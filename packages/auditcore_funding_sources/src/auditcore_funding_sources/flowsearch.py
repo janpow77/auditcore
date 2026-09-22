@@ -219,6 +219,7 @@ def record_values(
     fallback = mappings.get("_fallback") if "_fallback" in mappings else None
 
     def field(name: str) -> str | None:
+        """Mapped field of this record."""
         return extract_mapped_field(record, columns, name, fallback)
 
     name = field("beneficiary_name")

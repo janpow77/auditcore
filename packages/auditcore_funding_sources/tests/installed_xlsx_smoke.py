@@ -22,7 +22,8 @@ def main() -> None:
     buffer = io.BytesIO()
     wb.save(buffer)
     rows = workshop.parse_file(buffer.getvalue(), "liste.xlsx")
-    assert rows[0]["beneficiary_name"] == "Beispiel GmbH" and rows[0]["cost_total_raw"] == "125000.5"
+    assert rows[0]["beneficiary_name"] == "Beispiel GmbH"
+    assert rows[0]["cost_total_raw"] == "125000.5"
     print("PASS: installed auditcore_funding_sources[xlsx] with openpyxl and defusedxml")
 
 

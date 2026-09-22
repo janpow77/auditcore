@@ -89,14 +89,6 @@ def _check_size(content: bytes, limits: Limits) -> None:
         raise SourceFormatError("Die Datei überschreitet die zulässige Größe.")
 
 
-def _is_number(value: Any) -> bool:
-    try:
-        float(str(value).replace(",", ".").replace(" ", ""))
-        return True
-    except (ValueError, TypeError):
-        return False
-
-
 def _unique_headers(raw: Sequence[Any]) -> tuple[str, ...]:
     """pandas header mangling: empty → ``Unnamed: i``, duplicates → ``name.1``."""
     names: list[str] = []
@@ -174,57 +166,16 @@ def read_csv(
     limits = limits or Limits()
     _check_size(content, limits)
     text, encoding = _decode(content)
-    sample = text[:8192]
-    try:
-        delimiter = csv.Sniffer().sniff(sample, delimiters=";,\t|").delimiter
-    except csv.Error:
-        delimiter = ";"
-    try:
-        records = list(csv.reader(io.StringIO(text), delimiter=delimiter))
-    except csv.Error as exc:
-        raise SourceFormatError(f"CSV nicht lesbar: {exc}") from exc
-    records = [r for r in records if r]  # pandas skips blank lines
-    if len(records) > limits.max_rows + 30:
-        raise SourceFormatError("Die Datei enthält mehr Zeilen als zulässig.")
-    header = 0
-    candidates: list[tuple[int, int, float]] = []
-    for idx in range(min(len(records), 25)):
-        non_empty = [v.strip() for v in records[idx] if v.strip()]
-        if len(non_empty) < 2:
-            continue
-        ratio = sum(1 for v in non_empty if any(ch.isalpha() for ch in v)) / max(len(non_empty), 1)
-        candidates.append((idx, len(non_empty), ratio))
-    if candidates:
-        for idx, count, ratio in candidates:
-            if count >= 3 and ratio >= 0.6:
-                header = idx
-                break
-        else:
-            header = max(candidates, key=lambda item: (item[2], item[1]))[0]
-    if header + 1 < len(records):
-        following = [v.strip() for v in records[header + 1] if v.strip()]
-        snake = sum(
-            1
-            for v in following
-            if re.fullmatch(r"[a-z0-9_]+", v)
-            and (header_detection == "legacy" or re.search(r"[a-z]", v))
-        )
-        if following and snake >= max(3, len(following) // 2):
-            header += 1
-    if not records:
-        raise SourceFormatError("Die CSV-Datei ist leer.")
+    delimiter, records = _csv_records(text, limits)
+    header = _pick_header(
+        [[v.strip() for v in r if v.strip()] for r in records[:25]], min_ratio=0.6
+    )
+    header = _second_header(records, header, header_detection)
     headers = _unique_headers(records[header])
     if len(headers) > limits.max_columns:
         raise SourceFormatError("Die Datei enthält mehr Spalten als zulässig.")
     data = records[header + 1 :]
-    for row in data:
-        if len(row) > len(headers):
-            raise SourceFormatError(
-                f"Zeile mit {len(row)} Feldern bei {len(headers)} Spalten; "
-                "Datei nicht eindeutig lesbar."
-            )
-        if any(len(cell) > limits.max_cell_characters for cell in row):
-            raise SourceFormatError("Eine Zelle überschreitet die zulässige Länge.")
+    _check_csv_rows(data, len(headers), limits)
     return Table(
         headers,
         tuple(_typed([list(r) for r in data], len(headers), typing)),
@@ -233,6 +184,64 @@ def read_csv(
         encoding,
         typing,
     )
+
+
+def _csv_records(text: str, limits: Limits) -> tuple[str, list[list[str]]]:
+    """Sniffed delimiter (``;`` as fallback) and non-blank records."""
+    try:
+        delimiter = csv.Sniffer().sniff(text[:8192], delimiters=";,\t|").delimiter
+    except csv.Error:
+        delimiter = ";"
+    try:
+        records = [r for r in csv.reader(io.StringIO(text), delimiter=delimiter) if r]
+    except csv.Error as exc:
+        raise SourceFormatError(f"CSV nicht lesbar: {exc}") from exc
+    if not records:
+        raise SourceFormatError("Die CSV-Datei ist leer.")
+    if len(records) > limits.max_rows + 30:
+        raise SourceFormatError("Die Datei enthält mehr Zeilen als zulässig.")
+    return delimiter, records
+
+
+def _pick_header(non_empty_rows: Sequence[Sequence[str]], *, min_ratio: float) -> int:
+    """Source heuristic: first row with ≥ 3 cells and enough text, else the most textual."""
+    candidates: list[tuple[int, int, float]] = []
+    for idx, cells in enumerate(non_empty_rows):
+        if len(cells) < 2:
+            continue
+        ratio = sum(1 for c in cells if any(ch.isalpha() for ch in c)) / max(len(cells), 1)
+        candidates.append((idx, len(cells), ratio))
+    for idx, count, ratio in candidates:
+        if count >= 3 and ratio >= min_ratio:
+            return idx
+    if candidates:
+        return max(candidates, key=lambda item: (item[2], item[1]))[0]
+    return 0
+
+
+def _second_header(records: Sequence[Sequence[str]], header: int, mode: HeaderDetection) -> int:
+    """Skip a machine-readable second header (``snake_case``) below the header row."""
+    if header + 1 >= len(records):
+        return header
+    following = [v.strip() for v in records[header + 1] if v.strip()]
+    snake = sum(
+        1
+        for v in following
+        if re.fullmatch(r"[a-z0-9_]+", v) and (mode == "legacy" or re.search(r"[a-z]", v))
+    )
+    if following and snake >= max(3, len(following) // 2):
+        return header + 1
+    return header
+
+
+def _check_csv_rows(data: Sequence[Sequence[str]], width: int, limits: Limits) -> None:
+    for row in data:
+        if len(row) > width:
+            raise SourceFormatError(
+                f"Zeile mit {len(row)} Feldern bei {width} Spalten; Datei nicht eindeutig lesbar."
+            )
+        if any(len(cell) > limits.max_cell_characters for cell in row):
+            raise SourceFormatError("Eine Zelle überschreitet die zulässige Länge.")
 
 
 def _openpyxl() -> Any:
@@ -279,7 +288,6 @@ def _infer_excel_column(values: list[Any]) -> list[Any]:
     )
     if not numeric:
         return [math.nan if gap else v for v, gap in zip(values, missing, strict=True)]
-    numbers = [float(v) if isinstance(v, str) else v for v in present]
     integral = all(
         (isinstance(v, int) and not isinstance(v, bool))
         or (isinstance(v, str) and _INT_RE.fullmatch(v.strip()))
@@ -287,7 +295,6 @@ def _infer_excel_column(values: list[Any]) -> list[Any]:
     )
     if integral and not any(missing):
         return [int(v) if isinstance(v, str) else v for v in values]
-    del numbers
     return [math.nan if gap else float(v) for v, gap in zip(values, missing, strict=True)]
 
 
@@ -302,6 +309,28 @@ def read_xlsx(
     """First/selected sheet; header detection as in the source unless ``header_row`` > 0."""
     limits = limits or Limits()
     _check_size(content, limits)
+    rows = _xlsx_rows(content, sheet, limits)
+    header = header_row
+    if not header_row or header_row <= 0:
+        header = _pick_header(
+            [[str(c).strip() for c in r if c is not None and str(c).strip()] for r in rows[:31]],
+            min_ratio=0.4,
+        )
+    if header >= len(rows):
+        raise SourceFormatError("Die angegebene Kopfzeile liegt hinter dem Tabellenende.")
+    width = _used_width(rows, header)
+    headers = _unique_headers(rows[header][:width])
+    data = [(r + [None] * width)[:width] for r in rows[header + 1 :]]
+    if typing == "text":
+        typed = [tuple(_excel_value(v, typing) for v in r) for r in data]
+    else:
+        columns = [_infer_excel_column([r[i] for r in data]) for i in range(width)]
+        typed = [tuple(c[j] for c in columns) for j in range(len(data))]
+    return Table(headers, tuple(typed), header, None, None, typing)
+
+
+def _xlsx_rows(content: bytes, sheet: str | int | None, limits: Limits) -> list[list[Any]]:
+    """Cell values of the selected sheet without trailing empty rows."""
     openpyxl = _openpyxl()
     try:
         workbook = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
@@ -325,45 +354,20 @@ def read_xlsx(
         workbook.close()
     while rows and all(v is None for v in rows[-1]):
         rows.pop()
-    header = header_row
-    if not header_row or header_row <= 0:
-        header = 0
-        candidates = []
-        for i, row in enumerate(rows):
-            if i > 30:
-                break
-            non_empty = [str(c).strip() for c in row if c is not None and str(c).strip()]
-            if len(non_empty) < 2:
-                continue
-            ratio = sum(1 for c in non_empty if any(ch.isalpha() for ch in c)) / max(
-                len(non_empty), 1
-            )
-            candidates.append((i, len(non_empty), ratio))
-        if candidates:
-            for idx, count, ratio in candidates:
-                if count >= 3 and ratio >= 0.4:
-                    header = idx
-                    break
-            else:
-                header = max(candidates, key=lambda x: (x[2], x[1]))[0]
-    if header >= len(rows):
-        raise SourceFormatError("Die angegebene Kopfzeile liegt hinter dem Tabellenende.")
-    raw_header = rows[header]
-    width = len(raw_header)
+    return rows
+
+
+def _used_width(rows: Sequence[Sequence[Any]], header: int) -> int:
+    """Header width without trailing columns that are empty in header and data."""
+    raw = rows[header]
+    width = len(raw)
     while (
         width
-        and raw_header[width - 1] is None
+        and raw[width - 1] is None
         and all((len(r) < width or r[width - 1] is None) for r in rows[header + 1 :])
     ):
         width -= 1
-    headers = _unique_headers(raw_header[:width])
-    data = [(r + [None] * width)[:width] for r in rows[header + 1 :]]
-    if typing == "text":
-        typed = [tuple(_excel_value(v, typing) for v in r) for r in data]
-    else:
-        columns = [_infer_excel_column([r[i] for r in data]) for i in range(width)]
-        typed = [tuple(c[j] for c in columns) for j in range(len(data))]
-    return Table(headers, tuple(typed), header, None, None, typing)
+    return width
 
 
 def read_table(

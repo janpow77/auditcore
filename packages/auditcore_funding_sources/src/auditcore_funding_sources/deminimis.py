@@ -352,6 +352,7 @@ class Reconciliation:
 
     @property
     def content_hash(self) -> str:
+        """Inventory hash over the records seen in this run."""
         return inventory_hash(self.seen.values())
 
 
