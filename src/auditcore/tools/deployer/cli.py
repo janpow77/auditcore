@@ -44,6 +44,7 @@ def main(argv: list[str] | None = None) -> int:
     library.add_argument("--maintainer", required=True)
     library.add_argument("--source-date-epoch", type=int, required=True)
     library.add_argument("--dependency-mapping", type=Path)
+    library.add_argument("--optional-dependency-mapping", type=Path)
     library.add_argument("--debian-revision", type=int, default=1)
     library.add_argument("--allow-unreviewed-license", action="store_true")
     python_build = sub.add_parser("build-python", help="Build wheel and sdist with installed tools")
@@ -73,6 +74,9 @@ def main(argv: list[str] | None = None) -> int:
                 maintainer=args.maintainer,
                 dependency_mapping=read_json(args.dependency_mapping)
                 if args.dependency_mapping
+                else None,
+                optional_dependency_mapping=read_json(args.optional_dependency_mapping)
+                if args.optional_dependency_mapping
                 else None,
                 allow_unreviewed_license=args.allow_unreviewed_license,
                 debian_revision=args.debian_revision,

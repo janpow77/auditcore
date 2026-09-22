@@ -36,8 +36,10 @@ def bound_bytes(path: Path, root: Path, expected: str) -> bytes:
     return data
 
 
-def prepare_inputs(source: Path, version: str) -> dict[str, bytes]:
+def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
     """Fail closed before creating assets or signing keys."""
+    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", release_version):
+        raise ValueError("Explicit numeric release version required")
     report = read_json(source / "result.json")
     if report.get("scope") != "REAL_DOMAIN_PACKAGE_INSTALLATION" or report.get("status") != "PASS":
         raise ValueError("Successful real-domain installation report required")
@@ -59,7 +61,9 @@ def prepare_inputs(source: Path, version: str) -> dict[str, bytes]:
     for package in packages:
         name = package["name"]
         distribution = name.replace("_", "-")
-        if package["distribution"] != distribution or package["version"] != version:
+        if package["distribution"] != distribution or not re.fullmatch(
+            r"[0-9]+\.[0-9]+\.[0-9]+", package["version"]
+        ):
             raise ValueError("Unexpected distribution identity or release version")
         required.update(
             {
@@ -80,6 +84,7 @@ def prepare_inputs(source: Path, version: str) -> dict[str, bytes]:
     assets: dict[str, bytes] = {}
     for package in packages:
         name = package["name"]
+        version = package["version"]
         build = read_json(source / "builds" / name / "python-build-manifest.json")
         if (
             build.get("license_expression") != "MIT"
@@ -170,6 +175,7 @@ def prepare_inputs(source: Path, version: str) -> dict[str, bytes]:
             "wheel_sha256": digest(wheel_bytes),
             "license_expression": "MIT",
             "depends": deb["depends"],
+            "suggests": deb.get("suggests", []),
             "python_path": "/usr/lib/python3/dist-packages",
             "source_digest": build["source_digest"],
             "installation_evidence": "VERIFIED_PIP_AND_APT_INSTALL_UPGRADE_REMOVE",
@@ -177,6 +183,135 @@ def prepare_inputs(source: Path, version: str) -> dict[str, bytes]:
         }
         assets[f"{stem}_public-manifest.json"] = (json.dumps(public_deb, indent=2) + "\n").encode()
     return assets
+
+
+def optional_assets(
+    assets: dict[str, bytes], evidence: Path | None, release_version: str
+) -> dict[str, bytes]:
+    """Require actual installation and lock replay for published renderer extras."""
+    import io
+
+    features: dict[str, str] = {}
+    wheels: dict[str, dict[str, Any]] = {}
+    for name, content in assets.items():
+        if name.endswith(".whl"):
+            with zipfile.ZipFile(io.BytesIO(content)) as archive:
+                metadata_name = next(n for n in archive.namelist() if n.endswith("/METADATA"))
+                metadata = BytesParser().parsebytes(archive.read(metadata_name))
+                package = re.sub(r"[-_.]+", "_", metadata["Name"]).lower()
+                if package not in PACKAGES or package in wheels:
+                    raise ValueError("Unexpected or duplicate wheel identity")
+                wheels[package] = {
+                    "name": name,
+                    "version": metadata["Version"],
+                    "sha256": digest(content),
+                    "all_requires": metadata.get_all("Requires-Dist", []),
+                    "requires": [r for r in metadata.get_all("Requires-Dist", []) if ";" not in r],
+                }
+                for extra in set(metadata.get_all("Provides-Extra", [])) & {"pdf", "excel"}:
+                    if extra in features:
+                        raise ValueError("Renderer extra has ambiguous package ownership")
+                    features[extra] = package
+    if not features:
+        return {}
+    if evidence is None:
+        raise ValueError("Renderer extras require verified optional installation evidence")
+    report = read_json(evidence / "result.json")
+    if (
+        report.get("scope") != "OPTIONAL_RENDERER_INSTALLATION"
+        or report.get("status") != "PASS"
+        or report.get("release_version") != release_version
+        or set(report.get("features", {})) != set(features)
+    ):
+        raise ValueError("Optional renderer verification does not match the release")
+    apt_check = report["checks"].get("apt-renderers", {})
+    if apt_check.get("status") != "PASS" or apt_check.get("exit_code") != 0:
+        raise ValueError("Actual Debian renderer installation verification required")
+    bound_bytes(evidence / "apt-renderers.log", evidence, apt_check["log_sha256"])
+    result = {}
+    for extra, feature in report["features"].items():
+        package = feature["package"]
+        if (
+            package != features[extra]
+            or feature.get("status") != "PASS"
+            or feature.get("version") != wheels[package]["version"]
+        ):
+            raise ValueError("Unexpected renderer package/version or failed verification")
+        closure = {package}
+        pending = [package]
+        while pending:
+            for requirement in wheels[pending.pop()]["requires"]:
+                match = re.fullmatch(r"([A-Za-z0-9_.-]+)==([0-9.]+)", requirement)
+                if not match:
+                    raise ValueError("Pinned internal renderer dependency required")
+                dependency = re.sub(r"[-_.]+", "_", match[1]).lower()
+                if dependency not in wheels or wheels[dependency]["version"] != match[2]:
+                    raise ValueError("Missing matching renderer dependency wheel")
+                if dependency not in closure:
+                    closure.add(dependency)
+                    pending.append(dependency)
+        expected_wheels = {wheels[p]["name"]: wheels[p]["sha256"] for p in closure}
+        if feature.get("wheel_hashes") != expected_wheels:
+            raise ValueError("Optional renderer did not verify the exact wheel closure")
+        for stage in (
+            "install",
+            "smoke",
+            "independence",
+            "pip-check",
+            "remove",
+            "locked-install",
+            "locked-smoke",
+        ):
+            name = f"{extra}-{stage}"
+            check = report["checks"].get(name, {})
+            if check.get("status") != "PASS" or check.get("exit_code") != 0:
+                raise ValueError("Missing actual renderer verification")
+            bound_bytes(evidence / f"{name}.log", evidence, check["log_sha256"])
+        filename = f"requirements-{package}-{extra}.txt"
+        if feature.get("requirements") != filename:
+            raise ValueError("Unexpected optional requirements filename")
+        content = bound_bytes(evidence / filename, evidence, feature["requirements_sha256"])
+        text = content.decode()
+        lines = text.splitlines()
+        if lines[:2] != ["--index-url https://pypi.org/simple", "--require-hashes"]:
+            raise ValueError("Hash-locked PyPI dependency requirements required")
+        base = f"https://github.com/janpow77/auditcore/releases/download/v{release_version}"
+        expected_direct = {
+            p.replace("_", "-")
+            + (f"[{extra}]" if p == package else "")
+            + f" @ {base}/{wheels[p]['name']} --hash=sha256:{wheels[p]['sha256']}"
+            for p in closure
+        }
+        dependencies = feature.get("dependencies", {})
+        declared_extra_names = {
+            re.sub(r"[-_.]+", "-", re.match(r"[A-Za-z0-9_.-]+", r)[0]).lower()
+            for r in wheels[package]["all_requires"]
+            if r.endswith(f'; extra == "{extra}"') and re.match(r"[A-Za-z0-9_.-]+", r)
+        }
+        installed_names = set(dependencies) | {p.replace("_", "-") for p in closure}
+        if not declared_extra_names or not declared_extra_names.issubset(installed_names):
+            raise ValueError("Declared renderer dependencies missing from verified installation")
+        if len(lines[2:]) != len(expected_direct) + len(dependencies):
+            raise ValueError("Unexpected renderer requirement count")
+        remaining = set(lines[2:])
+        if not expected_direct.issubset(remaining):
+            raise ValueError("Renderer requirement URLs/hashes do not match release wheels")
+        remaining -= expected_direct
+        observed_dependencies = {}
+        for line in remaining:
+            match = re.fullmatch(
+                r"([a-z0-9][a-z0-9.-]*)==([A-Za-z0-9.!+_-]+)"
+                r"(?: --hash=sha256:[0-9a-f]{64})+",
+                line,
+            )
+            if not match or match[1] in observed_dependencies:
+                raise ValueError("Invalid or duplicated locked renderer dependency")
+            observed_dependencies[match[1]] = match[2]
+        if observed_dependencies != dependencies:
+            raise ValueError("Renderer dependency lock differs from verified installation")
+        result[filename] = content
+    result["optional-renderer-verification.json"] = (json.dumps(report, indent=2) + "\n").encode()
+    return result
 
 
 def run(command: list[str], environment: dict[str, str]) -> bytes:
@@ -193,6 +328,7 @@ def main() -> int:
     parser.add_argument("--platform-python", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--version", default="0.1.0")
+    parser.add_argument("--optional-verification-output", type=Path)
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", args.version):
         raise ValueError("Explicit numeric release version required")
@@ -202,6 +338,15 @@ def main() -> int:
     if source == output or source.is_relative_to(output) or output.is_relative_to(source):
         raise ValueError("Release assets must be separate from verification evidence")
     assets = prepare_inputs(source, args.version)
+    assets.update(
+        optional_assets(
+            assets,
+            args.optional_verification_output.resolve()
+            if args.optional_verification_output
+            else None,
+            args.version,
+        )
+    )
     python = args.platform_python.absolute()
     environment = {
         k: v for k, v in os.environ.items() if k not in {"PYTHONPATH", "PYTHONHOME", "GNUPGHOME"}
@@ -281,16 +426,19 @@ def main() -> int:
         for name, content in sorted(assets.items())
         if name.endswith(".whl")
     )
+    package_versions = {
+        p["name"]: p["version"] for p in read_json(source / "result.json")["packages"]
+    }
     for package in sorted(PACKAGES):
         (output / f"requirements-{package}.txt").write_text(
-            wheel_links + f"{package}=={args.version}\n"
+            wheel_links + f"{package}=={package_versions[package]}\n"
         )
     (output / "requirements-all-locked.txt").write_text(
         wheel_links
         + "--require-hashes\n"
         + "".join(
-            f"{package}=={args.version} --hash=sha256:"
-            f"{digest(assets[f'{package}-{args.version}-py3-none-any.whl'])}\n"
+            f"{package}=={package_versions[package]} --hash=sha256:"
+            f"{digest(assets[f'{package}-{package_versions[package]}-py3-none-any.whl'])}\n"
             for package in sorted(PACKAGES)
         )
     )
@@ -300,6 +448,7 @@ def main() -> int:
         "public_installation": "NOT_EXECUTED",
         "application_release": "NOT_EVALUATED",
         "version": args.version,
+        "package_versions": package_versions,
         "prepared_at": datetime.now(UTC).isoformat(),
         "verification_report_sha256": digest((source / "result.json").read_bytes()),
         "signing_key_fingerprint": fingerprint,

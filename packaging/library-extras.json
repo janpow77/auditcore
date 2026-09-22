@@ -1,0 +1,9 @@
+{
+  "auditcore_invoicegenerator": {
+    "reportlab<6,>=4.5.1; extra == \"pdf\"": "python3-reportlab (>= 3.6.12-1+deb12u1)"
+  },
+  "auditcore_reporting": {
+    "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
+    "defusedxml>=0.7.1; extra == \"excel\"": "python3-defusedxml (>= 0.7.1)"
+  }
+}
