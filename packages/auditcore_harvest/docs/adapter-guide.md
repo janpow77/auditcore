@@ -186,4 +186,10 @@ Geheimnisse, Fixtures, Implementierungsstatus (`SUPPORTED`, `PLANNED`,
 
 ## Änderungen
 
-- 0.1.0 / Vertrag 1: Erstfassung.
+- 0.1.0 / Vertrag 1: Erstfassung (Commit 0ff8d99).
+- **Inkompatibel seit c5a5e45:** `auditcore_harvest.UrllibTransport` und
+  `auditcore_harvest.transport.UrllibTransport` entfallen, weil ein
+  Netzwerkclient im Kern gegen AC-ARCH-002 verstößt. Adapter sind nicht
+  betroffen (sie nutzen nur `context.transport`). Consumer injizieren ihren
+  Transport; Standardbibliotheks-Vorlage: `docs/examples/urllib_transport.py`.
+  Alle übrigen Namen und Semantiken von Vertrag 1 bleiben unverändert.
