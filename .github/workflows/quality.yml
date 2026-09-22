@@ -31,6 +31,17 @@ jobs:
       - run: auditcore-refactor --help
       - run: auditcore-deploy --help
       - run: python -m build
+      - name: Prepare isolated Debian lifecycle image
+        if: matrix.python == '3.12'
+        run: >-
+          python -c "from auditcore.tools.deployer.validation import DockerPackageTester;
+          print(DockerPackageTester().prepare())"
+      - name: Verify installed platform and technical package lifecycle
+        if: matrix.python == '3.12'
+        run: python scripts/verify_installed_framework.py dist/auditcore-0.1.0-py3-none-any.whl
+      - name: Verify installed platform CLI and package inventory
+        if: matrix.python != '3.12'
+        run: python scripts/verify_installed_framework.py dist/auditcore-0.1.0-py3-none-any.whl --smoke-only
       - run: bandit -q -ll -r src
       - run: pip-audit --format json --output dependency-audit.json
         if: always()
@@ -38,8 +49,13 @@ jobs:
         if: always()
         with:
           name: evidence-python-${{ matrix.python }}
+          include-hidden-files: true
           path: |
             *quality.json
             *selfcheck.json
             dependency-audit.json
+            .auditcore/installed-framework/latest.json
+            .auditcore/installed-framework/run-*/*.log
+            .auditcore/installed-framework/run-*/migration/*.json
+            .auditcore/installed-framework/run-*/apt/*.json
             dist/

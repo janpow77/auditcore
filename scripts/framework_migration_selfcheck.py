@@ -71,10 +71,12 @@ def test_installed_class() -> None:
 def command_run(command: list[str], cwd: Path, *, expected: int = 0) -> dict[str, Any]:
     """Persist real subprocess evidence and reject unexpected exit codes."""
     environment = {
-        **os.environ,
-        "PATH": str(Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", ""),
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("PIP_") and key not in {"PYTHONPATH", "PYTHONHOME"}
     }
-    environment.pop("PYTHONPATH", None)
+    environment["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", "")
+    environment["PIP_CONFIG_FILE"] = os.devnull
     process = subprocess.run(
         command, cwd=cwd, env=environment, capture_output=True, text=True, timeout=300, check=False
     )
@@ -255,23 +257,46 @@ def fixture_check(kind: str, root: Path, framework: Path, wheels: Path) -> None:
             },
         )
     elif kind == "dependencies":
+        wheel = next(wheels.glob("*.whl"))
+        wheel_hash = digest(wheel.read_bytes())
+        requirement = f"auditcore_fixture==1.0.0 --hash=sha256:{wheel_hash}"
         requirements = (root / "requirements.txt").read_text().splitlines()
-        if "auditcore_fixture==1.0.0" not in requirements:
-            raise RuntimeError("Migration did not add pinned package requirement")
+        if requirement not in requirements:
+            raise RuntimeError("Migration did not add pinned and hashed package requirement")
+        index = read_json(wheels.parent / "fixture-index/index-manifest.json")
+        install_report = root / ".auditcore/pip-reinstallation.json"
         command_run(
             [
                 sys.executable,
                 "-m",
                 "pip",
                 "install",
-                "--no-index",
-                "--find-links",
-                str(wheels),
+                "--index-url",
+                index["index_url"],
+                "--force-reinstall",
+                "--no-cache-dir",
+                "--disable-pip-version-check",
+                "--only-binary=:all:",
+                "--require-hashes",
+                "--report",
+                str(install_report),
                 "-r",
                 "requirements.txt",
             ],
             root,
         )
+        installation = read_json(install_report)["install"]
+        if len(installation) != 1:
+            raise RuntimeError(
+                "Expected actual wheel reinstallation, not already-satisfied requirements"
+            )
+        downloaded = installation[0]["download_info"]
+        if downloaded["archive_info"]["hashes"].get("sha256") != wheel_hash or not downloaded[
+            "url"
+        ].startswith((wheels.parent / "fixture-index/packages").as_uri() + "/"):
+            raise RuntimeError(
+                "Requirements installation did not use the hash-bound local index wheel"
+            )
         command_run([sys.executable, "-m", "pip", "check"], root)
         if importlib.metadata.version("auditcore_fixture") != "1.0.0":
             raise RuntimeError("Installed version differs from requirement")
@@ -352,6 +377,16 @@ auditcore_fixture = ["py.typed"]
     wheel = next(wheels.glob("*.whl"))
     command_run(
         [
+            cli("auditcore-deploy"),
+            "pip-index",
+            str(wheel),
+            "--output",
+            str(output / "fixture-index"),
+        ],
+        output,
+    )
+    command_run(
+        [
             sys.executable,
             "-m",
             "pip",
@@ -428,7 +463,8 @@ def create_consumer(output: Path, name: str, framework: Path, wheels: Path) -> t
     plan["imports_to_change"] = [
         {"path": "app.py", "old": "legacy", "new": "auditcore_fixture", "symbol": "Formatter"}
     ]
-    plan["dependencies_to_add"] = ["auditcore_fixture==1.0.0"]
+    wheel_hash = digest(next(wheels.glob("*.whl")).read_bytes())
+    plan["dependencies_to_add"] = [f"auditcore_fixture==1.0.0 --hash=sha256:{wheel_hash}"]
     plan["characterization_checks"] = [
         {
             "path": "legacy.py",

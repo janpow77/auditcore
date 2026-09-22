@@ -1,8 +1,12 @@
 # auditcore
 
-Frameworkunabhängige Fachbibliothek und vier Werkzeuge in **einem Python-Projekt
-mit einem Releasezyklus**. Verbindliche Spezifikation:
-[AUDITCORE_LASTENHEFT.md](AUDITCORE_LASTENHEFT.md).
+**Plattformbibliothek zur Herstellung und Pflege eigenständiger Fachbibliotheken.**
+Das Repository verwaltet mehrere separat installierbare Python-Pakete. Anwendungen
+bleiben in ihren eigenen Repositories und beziehen benötigte Pakete über pip oder APT.
+Grundlage: [Lastenheft](AUDITCORE_LASTENHEFT.md) mit der später ausdrücklich vereinbarten
+[Mehrpaket-Architektur](docs/architecture/ADR-001-multi-package-monorepo.md).
+Der [Umsetzungsplan](docs/architecture/IMPLEMENTATION_PLAN.md) verlangt zuerst das
+fertige Framework und seinen technischen Nachweis, danach die Fachbibliotheken.
 
 | Bereich | Aufgabe |
 |---|---|
@@ -13,7 +17,8 @@ mit einem Releasezyklus**. Verbindliche Spezifikation:
 | `auditcore.tools.deployer` | Build, Debian, Pakettests, signierte APT-Metadaten |
 
 Der Fachkern importiert keine Tools, Webframeworks, HTTP-Clients oder Datenbanken.
-Neue Fachlogik gehört standardmäßig in ein Domain-Modul innerhalb `auditcore`.
+Neue Fachbibliotheken erhalten eigene Distributionen unter `packages/` und
+keine automatische Laufzeitabhängigkeit von der Plattform oder anderen Fachpaketen.
 Die vorhandene Funktion `auditcore.reporting.get_number_format` wurde mit
 34 Characterization-Fällen aus Flowlib übernommen; Herkunft und MIT-Lizenz
 stehen unter `docs/provenance` und `LICENSES`.
@@ -39,7 +44,7 @@ Debian-Builds benötigen `dpkg-deb`; isolierte Pakettests benötigen Docker auf
 ## Quality Gates
 
 ```bash
-auditcore-quality src/auditcore --strict --format json --output core.json
+auditcore-quality src/auditcore --strict --context contexts/core.json --format json --output core.json
 auditcore-bibquality src/auditcore/tools/quality
 auditcore-bibquality src/auditcore/tools/consolidator
 auditcore-bibquality src/auditcore/tools/apprefactor
@@ -62,7 +67,7 @@ Prüfkatalog, Standardsregister und Security-Dokumente bleiben externe Quelle.
 Die lokale Adapterdatei enthält technische Auslöser und Quellhashes, keinen
 unabhängigen Anforderungskatalog. Bei Drift bleibt die Bewertung REVIEW_REQUIRED.
 
-`auditcore-context.json` beschreibt den Fachkern. `contexts/*.json` trennt Core
+`auditcore-context.json` beschreibt die gesamte Plattformdistribution. `contexts/*.json` trennt Core
 und ausführbare Werkzeuge; `--context contexts/consolidator.json` wählt den
 Artefaktkontext. Unbestimmter Schutzbedarf und KI-Einsatz bleiben UNKNOWN.
 MUSS verlangt Klärung; BEDINGT prüft den konkreten Auslöser; SOLL bleibt eine
@@ -74,7 +79,12 @@ offline oder bei unterschiedlichem Remote-Commit immer POLICY_SOURCE_STALE.
 Nachweise werden je Projekt aus `.auditcore/policy-evidence.json` und
 `.auditcore/policy-decisions.json` geladen, jeweils nach Requirement-ID. Technische
 Nachweise brauchen `status: VERIFIED`, prüfbare `references` und den aktuellen
-Framework-`source_commit`. Abweichungen benötigen zusätzlich die menschlichen
+Framework-`source_commit` sowie übereinstimmende `artifact`,
+`artifact_source_digest` und `context_digest`. `evidence_binding()` berechnet nur
+die Bindung und erteilt keine Freigabe. Geänderte Quellen/Kontexte und Belege
+anderer Pakete werden abgelehnt. `versioned_artifact_types` unterscheidet etwa
+Regelwerke, Prompts und Agenten für die konkrete Testanwendbarkeit.
+Abweichungen benötigen zusätzlich die menschlichen
 Entscheidungsfelder aus dem Policy-Modell. Unbelegte Selbsterklärungen sind keine
 Freigabe. Für den Handoff muss `auditcore-deployment-evidence.json` alle
 Betriebsprüfungen mit `status`, `reference`, `reason` und den aktuellen
@@ -89,6 +99,8 @@ auditcore-consolidate libraries
 auditcore-consolidate analyse /path/to/application --with-auditcore
 auditcore-consolidate migrate owner/repository:symbol --dry-run
 auditcore-consolidate status
+auditcore-consolidate packages inventory .
+auditcore-consolidate packages status .
 ```
 
 GLOBAL inventarisiert den authentifizierten Account einschließlich privater,
@@ -103,6 +115,12 @@ für die Gesamtlandschaft gedacht. Die konservative automatische Moduswahl nutzt
 bei Unklarheit REPO_AUDITCORE. Der Consolidator erzeugt Pläne und verändert keine
 Anwendungsimplementierungen. AST-Gleichheit ersetzt keine fachliche Freigabe.
 Abweichende Regeln oder Sicherheitsgrenzen erzeugen Entscheidungsbedarf.
+
+Die [Mehrpaket-Verwaltung](docs/workspace.md) liest `auditcore-workspace.toml`
+und die einzelnen `pyproject.toml`-Dateien, ohne deren Code oder Build-Backends
+auszuführen. Sourcehash, API, Abhängigkeiten, Herkunft, bekannte Consumer und
+Anwendbarkeitskontext werden pro Distribution persistent erfasst. CURRENT heißt
+aktueller Inventarstand, nicht Policy- oder Releasefreigabe.
 
 ## KIRA und Graphify
 
@@ -129,7 +147,7 @@ ohne externe Systeme getestet.
 
 ```bash
 auditcore-refactor inspect /path/to/application
-auditcore-refactor plan /path/to/application --output plan.json
+auditcore-refactor plan /path/to/application --library auditcore_fixture==1.0.0 --output plan.json
 auditcore-refactor apply plan.json --dry-run
 auditcore-refactor apply plan.json
 auditcore-refactor verify /path/to/application
@@ -140,6 +158,9 @@ auditcore-refactor optimize /path/to/application --safe
 Ein Plan enthält konkrete Dateien, Imports, Wrapper, Quellhashes, Goldencases,
 Policy-Abhängigkeiten und Prüfkommandos. `characterize()` zeichnet tatsächliche
 Legacy-Ergebnisse vor Änderungen auf; `compare()` prüft Werte und Exceptiontypen.
+Klassenmethoden einschließlich Konstruktorargumenten und reine Importmigrationen
+werden durch explizite `characterization_checks` unterstützt. Frische Belege nach
+einer Änderung müssen aus tatsächlich erneut ausgeführten Prüfungen stammen.
 `apply()` kontrolliert Quellstand, Sicherheitsgrenzen und Policy vor/nach der
 Migration. Fehlgeschlagene Prüfungen stellen Originaldateien wieder her.
 Compatibility Wrapper erhalten Signaturen; die Legacy-Bereinigung bleibt ein
@@ -153,6 +174,22 @@ Kommandos sind NOT_EXECUTED. Befehle werden ohne Shell ausgeführt. Das Projekt
 ist für die fachliche Vollständigkeit seiner konkreten Tests verantwortlich.
 
 ## Debian, APT und Release
+
+Für Bibliotheken ohne Anwendungsdienst stehen eigenständige installierte Befehle bereit:
+
+```bash
+auditcore-deploy build-python /path/to/package --output dist --source-date-epoch 1700000000
+auditcore-deploy build-library dist/auditcore_fixture-1.0.0-py3-none-any.whl \
+  --output dist/debian --source-date-epoch 1700000000 \
+  --maintainer 'Packaging Test <packaging@example.invalid>'
+auditcore-deploy pip-index dist/auditcore_fixture-1.0.0-py3-none-any.whl --output dist/simple
+```
+
+`auditcore_fixture` ist ein technischer Beispielname, keine veröffentlichte Fachbibliothek.
+Bibliotheksbuilds benötigen keinen erfundenen Anwendungs-Handoff. Sie bekommen
+eigene Build-/Install-/Lizenzstatus; ein lokaler Testbau ist keine Veröffentlichung.
+Details: [pip-/APT-Paketierung](docs/deployment/library-installation.md).
+Die folgenden Befehle betreffen dagegen vollständige Anwendungen:
 
 ```bash
 auditcore-deploy inspect /path/to/application
@@ -173,11 +210,13 @@ führt keine PyPI/npm-Downloads aus. Konfiguration: `/etc/<app>`; persistente
 Daten: `/var/lib/<app>`; Programm: `/opt/<app>`; Betrieb über systemd/journald.
 `apt remove` und auch `purge` löschen fachliche Daten nicht automatisch.
 
-Ein Build benötigt einen aktuellen READY_FOR_DEPLOYMENT-Handoff und die
+Ein Anwendungsbuild benötigt einen aktuellen READY_FOR_DEPLOYMENT-Handoff und die
 Deployment-Policy-Nachweise. DEB_BUILT bedeutet noch keine Paketfreigabe.
 Installations-, Upgrade-, Remove-, systemd- und Health-Ergebnisse sind getrennt.
 Eine normale Docker-Umgebung kann systemd durch schreibgeschützte cgroups
 blockieren; diese Grenze darf nicht als bestandener Diensttest ausgegeben werden.
+Die [isolierte QEMU-Prüfung](docs/deployment/systemd-validation.md) hat den
+tatsächlichen systemd-Lifecycle für technische Testpakete nachgewiesen.
 APT-Publikation benötigt geprüfte Signaturen und einen expliziten Zielpfad.
 
 Wheel/sdist: `python -m build`. SBOMs stammen aus tatsächlichen Wheel-/Paketdateien,
