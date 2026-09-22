@@ -1,0 +1,4127 @@
+{
+ "status": "OBSERVED",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION_SYNTHETIC_RESPONSES_NO_NETWORK",
+ "sources": {
+  "auditdatabase": {
+   "repository": "janpow77/auditdatabase",
+   "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+   "files": [
+    {
+     "path": "backend/app/harvester/base.py",
+     "git_blob": "fcefbe13ecdd3d8bb1fff83f04a53c56ad700c4b"
+    },
+    {
+     "path": "backend/app/harvester/dip.py",
+     "git_blob": "de4a26ed623989ef6b84dec92b3d7c1e7eb3af62"
+    },
+    {
+     "path": "backend/app/harvester/eurlex.py",
+     "git_blob": "3bad9865dc13fbc2c21e195741f77864ae3fd4f2"
+    }
+   ]
+  },
+  "designer": {
+   "repository": "janpow77/audit_designer",
+   "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+   "files": [
+    {
+     "path": "backend/app/modules/vp_ai/harvester/_funding_period.py",
+     "git_blob": "f67579071cfdb8c03ec249de231675e792c58966"
+    },
+    {
+     "path": "backend/app/modules/vp_ai/harvester/base.py",
+     "git_blob": "7e5b9b652c9db72c8c661e38a8e5f7ce10d7f86e"
+    },
+    {
+     "path": "backend/app/modules/vp_ai/harvester/bundestag_dip.py",
+     "git_blob": "6fa48fc0301f9bc8e92822d2ce1ab9ef515cb344"
+    },
+    {
+     "path": "backend/app/modules/vp_ai/harvester/eurlex.py",
+     "git_blob": "c0cc8d9483f325cb1fd48707d2051fe747985fd3"
+    }
+   ]
+  }
+ },
+ "environment": {
+  "python": "3.12.3",
+  "httpx": "0.28.1",
+  "network": "none (httpx.AsyncClient replaced, SPARQL stubbed)"
+ },
+ "profile": {
+  "global_keywords_de": [
+   "EFRE",
+   "ESF",
+   "ESF+",
+   "EU-Förderung",
+   "Strukturfonds",
+   "Kohäsionspolitik",
+   "Kohäsion",
+   "Kohäsionsfonds",
+   "EU-Mittel",
+   "EU-Fördermittel",
+   "Europafonds",
+   "ESI-Fonds",
+   "geteilte Mittelverwaltung",
+   "Regionalförderung",
+   "Regionalentwicklung",
+   "Strukturpolitik",
+   "Regionalpolitik",
+   "ländliche Entwicklung",
+   "Prüfung",
+   "Finanzkontrolle",
+   "Rechnungsprüfung",
+   "Wirtschaftlichkeit",
+   "Ordnungsmäßigkeit",
+   "Finanzkorrektur",
+   "Fehlerquote",
+   "Internal Audit",
+   "Audit",
+   "Auditmanual",
+   "Prüfstrategie",
+   "Verwaltungskontrolle",
+   "Verwaltungs- und Kontrollsysteme",
+   "Zuwendung",
+   "Fördermittel",
+   "Beihilfe",
+   "Subvention",
+   "Förderung",
+   "Förderprogramm",
+   "Zuschuss",
+   "Beihilferecht",
+   "Zuwendungsrecht",
+   "Mitteilungsverordnung",
+   "Vergabe",
+   "Beschaffung",
+   "Ausschreibung",
+   "Vergaberecht",
+   "öffentliche Auftragsvergabe",
+   "Vergabe öffentlicher Aufträge",
+   "öffentliche Auftraggeber",
+   "Korruption",
+   "Betrug",
+   "Unregelmäßigkeit",
+   "Irregularität",
+   "Betrugsbekämpfung",
+   "Integrität",
+   "Transparenz",
+   "Fraud",
+   "OLAF",
+   "Rechnungshof",
+   "Prüfbehörde",
+   "Verwaltungsbehörde",
+   "Europäische Kommission",
+   "EU-Kommission",
+   "Dachverordnung",
+   "Allgemeine Verordnung",
+   "Haushaltsordnung",
+   "Landeshaushaltsordnung",
+   "Förderperiode 2021-2027",
+   "Förderperiode 2028-2034",
+   "WIBank",
+   "HELABA",
+   "Hessen",
+   "Bundesland"
+  ],
+  "global_keywords_en": [
+   "ERDF",
+   "ESF",
+   "ESF+",
+   "EU funding",
+   "structural funds",
+   "cohesion policy",
+   "cohesion",
+   "cohesion fund",
+   "EU funds",
+   "European funds",
+   "ESI funds",
+   "shared management",
+   "regional development",
+   "regional policy",
+   "structural policy",
+   "rural development",
+   "audit",
+   "financial control",
+   "financial audit",
+   "economy",
+   "efficiency",
+   "effectiveness",
+   "financial correction",
+   "error rate",
+   "internal audit",
+   "audit manual",
+   "audit strategy",
+   "management and control systems",
+   "grant",
+   "subsidy",
+   "state aid",
+   "funding programme",
+   "funding program",
+   "simplified cost options",
+   "SCO",
+   "SCOs",
+   "financing not linked to costs",
+   "FNLC",
+   "lump sum",
+   "flat rate",
+   "unit cost",
+   "procurement",
+   "public procurement",
+   "tendering",
+   "award procedure",
+   "contracting authority",
+   "corruption",
+   "fraud",
+   "irregularity",
+   "anti-fraud",
+   "anti-corruption",
+   "integrity",
+   "transparency",
+   "OLAF",
+   "court of auditors",
+   "audit authority",
+   "managing authority",
+   "European Commission",
+   "common provisions regulation",
+   "CPR",
+   "financial regulation",
+   "multiannual financial framework",
+   "MFF",
+   "programming period 2021-2027",
+   "programming period 2028-2034",
+   "Germany",
+   "German"
+  ],
+  "dip_keywords": [
+   "EFRE",
+   "ESF",
+   "ESF+",
+   "Strukturfonds",
+   "Kohäsionspolitik",
+   "EU-Förderung",
+   "Regionalförderung",
+   "Europäischer Fonds",
+   "Strukturfondsförderung",
+   "EU-Mittel",
+   "Fördermittel",
+   "Vergaberecht",
+   "Beihilferecht",
+   "Finanzkontrolle",
+   "Kohäsionsfonds",
+   "Europäischer Sozialfonds",
+   "Interreg",
+   "REACT-EU",
+   "JTF",
+   "Just Transition",
+   "Aufbaufonds",
+   "EU-Haushalt",
+   "Mehrjähriger Finanzrahmen",
+   "MFR",
+   "Dachverordnung",
+   "1060/2021",
+   "1058/2021"
+  ],
+  "dip_base_url": "https://search.dip.bundestag.de/api/v1",
+  "eurlex_queries": {
+   "cohesion_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date ?type WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n                OPTIONAL { ?work cdm:resource_legal_type ?type . }\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"2021/1058\") ||\n                    CONTAINS(STR(?title), \"1303/2013\") ||\n                    CONTAINS(STR(?title), \"regionale Entwicklung\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 200\n        ",
+   "delegated_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?celex), \"32021\") ||\n                    CONTAINS(STR(?celex), \"32022\") ||\n                    CONTAINS(STR(?celex), \"32023\") ||\n                    CONTAINS(STR(?celex), \"32024\")\n                )\n                FILTER(\n                    CONTAINS(STR(?title), \"Delegierte\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"Kohäsion\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+   "implementing_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Durchführung\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"EFRE\") ||\n                        CONTAINS(STR(?title), \"ESF\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+   "guidance_documents": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    (CONTAINS(STR(?celex), \"52021\") || CONTAINS(STR(?celex), \"52022\") ||\n                     CONTAINS(STR(?celex), \"52023\") || CONTAINS(STR(?celex), \"52024\")) &&\n                    (\n                        CONTAINS(STR(?title), \"Kohäsion\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"EFRE\") ||\n                        CONTAINS(STR(?title), \"ESF\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        "
+  },
+  "eurlex_core_documents": [
+   {
+    "celex": "32021R1060",
+    "title": "Dachverordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1058",
+    "title": "EFRE/KF-Verordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1057",
+    "title": "ESF+-Verordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1059",
+    "title": "Interreg-Verordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32013R1303",
+    "title": "Dachverordnung 2014-2020",
+    "period": "2014-2020"
+   },
+   {
+    "celex": "32013R1301",
+    "title": "EFRE-Verordnung 2014-2020",
+    "period": "2014-2020"
+   },
+   {
+    "celex": "32013R1304",
+    "title": "ESF-Verordnung 2014-2020",
+    "period": "2014-2020"
+   }
+  ],
+  "eurlex_endpoint": "https://publications.europa.eu/webapi/rdf/sparql",
+  "eurlex_base_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:",
+  "designer_dip_queries": [
+   "Bundeshaushalt",
+   "EU-Strukturfonds",
+   "EFRE",
+   "ESF",
+   "Finanzkontrolle",
+   "Rechnungsprüfung",
+   "Zuwendungsrecht",
+   "Subventionen",
+   "Vergaberecht",
+   "Fördermittel"
+  ],
+  "designer_eurlex_core_documents": [
+   {
+    "celex": "32021R1060",
+    "title": "Dachverordnung 2021-2027 (VO 2021/1060)",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1058",
+    "title": "EFRE/KF-Verordnung 2021-2027 (VO 2021/1058)",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1057",
+    "title": "ESF+-Verordnung 2021-2027 (VO 2021/1057)",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1059",
+    "title": "Interreg-Verordnung 2021-2027 (VO 2021/1059)",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32013R1303",
+    "title": "Dachverordnung 2014-2020 (VO 1303/2013)",
+    "period": "2014-2020"
+   },
+   {
+    "celex": "32013R1301",
+    "title": "EFRE-Verordnung 2014-2020 (VO 1301/2013)",
+    "period": "2014-2020"
+   },
+   {
+    "celex": "32013R1304",
+    "title": "ESF-Verordnung 2014-2020 (VO 1304/2013)",
+    "period": "2014-2020"
+   }
+  ],
+  "designer_eurlex_queries": {
+   "cohesion_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date ?type WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n                OPTIONAL { ?work cdm:resource_legal_type ?type . }\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"2021/1058\") ||\n                    CONTAINS(STR(?title), \"1303/2013\") ||\n                    CONTAINS(STR(?title), \"regionale Entwicklung\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 200\n        ",
+   "delegated_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?celex), \"32021\") ||\n                    CONTAINS(STR(?celex), \"32022\") ||\n                    CONTAINS(STR(?celex), \"32023\") ||\n                    CONTAINS(STR(?celex), \"32024\") ||\n                    CONTAINS(STR(?celex), \"32025\")\n                )\n                FILTER(\n                    CONTAINS(STR(?title), \"Delegierte\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"Kohäsion\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+   "eca_special_reports": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date ?type WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n                OPTIONAL { ?work cdm:resource_legal_type ?type . }\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Rechnungshof\") ||\n                    CONTAINS(STR(?title), \"Court of Auditors\") ||\n                    CONTAINS(STR(?title), \"Sonderbericht\") ||\n                    CONTAINS(STR(?title), \"Special Report\")\n                )\n                FILTER(\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"cohesion\") ||\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ERDF\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"regional\") ||\n                    CONTAINS(STR(?title), \"Förder\") ||\n                    CONTAINS(STR(?title), \"funding\") ||\n                    CONTAINS(STR(?title), \"audit\") ||\n                    CONTAINS(STR(?title), \"Prüfung\") ||\n                    CONTAINS(STR(?title), \"Fehler\") ||\n                    CONTAINS(STR(?title), \"error\")\n                )\n                FILTER(LANG(?title) = \"de\" || LANG(?title) = \"en\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 300\n        ",
+   "eca_annual_reports": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date ?type WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n                OPTIONAL { ?work cdm:resource_legal_type ?type . }\n\n                FILTER(\n                    (CONTAINS(STR(?title), \"Rechnungshof\") || CONTAINS(STR(?title), \"Court of Auditors\")) &&\n                    (CONTAINS(STR(?title), \"Jahresbericht\") || CONTAINS(STR(?title), \"Annual Report\") || CONTAINS(STR(?title), \"annual report\"))\n                )\n                FILTER(LANG(?title) = \"de\" || LANG(?title) = \"en\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        "
+  },
+  "designer_dip_keywords": [
+   "Bundeshaushalt",
+   "Haushalt",
+   "Finanzen",
+   "EU-Mittel",
+   "Strukturfonds",
+   "EFRE",
+   "ESF",
+   "Zuwendung",
+   "Förderung",
+   "Subvention",
+   "Rechnungshof",
+   "Prüfung",
+   "Kontrolle",
+   "Vergabe",
+   "Beschaffung"
+  ],
+  "designer_global_keywords_de": [
+   "EFRE",
+   "ESF",
+   "ESF+",
+   "EU-Förderung",
+   "Strukturfonds",
+   "Kohäsionspolitik",
+   "Kohäsion",
+   "Kohäsionsfonds",
+   "EU-Mittel",
+   "EU-Fördermittel",
+   "Europafonds",
+   "ESI-Fonds",
+   "geteilte Mittelverwaltung",
+   "Regionalförderung",
+   "Regionalentwicklung",
+   "Strukturpolitik",
+   "Regionalpolitik",
+   "ländliche Entwicklung",
+   "Prüfung",
+   "Finanzkontrolle",
+   "Rechnungsprüfung",
+   "Wirtschaftlichkeit",
+   "Ordnungsmäßigkeit",
+   "Finanzkorrektur",
+   "Fehlerquote",
+   "Internal Audit",
+   "Audit",
+   "Auditmanual",
+   "Prüfstrategie",
+   "Verwaltungskontrolle",
+   "Verwaltungs- und Kontrollsysteme",
+   "Zuwendung",
+   "Fördermittel",
+   "Beihilfe",
+   "Subvention",
+   "Förderung",
+   "Förderprogramm",
+   "Zuschuss",
+   "Beihilferecht",
+   "Zuwendungsrecht",
+   "Mitteilungsverordnung",
+   "Vergabe",
+   "Beschaffung",
+   "Ausschreibung",
+   "Vergaberecht",
+   "öffentliche Auftragsvergabe",
+   "Vergabe öffentlicher Aufträge",
+   "öffentliche Auftraggeber",
+   "Korruption",
+   "Betrug",
+   "Unregelmäßigkeit",
+   "Irregularität",
+   "Betrugsbekämpfung",
+   "Integrität",
+   "Transparenz",
+   "Fraud",
+   "OLAF",
+   "Rechnungshof",
+   "Prüfbehörde",
+   "Verwaltungsbehörde",
+   "Europäische Kommission",
+   "EU-Kommission",
+   "Dachverordnung",
+   "Allgemeine Verordnung",
+   "Haushaltsordnung",
+   "Landeshaushaltsordnung",
+   "Förderperiode 2021-2027",
+   "Förderperiode 2028-2034",
+   "WIBank",
+   "HELABA",
+   "Hessen",
+   "Bundesland"
+  ],
+  "designer_dip_base_url": "https://dip.bundestag.de",
+  "designer_dip_api_url": "https://search.dip.bundestag.de/api/v1"
+ },
+ "cases": [
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-None",
+   "operation": "parse_date",
+   "inputs": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'2024-03-15'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024-03-15"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'2024-03-15T10:20:30'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024-03-15T10:20:30"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'15.03.2024'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "15.03.2024"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'2024'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'1999'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'9'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "9"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-''",
+   "operation": "parse_date",
+   "inputs": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'kein Datum'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "kein Datum"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'2024-13-45'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024-13-45"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-'20240315'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "20240315"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-20240315",
+   "operation": "parse_date",
+   "inputs": {
+    "value": 20240315
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "parse-date-datetime.datetime(2024, 3, 15, 8, 0)",
+   "operation": "parse_date",
+   "inputs": {
+    "value": {
+     "$datetime": "2024-03-15T08:00:00"
+    }
+   },
+   "output": {
+    "$datetime": "2024-03-15T08:00:00"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-''",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-''",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-None",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-None",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'VO (EU) 2021/1060'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO (EU) 2021/1060"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'VO (EU) 2021/1060'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO (EU) 2021/1060"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'Förderperiode 2021-2027'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Förderperiode 2021-2027"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'Förderperiode 2021-2027'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Förderperiode 2021-2027"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'Dachverordnung'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Dachverordnung"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'Dachverordnung'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Dachverordnung"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'VO 1303/2013'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO 1303/2013"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'VO 1303/2013'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO 1303/2013"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'2014-2020'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "2014-2020"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'2014-2020'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "2014-2020"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'EFRE und ESF'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "EFRE und ESF"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'EFRE und ESF'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "EFRE und ESF"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'ERDF'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ERDF"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'ERDF'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ERDF"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'ESF+ Programm'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ESF+ Programm"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'ESF+ Programm'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ESF+ Programm"
+   },
+   "output": "ESF+",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'ESF plus'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ESF plus"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'ESF plus'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ESF plus"
+   },
+   "output": "ESF+",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'ESF'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ESF"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'ESF'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ESF"
+   },
+   "output": "ESF",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'Kohäsionsfonds'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Kohäsionsfonds"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'Kohäsionsfonds'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Kohäsionsfonds"
+   },
+   "output": "KF",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'cohesion'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "cohesion"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'cohesion'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "cohesion"
+   },
+   "output": "KF",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'Sonstiges'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Sonstiges"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'Sonstiges'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Sonstiges"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'efre klein'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "efre klein"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'efre klein'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "efre klein"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'VO 1083/2006'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO 1083/2006"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'VO 1083/2006'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO 1083/2006"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'2007-2013'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "2007-2013"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'2007-2013'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "2007-2013"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'1994-1999'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "1994-1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'1994-1999'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "1994-1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'VO 2021/1058'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO 2021/1058"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'VO 2021/1058'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO 2021/1058"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'1260/1999'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "1260/1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'1260/1999'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "1260/1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "funding-period-'ERDF Programm 2014-2020'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ERDF Programm 2014-2020"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "fund-'ERDF Programm 2014-2020'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ERDF Programm 2014-2020"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "relevant-''",
+   "operation": "is_relevant",
+   "inputs": {
+    "text": ""
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "relevant-None",
+   "operation": "is_relevant",
+   "inputs": {
+    "text": null
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "relevant-'efre im Titel'",
+   "operation": "is_relevant",
+   "inputs": {
+    "text": "efre im Titel"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "relevant-'Vergabeverfahren'",
+   "operation": "is_relevant",
+   "inputs": {
+    "text": "Vergabeverfahren"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "relevant-'ohne Bezug'",
+   "operation": "is_relevant",
+   "inputs": {
+    "text": "ohne Bezug"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "relevant-'EfRe'",
+   "operation": "is_relevant",
+   "inputs": {
+    "text": "EfRe"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "normalize-['content', 'date', 'id', 'title', 'url']",
+   "operation": "normalize_document",
+   "inputs": {
+    "id": "a",
+    "title": "T",
+    "content": "C",
+    "date": "2024",
+    "url": "https://x"
+   },
+   "output": {
+    "source_id": "probe",
+    "external_id": "a",
+    "title": "T",
+    "content": "C",
+    "abstract": null,
+    "publication_date": null,
+    "source_url": "https://x",
+    "document_type": null,
+    "language": "de",
+    "funding_period": null,
+    "fund": null,
+    "metadata": {}
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "normalize-['external_id', 'link', 'summary', 'title', 'type']",
+   "operation": "normalize_document",
+   "inputs": {
+    "external_id": "b",
+    "title": "T2",
+    "summary": "S",
+    "link": "https://y",
+    "type": "R"
+   },
+   "output": {
+    "source_id": "probe",
+    "external_id": "b",
+    "title": "T2",
+    "content": null,
+    "abstract": "S",
+    "publication_date": null,
+    "source_url": "https://y",
+    "document_type": "R",
+    "language": "de",
+    "funding_period": null,
+    "fund": null,
+    "metadata": {}
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "normalize-[]",
+   "operation": "normalize_document",
+   "inputs": {},
+   "output": {
+    "source_id": "probe",
+    "external_id": "",
+    "title": "",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "source_url": null,
+    "document_type": null,
+    "language": "de",
+    "funding_period": null,
+    "fund": null,
+    "metadata": {}
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "hash-C-A-T",
+   "operation": "content_hash",
+   "inputs": {
+    "content": "C",
+    "abstract": "A",
+    "title": "T"
+   },
+   "output": "6b23c0d5f35d1b11f9b683f0b0a617355deb11277d91ae091d399c655b87940d",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "hash-None-A-T",
+   "operation": "content_hash",
+   "inputs": {
+    "content": null,
+    "abstract": "A",
+    "title": "T"
+   },
+   "output": "559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "hash-None-None-T",
+   "operation": "content_hash",
+   "inputs": {
+    "content": null,
+    "abstract": null,
+    "title": "T"
+   },
+   "output": "e632b7095b0bf32c260fa4c539e9fd7b852d0de454e9be26f24d0d6f91d069d3",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "hash---T",
+   "operation": "content_hash",
+   "inputs": {
+    "content": "",
+    "abstract": "",
+    "title": "T"
+   },
+   "output": "e632b7095b0bf32c260fa4c539e9fd7b852d0de454e9be26f24d0d6f91d069d3",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "hash-None-None-",
+   "operation": "content_hash",
+   "inputs": {
+    "content": null,
+    "abstract": null,
+    "title": ""
+   },
+   "output": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-full",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270001",
+    "titel": "Synthetische Drucksache 1 zur EFRE-Förderung",
+    "dokumentnummer": "20/1001",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {
+     "pdf_url": "https://example.invalid/btd/20/1.pdf"
+    },
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270001",
+    "title": "Synthetische Drucksache 1 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1001",
+    "pdf_url": "https://example.invalid/btd/20/1.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1001",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 1 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-no-fundstelle",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270002",
+    "titel": "Synthetische Drucksache 2 zur EFRE-Förderung",
+    "dokumentnummer": "20/1002",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": null,
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270002",
+    "title": "Synthetische Drucksache 2 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1002",
+    "pdf_url": "https://dserver.bundestag.de/btd/20/010/2001002.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1002",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 2 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-fundstelle-string",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270003",
+    "titel": "Synthetische Drucksache 3 zur EFRE-Förderung",
+    "dokumentnummer": "20/1003",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": "kaputt",
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270003",
+    "title": "Synthetische Drucksache 3 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1003",
+    "pdf_url": "https://dserver.bundestag.de/btd/20/010/2001003.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1003",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 3 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-constructed-pdf",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270004",
+    "titel": "Synthetische Drucksache 4 zur EFRE-Förderung",
+    "dokumentnummer": "20/1004",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {},
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270004",
+    "title": "Synthetische Drucksache 4 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1004",
+    "pdf_url": "https://dserver.bundestag.de/btd/20/010/2001004.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1004",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 4 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-old-period",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270005",
+    "titel": "Synthetische Drucksache 5 zur EFRE-Förderung",
+    "dokumentnummer": "20/1005",
+    "wahlperiode": 20,
+    "datum": "2019-01-01",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {},
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270005",
+    "title": "Synthetische Drucksache 5 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1005",
+    "pdf_url": "https://dserver.bundestag.de/btd/20/010/2001005.pdf",
+    "funding_period": "2014-2020",
+    "fund": "EFRE",
+    "published_date": "2019-01-01",
+    "metadata": {
+     "drucksache_nummer": "20/1005",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 5 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-esf-title",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270006",
+    "titel": "ESF+ und Sozialfonds",
+    "dokumentnummer": "20/1006",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {
+     "pdf_url": "https://example.invalid/btd/20/6.pdf"
+    },
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270006",
+    "title": "ESF+ und Sozialfonds",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1006",
+    "pdf_url": "https://example.invalid/btd/20/6.pdf",
+    "funding_period": "2021-2027",
+    "fund": "ESF+",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1006",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "ESF+ und Sozialfonds"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-interreg-title",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270007",
+    "titel": "Interreg-Programme",
+    "dokumentnummer": "20/1007",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {
+     "pdf_url": "https://example.invalid/btd/20/7.pdf"
+    },
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270007",
+    "title": "Interreg-Programme",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1007",
+    "pdf_url": "https://example.invalid/btd/20/7.pdf",
+    "funding_period": "2021-2027",
+    "fund": "Interreg",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1007",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Interreg-Programme"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-no-number",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270008",
+    "titel": "Synthetische Drucksache 8 zur EFRE-Förderung",
+    "dokumentnummer": "",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {},
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270008",
+    "title": "Synthetische Drucksache 8 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/270008",
+    "pdf_url": null,
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 8 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-legacy-number-key",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270009",
+    "titel": "Synthetische Drucksache 9 zur EFRE-Förderung",
+    "dokumentnummer": null,
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {},
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": "",
+    "drucksacheNummer": "19/77"
+   },
+   "output": {
+    "id": "dip_270009",
+    "title": "Synthetische Drucksache 9 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/270009",
+    "pdf_url": null,
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": null,
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 9 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-bad-number",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270010",
+    "titel": "Synthetische Drucksache 10 zur EFRE-Förderung",
+    "dokumentnummer": "ohne-schraegstrich",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {},
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270010",
+    "title": "Synthetische Drucksache 10 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/ohne-schraegstrich",
+    "pdf_url": null,
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "ohne-schraegstrich",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 10 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-bad-date",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270011",
+    "titel": "Synthetische Drucksache 11 zur EFRE-Förderung",
+    "dokumentnummer": "20/1011",
+    "wahlperiode": 20,
+    "datum": "unbekannt",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {
+     "pdf_url": "https://example.invalid/btd/20/11.pdf"
+    },
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": ""
+   },
+   "output": {
+    "id": "dip_270011",
+    "title": "Synthetische Drucksache 11 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1011",
+    "pdf_url": "https://example.invalid/btd/20/11.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "unbekannt",
+    "metadata": {
+     "drucksache_nummer": "20/1011",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Synthetische Drucksache 11 zur EFRE-Förderung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-abstract",
+   "operation": "dip_normalize",
+   "inputs": {
+    "id": "270012",
+    "titel": "Synthetische Drucksache 12 zur EFRE-Förderung",
+    "dokumentnummer": "20/1012",
+    "wahlperiode": 20,
+    "datum": "2024-03-15",
+    "drucksachetyp": "Kleine Anfrage",
+    "fundstelle": {
+     "pdf_url": "https://example.invalid/btd/20/12.pdf"
+    },
+    "urheber": [
+     {
+      "titel": "Fraktion X"
+     }
+    ],
+    "autoren_anzeige": [],
+    "vorgangsbezug": [],
+    "abstract": "Kurzfassung"
+   },
+   "output": {
+    "id": "dip_270012",
+    "title": "Synthetische Drucksache 12 zur EFRE-Förderung",
+    "document_type": "Kleine Anfrage",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1012",
+    "pdf_url": "https://example.invalid/btd/20/12.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15",
+    "metadata": {
+     "drucksache_nummer": "20/1012",
+     "wahlperiode": 20,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren": [],
+     "vorgangsbezug": [],
+     "abstract": "Kurzfassung"
+    },
+    "content": "Kurzfassung"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-normalize-empty",
+   "operation": "dip_normalize",
+   "inputs": {},
+   "output": {
+    "id": "dip_",
+    "title": "Ohne Titel",
+    "document_type": "Drucksache",
+    "source": "dip_bundestag",
+    "source_url": "https://dip.bundestag.de/",
+    "pdf_url": null,
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "",
+    "metadata": {
+     "drucksache_nummer": "",
+     "wahlperiode": "",
+     "urheber": [],
+     "autoren": "",
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "content": "Ohne Titel"
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-harvest-limit-200",
+   "operation": "dip_harvest",
+   "inputs": {
+    "limit": 200
+   },
+   "output": {
+    "result": {
+     "source_id": "dip_bundestag",
+     "method_used": {
+      "$enum": "REST_API"
+     },
+     "documents": [
+      {
+       "id": "dip_270001",
+       "title": "Synthetische Drucksache 1 zur EFRE-Förderung",
+       "document_type": "Kleine Anfrage",
+       "source": "dip_bundestag",
+       "source_url": "https://dip.bundestag.de/drucksache/20/1001",
+       "pdf_url": "https://example.invalid/btd/20/1.pdf",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "2024-03-15",
+       "metadata": {
+        "drucksache_nummer": "20/1001",
+        "wahlperiode": 20,
+        "urheber": [
+         {
+          "titel": "Fraktion X"
+         }
+        ],
+        "autoren": [],
+        "vorgangsbezug": [],
+        "abstract": ""
+       },
+       "content": "Synthetische Drucksache 1 zur EFRE-Förderung"
+      },
+      {
+       "id": "dip_270002",
+       "title": "Synthetische Drucksache 2 zur EFRE-Förderung",
+       "document_type": "Kleine Anfrage",
+       "source": "dip_bundestag",
+       "source_url": "https://dip.bundestag.de/drucksache/20/1002",
+       "pdf_url": "https://example.invalid/btd/20/2.pdf",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "2024-03-15",
+       "metadata": {
+        "drucksache_nummer": "20/1002",
+        "wahlperiode": 20,
+        "urheber": [
+         {
+          "titel": "Fraktion X"
+         }
+        ],
+        "autoren": [],
+        "vorgangsbezug": [],
+        "abstract": ""
+       },
+       "content": "Synthetische Drucksache 2 zur EFRE-Förderung"
+      },
+      {
+       "id": "dip_270003",
+       "title": "Synthetische Drucksache 3 zur EFRE-Förderung",
+       "document_type": "Kleine Anfrage",
+       "source": "dip_bundestag",
+       "source_url": "https://dip.bundestag.de/drucksache/20/1003",
+       "pdf_url": "https://example.invalid/btd/20/3.pdf",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "2024-03-15",
+       "metadata": {
+        "drucksache_nummer": "20/1003",
+        "wahlperiode": 20,
+        "urheber": [
+         {
+          "titel": "Fraktion X"
+         }
+        ],
+        "autoren": [],
+        "vorgangsbezug": [],
+        "abstract": ""
+       },
+       "content": "Synthetische Drucksache 3 zur EFRE-Förderung"
+      }
+     ],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T18:55:18.310032"
+     }
+    },
+    "calls": [
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EFRE"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "ESF"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "ESF+"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Strukturfonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Kohäsionspolitik"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EU-Förderung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Regionalförderung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Europäischer Fonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Strukturfondsförderung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EU-Mittel"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Fördermittel"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Vergaberecht"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Beihilferecht"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Finanzkontrolle"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Kohäsionsfonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Europäischer Sozialfonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Interreg"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "REACT-EU"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "JTF"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Just Transition"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Aufbaufonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EU-Haushalt"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Mehrjähriger Finanzrahmen"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "MFR"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Dachverordnung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "1060/2021"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "1058/2021"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     }
+    ]
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-harvest-limit-2",
+   "operation": "dip_harvest",
+   "inputs": {
+    "limit": 2
+   },
+   "output": {
+    "result": {
+     "source_id": "dip_bundestag",
+     "method_used": {
+      "$enum": "REST_API"
+     },
+     "documents": [
+      {
+       "id": "dip_270001",
+       "title": "Synthetische Drucksache 1 zur EFRE-Förderung",
+       "document_type": "Kleine Anfrage",
+       "source": "dip_bundestag",
+       "source_url": "https://dip.bundestag.de/drucksache/20/1001",
+       "pdf_url": "https://example.invalid/btd/20/1.pdf",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "2024-03-15",
+       "metadata": {
+        "drucksache_nummer": "20/1001",
+        "wahlperiode": 20,
+        "urheber": [
+         {
+          "titel": "Fraktion X"
+         }
+        ],
+        "autoren": [],
+        "vorgangsbezug": [],
+        "abstract": ""
+       },
+       "content": "Synthetische Drucksache 1 zur EFRE-Förderung"
+      },
+      {
+       "id": "dip_270002",
+       "title": "Synthetische Drucksache 2 zur EFRE-Förderung",
+       "document_type": "Kleine Anfrage",
+       "source": "dip_bundestag",
+       "source_url": "https://dip.bundestag.de/drucksache/20/1002",
+       "pdf_url": "https://example.invalid/btd/20/2.pdf",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "2024-03-15",
+       "metadata": {
+        "drucksache_nummer": "20/1002",
+        "wahlperiode": 20,
+        "urheber": [
+         {
+          "titel": "Fraktion X"
+         }
+        ],
+        "autoren": [],
+        "vorgangsbezug": [],
+        "abstract": ""
+       },
+       "content": "Synthetische Drucksache 2 zur EFRE-Förderung"
+      }
+     ],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T18:55:18.310966"
+     }
+    },
+    "calls": [
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EFRE"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "ESF"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "ESF+"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Strukturfonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Kohäsionspolitik"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EU-Förderung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Regionalförderung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Europäischer Fonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Strukturfondsförderung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EU-Mittel"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Fördermittel"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Vergaberecht"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Beihilferecht"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Finanzkontrolle"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Kohäsionsfonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Europäischer Sozialfonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Interreg"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "REACT-EU"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "JTF"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Just Transition"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Aufbaufonds"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "EU-Haushalt"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Mehrjähriger Finanzrahmen"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "MFR"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "Dachverordnung"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "1060/2021"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     },
+     {
+      "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+      "params": {
+       "apikey": "TEST-KEY",
+       "format": "json",
+       "num": 30,
+       "f.titel": "1058/2021"
+      },
+      "headers": null,
+      "client": {
+       "timeout": 30.0,
+       "headers": null
+      }
+     }
+    ]
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-harvest-all-failing",
+   "operation": "dip_harvest",
+   "inputs": {
+    "limit": 200
+   },
+   "output": {
+    "result": {
+     "source_id": "dip_bundestag",
+     "method_used": {
+      "$enum": "REST_API"
+     },
+     "documents": [],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T18:55:18.311498"
+     }
+    },
+    "calls": 27
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-get-vorgang",
+   "operation": "dip_misc",
+   "inputs": {},
+   "output": null,
+   "exception": {
+    "type": "AttributeError",
+    "message": "'DIPHarvester' object has no attribute 'headers'"
+   }
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-test-connection",
+   "operation": "dip_misc",
+   "inputs": {},
+   "output": false,
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "dip-default-key-present",
+   "operation": "dip_misc",
+   "inputs": {},
+   "output": {
+    "has_default_key": true,
+    "key_in_query": true
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": ""
+   },
+   "output": "Unbekannt",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-32021R1060",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "32021R1060"
+   },
+   "output": "Verordnung",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-32019L0001",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "32019L0001"
+   },
+   "output": "Richtlinie",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-32020D0002",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "32020D0002"
+   },
+   "output": "Beschluss",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-32021X0001",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "32021X0001"
+   },
+   "output": "Sonstiges",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-52022DC0001",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "52022DC0001"
+   },
+   "output": "Guidance",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-62019CJ0001",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "62019CJ0001"
+   },
+   "output": "Rechtsprechung",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-12012E",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "12012E"
+   },
+   "output": "Sonstiges",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "celex-type-R",
+   "operation": "celex_type",
+   "inputs": {
+    "celex": "R"
+   },
+   "output": "Sonstiges",
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-normalize-core",
+   "operation": "eurlex_normalize",
+   "inputs": {
+    "celex": "32021R1060",
+    "title": "Dachverordnung 2021-2027",
+    "funding_period": "2021-2027",
+    "source": "core_documents"
+   },
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "32021R1060",
+    "title": "Dachverordnung 2021-2027",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021R1060",
+    "document_type": "Verordnung",
+    "language": "de",
+    "funding_period": "2021-2027",
+    "fund": null,
+    "metadata": {
+     "celex": "32021R1060",
+     "query_source": "core_documents",
+     "raw_type": null
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-normalize-query",
+   "operation": "eurlex_normalize",
+   "inputs": {
+    "celex": "32022R0001",
+    "title": "Delegierte Verordnung zu 2021/1060 EFRE",
+    "date": "2022-05-04",
+    "type": "REG_DEL",
+    "source": "delegated_regulations"
+   },
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "32022R0001",
+    "title": "Delegierte Verordnung zu 2021/1060 EFRE",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32022R0001",
+    "document_type": "Verordnung",
+    "language": "de",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "metadata": {
+     "celex": "32022R0001",
+     "query_source": "delegated_regulations",
+     "raw_type": "REG_DEL"
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-normalize-no-date",
+   "operation": "eurlex_normalize",
+   "inputs": {
+    "celex": "52023DC0010",
+    "title": "Mitteilung Kohäsion",
+    "source": "x"
+   },
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "52023DC0010",
+    "title": "Mitteilung Kohäsion",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:52023DC0010",
+    "document_type": "Guidance",
+    "language": "de",
+    "funding_period": null,
+    "fund": "KF",
+    "metadata": {
+     "celex": "52023DC0010",
+     "query_source": "x",
+     "raw_type": null
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-normalize-empty",
+   "operation": "eurlex_normalize",
+   "inputs": {},
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "",
+    "title": "",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:",
+    "document_type": "Unbekannt",
+    "language": "de",
+    "funding_period": null,
+    "fund": null,
+    "metadata": {
+     "celex": "",
+     "query_source": null,
+     "raw_type": null
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-execute-sparql",
+   "operation": "eurlex_sparql_parse",
+   "inputs": {
+    "bindings": [
+     {
+      "celex": {
+       "type": "literal",
+       "value": "32022R0001"
+      },
+      "title": {
+       "type": "literal",
+       "xml:lang": "de",
+       "value": "Delegierte VO EFRE"
+      },
+      "date": {
+       "type": "typed-literal",
+       "value": "2022-05-04"
+      }
+     },
+     {
+      "celex": {
+       "type": "literal",
+       "value": "32021R1060"
+      },
+      "title": {
+       "type": "literal",
+       "value": "Doppelt"
+      }
+     },
+     {
+      "title": {
+       "type": "literal",
+       "value": "Ohne CELEX"
+      }
+     }
+    ]
+   },
+   "output": [
+    {
+     "celex": "32022R0001",
+     "title": "Delegierte VO EFRE",
+     "date": "2022-05-04"
+    },
+    {
+     "celex": "32021R1060",
+     "title": "Doppelt"
+    },
+    {
+     "title": "Ohne CELEX"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-harvest",
+   "operation": "eurlex_harvest",
+   "inputs": {},
+   "output": {
+    "source_id": "eurlex",
+    "method_used": {
+     "$enum": "SPARQL"
+    },
+    "documents": [
+     {
+      "source_id": "eurlex",
+      "external_id": "32021R1060",
+      "title": "Dachverordnung 2021-2027",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021R1060",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2021-2027",
+      "fund": null,
+      "metadata": {
+       "celex": "32021R1060",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32021R1058",
+      "title": "EFRE/KF-Verordnung 2021-2027",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021R1058",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2021-2027",
+      "fund": "EFRE",
+      "metadata": {
+       "celex": "32021R1058",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32021R1057",
+      "title": "ESF+-Verordnung 2021-2027",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021R1057",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2021-2027",
+      "fund": "ESF+",
+      "metadata": {
+       "celex": "32021R1057",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32021R1059",
+      "title": "Interreg-Verordnung 2021-2027",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021R1059",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2021-2027",
+      "fund": null,
+      "metadata": {
+       "celex": "32021R1059",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32013R1303",
+      "title": "Dachverordnung 2014-2020",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32013R1303",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2014-2020",
+      "fund": null,
+      "metadata": {
+       "celex": "32013R1303",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32013R1301",
+      "title": "EFRE-Verordnung 2014-2020",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32013R1301",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2014-2020",
+      "fund": "EFRE",
+      "metadata": {
+       "celex": "32013R1301",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32013R1304",
+      "title": "ESF-Verordnung 2014-2020",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32013R1304",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2014-2020",
+      "fund": "ESF",
+      "metadata": {
+       "celex": "32013R1304",
+       "query_source": "core_documents",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32022R0001",
+      "title": "Kohäsion 2021/1060",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32022R0001",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": "2021-2027",
+      "fund": "KF",
+      "metadata": {
+       "celex": "32022R0001",
+       "query_source": "cohesion_regulations",
+       "raw_type": null
+      }
+     },
+     {
+      "source_id": "eurlex",
+      "external_id": "32023R0002",
+      "title": "Durchführungs-VO ESF",
+      "content": null,
+      "abstract": null,
+      "publication_date": null,
+      "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32023R0002",
+      "document_type": "Verordnung",
+      "language": "de",
+      "funding_period": null,
+      "fund": "ESF",
+      "metadata": {
+       "celex": "32023R0002",
+       "query_source": "implementing_regulations",
+       "raw_type": null
+      }
+     }
+    ],
+    "success": true,
+    "error": null,
+    "fallback_used": false,
+    "harvested_at": {
+     "$datetime": "2026-09-22T18:55:18.315212"
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "auditdatabase",
+   "name": "eurlex-update-query",
+   "operation": "eurlex_update_query",
+   "inputs": {
+    "since": "2024-01-31"
+   },
+   "output": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(?date >= \"2024-01-31\"^^xsd:date)\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"1303/2013\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        ",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-None",
+   "operation": "parse_date",
+   "inputs": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'2024-03-15'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024-03-15"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'2024-03-15T10:20:30'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024-03-15T10:20:30"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'15.03.2024'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "15.03.2024"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'2024'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'1999'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'9'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "9"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-''",
+   "operation": "parse_date",
+   "inputs": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'kein Datum'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "kein Datum"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'2024-13-45'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "2024-13-45"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-'20240315'",
+   "operation": "parse_date",
+   "inputs": {
+    "value": "20240315"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-20240315",
+   "operation": "parse_date",
+   "inputs": {
+    "value": 20240315
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "parse-date-datetime.datetime(2024, 3, 15, 8, 0)",
+   "operation": "parse_date",
+   "inputs": {
+    "value": {
+     "$datetime": "2024-03-15T08:00:00"
+    }
+   },
+   "output": {
+    "$datetime": "2024-03-15T08:00:00"
+   },
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-''",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-''",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-None",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-None",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'VO (EU) 2021/1060'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO (EU) 2021/1060"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'VO (EU) 2021/1060'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO (EU) 2021/1060"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'Förderperiode 2021-2027'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Förderperiode 2021-2027"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'Förderperiode 2021-2027'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Förderperiode 2021-2027"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'Dachverordnung'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Dachverordnung"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'Dachverordnung'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Dachverordnung"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'VO 1303/2013'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO 1303/2013"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'VO 1303/2013'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO 1303/2013"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'2014-2020'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "2014-2020"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'2014-2020'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "2014-2020"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'EFRE und ESF'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "EFRE und ESF"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'EFRE und ESF'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "EFRE und ESF"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'ERDF'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ERDF"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'ERDF'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ERDF"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'ESF+ Programm'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ESF+ Programm"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'ESF+ Programm'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ESF+ Programm"
+   },
+   "output": "ESF+",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'ESF plus'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ESF plus"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'ESF plus'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ESF plus"
+   },
+   "output": "ESF+",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'ESF'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ESF"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'ESF'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ESF"
+   },
+   "output": "ESF",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'Kohäsionsfonds'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Kohäsionsfonds"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'Kohäsionsfonds'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Kohäsionsfonds"
+   },
+   "output": "KF",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'cohesion'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "cohesion"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'cohesion'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "cohesion"
+   },
+   "output": "KF",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'Sonstiges'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "Sonstiges"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'Sonstiges'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "Sonstiges"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'efre klein'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "efre klein"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'efre klein'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "efre klein"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'VO 1083/2006'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO 1083/2006"
+   },
+   "output": "2007-2013",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'VO 1083/2006'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO 1083/2006"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'2007-2013'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "2007-2013"
+   },
+   "output": "2007-2013",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'2007-2013'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "2007-2013"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'1994-1999'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "1994-1999"
+   },
+   "output": "1994-1999",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'1994-1999'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "1994-1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'VO 2021/1058'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "VO 2021/1058"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'VO 2021/1058'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "VO 2021/1058"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'1260/1999'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "1260/1999"
+   },
+   "output": "2000-2006",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'1260/1999'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "1260/1999"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-'ERDF Programm 2014-2020'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "ERDF Programm 2014-2020"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "fund-'ERDF Programm 2014-2020'",
+   "operation": "detect_fund",
+   "inputs": {
+    "text": "ERDF Programm 2014-2020"
+   },
+   "output": "EFRE",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-date-''-'2019-01-01'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "",
+    "publication_date": "2019-01-01"
+   },
+   "output": "2014-2020",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-date-None-'2024'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": null,
+    "publication_date": "2024"
+   },
+   "output": "2021-2027",
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-date-'x'-'abc'",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "x",
+    "publication_date": "abc"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "funding-period-date-''-None",
+   "operation": "detect_funding_period",
+   "inputs": {
+    "text": "",
+    "publication_date": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "dip-parse-drucksache-full",
+   "operation": "designer_dip_drucksache",
+   "inputs": {
+    "item": {
+     "id": "270001",
+     "titel": "Synthetische Drucksache 1 zur EFRE-Förderung",
+     "dokumentnummer": "20/1001",
+     "wahlperiode": 20,
+     "datum": "2024-03-15",
+     "drucksachetyp": "Kleine Anfrage",
+     "fundstelle": {
+      "pdf_url": "https://example.invalid/btd/20/1.pdf"
+     },
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren_anzeige": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "query": "EFRE"
+   },
+   "output": {
+    "external_id": "dip_ds_20/1001",
+    "title": "Synthetische Drucksache 1 zur EFRE-Förderung",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1001",
+    "publication_date": "2024-03-15",
+    "document_type": "Kleine Anfrage",
+    "language": "de",
+    "metadata": {
+     "dokumentnummer": "20/1001",
+     "wahlperiode": 20,
+     "drucksachetyp": "Kleine Anfrage",
+     "herausgeber": null,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "query": "EFRE",
+     "api_id": "270001"
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "dip-parse-drucksache-no-title",
+   "operation": "designer_dip_drucksache",
+   "inputs": {
+    "item": {
+     "id": "270002",
+     "titel": "",
+     "dokumentnummer": "20/1002",
+     "wahlperiode": 20,
+     "datum": "2024-03-15",
+     "drucksachetyp": "Kleine Anfrage",
+     "fundstelle": {
+      "pdf_url": "https://example.invalid/btd/20/2.pdf"
+     },
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren_anzeige": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "query": "EFRE"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "dip-parse-drucksache-long-date",
+   "operation": "designer_dip_drucksache",
+   "inputs": {
+    "item": {
+     "id": "270003",
+     "titel": "Synthetische Drucksache 3 zur EFRE-Förderung",
+     "dokumentnummer": "20/1003",
+     "wahlperiode": 20,
+     "datum": "2024-03-15T00:00:00+01:00",
+     "drucksachetyp": "Kleine Anfrage",
+     "fundstelle": {
+      "pdf_url": "https://example.invalid/btd/20/3.pdf"
+     },
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "autoren_anzeige": [],
+     "vorgangsbezug": [],
+     "abstract": ""
+    },
+    "query": "EFRE"
+   },
+   "output": {
+    "external_id": "dip_ds_20/1003",
+    "title": "Synthetische Drucksache 3 zur EFRE-Förderung",
+    "source_url": "https://dip.bundestag.de/drucksache/20/1003",
+    "publication_date": "2024-03-15",
+    "document_type": "Kleine Anfrage",
+    "language": "de",
+    "metadata": {
+     "dokumentnummer": "20/1003",
+     "wahlperiode": 20,
+     "drucksachetyp": "Kleine Anfrage",
+     "herausgeber": null,
+     "urheber": [
+      {
+       "titel": "Fraktion X"
+      }
+     ],
+     "query": "EFRE",
+     "api_id": "270003"
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "dip-parse-drucksache-empty",
+   "operation": "designer_dip_drucksache",
+   "inputs": {
+    "item": {},
+    "query": "EFRE"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "dip-parse-vorgang-full",
+   "operation": "designer_dip_vorgang",
+   "inputs": {
+    "item": {
+     "id": "9",
+     "titel": "Vorgang EFRE",
+     "aktualisiert": "2024-02-01T10:00:00",
+     "vorgangstyp": "Gesetzgebung",
+     "wahlperiode": 20
+    },
+    "query": "EFRE"
+   },
+   "output": {
+    "external_id": "dip_vg_9",
+    "title": "Vorgang EFRE",
+    "source_url": "https://dip.bundestag.de/vorgang/9",
+    "publication_date": "2024-02-01",
+    "document_type": "Gesetzgebung",
+    "language": "de",
+    "metadata": {
+     "vorgang_id": "9",
+     "wahlperiode": 20,
+     "vorgangstyp": "Gesetzgebung",
+     "initiative": null,
+     "beratungsstand": null,
+     "query": "EFRE"
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "dip-parse-vorgang-no-title",
+   "operation": "designer_dip_vorgang",
+   "inputs": {
+    "item": {
+     "id": "9",
+     "titel": "",
+     "aktualisiert": "2024-02-01T10:00:00",
+     "vorgangstyp": "Gesetzgebung",
+     "wahlperiode": 20
+    },
+    "query": "EFRE"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "eurlex-normalize-core",
+   "operation": "eurlex_normalize",
+   "inputs": {
+    "celex": "32021R1060",
+    "title": "Dachverordnung 2021-2027 (VO 2021/1060)",
+    "funding_period": "2021-2027",
+    "source": "core_documents"
+   },
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "32021R1060",
+    "title": "Dachverordnung 2021-2027 (VO 2021/1060)",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "date_precision": "day",
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32021R1060",
+    "document_type": "Verordnung",
+    "language": "de",
+    "funding_period": "2021-2027",
+    "fund": null,
+    "kategorie": null,
+    "metadata": {
+     "celex": "32021R1060",
+     "query_source": "core_documents",
+     "raw_type": null
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "eurlex-normalize-query",
+   "operation": "eurlex_normalize",
+   "inputs": {
+    "celex": "32022R0001",
+    "title": "Delegierte Verordnung zu 2021/1060 EFRE",
+    "date": "2022-05-04",
+    "type": "REG_DEL",
+    "source": "delegated_regulations"
+   },
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "32022R0001",
+    "title": "Delegierte Verordnung zu 2021/1060 EFRE",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "date_precision": "day",
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32022R0001",
+    "document_type": "Verordnung",
+    "language": "de",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "kategorie": null,
+    "metadata": {
+     "celex": "32022R0001",
+     "query_source": "delegated_regulations",
+     "raw_type": "REG_DEL"
+    }
+   },
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "name": "eurlex-normalize-empty",
+   "operation": "eurlex_normalize",
+   "inputs": {},
+   "output": {
+    "source_id": "eurlex",
+    "external_id": "",
+    "title": "",
+    "content": null,
+    "abstract": null,
+    "publication_date": null,
+    "date_precision": "day",
+    "source_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:",
+    "document_type": "Unbekannt",
+    "language": "de",
+    "funding_period": null,
+    "fund": null,
+    "kategorie": null,
+    "metadata": {
+     "celex": "",
+     "query_source": null,
+     "raw_type": null
+    }
+   },
+   "exception": null
+  }
+ ]
+}
