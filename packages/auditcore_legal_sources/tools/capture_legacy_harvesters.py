@@ -59,6 +59,11 @@ SOURCES = {
 }
 
 
+#: Set by ``--migrated``: a consumer after migration is loaded without the
+#: pinned-blob/commit check; the actual blobs and the library origin are recorded.
+MIGRATED = False
+
+
 def git_blob(path: Path) -> str:
     raw = path.read_bytes()
     return hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
@@ -88,12 +93,12 @@ def load(variant: str, backend: Path) -> dict[str, types.ModuleType]:
     spec = SOURCES[variant]
     directory = backend / str(spec["directory"])
     for name, blob in dict(spec["blobs"]).items():
-        if git_blob(directory / name) != blob:
+        if git_blob(directory / name) != blob and not MIGRATED:
             raise SystemExit(f"{variant}/{name} does not match the pinned GitHub blob")
     head = subprocess.run(
         ["git", "-C", str(backend), "rev-parse", "HEAD"], capture_output=True, text=True, check=True
     ).stdout.strip()
-    if head != spec["commit"]:
+    if head != spec["commit"] and not MIGRATED:
         raise SystemExit(f"{variant} checkout is not at the pinned commit")
     package = str(spec["package"])
     parts = package.split(".")
@@ -187,7 +192,10 @@ def main() -> None:
     parser.add_argument("--auditdatabase", type=Path, required=True)
     parser.add_argument("--designer", type=Path, required=True)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--migrated", action="store_true")
     args = parser.parse_args()
+    global MIGRATED
+    MIGRATED = args.migrated
     cases: list[dict[str, Any]] = []
 
     def observe(variant: str, name: str, operation: str, inputs: Any, call: Any) -> None:

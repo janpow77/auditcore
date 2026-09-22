@@ -40,3 +40,7 @@ strict = true
 [tool.auditcore-bibquality]
 strict = true
 regression-command = ["python", "-m", "pytest", "tests", "-q"]
+
+[[tool.mypy.overrides]]
+module = ["feedparser", "feedparser.*"]
+ignore_missing_imports = true

@@ -86,7 +86,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("backend", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--migrated", action="store_true")
     args = parser.parse_args()
+    import capture_legacy_harvesters
+
+    capture_legacy_harvesters.MIGRATED = args.migrated
     SOURCES["auditdatabase"]["blobs"]["rss.py"] = RSS_BLOB  # type: ignore[index]
     modules = load("auditdatabase", args.backend.resolve())
     rss = modules["rss"]

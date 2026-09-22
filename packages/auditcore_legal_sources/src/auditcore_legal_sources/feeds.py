@@ -39,7 +39,7 @@ def feed_source(profile: SourceProfile, key: str) -> FeedSource:
 def parse_feed(text: str) -> list[Mapping[str, Any]]:
     """Parse RSS/Atom with feedparser (extra ``feeds``); malformed feeds raise ``ParseError``."""
     try:
-        import feedparser  # type: ignore[import-not-found,unused-ignore]
+        import feedparser
     except ImportError as exc:  # pragma: no cover - depends on the installed extra
         raise ConfigurationError("Feed-Parsing benötigt auditcore_legal_sources[feeds].") from exc
     parsed = feedparser.parse(text)
@@ -151,16 +151,19 @@ class _Links(HTMLParser):
         self._text: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        """Start collecting the text of an anchor with ``href``."""
         if tag == "a":
             href = dict(attrs).get("href")
             if href:
                 self._href, self._text = href, []
 
     def handle_data(self, data: str) -> None:
+        """Collect anchor text."""
         if self._href is not None:
             self._text.append(data)
 
     def handle_endtag(self, tag: str) -> None:
+        """Finish the current anchor."""
         if tag == "a" and self._href is not None:
             self.links.append((self._href, " ".join("".join(self._text).split())))
             self._href = None
