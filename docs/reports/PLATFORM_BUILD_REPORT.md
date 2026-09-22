@@ -5,9 +5,44 @@ Stand: 22. September 2026. Version: 0.1.0.
 Repository: `janpow77/auditcore`.
 Commit des geprüften Implementierungsstands: `c44f0c4`.
 Ausgangscommit: `b2f898cc0777a5d81833c8f549f61c7ab64a443e`.
-Die danach ergänzten Berichtsdateien stehen in einem separaten
-Dokumentationscommit. Die Änderungen sind lokal committet;
-ein Push oder eine Veröffentlichung wurde nicht durchgeführt.
+Die ursprünglichen Prüfnachweise unten beziehen sich auf diesen Implementierungsstand.
+Der Stand einschließlich Berichtscommit `e4e09f1` wurde inzwischen auf `origin/main`
+gepusht. Die anschließend geprüfte CI-Korrektur ist Commit `26989a2`.
+Ein Produktivpaket oder Release wurde weiterhin nicht veröffentlicht.
+
+## Nachtrag: CI-Fehler und Korrektur
+
+Der [erste GitHub-Lauf](https://github.com/janpow77/auditcore/actions/runs/35748087573)
+bestand unter Python 3.12 und 3.13. Unter Python 3.11 scheiterte ausschließlich
+das Dependency-Gate; die damalige Ausgabe enthielt nur `pip-audit exit=1`.
+
+Die Ursache ließ sich in einem frischen Python-3.11.16-Container reproduzieren:
+Das vorinstallierte `setuptools 79.0.1` blieb beim bisherigen Upgrade von nur
+`pip` unverändert. `pip-audit` meldete dafür `PYSEC-2026-3447`
+([Advisory](https://github.com/advisories/GHSA-h35f-9h28-mq5c), behoben ab 83.0.0).
+Der Befund betrifft Dateiausschlüsse beim Bauen von Source-Distributionen unter
+bestimmten Unicode-/Dateisystembedingungen; er belegt keinen Angriff auf auditcore.
+Die exakte setuptools-Version des ursprünglichen GitHub-Runners wurde nicht
+protokolliert. Nach Aktualisierung auf 84.0.0 bestand derselbe Container-Audit.
+
+Die CI aktualisiert jetzt `pip`, `setuptools>=83` und `wheel`; auch isolierte
+Builds verlangen `setuptools>=83`. Das Dependency-Gate nennt Paket, Version,
+Befund-ID und korrigierte Version, ohne ungefilterte Tool-Ausgaben zu übernehmen.
+Ein separater JSON-Audit wird auch nach Fehlern ausgeführt und als CI-Artefakt
+gesichert. Keine Schwachstelle wurde ignoriert oder aus der Prüfung entfernt.
+
+Erneut lokal ausgeführt: Installation mit Dev-Extras, **125 Tests bestanden**,
+Ruff, Mypy (42 Quelldateien), alle CLI-Hilfen, Wheel-/sdist-Build und fünf
+Self-Checks. Alle Befehle hatten Exitcode 0; die Self-Checks behalten wegen
+offener Policy-Nachweise den Gesamtstatus **REVIEW_REQUIRED**. Die vier neuen
+Testfälle prüfen verwertbare Dependency-Diagnosen, Geheimnisredaktion und
+ungültige Tool-Antworten. Aktuelle lokale Nachweise: `.auditcore/verification/`.
+
+Der [CI-Wiederholungslauf für 26989a2](https://github.com/janpow77/auditcore/actions/runs/35749034526)
+prüft die Korrektur in allen drei Python-Versionen. Sein tatsächlicher Status
+ist direkt am verlinkten Lauf nachvollziehbar. Die früher exportierten
+JSON-Berichte bleiben historische Nachweise und wurden nicht nachträglich
+als aktuelle Ergebnisse ausgegeben.
 
 **Gesamtstatus: REVIEW_REQUIRED.** Die Plattform ist implementiert, installierbar
 und lokal technisch geprüft. Die vollständige fachliche End-to-End-Abnahme des
@@ -247,7 +282,7 @@ Deployment-Nachweise. Die CLI schreibt erst danach den Handoff.
 | Anwendungsmigration/Rollback/Policy-Grenzen | synthetische Integrationstests PASS |
 | Vollständige Regression/Integration einer real migrierten Fachanwendung | NOT_EXECUTED |
 | Vollständige anwendbare externe Framework-Prüffälle | siehe Anwendbarkeit; keine pauschale Freigabe |
-| GitHub Actions | konfiguriert für Python 3.11/3.12/3.13, remote NOT_EXECUTED |
+| GitHub Actions | inzwischen ausgeführt; Erstlauf Python 3.11 FAIL, 3.12/3.13 PASS; Korrektur und Wiederholung siehe Nachtrag oben |
 
 [Ausführungsnachweise und Output-Digests](verification.json).
 Reproduzierbarer lokaler Prüfeinstieg: `python scripts/verify_platform.py` in der
