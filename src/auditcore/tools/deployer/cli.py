@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import configparser
+import tarfile
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +13,8 @@ from auditcore.exceptions import MigrationBlocked
 from auditcore.tools.common import emit, read_json, serializable, write_json
 from auditcore.tools.deployer.apt import AptRepository
 from auditcore.tools.deployer.build import ApplicationInspection, DeploymentBuilder
+from auditcore.tools.deployer.library import build_library_deb
+from auditcore.tools.deployer.python_repository import build_pip_index, build_python_package
 from auditcore.tools.deployer.validation import DockerPackageTester
 
 
@@ -33,6 +38,22 @@ def main(argv: list[str] | None = None) -> int:
     apt.add_argument("directory", type=Path)
     apt.add_argument("--signing-key")
     apt.add_argument("--destination", type=Path)
+    library = sub.add_parser("build-library", help="Build a Debian library package from a wheel")
+    library.add_argument("wheel", type=Path)
+    library.add_argument("--output", type=Path, required=True)
+    library.add_argument("--maintainer", required=True)
+    library.add_argument("--source-date-epoch", type=int, required=True)
+    library.add_argument("--dependency-mapping", type=Path)
+    library.add_argument("--allow-unreviewed-license", action="store_true")
+    python_build = sub.add_parser("build-python", help="Build wheel and sdist with installed tools")
+    python_build.add_argument("source", type=Path)
+    python_build.add_argument("--output", type=Path, required=True)
+    python_build.add_argument("--source-date-epoch", type=int, required=True)
+    python_build.add_argument("--allow-unreviewed-license", action="store_true")
+    index = sub.add_parser("pip-index", help="Prepare a local Python Simple API index")
+    index.add_argument("wheels", type=Path, nargs="+")
+    index.add_argument("--output", type=Path, required=True)
+    index.add_argument("--allow-unreviewed-license", action="store_true")
     sub.add_parser("status")
     args = parser.parse_args(argv)
     result: Any
@@ -43,6 +64,28 @@ def main(argv: list[str] | None = None) -> int:
             result = DeploymentBuilder().plan(args.path)
         elif args.command == "build":
             result = DeploymentBuilder().build_application(args.path, args.output, args.dry_run)
+        elif args.command == "build-library":
+            result = build_library_deb(
+                args.wheel,
+                args.output,
+                source_date_epoch=args.source_date_epoch,
+                maintainer=args.maintainer,
+                dependency_mapping=read_json(args.dependency_mapping)
+                if args.dependency_mapping
+                else None,
+                allow_unreviewed_license=args.allow_unreviewed_license,
+            )
+        elif args.command == "build-python":
+            result = build_python_package(
+                args.source,
+                args.output,
+                source_date_epoch=args.source_date_epoch,
+                allow_unreviewed_license=args.allow_unreviewed_license,
+            )
+        elif args.command == "pip-index":
+            result = build_pip_index(
+                args.wheels, args.output, allow_unreviewed_license=args.allow_unreviewed_license
+            )
         elif args.command in {"test-package", "test-upgrade"}:
             tester = DockerPackageTester()
             tester.prepare()
@@ -68,6 +111,14 @@ def main(argv: list[str] | None = None) -> int:
             write_json(Path(".auditcore/deployer-status.json"), result)
         status = serializable(result).get("status", "UNKNOWN")
         return 1 if status in {"FAIL", "BLOCKED", "MIGRATION_BLOCKED"} else 0
-    except (MigrationBlocked, OSError, RuntimeError, ValueError) as exc:
+    except (
+        MigrationBlocked,
+        OSError,
+        RuntimeError,
+        ValueError,
+        zipfile.BadZipFile,
+        tarfile.TarError,
+        configparser.Error,
+    ) as exc:
         emit({"status": "BLOCKED", "reason": str(exc)})
         return 1
