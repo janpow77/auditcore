@@ -25,12 +25,13 @@ pip install 'auditcore_funding_sources[xlsx]==0.1.0'  # zusätzlich XLSX (openpy
 | `adapters` | `funding.de_minimis_eaid`, `funding.eu_beneficiaries` (flowworkshop), `funding.eu_beneficiaries.flowsearch` für `auditcore_harvest`. |
 
 ```python
-from auditcore_harvest import AdapterRegistry, HarvestEngine, HarvestRequest, UrllibTransport
+from auditcore_harvest import AdapterRegistry, HarvestEngine, HarvestRequest
 from auditcore_funding_sources import adapters
 
 registry = AdapterRegistry()
 adapters.register(registry)
-# engine = HarvestEngine(UrllibTransport(), credentials, state, clock, sleeper)
+# transport: vom Consumer injiziert (Vorlage in auditcore_harvest docs/examples/)
+# engine = HarvestEngine(transport, credentials, state, clock, sleeper)
 # engine.run(registry.create("funding.de_minimis_eaid"),
 #            HarvestRequest("funding.de_minimis_eaid", run_id="…"), sink, config={"country": "DE"})
 ```
