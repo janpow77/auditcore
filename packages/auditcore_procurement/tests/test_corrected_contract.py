@@ -240,3 +240,16 @@ def test_normalisation_does_not_mutate_input() -> None:
     ted.normalize_notice(notice)
     ted.inspect_notice(notice)
     assert json.dumps(notice, sort_keys=True) == before
+
+
+def test_profile_from_consumer_ruleset_equals_packaged_rules() -> None:
+    from conftest import LEGACY
+
+    rules = LEGACY["ruleset"]
+    built = prechecks.profile_from_ruleset(
+        rules, profile_id="app.rules", version="1", source={"repository": "x"}
+    )
+    assert built.tiers == PROFILE.tiers and built.required_documents == PROFILE.required_documents
+    assert built.status == "CONSUMER_RULESET"
+    with pytest.raises(prechecks.ProfileError):
+        prechecks.profile_from_ruleset({}, profile_id="a", version="1", source={})

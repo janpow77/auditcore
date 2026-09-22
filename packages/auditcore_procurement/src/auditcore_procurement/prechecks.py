@@ -119,6 +119,55 @@ def profile_from_dict(data: Mapping[str, Any]) -> PrecheckProfile:
         raise ProfileError(f"Profil ist unvollständig oder fehlerhaft: {exc!r}") from exc
 
 
+def profile_from_ruleset(
+    ruleset: Mapping[str, Any],
+    *,
+    profile_id: str,
+    version: str,
+    source: Mapping[str, Any],
+) -> PrecheckProfile:
+    """Profile from an application ruleset with ``threshold_rules`` and
+    ``required_documents_by_procedure`` (source format), so a consumer keeps its
+    own rule authority. Tier order and values are taken over unchanged."""
+    try:
+        tiers = {
+            category: [
+                {
+                    "tier": name,
+                    "max": rule.get("max"),
+                    "procedure": rule.get("procedure", ""),
+                    "min_bids": rule.get("min_bids", 1),
+                }
+                for name, rule in rules.items()
+            ]
+            for category, rules in ruleset["threshold_rules"].items()
+        }
+        required = ruleset["required_documents_by_procedure"]
+    except (KeyError, AttributeError, TypeError) as exc:
+        raise ProfileError(f"Regelwerk ohne threshold_rules/required_documents: {exc!r}") from exc
+    return profile_from_dict(
+        {
+            "schema": "auditcore_procurement.precheck-profile/1",
+            "id": profile_id,
+            "version": version,
+            "status": "CONSUMER_RULESET",
+            "legal_status": "Regelwerk der Anwendung; nicht durch diese Bibliothek geprüft.",
+            "source": dict(source),
+            "construction_marker": "Bau",
+            "tiers": tiers,
+            "fallback_tier": "ABOVE_EU",
+            "required_documents": {k: list(v) for k, v in required.items()},
+            "bid_document_type": "ANGEBOT",
+            "default_min_bids": 1,
+            "value_deviation": {
+                "warning_above_percent": 10,
+                "fail_above_percent": 20,
+                "fail_reference": "§ 132 GWB",
+            },
+        }
+    )
+
+
 def load_profile(profile_id: str, version: str) -> PrecheckProfile:
     """Load an explicitly named packaged profile version."""
     name = f"{profile_id}-{version}.json"
