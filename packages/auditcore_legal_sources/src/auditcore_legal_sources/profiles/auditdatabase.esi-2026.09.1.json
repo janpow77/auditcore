@@ -249,5 +249,55 @@
   ],
   "update_query_template": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(?date >= \"{since}\"^^xsd:date)\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"1303/2013\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        ",
   "funding_period_rule": "auditdatabase"
+ },
+ "feeds": {
+  "bafin": {
+   "feeds": {
+    "aufsicht": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml",
+    "massnahmen": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Massnahmen.xml",
+    "presse": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Presse.xml"
+   },
+   "alternative_feeds": {
+    "alle": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/rssnewsfeed.xml",
+    "alle_alt": "https://www.bafin.de/rss/rssnewsfeed.xml"
+   },
+   "document_types": {
+    "aufsicht": "BaFin Aufsicht",
+    "massnahmen": "BaFin Massnahmen",
+    "presse": "BaFin Presse"
+   }
+  },
+  "curia": {
+   "feeds": {
+    "gerichtshof": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=de",
+    "gericht": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=de",
+    "pressemitteilungen": "https://curia.europa.eu/jcms/rss.jsp?lang=de&secondLang=en"
+   },
+   "alternative_feeds": {
+    "gerichtshof_en": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=en",
+    "gericht_en": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=en"
+   },
+   "document_types": {
+    "gerichtshof": "Rechtsprechung Gerichtshof",
+    "gericht": "Rechtsprechung Gericht",
+    "pressemitteilungen": "Pressemitteilung"
+   },
+   "case_patterns": [
+    "[CT]-\\d+/\\d+"
+   ]
+  },
+  "eca": {
+   "publication_urls": [
+    "https://www.eca.europa.eu/de/publications",
+    "https://www.eca.europa.eu/en/publications",
+    "https://www.eca.europa.eu/Lists/ECADocuments"
+   ],
+   "base_url": "https://www.eca.europa.eu",
+   "link_markers": [
+    "report",
+    "publication"
+   ],
+   "min_title_length": 11
+  }
  }
 }

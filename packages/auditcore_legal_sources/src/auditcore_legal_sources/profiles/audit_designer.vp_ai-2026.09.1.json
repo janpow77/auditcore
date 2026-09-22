@@ -185,5 +185,6 @@
   ],
   "update_query_template": null,
   "funding_period_rule": "designer"
- }
+ },
+ "feeds": {}
 }

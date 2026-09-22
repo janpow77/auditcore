@@ -12,10 +12,12 @@ VERSION = "2026.09.1"
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("fixture", type=Path)
+    parser.add_argument("feeds_fixture", type=Path)
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
     data = json.loads(args.fixture.read_text(encoding="utf-8"))
     p, sources = data["profile"], data["sources"]
+    feeds = json.loads(args.feeds_fixture.read_text(encoding="utf-8"))["profile"]
     update = next(c for c in data["cases"] if c["name"] == "eurlex-update-query")
     template = update["output"].replace(update["inputs"]["since"], "{since}")
     common = {
@@ -44,6 +46,29 @@ def main() -> None:
                 "update_query_template": template,
                 "funding_period_rule": "auditdatabase",
             },
+            "feeds": {
+                "bafin": {
+                    "feeds": feeds["bafin_feeds"],
+                    "alternative_feeds": feeds["bafin_alternative_feeds"],
+                    "document_types": {n: f"BaFin {n.title()}" for n in feeds["bafin_feeds"]},
+                },
+                "curia": {
+                    "feeds": feeds["curia_feeds"],
+                    "alternative_feeds": feeds["curia_alternative_feeds"],
+                    "document_types": {
+                        "gerichtshof": "Rechtsprechung Gerichtshof",
+                        "gericht": "Rechtsprechung Gericht",
+                        "pressemitteilungen": "Pressemitteilung",
+                    },
+                    "case_patterns": [r"[CT]-\d+/\d+"],
+                },
+                "eca": {
+                    "publication_urls": feeds["eca_publication_urls"],
+                    "base_url": "https://www.eca.europa.eu",
+                    "link_markers": ["report", "publication"],
+                    "min_title_length": 11,
+                },
+            },
         },
         "audit_designer.vp_ai": {
             **common,
@@ -66,6 +91,7 @@ def main() -> None:
                 "update_query_template": None,
                 "funding_period_rule": "designer",
             },
+            "feeds": {},
         },
     }
     for key, profile in profiles.items():

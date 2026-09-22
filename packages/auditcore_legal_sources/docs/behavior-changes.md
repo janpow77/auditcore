@@ -1,13 +1,14 @@
 # Legacyverhalten und korrigierter Vertrag
 
 Quellen: `janpow77/auditdatabase@bba911e918e102426d4ca2f88fd377fe8ca585e4`
-(`backend/app/harvester/{base,dip,eurlex}.py`) und
+(`backend/app/harvester/{base,dip,eurlex,rss}.py`) und
 `janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a`
 (`backend/app/modules/vp_ai/harvester/{_funding_period,base,bundestag_dip,eurlex}.py`).
 Alle Beobachtungen stammen aus tatsächlich ausgeführtem Originalcode mit
 synthetischen Antworten im dokumentierten Antwortformat und ersetztem
 `httpx.AsyncClient`/SPARQL-Aufruf (`tools/capture_legacy_harvesters.py`,
-176 Fälle). Kein Netzabruf, keine Anwendungsdatenbank.
+176 Fälle; `tools/capture_legacy_feeds.py`, 12 Fälle mit echtem feedparser 6.0.11
+und BeautifulSoup 4.12.3, `PYTHONHASHSEED=0`). Kein Netzabruf, keine Anwendungsdatenbank.
 
 `auditcore_legal_sources.legacy` reproduziert beide Varianten exakt (176 Replay-
 Tests). Die übrigen Module bilden den korrigierten Vertrag.
@@ -23,6 +24,12 @@ Tests). Die übrigen Module bilden den korrigierten Vertrag.
 | LS-C07 | Keine Pagination (DIP-Cursor ungenutzt, SPARQL nur `LIMIT`). | DIP-Cursor und `f.aktualisiert.start` für inkrementelle Abrufe; Ende, wenn der Cursor gleich bleibt. |
 | LS-C08 | SPARQL-Strukturfehler ergeben stillschweigend leere Listen. | Strikte Prüfung des W3C-JSON-Ergebnisformats. |
 | LS-C09 | Aktualisierungsabfrage per f-String aus einem `datetime`. | Nur `date`-Objekte, feste Profilvorlage mit genau einem Platzhalter. |
+| LS-C10 | RSS-Identitäten ohne Link aus `str(hash(title))`, bei ECA `hash(href)`: je Prozess verschieden (Seed 0 gegen 1 nachgewiesen). Sonst nur letztes Pfadsegment des Links (kollisionsanfällig). | SHA-256 aus Eintrags-`id` bzw. vollständigem Link; ohne beides `ParseError`. |
+| LS-C11 | RSS-Zeitpunkt aus `published_parsed` als UTC ohne Zonenangabe; Atom-`updated` wird nie gesetzt; nicht auswertbare Datumstexte werden leer. | Datum aus UTC-Tupel mit `+00:00`, sonst RFC 822/ISO-Text; Rohwert bleibt erhalten. |
+| LS-C12 | `_working_feeds` ist ein klassenweit geteiltes Dict: nach einem BaFin-Lauf ruft CURIA nur den BaFin-Feed ab und liefert BaFin-Meldungen als CURIA-Dokumente. | Reine Funktionen ohne gemeinsamen Zustand; Feedauswahl je Quelle aus dem Profil. |
+| LS-C13 | ECA liefert bei nicht lesbarer Seite drei feste Platzhalter-„Berichte“ als erfolgreiche Dokumente. | Kein Ersatzinhalt; leere Linkliste bzw. Fehler. Platzhalter nur im `legacy`-Adapter. |
+| LS-C14 | Jede BaFin-/CURIA-/ECA-Meldung erhält pauschal `fund=EFRE`, `funding_period=2021-2027`. | Keine erfundene Klassifikation. |
+| LS-C15 | CURIA: nur `C-`-Aktenzeichen; Typ „Urteil“ nie erreicht (Feedname `urteile` existiert nicht); ohne relevanten Treffer werden die 20 neuesten allgemeinen Einträge übernommen. | `C-`/`T-`-Aktenzeichen, Typ je Feed aus dem Profil (REVIEW_REQUIRED: Bezeichnung), expliziter Relevanzfilter ohne Rückfall. |
 
 Unverändert: Suchbegriffe, SPARQL-Abfragen, Kerndokumente, CELEX-Typregel,
 Fondsregel, Contenthash-Definition, Dublettenregel „erstes Vorkommen gewinnt“,

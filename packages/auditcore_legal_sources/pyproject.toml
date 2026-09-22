@@ -13,6 +13,7 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
+feeds = ["feedparser<7,>=6.0.10"]
 dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2"]
 
 [tool.setuptools.packages.find]

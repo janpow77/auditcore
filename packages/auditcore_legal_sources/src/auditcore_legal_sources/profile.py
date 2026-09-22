@@ -29,6 +29,35 @@ class CoreDocument:
 
 
 @dataclass(frozen=True)
+class FeedSource:
+    """Feed or publication-page source of a profile (BaFin, CURIA, ECA)."""
+
+    key: str
+    feeds: Mapping[str, str]
+    alternative_feeds: Mapping[str, str]
+    document_types: Mapping[str, str]
+    case_patterns: tuple[str, ...]
+    publication_urls: tuple[str, ...]
+    base_url: str
+    link_markers: tuple[str, ...]
+    min_title_length: int
+
+
+def _feed_source(key: str, data: Mapping[str, Any]) -> FeedSource:
+    return FeedSource(
+        key=key,
+        feeds=MappingProxyType(dict(data.get("feeds", {}))),
+        alternative_feeds=MappingProxyType(dict(data.get("alternative_feeds", {}))),
+        document_types=MappingProxyType(dict(data.get("document_types", {}))),
+        case_patterns=tuple(data.get("case_patterns", ())),
+        publication_urls=tuple(data.get("publication_urls", ())),
+        base_url=str(data.get("base_url", "")),
+        link_markers=tuple(data.get("link_markers", ())),
+        min_title_length=int(data.get("min_title_length", 1)),
+    )
+
+
+@dataclass(frozen=True)
 class SourceProfile:
     """Immutable, explicitly selected source profile."""
 
@@ -49,6 +78,7 @@ class SourceProfile:
     eurlex_core_documents: tuple[CoreDocument, ...]
     eurlex_update_query_template: str | None
     eurlex_funding_period_rule: str
+    feeds: Mapping[str, FeedSource]
     fingerprint: str
 
     @property
@@ -107,6 +137,9 @@ def profile_from_dict(data: Mapping[str, Any]) -> SourceProfile:
             ),
             eurlex_update_query_template=eurlex["update_query_template"],
             eurlex_funding_period_rule=str(eurlex["funding_period_rule"]),
+            feeds=MappingProxyType(
+                {key: _feed_source(key, value) for key, value in dict(data["feeds"]).items()}
+            ),
             fingerprint=fingerprint(data),
         )
     except (KeyError, TypeError, ValueError) as exc:

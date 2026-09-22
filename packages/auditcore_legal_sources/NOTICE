@@ -6,6 +6,7 @@ lists derive from:
     backend/app/harvester/base.py    fcefbe13ecdd3d8bb1fff83f04a53c56ad700c4b
     backend/app/harvester/dip.py     de4a26ed623989ef6b84dec92b3d7c1e7eb3af62
     backend/app/harvester/eurlex.py  3bad9865dc13fbc2c21e195741f77864ae3fd4f2
+    backend/app/harvester/rss.py     0918dfd90aca1804df8b30c9190ebc3b8282a54a
   janpow77/audit_designer (private) @ 030a71e083ef0feddc14545b095a4945bc0bbd7a
     backend/app/modules/vp_ai/harvester/_funding_period.py f67579071cfdb8c03ec249de231675e792c58966
     backend/app/modules/vp_ai/harvester/base.py            7e5b9b652c9db72c8c661e38a8e5f7ce10d7f86e

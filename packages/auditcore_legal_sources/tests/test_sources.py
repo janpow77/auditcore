@@ -291,7 +291,7 @@ def test_runtime_modules_use_only_stdlib_and_no_network_or_io() -> None:
     package = Path(auditcore_legal_sources.__file__).parent
     forbidden = {
         "socket",
-        "urllib",
+        "urllib.request",
         "http",
         "httpx",
         "requests",
@@ -308,6 +308,8 @@ def test_runtime_modules_use_only_stdlib_and_no_network_or_io() -> None:
                 names = [a.name for a in node.names]
             elif isinstance(node, ast.ImportFrom) and node.level == 0:
                 names = [node.module or ""]
-            assert not {n.split(".")[0] for n in names} & forbidden, path.name
+            roots = {n.split(".")[0] for n in names} | set(names)
+            assert not roots & forbidden, path.name
+            assert all(not n.startswith("urllib.request") for n in names), path.name
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 assert node.func.id not in {"open", "eval", "exec", "print", "__import__"}
