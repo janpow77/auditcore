@@ -1,0 +1,491 @@
+{
+  "cases": [
+    {
+      "args": [
+        "betrag"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-0"
+    },
+    {
+      "args": [
+        "SUMME"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-1"
+    },
+    {
+      "args": [
+        "Foerderbetrag"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-2"
+    },
+    {
+      "args": [
+        "quote"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-3"
+    },
+    {
+      "args": [
+        "anteil"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-4"
+    },
+    {
+      "args": [
+        "prozent"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-5"
+    },
+    {
+      "args": [
+        "rate"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-6"
+    },
+    {
+      "args": [
+        "satz"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-7"
+    },
+    {
+      "args": [
+        "datum"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-8"
+    },
+    {
+      "args": [
+        "date"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-9"
+    },
+    {
+      "args": [
+        "von"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-10"
+    },
+    {
+      "args": [
+        "bis"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-11"
+    },
+    {
+      "args": [
+        "beginn"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-12"
+    },
+    {
+      "args": [
+        "ende"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-13"
+    },
+    {
+      "args": [
+        "stichtag"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-14"
+    },
+    {
+      "args": [
+        "zeitpunkt"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-15"
+    },
+    {
+      "args": [
+        "anzahl"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-16"
+    },
+    {
+      "args": [
+        "count"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-17"
+    },
+    {
+      "args": [
+        "nummer"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-18"
+    },
+    {
+      "args": [
+        "nr"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-19"
+    },
+    {
+      "args": [
+        "pos"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-20"
+    },
+    {
+      "args": [
+        "lfd"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-21"
+    },
+    {
+      "args": [
+        "stunden"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-22"
+    },
+    {
+      "args": [
+        "tage"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-23"
+    },
+    {
+      "args": [
+        "hours"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-24"
+    },
+    {
+      "args": [
+        "days"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-25"
+    },
+    {
+      "args": [
+        "unbekannt"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-26"
+    },
+    {
+      "args": [
+        ""
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-27"
+    },
+    {
+      "args": [
+        "quote_betrag"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-28"
+    },
+    {
+      "args": [
+        "ANZAHL_BETRAG"
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-29"
+    },
+    {
+      "args": [
+        null
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-30"
+    },
+    {
+      "args": [
+        123
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "header-31"
+    },
+    {
+      "args": [
+        "unknown",
+        100
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "unused-sample"
+    },
+    {
+      "args": [
+        "unknown",
+        null
+      ],
+      "expected": null,
+      "expected_exception": null,
+      "kwargs": {},
+      "name": "unused-null"
+    }
+  ],
+  "classification": "OBSERVED",
+  "isolation": "Exact function and module constants extracted via AST; openpyxl adapter not executed",
+  "outcomes": [
+    {
+      "exception": null,
+      "name": "header-0",
+      "value": "#,##0.00 \"EUR\""
+    },
+    {
+      "exception": null,
+      "name": "header-1",
+      "value": "#,##0.00 \"EUR\""
+    },
+    {
+      "exception": null,
+      "name": "header-2",
+      "value": "#,##0.00 \"EUR\""
+    },
+    {
+      "exception": null,
+      "name": "header-3",
+      "value": "0.00%"
+    },
+    {
+      "exception": null,
+      "name": "header-4",
+      "value": "0.00%"
+    },
+    {
+      "exception": null,
+      "name": "header-5",
+      "value": "0.00%"
+    },
+    {
+      "exception": null,
+      "name": "header-6",
+      "value": "0.00%"
+    },
+    {
+      "exception": null,
+      "name": "header-7",
+      "value": "0.00%"
+    },
+    {
+      "exception": null,
+      "name": "header-8",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-9",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-10",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-11",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-12",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-13",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-14",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-15",
+      "value": "DD.MM.YYYY"
+    },
+    {
+      "exception": null,
+      "name": "header-16",
+      "value": "#,##0"
+    },
+    {
+      "exception": null,
+      "name": "header-17",
+      "value": "#,##0"
+    },
+    {
+      "exception": null,
+      "name": "header-18",
+      "value": "#,##0"
+    },
+    {
+      "exception": null,
+      "name": "header-19",
+      "value": "#,##0"
+    },
+    {
+      "exception": null,
+      "name": "header-20",
+      "value": "#,##0"
+    },
+    {
+      "exception": null,
+      "name": "header-21",
+      "value": "#,##0"
+    },
+    {
+      "exception": null,
+      "name": "header-22",
+      "value": "#,##0.00"
+    },
+    {
+      "exception": null,
+      "name": "header-23",
+      "value": "#,##0.00"
+    },
+    {
+      "exception": null,
+      "name": "header-24",
+      "value": "#,##0.00"
+    },
+    {
+      "exception": null,
+      "name": "header-25",
+      "value": "#,##0.00"
+    },
+    {
+      "exception": null,
+      "name": "header-26",
+      "value": "General"
+    },
+    {
+      "exception": null,
+      "name": "header-27",
+      "value": "General"
+    },
+    {
+      "exception": null,
+      "name": "header-28",
+      "value": "#,##0.00 \"EUR\""
+    },
+    {
+      "exception": null,
+      "name": "header-29",
+      "value": "#,##0.00 \"EUR\""
+    },
+    {
+      "exception": "builtins.TypeError",
+      "name": "header-30",
+      "value": null
+    },
+    {
+      "exception": "builtins.TypeError",
+      "name": "header-31",
+      "value": null
+    },
+    {
+      "exception": null,
+      "name": "unused-sample",
+      "value": "General"
+    },
+    {
+      "exception": null,
+      "name": "unused-null",
+      "value": "General"
+    }
+  ],
+  "reference": "legacy_formats:get_number_format",
+  "source_commit": "aca2dc6aad25aea0720312dbcc6da00b0bcba330",
+  "source_digest": "f86f2e1f01397e0a886568789713705673b886e9dfd11212e12286daf3154c35",
+  "source_path": "python/flowlib/excel/formats.py",
+  "source_repository": "janpow77/flowlib"
+}

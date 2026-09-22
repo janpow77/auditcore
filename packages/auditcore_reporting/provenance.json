@@ -1,0 +1,20 @@
+{
+  "repository": "janpow77/flowlib",
+  "commit_sha": "aca2dc6aad25aea0720312dbcc6da00b0bcba330",
+  "path": "python/flowlib/excel/formats.py",
+  "symbols": [
+    "get_number_format",
+    "_PATTERNS",
+    "_DEFAULT_FORMAT"
+  ],
+  "source_sha256": "f86f2e1f01397e0a886568789713705673b886e9dfd11212e12286daf3154c35",
+  "license": "MIT",
+  "license_file": "LICENSE",
+  "characterization": "tests/fixtures/flowlib-number-format-golden.json",
+  "characterization_cases": 34,
+  "classification": "OBSERVED",
+  "extraction": "Reuse of the already characterized auditcore.reporting implementation; behavior unchanged",
+  "excluded_variants": [
+    "auswertungjkb.get_number_format"
+  ]
+}
