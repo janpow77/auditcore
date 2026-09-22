@@ -17,8 +17,9 @@ auditcore-harvest catalog        # versionierten Quellenkatalog prüfen
   `HarvestRecord`, `PageResult`, `Checkpoint`, `HarvestResult`, strukturierte
   Fehler (`auth`, `config`, `rate_limited`, `transport`, `parser`, `sink`, …).
 - Ports: `Transport`, `CredentialProvider`, `StateStore`, `Sink`, `Clock`,
-  `Sleeper`, `EventSink`. Transporte: `UrllibTransport`, `FileTransport`,
-  `ReplayTransport`.
+  `Sleeper`, `EventSink`. Mitgelieferte Transporte: `FileTransport`,
+  `ReplayTransport`; Netzwerktransporte injiziert der Consumer
+  (Beispiel ohne Zusatzpakete: `docs/examples/urllib_transport.py`).
 - Zustellung *mindestens einmal*: Checkpoint erst nach Bestätigung der Senke;
   keine Exactly-once-Zusage. Der Kern löscht nie; `snapshot_complete` sagt,
   wann ein Consumer seine eigene Ersetzungsregel anwenden darf.

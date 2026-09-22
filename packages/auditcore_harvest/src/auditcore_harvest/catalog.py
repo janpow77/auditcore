@@ -62,6 +62,56 @@ def _check_config_schema(schema: Any, where: str) -> None:
             raise ConfigError(f"{where}: Geheimnisfeld '{name}' darf keinen Wert enthalten.")
 
 
+def _validate_origins(origins: Any, where: str) -> None:
+    if not isinstance(origins, list):
+        raise ConfigError(f"{where}: origins muss eine Liste sein.")
+    for origin in origins:
+        if not re.fullmatch(r"[0-9a-f]{40}|UNKNOWN", str(origin["commit"])):
+            raise ConfigError(f"{where}: Commit muss vollständiger SHA oder UNKNOWN sein.")
+        for key in ("repository", "path"):
+            if not isinstance(origin[key], str) or not origin[key]:
+                raise ConfigError(f"{where}: origin.{key} fehlt.")
+
+
+def _validate_status(entry: Mapping[str, Any], where: str) -> None:
+    checks = (
+        (entry["auth"], AUTH, "auth"),
+        (entry["implementation"]["status"], IMPLEMENTATION, "implementation.status"),
+        (entry["live_test"]["status"], LIVE_TEST, "live_test.status"),
+        (entry["licence_access"]["status"], REVIEW, "licence_access.status"),
+    )
+    for value, allowed, name in checks:
+        if value not in allowed:
+            raise ConfigError(f"{where}: {name} unbekannt.")
+    if entry["implementation"]["status"] == "SUPPORTED" and not entry["fixtures"]:
+        raise ConfigError(f"{where}: SUPPORTED ohne Fixtures.")
+    if entry["live_test"]["status"] in ("PASS", "FAIL") and not entry["live_test"].get("date"):
+        raise ConfigError(f"{where}: Live-Test ohne Datum.")
+
+
+def _validate_entry(entry: Mapping[str, Any], index: int, seen: set[str]) -> CatalogEntry:
+    where = f"Quelle {index}"
+    try:
+        source_id = entry["source_id"]
+        if not isinstance(source_id, str) or not _ID.fullmatch(source_id):
+            raise ConfigError(f"{where}: ungültige source_id {source_id!r}.")
+        if source_id in seen:
+            raise ConfigError(f"{where}: source_id {source_id} doppelt.")
+        seen.add(source_id)
+        where = source_id
+        for key in ("title", "family", "target_package"):
+            if not isinstance(entry[key], str) or not entry[key]:
+                raise ConfigError(f"{where}: '{key}' fehlt.")
+        _validate_origins(entry["origins"], where)
+        _validate_status(entry, where)
+        if not isinstance(entry["consumers"], list) or not isinstance(entry["fixtures"], list):
+            raise ConfigError(f"{where}: consumers/fixtures müssen Listen sein.")
+        _check_config_schema(entry["config_schema"], where)
+    except (KeyError, TypeError) as exc:
+        raise ConfigError(f"{where}: Pflichtfeld fehlt oder hat falschen Typ ({exc}).") from exc
+    return CatalogEntry(entry)
+
+
 def validate_catalog(data: Mapping[str, Any]) -> tuple[CatalogEntry, ...]:
     """Validate the catalogue document; raise ``ConfigError`` with the first problem."""
     if data.get("schema") != CATALOG_SCHEMA:
@@ -72,50 +122,7 @@ def validate_catalog(data: Mapping[str, Any]) -> tuple[CatalogEntry, ...]:
     if not isinstance(entries, list) or not entries:
         raise ConfigError("Katalog enthält keine Quellen.")
     seen: set[str] = set()
-    result: list[CatalogEntry] = []
-    for index, entry in enumerate(entries):
-        where = f"Quelle {index}"
-        try:
-            source_id = entry["source_id"]
-            if not isinstance(source_id, str) or not _ID.fullmatch(source_id):
-                raise ConfigError(f"{where}: ungültige source_id {source_id!r}.")
-            if source_id in seen:
-                raise ConfigError(f"{where}: source_id {source_id} doppelt.")
-            seen.add(source_id)
-            where = source_id
-            for key in ("title", "family", "target_package"):
-                if not isinstance(entry[key], str) or not entry[key]:
-                    raise ConfigError(f"{where}: '{key}' fehlt.")
-            origins = entry["origins"]
-            if not isinstance(origins, list):
-                raise ConfigError(f"{where}: origins muss eine Liste sein.")
-            for origin in origins:
-                if not re.fullmatch(r"[0-9a-f]{40}|UNKNOWN", str(origin["commit"])):
-                    raise ConfigError(f"{where}: Commit muss vollständiger SHA oder UNKNOWN sein.")
-                for key in ("repository", "path"):
-                    if not isinstance(origin[key], str) or not origin[key]:
-                        raise ConfigError(f"{where}: origin.{key} fehlt.")
-            if entry["auth"] not in AUTH:
-                raise ConfigError(f"{where}: auth unbekannt.")
-            if entry["implementation"]["status"] not in IMPLEMENTATION:
-                raise ConfigError(f"{where}: implementation.status unbekannt.")
-            if entry["live_test"]["status"] not in LIVE_TEST:
-                raise ConfigError(f"{where}: live_test.status unbekannt.")
-            if entry["licence_access"]["status"] not in REVIEW:
-                raise ConfigError(f"{where}: licence_access.status unbekannt.")
-            if entry["implementation"]["status"] == "SUPPORTED" and not entry["fixtures"]:
-                raise ConfigError(f"{where}: SUPPORTED ohne Fixtures.")
-            if entry["live_test"]["status"] in ("PASS", "FAIL") and not entry["live_test"].get(
-                "date"
-            ):
-                raise ConfigError(f"{where}: Live-Test ohne Datum.")
-            if not isinstance(entry["consumers"], list) or not isinstance(entry["fixtures"], list):
-                raise ConfigError(f"{where}: consumers/fixtures müssen Listen sein.")
-            _check_config_schema(entry["config_schema"], where)
-        except (KeyError, TypeError) as exc:
-            raise ConfigError(f"{where}: Pflichtfeld fehlt oder hat falschen Typ ({exc}).") from exc
-        result.append(CatalogEntry(entry))
-    return tuple(result)
+    return tuple(_validate_entry(entry, index, seen) for index, entry in enumerate(entries))
 
 
 def load_catalog(name: str = "sources.json") -> tuple[CatalogEntry, ...]:

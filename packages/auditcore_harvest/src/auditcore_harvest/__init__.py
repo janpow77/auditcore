@@ -46,7 +46,7 @@ from .ports import (
     StateStore,
     Transport,
 )
-from .transport import FileTransport, ReplayTransport, UrllibTransport, raise_for_status
+from .transport import FileTransport, ReplayTransport, raise_for_status
 
 __version__ = "0.1.0"
 
@@ -93,7 +93,6 @@ __all__ = [
     "StateStore",
     "Transport",
     "TransportError",
-    "UrllibTransport",
     "__version__",
     "canonical_hash",
     "raise_for_status",

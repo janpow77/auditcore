@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
+import sys
 import threading
 import time
 from collections.abc import Iterator
@@ -30,7 +32,16 @@ from auditcore_harvest.reference import (
     example_feed_source,
     example_json_source,
 )
-from auditcore_harvest.transport import FileTransport, ReplayTransport, UrllibTransport
+from auditcore_harvest.transport import FileTransport, ReplayTransport
+
+_spec = importlib.util.spec_from_file_location(
+    "urllib_transport", Path(__file__).parents[1] / "docs" / "examples" / "urllib_transport.py"
+)
+assert _spec and _spec.loader
+_module = importlib.util.module_from_spec(_spec)
+sys.modules["urllib_transport"] = _module
+_spec.loader.exec_module(_module)
+UrllibTransport = _module.UrllibTransport
 
 
 class Handler(BaseHTTPRequestHandler):
