@@ -7,8 +7,9 @@ import sys
 import tomllib
 from pathlib import Path
 
-from auditcore.tools.common import emit
+from auditcore.tools.common import emit, read_json
 from auditcore.tools.policy.framework import GitFrameworkPolicyProvider, context_from_project
+from auditcore.tools.policy.models import ApplicabilityContext
 from auditcore.tools.quality.engine import check
 
 
@@ -24,6 +25,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--compare-api", type=Path)
     parser.add_argument("--supply-chain-report", type=Path)
     parser.add_argument("--framework", type=Path)
+    parser.add_argument("--context", type=Path, help="Applicability context for this artifact")
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--project", type=Path, default=Path.cwd())
     args = parser.parse_args(argv)
@@ -36,9 +38,20 @@ def main(argv: list[str] | None = None) -> int:
             args.framework,
             offline=args.offline,
             cache=args.project / ".auditcore/framework-cache.json",
-            artifact=args.project.name,
+            artifact=str(target),
+            evidence=read_json(args.project / ".auditcore/policy-evidence.json")
+            if (args.project / ".auditcore/policy-evidence.json").exists()
+            else None,
+            decisions=read_json(args.project / ".auditcore/policy-decisions.json")
+            if (args.project / ".auditcore/policy-decisions.json").exists()
+            else None,
         )
-        policy = provider.evaluate(context_from_project(args.project))
+        context = (
+            ApplicabilityContext.from_dict(read_json(args.context))
+            if args.context
+            else context_from_project(args.project)
+        )
+        policy = provider.evaluate(context)
         report = check(
             target,
             policy=policy,

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from auditcore.exceptions import MigrationBlocked
-from auditcore.tools.common import emit, read_json, write_json
+from auditcore.tools.common import emit, read_json, serializable, write_json
 from auditcore.tools.deployer.apt import AptRepository
 from auditcore.tools.deployer.build import ApplicationInspection, DeploymentBuilder
 from auditcore.tools.deployer.validation import DockerPackageTester
@@ -66,7 +66,8 @@ def main(argv: list[str] | None = None) -> int:
         emit(result)
         if args.command != "status" and not getattr(args, "dry_run", False):
             write_json(Path(".auditcore/deployer-status.json"), result)
-        return 0
+        status = serializable(result).get("status", "UNKNOWN")
+        return 1 if status in {"FAIL", "BLOCKED", "MIGRATION_BLOCKED"} else 0
     except (MigrationBlocked, OSError, RuntimeError, ValueError) as exc:
         emit({"status": "BLOCKED", "reason": str(exc)})
         return 1

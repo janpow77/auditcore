@@ -114,3 +114,32 @@ def test_offline_is_stale_missing_unavailable(policy_provider, tmp_path):
     assert policy_provider.load_requirements().source_status == "POLICY_SOURCE_STALE"
     provider = GitFrameworkPolicyProvider(cache=tmp_path / "absent", offline=True)
     assert provider.evaluate(ApplicabilityContext()).source_status == "POLICY_SOURCE_UNAVAILABLE"
+
+
+def test_project_evidence_is_loaded_without_cross_project_leakage(
+    policy_provider, library_context, tmp_path
+):
+    from dataclasses import asdict
+
+    from auditcore.tools.common import write_json
+
+    first, second = tmp_path / "first", tmp_path / "second"
+    for root in (first, second):
+        root.mkdir()
+        context = {**asdict(library_context), "versioned_artifacts": True}
+        write_json(root / "auditcore-context.json", context)
+    source = policy_provider.load_requirements()
+    write_json(
+        first / ".auditcore/policy-evidence.json",
+        {
+            "F-09": {
+                "status": "VERIFIED",
+                "references": ["synthetic"],
+                "source_commit": source.commit_sha,
+            }
+        },
+    )
+    one = policy_provider.evaluate_project(first)
+    two = policy_provider.evaluate_project(second)
+    assert next(r for r in one.requirements if r.requirement_id == "F-09").status == "VERIFIED"
+    assert next(r for r in two.requirements if r.requirement_id == "F-09").status != "VERIFIED"

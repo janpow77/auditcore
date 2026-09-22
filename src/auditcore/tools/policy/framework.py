@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 from dataclasses import asdict
@@ -266,6 +267,21 @@ class GitFrameworkPolicyProvider:
             requirement.derived_checks,
             decision_ref,
         )
+
+    def evaluate_project(self, root: Path) -> PolicyEvaluationResult:
+        """Load explicit per-project evidence without sharing it across project evaluations."""
+        provider = copy.copy(self)
+        for filename, attribute in (
+            ("policy-evidence.json", "evidence"),
+            ("policy-decisions.json", "decisions"),
+        ):
+            path = root / ".auditcore" / filename
+            if path.exists():
+                value = read_json(path)
+                if not isinstance(value, dict):
+                    raise ValueError("Policy evidence must map requirement IDs to records")
+                setattr(provider, attribute, value)
+        return provider.evaluate(context_from_project(root))
 
     def evaluate(self, context: ApplicabilityContext) -> PolicyEvaluationResult:
         """Determine applicability before emitting any security or compliance gate."""

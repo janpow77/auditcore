@@ -87,3 +87,21 @@ def emit(value: Any, output: Path | None = None) -> None:
     if output:
         write_json(output, value)
     print(json.dumps(serializable(value), indent=2, ensure_ascii=False))
+
+
+DEPLOYMENT_CHECKS = (
+    "protection_need",
+    "service_user",
+    "permissions",
+    "secrets",
+    "configuration",
+    "logging",
+    "backup_restore",
+    "network",
+    "proxy",
+    "health",
+    "dependencies",
+    "sbom",
+    "supply_chain",
+    "updates",
+)

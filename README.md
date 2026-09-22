@@ -62,12 +62,23 @@ Prüfkatalog, Standardsregister und Security-Dokumente bleiben externe Quelle.
 Die lokale Adapterdatei enthält technische Auslöser und Quellhashes, keinen
 unabhängigen Anforderungskatalog. Bei Drift bleibt die Bewertung REVIEW_REQUIRED.
 
-`auditcore-context.json` hält Projektfakten fest. Fehlende Werte sind UNKNOWN.
+`auditcore-context.json` beschreibt den Fachkern. `contexts/*.json` trennt Core
+und ausführbare Werkzeuge; `--context contexts/consolidator.json` wählt den
+Artefaktkontext. Unbestimmter Schutzbedarf und KI-Einsatz bleiben UNKNOWN.
 MUSS verlangt Klärung; BEDINGT prüft den konkreten Auslöser; SOLL bleibt eine
 Empfehlung. Profile sind nur abgeleitete Gruppierungen. Eine genehmigte Abweichung
 benötigt einen vollständigen zuständigen menschlichen Entscheidungsnachweis.
 Der Provider selbst stellt diesen niemals aus. Cache: `.auditcore/framework-cache.json`;
 offline oder bei unterschiedlichem Remote-Commit immer POLICY_SOURCE_STALE.
+
+Nachweise werden je Projekt aus `.auditcore/policy-evidence.json` und
+`.auditcore/policy-decisions.json` geladen, jeweils nach Requirement-ID. Technische
+Nachweise brauchen `status: VERIFIED`, prüfbare `references` und den aktuellen
+Framework-`source_commit`. Abweichungen benötigen zusätzlich die menschlichen
+Entscheidungsfelder aus dem Policy-Modell. Unbelegte Selbsterklärungen sind keine
+Freigabe. Für den Handoff muss `auditcore-deployment-evidence.json` alle
+Betriebsprüfungen mit `status`, `reference`, `reason` und den aktuellen
+`source_digest` enthalten. Handoff und Paketplan kontrollieren diesen erneut.
 
 ## Inventur und Konsolidierung
 
@@ -122,6 +133,7 @@ auditcore-refactor plan /path/to/application --output plan.json
 auditcore-refactor apply plan.json --dry-run
 auditcore-refactor apply plan.json
 auditcore-refactor verify /path/to/application
+auditcore-refactor handoff /path/to/application
 auditcore-refactor optimize /path/to/application --safe
 ```
 

@@ -14,9 +14,17 @@ from typing import Any
 from auditcore.exceptions import MigrationBlocked
 from auditcore.tools.apprefactor.characterization import compare, execute_cases
 from auditcore.tools.apprefactor.models import ApplicationRefactoringPlan
-from auditcore.tools.common import digest, now, read_json, run, safe_path, write_json
+from auditcore.tools.common import (
+    DEPLOYMENT_CHECKS,
+    digest,
+    now,
+    read_json,
+    run,
+    safe_path,
+    write_json,
+)
 from auditcore.tools.consolidator.analysis import analyze_repository, load_policy
-from auditcore.tools.policy.framework import GitFrameworkPolicyProvider, context_from_project
+from auditcore.tools.policy.framework import GitFrameworkPolicyProvider
 from auditcore.tools.workflow import REFACTOR_STATES, StateMachine
 
 REQUIRED_VERIFICATION = tuple(load_policy("quality")["required_verification"])
@@ -50,7 +58,7 @@ def source_digest(root: Path) -> str:
             relative = path.relative_to(root).as_posix()
             if path.is_symlink():
                 content[relative] = digest("symlink:" + os.readlink(path))
-            elif relative == "auditcore-deploy.json":
+            elif relative in {"auditcore-deploy.json", "auditcore-deployment-evidence.json"}:
                 configuration = json.loads(path.read_text())
                 configuration.pop("source_digest", None)
                 content[relative] = digest(json.dumps(configuration, sort_keys=True))
@@ -159,7 +167,7 @@ class ApplicationRefactorer:
             "commit": commit,
             "digest": source_digest(root),
             **analyze_repository(root, root.name, commit),
-            "policy": asdict(self.framework.evaluate(context_from_project(root))),
+            "policy": asdict(self.framework.evaluate_project(root)),
         }
 
     def plan(self, root: Path) -> ApplicationRefactoringPlan:
@@ -265,7 +273,7 @@ class ApplicationRefactorer:
         workflow.transition("DRY_RUN_COMPLETE", {"status": "PASS", "reference": digest(str(diffs))})
         if dry_run:
             return {"status": "DRY_RUN_COMPLETE", "diffs": diffs, "workflow": workflow.history}
-        before = self.framework.evaluate(context_from_project(root))
+        before = self.framework.evaluate_project(root)
         if (
             before.blocks(set(plan.policy_dependencies))
             or before.source_status != "POLICY_SOURCE_CURRENT"
@@ -311,7 +319,7 @@ class ApplicationRefactorer:
                 },
             )
             verification = verify(root, plan.verification_commands)
-            after = self.framework.evaluate(context_from_project(root))
+            after = self.framework.evaluate_project(root)
             if verification["status"] != "PASS" or after.blocks(set(plan.policy_dependencies)):
                 raise MigrationBlocked("MIGRATION_BLOCKED: verification failed")
             workflow.transition(
@@ -358,12 +366,23 @@ class ApplicationRefactorer:
     def handoff(self, root: Path) -> dict[str, Any]:
         """Only a current verified migration plus deployment policy can become ready."""
         result = read_json(root / ".auditcore/refactor-result.json")
-        policy = self.framework.evaluate(context_from_project(root))
+        policy = self.framework.evaluate_project(root)
         if result.get("status") != "VERIFIED" or result["source_digest"] != source_digest(root):
             raise MigrationBlocked("Verification missing or stale")
-        if policy.overall_status != "PASS":
+        if policy.overall_status != "PASS" or policy.source_status != "POLICY_SOURCE_CURRENT":
             raise MigrationBlocked("Deployment policy requires review")
-        return {
+        evidence_path = root / "auditcore-deployment-evidence.json"
+        evidence = read_json(evidence_path) if evidence_path.exists() else {}
+        checks = evidence.get("checks", {})
+        if evidence.get("source_digest") != source_digest(root):
+            raise MigrationBlocked("Deployment evidence is missing or stale")
+        for name in DEPLOYMENT_CHECKS:
+            check = checks.get(name, {})
+            if check.get("status") not in {"PASS", "NOT_APPLICABLE_WITH_REASON"} or not (
+                check.get("reference") and check.get("reason")
+            ):
+                raise MigrationBlocked(f"Deployment evidence required: {name}")
+        handoff = {
             "application": root.name,
             "status": "READY_FOR_DEPLOYMENT",
             "git_commit": run(["git", "rev-parse", "HEAD"], root).strip(),
@@ -371,4 +390,7 @@ class ApplicationRefactorer:
             "shared_libraries": result["shared_libraries"],
             "tests": result["verification"],
             "policy": asdict(policy),
+            "deployment_checks": checks,
         }
+        write_json(root / ".auditcore/deployment-handoff.json", handoff)
+        return handoff

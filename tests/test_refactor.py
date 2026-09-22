@@ -199,3 +199,30 @@ def test_dependency_extras_brackets_are_not_array_end(tmp_path):
     )
     result = edit_dependencies(path, ["other"], ["auditcore==0.1.0"])
     assert tomllib.loads(result)["project"]["dependencies"] == ["pkg[extra]>=1", "auditcore==0.1.0"]
+
+
+def test_handoff_requires_current_deployment_evidence(migration):
+    from auditcore.tools.common import DEPLOYMENT_CHECKS, write_json
+
+    refactorer, plan, root = migration
+    refactorer.apply(plan)
+    with pytest.raises(MigrationBlocked, match="Deployment evidence"):
+        refactorer.handoff(root)
+    evidence = {
+        "checks": {
+            name: {"status": "PASS", "reference": "synthetic", "reason": "controlled fixture"}
+            for name in DEPLOYMENT_CHECKS
+        }
+    }
+    write_json(root / "auditcore-deployment-evidence.json", evidence)
+    evidence["source_digest"] = source_digest(root)
+    write_json(root / "auditcore-deployment-evidence.json", evidence)
+    result_path = root / ".auditcore/refactor-result.json"
+    result = json.loads(result_path.read_text())
+    result["source_digest"] = source_digest(root)
+    write_json(result_path, result)
+    assert refactorer.handoff(root)["status"] == "READY_FOR_DEPLOYMENT"
+    assert (root / ".auditcore/deployment-handoff.json").exists()
+    (root / "legacy.py").write_text("changed = True\n")
+    with pytest.raises(MigrationBlocked, match="stale"):
+        refactorer.handoff(root)

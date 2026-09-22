@@ -15,7 +15,7 @@ def main(argv: list[str] | None = None) -> int:
     """Inspect, plan, preview, migrate and verify application changes."""
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("inspect", "plan", "optimize", "verify"):
+    for command in ("inspect", "plan", "optimize", "verify", "handoff"):
         item = sub.add_parser(command)
         item.add_argument("repository", type=Path)
         item.add_argument("--safe", action="store_true")
@@ -45,6 +45,8 @@ def main(argv: list[str] | None = None) -> int:
                 args.repository,
                 read_json(config) if config.exists() else {},
             )
+        elif args.command == "handoff":
+            result = refactorer.handoff(args.repository)
         elif args.command == "verify":
             config = args.repository / "auditcore-verification.json"
             result = verify(args.repository, read_json(config) if config.exists() else {})
