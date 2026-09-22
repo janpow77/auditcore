@@ -1,0 +1,115 @@
+{
+  "status": "OBSERVED",
+  "source_repository": "janpow77/flowinvoice",
+  "source_commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "source_path": "docs/demo_data/generate_demo_invoices.py",
+  "source_sha256": "c5ee1e208b6dfb3fa830536ae82763f3dc279c5e90129789c644249750cce379",
+  "observed_at": "2026-09-22T16:37:45.821903+00:00",
+  "clock": "No wall-clock reads in selected functions; date ranges fixed by source constants",
+  "uuid": "NOT_APPLICABLE: selected source contains no UUID generation",
+  "rng": "Python random.seed(case.seed), full post-call RNG state SHA256 recorded",
+  "package": "auditcore_invoicegenerator",
+  "version": "0.1.0",
+  "source_git_blob": "8f1596a711b228194b58ffc5db6a6e7d0ed049a3",
+  "github_blob_verification": "PASS",
+  "characterization_cases": 180,
+  "characterization_sha256": "32034cb3cc3e6ab093f87885a0666e28c978231ac3596321e5a743c537550fdb",
+  "profile": "flowinvoice-demo-fb2d185",
+  "source_license": "MIT",
+  "release_authorization": "USER_AUTHORIZED_MIT",
+  "publication": "NOT_EXECUTED",
+  "consumer": "janpow77/flowinvoice:docs/demo_data/generate_demo_invoices.py:generate_all_invoices/main",
+  "shared_dependency": "auditcore_dummygenerator==0.1.0",
+  "modifications": [
+    "Explicit Random injection without draw-order changes",
+    "Independent-instance public profile instead of import-time global seed",
+    "Separate new scenario API using dummy-data package",
+    "JSON renderer and typed record facade"
+  ],
+  "not_extracted": [
+    "generate_sanctions_csv",
+    "generate_ted_contracts_csv",
+    "PDF renderer",
+    "application workers",
+    "API/database/authorization"
+  ],
+  "portal_contract_equivalence": "NOT_ASSERTED",
+  "versioned_artifacts": [
+    {
+      "artifact_id": "auditcore_invoicegenerator:flowinvoice-demo-fb2d185",
+      "type": "rulebook/template",
+      "title": "Flowinvoice synthetic invoice demo: characterized legacy rules",
+      "owner": "UNKNOWN",
+      "author": "UNKNOWN",
+      "organization": "UNKNOWN",
+      "version": "0.1.0",
+      "status": "DRAFT",
+      "created_at": "2026-09-22T16:37:45.821903+00:00",
+      "created_at_basis": "Initial package characterization/extraction observation; not original upstream creation date",
+      "modified_at": "2026-09-22T16:54:48.650066+00:00",
+      "predecessor_version": null,
+      "fork_parent": {
+        "repository": "janpow77/flowinvoice",
+        "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+        "path": "docs/demo_data/generate_demo_invoices.py",
+        "sha256": "c5ee1e208b6dfb3fa830536ae82763f3dc279c5e90129789c644249750cce379"
+      },
+      "fork_created_at": "2026-09-22T16:37:45.821903+00:00",
+      "change_reason": "Extract characterized historical demo rules into an installable library; new scenario profile deliberately has a separate contract",
+      "content_hash_algorithm": "SHA256 per UTF-8 source file; no provenance-file self-reference",
+      "content_hashes": {
+        "_legacy.py": "23354c51ec32917208030adad5e034f689cbd32fda81c04e6edb05d4f8d67769",
+        "profiles.py": "d3aded424cee69c32faf5a81417b7e4c2f08a4ffc30ba85668bd04ae0fcd531d"
+      },
+      "review": {
+        "technical_review": "IN_PROGRESS",
+        "reviewer": "UNKNOWN",
+        "human_release_approval": "NOT_GRANTED",
+        "public_release": "LICENSE_AUTHORIZED_TECHNICAL_REVIEW_IN_PROGRESS",
+        "license_authorization": "USER_AUTHORIZED_MIT"
+      }
+    },
+    {
+      "artifact_id": "auditcore_invoicegenerator:invoice-scenario-v1",
+      "type": "rulebook/template",
+      "title": "Synthetic DE/AT invoice scenarios with explicit ground truth",
+      "owner": "UNKNOWN",
+      "author": "UNKNOWN",
+      "organization": "UNKNOWN",
+      "version": "0.1.0",
+      "status": "DRAFT",
+      "created_at": "2026-09-22T16:37:45.821903+00:00",
+      "created_at_basis": "Initial package characterization/extraction observation; not original upstream creation date",
+      "modified_at": "2026-09-22T16:54:48.650098+00:00",
+      "predecessor_version": null,
+      "fork_parent": null,
+      "fork_created_at": null,
+      "change_reason": "Extract characterized historical demo rules into an installable library; new scenario profile deliberately has a separate contract",
+      "content_hash_algorithm": "SHA256 per UTF-8 source file; no provenance-file self-reference",
+      "content_hashes": {
+        "scenarios.py": "f384bd5494b6123836182e291f7574d7df0b7e70772d06700f65b2affd8c3427"
+      },
+      "review": {
+        "technical_review": "IN_PROGRESS",
+        "reviewer": "UNKNOWN",
+        "human_release_approval": "NOT_GRANTED",
+        "public_release": "LICENSE_AUTHORIZED_TECHNICAL_REVIEW_IN_PROGRESS",
+        "license_authorization": "USER_AUTHORIZED_MIT"
+      }
+    }
+  ],
+  "versioning_contract": "docs/versioning.md",
+  "source_license_at_observation": "UNKNOWN",
+  "license_expression": "MIT",
+  "license_authorization": {
+    "status": "USER_AUTHORIZED_MIT",
+    "date": "2026-09-22",
+    "declaration": "Ja, ich bin berechtigt und gebe beide unter MIT frei",
+    "scope": {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "docs/demo_data/generate_demo_invoices.py"
+    },
+    "excluded": "No relicensing claim for the entire source repository, Portal code or other unreviewed sources"
+  }
+}
