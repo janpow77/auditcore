@@ -156,6 +156,13 @@ class PackageWorkspace:
         return config, sorted(members)
 
     def _package(self, path: Path, members: set[Path], settings: dict[str, Any]) -> dict[str, Any]:
+        settings = dict(settings)
+        for key, filename in (
+            ("applicability", "auditcore-context.json"),
+            ("provenance", "provenance.json"),
+        ):
+            if key not in settings and (path / filename).exists():
+                settings[key] = (path / filename).relative_to(self.root).as_posix()
         data = tomllib.loads((path / "pyproject.toml").read_text())
         project = data.get("project", {})
         name = project.get("name")

@@ -77,6 +77,22 @@ def test_configuration_evidence_requirements_and_consumers(tmp_path):
     assert result["requirements_files"][0]["declarations"][1]["name"] == "UNKNOWN"
 
 
+def test_conventional_package_evidence_is_scoped_and_bound(tmp_path):
+    project(tmp_path, "platform")
+    domain = project(tmp_path / "packages" / "domain", "example_domain")
+    context = domain / "auditcore-context.json"
+    context.write_text('{"artifact_type":"library", "personal_data":"none"}')
+    (domain / "provenance.json").write_text('{"revision":"recorded-source"}')
+    workspace = PackageWorkspace(tmp_path)
+    records = {r["name"]: r for r in workspace.inventory()["packages"]}
+    assert records["example_domain"]["applicability"]["context"]["personal_data"] == "none"
+    assert records["platform"]["applicability"]["context"]["personal_data"] == "UNKNOWN"
+    assert records["example_domain"]["provenance"]["path"] == "packages/domain/provenance.json"
+    assert records["example_domain"]["applicability"]["policy_evaluation"] == "NOT_EXECUTED"
+    context.write_text('{"artifact_type":"library", "personal_data":"possible"}')
+    assert workspace.status()["status"] == "STALE"
+
+
 def test_cycles_fail_but_conditional_dependencies_are_not_assumed_active(tmp_path):
     project(tmp_path, "alpha", ["beta>=1"])
     project(tmp_path / "packages" / "beta", "beta", ["alpha"])

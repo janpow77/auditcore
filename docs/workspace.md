@@ -16,6 +16,9 @@ Es gibt keine automatische Laufzeitabhängigkeit der Fachpakete von `auditcore`.
 
 Ohne Konfiguration werden das Root-`pyproject.toml` und vorhandene
 `packages/*/pyproject.toml` erfasst. Andere Layouts werden ausdrücklich konfiguriert.
+Je Paket werden vorhandene `auditcore-context.json` und `provenance.json` als
+deklarierte Nachweise gefunden. Explizite Workspace-Einstellungen haben Vorrang;
+Dateien eines Nachbarpakets werden nicht als eigene Nachweise übernommen.
 Die Metadaten müssen einen statischen PEP-621-Projektnamen besitzen; eine dynamische
 Version bleibt `UNKNOWN`. Noch nicht gebaute Quellprojekte gelten dadurch nicht
 als installierbar nachgewiesen: `build_verification` bleibt `NOT_EXECUTED`.
