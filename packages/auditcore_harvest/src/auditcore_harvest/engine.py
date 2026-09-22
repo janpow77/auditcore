@@ -29,7 +29,6 @@ from typing import Any
 from .adapter import FetchContext, SourceAdapter
 from .errors import (
     Cancelled,
-    CheckpointConflict,
     ConfigError,
     HarvestError,
     LimitReached,
@@ -48,6 +47,7 @@ from .model import (
     RecordIssue,
     RunStatus,
     SnapshotSemantics,
+    Source,
 )
 from .ports import Clock, CredentialProvider, EventSink, Sink, Sleeper, StateStore, Transport
 
@@ -103,7 +103,10 @@ class CancelToken:
 
 
 class _NullEvents:
+    """Default event sink that discards events."""
+
     def emit(self, event: Mapping[str, Any]) -> None:
+        """Discard the event."""
         return None
 
 
@@ -192,6 +195,84 @@ class HarvestEngine:
         ):
             raise ParserError("Der Cursor schreitet nicht fort (Endlosschleife verhindert).")
 
+    def _start_cursor(
+        self, adapter: SourceAdapter, request: HarvestRequest, before: Checkpoint | None
+    ) -> Mapping[str, Any] | None:
+        """Cursor to resume from; a checkpoint of another profile version is refused."""
+        source = adapter.source
+        if before is None or not request.resume:
+            return None
+        if before.profile_version != source.profile_version:
+            raise ConfigError(
+                "Checkpoint stammt aus Profilversion "
+                f"{before.profile_version}, Adapter nutzt {source.profile_version}; "
+                "kein Wiederanlauf mit fremdem Cursor."
+            )
+        if not before.finished or source.snapshot_semantics is SnapshotSemantics.INCREMENTAL_UPSERT:
+            return before.cursor
+        return None
+
+    def _limits(self, run: _Run, request: HarvestRequest, cancel: CancelToken) -> None:
+        """Raise before the next page if a limit or cancellation applies."""
+        if cancel.cancelled:
+            raise Cancelled("Abbruch angefordert.")
+        if run.pages >= request.max_pages:
+            raise LimitReached(f"Seitenlimit {request.max_pages} erreicht.")
+        if run.delivered >= request.max_records:
+            raise LimitReached(f"Datensatzlimit {request.max_records} erreicht.")
+        if self.clock.monotonic() > run.deadline:
+            raise LimitReached("Zeitlimit des Laufs erreicht.")
+
+    @staticmethod
+    def _deliver(run: _Run, page: PageResult, sink: Sink, request: HarvestRequest) -> int:
+        """Deduplicate, deliver and verify the receipt; returns the number of fresh records."""
+        fresh: list[HarvestRecord] = []
+        for record in page.records:
+            marker = (record.key, record.content_hash)
+            if marker in run.seen:
+                run.dup_run += 1
+                continue
+            run.seen.add(marker)
+            fresh.append(record)
+        try:
+            receipt = sink.deliver(fresh, run_id=request.run_id, page=run.pages)
+        except HarvestError:
+            raise
+        except Exception as error:  # noqa: BLE001 - consumer storage failure
+            raise SinkError(f"Senke meldet {type(error).__name__}.") from error
+        confirmed = set(receipt.accepted) | set(receipt.duplicates)
+        if confirmed != {r.key for r in fresh}:
+            raise SinkError("Senke hat nicht genau die übergebenen Datensätze bestätigt.")
+        run.delivered += len(receipt.accepted)
+        run.dup_sink += len(receipt.duplicates)
+        run.issues.extend(page.issues)
+        run.partial = run.partial or bool(page.issues) or page.status is PageStatus.PARTIAL
+        return len(fresh)
+
+    def _confirm(
+        self,
+        run: _Run,
+        adapter: SourceAdapter,
+        request: HarvestRequest,
+        page: PageResult,
+        fresh: int,
+    ) -> None:
+        """Advance the checkpoint after the sink confirmed the page (compare-and-set)."""
+        source = adapter.source
+        base = run.current if run.current and not run.current.finished else None
+        checkpoint = Checkpoint(
+            source_id=source.source_id,
+            profile_version=source.profile_version,
+            cursor=None if page.next_cursor is None else dict(page.next_cursor),
+            run_id=request.run_id,
+            updated_at=self.clock.now().isoformat(),
+            pages_confirmed=(base.pages_confirmed if base else 0) + 1,
+            records_confirmed=(base.records_confirmed if base else 0) + fresh,
+            finished=page.complete,
+        )
+        self.state.save(checkpoint, run.current)
+        run.current = checkpoint
+
     def run(
         self,
         adapter: SourceAdapter,
@@ -201,159 +282,119 @@ class HarvestEngine:
         config: Mapping[str, Any] | None = None,
         cancel: CancelToken | None = None,
     ) -> HarvestResult:
-        """Execute one bounded run and return a structured result (never raises for
-        source, parser, sink or limit problems; programming errors propagate)."""
+        """Execute one bounded run and return a structured result.
+
+        Source, parser, sink, checkpoint and limit problems are reported in the
+        result; programming errors of the caller propagate.
+        """
         source = adapter.source
-        config = dict(config or {})
+        settings = dict(config or {})
         cancel = cancel or CancelToken()
-        started = self.clock.now()
-        deadline = self.clock.monotonic() + request.max_duration_seconds
-        errors: list[dict[str, Any]] = []
-        issues: list[RecordIssue] = []
-        pages = received = delivered = dup_run = dup_sink = 0
-        counter = [0]
-        exhausted = partial = False
-        status: RunStatus | None = None
-        before: Checkpoint | None = None
-        current: Checkpoint | None = None
-        started_from_beginning = True
-        seen: set[tuple[tuple[str, str], str]] = set()
-
-        def finish(final: RunStatus) -> HarvestResult:
-            return HarvestResult(
-                source_id=source.source_id,
-                run_id=request.run_id,
-                contract=CONTRACT_VERSION,
-                status=final,
-                started_at=started.isoformat(),
-                finished_at=self.clock.now().isoformat(),
-                pages=pages,
-                records_received=received,
-                records_delivered=delivered,
-                duplicates_in_run=dup_run,
-                duplicates_at_sink=dup_sink,
-                issues=tuple(issues),
-                errors=tuple(errors),
-                checkpoint_before=before,
-                checkpoint_after=current,
-                source_exhausted=exhausted,
-                snapshot_complete=(
-                    final is RunStatus.COMPLETE
-                    and exhausted
-                    and started_from_beginning
-                    and source.snapshot_semantics is SnapshotSemantics.FULL_SNAPSHOT_REPLACE
-                ),
-                attempts=counter[0],
-            )
-
+        run = _Run(
+            started=self.clock.now().isoformat(),
+            deadline=self.clock.monotonic() + request.max_duration_seconds,
+        )
+        status = RunStatus.FAILED
         try:
             if request.source_id != source.source_id:
                 raise ConfigError("Anfrage und Adapter betreffen verschiedene Quellen.")
-            adapter.validate_config(config)
-            before = self.state.load(source.source_id)
-            current = before
-            cursor: Mapping[str, Any] | None = None
-            if before is not None and request.resume:
-                if before.profile_version != source.profile_version:
-                    raise ConfigError(
-                        "Checkpoint stammt aus Profilversion "
-                        f"{before.profile_version}, Adapter nutzt {source.profile_version}; "
-                        "kein Wiederanlauf mit fremdem Cursor."
-                    )
-                if not before.finished or (
-                    source.snapshot_semantics is SnapshotSemantics.INCREMENTAL_UPSERT
-                ):
-                    cursor = before.cursor
-            started_from_beginning = cursor is None
+            adapter.validate_config(settings)
+            run.before = run.current = self.state.load(source.source_id)
+            cursor = self._start_cursor(adapter, request, run.before)
+            run.from_beginning = cursor is None
             self._emit("run_started", request, resume=cursor is not None)
             while True:
-                if cancel.cancelled:
-                    raise Cancelled("Abbruch angefordert.")
-                if pages >= request.max_pages:
-                    raise LimitReached(f"Seitenlimit {request.max_pages} erreicht.")
-                if delivered >= request.max_records:
-                    raise LimitReached(f"Datensatzlimit {request.max_records} erreicht.")
-                if self.clock.monotonic() > deadline:
-                    raise LimitReached("Zeitlimit des Laufs erreicht.")
+                self._limits(run, request, cancel)
                 context = FetchContext(
                     request,
-                    config,
+                    settings,
                     self.transport,
                     self.credentials,
                     self.clock,
                     self.request_timeout,
-                    pages + 1,
+                    run.pages + 1,
                 )
-                page = self._fetch(adapter, context, cursor, cancel, deadline, counter)
-                pages += 1
-                received += len(page.records)
+                page = self._fetch(adapter, context, cursor, cancel, run.deadline, run.attempts)
+                run.pages += 1
+                run.received += len(page.records)
                 self._check_page(adapter, page, cursor)
-                fresh: list[HarvestRecord] = []
-                for record in page.records:
-                    marker = (record.key, record.content_hash)
-                    if marker in seen:
-                        dup_run += 1
-                        continue
-                    seen.add(marker)
-                    fresh.append(record)
-                try:
-                    receipt = sink.deliver(fresh, run_id=request.run_id, page=pages)
-                except HarvestError:
-                    raise
-                except Exception as error:  # noqa: BLE001 - consumer storage failure
-                    raise SinkError(f"Senke meldet {type(error).__name__}.") from error
-                expected = {r.key for r in fresh}
-                confirmed = set(receipt.accepted) | set(receipt.duplicates)
-                if confirmed != expected:
-                    raise SinkError("Senke hat nicht genau die übergebenen Datensätze bestätigt.")
-                delivered += len(receipt.accepted)
-                dup_sink += len(receipt.duplicates)
-                issues.extend(page.issues)
-                partial = partial or bool(page.issues) or page.status is PageStatus.PARTIAL
-                checkpoint = Checkpoint(
-                    source_id=source.source_id,
-                    profile_version=source.profile_version,
-                    cursor=None if page.next_cursor is None else dict(page.next_cursor),
-                    run_id=request.run_id,
-                    updated_at=self.clock.now().isoformat(),
-                    pages_confirmed=(
-                        current.pages_confirmed if current and not current.finished else 0
-                    )
-                    + 1,
-                    records_confirmed=(
-                        current.records_confirmed if current and not current.finished else 0
-                    )
-                    + len(fresh),
-                    finished=page.complete,
-                )
-                try:
-                    self.state.save(checkpoint, current)
-                except CheckpointConflict:
-                    raise
-                current = checkpoint
+                fresh = self._deliver(run, page, sink, request)
+                self._confirm(run, adapter, request, page, fresh)
                 cursor = page.next_cursor
                 self._emit(
-                    "page_confirmed",
-                    request,
-                    page=pages,
-                    records=len(fresh),
-                    complete=page.complete,
+                    "page_confirmed", request, page=run.pages, records=fresh, complete=page.complete
                 )
                 if page.complete:
-                    exhausted = True
+                    run.exhausted = True
                     break
-            status = RunStatus.PARTIAL if partial else RunStatus.COMPLETE
+            status = RunStatus.PARTIAL if run.partial else RunStatus.COMPLETE
         except Cancelled as error:
-            errors.append(error.to_dict())
+            run.errors.append(error.to_dict())
             status = RunStatus.CANCELLED
         except LimitReached as error:
-            errors.append(error.to_dict())
+            run.errors.append(error.to_dict())
             status = RunStatus.PARTIAL
         except HarvestError as error:
-            errors.append(error.to_dict())
-            status = RunStatus.PARTIAL if current is not before else RunStatus.FAILED
-        result = finish(status)
+            run.errors.append(error.to_dict())
+            status = RunStatus.PARTIAL if run.current is not run.before else RunStatus.FAILED
+        result = run.result(source, request, status, self.clock.now().isoformat())
         self._emit(
-            "run_finished", request, status=result.status.value, pages=pages, delivered=delivered
+            "run_finished",
+            request,
+            status=result.status.value,
+            pages=run.pages,
+            delivered=run.delivered,
         )
         return result
+
+
+@dataclass
+class _Run:
+    """Mutable bookkeeping of one run."""
+
+    started: str
+    deadline: float
+    pages: int = 0
+    received: int = 0
+    delivered: int = 0
+    dup_run: int = 0
+    dup_sink: int = 0
+    attempts: list[int] = field(default_factory=lambda: [0])
+    issues: list[RecordIssue] = field(default_factory=list)
+    errors: list[dict[str, Any]] = field(default_factory=list)
+    seen: set[tuple[tuple[str, str], str]] = field(default_factory=set)
+    before: Checkpoint | None = None
+    current: Checkpoint | None = None
+    exhausted: bool = False
+    partial: bool = False
+    from_beginning: bool = True
+
+    def result(
+        self, source: Source, request: HarvestRequest, status: RunStatus, finished: str
+    ) -> HarvestResult:
+        """Freeze the bookkeeping into a :class:`HarvestResult`."""
+        return HarvestResult(
+            source_id=source.source_id,
+            run_id=request.run_id,
+            contract=CONTRACT_VERSION,
+            status=status,
+            started_at=self.started,
+            finished_at=finished,
+            pages=self.pages,
+            records_received=self.received,
+            records_delivered=self.delivered,
+            duplicates_in_run=self.dup_run,
+            duplicates_at_sink=self.dup_sink,
+            issues=tuple(self.issues),
+            errors=tuple(self.errors),
+            checkpoint_before=self.before,
+            checkpoint_after=self.current,
+            source_exhausted=self.exhausted,
+            snapshot_complete=(
+                status is RunStatus.COMPLETE
+                and self.exhausted
+                and self.from_beginning
+                and source.snapshot_semantics is SnapshotSemantics.FULL_SNAPSHOT_REPLACE
+            ),
+            attempts=self.attempts[0],
+        )
