@@ -29,7 +29,8 @@ def main() -> None:
     assert find_spec("auditcore") is None
     assert CONTRACT_VERSION == "auditcore_harvest.contract/1"
     entries = load_catalog()
-    assert len(entries) == 35 and summary(entries)["implementation"] == {"PLANNED": 35}
+    assert len(entries) == 62
+    assert summary(entries)["implementation"] == {"PLANNED": 53, "SUPPORTED": 7, "LEGACY_ONLY": 2}
     exchanges = [
         {
             "request": {"url": "https://feed.invalid/rss"},
