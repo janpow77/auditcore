@@ -43,6 +43,7 @@ class FlakyTransport:
     calls: int = 0
 
     def request(self, method: str, url: str, **kwargs: Any) -> Response:
+        """Request for one contract run."""
         """Delegate or fail."""
         self.calls += 1
         if self.calls in self.fail_calls:
@@ -57,6 +58,7 @@ class GarbageTransport:
     body: bytes = b"\x00<<kein gueltiges Format>>"
 
     def request(self, method: str, url: str, **kwargs: Any) -> Response:
+        """Request for one contract run."""
         """Garbage response."""
         return Response(200, self.body, {"content-type": "text/plain"}, url)
 
@@ -116,9 +118,11 @@ def check_adapter(
     secrets = StaticCredentials(dict(credentials or {}))
 
     def request(run: str) -> HarvestRequest:
+        """Request for one contract run."""
         return HarvestRequest(source.source_id, run, filters=dict(request_filters or {}))
 
     def case(name: str, check: Callable[[], str | None]) -> None:
+        """Run one case and record its outcome."""
         try:
             outcome = check()
         except AssertionError as exc:
@@ -129,18 +133,21 @@ def check_adapter(
             report.cases[name] = outcome or "PASS"
 
     def declaration() -> None:
+        """Source declaration is complete."""
         assert source.source_id and "." in source.source_id, "source_id 'familie.quelle' erwartet"
         assert source.adapter_version and source.profile_version, "Versionen fehlen"
         assert source.family and source.data_format, "Familie/Datenformat fehlen"
         assert isinstance(source.snapshot_semantics, SnapshotSemantics)
 
     def configuration() -> None:
+        """The given configuration is accepted."""
         adapter.validate_config(config)
 
     baseline = ListSink()
     first: dict[str, Any] = {}
 
     def full_replay() -> None:
+        """A full replay completes and yields records with provenance."""
         result = _engine(transport_factory(), secrets).run(
             factory(), request("contract-1"), baseline, config=config
         )
@@ -155,6 +162,7 @@ def check_adapter(
             assert record.provenance.raw_sha256, "Provenienz ohne Rohwert-Hash"
 
     def determinism() -> None:
+        """A second replay yields identical ids and hashes."""
         other = ListSink()
         _engine(transport_factory(), secrets).run(
             factory(), request("contract-2"), other, config=config
@@ -162,6 +170,7 @@ def check_adapter(
         assert _content(other) == _content(baseline), "zweiter Lauf liefert andere IDs/Hashes"
 
     def idempotent_rerun() -> None:
+        """Re-running with the same sink delivers nothing new."""
         state = MemoryStateStore()
         sink = ListSink()
         engine = _engine(transport_factory(), secrets, state)
@@ -173,6 +182,7 @@ def check_adapter(
         assert _content(sink) == _content(baseline)
 
     def resume_after_sink_failure() -> str | None:
+        """A sink failure keeps the checkpoint; resume loses nothing."""
         pages = first["result"].pages if "result" in first else 1
         state = MemoryStateStore()
         sink = ListSink(fail_on_page=pages)
@@ -191,6 +201,7 @@ def check_adapter(
         return None
 
     def resume_after_transport_failure() -> None:
+        """Retries are bounded; resume after a network failure completes."""
         state = MemoryStateStore()
         sink = ListSink()
         engine = _engine(FlakyTransport(transport_factory(), frozenset({1, 2})), secrets, state)
@@ -203,6 +214,7 @@ def check_adapter(
         assert resumed.status is RunStatus.COMPLETE and _content(sink) == _content(baseline)
 
     def malformed_response() -> None:
+        """An unparsable response is a parser error, not an empty result."""
         result = _engine(GarbageTransport(), secrets).run(
             factory(), request("contract-6"), ListSink(), config=config
         )
@@ -210,6 +222,7 @@ def check_adapter(
         assert result.errors[0]["code"] == "parser_error", result.errors
 
     def missing_credentials() -> str | None:
+        """Missing credentials are an authentication error."""
         if source.auth in (AuthKind.NONE,):
             return "SKIPPED: Quelle ohne Zugangsdaten"
         result = _engine(transport_factory(), StaticCredentials()).run(
@@ -220,6 +233,7 @@ def check_adapter(
         return None
 
     def secret_free() -> None:
+        """Results and events contain no credential values."""
         events = ListEvents()
         result = _engine(transport_factory(), secrets, events=events).run(
             factory(), request("contract-8"), ListSink(), config=config
