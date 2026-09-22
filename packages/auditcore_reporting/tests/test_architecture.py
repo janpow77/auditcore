@@ -1,23 +1,46 @@
-"""Applicable framework T-38: pure formatting cannot bypass protected persistence."""
+"""Applicable T-38: optional Office adapter remains separate from core and applications."""
 
 import ast
+import subprocess
+import sys
 from pathlib import Path
 
 import auditcore_reporting
 
 
-def test_reporting_uses_only_its_own_api_and_standard_library():
-    """Verify the complete installed Python module set has no infrastructure imports."""
+def test_reporting_dependency_boundary():
     package = Path(auditcore_reporting.__file__).parent
-    allowed = {"__future__", "re", "typing", "auditcore_reporting"}
-    observed = set()
     for path in package.glob("*.py"):
-        tree = ast.parse(path.read_text())
-        for node in ast.walk(tree):
+        allowed = set(sys.stdlib_module_names) | {"__future__", "auditcore_reporting"}
+        if path.name == "_excel.py":
+            allowed.add("openpyxl")
+        if path.name == "_ooxml.py":
+            allowed.add("defusedxml")
+        for node in ast.walk(ast.parse(path.read_text())):
             if isinstance(node, ast.Import):
-                observed.update(alias.name.split(".")[0] for alias in node.names)
+                assert {alias.name.split(".")[0] for alias in node.names} <= allowed
             elif isinstance(node, ast.ImportFrom):
-                observed.add((node.module or "").split(".")[0])
+                assert (node.module or "").split(".")[0] in allowed
             elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 assert node.func.id not in {"open", "eval", "exec", "__import__"}
-    assert observed <= allowed
+
+
+def test_core_import_and_formats_work_with_excel_import_forbidden():
+    script = """
+import importlib.abc, sys
+class Block(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, *args):
+        if fullname == "openpyxl" or fullname.startswith("openpyxl."):
+            raise ModuleNotFoundError("optional dependency blocked", name="openpyxl")
+sys.meta_path.insert(0, Block())
+from auditcore_reporting import get_number_format, render_workbook, ExcelDependencyError
+assert get_number_format("Betrag") == '#,##0.00 "EUR"'
+try:
+    render_workbook([])
+except ExcelDependencyError:
+    pass
+else:
+    raise AssertionError("Expected clear optional dependency error")
+"""
+    result = subprocess.run([sys.executable, "-I", "-c", script], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
