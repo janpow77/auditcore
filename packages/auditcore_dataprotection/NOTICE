@@ -1,0 +1,29 @@
+auditcore_dataprotection 0.1.0 — source attribution and authorization
+
+Calculation, catalogue texts, workflow rules and report layouts derive from:
+Repository: janpow77/regulierung (private)
+Commit: a5d48ea4b90a410210ec25e707781ef9e21ad743
+Paths and Git blobs:
+  backend/app/services/dsfa/bewertung.py      2a34de1d708e3bd83bdd366b0f7dbf09be177a5a
+  backend/app/services/dsfa/katalog.py        8be23a5163342f0f69b32f2d40b2ef2d60ba8783
+  backend/app/services/dsfa/verwaltung.py     eba4ffd8965980736b8bb325c027f34faf4542ac
+  backend/app/services/dsfa/export.py         e2a14999a49823813cf790843595fdbec0449801
+  backend/app/services/mandant_dsgvo_service.py 992aeadc70b8f289aaf996263f93c9fe1375cc1a
+Observed contributors: janpow77, claude
+
+The source repository had no license grant at the time of inspection
+(historical status: UNKNOWN). On 2026-09-22 the rights holder explicitly
+confirmed their authority and released these sources including the catalogue
+texts under MIT ("Ja, MIT-Freigabe: Ich bin berechtigt und gebe die genannten
+regulierung-Quellen einschließlich der Katalogtexte unter MIT frei").
+Status: USER_AUTHORIZED_MIT. This is not a relicensing of the rest of the
+repository.
+
+Not included: backend/app/data/dsgvo_vorbelegung.json, which the source marks
+as based on a BfDI template under CC-BY-SA 4.0. Legal references cite public
+norms (DSGVO, HDSIG, KI-VO), EDSA WP 248 rev.01, the DSK list under
+Art. 35 Abs. 4 DSGVO and the Standard-Datenschutzmodell by name only.
+
+The rule profiles are characterized software behavior, not legal advice or a
+confirmed interpretation. Assessment results are proposals for a human
+decision. MIT covers the code and texts; it is no approval for production use.
