@@ -34,7 +34,9 @@ target-version = "py311"
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.mypy]
-python_version = "3.11"
+# Keine feste python_version: rapidfuzz zieht numpy-Stubs nach, die ab numpy 2.5
+# Python-3.12-Syntax nutzen. Jeder CI-Job (3.11, 3.12, 3.13) prüft gegen seine
+# eigene Laufzeit und die dort installierte numpy-Version.
 strict = true
 
 [[tool.mypy.overrides]]
