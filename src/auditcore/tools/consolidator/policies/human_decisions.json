@@ -1,0 +1,23 @@
+{
+  "policy_version": "1.0",
+  "human_decision_required": [
+    "legal_interpretation",
+    "audit_methodology",
+    "risk_weighting",
+    "threshold",
+    "correction_rate",
+    "conflicting_business_rules"
+  ],
+  "security_boundaries": [
+    "authorize",
+    "permission",
+    "tenant",
+    "audit_log",
+    "approval",
+    "secret",
+    "password",
+    "validate_upload",
+    "csrf",
+    "version_lock"
+  ]
+}

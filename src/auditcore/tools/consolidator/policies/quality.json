@@ -1,0 +1,16 @@
+{
+  "policy_version": "1.0",
+  "required_verification": [
+    "shared_library",
+    "application_unit",
+    "regression",
+    "integration",
+    "framework",
+    "ruff",
+    "typing",
+    "security",
+    "dependencies",
+    "quality"
+  ],
+  "ready_requires_all": true
+}

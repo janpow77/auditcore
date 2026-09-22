@@ -1,0 +1,12 @@
+{
+  "policy_version": "1.0",
+  "default_target": "auditcore.{domain}",
+  "separate_package_requires": [
+    "independent_release",
+    "heavy_runtime",
+    "platform_incompatibility",
+    "ownership_boundary"
+  ],
+  "characterization_required": true,
+  "inventory_required": true
+}

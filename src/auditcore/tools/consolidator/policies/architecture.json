@@ -1,0 +1,6 @@
+{
+  "policy_version": "1.0",
+  "core_must_not_import_tools": true,
+  "consolidator_changes_source": false,
+  "unknown_applicability": "REVIEW_REQUIRED"
+}
