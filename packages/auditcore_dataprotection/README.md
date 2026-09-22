@@ -4,7 +4,8 @@ Eigenständig installierbare, frameworkunabhängige Bibliothek, mit der
 Anwendungen **eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und
 Datenschutz-Folgenabschätzungen (DSFA) anlegen, bearbeiten, berechnen,
 versionieren, freigeben und ausgeben** können. Laufzeit: nur die
-Standardbibliothek. Optional: `[excel]` (openpyxl), `[pdf]` (WeasyPrint).
+Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel]==0.2.0`),
+`[pdf]` (WeasyPrint).
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
@@ -21,7 +22,7 @@ pip install 'auditcore_dataprotection[excel]==0.1.0'    # zusätzlich XLSX
 | `register` | VVT-Inhalt prüfen (Art. 30 Abs. 1 DSGVO), stabile Tätigkeitskennungen, Entwurf, Freigabe und Ablösung mit Vier-Augen-Prinzip und Revisionen. |
 | `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
 | `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
-| `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF; Tabellentexte werden immer als Literal geschrieben. |
+| `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.0; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
 | `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
 
 ```python

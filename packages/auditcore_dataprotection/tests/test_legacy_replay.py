@@ -93,7 +93,18 @@ def legacy_catalog() -> dict[str, Any]:
 def test_fixture_covers_every_operation() -> None:
     assert len(CASES) == 241
     assert {c["operation"] for c in CASES} == {
-        "threshold", "suggestion", "risk", "risk_level", "prefill", "answers_from_json",
-        "scenarios_from_json", "check_regime", "regime_suggestion", "compare_activity",
-        "preview", "activity_identifier", "activities_with_identifiers", "placeholders",
+        "threshold",
+        "suggestion",
+        "risk",
+        "risk_level",
+        "prefill",
+        "answers_from_json",
+        "scenarios_from_json",
+        "check_regime",
+        "regime_suggestion",
+        "compare_activity",
+        "preview",
+        "activity_identifier",
+        "activities_with_identifiers",
+        "placeholders",
     }
