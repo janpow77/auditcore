@@ -1,0 +1,4744 @@
+{
+ "status": "OBSERVED",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "sources": [
+  {
+   "repository": "janpow77/flowworkshop",
+   "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+   "path": "auditworkshop/backend/services/entity_resolution.py",
+   "git_blob": "d7a799b65e0444e8be8e606b35bd2cc1ecbdfac0",
+   "symbols": [
+    "_LEI_RE",
+    "CONFIDENCE_FUZZY_THRESHOLD",
+    "is_valid_lei",
+    "extract_lei_from_text",
+    "_find_by_name_fuzzy"
+   ]
+  },
+  {
+   "repository": "janpow77/flowworkshop",
+   "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+   "path": "auditworkshop/backend/services/state_aid_service.py",
+   "git_blob": "e41be2700affb91c2a6436a7e3ce488696b07116",
+   "symbols": [
+    "_LEGAL_SUFFIXES",
+    "_FILLER_WORDS",
+    "_WS_RE",
+    "_PUNCT_RE",
+    "_strip_accents",
+    "normalize_company_name"
+   ]
+  },
+  {
+   "repository": "janpow77/flowworkshop",
+   "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+   "path": "auditworkshop/backend/services/sanctions_service.py",
+   "git_blob": "3e7ad8bd826eed4da15f9860af267f9fe8a9076b",
+   "symbols": [
+    "_LEGAL_SUFFIXES",
+    "_DIACRITIC_FOLD_MAP",
+    "_fold_diacritics",
+    "normalize_name",
+    "_classify"
+   ]
+  },
+  {
+   "repository": "janpow77/audit_designer",
+   "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+   "path": "backend/app/core/shared/research/register/sanctions.py",
+   "git_blob": "3d48504d92207d6c5a03c038d22fcdf09be63235",
+   "symbols": [
+    "RECHTSFORMZUSAETZE",
+    "_FALTUNG",
+    "_NICHT_WORT",
+    "falte_diakritika",
+    "normalisiere_name",
+    "klassifiziere",
+    "STANDARD_MINDESTWERT"
+   ]
+  }
+ ],
+ "environment": {
+  "python": "3.12.3",
+  "rapidfuzz": "3.10.1",
+  "unicode": "15.0.0"
+ },
+ "constants": {
+  "flowworkshop.state_aid.legal_suffixes": [
+   "ab",
+   "ag",
+   "bv",
+   "co",
+   "co.kg",
+   "cokg",
+   "company",
+   "corp",
+   "ev",
+   "fz",
+   "fzc",
+   "ggmbh",
+   "gmbh",
+   "inc",
+   "jsc",
+   "kg",
+   "kgaa",
+   "limited",
+   "llc",
+   "lp",
+   "ltd",
+   "mbh",
+   "nv",
+   "ohg",
+   "ojsc",
+   "ooo",
+   "oy",
+   "pjsc",
+   "plc",
+   "sa",
+   "sarl",
+   "sas",
+   "se",
+   "sl",
+   "sp",
+   "spa",
+   "spzoo",
+   "srl",
+   "ug",
+   "und",
+   "zao"
+  ],
+  "flowworkshop.state_aid.filler_words": [
+   "deutschland",
+   "europe",
+   "european",
+   "germany",
+   "group",
+   "gruppe",
+   "holding",
+   "international"
+  ],
+  "flowworkshop.sanctions.legal_suffixes": [
+   "ab",
+   "ag",
+   "bv",
+   "co",
+   "company",
+   "corp",
+   "ev",
+   "fz",
+   "fzc",
+   "gmbh",
+   "inc",
+   "jsc",
+   "kg",
+   "limited",
+   "llc",
+   "lp",
+   "ltd",
+   "nv",
+   "ohg",
+   "ojsc",
+   "ooo",
+   "oy",
+   "pjsc",
+   "plc",
+   "sa",
+   "sarl",
+   "sas",
+   "se",
+   "sl",
+   "spa",
+   "srl",
+   "ug",
+   "zao"
+  ],
+  "flowworkshop.sanctions.fold_map": {
+   "ß": "ss",
+   "ø": "o",
+   "Ø": "o",
+   "đ": "d",
+   "Đ": "d",
+   "ð": "d",
+   "Ð": "d",
+   "ł": "l",
+   "Ł": "l",
+   "þ": "th",
+   "Þ": "th",
+   "æ": "ae",
+   "Æ": "ae",
+   "œ": "oe",
+   "Œ": "oe"
+  },
+  "audit_designer.sanctions.legal_suffixes": [
+   "ab",
+   "ag",
+   "bv",
+   "co",
+   "company",
+   "corp",
+   "ev",
+   "fz",
+   "fzc",
+   "gmbh",
+   "inc",
+   "jsc",
+   "kg",
+   "limited",
+   "llc",
+   "lp",
+   "ltd",
+   "nv",
+   "ohg",
+   "ojsc",
+   "ooo",
+   "oy",
+   "pjsc",
+   "plc",
+   "sa",
+   "sarl",
+   "sas",
+   "se",
+   "sl",
+   "spa",
+   "srl",
+   "ug",
+   "zao"
+  ],
+  "audit_designer.sanctions.fold_map": {
+   "ß": "ss",
+   "ø": "o",
+   "Ø": "o",
+   "đ": "d",
+   "Đ": "d",
+   "ð": "d",
+   "Ð": "d",
+   "ł": "l",
+   "Ł": "l",
+   "þ": "th",
+   "Þ": "th",
+   "æ": "ae",
+   "Æ": "ae",
+   "œ": "oe",
+   "Œ": "oe"
+  },
+  "audit_designer.sanctions.minimum_score": 70.0,
+  "flowworkshop.entity_resolution.fuzzy_threshold": 75.0,
+  "flowworkshop.entity_resolution.lei_pattern": "^[A-Z0-9]{18}\\d{2}$"
+ },
+ "cases": [
+  {
+   "name": "state-aid-0",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-0",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "sanctions-0",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "designer-0",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-1",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-1",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "sanctions-1",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "designer-1",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-2",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "   "
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-2",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "   "
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "sanctions-2",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "   "
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "designer-2",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "   "
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-3",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "output": "mueller",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-3",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "output": "mueller",
+   "exception": null
+  },
+  {
+   "name": "sanctions-3",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "designer-3",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "state-aid-4",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "output": "mueller",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-4",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "output": "mueller",
+   "exception": null
+  },
+  {
+   "name": "sanctions-4",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "designer-4",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "state-aid-5",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-5",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "sanctions-5",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "designer-5",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "output": "muller",
+   "exception": null
+  },
+  {
+   "name": "state-aid-6",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "output": "strasse soehne",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-6",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "output": "strasse soehne",
+   "exception": null
+  },
+  {
+   "name": "sanctions-6",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "output": "strasse sohne",
+   "exception": null
+  },
+  {
+   "name": "designer-6",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "output": "strasse sohne",
+   "exception": null
+  },
+  {
+   "name": "state-aid-7",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "output": "strasse soehne",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-7",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "output": "strasse soehne",
+   "exception": null
+  },
+  {
+   "name": "sanctions-7",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "output": "strasse sohne",
+   "exception": null
+  },
+  {
+   "name": "designer-7",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "output": "strasse sohne",
+   "exception": null
+  },
+  {
+   "name": "state-aid-8",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "output": "fraunhofer gesellschaft e v",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-8",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "output": "fraunhofer gesellschaft e v",
+   "exception": null
+  },
+  {
+   "name": "sanctions-8",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "output": "fraunhofer gesellschaft e v",
+   "exception": null
+  },
+  {
+   "name": "designer-8",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "output": "fraunhofer gesellschaft e v",
+   "exception": null
+  },
+  {
+   "name": "state-aid-9",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "output": "fraunhofer gesellschaft",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-9",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "output": "fraunhofer gesellschaft",
+   "exception": null
+  },
+  {
+   "name": "sanctions-9",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "output": "fraunhofer gesellschaft",
+   "exception": null
+  },
+  {
+   "name": "designer-9",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "output": "fraunhofer gesellschaft",
+   "exception": null
+  },
+  {
+   "name": "state-aid-10",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "output": "societe generale s a",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-10",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "output": "societe generale s a",
+   "exception": null
+  },
+  {
+   "name": "sanctions-10",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "output": "societe generale s a",
+   "exception": null
+  },
+  {
+   "name": "designer-10",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "output": "societe generale s a",
+   "exception": null
+  },
+  {
+   "name": "state-aid-11",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "output": "société générale",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-11",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "output": "société générale",
+   "exception": null
+  },
+  {
+   "name": "sanctions-11",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "output": "societe generale",
+   "exception": null
+  },
+  {
+   "name": "designer-11",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "output": "societe generale",
+   "exception": null
+  },
+  {
+   "name": "state-aid-12",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "output": "jose strauss",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-12",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "output": "jose strauss",
+   "exception": null
+  },
+  {
+   "name": "sanctions-12",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "output": "jose strauss",
+   "exception": null
+  },
+  {
+   "name": "designer-12",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "output": "jose strauss",
+   "exception": null
+  },
+  {
+   "name": "state-aid-13",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "output": "søren ørsted a s",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-13",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "output": "søren ørsted a s",
+   "exception": null
+  },
+  {
+   "name": "sanctions-13",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "output": "soren orsted a s",
+   "exception": null
+  },
+  {
+   "name": "designer-13",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "output": "soren orsted a s",
+   "exception": null
+  },
+  {
+   "name": "state-aid-14",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "output": "łodz z o o",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-14",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "output": "łodz z o o",
+   "exception": null
+  },
+  {
+   "name": "sanctions-14",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "output": "lodz sp z o o",
+   "exception": null
+  },
+  {
+   "name": "designer-14",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "output": "lodz sp z o o",
+   "exception": null
+  },
+  {
+   "name": "state-aid-15",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "output": "brueder weiss",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-15",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "output": "brueder weiss",
+   "exception": null
+  },
+  {
+   "name": "sanctions-15",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "output": "bruder weiss",
+   "exception": null
+  },
+  {
+   "name": "designer-15",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "output": "bruder weiss",
+   "exception": null
+  },
+  {
+   "name": "state-aid-16",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "output": "siemens",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-16",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "output": "siemens",
+   "exception": null
+  },
+  {
+   "name": "sanctions-16",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "output": "siemens",
+   "exception": null
+  },
+  {
+   "name": "designer-16",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "output": "siemens",
+   "exception": null
+  },
+  {
+   "name": "state-aid-17",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "output": "siemens aktiengesellschaft",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-17",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "output": "siemens aktiengesellschaft",
+   "exception": null
+  },
+  {
+   "name": "sanctions-17",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "output": "siemens aktiengesellschaft",
+   "exception": null
+  },
+  {
+   "name": "designer-17",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "output": "siemens aktiengesellschaft",
+   "exception": null
+  },
+  {
+   "name": "state-aid-18",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "output": "deutsche bank holding group",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-18",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "output": "deutsche bank",
+   "exception": null
+  },
+  {
+   "name": "sanctions-18",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "output": "deutsche bank holding group",
+   "exception": null
+  },
+  {
+   "name": "designer-18",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "output": "deutsche bank holding group",
+   "exception": null
+  },
+  {
+   "name": "state-aid-19",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "output": "acme holding deutschland",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-19",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "output": "acme",
+   "exception": null
+  },
+  {
+   "name": "sanctions-19",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "output": "acme holding deutschland",
+   "exception": null
+  },
+  {
+   "name": "designer-19",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "output": "acme holding deutschland",
+   "exception": null
+  },
+  {
+   "name": "state-aid-20",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "output": "æther œuvre",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-20",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "output": "æther œuvre",
+   "exception": null
+  },
+  {
+   "name": "sanctions-20",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "output": "aether oeuvre",
+   "exception": null
+  },
+  {
+   "name": "designer-20",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "output": "aether oeuvre",
+   "exception": null
+  },
+  {
+   "name": "state-aid-21",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "output": "þor ðað",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-21",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "output": "þor ðað",
+   "exception": null
+  },
+  {
+   "name": "sanctions-21",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "output": "thor dad",
+   "exception": null
+  },
+  {
+   "name": "designer-21",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "output": "thor dad",
+   "exception": null
+  },
+  {
+   "name": "state-aid-22",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "output": "sstrasse",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-22",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "output": "sstrasse",
+   "exception": null
+  },
+  {
+   "name": "sanctions-22",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "output": "sstrasse",
+   "exception": null
+  },
+  {
+   "name": "designer-22",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "output": "sstrasse",
+   "exception": null
+  },
+  {
+   "name": "state-aid-23",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "output": "cafe creme",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-23",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "output": "cafe creme",
+   "exception": null
+  },
+  {
+   "name": "sanctions-23",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "output": "cafe creme",
+   "exception": null
+  },
+  {
+   "name": "designer-23",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "output": "cafe creme",
+   "exception": null
+  },
+  {
+   "name": "state-aid-24",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "output": "doppelte leerzeichen",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-24",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "output": "doppelte leerzeichen",
+   "exception": null
+  },
+  {
+   "name": "sanctions-24",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "output": "doppelte leerzeichen",
+   "exception": null
+  },
+  {
+   "name": "designer-24",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "output": "doppelte leerzeichen",
+   "exception": null
+  },
+  {
+   "name": "state-aid-25",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "output": "stiftung",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-25",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "output": "stiftung",
+   "exception": null
+  },
+  {
+   "name": "sanctions-25",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "output": "ggmbh stiftung",
+   "exception": null
+  },
+  {
+   "name": "designer-25",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "output": "ggmbh stiftung",
+   "exception": null
+  },
+  {
+   "name": "state-aid-26",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "output": "firma",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-26",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "output": "firma",
+   "exception": null
+  },
+  {
+   "name": "sanctions-26",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "output": "firma",
+   "exception": null
+  },
+  {
+   "name": "designer-26",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "output": "firma",
+   "exception": null
+  },
+  {
+   "name": "state-aid-27",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "output": "alpha",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-27",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "output": "alpha",
+   "exception": null
+  },
+  {
+   "name": "sanctions-27",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "output": "alpha",
+   "exception": null
+  },
+  {
+   "name": "designer-27",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "output": "alpha",
+   "exception": null
+  },
+  {
+   "name": "state-aid-28",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "output": "omega",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-28",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "output": "omega",
+   "exception": null
+  },
+  {
+   "name": "sanctions-28",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "output": "omega",
+   "exception": null
+  },
+  {
+   "name": "designer-28",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "output": "omega",
+   "exception": null
+  },
+  {
+   "name": "state-aid-29",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "output": "o reilly media",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-29",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "output": "o reilly media",
+   "exception": null
+  },
+  {
+   "name": "sanctions-29",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "output": "o reilly media",
+   "exception": null
+  },
+  {
+   "name": "designer-29",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "output": "o reilly media",
+   "exception": null
+  },
+  {
+   "name": "state-aid-30",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "output": "name_mit_unterstrich",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-30",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "output": "name_mit_unterstrich",
+   "exception": null
+  },
+  {
+   "name": "sanctions-30",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "output": "name_mit_unterstrich",
+   "exception": null
+  },
+  {
+   "name": "designer-30",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "output": "name_mit_unterstrich",
+   "exception": null
+  },
+  {
+   "name": "state-aid-31",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "output": "zahl 123",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-31",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "output": "zahl 123",
+   "exception": null
+  },
+  {
+   "name": "sanctions-31",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "output": "zahl 123",
+   "exception": null
+  },
+  {
+   "name": "designer-31",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "output": "zahl 123",
+   "exception": null
+  },
+  {
+   "name": "state-aid-32",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "output": "пао газпром",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-32",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "output": "пао газпром",
+   "exception": null
+  },
+  {
+   "name": "sanctions-32",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "output": "пао газпром",
+   "exception": null
+  },
+  {
+   "name": "designer-32",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "output": "пао газпром",
+   "exception": null
+  },
+  {
+   "name": "state-aid-33",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "北京公司"
+   },
+   "output": "北京公司",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-33",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "北京公司"
+   },
+   "output": "北京公司",
+   "exception": null
+  },
+  {
+   "name": "sanctions-33",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "北京公司"
+   },
+   "output": "北京公司",
+   "exception": null
+  },
+  {
+   "name": "designer-33",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "北京公司"
+   },
+   "output": "北京公司",
+   "exception": null
+  },
+  {
+   "name": "state-aid-34",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "output": "ōsaka kōgyō k k",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-34",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "output": "ōsaka kōgyō k k",
+   "exception": null
+  },
+  {
+   "name": "sanctions-34",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "output": "osaka kogyo k k",
+   "exception": null
+  },
+  {
+   "name": "designer-34",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "output": "osaka kogyo k k",
+   "exception": null
+  },
+  {
+   "name": "state-aid-35",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "output": "krakow s a",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-35",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "output": "krakow s a",
+   "exception": null
+  },
+  {
+   "name": "sanctions-35",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "output": "krakow s a",
+   "exception": null
+  },
+  {
+   "name": "designer-35",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "output": "krakow s a",
+   "exception": null
+  },
+  {
+   "name": "state-aid-36",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "output": "čapek s r o",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-36",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "output": "čapek s r o",
+   "exception": null
+  },
+  {
+   "name": "sanctions-36",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "output": "capek s r o",
+   "exception": null
+  },
+  {
+   "name": "designer-36",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "output": "capek s r o",
+   "exception": null
+  },
+  {
+   "name": "state-aid-37",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "output": "đordević d o o",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-37",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "output": "đordević d o o",
+   "exception": null
+  },
+  {
+   "name": "sanctions-37",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "output": "dordevic d o o",
+   "exception": null
+  },
+  {
+   "name": "designer-37",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "output": "dordevic d o o",
+   "exception": null
+  },
+  {
+   "name": "state-aid-38",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "output": "ñandu s l",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-38",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "output": "ñandu s l",
+   "exception": null
+  },
+  {
+   "name": "sanctions-38",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "output": "nandu s l",
+   "exception": null
+  },
+  {
+   "name": "designer-38",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "output": "nandu s l",
+   "exception": null
+  },
+  {
+   "name": "state-aid-39",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "output": "ÿves ëmile",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-39",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "output": "ÿves ëmile",
+   "exception": null
+  },
+  {
+   "name": "sanctions-39",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "output": "yves emile",
+   "exception": null
+  },
+  {
+   "name": "designer-39",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "output": "yves emile",
+   "exception": null
+  },
+  {
+   "name": "state-aid-40",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "output": "i stanbul a ş",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-40",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "output": "i stanbul a ş",
+   "exception": null
+  },
+  {
+   "name": "sanctions-40",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "output": "istanbul a s",
+   "exception": null
+  },
+  {
+   "name": "designer-40",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "output": "istanbul a s",
+   "exception": null
+  },
+  {
+   "name": "state-aid-41",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "GmbH"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-41",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "GmbH"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "sanctions-41",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "GmbH"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "designer-41",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "GmbH"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-42",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-42",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "sanctions-42",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "designer-42",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "state-aid-43",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "output": "haftungsbeschraenkt",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-43",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "output": "haftungsbeschraenkt",
+   "exception": null
+  },
+  {
+   "name": "sanctions-43",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "output": "haftungsbeschrankt",
+   "exception": null
+  },
+  {
+   "name": "designer-43",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "output": "haftungsbeschrankt",
+   "exception": null
+  },
+  {
+   "name": "state-aid-44",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "output": "finance flow",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-44",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "output": "finance flow",
+   "exception": null
+  },
+  {
+   "name": "sanctions-44",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "output": "finance flow",
+   "exception": null
+  },
+  {
+   "name": "designer-44",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "output": "finance flow",
+   "exception": null
+  },
+  {
+   "name": "state-aid-45",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "output": "ⅷ holding",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-45",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "output": "ⅷ",
+   "exception": null
+  },
+  {
+   "name": "sanctions-45",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "output": "viii holding",
+   "exception": null
+  },
+  {
+   "name": "designer-45",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "output": "viii holding",
+   "exception": null
+  },
+  {
+   "name": "state-aid-46",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "①②③"
+   },
+   "output": "①②③",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-46",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "①②③"
+   },
+   "output": "①②③",
+   "exception": null
+  },
+  {
+   "name": "sanctions-46",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "①②③"
+   },
+   "output": "123",
+   "exception": null
+  },
+  {
+   "name": "designer-46",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "①②③"
+   },
+   "output": "123",
+   "exception": null
+  },
+  {
+   "name": "state-aid-47",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "output": "tab name line",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-47",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "output": "tab name line",
+   "exception": null
+  },
+  {
+   "name": "sanctions-47",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "output": "tab name line",
+   "exception": null
+  },
+  {
+   "name": "designer-47",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "output": "tab name line",
+   "exception": null
+  },
+  {
+   "name": "state-aid-48",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "output": "emoji",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-48",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "output": "emoji",
+   "exception": null
+  },
+  {
+   "name": "sanctions-48",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "output": "emoji",
+   "exception": null
+  },
+  {
+   "name": "designer-48",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "output": "emoji",
+   "exception": null
+  },
+  {
+   "name": "state-aid-49",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "output": "vladimir vladimirovich putin",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-49",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "output": "vladimir vladimirovich putin",
+   "exception": null
+  },
+  {
+   "name": "sanctions-49",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "output": "vladimir vladimirovich putin",
+   "exception": null
+  },
+  {
+   "name": "designer-49",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "output": "vladimir vladimirovich putin",
+   "exception": null
+  },
+  {
+   "name": "state-aid-50",
+   "operation": "state_aid_normalize",
+   "inputs": {
+    "text": "putin"
+   },
+   "output": "putin",
+   "exception": null
+  },
+  {
+   "name": "state-aid-filler-50",
+   "operation": "state_aid_normalize_filler",
+   "inputs": {
+    "text": "putin"
+   },
+   "output": "putin",
+   "exception": null
+  },
+  {
+   "name": "sanctions-50",
+   "operation": "sanctions_normalize",
+   "inputs": {
+    "text": "putin"
+   },
+   "output": "putin",
+   "exception": null
+  },
+  {
+   "name": "designer-50",
+   "operation": "designer_normalize",
+   "inputs": {
+    "text": "putin"
+   },
+   "output": "putin",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-0",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": null
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-0",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-1",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": ""
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-1",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-2",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT394"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-2",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT394"
+   },
+   "output": "HWUPKR0MPOU8FGXBT394",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-3",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "hwupkr0mpou8fgxbt394"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-3",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "hwupkr0mpou8fgxbt394"
+   },
+   "output": "HWUPKR0MPOU8FGXBT394",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-4",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": " 529900T8BM49AURSDO55 "
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-4",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": " 529900T8BM49AURSDO55 "
+   },
+   "output": "529900T8BM49AURSDO55",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-5",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "5493001KJTIIGC8Y1R12"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-5",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "5493001KJTIIGC8Y1R12"
+   },
+   "output": "5493001KJTIIGC8Y1R12",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-6",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "7LTWFZYICNSX8D621K86"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-6",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "7LTWFZYICNSX8D621K86"
+   },
+   "output": "7LTWFZYICNSX8D621K86",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-7",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "7LTWFZYICNSX8D621K87"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-7",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "7LTWFZYICNSX8D621K87"
+   },
+   "output": "7LTWFZYICNSX8D621K87",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-8",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT39"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-8",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT39"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-9",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT3945"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-9",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT3945"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-10",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT39A"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-10",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXBT39A"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-11",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXB-394"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-11",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "HWUPKR0MPOU8FGXB-394"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-12",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "ÄWUPKR0MPOU8FGXBT394"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-12",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "ÄWUPKR0MPOU8FGXBT394"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-13",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "00000000000000000000"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-13",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "00000000000000000000"
+   },
+   "output": "00000000000000000000",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-14",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "LEI: 529900T8BM49AURSDO55"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-14",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "LEI: 529900T8BM49AURSDO55"
+   },
+   "output": "529900T8BM49AURSDO55",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-15",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "ID 529900T8BM49AURSDO55; HRB 123"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-15",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "ID 529900T8BM49AURSDO55; HRB 123"
+   },
+   "output": "529900T8BM49AURSDO55",
+   "exception": null
+  },
+  {
+   "name": "lei-valid-16",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "prefix529900T8BM49AURSDO55suffix"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-16",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "prefix529900T8BM49AURSDO55suffix"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-17",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": "HRB 12345"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-17",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": "HRB 12345"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "lei-valid-18",
+   "operation": "is_valid_lei",
+   "inputs": {
+    "value": 12345
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "name": "lei-extract-18",
+   "operation": "extract_lei",
+   "inputs": {
+    "value": 12345
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "classify-100.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-100.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-100.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 100.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-97.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-97.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 97.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-96.99-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-96.99-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 96.99,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-90.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-90.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 90.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-89.99-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-89.99-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 89.99,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-80.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-80.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 80.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "medium",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-79.99-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-79.99-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 79.99,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-0.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-0.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 0.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify--1.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere--1.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": -1.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "low",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-putin-vladimir vladimirovich putin",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-putin-vladimir vladimirovich putin",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "putin",
+    "matched_norm": "vladimir vladimirovich putin"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-vladimir putin-putin vladimir",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-vladimir putin-putin vladimir",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "vladimir putin",
+    "matched_norm": "putin vladimir"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-mueller-muller",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-mueller-muller",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "mueller",
+    "matched_norm": "muller"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-siemens-siemens",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-siemens-siemens",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "siemens",
+    "matched_norm": "siemens"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-deutsche bank-deutsche bank holding",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-deutsche bank-deutsche bank holding",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "deutsche bank",
+    "matched_norm": "deutsche bank holding"
+   },
+   "output": "high",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-alpha beta-alpha gamma",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-alpha beta-alpha gamma",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "alpha beta",
+    "matched_norm": "alpha gamma"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0--",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0--",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "",
+    "matched_norm": ""
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "classify-101.0-acme-acne",
+   "operation": "sanctions_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "klassifiziere-101.0-acme-acne",
+   "operation": "designer_classify",
+   "inputs": {
+    "score": 101.0,
+    "q_norm": "acme",
+    "matched_norm": "acne"
+   },
+   "output": "exact",
+   "exception": null
+  },
+  {
+   "name": "fuzzy-0-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "siemens",
+    "candidates": [
+     [
+      1,
+      "siemens"
+     ],
+     [
+      2,
+      "siemens energy"
+     ],
+     [
+      3,
+      "simens"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": [
+    1,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-0-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "siemens",
+    "candidates": [
+     [
+      1,
+      "siemens"
+     ],
+     [
+      2,
+      "siemens energy"
+     ],
+     [
+      3,
+      "simens"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": [
+    1,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-1-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "fraunhofer gesellschaft",
+    "candidates": [
+     [
+      1,
+      "fraunhofer gesellschaft zur foerderung"
+     ],
+     [
+      2,
+      "fraunhofer"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": [
+    1,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-1-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "fraunhofer gesellschaft",
+    "candidates": [
+     [
+      1,
+      "fraunhofer gesellschaft zur foerderung"
+     ],
+     [
+      2,
+      "fraunhofer"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": [
+    1,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-2-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "deutsche bank",
+    "candidates": [
+     [
+      7,
+      "deutsche bahn"
+     ],
+     [
+      8,
+      "deutsche bank"
+     ],
+     [
+      9,
+      "bank deutsche"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": [
+    8,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-2-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "deutsche bank",
+    "candidates": [
+     [
+      7,
+      "deutsche bahn"
+     ],
+     [
+      8,
+      "deutsche bank"
+     ],
+     [
+      9,
+      "bank deutsche"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": [
+    8,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-3-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "acme",
+    "candidates": [
+     [
+      1,
+      "acne"
+     ],
+     [
+      2,
+      "acme corp"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": [
+    2,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-3-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "acme",
+    "candidates": [
+     [
+      1,
+      "acne"
+     ],
+     [
+      2,
+      "acme corp"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": [
+    2,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-4-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "ab",
+    "candidates": [
+     [
+      1,
+      "ab"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "fuzzy-4-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "ab",
+    "candidates": [
+     [
+      1,
+      "ab"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "fuzzy-5-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "",
+    "candidates": [
+     [
+      1,
+      "x"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "fuzzy-5-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "",
+    "candidates": [
+     [
+      1,
+      "x"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "fuzzy-6-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "mueller bau",
+    "candidates": [
+     [
+      5,
+      "mueller bau"
+     ],
+     [
+      4,
+      "mueller bau"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": [
+    5,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-6-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "mueller bau",
+    "candidates": [
+     [
+      5,
+      "mueller bau"
+     ],
+     [
+      4,
+      "mueller bau"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": [
+    5,
+    100.0
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-7-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "alpha beta gamma",
+    "candidates": [
+     [
+      1,
+      "delta epsilon"
+     ],
+     [
+      2,
+      "zeta"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "fuzzy-7-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "alpha beta gamma",
+    "candidates": [
+     [
+      1,
+      "delta epsilon"
+     ],
+     [
+      2,
+      "zeta"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "fuzzy-8-75.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "muller logistik",
+    "candidates": [
+     [
+      1,
+      "mueller logistik"
+     ],
+     [
+      2,
+      "muller logistic"
+     ]
+    ],
+    "min_score": 75.0
+   },
+   "output": [
+    1,
+    96.8
+   ],
+   "exception": null
+  },
+  {
+   "name": "fuzzy-8-90.0",
+   "operation": "fuzzy_best",
+   "inputs": {
+    "query": "muller logistik",
+    "candidates": [
+     [
+      1,
+      "mueller logistik"
+     ],
+     [
+      2,
+      "muller logistic"
+     ]
+    ],
+    "min_score": 90.0
+   },
+   "output": [
+    1,
+    96.8
+   ],
+   "exception": null
+  }
+ ]
+}
