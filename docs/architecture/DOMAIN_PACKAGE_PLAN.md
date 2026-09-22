@@ -1,9 +1,12 @@
 # Fachpaketplan nach dem technischen Framework-Nachweis
 
-Stand: 22. September 2026. Status: **Planung, keine Fachpaketfreigabe und keine
-abgeschlossene Anwendungsmigration.** Umsetzung erst nach Phase A/B des
+Stand: 22. September 2026. **Fortgeschriebener Paketplan.** Dummy, Invoice und
+Reporting sind seit Preview v0.1.0 veröffentlicht; PDF-/Excel-Erweiterungen
+werden separat geprüft. Neue Kandidaten sind noch keine veröffentlichten Pakete
+und keine abgeschlossenen Anwendungsmigrationen. Grundlage bleibt Phase A/B des
 [Umsetzungsplans](IMPLEMENTATION_PLAN.md), gemäß [ADR-001](ADR-001-multi-package-monorepo.md).
-Dieser Plan erzeugt weder Fachcode noch zusätzliche Repository-Kopien.
+Dieser Plan dokumentiert den Zuschnitt. Den aktuellen Veröffentlichungsstand
+belegen die Releaseberichte; Anwendungen bleiben eigene Repositories.
 
 ## Ergebnis und Reihenfolge
 
@@ -12,6 +15,12 @@ Die erste Welle besteht aus `auditcore_dummygenerator`, darauf aufbauend
 Zuschnitt `auditcore_reporting`. Danach folgen Statistik und Stichproben.
 Privacy, Dokumentinterpretation, Risiko und Vergabe werden erst mit ihren
 jeweiligen fachlichen bzw. Sicherheitsnachweisen übernommen.
+
+**Die untenstehende ursprüngliche Reihenfolge wird durch den erweiterten Auftrag
+ergänzt:** Register-/DSFA-Funktionalität einschließlich Berechnung hat jetzt
+Priorität; Harvester und weitere Analyse-/Werkzeugfamilien werden ebenfalls
+berücksichtigt. Die [Abdeckung aller 71 Repositories](REPOSITORY_PACKAGE_COVERAGE.md)
+enthält Quellen, konkrete Consumer und die aktualisierte Reihenfolge.
 
 | Priorität | Eigenständige Distribution | Gemeinsam darin halten | Bewusst außerhalb halten |
 |---|---|---|---|
@@ -33,6 +42,89 @@ Pakete für jede einzelne Generatorfeldart sind derzeit nicht begründet.
 Alle Anwendungen behalten eigene Repositories, Oberfläche, Datenbank,
 Berechtigungen und Releaseentscheidungen. Fachpakete ziehen die Plattform
 `auditcore` nicht automatisch als Laufzeitabhängigkeit nach.
+
+## Erweiterter Auftrag: Register, DSFA, Harvester, Analysen und Tools
+
+Die vorherige Liste ist **keine vollständige Liste aller Bibliotheken**. Sie war
+auf ausgewählte Fachkerne begrenzt. Der Nutzer hat nun ausdrücklich die
+Erweiterung vorhandener Bibliotheken sowie die Berücksichtigung der Harvester,
+Analysen, Werkzeuge und der Datenschutzfunktionen aus `regulierung` verlangt.
+Die aktuelle repositoryübergreifende Abdeckung wird separat dokumentiert.
+
+### `auditcore_dataprotection`: VVT und DSFA einschließlich Berechnung
+
+**Ein eigenständig installierbares Fachpaket soll Anwendungen ermöglichen,
+eigene Verarbeitungsverzeichnisse und Datenschutz-Folgenabschätzungen anzulegen,
+zu bearbeiten, zu berechnen, zu versionieren und auszugeben.** Die Funktionalität
+ist der Gegenstand der Wiederverwendung; vorhandene Registerinhalte werden nicht
+als allgemeiner Datensatz übernommen.
+
+Das Verzeichnis und die zu einer Tätigkeit gehörende DSFA teilen stabile
+Tätigkeitskennungen, Versionsbezüge, Maßnahmen und Änderungsnachweise. Deshalb
+gehören sie in ein gemeinsames Paket mit klaren Teilmodulen:
+
+| Teilmodul | Wiederverwendbare Fähigkeit |
+|---|---|
+| `register` | Verzeichnis und Verarbeitungstätigkeiten anlegen/ändern, Felder prüfen, stabile Kennungen, Fassungen und nachvollziehbare Änderungen verwalten. |
+| `assessment` | Eine DSFA aus einer konkreten Tätigkeitsfassung erstellen; Fragen, Begründungen, Risiken und Maßnahmen erfassen; Bearbeitungsstände prüfen. |
+| `calculation` | Schwellwertanalyse, Bruttorisiko aus Schwere und Wahrscheinlichkeit, Maßnahmenwirkung, Nettorisiko und begründeten Vorschlag berechnen. |
+| `rules` | Explizite versionierte Frage-/Maßnahmenkataloge, Rechtsregime, Schwellen und Bewertungsprofile mit Herkunft und Anwendbarkeit. |
+| `workflow` | Fachliche Übergangsbedingungen, notwendige Begründungen, DSB-Beteiligung und erneuten Prüfbedarf bei geänderter Tätigkeit abbilden. |
+| `export` | Register- und DSFA-Berichtsdaten sowie optionale Excel-/PDF-Ausgabe. Allgemeine Ausgabetechnik nur bei passendem Vertrag über `auditcore_reporting`. |
+
+**Berechnung ist ein verpflichtender Kernumfang**, kein späterer optionaler
+Formularzusatz. Ergebnis und Begründung müssen die tatsächlich angewendete
+Regelversion nennen. Fachliche Entscheidung und technische Berechnung bleiben
+unterscheidbar; unbekannte/fehlende Angaben benötigen einen sichtbaren Zustand.
+
+Konkrete Quellbasis, lokal und gegen GitHub-HEAD geprüft am 22.09.2026:
+`janpow77/regulierung@a5d48ea4b90a410210ec25e707781ef9e21ad743`.
+
+- `backend/app/services/dsfa/bewertung.py`: `Antwort`, `Szenario`,
+  `Schwellwertergebnis`, `Risikoergebnis`, `Vorschlag`,
+  `vorbelegung_aus_taetigkeit`, `werte_schwellwert_aus`, `werte_risiko_aus`,
+  `erstelle_vorschlag`, `vorschlag_als_json`. Der Berechnungsteil ist bereits
+  weitgehend rein und importiert seinen Katalog sowie die Standardbibliothek.
+- `backend/app/services/dsfa/katalog.py`: Fragen, Maßnahmen, Fundstellen und
+  vorhandene Rechtsregime; diese sind versionierte Quellprofile, keine hiermit
+  bestätigte allgemeingültige Rechtsauslegung.
+- `backend/app/services/mandant_dsgvo_service.py`: Tätigkeitskennungen,
+  Registerfassungen, Bearbeitung/Freigabe und Workbook-Ausgabe.
+- `backend/app/services/dsfa/verwaltung.py`: Erstellung aus Tätigkeiten,
+  Vorschlagsberechnung, Bearbeitung, Freigabe, Änderungsvergleich und Neubewertung.
+- `backend/app/services/dsfa/export.py`: HTML-/PDF-Bericht und Workbook.
+- `backend/tests/test_dsfa_bewertung.py`, `test_dsfa_verwaltung.py`,
+  `test_mandant_dsgvo.py`: vorhandene Berechnungs- und Ablaufprüfungen als
+  Ausgangspunkt für tatsächlich auszuführende Characterization.
+
+Die Anwendung behält Datenbankadapter, Mandantenzugriff, serverseitige Rechte,
+Benutzeroberfläche und unveränderliche Speicherung freigegebener Fassungen.
+Die Bibliothek darf Vier-Augen-Prinzip, Versionsschutz oder DSB-Beteiligung
+nicht umgehen. Diese Anforderungen sind bei der Consumerintegration erneut
+zu prüfen. Allgemeine Pseudonymisierungsmechanik bleibt der getrennte Kandidat
+`auditcore_privacy`; sie ist keine Pflichtabhängigkeit der Register-/DSFA-Funktion.
+
+Bereits lokal ausgeführt: 19 unveränderte Originaltests bestanden, 129 weitere
+Ausgaben beobachtet, anschließend 148 Original-/Replaytests exakt bestanden.
+Nachweise: `.auditcore/dataprotection-characterization/{REPORT.md,result.json}`.
+Das ist eine Charakterisierung des reinen Berechnungskerns, keine vollständige
+VVT-/DSFA-Workflowabnahme oder rechtliche Bestätigung. Insbesondere doppelte
+Kriterien, unvollständige Antworten und explizite Netto-Nullwerte brauchen einen
+klaren Bibliotheksvertrag. Bestehende Schutzprüfungen des Verwaltungsadapters
+müssen beim Herauslösen erhalten bleiben.
+
+Vor Extraktion weiterhin abzusichern sind insbesondere leere
+oder unvollständige Antworten, doppelte Kriterien, unbekannte Schlüssel,
+Regimewechsel, Schwellenränder, Maßnahmenwirkung und explizite Restwerte.
+Der aktuelle Legacycode überspringt unbekannte/negative Antworten; seine
+Behandlung unvollständiger Erhebungen muss charakterisiert und fachlich geprüft
+werden, bevor daraus ein allgemeiner Freigabevertrag abgeleitet wird.
+
+Status: **konkreter Paketauftrag/Kandidat, noch keine veröffentlichte Distribution**.
+Die bisherige MIT-Freigabe für zwei Generatorkerne umfasst diese Quellen nicht.
+Zusätzlich nennt ein Quellkommentar BfDI-Mustermaterial unter CC-BY-SA 4.0;
+Vorlagenrechte und Codeherkunft werden getrennt geprüft. Es wird keine
+pauschale MIT-Umlizenzierung der bestehenden Register-/DSFA-Unterlagen behauptet.
 
 ## Evidenzbasis und Aussagegrenzen
 
