@@ -22,7 +22,8 @@ def document() -> dict[str, Any]:
 def test_catalog_covers_every_h0_family_and_is_honest() -> None:
     entries = load_catalog()
     stats = summary(entries)
-    assert len(entries) == 35
+    assert len(entries) == 62
+    assert stats["implementation"] == {"PLANNED": 53, "SUPPORTED": 7, "LEGACY_ONLY": 2}
     assert set(stats["family"]) == {
         "legal",
         "procurement",
@@ -38,11 +39,11 @@ def test_catalog_covers_every_h0_family_and_is_honest() -> None:
         "legal.eurlex",
         "legal.curia",
         "legal.eca",
-        "legal.olaf",
-        "legal.gesetze_im_internet",
-        "legal.hessenrecht",
-        "procurement.ted",
-        "procurement.had",
+        "legal.designer_olaf",
+        "legal.designer_gesetze_im_internet",
+        "legal.designer_hessenrecht",
+        "procurement.ted_awards",
+        "procurement.had_search",
         "funding.state_aid",
         "funding.de_minimis_eaid",
         "funding.eu_beneficiaries",
@@ -52,6 +53,16 @@ def test_catalog_covers_every_h0_family_and_is_honest() -> None:
         "property.zvg",
     ):
         assert required in ids
+    supported = {e.source_id for e in entries if e.implementation == "SUPPORTED"}
+    assert supported == {
+        "legal.dip_bundestag",
+        "legal.eurlex",
+        "legal.bafin",
+        "legal.curia",
+        "legal.eca",
+        "procurement.ted_awards",
+        "procurement.had_search",
+    }
     for entry in entries:
         assert entry.live_test in ("NOT_EXECUTED", "NOT_CONFIGURED")
         assert entry.data["licence_access"]["status"] != "REVIEWED"

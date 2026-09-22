@@ -13,9 +13,16 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
-excel = ["openpyxl>=3.1.5"]
+excel = ["openpyxl>=3.0.9,<4", "auditcore_reporting[excel]==0.2.0"]
 pdf = ["weasyprint>=60.2"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "openpyxl>=3.1.5"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "openpyxl>=3.1.5",
+    "auditcore_reporting[excel]==0.2.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -39,7 +46,7 @@ python_version = "3.11"
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["openpyxl.*", "weasyprint.*"]
+module = ["openpyxl.*", "weasyprint.*", "auditcore_reporting.*"]
 ignore_missing_imports = true
 
 [tool.auditcore-bibquality]
