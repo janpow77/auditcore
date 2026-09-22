@@ -27,26 +27,70 @@ from .profiles import load_profile
 PROFILE_ID = "flowworkshop.beneficiaries"
 MODES = ("smart", "full-refresh", "force", "snapshot")
 
-_ACCENT_TABLE = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss", "Ä": "ae", "Ö": "oe", "Ü": "ue"})
+_ACCENT_TABLE = str.maketrans(
+    {"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss", "Ä": "ae", "Ö": "oe", "Ü": "ue"}
+)
 _STRIP_TABLE = str.maketrans(
     {
-        "ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss", "Ä": "ae", "Ö": "oe", "Ü": "ue",
-        "á": "a", "à": "a", "â": "a", "ã": "a", "å": "a",
-        "é": "e", "è": "e", "ê": "e", "ë": "e",
-        "í": "i", "ì": "i", "î": "i", "ï": "i",
-        "ó": "o", "ò": "o", "ô": "o", "õ": "o",
-        "ú": "u", "ù": "u", "û": "u",
-        "ç": "c", "ñ": "n", "ý": "y",
-        "ł": "l", "ń": "n", "ś": "s", "ź": "z", "ż": "z",
-        "č": "c", "š": "s", "ž": "z", "đ": "d",
+        "ä": "ae",
+        "ö": "oe",
+        "ü": "ue",
+        "ß": "ss",
+        "Ä": "ae",
+        "Ö": "oe",
+        "Ü": "ue",
+        "á": "a",
+        "à": "a",
+        "â": "a",
+        "ã": "a",
+        "å": "a",
+        "é": "e",
+        "è": "e",
+        "ê": "e",
+        "ë": "e",
+        "í": "i",
+        "ì": "i",
+        "î": "i",
+        "ï": "i",
+        "ó": "o",
+        "ò": "o",
+        "ô": "o",
+        "õ": "o",
+        "ú": "u",
+        "ù": "u",
+        "û": "u",
+        "ç": "c",
+        "ñ": "n",
+        "ý": "y",
+        "ł": "l",
+        "ń": "n",
+        "ś": "s",
+        "ź": "z",
+        "ż": "z",
+        "č": "c",
+        "š": "s",
+        "ž": "z",
+        "đ": "d",
     }
 )
 _SA_REGEX = re.compile(r"\bSA[\s\.\-_]*(\d{4,6})(?:[/\-\.](\d{4}))?", re.IGNORECASE)
 _WS_RE = re.compile(r"\s+")
 _PUNCT_RE = re.compile(r"[^\w\s]", re.UNICODE)
 _ROLE_TO_ALIAS = (
-    "name", "projekt", "aktenzeichen", "beschreibung", "kosten", "kosten_eu", "standort",
-    "ort", "plz", "landkreis", "latitude", "longitude", "beginn", "ende",
+    "name",
+    "projekt",
+    "aktenzeichen",
+    "beschreibung",
+    "kosten",
+    "kosten_eu",
+    "standort",
+    "ort",
+    "plz",
+    "landkreis",
+    "latitude",
+    "longitude",
+    "beginn",
+    "ende",
 )
 
 
@@ -292,8 +336,12 @@ def map_rows(
         name = (canonical.get("name") or "").strip() if canonical.get("name") else ""
         if not name:
             result.append(
-                {"_row_number": index + 1, "_skip_reason": "no_name", "raw_row": raw_row,
-                 "mapping": mapping}
+                {
+                    "_row_number": index + 1,
+                    "_skip_reason": "no_name",
+                    "raw_row": raw_row,
+                    "mapping": mapping,
+                }
             )
             continue
         result.append(
@@ -398,7 +446,10 @@ def validate_rows(rows: Sequence[Mapping[str, Any]], context: SnapshotContext) -
             errors.append(f"Zeile {nr}: EU-Anteil darf nicht negativ sein.")
         if total is not None and eu is not None and eu > total:
             errors.append(f"Zeile {nr}: EU-Anteil ist größer als Gesamtkosten.")
-        start, end = parse_date(row.get("project_start_raw")), parse_date(row.get("project_end_raw"))
+        start, end = (
+            parse_date(row.get("project_start_raw")),
+            parse_date(row.get("project_end_raw")),
+        )
         if start and end and start > end:
             errors.append(f"Zeile {nr}: Projektbeginn liegt nach Projektende.")
         lat, lon = row.get("latitude"), row.get("longitude")
@@ -417,6 +468,7 @@ def parse_file(
     header_row: int = 0,
     field_mapping: Mapping[str, str] | None = None,
     typing: str = "legacy",
+    header_detection: str = "legacy",
 ) -> list[dict[str, Any]]:
     """``parse_xlsx_or_csv`` without pandas: read the table, then :func:`map_rows`.
 
@@ -426,7 +478,11 @@ def parse_file(
     from .tables import read_table
 
     table = read_table(
-        content, file_name, sheet=sheet, header_row=header_row,
+        content,
+        file_name,
+        sheet=sheet,
+        header_row=header_row,
         typing="text" if typing == "text" else "legacy",
+        header_detection="strict" if header_detection == "strict" else "legacy",
     )
     return map_rows(table.headers, table.rows, field_mapping)

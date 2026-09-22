@@ -33,13 +33,31 @@ Typing = Literal["legacy", "text"]
 #: pandas ``read_csv`` default NA strings (``keep_default_na=True``).
 PANDAS_NA = frozenset(
     {
-        "", "#N/A", "#N/A N/A", "#NA", "-1.#IND", "-1.#QNAN", "-NaN", "-nan", "1.#IND", "1.#QNAN",
-        "<NA>", "N/A", "NA", "NULL", "NaN", "None", "n/a", "nan", "null",
+        "",
+        "#N/A",
+        "#N/A N/A",
+        "#NA",
+        "-1.#IND",
+        "-1.#QNAN",
+        "-NaN",
+        "-nan",
+        "1.#IND",
+        "1.#QNAN",
+        "<NA>",
+        "N/A",
+        "NA",
+        "NULL",
+        "NaN",
+        "None",
+        "n/a",
+        "nan",
+        "null",
     }
 )
 _INT_RE = re.compile(r"[+-]?\d+")
-_FLOAT_RE = re.compile(r"[+-]?(?:\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?|inf|infinity|nan)",
-                       re.IGNORECASE)
+_FLOAT_RE = re.compile(
+    r"[+-]?(?:\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?|inf|infinity|nan)", re.IGNORECASE
+)
 
 
 @dataclass(frozen=True)
@@ -134,11 +152,24 @@ def _decode(content: bytes) -> tuple[str, str]:
     return content.decode("utf-8", errors="replace"), "utf-8-replace"  # pragma: no cover
 
 
-def read_csv(content: bytes, *, typing: Typing = "legacy", limits: Limits | None = None) -> Table:
+HeaderDetection = Literal["legacy", "strict"]
+
+
+def read_csv(
+    content: bytes,
+    *,
+    typing: Typing = "legacy",
+    header_detection: HeaderDetection = "legacy",
+    limits: Limits | None = None,
+) -> Table:
     """Transparency-list CSV: encoding and delimiter detection, title rows, double headers.
 
     Unlike the source application, title rows with fewer fields than the
-    header do not abort the file (FS-W04).
+    header do not abort the file (FS-W04). ``header_detection="legacy"`` keeps
+    the source rule for a second, machine-readable header row, which also
+    takes a first *data* row with three or more purely numeric cells as header
+    and thereby loses it (FS-W08); ``"strict"`` requires such header cells to
+    contain a letter.
     """
     limits = limits or Limits()
     _check_size(content, limits)
@@ -172,7 +203,12 @@ def read_csv(content: bytes, *, typing: Typing = "legacy", limits: Limits | None
             header = max(candidates, key=lambda item: (item[2], item[1]))[0]
     if header + 1 < len(records):
         following = [v.strip() for v in records[header + 1] if v.strip()]
-        snake = sum(1 for v in following if re.fullmatch(r"[a-z0-9_]+", v))
+        snake = sum(
+            1
+            for v in following
+            if re.fullmatch(r"[a-z0-9_]+", v)
+            and (header_detection == "legacy" or re.search(r"[a-z]", v))
+        )
         if following and snake >= max(3, len(following) // 2):
             header += 1
     if not records:
@@ -180,16 +216,23 @@ def read_csv(content: bytes, *, typing: Typing = "legacy", limits: Limits | None
     headers = _unique_headers(records[header])
     if len(headers) > limits.max_columns:
         raise SourceFormatError("Die Datei enthält mehr Spalten als zulässig.")
-    data = records[header + 1:]
+    data = records[header + 1 :]
     for row in data:
         if len(row) > len(headers):
             raise SourceFormatError(
-                f"Zeile mit {len(row)} Feldern bei {len(headers)} Spalten; Datei nicht eindeutig lesbar."
+                f"Zeile mit {len(row)} Feldern bei {len(headers)} Spalten; "
+                "Datei nicht eindeutig lesbar."
             )
         if any(len(cell) > limits.max_cell_characters for cell in row):
             raise SourceFormatError("Eine Zelle überschreitet die zulässige Länge.")
-    return Table(headers, tuple(_typed([list(r) for r in data], len(headers), typing)), header,
-                 delimiter, encoding, typing)
+    return Table(
+        headers,
+        tuple(_typed([list(r) for r in data], len(headers), typing)),
+        header,
+        delimiter,
+        encoding,
+        typing,
+    )
 
 
 def _openpyxl() -> Any:
@@ -292,7 +335,9 @@ def read_xlsx(
             non_empty = [str(c).strip() for c in row if c is not None and str(c).strip()]
             if len(non_empty) < 2:
                 continue
-            ratio = sum(1 for c in non_empty if any(ch.isalpha() for ch in c)) / max(len(non_empty), 1)
+            ratio = sum(1 for c in non_empty if any(ch.isalpha() for ch in c)) / max(
+                len(non_empty), 1
+            )
             candidates.append((i, len(non_empty), ratio))
         if candidates:
             for idx, count, ratio in candidates:
@@ -305,12 +350,14 @@ def read_xlsx(
         raise SourceFormatError("Die angegebene Kopfzeile liegt hinter dem Tabellenende.")
     raw_header = rows[header]
     width = len(raw_header)
-    while width and raw_header[width - 1] is None and all(
-        (len(r) < width or r[width - 1] is None) for r in rows[header + 1:]
+    while (
+        width
+        and raw_header[width - 1] is None
+        and all((len(r) < width or r[width - 1] is None) for r in rows[header + 1 :])
     ):
         width -= 1
     headers = _unique_headers(raw_header[:width])
-    data = [(r + [None] * width)[:width] for r in rows[header + 1:]]
+    data = [(r + [None] * width)[:width] for r in rows[header + 1 :]]
     if typing == "text":
         typed = [tuple(_excel_value(v, typing) for v in r) for r in data]
     else:
@@ -326,15 +373,22 @@ def read_table(
     sheet: str | int | None = None,
     header_row: int = 0,
     typing: Typing = "legacy",
+    header_detection: HeaderDetection = "legacy",
     limits: Limits | None = None,
 ) -> Table:
     """Dispatch by file extension (``csv``, ``xlsx``/``xlsm``); PDF stays with the consumer."""
     ext = file_name.rsplit(".", 1)[-1].lower() if "." in (file_name or "") else ""
     if ext == "csv":
-        return read_csv(content, typing=typing, limits=limits)
+        return read_csv(content, typing=typing, header_detection=header_detection, limits=limits)
     if ext in ("xlsx", "xlsm"):
-        return read_xlsx(content, sheet=sheet if sheet is not None else 0, header_row=header_row,
-                         typing=typing, limits=limits)
+        return read_xlsx(
+            content,
+            sheet=sheet if sheet is not None else 0,
+            header_row=header_row,
+            typing=typing,
+            limits=limits,
+        )
     raise SourceFormatError(
-        f"Nur CSV und XLSX werden von dieser Bibliothek gelesen, nicht '{ext}' (file_name={file_name})."
+        f"Nur CSV und XLSX werden von dieser Bibliothek gelesen, nicht '{ext}' "
+        f"(file_name={file_name})."
     )

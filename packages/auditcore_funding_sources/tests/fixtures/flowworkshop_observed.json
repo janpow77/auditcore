@@ -592,6 +592,17 @@
        }
       ],
       [
+       "erste_zeile_numerisch.csv",
+       {
+        "$dict": [
+         [
+          "sha256",
+          "6e03c2fadd3585466b99e76123527761c1449c4e771efd3ece9871eb87252e8d"
+         ]
+        ]
+       }
+      ],
+      [
        "komma_doppelkopf.csv",
        {
         "$dict": [
@@ -9856,7 +9867,110 @@
    "exception": null
   },
   {
-   "name": "parse_file-4-komma_doppelkopf.csv",
+   "name": "parse_file-4-erste_zeile_numerisch.csv",
+   "operation": "workshop.parse_xlsx_or_csv",
+   "inputs": {
+    "$dict": [
+     [
+      "file",
+      "erste_zeile_numerisch.csv"
+     ],
+     [
+      "sha256",
+      "6e03c2fadd3585466b99e76123527761c1449c4e771efd3ece9871eb87252e8d"
+     ]
+    ]
+   },
+   "output": [
+    {
+     "$dict": [
+      [
+       "_row_number",
+       1
+      ],
+      [
+       "_skip_reason",
+       "no_name"
+      ],
+      [
+       "raw_row",
+       {
+        "$dict": [
+         [
+          "A GmbH",
+          "B GmbH"
+         ],
+         [
+          "P1",
+          "P2"
+         ],
+         [
+          "150000",
+          2500
+         ],
+         [
+          "75000",
+          1000
+         ],
+         [
+          "34117",
+          60311
+         ]
+        ]
+       }
+      ],
+      [
+       "mapping",
+       {
+        "$dict": []
+       }
+      ]
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "read-erste_zeile_numerisch.csv",
+   "operation": "workshop.read_table",
+   "inputs": {
+    "$dict": [
+     [
+      "file",
+      "erste_zeile_numerisch.csv"
+     ]
+    ]
+   },
+   "output": {
+    "$dict": [
+     [
+      "headers",
+      [
+       "A GmbH",
+       "P1",
+       "150000",
+       "75000",
+       "34117"
+      ]
+     ],
+     [
+      "rows",
+      [
+       [
+        "B GmbH",
+        "P2",
+        2500,
+        1000,
+        60311
+       ]
+      ]
+     ]
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_file-5-komma_doppelkopf.csv",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -10185,7 +10299,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-5-tab_cp1252.csv",
+   "name": "parse_file-6-tab_cp1252.csv",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -10483,7 +10597,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-6-fonds_gemischt.csv",
+   "name": "parse_file-7-fonds_gemischt.csv",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -10893,7 +11007,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-7-ohne_namensspalte.csv",
+   "name": "parse_file-8-ohne_namensspalte.csv",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -11044,7 +11158,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-8-titelzeilen.xlsx",
+   "name": "parse_file-9-titelzeilen.xlsx",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -11734,7 +11848,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-9-kopfzeile_explizit.xlsx",
+   "name": "parse_file-10-kopfzeile_explizit.xlsx",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -12432,7 +12546,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-10-ohne_namensspalte.csv",
+   "name": "parse_file-11-ohne_namensspalte.csv",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [
@@ -12682,7 +12796,7 @@
    "exception": null
   },
   {
-   "name": "parse_file-11-semikolon_titelzeilen.csv",
+   "name": "parse_file-12-semikolon_titelzeilen.csv",
    "operation": "workshop.parse_xlsx_or_csv",
    "inputs": {
     "$dict": [

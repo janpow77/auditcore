@@ -31,24 +31,69 @@ PUBLIC_UI = "https://aid-register.ec.europa.eu/home"
 PAGE_SIZE = 500
 MASKED = "***"
 COLUMNS = (
-    "referenceNumber", "beneficiaryName", "beneficiaryReferenceNumber", "amountEur", "currency",
-    "amount", "grantingDate", "deMinimisType", "grantingAuthorityName", "sector", "instrument",
-    "publishedDate", "country",
+    "referenceNumber",
+    "beneficiaryName",
+    "beneficiaryReferenceNumber",
+    "amountEur",
+    "currency",
+    "amount",
+    "grantingDate",
+    "deMinimisType",
+    "grantingAuthorityName",
+    "sector",
+    "instrument",
+    "publishedDate",
+    "country",
 )
 HASH_FIELDS = (
-    "referenceNumber", "beneficiaryName", "beneficiaryReferenceNumber", "amountEur", "grantingDate",
-    "deMinimisType", "grantingAuthorityName", "sector", "instrument", "country",
+    "referenceNumber",
+    "beneficiaryName",
+    "beneficiaryReferenceNumber",
+    "amountEur",
+    "grantingDate",
+    "deMinimisType",
+    "grantingAuthorityName",
+    "sector",
+    "instrument",
+    "country",
 )
 ISO2_TO_ISO3 = {
-    "AT": "AUT", "BE": "BEL", "BG": "BGR", "CY": "CYP", "CZ": "CZE", "DE": "DEU", "DK": "DNK",
-    "EE": "EST", "EL": "GRC", "ES": "ESP", "FI": "FIN", "FR": "FRA", "GR": "GRC", "HR": "HRV",
-    "HU": "HUN", "IE": "IRL", "IT": "ITA", "LT": "LTU", "LU": "LUX", "LV": "LVA", "MT": "MLT",
-    "NL": "NLD", "PL": "POL", "PT": "PRT", "RO": "ROU", "SE": "SWE", "SI": "SVN", "SK": "SVK",
+    "AT": "AUT",
+    "BE": "BEL",
+    "BG": "BGR",
+    "CY": "CYP",
+    "CZ": "CZE",
+    "DE": "DEU",
+    "DK": "DNK",
+    "EE": "EST",
+    "EL": "GRC",
+    "ES": "ESP",
+    "FI": "FIN",
+    "FR": "FRA",
+    "GR": "GRC",
+    "HR": "HRV",
+    "HU": "HUN",
+    "IE": "IRL",
+    "IT": "ITA",
+    "LT": "LTU",
+    "LU": "LUX",
+    "LV": "LVA",
+    "MT": "MLT",
+    "NL": "NLD",
+    "PL": "POL",
+    "PT": "PRT",
+    "RO": "ROU",
+    "SE": "SWE",
+    "SI": "SVN",
+    "SK": "SVK",
 }
 
 
 def country_code(code: str | None) -> str:
-    """Business key of the register (``CountryDEU``); the ISO code ``DE`` would silently match nothing."""
+    """Business key of the register (``CountryDEU``).
+
+    The ISO code ``DE`` would silently match nothing in the register search.
+    """
     raw = (code or "DEU").strip().upper()
     if raw.startswith("COUNTRY"):
         return "Country" + raw[7:]
@@ -107,15 +152,20 @@ def beneficiary_request(reference: str) -> Request:
     """``GET /de-minimis-aid-awards/beneficiary/{reference}``; ``404`` means no awards."""
     if not isinstance(reference, str) or not re.fullmatch(r"[A-Za-z0-9._-]{1,64}", reference):
         raise ValueError("Ungültige Referenznummer des Begünstigten.")
-    return Request("GET", f"{API_BASE}/de-minimis-aid-awards/beneficiary/{reference}",
-                   expected_empty_status=(404,))
+    return Request(
+        "GET",
+        f"{API_BASE}/de-minimis-aid-awards/beneficiary/{reference}",
+        expected_empty_status=(404,),
+    )
 
 
 class RegisterResponseError(ValueError):
     """The register answered with something that is not an award list (FS-D01)."""
 
 
-def parse_award_list(payload: Any, *, status: int = 200, strict: bool = True) -> list[dict[str, Any]]:
+def parse_award_list(
+    payload: Any, *, status: int = 200, strict: bool = True
+) -> list[dict[str, Any]]:
     """Award list of a search or beneficiary response.
 
     ``strict=False`` reproduces the source application, which turned any
@@ -255,8 +305,12 @@ def harvest_fields(record: Mapping[str, Any]) -> dict[str, Any]:
 
 def record_hash(record: Mapping[str, Any]) -> str:
     """SHA-256 over the content fields of a register record (change detection)."""
-    canonical = json.dumps({f: record.get(f) for f in HASH_FIELDS}, ensure_ascii=False,
-                           sort_keys=True, separators=(",", ":"))
+    canonical = json.dumps(
+        {f: record.get(f) for f in HASH_FIELDS},
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 

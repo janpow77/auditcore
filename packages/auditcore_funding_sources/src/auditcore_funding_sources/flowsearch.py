@@ -24,10 +24,21 @@ from .errors import OptionalDependencyError, SourceFormatError
 
 PROFILE_ID = "flowsearch.beneficiaries"
 NUTS1 = {
-    "Baden-Württemberg": "DE1", "Bayern": "DE2", "Berlin": "DE3", "Brandenburg": "DE4",
-    "Bremen": "DE5", "Hamburg": "DE6", "Hessen": "DE7", "Mecklenburg-Vorpommern": "DE8",
-    "Niedersachsen": "DE9", "Nordrhein-Westfalen": "DEA", "Rheinland-Pfalz": "DEB",
-    "Saarland": "DEC", "Sachsen": "DED", "Sachsen-Anhalt": "DEE", "Schleswig-Holstein": "DEF",
+    "Baden-Württemberg": "DE1",
+    "Bayern": "DE2",
+    "Berlin": "DE3",
+    "Brandenburg": "DE4",
+    "Bremen": "DE5",
+    "Hamburg": "DE6",
+    "Hessen": "DE7",
+    "Mecklenburg-Vorpommern": "DE8",
+    "Niedersachsen": "DE9",
+    "Nordrhein-Westfalen": "DEA",
+    "Rheinland-Pfalz": "DEB",
+    "Saarland": "DEC",
+    "Sachsen": "DED",
+    "Sachsen-Anhalt": "DEE",
+    "Schleswig-Holstein": "DEF",
     "Thüringen": "DEG",
 }
 MAX_ARCHIVE_MEMBER_BYTES = 64 * 1024 * 1024
@@ -137,7 +148,9 @@ def extract_from_zip(content: bytes, *, max_member_bytes: int = MAX_ARCHIVE_MEMB
             raise ValueError("Keine Tabellendatei in ZIP gefunden")
         info = archive.getinfo(names[0])
         if info.file_size > max_member_bytes:
-            raise SourceFormatError("Die Tabellendatei im Archiv überschreitet die zulässige Größe.")
+            raise SourceFormatError(
+                "Die Tabellendatei im Archiv überschreitet die zulässige Größe."
+            )
         return archive.read(names[0])
 
 
@@ -180,8 +193,9 @@ def parse_excel(content: bytes, mapping: Mapping[str, Any] | None) -> list[dict[
     return records
 
 
-def project_id(source_key: str, beneficiary_name: str, project_title: str,
-               start_date: date | None) -> str:
+def project_id(
+    source_key: str, beneficiary_name: str, project_title: str, start_date: date | None
+) -> str:
     """Identity of the variant: MD5 over key, name, title and start date (16 hex)."""
     base = f"{source_key}_{beneficiary_name}_{project_title}_{start_date}"
     return hashlib.md5(base.encode(), usedforsecurity=False).hexdigest()[:16]
@@ -225,7 +239,8 @@ def record_values(
     national = total - eu if total > eu else 0.0
     city, postal = parse_location(field("location"))
     defaulted = [
-        label for label, raw in (("total_cost", raw_total), ("eu_contribution", raw_eu))
+        label
+        for label, raw in (("total_cost", raw_total), ("eu_contribution", raw_eu))
         if parse_amount(raw) == 0.0 and (raw in (None, "") or not re.search(r"\d", str(raw)))
     ]
     return {

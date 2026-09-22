@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-
 from typing import Any
 
 import pytest
@@ -22,13 +21,20 @@ CASES = [c for c in DATA["cases"] if c["operation"] not in CLIENT_OPS]
 def run(case: dict[str, Any]) -> Any:
     op, i = case["operation"], revive(case["inputs"])
     simple = {
-        "designer.parse_betrag": de.parse_betrag, "designer.state_aid_parse_amount": de.state_aid_parse_amount,
-        "designer.amount_is_range": de.amount_is_range, "designer.parse_satz": de.parse_satz,
-        "designer.parse_datum": de.parse_datum, "designer.state_aid_parse_date": de.state_aid_parse_date,
-        "designer.detect_sa_reference": de.detect_sa_reference, "deminimis.country_code": dm.country_code,
-        "deminimis.as_date": dm.as_date, "deminimis.harvest_date": dm.harvest_date,
-        "deminimis.as_amount": dm.as_amount, "deminimis.harvest_amount": dm.harvest_amount,
-        "deminimis.harvest_timestamp": dm.harvest_timestamp, "deminimis.harvest_normalize": dm.normalize_name,
+        "designer.parse_betrag": de.parse_betrag,
+        "designer.state_aid_parse_amount": de.state_aid_parse_amount,
+        "designer.amount_is_range": de.amount_is_range,
+        "designer.parse_satz": de.parse_satz,
+        "designer.parse_datum": de.parse_datum,
+        "designer.state_aid_parse_date": de.state_aid_parse_date,
+        "designer.detect_sa_reference": de.detect_sa_reference,
+        "deminimis.country_code": dm.country_code,
+        "deminimis.as_date": dm.as_date,
+        "deminimis.harvest_date": dm.harvest_date,
+        "deminimis.as_amount": dm.as_amount,
+        "deminimis.harvest_amount": dm.harvest_amount,
+        "deminimis.harvest_timestamp": dm.harvest_timestamp,
+        "deminimis.harvest_normalize": dm.normalize_name,
         "deminimis.authority_level": dm.authority_level,
     }
     if op in simple:
@@ -72,11 +78,19 @@ def test_recorded_output(case: dict[str, Any]) -> None:
 
 
 AWARD = {
-    "referenceNumber": "DM-2026-0001", "beneficiaryName": "Beispiel GmbH",
-    "beneficiaryReferenceNumber": "B-000123456", "amountEur": 120000.5, "currency": "EUR",
-    "amount": 120000.5, "grantingDate": "2026-02-01", "deMinimisType": "GENERAL",
-    "grantingAuthorityName": "Hessisches Ministerium für Wirtschaft", "sector": "C",
-    "instrument": "GRANT", "publishedDate": "2026-02-20 08:00:00", "country": "CountryDEU",
+    "referenceNumber": "DM-2026-0001",
+    "beneficiaryName": "Beispiel GmbH",
+    "beneficiaryReferenceNumber": "B-000123456",
+    "amountEur": 120000.5,
+    "currency": "EUR",
+    "amount": 120000.5,
+    "grantingDate": "2026-02-01",
+    "deMinimisType": "GENERAL",
+    "grantingAuthorityName": "Hessisches Ministerium für Wirtschaft",
+    "sector": "C",
+    "instrument": "GRANT",
+    "publishedDate": "2026-02-20 08:00:00",
+    "country": "CountryDEU",
     "extra": "nicht in SPALTEN",
 }
 
@@ -146,7 +160,9 @@ def test_harvest_scenarios_reproduce_source_runs() -> None:
     award = AWARD
 
     def rows(prefix: str, n: int, amount: float = 1000.0) -> list[dict[str, Any]]:
-        return [{**award, "referenceNumber": f"{prefix}-{i}", "amountEur": amount} for i in range(n)]
+        return [
+            {**award, "referenceNumber": f"{prefix}-{i}", "amountEur": amount} for i in range(n)
+        ]
 
     scenarios: dict[str, tuple[list[list[dict[str, Any]]], int | None, int | None]] = {
         "complete": ([rows("A", 3)], 3, None),
@@ -187,9 +203,17 @@ def test_harvest_scenarios_reproduce_source_runs() -> None:
         assert len(state.vanished) == expected["records_vanished"]
         assert state.requests == expected["requests"]
         assert state.content_hash == expected["content_hash"]
-        runs.append({"status": state.status, "content_hash": state.content_hash,
-                     "started_at": f"{number:03d}", "finished_at": f"{number:03d}"})
-        legacy_state = dm.inventory_state(runs, len(stored) - len(vanished), len(vanished), legacy=True)
+        runs.append(
+            {
+                "status": state.status,
+                "content_hash": state.content_hash,
+                "started_at": f"{number:03d}",
+                "finished_at": f"{number:03d}",
+            }
+        )
+        legacy_state = dm.inventory_state(
+            runs, len(stored) - len(vanished), len(vanished), legacy=True
+        )
         inventory = observed["inventory"]
         assert legacy_state["saetze"] == inventory["saetze"]
         assert legacy_state["verschwunden"] == inventory["verschwunden"]

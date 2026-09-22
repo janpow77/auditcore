@@ -23,8 +23,14 @@ from .profiles import load_profile
 
 PROFILE_ID = "designer.beneficiaries"
 HASH_FIELDS = (
-    "beneficiary_name", "project_name", "project_aktenzeichen", "bundesland", "periode",
-    "fonds", "funded_at_raw", "cost_total_raw",
+    "beneficiary_name",
+    "project_name",
+    "project_aktenzeichen",
+    "bundesland",
+    "periode",
+    "fonds",
+    "funded_at_raw",
+    "cost_total_raw",
 )
 _DATE_FORMATS = ("%d.%m.%Y", "%d/%m/%Y", "%Y-%m-%d", "%Y/%m/%d", "%d.%m.%y")
 _SA_REGEX = re.compile(r"\bSA[\s\.\-_]*(\d{4,6})(?:[/\-\.](\d{4}))?", re.IGNORECASE)

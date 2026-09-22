@@ -5,5 +5,9 @@
   "auditcore_reporting": {
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
     "defusedxml>=0.7.1; extra == \"excel\"": "python3-defusedxml (>= 0.7.1)"
+  },
+  "auditcore_funding_sources": {
+    "openpyxl<4,>=3.0.9; extra == \"xlsx\"": "python3-openpyxl (>= 3.0.9)",
+    "defusedxml>=0.7.1; extra == \"xlsx\"": "python3-defusedxml (>= 0.7.1)"
   }
 }

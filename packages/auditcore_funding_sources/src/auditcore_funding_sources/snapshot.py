@@ -72,7 +72,7 @@ def plan_snapshot(
         raise ValueError("source_key ist Pflicht.")
     if mode not in MODES:
         raise ValueError("mode muss smart|full-refresh|force|snapshot sein.")
-    kept, removed = filter_by_fund(list(rows), context.fonds)
+    kept, removed = filter_by_fund([dict(r) for r in rows], context.fonds)
     valid = [r for r in kept if not r.get("_skip_reason")]
     if not valid:
         raise ValueError("Keine valide Begünstigtenzeile bzw. keine Namensspalte erkannt.")
@@ -111,7 +111,8 @@ def plan_snapshot(
     notes = []
     if failed:
         notes.append(
-            f"{len(failed)} Zeile(n) ohne Begünstigtennamen (etwa Summen- oder Leerzeilen) sind als "
+            f"{len(failed)} Zeile(n) ohne Begünstigtennamen (etwa Summen- oder Leerzeilen) "
+            "sind als "
             "failed gezählt; der Laufstatus lautet deshalb partial."
         )
     return SnapshotPlan(

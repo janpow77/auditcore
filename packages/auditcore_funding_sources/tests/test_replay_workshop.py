@@ -12,20 +12,25 @@ from auditcore_funding_sources import workshop
 DATA = load("flowworkshop")
 #: FS-W04: the source aborted on title rows with fewer fields (ParserError);
 #: this library reads such files. Replayed separately in test_tables.py.
-CORRECTED = {"parse_file-0-semikolon_titelzeilen.csv", "read-semikolon_titelzeilen.csv",
-             "parse_file-11-semikolon_titelzeilen.csv"}
-CASES = [c for c in DATA["cases"] if c["name"] not in CORRECTED]
+CORRECTED = [
+    c for c in DATA["cases"] if c["exception"] and "semikolon_titelzeilen.csv" in c["name"]
+]
+CASES = [c for c in DATA["cases"] if c not in CORRECTED]
 
 
 def run(case: dict[str, Any]) -> Any:
     op, i = case["operation"], revive(case["inputs"])
     w = workshop
     simple = {
-        "workshop.parse_amount": w.parse_amount, "workshop.parse_date": w.parse_date,
-        "workshop.strip_accents": w.strip_accents, "workshop.normalize_for_hash": w.normalize_for_hash,
+        "workshop.parse_amount": w.parse_amount,
+        "workshop.parse_date": w.parse_date,
+        "workshop.strip_accents": w.strip_accents,
+        "workshop.normalize_for_hash": w.normalize_for_hash,
         "workshop.normalize_company_name_simple": w.normalize_company_name_simple,
-        "workshop.detect_sa_reference": w.detect_sa_reference, "workshop.stringify": w.stringify,
-        "workshop.stringify_plz": w.stringify_plz, "workshop.coerce_float": w.coerce_float,
+        "workshop.detect_sa_reference": w.detect_sa_reference,
+        "workshop.stringify": w.stringify,
+        "workshop.stringify_plz": w.stringify_plz,
+        "workshop.coerce_float": w.coerce_float,
     }
     if op in simple:
         return simple[op](i["value"])
@@ -37,8 +42,13 @@ def run(case: dict[str, Any]) -> Any:
         return w.detect_canonical_columns(i["headers"], i["mapping"])
     if op == "workshop.parse_xlsx_or_csv":
         content = (FIXTURES / "files" / i["file"]).read_bytes()
-        return w.parse_file(content, i["file"], header_row=i.get("header_row", 0),
-                            field_mapping=i.get("field_mapping"), sheet=i.get("sheet"))
+        return w.parse_file(
+            content,
+            i["file"],
+            header_row=i.get("header_row", 0),
+            field_mapping=i.get("field_mapping"),
+            sheet=i.get("sheet"),
+        )
     if op == "workshop.read_table":
         from auditcore_funding_sources.tables import read_table
 
@@ -76,6 +86,7 @@ def test_recorded_output(case: dict[str, Any]) -> None:
 
 
 def test_fixture_is_complete() -> None:
-    assert len(DATA["cases"]) == 313
+    assert len(DATA["cases"]) == 315
+    assert len(CORRECTED) == 3
     assert DATA["source"]["commit"] == "a05bb2143bd96d5e981f9462f05b965e1658be36"
     assert DATA["source"]["checkout_clean"] is True

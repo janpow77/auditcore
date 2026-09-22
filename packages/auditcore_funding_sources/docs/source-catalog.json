@@ -1,0 +1,357 @@
+{
+ "schema": "auditcore_harvest.catalog/1",
+ "version": "2026.09.1",
+ "sources": [
+  {
+   "source_id": "funding.eu_beneficiaries",
+   "title": "Listen der Vorhaben (Transparenzlisten) — Profil flowworkshop",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+     "path": "auditworkshop/backend/services/beneficiary_harvester.py",
+     "symbols": [
+      "parse_xlsx_or_csv",
+      "compute_record_hash",
+      "validate_beneficiary_rows",
+      "filtere_nach_fonds",
+      "run_beneficiary_harvest"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+     "path": "auditworkshop/backend/services/state_aid_service.py",
+     "symbols": [
+      "parse_amount",
+      "parse_date",
+      "normalize_company_name",
+      "detect_sa_reference"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+     "path": "auditworkshop/backend/services/dataframe_service.py",
+     "symbols": [
+      "_read_csv_smart",
+      "_read_excel_smart"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowworkshop services/beneficiary_harvester.py (Legacy-Consumer)",
+    "flowworkshop routers/beneficiaries.py"
+   ],
+   "profile": {
+    "version": "flowworkshop.beneficiaries 2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Code MIT (USER_AUTHORIZED_MIT 2026-09-22); Nutzungsbedingungen der Daten nicht geprüft; keine Originaldaten im Paket."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "url",
+     "file_name",
+     "source_key",
+     "fonds",
+     "periode",
+     "country_code"
+    ],
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Adresse der Liste (http(s) oder über den Consumer-Transport)"
+     },
+     "file_name": {
+      "type": "string",
+      "description": "Dateiname mit Endung csv/xlsx"
+     },
+     "source_key": {
+      "type": "string",
+      "description": "Stabile Quellenkennung, Teil der Identität"
+     },
+     "fonds": {
+      "type": "string"
+     },
+     "periode": {
+      "type": "string"
+     },
+     "country_code": {
+      "type": "string"
+     },
+     "bundesland": {
+      "type": "string"
+     },
+     "sheet": {
+      "type": [
+       "string",
+       "integer"
+      ]
+     },
+     "header_row": {
+      "type": "integer"
+     },
+     "field_mapping": {
+      "type": "object"
+     },
+     "typing": {
+      "enum": [
+       "legacy",
+       "text"
+      ]
+     },
+     "header_detection": {
+      "enum": [
+       "legacy",
+       "strict"
+      ]
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_funding_sources/tests/fixtures/workshop_file_replay.json",
+    "auditcore_funding_sources/tests/fixtures/flowworkshop_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_funding_sources.adapters:WorkshopBeneficiaryAdapter"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "date": null
+   },
+   "note": "Modi smart/full-refresh/force/snapshot als getrennter Bestandsplan (snapshot.plan_snapshot); gegen echte Läufe des Originals geprüft."
+  },
+  {
+   "source_id": "funding.eu_beneficiaries.flowsearch",
+   "title": "Listen der Vorhaben — Profil flowsearch",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/eu_beneficiary_harvester_v2.py",
+     "symbols": [
+      "EUBeneficiaryHarvesterV2"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/data/bundesland_mappings.json",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch scripts/harvest_eu_beneficiaries_v2.py (Legacy-Consumer)"
+   ],
+   "profile": {
+    "version": "flowsearch.beneficiaries 2026.09.1",
+    "snapshot_semantics": "incremental_upsert"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Code MIT (USER_AUTHORIZED_MIT 2026-09-22); Nutzungsbedingungen der Daten nicht geprüft; keine Originaldaten im Paket."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "url",
+     "source",
+     "mapping"
+    ],
+    "properties": {
+     "url": {
+      "type": "string"
+     },
+     "source": {
+      "type": "object"
+     },
+     "mapping": {
+      "type": "object"
+     },
+     "fallback": {
+      "type": "object"
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_funding_sources/tests/fixtures/flowsearch_file_replay.json",
+    "auditcore_funding_sources/tests/fixtures/flowsearch_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_funding_sources.adapters:FlowsearchBeneficiaryAdapter"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "date": null
+   },
+   "note": "Eigene Variante; fehlende Beträge 0.0 werden in normalized.defaulted ausgewiesen."
+  },
+  {
+   "source_id": "funding.de_minimis_eaid",
+   "title": "De-minimis / eAidRegister",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/de_minimis.py",
+     "symbols": [
+      "EAidRegisterClient",
+      "berechne_kumulierung"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/de_minimis_ernte.py",
+     "symbols": [
+      "ernte"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/de_minimis_models.py",
+     "symbols": [
+      "satz_hash",
+      "bestand_hash"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/de_minimis_zuordnung.py",
+     "symbols": [
+      "ebene"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "audit_designer register/de_minimis_ernte.py"
+   ],
+   "profile": {
+    "version": "designer.deminimis.register 2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Öffentlicher Lesezugang laut Quellcode ohne Anmeldung; Nutzungsbedingungen der Kommission nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "country": {
+      "type": "string",
+      "description": "ISO-2/3 oder CountryXXX"
+     },
+     "page_size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 500
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_funding_sources/tests/fixtures/deminimis_register_replay.json (synthetisch)",
+    "auditcore_funding_sources/tests/fixtures/designer_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_funding_sources.adapters:DeMinimisRegisterAdapter"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "date": null
+   },
+   "note": "Vollständig nur bei erreichter Gesamtzahl; Kumulierung getrennt in auditcore_funding_sources.cumulation (Profil REVIEW_REQUIRED)."
+  },
+  {
+   "source_id": "funding.state_aid",
+   "title": "State Aid Transparency",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/state_aid_harvester.py",
+     "symbols": [
+      "StateAidHarvester"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+     "path": "auditworkshop/backend/services/state_aid_service.py",
+     "symbols": [
+      "parse_amount",
+      "parse_date"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/state_aid.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch harvest_state_aid.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Parser (workshop/designer state_aid) extrahiert; Abrufadapter (TAM) noch nicht charakterisiert: PLANNED."
+  }
+ ]
+}

@@ -43,11 +43,22 @@ def run(case: dict[str, Any]) -> Any:
             return fs.extract_from_zip(buffer.getvalue())
         return fs.extract_from_zip((FIXTURES / "files" / i["file"]).read_bytes())
     if op == "flowsearch.import_record":
-        mappings = {"_fallback": MAPPINGS, "test_quelle": {
-            "delimiter": ";", "skip_rows": 1, "header_row": 2,
-            "columns": {"beneficiary_name": "Begünstigter", "project_name": "Vorhaben",
-                        "total_cost": "Gesamtkosten", "eu_contribution": "EU-Beitrag",
-                        "location": "Ort", "start_date": "Beginn"}}}
+        mappings = {
+            "_fallback": MAPPINGS,
+            "test_quelle": {
+                "delimiter": ";",
+                "skip_rows": 1,
+                "header_row": 2,
+                "columns": {
+                    "beneficiary_name": "Begünstigter",
+                    "project_name": "Vorhaben",
+                    "total_cost": "Gesamtkosten",
+                    "eu_contribution": "EU-Beitrag",
+                    "location": "Ort",
+                    "start_date": "Beginn",
+                },
+            },
+        }
         values = fs.record_values(i["record"], i["source"], mappings)
         if values is not None:
             values.pop("defaulted")
@@ -77,5 +88,3 @@ def test_record_values_report_defaulted_amounts() -> None:
 def test_fixture_is_complete() -> None:
     assert len(CASES) == 112
     assert DATA["source"]["checkout_clean"] is True
-
-

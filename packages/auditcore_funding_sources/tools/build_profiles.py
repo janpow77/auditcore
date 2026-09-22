@@ -36,7 +36,9 @@ def main() -> None:
         "version": VERSION,
         "status": "SOURCE_CHARACTERIZED",
         "source": source("flowworkshop", workshop),
-        "column_patterns": [[role, list(patterns)] for role, patterns in constants["column_patterns"].items()],
+        "column_patterns": [
+            [role, list(patterns)] for role, patterns in constants["column_patterns"].items()
+        ],
         "canonical_aliases": constants["canonical_aliases"],
         "hash_fields": constants["hash_fields"],
         "nameless": constants["nameless"],

@@ -87,7 +87,9 @@ def legacy_cumulation_values(
     }
 
 
-def legacy_cumulation(records: Iterable[Mapping[str, Any]], *, reference_date: date) -> dict[str, Any]:
+def legacy_cumulation(
+    records: Iterable[Mapping[str, Any]], *, reference_date: date
+) -> dict[str, Any]:
     """``berechne_kumulierung(...).to_dict()`` of the source, exactly (floats included)."""
     profile = load_profile(PROFILE_ID)
     v = legacy_cumulation_values(records, reference_date=reference_date)
@@ -157,7 +159,8 @@ class CumulationResult:
             "window_from": self.window_from.isoformat(),
             "window_to": self.window_to.isoformat(),
             "undertaking_references": list(self.undertaking_references)
-            if self.undertaking_references is not None else None,
+            if self.undertaking_references is not None
+            else None,
             "awards": [
                 {
                     "reference_number": a.reference_number,
@@ -174,7 +177,8 @@ class CumulationResult:
             "sum_considered_eur": str(self.sum_considered_eur),
             "ceiling_eur": str(self.ceiling_eur) if self.ceiling_eur is not None else None,
             "arithmetic_difference_eur": str(self.arithmetic_difference_eur)
-            if self.arithmetic_difference_eur is not None else None,
+            if self.arithmetic_difference_eur is not None
+            else None,
             "exceeds_ceiling": self.exceeds_ceiling,
             "complete": self.complete,
             "reasons_without_comparison": list(self.reasons_without_comparison),
@@ -216,15 +220,11 @@ def calculate(
         granted = as_date(record.get("grantingDate"))
         amount = as_amount(record.get("amountEur"))
         beneficiary = record.get("beneficiaryReferenceNumber")
-        base = {
-            "reference_number": record.get("referenceNumber"),
-            "beneficiary_reference": beneficiary,
-            "granting_date": granted,
-            "amount_eur": amount,
-            "de_minimis_type": kind,
-        }
         if group is not None and beneficiary not in group:
-            status, reason = "excluded", "Begünstigtenreferenz gehört nicht zum angegebenen Unternehmen."
+            status, reason = (
+                "excluded",
+                "Begünstigtenreferenz gehört nicht zum angegebenen Unternehmen.",
+            )
         elif granted is None:
             status, reason = "unclear", "Gewährungsdatum fehlt oder ist nicht lesbar."
             unclear.append("no_date")
@@ -241,14 +241,25 @@ def calculate(
         else:
             status, reason = "considered", "Im Zeitraum gewährt und berücksichtigt."
             per_type[kind] = per_type.get(kind, Decimal("0")) + amount
-        classified.append(ClassifiedAward(**base, status=status, reason=reason))
+        classified.append(
+            ClassifiedAward(
+                reference_number=record.get("referenceNumber"),
+                beneficiary_reference=beneficiary,
+                granting_date=granted,
+                amount_eur=amount,
+                de_minimis_type=kind,
+                status=status,
+                reason=reason,
+            )
+        )
     total = sum(per_type.values(), Decimal("0"))
     reasons: list[str] = []
     if not per_type:
         reasons.append("Keine Meldung im Betrachtungszeitraum.")
     if set(per_type) - {general}:
         reasons.append(
-            "Nicht ausschließlich Meldungen der allgemeinen Regelung; kein gemeinsamer Höchstbetrag."
+            "Nicht ausschließlich Meldungen der allgemeinen Regelung; "
+            "kein gemeinsamer Höchstbetrag."
         )
     if unclear:
         reasons.append(f"{len(unclear)} Meldung(en) mit ungeklärtem Datum oder Betrag.")
@@ -258,7 +269,11 @@ def calculate(
         ceiling = Decimal(profile["ceiling_eur"])
         difference = ceiling - total
         exceeds = total > ceiling
-    notices = [profile["notices"]["company"], profile["notices"]["period"], profile["notices"]["deadline"]]
+    notices = [
+        profile["notices"]["company"],
+        profile["notices"]["period"],
+        profile["notices"]["deadline"],
+    ]
     if group is None:
         notices.append(
             "Die Zugehörigkeit aller übergebenen Meldungen zu einem einzigen Unternehmen wurde "

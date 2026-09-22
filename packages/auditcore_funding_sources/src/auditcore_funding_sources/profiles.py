@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from functools import lru_cache
+from functools import cache
 from importlib import resources
 from typing import Any
 
@@ -29,7 +29,7 @@ def available_profiles() -> tuple[tuple[str, str], ...]:
     return tuple(sorted(found))
 
 
-@lru_cache(maxsize=None)
+@cache
 def load_profile(profile_id: str, version: str = PROFILE_VERSION) -> dict[str, Any]:
     """Load an explicitly named profile; adds ``fingerprint``.
 
@@ -50,4 +50,8 @@ def load_profile(profile_id: str, version: str = PROFILE_VERSION) -> dict[str, A
 
 def reference(profile: dict[str, Any]) -> dict[str, str]:
     """Identity recorded with every result."""
-    return {"id": profile["id"], "version": profile["version"], "fingerprint": profile["fingerprint"]}
+    return {
+        "id": profile["id"],
+        "version": profile["version"],
+        "fingerprint": profile["fingerprint"],
+    }
