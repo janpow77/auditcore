@@ -9,7 +9,7 @@
   "uuid": "NOT_APPLICABLE: selected source contains no UUID generation",
   "rng": "Python random.seed(case.seed), full post-call RNG state SHA256 recorded",
   "package": "auditcore_invoicegenerator",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "source_git_blob": "8f1596a711b228194b58ffc5db6a6e7d0ed049a3",
   "github_blob_verification": "PASS",
   "characterization_cases": 180,
@@ -24,7 +24,8 @@
     "Explicit Random injection without draw-order changes",
     "Independent-instance public profile instead of import-time global seed",
     "Separate new scenario API using dummy-data package",
-    "JSON renderer and typed record facade"
+    "JSON renderer and typed record facade",
+    "New optional plain-text deterministic PDF renderer; no upstream PDF implementation copied"
   ],
   "not_extracted": [
     "generate_sanctions_csv",
@@ -115,5 +116,28 @@
       "path": "docs/demo_data/generate_demo_invoices.py"
     },
     "excluded": "No relicensing claim for the entire source repository, Portal code or other unreviewed sources"
+  },
+  "predecessor_package_version": "0.1.0",
+  "renderer": {
+    "artifact_id": "auditcore_invoicegenerator:plain-pdf-v1",
+    "type": "template",
+    "title": "Synthetic invoice PDF layout",
+    "version": "0.2.0",
+    "status": "DRAFT",
+    "created_at": "2026-09-22T17:54:24.063559+00:00",
+    "origin": "New implementation in auditcore; authorized upstream demo file contains no PDF renderer",
+    "source_file": "pdf.py",
+    "sha256": "0668b84bdf493972ab20fb9e7eb9a4dea4185416319bce5923ec26e94e95d841",
+    "dependency": "reportlab (optional pdf extra)",
+    "predecessor_version": null,
+    "license": "MIT",
+    "no_other_repository_source_copied": true,
+    "modified_at": "2026-09-22T17:56:00.148960+00:00",
+    "owner": "UNKNOWN",
+    "author": "UNKNOWN",
+    "organization": "UNKNOWN",
+    "change_reason": "User-authorized optional PDF output of existing synthetic invoice contract; existing invoice rules unchanged",
+    "review_status": "TECHNICAL_REVIEW_IN_PROGRESS",
+    "source_reference": "New implementation; no upstream PDF source reused"
   }
 }

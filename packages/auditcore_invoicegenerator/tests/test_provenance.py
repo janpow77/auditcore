@@ -13,7 +13,8 @@ def test_installed_profile_metadata_binds_exact_content_and_fork():
     artifacts = metadata["versioned_artifacts"]
     assert len({artifact["artifact_id"] for artifact in artifacts}) == 2
     for artifact in artifacts:
-        assert artifact["version"] == metadata["version"]
+        # Existing rule profiles retain their version when a separate renderer is added.
+        assert artifact["version"] == "0.1.0"
         assert artifact["title"] and artifact["type"] == "rulebook/template"
         assert artifact["status"] == "DRAFT"
         assert artifact["predecessor_version"] is None
@@ -29,6 +30,9 @@ def test_installed_profile_metadata_binds_exact_content_and_fork():
     assert parent["commit"] == metadata["source_commit"]
     assert parent["sha256"] == metadata["source_sha256"]
     assert artifacts[1]["fork_parent"] is None
+    renderer = metadata["renderer"]
+    assert renderer["version"] == metadata["version"] == "0.2.0"
+    assert hashlib.sha256(package.joinpath("pdf.py").read_bytes()).hexdigest() == renderer["sha256"]
 
 
 def test_source_metadata_copies_match_installed_profile_contract():

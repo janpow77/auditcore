@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_invoicegenerator"
-version = "0.1.0"
+version = "0.2.0"
 description = "Characterized synthetic invoice profiles and explicit test scenarios"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -13,7 +13,8 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = ["auditcore_dummygenerator==0.1.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15"]
+pdf = ["reportlab>=4.5.1,<6"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "reportlab>=4.5.1,<6", "pypdf>=6.19,<7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -34,6 +35,10 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.11"
 strict = true
+
+[[tool.mypy.overrides]]
+module = "reportlab.*"
+ignore_missing_imports = true
 
 [tool.auditcore-bibquality]
 strict = true

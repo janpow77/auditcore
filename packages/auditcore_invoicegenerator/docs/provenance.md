@@ -2,6 +2,11 @@
 
 Quelle: `janpow77/flowinvoice@fb2d18568d2eaf64574d131ceae51a936b9aac02`,
 `docs/demo_data/generate_demo_invoices.py`.
+Die erneut geprüfte freigegebene Datei enthält keinen PDF-Renderer. Der optionale
+Renderer in Paket 0.2.0 ist eine neue Implementierung auf dem bereits extrahierten
+Rechnungsvertrag. Es wurde kein Portal-, Worker- oder sonstiger nicht freigegebener
+PDF-Code übernommen. Die bestehenden Regelprofile behalten Version 0.1.0 und
+ihre Characterization; der Renderer hat eine eigene Provenienz und einen Inhaltshash.
 Die gelesenen Quelldateibytes wurden gegen den GitHub-Blob
 `8f1596a711b228194b58ffc5db6a6e7d0ed049a3` bestätigt; SHA256 und tatsächlich
 beobachtete Characterization-Zeit stehen in `provenance.json`.
