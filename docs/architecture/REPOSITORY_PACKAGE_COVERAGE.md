@@ -159,7 +159,8 @@ in regulierung. Ihre bestehenden Anwendungs-/DB-Bindungen müssen vorher
 charakterisiert und über Schnittstellen abgetrennt werden. Eine identische
 Bezeichnung belegt noch keine kompatible Semantik.
 
-Abhängigkeitsrichtung: `auditcore_legal_sources`, `auditcore_funding_sources`,
+Abhängigkeitsrichtung: die Quellenadapter in `auditcore_procurement`,
+`auditcore_legal_sources`, `auditcore_funding_sources`,
 `auditcore_registry_sources` und weitere begründete Quellenfamilien nutzen
 `auditcore_harvest`; der Kern importiert diese Familien nicht obligatorisch.
 Anwendungen installieren nur ihre Quellenpakete. `auditcore` bleibt die Plattform
@@ -176,6 +177,62 @@ Familien durch denselben Kern betreiben, Originalantworten replayen und
 Pagination, Wiederanlauf nach Teilfehler, Dubletten, idempotente Übergabe und
 Checkpoint-Konsistenz testen. Ein konfigurierter zulässiger externer Smoke-Test
 wird separat ausgewiesen. Status: **geplant, noch nicht implementiert**.
+
+#### Verbindliche Adapterdokumentation und Quellenkatalog
+
+Zum Lieferumfang von `auditcore_harvest` gehören eine mitgelieferte
+Adapteranleitung, eine referenzierte öffentliche Schnittstelle und ausführbare
+Referenzadapter. Die unten genannten Verträge sind Implementierungsanforderungen,
+noch keine importierbare API. Die endgültigen Signaturen werden anhand der
+Characterization der ersten zwei Quellen festgelegt und anschließend versioniert.
+
+Die Anleitung muss konkret zeigen:
+
+1. Quellenkennung, Adapter-/Profilversion, unterstützte Filter, Datenformat und
+   Fähigkeiten deklarieren (Pagination, inkrementeller Abruf, vollständiger
+   Snapshot, Löschmeldungen). Unbekannte Fähigkeiten ausdrücklich kennzeichnen.
+2. Konfiguration validieren, Zugangsdaten über den Credential-Provider beziehen
+   und mit injiziertem Transport genau eine begrenzte Seite abrufen. Ein
+   Seitenergebnis enthält Datensätze, den nächsten Cursor und einen expliziten
+   Abschluss-/Teilfehlerstatus; der Kern steuert Wiederholungen und Seitenfolge.
+3. Quellantworten in Datensätze mit stabiler Quellen-ID, Rohwert-/Normalisierungs-
+   vertrag und Provenienz übersetzen. Fehlende Felder und Parserfehler dürfen
+   nicht als erfolgreicher leerer Datenbestand erscheinen.
+4. Authentifizierungs-, Konfigurations-, Rate-Limit-, Transport- und Parserfehler
+   unterscheidbar zurückgeben. Retry-Informationen müssen maschinenlesbar sein;
+   irreversible fachliche Entscheidungen trifft kein allgemeiner Retry-Handler.
+5. Adapter explizit registrieren, aus einer Consumer-Anwendung aufrufen und die
+   Ergebnisse an eine austauschbare Senke liefern. Wiederanlauf, Abbruch und
+   Checkpoint-Bestätigung anhand eines ausführbaren Beispiels erklären.
+6. Eine wiederverwendbare Contract-Test-Suite gegen eigene Adapter ausführen:
+   Fixtures, Paging, leere/fehlerhafte Antworten, Limits, Teilfehler, Cursor-
+   Fortschritt, stabile IDs und Wiederholung nach fehlgeschlagener Speicherung.
+
+Ein versionierter Quellenkatalog wird zusammen mit den Adapterpaketen gepflegt.
+Pro Quelle enthält er Herkunftsrepository und Commit, bestehenden Consumer,
+Quellenprofil, Authentifizierungsbedarf, Lizenz-/Zugangsprüfung, Konfigurations-
+schema ohne Secrets, Fixtures und letzten tatsächlichen Prüfstatus. Unterstützt,
+nur geplant und nicht konfiguriert müssen im Katalog unterscheidbar bleiben.
+
+**Die bereits in den Anwendungen angebundenen Quellen sind Ausgangsbestand**,
+keine erst später zu entdeckende optionale Ergänzung:
+
+| Familie | Bereits belegte Quellen/Anbindungen, für Adapterübernahme vorgesehen |
+|---|---|
+| Recht und Prüfung | DIP, EUR-Lex, CURIA, ECA, OLAF, Gesetze im Internet, Hessenrecht, Bundes-/Landesrechnungshöfe, Prüfverbände und vorhandene RSS-Profile |
+| Vergabebekanntmachungen (`auditcore_procurement`) | TED, HAD und weitere Vergabequellen; Online-Harvester, Dateiimport und Normalisierung aus Audit-Portal sowie Clients aus Flowinvoice/Designer vergleichen |
+| Förderung | EU-Begünstigtendaten, State Aid und das gesonderte De-minimis-/eAidRegister-Profil aus Flowsearch, Flowworkshop und Designer |
+| Register | Bestehende OpenRegister-, Handelsregister-, Sanktions- und PEP-Clients; tatsächlichen Provider und Zugang je Profil verifizieren |
+| Preis und Energie | Bundesbank, Destatis, EIA, EU Oil Bulletin, Tankerkoenig und MTSK aus regulierung; mögliche Überschneidungen anhand der Verträge prüfen |
+| Geo | Overpass sowie vorhandene Natura-/Geocoding-Anbindungen mit getrennten Profilen |
+| Immobilien | Vorhandene Bienici-, Citya-, Paruvendu-, Kleinanzeigen-, InBerlinWohnen- und ZVG-Parser, vorbehaltlich konkreter Zugangs-/Rechteprüfung |
+
+Die Belege und Abgrenzungen stehen in H1–H5. Diese Liste bestätigt vorhandenen
+Code, nicht die heutige Erreichbarkeit aller Dienste oder einen bereits
+erfolgreichen Live-Abruf. Weitere im Inventar belegte Quellen werden in den
+Katalog aufgenommen; keine Quelle allein wegen dieser Übersicht entfernen.
+Die Umsetzung beginnt mit einem Legal- und einem Funding-Adapter und erweitert
+danach die vorhandenen Familien. Abweichende Quellregeln bleiben explizit.
 
 ### H1 — Rechts-, Prüf- und Publikationsquellen: `auditcore_legal_sources`
 
@@ -226,6 +283,69 @@ wird separat ausgewiesen. Status: **geplant, noch nicht implementiert**.
   Profil; Tests für Komma/Punkt/Tausenderzeichen, Betragsintervalle, Datum,
   fehlende Namen, Postleitzahlen, Headererkennung, Snapshot-Grenzen und stabile
   Identität. Keine stillen Änderungen der Hashfelder oder Nullwertsemantik.
+
+#### De-minimis ausdrücklich als eigenes Quellenprofil
+
+De-minimis ist im Plan zusätzlich zu State Aid zu führen. Konkreter vorhandener
+Code in `audit_designer/backend/app/core/shared/research/register/`:
+`de_minimis.py` mit `EAidRegisterClient`, `Suchkriterien`,
+`DeMinimisRegisterProvider`, `DeMinimisCumulationProvider` und
+`berechne_kumulierung`; `de_minimis_ernte.py` mit `ernte`, `bestandsstand` und
+Feldnormalisierung sowie `de_minimis_models.py` für die Anwendungspersistenz.
+Das sind Codebelege am inventarisierten Stand, kein aktueller Live-Nachweis.
+
+Der Registerabruf gehört als eigenes Profil in `auditcore_funding_sources`
+auf Basis von `auditcore_harvest`. State-Aid- und De-minimis-Bestände behalten
+getrennte Quellenidentitäten, Filter, Abdeckungs- und Vollständigkeitsangaben.
+Bestehende ORM-Modelle und Freigaben nicht unverändert in den Kern übernehmen.
+Characterization umfasst Paging, Länder-/Datumsfilter, Dezimalbeträge,
+Quellenidentitäten, Teilabbrüche und Bestandsstände. Unvollständige Abrufe
+dürfen keinen vollständigen leeren Bestand vortäuschen.
+
+Die vorhandene Kumulierungsberechnung ist separat zu charakterisieren und als
+fachlicher Vertrag zu planen: Regelprofil, Gültigkeitszeitraum, Unternehmens-
+zuordnung, berücksichtigte Beihilfen, Berechnung und Begründung explizit halten.
+Abweichende Schwellen-/Zeitraumregeln im Legacy-Code verlangen fachlichen Review;
+keine automatische Harmonisierung oder Ableitung einer Freigabe aus einem
+Registerabruf. Keine ungeprüfte Übernahme alter Konstanten als aktuelle Rechtslage.
+
+### H2a — Vergabebekanntmachungen: `auditcore_procurement`
+
+Verbindlicher fachlicher Zuschnitt: TED, HAD und weitere Vergabebekanntmachungen
+gehören gemeinsam mit den Vergabedatenmodellen und Prüfverfahren in
+`auditcore_procurement`. `auditcore_legal_sources` bleibt für Rechts- und
+Prüfpublikationen vorgesehen. Kein separates TED-/HAD-Paket erzeugen.
+
+`audit-portal/backend/app/services/ted_harvester_service.py` enthält
+`build_ted_query`, seitenweisen Online-Abruf und Re-Exports der vorhandenen
+Normalisierung aus `audit_prep.ted_normalize`. Die vorhandenen Tests in
+`backend/tests/test_ted_harvest.py` behandeln unter anderem Feature-Flag,
+Netzwerk-/HTTP-Fehler, Paging, Dubletten, Mengenbegrenzung und Normalisierung.
+Diese Tests wurden bei dieser Planergänzung gelesen, nicht ausgeführt.
+Weitere konkrete Vergleichsquellen sind `_TEDClient` in
+`flowinvoice/company_records.py` und die Company-Clients im Designer.
+
+Für HAD sind `HADNotice` und `_HADClient` in `flowinvoice/company_records.py`
+und im Designer unter
+`backend/app/modules/vp_ai/services/company/company_records.py` belegt.
+Die Clients verwenden unterschiedliche Suchpfade; Parser, Suchfilter,
+Archivumfang und Dublettenverhalten vor einer Zusammenführung charakterisieren.
+Weitere Vergabeportale als eigene Quellenprofile derselben Bibliothek erfassen.
+
+Die Vergabeadapter verwenden `auditcore_harvest` für den gemeinsamen Ablauf.
+Innerhalb von `auditcore_procurement` bleiben reine Modelle, Normalisierung und
+fachliche Prüfungen von Netzwerkadaptern getrennt. Quellenabhängigkeiten über
+deklarierte Extras laden, sodass reine Vergabeberechnungen keine HTTP-/Browser-
+Installation benötigen. Adapter und Bewertungsfunktionen teilen dokumentierte
+Datenverträge, aber ein erfolgreicher Abruf bedeutet keine bestandene Prüfung.
+Das vorhandene Paket `audit_prep` zuerst auf Wiederverwendung prüfen. Online-
+Abruf und Dateiimport müssen denselben dokumentierten Datensatzvertrag erfüllen.
+Bekanntmachungstyp, CPV, Datums-/Länderfilter, Gewinnerbezug, Sprache, Beträge,
+Währung und Versions-/Korrekturbezug charakterisieren. Den bisherigen
+Zuschlags-/Gewinnerfilter nicht still als vollständige TED-Abdeckung ausgeben.
+Anwendungsseitige Offline-Sperren und Zugriffsrechte erhalten; Vergabebewertung
+bleibt ein separater Fachvertrag. Übernahme und Veröffentlichung bleiben von
+Quellrechten und tatsächlicher Verifikation abhängig.
 
 ### H3 — Entitätsabgleich und Register: getrennte Mechanik und Quellen
 

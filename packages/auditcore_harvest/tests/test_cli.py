@@ -12,7 +12,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 def test_catalog_command(capsys) -> None:  # type: ignore[no-untyped-def]
     assert main(["catalog"]) == 0
-    assert json.loads(capsys.readouterr().out)["sources"] == 35
+    assert json.loads(capsys.readouterr().out)["sources"] == 62
 
 
 def test_catalog_command_rejects_invalid_file(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
