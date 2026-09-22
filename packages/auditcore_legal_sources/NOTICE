@@ -1,0 +1,26 @@
+auditcore_legal_sources 0.1.0 — source attribution and authorization
+
+Parsers, normalization rules, search terms, SPARQL queries and core document
+lists derive from:
+  janpow77/auditdatabase (private) @ bba911e918e102426d4ca2f88fd377fe8ca585e4
+    backend/app/harvester/base.py    fcefbe13ecdd3d8bb1fff83f04a53c56ad700c4b
+    backend/app/harvester/dip.py     de4a26ed623989ef6b84dec92b3d7c1e7eb3af62
+    backend/app/harvester/eurlex.py  3bad9865dc13fbc2c21e195741f77864ae3fd4f2
+  janpow77/audit_designer (private) @ 030a71e083ef0feddc14545b095a4945bc0bbd7a
+    backend/app/modules/vp_ai/harvester/_funding_period.py f67579071cfdb8c03ec249de231675e792c58966
+    backend/app/modules/vp_ai/harvester/base.py            7e5b9b652c9db72c8c661e38a8e5f7ce10d7f86e
+    backend/app/modules/vp_ai/harvester/bundestag_dip.py   6fa48fc0301f9bc8e92822d2ce1ab9ef515cb344
+    backend/app/modules/vp_ai/harvester/eurlex.py          c0cc8d9483f325cb1fd48707d2051fe747985fd3
+Observed contributors: janpow77, claude
+
+Neither source repository had a license grant (historical status UNKNOWN).
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for the code extracted into this library only.
+The source repositories are not relicensed.
+
+The hard-coded DIP API key of the source is not included. Content retrieved
+from the Bundestag DIP API or EUR-Lex/Cellar is not part of this package and
+stays subject to the respective terms of use (DIP API terms; reuse of EU
+documents under Commission Decision 2011/833/EU). Test fixtures are synthetic
+responses in the documented response formats.
