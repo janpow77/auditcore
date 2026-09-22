@@ -26,7 +26,12 @@ with contextlib.redirect_stdout(io.StringIO()):
     outcomes = []
     for case in cases:
         try:
-            result = obj(*case["args"], **case["kwargs"])
+            callable_object = obj
+            if case.get("method") is not None:
+                instance = obj(*case.get("constructor_args", []),
+                               **case.get("constructor_kwargs", {}))
+                callable_object = getattr(instance, case["method"])
+            result = callable_object(*case["args"], **case["kwargs"])
             json.dumps(result, allow_nan=False)
             outcomes.append({"name": case["name"], "value": result, "exception": None})
         except Exception as exc:
@@ -40,6 +45,12 @@ def execute_cases(root: Path, reference: str, cases: list[dict[str, Any]]) -> li
     """Execute supplied cases with a timeout and no leakage of captured module output."""
     if not cases:
         raise MigrationBlocked("Characterization cases must not be empty")
+    for case in cases:
+        method = case.get("method")
+        if method is not None and (not isinstance(method, str) or not method.isidentifier()):
+            raise MigrationBlocked("Characterization method must be a single attribute name")
+        if method is None and (case.get("constructor_args") or case.get("constructor_kwargs")):
+            raise MigrationBlocked("Constructor inputs require an explicit method")
     result = subprocess.run(
         [sys.executable, "-c", _RUNNER],
         input=json.dumps([str(root.resolve()), reference, cases]),

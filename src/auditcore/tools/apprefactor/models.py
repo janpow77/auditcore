@@ -15,6 +15,9 @@ class CharacterizationCase:
     kwargs: dict[str, Any]
     expected: Any = None
     expected_exception: str | None = None
+    method: str | None = None
+    constructor_args: list[Any] = field(default_factory=list)
+    constructor_kwargs: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -57,6 +60,7 @@ class ApplicationRefactoringPlan:
     imports_to_change: list[dict[str, str]] = field(default_factory=list)
     symbols_to_replace: list[dict[str, Any]] = field(default_factory=list)
     wrappers_to_create: list[dict[str, Any]] = field(default_factory=list)
+    characterization_checks: list[dict[str, Any]] = field(default_factory=list)
     tests_to_update: list[str] = field(default_factory=list)
     dependencies_to_remove: list[str] = field(default_factory=list)
     dependencies_to_add: list[str] = field(default_factory=list)

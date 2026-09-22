@@ -170,13 +170,15 @@ class ApplicationRefactorer:
             "policy": asdict(self.framework.evaluate_project(root)),
         }
 
-    def plan(self, root: Path) -> ApplicationRefactoringPlan:
+    def plan(
+        self, root: Path, target_shared_libraries: dict[str, str] | None = None
+    ) -> ApplicationRefactoringPlan:
         """Create a source-bound plan requiring concrete, reviewable transformations."""
         return ApplicationRefactoringPlan(
             str(root.resolve()),
             run(["git", "rev-parse", "HEAD"], root).strip(),
             source_digest(root),
-            {"auditcore": "0.1.0"},
+            dict(target_shared_libraries or {}),
         )
 
     def _prepare(self, root: Path, plan: ApplicationRefactoringPlan) -> dict[Path, str]:
@@ -252,6 +254,35 @@ class ApplicationRefactorer:
             raise MigrationBlocked("Changed files differ from the reviewable plan")
         return changes
 
+    def _check_characterized_security(
+        self, source: Path, reference: str, item: dict[str, Any]
+    ) -> None:
+        """Require review when an import migration reduces known security controls."""
+
+        def symbol_source(path: Path, symbol_reference: str) -> str:
+            name = symbol_reference.split(":", 1)[1].split(".")[0]
+            tree = ast.parse(path.read_text())
+            node = next(
+                (
+                    node
+                    for node in tree.body
+                    if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+                    and node.name == name
+                ),
+                None,
+            )
+            if node is None:
+                raise MigrationBlocked("Characterized source symbol not found")
+            return ast.unparse(node).lower()
+
+        legacy = symbol_source(source, reference)
+        target = symbol_source(Path(item["target_file"]), item["target"])
+        if any(
+            legacy.count(word) > target.count(word)
+            for word in load_policy("human_decisions")["security_boundaries"]
+        ):
+            raise MigrationBlocked("SECURITY_OR_POLICY_REVIEW_REQUIRED")
+
     def apply(self, plan: ApplicationRefactoringPlan, dry_run: bool = False) -> dict[str, Any]:
         """Preview or transactionally migrate; failures restore every original file."""
         root = Path(plan.application).resolve()
@@ -282,10 +313,11 @@ class ApplicationRefactorer:
         if set(REQUIRED_VERIFICATION) - plan.verification_commands.keys():
             raise MigrationBlocked("Required verification commands are missing")
         transformations = plan.wrappers_to_create + plan.symbols_to_replace
-        if not transformations:
+        behavior_checks = transformations + plan.characterization_checks
+        if not behavior_checks:
             raise MigrationBlocked("Migration requires legacy characterization evidence")
         comparisons = []
-        for item in transformations:
+        for item in behavior_checks:
             golden = safe_path(root, item["characterization"])
             baseline = read_json(golden)
             source = safe_path(root, item["path"])
@@ -294,6 +326,8 @@ class ApplicationRefactorer:
             current = execute_cases(root, baseline["reference"], baseline["cases"])
             if current != baseline["outcomes"]:
                 raise MigrationBlocked("Legacy behavior differs from golden outcomes")
+            if item in plan.characterization_checks:
+                self._check_characterized_security(source, baseline["reference"], item)
             regression = compare(
                 Path(item["target_root"]), item["target"], golden, Path(item["target_file"])
             )
@@ -319,8 +353,22 @@ class ApplicationRefactorer:
                 },
             )
             verification = verify(root, plan.verification_commands)
+            # Recheck actual shared behavior after verification, before committing any change.
+            for item in behavior_checks:
+                regression = compare(
+                    Path(item["target_root"]),
+                    item["target"],
+                    safe_path(root, item["characterization"]),
+                    Path(item["target_file"]),
+                )
+                if regression.status != "PASS":
+                    raise MigrationBlocked("MIGRATION_BLOCKED: replacement behavior changed")
             after = self.framework.evaluate_project(root)
-            if verification["status"] != "PASS" or after.blocks(set(plan.policy_dependencies)):
+            if (
+                verification["status"] != "PASS"
+                or after.blocks(set(plan.policy_dependencies))
+                or after.source_status != "POLICY_SOURCE_CURRENT"
+            ):
                 raise MigrationBlocked("MIGRATION_BLOCKED: verification failed")
             workflow.transition(
                 "APPLICATION_TESTED",
@@ -353,7 +401,7 @@ class ApplicationRefactorer:
                 "verification": verification,
                 "policy_before": asdict(before),
                 "policy_after": asdict(after),
-                "legacy_cleanup": "NOT_EXECUTED: compatibility wrappers retained",
+                "legacy_cleanup": "NOT_EXECUTED: legacy code retained",
                 "shared_libraries": plan.target_shared_libraries,
             }
             write_json(root / ".auditcore/refactor-result.json", result)

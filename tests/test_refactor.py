@@ -18,6 +18,27 @@ from auditcore.tools.apprefactor.engine import (
 )
 from auditcore.tools.apprefactor.models import CharacterizationCase
 from auditcore.tools.common import digest
+from auditcore.tools.policy import evidence_binding
+from auditcore.tools.policy.framework import context_from_project
+
+
+def _attest_synthetic_fixture(provider, root):
+    """Bind synthetic unit-test attestations; not evidence for any real application."""
+    from auditcore.tools.common import write_json
+
+    binding = evidence_binding(root, provider.artifact, context_from_project(root))
+    write_json(
+        root / ".auditcore/policy-evidence.json",
+        {
+            identifier: {
+                "status": "VERIFIED",
+                "references": ["synthetic migration fixture only"],
+                "source_commit": provider.load_requirements().commit_sha,
+                **binding,
+            }
+            for identifier in ("F-07", "F-09")
+        },
+    )
 
 
 def test_import_replacement_preserves_aliases_comments_and_other_symbols():
@@ -63,7 +84,7 @@ def test_missing_verification_not_pass(git_project):
 
 
 @pytest.fixture
-def migration(git_project, policy_provider, library_context):
+def migration(git_project, policy_provider, library_context, monkeypatch):
     root = git_project
     (root / "shared.py").write_text("def normalize(value):\n    return value.strip()\n")
     golden = root / "golden.json"
@@ -76,15 +97,21 @@ def migration(git_project, policy_provider, library_context):
     )
     source = policy_provider.load_requirements()
     policy_provider._loaded = replace(source, source_status="POLICY_SOURCE_CURRENT")
-    policy_provider.evidence = {
-        identifier: {
-            "status": "VERIFIED",
-            "references": ["synthetic test"],
-            "source_commit": source.commit_sha,
-        }
-        for identifier in ("F-07", "F-09")
-    }
     refactorer = ApplicationRefactorer(policy_provider)
+    original_plan = refactorer.plan
+
+    def bound_plan(root, *args, **kwargs):
+        _attest_synthetic_fixture(policy_provider, root)
+        return original_plan(root, *args, **kwargs)
+
+    def bound_verification(root, commands):
+        result = verify(root, commands)
+        if result["status"] == "PASS":
+            _attest_synthetic_fixture(policy_provider, root)
+        return result
+
+    monkeypatch.setattr(refactorer, "plan", bound_plan)
+    monkeypatch.setattr("auditcore.tools.apprefactor.engine.verify", bound_verification)
     plan = refactorer.plan(root)
     plan.files_to_change = ["legacy.py"]
     plan.wrappers_to_create = [
@@ -221,8 +248,117 @@ def test_handoff_requires_current_deployment_evidence(migration):
     result = json.loads(result_path.read_text())
     result["source_digest"] = source_digest(root)
     write_json(result_path, result)
+    _attest_synthetic_fixture(refactorer.framework, root)
     assert refactorer.handoff(root)["status"] == "READY_FOR_DEPLOYMENT"
     assert (root / ".auditcore/deployment-handoff.json").exists()
     (root / "legacy.py").write_text("changed = True\n")
     with pytest.raises(MigrationBlocked, match="stale"):
         refactorer.handoff(root)
+
+
+@pytest.fixture
+def class_migration(migration):
+    refactorer, _, root = migration
+    implementation = (
+        "class TestDataGenerator:\n"
+        "    def __init__(self, prefix, suffix='!'):\n"
+        "        self.prefix, self.suffix = prefix, suffix\n"
+        "    def generate_rows(self, count):\n"
+        "        return [self.prefix + str(i) + self.suffix for i in range(count)]\n"
+    )
+    (root / "generator.py").write_text(implementation)
+    (root / "auditcore_dummygenerator.py").write_text(implementation)
+    (root / "main.py").write_text("from generator import TestDataGenerator\n")
+    characterize(
+        root,
+        "generator:TestDataGenerator",
+        [
+            CharacterizationCase(
+                "rows",
+                [2],
+                {},
+                method="generate_rows",
+                constructor_args=["row"],
+                constructor_kwargs={"suffix": "."},
+            )
+        ],
+        root / "class-golden.json",
+        root / "generator.py",
+    )
+    plan = refactorer.plan(root, {"auditcore_dummygenerator": "0.1.0"})
+    plan.files_to_change = ["main.py"]
+    plan.imports_to_change = [
+        {"path": "main.py", "old": "generator", "new": "auditcore_dummygenerator"}
+    ]
+    plan.characterization_checks = [
+        {
+            "path": "generator.py",
+            "characterization": "class-golden.json",
+            "target": "auditcore_dummygenerator:TestDataGenerator",
+            "target_root": str(root),
+            "target_file": str(root / "auditcore_dummygenerator.py"),
+        }
+    ]
+    command = [
+        sys.executable,
+        "-c",
+        "from main import TestDataGenerator; "
+        "assert TestDataGenerator('row', suffix='.').generate_rows(2) == ['row0.', 'row1.']",
+    ]
+    plan.verification_commands = {category: command for category in REQUIRED_VERIFICATION}
+    return refactorer, plan, root
+
+
+def test_class_import_migration_without_wrapper(class_migration):
+    refactorer, plan, root = class_migration
+    original = (root / "generator.py").read_bytes()
+    result = refactorer.apply(plan)
+    assert result["status"] == "VERIFIED"
+    assert result["shared_libraries"] == {"auditcore_dummygenerator": "0.1.0"}
+    assert (
+        root / "main.py"
+    ).read_text() == "from auditcore_dummygenerator import TestDataGenerator\n"
+    assert (root / "generator.py").read_bytes() == original
+    assert not plan.wrappers_to_create
+
+
+def test_class_import_requires_characterization(class_migration):
+    refactorer, plan, root = class_migration
+    plan.characterization_checks = []
+    with pytest.raises(MigrationBlocked, match="characterization"):
+        refactorer.apply(plan)
+    assert (root / "main.py").read_text() == "from generator import TestDataGenerator\n"
+
+
+def test_class_behavior_change_after_apply_rolls_back(class_migration):
+    refactorer, plan, root = class_migration
+    original = (root / "main.py").read_bytes()
+    plan.verification_commands["quality"] = [
+        sys.executable,
+        "-c",
+        "from pathlib import Path; p=Path('auditcore_dummygenerator.py'); "
+        "p.write_text(p.read_text().replace('range(count)', 'range(count + 1)'))",
+    ]
+    with pytest.raises(MigrationBlocked, match="replacement behavior changed"):
+        refactorer.apply(plan)
+    assert (root / "main.py").read_bytes() == original
+
+
+def test_plan_does_not_invent_library_version(migration):
+    refactorer, _, root = migration
+    assert refactorer.plan(root).target_shared_libraries == {}
+
+
+def test_plan_cli_records_explicit_package(git_project, capsys):
+    from auditcore.tools.apprefactor.cli import main
+
+    assert main(["plan", str(git_project), "--library", "auditcore_fixture==1.0.0"]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["target_shared_libraries"] == {"auditcore_fixture": "1.0.0"}
+
+
+def test_plan_cli_rejects_unpinned_library(git_project, capsys):
+    from auditcore.tools.apprefactor.cli import main
+
+    assert main(["plan", str(git_project), "--library", "auditcore_fixture"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "MIGRATION_BLOCKED"
