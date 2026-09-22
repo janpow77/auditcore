@@ -1,0 +1,74 @@
+{
+  "scope": "ANONYMOUS_PUBLIC_PREVIEW_INSTALLATION",
+  "base_url": "https://github.com/janpow77/auditcore/releases/download/v0.1.0",
+  "checks": {
+    "signature-key": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "b2dd3e6989120cf27599faed9221ff8693fe9731bcb822f5715e78f057971ee0"
+    },
+    "venv": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pip-selective": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "c8af5c21b0774d4d50bd670046c213c4f4f305b170c14a415553529a9ae1d548"
+    },
+    "pip-selective-origins": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pip-all-locked": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "55c2501c5005818fbabc929c218beb9e6cc40c40a35bedc3bbe9ae62cc1f2052"
+    },
+    "pip-smoke-auditcore_dummygenerator": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "4434f05414f838f69468156e52b0c19a162855efbe44e5566fa1fc58dad9c865"
+    },
+    "pip-smoke-auditcore_invoicegenerator": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "99e76428905e6ee1a3034dca571d98b78a7019b003303716f856804f44d727d9"
+    },
+    "pip-smoke-auditcore_reporting": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "187edf6559159e4e833c4083a0df36d9f9666cef5025ae5d6ab4dea490d31f88"
+    },
+    "pip-check": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    "pip-remove": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "ae50f3121e50f7b1f63d059a875c5822fd127ba375a1afc35f7063457f420ec7"
+    },
+    "pip-removal-proof": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "apt-public": {
+      "exit_code": 0,
+      "status": "PASS",
+      "log_sha256": "cc60063882e7c34b277fffd88db2f5428282693854fe994e5022e7fbf2db4cec"
+    }
+  },
+  "status": "PASS",
+  "release_commit": "8b11933957e6e311321c53ce37e7544e62768dbb",
+  "release_url": "https://github.com/janpow77/auditcore/releases/tag/v0.1.0",
+  "verified_on": "2026-09-22",
+  "signing_key_fingerprint": "E427F95CC37CBFD0876314CA0D1580A6CAE37327",
+  "public_pypi_publication": "NOT_EXECUTED",
+  "application_release": "NOT_EVALUATED",
+  "upgrade_scope": "LOCAL_DEBIAN_PACKAGING_REVISION_1_TO_2_SAME_UPSTREAM_WHEEL"
+}

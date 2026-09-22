@@ -38,6 +38,11 @@ bleiben getrennte Repositories. Synthetische Testrechnungen sind keine Zusage
 eines Systems zur verbindlichen Rechnungsstellung. PDF-Renderer gehören derzeit
 nicht zum Rechnungspaket.
 
+Die [öffentliche Preview v0.1.0](https://github.com/janpow77/auditcore/releases/tag/v0.1.0)
+enthält Wheels, Source-Distributionen und signierte Debian-Pakete.
+[Installation über Requirements oder APT](docs/deployment/package-feed.md) und
+[vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md).
+
 [Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md).
 Der technische Frameworknachweis ist im
 [Phasenbericht](docs/reports/FRAMEWORK_PHASES_1_2.md) dokumentiert.

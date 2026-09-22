@@ -1,4 +1,4 @@
-# Preview-Paketquelle vorbereiten und verwenden
+# Öffentliche Preview-Paketquelle verwenden
 
 Die drei Fachbibliotheken sind eigenständig installierbare Distributionen im
 Repository `auditcore`. Anwendungen behalten ihre eigenen Repositories und
@@ -37,18 +37,21 @@ Aufbewahrung dieses Verzeichnisses gehören zum Maintainerbetrieb. Nur der
 exportierte öffentliche Key gehört zu den Release-Assets. Kein Upload ganzer
 `.auditcore`-Verzeichnisse oder Verifikationsprotokolle.
 
-Der geplante Downloadpfad ist
+Die [Preview v0.1.0](https://github.com/janpow77/auditcore/releases/tag/v0.1.0)
+ist mit 27 Assets veröffentlicht. Der Downloadpfad lautet
 `https://github.com/janpow77/auditcore/releases/download/v0.1.0`.
-Er ist erst nach einem gesonderten Release-Upload verfügbar. `PREVIEW_ASSETS_PREPARED`
-beweist keine Veröffentlichung und keinen erfolgreichen Zugriff über diesen URL.
-Nach dem Upload werden pip und APT in frischen isolierten Umgebungen gegen den
-tatsächlichen öffentlichen Downloadpfad getestet, einschließlich GitHub-Redirects.
+Am 22.09.2026 wurden anonyme pip- und APT-Installationen, echte Funktionsaufrufe
+und Entfernung gegen diesen öffentlichen URL erfolgreich ausgeführt,
+einschließlich GitHub-Redirects. [Prüfnachweis](../reports/domain-public-installation.json).
+Der beigefügte `preview-manifest.json` dokumentiert unverändert den Stand vor Upload;
+er ist von diesem tatsächlichen Veröffentlichungsnachweis zu unterscheiden.
 Der Release ist eine Bibliotheks-Preview, keine Freigabe einer Fachanwendung.
 
 ## pip aus einem eigenen Anwendungsrepository
 
-Nach erfolgreicher Veröffentlichung kann die bereitgestellte Datei
-`requirements-auditcore_invoicegenerator.txt` übernommen werden. Sie enthält
+Die bereitgestellte
+[requirements-auditcore_invoicegenerator.txt](https://github.com/janpow77/auditcore/releases/download/v0.1.0/requirements-auditcore_invoicegenerator.txt)
+kann in das Anwendungsrepository übernommen werden. Sie enthält
 `--no-index`, SHA256-gebundene `--find-links`-URLs auf die einzelnen Wheels und
 genau eine fachliche Anforderung:
 
@@ -57,6 +60,7 @@ auditcore_invoicegenerator==0.1.0
 ```
 
 ```bash
+curl -fsSLO https://github.com/janpow77/auditcore/releases/download/v0.1.0/requirements-auditcore_invoicegenerator.txt
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-auditcore_invoicegenerator.txt
 .venv/bin/python -I -c 'from auditcore_invoicegenerator import InvoiceScenario'
@@ -72,7 +76,8 @@ PyPI-Veröffentlichung wird hier nicht behauptet.
 
 ## APT auf Debian mit Python 3.11 oder neuer
 
-Nach Veröffentlichung und erfolgreichem öffentlichen Installtest:
+Signaturschlüssel-Fingerprint: **`E427F95CC37CBFD0876314CA0D1580A6CAE37327`**.
+Die folgenden Schritte wurden gegen die öffentliche Paketquelle geprüft:
 
 ```bash
 BASE=https://github.com/janpow77/auditcore/releases/download/v0.1.0

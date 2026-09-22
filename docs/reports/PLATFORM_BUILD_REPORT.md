@@ -1,5 +1,9 @@
 # AUDITCORE PLATFORM BUILD REPORT
 
+Historischer Implementierungsbericht. Den aktuellen Mehrpaket- und Release-Stand
+dokumentiert der [Fachpaketbericht](DOMAIN_PACKAGES_REPORT.md); frühere Aussagen
+zur Ein-Projekt-Architektur und fehlenden Veröffentlichung unten sind zeitgebunden.
+
 Stand: 22. September 2026. Version: 0.1.0.
 
 Repository: `janpow77/auditcore`.
