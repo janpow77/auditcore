@@ -154,7 +154,8 @@ class FeedAdapter:
         if "<!DOCTYPE" in text.upper() or "<!ENTITY" in text.upper():
             raise ParserError("Feed mit DOCTYPE/ENTITY wird aus Sicherheitsgründen abgelehnt.")
         try:
-            root = ElementTree.fromstring(text)
+            # DOCTYPE/ENTITY are rejected above (tested); no DTD or entity expansion occurs.
+            root = ElementTree.fromstring(text)  # nosec B314
         except ElementTree.ParseError as exc:
             raise ParserError(f"Feed ist kein wohlgeformtes XML: {exc}") from exc
         if root.tag == "rss":
@@ -251,3 +252,8 @@ def example_feed_source() -> Source:
         ),
         snapshot_semantics=SnapshotSemantics.APPEND_ONLY,
     )
+
+
+def _feed_example() -> FeedAdapter:
+    """Factory of the synthetic feed example for ``auditcore-harvest replay``."""
+    return FeedAdapter(example_feed_source())

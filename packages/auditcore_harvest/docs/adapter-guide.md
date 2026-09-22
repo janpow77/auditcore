@@ -100,6 +100,11 @@ Entscheidungen trifft kein allgemeiner Retry-Handler.
 
 ## 5. Registrieren, aufrufen, Senke und Checkpoints
 
+Den Netzwerktransport stellt der Consumer bereit (Protokoll `Transport`,
+z. B. ein httpx-Client oder das Standardbibliotheks-Beispiel
+[`examples/urllib_transport.py`](examples/urllib_transport.py)); der Kern
+selbst enthält bewusst keinen Netzwerkclient.
+
 ```python
 registry = AdapterRegistry()
 registry.register("familie.quelle", MeinAdapter)  # explizit, keine Plugin-Magie
