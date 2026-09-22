@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-09-22T15:46:25.504064+00:00",
+  "source_commit": "8d04fc3e128b1ddd03e90a2ebbac4ca0da94a483",
+  "framework_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+  "scope": "Seven core Python files; auditcore.tools excluded",
+  "architecture": {
+    "status": "PASS",
+    "files": [
+      {
+        "path": "src/auditcore/__init__.py",
+        "sha256": "ba3b99b34c3644d998c877cadb4bc7c7331892b8c2ee9601407d56a1b7f183bf",
+        "imports": [],
+        "architecture_findings": []
+      },
+      {
+        "path": "src/auditcore/exceptions.py",
+        "sha256": "992d4a4005b00d5febf3e37363071e50f749cc9a69300d3bcbea1e758e9f5394",
+        "imports": [],
+        "architecture_findings": []
+      },
+      {
+        "path": "src/auditcore/models/__init__.py",
+        "sha256": "d63a32526787f93279d5ca75a237414f5d82e85d48baf0c6ee7ec3af09a61a75",
+        "imports": [
+          "from dataclasses import dataclass, field",
+          "from enum import StrEnum"
+        ],
+        "architecture_findings": []
+      },
+      {
+        "path": "src/auditcore/provenance/__init__.py",
+        "sha256": "53c0a52d3d096f13c1c781f456502f334038d081b06458956b0148c3dd6e7b04",
+        "imports": [
+          "from dataclasses import dataclass"
+        ],
+        "architecture_findings": []
+      },
+      {
+        "path": "src/auditcore/reporting/__init__.py",
+        "sha256": "82746ddc5aaa0ddd409d8f0ebf72774a8d61b611f1963db59dbfaadba975480d",
+        "imports": [
+          "from auditcore.reporting.formats import get_number_format"
+        ],
+        "architecture_findings": []
+      },
+      {
+        "path": "src/auditcore/reporting/formats.py",
+        "sha256": "9979859dafb9f1da7d75cf1900e543ad24a0cdf4c6dd77fb102736c80916f5a8",
+        "imports": [
+          "from __future__ import annotations",
+          "import re",
+          "from typing import Any"
+        ],
+        "architecture_findings": []
+      },
+      {
+        "path": "src/auditcore/rules/__init__.py",
+        "sha256": "6512086b4fcae46d0e3921146989f11beb4ffb22ae59a7bbba921f3f2c964214",
+        "imports": [
+          "from dataclasses import dataclass",
+          "from decimal import Decimal"
+        ],
+        "architecture_findings": []
+      }
+    ],
+    "method": "Full source review and AST architecture scan; no protected persistence accesses or authorization interfaces in this core"
+  },
+  "T-38": {
+    "status": "PASS",
+    "scope": "Core module dependencies and direct persistence access only; no consumer application verification"
+  },
+  "tests": {
+    "command": [
+      ".venv/bin/pytest",
+      "tests/test_core.py",
+      "tests/test_reporting.py",
+      "tests/test_quality.py",
+      "-q"
+    ],
+    "exit_code": 0,
+    "status": "PASS",
+    "stdout": "......................................................................   [100%]\n70 passed in 1.05s\n",
+    "stderr": ""
+  },
+  "human_approval": "NOT_EXECUTED",
+  "deployment_approval": "NOT_EXECUTED"
+}

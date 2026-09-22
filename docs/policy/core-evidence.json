@@ -1,0 +1,31 @@
+{
+  "F-09": {
+    "status": "VERIFIED",
+    "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+    "artifact": "auditcore.core",
+    "artifact_commit": "8d04fc3e128b1ddd03e90a2ebbac4ca0da94a483",
+    "references": [
+      "docs/policy/core-evidence.md#f-09-architektur-und-änderungsgrenzen",
+      "docs/policy/core-verification.json"
+    ],
+    "scope": "Seven core Python files only, bound to hashes in core-verification.json; no human release or consumer approval"
+  },
+  "F-15": {
+    "status": "OPEN",
+    "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+    "artifact": "auditcore.core",
+    "artifact_commit": "8d04fc3e128b1ddd03e90a2ebbac4ca0da94a483",
+    "references": [
+      "docs/policy/core-evidence.md#f-15-versionierte-teilbare-fachartefakte",
+      "src/auditcore/rules/__init__.py",
+      "src/auditcore/provenance/__init__.py"
+    ],
+    "coverage": "PARTIAL",
+    "remaining": [
+      "Complete rule artifact metadata",
+      "Version history and structured comparison verification",
+      "Define review and protected release contract",
+      "Distinguish rule artifacts from prompt/agent test triggers"
+    ]
+  }
+}
