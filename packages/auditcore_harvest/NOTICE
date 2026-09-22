@@ -1,0 +1,18 @@
+auditcore_harvest 0.1.0 — attribution and authorization
+
+The shared harvest contract is a new implementation. Its design was derived
+from the characterized behavior (not copied code) of these existing bases:
+  janpow77/auditdatabase@bba911e918e102426d4ca2f88fd377fe8ca585e4
+    backend/app/harvester/base.py, backend/app/harvester/dip.py
+  janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a
+    backend/app/modules/vp_ai/harvester/base.py, scheduler.py
+  janpow77/regulierung@a5d48ea4b90a410210ec25e707781ef9e21ad743
+    backend/app/services/external_apis/base.py, destatis_genesis.py
+Observed contributors of the sources: janpow77, claude.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library. The source repositories keep
+their own (unlicensed, private) status; this is no relicensing of them.
+Data and terms of use of the harvested services are separate and are tracked
+per source in the catalogue (licence_access), not covered by this licence.
