@@ -6,7 +6,7 @@
 | Ausgangsstand | `a05bb2143bd96d5e981f9462f05b965e1658be36` |
 | Branch / Worktree | `feat/auditcore-funding-sources` in `~/Projekte/flowworkshop-wt-funding` |
 | Commit | `9f5b6ec` (lokal, nicht gepusht) |
-| Installierte Wheels | `auditcore_funding_sources-0.1.0` (sha256 `6a65c819…cd13`), `auditcore_harvest-0.1.0` (sha256 `b98aea3c…2dd2`) per `pip install --target` in ein Scratch-Verzeichnis, eingebunden über `PYTHONPATH`; die Anwendungsumgebung bleibt unverändert |
+| Installierte Wheels | `auditcore_funding_sources-0.1.0` (sha256 `6a65c819…cd13`), `auditcore_harvest-0.1.0` (sha256 `b98aea3c…2dd2`) per `pip install --target` in ein Scratch-Verzeichnis, eingebunden über `PYTHONPATH`; die Anwendungsumgebung bleibt unverändert. Das spätere Wheel `061607ca…1404` (README-Formatierung in den Metadaten) enthält byte-gleichen Paketcode |
 
 ## Umfang
 
