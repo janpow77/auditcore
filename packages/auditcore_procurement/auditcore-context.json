@@ -4,7 +4,7 @@
   "artifact_type": "library",
   "authentication": "none",
   "binding_decisions": "none",
-  "data_space": "UNKNOWN",
+  "data_space": "single_project",
   "delegation": false,
   "deployment_target": "internal_test",
   "document_storage": false,

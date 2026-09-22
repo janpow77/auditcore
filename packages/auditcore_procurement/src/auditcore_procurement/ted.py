@@ -161,6 +161,7 @@ def extract_list(value: Any) -> list[str]:
     result: list[str] = []
 
     def add(item: Any) -> None:
+        """Append the item's text once."""
         text = extract_text(item)
         if text and text not in result:
             result.append(text)
