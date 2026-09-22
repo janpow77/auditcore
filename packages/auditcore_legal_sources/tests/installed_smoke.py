@@ -66,7 +66,9 @@ def main() -> None:
     clock = FixedClock()
     engine = HarvestEngine(
         transport=ReplayTransport(exchanges),
-        credentials=StaticCredentials({("legal.dip_bundestag", "api_key"): "nur-fuer-den-smoke-test"}),
+        credentials=StaticCredentials(
+            {("legal.dip_bundestag", "api_key"): "nur-fuer-den-smoke-test"}
+        ),
         state=MemoryStateStore(),
         clock=clock,
         sleeper=ClockSleeper(clock),
