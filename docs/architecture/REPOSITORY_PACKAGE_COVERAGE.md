@@ -8,6 +8,12 @@ Analysen, bestehende Bibliotheken und technische Werkzeuge gehören ausdrücklic
 zum Gesamtbestand. Dieses Dokument ergänzt den Plan um alle aktuell sichtbaren
 eigenen Repositories und einen fachlich begründeten nächsten Zuschnitt.
 
+Die nachfolgende [vertiefte Funktionsübersicht](FUNCTION_OVERVIEW.md) enthält
+die erneute GitHub-/Gitbaum-/AST-Inventur aller 71 Repositories, tatsächliche
+KIRA/RAG-/Graphify-Abfragen und Detailberichte für Workshop, OSINT/map.flowaudit,
+Designer/MCP, FlowStat und Regulierung. Sie ergänzt diese erste Einordnung;
+Regulierung ist der erste konkrete Refactoring-/Debian-Consumer.
+
 ## Erhebung und belastbare Grenzen
 
 Der authentifizierte GitHub-Owner ist `janpow77`. Die aktuelle REST-Abfrage
