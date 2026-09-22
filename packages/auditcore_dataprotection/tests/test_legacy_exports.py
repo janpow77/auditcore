@@ -32,18 +32,31 @@ def cells(workbook: Any) -> dict[str, Any]:
                 value = cell.value
                 if isinstance(value, datetime):
                     value = {"$datetime": value.isoformat()}
-                found.append({"ref": cell.coordinate, "value": value, "type": cell.data_type,
-                              "bold": bool(cell.font and cell.font.bold)})
-        sheets.append({"title": sheet.title, "cells": found,
-                       "merged": sorted(str(r) for r in sheet.merged_cells.ranges),
-                       "freeze_panes": sheet.freeze_panes, "auto_filter": sheet.auto_filter.ref})
+                found.append(
+                    {
+                        "ref": cell.coordinate,
+                        "value": value,
+                        "type": cell.data_type,
+                        "bold": bool(cell.font and cell.font.bold),
+                    }
+                )
+        sheets.append(
+            {
+                "title": sheet.title,
+                "cells": found,
+                "merged": sorted(str(r) for r in sheet.merged_cells.ranges),
+                "freeze_panes": sheet.freeze_panes,
+                "auto_filter": sheet.auto_filter.ref,
+            }
+        )
     return {"sheets": sheets}
 
 
 def corrected(expected: dict[str, Any], formula_refs: list[tuple[str, str]]) -> dict[str, Any]:
     """The original stored the text '=1+1' as a formula; the only intended difference."""
-    found = [(s["title"], c["ref"]) for s in expected["sheets"] for c in s["cells"]
-             if c["type"] == "f"]
+    found = [
+        (s["title"], c["ref"]) for s in expected["sheets"] for c in s["cells"] if c["type"] == "f"
+    ]
     assert found == formula_refs
     for sheet in expected["sheets"]:
         for cell in sheet["cells"]:
@@ -81,9 +94,15 @@ def test_formula_text_is_literal_after_round_trip(legacy: dict[str, Any], tmp_pa
 
 
 def test_empty_register_workbook_is_identical(legacy: dict[str, Any]) -> None:
-    document = {"inhalt": {}, "version": 9, "status": "entwurf", "ersteller": "anna",
-                "erstellt_am": datetime(2026, 9, 2, tzinfo=UTC), "freigeber": None,
-                "freigegeben_am": None}
+    document = {
+        "inhalt": {},
+        "version": 9,
+        "status": "entwurf",
+        "ersteller": "anna",
+        "erstellt_am": datetime(2026, 9, 2, tzinfo=UTC),
+        "freigeber": None,
+        "freigegeben_am": None,
+    }
     observed = cells(legacy_register_workbook(document, TENANT))
     assert observed == legacy["workflow"]["exports"]["register_workbook_empty"]
 

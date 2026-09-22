@@ -9,7 +9,7 @@ here for the legacy-compatible layouts and the new-contract workbooks alike.
 from __future__ import annotations
 
 import io
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from datetime import date, datetime
 from typing import Any
 
@@ -287,80 +287,83 @@ def legacy_overview_workbook(
 
 
 def _cell_value(value: Any) -> Any:
+    """Plain cell value for the reporting renderer; lists joined, flags as Ja/Nein."""
     if isinstance(value, datetime) and value.tzinfo is not None:
         return value.isoformat()  # Excel kennt keine Zeitzonen; Angabe bleibt eindeutig
-    if value is None or isinstance(value, (str, int, float, datetime, date)):
-        return value
     if isinstance(value, bool):
         return _yes_no(value)
+    if value is None or isinstance(value, (str, int, float, datetime, date)):
+        return value
     if isinstance(value, (list, tuple)):
         return ", ".join(str(v) for v in value)
     return str(value)
 
 
-def _sheet(wb: Any, title: str, header: Sequence[str], rows: Iterable[Sequence[Any]]) -> None:
-    from openpyxl.styles import Font
-
-    ws = wb.create_sheet(title[:31])
-    for column, label in enumerate(header, start=1):
-        _put(ws, 1, column, label).font = Font(bold=True)
-    for line, values in enumerate(rows, start=2):
-        if line - 1 > MAX_ROWS:
-            raise ValueError("Zu viele Zeilen für die Arbeitsmappe.")
-        for column, value in enumerate(values, start=1):
-            v = _cell_value(value)
-            if isinstance(v, bool):
-                v = _yes_no(v)
-            _put(ws, line, column, v)
-    ws.freeze_panes = "A2"
+def _render(tables: Sequence[tuple[str, Sequence[str], Sequence[Sequence[Any]]]]) -> bytes:
+    """Render flat tables with ``auditcore_reporting`` (formula-safe, bounded)."""
+    try:
+        from auditcore_reporting import ReportTable, render_workbook
+    except ImportError as exc:  # pragma: no cover - depends on installed extras
+        raise ExportDependencyError(
+            "XLSX-Export benötigt auditcore_reporting[excel]; installieren mit "
+            "pip install 'auditcore_dataprotection[excel]'."
+        ) from exc
+    return render_workbook(
+        [
+            ReportTable(
+                name[:31],
+                list(header),
+                [[_cell_value(v) for v in row] for row in rows],
+                profile="plain-v1",
+            )
+            for name, header, rows in tables
+        ]
+    )
 
 
 def render_register_xlsx(report: Mapping[str, Any]) -> bytes:
-    """Register report (see :func:`~auditcore_dataprotection.export.register_report`) as XLSX."""
-    openpyxl = _openpyxl()
-    wb = openpyxl.Workbook()
-    wb.remove(wb.active)
+    """Register report (see :func:`~auditcore_dataprotection.export.register_report`) as XLSX.
+
+    Uses the generic workbook renderer of ``auditcore_reporting`` 0.2.0.
+    """
     meta = report["meta"]
     cover = report.get("cover") or {}
-    info = [
-        ("Verzeichnis", meta.get("register_id")),
-        ("Fassung", meta.get("version")),
-        ("Status", meta.get("status")),
-        ("Inhaltsprüfsumme (SHA-256)", meta.get("content_hash")),
-        ("Erstellt von", meta.get("created_by")),
-        ("Bearbeitet von", ", ".join(meta.get("editors") or [])),
-        ("Freigegeben von", meta.get("released_by") or ""),
-        ("Profil", f"{meta.get('profile_id')} {meta.get('profile_version')}"),
+    info: list[list[Any]] = [
+        ["Verzeichnis", meta.get("register_id")],
+        ["Fassung", meta.get("version")],
+        ["Status", meta.get("status")],
+        ["Inhaltsprüfsumme (SHA-256)", meta.get("content_hash")],
+        ["Erstellt von", meta.get("created_by")],
+        ["Bearbeitet von", ", ".join(meta.get("editors") or [])],
+        ["Freigegeben von", meta.get("released_by") or ""],
+        ["Profil", f"{meta.get('profile_id')} {meta.get('profile_version')}"],
     ]
     for part in ("verantwortlicher", "dsb"):
         for key, value in (cover.get(part) or {}).items():
-            info.append((f"{part}.{key}", value))
-    _sheet(wb, "Vorblatt", ["Angabe", "Wert"], info)
+            info.append([f"{part}.{key}", value])
     columns = report["columns"]
     header = ["Referat", "Kennung", *[c["title"] for c in columns]]
-    rows = []
-    for group in report["departments"]:
-        for activity in group["activities"]:
-            rows.append(
-                [group["name"], activity.get("id"), *[activity.get(c["key"]) for c in columns]]
-            )
-    _sheet(wb, "Verarbeitungstätigkeiten", header, rows)
-    _sheet(
-        wb,
-        "Prüfhinweise",
-        ["Code", "Hinweis", "Blockiert Freigabe", "Bezug"],
-        [[i["code"], i["message"], i["blocking"], i["subject"]] for i in report["issues"]],
+    rows = [
+        [group["name"], activity.get("id"), *[activity.get(c["key"]) for c in columns]]
+        for group in report["departments"]
+        for activity in group["activities"]
+    ]
+    if len(rows) > MAX_ROWS:
+        raise ValueError("Zu viele Zeilen für die Arbeitsmappe.")
+    issues = [[i["code"], i["message"], i["blocking"], i["subject"]] for i in report["issues"]]
+    return _render(
+        [
+            ("Vorblatt", ["Angabe", "Wert"], info),
+            ("Verarbeitungstätigkeiten", header, rows),
+            ("Prüfhinweise", ["Code", "Hinweis", "Blockiert Freigabe", "Bezug"], issues),
+        ]
     )
-    return _to_bytes(wb)
 
 
 def render_overview_xlsx(
     rows: Sequence[Mapping[str, Any]], tenant_label: str, generated_at: datetime
 ) -> bytes:
-    """Overview of activities and their newest assessment as XLSX."""
-    openpyxl = _openpyxl()
-    wb = openpyxl.Workbook()
-    wb.remove(wb.active)
+    """Overview of activities and their newest assessment as XLSX (``auditcore_reporting``)."""
     header = [
         "Nr.",
         "Kennung",
@@ -392,6 +395,11 @@ def render_overview_xlsx(
                 dsfa.get("pruefung_erforderlich"),
             ]
         )
-    _sheet(wb, "Folgenabschätzungen", header, lines)
-    _sheet(wb, "Stand", ["Angabe", "Wert"], [["Mandant", tenant_label], ["Stand", generated_at]])
-    return _to_bytes(wb)
+    if len(lines) > MAX_ROWS:
+        raise ValueError("Zu viele Zeilen für die Arbeitsmappe.")
+    return _render(
+        [
+            ("Folgenabschätzungen", header, lines),
+            ("Stand", ["Angabe", "Wert"], [["Mandant", tenant_label], ["Stand", generated_at]]),
+        ]
+    )
