@@ -31,7 +31,7 @@ enthält Quellen, konkrete Consumer und die aktualisierte Reihenfolge.
 | 5 | `auditcore_sampling` | MUS/SRS, Schichtung, Hochrechnung und methodische Varianten | Stille Vereinheitlichung unterschiedlicher Stichprobenformeln |
 | 6 | `auditcore_privacy` | Deterministische Pseudonymmechanik, Kollisionsbehandlung und passende Datenverträge | Schlüsselverwaltung, Mandantenwahl, Mapping-Speicherung und Berechtigungen |
 | 7 | `auditcore_documents` | Dokumentdaten, reine Normalisierung und später isolierte Parser | Das gesamte vorhandene OCR-/PDF-/KI-Servicepaket |
-| 8 | `auditcore_risk`, `auditcore_procurement` | Jeweils Mechanik plus explizite, versionierte Regelprofile | Pauschale gemeinsame Rechtsauslegung oder ungeprüfte Schwellen-/Gewichtsänderungen |
+| 8 | `auditcore_risk`, `auditcore_procurement` | Mechanik plus explizite, versionierte Regelprofile; Procurement umfasst auch TED, HAD und weitere Vergabebekanntmachungen | Pauschale gemeinsame Rechtsauslegung oder ungeprüfte Schwellen-/Gewichtsänderungen |
 
 Statistik bleibt nur dann eine eigene Distribution, wenn ihr eigener Vertrag
 und ihre tatsächlichen Consumer belegt sind. Ausschließlich von Sampling
