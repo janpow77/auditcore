@@ -100,9 +100,22 @@ nicht vor bestätigter Verarbeitung fortschreiben; keine unbelegte Exactly-once-
 Behauptung. Spezifische Parser, Zugangsdaten und Snapshot-/Löschregeln bleiben
 explizit. Details stehen in Abschnitt H0 der Repository-Abdeckung.
 
+Liefere die dort festgelegte Adapteranleitung, öffentliche versionierte
+Schnittstelle, ausführbare Referenzadapter und wiederverwendbare Contract-Tests
+mit. Überführe die bereits verwendeten Quellen aus H0–H5 in einen versionierten
+Quellenkatalog mit Herkunft, Consumer, Konfigurationsschema und tatsächlichem
+Prüfstatus. Die vorgesehenen Quellen sind verbindlicher Inventur-/Planungsumfang;
+ein Katalogeintrag allein bedeutet weder implementiert noch live getestet.
+
 Konkrete Kandidatenfamilien sind:
 
-- `auditcore_funding_sources`: Förderempfänger-/Beihilfequellen und ihre Parser;
+- `auditcore_funding_sources`: Förderempfänger, State Aid und ausdrücklich das
+  separate De-minimis-/eAidRegister-Profil; Kumulierungsberechnung als getrennten
+  fachlichen Vertrag mit versionierten Regeln charakterisieren;
+- `auditcore_procurement`: TED, HAD und weitere Vergabebekanntmachungen mit
+  Online-Abruf, Dateiimport, Normalisierung und Vergabedatenmodellen sowie
+  expliziten fachlichen Prüfprofilen. Quellenadapter nutzen `auditcore_harvest`;
+  Netzwerkabhängigkeiten als Extras von reinen Berechnungen trennen;
 - `auditcore_legal_sources`: Rechts-/Prüfquellen wie DIP und EUR-Lex;
 - `auditcore_registry_sources`: fachlich abgegrenzte Register-/Sanktionsadapter;
 - `auditcore_entity_matching`: nachvollziehbare Entitätsnormalisierung und Abgleich;
