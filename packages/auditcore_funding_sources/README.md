@@ -46,9 +46,10 @@ Bestand des Consumers bleibt unberührt.
 from datetime import date
 from auditcore_funding_sources.cumulation import calculate
 
-ergebnis = calculate(meldungen, reference_date=date(2026, 9, 1),
-                     undertaking_references=["B-000123456"])
-ergebnis.to_dict()["decision"]   # immer None – die Beurteilung bleibt fachlich
+ergebnis = calculate(
+    meldungen, reference_date=date(2026, 9, 1), undertaking_references=["B-000123456"]
+)
+ergebnis.to_dict()["decision"]  # immer None – die Beurteilung bleibt fachlich
 ```
 
 ## Herkunft, Lizenz, Grenzen
