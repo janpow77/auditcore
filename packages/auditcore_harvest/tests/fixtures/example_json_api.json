@@ -1,0 +1,89 @@
+{
+ "note": "synthetische Antworten im Format der Beispiel-JSON-API",
+ "exchanges": [
+  {
+   "request": {
+    "url": "https://api.example.invalid/v1/items",
+    "params": {
+     "size": "2"
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": {
+     "items": [
+      {
+       "id": "E1",
+       "name": "Eintrag 1",
+       "land": "DE"
+      },
+      {
+       "id": "E2",
+       "name": "Eintrag 2",
+       "land": "DE"
+      }
+     ],
+     "next": "t2",
+     "total": 5
+    }
+   }
+  },
+  {
+   "request": {
+    "url": "https://api.example.invalid/v1/items",
+    "params": {
+     "size": "2",
+     "cursor": "t2"
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": {
+     "items": [
+      {
+       "id": "E2",
+       "name": "Eintrag 2",
+       "land": "DE"
+      },
+      {
+       "id": "E3",
+       "name": "Eintrag 3",
+       "land": "DE"
+      }
+     ],
+     "next": "t3",
+     "total": 5
+    }
+   }
+  },
+  {
+   "request": {
+    "url": "https://api.example.invalid/v1/items",
+    "params": {
+     "size": "2",
+     "cursor": "t3"
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": {
+     "items": [
+      {
+       "id": "E4",
+       "name": "Eintrag 4",
+       "land": "DE"
+      },
+      {
+       "id": "E5",
+       "name": "Eintrag 5",
+       "land": "DE",
+       "deleted": true
+      }
+     ],
+     "next": null,
+     "total": 5
+    }
+   }
+  }
+ ]
+}
