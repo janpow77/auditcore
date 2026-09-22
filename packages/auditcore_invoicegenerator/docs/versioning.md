@@ -14,8 +14,11 @@ Profil die öffentliche Konstante `FLOWINVOICE_DEMO_PROFILE`. Der historische
 Legacy-Rechnungsdatensatz erhält dadurch keine zusätzlichen Felder. Ein
 ausgeführter Test prüft beide Zuordnungen gegen die installierte Bibliothek.
 
-Beide Artefakte sind `DRAFT`. Es gibt noch keine zuvor veröffentlichte
-Paketversion; `predecessor_version: null` bedeutet genau das. Das Legacyprofil
+Die beiden fachlichen Artefakte tragen weiterhin `DRAFT`: Dies kennzeichnet
+die fachliche Freigabe, nicht den technischen Veröffentlichungsstatus.
+Paketversion 0.1.0 wurde als technische Preview veröffentlicht.
+`predecessor_version: null` bezeichnet die jeweils erste Fassung eines Profils;
+es behauptet nicht, dass noch keine Paketversion veröffentlicht wurde. Das Legacyprofil
 referenziert unabhängig davon den konkreten historischen Quellcommit als
 Fork-Ursprung. Das Szenarioprofil besitzt keinen gleichgesetzten Legacyvertrag.
 
@@ -42,7 +45,13 @@ Die Bibliothek selbst ist kein Versionsserver und behauptet keinen bereits
 konfigurierten öffentlichen Release-Schutz. Die Lizenzentscheidung ist seit der
 ausdrücklichen Nutzerfreigabe am 22.09.2026 `USER_AUTHORIZED_MIT`; technische
 Releaseprüfung und tatsächliche Publikation sind davon getrennt. Bis deren
-Abschluss bleibt der Artefaktstatus `DRAFT`.
+Abschluss bleibt eine neue technische Veröffentlichung unbestätigt. Der
+fachliche Artefaktstatus `DRAFT` wird davon getrennt geführt.
+
+Paketversion 0.2.0 ergänzt den optionalen PDF-Renderer mit einem eigenen
+Template-Profil. Die bestehenden Berechnungsprofile bleiben unverändert bei
+Version 0.1.0. Paket-, Profil- und technische Releaseversion müssen deshalb
+nicht identisch sein. Der neue PDF-Renderer ändert keine Rechnungssummen.
 
 Die Tests prüfen installierte Profil-Inhalte gegen ihre Hashreferenzen, die
 unveränderten beobachteten Legacyausgaben und den dokumentierten Fork-Ursprung.
