@@ -2,7 +2,7 @@
 
 import hashlib
 import json
-from datetime import datetime
+from datetime import date, datetime
 from importlib.resources import files
 from pathlib import Path
 
@@ -38,3 +38,18 @@ def test_source_metadata_copies_match_installed_profile_contract():
     )
     for path in [package_root / "provenance.json", package_root / "docs/provenance.json"]:
         assert json.loads(path.read_text()) == installed
+
+
+def test_stable_artifact_ids_map_to_actual_runtime_profile_ids():
+    from auditcore_invoicegenerator import FLOWINVOICE_DEMO_PROFILE, InvoiceScenario
+
+    metadata = json.loads(
+        files("auditcore_invoicegenerator").joinpath("provenance.json").read_text()
+    )
+    profiles = {row["artifact_id"]: row for row in metadata["versioned_artifacts"]}
+    legacy = profiles["auditcore_invoicegenerator:flowinvoice-demo-fb2d185"]
+    assert legacy["runtime_profile_id"] == FLOWINVOICE_DEMO_PROFILE
+    scenario = profiles["auditcore_invoicegenerator:invoice-scenario-v1"]
+    record = InvoiceScenario(42, base_date=date(2026, 1, 1)).generate(1)
+    assert scenario["runtime_profile_id"] == record["metadata"]["profile"]
+    assert scenario["runtime_profile_reference"] == "InvoiceRecord.metadata.profile"

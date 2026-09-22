@@ -46,7 +46,7 @@
       "status": "DRAFT",
       "created_at": "2026-09-22T16:37:45.821903+00:00",
       "created_at_basis": "Initial package characterization/extraction observation; not original upstream creation date",
-      "modified_at": "2026-09-22T16:54:48.650066+00:00",
+      "modified_at": "2026-09-22T17:06:33.478454+00:00",
       "predecessor_version": null,
       "fork_parent": {
         "repository": "janpow77/flowinvoice",
@@ -67,7 +67,9 @@
         "human_release_approval": "NOT_GRANTED",
         "public_release": "LICENSE_AUTHORIZED_TECHNICAL_REVIEW_IN_PROGRESS",
         "license_authorization": "USER_AUTHORIZED_MIT"
-      }
+      },
+      "runtime_profile_id": "flowinvoice-demo-fb2d185",
+      "runtime_profile_reference": "FLOWINVOICE_DEMO_PROFILE constant; legacy record shape deliberately unchanged"
     },
     {
       "artifact_id": "auditcore_invoicegenerator:invoice-scenario-v1",
@@ -80,7 +82,7 @@
       "status": "DRAFT",
       "created_at": "2026-09-22T16:37:45.821903+00:00",
       "created_at_basis": "Initial package characterization/extraction observation; not original upstream creation date",
-      "modified_at": "2026-09-22T16:54:48.650098+00:00",
+      "modified_at": "2026-09-22T17:06:33.478485+00:00",
       "predecessor_version": null,
       "fork_parent": null,
       "fork_created_at": null,
@@ -95,7 +97,9 @@
         "human_release_approval": "NOT_GRANTED",
         "public_release": "LICENSE_AUTHORIZED_TECHNICAL_REVIEW_IN_PROGRESS",
         "license_authorization": "USER_AUTHORIZED_MIT"
-      }
+      },
+      "runtime_profile_id": "synthetic-scenario-v1",
+      "runtime_profile_reference": "InvoiceRecord.metadata.profile"
     }
   ],
   "versioning_contract": "docs/versioning.md",

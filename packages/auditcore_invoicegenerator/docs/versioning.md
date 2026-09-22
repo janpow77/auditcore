@@ -7,6 +7,13 @@ Der Erstellungszeitpunkt bezeichnet die tatsächlich beobachtete lokale
 Characterization/Extraktion, nicht die unbekannte ursprüngliche Erstellung.
 Unbelegte Autoren, Eigentümer und Organisationen bleiben `UNKNOWN`.
 
+Die namespaced Artefakt-ID identifiziert den Profileintrag. Das separate Feld
+`runtime_profile_id` bindet ihn an den tatsächlichen Laufzeitbezug: beim neuen
+Szenario `InvoiceRecord.metadata.profile == synthetic-scenario-v1`, beim Legacy-
+Profil die öffentliche Konstante `FLOWINVOICE_DEMO_PROFILE`. Der historische
+Legacy-Rechnungsdatensatz erhält dadurch keine zusätzlichen Felder. Ein
+ausgeführter Test prüft beide Zuordnungen gegen die installierte Bibliothek.
+
 Beide Artefakte sind `DRAFT`. Es gibt noch keine zuvor veröffentlichte
 Paketversion; `predecessor_version: null` bedeutet genau das. Das Legacyprofil
 referenziert unabhängig davon den konkreten historischen Quellcommit als
