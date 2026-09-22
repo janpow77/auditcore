@@ -43,7 +43,7 @@ jobs:
         if: matrix.python != '3.12'
         run: python scripts/verify_installed_framework.py dist/auditcore-0.1.0-py3-none-any.whl --smoke-only
       - run: bandit -q -ll -r src
-      - run: pip-audit --format json --output dependency-audit.json
+      - run: pip-audit --timeout 60 --format json --output dependency-audit.json
         if: always()
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

@@ -223,7 +223,7 @@ def check(
     if policy:
         commands += [
             (["bandit", "-q", "-ll", "-r", str(root)], "AC-SEC-002"),
-            (["pip-audit", "--format", "json"], "AC-DEP-001"),
+            (["pip-audit", "--timeout", "60", "--format", "json"], "AC-DEP-001"),
         ]
     if external:
         findings.extend(_external(command, code, project) for command, code in commands)

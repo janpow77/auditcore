@@ -506,6 +506,34 @@ def create_consumer(output: Path, name: str, framework: Path, wheels: Path) -> t
     return root, plan_path
 
 
+def prepare_framework_source(output: Path, checkout: Path) -> dict[str, Any]:
+    """Resolve the actual framework before fixtures and retain explicit commit-bound evidence."""
+    provider = GitFrameworkPolicyProvider(
+        checkout,
+        cache=output / ".auditcore/framework-source-cache.json",
+    )
+    source = provider.load_requirements()
+    current = source.source_status == "POLICY_SOURCE_CURRENT" and bool(source.requirements)
+    proof = {
+        "status": "PASS"
+        if current
+        else "NOT_EXECUTED"
+        if source.source_status == "POLICY_SOURCE_UNAVAILABLE"
+        else "REVIEW_REQUIRED",
+        "repository": source.repository,
+        "source_commit": source.commit_sha,
+        "source_status": source.source_status,
+        "source_digests": source.source_digests,
+        "requirement_count": len(source.requirements),
+        "checked_at": now(),
+        "reason": "Framework checkout and remote HEAD verified by FrameworkPolicyProvider"
+        if current
+        else "Framework source is unavailable, stale or empty; migration cannot run",
+    }
+    write_json(output / "framework-source-proof.json", proof)
+    return proof
+
+
 def run_selfcheck(output: Path, framework: Path) -> dict[str, Any]:
     """Exercise positive and blocked/rollback CLI paths from an installed wheel."""
     import auditcore
@@ -535,6 +563,14 @@ def run_selfcheck(output: Path, framework: Path) -> dict[str, Any]:
     report_path = output / "framework-migration-report.json"
     write_json(report_path, report)
     try:
+        report["external_policy_source"] = prepare_framework_source(output, framework)
+        write_json(report_path, report)
+        if report["external_policy_source"]["status"] != "PASS":
+            raise RuntimeError(
+                "Framework source unavailable or stale before fixture creation; "
+                "see framework-source-proof.json. Public repository access or a valid "
+                "--framework checkout with current remote access is required."
+            )
         wheels = create_package(output)
         for name in ("positive", "missing-evidence", "stale-evidence", "rollback"):
             root, plan = create_consumer(output, name, framework, wheels)

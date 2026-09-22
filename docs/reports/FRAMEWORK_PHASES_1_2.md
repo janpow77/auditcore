@@ -38,8 +38,23 @@ Die öffentliche Bereitstellung auf PyPI oder einem erreichbaren APT-Server ist
 Der installierte Framework-Selfcheck prüft eine frische Wheelinstallation,
 tatsächliche Imports aus `site-packages`, fünf installierte CLIs, Paketinventur,
 Migration und signierte APT-Installation. Technische Fixtures sind ausdrücklich
-keine migrierten Fachanwendungen. Der abschließende Lauf und die CI-Ergebnisse
-werden nach Abschluss unten ergänzt.
+keine migrierten Fachanwendungen. Der abschließende lokale Lauf um 16:28 UTC
+bestand vollständig: `.auditcore/installed-framework/run-dt88bylk/result.json`.
+Wheel-SHA256: `742c82fcd01275bbdfb69c43bd210f5d48800553beb36938becfa5320eb91fb3`.
+Alle Schritte verwenden dieselbe unveränderliche Wheelkopie. Der Migrationscheck
+erzeugt die Python-Paketquelle über die installierte CLI und prüft die tatsächliche
+Requirements-Neuinstallation mit Hash und Downloadpfad im pip-Installationsbericht.
+APT-Signatur, Installation, Upgrade, Remove, Manipulationsabwehr und Plattformimport
+bestanden ebenfalls. Geprüfter Implementierungsstand: `9962e11`.
+CI: [Lauf 35754279581](https://github.com/janpow77/auditcore/actions/runs/35754279581)
+scheiterte trotz bestandener Unit-Tests: der frische Runner hatte keinen Zugriff
+auf die damals private Framework-Quelle; zwei Python-Versionen trafen zusätzlich
+den 15-Sekunden-PyPI-ReadTimeout. Auf ausdrückliche Nutzeranweisung wurde ausschließlich
+`verwaltung-app-framework` öffentlich gestellt. Anonymer Git-Zugriff wurde am
+unveränderten Commit `15f5338f783f2c7d5760a9bb299be06d27326be0` nachgewiesen.
+Keine Deploy-Keys oder Secrets wurden angelegt. Dependency-Audits erhalten nun
+60 Sekunden pro Netzabfrage; Fehler werden weiterhin nicht unterdrückt.
+Der erneute CI-Lauf wird nach Abschluss ergänzt.
 
 ### Regression und Integration
 
