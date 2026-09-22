@@ -56,3 +56,14 @@ Statusnamen sowie die Reihenfolge der Freigabeprüfungen und deren Meldungstexte
 4. Übernahme des korrigierten Ablaufs (statt `legacy`) in `regulierung` selbst:
    verändert Ergebnisse bestehender Fassungen (C01, C06, C08) und ist dort
    fachlich freizugeben.
+
+## Wiederverwendung vorhandener Renderer
+
+`render_register_xlsx` und `render_overview_xlsx` erzeugen flache Tabellen und
+verwenden dafür `auditcore_reporting.render_workbook` (Profil `plain-v1`,
+formelsicher, begrenzt). Die Legacy-Arbeitsmappen der Quellanwendung benötigen
+verbundene Zellen, Abschnittsüberschriften je Referat und eigene Stile; dieser
+Vertrag wird von `ReportTable` nicht abgedeckt. Sie bleiben deshalb ein eigener
+openpyxl-Adapter mit derselben Formelsicherheit (DP-C15). Der HTML-Bericht ist
+reine Standardbibliothek; PDF bleibt ein optionaler WeasyPrint-Adapter wie im
+Original. Geprüft mit openpyxl 3.1.5 und 3.0.10 (Debian Bookworm).
