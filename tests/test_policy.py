@@ -36,7 +36,7 @@ def test_kleene_all(left, right, expected):
 def test_library_no_oidc_roles_or_four_eyes(policy_provider, library_context):
     report = policy_provider.evaluate(library_context)
     rows = {r.requirement_id: r for r in report.requirements}
-    for identifier in ("F-01", "F-02", "F-06", "F-14", "F-18"):
+    for identifier in ("F-01", "F-02", "F-06", "F-07", "F-14", "F-18"):
         assert rows[identifier].status == "NOT_APPLICABLE_WITH_REASON"
         assert rows[identifier].applicability_reason
     assert rows["F-01.ASSESS"].status == "IMPLEMENTED"
@@ -79,7 +79,7 @@ def test_llm_cannot_approve_deviation(policy_provider, library_context):
     policy_provider.decisions = {
         "F-07": {"classification": "LLM_INFERRED", "reference": "proposal"}
     }
-    report = policy_provider.evaluate(library_context)
+    report = policy_provider.evaluate(replace(library_context, external_interfaces=True))
     assert not report.approved_deviations
     assert (
         next(r for r in report.requirements if r.requirement_id == "F-07").status
@@ -99,7 +99,12 @@ def test_human_deviation_requires_full_record(policy_provider, library_context):
             "framework_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
         }
     }
-    assert "F-07" in policy_provider.evaluate(library_context).approved_deviations
+    assert (
+        "F-07"
+        in policy_provider.evaluate(
+            replace(library_context, external_interfaces=True)
+        ).approved_deviations
+    )
 
 
 def test_source_drift_not_silently_accepted(policy_provider, library_context):
@@ -143,3 +148,16 @@ def test_project_evidence_is_loaded_without_cross_project_leakage(
     two = policy_provider.evaluate_project(second)
     assert next(r for r in one.requirements if r.requirement_id == "F-09").status == "VERIFIED"
     assert next(r for r in two.requirements if r.requirement_id == "F-09").status != "VERIFIED"
+
+
+@pytest.mark.parametrize(
+    "value,expected", [(False, "FALSE"), (True, "TRUE"), ("UNKNOWN", "UNKNOWN")]
+)
+def test_additional_security_checks_depend_on_actual_exposure(
+    policy_provider, library_context, value, expected
+):
+    report = policy_provider.evaluate(replace(library_context, external_interfaces=value))
+    row = next(r for r in report.requirements if r.requirement_id == "F-07")
+    assert row.applicable == expected
+    if value == "UNKNOWN":
+        assert row.gate_status == "REVIEW_REQUIRED"

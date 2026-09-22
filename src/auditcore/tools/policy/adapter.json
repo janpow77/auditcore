@@ -147,7 +147,44 @@
         ]
       },
       "trigger": {
-        "constant": "TRUE"
+        "any": [
+          {
+            "field": "authentication",
+            "in": [
+              "local",
+              "oidc",
+              "other"
+            ]
+          },
+          {
+            "field": "uploads",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "external_interfaces",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "ai_usage",
+            "in": [
+              "local",
+              "external_provider",
+              "multiple_providers",
+              "byok"
+            ]
+          },
+          {
+            "field": "protection_need",
+            "in": [
+              "high",
+              "very_high"
+            ]
+          }
+        ]
       }
     },
     "F-08": {
