@@ -122,7 +122,19 @@ class Recorder:
                 kwargs["transport"] = httpx.MockTransport(handler)
                 super().__init__(*args, **kwargs)
 
+        class SyncClient(httpx.Client):  # type: ignore[misc]
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                recorder.requests.append({"client_timeout": repr(kwargs.get("timeout"))})
+                kwargs["transport"] = httpx.MockTransport(handler)
+                super().__init__(*args, **kwargs)
+
+        self.saved_sync = httpx.Client
         httpx.AsyncClient = Client
+        httpx.Client = SyncClient
+
+    def restore(self) -> None:
+        """Undo :meth:`install` for the synchronous client (async is restored by callers)."""
+        self.httpx.Client = self.saved_sync
 
 
 def run_case(cases: list[dict[str, Any]], name: str, call: Any) -> None:
@@ -224,6 +236,7 @@ def capture_auditdatabase(root: Path) -> dict[str, Any]:
             result = asyncio.run(dip.DIPHarvester(api_key="fixture-key").harvest(limit=limit))
         finally:
             httpx.AsyncClient = saved
+            recorder.restore()
         scenarios[f"dip-{label}"] = {
             "result": {
                 **jsonable(result),
@@ -321,6 +334,7 @@ def capture_designer(root: Path) -> dict[str, Any]:
             text = asyncio.run(h._fetch_page_content("https://example.invalid/seite"))
         finally:
             httpx.AsyncClient = saved
+            recorder.restore()
         scenarios[f"fetch-{label}"] = {
             "text": text,
             "client_timeouts": sorted(
@@ -407,6 +421,7 @@ def capture_regulierung(root: Path) -> dict[str, Any]:
             result = asyncio.run(connector.run())
         finally:
             httpx.AsyncClient = saved
+            recorder.restore()
         scenarios[f"destatis-{label}"] = {
             "result": jsonable(result),
             "requests": len([r for r in recorder.requests if "url" in r]),
@@ -442,9 +457,10 @@ def main() -> None:
     parser.add_argument("repositories", type=Path)
     parser.add_argument("output", type=Path)
     parser.add_argument("--family", choices=sorted(PINNED))
+    parser.add_argument("--root", type=Path, help="migrated consumer checkout (no blob pinning)")
     args = parser.parse_args()
     if args.family:
-        root = args.repositories / f"janpow77__{args.family}"
+        root = args.root or args.repositories / f"janpow77__{args.family}"
         result = {
             "auditdatabase": capture_auditdatabase,
             "audit_designer": capture_designer,
