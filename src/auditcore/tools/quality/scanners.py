@@ -15,7 +15,7 @@ SECRET_PATTERNS = (
     r"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b",
     r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b",
     r"(?i)\bBearer\s+[A-Za-z0-9_.-]{20,}",
-    r"""(?i)\b(?:password|passwd|api_key|access_token|secret|token)\s*[:=]\s*["'][^"'\n]{8,}["']""",
+    r"""(?i)\b(?:password|passwd|api_key|access_token|secret|token)["']?\s*[:=]\s*["'][^"'\n]{8,}["']""",
     r"\bsk-[A-Za-z0-9_-]{24,}\b",
 )
 PRIVACY_PATTERNS = (
@@ -309,3 +309,44 @@ def python_sources(root: Path, exclude: list[str] | None = None) -> dict[str, st
             continue
         result[relative.as_posix()] = path.read_text(encoding="utf-8-sig")
     return result
+
+
+def text_resources(root: Path, exclude: list[str] | None = None) -> dict[str, str]:
+    """Read shipped text resources for secret scanning and exact wheel/source binding."""
+    suffixes = {
+        ".json",
+        ".toml",
+        ".yaml",
+        ".yml",
+        ".ini",
+        ".cfg",
+        ".env",
+        ".txt",
+        ".md",
+        ".rst",
+        ".tmpl",
+        ".typed",
+    }
+    excluded = {
+        ".git",
+        ".venv",
+        "venv",
+        "node_modules",
+        ".auditcore",
+        "build",
+        "dist",
+        "__pycache__",
+    }
+    resources = {}
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root)
+        if (
+            path.is_symlink()
+            or not path.is_file()
+            or excluded.intersection(relative.parts)
+            or any(relative.match(pattern) for pattern in (exclude or []))
+        ):
+            continue
+        if path.suffix in suffixes or path.name.startswith(".env"):
+            resources[relative.as_posix()] = path.read_text(encoding="utf-8-sig")
+    return resources

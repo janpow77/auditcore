@@ -20,6 +20,7 @@ from auditcore.tools.quality.scanners import (
     documentation_complexity,
     python_sources,
     scan_sensitive,
+    text_resources,
 )
 
 
@@ -102,9 +103,13 @@ def check(
     config = tomllib.loads(config_path.read_text()) if config_path.exists() else {}
     options = config.get("tool", {}).get("auditcore-bibquality", {})
     sources = python_sources(root, options.get("exclude", []))
+    resources = text_resources(root, options.get("exclude", []))
     if root.name == "auditcore":
         # Four tool components have their own self-check scopes.
         sources = {name: text for name, text in sources.items() if not name.startswith("tools/")}
+        resources = {
+            name: text for name, text in resources.items() if not name.startswith("tools/")
+        }
     findings: list[CheckResult] = []
     ignored: list[CheckResult] = []
     valid_sources = {}
@@ -159,6 +164,9 @@ def check(
                 ignored.append(finding)
             else:
                 findings.append(finding)
+    if policy:
+        for path, content in resources.items():
+            findings.extend(scan_sensitive(content, path))
     if not sources:
         findings.append(CheckResult("AC-SYN-001", CheckStatus.NOT_EXECUTED, "No Python files"))
     elif not any(f.code == "AC-SYN-001" and f.status == CheckStatus.FAIL for f in findings):
@@ -220,7 +228,7 @@ def check(
                 valid = valid and all(
                     f"{prefix}/{name}" in archive.namelist()
                     and archive.read(f"{prefix}/{name}") == (root / name).read_bytes()
-                    for name in sources
+                    for name in {**sources, **resources}
                 )
         else:
             valid = False
@@ -243,7 +251,7 @@ def check(
     return QualityReport(
         str(root),
         now(),
-        digest(str(sorted(sources.items()))),
+        digest(str(sorted({**sources, **resources}.items()))),
         findings,
         ignored,
         policy_data,

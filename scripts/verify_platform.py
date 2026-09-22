@@ -59,6 +59,7 @@ def main() -> None:
     check("mypy", ["mypy", "src"])
     for command in (
         "auditcore-quality",
+        "auditcore-bibquality",
         "auditcore-consolidate",
         "auditcore-refactor",
         "auditcore-deploy",
