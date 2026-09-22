@@ -26,6 +26,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--supply-chain-report", type=Path)
     parser.add_argument("--framework", type=Path)
     parser.add_argument("--context", type=Path, help="Applicability context for this artifact")
+    parser.add_argument("--artifact", help="Stable artifact identity for bound policy evidence")
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--project", type=Path, default=Path.cwd())
     args = parser.parse_args(argv)
@@ -38,7 +39,8 @@ def main(argv: list[str] | None = None) -> int:
             args.framework,
             offline=args.offline,
             cache=args.project / ".auditcore/framework-cache.json",
-            artifact=str(target),
+            artifact=args.artifact or str(target),
+            artifact_root=target,
             evidence=read_json(args.project / ".auditcore/policy-evidence.json")
             if (args.project / ".auditcore/policy-evidence.json").exists()
             else None,

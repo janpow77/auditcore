@@ -45,6 +45,7 @@ class ApplicabilityContext:
     international_users: bool | str = "UNKNOWN"
     modular_capabilities: bool | str = "UNKNOWN"
     versioned_artifacts: bool | str = "UNKNOWN"
+    versioned_artifact_types: tuple[str, ...] | str = "UNKNOWN"
     structured_imports: bool | str = "UNKNOWN"
     analytical_runs: bool | str = "UNKNOWN"
     exports: bool | str = "UNKNOWN"
@@ -54,6 +55,31 @@ class ApplicabilityContext:
     protection_need_source: str = "UNKNOWN"
 
     def __post_init__(self) -> None:
+        artifact_types = self.versioned_artifact_types
+        if isinstance(artifact_types, str) and artifact_types.lower() == "unknown":
+            object.__setattr__(self, "versioned_artifact_types", "UNKNOWN")
+        else:
+            allowed = {
+                "prompt",
+                "agent",
+                "rulebook",
+                "checklist",
+                "strategy",
+                "template",
+                "notebook_template",
+            }
+            if not isinstance(artifact_types, (tuple, list)) or not all(
+                isinstance(item, str) and item in allowed for item in artifact_types
+            ):
+                raise ValueError(
+                    "versioned_artifact_types must be an explicit type list or UNKNOWN"
+                )
+            normalized = tuple(sorted(set(artifact_types)))
+            if self.versioned_artifacts is False and normalized:
+                raise ValueError("Artifact types contradict versioned_artifacts=false")
+            if self.versioned_artifacts is True and not normalized:
+                raise ValueError("Versioned artifacts require at least one explicit type")
+            object.__setattr__(self, "versioned_artifact_types", normalized)
         choices = {
             "artifact_type": "library prototype application service deployment_package",
             "data_space": "single_project multi_tenant shared",

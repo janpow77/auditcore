@@ -312,6 +312,20 @@
           {
             "field": "versioned_artifacts",
             "known": true
+          },
+          {
+            "any": [
+              {
+                "field": "versioned_artifacts",
+                "in": [
+                  false
+                ]
+              },
+              {
+                "field": "versioned_artifact_types",
+                "known": true
+              }
+            ]
           }
         ]
       },
@@ -662,27 +676,58 @@
     "T-26": {
       "row_hash": "984619a402b30926f29763e1cf94c21177698402eaef514f91554fcba9f61d98",
       "trigger": {
-        "field": "versioned_artifacts",
-        "in": [
-          true
+        "all": [
+          {
+            "field": "versioned_artifacts",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "versioned_artifact_types",
+            "contains_any": [
+              "prompt"
+            ]
+          }
         ]
       }
     },
     "T-27": {
       "row_hash": "23cd4ee3b122459ba82db8cea3b2e9081443c7235f8e351dc4c9041d3900eaec",
       "trigger": {
-        "field": "versioned_artifacts",
-        "in": [
-          true
+        "all": [
+          {
+            "field": "versioned_artifacts",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "versioned_artifact_types",
+            "contains_any": [
+              "prompt"
+            ]
+          }
         ]
       }
     },
     "T-28": {
       "row_hash": "4666cb59ee3a35a7e93b47d8665af6f6e708786f5ebbd7cfb9ac70f7772754b6",
       "trigger": {
-        "field": "versioned_artifacts",
-        "in": [
-          true
+        "all": [
+          {
+            "field": "versioned_artifacts",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "versioned_artifact_types",
+            "contains_any": [
+              "prompt",
+              "agent"
+            ]
+          }
         ]
       }
     },
@@ -694,6 +739,12 @@
             "field": "versioned_artifacts",
             "in": [
               true
+            ]
+          },
+          {
+            "field": "versioned_artifact_types",
+            "contains_any": [
+              "prompt"
             ]
           },
           {

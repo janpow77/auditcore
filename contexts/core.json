@@ -23,5 +23,6 @@
   "uploads": false,
   "user_model": "no_users",
   "versioned_artifacts": true,
+  "versioned_artifact_types": ["rulebook"],
   "workflow": "calculation_only"
 }

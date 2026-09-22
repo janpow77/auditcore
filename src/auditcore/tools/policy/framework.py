@@ -5,12 +5,14 @@ from __future__ import annotations
 import copy
 import json
 import re
+from contextlib import suppress
 from dataclasses import asdict
 from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
 from auditcore.tools.common import digest, now, read_json, run, write_json
+from auditcore.tools.policy.evidence import evidence_binding
 from auditcore.tools.policy.models import (
     ApplicabilityContext,
     BindingLevel,
@@ -52,6 +54,8 @@ def trigger_value(trigger: dict[str, Any], context: ApplicabilityContext) -> Tru
         return Truth.UNKNOWN
     if "known" in trigger:
         return Truth.TRUE
+    if "contains_any" in trigger:
+        return Truth.TRUE if any(item in value for item in trigger["contains_any"]) else Truth.FALSE
     return Truth.TRUE if value in trigger["in"] else Truth.FALSE
 
 
@@ -78,6 +82,7 @@ class GitFrameworkPolicyProvider:
         evidence: dict[str, dict[str, Any]] | None = None,
         decisions: dict[str, dict[str, Any]] | None = None,
         artifact: str = "auditcore",
+        artifact_root: Path | None = None,
     ) -> None:
         self.checkout = checkout
         self.repository = repository
@@ -86,6 +91,7 @@ class GitFrameworkPolicyProvider:
         self.evidence = evidence or {}
         self.decisions = decisions or {}
         self.artifact = artifact
+        self.artifact_root = artifact_root
         self._loaded: RequirementSet | None = None
 
     def _source(self) -> dict[str, Any]:
@@ -210,6 +216,7 @@ class GitFrameworkPolicyProvider:
         self,
         requirement: Requirement,
         context: ApplicabilityContext,
+        binding: dict[str, str] | None,
     ) -> RequirementEvaluation:
         applicable = trigger_value(requirement.trigger, context)
         if not requirement.adapter_current:
@@ -217,7 +224,16 @@ class GitFrameworkPolicyProvider:
         reason = json.dumps(requirement.trigger, sort_keys=True)
         status, gate = "APPLICABLE", "REVIEW_REQUIRED"
         evidence = self.evidence.get(requirement.requirement_id, {})
-        references = tuple(evidence.get("references", []))
+        raw_references = evidence.get("references", [])
+        references = (
+            tuple(raw_references)
+            if isinstance(raw_references, list)
+            and all(isinstance(item, str) and item for item in raw_references)
+            else ()
+        )
+        bound = binding is not None and all(
+            evidence.get(key) == value for key, value in binding.items()
+        )
         decision_ref = None
         if applicable == Truth.UNKNOWN:
             status, gate = "OPEN", "REVIEW_REQUIRED"
@@ -229,11 +245,14 @@ class GitFrameworkPolicyProvider:
             status, gate = "IMPLEMENTED", "PASS"
             reason = "Required scoping facts supplied; no technical implementation inferred"
             references = ("applicability_context",)
-        elif (
-            evidence.get("status") == "VERIFIED"
-            and references
-            and (evidence.get("source_commit") == requirement.commit_sha)
+        elif evidence.get("status") in {"VERIFIED", "IMPLEMENTED", "MISSING"} and not (
+            references and evidence.get("source_commit") == requirement.commit_sha and bound
         ):
+            status = "EVIDENCE_INVALID"
+            reason = (
+                "Evidence missing/mismatched artifact, source, context, framework or references"
+            )
+        elif evidence.get("status") == "VERIFIED":
             status, gate = "VERIFIED", "PASS"
         elif evidence.get("status") == "IMPLEMENTED" and references:
             status = "IMPLEMENTED"
@@ -248,6 +267,8 @@ class GitFrameworkPolicyProvider:
                 decision.get("classification") == "HUMAN_CONFIRMED"
                 and all(decision.get(k) for k in required)
                 and decision.get("framework_commit") == requirement.commit_sha
+                and binding is not None
+                and all(decision.get(key) == value for key, value in binding.items())
             ):
                 status, gate = "DEVIATION_APPROVED", "PASS_WITH_DEVIATION"
                 decision_ref = decision["reference"]
@@ -271,6 +292,9 @@ class GitFrameworkPolicyProvider:
     def evaluate_project(self, root: Path) -> PolicyEvaluationResult:
         """Load explicit per-project evidence without sharing it across project evaluations."""
         provider = copy.copy(self)
+        provider.artifact_root = root
+        provider.evidence = {}
+        provider.decisions = {}
         for filename, attribute in (
             ("policy-evidence.json", "evidence"),
             ("policy-decisions.json", "decisions"),
@@ -278,7 +302,9 @@ class GitFrameworkPolicyProvider:
             path = root / ".auditcore" / filename
             if path.exists():
                 value = read_json(path)
-                if not isinstance(value, dict):
+                if not isinstance(value, dict) or not all(
+                    isinstance(record, dict) for record in value.values()
+                ):
                     raise ValueError("Policy evidence must map requirement IDs to records")
                 setattr(provider, attribute, value)
         return provider.evaluate(context_from_project(root))
@@ -286,7 +312,14 @@ class GitFrameworkPolicyProvider:
     def evaluate(self, context: ApplicabilityContext) -> PolicyEvaluationResult:
         """Determine applicability before emitting any security or compliance gate."""
         source = self.load_requirements()
-        evaluations = tuple(self._evaluate_requirement(r, context) for r in source.requirements)
+        binding = None
+        if self.artifact_root is not None:
+            # Missing/unreadable source cannot validate evidence or deviations.
+            with suppress(OSError, ValueError):
+                binding = evidence_binding(self.artifact_root, self.artifact, context)
+        evaluations = tuple(
+            self._evaluate_requirement(r, context, binding) for r in source.requirements
+        )
         blocked = tuple(r.requirement_id for r in evaluations if r.gate_status == "FAIL")
         review = tuple(r.requirement_id for r in evaluations if r.gate_status == "REVIEW_REQUIRED")
         if source.source_status != "POLICY_SOURCE_CURRENT":
@@ -314,6 +347,8 @@ class GitFrameworkPolicyProvider:
                 ),
                 "reason": json.dumps(test["trigger"], sort_keys=True),
             }
+            if applicability == Truth.UNKNOWN:
+                review += (identifier,)
         overall = "FAIL" if blocked else "REVIEW_REQUIRED" if review else "PASS"
         return PolicyEvaluationResult(
             source.repository,
@@ -345,5 +380,6 @@ def policy_report(root: Path, framework: Path | None = None) -> dict[str, Any]:
         framework,
         cache=root / ".auditcore/framework-cache.json",
         artifact=root.name,
+        artifact_root=root,
     )
-    return asdict(provider.evaluate(context_from_project(root)))
+    return asdict(provider.evaluate_project(root))
