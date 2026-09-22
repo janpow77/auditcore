@@ -54,7 +54,15 @@ den 15-Sekunden-PyPI-ReadTimeout. Auf ausdrückliche Nutzeranweisung wurde aussc
 unveränderten Commit `15f5338f783f2c7d5760a9bb299be06d27326be0` nachgewiesen.
 Keine Deploy-Keys oder Secrets wurden angelegt. Dependency-Audits erhalten nun
 60 Sekunden pro Netzabfrage; Fehler werden weiterhin nicht unterdrückt.
-Der erneute CI-Lauf wird nach Abschluss ergänzt.
+Der erneute [CI-Lauf 35754894466](https://github.com/janpow77/auditcore/actions/runs/35754894466)
+bestand auf **Python 3.11, 3.12 und 3.13** für Commit
+`b6a396f115ef333be9927f79105797ac7171cb2b`. Python 3.12 führte die vollständige
+installierte Migration und den signierten APT-Zyklus aus; 3.11/3.13 die installierte
+CLI-/Inventurprüfung. Ein weiterer lokaler vollständiger Lauf ohne vorbereiteten
+Frameworkcheckout bestand ebenfalls: `.auditcore/installed-framework/run-8xc8whf8/`;
+Wheel-SHA256 `d5226f464749e8c79eef7ed635c83f4a3bedf69f1da3748ebbb09d8e617c242b`.
+Damit ist der **technische Frameworknachweis abgeschlossen**. Die separat
+ausgewiesenen fachlichen Policy-/Releaseentscheidungen bleiben unverändert offen.
 
 ### Regression und Integration
 

@@ -1,0 +1,85 @@
+name: domain-packages
+on:
+  push:
+    paths:
+      - 'packages/**'
+      - 'src/auditcore/tools/deployer/**'
+      - 'scripts/verify_domain_packages.py'
+      - '.github/workflows/domain-packages.yml'
+  pull_request:
+    paths:
+      - 'packages/**'
+      - 'src/auditcore/tools/deployer/**'
+      - 'scripts/verify_domain_packages.py'
+      - '.github/workflows/domain-packages.yml'
+permissions:
+  contents: read
+jobs:
+  packages:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '${{ matrix.python }}'
+      - name: Build and install the platform wheel
+        run: |
+          python -m pip install --upgrade pip build 'setuptools>=83' wheel
+          python -m build
+          python -m venv .auditcore/package-platform
+          .auditcore/package-platform/bin/python -m pip install --upgrade pip 'dist/auditcore-0.1.0-py3-none-any.whl[dev]'
+      - name: Prepare Debian installation environment
+        if: matrix.python == '3.12'
+        run: >-
+          .auditcore/package-platform/bin/python -I -c
+          "from auditcore.tools.deployer.validation import DockerPackageTester;
+          print(DockerPackageTester().prepare())"
+      - name: Verify real packages through pip and optional APT
+        env:
+          VERIFY_APT: '${{ matrix.python == ''3.12'' }}'
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          from pathlib import Path
+          packages = sorted(p.parent for p in Path('packages').glob('*/pyproject.toml'))
+          assert packages, 'No completed domain packages found'
+          command = ['python', 'scripts/verify_domain_packages.py', *map(str, packages),
+                     '--platform-python', '.auditcore/package-platform/bin/python',
+                     '--output', '.auditcore/domain-ci']
+          if os.environ['VERIFY_APT'] == 'true':
+              command.append('--apt')
+          subprocess.run(command, check=True)
+          PY
+      - name: Test installed domain wheels against their source test suites
+        run: |
+          python - <<'PY'
+          import subprocess
+          from pathlib import Path
+          python = str(Path('.auditcore/package-platform/bin/python').absolute())
+          wheels = sorted(Path('.auditcore/domain-ci/builds').glob('*/*.whl'))
+          subprocess.run([python, '-m', 'pip', 'install',
+                          *(str(w.absolute()) + '[dev]' for w in wheels)], check=True)
+          for project in sorted(Path('packages').glob('*/pyproject.toml')):
+              for arguments in (['pytest', 'tests', '-q'], ['ruff', 'check', '.'],
+                                ['mypy', 'src'], ['bandit', '-q', '-ll', '-r', 'src']):
+                  subprocess.run([python, '-m', *arguments], cwd=project.parent, check=True)
+          subprocess.run([python, '-m', 'pip', 'check'], check=True)
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: domain-package-evidence-${{ matrix.python }}
+          include-hidden-files: true
+          path: |
+            .auditcore/domain-ci/result.json
+            .auditcore/domain-ci/*.log
+            .auditcore/domain-ci/pip-install.json
+            .auditcore/domain-ci/requirements.txt
+            .auditcore/domain-ci/builds/*/*
+            .auditcore/domain-ci/apt-*/*.deb
+            .auditcore/domain-ci/apt-*/*_manifest.json
