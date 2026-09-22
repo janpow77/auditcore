@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+case "$1" in remove|deconfigure)
+if [ -d /run/systemd/system ]; then systemctl stop {name}.service; fi
+;; esac

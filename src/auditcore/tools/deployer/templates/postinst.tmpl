@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+case "$1" in configure)
+getent passwd {user} >/dev/null || adduser --system --group --no-create-home --home /var/lib/{name} {user}
+install -d -m 0750 -o {user} -g {user} /var/lib/{name} {directories}
+chown root:{user} /etc/{name} /etc/{name}/*
+chmod 0750 /etc/{name}
+if [ -d /run/systemd/system ]; then
+systemctl daemon-reload
+{start_commands}
+fi
+;; esac
