@@ -1,0 +1,16 @@
+{
+  "target_symbol": "auditcore.reporting.get_number_format",
+  "migration_version": "0.1.0",
+  "sources": [{
+    "repository": "janpow77/flowlib",
+    "path": "python/flowlib/excel/formats.py",
+    "symbol": "get_number_format",
+    "revision": "aca2dc6aad25aea0720312dbcc6da00b0bcba330"
+  }],
+  "characterization_reference": "tests/fixtures/flowlib-number-format-golden.json",
+  "license_reference": "LICENSES/flowlib-MIT.txt",
+  "consumer_status": "MIGRATION_PENDING",
+  "isolation": "No openpyxl, framework, database or HTTP dependency in the extracted function",
+  "semantic_change": "NONE",
+  "known_conflict": "auswertungjkb.audit_excel_utils.get_number_format uses different formatting rules; not harmonized"
+}

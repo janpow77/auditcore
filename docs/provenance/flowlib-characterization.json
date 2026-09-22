@@ -1,0 +1,9 @@
+{
+  "classification": "OBSERVED",
+  "isolation": "Exact function and module constants extracted via AST; openpyxl adapter not executed",
+  "reference": "legacy_formats:get_number_format",
+  "source_commit": "aca2dc6aad25aea0720312dbcc6da00b0bcba330",
+  "source_digest": "f86f2e1f01397e0a886568789713705673b886e9dfd11212e12286daf3154c35",
+  "source_path": "python/flowlib/excel/formats.py",
+  "source_repository": "janpow77/flowlib"
+}

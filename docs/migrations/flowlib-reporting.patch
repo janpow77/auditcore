@@ -1,0 +1,51 @@
+--- formats.py
++++ formats.py
+@@ -27,26 +27,10 @@
+ _DEFAULT_FORMAT = "General"
+ 
+ 
+-def get_number_format(col_name: str, value: Any = None) -> str:
+-    """Return an Excel number format string based on column name heuristics.
+-
+-    Parameters
+-    ----------
+-    col_name:
+-        The column header / field name.
+-    value:
+-        Optional sample value (currently unused but available for future
+-        type-based inference).
+-
+-    Returns
+-    -------
+-    str
+-        An Excel number format string like ``#,##0.00 "EUR"`` or ``General``.
+-    """
+-    for pattern, fmt in _PATTERNS:
+-        if pattern.search(col_name):
+-            return fmt
+-    return _DEFAULT_FORMAT
++def get_number_format(col_name: str, value: Any=None) -> str:
++    """Deprecated compatibility wrapper; behavior retained by characterization."""
++    from auditcore.reporting import get_number_format as _auditcore_target
++    return _auditcore_target(col_name, value)
+ 
+ 
+ def auto_fit_columns(
+
+--- pyproject.toml
++++ pyproject.toml
+@@ -13,13 +13,7 @@
+     { name = "Jan Riener" },
+ ]
+ 
+-dependencies = [
+-    "pydantic-settings>=2.0",
+-    "python-jose[cryptography]>=3.3",
+-    "passlib[bcrypt]>=1.7",
+-    "httpx>=0.27",
+-    "openpyxl>=3.1",
+-]
++dependencies = ["pydantic-settings>=2.0", "python-jose[cryptography]>=3.3", "passlib[bcrypt]>=1.7", "httpx>=0.27", "openpyxl>=3.1", "auditcore==0.1.0"]
+ 
+ [project.optional-dependencies]
+ dev = [

@@ -1,0 +1,10 @@
+{
+  "application": "flowlib",
+  "changes_applied": false,
+  "characterization": "34 original legacy cases verified against auditcore; full consumer suite pending",
+  "proposal": "docs/migrations/flowlib-reporting.patch",
+  "reason": "Applicable policy evidence must be resolved before migration",
+  "scope": "Excel format consumer and dependency declaration",
+  "source_commit": "aca2dc6aad25aea0720312dbcc6da00b0bcba330",
+  "status": "MIGRATION_BLOCKED"
+}
