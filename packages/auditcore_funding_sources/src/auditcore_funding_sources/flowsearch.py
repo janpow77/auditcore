@@ -175,6 +175,9 @@ def parse_excel(content: bytes, mapping: Mapping[str, Any] | None) -> list[dict[
         ) from exc
     wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
     ws = wb.active
+    if ws is None:
+        wb.close()
+        raise ValueError("Die XLSX-Datei enthält kein aktives Tabellenblatt.")
     skip = mapping.get("skip_rows", 0) if mapping else 0
     header_row = mapping.get("header_row", skip + 1) if mapping else 1
     rows = list(ws.iter_rows(values_only=True))
