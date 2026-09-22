@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_entity_matching",
+  "version": "0.1.0",
+  "sources": [
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+      "path": "auditworkshop/backend/services/entity_resolution.py",
+      "git_blob": "d7a799b65e0444e8be8e606b35bd2cc1ecbdfac0",
+      "symbols": [
+        "_LEI_RE",
+        "CONFIDENCE_FUZZY_THRESHOLD",
+        "is_valid_lei",
+        "extract_lei_from_text",
+        "_find_by_name_fuzzy"
+      ]
+    },
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+      "path": "auditworkshop/backend/services/state_aid_service.py",
+      "git_blob": "e41be2700affb91c2a6436a7e3ce488696b07116",
+      "symbols": [
+        "_LEGAL_SUFFIXES",
+        "_FILLER_WORDS",
+        "_WS_RE",
+        "_PUNCT_RE",
+        "_strip_accents",
+        "normalize_company_name"
+      ]
+    },
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+      "path": "auditworkshop/backend/services/sanctions_service.py",
+      "git_blob": "3e7ad8bd826eed4da15f9860af267f9fe8a9076b",
+      "symbols": [
+        "_LEGAL_SUFFIXES",
+        "_DIACRITIC_FOLD_MAP",
+        "_fold_diacritics",
+        "normalize_name",
+        "_classify"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/core/shared/research/register/sanctions.py",
+      "git_blob": "3d48504d92207d6c5a03c038d22fcdf09be63235",
+      "symbols": [
+        "RECHTSFORMZUSAETZE",
+        "_FALTUNG",
+        "_NICHT_WORT",
+        "falte_diakritika",
+        "normalisiere_name",
+        "klassifiziere",
+        "STANDARD_MINDESTWERT"
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "historical_source_license_status": "UNKNOWN",
+    "github": {
+      "janpow77/flowworkshop": {
+        "private": false,
+        "license": null
+      },
+      "janpow77/audit_designer": {
+        "private": true,
+        "license": null
+      }
+    },
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+      "scope": "Extrahierter Bibliothekscode in auditcore_entity_matching",
+      "limitation": "Keine Umlizenzierung der Quell-Repositories flowworkshop und audit_designer."
+    }
+  },
+  "excluded": [
+    "resolve_entity/link_record/rebuild_* (ORM, Datenbank)",
+    "SQL-Vorfilter ILIKE/pg_trgm und candidate_limit (bleibt Anwendung)",
+    "Geburtsdatums-/Länder-Bonus/Malus (fachliches Profil, HUMAN_DECISION_REQUIRED)",
+    "Konfidenzstufen LEI/Identifier/Name-Exact als Anwendungsentscheidung (nur als Profilwerte dokumentiert)"
+  ],
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_observed.json",
+    "tool": "tools/capture_legacy.py",
+    "cases": 440,
+    "environment": {
+      "python": "3.12.3",
+      "rapidfuzz": "3.10.1",
+      "unicode": "15.0.0"
+    },
+    "method": "AST-Extraktion der unveränderten, Blob-geprüften Definitionen; ORM-Aufrufe in _find_by_name_fuzzy durch aufzeichnende Stellvertreter ersetzt"
+  },
+  "behavior_changes": "docs/behavior-changes.md"
+}
