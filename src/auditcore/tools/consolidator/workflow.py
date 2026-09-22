@@ -47,7 +47,7 @@ class ConsolidationWorkflow:
         symbols = [
             s for s in self.store.load("symbols") if s["repository"] in complete_repositories
         ]
-        candidates = detect_candidates(symbols)
+        candidates = detect_candidates(symbols, self.store.load("repositories"))
         run_id = str(uuid.uuid4())
         plans = []
         for candidate in candidates:
@@ -69,7 +69,21 @@ class ConsolidationWorkflow:
                     load_policy("quality")["required_verification"],
                     policy_impact=candidate.decision_status,
                     run_id=run_id,
-                    metadata={"requires_characterization": policy["characterization_required"]},
+                    metadata={
+                        "requires_characterization": policy["characterization_required"],
+                        "architecture_decision": "ADR-001-multi-package-monorepo",
+                        "license_status": candidate.license_status,
+                        "verified_consumers": candidate.consumers,
+                        "potential_consumers": candidate.potential_consumers,
+                        "consumer_status": candidate.consumer_status,
+                        "origin_groups": candidate.origin_groups,
+                        "origin_evidence": candidate.origin_evidence,
+                        "independent_origins_status": candidate.independent_origins_status,
+                        "runtime_dependencies_status": "REVIEW_REQUIRED",
+                        "platform_runtime_dependency_required": False,
+                    },
+                    target_distribution=candidate.target_distribution,
+                    package_directory=candidate.package_directory,
                 )
             )
         result = {

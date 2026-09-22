@@ -1,0 +1,8 @@
+[workspace]
+version = 1
+members = [".", "packages/*"]
+
+[[package]]
+path = "."
+source_roots = ["src"]
+applicability = "auditcore-context.json"

@@ -88,6 +88,14 @@ class LibraryCandidate:
     known_tests: list[str]
     recommendation: str
     classification: str = "DERIVED"
+    target_distribution: str = ""
+    package_directory: str = ""
+    license_status: str = "REVIEW_REQUIRED"
+    potential_consumers: list[str] = field(default_factory=list)
+    consumer_status: str = "NOT_VERIFIED"
+    origin_groups: list[list[str]] = field(default_factory=list)
+    origin_evidence: list[dict[str, str]] = field(default_factory=list)
+    independent_origins_status: str = "UNKNOWN"
 
 
 @dataclass
@@ -107,3 +115,6 @@ class ConsolidationPlan:
     policy_impact: str = "REVIEW_REQUIRED"
     run_id: str = ""
     metadata: dict[str, Any] = field(default_factory=dict)
+    target_distribution: str = ""
+    package_directory: str = ""
+    runtime_dependencies: list[str] = field(default_factory=list)

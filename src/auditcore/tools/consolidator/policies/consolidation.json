@@ -1,12 +1,10 @@
 {
-  "policy_version": "1.0",
-  "default_target": "auditcore.{domain}",
-  "separate_package_requires": [
-    "independent_release",
-    "heavy_runtime",
-    "platform_incompatibility",
-    "ownership_boundary"
-  ],
+  "policy_version": "2.0",
+  "architecture_decision": "ADR-001-multi-package-monorepo",
+  "default_target": "auditcore_{domain}",
+  "default_package_directory": "packages/auditcore_{domain}",
+  "platform_runtime_dependency_required": false,
+  "unknown_license": "REVIEW_REQUIRED",
   "characterization_required": true,
   "inventory_required": true
 }

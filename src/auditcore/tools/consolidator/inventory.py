@@ -224,7 +224,7 @@ class GlobalInventory:
             for d in dependencies
             if d.get("kind") == "import"
         ]
-        candidates = detect_candidates(symbols)
+        candidates = detect_candidates(symbols, repository_rows)
         metadata = {
             "inventory_version": 1,
             "scanner_version": "0.1.0",

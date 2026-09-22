@@ -51,8 +51,7 @@ def test_candidates_conflicts_and_security():
     assert identical[0].conflict_status == "IDENTICAL"
     conflicting = detect_candidates(symbols("a", 3) + symbols("b", 5))
     assert conflicting[0].decision_status == "HUMAN_DECISION_REQUIRED"
-    security = detect_candidates(symbols("a", 3, "authorize") + symbols("b", 3, "authorize"))
-    assert security[0].decision_status == "SECURITY_OR_POLICY_REVIEW_REQUIRED"
+    assert detect_candidates(symbols("a", 3, "authorize") + symbols("b", 3, "authorize")) == []
 
 
 def test_incremental_inventory(tmp_path):
@@ -115,7 +114,7 @@ def test_human_decision_gate():
 
 
 def test_resources_installed():
-    assert load_policy("consolidation")["default_target"] == "auditcore.{domain}"
+    assert load_policy("consolidation")["default_target"] == "auditcore_{domain}"
     prompt = load_prompt("consolidation")
     assert prompt["version"] == "1.0" and len(prompt["sha256"]) == 64
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,7 @@ from auditcore.tools.common import emit, run
 from auditcore.tools.consolidator.analysis import analyze_repository, detect_candidates
 from auditcore.tools.consolidator.inventory import GlobalInventory, JsonInventory
 from auditcore.tools.consolidator.models import WorkflowMode
+from auditcore.tools.consolidator.packages import PackageWorkspace, WorkspaceError
 from auditcore.tools.consolidator.providers.github import GitHubProvider
 from auditcore.tools.consolidator.providers.graph import GraphifyProvider
 from auditcore.tools.consolidator.providers.knowledge import KiraKnowledgeStore
@@ -55,6 +57,28 @@ def inventory_documents(store: JsonInventory) -> list[dict[str, Any]]:
     return documents
 
 
+def _safe_error_detail(exc: Exception) -> str:
+    """Expose actionable fixed diagnostics without filenames, source text or credentials."""
+    if isinstance(exc, WorkspaceError):
+        return str(exc)
+    if isinstance(exc, tomllib.TOMLDecodeError):
+        return "Invalid TOML configuration"
+    if isinstance(exc, FileNotFoundError):
+        return "Required input file or workspace directory does not exist"
+    if isinstance(exc, PermissionError):
+        return "Required input or state directory is not accessible"
+    if isinstance(exc, UnicodeError):
+        return "Input file is not valid text in the expected encoding"
+    path_errors = {
+        "Relative path required",
+        "Path escapes repository",
+        "Symlink traversal is forbidden",
+    }
+    if isinstance(exc, ValueError) and str(exc) in path_errors:
+        return str(exc)
+    return "Input validation, filesystem access or provider execution failed; inspect configuration"
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run discovery, inventory, comparison and plan generation."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -71,6 +95,9 @@ def main(argv: list[str] | None = None) -> int:
     migrate.add_argument("symbol")
     migrate.add_argument("--dry-run", action="store_true")
     sub.add_parser("status")
+    packages = sub.add_parser("packages", help="Persistent multi-package workspace inventory")
+    packages.add_argument("action", choices=["inventory", "status"])
+    packages.add_argument("root", nargs="?", type=Path, default=Path("."))
     kira = sub.add_parser("kira")
     kira.add_argument("action", choices=["sync", "search"])
     kira.add_argument("query", nargs="?", default="shared audit domain logic")
@@ -84,7 +111,12 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "inventory":
             result = GlobalInventory(provider, store).scan_authenticated_account(update=args.update)
         elif args.command == "libraries":
-            result = {"candidates": detect_candidates(store.load("symbols"))}
+            result = {
+                "candidates": detect_candidates(store.load("symbols"), store.load("repositories"))
+            }
+        elif args.command == "packages":
+            workspace = PackageWorkspace(args.root, args.state_dir)
+            result = workspace.inventory() if args.action == "inventory" else workspace.status()
         elif args.command == "analyse":
             revision = run(["git", "rev-parse", "HEAD"], args.repository).strip()
             result = analyze_repository(args.repository, args.repository.name, revision)
@@ -111,7 +143,13 @@ def main(argv: list[str] | None = None) -> int:
                 "plans": store.load("plans"),
             }
         emit(result)
-        return 1 if result.get("status") in {"FAIL", "PARTIAL"} else 0
+        return 1 if result.get("status") in {"FAIL", "PARTIAL", "STALE", "NOT_INVENTORIED"} else 0
     except (OSError, ValueError, RuntimeError) as exc:
-        emit({"status": "NOT_EXECUTED", "reason": type(exc).__name__})
+        emit(
+            {
+                "status": "NOT_EXECUTED",
+                "reason": type(exc).__name__,
+                "detail": _safe_error_detail(exc),
+            }
+        )
         return 2

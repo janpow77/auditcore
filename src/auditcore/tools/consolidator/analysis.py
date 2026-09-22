@@ -5,6 +5,7 @@ from __future__ import annotations
 import ast
 import copy
 import json
+import re
 from collections import defaultdict
 from importlib.resources import files
 from pathlib import Path
@@ -15,23 +16,29 @@ from auditcore.tools.consolidator.models import LibraryCandidate, SymbolRecord
 from auditcore.tools.quality.scanners import import_names, python_sources
 
 DOMAINS = {
-    "documents": ("document", "pdf", "docx", "text", "extract", "parser"),
-    "reporting": ("report", "export", "bericht", "render"),
-    "risk": ("risk", "risiko", "score"),
+    "privacy": ("anonym", "redact", "pseudonym"),
+    "statistics": ("benford", "statistic", "statistik", "outlier", "variance", "quantile"),
     "sampling": ("sample", "sampling", "stichprob"),
     "procurement": ("procurement", "vergabe", "tender"),
-    "validation": ("valid", "check", "pruef", "parse"),
-    "anonymization": ("anonym", "redact", "pseudonym"),
+    "risk": ("risk", "risiko"),
+    "reporting": ("report", "bericht", "excel", "xlsx", "numberformat"),
+    "documents": ("document", "pdf", "docx", "invoice", "rechnung"),
 }
 
 
 def domain(name: str) -> str:
     """Classify names as heuristic domains, not authoritative business meaning."""
+    tokens = re.findall(r"[a-z]+", re.sub(r"([a-z])([A-Z])", r"\1_\2", name).lower())
+    lower = name.lower()
+    if any(
+        marker in lower for marker in ("testdatagenerator", "dummy_generator", "synthetic_data")
+    ) and any(marker in lower for marker in ("generate_", "apply_deviation")):
+        return "dummygenerator"
     return next(
         (
             category
             for category, words in DOMAINS.items()
-            if any(word in name.lower() for word in words)
+            if any(token.startswith(word) for token in tokens for word in words)
         ),
         "utils",
     )
@@ -253,18 +260,146 @@ def load_prompt(name: str) -> dict[str, str]:
     }
 
 
-def detect_candidates(symbols: list[dict[str, Any]]) -> list[LibraryCandidate]:
-    """Detect exact/structural duplicates; different constants require human review."""
-    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
+def candidate_exclusion(symbol: dict[str, Any]) -> str:
+    """Explain conservative exclusions without deleting observations from the inventory."""
+    path = Path(symbol["path"])
+    parts = {part.lower() for part in path.parts}
+    name = symbol["symbol"].split(".")[-1].lower()
+    if (
+        parts & {"test", "tests", "testing", "fixtures", "__pycache__"}
+        or path.name.startswith("test_")
+        or path.name.endswith("_test.py")
+        or name.startswith("test_")
+        or path.name == "conftest.py"
+    ):
+        return "TEST_OR_FIXTURE"
+    if parts & {
+        "alembic",
+        "migrations",
+        "migration",
+        "generated",
+        "_generated",
+        "vendor",
+        "vendored",
+        "node_modules",
+        ".venv",
+        "venv",
+        "site-packages",
+        "build",
+        "dist",
+    }:
+        return "MIGRATION_GENERATED_OR_VENDOR_CODE"
+    if path.name.endswith(("_pb2.py", "_pb2_grpc.py")):
+        return "GENERATED_CODE"
+    if symbol.get("framework_dependencies") or symbol.get("database_dependencies"):
+        return "FRAMEWORK_OR_DATABASE_COUPLING"
+    if parts & {
+        "routers",
+        "routes",
+        "endpoints",
+        "middleware",
+        "auth",
+        "authentication",
+        "authorization",
+        "oauth",
+        "database",
+        "db",
+    }:
+        return "APPLICATION_INFRASTRUCTURE"
+    if name in {
+        "health",
+        "healthcheck",
+        "health_check",
+        "startup",
+        "shutdown",
+        "authorize",
+        "authenticate",
+        "login",
+        "logout",
+        "run_migrations_online",
+        "run_migrations_offline",
+    } or any(name.startswith(prefix) for prefix in ("get_current_user", "require_permission")):
+        return "APPLICATION_INFRASTRUCTURE"
+    calls = " ".join(symbol.get("callees", [])).lower()
+    if any(
+        marker in calls
+        for marker in (
+            "httpx.",
+            "requests.",
+            "subprocess.",
+            "session.query",
+            "session.execute",
+            "joblib.",
+            "threadpoolexecutor",
+            "processpoolexecutor",
+        )
+    ):
+        return "INFRASTRUCTURE_CALLS"
+    if (
+        symbol["symbol_type"] not in {"function", "method"}
+        or symbol["end_line"] - symbol["line"] < 3
+        or name.startswith("_")
+    ):
+        return "NO_PUBLIC_NONTRIVIAL_FUNCTION"
+    if domain(f"{symbol['path']}.{symbol['symbol']}") == "utils":
+        return "DOMAIN_REVIEW_REQUIRED"
+    return ""
+
+
+def _origins(group: list[dict[str, Any]]) -> tuple[list[list[str]], list[dict[str, str]]]:
+    """Group proven shared revisions and embedded copies; similarity alone is not ancestry."""
+    repositories = sorted({s["repository"] for s in group})
+    parent = {repository: repository for repository in repositories}
+    evidence = []
+
+    def root(repository: str) -> str:
+        while parent[repository] != repository:
+            repository = parent[repository]
+        return repository
+
+    for source in group:
+        for other in group:
+            if source["repository"] >= other["repository"]:
+                continue
+            revision = source["commit_sha"]
+            reason = ""
+            if re.fullmatch(r"[0-9a-f]{40}", revision) and revision == other["commit_sha"]:
+                reason = "IDENTICAL_GIT_COMMIT"
+            elif source["fingerprint"] == other["fingerprint"]:
+                for original, embedded in ((source, other), (other, source)):
+                    suffix = original["repository"].split("/")[-1] + "/" + original["path"]
+                    if embedded["path"].endswith(suffix):
+                        reason = "IDENTICAL_SYMBOL_AT_EMBEDDED_REPOSITORY_PATH"
+            if reason:
+                parent[root(other["repository"])] = root(source["repository"])
+                item = {
+                    "source": source["repository"],
+                    "related": other["repository"],
+                    "evidence": reason,
+                    "source_path": source["path"],
+                    "related_path": other["path"],
+                }
+                if item not in evidence:
+                    evidence.append(item)
+    groups: dict[str, list[str]] = defaultdict(list)
+    for repository in repositories:
+        groups[root(repository)].append(repository)
+    return list(groups.values()), evidence
+
+
+def detect_candidates(
+    symbols: list[dict[str, Any]],
+    repositories: list[dict[str, Any]] | None = None,
+) -> list[LibraryCandidate]:
+    """Propose domain distributions; code occurrences never prove independent consumers."""
+    metadata = {r["repository"]: r for r in repositories or []}
+    groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for symbol in symbols:
-        if (
-            symbol["symbol_type"] in {"function", "method"}
-            and (symbol["end_line"] - symbol["line"] >= 3)
-            and not symbol["symbol"].split(".")[-1].startswith("_")
-        ):
-            groups[symbol["shape_fingerprint"]].append(symbol)
+        if not candidate_exclusion(symbol):
+            category = domain(f"{symbol['path']}.{symbol['symbol']}")
+            groups[(category, symbol["shape_fingerprint"])].append(symbol)
     candidates = []
-    for group in groups.values():
+    for (category, _), group in groups.items():
         repos = sorted({s["repository"] for s in group})
         if len(repos) < 2:
             continue
@@ -276,15 +411,24 @@ def detect_candidates(symbols: list[dict[str, Any]]) -> list[LibraryCandidate]:
             if security
             else ("REVIEW_REQUIRED" if identical else "HUMAN_DECISION_REQUIRED")
         )
+        target = "auditcore_" + category
+        origin_groups, origin_evidence = _origins(group)
+        # An observed license identifier is evidence, not a compatibility clearance.
+        licenses = {metadata.get(repo, {}).get("license", "UNKNOWN") for repo in repos}
+        license_status = (
+            "REVIEW_REQUIRED"
+            if licenses & {"UNKNOWN", "NOASSERTION", "", None}
+            else "COMPATIBILITY_REVIEW_REQUIRED"
+        )
         candidates.append(
             LibraryCandidate(
-                "auditcore." + group[0]["domain_category"],
+                target,
                 [{k: s[k] for k in ("repository", "path", "symbol", "commit_sha")} for s in group],
                 repos,
                 "AST_IDENTICAL" if identical else "STRUCTURAL_SIMILARITY",
                 conflict,
                 decision,
-                repos,
+                [],
                 sorted(
                     {
                         d
@@ -294,6 +438,15 @@ def detect_candidates(symbols: list[dict[str, Any]]) -> list[LibraryCandidate]:
                 ),
                 [],
                 "CHARACTERIZE" if identical and not security else "REVIEW_CONFLICT",
+                target_distribution=target,
+                package_directory="packages/" + target,
+                license_status=license_status,
+                potential_consumers=repos,
+                origin_groups=origin_groups,
+                origin_evidence=origin_evidence,
+                independent_origins_status=(
+                    "SHARED_ORIGIN_OBSERVED" if origin_evidence else "UNKNOWN"
+                ),
             )
         )
     return candidates
