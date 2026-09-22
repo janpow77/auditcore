@@ -1,0 +1,34 @@
+{
+  "ai_usage": "none",
+  "analytical_runs": false,
+  "artifact_type": "library",
+  "authentication": "none",
+  "binding_decisions": "none",
+  "data_space": "UNKNOWN",
+  "delegation": false,
+  "deployment_target": "internal_test",
+  "document_storage": false,
+  "documents": true,
+  "dsfa_required": "UNKNOWN",
+  "export_formats": [
+    "json"
+  ],
+  "exports": true,
+  "external_interfaces": true,
+  "graphical_ui": false,
+  "interactive_workspace": false,
+  "international_users": false,
+  "modular_capabilities": false,
+  "personal_data": "possible",
+  "protection_need": "UNKNOWN",
+  "protection_need_source": "UNKNOWN",
+  "real_data_for_test_generation": false,
+  "structured_imports": true,
+  "uploads": false,
+  "user_model": "no_users",
+  "versioned_artifact_types": [
+    "rulebook"
+  ],
+  "versioned_artifacts": true,
+  "workflow": "calculation_only"
+}

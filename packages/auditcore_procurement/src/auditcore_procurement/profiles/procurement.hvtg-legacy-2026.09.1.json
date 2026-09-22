@@ -1,0 +1,131 @@
+{
+ "schema": "auditcore_procurement.precheck-profile/1",
+ "id": "procurement.hvtg-legacy",
+ "version": "2026.09.1",
+ "status": "SOURCE_CHARACTERIZED",
+ "legal_status": "Schwellen, Verfahrenszuordnung und Pflichtdokumente aus dem Regelwerk PROCUREMENT_HVTG der Quellanwendungen übernommen. Aktualität der Beträge (insbesondere der EU-Schwellenwerte) und die rechtliche Zuordnung sind nicht geprüft: HUMAN_DECISION_REQUIRED.",
+ "source": {
+  "repositories": [
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "e76961b1bdab273f8c2441a4bfe2108a2c71f9eb"
+   },
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "a3fa3be4d0c486f2cf0d161a94b3795e6f46455b"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   }
+  ],
+  "rights": "USER_AUTHORIZED_MIT"
+ },
+ "construction_marker": "Bau",
+ "tiers": {
+  "supply_service": [
+   {
+    "tier": "BELOW_1K",
+    "max": 1000,
+    "procedure": "Direktvergabe",
+    "min_bids": 1
+   },
+   {
+    "tier": "BELOW_25K",
+    "max": 25000,
+    "procedure": "Verhandlungsvergabe",
+    "min_bids": 3
+   },
+   {
+    "tier": "BELOW_EU",
+    "max": 221000,
+    "procedure": "Oeffentliche Ausschreibung",
+    "min_bids": 3
+   },
+   {
+    "tier": "ABOVE_EU",
+    "max": null,
+    "procedure": "EU-Verfahren",
+    "min_bids": 5
+   }
+  ],
+  "construction": [
+   {
+    "tier": "BELOW_1K",
+    "max": 1000,
+    "procedure": "Direktvergabe",
+    "min_bids": 1
+   },
+   {
+    "tier": "BELOW_25K",
+    "max": 25000,
+    "procedure": "Freihaendige Vergabe",
+    "min_bids": 3
+   },
+   {
+    "tier": "BELOW_EU",
+    "max": 5538000,
+    "procedure": "Oeffentliche Ausschreibung",
+    "min_bids": 3
+   },
+   {
+    "tier": "ABOVE_EU",
+    "max": null,
+    "procedure": "EU-Verfahren",
+    "min_bids": 5
+   }
+  ]
+ },
+ "fallback_tier": "ABOVE_EU",
+ "required_documents": {
+  "Direktvergabe": [
+   "VERGABEVERMERK"
+  ],
+  "Verhandlungsvergabe": [
+   "VERGABEVERMERK",
+   "ANGEBOT",
+   "ZUSCHLAG"
+  ],
+  "Freihaendige Vergabe": [
+   "VERGABEVERMERK",
+   "ANGEBOT",
+   "ZUSCHLAG"
+  ],
+  "Oeffentliche Ausschreibung": [
+   "VERGABEVERMERK",
+   "AUSSCHREIBUNG",
+   "ANGEBOT",
+   "SUBMISSIONSPROTOKOLL",
+   "ZUSCHLAG"
+  ],
+  "EU-Verfahren": [
+   "VERGABEVERMERK",
+   "AUSSCHREIBUNG",
+   "ANGEBOT",
+   "SUBMISSIONSPROTOKOLL",
+   "ZUSCHLAG",
+   "VERTRAG",
+   "COI",
+   "TARIFTREUEERKLAERUNG"
+  ]
+ },
+ "bid_document_type": "ANGEBOT",
+ "default_min_bids": 1,
+ "value_deviation": {
+  "warning_above_percent": 10,
+  "fail_above_percent": 20,
+  "fail_reference": "§ 132 GWB"
+ }
+}
