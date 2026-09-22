@@ -14,6 +14,87 @@ from auditcore.tools.consolidator.inventory import JsonInventory
 from auditcore.tools.consolidator.providers.knowledge import KiraKnowledgeStore
 
 
+def repository_documents(repository: dict, symbols: list[dict]) -> list[dict]:
+    """Build stable inventory documents shared by synchronization and readback."""
+    name = repository["repository"]
+    base = {
+        "repository": name,
+        "branch": repository["default_branch"],
+        "commit_sha": repository["commit_sha"],
+        "classification": "OBSERVED",
+    }
+    documents = [
+        {
+            **base,
+            "type": "REPOSITORY",
+            "path": "",
+            "symbol": "",
+            "metadata": repository,
+            "symbol_count": len(symbols),
+        }
+    ]
+    # Batch symbol observations with full provenance and relationships. Shared module
+    # imports repeat in the local inventory, but are stored once per module in KIRA.
+    by_file = defaultdict(list)
+    for symbol in symbols:
+        by_file[symbol["path"]].append(symbol)
+    batch = []
+    size = 0
+    ordinal = 0
+    for path, items in sorted(by_file.items()):
+        for symbol in items:
+            compact = {
+                k: v
+                for k, v in symbol.items()
+                if k
+                not in {
+                    "repository",
+                    "commit_sha",
+                    "imports",
+                    "docstring_summary",
+                    "classification",
+                    "test_coverage",
+                    "last_change",
+                }
+            }
+            record = json.dumps(compact, ensure_ascii=False)
+            if size + len(record) > 30000 and batch:
+                documents.append(
+                    {
+                        **base,
+                        "type": "SYMBOL_CATALOG",
+                        "path": "",
+                        "symbol": f"batch-{ordinal:05d}",
+                        "symbols": batch,
+                    }
+                )
+                ordinal += 1
+                batch, size = [], 0
+            if len(record) > 30000:
+                # Oversized observed symbols are retained locally and explicitly referenced.
+                compact = {
+                    "path": path,
+                    "symbol": symbol["symbol"],
+                    "source_sha256": symbol["fingerprint"],
+                    "details_status": "LOCAL_INVENTORY_ONLY",
+                    "reason": "Oversized symbol record",
+                }
+                record = json.dumps(compact)
+            batch.append(compact)
+            size += len(record)
+    if batch:
+        documents.append(
+            {
+                **base,
+                "type": "SYMBOL_CATALOG",
+                "path": "",
+                "symbol": f"batch-{ordinal:05d}",
+                "symbols": batch,
+            }
+        )
+    return documents
+
+
 def main() -> None:
     """Resolve the existing local KIRA configuration without persisting credentials."""
     # Explicit local integration supplied by the machine's existing graphify-kira setup.
@@ -37,6 +118,7 @@ def main() -> None:
         "screening_blocked": 0,
         "failed": 0,
         "pending": 0,
+        "deferred": 0,
         "repositories_processed": 0,
         "status": "RUNNING",
         "symbol_count": len(symbols),
@@ -44,81 +126,7 @@ def main() -> None:
 
     def sync_repository(repository):
         name = repository["repository"]
-        base = {
-            "repository": name,
-            "branch": repository["default_branch"],
-            "commit_sha": repository["commit_sha"],
-            "classification": "OBSERVED",
-        }
-        documents = [
-            {
-                **base,
-                "type": "REPOSITORY",
-                "path": "",
-                "symbol": "",
-                "metadata": repository,
-                "symbol_count": len(grouped[name]),
-            }
-        ]
-        # Batch symbol observations with full provenance and relationships. Shared module
-        # imports repeat in the local inventory, but are stored once per module in KIRA.
-        by_file = defaultdict(list)
-        for symbol in grouped[name]:
-            by_file[symbol["path"]].append(symbol)
-        batch = []
-        size = 0
-        ordinal = 0
-        for path, items in sorted(by_file.items()):
-            for symbol in items:
-                compact = {
-                    k: v
-                    for k, v in symbol.items()
-                    if k
-                    not in {
-                        "repository",
-                        "commit_sha",
-                        "imports",
-                        "docstring_summary",
-                        "classification",
-                        "test_coverage",
-                        "last_change",
-                    }
-                }
-                record = json.dumps(compact, ensure_ascii=False)
-                if size + len(record) > 30000 and batch:
-                    documents.append(
-                        {
-                            **base,
-                            "type": "SYMBOL_CATALOG",
-                            "path": "",
-                            "symbol": f"batch-{ordinal:05d}",
-                            "symbols": batch,
-                        }
-                    )
-                    ordinal += 1
-                    batch, size = [], 0
-                if len(record) > 30000:
-                    # Oversized observed symbols are retained locally and explicitly referenced.
-                    compact = {
-                        "path": path,
-                        "symbol": symbol["symbol"],
-                        "source_sha256": symbol["fingerprint"],
-                        "details_status": "LOCAL_INVENTORY_ONLY",
-                        "reason": "Oversized symbol record",
-                    }
-                    record = json.dumps(compact)
-                batch.append(compact)
-                size += len(record)
-        if batch:
-            documents.append(
-                {
-                    **base,
-                    "type": "SYMBOL_CATALOG",
-                    "path": "",
-                    "symbol": f"batch-{ordinal:05d}",
-                    "symbols": batch,
-                }
-            )
+        documents = repository_documents(repository, grouped[name])
         project_store = KiraKnowledgeStore(
             config.kira_url,
             config.api_key,
@@ -137,13 +145,22 @@ def main() -> None:
         futures = [pool.submit(sync_repository, repository) for repository in repositories]
         for future in as_completed(futures):
             name, result = future.result()
-            for key in ("stored", "unchanged", "screening_blocked", "failed", "pending"):
+            for key in (
+                "stored",
+                "unchanged",
+                "screening_blocked",
+                "failed",
+                "pending",
+                "deferred",
+            ):
                 total[key] += result.get(key, 0)
             total["repositories_processed"] += 1
             write_json(Path(".auditcore/kira-sync-progress.json"), total)
             print(json.dumps({"repository": name, **result}), flush=True)
     total["status"] = (
-        "FAIL" if total["failed"] else ("REVIEW_REQUIRED" if total["screening_blocked"] else "PASS")
+        "FAIL"
+        if total["failed"]
+        else ("REVIEW_REQUIRED" if total["screening_blocked"] or total["deferred"] else "PASS")
     )
     total["inventory_sha256"] = digest(Path(".auditcore/inventory/symbols.json").read_bytes())
     write_json(Path(".auditcore/kira-sync-result.json"), total)

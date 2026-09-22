@@ -34,6 +34,104 @@ class KiraKnowledgeStore:
         self.url = (url or os.environ.get("KIRA_MEMORY_URL", "")).rstrip("/")
         self.api_key = api_key or os.environ.get("MEMORY_API_KEY", "")
         self.ledger = ledger
+        self.pending_ledger = ledger.with_name(ledger.name + ".pending.json")
+
+    @staticmethod
+    def _reference(document: dict[str, Any]) -> str:
+        identity = ":".join(
+            str(document[k]) for k in ("repository", "branch", "type", "path", "symbol")
+        )
+        return "auditcore:" + digest(identity)
+
+    def reconcile(self, documents: list[dict[str, Any]], max_pages: int = 10) -> dict[str, Any]:
+        """Recover exact acknowledgements by reading KIRA, never repeating uncertain writes.
+
+        The listing contract is the existing Memory API's project-filtered list.
+        Semantic search cannot prove document identity or resolve an uncertain POST.
+        A page limit, malformed response or transport error remains inconclusive.
+        """
+        if not self.configured:
+            return {"status": "NOT_CONFIGURED", "recovered": 0}
+        if max_pages < 1:
+            raise ValueError("max_pages must be positive")
+        ledger = read_json(self.ledger) if self.ledger.exists() else {}
+        pending = read_json(self.pending_ledger) if self.pending_ledger.exists() else {}
+        recovered = 0
+        results = []
+        by_repository: dict[str, list[dict[str, Any]]] = {}
+        for document in documents:
+            by_repository.setdefault(document["repository"], []).append(document)
+        for repository, records in by_repository.items():
+            rows: list[dict[str, Any]] = []
+            listing_status = "PAGE_LIMIT_REACHED"
+            try:
+                for page in range(max_pages):
+                    query = urllib.parse.urlencode(
+                        {
+                            "project": repository,
+                            "category": "graph",
+                            "source_type": "agent",
+                            "limit": 100,
+                            "offset": page * 100,
+                        }
+                    )
+                    response = self._request("GET", "/entries?" + query)
+                    if not isinstance(response, list) or any(
+                        not isinstance(row, dict) for row in response
+                    ):
+                        raise ValueError("Unexpected listing response")
+                    rows.extend(response)
+                    if len(response) < 100:
+                        listing_status = "COMPLETE"
+                        break
+            except (OSError, ValueError, urllib.error.URLError):
+                listing_status = "NOT_EXECUTED"
+            for document in records:
+                reference = self._reference(document)
+                content = json.dumps(document, sort_keys=True, ensure_ascii=False)
+                matches = [row for row in rows if row.get("source_ref") == reference]
+                # Multiple identities, even equal contents, require explicit reconciliation.
+                exact = (
+                    listing_status == "COMPLETE"
+                    and len(matches) == 1
+                    and matches[0].get("content") == content
+                    and isinstance(matches[0].get("id"), str)
+                    and matches[0]["id"]
+                )
+                if exact:
+                    ledger[reference] = {
+                        "id": matches[0]["id"],
+                        "digest": digest(content),
+                        "commit_sha": document["commit_sha"],
+                        "indexed_at": now(),
+                        "confirmation": "EXACT_READBACK",
+                    }
+                    write_json(self.ledger, ledger)
+                    pending.pop(reference, None)
+                    write_json(self.pending_ledger, pending)
+                    recovered += 1
+                else:
+                    # This also imports unresolved pre-journal writes safely: a
+                    # subsequent sync must not recreate an unknown remote identity.
+                    pending[reference] = {
+                        "digest": digest(content),
+                        "recorded_at": now(),
+                        "error": "RECONCILIATION_UNRESOLVED",
+                    }
+                    write_json(self.pending_ledger, pending)
+                results.append(
+                    {
+                        "reference": reference,
+                        "status": "PASS" if exact else "REVIEW_REQUIRED",
+                        "listing_status": listing_status,
+                        "identity_matches": len(matches),
+                    }
+                )
+        return {
+            "status": "PASS" if recovered == len(documents) else "REVIEW_REQUIRED",
+            "recovered": recovered,
+            "results": results,
+        }
 
     @property
     def configured(self) -> bool:
@@ -65,7 +163,9 @@ class KiraKnowledgeStore:
         if not self.configured:
             return {"status": "NOT_CONFIGURED", "stored": 0, "reason": "KIRA URL/key missing"}
         ledger = read_json(self.ledger) if self.ledger.exists() else {}
+        unconfirmed = read_json(self.pending_ledger) if self.pending_ledger.exists() else {}
         stored = skipped = blocked = failed = 0
+        deferred = 0
         errors: list[dict[str, Any]] = []
         consecutive_failures = 0
         pending = 0
@@ -94,12 +194,20 @@ class KiraKnowledgeStore:
             if scan_sensitive(content):
                 blocked += 1
                 continue
-            identity = ":".join(
-                str(document[k]) for k in ("repository", "branch", "type", "path", "symbol")
-            )
-            reference = "auditcore:" + digest(identity)
+            reference = self._reference(document)
             fingerprint = digest(content)
             previous = ledger.get(reference, {})
+            if reference in unconfirmed:
+                deferred += 1
+                errors.append(
+                    {
+                        "reference": reference,
+                        "error": "UNCONFIRMED_WRITE",
+                        "previous_error": unconfirmed[reference].get("error"),
+                        "action": "EXACT_READBACK_OR_PROVIDER_REVIEW_REQUIRED",
+                    }
+                )
+                continue
             if previous.get("digest") == fingerprint:
                 skipped += 1
                 continue
@@ -112,6 +220,14 @@ class KiraKnowledgeStore:
                 "tags": ["auditcore", document["type"], document["classification"]],
                 "confidence": 1.0 if document["classification"] == "OBSERVED" else 0.5,
             }
+            # Persist before sending: a timeout or process interruption is not proof
+            # that the remote write failed. Never blindly repeat an ambiguous POST.
+            unconfirmed[reference] = {
+                "digest": fingerprint,
+                "recorded_at": now(),
+                "error": "WRITE_IN_FLIGHT",
+            }
+            write_json(self.pending_ledger, unconfirmed)
             try:
                 if previous.get("id"):
                     result = self._request(
@@ -121,11 +237,20 @@ class KiraKnowledgeStore:
                     )
                 else:
                     result = self._request("POST", "/entries", payload)
+                if not isinstance(result, dict):
+                    raise ValueError("Unexpected write response")
                 identifier = result.get("id") or previous.get("id")
-                if not identifier or result.get("content") != content:
+                if (
+                    not isinstance(identifier, str)
+                    or not identifier
+                    or result.get("content") != content
+                    or result.get("source_ref", reference) != reference
+                ):
                     failed += 1
                     consecutive_failures += 1
                     errors.append({"reference": reference, "error": "RESPONSE_CONTENT_MISMATCH"})
+                    unconfirmed[reference]["error"] = "RESPONSE_CONTENT_MISMATCH"
+                    write_json(self.pending_ledger, unconfirmed)
                     continue
                 ledger[reference] = {
                     "id": identifier,
@@ -134,11 +259,16 @@ class KiraKnowledgeStore:
                     "indexed_at": now(),
                 }
                 write_json(self.ledger, ledger)
+                unconfirmed.pop(reference, None)
+                write_json(self.pending_ledger, unconfirmed)
                 stored += 1
                 consecutive_failures = 0
             except (OSError, ValueError, urllib.error.URLError) as exc:
                 failed += 1
                 consecutive_failures += 1
+                unconfirmed[reference]["error"] = type(exc).__name__
+                unconfirmed[reference]["http_status"] = getattr(exc, "code", None)
+                write_json(self.pending_ledger, unconfirmed)
                 validation: list[dict[str, Any]] = []
                 if isinstance(exc, urllib.error.HTTPError) and exc.code == 422:
                     try:
@@ -165,12 +295,13 @@ class KiraKnowledgeStore:
                     }
                 )
         return {
-            "status": "FAIL" if failed else "REVIEW_REQUIRED" if blocked else "PASS",
+            "status": "FAIL" if failed else "REVIEW_REQUIRED" if blocked or deferred else "PASS",
             "stored": stored,
             "unchanged": skipped,
             "screening_blocked": blocked,
             "failed": failed,
             "pending": pending,
+            "deferred": deferred,
             "errors": errors,
         }
 
