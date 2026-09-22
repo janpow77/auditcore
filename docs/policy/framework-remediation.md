@@ -155,3 +155,56 @@ vollständige Plattform-, Migrations- und Installationstests bleiben gesonderte
 Integrationsnachweise des Hauptprüflaufs. Ältere Core-Nachweisdateien ohne neue
 Bindungsfelder bleiben historische Dokumentation und werden nicht nachträglich
 als gültige aktuelle Freigaben ausgegeben.
+
+## 4. Gespeicherte Dokumente und konkrete Exportformate
+
+Die im lokalen Framework-Checkout vollständig gelesenen Katalogzeilen am oben
+genannten Commit unterscheiden die Integrität **gespeicherter Inhalte** (T-08)
+von sicheren **Tabellen-/Archivexporten** (T-10). Ein JSON-Datenkern ohne
+Dokumentenspeicher erfüllt diese konkreten Auslöser nicht schon dadurch, dass
+er Dokumentdaten erzeugt und exportiert. Dazu gibt es zwei zusätzliche Fakten:
+
+- `document_storage`: boolescher Wert oder `UNKNOWN`; bedeutet, dass das
+  Artefakt Dokumentinhalte speichert beziehungsweise gespeicherte Inhalte
+  wieder abruft. Ein temporärer Rückgabewert ist kein Dokumentenspeicher.
+- `export_formats`: explizite Liste der tatsächlich unterstützten Formate
+  oder `UNKNOWN`. Erlaubt sind `json`, `csv`, `tsv`, `xls`, `xlsx`, `ods`, `zip`,
+  `tar`, `archive`, `pdf`, `xml`, `txt` und `html`. Sonstige Archivformate werden
+  als `archive` erfasst; ein ungeklärtes Format bleibt `UNKNOWN`.
+
+Die Liste wird sortiert, dedupliziert und intern als Tupel gespeichert.
+`exports=false` erlaubt eine leere Liste; `exports=true` mit leerer Liste sowie
+unbekannte Formatnamen werden als widersprüchliche/ungültige Eingaben abgelehnt.
+`UNKNOWN` ist bei beiden Exportzuständen zulässig und wird niemals als `false`
+ausgelegt. Alte Kontextdateien bleiben lesbar; die neuen Fakten fehlen dann
+ausdrücklich als `UNKNOWN`.
+
+| Test | Präzisierter Auslöser |
+|---|---|
+| T-08 | `documents=true` UND `document_storage=true` |
+| T-10 | `exports=true` UND mindestens `csv`, `tsv`, `xls`, `xlsx`, `ods`, `zip`, `tar` oder `archive` |
+
+Ein nur JSON erzeugender Kern kann nach Quellenprüfung beispielsweise
+`documents=true`, `document_storage=false`, `exports=true` und
+`export_formats=["json"]` festhalten. T-08 und T-10 erhalten dann
+`NOT_APPLICABLE_WITH_REASON`, keinen künstlichen Prüferfolg. Ist bei einem
+Dokument-/Exportartefakt das entsprechende neue Detail unbekannt, bleibt der
+Test `REVIEW_REQUIRED`. Anwendbare Tests bleiben bis zur tatsächlichen
+Durchführung `NOT_EXECUTED`.
+
+F-07, sämtliche Anforderungsbewertungen und T-09 bleiben unverändert. T-14
+bleibt ebenfalls unverändert: Das Fehlen vorhandenen Loggings belegt nicht,
+dass erforderliche Nachweise und sensible Log-Inhalte irrelevant wären. Eine
+zusätzliche pauschale `logging=false`-Ausnahme wurde deshalb nicht eingeführt.
+
+Die gezielten Regressionen decken gespeicherte/ungespeicherte Dokumente,
+unbekannte Altkontexte, alle unterstützten Tabellen-/Archivformate, JSON-only,
+gemischte Formate und die unveränderten Sicherheitsanforderungen ab. Die drei
+Prüfbefehle aus Abschnitt 3 wurden nach dieser Erweiterung erneut ausgeführt:
+97 Policy-/Quality-Tests bestanden, Ruff ohne Befund, Mypy ohne Befund in den
+vier Policy-Quelldateien. Dies ersetzt keine Tests einer konkreten Anwendung.
+
+Die neuen Felder sind Bestandteil des vollständigen `context_digest`.
+Bestehende artefaktgebundene Belege müssen deshalb nach tatsächlicher
+Wiederprüfung mit dem aktuellen Kontext neu gebunden werden; bloßes Umhashen
+historischer Freigaben ist kein neuer Nachweis.

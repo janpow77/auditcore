@@ -486,9 +486,9 @@
     "T-08": {
       "row_hash": "33bcafaf22a91d2736024faf2b490338d67ea19929cde70329c14283f6192099",
       "trigger": {
-        "field": "documents",
-        "in": [
-          true
+        "all": [
+          {"field": "documents", "in": [true]},
+          {"field": "document_storage", "in": [true]}
         ]
       }
     },
@@ -504,9 +504,12 @@
     "T-10": {
       "row_hash": "47ea9ab7b67a526828a5844b78f5e8f10955a0afbea5993582be2f1048547033",
       "trigger": {
-        "field": "exports",
-        "in": [
-          true
+        "all": [
+          {"field": "exports", "in": [true]},
+          {
+            "field": "export_formats",
+            "contains_any": ["csv", "tsv", "xls", "xlsx", "ods", "zip", "tar", "archive"]
+          }
         ]
       }
     },

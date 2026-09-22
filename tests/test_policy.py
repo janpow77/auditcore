@@ -367,3 +367,105 @@ def test_additional_security_checks_depend_on_actual_exposure(
     assert row.applicable == expected
     if value == "UNKNOWN":
         assert row.gate_status == "REVIEW_REQUIRED"
+
+
+@pytest.mark.parametrize(
+    "documents,storage,expected",
+    [
+        (True, True, "TRUE"),
+        (True, False, "FALSE"),
+        (True, "UNKNOWN", "UNKNOWN"),
+        (False, "UNKNOWN", "FALSE"),
+        ("UNKNOWN", True, "UNKNOWN"),
+        ("UNKNOWN", False, "FALSE"),
+    ],
+)
+def test_document_integrity_test_requires_stored_documents(
+    policy_provider, library_context, documents, storage, expected
+):
+    result = policy_provider.evaluate(
+        replace(library_context, documents=documents, document_storage=storage)
+    )
+    assert result.tests["T-08"]["applicable"] == expected
+    assert (
+        result.tests["T-08"]["status"]
+        == {
+            "TRUE": "NOT_EXECUTED",
+            "FALSE": "NOT_APPLICABLE_WITH_REASON",
+            "UNKNOWN": "REVIEW_REQUIRED",
+        }[expected]
+    )
+    if expected == "UNKNOWN":
+        assert "T-08" in result.review_required
+
+
+@pytest.mark.parametrize(
+    "formats,expected",
+    [
+        (("json",), "FALSE"),
+        (("json", "pdf", "xml", "txt", "html"), "FALSE"),
+        *(
+            ([format_name], "TRUE")
+            for format_name in ("csv", "tsv", "xls", "xlsx", "ods", "zip", "tar", "archive")
+        ),
+        (("json", "xlsx"), "TRUE"),
+        ("UNKNOWN", "UNKNOWN"),
+    ],
+)
+def test_export_test_depends_on_table_or_archive_formats(
+    policy_provider, library_context, formats, expected
+):
+    result = policy_provider.evaluate(
+        replace(library_context, exports=True, export_formats=formats)
+    )
+    assert result.tests["T-10"]["applicable"] == expected
+    assert (
+        result.tests["T-10"]["status"]
+        == {
+            "TRUE": "NOT_EXECUTED",
+            "FALSE": "NOT_APPLICABLE_WITH_REASON",
+            "UNKNOWN": "REVIEW_REQUIRED",
+        }[expected]
+    )
+    if expected == "UNKNOWN":
+        assert "T-10" in result.review_required
+    assert result.tests["T-09"]["applicable"] == "TRUE"
+
+
+def test_legacy_context_retains_unknown_document_and_export_details(policy_provider):
+    context = ApplicabilityContext.from_dict({"documents": True, "exports": True})
+    assert context.document_storage == context.export_formats == "UNKNOWN"
+    report = policy_provider.evaluate(context)
+    assert {"T-08", "T-10"}.issubset(report.review_required)
+
+
+def test_json_only_does_not_weaken_security_or_log_requirements(policy_provider, library_context):
+    before = replace(library_context, exports=True, documents=True, external_interfaces=True)
+    after = replace(before, document_storage=False, export_formats=("json",))
+    baseline = policy_provider.evaluate(before)
+    result = policy_provider.evaluate(after)
+    assert result.requirements == baseline.requirements
+    assert result.tests["T-14"] == baseline.tests["T-14"]
+    assert result.tests["T-14"]["applicable"] == "TRUE"
+    assert (
+        next(row for row in result.requirements if row.requirement_id == "F-07").applicable
+        == "TRUE"
+    )
+
+
+def test_export_format_validation_and_no_export_case(policy_provider):
+    assert ApplicabilityContext.from_dict(
+        {"exports": True, "export_formats": ["json", "csv", "json"]}
+    ).export_formats == ("csv", "json")
+    for value in ([], ["unsupported"], [False], "json", None):
+        with pytest.raises(ValueError):
+            ApplicabilityContext(exports=True, export_formats=value)
+    with pytest.raises(ValueError):
+        ApplicabilityContext(exports=False, export_formats=("json",))
+    with pytest.raises(ValueError):
+        ApplicabilityContext(document_storage="false")
+    for formats in ((), "UNKNOWN"):
+        result = policy_provider.evaluate(
+            ApplicabilityContext(exports=False, export_formats=formats)
+        )
+        assert result.tests["T-10"]["applicable"] == "FALSE"

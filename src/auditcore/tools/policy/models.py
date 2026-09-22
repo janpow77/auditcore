@@ -49,12 +49,46 @@ class ApplicabilityContext:
     structured_imports: bool | str = "UNKNOWN"
     analytical_runs: bool | str = "UNKNOWN"
     exports: bool | str = "UNKNOWN"
+    export_formats: tuple[str, ...] | str = "UNKNOWN"
     documents: bool | str = "UNKNOWN"
+    document_storage: bool | str = "UNKNOWN"
     delegation: bool | str = "UNKNOWN"
     dsfa_required: bool | str = "UNKNOWN"
     protection_need_source: str = "UNKNOWN"
 
     def __post_init__(self) -> None:
+        export_formats = self.export_formats
+        if isinstance(export_formats, str) and export_formats.lower() == "unknown":
+            object.__setattr__(self, "export_formats", "UNKNOWN")
+        else:
+            allowed_formats = {
+                "json",
+                "csv",
+                "tsv",
+                "xls",
+                "xlsx",
+                "ods",
+                "zip",
+                "tar",
+                "archive",
+                "pdf",
+                "docx",
+                "odt",
+                "rtf",
+                "xml",
+                "txt",
+                "html",
+            }
+            if not isinstance(export_formats, (tuple, list)) or not all(
+                isinstance(item, str) and item in allowed_formats for item in export_formats
+            ):
+                raise ValueError("export_formats must be an explicit format list or UNKNOWN")
+            normalized_formats = tuple(sorted(set(export_formats)))
+            if self.exports is False and normalized_formats:
+                raise ValueError("Export formats contradict exports=false")
+            if self.exports is True and not normalized_formats:
+                raise ValueError("Exports require at least one explicit format")
+            object.__setattr__(self, "export_formats", normalized_formats)
         artifact_types = self.versioned_artifact_types
         if isinstance(artifact_types, str) and artifact_types.lower() == "unknown":
             object.__setattr__(self, "versioned_artifact_types", "UNKNOWN")
