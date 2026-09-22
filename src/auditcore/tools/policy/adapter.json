@@ -1,0 +1,770 @@
+{
+  "version": "1.0",
+  "source_repository": "janpow77/verwaltung-app-framework",
+  "reviewed_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+  "source_digests": {
+    "AGENTS.md": "90c2ac0b32cb5b56dc8507873cc36870233b86dfba707eb43bd94089865b776e",
+    "docs/anforderungen.md": "612a6c99cac3148798c16d1b902c9ed5b46abe106bf28bb90b24e5582d2540f3",
+    "docs/verbindlichkeit.md": "983c264aa4e4bd53f13c174cfce1ddb4ac7ac6517c40a356def011de4110665e",
+    "docs/pruefkatalog.md": "3e2bfb559db75ae57d7886849104bc0ab53222fa260a4cfd7a211c01f780b3ff",
+    "docs/standards.md": "17804271d770180ca1ab2f71f72b48f7c3a94fe8b3c7a55850ef90d5ef6ea821",
+    "docs/standards-register.json": "1f15b58258a4184aa27ca988911812b0dbd1c7634809e54fb94fcd2ad056117c",
+    "docs/security/bsi-baseline.md": "3b3186afb3ff814cec1ea779b74fd5ca9752af966fe7b7e7cbd593ba7dd4beda",
+    "docs/security/lieferkette.md": "474db1740aea02b5c9d02ec672541b271b11bb8a76bb20b5d7846e41fa311021",
+    "docs/security/sicherheitsvorfaelle.md": "7927e9cf2c7966b994dc0ed24f268e1e5b3ad2cc40cfc35bf16407ffa369e9d9"
+  },
+  "requirements": {
+    "F-01": {
+      "row_hash": "2fcb205625013fbb223deee2f211352e34fa86d7c80026b2706a306b24d6b824",
+      "assessment": {
+        "all": [
+          {
+            "field": "data_space",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "data_space",
+        "in": [
+          "multi_tenant"
+        ]
+      }
+    },
+    "F-02": {
+      "row_hash": "180f78669f6045f5a3ab074269f47dc58ab649005b21bad5e49876b2b10bed97",
+      "assessment": {
+        "all": [
+          {
+            "field": "user_model",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "user_model",
+        "in": [
+          "multi_user",
+          "external_users"
+        ]
+      }
+    },
+    "F-03": {
+      "row_hash": "e0d8eb60e7e6cf75113b20124abdfbb3e0a61649d58f9cf2bce7eb007d3bc431",
+      "assessment": {
+        "all": [
+          {
+            "field": "workflow",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "workflow",
+        "in": [
+          "simple_crud",
+          "procedural",
+          "state_machine"
+        ]
+      }
+    },
+    "F-04": {
+      "row_hash": "cac3df23edb7e6bba62e115fd091f86fd0ee81b17b0835e25d2e96f17a5e09f8",
+      "assessment": {
+        "all": [
+          {
+            "field": "exports",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "exports",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-05": {
+      "row_hash": "38ca4918ffc70dc7b51d743721c960a19cd139d399c9da23824d7b8d7af16e03",
+      "assessment": {
+        "all": [
+          {
+            "field": "personal_data",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "personal_data",
+        "in": [
+          "possible",
+          "yes"
+        ]
+      }
+    },
+    "F-06": {
+      "row_hash": "246fe0787d670aeefbd6bdfd952bbe06952c9074884c5e08ce84a960620e17b4",
+      "assessment": {
+        "all": [
+          {
+            "field": "binding_decisions",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "binding_decisions",
+        "in": [
+          "yes"
+        ]
+      }
+    },
+    "F-07": {
+      "row_hash": "94eea6412f7f61532ac5eb3fde505d307633ba53184de8f5e2812f3de2a824e8",
+      "assessment": {
+        "all": [
+          {
+            "field": "protection_need",
+            "known": true
+          },
+          {
+            "field": "authentication",
+            "known": true
+          },
+          {
+            "field": "uploads",
+            "known": true
+          },
+          {
+            "field": "external_interfaces",
+            "known": true
+          },
+          {
+            "field": "ai_usage",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "constant": "TRUE"
+      }
+    },
+    "F-08": {
+      "row_hash": "ae2cef9fc3979b5d9d59d9d4a57cfe305676a0355cdece92a744dc6cf104840b",
+      "assessment": {
+        "all": [
+          {
+            "field": "deployment_target",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "deployment_target",
+        "in": [
+          "pilot",
+          "production"
+        ]
+      }
+    },
+    "F-09": {
+      "row_hash": "9c469399bff757f95fce5f17ed4cb9f3d0e583539d94cab0ec0564ed6536f6d2",
+      "assessment": {
+        "all": [
+          {
+            "field": "artifact_type",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "constant": "TRUE"
+      }
+    },
+    "F-10": {
+      "row_hash": "683b33b21ffc19f847809f06d198fe6b4fb7c2671837271cb5b8c1bf72587dff",
+      "assessment": {
+        "all": [
+          {
+            "field": "graphical_ui",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-11": {
+      "row_hash": "37260c8a83c425fb50e885b15b03842a3e24117cd613b6e2a4bbd59f3f570331",
+      "assessment": {
+        "all": [
+          {
+            "field": "graphical_ui",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-12": {
+      "row_hash": "236f1363bd3b4d452f5d66eaffde282573fa88cd47f70e568773670e836f56f4",
+      "assessment": {
+        "all": [
+          {
+            "field": "international_users",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "international_users",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-13": {
+      "row_hash": "882671b4091abfea15b058fee2437209ab274d664cffa805785759aabbf440b4",
+      "assessment": {
+        "all": [
+          {
+            "field": "modular_capabilities",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "modular_capabilities",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-14": {
+      "row_hash": "afc768402182cd2bf217c5885978080cb6afbff4ca1f3df81a9c9575769c73b2",
+      "assessment": {
+        "all": [
+          {
+            "field": "ai_usage",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "ai_usage",
+        "in": [
+          "multiple_providers",
+          "byok"
+        ]
+      }
+    },
+    "F-15": {
+      "row_hash": "8d2ede3c2c8b48bfc2ae0459b33e5b78c53149f7fb86c8e3a218894639d7adf0",
+      "assessment": {
+        "all": [
+          {
+            "field": "versioned_artifacts",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "versioned_artifacts",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-16": {
+      "row_hash": "160e442a1eafbc992a656aafb9f80f7a3a2c526fd92918eaf5a0d4b4b15e74d9",
+      "assessment": {
+        "all": [
+          {
+            "field": "structured_imports",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "structured_imports",
+        "in": [
+          true
+        ]
+      }
+    },
+    "F-17": {
+      "row_hash": "8a97465030d6bd38998af4ee2a2902b6917fc8b36d8caa224e110007d27fb690",
+      "assessment": {
+        "all": [
+          {
+            "field": "analytical_runs",
+            "known": true
+          },
+          {
+            "field": "interactive_workspace",
+            "known": true
+          },
+          {
+            "field": "ai_usage",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "any": [
+          {
+            "field": "analytical_runs",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "interactive_workspace",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "ai_usage",
+            "in": [
+              "local",
+              "external_provider",
+              "multiple_providers",
+              "byok"
+            ]
+          }
+        ]
+      }
+    },
+    "F-18": {
+      "row_hash": "007d90414d31f183fcf1a8c5282c1a8453887da9206dcc39a299d45100baa81b",
+      "assessment": {
+        "all": [
+          {
+            "field": "real_data_for_test_generation",
+            "known": true
+          }
+        ]
+      },
+      "trigger": {
+        "field": "real_data_for_test_generation",
+        "in": [
+          true
+        ]
+      }
+    }
+  },
+  "tests": {
+    "T-01": {
+      "row_hash": "67177a5eba08a22a87d5226def21d7cfbce1cef2223c483548896f33b6c2a4e6",
+      "trigger": {
+        "field": "data_space",
+        "in": [
+          "multi_tenant"
+        ]
+      }
+    },
+    "T-02": {
+      "row_hash": "32c09654bb00c5aa92644f3439865c441b7892231b3028e529e0bf9de20f3703",
+      "trigger": {
+        "field": "user_model",
+        "in": [
+          "multi_user",
+          "external_users"
+        ]
+      }
+    },
+    "T-03": {
+      "row_hash": "ece2f34366b29e2b64dfcc933f9c2705efdddf738ceb0de9d397499d754ebdd8",
+      "trigger": {
+        "field": "user_model",
+        "in": [
+          "multi_user",
+          "external_users"
+        ]
+      }
+    },
+    "T-04": {
+      "row_hash": "a80b37198752b6c11fd968737bbe7cc0ef6d9c9f5ea3530bbf379c860df9c9c3",
+      "trigger": {
+        "field": "delegation",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-05": {
+      "row_hash": "2de22df77b7bd037e0916c93ad92833c92b5063d9fee526427312135f304a72f",
+      "trigger": {
+        "field": "workflow",
+        "in": [
+          "simple_crud",
+          "procedural",
+          "state_machine"
+        ]
+      }
+    },
+    "T-06": {
+      "row_hash": "1c445cfe2becbe60922f7a95881a289814ab4a74c11b906dffefb5321bd70fe1",
+      "trigger": {
+        "field": "binding_decisions",
+        "in": [
+          "yes"
+        ]
+      }
+    },
+    "T-07": {
+      "row_hash": "31b4e7fa7b1d466b4fccbb0ee367a87d79e01966e271a7362b794c2ea8533af2",
+      "trigger": {
+        "field": "uploads",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-08": {
+      "row_hash": "33bcafaf22a91d2736024faf2b490338d67ea19929cde70329c14283f6192099",
+      "trigger": {
+        "field": "documents",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-09": {
+      "row_hash": "d4942464969787133ce3c205cb400858601fed2cdc169d50118449614e52f63e",
+      "trigger": {
+        "field": "exports",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-10": {
+      "row_hash": "47ea9ab7b67a526828a5844b78f5e8f10955a0afbea5993582be2f1048547033",
+      "trigger": {
+        "field": "exports",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-11": {
+      "row_hash": "56255fc05589afb9833def140857afe5d6359157aee21f3e9fe828bd16ee39a0",
+      "trigger": {
+        "field": "personal_data",
+        "in": [
+          "possible",
+          "yes"
+        ]
+      }
+    },
+    "T-12": {
+      "row_hash": "f8dd177af5d4789f2e26753c79b627256bd87738bbc3cd5b4484052988782d45",
+      "trigger": {
+        "field": "dsfa_required",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-13": {
+      "row_hash": "29b89bb86f6cb7307de81e38bb5d7159d35e94ed2c31d1bddf268a2eb625cc78",
+      "trigger": {
+        "field": "authentication",
+        "in": [
+          "local",
+          "oidc",
+          "other"
+        ]
+      }
+    },
+    "T-14": {
+      "row_hash": "36ac4b57953907605488939efe5769eb00632aca51c16508ad76b3b3e02e6f39",
+      "trigger": {
+        "constant": "TRUE"
+      }
+    },
+    "T-15": {
+      "row_hash": "4761a8fcf4f0c5f23ea2f82f5d71d56afb4d98b09dd862a29c4a7cac8018a07c",
+      "trigger": {
+        "field": "deployment_target",
+        "in": [
+          "pilot",
+          "production"
+        ]
+      }
+    },
+    "T-16": {
+      "row_hash": "ca293633b066ec24b1e1395751bacd8500f123c9688bcae0e51cb621e7bcd6c2",
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-17": {
+      "row_hash": "40dad1a0bffc7b6d16f33b3dd2ee81607a6c2720380ba60dba27e4c5c6e3bd3b",
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-18": {
+      "row_hash": "956b10526ec007387b858a2d49281f8d2de1d0af66b9bc8b0a9fcfa3000b3429",
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-19": {
+      "row_hash": "df86aa94d4af9ce64aa3309dc7a23276441057459dedf0df84155c66a4ef710c",
+      "trigger": {
+        "all": [
+          {
+            "field": "documents",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "ai_usage",
+            "in": [
+              "local",
+              "external_provider",
+              "multiple_providers",
+              "byok"
+            ]
+          }
+        ]
+      }
+    },
+    "T-20": {
+      "row_hash": "b4b40d80cb18e6120b0b51bead6448af39b592e676e48ccc3170a58a63ba02d4",
+      "trigger": {
+        "all": [
+          {
+            "field": "workflow",
+            "in": [
+              "simple_crud",
+              "procedural",
+              "state_machine"
+            ]
+          },
+          {
+            "field": "user_model",
+            "in": [
+              "multi_user",
+              "external_users"
+            ]
+          }
+        ]
+      }
+    },
+    "T-21": {
+      "row_hash": "28de331d1c6b893a9c7a17aca0935cb7bcecec1116a7e12810a8b147342ecc92",
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-22": {
+      "row_hash": "56f786cc2c00ddc5682c61bf30162ef05b5e8402a45ed913cdb44fc37b95a72e",
+      "trigger": {
+        "field": "graphical_ui",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-23": {
+      "row_hash": "215d93b07a6a7ddb8e24445996831ff79d20b36489c1bf561d9d0fb3f2467111",
+      "trigger": {
+        "field": "international_users",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-24": {
+      "row_hash": "7d330a6044912c6df5231b0b0a4711613c989ffff479341999b6a8e098ad6546",
+      "trigger": {
+        "field": "modular_capabilities",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-25": {
+      "row_hash": "cddb8fe3b1cd0ebaa7428aa3b73868b6fb1368a7dd1dd1d18c8095991492f5b9",
+      "trigger": {
+        "field": "ai_usage",
+        "in": [
+          "multiple_providers",
+          "byok"
+        ]
+      }
+    },
+    "T-26": {
+      "row_hash": "984619a402b30926f29763e1cf94c21177698402eaef514f91554fcba9f61d98",
+      "trigger": {
+        "field": "versioned_artifacts",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-27": {
+      "row_hash": "23cd4ee3b122459ba82db8cea3b2e9081443c7235f8e351dc4c9041d3900eaec",
+      "trigger": {
+        "field": "versioned_artifacts",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-28": {
+      "row_hash": "4666cb59ee3a35a7e93b47d8665af6f6e708786f5ebbd7cfb9ac70f7772754b6",
+      "trigger": {
+        "field": "versioned_artifacts",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-29": {
+      "row_hash": "6ca301163fcb693e869fc263664e81eadff361235c069ca1db5b28b35bcabf21",
+      "trigger": {
+        "all": [
+          {
+            "field": "versioned_artifacts",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "ai_usage",
+            "in": [
+              "local",
+              "external_provider",
+              "multiple_providers",
+              "byok"
+            ]
+          }
+        ]
+      }
+    },
+    "T-30": {
+      "row_hash": "a8a25f409362b0870b566269158e983553525464db2eab97925a7efd478bf7f0",
+      "trigger": {
+        "field": "structured_imports",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-31": {
+      "row_hash": "377f436bd7a79a0ca60e54be064600135a7e6c5ce98e1b97674405e1845f3142",
+      "trigger": {
+        "any": [
+          {
+            "field": "analytical_runs",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "interactive_workspace",
+            "in": [
+              true
+            ]
+          },
+          {
+            "field": "ai_usage",
+            "in": [
+              "local",
+              "external_provider",
+              "multiple_providers",
+              "byok"
+            ]
+          }
+        ]
+      }
+    },
+    "T-32": {
+      "row_hash": "9b94967e890bd0d71da157c2849da45b7c53486cbec345c4b9e97010c28e6d77",
+      "trigger": {
+        "field": "interactive_workspace",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-33": {
+      "row_hash": "36750b67d91351b033ca79ad1bf0c6b79e51f3ce24d0dc1cbfdc456ceb12149f",
+      "trigger": {
+        "field": "real_data_for_test_generation",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-34": {
+      "row_hash": "b0fcbca0506f7529733df4fbd3fa6842e95a683cdf76e2b5fef7a5e4d9064e8b",
+      "trigger": {
+        "field": "real_data_for_test_generation",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-35": {
+      "row_hash": "ed53e754e0097791d245e187a963fa0f273e5e46a0d87c5c08024fbae54ff7be",
+      "trigger": {
+        "field": "real_data_for_test_generation",
+        "in": [
+          true
+        ]
+      }
+    },
+    "T-36": {
+      "row_hash": "4d86a6c604bcf257764fa0d10ef91bf309b30b167427c6e8582e0cefe7374868",
+      "trigger": {
+        "field": "deployment_target",
+        "in": [
+          "pilot",
+          "production"
+        ]
+      }
+    },
+    "T-37": {
+      "row_hash": "119dcdd0e5a65f72f714f7a4f1945a67181cbb4c3a451fe2016558d0868828f1",
+      "trigger": {
+        "constant": "TRUE"
+      }
+    },
+    "T-38": {
+      "row_hash": "0a39c2acc6115facd992a9027926f7397021ad0afdb7863e75a297bb09c5c12c",
+      "trigger": {
+        "constant": "TRUE"
+      }
+    }
+  }
+}

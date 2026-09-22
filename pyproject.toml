@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore"
+version = "0.1.0"
+description = "Framework-independent audit domain library and evidence-driven consolidation tools"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "LICENSES/*"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "bandit>=1.8", "pip-audit>=2.9", "cyclonedx-python-lib[json-validation]>=9"]
+quality = ["ruff>=0.11", "mypy>=1.15", "bandit>=1.8", "pip-audit>=2.9", "cyclonedx-python-lib[json-validation]>=9"]
+analysis = []
+deploy = ["build>=1.2"]
+all = ["auditcore[quality,deploy]"]
+
+[project.scripts]
+auditcore-quality = "auditcore.tools.quality.cli:main"
+auditcore-bibquality = "auditcore.tools.quality.cli:main"
+auditcore-consolidate = "auditcore.tools.consolidator.cli:main"
+auditcore-refactor = "auditcore.tools.apprefactor.cli:main"
+auditcore-deploy = "auditcore.tools.deployer.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore = ["py.typed"]
+"auditcore.tools.consolidator" = ["prompts/*.md", "policies/*.json"]
+"auditcore.tools.policy" = ["*.json"]
+"auditcore.tools.deployer" = ["templates/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[tool.auditcore-bibquality]
+strict = false
+exclude = []
+regression-command = ["pytest", "tests/test_reporting.py", "tests/test_core.py", "-q"]
