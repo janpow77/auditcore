@@ -1,0 +1,38 @@
+{
+  "scope": "ACTUAL_LEGACY_TECHNICAL_DEFECT_OBSERVATIONS",
+  "source_commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+  "invalid_worker_requested_rows": 200,
+  "invalid_worker_returned_rows": 0,
+  "worker_error_stdout": "Batch 0 fehlgeschlagen: empty range in randrange(5, 2)\nBatch 1 fehlgeschlagen: empty range in randrange(5, 2)\n",
+  "worker_dispatch_intercepted": [
+    {
+      "method": "generate_rows",
+      "rows": 1000,
+      "would_dispatch_parallel": true
+    }
+  ],
+  "request_before": {
+    "fields": [
+      {
+        "name": "id",
+        "type": "auto_increment",
+        "params": {
+          "start": 10,
+          "step": 3
+        }
+      }
+    ]
+  },
+  "request_after": {
+    "fields": [
+      {
+        "name": "id",
+        "type": "auto_increment",
+        "params": {
+          "start": 310,
+          "step": 3
+        }
+      }
+    ]
+  }
+}

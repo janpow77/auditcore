@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_dummygenerator",
+  "version": "0.1.0",
+  "source": {
+    "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+    "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+    "path": "backend/generator.py",
+    "git_blob": "a9204a0883948e3f3626db12e23ea120983fc901",
+    "sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780"
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "local_extraction": "AUTHORIZED_BY_USER",
+    "github_private": true,
+    "github_license": null,
+    "contributors": [
+      "janpow77",
+      "claude"
+    ],
+    "reviewed_on": "2026-09-22",
+    "notice": "Original attribution retained; MIT authorization is explicit from the rights holder, not inferred from platform licensing.",
+    "historical_source_license_status": "UNKNOWN",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "Ja, ich bin berechtigt und gebe beide unter MIT frei",
+      "scope": {
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py"
+      },
+      "limitation": "Authorizes this extracted generator under MIT, not a blanket relicensing of the entire source repository."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_observed.json",
+    "cases": 58,
+    "fresh_original_replay": "2026-09-22",
+    "technical_defects_fixture": "tests/fixtures/legacy_technical_defects.json"
+  },
+  "changes": [
+    "Framework-independent packaging and typing",
+    "Worker-only sequential generation prevents nested pools",
+    "Worker request isolation",
+    "Worker exceptions and incomplete output raise BatchGenerationError",
+    "Explicit optional base_date/max_workers/use_joblib contract",
+    "Positive worker-limit validation",
+    "Spawn multiprocessing context avoids inheriting thread state"
+  ],
+  "consumer": {
+    "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+    "path": "backend/main.py",
+    "migration_status": "MIGRATION_BLOCKED",
+    "integration_status": "PASS_ISOLATED_PROPOSED_IMPORT",
+    "integration_formats": [
+      "json",
+      "csv",
+      "xml",
+      "txt"
+    ],
+    "blocker": "Unresolved application F-07 protection assessment and operational policy; no production approval"
+  },
+  "release_cycle": "Coordinated auditcore repository release; separately installable distribution",
+  "profiles": {
+    "registry": "profiles.json",
+    "version": "0.1.0",
+    "count": 27,
+    "status": "Draft",
+    "policy": "docs/profile-versioning.md"
+  }
+}

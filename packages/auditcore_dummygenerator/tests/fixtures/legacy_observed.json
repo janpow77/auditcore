@@ -1,0 +1,2168 @@
+{
+  "source_repository": "janpow77/flowaudit_testdatengenerator_frontend",
+  "source_commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+  "source_path": "backend/generator.py",
+  "source_blob": "a9204a0883948e3f3626db12e23ea120983fc901",
+  "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+  "captured_at": "2026-09-22T15:59:15.735791+00:00",
+  "python_version": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "parallel_backend": "ProcessPoolExecutor",
+  "records": [
+    {
+      "method": "generate_first_name",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "Anna"
+    },
+    {
+      "method": "generate_last_name",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "Schmidt"
+    },
+    {
+      "method": "generate_street",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "Bahnhofstraße"
+    },
+    {
+      "method": "generate_city",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": [
+        "Berlin",
+        "10115"
+      ]
+    },
+    {
+      "method": "generate_postal_code",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "10115"
+    },
+    {
+      "method": "generate_iban",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "DE91104332181960013389"
+    },
+    {
+      "method": "generate_bic",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "QAHFDE0Y6DP"
+    },
+    {
+      "method": "generate_ustid",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "DE786579303"
+    },
+    {
+      "method": "generate_phone",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "output": "0179 1043321"
+    },
+    {
+      "method": "generate_first_name",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "Elisabeth"
+    },
+    {
+      "method": "generate_last_name",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "Huber"
+    },
+    {
+      "method": "generate_street",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "Wiener Straße"
+    },
+    {
+      "method": "generate_city",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": [
+        "Wien",
+        "1010"
+      ]
+    },
+    {
+      "method": "generate_postal_code",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "1010"
+    },
+    {
+      "method": "generate_iban",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "AT911043321819600133"
+    },
+    {
+      "method": "generate_bic",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "QAHFAT0Y6DP"
+    },
+    {
+      "method": "generate_ustid",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "ATU95822412"
+    },
+    {
+      "method": "generate_phone",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "output": "0664 0433218"
+    },
+    {
+      "method": "generate_first_name",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "Anna"
+    },
+    {
+      "method": "generate_last_name",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "Schmidt"
+    },
+    {
+      "method": "generate_street",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "Bahnhofstraße"
+    },
+    {
+      "method": "generate_city",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": [
+        "Berlin",
+        "10115"
+      ]
+    },
+    {
+      "method": "generate_postal_code",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "10115"
+    },
+    {
+      "method": "generate_iban",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "DE91104332181960013389"
+    },
+    {
+      "method": "generate_bic",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "QAHFDE0Y6DP"
+    },
+    {
+      "method": "generate_ustid",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "DE786579303"
+    },
+    {
+      "method": "generate_phone",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "output": "0179 1043321"
+    },
+    {
+      "method": "generate_house_number",
+      "args": [],
+      "seed": 42,
+      "output": "29"
+    },
+    {
+      "method": "generate_date_range",
+      "args": [
+        "2024-01-01",
+        "2024-12-31"
+      ],
+      "seed": 42,
+      "output": "2024-11-23"
+    },
+    {
+      "method": "generate_date_after",
+      "args": [
+        "2024-01-01",
+        1,
+        30
+      ],
+      "seed": 42,
+      "output": "2024-01-22"
+    },
+    {
+      "method": "generate_amount",
+      "args": [
+        1.0,
+        1000.0,
+        2
+      ],
+      "seed": 42,
+      "output": 639.79
+    },
+    {
+      "method": "generate_amount_relative",
+      "args": [
+        1000.0,
+        0.5,
+        1.0
+      ],
+      "seed": 42,
+      "output": 819.71
+    },
+    {
+      "method": "generate_invoice_no",
+      "args": [],
+      "seed": 42,
+      "output": "1043321819"
+    },
+    {
+      "method": "generate_invoice_no",
+      "args": [
+        "custom"
+      ],
+      "seed": 42,
+      "output": "INV-770487"
+    },
+    {
+      "method": "generate_company",
+      "args": [],
+      "seed": 42,
+      "output": "Digital Solutions AG"
+    },
+    {
+      "method": "generate_purpose_text",
+      "args": [],
+      "seed": 42,
+      "output": "Softwarelizenz Hosting Hardwarebeschaffung Softwarelizenz Softwarelizenz Hosting Support"
+    },
+    {
+      "method": "generate_weighted_choice",
+      "args": [
+        [
+          {
+            "value": "a",
+            "weight": 2
+          },
+          {
+            "value": "b",
+            "weight": 1
+          }
+        ]
+      ],
+      "seed": 42,
+      "output": "a"
+    },
+    {
+      "method": "generate_weighted_choice",
+      "args": [
+        []
+      ],
+      "seed": 42,
+      "output": ""
+    },
+    {
+      "method": "generate_number",
+      "args": [],
+      "seed": 42,
+      "output": 81
+    },
+    {
+      "method": "generate_boolean",
+      "args": [],
+      "seed": 42,
+      "output": true
+    },
+    {
+      "method": "generate_field",
+      "args": [
+        "unrecognized",
+        {},
+        "DE",
+        {}
+      ],
+      "seed": 42,
+      "output": ""
+    },
+    {
+      "method": "generate_field",
+      "args": [
+        "amount_eur_relative",
+        {
+          "refFieldName": "value"
+        },
+        "AT",
+        {
+          "value": "12,50"
+        }
+      ],
+      "seed": 42,
+      "output": 10.25
+    },
+    {
+      "method": "generate_field",
+      "args": [
+        "amount_eur_relative",
+        {
+          "refFieldName": "value"
+        },
+        "AT",
+        {
+          "value": "invalid"
+        }
+      ],
+      "seed": 42,
+      "output": 819.71
+    },
+    {
+      "method": "generate_date_range",
+      "args": [
+        "2024-02-01",
+        "2024-01-01"
+      ],
+      "seed": 42,
+      "exception": "ValueError"
+    },
+    {
+      "method": "generate_date_range",
+      "args": [
+        "invalid",
+        "2024-01-01"
+      ],
+      "seed": 42,
+      "exception": "ValueError"
+    },
+    {
+      "method": "generate_weighted_choice",
+      "args": [
+        [
+          {
+            "value": "a",
+            "weight": 0
+          }
+        ]
+      ],
+      "seed": 42,
+      "exception": "ValueError"
+    },
+    {
+      "method": "generate_number",
+      "args": [
+        5,
+        1
+      ],
+      "seed": 42,
+      "exception": "ValueError"
+    },
+    {
+      "method": "generate_rows",
+      "args": [
+        {
+          "rows": 5,
+          "countries": "DE",
+          "fields": [
+            {
+              "name": "id",
+              "type": "auto_increment",
+              "params": {
+                "start": 10,
+                "step": 3
+              }
+            },
+            {
+              "name": "first_name",
+              "type": "first_name"
+            },
+            {
+              "name": "last_name",
+              "type": "last_name"
+            },
+            {
+              "name": "street",
+              "type": "street"
+            },
+            {
+              "name": "house_number",
+              "type": "house_number"
+            },
+            {
+              "name": "postal_code",
+              "type": "postal_code"
+            },
+            {
+              "name": "city",
+              "type": "city"
+            },
+            {
+              "name": "iban",
+              "type": "iban"
+            },
+            {
+              "name": "bic",
+              "type": "bic"
+            },
+            {
+              "name": "ustid",
+              "type": "ustid"
+            },
+            {
+              "name": "phone",
+              "type": "phone"
+            },
+            {
+              "name": "date_range",
+              "type": "date_range"
+            },
+            {
+              "name": "amount_eur",
+              "type": "amount_eur"
+            },
+            {
+              "name": "invoice_no",
+              "type": "invoice_no"
+            },
+            {
+              "name": "company",
+              "type": "company"
+            },
+            {
+              "name": "purpose_text",
+              "type": "purpose_text"
+            },
+            {
+              "name": "number",
+              "type": "number"
+            },
+            {
+              "name": "boolean",
+              "type": "boolean"
+            },
+            {
+              "name": "paid",
+              "type": "date_after",
+              "params": {
+                "refFieldName": "date_range"
+              }
+            },
+            {
+              "name": "relative",
+              "type": "amount_eur_relative",
+              "params": {
+                "refFieldName": "amount_eur"
+              }
+            },
+            {
+              "name": "weighted",
+              "type": "weighted_list",
+              "params": {
+                "items": [
+                  {
+                    "value": "x",
+                    "weight": 2
+                  },
+                  {
+                    "value": "y",
+                    "weight": 1
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "seed": 42,
+      "output": [
+        {
+          "id": 10,
+          "first_name": "Max",
+          "last_name": "Weber",
+          "street": "Gartenstraße",
+          "house_number": "58",
+          "postal_code": "10115",
+          "city": "Frankfurt",
+          "iban": "DE21960013389083863794",
+          "bic": "VAUSDEMF8MD",
+          "ustid": "DE203848421",
+          "phone": "0171 5940781",
+          "date_range": "2024-03-30",
+          "amount_eur": 880.12,
+          "invoice_no": "959310341",
+          "company": "DataServ GmbH",
+          "purpose_text": "Softwarelizenz Hardwarebeschaffung Entwicklung Schulung Schulung Hardwarebeschaffung Hardwarebeschaffung Projektmanagement",
+          "number": 82,
+          "boolean": true,
+          "paid": "2024-04-18",
+          "relative": 719.49,
+          "weighted": "x"
+        },
+        {
+          "id": 13,
+          "first_name": "Peter",
+          "last_name": "Becker",
+          "street": "Lindenstraße",
+          "house_number": "70c",
+          "postal_code": "60311",
+          "city": "Hamburg",
+          "iban": "DE97503056413953767242",
+          "bic": "GOGPDE6OH9S",
+          "ustid": "DE197613238",
+          "phone": "0151 1226916",
+          "date_range": "2024-04-12",
+          "amount_eur": 5999.3,
+          "invoice_no": "848018451",
+          "company": "CloudSys AG",
+          "purpose_text": "Softwarelizenz Beratungsleistung Hosting Hosting Projektmanagement",
+          "number": 97,
+          "boolean": true,
+          "paid": "2024-04-28",
+          "relative": 5737.21,
+          "weighted": "y"
+        },
+        {
+          "id": 16,
+          "first_name": "Andreas",
+          "last_name": "Hoffmann",
+          "street": "Gartenstraße",
+          "house_number": "40",
+          "postal_code": "20095",
+          "city": "Frankfurt",
+          "iban": "DE77095701543039117182",
+          "bic": "DMOGDE5PHT0",
+          "ustid": "DE315984311",
+          "phone": "0170 6578713",
+          "date_range": "2022-07-09",
+          "amount_eur": 733.86,
+          "invoice_no": "98393010",
+          "company": "DataServ GmbH",
+          "purpose_text": "Projektmanagement Consulting",
+          "number": 9,
+          "boolean": true,
+          "paid": "2022-07-17",
+          "relative": 612.4,
+          "weighted": "x"
+        },
+        {
+          "id": 19,
+          "first_name": "Lisa",
+          "last_name": "Hoffmann",
+          "street": "Kirchstraße",
+          "house_number": "63a",
+          "postal_code": "50667",
+          "city": "Hamburg",
+          "iban": "DE22165667010651333872",
+          "bic": "KHGYDEP5TB9",
+          "ustid": "DE997677788",
+          "phone": "0151 1326773",
+          "date_range": "2024-06-30",
+          "amount_eur": 9034.18,
+          "invoice_no": "60647468",
+          "company": "IT-Service GmbH",
+          "purpose_text": "Softwarelizenz Hardwarebeschaffung Beratungsleistung",
+          "number": 94,
+          "boolean": true,
+          "paid": "2024-07-23",
+          "relative": 5933.67,
+          "weighted": "x"
+        },
+        {
+          "id": 22,
+          "first_name": "Andreas",
+          "last_name": "Schulz",
+          "street": "Schulstraße",
+          "house_number": "15b",
+          "postal_code": "10115",
+          "city": "Hamburg",
+          "iban": "DE18913619399091699854",
+          "bic": "FSGKDEYKL1C",
+          "ustid": "DE592080329",
+          "phone": "0178 9118384",
+          "date_range": "2021-06-26",
+          "amount_eur": 9339.27,
+          "invoice_no": "35427849",
+          "company": "WebTech AG",
+          "purpose_text": "Entwicklung Support",
+          "number": 84,
+          "boolean": true,
+          "paid": "2021-07-26",
+          "relative": 8770.17,
+          "weighted": "x"
+        }
+      ]
+    },
+    {
+      "method": "generate_rows",
+      "args": [
+        {
+          "rows": 5,
+          "countries": "AT",
+          "fields": [
+            {
+              "name": "id",
+              "type": "auto_increment",
+              "params": {
+                "start": 10,
+                "step": 3
+              }
+            },
+            {
+              "name": "first_name",
+              "type": "first_name"
+            },
+            {
+              "name": "last_name",
+              "type": "last_name"
+            },
+            {
+              "name": "street",
+              "type": "street"
+            },
+            {
+              "name": "house_number",
+              "type": "house_number"
+            },
+            {
+              "name": "postal_code",
+              "type": "postal_code"
+            },
+            {
+              "name": "city",
+              "type": "city"
+            },
+            {
+              "name": "iban",
+              "type": "iban"
+            },
+            {
+              "name": "bic",
+              "type": "bic"
+            },
+            {
+              "name": "ustid",
+              "type": "ustid"
+            },
+            {
+              "name": "phone",
+              "type": "phone"
+            },
+            {
+              "name": "date_range",
+              "type": "date_range"
+            },
+            {
+              "name": "amount_eur",
+              "type": "amount_eur"
+            },
+            {
+              "name": "invoice_no",
+              "type": "invoice_no"
+            },
+            {
+              "name": "company",
+              "type": "company"
+            },
+            {
+              "name": "purpose_text",
+              "type": "purpose_text"
+            },
+            {
+              "name": "number",
+              "type": "number"
+            },
+            {
+              "name": "boolean",
+              "type": "boolean"
+            },
+            {
+              "name": "paid",
+              "type": "date_after",
+              "params": {
+                "refFieldName": "date_range"
+              }
+            },
+            {
+              "name": "relative",
+              "type": "amount_eur_relative",
+              "params": {
+                "refFieldName": "amount_eur"
+              }
+            },
+            {
+              "name": "weighted",
+              "type": "weighted_list",
+              "params": {
+                "items": [
+                  {
+                    "value": "x",
+                    "weight": 2
+                  },
+                  {
+                    "value": "y",
+                    "weight": 1
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "seed": 42,
+      "output": [
+        {
+          "id": 10,
+          "first_name": "Franz",
+          "last_name": "Müller",
+          "street": "Kirchengasse",
+          "house_number": "58",
+          "postal_code": "1010",
+          "city": "Innsbruck",
+          "iban": "AT219600133890838637",
+          "bic": "PVAUATZMF8M",
+          "ustid": "ATU22448136",
+          "phone": "0650 1559407",
+          "date_range": "2021-05-26",
+          "amount_eur": 9733.85,
+          "invoice_no": "184959310",
+          "company": "DataServ GmbH",
+          "purpose_text": "Hardwarebeschaffung Beratungsleistung Hardwarebeschaffung Softwarelizenz Hardwarebeschaffung Entwicklung Schulung Schulung",
+          "number": 26,
+          "boolean": false,
+          "paid": "2021-06-17",
+          "relative": 9425.55,
+          "weighted": "x"
+        },
+        {
+          "id": 13,
+          "first_name": "Karl",
+          "last_name": "Wagner",
+          "street": "Bahnhofstraße",
+          "house_number": "119a",
+          "postal_code": "4020",
+          "city": "Innsbruck",
+          "iban": "AT385030564139537672",
+          "bic": "GGOGATV6OH9",
+          "ustid": "ATU78387461",
+          "phone": "0650 1012269",
+          "date_range": "2020-09-17",
+          "amount_eur": 3909.2,
+          "invoice_no": "7848018451",
+          "company": "CloudSys AG",
+          "purpose_text": "Softwarelizenz Beratungsleistung Hosting Hosting Projektmanagement",
+          "number": 97,
+          "boolean": true,
+          "paid": "2020-10-03",
+          "relative": 3738.42,
+          "weighted": "y"
+        },
+        {
+          "id": 16,
+          "first_name": "Karl",
+          "last_name": "Hofer",
+          "street": "Kirchengasse",
+          "house_number": "40",
+          "postal_code": "8010",
+          "city": "Innsbruck",
+          "iban": "AT770957015430391171",
+          "bic": "ZNDRAT8FSV8",
+          "ustid": "ATU82383095",
+          "phone": "0676 4657871",
+          "date_range": "2022-10-12",
+          "amount_eur": 2324.5,
+          "invoice_no": "098393010",
+          "company": "DataServ GmbH",
+          "purpose_text": "Projektmanagement Consulting",
+          "number": 9,
+          "boolean": true,
+          "paid": "2022-10-20",
+          "relative": 1939.77,
+          "weighted": "x"
+        },
+        {
+          "id": 19,
+          "first_name": "Margarethe",
+          "last_name": "Hofer",
+          "street": "Wiesengasse",
+          "house_number": "63a",
+          "postal_code": "5020",
+          "city": "Graz",
+          "iban": "AT221656670106513338",
+          "bic": "LKHGAT7P5TB",
+          "ustid": "ATU82556484",
+          "phone": "0664 1326773",
+          "date_range": "2024-06-30",
+          "amount_eur": 9034.18,
+          "invoice_no": "60647468",
+          "company": "IT-Service GmbH",
+          "purpose_text": "Softwarelizenz Hardwarebeschaffung Beratungsleistung",
+          "number": 94,
+          "boolean": true,
+          "paid": "2024-07-23",
+          "relative": 5933.67,
+          "weighted": "x"
+        },
+        {
+          "id": 22,
+          "first_name": "Karl",
+          "last_name": "Mayer",
+          "street": "Bahnhofstraße",
+          "house_number": "15b",
+          "postal_code": "1010",
+          "city": "Graz",
+          "iban": "AT189136193990916998",
+          "bic": "IGRIATJEXQ7",
+          "ustid": "ATU19736572",
+          "phone": "0664 7991183",
+          "date_range": "2025-09-03",
+          "amount_eur": 2725.48,
+          "invoice_no": "135427849",
+          "company": "WebTech AG",
+          "purpose_text": "Entwicklung Support",
+          "number": 84,
+          "boolean": true,
+          "paid": "2025-10-03",
+          "relative": 2559.4,
+          "weighted": "x"
+        }
+      ]
+    },
+    {
+      "method": "generate_rows",
+      "args": [
+        {
+          "rows": 5,
+          "countries": "DE+AT",
+          "fields": [
+            {
+              "name": "id",
+              "type": "auto_increment",
+              "params": {
+                "start": 10,
+                "step": 3
+              }
+            },
+            {
+              "name": "first_name",
+              "type": "first_name"
+            },
+            {
+              "name": "last_name",
+              "type": "last_name"
+            },
+            {
+              "name": "street",
+              "type": "street"
+            },
+            {
+              "name": "house_number",
+              "type": "house_number"
+            },
+            {
+              "name": "postal_code",
+              "type": "postal_code"
+            },
+            {
+              "name": "city",
+              "type": "city"
+            },
+            {
+              "name": "iban",
+              "type": "iban"
+            },
+            {
+              "name": "bic",
+              "type": "bic"
+            },
+            {
+              "name": "ustid",
+              "type": "ustid"
+            },
+            {
+              "name": "phone",
+              "type": "phone"
+            },
+            {
+              "name": "date_range",
+              "type": "date_range"
+            },
+            {
+              "name": "amount_eur",
+              "type": "amount_eur"
+            },
+            {
+              "name": "invoice_no",
+              "type": "invoice_no"
+            },
+            {
+              "name": "company",
+              "type": "company"
+            },
+            {
+              "name": "purpose_text",
+              "type": "purpose_text"
+            },
+            {
+              "name": "number",
+              "type": "number"
+            },
+            {
+              "name": "boolean",
+              "type": "boolean"
+            },
+            {
+              "name": "paid",
+              "type": "date_after",
+              "params": {
+                "refFieldName": "date_range"
+              }
+            },
+            {
+              "name": "relative",
+              "type": "amount_eur_relative",
+              "params": {
+                "refFieldName": "amount_eur"
+              }
+            },
+            {
+              "name": "weighted",
+              "type": "weighted_list",
+              "params": {
+                "items": [
+                  {
+                    "value": "x",
+                    "weight": 2
+                  },
+                  {
+                    "value": "y",
+                    "weight": 1
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "seed": 42,
+      "output": [
+        {
+          "id": 10,
+          "first_name": "Max",
+          "last_name": "Weber",
+          "street": "Gartenstraße",
+          "house_number": "58",
+          "postal_code": "10115",
+          "city": "Frankfurt",
+          "iban": "DE21960013389083863794",
+          "bic": "VAUSDEMF8MD",
+          "ustid": "DE203848421",
+          "phone": "0171 5940781",
+          "date_range": "2024-03-30",
+          "amount_eur": 880.12,
+          "invoice_no": "959310341",
+          "company": "DataServ GmbH",
+          "purpose_text": "Softwarelizenz Hardwarebeschaffung Entwicklung Schulung Schulung Hardwarebeschaffung Hardwarebeschaffung Projektmanagement",
+          "number": 82,
+          "boolean": true,
+          "paid": "2024-04-18",
+          "relative": 719.49,
+          "weighted": "x"
+        },
+        {
+          "id": 13,
+          "first_name": "Peter",
+          "last_name": "Becker",
+          "street": "Lindenstraße",
+          "house_number": "70c",
+          "postal_code": "60311",
+          "city": "Hamburg",
+          "iban": "DE97503056413953767242",
+          "bic": "GOGPDE6OH9S",
+          "ustid": "DE197613238",
+          "phone": "0151 1226916",
+          "date_range": "2024-04-12",
+          "amount_eur": 5999.3,
+          "invoice_no": "848018451",
+          "company": "CloudSys AG",
+          "purpose_text": "Softwarelizenz Beratungsleistung Hosting Hosting Projektmanagement",
+          "number": 97,
+          "boolean": true,
+          "paid": "2024-04-28",
+          "relative": 5737.21,
+          "weighted": "y"
+        },
+        {
+          "id": 16,
+          "first_name": "Karl",
+          "last_name": "Hofer",
+          "street": "Kirchengasse",
+          "house_number": "40",
+          "postal_code": "8010",
+          "city": "Innsbruck",
+          "iban": "AT770957015430391171",
+          "bic": "ZNDRAT8FSV8",
+          "ustid": "ATU82383095",
+          "phone": "0676 4657871",
+          "date_range": "2022-10-12",
+          "amount_eur": 2324.5,
+          "invoice_no": "098393010",
+          "company": "DataServ GmbH",
+          "purpose_text": "Projektmanagement Consulting",
+          "number": 9,
+          "boolean": true,
+          "paid": "2022-10-20",
+          "relative": 1939.77,
+          "weighted": "x"
+        },
+        {
+          "id": 19,
+          "first_name": "Lisa",
+          "last_name": "Hoffmann",
+          "street": "Kirchstraße",
+          "house_number": "63a",
+          "postal_code": "50667",
+          "city": "Hamburg",
+          "iban": "DE22165667010651333872",
+          "bic": "KHGYDEP5TB9",
+          "ustid": "DE997677788",
+          "phone": "0151 1326773",
+          "date_range": "2024-06-30",
+          "amount_eur": 9034.18,
+          "invoice_no": "60647468",
+          "company": "IT-Service GmbH",
+          "purpose_text": "Softwarelizenz Hardwarebeschaffung Beratungsleistung",
+          "number": 94,
+          "boolean": true,
+          "paid": "2024-07-23",
+          "relative": 5933.67,
+          "weighted": "x"
+        },
+        {
+          "id": 22,
+          "first_name": "Karl",
+          "last_name": "Mayer",
+          "street": "Bahnhofstraße",
+          "house_number": "15b",
+          "postal_code": "1010",
+          "city": "Graz",
+          "iban": "AT189136193990916998",
+          "bic": "IGRIATJEXQ7",
+          "ustid": "ATU19736572",
+          "phone": "0664 7991183",
+          "date_range": "2025-09-03",
+          "amount_eur": 2725.48,
+          "invoice_no": "135427849",
+          "company": "WebTech AG",
+          "purpose_text": "Entwicklung Support",
+          "number": 84,
+          "boolean": true,
+          "paid": "2025-10-03",
+          "relative": 2559.4,
+          "weighted": "x"
+        }
+      ]
+    },
+    {
+      "method": "apply_deviation",
+      "args": [
+        {
+          "betrag": 100.0,
+          "foerderfaehig": 90.0,
+          "rechnungsdatum": "2024-01-15",
+          "bezahldatum": "2024-02-01"
+        },
+        "NONE",
+        1.0
+      ],
+      "seed": 42,
+      "output": {
+        "betrag": 100.0,
+        "foerderfaehig": 90.0,
+        "rechnungsdatum": "2024-01-15",
+        "bezahldatum": "2024-02-01"
+      }
+    },
+    {
+      "method": "apply_deviation",
+      "args": [
+        {
+          "betrag": 100.0,
+          "foerderfaehig": 90.0,
+          "rechnungsdatum": "2024-01-15",
+          "bezahldatum": "2024-02-01"
+        },
+        "NEGATIVE_AMOUNTS",
+        1.0
+      ],
+      "seed": 42,
+      "output": {
+        "betrag": -100.0,
+        "foerderfaehig": 90.0,
+        "rechnungsdatum": "2024-01-15",
+        "bezahldatum": "2024-02-01"
+      }
+    },
+    {
+      "method": "apply_deviation",
+      "args": [
+        {
+          "betrag": 100.0,
+          "foerderfaehig": 90.0,
+          "rechnungsdatum": "2024-01-15",
+          "bezahldatum": "2024-02-01"
+        },
+        "BEZAHLT_VOR_RECHNUNG",
+        1.0
+      ],
+      "seed": 42,
+      "output": {
+        "betrag": 100.0,
+        "foerderfaehig": 90.0,
+        "rechnungsdatum": "2024-01-15",
+        "bezahldatum": "2024-01-14"
+      }
+    },
+    {
+      "method": "apply_deviation",
+      "args": [
+        {
+          "betrag": 100.0,
+          "foerderfaehig": 90.0,
+          "rechnungsdatum": "2024-01-15",
+          "bezahldatum": "2024-02-01"
+        },
+        "FOERDERFAEHIG_GT_GEZAHLT",
+        1.0
+      ],
+      "seed": 42,
+      "output": {
+        "betrag": 100.0,
+        "foerderfaehig": 111.00043020890669,
+        "rechnungsdatum": "2024-01-15",
+        "bezahldatum": "2024-02-01"
+      }
+    },
+    {
+      "method": "generate_rows",
+      "args": [
+        {
+          "rows": 0
+        }
+      ],
+      "seed": 42,
+      "output": []
+    },
+    {
+      "method": "generate_rows",
+      "args": [
+        {
+          "rows": -1
+        }
+      ],
+      "seed": 42,
+      "output": []
+    },
+    {
+      "method": "generate_rows",
+      "args": [
+        {
+          "rows": 5,
+          "fields": [
+            {
+              "name": "vorhabennummer",
+              "type": "number"
+            },
+            {
+              "name": "aktenzeichen",
+              "type": "number"
+            },
+            {
+              "name": "kostenstelle",
+              "type": "number"
+            },
+            {
+              "name": "kategorie",
+              "type": "number"
+            }
+          ],
+          "beleglisteOptions": {
+            "criteria": {
+              "vorhabennummern": {
+                "items": [
+                  {
+                    "value": "vorhabennummern-a",
+                    "weight": 1
+                  },
+                  {
+                    "value": "vorhabennummern-b",
+                    "weight": 2
+                  }
+                ]
+              },
+              "aktenzeichen": {
+                "items": [
+                  {
+                    "value": "aktenzeichen-a",
+                    "weight": 1
+                  },
+                  {
+                    "value": "aktenzeichen-b",
+                    "weight": 2
+                  }
+                ]
+              },
+              "kostenstellen": {
+                "items": [
+                  {
+                    "value": "kostenstellen-a",
+                    "weight": 1
+                  },
+                  {
+                    "value": "kostenstellen-b",
+                    "weight": 2
+                  }
+                ]
+              },
+              "kategorien": {
+                "items": [
+                  {
+                    "value": "kategorien-a",
+                    "weight": 1
+                  },
+                  {
+                    "value": "kategorien-b",
+                    "weight": 2
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "seed": 42,
+      "output": [
+        {
+          "vorhabennummer": "vorhabennummern-a",
+          "aktenzeichen": "aktenzeichen-a",
+          "kostenstelle": "kostenstellen-a",
+          "kategorie": "kategorien-b"
+        },
+        {
+          "vorhabennummer": "vorhabennummern-b",
+          "aktenzeichen": "aktenzeichen-a",
+          "kostenstelle": "kostenstellen-a",
+          "kategorie": "kategorien-a"
+        },
+        {
+          "vorhabennummer": "vorhabennummern-b",
+          "aktenzeichen": "aktenzeichen-b",
+          "kostenstelle": "kostenstellen-b",
+          "kategorie": "kategorien-b"
+        },
+        {
+          "vorhabennummer": "vorhabennummern-b",
+          "aktenzeichen": "aktenzeichen-b",
+          "kostenstelle": "kostenstellen-a",
+          "kategorie": "kategorien-b"
+        },
+        {
+          "vorhabennummer": "vorhabennummern-b",
+          "aktenzeichen": "aktenzeichen-a",
+          "kostenstelle": "kostenstellen-b",
+          "kategorie": "kategorien-b"
+        }
+      ]
+    },
+    {
+      "method": "generate_rows_parallel",
+      "args": [
+        {
+          "rows": 200,
+          "fields": [
+            {
+              "name": "id",
+              "type": "auto_increment",
+              "params": {
+                "start": 10,
+                "step": 3
+              }
+            },
+            {
+              "name": "value",
+              "type": "number"
+            }
+          ]
+        },
+        2
+      ],
+      "seed": 42,
+      "output": [
+        {
+          "id": 10,
+          "value": 3
+        },
+        {
+          "id": 13,
+          "value": 31
+        },
+        {
+          "id": 16,
+          "value": 17
+        },
+        {
+          "id": 19,
+          "value": 86
+        },
+        {
+          "id": 22,
+          "value": 75
+        },
+        {
+          "id": 25,
+          "value": 4
+        },
+        {
+          "id": 28,
+          "value": 11
+        },
+        {
+          "id": 31,
+          "value": 29
+        },
+        {
+          "id": 34,
+          "value": 71
+        },
+        {
+          "id": 37,
+          "value": 91
+        },
+        {
+          "id": 40,
+          "value": 28
+        },
+        {
+          "id": 43,
+          "value": 75
+        },
+        {
+          "id": 46,
+          "value": 0
+        },
+        {
+          "id": 49,
+          "value": 89
+        },
+        {
+          "id": 52,
+          "value": 43
+        },
+        {
+          "id": 55,
+          "value": 19
+        },
+        {
+          "id": 58,
+          "value": 97
+        },
+        {
+          "id": 61,
+          "value": 13
+        },
+        {
+          "id": 64,
+          "value": 48
+        },
+        {
+          "id": 67,
+          "value": 45
+        },
+        {
+          "id": 70,
+          "value": 77
+        },
+        {
+          "id": 73,
+          "value": 5
+        },
+        {
+          "id": 76,
+          "value": 68
+        },
+        {
+          "id": 79,
+          "value": 48
+        },
+        {
+          "id": 82,
+          "value": 70
+        },
+        {
+          "id": 85,
+          "value": 80
+        },
+        {
+          "id": 88,
+          "value": 73
+        },
+        {
+          "id": 91,
+          "value": 90
+        },
+        {
+          "id": 94,
+          "value": 5
+        },
+        {
+          "id": 97,
+          "value": 98
+        },
+        {
+          "id": 100,
+          "value": 10
+        },
+        {
+          "id": 103,
+          "value": 12
+        },
+        {
+          "id": 106,
+          "value": 35
+        },
+        {
+          "id": 109,
+          "value": 81
+        },
+        {
+          "id": 112,
+          "value": 20
+        },
+        {
+          "id": 115,
+          "value": 45
+        },
+        {
+          "id": 118,
+          "value": 85
+        },
+        {
+          "id": 121,
+          "value": 89
+        },
+        {
+          "id": 124,
+          "value": 77
+        },
+        {
+          "id": 127,
+          "value": 68
+        },
+        {
+          "id": 130,
+          "value": 20
+        },
+        {
+          "id": 133,
+          "value": 48
+        },
+        {
+          "id": 136,
+          "value": 81
+        },
+        {
+          "id": 139,
+          "value": 87
+        },
+        {
+          "id": 142,
+          "value": 98
+        },
+        {
+          "id": 145,
+          "value": 29
+        },
+        {
+          "id": 148,
+          "value": 40
+        },
+        {
+          "id": 151,
+          "value": 34
+        },
+        {
+          "id": 154,
+          "value": 27
+        },
+        {
+          "id": 157,
+          "value": 27
+        },
+        {
+          "id": 160,
+          "value": 50
+        },
+        {
+          "id": 163,
+          "value": 18
+        },
+        {
+          "id": 166,
+          "value": 17
+        },
+        {
+          "id": 169,
+          "value": 95
+        },
+        {
+          "id": 172,
+          "value": 95
+        },
+        {
+          "id": 175,
+          "value": 74
+        },
+        {
+          "id": 178,
+          "value": 46
+        },
+        {
+          "id": 181,
+          "value": 17
+        },
+        {
+          "id": 184,
+          "value": 11
+        },
+        {
+          "id": 187,
+          "value": 14
+        },
+        {
+          "id": 190,
+          "value": 80
+        },
+        {
+          "id": 193,
+          "value": 87
+        },
+        {
+          "id": 196,
+          "value": 76
+        },
+        {
+          "id": 199,
+          "value": 49
+        },
+        {
+          "id": 202,
+          "value": 76
+        },
+        {
+          "id": 205,
+          "value": 67
+        },
+        {
+          "id": 208,
+          "value": 70
+        },
+        {
+          "id": 211,
+          "value": 87
+        },
+        {
+          "id": 214,
+          "value": 87
+        },
+        {
+          "id": 217,
+          "value": 98
+        },
+        {
+          "id": 220,
+          "value": 14
+        },
+        {
+          "id": 223,
+          "value": 55
+        },
+        {
+          "id": 226,
+          "value": 58
+        },
+        {
+          "id": 229,
+          "value": 92
+        },
+        {
+          "id": 232,
+          "value": 64
+        },
+        {
+          "id": 235,
+          "value": 64
+        },
+        {
+          "id": 238,
+          "value": 80
+        },
+        {
+          "id": 241,
+          "value": 81
+        },
+        {
+          "id": 244,
+          "value": 19
+        },
+        {
+          "id": 247,
+          "value": 97
+        },
+        {
+          "id": 250,
+          "value": 69
+        },
+        {
+          "id": 253,
+          "value": 76
+        },
+        {
+          "id": 256,
+          "value": 62
+        },
+        {
+          "id": 259,
+          "value": 14
+        },
+        {
+          "id": 262,
+          "value": 39
+        },
+        {
+          "id": 265,
+          "value": 7
+        },
+        {
+          "id": 268,
+          "value": 72
+        },
+        {
+          "id": 271,
+          "value": 10
+        },
+        {
+          "id": 274,
+          "value": 8
+        },
+        {
+          "id": 277,
+          "value": 16
+        },
+        {
+          "id": 280,
+          "value": 70
+        },
+        {
+          "id": 283,
+          "value": 33
+        },
+        {
+          "id": 286,
+          "value": 27
+        },
+        {
+          "id": 289,
+          "value": 91
+        },
+        {
+          "id": 292,
+          "value": 51
+        },
+        {
+          "id": 295,
+          "value": 56
+        },
+        {
+          "id": 298,
+          "value": 15
+        },
+        {
+          "id": 301,
+          "value": 28
+        },
+        {
+          "id": 304,
+          "value": 43
+        },
+        {
+          "id": 307,
+          "value": 75
+        },
+        {
+          "id": 310,
+          "value": 18
+        },
+        {
+          "id": 313,
+          "value": 7
+        },
+        {
+          "id": 316,
+          "value": 38
+        },
+        {
+          "id": 319,
+          "value": 50
+        },
+        {
+          "id": 322,
+          "value": 97
+        },
+        {
+          "id": 325,
+          "value": 61
+        },
+        {
+          "id": 328,
+          "value": 21
+        },
+        {
+          "id": 331,
+          "value": 80
+        },
+        {
+          "id": 334,
+          "value": 94
+        },
+        {
+          "id": 337,
+          "value": 35
+        },
+        {
+          "id": 340,
+          "value": 8
+        },
+        {
+          "id": 343,
+          "value": 32
+        },
+        {
+          "id": 346,
+          "value": 91
+        },
+        {
+          "id": 349,
+          "value": 66
+        },
+        {
+          "id": 352,
+          "value": 97
+        },
+        {
+          "id": 355,
+          "value": 26
+        },
+        {
+          "id": 358,
+          "value": 13
+        },
+        {
+          "id": 361,
+          "value": 3
+        },
+        {
+          "id": 364,
+          "value": 79
+        },
+        {
+          "id": 367,
+          "value": 68
+        },
+        {
+          "id": 370,
+          "value": 22
+        },
+        {
+          "id": 373,
+          "value": 72
+        },
+        {
+          "id": 376,
+          "value": 3
+        },
+        {
+          "id": 379,
+          "value": 70
+        },
+        {
+          "id": 382,
+          "value": 65
+        },
+        {
+          "id": 385,
+          "value": 15
+        },
+        {
+          "id": 388,
+          "value": 3
+        },
+        {
+          "id": 391,
+          "value": 90
+        },
+        {
+          "id": 394,
+          "value": 6
+        },
+        {
+          "id": 397,
+          "value": 76
+        },
+        {
+          "id": 400,
+          "value": 69
+        },
+        {
+          "id": 403,
+          "value": 22
+        },
+        {
+          "id": 406,
+          "value": 97
+        },
+        {
+          "id": 409,
+          "value": 58
+        },
+        {
+          "id": 412,
+          "value": 91
+        },
+        {
+          "id": 415,
+          "value": 20
+        },
+        {
+          "id": 418,
+          "value": 61
+        },
+        {
+          "id": 421,
+          "value": 28
+        },
+        {
+          "id": 424,
+          "value": 13
+        },
+        {
+          "id": 427,
+          "value": 80
+        },
+        {
+          "id": 430,
+          "value": 94
+        },
+        {
+          "id": 433,
+          "value": 47
+        },
+        {
+          "id": 436,
+          "value": 71
+        },
+        {
+          "id": 439,
+          "value": 95
+        },
+        {
+          "id": 442,
+          "value": 60
+        },
+        {
+          "id": 445,
+          "value": 80
+        },
+        {
+          "id": 448,
+          "value": 20
+        },
+        {
+          "id": 451,
+          "value": 43
+        },
+        {
+          "id": 454,
+          "value": 24
+        },
+        {
+          "id": 457,
+          "value": 25
+        },
+        {
+          "id": 460,
+          "value": 22
+        },
+        {
+          "id": 463,
+          "value": 42
+        },
+        {
+          "id": 466,
+          "value": 84
+        },
+        {
+          "id": 469,
+          "value": 95
+        },
+        {
+          "id": 472,
+          "value": 45
+        },
+        {
+          "id": 475,
+          "value": 66
+        },
+        {
+          "id": 478,
+          "value": 20
+        },
+        {
+          "id": 481,
+          "value": 55
+        },
+        {
+          "id": 484,
+          "value": 100
+        },
+        {
+          "id": 487,
+          "value": 73
+        },
+        {
+          "id": 490,
+          "value": 28
+        },
+        {
+          "id": 493,
+          "value": 64
+        },
+        {
+          "id": 496,
+          "value": 30
+        },
+        {
+          "id": 499,
+          "value": 56
+        },
+        {
+          "id": 502,
+          "value": 48
+        },
+        {
+          "id": 505,
+          "value": 30
+        },
+        {
+          "id": 508,
+          "value": 32
+        },
+        {
+          "id": 511,
+          "value": 34
+        },
+        {
+          "id": 514,
+          "value": 46
+        },
+        {
+          "id": 517,
+          "value": 72
+        },
+        {
+          "id": 520,
+          "value": 4
+        },
+        {
+          "id": 523,
+          "value": 66
+        },
+        {
+          "id": 526,
+          "value": 22
+        },
+        {
+          "id": 529,
+          "value": 85
+        },
+        {
+          "id": 532,
+          "value": 38
+        },
+        {
+          "id": 535,
+          "value": 43
+        },
+        {
+          "id": 538,
+          "value": 81
+        },
+        {
+          "id": 541,
+          "value": 40
+        },
+        {
+          "id": 544,
+          "value": 59
+        },
+        {
+          "id": 547,
+          "value": 47
+        },
+        {
+          "id": 550,
+          "value": 57
+        },
+        {
+          "id": 553,
+          "value": 75
+        },
+        {
+          "id": 556,
+          "value": 51
+        },
+        {
+          "id": 559,
+          "value": 15
+        },
+        {
+          "id": 562,
+          "value": 30
+        },
+        {
+          "id": 565,
+          "value": 91
+        },
+        {
+          "id": 568,
+          "value": 85
+        },
+        {
+          "id": 571,
+          "value": 45
+        },
+        {
+          "id": 574,
+          "value": 33
+        },
+        {
+          "id": 577,
+          "value": 80
+        },
+        {
+          "id": 580,
+          "value": 53
+        },
+        {
+          "id": 583,
+          "value": 85
+        },
+        {
+          "id": 586,
+          "value": 50
+        },
+        {
+          "id": 589,
+          "value": 21
+        },
+        {
+          "id": 592,
+          "value": 55
+        },
+        {
+          "id": 595,
+          "value": 14
+        },
+        {
+          "id": 598,
+          "value": 23
+        },
+        {
+          "id": 601,
+          "value": 41
+        },
+        {
+          "id": 604,
+          "value": 9
+        },
+        {
+          "id": 607,
+          "value": 20
+        }
+      ]
+    }
+  ]
+}

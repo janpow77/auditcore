@@ -1,0 +1,1196 @@
+{
+  "schema_version": 1,
+  "distribution": "auditcore_dummygenerator",
+  "version": "0.1.0",
+  "created_at": "2026-09-22T16:55:16.697897+00:00",
+  "profiles": [
+    {
+      "artifact_id": "auditcore.dummygenerator.field.first_name",
+      "type": "rulebook",
+      "title": "field: first_name",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156450+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "first_name"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "f17a8f10da6b4f1bb6fc05310fff0a0a3d7575b601e392572643e49203902e3c",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.last_name",
+      "type": "rulebook",
+      "title": "field: last_name",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156509+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "last_name"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "13de13fa745cb76ff1d12b23e8ba6a4e73083d132ead4cd034063fabe67af57a",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.street",
+      "type": "rulebook",
+      "title": "field: street",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156536+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "street"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "4db47ec0cf7984ffa0fd4f2f8aa741c67a5208d267a97b3db96fb03edfeebd46",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.house_number",
+      "type": "rulebook",
+      "title": "field: house_number",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156558+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "house_number"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "d60831265f83564d3baeecf105055e56d91966b85804df296519235fd9adc914",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.postal_code",
+      "type": "rulebook",
+      "title": "field: postal_code",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156576+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "postal_code"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "e54e3f1e3bf316ddeb2accf802887f694181b157c0e7bbdafea9bbb2f12fea02",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.city",
+      "type": "rulebook",
+      "title": "field: city",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156593+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "city"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "9c4b5d69d1b9873654ff1a4094bb1992e85804d8e62e80542c6e799d24996f93",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.iban",
+      "type": "rulebook",
+      "title": "field: iban",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156609+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "iban"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "27880b672f09674edb4e053b5ef8fdc9c274d418a648c823178aa4cdff1fc32c",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.bic",
+      "type": "rulebook",
+      "title": "field: bic",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156624+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "bic"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "01f7aab8db962aaabcff1f04bd4a328dff7837e52caa101349876d22fe0f726c",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.ustid",
+      "type": "rulebook",
+      "title": "field: ustid",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156639+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "ustid"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "9c1efc5b50c9341f12b037f9676019958fcd2816f57b5fa532c293de8a68caa2",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.phone",
+      "type": "rulebook",
+      "title": "field: phone",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156655+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "phone"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "e687fd9685d4b0579805599f4b80637e123e7ddae5cc7ba181e1b2fb06533052",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.date_range",
+      "type": "rulebook",
+      "title": "field: date_range",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156671+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "date_range"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "d18b46947993382695d6fce5ae7ab348c89265effa970b240dbe9ed01951abbb",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.date_after",
+      "type": "rulebook",
+      "title": "field: date_after",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156687+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "date_after"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "324c59f879401087cf62a83e4b5cbcc9feafbb6c7a94f7014bfcc7424e06156e",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.amount_eur",
+      "type": "rulebook",
+      "title": "field: amount_eur",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156703+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "amount_eur"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "336b588134fa40b6142a5beb0176e9c051478078c598c7d8eab15e132858ec3d",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.amount_eur_relative",
+      "type": "rulebook",
+      "title": "field: amount_eur_relative",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156719+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "amount_eur_relative"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "a0e172b59ddc008a87586e2b1badc01128d438b3c0b20b92b0cd81acb8b643f4",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.invoice_no",
+      "type": "rulebook",
+      "title": "field: invoice_no",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156734+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "invoice_no"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "74471921c95effe80fc0d1e78879fd24d16d1c3d1d5cab482ed2638fc0d8d0e7",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.company",
+      "type": "rulebook",
+      "title": "field: company",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156750+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "company"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "2de416bdeef1da36a7b3df2c67bed2d22c4dda83c2b2a8fd3b95b8c5d0a50e14",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.purpose_text",
+      "type": "rulebook",
+      "title": "field: purpose_text",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156766+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "purpose_text"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "efb72bd84f107cb9f7d4b3b1e635c88c5f82f4d802f7517b68d49da2d5346de7",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.weighted_list",
+      "type": "rulebook",
+      "title": "field: weighted_list",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156781+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "weighted_list"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "d95450c5d72a989880e2b56491a0c37c45bb9105da8e89c068de3ce1f5dd2166",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.number",
+      "type": "rulebook",
+      "title": "field: number",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156797+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "number"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "11babd87fb10ee8d1193e5b66759ecf88fcaa6b0279981bf6987c86e6b3310e0",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.boolean",
+      "type": "rulebook",
+      "title": "field: boolean",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156812+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "boolean"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "1746199d6f747bb30e654536b12716db764e994917856abe29c77bd160f17c3c",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.field.auto_increment",
+      "type": "rulebook",
+      "title": "field: auto_increment",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156828+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.generate_field",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.generate_field",
+        "configuration": {
+          "field_type": "auto_increment"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "08409bd3423b392e9357a00c7095116a224c6a04df809f352faca899f3d68e4e",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.deviation.NONE",
+      "type": "rulebook",
+      "title": "deviation: NONE",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156844+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.apply_deviation",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.apply_deviation",
+        "configuration": {
+          "scenario": "NONE"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "760bde1ed0cabb38a3ae05dd1bd2c6204d716003dbf788bbff3b5aa019ae3b5f",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.deviation.FOERDERFAEHIG_GT_GEZAHLT",
+      "type": "rulebook",
+      "title": "deviation: FOERDERFAEHIG_GT_GEZAHLT",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156860+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.apply_deviation",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.apply_deviation",
+        "configuration": {
+          "scenario": "FOERDERFAEHIG_GT_GEZAHLT"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "c99559cdadb3f97b7b683558b2b6a8f5d8e973f9c0820bc5864b48358cbb8b73",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.deviation.BEZAHLT_VOR_RECHNUNG",
+      "type": "rulebook",
+      "title": "deviation: BEZAHLT_VOR_RECHNUNG",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156876+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.apply_deviation",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.apply_deviation",
+        "configuration": {
+          "scenario": "BEZAHLT_VOR_RECHNUNG"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "2ce74d7b551dc369706f6e6ec9972b07e2059cac0692f16970b1429d86fae79a",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.deviation.NEGATIVE_AMOUNTS",
+      "type": "rulebook",
+      "title": "deviation: NEGATIVE_AMOUNTS",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156891+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.apply_deviation",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.apply_deviation",
+        "configuration": {
+          "scenario": "NEGATIVE_AMOUNTS"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "67323958c1db4837b2ebd3397ed80e4ddbbf7b498854dd91223b0491a5c39d65",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.catalog.DE",
+      "type": "template",
+      "title": "Synthetic country catalog DE",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156915+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.__init__",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.__init__",
+        "configuration": {
+          "country": "DE"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "4d4f865f7c5911a032f746fc48ea2183ca609a8f4c644e0a0d6f4f3b85c288da",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    },
+    {
+      "artifact_id": "auditcore.dummygenerator.catalog.AT",
+      "type": "template",
+      "title": "Synthetic country catalog AT",
+      "version": "0.1.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T16:55:16.697897+00:00",
+      "updated_at": "2026-09-22T16:56:47.156932+00:00",
+      "owner": {
+        "repository_owner": "janpow77",
+        "organization": "UNKNOWN"
+      },
+      "authors": {
+        "source_commit_author": "janpow77",
+        "metadata_prepared_by": "Codex",
+        "organization": "UNKNOWN"
+      },
+      "predecessor": {
+        "kind": "legacy_source_revision",
+        "repository": "janpow77/flowaudit_testdatengenerator_frontend",
+        "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
+        "path": "backend/generator.py",
+        "symbol": "TestDataGenerator.__init__",
+        "source_sha256": "fce760d2dd06b4fe5438120e3de3f596ef8a6f7c4cbf9bdc28be7b0deb0e6780",
+        "profile_version": "UNVERSIONED_LEGACY"
+      },
+      "change_reason": "Extract existing behavior into an independently installable distribution; technical worker corrections are documented separately.",
+      "content": {
+        "entrypoint": "auditcore_dummygenerator.TestDataGenerator.__init__",
+        "configuration": {
+          "country": "AT"
+        },
+        "implementation_sha256": "0f58f13e22bb780881e94523859b2c4ac46dcf70806dfb0a51b2294b44b58dd5",
+        "custom_parameters": "Caller supplied; record separately in each run manifest"
+      },
+      "content_hash": "26a8f46e784c34877a59e304384c1d439a6e84b2fcd8236489d5a8a2449b419e",
+      "review": {
+        "status": "TECHNICAL_TESTS_EXECUTED",
+        "human_release_approval": "NOT_GRANTED",
+        "policy": "docs/profile-versioning.md",
+        "evidence": "tests/test_profile_metadata.py and tests/test_generator.py; release approval is separate"
+      },
+      "release_policy": "docs/profile-versioning.md"
+    }
+  ]
+}

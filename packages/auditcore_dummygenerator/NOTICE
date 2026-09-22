@@ -1,0 +1,25 @@
+auditcore_dummygenerator 0.1.0 — source attribution and authorization
+
+The generator implementation derives from:
+Repository: janpow77/flowaudit_testdatengenerator_frontend
+Commit: 05bc5ac560dfff3bc7181323240745215492d09a
+Path: backend/generator.py
+Git blob: a9204a0883948e3f3626db12e23ea120983fc901
+Source commit author: janpow77
+Observed repository contributors: janpow77, claude
+
+The private source repository had no identified license grant at the time
+of inspection (historical source-license status: UNKNOWN). On 2026-09-22,
+the rights holder explicitly confirmed their authority and authorized this
+extracted generator under MIT: "Ja, ich bin berechtigt und gebe beide unter
+MIT frei". Status: USER_AUTHORIZED_MIT. The other source in that confirmation
+was the separately packaged invoice demo generator.
+
+The authorization here covers the above backend/generator.py revision and
+its extraction into auditcore_dummygenerator. It does not claim a blanket
+relicensing of the entire original repository. The included LICENSE supplies
+the MIT terms; source attribution and this authorization record are retained.
+
+README.md, docs/profile-versioning.md and packaged provenance.json document
+technical changes, original observations and draft profile versioning.
+Local package tests do not authorize production deployment of a consumer.

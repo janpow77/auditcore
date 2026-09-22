@@ -1,0 +1,8 @@
+include LICENSE
+include NOTICE
+include README.md
+recursive-include tests *.py *.json
+recursive-include tools *.py
+include auditcore-context.json
+include provenance.json
+recursive-include docs *.md
