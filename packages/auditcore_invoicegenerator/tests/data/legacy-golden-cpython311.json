@@ -1,0 +1,6078 @@
+{
+  "status": "OBSERVED",
+  "source_repository": "janpow77/flowinvoice",
+  "source_commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "source_path": "docs/demo_data/generate_demo_invoices.py",
+  "source_sha256": "c5ee1e208b6dfb3fa830536ae82763f3dc279c5e90129789c644249750cce379",
+  "observed_at": "2026-09-22T17:12:08.445722+00:00",
+  "clock": "No wall-clock reads in selected functions; date ranges fixed by source constants",
+  "uuid": "NOT_APPLICABLE: selected source contains no UUID generation",
+  "rng": "Python random.seed(case.seed), full post-call RNG state SHA256 recorded",
+  "cases": [
+    {
+      "name": "country-GB",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Johnson IT Services Ltd.",
+          "vat_id": "GB123456789",
+          "country": "GB",
+          "city": "Cambridge",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "IV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Johnson IT Services Ltd.",
+          "vat_id": "GB123456789",
+          "country": "GB",
+          "city": "Cambridge",
+          "address": "148 Business Street, Cambridge"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.2,
+          "vat_amount": 2055.48,
+          "total": 12332.86,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-DE",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Müller Technologie GmbH",
+          "vat_id": "DE123456789",
+          "country": "DE",
+          "city": "Munich",
+          "category": "hardware"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Müller Technologie GmbH",
+          "vat_id": "DE123456789",
+          "country": "DE",
+          "city": "Munich",
+          "address": "148 Business Street, Munich"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Storage System",
+            "quantity": 1,
+            "unit_price": 3953.45,
+            "amount": 3953.45
+          },
+          {
+            "description": "Server Hardware - ProLiant DL380",
+            "quantity": 1,
+            "unit_price": 7334.0,
+            "amount": 7334.0
+          },
+          {
+            "description": "Measurement Instruments",
+            "quantity": 1,
+            "unit_price": 1932.88,
+            "amount": 1932.88
+          },
+          {
+            "description": "Sensor Array Components",
+            "quantity": 1,
+            "unit_price": 2029.4,
+            "amount": 2029.4
+          },
+          {
+            "description": "Server Hardware - Precision 7920",
+            "quantity": 1,
+            "unit_price": 2415.8,
+            "amount": 2415.8
+          }
+        ],
+        "amounts": {
+          "subtotal": 17665.530000000002,
+          "vat_rate": 0.19,
+          "vat_amount": 3356.45,
+          "total": 21021.98,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "hardware"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-FR",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Dupont Technologies SARL",
+          "vat_id": "FR12345678901",
+          "country": "FR",
+          "city": "Paris",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Dupont Technologies SARL",
+          "vat_id": "FR12345678901",
+          "country": "FR",
+          "city": "Paris",
+          "address": "148 Business Street, Paris"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.2,
+          "vat_amount": 2055.48,
+          "total": 12332.86,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-NL",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Amsterdam Digital BV",
+          "vat_id": "NL123456789B01",
+          "country": "NL",
+          "city": "Amsterdam",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "FN-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Amsterdam Digital BV",
+          "vat_id": "NL123456789B01",
+          "country": "NL",
+          "city": "Amsterdam",
+          "address": "148 Business Street, Amsterdam"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.21,
+          "vat_amount": 2158.25,
+          "total": 12435.63,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-BE",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Brussels Innovation SPRL",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "category": "consulting"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Brussels Innovation SPRL",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "181 Business Street, Brussels"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Business Process Analysis",
+            "quantity": 1,
+            "unit_price": 3837.84,
+            "amount": 3837.84
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 7382.5,
+            "amount": 7382.5
+          },
+          {
+            "description": "Feasibility Study",
+            "quantity": 1,
+            "unit_price": 3691.52,
+            "amount": 3691.52
+          },
+          {
+            "description": "Regulatory Compliance Consulting",
+            "quantity": 1,
+            "unit_price": 2464.53,
+            "amount": 2464.53
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 874.65,
+            "amount": 874.65
+          }
+        ],
+        "amounts": {
+          "subtotal": 18251.04,
+          "vat_rate": 0.21,
+          "vat_amount": 3832.72,
+          "total": 22083.76,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-SE",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "FS-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "address": "148 Business Street, Stockholm"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.25,
+          "vat_amount": 2569.34,
+          "total": 12846.72,
+          "currency": "SEK"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-IT",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Milano Tecnologia SRL",
+          "vat_id": "IT12345678901",
+          "country": "IT",
+          "city": "Milan",
+          "category": "hardware"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Milano Tecnologia SRL",
+          "vat_id": "IT12345678901",
+          "country": "IT",
+          "city": "Milan",
+          "address": "148 Business Street, Milan"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Storage System",
+            "quantity": 1,
+            "unit_price": 3953.45,
+            "amount": 3953.45
+          },
+          {
+            "description": "Server Hardware - ProLiant DL380",
+            "quantity": 1,
+            "unit_price": 7334.0,
+            "amount": 7334.0
+          },
+          {
+            "description": "Measurement Instruments",
+            "quantity": 1,
+            "unit_price": 1932.88,
+            "amount": 1932.88
+          },
+          {
+            "description": "Sensor Array Components",
+            "quantity": 1,
+            "unit_price": 2029.4,
+            "amount": 2029.4
+          },
+          {
+            "description": "Server Hardware - Precision 7920",
+            "quantity": 1,
+            "unit_price": 2415.8,
+            "amount": 2415.8
+          }
+        ],
+        "amounts": {
+          "subtotal": 17665.530000000002,
+          "vat_rate": 0.22,
+          "vat_amount": 3886.42,
+          "total": 21551.95,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "hardware"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-ES",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Madrid Tecnología SL",
+          "vat_id": "ESA12345678",
+          "country": "ES",
+          "city": "Madrid",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Madrid Tecnología SL",
+          "vat_id": "ESA12345678",
+          "country": "ES",
+          "city": "Madrid",
+          "address": "148 Business Street, Madrid"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.21,
+          "vat_amount": 2158.25,
+          "total": 12435.63,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-AT",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Wien Technologie GmbH",
+          "vat_id": "ATU12345678",
+          "country": "AT",
+          "city": "Vienna",
+          "category": "hardware"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Wien Technologie GmbH",
+          "vat_id": "ATU12345678",
+          "country": "AT",
+          "city": "Vienna",
+          "address": "148 Business Street, Vienna"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Storage System",
+            "quantity": 1,
+            "unit_price": 3953.45,
+            "amount": 3953.45
+          },
+          {
+            "description": "Server Hardware - ProLiant DL380",
+            "quantity": 1,
+            "unit_price": 7334.0,
+            "amount": 7334.0
+          },
+          {
+            "description": "Measurement Instruments",
+            "quantity": 1,
+            "unit_price": 1932.88,
+            "amount": 1932.88
+          },
+          {
+            "description": "Sensor Array Components",
+            "quantity": 1,
+            "unit_price": 2029.4,
+            "amount": 2029.4
+          },
+          {
+            "description": "Server Hardware - Precision 7920",
+            "quantity": 1,
+            "unit_price": 2415.8,
+            "amount": 2415.8
+          }
+        ],
+        "amounts": {
+          "subtotal": 17665.530000000002,
+          "vat_rate": 0.2,
+          "vat_amount": 3533.11,
+          "total": 21198.64,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "hardware"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-PL",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Warsaw Tech Solutions",
+          "vat_id": "PL1234567890",
+          "country": "PL",
+          "city": "Warsaw",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2026-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Warsaw Tech Solutions",
+          "vat_id": "PL1234567890",
+          "country": "PL",
+          "city": "Warsaw",
+          "address": "148 Business Street, Warsaw"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.23,
+          "vat_amount": 2363.8,
+          "total": 12641.18,
+          "currency": "PLN"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "country-IE",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Dublin Software Ltd.",
+          "vat_id": "IE1234567WA",
+          "country": "IE",
+          "city": "Dublin",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Dublin Software Ltd.",
+          "vat_id": "IE1234567WA",
+          "country": "IE",
+          "city": "Dublin",
+          "address": "181 Business Street, Dublin"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.23,
+          "vat_amount": 2363.8,
+          "total": 12641.18,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-PT",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Lisboa Tecnologia Lda",
+          "vat_id": "PT123456789",
+          "country": "PT",
+          "city": "Lisbon",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Lisboa Tecnologia Lda",
+          "vat_id": "PT123456789",
+          "country": "PT",
+          "city": "Lisbon",
+          "address": "181 Business Street, Lisbon"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.23,
+          "vat_amount": 2363.8,
+          "total": 12641.18,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-DK",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Copenhagen Tech ApS",
+          "vat_id": "DK12345678",
+          "country": "DK",
+          "city": "Copenhagen",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Copenhagen Tech ApS",
+          "vat_id": "DK12345678",
+          "country": "DK",
+          "city": "Copenhagen",
+          "address": "181 Business Street, Copenhagen"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.25,
+          "vat_amount": 2569.34,
+          "total": 12846.72,
+          "currency": "DKK"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-FI",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Helsinki Software Oy",
+          "vat_id": "FI12345678",
+          "country": "FI",
+          "city": "Helsinki",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Helsinki Software Oy",
+          "vat_id": "FI12345678",
+          "country": "FI",
+          "city": "Helsinki",
+          "address": "181 Business Street, Helsinki"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.24,
+          "vat_amount": 2466.57,
+          "total": 12743.95,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-CZ",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Praha Software s.r.o.",
+          "vat_id": "CZ12345678",
+          "country": "CZ",
+          "city": "Prague",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Praha Software s.r.o.",
+          "vat_id": "CZ12345678",
+          "country": "CZ",
+          "city": "Prague",
+          "address": "181 Business Street, Prague"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.21,
+          "vat_amount": 2158.25,
+          "total": 12435.63,
+          "currency": "CZK"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-GR",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Athens Tech Solutions",
+          "vat_id": "EL123456789",
+          "country": "GR",
+          "city": "Athens",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Athens Tech Solutions",
+          "vat_id": "EL123456789",
+          "country": "GR",
+          "city": "Athens",
+          "address": "181 Business Street, Athens"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.24,
+          "vat_amount": 2466.57,
+          "total": 12743.95,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-HU",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Budapest Software Kft",
+          "vat_id": "HU12345678",
+          "country": "HU",
+          "city": "Budapest",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Budapest Software Kft",
+          "vat_id": "HU12345678",
+          "country": "HU",
+          "city": "Budapest",
+          "address": "181 Business Street, Budapest"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.27,
+          "vat_amount": 2774.89,
+          "total": 13052.27,
+          "currency": "HUF"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-RO",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Bucharest Tech SRL",
+          "vat_id": "RO12345678",
+          "country": "RO",
+          "city": "Bucharest",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Bucharest Tech SRL",
+          "vat_id": "RO12345678",
+          "country": "RO",
+          "city": "Bucharest",
+          "address": "181 Business Street, Bucharest"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.19,
+          "vat_amount": 1952.7,
+          "total": 12230.08,
+          "currency": "RON"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-LU",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Luxembourg Consulting SARL",
+          "vat_id": "LU12345678",
+          "country": "LU",
+          "city": "Luxembourg",
+          "category": "consulting"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Luxembourg Consulting SARL",
+          "vat_id": "LU12345678",
+          "country": "LU",
+          "city": "Luxembourg",
+          "address": "181 Business Street, Luxembourg"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Business Process Analysis",
+            "quantity": 1,
+            "unit_price": 3837.84,
+            "amount": 3837.84
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 7382.5,
+            "amount": 7382.5
+          },
+          {
+            "description": "Feasibility Study",
+            "quantity": 1,
+            "unit_price": 3691.52,
+            "amount": 3691.52
+          },
+          {
+            "description": "Regulatory Compliance Consulting",
+            "quantity": 1,
+            "unit_price": 2464.53,
+            "amount": 2464.53
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 874.65,
+            "amount": 874.65
+          }
+        ],
+        "amounts": {
+          "subtotal": 18251.04,
+          "vat_rate": 0.17,
+          "vat_amount": 3102.68,
+          "total": 21353.72,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-CY",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Cyprus Tech Ltd",
+          "vat_id": "CY12345678X",
+          "country": "CY",
+          "city": "Nicosia",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Cyprus Tech Ltd",
+          "vat_id": "CY12345678X",
+          "country": "CY",
+          "city": "Nicosia",
+          "address": "181 Business Street, Nicosia"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.19,
+          "vat_amount": 1952.7,
+          "total": 12230.08,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-MT",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Malta IT Services",
+          "vat_id": "MT12345678",
+          "country": "MT",
+          "city": "Valletta",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Malta IT Services",
+          "vat_id": "MT12345678",
+          "country": "MT",
+          "city": "Valletta",
+          "address": "181 Business Street, Valletta"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.18,
+          "vat_amount": 1849.93,
+          "total": 12127.31,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-SI",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Slovenia Engineering d.o.o.",
+          "vat_id": "SI12345678",
+          "country": "SI",
+          "city": "Ljubljana",
+          "category": "installation"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Slovenia Engineering d.o.o.",
+          "vat_id": "SI12345678",
+          "country": "SI",
+          "city": "Ljubljana",
+          "address": "181 Business Street, Ljubljana"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "System Integration",
+            "quantity": 1,
+            "unit_price": 7484.98,
+            "amount": 7484.98
+          },
+          {
+            "description": "Equipment Installation Services",
+            "quantity": 1,
+            "unit_price": 4775.68,
+            "amount": 4775.68
+          },
+          {
+            "description": "Commissioning Services",
+            "quantity": 1,
+            "unit_price": 2262.99,
+            "amount": 2262.99
+          },
+          {
+            "description": "On-site Technical Support",
+            "quantity": 1,
+            "unit_price": 1464.0,
+            "amount": 1464.0
+          },
+          {
+            "description": "Equipment Installation Services",
+            "quantity": 1,
+            "unit_price": 1492.64,
+            "amount": 1492.64
+          }
+        ],
+        "amounts": {
+          "subtotal": 17480.29,
+          "vat_rate": 0.22,
+          "vat_amount": 3845.66,
+          "total": 21325.95,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "installation"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-SK",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Slovakia Software s.r.o.",
+          "vat_id": "SK1234567890",
+          "country": "SK",
+          "city": "Bratislava",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Slovakia Software s.r.o.",
+          "vat_id": "SK1234567890",
+          "country": "SK",
+          "city": "Bratislava",
+          "address": "181 Business Street, Bratislava"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.2,
+          "vat_amount": 2055.48,
+          "total": 12332.86,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-EE",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Estonia Digital OÜ",
+          "vat_id": "EE123456789",
+          "country": "EE",
+          "city": "Tallinn",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Estonia Digital OÜ",
+          "vat_id": "EE123456789",
+          "country": "EE",
+          "city": "Tallinn",
+          "address": "181 Business Street, Tallinn"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.22,
+          "vat_amount": 2261.02,
+          "total": 12538.4,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-LV",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Latvia Tech SIA",
+          "vat_id": "LV12345678901",
+          "country": "LV",
+          "city": "Riga",
+          "category": "hardware"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Latvia Tech SIA",
+          "vat_id": "LV12345678901",
+          "country": "LV",
+          "city": "Riga",
+          "address": "181 Business Street, Riga"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Storage System",
+            "quantity": 1,
+            "unit_price": 3953.45,
+            "amount": 3953.45
+          },
+          {
+            "description": "Server Hardware - ProLiant DL380",
+            "quantity": 1,
+            "unit_price": 7334.0,
+            "amount": 7334.0
+          },
+          {
+            "description": "Measurement Instruments",
+            "quantity": 1,
+            "unit_price": 1932.88,
+            "amount": 1932.88
+          },
+          {
+            "description": "Sensor Array Components",
+            "quantity": 1,
+            "unit_price": 2029.4,
+            "amount": 2029.4
+          },
+          {
+            "description": "Server Hardware - Precision 7920",
+            "quantity": 1,
+            "unit_price": 2415.8,
+            "amount": 2415.8
+          }
+        ],
+        "amounts": {
+          "subtotal": 17665.530000000002,
+          "vat_rate": 0.21,
+          "vat_amount": 3709.76,
+          "total": 21375.29,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "hardware"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-LT",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Lithuania Consulting UAB",
+          "vat_id": "LT123456789012",
+          "country": "LT",
+          "city": "Vilnius",
+          "category": "consulting"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Lithuania Consulting UAB",
+          "vat_id": "LT123456789012",
+          "country": "LT",
+          "city": "Vilnius",
+          "address": "181 Business Street, Vilnius"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Business Process Analysis",
+            "quantity": 1,
+            "unit_price": 3837.84,
+            "amount": 3837.84
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 7382.5,
+            "amount": 7382.5
+          },
+          {
+            "description": "Feasibility Study",
+            "quantity": 1,
+            "unit_price": 3691.52,
+            "amount": 3691.52
+          },
+          {
+            "description": "Regulatory Compliance Consulting",
+            "quantity": 1,
+            "unit_price": 2464.53,
+            "amount": 2464.53
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 874.65,
+            "amount": 874.65
+          }
+        ],
+        "amounts": {
+          "subtotal": 18251.04,
+          "vat_rate": 0.21,
+          "vat_amount": 3832.72,
+          "total": 22083.76,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-HR",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Croatia Engineering d.o.o.",
+          "vat_id": "HR12345678901",
+          "country": "HR",
+          "city": "Zagreb",
+          "category": "installation"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Croatia Engineering d.o.o.",
+          "vat_id": "HR12345678901",
+          "country": "HR",
+          "city": "Zagreb",
+          "address": "181 Business Street, Zagreb"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "System Integration",
+            "quantity": 1,
+            "unit_price": 7484.98,
+            "amount": 7484.98
+          },
+          {
+            "description": "Equipment Installation Services",
+            "quantity": 1,
+            "unit_price": 4775.68,
+            "amount": 4775.68
+          },
+          {
+            "description": "Commissioning Services",
+            "quantity": 1,
+            "unit_price": 2262.99,
+            "amount": 2262.99
+          },
+          {
+            "description": "On-site Technical Support",
+            "quantity": 1,
+            "unit_price": 1464.0,
+            "amount": 1464.0
+          },
+          {
+            "description": "Equipment Installation Services",
+            "quantity": 1,
+            "unit_price": 1492.64,
+            "amount": 1492.64
+          }
+        ],
+        "amounts": {
+          "subtotal": 17480.29,
+          "vat_rate": 0.25,
+          "vat_amount": 4370.07,
+          "total": 21850.36,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "installation"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "country-BG",
+      "function": "generate_invoice",
+      "args": [
+        7,
+        {
+          "name": "Bulgaria Software EOOD",
+          "vat_id": "BG123456789",
+          "country": "BG",
+          "city": "Sofia",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00007",
+        "invoice_number": "INV-2025-0007",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Bulgaria Software EOOD",
+          "vat_id": "BG123456789",
+          "country": "BG",
+          "city": "Sofia",
+          "address": "181 Business Street, Sofia"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.2,
+          "vat_amount": 2055.48,
+          "total": 12332.86,
+          "currency": "BGN"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "problem-sanctions-0",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Petrov Industrial Supply Ltd.",
+          "vat_id": "",
+          "country": "RU",
+          "city": "Moscow",
+          "category": "equipment",
+          "address": "42 Lenina Street, Moscow 125009"
+        },
+        "sanctions"
+      ],
+      "seed": 0,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2026-0012",
+        "invoice_date": "2025-07-31",
+        "supply_date": "2025-07-18",
+        "due_date": "2025-08-30",
+        "supplier": {
+          "name": "Petrov Industrial Supply Ltd.",
+          "vat_id": "",
+          "country": "RU",
+          "city": "Moscow",
+          "address": "42 Lenina Street, Moscow 125009"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Communication Equipment",
+            "quantity": 1,
+            "unit_price": 1073.53,
+            "amount": 1073.53
+          },
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 1513.7,
+            "amount": 1513.7
+          },
+          {
+            "description": "Monitoring Equipment",
+            "quantity": 1,
+            "unit_price": 2671.01,
+            "amount": 2671.01
+          },
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 1108.45,
+            "amount": 1108.45
+          }
+        ],
+        "amounts": {
+          "subtotal": 6366.69,
+          "vat_rate": 0.0,
+          "vat_amount": 0.0,
+          "total": 6366.69,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP4",
+          "work_package_name": "Dissemination",
+          "category": "equipment"
+        },
+        "metadata": {
+          "problem_type": "sanctions",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "baeb7c6fffd84b57c15c2d6eebbed0d47e5d842a0a921f56763f4cac58ca3353"
+    },
+    {
+      "name": "problem-sanctions-42",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Petrov Industrial Supply Ltd.",
+          "vat_id": "",
+          "country": "RU",
+          "city": "Moscow",
+          "category": "equipment",
+          "address": "42 Lenina Street, Moscow 125009"
+        },
+        "sanctions"
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2025-0012",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Petrov Industrial Supply Ltd.",
+          "vat_id": "",
+          "country": "RU",
+          "city": "Moscow",
+          "address": "42 Lenina Street, Moscow 125009"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 959.46,
+            "amount": 959.46
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 2387.84,
+            "amount": 2387.84
+          },
+          {
+            "description": "Safety Equipment",
+            "quantity": 3,
+            "unit_price": 726.51,
+            "amount": 2179.53
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 346.09,
+            "amount": 346.09
+          },
+          {
+            "description": "Safety Equipment",
+            "quantity": 1,
+            "unit_price": 440.8,
+            "amount": 440.8
+          }
+        ],
+        "amounts": {
+          "subtotal": 6313.72,
+          "vat_rate": 0.0,
+          "vat_amount": 0.0,
+          "total": 6313.72,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "equipment"
+        },
+        "metadata": {
+          "problem_type": "sanctions",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "7aa673bd7ddcaa8a152353174a9159a99c29b459c20f35edab86e01de79791bb"
+    },
+    {
+      "name": "problem-sanctions-123",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Petrov Industrial Supply Ltd.",
+          "vat_id": "",
+          "country": "RU",
+          "city": "Moscow",
+          "category": "equipment",
+          "address": "42 Lenina Street, Moscow 125009"
+        },
+        "sanctions"
+      ],
+      "seed": 123,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2025-0012",
+        "invoice_date": "2025-02-10",
+        "supply_date": "2025-02-05",
+        "due_date": "2025-03-12",
+        "supplier": {
+          "name": "Petrov Industrial Supply Ltd.",
+          "vat_id": "",
+          "country": "RU",
+          "city": "Moscow",
+          "address": "42 Lenina Street, Moscow 125009"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Presentation Equipment",
+            "quantity": 1,
+            "unit_price": 2600.63,
+            "amount": 2600.63
+          },
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 1830.63,
+            "amount": 1830.63
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 1875.07,
+            "amount": 1875.07
+          }
+        ],
+        "amounts": {
+          "subtotal": 6306.33,
+          "vat_rate": 0.0,
+          "vat_amount": 0.0,
+          "total": 6306.33,
+          "currency": "EUR"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "equipment"
+        },
+        "metadata": {
+          "problem_type": "sanctions",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "68f8fcf563356c66b0d33af2baa0e1081bc207ccaf0a17de3a8c157a8c5f7b77"
+    },
+    {
+      "name": "problem-ted_concentration-0",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Consulting Partners Europe Ltd.",
+          "vat_id": "GB111222333",
+          "country": "GB",
+          "city": "London",
+          "category": "consulting",
+          "address": "200 Whitehall Place, London SW1A 2AW"
+        },
+        "ted_concentration"
+      ],
+      "seed": 0,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "IV-2026-0012",
+        "invoice_date": "2025-07-31",
+        "supply_date": "2025-07-18",
+        "due_date": "2025-08-30",
+        "supplier": {
+          "name": "Consulting Partners Europe Ltd.",
+          "vat_id": "GB111222333",
+          "country": "GB",
+          "city": "London",
+          "address": "200 Whitehall Place, London SW1A 2AW"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Feasibility Study",
+            "quantity": 1,
+            "unit_price": 8918.59,
+            "amount": 8918.59
+          },
+          {
+            "description": "Technical Advisory (49h)",
+            "quantity": 1,
+            "unit_price": 11352.73,
+            "amount": 11352.73
+          },
+          {
+            "description": "Regulatory Compliance Consulting",
+            "quantity": 1,
+            "unit_price": 3107.09,
+            "amount": 3107.09
+          },
+          {
+            "description": "Business Process Analysis",
+            "quantity": 1,
+            "unit_price": 636.58,
+            "amount": 636.58
+          }
+        ],
+        "amounts": {
+          "subtotal": 24014.99,
+          "vat_rate": 0.2,
+          "vat_amount": 4803.0,
+          "total": 28817.99,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP4",
+          "work_package_name": "Dissemination",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": "ted_concentration",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "baeb7c6fffd84b57c15c2d6eebbed0d47e5d842a0a921f56763f4cac58ca3353"
+    },
+    {
+      "name": "problem-ted_concentration-42",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Consulting Partners Europe Ltd.",
+          "vat_id": "GB111222333",
+          "country": "GB",
+          "city": "London",
+          "category": "consulting",
+          "address": "200 Whitehall Place, London SW1A 2AW"
+        },
+        "ted_concentration"
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "IV-2026-0012",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Consulting Partners Europe Ltd.",
+          "vat_id": "GB111222333",
+          "country": "GB",
+          "city": "London",
+          "address": "200 Whitehall Place, London SW1A 2AW"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Business Process Analysis",
+            "quantity": 1,
+            "unit_price": 3837.84,
+            "amount": 3837.84
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 9551.36,
+            "amount": 9551.36
+          },
+          {
+            "description": "Feasibility Study",
+            "quantity": 1,
+            "unit_price": 4183.32,
+            "amount": 4183.32
+          },
+          {
+            "description": "Regulatory Compliance Consulting",
+            "quantity": 1,
+            "unit_price": 3171.16,
+            "amount": 3171.16
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 2368.33,
+            "amount": 2368.33
+          }
+        ],
+        "amounts": {
+          "subtotal": 23112.010000000002,
+          "vat_rate": 0.2,
+          "vat_amount": 4622.4,
+          "total": 27734.41,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": "ted_concentration",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "problem-ted_concentration-123",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Consulting Partners Europe Ltd.",
+          "vat_id": "GB111222333",
+          "country": "GB",
+          "city": "London",
+          "category": "consulting",
+          "address": "200 Whitehall Place, London SW1A 2AW"
+        },
+        "ted_concentration"
+      ],
+      "seed": 123,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "SI-2026-0012",
+        "invoice_date": "2025-02-10",
+        "supply_date": "2025-02-05",
+        "due_date": "2025-03-12",
+        "supplier": {
+          "name": "Consulting Partners Europe Ltd.",
+          "vat_id": "GB111222333",
+          "country": "GB",
+          "city": "London",
+          "address": "200 Whitehall Place, London SW1A 2AW"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Market Research & Analysis",
+            "quantity": 1,
+            "unit_price": 10446.91,
+            "amount": 10446.91
+          },
+          {
+            "description": "Project Management Consulting",
+            "quantity": 1,
+            "unit_price": 9153.15,
+            "amount": 9153.15
+          },
+          {
+            "description": "Technical Advisory (67h)",
+            "quantity": 1,
+            "unit_price": 4125.6,
+            "amount": 4125.6
+          },
+          {
+            "description": "Technical Advisory (65h)",
+            "quantity": 1,
+            "unit_price": 220.21,
+            "amount": 220.21
+          }
+        ],
+        "amounts": {
+          "subtotal": 23945.869999999995,
+          "vat_rate": 0.2,
+          "vat_amount": 4789.17,
+          "total": 28735.04,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": "ted_concentration",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "6331143d38607a566a1e3deae3ebc091bb75944f9356c4310fa18dc0a41f683f"
+    },
+    {
+      "name": "problem-duplicate-0",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Smith Office Supplies Ltd.",
+          "vat_id": "GB987654321",
+          "country": "GB",
+          "city": "Manchester",
+          "category": "equipment"
+        },
+        "duplicate"
+      ],
+      "seed": 0,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "IV-2025-0012",
+        "invoice_date": "2025-07-31",
+        "supply_date": "2025-07-18",
+        "due_date": "2025-08-30",
+        "supplier": {
+          "name": "Smith Office Supplies Ltd.",
+          "vat_id": "GB987654321",
+          "country": "GB",
+          "city": "Manchester",
+          "address": "49 Business Street, Manchester"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Communication Equipment",
+            "quantity": 1,
+            "unit_price": 1073.53,
+            "amount": 1073.53
+          },
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 1513.7,
+            "amount": 1513.7
+          },
+          {
+            "description": "Monitoring Equipment",
+            "quantity": 1,
+            "unit_price": 3976.61,
+            "amount": 3976.61
+          },
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 1848.79,
+            "amount": 1848.79
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 1177.24,
+            "amount": 1177.24
+          }
+        ],
+        "amounts": {
+          "subtotal": 9589.87,
+          "vat_rate": 0.2,
+          "vat_amount": 1917.97,
+          "total": 11507.84,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP4",
+          "work_package_name": "Dissemination",
+          "category": "equipment"
+        },
+        "metadata": {
+          "problem_type": "duplicate",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "39e4ee0715c6b8995ed24bf30eda6d0c746a7e9a88a4ea4929758bbb07e65806"
+    },
+    {
+      "name": "problem-duplicate-42",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Smith Office Supplies Ltd.",
+          "vat_id": "GB987654321",
+          "country": "GB",
+          "city": "Manchester",
+          "category": "equipment"
+        },
+        "duplicate"
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2025-0012",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Smith Office Supplies Ltd.",
+          "vat_id": "GB987654321",
+          "country": "GB",
+          "city": "Manchester",
+          "address": "198 Business Street, Manchester"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 959.46,
+            "amount": 959.46
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 2387.84,
+            "amount": 2387.84
+          },
+          {
+            "description": "Safety Equipment",
+            "quantity": 3,
+            "unit_price": 726.51,
+            "amount": 2179.53
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 3282.59,
+            "amount": 3282.59
+          },
+          {
+            "description": "Communication Equipment",
+            "quantity": 1,
+            "unit_price": 682.8,
+            "amount": 682.8
+          }
+        ],
+        "amounts": {
+          "subtotal": 9492.22,
+          "vat_rate": 0.2,
+          "vat_amount": 1898.44,
+          "total": 11390.66,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "equipment"
+        },
+        "metadata": {
+          "problem_type": "duplicate",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "6b4fab3cc442607646977f633e0893e9b434a170ecdd27bca26d4dd460418202"
+    },
+    {
+      "name": "problem-duplicate-123",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Smith Office Supplies Ltd.",
+          "vat_id": "GB987654321",
+          "country": "GB",
+          "city": "Manchester",
+          "category": "equipment"
+        },
+        "duplicate"
+      ],
+      "seed": 123,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "SI-2026-0012",
+        "invoice_date": "2025-02-10",
+        "supply_date": "2025-02-05",
+        "due_date": "2025-03-12",
+        "supplier": {
+          "name": "Smith Office Supplies Ltd.",
+          "vat_id": "GB987654321",
+          "country": "GB",
+          "city": "Manchester",
+          "address": "134 Business Street, Manchester"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Presentation Equipment",
+            "quantity": 1,
+            "unit_price": 2600.63,
+            "amount": 2600.63
+          },
+          {
+            "description": "Laboratory Supplies",
+            "quantity": 1,
+            "unit_price": 1830.63,
+            "amount": 1830.63
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 4574.29,
+            "amount": 4574.29
+          },
+          {
+            "description": "Office Furniture Set",
+            "quantity": 1,
+            "unit_price": 669.82,
+            "amount": 669.82
+          }
+        ],
+        "amounts": {
+          "subtotal": 9675.369999999999,
+          "vat_rate": 0.2,
+          "vat_amount": 1935.07,
+          "total": 11610.44,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "equipment"
+        },
+        "metadata": {
+          "problem_type": "duplicate",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "6331143d38607a566a1e3deae3ebc091bb75944f9356c4310fa18dc0a41f683f"
+    },
+    {
+      "name": "problem-invalid_vat-0",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "QuickFix Technical Services Ltd.",
+          "vat_id": "GB999888777",
+          "country": "GB",
+          "city": "Birmingham",
+          "category": "installation"
+        },
+        "invalid_vat"
+      ],
+      "seed": 0,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2026-0012",
+        "invoice_date": "2025-07-31",
+        "supply_date": "2025-07-18",
+        "due_date": "2025-08-30",
+        "supplier": {
+          "name": "QuickFix Technical Services Ltd.",
+          "vat_id": "GB999888777",
+          "country": "GB",
+          "city": "Birmingham",
+          "address": "137 Business Street, Birmingham"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Commissioning Services",
+            "quantity": 1,
+            "unit_price": 1449.27,
+            "amount": 1449.27
+          }
+        ],
+        "amounts": {
+          "subtotal": 1449.27,
+          "vat_rate": 0.2,
+          "vat_amount": 289.85,
+          "total": 1739.12,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP4",
+          "work_package_name": "Dissemination",
+          "category": "installation"
+        },
+        "metadata": {
+          "problem_type": "invalid_vat",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "aa35cefbb2d0ca2340939e4b2d77d74ff84823016c479a5e77c51a79937caa95"
+    },
+    {
+      "name": "problem-invalid_vat-42",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "QuickFix Technical Services Ltd.",
+          "vat_id": "GB999888777",
+          "country": "GB",
+          "city": "Birmingham",
+          "category": "installation"
+        },
+        "invalid_vat"
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "SI-2026-0012",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "QuickFix Technical Services Ltd.",
+          "vat_id": "GB999888777",
+          "country": "GB",
+          "city": "Birmingham",
+          "address": "148 Business Street, Birmingham"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "System Integration",
+            "quantity": 1,
+            "unit_price": 419.6,
+            "amount": 419.6
+          },
+          {
+            "description": "System Integration",
+            "quantity": 1,
+            "unit_price": 512.8,
+            "amount": 512.8
+          },
+          {
+            "description": "On-site Technical Support",
+            "quantity": 1,
+            "unit_price": 140.05,
+            "amount": 140.05
+          },
+          {
+            "description": "Commissioning Services",
+            "quantity": 1,
+            "unit_price": 85.97,
+            "amount": 85.97
+          }
+        ],
+        "amounts": {
+          "subtotal": 1158.42,
+          "vat_rate": 0.2,
+          "vat_amount": 231.68,
+          "total": 1390.1,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "installation"
+        },
+        "metadata": {
+          "problem_type": "invalid_vat",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    },
+    {
+      "name": "problem-invalid_vat-123",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "QuickFix Technical Services Ltd.",
+          "vat_id": "GB999888777",
+          "country": "GB",
+          "city": "Birmingham",
+          "category": "installation"
+        },
+        "invalid_vat"
+      ],
+      "seed": 123,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2025-0012",
+        "invoice_date": "2025-02-10",
+        "supply_date": "2025-02-05",
+        "due_date": "2025-03-12",
+        "supplier": {
+          "name": "QuickFix Technical Services Ltd.",
+          "vat_id": "GB999888777",
+          "country": "GB",
+          "city": "Birmingham",
+          "address": "87 Business Street, Birmingham"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "On-site Technical Support",
+            "quantity": 1,
+            "unit_price": 1198.71,
+            "amount": 1198.71
+          }
+        ],
+        "amounts": {
+          "subtotal": 1198.71,
+          "vat_rate": 0.2,
+          "vat_amount": 239.74,
+          "total": 1438.45,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "installation"
+        },
+        "metadata": {
+          "problem_type": "invalid_vat",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "afc966b41ebde65554be976dd4b99dc6f96b4660f9c9b3ec297c473e4285179b"
+    },
+    {
+      "name": "problem-subject_relevance-0",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Gourmet Catering Services Ltd.",
+          "vat_id": "GB555666777",
+          "country": "GB",
+          "city": "London",
+          "category": "catering"
+        },
+        "subject_relevance"
+      ],
+      "seed": 0,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "SI-2026-0012",
+        "invoice_date": "2025-07-31",
+        "supply_date": "2025-07-18",
+        "due_date": "2025-08-30",
+        "supplier": {
+          "name": "Gourmet Catering Services Ltd.",
+          "vat_id": "GB555666777",
+          "country": "GB",
+          "city": "London",
+          "address": "134 Business Street, London"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Event Catering Services",
+            "quantity": 1,
+            "unit_price": 1362.11,
+            "amount": 1362.11
+          },
+          {
+            "description": "Executive Lunch Catering",
+            "quantity": 1,
+            "unit_price": 1768.37,
+            "amount": 1768.37
+          },
+          {
+            "description": "Event Catering Services",
+            "quantity": 1,
+            "unit_price": 413.16,
+            "amount": 413.16
+          }
+        ],
+        "amounts": {
+          "subtotal": 3543.6399999999994,
+          "vat_rate": 0.2,
+          "vat_amount": 708.73,
+          "total": 4252.37,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP4",
+          "work_package_name": "Dissemination",
+          "category": "catering"
+        },
+        "metadata": {
+          "problem_type": "subject_relevance",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "da07bef94487118fbd8b172eaf21a9e10dd62c14b24f47c1a3603be75bcef96d"
+    },
+    {
+      "name": "problem-subject_relevance-42",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Gourmet Catering Services Ltd.",
+          "vat_id": "GB555666777",
+          "country": "GB",
+          "city": "London",
+          "category": "catering"
+        },
+        "subject_relevance"
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2025-0012",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Gourmet Catering Services Ltd.",
+          "vat_id": "GB555666777",
+          "country": "GB",
+          "city": "London",
+          "address": "98 Business Street, London"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Executive Lunch Catering",
+            "quantity": 1,
+            "unit_price": 1554.8,
+            "amount": 1554.8
+          },
+          {
+            "description": "Executive Lunch Catering",
+            "quantity": 1,
+            "unit_price": 1148.24,
+            "amount": 1148.24
+          },
+          {
+            "description": "Premium Wine Selection",
+            "quantity": 3,
+            "unit_price": 308.36,
+            "amount": 925.08
+          }
+        ],
+        "amounts": {
+          "subtotal": 3628.12,
+          "vat_rate": 0.2,
+          "vat_amount": 725.62,
+          "total": 4353.74,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "catering"
+        },
+        "metadata": {
+          "problem_type": "subject_relevance",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "7aa377eac80f00dd3c7f5ff5a83c2e2134aba0b8e55e54dcb6996d201861afcd"
+    },
+    {
+      "name": "problem-subject_relevance-123",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Gourmet Catering Services Ltd.",
+          "vat_id": "GB555666777",
+          "country": "GB",
+          "city": "London",
+          "category": "catering"
+        },
+        "subject_relevance"
+      ],
+      "seed": 123,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2026-0012",
+        "invoice_date": "2025-02-10",
+        "supply_date": "2025-02-05",
+        "due_date": "2025-03-12",
+        "supplier": {
+          "name": "Gourmet Catering Services Ltd.",
+          "vat_id": "GB555666777",
+          "country": "GB",
+          "city": "London",
+          "address": "18 Business Street, London"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Premium Wine Selection",
+            "quantity": 1,
+            "unit_price": 1307.71,
+            "amount": 1307.71
+          },
+          {
+            "description": "Executive Lunch Catering",
+            "quantity": 1,
+            "unit_price": 2123.65,
+            "amount": 2123.65
+          }
+        ],
+        "amounts": {
+          "subtotal": 3431.36,
+          "vat_rate": 0.2,
+          "vat_amount": 686.27,
+          "total": 4117.63,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "catering"
+        },
+        "metadata": {
+          "problem_type": "subject_relevance",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "715da771f62482320cd0c4e8771bbdb5089cccd38f2aa944370ebcc1e160283a"
+    },
+    {
+      "name": "problem-temporal-0",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "category": "consulting"
+        },
+        "temporal"
+      ],
+      "seed": 0,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "F-2025-0012",
+        "invoice_date": "2024-11-15",
+        "supply_date": "2024-11-01",
+        "due_date": "2024-12-15",
+        "supplier": {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "address": "146 Business Street, Stockholm"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Technology Assessment",
+            "quantity": 1,
+            "unit_price": 3992.79,
+            "amount": 3992.79
+          },
+          {
+            "description": "Business Process Analysis",
+            "quantity": 1,
+            "unit_price": 7876.06,
+            "amount": 7876.06
+          },
+          {
+            "description": "Project Management Consulting",
+            "quantity": 1,
+            "unit_price": 1277.55,
+            "amount": 1277.55
+          },
+          {
+            "description": "Technology Assessment",
+            "quantity": 1,
+            "unit_price": 1533.07,
+            "amount": 1533.07
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 682.85,
+            "amount": 682.85
+          }
+        ],
+        "amounts": {
+          "subtotal": 15362.32,
+          "vat_rate": 0.25,
+          "vat_amount": 3840.58,
+          "total": 19202.9,
+          "currency": "SEK"
+        },
+        "project": {
+          "work_package": "WP4",
+          "work_package_name": "Dissemination",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": "temporal",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "480badfbc6777d6c2ba9ad08b5d979492578936d8857241bf36c24a9a35a05f9"
+    },
+    {
+      "name": "problem-temporal-42",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "category": "consulting"
+        },
+        "temporal"
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "INV-2025-0012",
+        "invoice_date": "2024-11-15",
+        "supply_date": "2024-11-01",
+        "due_date": "2024-12-15",
+        "supplier": {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "address": "181 Business Street, Stockholm"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Market Research & Analysis",
+            "quantity": 1,
+            "unit_price": 7700.17,
+            "amount": 7700.17
+          },
+          {
+            "description": "Strategic Consulting Services",
+            "quantity": 1,
+            "unit_price": 3178.08,
+            "amount": 3178.08
+          },
+          {
+            "description": "Technology Assessment",
+            "quantity": 1,
+            "unit_price": 2406.78,
+            "amount": 2406.78
+          },
+          {
+            "description": "Project Management Consulting",
+            "quantity": 1,
+            "unit_price": 2135.62,
+            "amount": 2135.62
+          },
+          {
+            "description": "Market Research & Analysis",
+            "quantity": 1,
+            "unit_price": 138.38,
+            "amount": 138.38
+          }
+        ],
+        "amounts": {
+          "subtotal": 15559.03,
+          "vat_rate": 0.25,
+          "vat_amount": 3889.76,
+          "total": 19448.79,
+          "currency": "SEK"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": "temporal",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "5a3532f9fecc36136083568fd05abda842e0b81647173ed116c9061895979b6b"
+    },
+    {
+      "name": "problem-temporal-123",
+      "function": "generate_invoice",
+      "args": [
+        12,
+        {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "category": "consulting"
+        },
+        "temporal"
+      ],
+      "seed": 123,
+      "expected": {
+        "id": "DOC-00012",
+        "invoice_number": "FS-2025-0012",
+        "invoice_date": "2024-11-15",
+        "supply_date": "2024-11-01",
+        "due_date": "2024-12-15",
+        "supplier": {
+          "name": "Nordic Tech Solutions AB",
+          "vat_id": "SE556677889901",
+          "country": "SE",
+          "city": "Stockholm",
+          "address": "33 Business Street, Stockholm"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Technology Assessment",
+            "quantity": 1,
+            "unit_price": 7846.28,
+            "amount": 7846.28
+          },
+          {
+            "description": "Project Management Consulting",
+            "quantity": 1,
+            "unit_price": 7140.88,
+            "amount": 7140.88
+          },
+          {
+            "description": "Technical Advisory (67h)",
+            "quantity": 1,
+            "unit_price": 719.4,
+            "amount": 719.4
+          }
+        ],
+        "amounts": {
+          "subtotal": 15706.56,
+          "vat_rate": 0.25,
+          "vat_amount": 3926.64,
+          "total": 19633.2,
+          "currency": "SEK"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "consulting"
+        },
+        "metadata": {
+          "problem_type": "temporal",
+          "is_problematic": true
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "68f8fcf563356c66b0d33af2baa0e1081bc207ccaf0a17de3a8c157a8c5f7b77"
+    },
+    {
+      "name": "items-software-100",
+      "function": "generate_line_items",
+      "args": [
+        "software",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-software-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "software",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Software Development Services",
+          "quantity": 1,
+          "unit_price": 55.32,
+          "amount": 55.32
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-software-200",
+      "function": "generate_line_items",
+      "args": [
+        "software",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Software Development Services",
+          "quantity": 1,
+          "unit_price": 110.63,
+          "amount": 110.63
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-software-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "software",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Software Development Services",
+          "quantity": 1,
+          "unit_price": 2097.67,
+          "amount": 2097.67
+        },
+        {
+          "description": "Custom Software Module Development",
+          "quantity": 1,
+          "unit_price": 430.11,
+          "amount": 430.11
+        },
+        {
+          "description": "Custom Software Module Development",
+          "quantity": 1,
+          "unit_price": 234.27,
+          "amount": 234.27
+        },
+        {
+          "description": "Software Maintenance & Support",
+          "quantity": 1,
+          "unit_price": 266.66,
+          "amount": 266.66
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "5066c9999a23f78e6928a67b7fab4543f76e842032d541cfe0cf85aeb2ce274b"
+    },
+    {
+      "name": "items-hardware-100",
+      "function": "generate_line_items",
+      "args": [
+        "hardware",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-hardware-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "hardware",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Network Equipment",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-hardware-200",
+      "function": "generate_line_items",
+      "args": [
+        "hardware",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Network Equipment",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-hardware-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "hardware",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Network Equipment",
+          "quantity": 4,
+          "unit_price": 728.08,
+          "amount": 2912.32
+        },
+        {
+          "description": "Server Hardware - PowerEdge R750",
+          "quantity": 1,
+          "unit_price": 145.67,
+          "amount": 145.67
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "4c5adfa98c222f064c9f946ba2afc3bb76b747e61d5b8807b62c701cb9839e27"
+    },
+    {
+      "name": "items-consulting-100",
+      "function": "generate_line_items",
+      "args": [
+        "consulting",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-consulting-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "consulting",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Technical Advisory (23h)",
+          "quantity": 1,
+          "unit_price": 55.32,
+          "amount": 55.32
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-consulting-200",
+      "function": "generate_line_items",
+      "args": [
+        "consulting",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Technical Advisory (23h)",
+          "quantity": 1,
+          "unit_price": 110.63,
+          "amount": 110.63
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-consulting-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "consulting",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Technical Advisory (23h)",
+          "quantity": 1,
+          "unit_price": 1641.14,
+          "amount": 1641.14
+        },
+        {
+          "description": "Technology Assessment",
+          "quantity": 1,
+          "unit_price": 1207.49,
+          "amount": 1207.49
+        },
+        {
+          "description": "Business Process Analysis",
+          "quantity": 1,
+          "unit_price": 197.56,
+          "amount": 197.56
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d7f05c16a3f90b078c6085067077e43a280b7c27961fba09f2ebcd5a29e76fbd"
+    },
+    {
+      "name": "items-equipment-100",
+      "function": "generate_line_items",
+      "args": [
+        "equipment",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-equipment-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "equipment",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Monitoring Equipment",
+          "quantity": 1,
+          "unit_price": 35.22,
+          "amount": 35.22
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "b4d05d385606d483a01368333a032b7328f0101fcf23b189c38f8fb02462d4a0"
+    },
+    {
+      "name": "items-equipment-200",
+      "function": "generate_line_items",
+      "args": [
+        "equipment",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Monitoring Equipment",
+          "quantity": 1,
+          "unit_price": 70.43,
+          "amount": 70.43
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "b4d05d385606d483a01368333a032b7328f0101fcf23b189c38f8fb02462d4a0"
+    },
+    {
+      "name": "items-equipment-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "equipment",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Monitoring Equipment",
+          "quantity": 1,
+          "unit_price": 2372.28,
+          "amount": 2372.28
+        },
+        {
+          "description": "Communication Equipment",
+          "quantity": 1,
+          "unit_price": 237.31,
+          "amount": 237.31
+        },
+        {
+          "description": "Laboratory Supplies",
+          "quantity": 1,
+          "unit_price": 369.41,
+          "amount": 369.41
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d7f05c16a3f90b078c6085067077e43a280b7c27961fba09f2ebcd5a29e76fbd"
+    },
+    {
+      "name": "items-training-100",
+      "function": "generate_line_items",
+      "args": [
+        "training",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-training-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "training",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Leadership Development Training",
+          "quantity": 1,
+          "unit_price": 35.22,
+          "amount": 35.22
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "b4d05d385606d483a01368333a032b7328f0101fcf23b189c38f8fb02462d4a0"
+    },
+    {
+      "name": "items-training-200",
+      "function": "generate_line_items",
+      "args": [
+        "training",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Leadership Development Training",
+          "quantity": 1,
+          "unit_price": 70.43,
+          "amount": 70.43
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "b4d05d385606d483a01368333a032b7328f0101fcf23b189c38f8fb02462d4a0"
+    },
+    {
+      "name": "items-training-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "training",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Leadership Development Training",
+          "quantity": 1,
+          "unit_price": 2598.59,
+          "amount": 2598.59
+        },
+        {
+          "description": "Safety Training Program",
+          "quantity": 1,
+          "unit_price": 165.81,
+          "amount": 165.81
+        },
+        {
+          "description": "Technical Skills Training (1 days)",
+          "quantity": 1,
+          "unit_price": 258.12,
+          "amount": 258.12
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d7f05c16a3f90b078c6085067077e43a280b7c27961fba09f2ebcd5a29e76fbd"
+    },
+    {
+      "name": "items-travel-100",
+      "function": "generate_line_items",
+      "args": [
+        "travel",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-travel-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "travel",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Conference Attendance - EU Innovation Forum",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-travel-200",
+      "function": "generate_line_items",
+      "args": [
+        "travel",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Conference Attendance - EU Innovation Forum",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-travel-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "travel",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Conference Attendance - EU Innovation Forum",
+          "quantity": 4,
+          "unit_price": 717.35,
+          "amount": 2869.4
+        },
+        {
+          "description": "Conference Attendance - EU Innovation Forum",
+          "quantity": 1,
+          "unit_price": 140.16,
+          "amount": 140.16
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "e82e3ae5e0c2b7edbcdb7a6895c1c53bdc3e0aa17d733bc88ddf223149b9c05e"
+    },
+    {
+      "name": "items-publications-100",
+      "function": "generate_line_items",
+      "args": [
+        "publications",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-publications-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "publications",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Scientific Publication Services",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-publications-200",
+      "function": "generate_line_items",
+      "args": [
+        "publications",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Scientific Publication Services",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-publications-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "publications",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Scientific Publication Services",
+          "quantity": 4,
+          "unit_price": 717.35,
+          "amount": 2869.4
+        },
+        {
+          "description": "Scientific Publication Services",
+          "quantity": 1,
+          "unit_price": 140.16,
+          "amount": 140.16
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "e82e3ae5e0c2b7edbcdb7a6895c1c53bdc3e0aa17d733bc88ddf223149b9c05e"
+    },
+    {
+      "name": "items-conference-100",
+      "function": "generate_line_items",
+      "args": [
+        "conference",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-conference-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "conference",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Conference Organization Support",
+          "quantity": 1,
+          "unit_price": 55.32,
+          "amount": 55.32
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-conference-200",
+      "function": "generate_line_items",
+      "args": [
+        "conference",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Conference Organization Support",
+          "quantity": 1,
+          "unit_price": 110.63,
+          "amount": 110.63
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-conference-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "conference",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Conference Organization Support",
+          "quantity": 1,
+          "unit_price": 2097.67,
+          "amount": 2097.67
+        },
+        {
+          "description": "Virtual Event Platform",
+          "quantity": 1,
+          "unit_price": 748.42,
+          "amount": 748.42
+        },
+        {
+          "description": "Virtual Event Platform",
+          "quantity": 1,
+          "unit_price": 119.04,
+          "amount": 119.04
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "302d323c17b1747ba34d9e1c0466aee3dd5403e95e7cb6c88dec496066c991fa"
+    },
+    {
+      "name": "items-website-100",
+      "function": "generate_line_items",
+      "args": [
+        "website",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-website-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "website",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Website Development",
+          "quantity": 1,
+          "unit_price": 55.32,
+          "amount": 55.32
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-website-200",
+      "function": "generate_line_items",
+      "args": [
+        "website",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Website Development",
+          "quantity": 1,
+          "unit_price": 110.63,
+          "amount": 110.63
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-website-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "website",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Website Development",
+          "quantity": 1,
+          "unit_price": 2097.67,
+          "amount": 2097.67
+        },
+        {
+          "description": "SEO & Analytics Services",
+          "quantity": 2,
+          "unit_price": 513.95,
+          "amount": 1027.9
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "9101ad634fa433699e67e808f0d17805ce9831ccb90aaff1cbc8a1736255714e"
+    },
+    {
+      "name": "items-installation-100",
+      "function": "generate_line_items",
+      "args": [
+        "installation",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-installation-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "installation",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Equipment Installation Services",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-installation-200",
+      "function": "generate_line_items",
+      "args": [
+        "installation",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Equipment Installation Services",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-installation-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "installation",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Equipment Installation Services",
+          "quantity": 1,
+          "unit_price": 1184.61,
+          "amount": 1184.61
+        },
+        {
+          "description": "Commissioning Services",
+          "quantity": 1,
+          "unit_price": 1511.65,
+          "amount": 1511.65
+        },
+        {
+          "description": "System Integration",
+          "quantity": 1,
+          "unit_price": 307.1,
+          "amount": 307.1
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d7f05c16a3f90b078c6085067077e43a280b7c27961fba09f2ebcd5a29e76fbd"
+    },
+    {
+      "name": "items-certification-100",
+      "function": "generate_line_items",
+      "args": [
+        "certification",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-certification-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "certification",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Quality Certification Audit",
+          "quantity": 1,
+          "unit_price": 55.32,
+          "amount": 55.32
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-certification-200",
+      "function": "generate_line_items",
+      "args": [
+        "certification",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Quality Certification Audit",
+          "quantity": 1,
+          "unit_price": 110.63,
+          "amount": 110.63
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-certification-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "certification",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Quality Certification Audit",
+          "quantity": 1,
+          "unit_price": 2097.67,
+          "amount": 2097.67
+        },
+        {
+          "description": "Safety Certification",
+          "quantity": 1,
+          "unit_price": 430.11,
+          "amount": 430.11
+        },
+        {
+          "description": "Safety Certification",
+          "quantity": 1,
+          "unit_price": 234.27,
+          "amount": 234.27
+        },
+        {
+          "description": "Compliance Assessment",
+          "quantity": 1,
+          "unit_price": 117.84,
+          "amount": 117.84
+        },
+        {
+          "description": "Safety Certification",
+          "quantity": 1,
+          "unit_price": 157.44,
+          "amount": 157.44
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "eb7c6d7ad724dad2e10ac5c82a6b228bd5db3ce7db1e2c9c1ee009d36dff8fd4"
+    },
+    {
+      "name": "items-subcontracting-100",
+      "function": "generate_line_items",
+      "args": [
+        "subcontracting",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-subcontracting-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "subcontracting",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Research Subcontract",
+          "quantity": 1,
+          "unit_price": 55.32,
+          "amount": 55.32
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-subcontracting-200",
+      "function": "generate_line_items",
+      "args": [
+        "subcontracting",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Research Subcontract",
+          "quantity": 1,
+          "unit_price": 110.63,
+          "amount": 110.63
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "941238d98e115719dd8aca9a73ef11fb280810d0df590c66286a6efcb5adc07d"
+    },
+    {
+      "name": "items-subcontracting-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "subcontracting",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Research Subcontract",
+          "quantity": 1,
+          "unit_price": 1727.75,
+          "amount": 1727.75
+        },
+        {
+          "description": "Research Subcontract",
+          "quantity": 1,
+          "unit_price": 794.89,
+          "amount": 794.89
+        },
+        {
+          "description": "Specialized Testing Services",
+          "quantity": 1,
+          "unit_price": 217.09,
+          "amount": 217.09
+        },
+        {
+          "description": "Data Collection & Processing",
+          "quantity": 1,
+          "unit_price": 133.26,
+          "amount": 133.26
+        },
+        {
+          "description": "Specialized Testing Services",
+          "quantity": 1,
+          "unit_price": 223.19,
+          "amount": 223.19
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d5aa697566f2382584408839636cf9aaafa482763c8d49cd4f119c8802071108"
+    },
+    {
+      "name": "items-construction-100",
+      "function": "generate_line_items",
+      "args": [
+        "construction",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-construction-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "construction",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Infrastructure Modifications",
+          "quantity": 1,
+          "unit_price": 83.54,
+          "amount": 83.54
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "e1d9ff746e75d2121da7b4f29e6ae2e5fa347c424599c865358aaddfc072b2c7"
+    },
+    {
+      "name": "items-construction-200",
+      "function": "generate_line_items",
+      "args": [
+        "construction",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Infrastructure Modifications",
+          "quantity": 1,
+          "unit_price": 167.06,
+          "amount": 167.06
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "e1d9ff746e75d2121da7b4f29e6ae2e5fa347c424599c865358aaddfc072b2c7"
+    },
+    {
+      "name": "items-construction-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "construction",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Infrastructure Modifications",
+          "quantity": 1,
+          "unit_price": 3083.54,
+          "amount": 3083.54
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "1b832fff99a132135fc6e5803fd3f3b57e17089fd09b8500962d0fbda7191005"
+    },
+    {
+      "name": "items-consumables-100",
+      "function": "generate_line_items",
+      "args": [
+        "consumables",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-consumables-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "consumables",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Laboratory Consumables",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-consumables-200",
+      "function": "generate_line_items",
+      "args": [
+        "consumables",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Laboratory Consumables",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-consumables-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "consumables",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Laboratory Consumables",
+          "quantity": 4,
+          "unit_price": 443.43,
+          "amount": 1773.72
+        },
+        {
+          "description": "Laboratory Consumables",
+          "quantity": 1,
+          "unit_price": 744.66,
+          "amount": 744.66
+        },
+        {
+          "description": "Prototype Materials",
+          "quantity": 1,
+          "unit_price": 218.63,
+          "amount": 218.63
+        },
+        {
+          "description": "Prototype Materials",
+          "quantity": 1,
+          "unit_price": 134.2,
+          "amount": 134.2
+        },
+        {
+          "description": "Testing Materials",
+          "quantity": 1,
+          "unit_price": 224.78,
+          "amount": 224.78
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d5aa697566f2382584408839636cf9aaafa482763c8d49cd4f119c8802071108"
+    },
+    {
+      "name": "items-admin-100",
+      "function": "generate_line_items",
+      "args": [
+        "admin",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-admin-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "admin",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Administrative Support Services",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-admin-200",
+      "function": "generate_line_items",
+      "args": [
+        "admin",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Administrative Support Services",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-admin-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "admin",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Administrative Support Services",
+          "quantity": 4,
+          "unit_price": 717.35,
+          "amount": 2869.4
+        },
+        {
+          "description": "Administrative Support Services",
+          "quantity": 1,
+          "unit_price": 140.16,
+          "amount": 140.16
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "e82e3ae5e0c2b7edbcdb7a6895c1c53bdc3e0aa17d733bc88ddf223149b9c05e"
+    },
+    {
+      "name": "items-personnel-100",
+      "function": "generate_line_items",
+      "args": [
+        "personnel",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-personnel-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "personnel",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "External Expert Consultation",
+          "quantity": 1,
+          "unit_price": 31.91,
+          "amount": 31.91
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-personnel-200",
+      "function": "generate_line_items",
+      "args": [
+        "personnel",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "External Expert Consultation",
+          "quantity": 1,
+          "unit_price": 63.81,
+          "amount": 63.81
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "01d253d9e1273cef9852c0bb44eb12dfa970ae24c8e8fc7221443880dd5baa69"
+    },
+    {
+      "name": "items-personnel-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "personnel",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "External Expert Consultation",
+          "quantity": 1,
+          "unit_price": 1184.61,
+          "amount": 1184.61
+        },
+        {
+          "description": "Temporary Staff Services",
+          "quantity": 1,
+          "unit_price": 1998.38,
+          "amount": 1998.38
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "f08e93283ddb280138245cde3c0d01e146669c766724d8657675d84a5f6476ff"
+    },
+    {
+      "name": "items-catering-100",
+      "function": "generate_line_items",
+      "args": [
+        "catering",
+        100
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "items-catering-100.01",
+      "function": "generate_line_items",
+      "args": [
+        "catering",
+        100.01
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Event Catering Services",
+          "quantity": 1,
+          "unit_price": 35.22,
+          "amount": 35.22
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "b4d05d385606d483a01368333a032b7328f0101fcf23b189c38f8fb02462d4a0"
+    },
+    {
+      "name": "items-catering-200",
+      "function": "generate_line_items",
+      "args": [
+        "catering",
+        200
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Event Catering Services",
+          "quantity": 1,
+          "unit_price": 70.43,
+          "amount": 70.43
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "b4d05d385606d483a01368333a032b7328f0101fcf23b189c38f8fb02462d4a0"
+    },
+    {
+      "name": "items-catering-3123.45",
+      "function": "generate_line_items",
+      "args": [
+        "catering",
+        3123.45
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Event Catering Services",
+          "quantity": 1,
+          "unit_price": 2436.94,
+          "amount": 2436.94
+        },
+        {
+          "description": "Event Catering Services",
+          "quantity": 1,
+          "unit_price": 216.88,
+          "amount": 216.88
+        },
+        {
+          "description": "Executive Lunch Catering",
+          "quantity": 1,
+          "unit_price": 337.61,
+          "amount": 337.61
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "d7f05c16a3f90b078c6085067077e43a280b7c27961fba09f2ebcd5a29e76fbd"
+    },
+    {
+      "name": "vat-AT",
+      "function": "get_vat_rate",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "expected": 0.2,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-AT",
+      "function": "get_currency",
+      "args": [
+        "AT"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-BE",
+      "function": "get_vat_rate",
+      "args": [
+        "BE"
+      ],
+      "seed": 42,
+      "expected": 0.21,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-BE",
+      "function": "get_currency",
+      "args": [
+        "BE"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-BG",
+      "function": "get_vat_rate",
+      "args": [
+        "BG"
+      ],
+      "seed": 42,
+      "expected": 0.2,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-BG",
+      "function": "get_currency",
+      "args": [
+        "BG"
+      ],
+      "seed": 42,
+      "expected": "BGN",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-CY",
+      "function": "get_vat_rate",
+      "args": [
+        "CY"
+      ],
+      "seed": 42,
+      "expected": 0.19,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-CY",
+      "function": "get_currency",
+      "args": [
+        "CY"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-CZ",
+      "function": "get_vat_rate",
+      "args": [
+        "CZ"
+      ],
+      "seed": 42,
+      "expected": 0.21,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-CZ",
+      "function": "get_currency",
+      "args": [
+        "CZ"
+      ],
+      "seed": 42,
+      "expected": "CZK",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-DE",
+      "function": "get_vat_rate",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "expected": 0.19,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-DE",
+      "function": "get_currency",
+      "args": [
+        "DE"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-DK",
+      "function": "get_vat_rate",
+      "args": [
+        "DK"
+      ],
+      "seed": 42,
+      "expected": 0.25,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-DK",
+      "function": "get_currency",
+      "args": [
+        "DK"
+      ],
+      "seed": 42,
+      "expected": "DKK",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-EE",
+      "function": "get_vat_rate",
+      "args": [
+        "EE"
+      ],
+      "seed": 42,
+      "expected": 0.22,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-EE",
+      "function": "get_currency",
+      "args": [
+        "EE"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-ES",
+      "function": "get_vat_rate",
+      "args": [
+        "ES"
+      ],
+      "seed": 42,
+      "expected": 0.21,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-ES",
+      "function": "get_currency",
+      "args": [
+        "ES"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-FI",
+      "function": "get_vat_rate",
+      "args": [
+        "FI"
+      ],
+      "seed": 42,
+      "expected": 0.24,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-FI",
+      "function": "get_currency",
+      "args": [
+        "FI"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-FR",
+      "function": "get_vat_rate",
+      "args": [
+        "FR"
+      ],
+      "seed": 42,
+      "expected": 0.2,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-FR",
+      "function": "get_currency",
+      "args": [
+        "FR"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-GB",
+      "function": "get_vat_rate",
+      "args": [
+        "GB"
+      ],
+      "seed": 42,
+      "expected": 0.2,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-GB",
+      "function": "get_currency",
+      "args": [
+        "GB"
+      ],
+      "seed": 42,
+      "expected": "GBP",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-GR",
+      "function": "get_vat_rate",
+      "args": [
+        "GR"
+      ],
+      "seed": 42,
+      "expected": 0.24,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-GR",
+      "function": "get_currency",
+      "args": [
+        "GR"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-HR",
+      "function": "get_vat_rate",
+      "args": [
+        "HR"
+      ],
+      "seed": 42,
+      "expected": 0.25,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-HR",
+      "function": "get_currency",
+      "args": [
+        "HR"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-HU",
+      "function": "get_vat_rate",
+      "args": [
+        "HU"
+      ],
+      "seed": 42,
+      "expected": 0.27,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-HU",
+      "function": "get_currency",
+      "args": [
+        "HU"
+      ],
+      "seed": 42,
+      "expected": "HUF",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-IE",
+      "function": "get_vat_rate",
+      "args": [
+        "IE"
+      ],
+      "seed": 42,
+      "expected": 0.23,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-IE",
+      "function": "get_currency",
+      "args": [
+        "IE"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-IT",
+      "function": "get_vat_rate",
+      "args": [
+        "IT"
+      ],
+      "seed": 42,
+      "expected": 0.22,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-IT",
+      "function": "get_currency",
+      "args": [
+        "IT"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-LT",
+      "function": "get_vat_rate",
+      "args": [
+        "LT"
+      ],
+      "seed": 42,
+      "expected": 0.21,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-LT",
+      "function": "get_currency",
+      "args": [
+        "LT"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-LU",
+      "function": "get_vat_rate",
+      "args": [
+        "LU"
+      ],
+      "seed": 42,
+      "expected": 0.17,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-LU",
+      "function": "get_currency",
+      "args": [
+        "LU"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-LV",
+      "function": "get_vat_rate",
+      "args": [
+        "LV"
+      ],
+      "seed": 42,
+      "expected": 0.21,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-LV",
+      "function": "get_currency",
+      "args": [
+        "LV"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-MT",
+      "function": "get_vat_rate",
+      "args": [
+        "MT"
+      ],
+      "seed": 42,
+      "expected": 0.18,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-MT",
+      "function": "get_currency",
+      "args": [
+        "MT"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-NL",
+      "function": "get_vat_rate",
+      "args": [
+        "NL"
+      ],
+      "seed": 42,
+      "expected": 0.21,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-NL",
+      "function": "get_currency",
+      "args": [
+        "NL"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-PL",
+      "function": "get_vat_rate",
+      "args": [
+        "PL"
+      ],
+      "seed": 42,
+      "expected": 0.23,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-PL",
+      "function": "get_currency",
+      "args": [
+        "PL"
+      ],
+      "seed": 42,
+      "expected": "PLN",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-PT",
+      "function": "get_vat_rate",
+      "args": [
+        "PT"
+      ],
+      "seed": 42,
+      "expected": 0.23,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-PT",
+      "function": "get_currency",
+      "args": [
+        "PT"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-RO",
+      "function": "get_vat_rate",
+      "args": [
+        "RO"
+      ],
+      "seed": 42,
+      "expected": 0.19,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-RO",
+      "function": "get_currency",
+      "args": [
+        "RO"
+      ],
+      "seed": 42,
+      "expected": "RON",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-RU",
+      "function": "get_vat_rate",
+      "args": [
+        "RU"
+      ],
+      "seed": 42,
+      "expected": 0.0,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-RU",
+      "function": "get_currency",
+      "args": [
+        "RU"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-SE",
+      "function": "get_vat_rate",
+      "args": [
+        "SE"
+      ],
+      "seed": 42,
+      "expected": 0.25,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-SE",
+      "function": "get_currency",
+      "args": [
+        "SE"
+      ],
+      "seed": 42,
+      "expected": "SEK",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-SI",
+      "function": "get_vat_rate",
+      "args": [
+        "SI"
+      ],
+      "seed": 42,
+      "expected": 0.22,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-SI",
+      "function": "get_currency",
+      "args": [
+        "SI"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-SK",
+      "function": "get_vat_rate",
+      "args": [
+        "SK"
+      ],
+      "seed": 42,
+      "expected": 0.2,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-SK",
+      "function": "get_currency",
+      "args": [
+        "SK"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "vat-UNKNOWN",
+      "function": "get_vat_rate",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "expected": 0.2,
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "currency-UNKNOWN",
+      "function": "get_currency",
+      "args": [
+        "UNKNOWN"
+      ],
+      "seed": 42,
+      "expected": "EUR",
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "unknown-category",
+      "function": "generate_line_items",
+      "args": [
+        "unknown",
+        999.99
+      ],
+      "seed": 42,
+      "expected": [
+        {
+          "description": "Technical Advisory (23h)",
+          "quantity": 1,
+          "unit_price": 553.15,
+          "amount": 553.15
+        },
+        {
+          "description": "Strategic Consulting Services",
+          "quantity": 1,
+          "unit_price": 254.49,
+          "amount": 254.49
+        }
+      ],
+      "exception": null,
+      "rng_after_sha256": "5f4d78be7593b6014c94cce6cada5d1647eb86dabec55bbce5b85f15a3346de6"
+    },
+    {
+      "name": "negative-target",
+      "function": "generate_line_items",
+      "args": [
+        "software",
+        -1
+      ],
+      "seed": 42,
+      "expected": [],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "temporal-dates",
+      "function": "generate_invoice_date",
+      "args": [
+        true
+      ],
+      "seed": 42,
+      "expected": [
+        "2024-11-15T00:00:00",
+        "2024-11-01T00:00:00"
+      ],
+      "exception": null,
+      "rng_after_sha256": "a52169fac48aa2d80acadd41f776ce38656ab70adc3b32c80c1fb1f0ee56b71f"
+    },
+    {
+      "name": "normal-dates",
+      "function": "generate_invoice_date",
+      "args": [
+        false
+      ],
+      "seed": 42,
+      "expected": [
+        "2025-12-08T00:00:00",
+        "2025-12-06T00:00:00"
+      ],
+      "exception": null,
+      "rng_after_sha256": "a7f2d45690c305d3490361a875a47b5812b7a2d1bfff9c6df326162921c6cf06"
+    },
+    {
+      "name": "missing-country",
+      "function": "generate_invoice",
+      "args": [
+        1,
+        {},
+        null
+      ],
+      "seed": 42,
+      "expected": null,
+      "exception": "KeyError",
+      "rng_after_sha256": "f2faf0f68235247df77e4c4bcdf9be99d6a4df6d19dc7a841e5f945917093ed6"
+    },
+    {
+      "name": "negative-index",
+      "function": "generate_invoice",
+      "args": [
+        -1,
+        {
+          "name": "Johnson IT Services Ltd.",
+          "vat_id": "GB123456789",
+          "country": "GB",
+          "city": "Cambridge",
+          "category": "software"
+        },
+        null
+      ],
+      "seed": 42,
+      "expected": {
+        "id": "DOC--0001",
+        "invoice_number": "IV-2026--001",
+        "invoice_date": "2025-12-08",
+        "supply_date": "2025-12-06",
+        "due_date": "2026-01-07",
+        "supplier": {
+          "name": "Johnson IT Services Ltd.",
+          "vat_id": "GB123456789",
+          "country": "GB",
+          "city": "Cambridge",
+          "address": "148 Business Street, Cambridge"
+        },
+        "beneficiary": {
+          "name": "European Green Technology Institute",
+          "vat_id": "BE0123456789",
+          "country": "BE",
+          "city": "Brussels",
+          "address": "42 Innovation Boulevard, 1000 Brussels"
+        },
+        "line_items": [
+          {
+            "description": "Database Management System License",
+            "quantity": 1,
+            "unit_price": 3225.22,
+            "amount": 3225.22
+          },
+          {
+            "description": "Annual Software License - DataAnalyzer Pro",
+            "quantity": 1,
+            "unit_price": 2561.98,
+            "amount": 2561.98
+          },
+          {
+            "description": "Software Testing Services",
+            "quantity": 1,
+            "unit_price": 1297.53,
+            "amount": 1297.53
+          },
+          {
+            "description": "Software Maintenance & Support",
+            "quantity": 1,
+            "unit_price": 1161.3,
+            "amount": 1161.3
+          },
+          {
+            "description": "Annual Software License - ProjectFlow",
+            "quantity": 1,
+            "unit_price": 2031.35,
+            "amount": 2031.35
+          }
+        ],
+        "amounts": {
+          "subtotal": 10277.38,
+          "vat_rate": 0.2,
+          "vat_amount": 2055.48,
+          "total": 12332.86,
+          "currency": "GBP"
+        },
+        "project": {
+          "work_package": "WP1",
+          "work_package_name": "Project Management",
+          "category": "software"
+        },
+        "metadata": {
+          "problem_type": null,
+          "is_problematic": false
+        }
+      },
+      "exception": null,
+      "rng_after_sha256": "869c281a222429a1ba3e872ba1810a46dce8590b3cbbcabbb2558f3541c7ce6e"
+    }
+  ],
+  "python": {
+    "implementation": "cpython",
+    "version": "3.11.2 (main, May 12 2026, 05:17:27) [GCC 12.2.0]",
+    "sum_profile": "CPython 3.11 native float sum"
+  }
+}

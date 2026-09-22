@@ -293,7 +293,7 @@ def main() -> int:
                             "--output",
                             str(repository),
                             "--maintainer",
-                            "Local Package Verification <packages@example.invalid>",
+                            "auditcore maintainers <janpow77@users.noreply.github.com>",
                             "--source-date-epoch",
                             "1700000000",
                             "--debian-revision",

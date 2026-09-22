@@ -14,7 +14,30 @@ import pytest
 
 import auditcore_invoicegenerator as invoices
 
-GOLDEN = json.loads((Path(__file__).parent / "data/legacy-golden.json").read_text())
+GOLDEN_NAME = (
+    "legacy-golden-cpython311.json"
+    if sys.implementation.name == "cpython" and sys.version_info[:2] == (3, 11)
+    else "legacy-golden.json"
+)
+GOLDEN = json.loads((Path(__file__).parent / "data" / GOLDEN_NAME).read_text())
+
+
+def test_observed_interpreter_profiles_differ_only_in_native_subtotal_sum():
+    directory = Path(__file__).parent / "data"
+    modern = json.loads((directory / "legacy-golden.json").read_text())
+    previous = json.loads((directory / "legacy-golden-cpython311.json").read_text())
+    assert modern["source_sha256"] == previous["source_sha256"]
+    assert previous["python"]["implementation"] == "cpython"
+    assert previous["python"]["version"].startswith("3.11.")
+    differences = []
+    for newer, older in zip(modern["cases"], previous["cases"], strict=True):
+        if newer != older:
+            assert newer["function"] == "generate_invoice"
+            newer["expected"]["amounts"].pop("subtotal")
+            older["expected"]["amounts"].pop("subtotal")
+            assert newer == older
+            differences.append(newer["name"])
+    assert len(differences) == 9
 
 
 @pytest.mark.parametrize("case", GOLDEN["cases"], ids=lambda case: case["name"])

@@ -245,8 +245,8 @@ def build_library_deb(
             f"Section: python\nPriority: optional\nDepends: {', '.join(depends)}\n"
             f"Installed-Size: {installed_size}\n"
             "Homepage: https://github.com/janpow77/auditcore\n"
-            "Description: Framework-independent audit library and platform tools\n"
-            " Shared domain functions and quality, consolidation, migration and build tools.\n"
+            f"Description: Python library {release.distribution}\n"
+            " Independently installable library maintained in the auditcore repository.\n"
         )
         # Debian's installed Python helpers manage bytecode, without pip or network access.
         (control / "postinst").write_text(

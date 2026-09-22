@@ -14,6 +14,24 @@ und SHA256 des nachfolgenden RNG-Zustands wurden als Golden-Daten gespeichert.
 In diesem Quellpfad gibt es weder aktuelle Uhrzeit noch UUID-Aufrufe. Der
 unveränderte historische Datumsbereich ist Teil des Legacyvertrags.
 
+Die erste Golden-Beobachtung erfolgte unter CPython 3.12. Der ursprüngliche
+Algorithmus verwendet für die ungerundete Zwischensumme das eingebaute `sum`.
+CPython 3.11 liefert bei neun der 180 Fälle andere letzte Binärstellen als
+3.12/3.13. Deshalb wurde derselbe unveränderte, SHA256-geprüfte Originalquelltext
+zusätzlich unter CPython 3.11.2 in einem isolierten Debian-Container ausgeführt.
+`tests/data/legacy-golden-cpython311.json` enthält diese tatsächlich beobachteten
+Ergebnisse einschließlich Interpreterversion und Beobachtungszeit. Die Tests
+wählen unter CPython 3.11 diesen Originalvergleich, sonst den bisherigen Golden.
+Die tatsächlichen CI-Matrizen prüfen CPython 3.11, 3.12 und 3.13.
+
+Die beiden Beobachtungen unterscheiden sich ausschließlich in neun ungerundeten
+`amounts.subtotal`-Werten. Positionsbeträge, gerundete Steuer-/Gesamtbeträge, alle
+anderen Felder und RNG-Endzustände stimmen exakt überein; ein eigener Test prüft
+diese Grenze. Jeder Lauf vergleicht weiterhin das vollständige Ergebnis exakt.
+Es werden keine Näherungsvergleiche oder nachträglichen Betragsrundungen eingeführt.
+Die Runtime behält damit die native Semantik des Originalcodes auf dem jeweiligen
+Interpreter, statt eine fachlich unbeauftragte Rechenänderung vorzunehmen.
+
 Die Extraktion injiziert `Random`, damit reguläre Bibliotheksimporte/-Instanzen
 keine globale Zufallsquelle ändern. Alle beobachteten Ziehfolgen bleiben gleich.
 `generate_invoice_legacy_global` ist der ausdrücklich benannte Kompatibilitätsweg
