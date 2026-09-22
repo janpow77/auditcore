@@ -74,6 +74,22 @@ def test_domain_distribution_real_deb_and_reproducibility(tmp_path):
     assert (root / "usr/share/doc/python3-auditcore-dummygenerator/copyright").is_file()
 
 
+def test_packaging_revision_preserves_upstream_wheel(tmp_path):
+    wheel = make_wheel(tmp_path)
+    original = build(wheel, tmp_path / "debs")
+    upgrade = build(wheel, tmp_path / "debs", debian_revision=2)
+    assert original["wheel_sha256"] == upgrade["wheel_sha256"]
+    assert original["version"] == upgrade["version"] == "1.2.3"
+    assert upgrade["debian_version"] == "1.2.3-2"
+    assert run(["dpkg-deb", "--field", upgrade["package"], "Version"]).strip() == "1.2.3-2"
+
+
+@pytest.mark.parametrize("revision", [0, -1, True, "1\nInjected: yes"])
+def test_reject_invalid_packaging_revision(tmp_path, revision):
+    with pytest.raises(ValueError, match="positive integer"):
+        build(make_wheel(tmp_path), tmp_path / "debs", debian_revision=revision)
+
+
 @pytest.mark.parametrize(
     "name",
     [

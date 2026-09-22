@@ -167,10 +167,13 @@ def build_library_deb(
     maintainer: str,
     dependency_mapping: dict[str, str] | None = None,
     allow_unreviewed_license: bool = False,
+    debian_revision: int = 1,
 ) -> dict[str, Any]:
     """Build python3-auditcore from a verified wheel; this is no application release approval."""
     if source_date_epoch <= 0:
         raise ValueError("A positive reproducible source_date_epoch is required")
+    if type(debian_revision) is not int or debian_revision < 1:
+        raise ValueError("Debian revision must be a positive integer")
     if not re.fullmatch(r"[^\r\n<>]+ <[^\s<>@]+@[^\s<>@]+>", maintainer):
         raise ValueError("Maintainer must be a single Name <email> field")
     release = _wheel_payload(wheel, allow_unreviewed_license=allow_unreviewed_license)
@@ -193,7 +196,8 @@ def build_library_deb(
     package_name = f"python3-{release.distribution}"
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=True)
-    package = output / f"{package_name}_{version}-1_all.deb"
+    debian_version = f"{version}-{debian_revision}"
+    package = output / f"{package_name}_{debian_version}_all.deb"
     with tempfile.TemporaryDirectory(prefix="auditcore-library-") as temporary:
         stage = Path(temporary) / "root"
         python_root = stage / "usr/lib/python3/dist-packages"
@@ -237,7 +241,7 @@ def build_library_deb(
         ) // 1024
         (control / "control").write_text(
             f"Package: {package_name}\n"
-            f"Version: {version}-1\nArchitecture: all\nMaintainer: {maintainer}\n"
+            f"Version: {debian_version}\nArchitecture: all\nMaintainer: {maintainer}\n"
             f"Section: python\nPriority: optional\nDepends: {', '.join(depends)}\n"
             f"Installed-Size: {installed_size}\n"
             "Homepage: https://github.com/janpow77/auditcore\n"
@@ -274,7 +278,7 @@ def build_library_deb(
         "artifact_scope": "PYTHON_LIBRARY",
         "distribution": release.distribution,
         "version": version,
-        "debian_version": f"{version}-1",
+        "debian_version": debian_version,
         "package": str(package),
         "package_sha256": digest(package.read_bytes()),
         "wheel": wheel.name,
