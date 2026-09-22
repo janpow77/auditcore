@@ -3,7 +3,7 @@
 Eigenständig installierbare Testrechnungsbibliothek mit vollständigen Parteien,
 Positionen, numerischen Beträgen, Datumsfeldern und expliziten Fehlerfällen.
 Die Anwendung bleibt ein eigenes Repository. Einzige Paketpflicht:
-`auditcore_dummygenerator==0.1.0`; keine Plattform-, Web-, DB- oder PDF-Abhängigkeit.
+`auditcore_dummygenerator==0.1.0`; keine Plattform-, Web- oder DB-Pflichtabhängigkeit. PDF ist ein optionales Extra.
 
 ```python
 from datetime import date
@@ -21,7 +21,7 @@ unterstützt. Parteien- und Rechnungszufall sind getrennt; gleicher Seed und
 Bezugsdatum liefern auf frischen Instanzen gleiche vollständige Ergebnisse.
 Instanzen werden sequenziell benutzt. Ein Aufruf verändert weder globalen
 Zufallszustand noch übergebene Fehlerpläne. Der JSON-Renderer ist vollständig
-enthalten; PDF/Scan/UBL/XRechnung sind nicht implementiert oder versprochen.
+enthalten; PDF ist seit 0.2.0 optional verfügbar. Scan/UBL/XRechnung sind nicht implementiert.
 
 Fehler: `wrong_total`, `missing_vat_id`, `date_before_reference` und explizite
 Duplikate. `metadata.injected_errors` benennt die beabsichtigte Abweichung;
@@ -64,11 +64,60 @@ wurde nicht damit gleichgesetzt.
 
 ## Installation und Prüfungen
 
+### Optionaler PDF-Renderer ab 0.2.0
+
+```bash
+pip install 'auditcore_invoicegenerator[pdf]==0.2.0'
+```
+
+```python
+from pathlib import Path
+from auditcore_invoicegenerator import render_pdf
+
+Path("synthetic-invoice.pdf").write_bytes(render_pdf(invoices[0]))
+```
+
+Der Renderer liefert Bytes und verändert keine Eingaben. Er druckt Parteien,
+Rechnungs-/Leistungs-/Fälligkeitsdatum, alle Positionen, Einzelpreise, Mengen,
+Währung, Steuerbetrag und Summen mit automatischem Seitenumbruch. Beabsichtigte
+Rechenfehler werden nicht korrigiert; die Lösungshinweise in `metadata` werden
+nicht auf der Rechnung verraten. Jede Seite trägt eine sichtbare Kennzeichnung
+als synthetische Testrechnung. Bei identischen Daten und derselben ReportLab-
+Version entstehen identische Bytes, unabhängig von der aktuellen Uhrzeit.
+
+Die Standardschrift unterstützt Windows-1252 einschließlich deutscher Umlaute.
+Andere Zeichen, Steuerzeichen, nichtendliche Zahlen und übergroße Eingaben werden
+mit `ValueError` abgewiesen, statt Zeichen unsichtbar zu verlieren. Grenzen:
+2000 Zeichen je Textfeld, 2000 Positionen, 200000 Zeichen insgesamt, Betrags-/
+Mengengrößen höchstens 10^15. Die Anzeige nutzt zwei Nachkommastellen; die
+fachlichen Floatwerte des Eingabedatensatzes bleiben unverändert.
+
+Es werden ausschließlich Klartextzeichen gezeichnet: kein HTML/RML, keine Bilder,
+Links, Skripte, Dateianhänge, Schrift- oder Netzwerkdownloads. Fehlendes ReportLab
+führt erst beim PDF-Aufruf zu `PDFDependencyError` mit Installationshinweis. Der
+JSON-/Generator-Kern lässt sich weiterhin ohne dieses Extra verwenden.
+
+Das pip-Extra verwendet ReportLab ab 4.5.1 und unter 6 als getestete moderne
+Abhängigkeitslinie; dieser Wert ist keine pauschale CVE-Grenze. Debian Bookworm
+führt eine separat gepatchte Linie `3.6.12-1+deb12u1`, siehe
+[Debian Security Tracker](https://security-tracker.debian.org/tracker/source-package/python-reportlab)
+und [DSA-5791-1](https://security-tracker.debian.org/tracker/DSA-5791-1), das den
+Fix für CVE-2023-33733 in genau dieser Debian-Revision ausweist.
+APT-Kompatibilität muss mit dem tatsächlichen Debian-Paket geprüft werden;
+die Upstream-Version allein beschreibt dessen Backports nicht. Der Renderer
+verwendet keine ReportLab-Markupauswertung oder externen Bildquellen. Eine
+Freigabe beliebiger ungepatchter alter PyPI-Versionen wird daraus nicht abgeleitet.
+
+PDF ist ein Anzeigeformat dieser Testrechnungen, kein PDF/A-, Signatur-,
+Barrierefreiheits-, UBL-, Scan- oder Rechtskonformitätsnachweis.
+
+### Kernpaket
+
 Lokale Wheels beziehungsweise freigegebene Paketquelle vorausgesetzt:
 
 ```text
 # requirements.txt
-auditcore_invoicegenerator==0.1.0
+auditcore_invoicegenerator==0.2.0
 ```
 
 `pip install -r requirements.txt` löst die deklarierte Dummy-Abhängigkeit auf.

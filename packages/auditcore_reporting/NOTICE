@@ -1,0 +1,14 @@
+auditcore_reporting 0.2.0
+
+MIT source reused from janpow77/flowlib:
+Commit aca2dc6aad25aea0720312dbcc6da00b0bcba330
+python/flowlib/excel/formats.py — format rules and column-width calculations
+python/flowlib/excel/report.py — worksheet/header/data styling behavior
+python/flowlib/excel/styles.py — header, alternating-row and border definitions
+Copyright (c) 2026 Jan Riener. Original MIT terms retained in LICENSE.
+
+The old get_number_format contract remains unchanged. Workbook rendering is
+an adaptation with explicit input/resource limits, literal text cells and
+standard-library table contracts instead of pandas or application data access.
+No JKB implementation, application query, HTTP exporter or authentication
+client is included. No conformity to a corporate-design standard is claimed.

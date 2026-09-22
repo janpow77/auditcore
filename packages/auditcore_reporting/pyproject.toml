@@ -4,22 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_reporting"
-version = "0.1.0"
+version = "0.2.0"
 description = "Characterized reporting format rules preserving Flowlib behavior"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15"]
+excel = ["openpyxl>=3.0.9,<4", "defusedxml>=0.7.1"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "openpyxl>=3.0.9,<4", "types-openpyxl>=3.1", "pandas>=2", "build>=1.2", "defusedxml>=0.7.1", "types-defusedxml>=0.7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-auditcore_reporting = ["py.typed"]
+auditcore_reporting = ["py.typed", "profile-registry.json", "provenance.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

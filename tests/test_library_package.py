@@ -243,3 +243,31 @@ def test_direct_dependency_urls_and_options_are_rejected(tmp_path, requirement):
     wheel = make_wheel(tmp_path, requirements=(requirement,))
     with pytest.raises(ValueError, match="dependency"):
         _wheel_payload(wheel)
+
+
+def test_optional_renderer_mapping_is_suggested_without_forcing_runtime(tmp_path):
+    requirement = 'reportlab>=4; extra == "pdf"'
+    wheel = make_wheel(tmp_path, requirements=(requirement,))
+    result = build(
+        wheel,
+        tmp_path / "optional",
+        optional_dependency_mapping={requirement: "python3-reportlab (>= 3.6.12-1+deb12u1)"},
+    )
+    control = run(["dpkg-deb", "--field", result["package"]])
+    assert "Suggests: python3-reportlab (>= 3.6.12-1+deb12u1)" in control
+    assert result["depends"] == ["python3 (>= 3.11)"]
+    assert result["suggests"] == ["python3-reportlab (>= 3.6.12-1+deb12u1)"]
+
+
+@pytest.mark.parametrize(
+    "mapping",
+    [
+        {"unrelated": "python3-reportlab"},
+        {'reportlab>=4; extra == "pdf"': "python3-reportlab\nDepends: injected"},
+        ["python3-reportlab"],
+    ],
+)
+def test_reject_undeclared_or_injected_optional_dependencies(tmp_path, mapping):
+    wheel = make_wheel(tmp_path, requirements=('reportlab>=4; extra == "pdf"',))
+    with pytest.raises(ValueError):
+        build(wheel, tmp_path / "rejected", optional_dependency_mapping=mapping)

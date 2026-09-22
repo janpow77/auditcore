@@ -1,0 +1,119 @@
+"""Reject stale or incomplete optional-renderer release evidence (synthetic fixtures)."""
+
+import importlib.util
+import io
+import json
+import zipfile
+from pathlib import Path
+
+import pytest
+
+SPEC = importlib.util.spec_from_file_location(
+    "release_preparation",
+    Path(__file__).resolve().parents[1] / "scripts/prepare_library_release.py",
+)
+assert SPEC is not None and SPEC.loader is not None
+release = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(release)
+
+
+def fixture_wheel(package, version, metadata=""):
+    stream = io.BytesIO()
+    with zipfile.ZipFile(stream, "w") as archive:
+        archive.writestr(
+            f"{package}-{version}.dist-info/METADATA",
+            f"Name: {package}\nVersion: {version}\n{metadata}",
+        )
+    return stream.getvalue()
+
+
+def fixture_evidence(tmp_path):
+    invoice = "auditcore_invoicegenerator-0.2.0-py3-none-any.whl"
+    dummy = "auditcore_dummygenerator-0.1.0-py3-none-any.whl"
+    assets = {
+        invoice: fixture_wheel(
+            "auditcore_invoicegenerator",
+            "0.2.0",
+            "Provides-Extra: pdf\nRequires-Dist: auditcore_dummygenerator==0.1.0\n"
+            'Requires-Dist: reportlab>=4; extra == "pdf"\n',
+        ),
+        dummy: fixture_wheel("auditcore_dummygenerator", "0.1.0"),
+    }
+    hashes = {name: release.digest(data) for name, data in assets.items()}
+    base = "https://github.com/janpow77/auditcore/releases/download/v0.2.0"
+    filename = "requirements-auditcore_invoicegenerator-pdf.txt"
+    text = (
+        "--index-url https://pypi.org/simple\n--require-hashes\n"
+        f"auditcore-invoicegenerator[pdf] @ {base}/{invoice} --hash=sha256:{hashes[invoice]}\n"
+        f"auditcore-dummygenerator @ {base}/{dummy} --hash=sha256:{hashes[dummy]}\n"
+        f"reportlab==5.0.1 --hash=sha256:{'a' * 64}\n"
+    )
+    (tmp_path / filename).write_text(text)
+    checks = {}
+    for name in [
+        "apt-renderers",
+        *[
+            f"pdf-{stage}"
+            for stage in (
+                "install",
+                "smoke",
+                "independence",
+                "pip-check",
+                "remove",
+                "locked-install",
+                "locked-smoke",
+            )
+        ],
+    ]:
+        content = b"Synthetic evidence fixture; not an executed package test.\n"
+        (tmp_path / f"{name}.log").write_bytes(content)
+        checks[name] = {"status": "PASS", "exit_code": 0, "log_sha256": release.digest(content)}
+    report = {
+        "scope": "OPTIONAL_RENDERER_INSTALLATION",
+        "status": "PASS",
+        "release_version": "0.2.0",
+        "checks": checks,
+        "features": {
+            "pdf": {
+                "status": "PASS",
+                "package": "auditcore_invoicegenerator",
+                "version": "0.2.0",
+                "wheel_hashes": hashes,
+                "dependencies": {"reportlab": "5.0.1"},
+                "requirements": filename,
+                "requirements_sha256": release.digest(text.encode()),
+            }
+        },
+    }
+    return assets, report
+
+
+def test_optional_release_accepts_exact_mixed_version_dependency_closure(tmp_path):
+    assets, report = fixture_evidence(tmp_path)
+    (tmp_path / "result.json").write_text(json.dumps(report))
+    output = release.optional_assets(assets, tmp_path, "0.2.0")
+    assert set(output) == {
+        "requirements-auditcore_invoicegenerator-pdf.txt",
+        "optional-renderer-verification.json",
+    }
+
+
+@pytest.mark.parametrize("change", ["empty", "missing_dependency", "version", "package", "url"])
+def test_optional_release_rejects_stale_or_incomplete_bindings(tmp_path, change):
+    assets, report = fixture_evidence(tmp_path)
+    feature = report["features"]["pdf"]
+    if change == "empty":
+        feature["wheel_hashes"] = {}
+    elif change == "missing_dependency":
+        feature["wheel_hashes"].pop("auditcore_dummygenerator-0.1.0-py3-none-any.whl")
+    elif change == "version":
+        feature["version"] = "0.1.0"
+    elif change == "package":
+        feature["package"] = "auditcore_reporting"
+    else:
+        lock = tmp_path / feature["requirements"]
+        lock.write_text(lock.read_text().replace("download/v0.2.0", "download/v0.1.0"))
+        feature["requirements_sha256"] = release.digest(lock.read_bytes())
+    (tmp_path / "result.json").write_text(json.dumps(report))
+    with pytest.raises(ValueError):
+        release.optional_assets(assets, tmp_path, "0.2.0")

@@ -31,6 +31,11 @@ def main() -> int:
     parser.add_argument("--allow-unreviewed-license", action="store_true")
     parser.add_argument("--apt", action="store_true")
     parser.add_argument("--image", default="auditcore-package-test:bookworm")
+    parser.add_argument(
+        "--optional-dependency-mappings",
+        type=Path,
+        default=Path(__file__).resolve().parents[1] / "packaging/library-extras.json",
+    )
     args = parser.parse_args()
     # Preserve the venv executable path: resolving its symlink loses its environment.
     platform_python = args.platform_python.absolute()
@@ -89,6 +94,11 @@ def main() -> int:
             save()
             raise
 
+    optional_mappings = (
+        json.loads(args.optional_dependency_mappings.read_text())
+        if args.optional_dependency_mappings.is_file()
+        else {}
+    )
     license_option = ["--allow-unreviewed-license"] if args.allow_unreviewed_license else []
     try:
         run(
@@ -284,6 +294,10 @@ def main() -> int:
                         mapping[requirement] = f"python3-{normalized} (= {match[2]}-{revision})"
                     mapping_file = output / f"mapping-{package['name']}-{revision}.json"
                     mapping_file.write_text(json.dumps(mapping))
+                    optional_mapping_file = output / f"optional-{package['name']}.json"
+                    optional_mapping_file.write_text(
+                        json.dumps(optional_mappings.get(package["name"], {}))
+                    )
                     run(
                         f"deb-{package['name']}-{revision}",
                         [
@@ -300,6 +314,8 @@ def main() -> int:
                             str(revision),
                             "--dependency-mapping",
                             str(mapping_file),
+                            "--optional-dependency-mapping",
+                            str(optional_mapping_file),
                             *license_option,
                         ],
                     )

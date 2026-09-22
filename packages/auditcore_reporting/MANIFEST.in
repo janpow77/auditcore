@@ -1,2 +1,5 @@
 include LICENSE README.md provenance.json auditcore-context.json
 recursive-include tests *.py *.json
+include NOTICE
+recursive-include tools *.py
+recursive-include docs *.md

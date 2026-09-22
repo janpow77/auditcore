@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "flowlib-legacy-v1": {
+      "artifact_id": "auditcore.reporting.flowlib-legacy-v1",
+      "type": "rulebook",
+      "title": "Original Flowlib column-name formatting",
+      "version": "1.0.0",
+      "package_version": "0.2.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T18:02:08.851298+00:00",
+      "updated_at": "2026-09-22T18:02:08.851298+00:00",
+      "owner": "Jan Riener",
+      "author": "Jan Riener (source); Codex (extraction metadata)",
+      "organization": "UNKNOWN",
+      "predecessor": "auditcore_reporting@0.1.0:get_number_format",
+      "source": {
+        "repository": "janpow77/flowlib",
+        "commit": "aca2dc6aad25aea0720312dbcc6da00b0bcba330"
+      },
+      "change_reason": "Expose named format profiles without changing existing Flowlib behavior",
+      "content": {
+        "profile_id": "flowlib-legacy-v1",
+        "implementation_hashes": {
+          "formats.py": "e3468fbceb97d27217402297f9606b27ade9ca62a9ffe1a972088714d73a02ec",
+          "profiles.py": "0f5df8237bc32cdb4dfa0d009eff327ff9d1e628d0e464898d483581a6f51247"
+        }
+      },
+      "content_hash": "6f94e2bbaec8bda110460f59ea9e5b3220f92509d0ffe97bf54e98bda94eedd9",
+      "review": {
+        "technical_tests": "tests/test_formats.py and tests/test_excel.py",
+        "human_release_approval": "NOT_CLAIMED"
+      },
+      "release_policy": "docs/profiles.md"
+    },
+    "plain-v1": {
+      "artifact_id": "auditcore.reporting.plain-v1",
+      "type": "template",
+      "title": "Explicit General formatting without heuristics",
+      "version": "1.0.0",
+      "package_version": "0.2.0",
+      "status": "Draft",
+      "created_at": "2026-09-22T18:02:08.851298+00:00",
+      "updated_at": "2026-09-22T18:02:08.851298+00:00",
+      "owner": "Jan Riener",
+      "author": "Jan Riener (source); Codex (extraction metadata)",
+      "organization": "UNKNOWN",
+      "predecessor": null,
+      "source": {
+        "kind": "new explicitly neutral profile"
+      },
+      "change_reason": "Expose named format profiles without changing existing Flowlib behavior",
+      "content": {
+        "profile_id": "plain-v1",
+        "implementation_hashes": {
+          "formats.py": "e3468fbceb97d27217402297f9606b27ade9ca62a9ffe1a972088714d73a02ec",
+          "profiles.py": "0f5df8237bc32cdb4dfa0d009eff327ff9d1e628d0e464898d483581a6f51247"
+        }
+      },
+      "content_hash": "ef555932e36288b4cdb96cf6f0494362f0cb7e9ca69150aa490306d01a6baae3",
+      "review": {
+        "technical_tests": "tests/test_formats.py and tests/test_excel.py",
+        "human_release_approval": "NOT_CLAIMED"
+      },
+      "release_policy": "docs/profiles.md"
+    }
+  }
+}

@@ -19,4 +19,6 @@ algorithms/catalogs; it does not claim to relicense the entire source repository
 Portal sources, or unrelated third-party material.
 
 This package does not contain the source's sanctions-list or TED-list exporters,
-PDF renderer, web application, database or background worker.
+upstream PDF renderer, web application, database or background worker.
+The optional PDF renderer introduced in 0.2.0 is newly implemented in auditcore;
+no other application's PDF implementation was copied.

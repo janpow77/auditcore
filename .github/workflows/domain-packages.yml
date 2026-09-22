@@ -3,14 +3,20 @@ on:
   push:
     paths:
       - 'packages/**'
+      - 'packaging/**'
       - 'src/auditcore/tools/deployer/**'
       - 'scripts/verify_domain_packages.py'
+      - 'scripts/verify_optional_renderers.py'
+      - 'scripts/prepare_library_release.py'
       - '.github/workflows/domain-packages.yml'
   pull_request:
     paths:
       - 'packages/**'
+      - 'packaging/**'
       - 'src/auditcore/tools/deployer/**'
       - 'scripts/verify_domain_packages.py'
+      - 'scripts/verify_optional_renderers.py'
+      - 'scripts/prepare_library_release.py'
       - '.github/workflows/domain-packages.yml'
 permissions:
   contents: read
@@ -55,6 +61,11 @@ jobs:
               command.append('--apt')
           subprocess.run(command, check=True)
           PY
+      - name: Verify optional PDF and Excel installations and hash locks
+        run: |
+          python scripts/verify_optional_renderers.py .auditcore/domain-ci \
+            --output .auditcore/optional-renderers-ci --release-version 0.2.0 \
+            ${{ matrix.python == '3.12' && '--apt' || '' }}
       - name: Test installed domain wheels against their source test suites
         run: |
           python - <<'PY'
@@ -76,6 +87,9 @@ jobs:
           name: domain-package-evidence-${{ matrix.python }}
           include-hidden-files: true
           path: |
+            .auditcore/optional-renderers-ci/result.json
+            .auditcore/optional-renderers-ci/*.log
+            .auditcore/optional-renderers-ci/requirements-*.txt
             .auditcore/domain-ci/result.json
             .auditcore/domain-ci/*.log
             .auditcore/domain-ci/pip-install.json

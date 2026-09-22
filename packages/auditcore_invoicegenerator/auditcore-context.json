@@ -11,7 +11,8 @@
   "documents": true,
   "dsfa_required": false,
   "export_formats": [
-    "json"
+    "json",
+    "pdf"
   ],
   "exports": true,
   "external_interfaces": false,

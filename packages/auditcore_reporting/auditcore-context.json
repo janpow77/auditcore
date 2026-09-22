@@ -8,10 +8,12 @@
   "delegation": false,
   "deployment_target": "internal_test",
   "document_storage": false,
-  "documents": false,
+  "documents": true,
   "dsfa_required": false,
-  "export_formats": [],
-  "exports": false,
+  "export_formats": [
+    "xlsx"
+  ],
+  "exports": true,
   "external_interfaces": false,
   "graphical_ui": false,
   "interactive_workspace": false,
@@ -24,7 +26,10 @@
   "structured_imports": false,
   "uploads": false,
   "user_model": "no_users",
-  "versioned_artifact_types": [],
-  "versioned_artifacts": false,
+  "versioned_artifact_types": [
+    "rulebook",
+    "template"
+  ],
+  "versioned_artifacts": true,
   "workflow": "calculation_only"
 }

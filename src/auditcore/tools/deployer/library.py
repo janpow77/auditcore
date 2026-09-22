@@ -166,6 +166,7 @@ def build_library_deb(
     source_date_epoch: int,
     maintainer: str,
     dependency_mapping: dict[str, str] | None = None,
+    optional_dependency_mapping: dict[str, str] | None = None,
     allow_unreviewed_license: bool = False,
     debian_revision: int = 1,
 ) -> dict[str, Any]:
@@ -179,6 +180,7 @@ def build_library_deb(
     release = _wheel_payload(wheel, allow_unreviewed_license=allow_unreviewed_license)
     version, payload, scripts = release.version, release.payload, release.scripts
     mapping = {} if dependency_mapping is None else dependency_mapping
+    optional_mapping = {} if optional_dependency_mapping is None else optional_dependency_mapping
     if not isinstance(mapping, dict) or not all(
         isinstance(key, str) and isinstance(value, str) for key, value in mapping.items()
     ):
@@ -187,12 +189,22 @@ def build_library_deb(
         )
     if set(mapping) != set(release.dependencies):
         raise ValueError("Every runtime requirement needs an exact Debian dependency mapping")
-    for mapped in mapping.values():
+    if (
+        not isinstance(optional_mapping, dict)
+        or not all(
+            isinstance(key, str) and isinstance(value, str)
+            for key, value in optional_mapping.items()
+        )
+        or not set(optional_mapping).issubset(release.extras)
+    ):
+        raise ValueError("Optional mappings must reference declared wheel extra requirements")
+    for mapped in (*mapping.values(), *optional_mapping.values()):
         if not re.fullmatch(
             r"[a-z0-9][a-z0-9+.-]*(?: \((?:>=|<=|=|>>|<<) [0-9][A-Za-z0-9.+:~\-]*\))?", mapped
         ):
             raise ValueError("Invalid Debian dependency mapping")
     depends = ["python3 (>= 3.11)", *sorted(set(mapping.values()))]
+    suggests = sorted(set(optional_mapping.values()))
     package_name = f"python3-{release.distribution}"
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -243,7 +255,8 @@ def build_library_deb(
             f"Package: {package_name}\n"
             f"Version: {debian_version}\nArchitecture: all\nMaintainer: {maintainer}\n"
             f"Section: python\nPriority: optional\nDepends: {', '.join(depends)}\n"
-            f"Installed-Size: {installed_size}\n"
+            + (f"Suggests: {', '.join(suggests)}\n" if suggests else "")
+            + f"Installed-Size: {installed_size}\n"
             "Homepage: https://github.com/janpow77/auditcore\n"
             f"Description: Python library {release.distribution}\n"
             " Independently installable library maintained in the auditcore repository.\n"
@@ -287,6 +300,8 @@ def build_library_deb(
         "python_path": "/usr/lib/python3/dist-packages",
         "depends": depends,
         "dependency_mapping": mapping,
+        "suggests": suggests,
+        "optional_dependency_mapping": optional_mapping,
         "optional_requirements_not_bundled": release.extras,
         "console_scripts": scripts,
         "license_expression": release.license_expression,

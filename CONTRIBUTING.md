@@ -1,7 +1,11 @@
 # Contributing
 
-Read AUDITCORE_LASTENHEFT.md and docs/analysis.md before changes. Keep one project
-and release cycle. Domain modules cannot import tools, frameworks or infrastructure.
+Read AUDITCORE_LASTENHEFT.md, docs/analysis.md and
+`docs/architecture/ADR-001-multi-package-monorepo.md` before changes. The accepted
+architecture is one repository hosting the platform and independently installable
+domain distributions under `packages/`. Applications remain separate repositories.
+Domain cores cannot import platform tools, web frameworks or application infrastructure;
+explicitly selected renderer/source adapters declare their optional dependencies.
 Do not invent business rules, legal thresholds or successful test outcomes.
 
 Use a virtual environment and install `python -m pip install -e ".[dev]"`.
