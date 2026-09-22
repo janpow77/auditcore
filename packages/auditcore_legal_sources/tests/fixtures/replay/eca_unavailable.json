@@ -1,0 +1,16 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://www.eca.europa.eu/de/publications",
+    "params": {}
+   },
+   "response": {
+    "status": 503,
+    "headers": {},
+    "body_text": ""
+   }
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link><description>Synthetischer Feed</description><item><title>Allgemeinverfügung zur Vergabe</title><link>https://example.invalid/bafin/a1</link><description>Text</description><pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate></item><item><title>Aufsichtsmitteilung</title><link>https://example.invalid/bafin/a2</link><description>Mehr Text</description><pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate></item></channel></rss>"
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Massnahmen.xml",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link><description>Synthetischer Feed</description><item><title>Maßnahme gegen Institut</title><link>https://example.invalid/bafin/m1</link><description>Text</description><pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate></item></channel></rss>"
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Presse.xml",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link><description>Synthetischer Feed</description></channel></rss>"
+   }
+  }
+ ]
+}

@@ -99,22 +99,35 @@ def main() -> None:
             output, exception = jsonable(call()), None
         except Exception as exc:  # noqa: BLE001
             output, exception = None, error(exc)
-        cases.append({"name": name, "operation": operation, "inputs": inputs,
-                      "output": output, "exception": exception})
+        cases.append(
+            {
+                "name": name,
+                "operation": operation,
+                "inputs": inputs,
+                "output": output,
+                "exception": exception,
+            }
+        )
 
     bafin, curia, eca = rss.BaFinHarvester(), rss.CURIAHarvester(), rss.ECAHarvester()
     for feed_name, xml in (("aufsicht", BAFIN_RSS), ("atom", ATOM)):
         parsed = feedparser.parse(xml)
         for index, entry in enumerate(parsed.entries):
-            record(f"bafin-entry-{feed_name}-{index}", "bafin_entry",
-                   {"feed": feed_name, "entry": entry_data(entry), "index": index},
-                   lambda e=entry, f=feed_name: bafin._normalize_entry(e, f))
+            record(
+                f"bafin-entry-{feed_name}-{index}",
+                "bafin_entry",
+                {"feed": feed_name, "entry": entry_data(entry), "index": index},
+                lambda e=entry, f=feed_name: bafin._normalize_entry(e, f),
+            )
     for feed_name in ("gerichtshof", "urteile"):
         parsed = feedparser.parse(CURIA_RSS)
         for index, entry in enumerate(parsed.entries):
-            record(f"curia-entry-{feed_name}-{index}", "curia_entry",
-                   {"feed": feed_name, "entry": entry_data(entry), "index": index},
-                   lambda e=entry, f=feed_name: curia._normalize_entry(e, f))
+            record(
+                f"curia-entry-{feed_name}-{index}",
+                "curia_entry",
+                {"feed": feed_name, "entry": entry_data(entry), "index": index},
+                lambda e=entry, f=feed_name: curia._normalize_entry(e, f),
+            )
     record("eca-core-reports", "eca_core", {}, eca._get_core_reports)
 
     def feed_route(call: dict[str, Any]) -> Any:
@@ -135,36 +148,66 @@ def main() -> None:
     factory.calls.clear()
     curia_result = asyncio.run(rss.CURIAHarvester().harvest())
     curia_calls = [c["url"] for c in factory.calls]
-    cases.append({"name": "rss-shared-feed-cache", "operation": "rss_flow", "inputs": {},
-                  "output": {"bafin": jsonable(bafin_result), "bafin_calls": bafin_calls,
-                             "curia": jsonable(curia_result), "curia_calls": curia_calls,
-                             "cache_shared": rss.BaFinHarvester._working_feeds
-                             is rss.CURIAHarvester._working_feeds},
-                  "exception": None})
+    cases.append(
+        {
+            "name": "rss-shared-feed-cache",
+            "operation": "rss_flow",
+            "inputs": {},
+            "output": {
+                "bafin": jsonable(bafin_result),
+                "bafin_calls": bafin_calls,
+                "curia": jsonable(curia_result),
+                "curia_calls": curia_calls,
+                "cache_shared": rss.BaFinHarvester._working_feeds
+                is rss.CURIAHarvester._working_feeds,
+            },
+            "exception": None,
+        }
+    )
     rss.RSSHarvester._working_feeds.clear()
     factory.calls.clear()
     curia_alone = asyncio.run(rss.CURIAHarvester().harvest())
-    cases.append({"name": "curia-harvest-fresh-cache", "operation": "rss_flow", "inputs": {},
-                  "output": {"result": jsonable(curia_alone),
-                             "calls": [c["url"] for c in factory.calls]}, "exception": None})
+    cases.append(
+        {
+            "name": "curia-harvest-fresh-cache",
+            "operation": "rss_flow",
+            "inputs": {},
+            "output": {"result": jsonable(curia_alone), "calls": [c["url"] for c in factory.calls]},
+            "exception": None,
+        }
+    )
     rss.ECAHarvester._working_url = None
     eca_scraped = asyncio.run(rss.ECAHarvester().harvest())
     rss.ECAHarvester._working_url = None
     rss.httpx.AsyncClient = FakeClientFactory(lambda call: FakeResponse(503, text=""))
     eca_fallback = asyncio.run(rss.ECAHarvester().harvest())
-    cases.append({"name": "eca-harvest", "operation": "eca_flow", "inputs": {"html": ECA_HTML},
-                  "output": {"scraped": jsonable(eca_scraped), "fallback": jsonable(eca_fallback)},
-                  "exception": None})
+    cases.append(
+        {
+            "name": "eca-harvest",
+            "operation": "eca_flow",
+            "inputs": {"html": ECA_HTML},
+            "output": {"scraped": jsonable(eca_scraped), "fallback": jsonable(eca_fallback)},
+            "exception": None,
+        }
+    )
     report = {
         "status": "OBSERVED",
         "scope": "LOCAL_LEGACY_CHARACTERIZATION_SYNTHETIC_FEEDS_NO_NETWORK",
-        "source": {"repository": "janpow77/auditdatabase",
-                   "commit": SOURCES["auditdatabase"]["commit"],
-                   "files": [{"path": "backend/app/harvester/rss.py", "git_blob": RSS_BLOB}]},
-        "environment": {"feedparser": feedparser.__version__,
-                        "PYTHONHASHSEED": os.environ.get("PYTHONHASHSEED", "random")},
-        "documents": {"bafin_rss": BAFIN_RSS, "curia_rss": CURIA_RSS, "atom": ATOM,
-                      "eca_html": ECA_HTML},
+        "source": {
+            "repository": "janpow77/auditdatabase",
+            "commit": SOURCES["auditdatabase"]["commit"],
+            "files": [{"path": "backend/app/harvester/rss.py", "git_blob": RSS_BLOB}],
+        },
+        "environment": {
+            "feedparser": feedparser.__version__,
+            "PYTHONHASHSEED": os.environ.get("PYTHONHASHSEED", "random"),
+        },
+        "documents": {
+            "bafin_rss": BAFIN_RSS,
+            "curia_rss": CURIA_RSS,
+            "atom": ATOM,
+            "eca_html": ECA_HTML,
+        },
         "profile": {
             "bafin_feeds": dict(rss.BaFinHarvester.FEEDS),
             "bafin_alternative_feeds": dict(rss.BaFinHarvester.ALTERNATIVE_FEEDS),
@@ -176,8 +219,15 @@ def main() -> None:
         "cases": cases,
     }
     args.output.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
-    print(json.dumps({"status": "OBSERVED", "cases": len(cases),
-                      "exceptions": sum(c["exception"] is not None for c in cases)}))
+    print(
+        json.dumps(
+            {
+                "status": "OBSERVED",
+                "cases": len(cases),
+                "exceptions": sum(c["exception"] is not None for c in cases),
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

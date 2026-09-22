@@ -1,0 +1,46 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=de",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link><description>Synthetischer Feed</description><item><title>Urteil C-123/22 zur EFRE-Förderung</title><link>https://example.invalid/curia/1</link><description>Kohäsionspolitik</description><pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate></item><item><title>Urteil ohne Bezug</title><link>https://example.invalid/curia/2</link><description>Zollrecht</description><pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate></item></channel></rss>"
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=de",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link><description>Synthetischer Feed</description><item><title>Urteil T-45/21 Beihilfe</title><link>https://example.invalid/curia/3</link><description>Beihilferecht</description><pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate></item></channel></rss>"
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://curia.europa.eu/jcms/rss.jsp?lang=de&secondLang=en",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link><description>Synthetischer Feed</description></channel></rss>"
+   }
+  }
+ ]
+}
