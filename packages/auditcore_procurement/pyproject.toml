@@ -14,13 +14,21 @@ dependencies = []
 
 [project.optional-dependencies]
 html = ["lxml>=4.9.2"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "lxml>=4.9.2"]
+sources = ["auditcore_harvest==0.1.0"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "lxml>=4.9.2",
+    "auditcore_harvest==0.1.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-auditcore_procurement = ["py.typed", "provenance.json", "profiles/*.json"]
+auditcore_procurement = ["py.typed", "provenance.json", "sources_catalog.json", "profiles/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
