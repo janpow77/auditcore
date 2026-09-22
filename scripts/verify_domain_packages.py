@@ -210,6 +210,62 @@ def main() -> int:
                 f"assert all(importlib.util.find_spec(n) is None for n in {names!r})",
             ],
         )
+        by_distribution = {p["distribution"]: p for p in report["packages"]}
+        for package in report["packages"]:
+            selected = package["distribution"]
+            expected = {selected}
+            pending = [selected]
+            while pending:
+                for requirement in by_distribution[pending.pop()]["runtime_requirements"]:
+                    match = re.fullmatch(r"([A-Za-z0-9_.-]+)==([0-9.]+)", requirement)
+                    if not match:
+                        raise ValueError("Selective proof requires pinned internal dependencies")
+                    dependency = re.sub(r"[-_.]+", "-", match[1]).lower()
+                    if dependency not in by_distribution:
+                        raise ValueError("Dependency missing from the local package index")
+                    if dependency not in expected:
+                        expected.add(dependency)
+                        pending.append(dependency)
+            selected_requirements = output / f"requirements-{selected}.txt"
+            selected_requirements.write_text(f"{selected}=={package['version']}\n")
+            selected_report = output / f"pip-selected-{selected}.json"
+            run(
+                f"selective-install-{selected}",
+                [
+                    python,
+                    "-I",
+                    "-m",
+                    "pip",
+                    "--isolated",
+                    "install",
+                    "--index-url",
+                    (index / "simple").as_uri() + "/",
+                    "--only-binary=:all:",
+                    "--no-cache-dir",
+                    "--disable-pip-version-check",
+                    "--report",
+                    str(selected_report),
+                    "-r",
+                    str(selected_requirements),
+                ],
+            )
+            installed = json.loads(selected_report.read_text())["install"]
+            observed = {
+                re.sub(r"[-_.]+", "-", row["metadata"]["name"]).lower() for row in installed
+            }
+            if observed != expected or {
+                row["download_info"]["archive_info"]["hashes"]["sha256"] for row in installed
+            } != {by_distribution[name]["wheel_sha256"] for name in expected}:
+                raise RuntimeError("Selective install pulled unexpected code or dependencies")
+            run(
+                f"selective-smoke-{selected}",
+                [python, "-I", str(output / f"smoke-{package['name']}.py")],
+            )
+            run(
+                f"selective-remove-{selected}",
+                [python, "-I", "-m", "pip", "uninstall", "-y", *sorted(expected)],
+            )
+            package["selective_installed_distributions"] = sorted(observed)
         if args.apt:
             versions = {p["distribution"]: p["version"] for p in report["packages"]}
             for revision in (1, 2):

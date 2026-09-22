@@ -23,6 +23,25 @@ Die vorhandene Funktion `auditcore.reporting.get_number_format` wurde mit
 34 Characterization-Fällen aus Flowlib übernommen; Herkunft und MIT-Lizenz
 stehen unter `docs/provenance` und `LICENSES`.
 
+## Eigenständige Fachpakete
+
+| Distribution / Import | Funktion | Pflichtabhängigkeiten |
+|---|---|---|
+| [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | Synthetische Felder und Zeilen, feste Seeds/Bezugsdaten, explizite Fehlerszenarien | Keine |
+| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | Vollständige synthetische Rechnungen, Positions-/Betragsdaten, historische Profile und JSON-Ausgabe | `auditcore_dummygenerator==0.1.0` |
+| [`auditcore_reporting`](packages/auditcore_reporting) | Charakterisierte Flowlib-Zahlenformate für Berichte | Keine |
+
+Die Installation des Rechnungsgenerators benötigt weder Reporting noch die
+Plattformbibliothek. Alle Pakete werden aus eigenen `pyproject.toml` gebaut und
+haben eigene Tests, Anwendbarkeitskontexte und Herkunftsnachweise. Anwendungen
+bleiben getrennte Repositories. Synthetische Testrechnungen sind keine Zusage
+eines Systems zur verbindlichen Rechnungsstellung. PDF-Renderer gehören derzeit
+nicht zum Rechnungspaket.
+
+[Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md).
+Der technische Frameworknachweis ist im
+[Phasenbericht](docs/reports/FRAMEWORK_PHASES_1_2.md) dokumentiert.
+
 ## Installation
 
 Python 3.11 oder neuer, für Entwicklung:

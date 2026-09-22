@@ -7,8 +7,10 @@
   "data_space": "single_project",
   "delegation": false,
   "deployment_target": "internal_test",
+  "document_storage": false,
   "documents": false,
   "dsfa_required": false,
+  "export_formats": [],
   "exports": false,
   "external_interfaces": false,
   "graphical_ui": false,
@@ -22,7 +24,7 @@
   "structured_imports": false,
   "uploads": false,
   "user_model": "no_users",
-  "versioned_artifacts": false,
   "versioned_artifact_types": [],
+  "versioned_artifacts": false,
   "workflow": "calculation_only"
 }
