@@ -125,6 +125,58 @@ explizitem menschlichem Review. Quelleigene externe Vorlagenhinweise
 (insbesondere BfDI/CC-BY-SA 4.0) benötigen Rechte-/Attributionsprüfung;
 die MIT-Freigabe der zwei Generatoren gilt nicht automatisch für diese Inhalte.
 
+### H0 — Gemeinsamer Datenharvest: `auditcore_harvest`
+
+**Ausdrücklich gewünschter gemeinsamer Kern für alle angebundenen Datenharvester.**
+Dieser Teil war bislang bedingt vorgesehen und ist nun als eigener technischer
+Bibliotheksvertrag konkretisiert. Die unterschiedlichen Quellenadapter verwenden
+denselben Ablauf und dieselben Nachweis-/Fortschrittsverträge. Das Kernpaket
+installiert keine komplette Sammlung aller Quellen oder deren Spezialabhängigkeiten.
+
+Gemeinsame Fähigkeiten:
+
+- `Source`, `HarvestRequest`, `HarvestRecord`, `HarvestResult` und quellenbezogene
+  Cursor/Checkpoints als versionierte Datenverträge; Originalquelle, Abrufzeit,
+  Profilversion und Contenthash bleiben pro Datensatz erhalten.
+- Ablauf Abruf → Parse → Validierung/Normalisierung → Übergabe an eine Senke;
+  Quellenparser und fachliche Datenmodelle bleiben im jeweiligen Adapter.
+- Pagination, Timeouts, begrenzte Wiederholungen, Rate-Limits und `Retry-After`,
+  Abbruch-/Fortsetzungszustände und erkennbare Teilfehler.
+- Inkrementelle Aktualisierung, stabile Identitäten, Dublettenmechanik und
+  idempotente Senkenverträge. Checkpoints erst nach bestätigter Verarbeitung
+  fortschreiben; keine unbelegte Exactly-once-Zusage. Snapshot-/Löschsemantik
+  ausdrücklich pro Quellenprofil erhalten.
+- Injektionsfähiger HTTP-/Dateitransport, Uhr/Zufallsquelle für Backoff,
+  StateStore und Sink; kein fester Anwendungs-ORM oder Mandantenkontext.
+- Einheitliche strukturierte Ergebnisse/Fehler und begrenzte, secretfreie Logs;
+  Zugangsdaten über den Consumer bzw. Credential-Provider.
+- Optionale CLI für konfigurierte Abrufe und lokal replaybare Fixtures;
+  Scheduling, produktive Speicherung und Berechtigungen bleiben Integrationsaufgaben.
+
+Belegte Ausgangspunkte sind die wiederkehrenden `BaseHarvester`-/`HarvestResult`-
+Verträge in auditdatabase und audit_designer sowie `BaseConnector`/`HarvestResult`
+in regulierung. Ihre bestehenden Anwendungs-/DB-Bindungen müssen vorher
+charakterisiert und über Schnittstellen abgetrennt werden. Eine identische
+Bezeichnung belegt noch keine kompatible Semantik.
+
+Abhängigkeitsrichtung: `auditcore_legal_sources`, `auditcore_funding_sources`,
+`auditcore_registry_sources` und weitere begründete Quellenfamilien nutzen
+`auditcore_harvest`; der Kern importiert diese Familien nicht obligatorisch.
+Anwendungen installieren nur ihre Quellenpakete. `auditcore` bleibt die Plattform
+zur Herstellung/Prüfung und ist keine Pflicht-Laufzeitabhängigkeit dieses Kerns.
+
+Alle **angebundenen** Quellen können damit über einen einheitlichen Einstieg
+abgerufen werden. Eine neue API, Website, Datei oder ein Portal braucht weiterhin
+einen passenden Adapter mit tatsächlich getesteten Parser-/Zugriffsregeln.
+Fachliche Analyseverfahren verwenden die Ergebnisse über ihre Datenverträge;
+Bewertung, DSFA-Berechnung und Prüfentscheidungen gehören nicht in den Harvestkern.
+
+Erster Nachweis: mindestens zwei reale Quellenadapter aus unterschiedlichen
+Familien durch denselben Kern betreiben, Originalantworten replayen und
+Pagination, Wiederanlauf nach Teilfehler, Dubletten, idempotente Übergabe und
+Checkpoint-Konsistenz testen. Ein konfigurierter zulässiger externer Smoke-Test
+wird separat ausgewiesen. Status: **geplant, noch nicht implementiert**.
+
 ### H1 — Rechts-, Prüf- und Publikationsquellen: `auditcore_legal_sources`
 
 - `auditdatabase/backend/app/harvester/base.py`: `HarvestedDocument`,
@@ -380,7 +432,7 @@ Ein Pfad ist Quellenbeleg für die Einordnung, keine vollständige Codeabnahme.
 |---|---|---|
 | Bereits vorhanden | Dummy, Invoice und Reporting weiterpflegen | Bestehende Wheel-/APT-/Characterization-Nachweise; reale Consumer-Migration separat |
 | 1 | `auditcore_dataprotection`: eigenes Register erstellen und DSFA erstellen/berechnen/pflegen | Register-/DSFA-Vertrag, charakterisierte Bewertung, Fassungs-/Reviewübergänge, Export und sichere Consumer-Ports |
-| 2 | `auditcore_funding_sources`: ein fixes Parser-/Quellprofil | Originalfixtures, unveränderte Rohwerte/Hashes, Fehler-/Snapshotsemantik, erster realer Consumer |
+| 2 | `auditcore_harvest` mit einem Funding- und einem Legal-Quellenadapter | Gemeinsamer Ablauf, Originalfixtures, Cursor-/Teilfehler-/Snapshotsemantik, erster realer Consumer |
 | 3 | `auditcore_legal_sources`: Dokumentvertrag plus ein DIP-/EUR-Lex-Adapter | Paging-/Fehler-/Provenienzfälle und injizierter Transport; keine App-DB im Paket |
 | 4 | Statistik/Sampling und Entity-Matching | Getrennte Methodenprofile, echte Legacy-Vergleiche; fachliche Konflikte dokumentiert |
 | 5 | Preis-/Geo-/Immobilienquellen und spezielle Analysekerne | Tatsächlicher Mehrfachnutzen, Daten-/Quellenrechte, Ressourcen-/Zeitlimits und benannte Consumer |
@@ -389,9 +441,10 @@ Ein Pfad ist Quellenbeleg für die Einordnung, keine vollständige Codeabnahme.
 Diese Reihenfolge priorisiert die ausdrücklich gewünschte Datenschutzfähigkeit
 und schließt Harvester nicht aus. Sie legt keine endgültige Zahl neuer Pakete
 fest. Kleine ausschließlich intern benötigte Helfer bleiben in ihrer Familie.
-Ein transportneutraler gemeinsamer Harvest-Vertrag kann bei belegtem Bedarf von
-mindestens zwei Familien zusammengeführt werden; ein weiteres `auditcore_harvest`
-ist nicht allein zur Vervollständigung eines Namensschemas erforderlich.
+Der gemeinsame Harvest-Vertrag wird als `auditcore_harvest` anhand mindestens
+zweier Quellenfamilien charakterisiert. Die ausdrücklich gewünschte gemeinsame
+Nutzung und die belegten wiederkehrenden Abrufverträge begründen diese
+technische Distribution; sie entsteht nicht allein aus einem Namensschema.
 
 Offene Nachweise werden bei der jeweiligen Extraktion bearbeitet:
 

@@ -90,6 +90,16 @@ Arbeite die aktualisierte Priorisierung in `REPOSITORY_PACKAGE_COVERAGE.md` ab.
 Sie erfasst 71 Repositories; der ältere Domain-Paketplan war keine vollständige
 Liste. Erfinde keine weitere Universalbibliothek für alle Funktionen.
 
+Implementiere für den Datenharvest den ausdrücklich gewünschten gemeinsamen
+Kern `auditcore_harvest`. Quellenfamilien hängen von ihm ab; der Kern installiert
+nicht alle Adapter. Gemeinsame Verträge und Ablaufsteuerung umfassen Abruf,
+Pagination, Timeouts/Rate-Limits/Retry, Provenienz, Teilfehler, inkrementelle
+Checkpoints sowie idempotente Übergabe an eine injizierbare Senke. Bestätige den
+Vertrag anhand mindestens eines Funding- und eines Legal-Adapters. Checkpoints
+nicht vor bestätigter Verarbeitung fortschreiben; keine unbelegte Exactly-once-
+Behauptung. Spezifische Parser, Zugangsdaten und Snapshot-/Löschregeln bleiben
+explizit. Details stehen in Abschnitt H0 der Repository-Abdeckung.
+
 Konkrete Kandidatenfamilien sind:
 
 - `auditcore_funding_sources`: Förderempfänger-/Beihilfequellen und ihre Parser;

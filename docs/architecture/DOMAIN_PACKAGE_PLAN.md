@@ -51,6 +51,18 @@ Erweiterung vorhandener Bibliotheken sowie die Berücksichtigung der Harvester,
 Analysen, Werkzeuge und der Datenschutzfunktionen aus `regulierung` verlangt.
 Die aktuelle repositoryübergreifende Abdeckung wird separat dokumentiert.
 
+### Gemeinsamer Harvesterkern
+
+`auditcore_harvest` ist als gemeinsame technische Bibliothek für die angebundenen
+Datenquellen vorgesehen: Abrufablauf, Pagination, Rate-Limits/Retry, Teilfehler,
+Provenienz, inkrementelle Checkpoints und Übergabe an injizierbare Senken.
+Die Quellenfamilien (`legal_sources`, `funding_sources`, `registry_sources`
+usw.) liefern ihre Adapter und Parser und hängen vom Kern ab. Der Kern zieht
+nicht alle Quellenpakete nach. Mindestens zwei Quellenfamilien müssen den
+wiederverwendbaren Vertrag praktisch belegen; neue Quellen benötigen passende
+Adapter. [Ausführlicher Zuschnitt H0](REPOSITORY_PACKAGE_COVERAGE.md#h0--gemeinsamer-datenharvest-auditcore_harvest).
+Status: geplant, noch keine installierbare Distribution.
+
 ### `auditcore_dataprotection`: VVT und DSFA einschließlich Berechnung
 
 **Ein eigenständig installierbares Fachpaket soll Anwendungen ermöglichen,
