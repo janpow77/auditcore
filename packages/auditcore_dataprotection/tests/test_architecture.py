@@ -13,7 +13,7 @@ from pathlib import Path
 import auditcore_dataprotection
 
 PACKAGE = Path(auditcore_dataprotection.__file__).parent
-OPTIONAL = {"excel.py": {"openpyxl"}, "pdf.py": {"weasyprint"}}
+OPTIONAL = {"excel.py": {"openpyxl", "auditcore_reporting"}, "pdf.py": {"weasyprint"}}
 FORBIDDEN_CALLS = {"open", "eval", "exec", "compile", "__import__"}
 FORBIDDEN_MODULES = {
     "subprocess",
@@ -83,7 +83,7 @@ def test_profiles_are_packaged_data_not_code() -> None:
 
 
 def test_import_does_not_load_optional_renderers() -> None:
-    for name in ("openpyxl", "weasyprint", "sqlalchemy", "fastapi"):
+    for name in ("openpyxl", "weasyprint", "auditcore_reporting", "sqlalchemy", "fastapi"):
         before = name in sys.modules
         import auditcore_dataprotection.assessment  # noqa: F401
         import auditcore_dataprotection.calculation  # noqa: F401

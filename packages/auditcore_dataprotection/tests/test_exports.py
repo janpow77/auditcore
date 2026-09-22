@@ -48,27 +48,56 @@ def make_assessment(**changes: Any) -> Assessment:
     answers["art35_3_a"] = Answer(AnswerValue.YES, "Profiling <b>fett</b>")
     answers["edsa_05_umfang"] = Answer(AnswerValue.UNKNOWN)
     scenarios = parse_scenarios(
-        [{"dimension": "vertraulichkeit", "description": "Unbefugter Zugriff", "severity": 4,
-          "likelihood": 4, "measures": ["verschluesselung"], "residual_severity": 3,
-          "residual_justification": "Pseudonyme Kennungen"}],
+        [
+            {
+                "dimension": "vertraulichkeit",
+                "description": "Unbefugter Zugriff",
+                "severity": 4,
+                "likelihood": 4,
+                "measures": ["verschluesselung"],
+                "residual_severity": 3,
+                "residual_justification": "Pseudonyme Kennungen",
+            }
+        ],
         PROFILE,
     )
     proposal = propose(PROFILE, answers, scenarios).to_dict()
     values: dict[str, Any] = dict(
-        tenant_id="mandant-1", assessment_id="a-1", register_id="verarbeitungsverzeichnis",
-        activity_id="t-1", activity_name=ACTIVITY["name"], version=2,
-        status=AssessmentStatus.DPO_INVOLVED, profile_id=PROFILE.id,
-        profile_version=PROFILE.version, profile_fingerprint=PROFILE.fingerprint,
-        register_version=3, activity_snapshot=ACTIVITY, answers=answers, scenarios=scenarios,
-        proposal=proposal, created_by="anna", created_at=NOW, updated_at=NOW,
-        editors=("anna", "carl"), necessity="Erforderlich", proportionality="Angemessen",
-        decision="freigabe", deviation=True, deviation_justification="x" * 50,
-        decided_by="anna", decided_at=NOW, dpo_vote="zugestimmt_mit_auflagen",
-        dpo_statement="Auflage", dpo_by="dora", dpo_at=NOW,
+        tenant_id="mandant-1",
+        assessment_id="a-1",
+        register_id="verarbeitungsverzeichnis",
+        activity_id="t-1",
+        activity_name=ACTIVITY["name"],
+        version=2,
+        status=AssessmentStatus.DPO_INVOLVED,
+        profile_id=PROFILE.id,
+        profile_version=PROFILE.version,
+        profile_fingerprint=PROFILE.fingerprint,
+        register_version=3,
+        activity_snapshot=ACTIVITY,
+        answers=answers,
+        scenarios=scenarios,
+        proposal=proposal,
+        created_by="anna",
+        created_at=NOW,
+        updated_at=NOW,
+        editors=("anna", "carl"),
+        necessity="Erforderlich",
+        proportionality="Angemessen",
+        decision="freigabe",
+        deviation=True,
+        deviation_justification="x" * 50,
+        decided_by="anna",
+        decided_at=NOW,
+        dpo_vote="zugestimmt_mit_auflagen",
+        dpo_statement="Auflage",
+        dpo_by="dora",
+        dpo_at=NOW,
         consultation=Consultation("HBDI", "keine Bedenken", "2026-09-02", "anna", NOW),
         predecessor_id="a-0",
-        changes_to_predecessor=({"feld": "zweck", "bezeichnung": "Zweck", "vorher": "A",
-                                 "nachher": "B"},),
+        changes_to_predecessor=(
+            {"feld": "zweck", "bezeichnung": "Zweck", "vorher": "A", "nachher": "B"},
+        ),
     )
     values.update(changes)
     return Assessment(**values)
@@ -81,10 +110,18 @@ def make_register() -> RegisterVersion:
         "taetigkeiten": [ACTIVITY, {"id": "t-2", "name": "Ohne Referat"}],
     }
     return RegisterVersion(
-        tenant_id="mandant-1", register_id="verarbeitungsverzeichnis", version=3,
-        status=RegisterStatus.RELEASED, content=content, content_hash=content_hash(content),
-        created_by="anna", created_at=NOW, editors=("anna",), released_by="bert",
-        released_at=NOW, predecessor_version=2,
+        tenant_id="mandant-1",
+        register_id="verarbeitungsverzeichnis",
+        version=3,
+        status=RegisterStatus.RELEASED,
+        content=content,
+        content_hash=content_hash(content),
+        created_by="anna",
+        created_at=NOW,
+        editors=("anna",),
+        released_by="bert",
+        released_at=NOW,
+        predecessor_version=2,
     )
 
 
@@ -119,9 +156,11 @@ def test_html_escapes_input_and_shows_profile_and_gaps() -> None:
 
 
 def test_html_shows_missing_consultation_and_empty_risk() -> None:
-    assessment = make_assessment(consultation=None, scenarios=(),
-                                 proposal={**make_assessment().proposal,
-                                           "consultation_required": True, "risk": None})
+    assessment = make_assessment(
+        consultation=None,
+        scenarios=(),
+        proposal={**make_assessment().proposal, "consultation_required": True, "risk": None},
+    )
     html = render_assessment_html(assessment_report(assessment, PROFILE))
     assert "noch nicht dokumentiert" in html
     assert "noch kein Risikoszenario" in html
@@ -160,12 +199,23 @@ def test_register_xlsx_is_literal_text() -> None:
 def test_overview_xlsx() -> None:
     from auditcore_dataprotection.excel import render_overview_xlsx
 
-    rows = [{"id": "t-1", "position": 1, "name": "=HYPERLINK(\"x\")", "zweck": "z",
-             "dsfa": {"status": "freigegeben", "version": 1, "freigegeben_am": date(2026, 9, 1),
-                      "pruefung_erforderlich": True}}]
+    rows = [
+        {
+            "id": "t-1",
+            "position": 1,
+            "name": '=HYPERLINK("x")',
+            "zweck": "z",
+            "dsfa": {
+                "status": "freigegeben",
+                "version": 1,
+                "freigegeben_am": date(2026, 9, 1),
+                "pruefung_erforderlich": True,
+            },
+        }
+    ]
     book = openpyxl.load_workbook(io.BytesIO(render_overview_xlsx(rows, "Behörde", NOW)))
     cell = book["Folgenabschätzungen"]["C2"]
-    assert cell.value == "=HYPERLINK(\"x\")" and cell.data_type == "s"
+    assert cell.value == '=HYPERLINK("x")' and cell.data_type == "s"
     assert book["Folgenabschätzungen"]["K2"].value == "Ja"
 
 
@@ -173,6 +223,7 @@ def test_pdf_renderer() -> None:
     pytest.importorskip("weasyprint")
     from auditcore_dataprotection.pdf import render_pdf
 
-    assert render_pdf(render_assessment_html(assessment_report(make_assessment(), PROFILE)))[
-        :5
-    ] == b"%PDF-"
+    assert (
+        render_pdf(render_assessment_html(assessment_report(make_assessment(), PROFILE)))[:5]
+        == b"%PDF-"
+    )
