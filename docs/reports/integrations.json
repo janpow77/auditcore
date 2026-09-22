@@ -1,0 +1,115 @@
+{
+  "apt_test_signing": {
+    "digests": "PASS",
+    "signature": "PASS",
+    "status": "PASS"
+  },
+  "debian_fixture": {
+    "fixture_gate_inputs_are_synthetic": true,
+    "installation": {
+      "checks": {
+        "ACD-CONF-001": "PASS",
+        "ACD-DATA-001": "PASS",
+        "ACD-HEALTH-001": "PASS",
+        "ACD-INST-001": "PASS",
+        "ACD-RM-001": "PASS",
+        "ACD-SVC-001": "PASS",
+        "ACD-UPG-001": "NOT_EXECUTED",
+        "systemd_runtime": "NOT_EXECUTED"
+      },
+      "environment": "auditcore-package-test:bookworm",
+      "package_sha256": "a0d2b81b9e4693747af7a1594685c319eb2268f69312b3cf92e623fbcc2cc528",
+      "status": "REVIEW_REQUIRED"
+    },
+    "scope": "Actual isolated Debian package lifecycle; no production authorization",
+    "upgrade": {
+      "checks": {
+        "ACD-CONF-001": "PASS",
+        "ACD-DATA-001": "PASS",
+        "ACD-HEALTH-001": "PASS",
+        "ACD-INST-001": "PASS",
+        "ACD-RM-001": "PASS",
+        "ACD-SVC-001": "PASS",
+        "ACD-UPG-001": "PASS",
+        "systemd_runtime": "NOT_EXECUTED"
+      },
+      "new_sha256": "fdd22ce7d3ce1fb22f72177df77075ee0e0f3f3eae009a0843c7cf22929eab04",
+      "old_sha256": "a0d2b81b9e4693747af7a1594685c319eb2268f69312b3cf92e623fbcc2cc528",
+      "status": "REVIEW_REQUIRED"
+    }
+  },
+  "graphify": {
+    "audit_designer": {
+      "edges": 128353,
+      "nodes": 59023,
+      "status": "PASS"
+    },
+    "auditcore": {
+      "edges": 994,
+      "nodes": 503,
+      "status": "PASS"
+    },
+    "auswertungjkb": {
+      "edges": 1918,
+      "nodes": 1056,
+      "status": "PASS"
+    },
+    "flowlib": {
+      "edges": 199,
+      "nodes": 151,
+      "status": "PASS"
+    },
+    "regulierung": {
+      "edges": 23413,
+      "nodes": 9543,
+      "status": "PASS"
+    }
+  },
+  "kira": {
+    "build_provenance_sync": {
+      "errors": [],
+      "failed": 0,
+      "pending": 0,
+      "screening_blocked": 0,
+      "status": "PASS",
+      "stored": 1,
+      "unchanged": 0
+    },
+    "detailed_sync": {
+      "completed_repository_batches": 55,
+      "reason": "Repeated provider timeouts and remote content rejections; detailed ingestion interrupted, acknowledged entries retained; repository catalog synchronized independently",
+      "repositories_total": 71,
+      "status": "PARTIAL",
+      "totals": {
+        "failed": 32,
+        "pending": 15,
+        "screening_blocked": 21,
+        "stored": 188,
+        "unchanged": 57
+      },
+      "unacknowledged_in_flight": "UNKNOWN; server may have persisted a timed-out request"
+    },
+    "platform_sync": {
+      "outcomes": {
+        "FAIL": 4,
+        "PASS": 9
+      },
+      "readback": "PASS",
+      "status": "PARTIAL"
+    },
+    "repository_catalog": {
+      "outcomes": {
+        "FAIL": 1,
+        "PASS": 70
+      },
+      "repositories": 71,
+      "status": "PARTIAL"
+    },
+    "semantic_search": {
+      "equivalence": "REVIEW_REQUIRED",
+      "result_count": 20,
+      "status": "PASS",
+      "structured_provenance_count": 20
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "analysis_completed": true,
+  "candidate_decisions": {
+    "HUMAN_DECISION_REQUIRED": 70,
+    "REVIEW_REQUIRED": 2264,
+    "SECURITY_OR_POLICY_REVIEW_REQUIRED": 104
+  },
+  "candidates": 2438,
+  "candidates_catalog": {
+    "local_path": ".auditcore/inventory/candidates.json",
+    "records": 2438,
+    "sha256": "5cada6f355d1d2fe100d51d06f413fab326699b6bc8c9779aea12eada73c94c9"
+  },
+  "consumers_catalog": {
+    "local_path": ".auditcore/inventory/consumers.json",
+    "records": 126041,
+    "sha256": "3b9118aac468a433f1fbe1ae0f2ad9a5be1f6ca9b3d8a8476e099d2b007341f1"
+  },
+  "coverage": "Python AST and dependency manifests; dynamic edges unresolved",
+  "dependencies_catalog": {
+    "local_path": ".auditcore/inventory/dependencies.json",
+    "records": 549649,
+    "sha256": "d6d6e319fa371c28af50e5d8f10064e57405b0da54ddfc737bd99d9d516f7d9d"
+  },
+  "discovery_complete": true,
+  "generated_at": "2026-09-22T13:18:04.660476+00:00",
+  "inventory_version": 1,
+  "libraries_catalog": {
+    "local_path": ".auditcore/inventory/libraries.json",
+    "records": 42,
+    "sha256": "216143449da3d331d6f3dbb8e45d26a31e1c91364251e272afcc3b7f957bc4f4"
+  },
+  "plans": 2420,
+  "repositories_catalog": {
+    "local_path": ".auditcore/inventory/repositories.json",
+    "records": 71,
+    "sha256": "332d924a43627f73376703238b4c20ba8cef045aaee9ba881c2c2698196a0ee3"
+  },
+  "repositories_complete": 63,
+  "repositories_found": 71,
+  "repository_statuses": {
+    "COMPLETE": 63,
+    "NOT_APPLICABLE_WITH_REASON": 6,
+    "PARTIAL": 2
+  },
+  "reused": 65,
+  "run_id": "553272de-ce48-4343-9041-ee75ae5d214a",
+  "scan_scope": "GLOBAL",
+  "scanner_version": "0.1.0",
+  "status": "PARTIAL",
+  "symbols": 84752,
+  "symbols_catalog": {
+    "local_path": ".auditcore/inventory/symbols.json",
+    "records": 84752,
+    "sha256": "7c44a5f9af88077c1d63db98e061169068e3d423ee80d9bc3a0158f253ed732c"
+  }
+}

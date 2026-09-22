@@ -1,0 +1,208 @@
+{
+  "checks": {
+    "apprefactor-selfcheck": {
+      "command": [
+        "auditcore-bibquality",
+        "src/auditcore.tools.apprefactor",
+        "--context",
+        "contexts/apprefactor.json",
+        "--supply-chain-report",
+        "dist/supply-chain.json",
+        "--output",
+        ".auditcore/apprefactor-selfcheck.json"
+      ],
+      "exit_code": 0,
+      "output_sha256": "c7fce81ef5faf49924ee858bd50b691985487502f9831c8bd58332fa1491c611",
+      "status": "PASS"
+    },
+    "auditcore-bibquality-help": {
+      "command": [
+        "auditcore-bibquality",
+        "--help"
+      ],
+      "exit_code": 0,
+      "output_sha256": "80b11e01d52652f0934ab24e4e2c1234c72cc6868dbea4be21a94fd4aa863c0d",
+      "status": "PASS"
+    },
+    "auditcore-consolidate-help": {
+      "command": [
+        "auditcore-consolidate",
+        "--help"
+      ],
+      "exit_code": 0,
+      "output_sha256": "c8daf4cb76270eb4d59ddb2fa6c568162ce3fe0ccc505175dfbdd621c1d6c894",
+      "status": "PASS"
+    },
+    "auditcore-deploy-help": {
+      "command": [
+        "auditcore-deploy",
+        "--help"
+      ],
+      "exit_code": 0,
+      "output_sha256": "979e016aec8f2615b31d6e9fb880cca90bac50b95c05a4b477c23b58621a9827",
+      "status": "PASS"
+    },
+    "auditcore-quality-help": {
+      "command": [
+        "auditcore-quality",
+        "--help"
+      ],
+      "exit_code": 0,
+      "output_sha256": "95f1c18505ae7a18968e919e2cc9b11120851bd03158d5c3dc7d3d0982c88e8c",
+      "status": "PASS"
+    },
+    "auditcore-refactor-help": {
+      "command": [
+        "auditcore-refactor",
+        "--help"
+      ],
+      "exit_code": 0,
+      "output_sha256": "193f412c0571d7364a3e728577a0b85568dcd4452383c23393972904940eb46f",
+      "status": "PASS"
+    },
+    "build": {
+      "command": [
+        "python",
+        "-m",
+        "build"
+      ],
+      "exit_code": 0,
+      "output_sha256": "d194f5c97bc4b14df86562e77756d7c73abdd1888ef0b8fb0ce752fde3a49b15",
+      "status": "PASS"
+    },
+    "consolidator-selfcheck": {
+      "command": [
+        "auditcore-bibquality",
+        "src/auditcore.tools.consolidator",
+        "--context",
+        "contexts/consolidator.json",
+        "--supply-chain-report",
+        "dist/supply-chain.json",
+        "--output",
+        ".auditcore/consolidator-selfcheck.json"
+      ],
+      "exit_code": 0,
+      "output_sha256": "488330ab3d5a42bfeb15b0ca65ce8b132bb18f5b51c66fea456979f673131d05",
+      "status": "PASS"
+    },
+    "core-selfcheck": {
+      "command": [
+        "auditcore-bibquality",
+        "src/auditcore",
+        "--context",
+        "contexts/core.json",
+        "--supply-chain-report",
+        "dist/supply-chain.json",
+        "--output",
+        ".auditcore/core-selfcheck.json",
+        "--strict",
+        "--compare-api",
+        ".auditcore/core-api.json"
+      ],
+      "exit_code": 0,
+      "output_sha256": "8f41ce35563a844d7a44bb993fa0e6ee9d939b74e879634ddc0ff8564a690ac7",
+      "status": "PASS"
+    },
+    "deployer-selfcheck": {
+      "command": [
+        "auditcore-bibquality",
+        "src/auditcore.tools.deployer",
+        "--context",
+        "contexts/deployer.json",
+        "--supply-chain-report",
+        "dist/supply-chain.json",
+        "--output",
+        ".auditcore/deployer-selfcheck.json"
+      ],
+      "exit_code": 0,
+      "output_sha256": "cb1d50879b9b556b464e84755265dd13d4195ee5780d79c25cc34f53fe7e07c0",
+      "status": "PASS"
+    },
+    "install": {
+      "command": [
+        "python",
+        "-m",
+        "pip",
+        "install",
+        "-e",
+        ".[dev]"
+      ],
+      "exit_code": 0,
+      "output_sha256": "71f607b235ada45659aa23bec19b5f5326552f7d5a3ad613776164a06bbcb88f",
+      "status": "PASS"
+    },
+    "mypy": {
+      "command": [
+        "mypy",
+        "src"
+      ],
+      "exit_code": 0,
+      "output_sha256": "e6a337f5d3c5bfc91aa5e09a3e3e6ba1ed5d06d2dac23e22cac9db017a5c00ea",
+      "status": "PASS"
+    },
+    "pytest": {
+      "command": [
+        "pytest",
+        "--cov=auditcore",
+        "--cov-report=json:.auditcore/coverage.json",
+        "-q"
+      ],
+      "exit_code": 0,
+      "output_sha256": "321ac5ce5c141c037f58284c0857a270b2743cdfa87bdd5c42bc61ef1520a20b",
+      "status": "PASS"
+    },
+    "quality-selfcheck": {
+      "command": [
+        "auditcore-bibquality",
+        "src/auditcore.tools.quality",
+        "--context",
+        "contexts/quality.json",
+        "--supply-chain-report",
+        "dist/supply-chain.json",
+        "--output",
+        ".auditcore/quality-selfcheck.json"
+      ],
+      "exit_code": 0,
+      "output_sha256": "27e5832014542e9ce5c48b355b3008e1147bfd5803bc5a0f9bd16ed477ea8742",
+      "status": "PASS"
+    },
+    "ruff": {
+      "command": [
+        "ruff",
+        "check",
+        "."
+      ],
+      "exit_code": 0,
+      "output_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "status": "PASS"
+    }
+  },
+  "code_commit": "c44f0c4bd579d3f33eab098b067c6c8c09b2f3fe",
+  "coverage_percent": 72.21990837151186,
+  "generated_at": "2026-09-22T13:53:00.405616+00:00",
+  "pytest_count": 121,
+  "scope": "Command execution evidence; self-check exit status does not replace report findings",
+  "supply_chain": {
+    "artifact": "auditcore-0.1.0-py3-none-any.whl",
+    "artifact_sha256": "5a7e315a3508677e49d3d417a62b022606eb9377c9129d1cb19457b170d5deb1",
+    "sbom": "auditcore-0.1.0-sbom.json",
+    "sbom_sha256": "7b4c23871f079c18c201a0e42bc57cdd64c96859ed12c858f57f947f71e545bc",
+    "status": "PASS",
+    "validation": {
+      "schema": "CycloneDX 1.6",
+      "status": "PASS",
+      "validator": "cyclonedx-python-lib"
+    }
+  },
+  "wheel_smoke": {
+    "artifact_sha256": "5a7e315a3508677e49d3d417a62b022606eb9377c9129d1cb19457b170d5deb1",
+    "cli_help": 4,
+    "installed_without_dependencies": true,
+    "resources": [
+      "prompt",
+      "policy",
+      "templates"
+    ],
+    "status": "PASS"
+  }
+}
