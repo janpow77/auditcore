@@ -17,6 +17,13 @@ und die Aufteilung der geschichteten SRS. Die Zufallsziehung selbst
 | SA-C04 | Zufall aus globalem NumPy-Zustand (flowstat ohne Seed; portal optional). | Zufall nur über ausdrücklich übergebenes `random.Random`; mit Seed reproduzierbar. | F-17 Reproduzierbarkeit. |
 | SA-C05 | flowstat nimmt negative Werte in die kumulierte Summe und führt Positionen mehrfach. | Variante wählbar: `flowstat` (unverändert) oder `portal` (nur positive Werte, Ausschlüsse ausgewiesen, jede Position einmal). | Varianten nicht still vereinheitlicht. |
 
+Consumer-Nachweis `flowstat` (Branch `feat/auditcore-statistics-sampling`):
+Nach Umstellung von `_calculate_mus_sample_size`, `_calculate_srs_sample_size`,
+`run_mus_standard`/`run_mus_conservative` und `run_benford` ergibt ein erneuter
+Capture-Lauf 8883 bzw. 32 identische Fälle; 74 Originaltests bestehen. Einzige
+beobachtete Abweichung: die NumPy-`RuntimeWarning` der im Original berechneten,
+aber ungenutzten Division `materiality / population_value` bei Wert 0 entfällt.
+
 `statistics` und `sampling` sind getrennte Distributionen ohne gegenseitige
 Abhängigkeit: Es gibt keinen gemeinsamen Vertrag. Die kleine
 Summierungshilfe bleibt intern in `sampling` (Paketplan: „sampling →
