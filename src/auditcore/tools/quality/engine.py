@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import ast
+import json
+import re
 import shutil
 import subprocess
 import tomllib
@@ -63,6 +65,31 @@ class QualityReport:
         return {**asdict(self), "status": self.status}
 
 
+def _dependency_diagnostics(output: str) -> str:
+    """Expose package/advisory identifiers without copying arbitrary tool output."""
+
+    def identifier(value: object) -> str:
+        if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9_.+!-]{1,120}", value):
+            return "[redacted]"
+        if any(f.code == "AC-SEC-001" for f in scan_sensitive(value)):
+            return "[redacted]"
+        return value
+
+    try:
+        report = json.loads(output)
+        findings = []
+        for package in report["dependencies"]:
+            for vulnerability in package.get("vulns", []):
+                fixes = ",".join(identifier(v) for v in vulnerability["fix_versions"])
+                findings.append(
+                    f"{identifier(package['name'])} {identifier(package['version'])}: "
+                    f"{identifier(vulnerability['id'])}; fixed in {fixes or 'not available'}"
+                )
+        return "; ".join(dict.fromkeys(findings)) or "No vulnerability details returned"
+    except (ValueError, TypeError, KeyError, AttributeError):
+        return "Invalid dependency audit JSON; inspect the dedicated CI audit step"
+
+
 def _external(command: list[str], code: str, cwd: Path) -> CheckResult:
     if not shutil.which(command[0]):
         return CheckResult(code, CheckStatus.NOT_EXECUTED, f"Not installed: {command[0]}")
@@ -70,6 +97,9 @@ def _external(command: list[str], code: str, cwd: Path) -> CheckResult:
         result = subprocess.run(
             command, cwd=cwd, capture_output=True, text=True, timeout=180, check=False
         )
+        message = f"{command[0]} exit={result.returncode}"
+        if command[0] == "pip-audit" and result.returncode:
+            message += ": " + _dependency_diagnostics(result.stdout)
         return CheckResult(
             code,
             CheckStatus.PASS
@@ -77,7 +107,7 @@ def _external(command: list[str], code: str, cwd: Path) -> CheckResult:
             else CheckStatus.NOT_EXECUTED
             if result.returncode == 2
             else CheckStatus.FAIL,
-            f"{command[0]} exit={result.returncode}",
+            message,
             evidence=(" ".join(command),),
         )
     except (OSError, subprocess.TimeoutExpired):
@@ -193,7 +223,7 @@ def check(
     if policy:
         commands += [
             (["bandit", "-q", "-ll", "-r", str(root)], "AC-SEC-002"),
-            (["pip-audit"], "AC-DEP-001"),
+            (["pip-audit", "--format", "json"], "AC-DEP-001"),
         ]
     if external:
         findings.extend(_external(command, code, project) for command, code in commands)

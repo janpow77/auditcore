@@ -1,11 +1,13 @@
 """Negative quality cases must fail without leaking matched secret values."""
 
 import ast
+import json
+import subprocess
 
 import pytest
 
 from auditcore.models import CheckStatus
-from auditcore.tools.quality.engine import check
+from auditcore.tools.quality.engine import _external, check
 from auditcore.tools.quality.scanners import api_snapshot, architecture, scan_sensitive
 
 
@@ -38,6 +40,51 @@ def test_secret_redaction():
     secret = "ghp_" + "SYNTHETIC" * 5
     findings = scan_sensitive(secret)
     assert findings and all(secret not in r.message for r in findings)
+
+
+def test_dependency_failure_is_actionable_without_raw_output(tmp_path, monkeypatch):
+    secret = "ghp_" + "SYNTHETIC" * 5
+    vulnerability = {
+        "id": "PYSEC-2026-3447",
+        "fix_versions": ["83.0.0"],
+        "description": secret,
+    }
+    output = json.dumps(
+        {
+            "dependencies": [
+                {
+                    "name": "setuptools",
+                    "version": "79.0.1",
+                    "vulns": [vulnerability, vulnerability],
+                },
+                {"name": secret, "version": "1.0", "vulns": [vulnerability]},
+            ]
+        }
+    )
+    monkeypatch.setattr("shutil.which", lambda _: "/synthetic/pip-audit")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *a, **kw: subprocess.CompletedProcess(a[0], 1, stdout=output, stderr=secret),
+    )
+    result = _external(["pip-audit", "--format", "json"], "AC-DEP-001", tmp_path)
+    assert result.status == CheckStatus.FAIL
+    assert "setuptools 79.0.1: PYSEC-2026-3447; fixed in 83.0.0" in result.message
+    assert result.message.count("setuptools") == 1
+    assert secret not in str(result)
+
+
+@pytest.mark.parametrize("output", ["not json", "null", '{"dependencies": [null]}'])
+def test_dependency_invalid_output_does_not_hide_failure(tmp_path, monkeypatch, output):
+    monkeypatch.setattr("shutil.which", lambda _: "/synthetic/pip-audit")
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        lambda *a, **kw: subprocess.CompletedProcess(a[0], 1, stdout=output, stderr=""),
+    )
+    result = _external(["pip-audit", "--format", "json"], "AC-DEP-001", tmp_path)
+    assert result.status == CheckStatus.FAIL
+    assert "Invalid dependency audit JSON" in result.message
 
 
 @pytest.mark.parametrize(
