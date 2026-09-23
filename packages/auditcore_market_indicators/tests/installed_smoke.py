@@ -12,7 +12,9 @@ def main() -> None:
     assert package.version == "0.1.0" and mi.__version__ == "0.1.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
-    assert len(mi.available_profiles()) == 4
+    assert len(mi.available_profiles()) == 5
+    decided = mi.load_profile(*mi.RECOMMENDED_PROFILE)
+    assert decided.min_lookback == 250 and decided.atr is not None
     base = mi.load_profile("krypto.indicators_base", "2026.09.1")
     scoring = mi.load_profile("krypto.scoring_rsi_macd", "2026.09.1")
     close = [100.0, 101.5, 99.8, 102.3, 103.0, 101.2, 104.8, 106.1, 105.0, 107.4]

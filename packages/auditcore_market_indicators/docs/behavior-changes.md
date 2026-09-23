@@ -50,16 +50,22 @@ reproduzierbar (erneuter Lauf inhaltsgleich).
   hebt die Untergrenze auf `polars>=1.21`.
 - **MI-K02:** Gespeicherte Indikatorwerte hängen von der installierten
   polars-Version ab (siehe MI-C04); krypto pinnt polars nicht.
-- **MI-K03 – HUMAN_DECISION_REQUIRED:** Die Pipeline lädt `lookback=60` Kerzen.
-  EMA(50) startet an Index 49 mit einem SMA und hat nur 11 rekursive Schritte;
-  RSI(14) nach Wilder ist ebenfalls startabhängig. Wegen der Idempotenzregel
-  bleibt der zuerst berechnete Wert je Zeitstempel gespeichert, obwohl ein
-  späterer Lauf mit anderem Fensterbeginn einen anderen Wert ergäbe
-  (`tests/test_indicators.py::test_ema_value_depends_on_the_warm_up_window`).
-  Zu entscheiden: längerer Rückblick oder Speichern erst nach Einschwingen.
-- **MI-K04 – HUMAN_DECISION_REQUIRED:** ATR als SMA (MI-L01) und RSI-Wert bei
-  flachem Markt (100 gegenüber 50, MI-L02) sind fachlich zu bestätigen. Die
-  Bibliothek bildet beide Varianten ab und entscheidet nicht.
+- **MI-K03 – DECIDED (23.09.2026, Nutzer: „5. 250 kerzen“):** Die Pipeline lud
+  `lookback=60` (stündlich, 4-stündlich; täglich 90) Kerzen. EMA(50) startete an
+  Index 49 mit einem SMA und hatte nur 11 rekursive Schritte; RSI(14) nach Wilder
+  war ebenfalls startabhängig, und wegen der Idempotenzregel blieb der zuerst
+  berechnete Wert gespeichert. Entschieden: Rückblick 250 Kerzen, im Profil
+  `krypto.entschieden` als `warmup.min_lookback = 250`. Gemessen auf einer
+  synthetischen Reihe: EMA(50)-Abweichung zum Wert aus der Vollreihe 1,5 % bei
+  60 Kerzen, 1,4·10⁻⁶ bei 250 Kerzen
+  (`tests/test_indicators.py::test_recommended_lookback_removes_the_start_dependence_of_ema50`).
+- **MI-K04 – DECIDED (23.09.2026, Nutzer: „6 ja wilder, rsi“):** ATR nach
+  Wilder statt SMA (MI-L01) und RSI ohne jede Bewegung = 50 statt 100 (MI-L02).
+  Umgesetzt als neues, empfohlenes Profil `krypto.entschieden` 2026.09.1
+  (`RECOMMENDED_PROFILE`, Status `DECIDED`, abgeleitet aus
+  `krypto.indicators_base`; EMA, ADX und Summation unverändert). Die
+  charakterisierten Profile bleiben unverändert (gleiche Fingerabdrücke), damit
+  der Legacy-Replay bitgenau bleibt.
 
 Nicht übernommen: Datenabruf (`adapters`, `ingestion`), Score-Abbildungen
 (`map_rsi_to_score`, `map_macd_to_score`), Gewichte, HMM-Modell und
