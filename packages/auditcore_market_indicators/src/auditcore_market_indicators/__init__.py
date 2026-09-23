@@ -29,6 +29,7 @@ from .indicators import (
     zscore,
 )
 from .profiles import (
+    RECOMMENDED_PROFILE,
     IndicatorProfile,
     available_profiles,
     load_profile,
@@ -40,6 +41,7 @@ __version__ = "0.1.0"
 
 __all__ = [
     "METHOD",
+    "RECOMMENDED_PROFILE",
     "AdxResult",
     "BreakoutResult",
     "DependencyError",

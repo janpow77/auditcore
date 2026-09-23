@@ -14,6 +14,7 @@ import auditcore_market_indicators as mi
 from auditcore_market_indicators.profiles import fingerprint
 
 PACKAGED = [
+    ("krypto.entschieden", "2026.09.1"),
     ("krypto.indicators_base", "2026.09.1"),
     ("krypto.regime_hmm", "2026.09.1"),
     ("krypto.scoring_confluence", "2026.09.1"),
@@ -49,7 +50,8 @@ def test_profiles_are_source_bound_and_fingerprinted(profile_id: str, version: s
     assert source["commit"] == fixture()["source"]["commit"]
     assert fixture()["source"]["files"][source["path"]]["git_blob"] == source["git_blob"]
     assert source["rights"] == "USER_AUTHORIZED_MIT"
-    assert profile.status == "CHARACTERIZED" and "keine" in profile.legal_status
+    expected_status = "DECIDED" if profile_id == "krypto.entschieden" else "CHARACTERIZED"
+    assert profile.status == expected_status and "keine" in profile.legal_status
     json.dumps(mi.profile_document(profile))
 
 
@@ -130,3 +132,39 @@ def test_own_profiles_can_be_built_but_change_the_fingerprint() -> None:
     own = mi.profile_from_dict(data)
     assert own.atr == mi.profiles.AtrRule("wilder")
     assert own.fingerprint != mi.load_profile("krypto.indicators_base", "2026.09.1").fingerprint
+
+
+def test_decided_profile_implements_the_user_decision_of_2026_09_23() -> None:
+    """„5. 250 kerzen. 6 ja wilder, rsi“: ATR Wilder, RSI flach 50, Rückblick 250."""
+    assert mi.RECOMMENDED_PROFILE == ("krypto.entschieden", "2026.09.1")
+    decided = mi.load_profile(*mi.RECOMMENDED_PROFILE)
+    base = mi.load_profile("krypto.indicators_base", "2026.09.1")
+    assert decided.atr == mi.profiles.AtrRule("wilder")
+    assert decided.rsi == mi.profiles.RsiRule("wilder", 50.0, "zero_move")
+    assert decided.min_lookback == 250 and base.min_lookback is None
+    assert (decided.ema, decided.adx, decided.summation) == (base.ema, base.adx, base.summation)
+    assert decided.macd
+    data = document("krypto.entschieden")
+    assert data["decision"]["date"] == "2026-09-23"
+    assert data["decision"]["derived_from"] == {"id": base.id, "version": base.version}
+    assert mi.profile_document(decided)["min_lookback"] == 250
+
+
+def test_legacy_profiles_are_unchanged_by_the_decision() -> None:
+    """The characterized profiles keep their fingerprints for the bit-exact replay."""
+    fingerprints = {
+        name: mi.load_profile(name, "2026.09.1").fingerprint
+        for name, _ in PACKAGED
+        if name != "krypto.entschieden"
+    }
+    for name, value in fingerprints.items():
+        assert "warmup" not in document(name) and value == fingerprint(document(name))
+    assert mi.load_profile("krypto.indicators_base", "2026.09.1").atr == mi.profiles.AtrRule("sma")
+
+
+@pytest.mark.parametrize("value", [0, -5, True, "250"])
+def test_invalid_warmup_is_rejected(value: Any) -> None:
+    data = document("krypto.entschieden")
+    data["warmup"] = {"min_lookback": value}
+    with pytest.raises(mi.ProfileError, match="min_lookback"):
+        mi.profile_from_dict(data)

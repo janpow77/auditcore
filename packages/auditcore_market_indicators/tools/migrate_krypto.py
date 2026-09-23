@@ -24,25 +24,35 @@ PINNED = {
     "backend/app/services/scoring/confluence.py": "52af074e196f454ce2715d316131841157de58cc",
     "backend/app/services/regime/hmm.py": "2ae11f35cd4a87ab74395a0a589dbfcab4f15d4e",
     "backend/app/services/scoring/ma_crossover.py": "1266032a8d8eaf96576095eb815d3f7a70d973e1",
+    "backend/app/services/pipelines/hourly.py": "aa8dc53c4c998446b2e10502331382183a0e47f3",
+    "backend/app/services/pipelines/four_hour.py": "3422f7e37885aafc4486f6df2f64e17bb3fb60a8",
+    "backend/app/services/pipelines/daily.py": "bd6b0a27c6371fcc58ecc8e48506b82faacc1810",
+}
+#: Nutzerentscheidung vom 23.09.2026 („5. 250 kerzen“): Rückblick der Pipeline.
+LOOKBACK_CALLS = {
+    "backend/app/services/pipelines/hourly.py": "lookback=60,",
+    "backend/app/services/pipelines/four_hour.py": "lookback=60,",
+    "backend/app/services/pipelines/daily.py": "lookback=90,",
 }
 
 BASE = '''"""Vektorisierte Indikator-Grundfunktionen nach Pflichtenheft §7.1-7.7.
 
 Die Berechnung liegt in ``auditcore_market_indicators`` (Profil
-``krypto.indicators_base`` 2026.09.1, charakterisiert aus dieser Datei in
-krypto@34d6017). Dieses Modul behält Namen, Signaturen, Serien-Namen und
-Rückgabetypen bei. Fehlende oder undefinierte Werte sind ``None`` (nie NaN/inf);
-NaN in den Eingaben wird abgewiesen. Die ATR ist wie bisher der einfache
-gleitende Mittelwert der True Range (nicht Wilder).
+``krypto.entschieden`` 2026.09.1: Nutzerentscheidung vom 23.09.2026 auf Basis
+des aus dieser Datei charakterisierten Profils ``krypto.indicators_base``).
+Dieses Modul behält Namen, Signaturen, Serien-Namen und Rückgabetypen bei.
+Fehlende oder undefinierte Werte sind ``None`` (nie NaN/inf); NaN in den
+Eingaben wird abgewiesen. ATR nach Wilder, RSI ohne jede Bewegung = 50,
+empfohlener Mindest-Rückblick ``PROFILE.min_lookback`` = 250 Kerzen.
 """
 
 from __future__ import annotations
 
 import polars as pl
-from auditcore_market_indicators import load_profile
+from auditcore_market_indicators import RECOMMENDED_PROFILE, load_profile
 from auditcore_market_indicators import polars_adapter as _mi
 
-PROFILE = load_profile("krypto.indicators_base", "2026.09.1")
+PROFILE = load_profile(*RECOMMENDED_PROFILE)
 
 
 def returns(close: pl.Series, periods: int) -> pl.Series:
@@ -226,7 +236,17 @@ def main() -> None:
     old = "vma_20 = vol.rolling_mean(window_size=20, min_samples=20)"
     if old not in text:
         raise SystemExit("pipeline.py: vma_20-Zeile nicht gefunden")
-    pipeline.write_text(text.replace(old, "vma_20 = sma(vol, 20)"), encoding="utf-8")
+    text = text.replace(old, "vma_20 = sma(vol, 20)")
+    if "    lookback: int = 60," not in text:
+        raise SystemExit("pipeline.py: lookback-Vorgabe nicht gefunden")
+    text = text.replace("    lookback: int = 60,", "    lookback: int = 250,", 1)
+    pipeline.write_text(text, encoding="utf-8")
+    for relative, call in LOOKBACK_CALLS.items():
+        path = root / relative
+        source = path.read_text(encoding="utf-8")
+        if source.count(call) != 1:
+            raise SystemExit(f"{relative}: {call} nicht eindeutig")
+        path.write_text(source.replace(call, "lookback=250,"), encoding="utf-8")
     for relative, functions in REPLACEMENTS.items():
         path = root / relative
         text = add_imports(path.read_text(encoding="utf-8"), PROFILES[relative])

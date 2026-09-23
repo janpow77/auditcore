@@ -46,6 +46,12 @@ vier mitgelieferten Profile reproduzieren je ein Quellmodul aus
 | `krypto.scoring_rsi_macd` | `services/scoring/rsi_macd.py` | SMA / halten | Wilder / 50 | – | NumPy paarweise |
 | `krypto.scoring_confluence` | `services/scoring/confluence.py` | SMA / Fehler | – | – | NumPy paarweise |
 | `krypto.regime_hmm` | `services/regime/hmm.py` | erster Wert / Fehler | – | – | – |
+| `krypto.entschieden` (**empfohlen**, `RECOMMENDED_PROFILE`) | Nutzerentscheidung 23.09.2026 auf Basis `indicators_base` | SMA / überspringen | Wilder / 50 | Wilder | Neumaier; Rückblick ≥ 250 |
+
+Die ersten vier Profile reproduzieren die Quellen bitgenau und bleiben dafür
+unverändert. `krypto.entschieden` setzt die Nutzerentscheidung vom 23.09.2026
+um („5. 250 kerzen. 6 ja wilder, rsi“) und nennt mit `min_lookback = 250` den
+empfohlenen Mindest-Rückblick.
 
 Die Glättungsvariante ist Teil des Profils (`rsi.smoothing`: `wilder`, `ema`,
 `sma`; `atr.smoothing`: `sma`, `wilder`, `ema`). Eigene Profile entstehen mit

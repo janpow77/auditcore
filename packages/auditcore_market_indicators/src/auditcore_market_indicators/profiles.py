@@ -3,7 +3,8 @@
 A profile fixes every choice in which the characterized krypto functions
 differ: start value and gap handling of the EMA, smoothing (Wilder, EMA or
 SMA) and flat-market value of the RSI, smoothing of the ATR, gap handling of
-RSI/ADX and the summation order of start values. Indicators without variants
+RSI/ADX, the summation order of start values and, optionally, the
+recommended minimum lookback (``warmup.min_lookback``). Indicators without variants
 (returns, SMA, z-score …) take no profile.
 
 Nothing here picks a variant: every packaged profile reproduces one source
@@ -88,6 +89,7 @@ class IndicatorProfile:
     atr: AtrRule | None
     adx: AdxRule | None
     macd: bool
+    min_lookback: int | None = None
 
     @property
     def reference(self) -> dict[str, str]:
@@ -190,6 +192,15 @@ def profile_from_dict(data: Mapping[str, Any]) -> IndicatorProfile:
             raise ProfileError("macd setzt einen ema-Abschnitt voraus.")
         if ema is None and rsi is None and atr is None and adx is None:
             raise ProfileError("Profil legt keinen Indikator fest.")
+        min_lookback = None
+        if "warmup" in data:  # optional; characterized legacy profiles do not define it
+            warmup = data["warmup"]
+            if not isinstance(warmup, Mapping):
+                raise ProfileError("warmup muss ein Objekt sein.")
+            value = warmup["min_lookback"]
+            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+                raise ProfileError("warmup.min_lookback muss eine positive ganze Zahl sein.")
+            min_lookback = value
         return IndicatorProfile(
             id=data["id"],
             version=data["version"],
@@ -203,9 +214,16 @@ def profile_from_dict(data: Mapping[str, Any]) -> IndicatorProfile:
             atr=atr,
             adx=adx,
             macd=macd_section is not None,
+            min_lookback=min_lookback,
         )
     except (KeyError, TypeError) as exc:
         raise ProfileError(f"Profil ist unvollständig oder fehlerhaft: {exc!r}") from exc
+
+
+#: Nutzerentscheidung vom 23.09.2026 („6 ja wilder, rsi“; „5. 250 kerzen“):
+#: empfohlenes Profil für den krypto-Consumer. Die charakterisierten Profile
+#: bleiben für den bitgenauen Legacy-Replay unverändert.
+RECOMMENDED_PROFILE = ("krypto.entschieden", "2026.09.1")
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
@@ -244,11 +262,13 @@ def profile_document(profile: IndicatorProfile) -> dict[str, Any]:
         "atr": None if profile.atr is None else dict(vars(profile.atr)),
         "adx": None if profile.adx is None else dict(vars(profile.adx)),
         "macd": profile.macd,
+        "min_lookback": profile.min_lookback,
         "source": dict(profile.source),
     }
 
 
 __all__ = [
+    "RECOMMENDED_PROFILE",
     "SCHEMA",
     "AdxRule",
     "AtrRule",
