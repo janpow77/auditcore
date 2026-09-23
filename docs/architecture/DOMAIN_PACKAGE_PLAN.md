@@ -22,6 +22,14 @@ Priorität; Harvester und weitere Analyse-/Werkzeugfamilien werden ebenfalls
 berücksichtigt. Die [Abdeckung aller 71 Repositories](REPOSITORY_PACKAGE_COVERAGE.md)
 enthält Quellen, konkrete Consumer und die aktualisierte Reihenfolge.
 
+Die vertiefte [Funktionsübersicht](FUNCTION_OVERVIEW.md) ergänzt jetzt Workshop,
+OSINT/map.flowaudit, Audit-Designer einschließlich MCP und eingebettetem FlowStat,
+Standalone-FlowStat sowie Regulierung. 20 bisher benannte Pakete sind kein
+abschließend vollständiger Funktionskatalog. Zusätzliche Kandidaten wie
+Checklisten und Nachrichtenquellen sind dort mit konkreten Belegen abgegrenzt.
+**Erster gezielt zu migrierender Consumer ist Regulierung**; dafür gilt der
+[Refactoring-/Debianplan](FUNCTIONS_REGULIERUNG_MIGRATION.md).
+
 | Priorität | Eigenständige Distribution | Gemeinsam darin halten | Bewusst außerhalb halten |
 |---|---|---|---|
 | 1 | `auditcore_dummygenerator` | Synthetische Namen, Adressen, Zahlen, Datumswerte, Felder, Zeilen und explizite Fehlerfälle | FastAPI-Endpunkte, Uploads, CSV-Downloadantworten, Serverkonfiguration und Workerbetrieb |
