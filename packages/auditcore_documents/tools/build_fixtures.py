@@ -511,13 +511,27 @@ def build_synthetic() -> dict[str, str]:
 
 ERRORS = ROOT / "tests" / "fixtures" / "errors"
 
-#: Minimales PDF mit einer leeren Seite ohne Textebene (wie ein Scan ohne OCR).
-BLANK_PDF = (
-    b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n"
-    b"2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n"
-    b"3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]>>endobj\n"
-    b"trailer<</Root 1 0 R>>\n%%EOF\n"
-)
+def blank_pdf() -> bytes:
+    """Gültiges PDF (mit Querverweistabelle) mit einer leeren Seite ohne Textebene."""
+    objects = [
+        b"<</Type/Catalog/Pages 2 0 R>>",
+        b"<</Type/Pages/Kids[3 0 R]/Count 1>>",
+        b"<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<<>>>>",
+    ]
+    out = bytearray(b"%PDF-1.4\n")
+    offsets = []
+    for number, body in enumerate(objects, 1):
+        offsets.append(len(out))
+        out += b"%d 0 obj\n" % number + body + b"\nendobj\n"
+    xref = len(out)
+    out += b"xref\n0 %d\n0000000000 65535 f \n" % (len(objects) + 1)
+    for offset in offsets:
+        out += b"%010d 00000 n \n" % offset
+    out += b"trailer\n<</Size %d/Root 1 0 R>>\nstartxref\n%d\n%%%%EOF\n" % (
+        len(objects) + 1,
+        xref,
+    )
+    return bytes(out)
 
 
 def build_errors() -> dict[str, str]:
@@ -525,7 +539,7 @@ def build_errors() -> dict[str, str]:
     (ERRORS / "kaputt.docx").write_bytes(b"PK\x03\x04 keine gueltige ZIP-Datei")
     (ERRORS / "kaputt.pdf").write_bytes(b"not a real pdf")
     (ERRORS / "notiz.txt").write_text("Nur Text.\n", encoding="utf-8")
-    (ERRORS / "leer.pdf").write_bytes(BLANK_PDF)
+    (ERRORS / "leer.pdf").write_bytes(blank_pdf())
     with zipfile.ZipFile(ERRORS / "ohne_document.docx", "w") as archive:
         archive.writestr(zipfile.ZipInfo("word/styles.xml", FIXED_TIME), b"<styles/>")
     with zipfile.ZipFile(ERRORS / "xml_fehler.docx", "w") as archive:

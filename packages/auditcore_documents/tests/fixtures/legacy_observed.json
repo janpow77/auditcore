@@ -34882,10 +34882,10 @@
     "moved_count": 0,
     "new_count": 2,
     "new_filename": "leer.pdf",
-    "new_sha256": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+    "new_sha256": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
     "old_count": 2,
     "old_filename": "leer.pdf",
-    "old_sha256": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+    "old_sha256": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
     "removed_count": 0,
     "rows": [
      {
@@ -34975,10 +34975,10 @@
     "moved_count": 0,
     "new_count": 2,
     "new_filename": "leer.pdf",
-    "new_sha256": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+    "new_sha256": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
     "old_count": 2,
     "old_filename": "leer.pdf",
-    "old_sha256": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+    "old_sha256": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
     "removed_count": 0,
     "rows": [
      {
@@ -35271,7 +35271,7 @@
   "errors/entitaet_intern.docx": "8baf9ddef45ce5a6c52ea793d46d040c4983ebf94d290e15377316191c18225a",
   "errors/kaputt.docx": "00f642f3a46e21375613698398550f13a5445a5912fa0f50c49fbb63ca9be18b",
   "errors/kaputt.pdf": "32ed5017fce95db1619dfd80fe7ffe1e51ec4dfb98e43e3266d265836f6ae62b",
-  "errors/leer.pdf": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+  "errors/leer.pdf": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
   "errors/notiz.txt": "4cffd70d9e9c936fbb4b6b857181b1dcc4597c87c390fe4c4072b971b7a92627",
   "errors/ohne_document.docx": "34678999c995146480d95f066b2bbb5832ef024c2e2112c517003a6736a8572d",
   "errors/xml_fehler.docx": "dbd5e70cb4cfe63ba84f9b33ac3cc365ce90fdf50037887f3ad2315a10588ad6",
@@ -44479,10 +44479,10 @@
     "moved_count": 0,
     "new_count": 2,
     "new_filename": "leer.pdf",
-    "new_sha256": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+    "new_sha256": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
     "old_count": 2,
     "old_filename": "leer.pdf",
-    "old_sha256": "e5a636ac00ea3c175d3193c5d05df60ded156dd466043c70d254507ec277e4c2",
+    "old_sha256": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
     "removed_count": 0,
     "rows": [
      {
