@@ -194,6 +194,103 @@ def _consumption(profile: CalculationProfile, consumption: Mapping[str, Any]) ->
     return {name: non_negative(consumption.get(name), field=name) for name in names}
 
 
+@dataclass
+class _Evaluation:
+    """Mutable bookkeeping while the component lines are evaluated."""
+
+    lines: list[Line]
+    issues: list[str]
+    missing_required: list[str]
+    missing_optional: list[str]
+
+
+def _make_line(
+    rule: ComponentRule,
+    profile: CalculationProfile,
+    status: str,
+    values: tuple[Decimal | None, Decimal | None, Decimal | None],
+    uses: tuple[TierUse, ...] = (),
+) -> Line:
+    price, quantity, amount = values
+    return Line(
+        component=rule.name,
+        line=rule.line,
+        label=rule.label,
+        unit=rule.unit,
+        status=status,
+        price=price,
+        basis=rule.basis,
+        quantity=quantity,
+        factor=rule.factor,
+        amount=amount,
+        amount_rounded=None if amount is None else profile.money.apply(amount),
+        tiers=uses,
+    )
+
+
+def _tiered_line(
+    rule: ComponentRule,
+    tariff: Tariff,
+    profile: CalculationProfile,
+    quantities: Mapping[str, Decimal],
+    state: _Evaluation,
+) -> Line:
+    tiers_rule = profile.tiers
+    if tiers_rule is None or not tariff.tiers:  # pragma: no cover - guarded by the caller
+        raise PriceAnalysisError("invalid_tiers", "Staffelzeile ohne Staffel.")
+    quantity = quantities[tiers_rule.quantity]
+    amount, uses, beyond = tiered_amount(tariff.tiers, quantity, open_last=tiers_rule.open_last)
+    if tariff.components.get(rule.name) is not None:
+        state.issues.append(f"{rule.name}: durch Staffel {tiers_rule.field} überlagert")
+    if beyond:
+        state.issues.append(
+            f"{tiers_rule.field}: Verbrauch über der letzten Staffelgrenze, "
+            "letzte Stufe gilt unbegrenzt (Profilregel)"
+        )
+    for key in tariff.extra.get("ignored_tier_keys", []):
+        state.issues.append(f"{tiers_rule.field}: Angabe {key} nicht ausgewertet")
+    return _make_line(rule, profile, TIERED, (None, quantity, amount), uses)
+
+
+def _component_line(
+    rule: ComponentRule,
+    tariff: Tariff,
+    profile: CalculationProfile,
+    quantities: Mapping[str, Decimal],
+    day: date,
+    state: _Evaluation,
+) -> Line:
+    """One formula line: not applicable, tiered, missing or given."""
+    price = tariff.components.get(rule.name)
+    quantity = quantities[rule.basis] if rule.basis else None
+    if not rule.applies(day):
+        if price is not None:
+            state.issues.append(f"{rule.name}: am Stichtag nicht anwendbar, nicht berücksichtigt")
+        return _make_line(rule, profile, NOT_APPLICABLE, (price, quantity, None))
+    if rule.tiered_by and profile.tiers is not None and tariff.tiers:
+        return _tiered_line(rule, tariff, profile, quantities, state)
+    if price is None:
+        (state.missing_required if rule.required else state.missing_optional).append(rule.name)
+        return _make_line(rule, profile, MISSING, (None, quantity, None))
+    amount = price * (quantity if quantity is not None else Decimal(1)) * rule.factor
+    return _make_line(rule, profile, GIVEN, (price, quantity, amount))
+
+
+def _not_comparable(
+    tariff: Tariff, profile: CalculationProfile, day: date, state: _Evaluation
+) -> list[str]:
+    reasons = [f"fehlt:{name}" for name in state.missing_required]
+    if profile.optional_missing_blocks_comparison:
+        reasons += [f"fehlt:{name}" for name in state.missing_optional]
+    if profile.require_released_for_comparison and tariff.release is not ReleaseStatus.FREIGEGEBEN:
+        reasons.append(f"freigabe:{tariff.release.value}")
+    if tariff.valid_from is not None and day < tariff.valid_from:
+        reasons.append("noch_nicht_gueltig")
+    if tariff.valid_to is not None and day > tariff.valid_to:
+        reasons.append("nicht_mehr_gueltig")
+    return reasons
+
+
 def calculate(
     tariff: Tariff,
     profile: CalculationProfile,
@@ -212,65 +309,10 @@ def calculate(
         )
     day = parse_day(stichtag)
     quantities = _consumption(profile, consumption)
-    lines: list[Line] = []
-    issues: list[str] = []
-    missing_required: list[str] = []
-    missing_optional: list[str] = []
+    state = _Evaluation([], [], [], [])
     for rule in profile.components:
-        price = tariff.components.get(rule.name)
-        quantity = quantities[rule.basis] if rule.basis else None
-
-        def line(
-            status: str,
-            price: Decimal | None,
-            quantity: Decimal | None,
-            amount: Decimal | None,
-            uses: tuple[TierUse, ...] = (),
-            rule: ComponentRule = rule,
-        ) -> Line:
-            return Line(
-                component=rule.name,
-                line=rule.line,
-                label=rule.label,
-                unit=rule.unit,
-                status=status,
-                price=price,
-                basis=rule.basis,
-                quantity=quantity,
-                factor=rule.factor,
-                amount=amount,
-                amount_rounded=None if amount is None else profile.money.apply(amount),
-                tiers=uses,
-            )
-
-        if not rule.applies(day):
-            if price is not None:
-                issues.append(f"{rule.name}: am Stichtag nicht anwendbar, nicht berücksichtigt")
-            lines.append(line(NOT_APPLICABLE, price, quantity, None))
-            continue
-        if rule.tiered_by and profile.tiers is not None and tariff.tiers:
-            tier_quantity = quantities[profile.tiers.quantity]
-            amount, uses, beyond = tiered_amount(
-                tariff.tiers, tier_quantity, open_last=profile.tiers.open_last
-            )
-            if price is not None:
-                issues.append(f"{rule.name}: durch Staffel {profile.tiers.field} überlagert")
-            if beyond:
-                issues.append(
-                    f"{profile.tiers.field}: Verbrauch über der letzten Staffelgrenze, "
-                    "letzte Stufe gilt unbegrenzt (Profilregel)"
-                )
-            for key in tariff.extra.get("ignored_tier_keys", []):
-                issues.append(f"{profile.tiers.field}: Angabe {key} nicht ausgewertet")
-            lines.append(line(TIERED, None, tier_quantity, amount, uses))
-            continue
-        if price is None:
-            (missing_required if rule.required else missing_optional).append(rule.name)
-            lines.append(line(MISSING, None, quantity, None))
-            continue
-        amount = price * (quantity if quantity is not None else Decimal(1)) * rule.factor
-        lines.append(line(GIVEN, price, quantity, amount))
-    amounts = [(item.component, item.amount) for item in lines if item.amount is not None]
+        state.lines.append(_component_line(rule, tariff, profile, quantities, day, state))
+    amounts = [(item.component, item.amount) for item in state.lines if item.amount is not None]
     total = sum((amount for _, amount in amounts), Decimal(0))
     fixed = sum((amount for name, amount in amounts if profile.component(name).fixed), Decimal(0))
     mixed_rule = profile.mixed_price
@@ -280,26 +322,18 @@ def calculate(
     variable_share = (
         profile.percent.apply(Decimal(100) - fixed / total * 100) if total > 0 else None
     )
-    reasons = [f"fehlt:{name}" for name in missing_required]
-    if profile.optional_missing_blocks_comparison:
-        reasons += [f"fehlt:{name}" for name in missing_optional]
-    if profile.require_released_for_comparison and tariff.release is not ReleaseStatus.FREIGEGEBEN:
-        reasons.append(f"freigabe:{tariff.release.value}")
-    if tariff.valid_from is not None and day < tariff.valid_from:
-        reasons.append("noch_nicht_gueltig")
-    if tariff.valid_to is not None and day > tariff.valid_to:
-        reasons.append("nicht_mehr_gueltig")
+    reasons = _not_comparable(tariff, profile, day, state)
     return CalculationResult(
         profile=profile.reference,
         kind=profile.kind,
         stichtag=day,
         consumption=quantities,
-        lines=tuple(lines),
+        lines=tuple(state.lines),
         total=total,
         total_rounded=profile.money.apply(total),
-        total_is_lower_bound=bool(missing_required or missing_optional),
-        missing_required=tuple(missing_required),
-        missing_optional=tuple(missing_optional),
+        total_is_lower_bound=bool(state.missing_required or state.missing_optional),
+        missing_required=tuple(state.missing_required),
+        missing_optional=tuple(state.missing_optional),
         comparable=not reasons,
         not_comparable_reasons=tuple(reasons),
         mixed_price_name=mixed_rule.name,
@@ -308,5 +342,5 @@ def calculate(
         fixed_share_pct=fixed_share,
         variable_share_pct=variable_share,
         release=tariff.release,
-        issues=tuple(issues),
+        issues=tuple(state.issues),
     )

@@ -140,12 +140,16 @@ class Tariff:
         valid_to: Any = None,
         release: ReleaseStatus | str = ReleaseStatus.UNBEKANNT,
         q3: Any = None,
-        variant_id: int | None = None,
-        row_id: int | None = None,
-        standard_variant: bool = False,
-        source_ref: str | None = None,
+        **identity: Any,
     ) -> Tariff:
-        """Build from the legacy ``preisdaten`` mapping; unknown keys are rejected."""
+        """Build from the legacy ``preisdaten`` mapping; unknown keys are rejected.
+
+        ``identity`` may name ``variant_id``, ``row_id``, ``standard_variant``
+        and ``source_ref`` (selection and traceability only).
+        """
+        unexpected = set(identity) - {"variant_id", "row_id", "standard_variant", "source_ref"}
+        if unexpected:
+            raise TypeError(f"Unbekannte Angaben {sorted(unexpected)}")
         allowed = {c.name for c in profile.components}
         if profile.tiers is not None:
             allowed.add(profile.tiers.field)
@@ -174,10 +178,10 @@ class Tariff:
             valid_to=None if valid_to is None else parse_day(valid_to, field="valid_to"),
             release=release if isinstance(release, ReleaseStatus) else ReleaseStatus(release),
             q3=optional_non_negative(q3, field="q3"),
-            variant_id=variant_id,
-            row_id=row_id,
-            standard_variant=standard_variant,
-            source_ref=source_ref,
+            variant_id=identity.get("variant_id"),
+            row_id=identity.get("row_id"),
+            standard_variant=bool(identity.get("standard_variant", False)),
+            source_ref=identity.get("source_ref"),
             extra=extra,
         )
 

@@ -44,8 +44,12 @@ def main() -> None:
     assert traffic_light(result.total_rounded, Decimal("420"), vergleich) == "gelb"
     assert group_statistics([], vergleich).median is None
     legacy_result = legacy.calculate_wasser(
-        {"grundpreis_eur_monat": 0, "arbeitspreis_eur_m3": 1.07,
-         "verrechnungspreis_eur_monat": 0, "wasserentnahmeentgelt_eur_m3": 0},
+        {
+            "grundpreis_eur_monat": 0,
+            "arbeitspreis_eur_m3": 1.07,
+            "verrechnungspreis_eur_monat": 0,
+            "wasserentnahmeentgelt_eur_m3": 0,
+        },
         m3=2.5,
     )
     assert legacy_result["jahreskosten"] == 2.68
