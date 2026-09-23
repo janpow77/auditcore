@@ -1,0 +1,19 @@
+{
+ "note": "Synthetische HAD-Ergebnisseite im Tabellenlayout, das der Quellparser erwartet; keine echte HAD-Seite.",
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://www.had.de/onlinesuche_erweitert.html",
+    "params": {
+     "q": "Kita",
+     "archiv": "1"
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_b64": "PGh0bWw+PGJvZHk+PHRhYmxlIGNsYXNzPSJyZXN1bHQtbGlzdCI+Cjx0cj48dGQ+TmV1YmF1IEtpdGE8L3RkPjx0ZD5TdGFkdCBLYXNzZWw8L3RkPjx0ZD5PZmZlbmVzIFZlcmZhaHJlbjwvdGQ+PHRkPkJhdWxlaXN0dW5nPC90ZD4KPHRkPkthc3NlbDwvdGQ+PHRkPjxhIGhyZWY9ImRldGFpbHMuaHRtbD9pZD00NzExIj5tZWhyPC9hPjwvdGQ+PHRkPjAxLjAzLjIwMjQ8L3RkPjwvdHI+Cjx0cj48dGQ+TnVyIFRpdGVsPC90ZD48L3RyPgo8dHI+PHRkPlJlaW5pZ3VuZzwvdGQ+PHRkPkxhbmQgSGVzc2VuPC90ZD48dGQ+PGEgaHJlZj0iaHR0cHM6Ly93d3cuaGFkLmRlL3guaHRtbD9pZD05OSI+eDwvYT48L3RkPjwvdHI+CjwvdGFibGU+PC9ib2R5PjwvaHRtbD4="
+   }
+  }
+ ]
+}

@@ -1,0 +1,5750 @@
+{
+ "status": "OBSERVED",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION_NOT_LEGAL_VALIDATION",
+ "source": {
+  "files": [
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/services/ted_harvester_service.py",
+    "git_blob": "1f8b43677a794b8b2fdb6787c8e533c08a78a2cb"
+   },
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/audit_prep/ted_normalize.py",
+    "git_blob": "600c9dd9909b147c253ef72d5d8e27e80af0d002"
+   },
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "e76961b1bdab273f8c2441a4bfe2108a2c71f9eb"
+   },
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "company_records.py",
+    "git_blob": "b19d308f2e0cf3d9e99e91f8f325f89183ee4f84"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "a3fa3be4d0c486f2cf0d161a94b3795e6f46455b"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   },
+   {
+    "repository": "janpow77/audit_designer",
+    "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+    "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+    "git_blob": "874901d0414976bbc3f9f9314894c7cf913c043a"
+   }
+  ],
+  "migrated_portal": ""
+ },
+ "library": null,
+ "environment": {
+  "python": "3.12.3",
+  "httpx": "0.28.1",
+  "network": "in-process fakes only",
+  "database": "unreachable URL, never connected"
+ },
+ "ruleset": {
+  "threshold_rules": {
+   "supply_service": {
+    "BELOW_1K": {
+     "max": 1000,
+     "procedure": "Direktvergabe",
+     "min_bids": 1
+    },
+    "BELOW_25K": {
+     "max": 25000,
+     "procedure": "Verhandlungsvergabe",
+     "min_bids": 3
+    },
+    "BELOW_EU": {
+     "max": 221000,
+     "procedure": "Oeffentliche Ausschreibung",
+     "min_bids": 3
+    },
+    "ABOVE_EU": {
+     "max": null,
+     "procedure": "EU-Verfahren",
+     "min_bids": 5
+    }
+   },
+   "construction": {
+    "BELOW_1K": {
+     "max": 1000,
+     "procedure": "Direktvergabe",
+     "min_bids": 1
+    },
+    "BELOW_25K": {
+     "max": 25000,
+     "procedure": "Freihaendige Vergabe",
+     "min_bids": 3
+    },
+    "BELOW_EU": {
+     "max": 5538000,
+     "procedure": "Oeffentliche Ausschreibung",
+     "min_bids": 3
+    },
+    "ABOVE_EU": {
+     "max": null,
+     "procedure": "EU-Verfahren",
+     "min_bids": 5
+    }
+   }
+  },
+  "required_documents_by_procedure": {
+   "Direktvergabe": [
+    "VERGABEVERMERK"
+   ],
+   "Verhandlungsvergabe": [
+    "VERGABEVERMERK",
+    "ANGEBOT",
+    "ZUSCHLAG"
+   ],
+   "Freihaendige Vergabe": [
+    "VERGABEVERMERK",
+    "ANGEBOT",
+    "ZUSCHLAG"
+   ],
+   "Oeffentliche Ausschreibung": [
+    "VERGABEVERMERK",
+    "AUSSCHREIBUNG",
+    "ANGEBOT",
+    "SUBMISSIONSPROTOKOLL",
+    "ZUSCHLAG"
+   ],
+   "EU-Verfahren": [
+    "VERGABEVERMERK",
+    "AUSSCHREIBUNG",
+    "ANGEBOT",
+    "SUBMISSIONSPROTOKOLL",
+    "ZUSCHLAG",
+    "VERTRAG",
+    "COI",
+    "TARIFTREUEERKLAERUNG"
+   ]
+  },
+  "keys": [
+   "description_de",
+   "description_en",
+   "error_categories",
+   "features",
+   "jurisdiction",
+   "legal_references",
+   "required_documents_by_procedure",
+   "ruleset_id",
+   "supported_document_types",
+   "threshold_rules",
+   "title_de",
+   "title_en",
+   "version"
+  ]
+ },
+ "cases": [
+  {
+   "name": "normalize-award",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-no-winner",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324999-2024",
+    "notice-title": {
+     "deu": "Ausschreibung ohne Zuschlag"
+    },
+    "publication-date": "2024-03-01+01:00"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "normalize-english-only",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "eng": "Only English"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "eng": "X Ltd"
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "X Ltd",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Only English",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-french-first-value",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "fra": "Titre",
+     "ita": "Titolo"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Titre",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-legacy-mnemonics",
+   "operation": "normalize_notice",
+   "inputs": {
+    "ND": "100-2019",
+    "TI": "Alt",
+    "AA_NAME": "Amt",
+    "CY": "DE",
+    "WIN_NAME": "Firma",
+    "PD": "20190301",
+    "DT_AWARD": "01/02/2019",
+    "CPV": "45000000",
+    "RC": [
+     "DE7"
+    ],
+    "PR_PROC": "1"
+   },
+   "output": {
+    "notice_id": "100-2019",
+    "document_number": "100-2019",
+    "contracting_authority_name": "Amt",
+    "contracting_authority_country": "DE",
+    "contractor_name": "Firma",
+    "title": "Alt",
+    "cpv_codes": "45000000",
+    "nuts_codes": "DE7",
+    "publication_date": "2019-03-01",
+    "contract_award_date": "2019-02-01",
+    "procedure_type": "1"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-amount-object",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": {
+     "amount": "99.5",
+     "currency": "USD"
+    },
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 99.5,
+    "contract_value_currency": "USD"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-amount-list-max",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": [
+     {
+      "amount": 10,
+      "currency": "EUR"
+     },
+     {
+      "amount": 20,
+      "currency": "CHF"
+     }
+    ],
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 20.0,
+    "contract_value_currency": "CHF"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-amount-german",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "1.234,56",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 1.23456,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-amount-thousands",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "1,234.56",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 1234.56,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-amount-garbage",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "n/a",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-amount-int",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": 5,
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 5.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-estimated-only",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": null,
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ],
+    "estimated-value-proc": "70000"
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "estimated_value": 70000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-currency-separate",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "7",
+    "result-value-cur-notice": "PLN",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 7.0,
+    "contract_value_currency": "PLN"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-empty-values",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {},
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [],
+    "buyer-name": "",
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-cpv-objects",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     {
+      "code": "1"
+     },
+     {
+      "value": "2"
+     },
+     {
+      "id": "1"
+     }
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "1, 2",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-nuts",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ],
+    "place-performance-nuts": [
+     "DE71",
+     "DE71",
+     "DE72"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "nuts_codes": "DE71, DE72",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-dates-variants",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "15.01.2024",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": "20240201",
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ],
+    "contract-start-date": "2024/02/01",
+    "contract-end-date": "garbage"
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "contract_start_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-datetime-string",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15T10:00:00Z",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-winner-list",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": [
+     "",
+     "Zweite GmbH"
+    ],
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Zweite GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-numeric-title",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": 12345,
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ]
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "12345",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-correction-fields",
+   "operation": "normalize_notice",
+   "inputs": {
+    "publication-number": "324184-2024",
+    "notice-title": {
+     "deu": "Rahmenvertrag IT-Dienstleistungen",
+     "eng": "Framework IT"
+    },
+    "publication-date": "2024-01-15+01:00",
+    "classification-cpv": [
+     "72000000",
+     "72200000"
+    ],
+    "buyer-name": {
+     "deu": [
+      "Bundesamt für Beispiele"
+     ]
+    },
+    "buyer-country": [
+     "DEU"
+    ],
+    "winner-name": {
+     "deu": [
+      "Beispiel GmbH"
+     ]
+    },
+    "winner-country": [
+     "DEU"
+    ],
+    "winner-identifier": [
+     "DE123456789"
+    ],
+    "winner-decision-date": [
+     "2024-02-01+01:00"
+    ],
+    "result-value-notice": "150000.0000",
+    "result-value-cur-notice": "EUR",
+    "procedure-type": "open",
+    "contract-nature": [
+     "services",
+     "services"
+    ],
+    "notice-type": "corr",
+    "change-notice-version-identifier": "2"
+   },
+   "output": {
+    "notice_id": "324184-2024",
+    "document_number": "324184-2024",
+    "contracting_authority_name": "Bundesamt für Beispiele",
+    "contracting_authority_country": "DEU",
+    "contractor_name": "Beispiel GmbH",
+    "contractor_country": "DEU",
+    "contractor_vat_id": "DE123456789",
+    "title": "Rahmenvertrag IT-Dienstleistungen",
+    "cpv_codes": "72000000, 72200000",
+    "publication_date": "2024-01-15",
+    "contract_award_date": "2024-02-01",
+    "procedure_type": "open",
+    "contract_type": "services",
+    "contract_value": 150000.0,
+    "contract_value_currency": "EUR"
+   },
+   "exception": null
+  },
+  {
+   "name": "normalize-not-a-dict",
+   "operation": "normalize_notice",
+   "inputs": [
+    "x"
+   ],
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "normalize-list",
+   "operation": "normalize_notices",
+   "inputs": [
+    {
+     "publication-number": "324184-2024",
+     "notice-title": {
+      "deu": "Rahmenvertrag IT-Dienstleistungen",
+      "eng": "Framework IT"
+     },
+     "publication-date": "2024-01-15+01:00",
+     "classification-cpv": [
+      "72000000",
+      "72200000"
+     ],
+     "buyer-name": {
+      "deu": [
+       "Bundesamt für Beispiele"
+      ]
+     },
+     "buyer-country": [
+      "DEU"
+     ],
+     "winner-name": {
+      "deu": [
+       "Beispiel GmbH"
+      ]
+     },
+     "winner-country": [
+      "DEU"
+     ],
+     "winner-identifier": [
+      "DE123456789"
+     ],
+     "winner-decision-date": [
+      "2024-02-01+01:00"
+     ],
+     "result-value-notice": "150000.0000",
+     "result-value-cur-notice": "EUR",
+     "procedure-type": "open",
+     "contract-nature": [
+      "services",
+      "services"
+     ]
+    },
+    {
+     "publication-number": "324999-2024",
+     "notice-title": {
+      "deu": "Ausschreibung ohne Zuschlag"
+     },
+     "publication-date": "2024-03-01+01:00"
+    },
+    {
+     "publication-number": "324184-2024",
+     "notice-title": {
+      "eng": "Only English"
+     },
+     "publication-date": "2024-01-15+01:00",
+     "classification-cpv": [
+      "72000000",
+      "72200000"
+     ],
+     "buyer-name": {
+      "deu": [
+       "Bundesamt für Beispiele"
+      ]
+     },
+     "buyer-country": [
+      "DEU"
+     ],
+     "winner-name": {
+      "eng": "X Ltd"
+     },
+     "winner-country": [
+      "DEU"
+     ],
+     "winner-identifier": [
+      "DE123456789"
+     ],
+     "winner-decision-date": [
+      "2024-02-01+01:00"
+     ],
+     "result-value-notice": "150000.0000",
+     "result-value-cur-notice": "EUR",
+     "procedure-type": "open",
+     "contract-nature": [
+      "services",
+      "services"
+     ]
+    },
+    {
+     "publication-number": "324184-2024",
+     "notice-title": {
+      "fra": "Titre",
+      "ita": "Titolo"
+     },
+     "publication-date": "2024-01-15+01:00",
+     "classification-cpv": [
+      "72000000",
+      "72200000"
+     ],
+     "buyer-name": {
+      "deu": [
+       "Bundesamt für Beispiele"
+      ]
+     },
+     "buyer-country": [
+      "DEU"
+     ],
+     "winner-name": {
+      "deu": [
+       "Beispiel GmbH"
+      ]
+     },
+     "winner-country": [
+      "DEU"
+     ],
+     "winner-identifier": [
+      "DE123456789"
+     ],
+     "winner-decision-date": [
+      "2024-02-01+01:00"
+     ],
+     "result-value-notice": "150000.0000",
+     "result-value-cur-notice": "EUR",
+     "procedure-type": "open",
+     "contract-nature": [
+      "services",
+      "services"
+     ]
+    },
+    {
+     "ND": "100-2019",
+     "TI": "Alt",
+     "AA_NAME": "Amt",
+     "CY": "DE",
+     "WIN_NAME": "Firma",
+     "PD": "20190301",
+     "DT_AWARD": "01/02/2019",
+     "CPV": "45000000",
+     "RC": [
+      "DE7"
+     ],
+     "PR_PROC": "1"
+    },
+    {
+     "publication-number": "324184-2024",
+     "notice-title": {
+      "deu": "Rahmenvertrag IT-Dienstleistungen",
+      "eng": "Framework IT"
+     },
+     "publication-date": "2024-01-15+01:00",
+     "classification-cpv": [
+      "72000000",
+      "72200000"
+     ],
+     "buyer-name": {
+      "deu": [
+       "Bundesamt für Beispiele"
+      ]
+     },
+     "buyer-country": [
+      "DEU"
+     ],
+     "winner-name": {
+      "deu": [
+       "Beispiel GmbH"
+      ]
+     },
+     "winner-country": [
+      "DEU"
+     ],
+     "winner-identifier": [
+      "DE123456789"
+     ],
+     "winner-decision-date": [
+      "2024-02-01+01:00"
+     ],
+     "result-value-notice": {
+      "amount": "99.5",
+      "currency": "USD"
+     },
+     "result-value-cur-notice": "EUR",
+     "procedure-type": "open",
+     "contract-nature": [
+      "services",
+      "services"
+     ]
+    }
+   ],
+   "output": [
+    {
+     "notice_id": "324184-2024",
+     "document_number": "324184-2024",
+     "contracting_authority_name": "Bundesamt für Beispiele",
+     "contracting_authority_country": "DEU",
+     "contractor_name": "Beispiel GmbH",
+     "contractor_country": "DEU",
+     "contractor_vat_id": "DE123456789",
+     "title": "Rahmenvertrag IT-Dienstleistungen",
+     "cpv_codes": "72000000, 72200000",
+     "publication_date": "2024-01-15",
+     "contract_award_date": "2024-02-01",
+     "procedure_type": "open",
+     "contract_type": "services",
+     "contract_value": 150000.0,
+     "contract_value_currency": "EUR"
+    },
+    {
+     "notice_id": "324184-2024",
+     "document_number": "324184-2024",
+     "contracting_authority_name": "Bundesamt für Beispiele",
+     "contracting_authority_country": "DEU",
+     "contractor_name": "X Ltd",
+     "contractor_country": "DEU",
+     "contractor_vat_id": "DE123456789",
+     "title": "Only English",
+     "cpv_codes": "72000000, 72200000",
+     "publication_date": "2024-01-15",
+     "contract_award_date": "2024-02-01",
+     "procedure_type": "open",
+     "contract_type": "services",
+     "contract_value": 150000.0,
+     "contract_value_currency": "EUR"
+    },
+    {
+     "notice_id": "324184-2024",
+     "document_number": "324184-2024",
+     "contracting_authority_name": "Bundesamt für Beispiele",
+     "contracting_authority_country": "DEU",
+     "contractor_name": "Beispiel GmbH",
+     "contractor_country": "DEU",
+     "contractor_vat_id": "DE123456789",
+     "title": "Titre",
+     "cpv_codes": "72000000, 72200000",
+     "publication_date": "2024-01-15",
+     "contract_award_date": "2024-02-01",
+     "procedure_type": "open",
+     "contract_type": "services",
+     "contract_value": 150000.0,
+     "contract_value_currency": "EUR"
+    },
+    {
+     "notice_id": "100-2019",
+     "document_number": "100-2019",
+     "contracting_authority_name": "Amt",
+     "contracting_authority_country": "DE",
+     "contractor_name": "Firma",
+     "title": "Alt",
+     "cpv_codes": "45000000",
+     "nuts_codes": "DE7",
+     "publication_date": "2019-03-01",
+     "contract_award_date": "2019-02-01",
+     "procedure_type": "1"
+    },
+    {
+     "notice_id": "324184-2024",
+     "document_number": "324184-2024",
+     "contracting_authority_name": "Bundesamt für Beispiele",
+     "contracting_authority_country": "DEU",
+     "contractor_name": "Beispiel GmbH",
+     "contractor_country": "DEU",
+     "contractor_vat_id": "DE123456789",
+     "title": "Rahmenvertrag IT-Dienstleistungen",
+     "cpv_codes": "72000000, 72200000",
+     "publication_date": "2024-01-15",
+     "contract_award_date": "2024-02-01",
+     "procedure_type": "open",
+     "contract_type": "services",
+     "contract_value": 99.5,
+     "contract_value_currency": "USD"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-raw-array",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "5b7b227075626c69636174696f6e2d6e756d626572223a20223332343138342d32303234222c20226e6f746963652d7469746c65223a207b22646575223a20225261686d656e766572747261672049542d4469656e73746c65697374756e67656e222c2022656e67223a20224672616d65776f726b204954227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30312d31352b30313a3030222c2022636c617373696669636174696f6e2d637076223a205b223732303030303030222c20223732323030303030225d2c202262757965722d6e616d65223a207b22646575223a205b2242756e646573616d7420665c75303066637220426569737069656c65225d7d2c202262757965722d636f756e747279223a205b22444555225d2c202277696e6e65722d6e616d65223a207b22646575223a205b22426569737069656c20476d6248225d7d2c202277696e6e65722d636f756e747279223a205b22444555225d2c202277696e6e65722d6964656e746966696572223a205b224445313233343536373839225d2c202277696e6e65722d6465636973696f6e2d64617465223a205b22323032342d30322d30312b30313a3030225d2c2022726573756c742d76616c75652d6e6f74696365223a20223135303030302e30303030222c2022726573756c742d76616c75652d6375722d6e6f74696365223a2022455552222c202270726f6365647572652d74797065223a20226f70656e222c2022636f6e74726163742d6e6174757265223a205b227365727669636573222c20227365727669636573225d7d2c207b227075626c69636174696f6e2d6e756d626572223a20223332343939392d32303234222c20226e6f746963652d7469746c65223a207b22646575223a202241757373636872656962756e67206f686e65205a757363686c6167227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30332d30312b30313a3030227d5d",
+    "file_name": "raw-array.json"
+   },
+   "output": [
+    [
+     {
+      "notice_id": "324184-2024",
+      "document_number": "324184-2024",
+      "contracting_authority_name": "Bundesamt für Beispiele",
+      "contracting_authority_country": "DEU",
+      "contractor_name": "Beispiel GmbH",
+      "contractor_country": "DEU",
+      "contractor_vat_id": "DE123456789",
+      "title": "Rahmenvertrag IT-Dienstleistungen",
+      "cpv_codes": "72000000, 72200000",
+      "publication_date": "2024-01-15",
+      "contract_award_date": "2024-02-01",
+      "procedure_type": "open",
+      "contract_type": "services",
+      "contract_value": 150000.0,
+      "contract_value_currency": "EUR"
+     }
+    ],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [],
+     "warnings": [
+      "1 Notice(s) ohne Auftragnehmer (contractor_name) übersprungen."
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-raw-object-notices",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "7b226e6f7469636573223a205b7b227075626c69636174696f6e2d6e756d626572223a20223332343138342d32303234222c20226e6f746963652d7469746c65223a207b22646575223a20225261686d656e766572747261672049542d4469656e73746c65697374756e67656e222c2022656e67223a20224672616d65776f726b204954227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30312d31352b30313a3030222c2022636c617373696669636174696f6e2d637076223a205b223732303030303030222c20223732323030303030225d2c202262757965722d6e616d65223a207b22646575223a205b2242756e646573616d7420665c75303066637220426569737069656c65225d7d2c202262757965722d636f756e747279223a205b22444555225d2c202277696e6e65722d6e616d65223a207b22646575223a205b22426569737069656c20476d6248225d7d2c202277696e6e65722d636f756e747279223a205b22444555225d2c202277696e6e65722d6964656e746966696572223a205b224445313233343536373839225d2c202277696e6e65722d6465636973696f6e2d64617465223a205b22323032342d30322d30312b30313a3030225d2c2022726573756c742d76616c75652d6e6f74696365223a20223135303030302e30303030222c2022726573756c742d76616c75652d6375722d6e6f74696365223a2022455552222c202270726f6365647572652d74797065223a20226f70656e222c2022636f6e74726163742d6e6174757265223a205b227365727669636573222c20227365727669636573225d7d5d7d",
+    "file_name": "raw-object-notices.json"
+   },
+   "output": [
+    [
+     {
+      "notice_id": "324184-2024",
+      "document_number": "324184-2024",
+      "contracting_authority_name": "Bundesamt für Beispiele",
+      "contracting_authority_country": "DEU",
+      "contractor_name": "Beispiel GmbH",
+      "contractor_country": "DEU",
+      "contractor_vat_id": "DE123456789",
+      "title": "Rahmenvertrag IT-Dienstleistungen",
+      "cpv_codes": "72000000, 72200000",
+      "publication_date": "2024-01-15",
+      "contract_award_date": "2024-02-01",
+      "procedure_type": "open",
+      "contract_type": "services",
+      "contract_value": 150000.0,
+      "contract_value_currency": "EUR"
+     }
+    ],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [],
+     "warnings": []
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-raw-object-results",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "7b22726573756c7473223a205b7b227075626c69636174696f6e2d6e756d626572223a20223332343138342d32303234222c20226e6f746963652d7469746c65223a207b22646575223a20225261686d656e766572747261672049542d4469656e73746c65697374756e67656e222c2022656e67223a20224672616d65776f726b204954227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30312d31352b30313a3030222c2022636c617373696669636174696f6e2d637076223a205b223732303030303030222c20223732323030303030225d2c202262757965722d6e616d65223a207b22646575223a205b2242756e646573616d7420665c75303066637220426569737069656c65225d7d2c202262757965722d636f756e747279223a205b22444555225d2c202277696e6e65722d6e616d65223a207b22646575223a205b22426569737069656c20476d6248225d7d2c202277696e6e65722d636f756e747279223a205b22444555225d2c202277696e6e65722d6964656e746966696572223a205b224445313233343536373839225d2c202277696e6e65722d6465636973696f6e2d64617465223a205b22323032342d30322d30312b30313a3030225d2c2022726573756c742d76616c75652d6e6f74696365223a20223135303030302e30303030222c2022726573756c742d76616c75652d6375722d6e6f74696365223a2022455552222c202270726f6365647572652d74797065223a20226f70656e222c2022636f6e74726163742d6e6174757265223a205b227365727669636573222c20227365727669636573225d7d5d7d",
+    "file_name": "raw-object-results.json"
+   },
+   "output": [
+    [
+     {
+      "notice_id": "324184-2024",
+      "document_number": "324184-2024",
+      "contracting_authority_name": "Bundesamt für Beispiele",
+      "contracting_authority_country": "DEU",
+      "contractor_name": "Beispiel GmbH",
+      "contractor_country": "DEU",
+      "contractor_vat_id": "DE123456789",
+      "title": "Rahmenvertrag IT-Dienstleistungen",
+      "cpv_codes": "72000000, 72200000",
+      "publication_date": "2024-01-15",
+      "contract_award_date": "2024-02-01",
+      "procedure_type": "open",
+      "contract_type": "services",
+      "contract_value": 150000.0,
+      "contract_value_currency": "EUR"
+     }
+    ],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [],
+     "warnings": []
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-normalized",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "5b7b22636f6e74726163746f725f6e616d65223a202241222c20226e6f746963655f6964223a202231227d2c207b226e6f746963655f6964223a202232227d5d",
+    "file_name": "normalized.json"
+   },
+   "output": [
+    [
+     {
+      "contractor_name": "A",
+      "notice_id": "1"
+     }
+    ],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [],
+     "warnings": [
+      "1 Notice(s) ohne Auftragnehmer (contractor_name) übersprungen."
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-empty-array",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "5b5d",
+    "file_name": "empty-array.json"
+   },
+   "output": [
+    [],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [
+      "Die Datei enthält keine verwertbaren TED-Zuschläge (Zuschlagsbekanntmachung mit contractor_name)."
+     ],
+     "warnings": []
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-invalid-json",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "7b6e6f74206a736f6e",
+    "file_name": "invalid-json.json"
+   },
+   "output": [
+    [],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [
+      "TED-Datei ist kein gültiges JSON — erwartet wird ein JSON-Array von TED-Notices (roh oder normalisiert)."
+     ],
+     "warnings": []
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-latin1",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "5b7b227075626c69636174696f6e2d6e756d626572223a20223332343138342d32303234222c20226e6f746963652d7469746c65223a207b22646575223a20225261686d656e766572747261672049542d4469656e73746c65697374756e67656e222c2022656e67223a20224672616d65776f726b204954227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30312d31352b30313a3030222c2022636c617373696669636174696f6e2d637076223a205b223732303030303030222c20223732323030303030225d2c202262757965722d6e616d65223a207b22646575223a205b2242756e646573616d742066fc7220426569737069656c65225d7d2c202262757965722d636f756e747279223a205b22444555225d2c202277696e6e65722d6e616d65223a20224dfc6c6c6572222c202277696e6e65722d636f756e747279223a205b22444555225d2c202277696e6e65722d6964656e746966696572223a205b224445313233343536373839225d2c202277696e6e65722d6465636973696f6e2d64617465223a205b22323032342d30322d30312b30313a3030225d2c2022726573756c742d76616c75652d6e6f74696365223a20223135303030302e30303030222c2022726573756c742d76616c75652d6375722d6e6f74696365223a2022455552222c202270726f6365647572652d74797065223a20226f70656e222c2022636f6e74726163742d6e6174757265223a205b227365727669636573222c20227365727669636573225d7d5d",
+    "file_name": "latin1.json"
+   },
+   "output": [
+    [
+     {
+      "notice_id": "324184-2024",
+      "document_number": "324184-2024",
+      "contracting_authority_name": "Bundesamt für Beispiele",
+      "contracting_authority_country": "DEU",
+      "contractor_name": "Müller",
+      "contractor_country": "DEU",
+      "contractor_vat_id": "DE123456789",
+      "title": "Rahmenvertrag IT-Dienstleistungen",
+      "cpv_codes": "72000000, 72200000",
+      "publication_date": "2024-01-15",
+      "contract_award_date": "2024-02-01",
+      "procedure_type": "open",
+      "contract_type": "services",
+      "contract_value": 150000.0,
+      "contract_value_currency": "EUR"
+     }
+    ],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [],
+     "warnings": [
+      "Datei nicht UTF-8-kodiert — Latin-1-Fallback verwendet."
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-utf8-bom",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "efbbbf5b7b227075626c69636174696f6e2d6e756d626572223a20223332343138342d32303234222c20226e6f746963652d7469746c65223a207b22646575223a20225261686d656e766572747261672049542d4469656e73746c65697374756e67656e222c2022656e67223a20224672616d65776f726b204954227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30312d31352b30313a3030222c2022636c617373696669636174696f6e2d637076223a205b223732303030303030222c20223732323030303030225d2c202262757965722d6e616d65223a207b22646575223a205b2242756e646573616d7420665c75303066637220426569737069656c65225d7d2c202262757965722d636f756e747279223a205b22444555225d2c202277696e6e65722d6e616d65223a207b22646575223a205b22426569737069656c20476d6248225d7d2c202277696e6e65722d636f756e747279223a205b22444555225d2c202277696e6e65722d6964656e746966696572223a205b224445313233343536373839225d2c202277696e6e65722d6465636973696f6e2d64617465223a205b22323032342d30322d30312b30313a3030225d2c2022726573756c742d76616c75652d6e6f74696365223a20223135303030302e30303030222c2022726573756c742d76616c75652d6375722d6e6f74696365223a2022455552222c202270726f6365647572652d74797065223a20226f70656e222c2022636f6e74726163742d6e6174757265223a205b227365727669636573222c20227365727669636573225d7d5d",
+    "file_name": "utf8-bom.json"
+   },
+   "output": [
+    [
+     {
+      "notice_id": "324184-2024",
+      "document_number": "324184-2024",
+      "contracting_authority_name": "Bundesamt für Beispiele",
+      "contracting_authority_country": "DEU",
+      "contractor_name": "Beispiel GmbH",
+      "contractor_country": "DEU",
+      "contractor_vat_id": "DE123456789",
+      "title": "Rahmenvertrag IT-Dienstleistungen",
+      "cpv_codes": "72000000, 72200000",
+      "publication_date": "2024-01-15",
+      "contract_award_date": "2024-02-01",
+      "procedure_type": "open",
+      "contract_type": "services",
+      "contract_value": 150000.0,
+      "contract_value_currency": "EUR"
+     }
+    ],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [],
+     "warnings": []
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-scalar",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "3432",
+    "file_name": "scalar.json"
+   },
+   "output": [
+    [],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [
+      "TED-JSON enthält kein Array von Notices."
+     ],
+     "warnings": []
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "file-only-no-winner",
+   "operation": "parse_ted_file",
+   "inputs": {
+    "bytes_hex": "5b7b227075626c69636174696f6e2d6e756d626572223a20223332343939392d32303234222c20226e6f746963652d7469746c65223a207b22646575223a202241757373636872656962756e67206f686e65205a757363686c6167227d2c20227075626c69636174696f6e2d64617465223a2022323032342d30332d30312b30313a3030227d5d",
+    "file_name": "only-no-winner.json"
+   },
+   "output": [
+    [],
+    [
+     "notice_id",
+     "contract_id",
+     "document_number",
+     "contracting_authority_name",
+     "contracting_authority_country",
+     "contracting_authority_address",
+     "contractor_name",
+     "contractor_country",
+     "contractor_address",
+     "contractor_vat_id",
+     "title",
+     "description",
+     "cpv_codes",
+     "nuts_codes",
+     "contract_value",
+     "contract_value_currency",
+     "estimated_value",
+     "publication_date",
+     "contract_award_date",
+     "contract_start_date",
+     "contract_end_date",
+     "procedure_type",
+     "contract_type"
+    ],
+    {
+     "errors": [
+      "Die Datei enthält keine verwertbaren TED-Zuschläge (Zuschlagsbekanntmachung mit contractor_name)."
+     ],
+     "warnings": [
+      "1 Notice(s) ohne Auftragnehmer (contractor_name) übersprungen."
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "iso-date-'2024-01-15'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "2024-01-15"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'2024-01-15+01:00'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "2024-01-15+01:00"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'20240115'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "20240115"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'15/01/2024'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "15/01/2024"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'15.01.2024'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "15.01.2024"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'15-01-2024'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "15-01-2024"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'2024/01/15'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "2024/01/15"
+   },
+   "output": "2024-01-15",
+   "exception": null
+  },
+  {
+   "name": "iso-date-'Jan 15'",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": "Jan 15"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "iso-date-None",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "iso-date-''",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "iso-date-['2024-03-01']",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": [
+     "2024-03-01"
+    ]
+   },
+   "output": "2024-03-01",
+   "exception": null
+  },
+  {
+   "name": "iso-date-{'deu': '2024-04-01'}",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": {
+     "deu": "2024-04-01"
+    }
+   },
+   "output": "2024-04-01",
+   "exception": null
+  },
+  {
+   "name": "iso-date-5",
+   "operation": "to_iso_date",
+   "inputs": {
+    "value": 5
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "query-empty",
+   "operation": "build_ted_query",
+   "inputs": {},
+   "output": "notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-explicit-query",
+   "operation": "build_ted_query",
+   "inputs": {
+    "query": "  FT=x  ",
+    "country": "DEU"
+   },
+   "output": "FT=x",
+   "exception": null
+  },
+  {
+   "name": "query-blank-query",
+   "operation": "build_ted_query",
+   "inputs": {
+    "query": "  ",
+    "country": "DEU"
+   },
+   "output": "buyer-country=DEU AND notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-cpv",
+   "operation": "build_ted_query",
+   "inputs": {
+    "cpv_codes": [
+     "72000000",
+     " ",
+     " 45000000 "
+    ]
+   },
+   "output": "(classification-cpv=72000000 OR classification-cpv=45000000) AND notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-cpv-empty",
+   "operation": "build_ted_query",
+   "inputs": {
+    "cpv_codes": [
+     " "
+    ]
+   },
+   "output": "notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-all",
+   "operation": "build_ted_query",
+   "inputs": {
+    "cpv_codes": [
+     "1"
+    ],
+    "country": " DEU ",
+    "contractor_name": " X GmbH ",
+    "date_from": "2024-01-01",
+    "date_to": "2024-12-31+01:00"
+   },
+   "output": "(classification-cpv=1) AND buyer-country=DEU AND winner-name=\"X GmbH\" AND publication-date>=20240101 AND publication-date<=20241231 AND notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-unparseable-date",
+   "operation": "build_ted_query",
+   "inputs": {
+    "date_from": "gestern"
+   },
+   "output": "publication-date>=gestern AND notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-quote-in-name",
+   "operation": "build_ted_query",
+   "inputs": {
+    "contractor_name": "A \"B\" C"
+   },
+   "output": "winner-name=\"A \"B\" C\" AND notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "query-date-object",
+   "operation": "build_ted_query",
+   "inputs": {
+    "date_from": "date(2024,1,2)"
+   },
+   "output": "publication-date>=20240102 AND notice-type=can-standard AND winner-name=*",
+   "exception": null
+  },
+  {
+   "name": "default-fields",
+   "operation": "constant",
+   "inputs": null,
+   "output": [
+    "publication-number",
+    "notice-title",
+    "publication-date",
+    "classification-cpv",
+    "buyer-name",
+    "buyer-country",
+    "winner-name",
+    "winner-country",
+    "winner-identifier",
+    "winner-decision-date",
+    "result-value-notice",
+    "result-value-cur-notice",
+    "procedure-type",
+    "contract-nature"
+   ],
+   "exception": null
+  },
+  {
+   "name": "field-aliases",
+   "operation": "constant",
+   "inputs": null,
+   "output": {
+    "notice_id": [
+     "publication-number",
+     "ND",
+     "noticePublicationNumber"
+    ],
+    "contract_id": [
+     "contract-identifier",
+     "contract-id"
+    ],
+    "document_number": [
+     "document-number",
+     "ND",
+     "publication-number"
+    ],
+    "contracting_authority_name": [
+     "buyer-name",
+     "organisation-name-buyer",
+     "official-name-buyer",
+     "AA_NAME"
+    ],
+    "contracting_authority_country": [
+     "buyer-country",
+     "organisation-country-buyer",
+     "country-buyer",
+     "CY"
+    ],
+    "contracting_authority_address": [
+     "buyer-address",
+     "organisation-address-buyer"
+    ],
+    "contractor_name": [
+     "winner-name",
+     "organisation-name-serv-prov",
+     "winner-official-name",
+     "tenderer-name",
+     "WIN_NAME"
+    ],
+    "contractor_country": [
+     "winner-country",
+     "organisation-country-serv-prov",
+     "tenderer-country"
+    ],
+    "contractor_address": [
+     "winner-address",
+     "organisation-address-serv-prov"
+    ],
+    "contractor_vat_id": [
+     "winner-identifier",
+     "organisation-identifier-tenderer",
+     "organisation-identifier-serv-prov",
+     "winner-nationalid"
+    ],
+    "title": [
+     "notice-title",
+     "title-proc",
+     "title",
+     "TI"
+    ],
+    "description": [
+     "description-proc",
+     "description",
+     "short-descr"
+    ],
+    "cpv_codes": [
+     "classification-cpv",
+     "main-classification-proc",
+     "cpv",
+     "CPV"
+    ],
+    "nuts_codes": [
+     "place-performance-nuts",
+     "performance-nuts",
+     "nuts",
+     "RC"
+    ],
+    "contract_value": [
+     "result-value-notice",
+     "result-value-lot",
+     "winner-value",
+     "tender-value",
+     "notice-value"
+    ],
+    "contract_value_currency": [
+     "result-value-cur-notice",
+     "result-value-cur-lot",
+     "currency",
+     "value-currency"
+    ],
+    "estimated_value": [
+     "estimated-value-proc",
+     "estimated-value-lot",
+     "estimated-value"
+    ],
+    "publication_date": [
+     "publication-date",
+     "dispatch-date",
+     "PD"
+    ],
+    "contract_award_date": [
+     "winner-decision-date",
+     "contract-conclusion-date",
+     "award-date",
+     "DT_AWARD"
+    ],
+    "contract_start_date": [
+     "contract-start-date",
+     "duration-start"
+    ],
+    "contract_end_date": [
+     "contract-end-date",
+     "duration-end"
+    ],
+    "procedure_type": [
+     "procedure-type",
+     "type-procedure",
+     "PR_PROC"
+    ],
+    "contract_type": [
+     "contract-nature",
+     "main-nature-proc",
+     "nature-proc",
+     "NC_CONTRACT_NATURE"
+    ]
+   },
+   "exception": null
+  }
+ ],
+ "fetch": [
+  {
+   "name": "single-page-total",
+   "kwargs": {
+    "page_size": 10,
+    "max_notices": 100
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 10,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [
+    "a-0",
+    "a-1",
+    "a-2"
+   ],
+   "exception": null
+  },
+  {
+   "name": "two-pages-then-empty",
+   "kwargs": {
+    "page_size": 2,
+    "max_notices": 100
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 2,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 2,
+      "limit": 2,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 3,
+      "limit": 2,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [
+    "b-0",
+    "b-1",
+    "c-0",
+    "c-1"
+   ],
+   "exception": null
+  },
+  {
+   "name": "max-notices-not-multiple",
+   "kwargs": {
+    "page_size": 4,
+    "max_notices": 6
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 4,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 2,
+      "limit": 4,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [
+    "d-0",
+    "d-1",
+    "d-2",
+    "d-3",
+    "e-0",
+    "e-1"
+   ],
+   "exception": null
+  },
+  {
+   "name": "results-key",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [
+    "f-0"
+   ],
+   "exception": null
+  },
+  {
+   "name": "data-key",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 2,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [
+    "g-0"
+   ],
+   "exception": null
+  },
+  {
+   "name": "non-list",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "name": "http-500",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": null,
+   "exception": {
+    "type": "TedHarvestError",
+    "message": "TED-API antwortete mit HTTP 500 (http://ted.invalid/search)."
+   }
+  },
+  {
+   "name": "http-400",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": null,
+   "exception": {
+    "type": "TedHarvestError",
+    "message": "TED-API antwortete mit HTTP 400 (http://ted.invalid/search)."
+   }
+  },
+  {
+   "name": "bad-json",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": null,
+   "exception": {
+    "type": "TedHarvestError",
+    "message": "Unerwartete Antwort der TED-API (http://ted.invalid/search): Expecting value: line 1 column 1 (char 0)"
+   }
+  },
+  {
+   "name": "network-error",
+   "kwargs": {
+    "page_size": 5,
+    "max_notices": 5
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 5,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": null,
+   "exception": {
+    "type": "TedHarvestError",
+    "message": "Netzwerkfehler beim TED-Abruf (http://ted.invalid/search): boom"
+   }
+  },
+  {
+   "name": "second-page-fails",
+   "kwargs": {
+    "page_size": 2,
+    "max_notices": 10
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 2,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 2,
+      "limit": 2,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": null,
+   "exception": {
+    "type": "TedHarvestError",
+    "message": "TED-API antwortete mit HTTP 503 (http://ted.invalid/search)."
+   }
+  },
+  {
+   "name": "page-cap",
+   "kwargs": {
+    "page_size": 1,
+    "max_notices": 3
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 1,
+      "limit": 1,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 2,
+      "limit": 1,
+      "scope": "ALL"
+     },
+     "headers": {}
+    },
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "publication-number",
+       "notice-title",
+       "publication-date",
+       "classification-cpv",
+       "buyer-name",
+       "buyer-country",
+       "winner-name",
+       "winner-country",
+       "winner-identifier",
+       "winner-decision-date",
+       "result-value-notice",
+       "result-value-cur-notice",
+       "procedure-type",
+       "contract-nature"
+      ],
+      "page": 3,
+      "limit": 1,
+      "scope": "ALL"
+     },
+     "headers": {}
+    }
+   ],
+   "output": [
+    "p0-0",
+    "p1-0",
+    "p2-0"
+   ],
+   "exception": null
+  },
+  {
+   "name": "auth-and-fields",
+   "kwargs": {
+    "page_size": 1,
+    "max_notices": 1,
+    "auth_headers": {
+     "Authorization": "Bearer X"
+    },
+    "fields": [
+     "a",
+     "b"
+    ]
+   },
+   "requests": [
+    {
+     "body": {
+      "query": "q",
+      "fields": [
+       "a",
+       "b"
+      ],
+      "page": 1,
+      "limit": 1,
+      "scope": "ALL"
+     },
+     "headers": {
+      "authorization": "Bearer X"
+     }
+    }
+   ],
+   "output": [
+    "i-0"
+   ],
+   "exception": null
+  }
+ ],
+ "prechecks": [
+  {
+   "name": "all-missing",
+   "args": [
+    null,
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "zero-estimated",
+   "args": [
+    {
+     "$decimal": "0"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "below-1k-direct",
+   "args": [
+    {
+     "$decimal": "800"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Direktvergabe",
+    "BELOW_1K",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_1K (800 EUR).",
+      "calculated_tier": "BELOW_1K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Direktvergabe' passt zum Schwellenwert 'BELOW_1K'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "PASS",
+      "message": "Alle Pflichtdokumente vorhanden.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 1 erwartet fuer 'BELOW_1K'.",
+      "min_required": 1,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "edge-1000",
+   "args": [
+    {
+     "$decimal": "1000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    null,
+    "BELOW_1K",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_1K (1000 EUR).",
+      "calculated_tier": "BELOW_1K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 1 erwartet fuer 'BELOW_1K'.",
+      "min_required": 1,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "edge-1000.01",
+   "args": [
+    {
+     "$decimal": "1000.01"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    null,
+    "BELOW_1K",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "FAIL",
+      "message": "Schwellenwert-Stufe 'BELOW_1K' stimmt nicht mit berechnetem Wert 'BELOW_25K' ueberein (Auftragswert: 1000.01 EUR, Kategorie: supply_service).",
+      "calculated_tier": "BELOW_25K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 1 erwartet fuer 'BELOW_1K'.",
+      "min_required": 1,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "edge-25000",
+   "args": [
+    {
+     "$decimal": "25000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Verhandlungsvergabe",
+    "BELOW_25K",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ZUSCHLAG"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_25K (25000 EUR).",
+      "calculated_tier": "BELOW_25K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Verhandlungsvergabe' passt zum Schwellenwert 'BELOW_25K'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "PASS",
+      "message": "Alle Pflichtdokumente vorhanden.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "WARNING",
+      "message": "Nur 1 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_25K'.",
+      "min_required": 3,
+      "actual_count": 1,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "edge-221000",
+   "args": [
+    {
+     "$decimal": "221000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Oeffentliche Ausschreibung",
+    "BELOW_EU",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     },
+     {
+      "procurement_doc_type": "AUSSCHREIBUNG"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "SUBMISSIONSPROTOKOLL"
+     },
+     {
+      "procurement_doc_type": "ZUSCHLAG"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_EU (221000 EUR).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Oeffentliche Ausschreibung' passt zum Schwellenwert 'BELOW_EU'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "PASS",
+      "message": "Alle Pflichtdokumente vorhanden.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "PASS",
+      "message": "3 Angebot(e) vorhanden (Minimum: 3).",
+      "min_required": 3,
+      "actual_count": 3,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "PASS",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "above-eu-supply",
+   "args": [
+    {
+     "$decimal": "221000.01"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "EU-Verfahren",
+    "ABOVE_EU",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     },
+     {
+      "procurement_doc_type": "AUSSCHREIBUNG"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "SUBMISSIONSPROTOKOLL"
+     },
+     {
+      "procurement_doc_type": "ZUSCHLAG"
+     },
+     {
+      "procurement_doc_type": "VERTRAG"
+     },
+     {
+      "procurement_doc_type": "COI"
+     },
+     {
+      "procurement_doc_type": "TARIFTREUEERKLAERUNG"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: ABOVE_EU (221000.01 EUR).",
+      "calculated_tier": "ABOVE_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'EU-Verfahren' passt zum Schwellenwert 'ABOVE_EU'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "PASS",
+      "message": "Alle Pflichtdokumente vorhanden.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "PASS",
+      "message": "5 Angebot(e) vorhanden (Minimum: 5).",
+      "min_required": 5,
+      "actual_count": 5,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "PASS",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "construction-below-eu",
+   "args": [
+    {
+     "$decimal": "5538000"
+    },
+    null,
+    null,
+    "Bauleistungen",
+    "Oeffentliche Ausschreibung",
+    "BELOW_EU",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_EU (5538000 EUR).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Oeffentliche Ausschreibung' passt zum Schwellenwert 'BELOW_EU'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "FAIL",
+      "message": "Fehlende Pflichtdokumente: VERGABEVERMERK (benoetigt: 1, vorhanden: 0), AUSSCHREIBUNG (benoetigt: 1, vorhanden: 0), ANGEBOT (benoetigt: 1, vorhanden: 0), SUBMISSIONSPROTOKOLL (benoetigt: 1, vorhanden: 0), ZUSCHLAG (benoetigt: 1, vorhanden: 0).",
+      "missing_documents": [
+       {
+        "type": "VERGABEVERMERK",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "AUSSCHREIBUNG",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "ANGEBOT",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "SUBMISSIONSPROTOKOLL",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "ZUSCHLAG",
+        "needed": 1,
+        "present": 0
+       }
+      ],
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_EU'.",
+      "min_required": 3,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "construction-above-eu",
+   "args": [
+    {
+     "$decimal": "5538000.01"
+    },
+    null,
+    null,
+    "Bauleistungen",
+    "EU-Verfahren",
+    "ABOVE_EU",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     },
+     {
+      "procurement_doc_type": "AUSSCHREIBUNG"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     },
+     {
+      "procurement_doc_type": "SUBMISSIONSPROTOKOLL"
+     },
+     {
+      "procurement_doc_type": "ZUSCHLAG"
+     },
+     {
+      "procurement_doc_type": "VERTRAG"
+     },
+     {
+      "procurement_doc_type": "COI"
+     },
+     {
+      "procurement_doc_type": "TARIFTREUEERKLAERUNG"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: ABOVE_EU (5538000.01 EUR).",
+      "calculated_tier": "ABOVE_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'EU-Verfahren' passt zum Schwellenwert 'ABOVE_EU'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "PASS",
+      "message": "Alle Pflichtdokumente vorhanden.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "PASS",
+      "message": "5 Angebot(e) vorhanden (Minimum: 5).",
+      "min_required": 5,
+      "actual_count": 5,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "PASS",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "construction-freihaendig",
+   "args": [
+    {
+     "$decimal": "20000"
+    },
+    null,
+    null,
+    "Bauleistungen",
+    "Freihaendige Vergabe",
+    "BELOW_25K",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     },
+     {
+      "procurement_doc_type": "ANGEBOT"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_25K (20000 EUR).",
+      "calculated_tier": "BELOW_25K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Freihaendige Vergabe' passt zum Schwellenwert 'BELOW_25K'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "FAIL",
+      "message": "Fehlende Pflichtdokumente: ZUSCHLAG (benoetigt: 1, vorhanden: 0).",
+      "missing_documents": [
+       {
+        "type": "ZUSCHLAG",
+        "needed": 1,
+        "present": 0
+       }
+      ],
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "WARNING",
+      "message": "Nur 1 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_25K'.",
+      "min_required": 3,
+      "actual_count": 1,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "bau-substring",
+   "args": [
+    {
+     "$decimal": "20000"
+    },
+    null,
+    null,
+    "Hochbau",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_25K (20000 EUR).",
+      "calculated_tier": "BELOW_25K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "wrong-tier",
+   "args": [
+    {
+     "$decimal": "50000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Direktvergabe",
+    "BELOW_1K",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "FAIL",
+      "message": "Schwellenwert-Stufe 'BELOW_1K' stimmt nicht mit berechnetem Wert 'BELOW_EU' ueberein (Auftragswert: 50000 EUR, Kategorie: supply_service).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Direktvergabe' passt zum Schwellenwert 'BELOW_1K'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "FAIL",
+      "message": "Fehlende Pflichtdokumente: VERGABEVERMERK (benoetigt: 1, vorhanden: 0).",
+      "missing_documents": [
+       {
+        "type": "VERGABEVERMERK",
+        "needed": 1,
+        "present": 0
+       }
+      ],
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 1 erwartet fuer 'BELOW_1K'.",
+      "min_required": 1,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "procedure-mismatch",
+   "args": [
+    {
+     "$decimal": "50000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Direktvergabe",
+    "BELOW_EU",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_EU (50000 EUR).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "FAIL",
+      "message": "Vergabeart 'Direktvergabe' passt NICHT zum Schwellenwert 'BELOW_EU'. Erwartet: 'Oeffentliche Ausschreibung'.",
+      "expected_procedure": "Oeffentliche Ausschreibung",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "FAIL",
+      "message": "Fehlende Pflichtdokumente: VERGABEVERMERK (benoetigt: 1, vorhanden: 0).",
+      "missing_documents": [
+       {
+        "type": "VERGABEVERMERK",
+        "needed": 1,
+        "present": 0
+       }
+      ],
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_EU'.",
+      "min_required": 3,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "unknown-tier-matches-all",
+   "args": [
+    {
+     "$decimal": "50000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Irgendwas",
+    "UNBEKANNT",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "FAIL",
+      "message": "Schwellenwert-Stufe 'UNBEKANNT' stimmt nicht mit berechnetem Wert 'BELOW_EU' ueberein (Auftragswert: 50000 EUR, Kategorie: supply_service).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Irgendwas' passt zum Schwellenwert 'UNBEKANNT'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Keine Pflichtdokument-Regel fuer 'Irgendwas' hinterlegt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 1 erwartet fuer 'UNBEKANNT'.",
+      "min_required": 1,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "unknown-procedure",
+   "args": [
+    {
+     "$decimal": "50000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Sonderverfahren",
+    "BELOW_EU",
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_EU (50000 EUR).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "FAIL",
+      "message": "Vergabeart 'Sonderverfahren' passt NICHT zum Schwellenwert 'BELOW_EU'. Erwartet: 'Oeffentliche Ausschreibung'.",
+      "expected_procedure": "Oeffentliche Ausschreibung",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Keine Pflichtdokument-Regel fuer 'Sonderverfahren' hinterlegt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_EU'.",
+      "min_required": 3,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "substring-procedure",
+   "args": [
+    {
+     "$decimal": "500"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Direktvergabe (Ausnahme)",
+    "BELOW_1K",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_1K (500 EUR).",
+      "calculated_tier": "BELOW_1K",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Direktvergabe (Ausnahme)' passt zum Schwellenwert 'BELOW_1K'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "PASS",
+      "message": "Alle Pflichtdokumente vorhanden.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 1 erwartet fuer 'BELOW_1K'.",
+      "min_required": 1,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "no-bids",
+   "args": [
+    {
+     "$decimal": "50000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Oeffentliche Ausschreibung",
+    "BELOW_EU",
+    [
+     {
+      "procurement_doc_type": "VERGABEVERMERK"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_EU (50000 EUR).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Oeffentliche Ausschreibung' passt zum Schwellenwert 'BELOW_EU'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "FAIL",
+      "message": "Fehlende Pflichtdokumente: AUSSCHREIBUNG (benoetigt: 1, vorhanden: 0), ANGEBOT (benoetigt: 1, vorhanden: 0), SUBMISSIONSPROTOKOLL (benoetigt: 1, vorhanden: 0), ZUSCHLAG (benoetigt: 1, vorhanden: 0).",
+      "missing_documents": [
+       {
+        "type": "AUSSCHREIBUNG",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "ANGEBOT",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "SUBMISSIONSPROTOKOLL",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "ZUSCHLAG",
+        "needed": 1,
+        "present": 0
+       }
+      ],
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "FAIL",
+      "message": "Nur 0 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_EU'.",
+      "min_required": 3,
+      "actual_count": 0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "one-bid",
+   "args": [
+    {
+     "$decimal": "50000"
+    },
+    null,
+    null,
+    "Liefer-/Dienstleistungen",
+    "Oeffentliche Ausschreibung",
+    "BELOW_EU",
+    [
+     {
+      "procurement_doc_type": "ANGEBOT"
+     }
+    ]
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "PASS",
+      "message": "Schwellenwert korrekt: BELOW_EU (50000 EUR).",
+      "calculated_tier": "BELOW_EU",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_procedure_threshold",
+      "name_de": "Verfahrenswahl vs. Schwellenwert",
+      "status": "PASS",
+      "message": "Vergabeart 'Oeffentliche Ausschreibung' passt zum Schwellenwert 'BELOW_EU'.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "FAIL",
+      "message": "Fehlende Pflichtdokumente: VERGABEVERMERK (benoetigt: 1, vorhanden: 0), AUSSCHREIBUNG (benoetigt: 1, vorhanden: 0), SUBMISSIONSPROTOKOLL (benoetigt: 1, vorhanden: 0), ZUSCHLAG (benoetigt: 1, vorhanden: 0).",
+      "missing_documents": [
+       {
+        "type": "VERGABEVERMERK",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "AUSSCHREIBUNG",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "SUBMISSIONSPROTOKOLL",
+        "needed": 1,
+        "present": 0
+       },
+       {
+        "type": "ZUSCHLAG",
+        "needed": 1,
+        "present": 0
+       }
+      ],
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "WARNING",
+      "message": "Nur 1 Angebot(e) vorhanden, mindestens 3 erwartet fuer 'BELOW_EU'.",
+      "min_required": 3,
+      "actual_count": 1,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-0",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "100"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_value_deviation",
+      "name_de": "Wertabweichung (Auftrags- vs. Abrechnungswert)",
+      "status": "PASS",
+      "message": "Abweichung akzeptabel: 0.0% (Vertrag: 100 EUR, Abrechnung: 100 EUR).",
+      "deviation_percent": 0.0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-10",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "110"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_value_deviation",
+      "name_de": "Wertabweichung (Auftrags- vs. Abrechnungswert)",
+      "status": "PASS",
+      "message": "Abweichung akzeptabel: 10.0% (Vertrag: 100 EUR, Abrechnung: 110 EUR).",
+      "deviation_percent": 10.0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-10.01",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "110.01"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_value_deviation",
+      "name_de": "Wertabweichung (Auftrags- vs. Abrechnungswert)",
+      "status": "WARNING",
+      "message": "Abweichung: 10.0% (Vertrag: 100 EUR, Abrechnung: 110.01 EUR).",
+      "deviation_percent": 10.0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-20",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "80"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_value_deviation",
+      "name_de": "Wertabweichung (Auftrags- vs. Abrechnungswert)",
+      "status": "WARNING",
+      "message": "Abweichung: 20.0% (Vertrag: 100 EUR, Abrechnung: 80 EUR).",
+      "deviation_percent": 20.0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-20.01",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "120.01"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_value_deviation",
+      "name_de": "Wertabweichung (Auftrags- vs. Abrechnungswert)",
+      "status": "FAIL",
+      "message": "Erhebliche Abweichung: 20.0% (Vertrag: 100 EUR, Abrechnung: 120.01 EUR). Pruefung gemaess § 132 GWB erforderlich.",
+      "deviation_percent": 20.0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-zero-contract",
+   "args": [
+    null,
+    {
+     "$decimal": "0"
+    },
+    {
+     "$decimal": "100"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-zero-invoice",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "0"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "WARNING",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  },
+  {
+   "name": "deviation-negative",
+   "args": [
+    null,
+    {
+     "$decimal": "100"
+    },
+    {
+     "$decimal": "-50"
+    },
+    "Liefer-/Dienstleistungen",
+    null,
+    null,
+    []
+   ],
+   "output": {
+    "checks": [
+     {
+      "check_id": "precheck_threshold",
+      "name_de": "Schwellenwert-Klassifikation",
+      "status": "WARNING",
+      "message": "Kein geschaetzter Auftragswert angegeben.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_required_docs",
+      "name_de": "Pflichtdokumente",
+      "status": "WARNING",
+      "message": "Vergabeart unbekannt, Pflichtdokumente nicht pruefbar.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_min_bids",
+      "name_de": "Mindestangebote",
+      "status": "NOT_CHECKED",
+      "message": "Schwellenwert unbekannt.",
+      "source": "RULE"
+     },
+     {
+      "check_id": "precheck_value_deviation",
+      "name_de": "Wertabweichung (Auftrags- vs. Abrechnungswert)",
+      "status": "FAIL",
+      "message": "Erhebliche Abweichung: 150.0% (Vertrag: 100 EUR, Abrechnung: -50 EUR). Pruefung gemaess § 132 GWB erforderlich.",
+      "deviation_percent": 150.0,
+      "source": "RULE"
+     }
+    ],
+    "overall_status": "FAIL",
+    "timestamp": "<wall-clock>"
+   },
+   "exception": null
+  }
+ ],
+ "clients": [
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "results-mnemonic",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "notices-mnemonic",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [
+    {
+     "publication_number": "12-2020",
+     "publication_date": "2020-01-02",
+     "notice_title": "Plain",
+     "buyer_name": "Amt",
+     "buyer_country": "DE",
+     "contract_type": "services",
+     "procedure_type": "open",
+     "cpv_code": "",
+     "estimated_value": "100",
+     "currency": "EUR",
+     "winner_name": "",
+     "award_date": "",
+     "final_value": "",
+     "notice_type": "7",
+     "url": "https://ted.europa.eu/en/notice/12-2020"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "long-names",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [
+    {
+     "publication_number": "N",
+     "publication_date": "",
+     "notice_title": "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
+     "buyer_name": "",
+     "buyer_country": "DE",
+     "contract_type": "",
+     "procedure_type": "",
+     "cpv_code": "",
+     "estimated_value": "",
+     "currency": "EUR",
+     "winner_name": "",
+     "award_date": "",
+     "final_value": "",
+     "notice_type": "",
+     "url": "https://ted.europa.eu/en/notice/N"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "empty",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "not-found",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "server-error",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "bad-json",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "ted",
+   "name": "exception",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://ted.europa.eu/api/v3.0/notices/search",
+     "params": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DE",
+      "fields": "ND,PD,TI,OL,NC,PR,TV",
+      "pageSize": 50,
+      "pageNum": 1,
+      "scope": 3
+     },
+     "headers": {
+      "Accept": "application/json",
+      "User-Agent": "EFRE-AuditTool/2.0"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "table",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [
+    {
+     "titel": "Neubau Kita",
+     "vergabestelle": "Stadt Kassel",
+     "vergabeart": "Offenes Verfahren",
+     "leistungsart": "Bauleistung",
+     "cpv": "",
+     "ort": "Kassel",
+     "frist": "",
+     "bekanntmachung_id": "4711",
+     "url": "https://www.had.de/details.html?id=4711",
+     "datum": "01.03.2024"
+    },
+    {
+     "titel": "Reinigung",
+     "vergabestelle": "Land Hessen",
+     "vergabeart": "x",
+     "leistungsart": "",
+     "cpv": "",
+     "ort": "",
+     "frist": "",
+     "bekanntmachung_id": "99",
+     "url": "https://www.had.de/x.html?id=99",
+     "datum": "x"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "divs",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [
+    {
+     "titel": "Schulbau",
+     "vergabestelle": "Kreis Fulda",
+     "vergabeart": "ohne id",
+     "leistungsart": "",
+     "cpv": "",
+     "ort": "",
+     "frist": "",
+     "bekanntmachung_id": "",
+     "url": "https://www.had.de/a.html",
+     "datum": "ohne id"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "none",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "0"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "forbidden",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "not-found",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "error",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "flowinvoice",
+   "source": "had",
+   "name": "exception",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_suche.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "results-mnemonic",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [
+    {
+     "publication_number": "12-2020",
+     "publication_date": "2020-01-02",
+     "notice_title": "Titel",
+     "buyer_name": "Amt",
+     "buyer_country": "DEU",
+     "contract_type": "services",
+     "procedure_type": "open",
+     "cpv_code": "",
+     "estimated_value": "100",
+     "currency": "EUR",
+     "winner_name": "",
+     "award_date": "",
+     "final_value": "",
+     "notice_type": "7",
+     "url": "https://ted.europa.eu/en/notice/12-2020"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "notices-mnemonic",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [
+    {
+     "publication_number": "12-2020",
+     "publication_date": "2020-01-02",
+     "notice_title": "Plain",
+     "buyer_name": "Amt",
+     "buyer_country": "DEU",
+     "contract_type": "services",
+     "procedure_type": "open",
+     "cpv_code": "",
+     "estimated_value": "100",
+     "currency": "EUR",
+     "winner_name": "",
+     "award_date": "",
+     "final_value": "",
+     "notice_type": "7",
+     "url": "https://ted.europa.eu/en/notice/12-2020"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "long-names",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [
+    {
+     "publication_number": "",
+     "publication_date": "",
+     "notice_title": "",
+     "buyer_name": "",
+     "buyer_country": "DEU",
+     "contract_type": "",
+     "procedure_type": "",
+     "cpv_code": "",
+     "estimated_value": "",
+     "currency": "EUR",
+     "winner_name": "",
+     "award_date": "",
+     "final_value": "",
+     "notice_type": "",
+     "url": ""
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "empty",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "not-found",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "server-error",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "bad-json",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "ted",
+   "name": "exception",
+   "calls": [
+    {
+     "method": "POST",
+     "url": "https://api.ted.europa.eu/v3/notices/search",
+     "json": {
+      "query": "FT=\"Beispiel GmbH\" AND CY=DEU",
+      "fields": [
+       "ND",
+       "PD",
+       "TI",
+       "OL",
+       "NC",
+       "PR",
+       "TV"
+      ]
+     },
+     "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+     },
+     "timeout": 30
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "table",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [
+    {
+     "titel": "Neubau Kita",
+     "vergabestelle": "Stadt Kassel",
+     "vergabeart": "Offenes Verfahren",
+     "leistungsart": "Bauleistung",
+     "cpv": "",
+     "ort": "Kassel",
+     "frist": "",
+     "bekanntmachung_id": "4711",
+     "url": "https://www.had.de/details.html?id=4711",
+     "datum": "01.03.2024"
+    },
+    {
+     "titel": "Reinigung",
+     "vergabestelle": "Land Hessen",
+     "vergabeart": "x",
+     "leistungsart": "",
+     "cpv": "",
+     "ort": "",
+     "frist": "",
+     "bekanntmachung_id": "99",
+     "url": "https://www.had.de/x.html?id=99",
+     "datum": "x"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "divs",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [
+    {
+     "titel": "Schulbau",
+     "vergabestelle": "Kreis Fulda",
+     "vergabeart": "ohne id",
+     "leistungsart": "",
+     "cpv": "",
+     "ort": "",
+     "frist": "",
+     "bekanntmachung_id": "",
+     "url": "https://www.had.de/a.html",
+     "datum": "ohne id"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "none",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "0"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "forbidden",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "not-found",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "error",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  },
+  {
+   "variant": "designer",
+   "source": "had",
+   "name": "exception",
+   "calls": [
+    {
+     "method": "GET",
+     "url": "https://www.had.de/onlinesuche_erweitert.html",
+     "params": {
+      "q": "Kita",
+      "archiv": "1"
+     },
+     "headers": {
+      "Accept": "text/html,application/xhtml+xml",
+      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+     },
+     "timeout": 20
+    }
+   ],
+   "output": [],
+   "exception": null
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://www.eca.europa.eu/de/publications",
+    "params": {}
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "text/html"
+    },
+    "body_text": "<html><body><a href=\"/de/publications/SR-2024-01\">Sonderbericht 01/2024: Synthetischer Titel zur Prüfung</a><a href=\"/de/report/annual-2023\">Jahresbericht 2023 synthetisch lang</a><a href=\"/de/other\">Kontakt und Impressum der Seite</a></body></html>"
+   }
+  }
+ ]
+}
