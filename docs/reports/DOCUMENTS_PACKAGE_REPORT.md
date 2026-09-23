@@ -2,9 +2,10 @@
 
 Stand: 23. September 2026. Branch `feat/auditcore-documents` (Worktree
 `auditcore-wt-documents`, Basis `origin/main`, zuletzt mit `7c063d4`
-zusammengeführt). Teil 1 dieses Berichts betrifft den Dokumentvergleich und die
-Gesetzessynopse aus audit_designer. Die flowinvoice-Dokumentpipeline folgt als
-eigener, logisch getrennter Pull Request (Teil 2).
+zusammengeführt). Teil 1 (PR #18, gemergt als `d779a44`) betrifft
+Dokumentvergleich, Gesetzessynopse und Synopse-Ausgabe aus audit_designer.
+Teil 2 (Branch `feat/auditcore-documents-pipeline`) ergänzt den Kern der
+flowinvoice-Dokumentpipeline, siehe Abschnitt „Teil 2“.
 
 ## Umfang Teil 1
 
@@ -141,3 +142,54 @@ QCHESS_PRINT und Einordnung bei `auditcore_reporting`, Vorlagenrechte
 Weitere Befunde ohne Entscheidungsbedarf: die seit 2024 übliche Befehlsform
 „wird durch den folgenden … ersetzt“ und Satz-/Nummernbefehle bleiben offen
 (DC-L03, Funktionserweiterung).
+
+## Teil 2: Dokumentpipeline aus flowinvoice
+
+Quelle `janpow77/flowinvoice@fb2d18568d2eaf64574d131ceae51a936b9aac02`
+(`main`, gegen GitHub geprüft), 13 Blobs aus `backend/app/pipeline` in
+`provenance.json`; Quellbindung in `scripts/prepare_library_release.py`
+ergänzt. Unterpaket `auditcore_documents.pipeline`: Stufenvertrag,
+Orchestrierung mit Wiederherstellung, Kontext/Modelle ohne pydantic, Hashing
+mit bytegleichen Stufen-Hashes, Audit-Port mit unveränderlicher Referenzsenke,
+Aufbewahrung, Profile `LEGACY_PIPELINE`/`CORRECTED_PIPELINE`. OCR-Engines
+(Gateway, Chandra, Tesseract), Rasterung, libmagic, Persistenz,
+Betrugsprüfung und Webhooks sind Ports; neue Extras `mime` (python-magic) und
+`ocr-raster` (pypdfium2, Pillow); kein torch/transformers/GPU.
+`services/parser.py:PDFParser` und `services/chandra_ocr.py` bleiben in der
+Anwendung; `services/extraction_quality_watchdog.py` ist geplant
+(HUMAN_DECISION_REQUIRED zu den Meldungstexten ohne Umlaute).
+
+| Prüfung | Ergebnis |
+|---|---|
+| Originaltests flowinvoice (Pipeline, Watchdog, Profile) gegen Wegwerf-PostgreSQL | 164 passed |
+| Charakterisierung (`tools/capture_pipeline.py`) | 30 vollständige Läufe + Einzelfälle; erneuter Lauf identisch bis auf temporäre Pfade |
+| Replay durch die Bibliothek | 30/30 Läufe exakt (Kontext inkl. Stufen-Hashes, Audit, Gateway-Aufrufe, Artefakte, Exporte) |
+| Paket-pytest gesamt (Python 3.12) | 491 passed, 3 skipped |
+| ruff, mypy strict, bandit, pip-audit | PASS |
+| auditcore-quality strict | Sicherheits-/Lieferketten-Gates PASS; Gesamt REVIEW_REQUIRED (Policy F-05/F-07 UNKNOWN) |
+| Policy | F-04, F-07-Nachweisteil, F-09, F-15 VERIFIED |
+| `verify_domain_packages.py --apt` | 21/21 PASS, Wheel-SHA256 `572e85f9a5b06802cd55bddf7ad584617d87a65ea9324b66633fda2c97d6f1da` |
+| Installationstest | fand einen Defekt (leeres `InMemoryAuditLog` „falsy“), behoben in `545b354` |
+
+**Befunde** (Details `packages/auditcore_documents/docs/pipeline.md`):
+REVIEW_NEEDED geht im Original verloren – Belege mit niedriger OCR-Konfidenz oder
+Regelbefund enden als `ok` (PL-C01, korrigiert nur im Profil `CORRECTED_PIPELINE`);
+das IBAN-Muster frisst Folgezeilen und lehnt gültige IBAN als CRITICAL ab
+(PL-C02); englische Beträge werden als deutsches Format gelesen (PL-L01);
+Gateway-Ausfall wird zu REJECTED (PL-L03); nur eine von fünf Aufbewahrungsfristen
+wirkt (PL-L05). Beim Consumer: doppelte `run_id`, ungenutzte Profil-Einstellungen,
+doppelte Audit-Ereignisse, `NameError` im Export-Task, und die Audit-Tabelle
+`pipeline_audit_events` ist nicht durch den WORM-Trigger geschützt
+(SECURITY_OR_POLICY_REVIEW_REQUIRED).
+
+**Consumer flowinvoice:** Integrationsvariante in einer Checkout-Kopie (lokaler
+Commit `bfe3d78`, nicht gepusht): `app/pipeline/auditcore_runner.py` mit Ports,
+Worker ruft `run_document_pipeline`. Im Wegwerf-Container mit den
+Produktionsabhängigkeiten und Wegwerf-PostgreSQL: 164 Originaltests plus neuer
+Worker-Integrationstest → 165 passed; `pip check` mit
+`auditcore_documents[mime,ocr-raster,pdf-text]` ohne Befund.
+**MIGRATION_BLOCKED** bis Release v0.3.0.
+
+Weitere offene Entscheidungen: Übernahme von `CORRECTED_PIPELINE`, Gebietsschema
+der Feldextraktion (PL-L01), Umgang mit Gateway-Ausfall (PL-L03), Löschkonzept
+(PL-L05), Meldungstexte des Watchdogs.
