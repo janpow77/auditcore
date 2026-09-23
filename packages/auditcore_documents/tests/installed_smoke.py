@@ -7,6 +7,26 @@ import auditcore_documents as ad
 from auditcore_documents.legacy import DocumentCompareService
 
 
+def pipeline_smoke() -> None:
+    """Nachverarbeitung, Validierung, Stufen-Hash und Audit ohne OCR/DB."""
+    import asyncio
+
+    from auditcore_documents import pipeline as pl
+
+    audit = pl.InMemoryAuditLog()
+    context = pl.PipelineContext(document_id="d", run_id="r")
+    context.artifacts.ocr_text = (
+        "Rechnungsnummer: RE-1\nNettobetrag: 100,00\nMwSt 19%: 19,00\nGesamtbetrag: 119,00\n"
+    )
+    orchestrator = pl.PipelineOrchestrator(
+        [pl.PostprocessStage(), pl.ValidationStage()], audit_service=audit
+    )
+    result = asyncio.run(orchestrator.run(context))
+    assert result.status == pl.RunStatus.OK, result.status
+    assert result.artifacts.normalized_json["total"] == 119.0
+    assert len(result.hash_chain) == 2 and len(audit) == 7
+
+
 def main() -> None:
     """Pure comparison, article-law commands, reasons port and extra boundaries."""
     package = distribution("auditcore_documents")
@@ -38,6 +58,7 @@ def main() -> None:
     )
     assert reason == "Nach § 7." and meta["missing_references"] == ["§ 7"]
     assert ad.sanitise_settings({"threshold": 5})["threshold"] == 70
+    pipeline_smoke()
     if find_spec("rapidfuzz") is None:
         try:
             ad.get_scorer("rapidfuzz-token-set")

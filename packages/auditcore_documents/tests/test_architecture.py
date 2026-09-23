@@ -11,23 +11,32 @@ import auditcore_documents
 
 STDLIB = {
     "__future__",
+    "abc",
     "argparse",
+    "asyncio",
     "collections",
+    "contextlib",
     "copy",
     "dataclasses",
     "datetime",
+    "decimal",
     "difflib",
+    "enum",
     "functools",
     "getpass",
     "hashlib",
     "io",
     "json",
+    "math",
     "os",
     "pathlib",
     "re",
     "subprocess",
     "sys",
+    "time",
+    "types",
     "typing",
+    "uuid",
     "xml",
     "zipfile",
     "zoneinfo",
@@ -39,6 +48,8 @@ LAZY = {
     "pypdf": {"pdf-text"},
     "docx": {"docx-render"},
     "reportlab": {"pdf-render"},
+    "magic": {"mime"},
+    "pypdfium2": {"ocr-raster"},
 }
 FORBIDDEN = {
     "fastapi",
@@ -78,7 +89,7 @@ def _imports(tree: ast.AST) -> list[tuple[ast.AST, set[str], bool]]:
 
 def test_runtime_imports() -> None:
     package = Path(auditcore_documents.__file__).parent
-    for path in package.glob("*.py"):
+    for path in package.rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for _node, roots, in_function in _imports(tree):
             assert not roots & FORBIDDEN, (path.name, roots)
@@ -107,7 +118,9 @@ def test_subprocess_only_in_pdftotext_adapter() -> None:
 def test_import_loads_no_optional_dependency() -> None:
     code = (
         "import sys, auditcore_documents, auditcore_documents.legacy, auditcore_documents.cli;"
-        "bad = {'lxml', 'rapidfuzz', 'pypdf', 'docx', 'reportlab', 'auditcore_reporting'}"
+        "import auditcore_documents.pipeline;"
+        "bad = {'lxml', 'rapidfuzz', 'pypdf', 'docx', 'reportlab', 'auditcore_reporting',"
+        " 'magic', 'pypdfium2', 'PIL', 'httpx', 'pydantic', 'sqlalchemy'}"
         " & set(sys.modules);"
         "assert not bad, bad"
     )
