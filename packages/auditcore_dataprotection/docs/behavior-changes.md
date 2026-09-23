@@ -76,18 +76,23 @@ Neue Profilfassungen `regulierung.dsgvo` und `regulierung.hdsig_ji`
 
 | ID | Änderung | Grundlage |
 |---|---|---|
-| DP-E01 | Schwere 4 ergibt mindestens die Stufe `mittel`, auch wenn das Produkt darunter liegt; Vorschlag und Begründung folgen der angehobenen Stufe. | Fachliche Festlegung vom 23.09.2026; EDSA-Explainer Fn. 9; DSK-Kurzpapier Nr. 18, S. 5 |
+| DP-E01 | Die Risikostufe jedes Szenarios ergibt sich Feld für Feld aus der Matrix des DSK-Kurzpapiers Nr. 18 (S. 5), nicht aus den Produktgrenzen 4/9; der Vorschlag folgt der höchsten Stufe nach Maßnahmen (gering → Freigabe, mittel → mit Auflagen, hoch → Konsultation). Abweichend von 2026.09.1: 4×2 und 3×3 hoch, 3×1, 2×1, 2×2, 1×3 und 1×4 mittel. Geteilte Felder nach überwiegendem Flächenanteil: 4×2 (63 % hoch), 3×3 (59 % hoch), 2×1 (53 % Risiko), 1×2 (56 % gering). | Fachliche Festlegung vom 23.09.2026; KP 18, S. 5 |
+| DP-E10 | Ab Schwere 4 vor Maßnahmen gilt mindestens `mittel`; Maßnahmen heben das nicht auf, nur ein ausdrücklich begründeter Rest-Schweregrad. Mit der Matrix wirkt die Regel derzeit als Absicherung, weil Schwere 2 bereits überall `mittel` ergibt. | Fachliche Festlegung vom 23.09.2026; EDSA-Explainer Fn. 9 |
 | DP-E02 | Entscheidung `verworfen`; wird nie vorgeschlagen, verlangt daher eine Begründung; eine sonst nötige Konsultation entfällt. | EDSA-Vorlage Abschnitt 6 |
 | DP-E03 | `freigabe_mit_auflagen` verlangt mindestens eine Bedingung; eine inhaltliche Änderung setzt sie mit der Entscheidung zurück. | EDSA-Vorlage Abschnitt 6 |
 | DP-E04 | Konsultation mit Grund; im DSGVO-Profil auch Art. 36 Abs. 5 DSGVO. | EDSA-Vorlage Abschnitt 6 |
-| DP-E05 | Szenarien mit Risikoquelle, Umständen und Hinnehmbarkeit. | EDSA-Vorlage 3.1, 4.1, 4.2.b |
+| DP-E05 | Szenarien mit Risikoquelle, Umständen und getrennter Hinnehmbarkeit vor Maßnahmen und des Restrisikos. | EDSA-Vorlage 3.1, 4.1.a, 4.1.c, 4.2.b |
 | DP-E06 | Maßnahmen mit Bereich und Umsetzungsstand; im DSGVO-Profil fünf dokumentierende Maßnahmen ohne rechnerische Minderung. | EDSA-Vorlage 2.3, 4.2.a |
 | DP-E07 | Maßnahmenplan (Vorhaben, Verantwortlich, Termin). | EDSA-Vorlage 4.2.c |
 | DP-E08 | Stammdaten der Abschätzung; „Beteiligte“ und „Umfang“ sperren die Freigabe, wenn sie fehlen. | EDSA-Vorlage 0.5 |
 | DP-E09 | WP 248 wird der Art.-29-Datenschutzgruppe zugeordnet (vom EDSA am 25.05.2018 bestätigt), nicht dem EDSA. | WP 248 rev.01 |
+| DP-E11 | Änderungen nur an Umsetzungsstand oder Maßnahmenplan lassen Entscheidung, Votum und Bedingungen bestehen; Stammdaten, Antworten und Szenarien setzen sie weiter zurück. | Fachliche Festlegung vom 23.09.2026 |
+| DP-E12 | Eine Abschätzung nach Schema 2 kann nicht auf ein Profil nach Schema 1 wechseln (Bearbeitung oder Neubewertung); bei einer Neubewertung werden Stammdaten, Umsetzungsstand und Plan gegen das neue Profil geprüft. | Kein stiller Datenverlust |
+| DP-E13 | „verworfen“: keine Konsultationszeile im Bericht; folgt die Entscheidung einer ablehnenden Stellungnahme, entfallen Abweichungsbegründung und Leitungsvorlage. Konsultationsgrund „hohes Restrisiko“ nur, wenn die Bewertung eine Konsultation verlangt. | Art. 36 Abs. 1; WP 243 Ziff. 4.2 |
 
 Offen (HUMAN_DECISION_REQUIRED): die Normen des Dritten Teils HDSIG zu den
-Maßnahmenbereichen im JI-Profil; ob die förmliche Billigung (Explainer Rn. 10)
-Pflichtfeld wird; ob nicht umgesetzte Maßnahmen eine Freigabe ohne Auflagen
+Maßnahmenbereichen im JI-Profil (bewusst nicht geraten); ob die förmliche
+Billigung und ihr Datum (Explainer Rn. 10) Pflichtfelder werden; die
+Zuordnung der vier geteilten Matrixfelder; ob nicht umgesetzte Maßnahmen eine Freigabe ohne Auflagen
 sperren statt nur einen Hinweis auszulösen; Übernahme der Endfassung der
 EDSA-Vorlage nach der Konsultation.

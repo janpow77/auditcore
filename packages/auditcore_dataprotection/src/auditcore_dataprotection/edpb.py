@@ -180,14 +180,28 @@ def edpb_hints(assessment: Assessment, rules: RuleProfile) -> tuple[str, ...]:
             f"Szenario {', '.join(no_source)}: Die Risikoquelle ist nicht beschrieben "
             "(Abschnitte 3.1 und 4.1.a)."
         )
-    unrated = [str(i) for i, s in enumerate(assessment.scenarios, 1) if s.acceptance is None]
-    if unrated and assessment.decision != DECISION_REJECTED:
-        hints.append(
-            f"Szenario {', '.join(unrated)}: Es ist nicht festgehalten, ob das Risiko "
-            "hinnehmbar ist (Abschnitte 4.1.c und 4.2.b)."
-        )
+    if assessment.decision != DECISION_REJECTED:
+        for name, sections in (
+            ("acceptance_inherent", "Abschnitt 4.1.c, Risiko vor Maßnahmen"),
+            ("acceptance_residual", "Abschnitt 4.2.b, Restrisiko"),
+        ):
+            unrated = [
+                str(i)
+                for i, scenario in enumerate(assessment.scenarios, 1)
+                if getattr(scenario, name) is None
+            ]
+            if unrated:
+                hints.append(
+                    f"Szenario {', '.join(unrated)}: Es ist nicht festgehalten, ob das Risiko "
+                    f"hinnehmbar ist ({sections})."
+                )
     covered = {rules.measure(k).category for k in status if rules.measure(k).category}
-    missing = [title for key, (title, _) in rules.measure_categories.items() if key not in covered]
+    offered = {m.category for m in rules.measures}
+    missing = [
+        title
+        for key, (title, _) in rules.measure_categories.items()
+        if key in offered and key not in covered
+    ]
     if assessment.scenarios and missing:
         hints.append(
             "Für diese Bereiche ist keine Maßnahme mit Umsetzungsstand dokumentiert: "

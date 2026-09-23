@@ -78,19 +78,21 @@ Seit 0.2.0 gibt es zu beiden Regimen die Profilfassung `2026.10.1`
 (Schema `auditcore_dataprotection.profile/2`). Sie richtet die Dokumentation an
 der Vorlage des Europäischen Datenschutzausschusses für
 Datenschutz-Folgenabschätzungen aus (2026, Version 1.0, Konsultationsfassung)
-und lässt die Rechenmethode unverändert. Die Fassungen `2026.09.1` verhalten
-sich unverändert.
+und bildet die Risikostufen Feld für Feld aus der Matrix des
+DSK-Kurzpapiers Nr. 18 (S. 5) statt aus Produktgrenzen. Die Fassungen
+`2026.09.1` verhalten sich unverändert (Ausgaben byte-gleich zu 0.1.0).
 
 | Neu in 2026.10.1 | EDSA-Vorlage |
 |---|---|
 | Entscheidung `verworfen` (Verarbeitung unterbleibt) | Abschnitt 6 |
 | Bedingungen einer Freigabe mit Auflagen, vor der Freigabe Pflicht | Abschnitt 6 |
 | Grund der Konsultation, u. a. Art. 36 Abs. 5 DSGVO | Abschnitt 6 |
-| Mindeststufe `mittel` ab Schwere 4 | Explainer Fn. 9; DSK-Kurzpapier Nr. 18, S. 5 |
-| Risikoquelle, Umstände, Hinnehmbarkeit je Szenario | Abschnitte 3.1, 4.1, 4.2.b |
+| Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18; Methode im Bericht | Abschnitt 4.1.b; KP 18, S. 5 |
+| Mindeststufe `mittel` ab Schwere 4 vor Maßnahmen | Explainer Fn. 9; KP 18, S. 5 |
+| Risikoquelle, Umstände, Hinnehmbarkeit vor und nach Maßnahmen | Abschnitte 3.1, 4.1.a, 4.1.c, 4.2.b |
 | Maßnahmenbereiche und Umsetzungsstand | Abschnitte 2.3, 4.2.a |
 | Maßnahmenplan | Abschnitt 4.2.c |
-| Stammdaten der Abschätzung (Team und Umfang Pflicht) | Abschnitte 0.4, 0.5, 1.1.c, 1.4, 2.2.b |
+| Stammdaten der Abschätzung (Team und Umfang Pflicht, Billigung mit Datum) | Abschnitte 0.4, 0.5, 1.1.c, 1.4, 2.2.b |
 | Quellenliste im Profil und im Bericht | Abschnitt 0.5 |
 
 `AssessmentService.hints()` liefert nicht blockierende Hinweise, wo die

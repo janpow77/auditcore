@@ -48,6 +48,13 @@
     "title": "Förmliche Billigung durch (Funktion)"
    },
    {
+    "key": "billigung_datum",
+    "kind": "date",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5; Explainer Rn. 10",
+    "required": false,
+    "title": "Datum der förmlichen Billigung"
+   },
+   {
     "choices": [
      {
       "key": "nein",
@@ -92,11 +99,16 @@
   ]
  },
  "id": "regulierung.hdsig_ji",
- "legal_status": "Aus Version 2026.09.1 abgeleitet und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Mindeststufe ‚mittel‘ ab Schwere 4 (fachliche Festlegung vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
+ "legal_status": "Aus Version 2026.09.1 abgeleitet und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18 statt aus Produktgrenzen und Mindeststufe ‚mittel‘ ab Schwere 4 vor Maßnahmen (fachliche Festlegungen vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
  "prefill": {
   "large_scale_threshold": 10000
  },
  "recommendation": {
+  "by_band": {
+   "gering": "freigabe",
+   "hoch": "konsultation_aufsichtsbehoerde",
+   "mittel": "freigabe_mit_auflagen"
+  },
   "conditions_from": 5,
   "consult_from": 10,
   "consultation_grounds": [
@@ -344,6 +356,32 @@
    "3": "wahrscheinlich (bekannte Schwachstellen, übliche Angriffswege greifen)",
    "4": "sehr wahrscheinlich (keine wirksamen Barrieren, im Betrieb angelegt)"
   },
+  "matrix": {
+   "1": {
+    "1": "gering",
+    "2": "gering",
+    "3": "mittel",
+    "4": "mittel"
+   },
+   "2": {
+    "1": "mittel",
+    "2": "mittel",
+    "3": "mittel",
+    "4": "mittel"
+   },
+   "3": {
+    "1": "mittel",
+    "2": "mittel",
+    "3": "hoch",
+    "4": "hoch"
+   },
+   "4": {
+    "1": "mittel",
+    "2": "hoch",
+    "3": "hoch",
+    "4": "hoch"
+   }
+  },
   "measure_categories": [
    {
     "key": "grundsaetze",
@@ -436,6 +474,7 @@
     "title": "Gesicherte Wiederherstellbarkeit und erprobtes Notfallverfahren"
    }
   ],
+  "method": "Schwere und Eintrittswahrscheinlichkeit werden je auf vier Stufen eingeschätzt. Die Risikostufe ergibt sich Feld für Feld aus der Risikomatrix des DSK-Kurzpapiers Nr. 18 (S. 5): gering, mittel (im Kurzpapier „Risiko“) oder hoch. Geteilte Felder sind nach dem überwiegenden Flächenanteil zugeordnet. Das Produkt aus Schwere und Wahrscheinlichkeit wird nur zur Information angezeigt. Ab Schwere 4 vor Maßnahmen gilt mindestens die Stufe mittel. Maßgeblich für den Vorschlag ist die höchste Stufe nach Maßnahmen: gering führt zur Freigabe, mittel zur Freigabe mit Auflagen, hoch zur Konsultation der Aufsichtsbehörde.",
   "mitigation": {
    "cap_per_axis": 2,
    "floor": 1
@@ -462,7 +501,7 @@
   "severity_floors": [
    {
     "min_band": "mittel",
-    "reference": "EDSA, Explainer zur DSFA-Vorlage 2026 v1.0, Fn. 9; DSK-Kurzpapier Nr. 18, S. 5",
+    "reference": "Fachliche Festlegung vom 23.09.2026; EDSA, Explainer zur DSFA-Vorlage 2026 v1.0, Fn. 9; DSK-Kurzpapier Nr. 18, S. 5",
     "severity": 4
    }
   ]
@@ -766,7 +805,7 @@
    "reference": "S. 4 f.",
    "status": "geltend",
    "title": "Kurzpapier Nr. 18: Risiko für die Rechte und Freiheiten natürlicher Personen",
-   "used_for": "Vier Stufen je Achse, Risikomatrix, Mindeststufe bei großer Schwere"
+   "used_for": "Vier Stufen je Achse (S. 4) und Risikomatrix Feld für Feld (S. 5); Mindeststufe bei großer Schwere"
   },
   {
    "date": "2024-05-14",
