@@ -7,8 +7,18 @@ zentrale Release v0.3.0 folgt nach allen Paketen. Mit diesem Paket steigen
 `auditcore_entity_matching` auf 0.2.0 (Profil `riskanalysis.payee`,
 `pair_score`) und `auditcore_statistics` auf 0.2.0 (Legacyvariante
 `legacy_flowinvoice_benford`), jeweils additiv. Teil 2 gemergt als PR #21
-(`f07574e`); Teil 3 (VerwK-Punkte-Scores WIBANK-RBVK und Ex-ante) auf Branch
-`feat/auditcore-risk-verwk`.
+(`f07574e`); Teil 3 (VerwK-Punkte-Scores WIBANK-RBVK und Ex-ante) gemergt als
+PR #24 (`b038581`).
+
+## CI, KIRA, Graphify
+
+| Nachweis | Ergebnis |
+|---|---|
+| GitHub-CI PR #17 | quality und domain-packages auf Python 3.11/3.12/3.13 PASS (Läufe 35856612377, 35856612521, 35856625352, 35856625418) |
+| GitHub-CI PR #21 | erster Lauf unter 3.11 FAIL (Interpreter-abhängige `sum()`-Semantik, RK-L07), nach Korrektur alle PASS (Läufe 35859478313, 35859478441, 35859482904, 35859483111) |
+| GitHub-CI PR #24 | alle PASS (Läufe 35860540857, 35860540945, 35860546501, 35860546513) |
+| KIRA | Eintrag `b2c38a7f-8f28-4779-81ef-51c7a86c8358` (architecture); Dublettensuche war wegen nicht erreichbarem Einbettungsdienst NOT_EXECUTED, Listenprüfung des Projekts ohne Treffer |
+| Graphify | `graphify update` über `packages/auditcore_risk/{src,tools}` (main): 442 Knoten, 1.215 Kanten, 15 Communities |
 
 ## Umfang
 
