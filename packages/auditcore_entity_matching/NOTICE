@@ -7,6 +7,8 @@ Derived from (unchanged Git blobs, verified against GitHub on 2026-09-22):
     auditworkshop/backend/services/sanctions_service.py  3e7ad8bd826eed4da15f9860af267f9fe8a9076b
   janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a
     backend/app/core/shared/research/register/sanctions.py  3d48504d92207d6c5a03c038d22fcdf09be63235
+  janpow77/riskanalysis@b5c523bf7eaa326153778d9751f176f03d4d56ed (added in 0.2.0)
+    backend/app/pipeline/payee_normalizer.py  fceae5b0d3364c5b20cc638ce4453ac082085aa7
 
 Profile versions 2026.09.2 (added in 0.2.0, verified against GitHub on 2026-09-23):
   janpow77/audit_designer@1254591156d3bdf6ccdf4050dec7713a61ad4a20 (PR #380)

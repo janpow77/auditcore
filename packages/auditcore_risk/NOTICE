@@ -1,0 +1,21 @@
+auditcore_risk 0.1.0 — source attribution and authorization
+
+Derived from (unchanged Git blobs, verified against GitHub on 2026-09-23):
+  janpow77/riskanalysis@b5c523bf7eaa326153778d9751f176f03d4d56ed
+    backend/app/pipeline/red_flags.py  b6196a7dbd3838bd4dd361c71e3cc44c904f4980
+  janpow77/audit_designer@1254591156d3bdf6ccdf4050dec7713a61ad4a20
+    backend/app/modules/flowstat/services/belegliste_analysis_service.py
+      d03738cb7e250e3cd838c88157992e0b4093ef35
+  janpow77/audit-portal@ac1ccc779db69492db0c2c154b6ec84fdd1794b1
+    backend/app/modules/flowstat/services/belegliste_analysis_service.py
+      d03738cb7e250e3cd838c88157992e0b4093ef35 (identical blob)
+
+The source repositories have no license file (historical status UNKNOWN).
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for the extracted library code and rule profiles
+in this package. The source repositories themselves are not relicensed.
+
+The rule profiles are characterized software behavior for sampling
+prioritisation, not a legal assessment and no error rate. Test data are
+synthetic.

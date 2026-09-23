@@ -59,6 +59,19 @@
       ]
     },
     {
+      "repository": "janpow77/riskanalysis",
+      "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+      "path": "backend/app/pipeline/payee_normalizer.py",
+      "git_blob": "fceae5b0d3364c5b20cc638ce4453ac082085aa7",
+      "symbols": [
+        "_LEGAL",
+        "_NONWORD",
+        "_WS",
+        "normalize_name"
+      ],
+      "added_in": "0.2.0"
+    },
+    {
       "repository": "janpow77/audit_designer",
       "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
       "path": "backend/app/core/shared/research/register/sanctions.py",
@@ -125,6 +138,10 @@
         "private": true,
         "license": null
       },
+      "janpow77/riskanalysis": {
+        "private": true,
+        "license": null
+      },
       "janpow77/flowinvoice": {
         "private": true,
         "license": null
@@ -139,7 +156,7 @@
       "date": "2026-09-22",
       "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
       "scope": "Extrahierter Bibliothekscode in auditcore_entity_matching",
-      "limitation": "Keine Umlizenzierung der Quell-Repositories flowworkshop und audit_designer."
+      "limitation": "Keine Umlizenzierung der Quell-Repositories flowworkshop, audit_designer und riskanalysis."
     }
   },
   "excluded": [
@@ -157,7 +174,18 @@
       "rapidfuzz": "3.10.1",
       "unicode": "15.0.0"
     },
-    "method": "AST-Extraktion der unveränderten, Blob-geprüften Definitionen; ORM-Aufrufe in _find_by_name_fuzzy durch aufzeichnende Stellvertreter ersetzt"
+    "method": "AST-Extraktion der unveränderten, Blob-geprüften Definitionen; ORM-Aufrufe in _find_by_name_fuzzy durch aufzeichnende Stellvertreter ersetzt",
+    "riskanalysis_payee": {
+      "fixture": "tests/fixtures/riskanalysis_payee_observed.json",
+      "tool": "tools/capture_riskanalysis_payee.py",
+      "cases": 80,
+      "environment": {
+        "python": "3.12.3",
+        "rapidfuzz": "3.14.5",
+        "unicode": "15.0.0"
+      },
+      "method": "AST-Extraktion der Blob-geprüften Definitionen aus payee_normalizer.py und red_flags._name_match (rapidfuzz-Zweig)"
+    }
   },
   "behavior_changes": "docs/behavior-changes.md",
   "decisions": [
@@ -202,8 +230,8 @@
     },
     {
       "version": "0.2.0",
-      "profiles": 9,
-      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten)"
+      "profiles": 10,
+      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten); Profil riskanalysis.payee 2026.09.1 (Algorithmus nfkd_lower_regex, auditcore_risk)"
     }
   ],
   "characterization_flowinvoice": {

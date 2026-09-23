@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from importlib import resources
@@ -19,7 +20,13 @@ from .errors import ProfileError
 
 SCHEMA = "auditcore_entity_matching.profile/1"
 ALGORITHMS = frozenset(
-    {"translate_then_casefold", "casefold_fold_nfkd", "casefold_nfc_fold_nfkd", "lower_nfkd_ascii"}
+    {
+        "translate_then_casefold",
+        "casefold_fold_nfkd",
+        "casefold_nfc_fold_nfkd",
+        "lower_nfkd_ascii",
+        "nfkd_lower_regex",
+    }
 )
 
 
@@ -34,6 +41,10 @@ class Normalization:
     legal_suffixes: frozenset[str]
     filler_words: frozenset[str]
     compact_tokens: bool
+    #: Only ``nfkd_lower_regex``: characters replaced by a space after NFKD/lower().
+    nonword_pattern: str | None = None
+    #: Only ``nfkd_lower_regex``: legal-form/generic tokens replaced by a space.
+    removal_pattern: str | None = None
 
 
 @dataclass(frozen=True)
@@ -102,6 +113,22 @@ def _mapping(values: Any, label: str) -> Mapping[str, str]:
     return MappingProxyType(dict(values))
 
 
+def _check_patterns(rules: Normalization) -> None:
+    """``nfkd_lower_regex`` needs both compilable patterns; other algorithms none."""
+    patterns = (rules.nonword_pattern, rules.removal_pattern)
+    if rules.algorithm != "nfkd_lower_regex":
+        if any(p is not None for p in patterns):
+            raise ProfileError("Muster sind nur für nfkd_lower_regex zulässig.")
+        return
+    if not all(isinstance(p, str) and p for p in patterns):
+        raise ProfileError("nfkd_lower_regex verlangt nonword_pattern und removal_pattern.")
+    for pattern in patterns:
+        try:
+            re.compile(str(pattern))
+        except re.error as exc:
+            raise ProfileError(f"Ungültiges Muster {pattern!r}: {exc}") from exc
+
+
 def profile_from_dict(data: Mapping[str, Any]) -> Profile:
     """Validate a profile document; nothing is defaulted silently."""
     try:
@@ -120,7 +147,10 @@ def profile_from_dict(data: Mapping[str, Any]) -> Profile:
                 legal_suffixes=_strings(n["legal_suffixes"], "legal_suffixes"),
                 filler_words=_strings(n["filler_words"], "filler_words"),
                 compact_tokens=bool(n["compact_tokens"]),
+                nonword_pattern=n.get("nonword_pattern"),
+                removal_pattern=n.get("removal_pattern"),
             )
+            _check_patterns(normalization)
         if "classification" in data:
             c = data["classification"]
             classification = Classification(

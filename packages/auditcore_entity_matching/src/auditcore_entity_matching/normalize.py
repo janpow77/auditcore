@@ -19,6 +19,11 @@ Two algorithms exist in the sources and are kept apart:
   NFKD without combining marks, then every character outside ``a-z``,
   ``0-9`` and whitespace becomes a separator. ``ß``, ``ø``, ``ł`` and all
   non-Latin scripts are therefore lost (``Straße → stra e``).
+* ``nfkd_lower_regex`` (riskanalysis payee normaliser): NFKD decomposition,
+  ``lower()``, every character matched by ``nonword_pattern`` → space (this
+  also turns the combining diaeresis of ``ü`` into a space: ``Müller → mu
+  ller``), legal-form/generic words matched by ``removal_pattern`` → space,
+  whitespace collapsed. Reproduced as characterized, not corrected.
 """
 
 from __future__ import annotations
@@ -47,6 +52,11 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         return ""
     if not isinstance(text, str):
         raise TypeError("Namen sind als Text zu übergeben.")
+    if rules.algorithm == "nfkd_lower_regex":
+        value = unicodedata.normalize("NFKD", text).lower()
+        value = re.sub(str(rules.nonword_pattern), " ", value)
+        value = re.sub(str(rules.removal_pattern), " ", value)
+        return _SPACE.sub(" ", value).strip()
     if rules.algorithm == "lower_nfkd_ascii":
         decomposed = unicodedata.normalize("NFKD", text.lower().strip())
         value = "".join(c for c in decomposed if not unicodedata.combining(c))

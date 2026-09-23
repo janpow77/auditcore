@@ -11,6 +11,7 @@ from auditcore_entity_matching import (
     legacy,
     load_profile,
     normalize,
+    pair_score,
 )
 
 
@@ -20,7 +21,7 @@ def main() -> None:
     assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 9
+    assert len(available_profiles()) == 10
     assert check_lei("529900T8BM49AURSDO55").valid
     assert not check_lei("7LTWFZYICNSX8D621K87").valid
     assert legacy.flowworkshop_is_valid_lei("7LTWFZYICNSX8D621K87")
@@ -32,6 +33,8 @@ def main() -> None:
     umschrift = load_profile("audit_designer.sanctions", "2026.09.2")
     assert normalize("Mu\u0308ller-Søren GmbH", umschrift) == "mueller soren"
     assert legacy.flowworkshop_normalize_name_umschrift("Müller") == "mueller"
+    payee = load_profile("riskanalysis.payee", "2026.09.1")
+    assert normalize("Müller GmbH", payee) == "mu ller"
     if find_spec("rapidfuzz") is None:
         try:
             legacy.flowworkshop_fuzzy_best("siemens", [(1, "siemens")])
@@ -41,6 +44,7 @@ def main() -> None:
             raise AssertionError("Fuzzy matching must require the optional extra")
     else:
         assert legacy.flowworkshop_fuzzy_best("siemens", [(1, "siemens")]) == (1, 100.0)
+        assert pair_score("stadtwerke nord", "nordstadtwerke", "token_set_ratio") > 96
     print("PASS: installed auditcore_entity_matching normalisation, LEI and extra boundary")
 
 

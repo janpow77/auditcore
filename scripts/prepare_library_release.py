@@ -31,6 +31,7 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
             ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
             ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
         }
     ),
     "auditcore_funding_sources": frozenset(
@@ -38,6 +39,14 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
             ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
             ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+        }
+    ),
+    "auditcore_geo": frozenset(
+        {
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
+            ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
+            ("janpow77/osint", "d361ddb9a502bb899065e799d50104f306cfdc89"),
         }
     ),
     "auditcore_harvest": frozenset(
@@ -52,6 +61,9 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
             ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
         }
+    ),
+    "auditcore_market_indicators": frozenset(
+        {("janpow77/krypto", "34d601726227f913548a118e144de5519eee0f3f")}
     ),
     "auditcore_procurement": frozenset(
         {
@@ -68,6 +80,19 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
             ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
             ("janpow77/osint", "d361ddb9a502bb899065e799d50104f306cfdc89"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
+        }
+    ),
+    "auditcore_property_sources": frozenset(
+        {
+            ("janpow77/versteigerung", "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448"),
+            ("janpow77/wohnungsmonitor", "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91"),
+        }
+    ),
+    "auditcore_risk": frozenset(
+        {
+            ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
             ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
         }
     ),
