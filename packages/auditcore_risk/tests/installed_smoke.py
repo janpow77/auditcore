@@ -22,7 +22,7 @@ def main() -> None:
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_entity_matching==0.2.0"], runtime
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 4
+    assert len(available_profiles()) == 7
     assert len(available_fraud_profiles()) == 3
     flowstat = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
     result = evaluate([{"projektbetrag": 24_500.0}, {"projektbetrag": 5_000.0}], flowstat)
@@ -44,6 +44,10 @@ def main() -> None:
     assert score_signals({"sanctions": {"is_sanctioned": True, "matches": []}}, signals).level == (
         "critical"
     )
+    wibank = load_profile("flowinvoice.rbvk_wibank", "fb2d18568d2e")
+    points = evaluate([{"erstes_vorhaben": True, "hat_absch": "ja", "prior_q": 60.0}], wibank)
+    assert points.records[0].assessment is not None
+    assert points.records[0].assessment["score"] == 3 + 2 + 2 + 1
     legacy = load_profile("riskanalysis.legacy", "b5c523bf7eaa")
     rows = [
         {

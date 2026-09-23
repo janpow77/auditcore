@@ -94,7 +94,26 @@ gespeicherte `RiskCheckerConfig` ist nicht angebunden. Profil
 `flowinvoice.risk_checker` steht bereit; eine Anbindung ist fachlich zu
 entscheiden (Status: geplant).
 
+## flowinvoice VerwK-Scores (Consumer, geprüft)
+
+* WIBANK-RBVK: `verwk/pipeline/rbvk_wibank_scorer.py:score_mittelabrufe` (Aufrufer
+  `pruefplan.py:903`). Umstellung: Merkmalsaufbereitung und Vorhistorie bleiben;
+  im Bewertungsschritt wird je Mittelabruf ein Datensatz aus den aufbereiteten
+  Feldern plus `prior_k`, `prior_q`, `prior_families`, `erstes_vorhaben` gebildet
+  und mit `evaluate([...], load_profile("flowinvoice.rbvk_wibank", "fb2d18568d2e"))`
+  bewertet (Punkte `assessment["score"]`, Kriterien `assessment["criteria"]`).
+* Nachweis (Checkout-Kopie, Bewertungsschritt ersetzt, installiertes Wheel):
+  `score_mittelabrufe` liefert für einen Demobestand und 40 synthetische Rahmen
+  (410 Mittelabrufe) identische Ergebnisse; `tests/verwk` mit Demobestand als
+  `PSEUDONYMIZED_DATA_DIR` vorher und nachher 572 passed.
+* Ex-ante: `verwk/pipeline/exante_score.py:kalibriere_und_score` (Aufrufer
+  `aggregation.py:276`). Die Kalibrierung liefert Gewichte; Score, Klasse und
+  Detail über `evaluate(..., load_profile("flowinvoice.exante_basis", …), points=…)`.
+  Replay aller Läufe im Paket; Consumer-Umstellung Status: geplant.
+* riskanalysis enthält dieselben Scorer (fachlich gleich); Umstellung analog (geplant).
+
 ## Weitere geplante Consumer
 
-* flowinvoice/riskanalysis `verwk/pipeline/{rbvk_wibank_scorer,exante_score,auffaelligkeiten}.py`:
-  eigene Legacyprofile in einem Folge-PR (Status: geplant).
+* flowinvoice `verwk/pipeline/auffaelligkeiten.py` (nach Methodenprofil in
+  `auditcore_statistics`), `konzentration.py`, `benford.py`, `fuzzy_link.py`: siehe
+  `behavior-changes.md` (Status: geplant).

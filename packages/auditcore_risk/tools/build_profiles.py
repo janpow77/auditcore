@@ -490,6 +490,7 @@ def build() -> list[tuple[str, dict[str, Any]]]:
         ],
     }
     return [
+        *verwk_profiles(),
         flowinvoice_risk_checker(),
         (f"{legacy['id']}-{legacy['version']}.json", legacy),
         (f"{year_bound['id']}-{year_bound['version']}.json", year_bound),
@@ -1065,6 +1066,462 @@ def fraud_profiles() -> list[tuple[str, dict[str, Any]]]:
         ],
     }
     return [(f"{d['id']}-{d['version']}.json", d) for d in (signals, ted, duplicates)]
+
+
+VK = "backend/app/verwk/pipeline/"
+TRUTHY = [
+    "1",
+    "true",
+    "ja",
+    "j",
+    "x",
+    "yes",
+    "y",
+    "eu",
+    "eu-weit",
+    "europaweit",
+    "hochschule",
+    "forschung",
+]
+
+
+def _truthy(code: str, label: str, fields: list[str], points: int, lines: str) -> dict[str, Any]:
+    return {
+        "code": code,
+        "label": label,
+        "kind": "truthy_all",
+        "points": points,
+        "params": {"fields": fields, "truthy_values": TRUTHY},
+        "origin": {
+            "path": VK + "rbvk_wibank_scorer.py",
+            "symbol": "score_mittelabrufe, _bool",
+            "lines": lines,
+        },
+    }
+
+
+def _range(
+    code: str,
+    label: str,
+    field: str,
+    lower: float | None,
+    upper: float | None,
+    points: int,
+    origin: dict[str, Any],
+    *,
+    lower_inclusive: bool = False,
+    upper_inclusive: bool = False,
+    missing: float = 0,
+) -> dict[str, Any]:
+    return {
+        "code": code,
+        "label": label,
+        "kind": "number_range",
+        "points": points,
+        "params": {
+            "field": field,
+            "lower": lower,
+            "lower_inclusive": lower_inclusive,
+            "upper": upper,
+            "upper_inclusive": upper_inclusive,
+            "missing_value": missing,
+        },
+        "origin": origin,
+    }
+
+
+def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
+    """flowinvoice VerwK: WIBANK-RBVK points, ex-ante heuristic and ex-ante basis weights."""
+    fx = json.loads((FIXTURES / "flowinvoice_verwk_scores_observed.json").read_text())
+    commit = fx["source"]["commit"]
+    files = fx["source"]["files"]
+    legal = (
+        "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten der "
+        "Verwaltungskontrolle (VerwK); Punkte und Stufen ausschließlich dieses Profils, "
+        "keine Vereinheitlichung mit anderen Scores."
+    )
+
+    def src(path: str, symbols: list[str]) -> dict[str, Any]:
+        return {
+            "repository": "janpow77/flowinvoice",
+            "commit": commit,
+            "path": VK + path,
+            "git_blob": files[VK + path],
+            "symbols": symbols,
+            "rights": "USER_AUTHORIZED_MIT",
+            "also_present_in": fx["also_present_in"],
+            "characterization": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
+        }
+
+    wb = {"path": VK + "rbvk_wibank_scorer.py", "symbol": "score_mittelabrufe"}
+    rules = [
+        _truthy("K1", "Verbundvorhaben", ["verbundvorhaben"], 1, "237"),
+        {
+            "code": "K2",
+            "label": "FPG 1008/1009/1010",
+            "kind": "text_in_set",
+            "points": 1,
+            "params": {"field": "fpg", "values": ["1008", "1009", "1010"], "missing_text": ""},
+            "origin": {**wb, "lines": "238"},
+        },
+        _truthy("K3", "Bau", ["hat_bau"], 1, "239"),
+        _truthy("K4", "Abschreibung", ["hat_absch"], 2, "240"),
+        _truthy("K5", "Sachleistung", ["hat_sachleist"], 1, "241"),
+        _truthy(
+            "K7",
+            "Beihilfefrei und Trennungsrechnung",
+            ["beihilfefrei", "trennungsrechnung_erforderlich"],
+            1,
+            "242",
+        ),
+        _range(
+            "K8",
+            "Projektbudget 1,5 Mio – 5 Mio",
+            "projekt_budget",
+            1_500_000,
+            5_000_000,
+            1,
+            {**wb, "lines": "243-244"},
+            upper_inclusive=True,
+        ),
+        _range(
+            "K9",
+            "Projektbudget > 5 Mio",
+            "projekt_budget",
+            5_000_000,
+            None,
+            1,
+            {**wb, "lines": "243, 245"},
+        ),
+        _truthy("K10", "Offene Auflagen", ["offene_auflagen"], 1, "246"),
+        _truthy("K11", "Kein früheres Vorhaben des Begünstigten", ["erstes_vorhaben"], 3, "247"),
+        _range("K12", "Frühere Kürzung > 0", "prior_k", 0, None, 2, {**wb, "lines": "224, 248"}),
+        _truthy("K13", "Öffentlich-rechtlich", ["oeffentlich_rechtlich"], -1, "249"),
+        _truthy("K14", "Öffentlicher Auftraggeber", ["oeffentlicher_auftraggeber"], 2, "250"),
+        _range("K16", "Frühere Quote > 0", "prior_q", 0, None, 2, {**wb, "lines": "225, 251"}),
+        _range(
+            "K17",
+            "Frühere Quote 25–50",
+            "prior_q",
+            25,
+            50,
+            1,
+            {**wb, "lines": "252"},
+            upper_inclusive=True,
+        ),
+        _range("K18", "Frühere Quote > 50", "prior_q", 50, None, 1, {**wb, "lines": "253"}),
+        _range("K19", "Frühere Quote unter 5", "prior_q", 0, 5, -2, {**wb, "lines": "254"}),
+        {
+            "code": "K20",
+            "label": "Frühere Familie Vergabe",
+            "kind": "set_overlap",
+            "points": 1,
+            "params": {
+                "field": "prior_families",
+                "values": ["Vergaberecht", "Vergabe"],
+                "mode": "any",
+            },
+            "origin": {**wb, "lines": "255"},
+        },
+        {
+            "code": "K21",
+            "label": "Frühere Familie Beihilfe",
+            "kind": "set_overlap",
+            "points": 1,
+            "params": {
+                "field": "prior_families",
+                "values": ["Beihilferecht", "Beihilfe"],
+                "mode": "any",
+            },
+            "origin": {**wb, "lines": "256"},
+        },
+        {
+            "code": "K22",
+            "label": "Sonstige frühere Familie",
+            "kind": "set_overlap",
+            "points": 1,
+            "params": {
+                "field": "prior_families",
+                "values": ["Vergaberecht", "Vergabe", "Beihilferecht", "Beihilfe"],
+                "mode": "outside",
+            },
+            "origin": {**wb, "lines": "257"},
+            "note": "Eigene frühere Mittelabrufe tragen die Familie '' (prior_familie wird nie "
+            "gesetzt) und lösen K22 aus (HUMAN_DECISION_REQUIRED).",
+        },
+        _truthy("K23", "Vergabe vorhanden", ["hat_vergabe"], 1, "258"),
+        _truthy("K24", "EU-weite Vergabe", ["eu_vergaberelevant"], 1, "259"),
+        _range("K25", "Direkte Belege > 80", "n_direct", 80, None, 1, {**wb, "lines": "260"}),
+        _truthy("K26", "Sachkosten", ["hat_sach"], 1, "261"),
+        _range("K28", "Abrufanteil > 0,5", "abruf_anteil", 0.5, None, 2, {**wb, "lines": "262"}),
+    ]
+    wibank = {
+        "schema": "auditcore_risk.profile/1",
+        "id": "flowinvoice.rbvk_wibank",
+        "version": commit[:12],
+        "kind": "points_score",
+        "status": "LEGACY_CHARACTERIZED",
+        "legal_status": legal + " Bildet das Codeverhalten ab, nicht die Profildatei "
+        "rbvk_wibank.json (V1.21), die die Quelle nicht liest.",
+        "source": src("rbvk_wibank_scorer.py", ["score_mittelabrufe"]),
+        "rules": rules,
+        "output": {},
+        "summary": {"format": "none"},
+        "assessment": {
+            "kind": "points_stages",
+            "stages": [{"min": 19, "stage": "vollpruefung"}, {"min": 8, "stage": "teilpruefung"}],
+            "default_stage": "keine_pruefung",
+            "cap": None,
+            "detail_template": None,
+            "points_override": "forbidden",
+            "source_version": "WIBANK-RBVK V1.21 (Code)",
+        },
+        "open_decisions": [
+            "Code weicht von rbvk_wibank.json ab: K10 +1 statt score_max 2; 13.* zählt als "
+            "Beihilfe (K21) statt Sonstige (K22); K12 und K16 greifen praktisch gleich.",
+            "K22 greift für jeden Begünstigten mit früherem Mittelabruf (Familie '').",
+            "Merkmalsaufbereitung (_normalise_sources), Vorhistorie (CSV, MA-Versionen) und "
+            "'nicht abbildbar' bleiben in der Anwendung; Eingaben sind aufbereitete Merkmale.",
+            "Stufengrenzen 8/19 (Parameter wibank_score_teil_ab/voll_ab); andere Werte = eigene "
+            "Profilversion.",
+        ],
+    }
+    ex = {"path": VK + "exante_score.py"}
+    heur_origin = {**ex, "symbol": "heuristik_score"}
+    heuristik = {
+        **{k: v for k, v in wibank.items() if k not in ("rules", "assessment", "open_decisions")},
+        "id": "flowinvoice.exante_heuristik",
+        "legal_status": legal + " Bisherige gesetzte Vergleichsheuristik (nur Validierung).",
+        "source": src("exante_score.py", ["heuristik_score"]),
+        "rules": [
+            _range(
+                "H1",
+                "Budget > 1 Mio",
+                "brutto",
+                1_000_000,
+                None,
+                20,
+                {**heur_origin, "lines": "88-89"},
+            ),
+            _range(
+                "H2",
+                "Budget 500 T – 1 Mio",
+                "brutto",
+                500_000,
+                1_000_000,
+                15,
+                {**heur_origin, "lines": "90-91"},
+                upper_inclusive=True,
+            ),
+            _range(
+                "H3",
+                "Kürzungsquote > 20",
+                "kuerzungsquote",
+                20,
+                None,
+                15,
+                {**heur_origin, "lines": "92-93"},
+            ),
+            _range(
+                "H4",
+                "Kürzungsquote 10–20",
+                "kuerzungsquote",
+                10,
+                20,
+                8,
+                {**heur_origin, "lines": "94-95"},
+                upper_inclusive=True,
+            ),
+            _range(
+                "H5",
+                "Laufzeit > 36 Monate",
+                "laufzeit_monate",
+                36,
+                None,
+                10,
+                {**heur_origin, "lines": "96-98"},
+            ),
+            _range(
+                "H6",
+                "Laufzeit 24–36 Monate",
+                "laufzeit_monate",
+                24,
+                36,
+                6,
+                {**heur_origin, "lines": "99-100"},
+                upper_inclusive=True,
+            ),
+            _range(
+                "H7", "Mittelabrufe > 5", "ma", 5, None, 10, {**heur_origin, "lines": "101-102"}
+            ),
+            _range(
+                "H8", "Belege > 200", "belege", 200, None, 15, {**heur_origin, "lines": "103-104"}
+            ),
+            _range(
+                "H9",
+                "Belege 100–200",
+                "belege",
+                100,
+                200,
+                10,
+                {**heur_origin, "lines": "105-106"},
+                upper_inclusive=True,
+            ),
+            _range(
+                "H10",
+                "Gruppe mit höchstens einem Vorhaben",
+                "gruppe_vorhaben",
+                None,
+                1,
+                20,
+                {**heur_origin, "lines": "107-109"},
+                upper_inclusive=True,
+                missing=1,
+            ),
+            _range(
+                "H11",
+                "Gruppe mit mehr als drei Vorhaben",
+                "gruppe_vorhaben",
+                3,
+                None,
+                15,
+                {**heur_origin, "lines": "110-111"},
+                missing=1,
+            ),
+            _range(
+                "H12",
+                "FPG-Quote > 15",
+                "fpg_quote",
+                15,
+                None,
+                20,
+                {**heur_origin, "lines": "112-113"},
+            ),
+            _range(
+                "H13",
+                "FPG-Quote 2–15",
+                "fpg_quote",
+                2,
+                15,
+                10,
+                {**heur_origin, "lines": "114-115"},
+                upper_inclusive=True,
+            ),
+            _range(
+                "H14",
+                "FPG-Rückgabequote > 40",
+                "fpg_rueckgabequote",
+                40,
+                None,
+                10,
+                {**heur_origin, "lines": "116-117"},
+            ),
+        ],
+        "assessment": {
+            "kind": "points_stages",
+            "stages": [],
+            "default_stage": None,
+            "cap": 100,
+            "detail_template": None,
+            "points_override": "forbidden",
+            "source_version": "heuristik_score",
+        },
+        "open_decisions": ["Nur Vergleichsbasis der Kalibrierung; kein produktiver Score."],
+    }
+    feat = {**ex, "symbol": "_features, kalibriere_und_score"}
+    basis = {
+        **{k: v for k, v in wibank.items() if k not in ("rules", "assessment", "open_decisions")},
+        "id": "flowinvoice.exante_basis",
+        "legal_status": legal + " Sieben ex-ante-Indikatoren mit den dokumentierten "
+        "Basisgewichten (Fallback); kalibrierte Gewichte kann der Consumer ausdrücklich übergeben.",
+        "source": src("exante_score.py", ["_features", "kalibriere_und_score"]),
+        "rules": [
+            _range(
+                "E1",
+                "Budget > 1 Mio €",
+                "brutto",
+                1_000_000,
+                None,
+                20,
+                {**feat, "lines": "143, 245-253"},
+            ),
+            _range(
+                "E2",
+                "Budget 500 T€–1 Mio €",
+                "brutto",
+                500_000,
+                1_000_000,
+                15,
+                {**feat, "lines": "144"},
+                upper_inclusive=True,
+            ),
+            _range(
+                "E3",
+                "Geplante Laufzeit > 24 M",
+                "laufzeit_monate",
+                24,
+                None,
+                6,
+                {**feat, "lines": "145-147"},
+            ),
+            _range(
+                "E4",
+                "Erwartete Mittelabrufe hoch (> 4)",
+                "erw_ma",
+                4,
+                None,
+                10,
+                {**feat, "lines": "148-150"},
+            ),
+            _range(
+                "E5",
+                "FPG-Fehlerquote historisch hoch (> 15 %)",
+                "fpgq",
+                15,
+                None,
+                10,
+                {**feat, "lines": "151"},
+            ),
+            _range(
+                "E6",
+                "Erstantragsteller",
+                "grp_v",
+                None,
+                1,
+                10,
+                {**feat, "lines": "152"},
+                upper_inclusive=True,
+                missing=1,
+            ),
+            _range(
+                "E7",
+                "Auftragnehmer-Risiko (> 30 %)",
+                "an_risiko",
+                0.3,
+                None,
+                15,
+                {**feat, "lines": "153"},
+            ),
+        ],
+        "assessment": {
+            "kind": "points_stages",
+            "stages": [{"min": 55, "stage": "hoch"}, {"min": 30, "stage": "mittel"}],
+            "default_stage": "niedrig",
+            "cap": None,
+            "detail_template": "{label} (+{points})",
+            "points_override": "allowed",
+            "source_version": "kalibriere_und_score (Basisgewichte)",
+        },
+        "open_decisions": [
+            "Produktive Gewichte entstehen zur Laufzeit per Logit-Kalibrierung (statsmodels); die "
+            "Kalibrierung bleibt beim Consumer, übergebene Gewichte werden unverändert "
+            "angewandt.",
+            "Klassengrenzen 30/55 gelten für kalibrierte und Basisgewichte gleichermaßen.",
+            "Eingaben erwartete Mittelabrufe (OLS) und Auftragnehmer-Risiko (leave-one-out) "
+            "berechnet der Consumer.",
+        ],
+    }
+    return [(f"{d['id']}-{d['version']}.json", d) for d in (wibank, heuristik, basis)]
 
 
 def main() -> None:

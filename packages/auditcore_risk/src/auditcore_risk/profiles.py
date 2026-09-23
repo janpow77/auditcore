@@ -59,6 +59,7 @@ _RULE_KEYS = frozenset(
         "severity",
         "messages",
         "echo_fields",
+        "points",
     }
 )
 
@@ -80,6 +81,7 @@ class Rule:
     severity: str | None = None
     messages: Mapping[str, Mapping[str, str]] | None = None
     echo_fields: Mapping[str, str] | None = None
+    points: float | None = None
 
     @property
     def scope(self) -> str:
@@ -207,6 +209,9 @@ def _rule_from_dict(data: Any, index: int) -> Rule:
     severity = data.get("severity")
     if severity is not None and severity not in SEVERITIES:
         raise ProfileError(f"{where}: unbekannte Schwere {severity!r}.")
+    points = data.get("points")
+    if points is not None and (isinstance(points, bool) or not isinstance(points, int | float)):
+        raise ProfileError(f"{where}: 'points' muss eine Zahl sein.")
     echo = data.get("echo_fields")
     if echo is not None and (
         not isinstance(echo, dict)
@@ -229,6 +234,7 @@ def _rule_from_dict(data: Any, index: int) -> Rule:
         severity=severity,
         messages=_messages(data.get("messages"), where),
         echo_fields=None if echo is None else _freeze(echo),
+        points=points,
     )
 
 
@@ -304,9 +310,46 @@ _ASSESSMENT_KEYS = frozenset(
 _SUMMARY_KEYS = frozenset({"none", "one", "many", "level_words", "unknown_level"})
 
 
-def _check_assessment(data: Any, rules: tuple[Rule, ...]) -> None:
-    """Profile-local legacy aggregation (severity weights); never across profiles."""
+_POINTS_KEYS = frozenset(
+    {
+        "kind",
+        "stages",
+        "default_stage",
+        "cap",
+        "detail_template",
+        "points_override",
+        "source_version",
+    }
+)
+
+
+def _check_points(data: dict[str, Any], rules: tuple[Rule, ...]) -> None:
     where = "assessment"
+    if set(data) != _POINTS_KEYS:
+        raise ProfileError(f"{where}: Felder {sorted(_POINTS_KEYS)} sind Pflicht.")
+    if not all(r.points is not None for r in rules):
+        raise ProfileError(f"{where}: jede Regel braucht Punkte.")
+    if not isinstance(data["stages"], list):
+        raise ProfileError(f"{where}: stages muss eine Liste sein.")
+    minima = [s.get("min") for s in data["stages"]]
+    if not all(isinstance(m, int | float) and not isinstance(m, bool) for m in minima) or (
+        minima != sorted(minima, reverse=True)
+    ):
+        raise ProfileError(f"{where}: Stufen brauchen absteigende Mindestwerte.")
+    if data["cap"] is not None and not isinstance(data["cap"], int | float):
+        raise ProfileError(f"{where}: cap muss Zahl oder null sein.")
+    if data["points_override"] not in ("forbidden", "allowed"):
+        raise ProfileError(f"{where}: points_override muss forbidden/allowed sein.")
+    if data["detail_template"] is not None:
+        check_template(data["detail_template"], where)
+
+
+def _check_assessment(data: Any, rules: tuple[Rule, ...]) -> None:
+    """Profile-local legacy aggregation (weights/points); never across profiles."""
+    where = "assessment"
+    if isinstance(data, dict) and data.get("kind") == "points_stages":
+        _check_points(data, rules)
+        return
     if not isinstance(data, dict) or set(data) != _ASSESSMENT_KEYS:
         raise ProfileError(f"{where}: Felder {sorted(_ASSESSMENT_KEYS)} sind Pflicht.")
     if data["kind"] != "severity_weighted_sum":
