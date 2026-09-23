@@ -124,22 +124,17 @@ alle Quelltestsuiten gegen die installierten Wheels: PASS.
 Umstellungsanleitung und Vorlage: `packages/auditcore_risk/docs/consumer-integration.md`,
 `packages/auditcore_risk/docs/consumers/riskanalysis_red_flags.py`.
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED, 23.09.2026, „alle empfehlungen“)
 
-1. Kein gemeinsamer/vereinheitlichter Risikoscore ohne fachliche Entscheidung.
-2. RF02: netto kommentierte Schwellen gegen Bruttobeträge.
-3. RF02 jahresbezogen: Freigabe `riskanalysis.year_bound` (Stichtag, Auftraggebertyp,
-   Leistungskategorie; nationale Wertgrenzen jahresbezogen?). 221.000 ist die
-   EU-Schwelle 2024–2025, seit 2026 gilt 216.000.
-4. RF09: Umlautzerlegung (`Müller → mu ller`) vs. empfohlene Transliteration.
-5. RF12: Merkmalsübertragung über gleiche Vorhabenkennung aus fremden Gruppen.
-6. BL_RF08/BL_RF09 gegenüber RF08: unterschiedliche Vergaberegeln bleiben getrennt.
-7. flowinvoice RiskChecker: Aktivierung/Anbindung der gespeicherten Konfiguration; Bezugsgröße der Lieferantenhäufung.
-8. Betrugs-Signalscore: Skala der TED-Legitimität (0–1 oder 0–100), Zählung der Warnungen vor/nach Deduplizierung.
-9. Rechnungssplitting-Schwellen (1.000–50.000, 80 %) vs. RF02 und jahresbezogene EU-Schwellen.
-10. Benford der Betrugsprüfung: Umstellung auf `benford_test` (exakte Erwartungswerte, echter p-Wert).
-11. WIBANK-RBVK: Codeverhalten vs. Profildatei V1.21 (K10, K21/K22, K12/K16); K22 durch nie gesetzte `prior_familie`.
-12. Ex-ante: Kalibrierung und Klassengrenzen (Methodikhoheit der Verwaltungsbehörde).
+K1 kein gemeinsamer Score; K2 netto; K3 `riskanalysis.year_bound 2026.09.2`
+freigegeben (EU-Schwelle je Jahr, 2026: 216.000 €); K4 „mueller“-Umschrift in
+`riskanalysis.year_bound 2026.09.3` (RF09 mit `riskanalysis.payee 2026.09.2`); K5 RF12 gruppenintern; K6 unverändert je Profil;
+K7 RiskChecker nicht aktivieren; K8 TED-Legitimität 0–1, Warnungen nach
+Dublettenentfernung; K9 Splitting mit EU-Schwelle je Jahr; K10
+`recommended_flowinvoice_benford` (statistics); K11 WIBANK nach Profildatei V1.21
+(`flowinvoice.rbvk_wibank 2026.09.2`); K12 Ex-ante-Klassen 30/55 unverändert.
+Legacyprofile bleiben bitgenau; Details in
+`packages/auditcore_risk/docs/behavior-changes.md`.
 
 ## Geprüft, nicht in auditcore_risk (Status)
 

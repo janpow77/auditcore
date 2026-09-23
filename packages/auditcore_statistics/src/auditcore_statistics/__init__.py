@@ -14,7 +14,7 @@ from .benford import (
     expected_share,
     legacy_run_benford,
 )
-from .legacy_flowinvoice import legacy_flowinvoice_benford
+from .legacy_flowinvoice import legacy_flowinvoice_benford, recommended_flowinvoice_benford
 from .numeric import chi2_survival
 
 __version__ = "0.2.0"
@@ -31,4 +31,5 @@ __all__ = [
     "expected_share",
     "legacy_flowinvoice_benford",
     "legacy_run_benford",
+    "recommended_flowinvoice_benford",
 ]

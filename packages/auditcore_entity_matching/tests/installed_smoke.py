@@ -12,6 +12,7 @@ from auditcore_entity_matching import (
     load_profile,
     normalize,
     pair_score,
+    recommended_profile,
 )
 
 
@@ -21,7 +22,7 @@ def main() -> None:
     assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 10
+    assert len(available_profiles()) == 15
     assert check_lei("529900T8BM49AURSDO55").valid
     assert not check_lei("7LTWFZYICNSX8D621K87").valid
     assert legacy.flowworkshop_is_valid_lei("7LTWFZYICNSX8D621K87")
@@ -35,6 +36,7 @@ def main() -> None:
     assert legacy.flowworkshop_normalize_name_umschrift("Müller") == "mueller"
     payee = load_profile("riskanalysis.payee", "2026.09.1")
     assert normalize("Müller GmbH", payee) == "mu ller"
+    assert normalize("Mu\u0308ller GmbH", recommended_profile("payee")) == "mueller"
     if find_spec("rapidfuzz") is None:
         try:
             legacy.flowworkshop_fuzzy_best("siemens", [(1, "siemens")])

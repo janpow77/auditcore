@@ -21,6 +21,8 @@ ausdrücklichem `significance_level`. Für zwei Ziffern ist
 bestehende Consumer). Seit 0.2.0 reproduziert `legacy_flowinvoice_benford` die
 Betrugsprüfung `flowinvoice@fb2d185 BenfordsLawAnalyzer.analyze` (Profil
 `flowinvoice.fraud_benford`, identisch in audit-portal): gerundete
-Erwartungswerte, fester kritischer Wert 15,507, Stufen-p-Wert, Mindestumfang 50. Unterschiede und offene Entscheidungen:
+Erwartungswerte, fester kritischer Wert 15,507, Stufen-p-Wert, Mindestumfang 50.
+Empfohlen (Entscheidung 23.09.2026): `recommended_flowinvoice_benford`, also
+`benford_test` mit `digits=1` und `significance_level=0.05`. Unterschiede und offene Entscheidungen:
 [docs/behavior-changes.md](docs/behavior-changes.md). Herkunft und
 MIT-Freigabe: `NOTICE`, `provenance.json`. Debian: `python3-auditcore-statistics`.

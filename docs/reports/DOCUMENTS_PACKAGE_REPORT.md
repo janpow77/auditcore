@@ -2,9 +2,10 @@
 
 Stand: 23. September 2026. Branch `feat/auditcore-documents` (Worktree
 `auditcore-wt-documents`, Basis `origin/main`, zuletzt mit `7c063d4`
-zusammengeführt). Teil 1 dieses Berichts betrifft den Dokumentvergleich und die
-Gesetzessynopse aus audit_designer. Die flowinvoice-Dokumentpipeline folgt als
-eigener, logisch getrennter Pull Request (Teil 2).
+zusammengeführt). Teil 1 (PR #18, gemergt als `d779a44`) betrifft
+Dokumentvergleich, Gesetzessynopse und Synopse-Ausgabe aus audit_designer.
+Teil 2 (Branch `feat/auditcore-documents-pipeline`) ergänzt den Kern der
+flowinvoice-Dokumentpipeline, siehe Abschnitt „Teil 2“.
 
 ## Umfang Teil 1
 
@@ -141,3 +142,81 @@ QCHESS_PRINT und Einordnung bei `auditcore_reporting`, Vorlagenrechte
 Weitere Befunde ohne Entscheidungsbedarf: die seit 2024 übliche Befehlsform
 „wird durch den folgenden … ersetzt“ und Satz-/Nummernbefehle bleiben offen
 (DC-L03, Funktionserweiterung).
+
+## Teil 2: Dokumentpipeline aus flowinvoice
+
+Quelle `janpow77/flowinvoice@fb2d18568d2eaf64574d131ceae51a936b9aac02`
+(`main`, gegen GitHub geprüft), 13 Blobs aus `backend/app/pipeline` in
+`provenance.json`; Quellbindung in `scripts/prepare_library_release.py`
+ergänzt. Unterpaket `auditcore_documents.pipeline`: Stufenvertrag,
+Orchestrierung mit Wiederherstellung, Kontext/Modelle ohne pydantic, Hashing
+mit bytegleichen Stufen-Hashes, Audit-Port mit unveränderlicher Referenzsenke,
+Aufbewahrung, Profile `LEGACY_PIPELINE`/`CORRECTED_PIPELINE`. OCR-Engines
+(Gateway, Chandra, Tesseract), Rasterung, libmagic, Persistenz,
+Betrugsprüfung und Webhooks sind Ports; neue Extras `mime` (python-magic) und
+`ocr-raster` (pypdfium2, Pillow); kein torch/transformers/GPU.
+`services/parser.py:PDFParser` und `services/chandra_ocr.py` bleiben in der
+Anwendung; `services/extraction_quality_watchdog.py` ist geplant
+(HUMAN_DECISION_REQUIRED zu den Meldungstexten ohne Umlaute).
+
+| Prüfung | Ergebnis |
+|---|---|
+| Originaltests flowinvoice (Pipeline, Watchdog, Profile) gegen Wegwerf-PostgreSQL | 164 passed |
+| Charakterisierung (`tools/capture_pipeline.py`) | 30 vollständige Läufe + Einzelfälle; erneuter Lauf identisch bis auf temporäre Pfade |
+| Replay durch die Bibliothek | 30/30 Läufe exakt (Kontext inkl. Stufen-Hashes, Audit, Gateway-Aufrufe, Artefakte, Exporte) |
+| Paket-pytest gesamt (Python 3.12) | 491 passed, 3 skipped |
+| ruff, mypy strict, bandit, pip-audit | PASS |
+| auditcore-quality strict | Sicherheits-/Lieferketten-Gates PASS; Gesamt REVIEW_REQUIRED (Policy F-05/F-07 UNKNOWN) |
+| Policy | F-04, F-07-Nachweisteil, F-09, F-15 VERIFIED |
+| `verify_domain_packages.py --apt` | 21/21 PASS, Wheel-SHA256 `572e85f9a5b06802cd55bddf7ad584617d87a65ea9324b66633fda2c97d6f1da` |
+| Installationstest | fand einen Defekt (leeres `InMemoryAuditLog` „falsy“), behoben in `545b354` |
+
+**Befunde** (Details `packages/auditcore_documents/docs/pipeline.md`):
+REVIEW_NEEDED geht im Original verloren – Belege mit niedriger OCR-Konfidenz oder
+Regelbefund enden als `ok` (PL-C01, korrigiert nur im Profil `CORRECTED_PIPELINE`);
+das IBAN-Muster frisst Folgezeilen und lehnt gültige IBAN als CRITICAL ab
+(PL-C02); englische Beträge werden als deutsches Format gelesen (PL-L01);
+Gateway-Ausfall wird zu REJECTED (PL-L03); nur eine von fünf Aufbewahrungsfristen
+wirkt (PL-L05). Beim Consumer: doppelte `run_id`, ungenutzte Profil-Einstellungen,
+doppelte Audit-Ereignisse, `NameError` im Export-Task, und die Audit-Tabelle
+`pipeline_audit_events` ist nicht durch den WORM-Trigger geschützt
+(SECURITY_OR_POLICY_REVIEW_REQUIRED).
+
+**Consumer flowinvoice:** Integrationsvariante in einer Checkout-Kopie (lokaler
+Commit `bfe3d78`, nicht gepusht): `app/pipeline/auditcore_runner.py` mit Ports,
+Worker ruft `run_document_pipeline`. Im Wegwerf-Container mit den
+Produktionsabhängigkeiten und Wegwerf-PostgreSQL: 164 Originaltests plus neuer
+Worker-Integrationstest → 165 passed; `pip check` mit
+`auditcore_documents[mime,ocr-raster,pdf-text]` ohne Befund.
+**MIGRATION_BLOCKED** bis Release v0.3.0.
+
+Weitere offene Entscheidungen: Übernahme von `CORRECTED_PIPELINE`, Gebietsschema
+der Feldextraktion (PL-L01), Umgang mit Gateway-Ausfall (PL-L03), Löschkonzept
+(PL-L05), Meldungstexte des Watchdogs.
+
+## Teil 3: Umsetzung der Entscheidungen vom 2026-09-23
+
+Nutzerentscheidung „alle empfehlungen“; alle vorher als HUMAN_DECISION_REQUIRED
+markierten Punkte sind jetzt **DECIDED** (Version bleibt 0.1.0, unveröffentlicht).
+
+| Nr. | Umsetzung |
+|---|---|
+| D1 | `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare` 2026.09.2), CLI-Voreinstellung |
+| D2 | Absatznummerierung nach Einfügung korrigiert (`renumber_after_insert`); Ersetzungen treffen alle Vorkommen |
+| D3 | Empfohlenes Profil ohne rapidfuzz: `DependencyError`; `LEGACY_DIFFLIB` ausdrücklich wählbar |
+| D4 | `CORRECTED_PIPELINE` = `RECOMMENDED_PIPELINE` (`auditcore.pipeline` 2026.09.2) |
+| D5 | Beträge gebietsschemabewusst (`parse_amount`), mehrdeutige Beträge → `VAL_AMOUNT_FORMAT` → REVIEW_NEEDED; Feldmuster zeilengebunden |
+| D6 | Gateway-Ausfall → `OCR_GATEWAY_UNAVAILABLE`, drei Wiederholungen, danach FAILED (wiederholbar) |
+| D7 | Alle fünf Aufbewahrungsfristen über `ArtifactRetentionStore` / `build_retention_sweeper` |
+| D8 | Watchdog als `auditcore_documents.pipeline.watchdog`, Meldungen mit Umlauten |
+| S2 | WORM-Trigger auf `pipeline_audit_events` als entschiedener Umstellungsschritt in flowinvoice (nach v0.3.0), dokumentiert in `docs/consumer-integration.md` |
+
+| Prüfung | Ergebnis |
+|---|---|
+| `LEGACY`, `LEGACY_DIFFLIB`, `LEGACY_PIPELINE` | Replays unverändert exakt, Fingerabdrücke unverändert |
+| Referenzumgebung (pdftotext 22.12, lxml 5.1.0) `test_legacy_replay`, `test_original_suite` | 310 passed |
+| Watchdog: 18 aufgezeichnete Originalläufe (`tools/capture_watchdog.py`) | nach Rückumschrift exakt gleich; 30 Originaltests passed |
+| Paket-pytest gesamt (Python 3.12) | 565 passed, 3 skipped (pdftotext-Version) |
+| ruff, mypy strict | PASS |
+| Policy-Nachweis | F-04, F-07, F-09, F-15 VERIFIED |
+| `verify_domain_packages.py --apt` | 21/21 PASS, Wheel-SHA256 `380edf8d4e44b8866f19d69597cdd5cf16eed46e2a9b34af4a697acbd638e2b7` |

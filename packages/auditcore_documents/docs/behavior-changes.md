@@ -25,7 +25,7 @@ aufgezeichneten Fälle exakt, einschließlich DOCX-Hauptteil, Kopf- und Fußzeil
 | DC-C01 | Ähnlichkeitsmaß still nach Umgebung: `rapidfuzz.fuzz.token_set_ratio`, bei `ImportError` `difflib`. Beide ordnen verschieden zu (KassenSichV DOCX: 12 statt 7 geänderte Absätze). | Maß ist Profilbestandteil; fehlt rapidfuzz, `DependencyError`. Der Rückfall ist als Profil `LEGACY_DIFFLIB` ausdrücklich wählbar. | Ergebnisse dürfen nicht von zufällig installierten Paketen abhängen. |
 | DC-C02 | `etree.fromstring` mit Standardparser. Mit lxml 5.1 werden interne Entitäten aufgelöst, externe nicht; **mit lxml 4.9.2 (Debian bookworm) liest der Originalcode eine externe Entität `file:///etc/hostname` in den Vergleichstext ein** (im Debian-Container nachgewiesen). | Gehärteter Parser (`resolve_entities=False`, keine DTD, kein Netz, keine übergroßen Bäume); Dokumente mit DTD werden mit `ParseError` abgewiesen. Extra `docx` verlangt lxml ≥ 6.1.0. | XXE/lokale Dateioffenlegung (CVE-2026-41066, pip-audit PYSEC-2026-87 für lxml < 6.1.0, betrifft die Produktionsfassung lxml 5.1.0 des Consumers); Word schreibt keine DTD. |
 | DC-C03 | Keine Größen-/Seitengrenzen (nur der ecohesion-Worker setzt `RLIMIT_CPU`/`RLIMIT_AS`). | `ReadLimits`: Datei 512 MiB, entpacktes `document.xml` 128 MiB, 5000 PDF-Seiten, pdftotext 120 s; Überschreitung `LimitExceededError`. | Schutz vor ZIP-Bomben; Vorgaben ändern keinen charakterisierten Fall. |
-| DC-C04 | Das Änderungsdokument wird als Fließtext gelesen; Absätze, die mit „§“ beginnen, gelten als **Überschrift** und nie als Befehl. Die Muster „§ … wird aufgehoben“ und „§ … Absatz … wird wie folgt gefasst“ können deshalb nie greifen (Fall `al_befehle`: 3 statt 5 erkannte Befehle). | Profil `CORRECTED` (`auditcore.document_compare` 2026.09.1) liest jeden Absatz als möglichen Befehl und nennt sich in `metadata["profile"]`. `LEGACY` bleibt unverändert. | Offensichtlicher Defekt; die Umstellung ändert Ergebnisse → HUMAN_DECISION_REQUIRED (siehe unten). |
+| DC-C04 | Das Änderungsdokument wird als Fließtext gelesen; Absätze, die mit „§“ beginnen, gelten als **Überschrift** und nie als Befehl. Die Muster „§ … wird aufgehoben“ und „§ … Absatz … wird wie folgt gefasst“ können deshalb nie greifen (Fall `al_befehle`: 3 statt 5 erkannte Befehle). | Profil `CORRECTED` (`auditcore.document_compare` 2026.09.1) liest jeden Absatz als möglichen Befehl und nennt sich in `metadata["profile"]`. `LEGACY` bleibt unverändert. | Offensichtlicher Defekt; **DECIDED** (D1, 2026-09-23): `CORRECTED` ist das empfohlene Profil (siehe unten). |
 | DC-C05 | `subprocess.run(..., text=True)` dekodiert pdftotext-Ausgabe nach Gebietsschema; Pfade mit führendem „-“ würden als Option gelesen. | Ausdrücklich UTF-8 (sonst `ParseError`); führendes „-“ wird als `./-…` übergeben. | Umgebungsunabhängigkeit, Argumentinjektion. |
 | DC-C06 | Nicht-Objekt-JSON des KI-Dienstes (`[1, 2]`) führt zu `AttributeError`. | `CompareError` „keine gültige JSON-Begründung“; Anbieter dürfen auch ein Mapping liefern. | Einheitlicher Fehlervertrag. |
 | DC-C07 | `load_settings`/`save_settings` lesen ohne Pfad `AUDIT_DOCUMENT_COMPARE_CONFIG` bzw. `~/.config/audit_designer/…`. | Pfad ist Pflicht; der Standardpfad des Originals liegt in `legacy.audit_designer_config_path()`. | Eine Bibliothek liest keine Anwendungsumgebung. |
@@ -38,8 +38,8 @@ aufgezeichneten Fälle exakt, einschließlich DOCX-Hauptteil, Kopf- und Fußzeil
 
 | ID | Verhalten | Status |
 |---|---|---|
-| DC-L01 | „Nach § 3 Absatz 1 wird folgender Absatz 2 eingefügt“ nummeriert die folgenden Absätze nicht um; danach gibt es zweimal „§ 3 Absatz 2“, spätere Befehle treffen den eingefügten. | **HUMAN_DECISION_REQUIRED**: Zählweise nach Einfügung (amtlich folgt meist „Der bisherige Absatz 2 wird Absatz 3“, das nicht unterstützt ist). |
-| DC-L02 | Ersetzungsbefehle ersetzen **jedes** Vorkommen im Absatz; Angaben zu Satz, Nummer oder Buchstabe („In § 11 Absatz 1 Satz 1 …“) werden überlesen. Bei der KassenSichV (einmaliges Vorkommen) ist das Ergebnis korrekt. | **HUMAN_DECISION_REQUIRED**: ob ohne „jeweils“ nur das erste Vorkommen bzw. nur der genannte Satz ersetzt werden soll. |
+| DC-L01 | „Nach § 3 Absatz 1 wird folgender Absatz 2 eingefügt“ nummeriert die folgenden Absätze nicht um; danach gibt es zweimal „§ 3 Absatz 2“, spätere Befehle treffen den eingefügten. | **DECIDED** (D2, 2026-09-23): Im Profil `CORRECTED` (ab 2026.09.2) rücken die folgenden Absätze desselben Paragraphen um eins auf; spätere Befehle treffen die ursprünglichen Absätze. `LEGACY` bleibt unverändert. |
+| DC-L02 | Ersetzungsbefehle ersetzen **jedes** Vorkommen im Absatz; Angaben zu Satz, Nummer oder Buchstabe („In § 11 Absatz 1 Satz 1 …“) werden überlesen. Bei der KassenSichV (einmaliges Vorkommen) ist das Ergebnis korrekt. | **DECIDED** (D2, 2026-09-23): Ersetzungen treffen weiterhin **alle** Vorkommen im Absatz – in `LEGACY` und `CORRECTED`. |
 | DC-L03 | Nur Befehle auf Absatzebene im Stil „wird wie folgt gefasst“. Die seit 2024 übliche Formulierung „wird durch den folgenden … ersetzt“ (BGBl. 2026 I Nr. 223) und Nummern-/Satzbefehle bleiben „offen“. | Funktionserweiterung, keine Entscheidung; offene Befehle werden sichtbar ausgewiesen. |
 | DC-L04 | PDF-Zeilenumbruch nach Bindestrich wird zusammengezogen: „BSI-\nGesetzes“ → „BSIGesetzes“ (BGBl.-Seite 55). | beibehalten, dokumentiert. |
 | DC-L05 | Modus „auto“ erkennt eine DOCX-Checkliste erst ab 6 Tabellenzeilen; kleinere Checklisten gelten als Fließtext und scheitern mit „keine vergleichbaren Textstellen“. | beibehalten (charakterisierte Fälle 2, 24, 25). |
@@ -48,9 +48,17 @@ aufgezeichneten Fälle exakt, einschließlich DOCX-Hauptteil, Kopf- und Fußzeil
 | DC-L08 | Zeitangaben im DOCX (`geändert …`, `Erstellt …`) in lokaler Prozesszeitzone. | beibehalten. |
 | DC-L09 | Die Reihenfolgenwahl bei gleichem Ähnlichkeitswert ist „erster Kandidat“. | beibehalten. |
 
-## Offene Entscheidungen
+## Entscheidungen
 
-1. Übernahme von DC-C04 (Profil `CORRECTED`) in audit_designer/ECOHESION statt `LEGACY`.
-2. DC-L01 und DC-L02 (Zählweise nach Einfügung, Umfang von Ersetzungen).
-3. Ob audit_designer ohne rapidfuzz überhaupt vergleichen darf (heute: Rückfall
-   auf difflib; Bibliothek: Fehler, siehe DC-C01).
+Entschieden am **2026-09-23** durch den Nutzer (Zitat: „alle empfehlungen“).
+Status vorher: HUMAN_DECISION_REQUIRED, jetzt **DECIDED**.
+
+| Nr. | Frage | Entscheidung | Umsetzung |
+|---|---|---|---|
+| D1 | Übernahme von DC-C04 (Profil `CORRECTED`) statt `LEGACY` | `CORRECTED` ist das empfohlene Vergleichsprofil. | `auditcore_documents.RECOMMENDED is CORRECTED`, Status `DECIDED_RECOMMENDED`, Version 2026.09.2 (`result_version` `1.1.0+auditcore.2026.09.2`); CLI-Voreinstellung `auditcore.document_compare`. |
+| D2 | DC-L01/DC-L02: Zählweise nach Einfügung, Umfang von Ersetzungen | Absatznummerierung korrigiert; Ersetzungen treffen alle Vorkommen. | Profilfeld `renumber_after_insert=True` in `CORRECTED`; `apply_commands(..., renumber_after_insert=...)`. |
+| D3 | Vergleich ohne rapidfuzz | Klarer Fehler statt stillem Rückfall auf difflib. | Empfohlenes Profil verlangt rapidfuzz (`DependencyError`); `LEGACY_DIFFLIB` bleibt ausdrücklich wählbar. |
+
+`LEGACY` und `LEGACY_DIFFLIB` bleiben bitgenau, einschließlich ihrer
+Fingerabdrücke (`test_legacy_fingerprints_are_stable`). Die Pipeline-Entscheidungen
+D4 bis D8 stehen in `docs/pipeline.md`.

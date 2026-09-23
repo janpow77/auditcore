@@ -168,7 +168,7 @@
   },
   "data_licences": {
    "status": "REVIEW_REQUIRED",
-   "OpenSanctions": "Massendaten und API unter CC BY-NC 4.0 (nicht kommerziell), geprüft 2026-09-23 auf opensanctions.org/licensing; API nur mit Schlüssel",
+   "OpenSanctions": "Massendaten und API unter CC BY-NC 4.0 (nicht kommerziell), geprüft 2026-09-23 auf opensanctions.org/licensing; API nur mit Schlüssel; Nutzerentscheidung A2 (23.09.2026): abgedeckt durch Nutzung, Verantwortung beim Betreiber",
    "EU FSF / OFAC SDN / UN SC": "amtliche Listen; Bedingungen je Herausgeber nicht abschließend geprüft",
    "VIES / OffeneRegister / ZER / IHK / ZDH": "Nutzungsbedingungen nicht geprüft",
    "note": "Das Paket enthält keine Originaldaten dieser Quellen. Fixtures sind synthetisch im Originalformat; einzige Ausnahme ist die VIES-Antwort für die nicht vergebene Nummer DE000000000 (keine Personendaten)."
@@ -193,16 +193,23 @@
  "profiles": [
   "audit_designer.sanctions_lists 2026.09.1",
   "audit_designer.sanctions_screening 2026.09.1",
+  "audit_designer.sanctions_screening 2026.09.2",
   "flowinvoice.company_verification 2026.09.1",
+  "flowinvoice.company_verification 2026.09.2",
   "flowinvoice.pep_bulk 2026.09.1",
+  "flowinvoice.pep_bulk 2026.09.2",
   "flowinvoice.sanctions_local 2026.09.1",
   "flowinvoice.sanctions_network 2026.09.1",
   "flowsearch.kmu 2026.09.1",
+  "flowsearch.kmu 2026.09.2",
   "flowsearch.opensanctions_match 2026.09.1",
   "flowsearch.pep_risk 2026.09.1",
+  "flowsearch.pep_risk 2026.09.2",
   "flowsearch.ubo 2026.09.1",
+  "flowsearch.ubo 2026.09.2",
   "flowworkshop.sanctions_lists 2026.09.1",
   "flowworkshop.sanctions_screening 2026.09.1",
+  "flowworkshop.sanctions_screening 2026.09.2",
   "official.sanctions_lists 2026.09.1"
  ],
  "runtime_dependencies": [
@@ -215,5 +222,27 @@
   "html": "beautifulsoup4>=4.11.2,<5"
  },
  "live_checks": "docs/live-smoke.json",
- "behavior_changes": "docs/behavior-changes.md"
+ "behavior_changes": "docs/behavior-changes.md",
+ "decisions": [
+  {
+   "status": "DECIDED",
+   "date": "2026-09-23",
+   "quote": "alle empfehlungen, ... A2 abgedeckt durch nutzung, A3 sollte jeder dann selber holen können",
+   "ids": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9",
+    "R10",
+    "A2",
+    "A3"
+   ],
+   "effect": "Empfohlene Profile 2026.09.2 (USER_DECIDED); Quellprofile 2026.09.1 unverändert; siehe docs/behavior-changes.md"
+  }
+ ]
 }

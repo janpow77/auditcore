@@ -34,7 +34,11 @@ for merkmal in ergebnis.records[0].hits:
 |---|---|---|---|
 | `riskanalysis.legacy` | `b5c523bf7eaa` | `LEGACY_CHARACTERIZED` | riskanalysis `red_flags.py` (RF01, RF02, RF08–RF15), exakt reproduziert |
 | `audit_designer.flowstat_belegliste` | `1254591156d3` | `LEGACY_CHARACTERIZED` | Flowstat `_red_flags` (BL_RF01–BL_RF10) in audit_designer und audit-portal |
-| `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | wie Legacy, RF02 mit jahresbezogener EU-Schwelle aus `auditcore_procurement` |
+| `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | abgelöst durch 2026.09.2 |
+| `riskanalysis.year_bound` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 |
+| `riskanalysis.year_bound` | `2026.09.3` | `APPROVED` (empfohlen) | Entscheidung 23.09.2026: netto, EU-Schwelle des Jahres, RF12 gruppenintern, RF09 mit Umschrift „mueller“ |
+| `flowinvoice.risk_checker` | `2026.09.2` | `APPROVED` (nicht aktiviert) | Splitting mit EU-Schwelle des Jahres |
+| `flowinvoice.rbvk_wibank` | `2026.09.2` | `APPROVED` (empfohlen) | nach Profildatei V1.21 |
 | `flowinvoice.risk_checker` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | flowinvoice/audit-portal `RiskChecker` (9 Rechnungsindikatoren, Texte und Legacy-Score dieses Profils) |
 | `flowinvoice.rbvk_wibank` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | WIBANK-RBVK-Punkte je Mittelabruf (Codeverhalten), Stufen 8/19 |
 | `flowinvoice.exante_basis` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 7 Ex-ante-Indikatoren, Basisgewichte, Klassen 30/55; kalibrierte Gewichte ausdrücklich über `points` |
@@ -47,6 +51,7 @@ Betrugsprüfungen aus flowinvoice `fraud_detection` haben eigene Profile
 |---|---|---|
 | `flowinvoice.fraud_signals` | `score_signals` | Blocker, Warnungen, Score und Stufe aus den Ergebnissen der Teilprüfungen (Sanktions-, PEP- und Firmenprüfung werden nur als Signale konsumiert) |
 | `flowinvoice.ted_contractor` | `select_contracts`, `assess_contractor` | Statistik, Merkmale und Legitimitätswert öffentlicher Aufträge (TED-Datensätze im `notice/1`-Vertrag von `auditcore_procurement`) |
+| `flowinvoice.fraud_signals`, `flowinvoice.ted_contractor` 2026.09.2 | wie oben | empfohlen: Legitimität 0–1, Warnungen nach Dublettenentfernung |
 | `flowinvoice.duplicates` | `find_duplicates` | exakte und unscharfe Rechnungsdubletten unter vorausgewählten Kandidaten |
 
 Die Benford-Prüfung derselben Quelle liegt als `legacy_flowinvoice_benford`

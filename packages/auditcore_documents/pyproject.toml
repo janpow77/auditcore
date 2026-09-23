@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "auditcore_documents"
 version = "0.1.0"
-description = "Characterized document comparison and German article-law synopsis without web or database dependencies"
+description = "Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -18,6 +18,8 @@ pdf-text = ["pypdf>=4,<7"]
 fuzzy = ["rapidfuzz>=3.10,<4"]
 docx-render = ["python-docx>=1.1,<2", "lxml>=6.1.0,<7"]
 pdf-render = ["reportlab>=4.0.8,<6"]
+mime = ["python-magic>=0.4.27"]
+ocr-raster = ["pypdfium2>=4.30,<6", "pillow>=10"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
@@ -29,6 +31,8 @@ dev = [
     "rapidfuzz>=3.10.1,<4",
     "bandit>=1.7",
     "reportlab>=4.5.1,<6",
+    "pypdfium2>=4.30,<6",
+    "pillow>=10",
 ]
 
 [project.scripts]
@@ -55,7 +59,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["rapidfuzz.*", "docx.*", "pypdf.*", "reportlab.*", "lxml.*"]
+module = ["rapidfuzz.*", "docx.*", "pypdf.*", "reportlab.*", "lxml.*", "pypdfium2.*", "magic.*"]
 ignore_missing_imports = true
 
 [tool.auditcore-bibquality]

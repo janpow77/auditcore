@@ -48,7 +48,15 @@ Profile (`available_profiles()`): Listenkataloge `audit_designer`, `flowworkshop
 `flowinvoice.pep_bulk`; API `flowsearch.opensanctions_match`, `flowsearch.pep_risk`,
 `flowinvoice.sanctions_network` (LEGACY_ONLY); `flowsearch.ubo`, `flowsearch.kmu`,
 `flowinvoice.company_verification`. Widersprüchliche Varianten tragen
-`HUMAN_DECISION_REQUIRED` im Profil und in jedem Ergebnis.
+`HUMAN_DECISION_REQUIRED` im Profil und in jedem Ergebnis. **Empfohlen** nach den
+Nutzerentscheidungen vom 23.09.2026 sind die Nachfolger 2026.09.2 über
+`recommended_profile(zweck)` (`sanctions_screening`, `pep_bulk`, `pep_risk`,
+`ubo`, `sme`, `company_verification`).
+
+OpenSanctions-API: Den Schlüssel beschafft jeder Betreiber selbst
+(https://www.opensanctions.org/api/) und übergibt ihn als `MatchClient(api_key=…)`
+oder per `credentials_from_environment(os.environ)` aus `OPENSANCTIONS_API_KEY`;
+ohne Schlüssel meldet `MatchClient.status` `NOT_CONFIGURED`.
 
 Datenlizenzen je Quelle (≠ MIT des Codes) und Live-Prüfstatus:
 [docs/source-catalog.json](docs/source-catalog.json),

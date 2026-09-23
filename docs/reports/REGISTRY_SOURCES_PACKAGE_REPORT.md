@@ -89,7 +89,27 @@ flowworkshop (29 → 29 inkl. 7 gegen Wegwerf-PostgreSQL), flowinvoice
 `packages/auditcore_registry_sources/docs/consumer-migration.md`. flowsearch
 und osint: geplant.
 
-## Offene Entscheidungen (HUMAN_DECISION_REQUIRED)
+## Entscheidungen vom 23.09.2026 (DECIDED, Folge-PR)
+
+Nutzer: „alle empfehlungen, ... A2 abgedeckt durch nutzung, A3 sollte jeder dann
+selber holen können“. Umgesetzt als neue empfohlene Profile (`recommended_profile`),
+Quellprofile und Replays bitgenau:
+
+- entity_matching: `audit_designer.sanctions` 2026.09.3 (R1), NFC überall über
+  `compose` (R2: `flowworkshop.sanctions` 2026.09.3, `flowworkshop.state_aid`
+  2026.09.2), `flowinvoice.pep` 2026.09.2 (R3), **`riskanalysis.payee` 2026.09.2**
+  (K4, `Müller → mueller`) für auditcore_risk.
+- registry_sources 2026.09.2: `audit_designer.sanctions_screening` (R1/R2/R8),
+  `flowworkshop.sanctions_screening` (R2), `flowinvoice.pep_bulk` (R3),
+  `flowsearch.ubo` nach § 3 Abs. 2 GwG (R4), `flowsearch.kmu` nach Anhang I AGVO
+  (R5), `flowsearch.pep_risk` (R6) und `flowinvoice.company_verification` (R7)
+  unverändert als entschieden; R9/R10 in der Consumer-Anleitung; A2 im Katalog;
+  A3 `MatchClient(api_key=…)`/`credentials_from_environment` mit `NOT_CONFIGURED`.
+- Nachweise: registry 524, entity_matching 989, risk 2356, Plattform 288 passed;
+  `verify_domain_packages.py --apt` 35/35 PASS (Wheel registry `c7006dbe…`,
+  entity_matching `60c6ebec…`).
+
+## Ursprünglich offene Entscheidungen (inzwischen DECIDED, siehe oben)
 
 Maßgebliches Screening-Profil und Schwellen, NFC bei zerlegten Umlauten,
 flowinvoice-Varianten, UBO-Stimmrechtsschwelle/mittelbare Beteiligung, KMU

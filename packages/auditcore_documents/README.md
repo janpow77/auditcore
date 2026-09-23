@@ -21,6 +21,8 @@ python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.1
 | `fuzzy` | rapidfuzz ≥ 3.10 | Ähnlichkeitsmaß der Produktion (`token_set_ratio`) |
 | `docx-render` | python-docx ≥ 1.1 | Synopse als DOCX (Vermerk/Text wie im Designer) |
 | `pdf-render` | reportlab ≥ 4.0.8 | Synopse als PDF (wie ECOHESION `comparison.pdf`) |
+| `mime` | python-magic ≥ 0.4.27 | MIME-Erkennung der Pipeline wie im Original (libmagic) |
+| `ocr-raster` | pypdfium2, Pillow | Seitenrasterung vor Gateway-OCR |
 
 ## Nutzung
 
@@ -64,8 +66,8 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 - **Profile** (`PROFILES`, versioniert, mit Fingerprint):
   `audit_designer.document_compare` 1.1.0 (`LEGACY`, Produktionsverhalten),
   `…difflib` (`LEGACY_DIFFLIB`, Rückfall des Originals ohne rapidfuzz),
-  `auditcore.document_compare` 2026.09.1 (`CORRECTED`, siehe DC-C04; Übernahme
-  ist eine fachliche Entscheidung).
+  `auditcore.document_compare` 2026.09.2 (`CORRECTED` = `RECOMMENDED`,
+  entschieden am 2026-09-23: DC-C04 und Absatznummerierung nach Einfügung).
 - **Standardvergleich**: Checklisten (Tabellenzeilen; stabile Kennung aus
   Inhaltssteuerelementen, dann wortgleich, dann Ähnlichkeit ≥ Schwelle) oder
   Fließtext (reihenfolgetreu, unscharfe Ersetzungsblöcke); wortgleich
@@ -92,5 +94,30 @@ PDF-Synopse (`render_synopsis_pdf`, Seitentext, Titel und Autor gleich dem
 Original). `auditcore_reporting` 0.2.0 kennt nur XLSX; beide Renderer bleiben
 deshalb Extras hier. Für XLSX liefert `synopsis_records` passende Datensätze.
 
-Nachweise, Abweichungen und offene Entscheidungen: `docs/behavior-changes.md`,
+## Dokumentpipeline (`auditcore_documents.pipeline`)
+
+Frameworkunabhängiger Kern der flowinvoice-Pipeline (fb2d185): Stufenvertrag,
+Orchestrierung mit Wiederherstellung, Kontext und Modelle, SHA-256-Hashing mit
+Stufen-Hashes, Audit-Ereignisse (Port `AuditSink`, Referenz `InMemoryAuditLog`),
+Aufbewahrungsregeln (`RetentionSweeper`) und versionierte Profile
+(`LEGACY_PIPELINE`, `CORRECTED_PIPELINE`). OCR-Engines (Gateway, Chandra,
+Tesseract), Rasterung, Persistenz, Betrugsprüfung und Webhooks sind Ports;
+kein torch/transformers/GPU im Kern.
+
+```python
+import asyncio
+from auditcore_documents import pipeline as pl
+
+audit = pl.InMemoryAuditLog()
+ocr = pl.OcrStage(routing=pl.OcrRouting(mode="router"), router=mein_gateway)  # Port
+orchestrator = pl.build_pipeline(profile=pl.LEGACY_PIPELINE, audit=audit, ocr=ocr)
+context = asyncio.run(
+    orchestrator.run(pl.PipelineContext(document_id="d", input_uri="/pfad/beleg.pdf"))
+)
+print(context.status, context.validation_flags, context.hash_chain)
+```
+
+Details, Korrekturen PL-C01…PL-C08 und Befunde: `docs/pipeline.md`.
+
+Nachweise, Abweichungen und Entscheidungen: `docs/behavior-changes.md`,
 `docs/consumer-integration.md`, `provenance.json`, `NOTICE`.

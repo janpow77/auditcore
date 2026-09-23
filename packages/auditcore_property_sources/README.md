@@ -50,11 +50,14 @@ result = engine.run(
 - Ein Aufruf von `fetch_page` = eine Ergebnisseite; Paging- und Abbruchregeln
   entsprechen den Original-`hole_bestand`-Funktionen. Timeouts, begrenzte
   Wiederholungen, Rate-Limit, Checkpoints und Teilfehler übernimmt der Engine.
-- Transport (User-Agent, Cookies/Sitzung) injiziert der Consumer; die Bibliothek
-  setzt keine eigenen Kennungen.
-- **robots.txt** wird vor der ersten http(s)-Anfrage über den Transport gelesen;
-  gesperrte Adressen enden mit `access_not_permitted` (nicht wiederholbar).
-  `file:`-Adressen (Archiv über `FileTransport`) sind ausgenommen.
+- Transport (User-Agent, Cookies/Sitzung) injiziert der Consumer. Ausnahme
+  bienici: Der Adapter sendet wie das Original die Browser-Kennung und die
+  Kopfzeilen von `_hole` (`user_agent=None` überlässt die Kennung dem Transport).
+- **robots.txt** (Einstellung `robots_policy`, Nutzerentscheidung 2026-09-23):
+  Standard `"ignore"` ruft wie die Originale ohne robots.txt ab. Mit `"respect"`
+  wird robots.txt vor der ersten http(s)-Anfrage gelesen; gesperrte Adressen
+  enden dann mit `access_not_permitted` (nicht wiederholbar). `file:`-Adressen
+  (Archiv über `FileTransport`) sind nie betroffen.
 - Alle Adapter erfüllen die Contract-Suite `auditcore_harvest.testing.assert_adapter`.
 - `snapshot_semantics = FULL_SNAPSHOT_REPLACE`: Ausscheiden/Schließen nur nach
   `result.snapshot_complete` (wohnungsmonitor LA-06; ZVG-Lebenszyklus je Gericht).
@@ -65,7 +68,8 @@ result = engine.run(
 Semantik, robots.txt-Befund (Schnappschuss 2026-09-23), Nutzungsbedingungen
 (`REVIEW_REQUIRED`) und Live-Status (`docs/live-smoke.json`: je Portal eine
 Ergebnisseite, nur Aggregate). Kleinanzeigen (Suchadresse des Originals) und
-ZVG-Detailseiten sind per robots.txt gesperrt – siehe
-[docs/behavior-changes.md](docs/behavior-changes.md) (HUMAN_DECISION_REQUIRED).
+ZVG-Detailseiten sind per robots.txt gesperrt und werden nach Nutzerentscheidung
+trotzdem abgerufen – siehe [docs/behavior-changes.md](docs/behavior-changes.md)
+(PS-D01–D03).
 Consumer-Umstellung: [docs/consumer-migration.md](docs/consumer-migration.md).
 Herkunft und MIT-Freigabe: `NOTICE`, `provenance.json`.

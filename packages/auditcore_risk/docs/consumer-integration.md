@@ -87,7 +87,17 @@ Produktionsdatenbank).
   `risk_factors`/`hit_count`, die es nicht gibt; TED-Legitimität als Wörterbuch.
   Status: geplant.
 
-## flowinvoice / audit-portal RiskChecker (kein Laufzeit-Consumer)
+## Empfohlene Profile nach der Entscheidung vom 23.09.2026
+
+Neue Consumer-Umstellungen verwenden die freigegebenen Profile
+`riskanalysis.year_bound 2026.09.3` (Spalte `nettobetrag` bereitstellen, z. B.
+aus „Gesamt Netto“), `flowinvoice.rbvk_wibank 2026.09.2` (Eingaben
+`offene_auflagen_anzahl`, `externe_kuerzung`, `vorherige_verwk_quote`,
+`vorherige_kuerzungsgruende`), `flowinvoice.fraud_signals`/`ted_contractor
+2026.09.2` und `auditcore_statistics.recommended_flowinvoice_benford`. Die
+Legacyprofile dienen der Nachweisführung (bitgenaue Reproduktion).
+
+## flowinvoice / audit-portal RiskChecker (kein Laufzeit-Consumer, K7: nicht aktivieren)
 
 `services/risk_checker.py` wird in beiden Anwendungen nirgends aufgerufen; die
 gespeicherte `RiskCheckerConfig` ist nicht angebunden. Profil

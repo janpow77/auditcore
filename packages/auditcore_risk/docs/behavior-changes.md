@@ -118,31 +118,23 @@ Geprüft und **nicht** in `auditcore_risk` übernommen (Stand, Begründung):
   Checklistenpaket, nicht zu Risikomerkmalen.
 * KPAnG-Tatbildung aus regulierung — bleibt laut Migrationsplan in regulierung.
 
-## HUMAN_DECISION_REQUIRED
+## DECIDED (Nutzerentscheidung vom 23.09.2026, Zitat: „alle empfehlungen“)
 
-1. **Kein gemeinsamer Risikoscore.** Ob und wie Merkmale verschiedener Profile
-   gewichtet zusammengefasst werden, ist fachlich zu entscheiden; die
-   Bibliothek bietet bewusst keinen Score.
-2. **RF02 brutto/netto:** Schwellen sind als netto kommentiert, geprüft wird der Bruttobetrag.
-3. **RF02 Jahresbezug:** 221.000 ist die EU-Schwelle 2024–2025 (Liefer-/Dienstleistungen,
-   subzentral); seit 01.01.2026 gilt 216.000. Freigabe des Kandidaten
-   `riskanalysis.year_bound` einschließlich Stichtag (Rechnungs-, Vergabedatum,
-   Geschäftsjahr), Auftraggebertyp und Leistungskategorie je Beleg; ob auch die
-   nationalen Wertgrenzen 1.000 … 100.000 jahresbezogen gepflegt werden.
-4. **RF09:** Umstellung der Rechnungssteller-Normalisierung auf die empfohlene
-   Transliteration (`flowworkshop.state_aid`, „mueller“) — ändert Treffer.
-5. **RF12:** Übertragung über gleiche Vorhabenkennung aus fremden Gruppen beibehalten oder beheben.
-6. **BL_RF08/BL_RF09 vs. RF08:** unterschiedliche Vergaberegeln bleiben getrennt;
-   eine Angleichung ist eine fachliche Entscheidung.
-7. **flowinvoice RiskChecker:** ohne Laufzeit-Consumer; ob er aktiviert und mit
-   `RiskCheckerConfig` verbunden wird, ist offen. Bezugsgröße der
-   Lieferantenhäufung (Rechnungen oder Lieferanten) klären.
-8. **Betrugs-Signalscore:** Skala der TED-Legitimität (0–1 oder 0–100) und ob
-   Warnungen vor oder nach der Deduplizierung zählen.
-9. **Rechnungssplitting-Schwellen** (1.000–50.000, 80 %) weichen von RF02 und den
-   jahresbezogenen EU-Schwellen ab; keine Angleichung ohne Entscheidung.
-10. **WIBANK-RBVK:** Codeverhalten gegen Profildatei V1.21 (K10 +1 statt bis 2;
-    13.* als Beihilfe; K22 greift für jede eigene Vorgeschichte, weil
-    `prior_familie` nie gesetzt wird).
-11. **Ex-ante-Score:** Kalibrierung (Logit, Signifikanz p < 0,10, Skalierung auf
-    25) und Klassen 30/55 sind Methodikhoheit der Verwaltungsbehörde.
+Legacyprofile und ihre Replay-Nachweise bleiben bitgenau. Jede Entscheidung ist
+als neue, freigegebene (`APPROVED`) Profilversion umgesetzt; die Legacyprofile
+bleiben für die Reproduktion bestehen.
+
+| Nr. | Entscheidung | Umsetzung |
+|---|---|---|
+| K1 | Kein gemeinsamer Risikoscore. | Festgeschrieben: die Bibliothek bietet keinen profilübergreifenden Score; Scores gibt es nur als Bewertung eines einzelnen Profils. |
+| K2 | Schwellenprüfung netto. | `riskanalysis.year_bound 2026.09.2`: RF02 und RF08 prüfen `nettobetrag` (Pflichtspalte, kein stiller Rückfall auf brutto); runde Beträge und Volumen bleiben brutto. |
+| K3 | `riskanalysis.year_bound` freigeben. | `riskanalysis.year_bound 2026.09.2`, fortgeführt in 2026.09.3 (`APPROVED`): nationale Wertgrenzen 1.000–100.000 plus EU-Schwelle des Rechnungsjahres aus `auditcore_procurement` (`procurement.hvtg 2026.09.2`, 2026: 216.000 €). Der Kandidat 2026.09.1 bleibt als abgelöste Fassung. |
+| K4 | RF09 auf „mueller“-Umschrift. | `riskanalysis.year_bound 2026.09.3` (`APPROVED`, empfohlen): RF09 normalisiert mit `riskanalysis.payee 2026.09.2` aus `auditcore_entity_matching` 0.2.0 (Müller → mueller, auch zerlegte Umlaute); sonst identisch mit 2026.09.2, das als abgelöste Fassung bleibt. |
+| K5 | RF12 nur innerhalb derselben Gruppe. | Parameter `propagation: same_group` in `riskanalysis.year_bound 2026.09.2`. |
+| K6 | BL_RF08/09 vs. RF08 wie bisher je Profil. | Keine Änderung. |
+| K7 | RiskChecker nicht aktivieren. | Consumer-Dokumentation; `flowinvoice.risk_checker 2026.09.2` steht nur für eine spätere Aktivierung bereit. |
+| K8 | TED-Legitimität 0–1; Warnungen nach Dublettenentfernung zählen. | `flowinvoice.fraud_signals 2026.09.2` (`policy`: `after_dedup`, `unit_interval`, Werte außerhalb 0–1 → `InputError`), `flowinvoice.ted_contractor 2026.09.2` (Legitimitätswert als Anteil, Rating unverändert). |
+| K9 | Splitting-Schwellen an jahresbezogene EU-Schwellen koppeln. | `flowinvoice.risk_checker 2026.09.2`: Schwellenliste um die EU-Schwelle des Rechnungsjahres ergänzt; ohne belegten Zeitraum und ohne nationalen Treffer „unbestimmt“. |
+| K10 | flowinvoice-Benford auf `benford_test`. | `auditcore_statistics.recommended_flowinvoice_benford` (`digits=1`, `significance_level=0.05`); `legacy_flowinvoice_benford` bleibt. |
+| K11 | WIBANK nach Profildatei V1.21. | `flowinvoice.rbvk_wibank 2026.09.2`: K10 je offene Auflage bis 2 Punkte, K12 (externe Prüfungsfeststellungen) getrennt von K16–K19 (frühere Verwaltungskontrollen), K20–K22 nach Kürzungsgrund-Codes (1.1–1.24; 5.1/5.2; 8.1–8.3, 8.8, 13.1). Der Consumer übergibt die Codes auch eigener früherer Mittelabrufe (`prior_familie` korrekt setzen). |
+| K12 | Ex-ante-Klassen 30/55 wie bisher. | Keine Änderung, bis Kalibrierdaten vorliegen. |

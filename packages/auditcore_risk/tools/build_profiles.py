@@ -1524,14 +1524,313 @@ def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
     return [(f"{d['id']}-{d['version']}.json", d) for d in (wibank, heuristik, basis)]
 
 
+DECIDED_ON = "2026-09-23"
+DECISION_QUOTE = "alle empfehlungen"
+EU_SUPPLY = {
+    "profile": "procurement.hvtg",
+    "version": "2026.09.2",
+    "category": "supply_service",
+    "authority_type": "sub_central",
+    "date_source": "record",
+}
+
+
+def _decision(ids: list[str], text: str) -> dict[str, Any]:
+    return {"decided_on": DECIDED_ON, "quote": DECISION_QUOTE, "decisions": ids, "effect": text}
+
+
+def decided_profiles(
+    built: dict[str, dict[str, Any]],
+) -> tuple[list[tuple[str, dict[str, Any]]], list[tuple[str, dict[str, Any]]]]:
+    """Recommended profiles implementing the user decisions of 23.09.2026.
+
+    Legacy profiles stay bit-identical; every decision becomes a new, approved
+    profile version derived from the legacy document.
+    """
+
+    def clone(doc: dict[str, Any]) -> dict[str, Any]:
+        copied: dict[str, Any] = json.loads(json.dumps(doc))
+        return copied
+
+    legacy = built["riskanalysis.legacy"]
+    ra = clone(legacy)
+    ra.update(
+        {
+            "id": "riskanalysis.year_bound",
+            "version": "2026.09.2",
+            "status": "APPROVED",
+            "legal_status": LEGAL + " Freigegeben durch Nutzerentscheidung vom 23.09.2026 "
+            "('alle empfehlungen'): Schwellen netto (K2), jahresbezogene EU-Schwellen (K3), RF12 "
+            "nur innerhalb der Gruppe (K5).",
+        }
+    )
+    ra["source"]["derived_from"] = {"profile": legacy["id"], "version": legacy["version"]}
+    ra["source"]["decision"] = _decision(
+        ["K2", "K3", "K5"],
+        "RF02/RF08 auf Nettobetrag, RF02 mit EU-Schwelle des Rechnungsjahres, RF12 gruppenintern.",
+    )
+    for rule in ra["rules"]:
+        if rule["code"] == "RF02":
+            rule["label"] = (
+                "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)"
+            )
+            rule["requires"] = ["nettobetrag"]
+            rule["params"]["field"] = "nettobetrag"
+            rule["params"]["thresholds"] = {
+                "static": [t for t in rule["params"]["thresholds"]["static"] if t != 221000.0],
+                "procurement_eu": {**EU_SUPPLY, "date_field": "rechnungsdatum_dt"},
+            }
+            rule["note"] = (
+                "Nettobetrag (K2) gegen nationale Wertgrenzen und die EU-Schwelle des "
+                "Rechnungsjahres aus auditcore_procurement (K3; 2026: 216.000 €). Ohne "
+                "belegten Zeitraum bleibt der Beleg unbestimmt."
+            )
+        if rule["code"] == "RF08":
+            rule["label"] = (
+                "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)"
+            )
+            rule["requires"] = ["nettobetrag"]
+            rule["params"]["amount_field"] = "nettobetrag"
+            rule["note"] = "Bagatellgrenze gegen den Nettobetrag (K2)."
+        if rule["code"] == "RF12":
+            rule["params"]["propagation"] = "same_group"
+            rule["note"] = (
+                rule.get("note", "") + " Merkmal nur innerhalb derselben Gruppe übertragen (K5)."
+            ).strip()
+    ra["open_decisions"] = [
+        "RF09: Umschrift 'mueller' (K4) folgt, sobald auditcore_entity_matching das neue Profil "
+        "riskanalysis.payee bereitstellt.",
+        "Stichtag der EU-Schwelle ist das Rechnungsdatum (rechnungsdatum_dt); Auftraggebertyp "
+        "subzentral und Kategorie Liefer-/Dienstleistungen je Beleg sind Profilvorgaben.",
+    ]
+
+    rc_legacy = built["flowinvoice.risk_checker"]
+    rc = clone(rc_legacy)
+    rc.update({"version": "2026.09.2", "status": "APPROVED"})
+    rc["source"]["derived_from"] = {"profile": rc_legacy["id"], "version": rc_legacy["version"]}
+    rc["source"]["decision"] = _decision(
+        ["K7", "K9"],
+        "Splitting-Schwellen um die EU-Schwelle "
+        "des Rechnungsjahres ergänzt; RiskChecker wird nicht "
+        "aktiviert.",
+    )
+    for rule in rc["rules"]:
+        if rule["code"] == "SPLIT_INVOICE":
+            rule["params"]["procurement_eu"] = {**EU_SUPPLY, "date_field": "invoice_date"}
+            rule["note"] = (
+                "Schwellenliste 1.000–50.000 plus EU-Schwelle des Rechnungsjahres aus "
+                "auditcore_procurement (K9). Fehlt der belegte Zeitraum und trifft keine "
+                "nationale Schwelle, bleibt die Rechnung unbestimmt."
+            )
+    rc["open_decisions"] = ["Nicht aktiviert (K7): kein Laufzeit-Consumer vorgesehen."]
+
+    wb_legacy = built["flowinvoice.rbvk_wibank"]
+    wb = clone(wb_legacy)
+    wb.update(
+        {
+            "version": "2026.09.2",
+            "status": "APPROVED",
+            "legal_status": wb_legacy["legal_status"].split(" Bildet")[0] + " Nach Profildatei "
+            "RBVK WIBANK V1.21 korrigiert (Entscheidung K11 vom 23.09.2026).",
+        }
+    )
+    wb["source"]["derived_from"] = {"profile": wb_legacy["id"], "version": wb_legacy["version"]}
+    wb["source"]["profile_file"] = {
+        "path": "backend/app/verwk/data/rbvk_wibank.json",
+        "git_blob": "f1434e6eeaa6b257cc3b6ed11623cb118af3ffd9",
+        "version": "1.21",
+        "stand": "2025-01-07",
+    }
+    wb["source"]["decision"] = _decision(
+        ["K11"],
+        "K10 je offene Auflage bis 2 Punkte, K12 "
+        "externe Prüfungsfeststellungen getrennt von K16 "
+        "Verwaltungskontrolle, K20–K22 nach Kürzungsgrund-Codes.",
+    )
+    origin = {"path": "backend/app/verwk/data/rbvk_wibank.json", "symbol": "scoring.kriterien"}
+    codes_1 = [f"1.{i}" for i in range(1, 25)]
+
+    def overlap(code: str, label: str, values: list[str]) -> dict[str, Any]:
+        return {
+            "code": code,
+            "label": label,
+            "kind": "set_overlap",
+            "points": 1,
+            "params": {"field": "vorherige_kuerzungsgruende", "values": values, "mode": "any"},
+            "origin": {**origin, "lines": f"nr {code[1:]}"},
+        }
+
+    replaced = {
+        "K10": [
+            _range(
+                "K10",
+                "Bewilligte offene Auflagen (1. Auflage)",
+                "offene_auflagen_anzahl",
+                1,
+                None,
+                1,
+                {**origin, "lines": "nr 10"},
+                lower_inclusive=True,
+            ),
+            _range(
+                "K10b",
+                "Bewilligte offene Auflagen (2. Auflage, score_max 2)",
+                "offene_auflagen_anzahl",
+                2,
+                None,
+                1,
+                {**origin, "lines": "nr 10"},
+                lower_inclusive=True,
+            ),
+        ],
+        "K12": [
+            _range(
+                "K12",
+                "Kürzung aufgrund von Feststellungen der KOM, Rechnungshöfe oder Prüfbehörde",
+                "externe_kuerzung",
+                0,
+                None,
+                2,
+                {**origin, "lines": "nr 12"},
+            )
+        ],
+        "K16": [
+            _range(
+                "K16",
+                "Schlechte Ergebnisse vorheriger Verwaltungskontrollen",
+                "vorherige_verwk_quote",
+                0,
+                None,
+                2,
+                {**origin, "lines": "nr 16"},
+            )
+        ],
+        "K17": [
+            _range(
+                "K17",
+                "Historische Differenz über 25 Prozent",
+                "vorherige_verwk_quote",
+                25,
+                50,
+                1,
+                {**origin, "lines": "nr 17"},
+                upper_inclusive=True,
+            )
+        ],
+        "K18": [
+            _range(
+                "K18",
+                "Historische Differenz über 50 Prozent",
+                "vorherige_verwk_quote",
+                50,
+                None,
+                1,
+                {**origin, "lines": "nr 18"},
+            )
+        ],
+        "K19": [
+            _range(
+                "K19",
+                "Historische Differenz unter 5 Prozent",
+                "vorherige_verwk_quote",
+                0,
+                5,
+                -2,
+                {**origin, "lines": "nr 19"},
+            )
+        ],
+        "K20": [overlap("K20", "Vorherige Kürzungsgründe 1.1 bis 1.24", codes_1)],
+        "K21": [overlap("K21", "Vorherige Kürzungsgründe 5.1 oder 5.2", ["5.1", "5.2"])],
+        "K22": [
+            overlap(
+                "K22",
+                "Vorherige Kürzungsgründe 8.1–8.3, 8.8 oder 13.1",
+                ["8.1", "8.2", "8.3", "8.8", "13.1"],
+            )
+        ],
+    }
+    rules = []
+    for rule in wb["rules"]:
+        rules.extend(replaced.get(rule["code"], [rule]))
+    wb["rules"] = rules
+    wb["assessment"]["source_version"] = "WIBANK-RBVK V1.21 (Profildatei)"
+    wb["open_decisions"] = [
+        "Eingaben: offene_auflagen_anzahl (Zahl), externe_kuerzung (Prüfungsfeststellungen "
+        "KOM/ERH/PB), vorherige_verwk_quote (eigene frühere Verwaltungskontrollen), "
+        "vorherige_kuerzungsgruende (Codes wie '1.3', '13.1', auch aus eigenen früheren "
+        "Mittelabrufen – prior_familie korrekt setzen). Aufbereitung beim Consumer.",
+        "K8/K9 und K17/K18 wie im Code (1,5–5 Mio bzw. 25–50 % ohne Überlappung).",
+    ]
+
+    fraud_sig = clone(built["flowinvoice.fraud_signals"])
+    fraud_sig.update({"version": "2026.09.2", "status": "APPROVED"})
+    fraud_sig["source"]["derived_from"] = {
+        "profile": "flowinvoice.fraud_signals",
+        "version": built["flowinvoice.fraud_signals"]["version"],
+    }
+    fraud_sig["source"]["decision"] = _decision(
+        ["K8"], "TED-Legitimität 0–1, Warnungen nach Dublettenentfernung zählen."
+    )
+    fraud_sig["parameters"]["policy"] = {
+        "warning_count": "after_dedup",
+        "ted_legitimacy_scale": "unit_interval",
+    }
+    fraud_sig["open_decisions"] = []
+    ted = clone(built["flowinvoice.ted_contractor"])
+    ted.update({"version": "2026.09.2", "status": "APPROVED"})
+    ted["source"]["derived_from"] = {
+        "profile": "flowinvoice.ted_contractor",
+        "version": built["flowinvoice.ted_contractor"]["version"],
+    }
+    ted["source"]["decision"] = _decision(
+        ["K8"], "Legitimitätswert als Anteil 0–1 (Rating unverändert auf der 0–100-Skala bestimmt)."
+    )
+    ted["parameters"]["legitimacy"]["unit"] = "fraction"
+    ted["parameters"]["legitimacy"]["digits"] = 3
+    ra3 = clone(ra)
+    ra3["version"] = "2026.09.3"
+    ra3["legal_status"] = ra["legal_status"].replace(
+        "RF12 nur innerhalb der Gruppe (K5).",
+        "RF12 nur innerhalb der Gruppe (K5), RF09 mit Umschrift 'mueller' (K4).",
+    )
+    ra3["source"]["derived_from"] = {"profile": ra["id"], "version": ra["version"]}
+    ra3["source"]["decision"] = _decision(
+        ["K2", "K3", "K4", "K5"],
+        "Wie 2026.09.2; RF09 normalisiert mit riskanalysis.payee 2026.09.2 "
+        "(Müller → mueller, auch zerlegte Umlaute).",
+    )
+    for rule in ra3["rules"]:
+        if rule["code"] == "RF09":
+            rule["params"]["normalization"] = {
+                "profile": "riskanalysis.payee",
+                "version": "2026.09.2",
+            }
+            rule["note"] = (
+                "Rechnungssteller-Normalisierung riskanalysis.payee 2026.09.2 "
+                "(auditcore_entity_matching, Umschrift ä → ae, K4); rapidfuzz Pflicht."
+            )
+    ra3["open_decisions"] = [
+        "Stichtag der EU-Schwelle ist das Rechnungsdatum (rechnungsdatum_dt); Auftraggebertyp "
+        "subzentral und Kategorie Liefer-/Dienstleistungen je Beleg sind Profilvorgaben.",
+    ]
+    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, ra3, rc, wb)]
+    fraud = [(f"{d['id']}-{d['version']}.json", d) for d in (fraud_sig, ted)]
+    return risk, fraud
+
+
 def main() -> None:
     DATA.mkdir(parents=True, exist_ok=True)
-    for name, document in build():
+    built_risk = build()
+    built_fraud = fraud_profiles()
+    decided_risk, decided_fraud = decided_profiles(
+        {d["id"]: d for _, d in [*built_risk, *built_fraud] if d["version"] != "2026.09.1"}
+    )
+    for name, document in [*built_risk, *decided_risk]:
         (DATA / name).write_text(
             json.dumps(document, ensure_ascii=False, indent=1, sort_keys=True) + "\n"
         )
         print(name)
-    for name, document in fraud_profiles():
+    for name, document in [*built_fraud, *decided_fraud]:
         (FRAUD / name).write_text(
             json.dumps(document, ensure_ascii=False, indent=1, sort_keys=True) + "\n"
         )

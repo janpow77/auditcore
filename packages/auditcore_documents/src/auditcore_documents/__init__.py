@@ -48,6 +48,7 @@ from auditcore_documents.profiles import (
     LEGACY,
     LEGACY_DIFFLIB,
     PROFILES,
+    RECOMMENDED,
     CompareProfile,
     get_profile,
 )
@@ -86,6 +87,7 @@ __all__ = [
     "LEGACY",
     "LEGACY_DIFFLIB",
     "PROFILES",
+    "RECOMMENDED",
     "CompareError",
     "CompareItem",
     "CompareOptions",
