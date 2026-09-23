@@ -16,6 +16,7 @@ DATA = Path(__file__).parents[1] / "src" / "auditcore_risk" / "profile_data"
 LEGACY = ("riskanalysis.legacy", "b5c523bf7eaa")
 YEAR = ("riskanalysis.year_bound", "2026.09.1")
 FLOWSTAT = ("audit_designer.flowstat_belegliste", "1254591156d3")
+RISK_CHECKER = ("flowinvoice.risk_checker", "fb2d18568d2e")
 
 
 def raw(profile_id: str, version: str) -> dict[str, Any]:
@@ -24,7 +25,7 @@ def raw(profile_id: str, version: str) -> dict[str, Any]:
 
 
 def test_packaged_profiles_and_status() -> None:
-    assert available_profiles() == tuple(sorted([LEGACY, YEAR, FLOWSTAT]))
+    assert available_profiles() == tuple(sorted([LEGACY, YEAR, FLOWSTAT, RISK_CHECKER]))
     assert load_profile(*LEGACY).status == "LEGACY_CHARACTERIZED"
     assert load_profile(*FLOWSTAT).status == "LEGACY_CHARACTERIZED"
     assert load_profile(*YEAR).status == "CANDIDATE_HUMAN_DECISION_REQUIRED"

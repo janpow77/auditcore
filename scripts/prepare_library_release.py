@@ -78,6 +78,7 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         {
             ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
             ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
             ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
         }
     ),
@@ -88,7 +89,10 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         }
     ),
     "auditcore_statistics": frozenset(
-        {("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a")}
+        {
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a"),
+        }
     ),
 }
 #: Renderer extras with published, hash-locked requirement files and their owner.

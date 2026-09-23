@@ -14,9 +14,10 @@ from datetime import date
 from types import MappingProxyType
 from typing import Any
 
+from .base import Context, Outcome, Table, _sum, seq_sum
 from .errors import InputError, ProfileError
 from .profiles import RiskProfile, Rule
-from .rules import KINDS, Context, Outcome, Table, _sum, identifier_state, pair_similarity
+from .rules import KINDS, identifier_state, pair_similarity
 from .values import strict_amount
 
 #: Library identity recorded in every evaluation (T-31).
@@ -34,6 +35,8 @@ class FlagHit:
     interpretation: str
     note: str | None
     origin: Mapping[str, Any]
+    severity: str | None = None
+    messages: Mapping[str, str] | None = None
 
 
 @dataclass(frozen=True)
@@ -45,6 +48,7 @@ class RecordResult:
     hits: tuple[FlagHit, ...]
     undetermined: Mapping[str, str]
     values: Mapping[str, Any]
+    assessment: Mapping[str, Any] | None = None
 
     @property
     def codes(self) -> tuple[str, ...]:
@@ -88,6 +92,7 @@ class Evaluation:
                     "codes": list(r.codes),
                     "undetermined": dict(r.undetermined),
                     "values": dict(r.values),
+                    "assessment": None if r.assessment is None else _plain(r.assessment),
                     "hits": [
                         {
                             "code": h.code,
@@ -95,6 +100,8 @@ class Evaluation:
                             "reason": h.reason,
                             "interpretation": h.interpretation,
                             "note": h.note,
+                            "severity": h.severity,
+                            "messages": None if h.messages is None else dict(h.messages),
                             "evidence": _plain(h.evidence),
                             "origin": _plain(h.origin),
                         }
@@ -124,7 +131,73 @@ def _plain(value: Any) -> Any:
         return {str(k): _plain(v) for k, v in value.items()}
     if isinstance(value, list | tuple):
         return [_plain(v) for v in value]
+    if isinstance(value, date):
+        return value.isoformat()
     return value
+
+
+def flatten_record(record: Mapping[str, Any], separator: str = ".") -> dict[str, Any]:
+    """One level of nested mappings as ``parent.child`` fields (lists stay values).
+
+    Example: ``{"context": {"median_amount": 5.0}}`` → ``{"context.median_amount": 5.0}``;
+    a nested ``None`` keeps the parent key with ``None``.
+    """
+    flat: dict[str, Any] = {}
+    for key, value in record.items():
+        if isinstance(value, Mapping):
+            for child, inner in value.items():
+                flat[f"{key}{separator}{child}"] = inner
+        else:
+            flat[str(key)] = value
+    return flat
+
+
+def _messages(rule: Rule, variant: str | None, values: Mapping[str, Any]) -> dict[str, str] | None:
+    if rule.messages is None:
+        return None
+    templates = rule.messages.get(variant or "default")
+    if templates is None:
+        raise ProfileError(f"Regel {rule.code}: keine Texte für Variante {variant!r}.")
+    try:
+        return {part: str(template).format(**values) for part, template in templates.items()}
+    except (KeyError, ValueError, TypeError) as exc:
+        raise ProfileError(f"Regel {rule.code}: Textvorlage passt nicht ({exc!r}).") from exc
+
+
+def _assessment(profile: RiskProfile, hits: list[FlagHit]) -> dict[str, Any]:
+    """Legacy score of *this* profile: sum of severity weights in rule order."""
+    spec = profile.assessment
+    if spec is None:
+        raise ProfileError(f"Profil {profile.id} enthält keine Bewertung.")
+    weights = spec["weights"]
+    total = seq_sum(float(weights.get(h.severity, spec["fallback_weight"])) for h in hits)
+    score = min(total / float(spec["divisor"]), float(spec["cap"])) if hits else 0.0
+    highest = next(
+        (level for level in spec["severity_order"] if any(h.severity == level for h in hits)),
+        None,
+    )
+    text = spec["summary"]
+    if not hits:
+        summary = str(text["none"])
+    else:
+        word = (
+            text["level_words"].get(highest, text["unknown_level"])
+            if highest
+            else text["unknown_level"]
+        )
+        key = "one" if len(hits) == 1 else "many"
+        summary = str(text[key]).format(count=len(hits), level=word)
+    return {
+        "score": score,
+        "highest_severity": highest,
+        "summary": summary,
+        "findings": [
+            {"code": h.code, "severity": h.severity, **(dict(h.messages) if h.messages else {})}
+            for h in hits
+        ],
+        "source_version": spec["source_version"],
+        "kind": spec["kind"],
+    }
 
 
 def _columns(rows: Sequence[Mapping[str, Any]], columns: Iterable[str] | None) -> tuple[str, ...]:
@@ -216,17 +289,33 @@ def evaluate(
             if flag is None:
                 undetermined[rule.code] = outcome.reasons[i] or "nicht entscheidbar"
             elif flag:
+                evidence = dict(outcome.evidence[i] or {})
+                variant = outcome.variants[i] if outcome.variants is not None else None
+                severity = (
+                    outcome.severities[i]
+                    if outcome.severities is not None and outcome.severities[i] is not None
+                    else rule.severity
+                )
+                echo = {
+                    alias: table.value(i, field)
+                    for alias, field in (rule.echo_fields or {}).items()
+                }
                 hits.append(
                     FlagHit(
                         code=rule.code,
                         label=rule.label,
                         reason=outcome.reasons[i] or rule.label,
-                        evidence=MappingProxyType(dict(outcome.evidence[i] or {})),
+                        evidence=MappingProxyType(evidence),
                         interpretation=rule.interpretation,
                         note=rule.note,
                         origin=rule.origin,
+                        severity=severity,
+                        messages=_messages(rule, variant, {**evidence, **echo}),
                     )
                 )
+        assessment = (
+            None if profile.assessment is None else MappingProxyType(_assessment(profile, hits))
+        )
         results.append(
             RecordResult(
                 i,
@@ -234,6 +323,7 @@ def evaluate(
                 tuple(hits),
                 MappingProxyType(undetermined),
                 MappingProxyType(values),
+                assessment,
             )
         )
     summary = _summary(profile, table, record_rules, outcomes, dataset)
@@ -278,6 +368,8 @@ def _summary(
             if undecided:
                 entry["unbestimmt"] = undecided
             out.append(entry)
+        return out
+    if spec["format"] == "none":
         return out
     by_code = {d.code: d for d in dataset}
     for rule in profile.rules:
@@ -334,6 +426,7 @@ __all__ = [
     "FlagHit",
     "RecordResult",
     "evaluate",
+    "flatten_record",
     "identifier_missing",
     "missing_columns",
     "name_similarity",

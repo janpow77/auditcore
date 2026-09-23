@@ -139,7 +139,11 @@ def _extracted_provenance():
             {
                 "repository": "janpow77/flowstat",
                 "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",
-            }
+            },
+            {
+                "repository": "janpow77/flowinvoice",
+                "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+            },
         ],
         "rights": {
             "authorization": {

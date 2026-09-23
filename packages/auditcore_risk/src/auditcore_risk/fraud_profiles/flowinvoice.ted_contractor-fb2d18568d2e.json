@@ -1,0 +1,140 @@
+{
+ "id": "flowinvoice.ted_contractor",
+ "kind": "ted_contractor",
+ "legal_status": "Legacy-Auswertung öffentlicher Aufträge eines Auftragnehmers; Zeitfenster 12/24/60 Monate sind in der Quelle nicht umgesetzt (alle = Gesamtzahl).",
+ "open_decisions": [
+  "Zeitfenster 12/24/60 Monate fehlen in der Quelle (TODO); WARNING_GROWTH_THRESHOLD = 3.0 ungenutzt.",
+  "audit-portal nutzt eine abweichende Variante (ILIKE-Teilstring, echte Zeitfenster); sie ist nicht Teil dieses Profils.",
+  "Datengrundlage: TED-Bekanntmachungen im notice/1-Vertrag von auditcore_procurement."
+ ],
+ "parameters": {
+  "empty_statistics": {
+   "avg_value_eur": 0,
+   "concentration_ratio": 0,
+   "contract_count_12m": 0,
+   "contract_count_24m": 0,
+   "contract_count_60m": 0,
+   "top_authorities": [],
+   "total_value_eur": 0
+  },
+  "flags": [
+   {
+    "description": "Ungewöhnlich hohe Auftragsanzahl: {contract_count_12m} in 12 Monaten",
+    "evidence": {
+     "contract_count_12m": "contract_count_12m"
+    },
+    "flag_type": "HIGH_CONTRACT_COUNT",
+    "severity": "medium",
+    "when": [
+     {
+      "metric": "contract_count_12m",
+      "op": "gt",
+      "value": 20
+     }
+    ]
+   },
+   {
+    "description": "Hohe Konzentration: {concentration_percent:.1f}% der Aufträge bei einem Auftraggeber ({top1_name})",
+    "evidence": {
+     "concentration_ratio": "concentration_ratio",
+     "top_authorities": "top_authorities"
+    },
+    "flag_type": "HIGH_CONCENTRATION",
+    "severity": "medium",
+    "when": [
+     {
+      "metric": "concentration_ratio",
+      "op": "gt",
+      "value": 0.7
+     }
+    ]
+   },
+   {
+    "description": "Kritische Konzentration: {concentration_percent:.1f}% bei nur einem Auftraggeber ({top1_name}) - mögliches Insider-Betrugsmuster",
+    "evidence": {
+     "concentration_ratio": "concentration_ratio",
+     "top_authorities": "top_authorities"
+    },
+    "flag_type": "EXTREME_CONCENTRATION",
+    "severity": "high",
+    "when": [
+     {
+      "metric": "concentration_ratio",
+      "op": "gt",
+      "value": 0.9
+     }
+    ]
+   },
+   {
+    "description": "Nur {authority_count} unterschiedliche Auftraggeber bei {contract_count_12m} Aufträgen (begrenzte Diversifikation)",
+    "evidence": {
+     "authority_count": "authority_count",
+     "contract_count": "contract_count_12m"
+    },
+    "flag_type": "LOW_AUTHORITY_DIVERSITY",
+    "severity": "low",
+    "when": [
+     {
+      "metric": "authority_count",
+      "op": "lt",
+      "value": 3
+     },
+     {
+      "metric": "contract_count_12m",
+      "op": "ge",
+      "value": 3
+     }
+    ]
+   }
+  ],
+  "legitimacy": {
+   "clamp": [
+    0,
+    100
+   ],
+   "concentration_factor": 20,
+   "count_cap": 100,
+   "count_divisor": 5,
+   "count_max_points": 20,
+   "default_rating": "NIEDRIG",
+   "digits": 1,
+   "distribution_points": 20,
+   "ratings": [
+    {
+     "min": 70,
+     "rating": "HOCH"
+    },
+    {
+     "min": 40,
+     "rating": "MITTEL"
+    }
+   ],
+   "severity_penalties": {
+    "critical": 50,
+    "high": 30,
+    "low": 5,
+    "medium": 15
+   },
+   "start": 50.0
+  },
+  "top_n": 3,
+  "unknown_authority": "Unbekannt"
+ },
+ "schema": "auditcore_risk.fraud-profile/1",
+ "source": {
+  "characterization": "tests/fixtures/flowinvoice_fraud_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "5618a2e0f090550443f5c74c8aaaee2ed188e420",
+  "path": "backend/app/services/fraud_detection/ted_checker.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "TedChecker._calculate_statistics",
+   "_detect_red_flags",
+   "_calculate_legitimacy_score",
+   "_load_contracts"
+  ]
+ },
+ "status": "LEGACY_CHARACTERIZED",
+ "version": "fb2d18568d2e"
+}

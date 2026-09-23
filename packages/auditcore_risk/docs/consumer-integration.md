@@ -66,8 +66,35 @@ Produktionsdatenbank).
   Ausführung der Designer-/Portal-Testsuite ist **NOT_EXECUTED** (umfangreiche
   Anwendungsabhängigkeiten); Status: geplant.
 
+## flowinvoice Betrugsprüfung (Consumer, Profile vorhanden)
+
+* Stellen: `services/fraud_detection/manager.py` (`_calculate_risk_score`,
+  `_determine_risk_level`, Ableitung der Blocker/Warnungen) → `score_signals`
+  mit `flowinvoice.fraud_signals`; `ted_checker.py` (`_calculate_statistics`,
+  `_detect_red_flags`, `_calculate_legitimacy_score`) → `assess_contractor`
+  mit `flowinvoice.ted_contractor`; `duplicate_detector.py` (Python-Teil nach
+  der SQL-Vorauswahl) → `find_duplicates` mit `flowinvoice.duplicates`;
+  `benfords_law.py` → `auditcore_statistics.legacy_flowinvoice_benford`.
+  Laufzeitaufrufer: `api/fraud_detection.py` (`/api/fraud/check-invoice`,
+  `/fraud/analyze-benford`, `/projects/{id}/fraud-analysis`, `/fraud/check-ted`)
+  und die Pipeline-Regel `FraudDetectionRule`.
+* Umstellung: `requirements-production.txt` um `auditcore_risk==0.1.0` und
+  `auditcore_statistics==0.2.0` ergänzen; der Manager übergibt seine
+  Teilergebnisse als Zuordnungen an `score_signals`, die SQL-Abfragen bleiben.
+* Nachweis: Replay aller Originalfälle im Paket. flowinvoice hat für diese
+  Module keine Tests; eine Consumer-Testsuite ist **NOT_EXECUTED**. Bekannte
+  Consumer-Fehler (nicht Teil der Bibliothek): `FraudDetectionRule` liest
+  `risk_factors`/`hit_count`, die es nicht gibt; TED-Legitimität als Wörterbuch.
+  Status: geplant.
+
+## flowinvoice / audit-portal RiskChecker (kein Laufzeit-Consumer)
+
+`services/risk_checker.py` wird in beiden Anwendungen nirgends aufgerufen; die
+gespeicherte `RiskCheckerConfig` ist nicht angebunden. Profil
+`flowinvoice.risk_checker` steht bereit; eine Anbindung ist fachlich zu
+entscheiden (Status: geplant).
+
 ## Weitere geplante Consumer
 
-* flowinvoice `services/risk_checker.py`, `services/fraud_detection/*` und
-  `verwk/pipeline/{rbvk_wibank_scorer,exante_score,auffaelligkeiten}.py`:
+* flowinvoice/riskanalysis `verwk/pipeline/{rbvk_wibank_scorer,exante_score,auffaelligkeiten}.py`:
   eigene Legacyprofile in einem Folge-PR (Status: geplant).

@@ -49,6 +49,56 @@
         "_red_flags"
       ],
       "profile": "audit_designer.flowstat_belegliste 1254591156d3 (identischer Blob)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/risk_checker.py",
+      "git_blob": "b799e855c382760d0a84762b2949462692f7be01",
+      "symbols": [
+        "RiskChecker"
+      ],
+      "profile": "flowinvoice.risk_checker fb2d18568d2e",
+      "also_identical_in": "janpow77/audit-portal backend/app/services/risk_checker.py blob 5e93b2b8 (nur Formatierung)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/manager.py",
+      "git_blob": "0a48b36753546c8954604616d4e1028b6c9b9b24",
+      "symbols": [
+        "FraudDetectionManager.analyze_invoice",
+        "_calculate_risk_score",
+        "_determine_risk_level"
+      ],
+      "profile": "flowinvoice.fraud_signals fb2d18568d2e"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/ted_checker.py",
+      "git_blob": "5618a2e0f090550443f5c74c8aaaee2ed188e420",
+      "symbols": [
+        "TedChecker._calculate_statistics",
+        "_detect_red_flags",
+        "_calculate_legitimacy_score",
+        "_load_contracts"
+      ],
+      "profile": "flowinvoice.ted_contractor fb2d18568d2e"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/duplicate_detector.py",
+      "git_blob": "ad6c7ff993aa2e9bd3afd246811b8a9e942c6b1d",
+      "symbols": [
+        "DuplicateDetector._find_exact_duplicates",
+        "_find_fuzzy_duplicates",
+        "_names_similar",
+        "_parse_date"
+      ],
+      "profile": "flowinvoice.duplicates fb2d18568d2e",
+      "also_identical_in": "janpow77/audit-portal (gleicher Blob)"
     }
   ],
   "dependencies": {
@@ -71,6 +121,10 @@
       "janpow77/audit-portal": {
         "private": true,
         "license": null
+      },
+      "janpow77/flowinvoice": {
+        "private": true,
+        "license": null
       }
     },
     "authorization": {
@@ -78,7 +132,7 @@
       "date": "2026-09-22",
       "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
       "scope": "Extrahierter Bibliothekscode und Regelprofile in auditcore_risk",
-      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories riskanalysis, audit_designer und audit-portal; Datenrechte der Consumer separat."
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories riskanalysis, audit_designer, audit-portal und flowinvoice; Datenrechte der Consumer separat."
     }
   },
   "excluded": [
@@ -87,7 +141,9 @@
     "audit_designer vp_ai rule_validation_service.RuleValidationService (Checklisten-Konsistenzregeln R01–R16 über ORM; gehört zu einem Checklistenpaket; blob c8e0f76465381a7e10639cefc69786d068f77a4f)",
     "Flowstat _standard_packages/analyze_belegliste (Kennzahlenpakete, Excelnormalisierung) – nur _red_flags übernommen",
     "riskanalysis payee_normalizer.add_payee_columns/_fuzzy_merge (Clustering, bleibt Anwendung)",
-    "Gemeinsamer oder vereinheitlichter Risikoscore (HUMAN_DECISION_REQUIRED)"
+    "Gemeinsamer oder vereinheitlichter Risikoscore (HUMAN_DECISION_REQUIRED)",
+    "flowinvoice fraud_detection sanctions_checker/pep_checker/company_verifier (Screening; Ergebnisse werden als Signale konsumiert, Quelle: registry-Bibliotheken)",
+    "flowinvoice fraud_detection benfords_law → auditcore_statistics 0.2.0 legacy_flowinvoice_benford (nicht dupliziert)"
   ],
   "characterization": {
     "riskanalysis": {
@@ -112,6 +168,32 @@
         "numpy": "1.26.2"
       },
       "method": "AST-Extraktion der Blob-geprüften Definitionen aus audit_designer und audit-portal, beide ausgeführt und verglichen"
+    },
+    "flowinvoice_risk_checker": {
+      "fixture": "tests/fixtures/flowinvoice_risk_checker_observed.json",
+      "tool": "tools/capture_flowinvoice_risk_checker.py",
+      "cases": 338,
+      "environment": {
+        "python": "3.11.16 (Container python:3.11-slim, wie flowinvoice Dockerfile/Dockerfile.production)",
+        "pydantic": "2.13.5",
+        "sqlalchemy": "2.0.54"
+      },
+      "method": "RiskChecker.assess unverändert aus dem Blob-geprüften Checkout ausgeführt"
+    },
+    "flowinvoice_fraud": {
+      "fixture": "tests/fixtures/flowinvoice_fraud_observed.json",
+      "tool": "tools/capture_flowinvoice_fraud.py",
+      "cases": {
+        "manager": 268,
+        "ted": 129,
+        "duplicates": 250
+      },
+      "method": "Manager mit Stellvertretern der Teilprüfungen; TED-Statistik/-Merkmale/-Legitimität und Dublettenlogik unverändert; SQL-Auswahl NOT_EXECUTED",
+      "environment": {
+        "python": "3.11.16 (Container python:3.11-slim, wie flowinvoice Dockerfile/Dockerfile.production)",
+        "pydantic": "2.13.5",
+        "sqlalchemy": "2.0.54"
+      }
     }
   },
   "profiles": [
@@ -129,6 +211,29 @@
       "id": "audit_designer.flowstat_belegliste",
       "version": "1254591156d3",
       "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.risk_checker",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.fraud_signals",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED",
+      "schema": "auditcore_risk.fraud-profile/1"
+    },
+    {
+      "id": "flowinvoice.ted_contractor",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED",
+      "schema": "auditcore_risk.fraud-profile/1"
+    },
+    {
+      "id": "flowinvoice.duplicates",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED",
+      "schema": "auditcore_risk.fraud-profile/1"
     }
   ],
   "behavior_changes": "docs/behavior-changes.md"
