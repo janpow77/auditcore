@@ -1,0 +1,7146 @@
+{
+ "status": "OBSERVED",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION_ON_SYNTHETIC_STRUCTURE_DERIVED_PAGES",
+ "inputs": "synthetic, structure-derived (tools/synthetic_pages.py); no personal data",
+ "sources": {
+  "wohnungsmonitor": {
+   "repository": "janpow77/wohnungsmonitor",
+   "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+   "files": {
+    "immobilien_export.py": "44233aea7651855d51b26c3d173f624ca96a389b",
+    "inberlinwohnen_export.py": "c044ed39271412c20978c41ec51e7f382def7336",
+    "kleinanzeigen_export.py": "8a7c8cba46e15b424f48ae95be43989a10c1b39f",
+    "bienici_export.py": "5a8cc85e222193c505b6fd4dec43394ffd5fb015",
+    "citya_export.py": "d5cc5d625bf19dca6f1c6a918069df6f35ae8509",
+    "paruvendu_export.py": "22f98c9f36d0299fe220743f40234b7119c7e62d"
+   }
+  },
+  "versteigerung": {
+   "repository": "janpow77/versteigerung",
+   "commit": "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448",
+   "files": {
+    "backend/app/crawler/zvg_crawler.py": "b10ad2a63725246d3867bf9dd66329fc71e986cb"
+   }
+  }
+ },
+ "environment": {
+  "python": "3.12.3",
+  "beautifulsoup4": "4.12.3",
+  "httpx": "0.28.1",
+  "captured_on": "2026-09-23"
+ },
+ "synthetic_mappings": {
+  "plz_bezirke": {
+   "10245": [
+    "Friedrichshain-Kreuzberg"
+   ],
+   "10961": [
+    "Friedrichshain-Kreuzberg"
+   ],
+   "12043": [
+    "Neukölln"
+   ],
+   "13055": [
+    "Lichtenberg",
+    "Marzahn-Hellersdorf"
+   ]
+  },
+  "ortsteile_bezirke": {
+   "Friedrichshain": "Friedrichshain-Kreuzberg",
+   "Prenzlauer Berg": "Pankow",
+   "Weißensee": "Pankow",
+   "Neukölln": "Neukölln"
+  }
+ },
+ "cases": [
+  {
+   "group": "immobilien_de",
+   "function": "parse_page",
+   "args": {
+    "page": "immobilien_de/seite-1.html"
+   },
+   "output": {
+    "41000001": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000001",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 593.67
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-15",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10245"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 54.3
+     },
+     "numberOfRooms": 2,
+     "_mietart": "Kaltmiete"
+    },
+    "41000002": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000002",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 640
+      }
+     },
+     "name": "Altbau",
+     "datePosted": "2026-09-14",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10961"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 61
+     },
+     "numberOfRooms": 2.5,
+     "_mietart": "Warmmiete"
+    },
+    "41000003": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000003",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": "702.5"
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "15.09.2026",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "12043"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 48.0
+     },
+     "numberOfRooms": 1,
+     "_mietart": "Nettokaltmiete"
+    },
+    "41000004": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000004",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 1234.5
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-10",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "13055"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 88.25
+     },
+     "numberOfRooms": 3,
+     "_mietart": "Warmmiete"
+    },
+    "41000005": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000005",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": null
+      }
+     },
+     "_mietart": null
+    },
+    "41000006": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000006",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": "auf Anfrage"
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-01",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10115"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 40
+     },
+     "numberOfRooms": "2",
+     "_mietart": null
+    },
+    "41000007": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000007",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 455.0
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-02",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "99999"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 30.5
+     },
+     "numberOfRooms": 1,
+     "_mietart": null
+    },
+    "41000008": {
+     "@type": [
+      "Product",
+      "RealEstateListing"
+     ],
+     "url": "https://www.immobilien.de/expose/41000008/",
+     "name": "Liste als Typ",
+     "address": {
+      "postalCode": "10245"
+     },
+     "offers": {
+      "priceSpecification": {
+       "price": 510
+      }
+     },
+     "_mietart": "Kaltmiete"
+    }
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietarten",
+   "args": {
+    "page": "immobilien_de/seite-1.html"
+   },
+   "output": {
+    "593,67": "Kaltmiete",
+    "640,00": "Warmmiete",
+    "702,50": "Nettokaltmiete",
+    "1.234,50": "Warmmiete",
+    "510": "Kaltmiete"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000001",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 593.67
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-15",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10245"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 54.3
+     },
+     "numberOfRooms": 2,
+     "_mietart": "Kaltmiete"
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000001",
+    "quelle": "immobilien.de",
+    "titel": "2-Zimmer-Wohnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "10245",
+    "bezirk": "Friedrichshain-Kreuzberg",
+    "bezirke_moeglich": [
+     "Friedrichshain-Kreuzberg"
+    ],
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.0,
+    "flaeche_qm": 54.3,
+    "kaltmiete": 593.67,
+    "preisart": "kalt",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 10.93,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "15.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000001",
+    "erfasst_am": "2026-09-15"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000002",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 640
+      }
+     },
+     "name": "Altbau",
+     "datePosted": "2026-09-14",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10961"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 61
+     },
+     "numberOfRooms": 2.5,
+     "_mietart": "Warmmiete"
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000002",
+    "quelle": "immobilien.de",
+    "titel": "Altbau",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "10961",
+    "bezirk": "Friedrichshain-Kreuzberg",
+    "bezirke_moeglich": [
+     "Friedrichshain-Kreuzberg"
+    ],
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.5,
+    "flaeche_qm": 61.0,
+    "kaltmiete": null,
+    "preisart": "warm",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": 640.0,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": 10.49,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "14.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000002",
+    "erfasst_am": "2026-09-14"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000003",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": "702.5"
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "15.09.2026",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "12043"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 48.0
+     },
+     "numberOfRooms": 1,
+     "_mietart": "Nettokaltmiete"
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000003",
+    "quelle": "immobilien.de",
+    "titel": "2-Zimmer-Wohnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "12043",
+    "bezirk": "Neukölln",
+    "bezirke_moeglich": [
+     "Neukölln"
+    ],
+    "lat": null,
+    "lon": null,
+    "zimmer": 1.0,
+    "flaeche_qm": 48.0,
+    "kaltmiete": 702.5,
+    "preisart": "kalt",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 14.64,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000003",
+    "erfasst_am": "15.09.2026"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000004",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 1234.5
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-10",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "13055"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 88.25
+     },
+     "numberOfRooms": 3,
+     "_mietart": "Warmmiete"
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000004",
+    "quelle": "immobilien.de",
+    "titel": "2-Zimmer-Wohnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "13055",
+    "bezirk": "Lichtenberg",
+    "bezirke_moeglich": [
+     "Lichtenberg",
+     "Marzahn-Hellersdorf"
+    ],
+    "lat": null,
+    "lon": null,
+    "zimmer": 3.0,
+    "flaeche_qm": 88.25,
+    "kaltmiete": null,
+    "preisart": "warm",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": 1234.5,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": 13.99,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "10.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000004",
+    "erfasst_am": "2026-09-10"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000005",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": null
+      }
+     },
+     "_mietart": null
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000005",
+    "quelle": "immobilien.de",
+    "titel": "Angebot ohne Bezeichnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": null,
+    "bezirk": null,
+    "bezirke_moeglich": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": null,
+    "kaltmiete": null,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000005",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000006",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": "auf Anfrage"
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-01",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10115"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 40
+     },
+     "numberOfRooms": "2",
+     "_mietart": null
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000006",
+    "quelle": "immobilien.de",
+    "titel": "2-Zimmer-Wohnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "10115",
+    "bezirk": null,
+    "bezirke_moeglich": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": 40.0,
+    "kaltmiete": null,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "01.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000006",
+    "erfasst_am": "2026-09-01"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000007",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 455.0
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-02",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "99999"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 30.5
+     },
+     "numberOfRooms": 1,
+     "_mietart": null
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000007",
+    "quelle": "immobilien.de",
+    "titel": "2-Zimmer-Wohnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "99999",
+    "bezirk": null,
+    "bezirke_moeglich": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 1.0,
+    "flaeche_qm": 30.5,
+    "kaltmiete": 455.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 14.92,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "02.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000007",
+    "erfasst_am": "2026-09-02"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": [
+      "Product",
+      "RealEstateListing"
+     ],
+     "url": "https://www.immobilien.de/expose/41000008/",
+     "name": "Liste als Typ",
+     "address": {
+      "postalCode": "10245"
+     },
+     "offers": {
+      "priceSpecification": {
+       "price": 510
+      }
+     },
+     "_mietart": "Kaltmiete"
+    },
+    "plz_bezirke": {
+     "10245": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "10961": [
+      "Friedrichshain-Kreuzberg"
+     ],
+     "12043": [
+      "Neukölln"
+     ],
+     "13055": [
+      "Lichtenberg",
+      "Marzahn-Hellersdorf"
+     ]
+    }
+   },
+   "output": {
+    "id": "imde:41000008",
+    "quelle": "immobilien.de",
+    "titel": "Liste als Typ",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "10245",
+    "bezirk": "Friedrichshain-Kreuzberg",
+    "bezirke_moeglich": [
+     "Friedrichshain-Kreuzberg"
+    ],
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": null,
+    "kaltmiete": 510.0,
+    "preisart": "kalt",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000008/",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000001",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 593.67
+      }
+     },
+     "name": "2-Zimmer-Wohnung",
+     "datePosted": "2026-09-15",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10245"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 54.3
+     },
+     "numberOfRooms": 2,
+     "_mietart": "Kaltmiete"
+    },
+    "plz_bezirke": {}
+   },
+   "output": {
+    "id": "imde:41000001",
+    "quelle": "immobilien.de",
+    "titel": "2-Zimmer-Wohnung",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "10245",
+    "bezirk": null,
+    "bezirke_moeglich": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.0,
+    "flaeche_qm": 54.3,
+    "kaltmiete": 593.67,
+    "preisart": "kalt",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 10.93,
+    "warm_pro_qm": null,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "15.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000001",
+    "erfasst_am": "2026-09-15"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "RealEstateListing",
+     "url": "https://www.immobilien.de/expose/41000002",
+     "offers": {
+      "@type": "Offer",
+      "priceSpecification": {
+       "price": 640
+      }
+     },
+     "name": "Altbau",
+     "datePosted": "2026-09-14",
+     "address": {
+      "@type": "PostalAddress",
+      "postalCode": "10961"
+     },
+     "floorSize": {
+      "@type": "QuantitativeValue",
+      "value": 61
+     },
+     "numberOfRooms": 2.5,
+     "_mietart": "Warmmiete"
+    },
+    "plz_bezirke": {}
+   },
+   "output": {
+    "id": "imde:41000002",
+    "quelle": "immobilien.de",
+    "titel": "Altbau",
+    "gesellschaft": "über immobilien.de",
+    "strasse": "",
+    "plz": "10961",
+    "bezirk": null,
+    "bezirke_moeglich": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.5,
+    "flaeche_qm": 61.0,
+    "kaltmiete": null,
+    "preisart": "warm",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": 640.0,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": 10.49,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "14.09.2026",
+    "ausstattung": "",
+    "expose_url": "https://www.immobilien.de/expose/41000002",
+    "erfasst_am": "2026-09-14"
+   },
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": 593.67,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": "Kaltmiete",
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": 640,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": "Warmmiete",
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": "640",
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": "Warmmiete",
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": 702.5,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": "Nettokaltmiete",
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": 1234.5,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": "Warmmiete",
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": 455.0,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": null,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": "x",
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "_mietart_zu",
+   "args": {
+    "price": 0,
+    "arten": {
+     "593,67": "Kaltmiete",
+     "640,00": "Warmmiete",
+     "702,50": "Nettokaltmiete",
+     "1.234,50": "Warmmiete",
+     "510": "Kaltmiete"
+    }
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "parse_page",
+   "args": {
+    "page": "immobilien_de/leer.html"
+   },
+   "output": {},
+   "exception": null
+  },
+  {
+   "group": "immobilien_de",
+   "function": "hole_bestand",
+   "args": {
+    "hoechstpreis": 700,
+    "seiten": 3,
+    "web": [
+     "https://www.immobilien.de/mieten/wohnung/berlin/?preis_bis=700&page=1",
+     "https://www.immobilien.de/mieten/wohnung/berlin/?preis_bis=700&page=2",
+     "https://www.immobilien.de/mieten/wohnung/berlin/?preis_bis=700&page=3"
+    ],
+    "requested": [
+     "https://www.immobilien.de/mieten/wohnung/berlin/?preis_bis=700&page=1",
+     "https://www.immobilien.de/mieten/wohnung/berlin/?preis_bis=700&page=2"
+    ]
+   },
+   "output": [
+    [
+     {
+      "id": "imde:41000001",
+      "quelle": "immobilien.de",
+      "titel": "2-Zimmer-Wohnung",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "10245",
+      "bezirk": "Friedrichshain-Kreuzberg",
+      "bezirke_moeglich": [
+       "Friedrichshain-Kreuzberg"
+      ],
+      "lat": null,
+      "lon": null,
+      "zimmer": 2.0,
+      "flaeche_qm": 54.3,
+      "kaltmiete": 593.67,
+      "preisart": "kalt",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 10.93,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "15.09.2026",
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000001",
+      "erfasst_am": "2026-09-15"
+     },
+     {
+      "id": "imde:41000002",
+      "quelle": "immobilien.de",
+      "titel": "Altbau",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "10961",
+      "bezirk": "Friedrichshain-Kreuzberg",
+      "bezirke_moeglich": [
+       "Friedrichshain-Kreuzberg"
+      ],
+      "lat": null,
+      "lon": null,
+      "zimmer": 2.5,
+      "flaeche_qm": 61.0,
+      "kaltmiete": null,
+      "preisart": "warm",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": 640.0,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": 10.49,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "14.09.2026",
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000002",
+      "erfasst_am": "2026-09-14"
+     },
+     {
+      "id": "imde:41000003",
+      "quelle": "immobilien.de",
+      "titel": "2-Zimmer-Wohnung",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "12043",
+      "bezirk": "Neukölln",
+      "bezirke_moeglich": [
+       "Neukölln"
+      ],
+      "lat": null,
+      "lon": null,
+      "zimmer": 1.0,
+      "flaeche_qm": 48.0,
+      "kaltmiete": 702.5,
+      "preisart": "kalt",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 14.64,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000003",
+      "erfasst_am": "15.09.2026"
+     },
+     {
+      "id": "imde:41000004",
+      "quelle": "immobilien.de",
+      "titel": "2-Zimmer-Wohnung",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "13055",
+      "bezirk": "Lichtenberg",
+      "bezirke_moeglich": [
+       "Lichtenberg",
+       "Marzahn-Hellersdorf"
+      ],
+      "lat": null,
+      "lon": null,
+      "zimmer": 3.0,
+      "flaeche_qm": 88.25,
+      "kaltmiete": null,
+      "preisart": "warm",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": 1234.5,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": 13.99,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "10.09.2026",
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000004",
+      "erfasst_am": "2026-09-10"
+     },
+     {
+      "id": "imde:41000005",
+      "quelle": "immobilien.de",
+      "titel": "Angebot ohne Bezeichnung",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": null,
+      "bezirk": null,
+      "bezirke_moeglich": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": null,
+      "flaeche_qm": null,
+      "kaltmiete": null,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000005",
+      "erfasst_am": null
+     },
+     {
+      "id": "imde:41000006",
+      "quelle": "immobilien.de",
+      "titel": "2-Zimmer-Wohnung",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "10115",
+      "bezirk": null,
+      "bezirke_moeglich": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": null,
+      "flaeche_qm": 40.0,
+      "kaltmiete": null,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "01.09.2026",
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000006",
+      "erfasst_am": "2026-09-01"
+     },
+     {
+      "id": "imde:41000007",
+      "quelle": "immobilien.de",
+      "titel": "2-Zimmer-Wohnung",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "99999",
+      "bezirk": null,
+      "bezirke_moeglich": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 1.0,
+      "flaeche_qm": 30.5,
+      "kaltmiete": 455.0,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 14.92,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "02.09.2026",
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000007",
+      "erfasst_am": "2026-09-02"
+     },
+     {
+      "id": "imde:41000008",
+      "quelle": "immobilien.de",
+      "titel": "Liste als Typ",
+      "gesellschaft": "über immobilien.de",
+      "strasse": "",
+      "plz": "10245",
+      "bezirk": "Friedrichshain-Kreuzberg",
+      "bezirke_moeglich": [
+       "Friedrichshain-Kreuzberg"
+      ],
+      "lat": null,
+      "lon": null,
+      "zimmer": null,
+      "flaeche_qm": null,
+      "kaltmiete": 510.0,
+      "preisart": "kalt",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.immobilien.de/expose/41000008/",
+      "erfasst_am": null
+     }
+    ],
+    8
+   ],
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "total_count",
+   "args": {
+    "page": "inberlinwohnen/seite-1.html"
+   },
+   "output": 1203,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "total_count",
+   "args": {
+    "page": "inberlinwohnen/leer.html"
+   },
+   "output": 0,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "learn_attributes",
+   "args": {
+    "page": "inberlinwohnen/seite-1.html",
+    "before": {}
+   },
+   "output": {
+    "3": "Balkon",
+    "7": "Aufzug"
+   },
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "parse_page",
+   "args": {
+    "page": "inberlinwohnen/seite-1.html"
+   },
+   "output": {
+    "900001": {
+     "id": 900001,
+     "title": "<b>Helle 2-Zimmer-Wohnung</b> mit Balkon &amp; Aufzug",
+     "company": {
+      "name": "Beispiel Wohnungsbaugesellschaft mbH"
+     },
+     "address": {
+      "street": "Musterstraße",
+      "number": "12a",
+      "zipCode": "10245",
+      "district": "Friedrichshain-Kreuzberg",
+      "lat": "52,5071",
+      "lon": "13.4545"
+     },
+     "area": "54,32 m²",
+     "rentNet": "351,30 €",
+     "extraCosts": "68,00",
+     "rentGross": "419,30",
+     "details": [
+      [
+       {
+        "label": "Gesamtmiete",
+        "value": "489,30 €"
+       },
+       {
+        "label": "WBS",
+        "value": "erforderlich"
+       },
+       {
+        "label": "Heizung",
+        "value": "Fernwärme"
+       }
+      ],
+      [
+       {
+        "label": "Energieverbrauchskennwert",
+        "value": "98,5 kWh"
+       },
+       {
+        "label": "Eingestellt am",
+        "value": "04.09.2026"
+       }
+      ]
+     ],
+     "attributes": [
+      {
+       "flat_attribute_id": 3
+      },
+      {
+       "flat_attribute_id": 7
+      },
+      {
+       "flat_attribute_id": 99
+      }
+     ],
+     "rooms": "2",
+     "level": 3,
+     "levelsTotal": 5,
+     "constructionYear": 1965,
+     "energyPassType": "Verbrauch",
+     "bathrooms": 1,
+     "occupationDate": "01.11.2026",
+     "deeplink": "https://www.inberlinwohnen.de/wohnung/900001",
+     "createdAt": "2026-09-04T17:59:02.000000Z"
+    },
+    "900002": {
+     "id": 900002,
+     "title": "Wohnung",
+     "company": null,
+     "address": {
+      "street": "Beispielweg",
+      "number": null,
+      "zipCode": "",
+      "district": null,
+      "lat": "52.45117026",
+      "lon": "52.45117026"
+     },
+     "area": 61.5,
+     "rentNet": 512.0,
+     "extraCosts": null,
+     "rentGross": "600,00",
+     "details": [],
+     "attributes": [],
+     "rooms": 3,
+     "createdAt": "2026-09-05 08:00:00"
+    },
+    "900003": {
+     "id": 900003,
+     "title": "Unbekannte Werte",
+     "address": {},
+     "area": "unbekannt",
+     "rentNet": "400",
+     "extraCosts": "100",
+     "details": [
+      {
+       "label": "WBS",
+       "value": "nicht erforderlich"
+      }
+     ],
+     "createdAt": null,
+     "rooms": "2,5"
+    }
+   },
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": 900001,
+     "title": "<b>Helle 2-Zimmer-Wohnung</b> mit Balkon &amp; Aufzug",
+     "company": {
+      "name": "Beispiel Wohnungsbaugesellschaft mbH"
+     },
+     "address": {
+      "street": "Musterstraße",
+      "number": "12a",
+      "zipCode": "10245",
+      "district": "Friedrichshain-Kreuzberg",
+      "lat": "52,5071",
+      "lon": "13.4545"
+     },
+     "area": "54,32 m²",
+     "rentNet": "351,30 €",
+     "extraCosts": "68,00",
+     "rentGross": "419,30",
+     "details": [
+      [
+       {
+        "label": "Gesamtmiete",
+        "value": "489,30 €"
+       },
+       {
+        "label": "WBS",
+        "value": "erforderlich"
+       },
+       {
+        "label": "Heizung",
+        "value": "Fernwärme"
+       }
+      ],
+      [
+       {
+        "label": "Energieverbrauchskennwert",
+        "value": "98,5 kWh"
+       },
+       {
+        "label": "Eingestellt am",
+        "value": "04.09.2026"
+       }
+      ]
+     ],
+     "attributes": [
+      {
+       "flat_attribute_id": 3
+      },
+      {
+       "flat_attribute_id": 7
+      },
+      {
+       "flat_attribute_id": 99
+      }
+     ],
+     "rooms": "2",
+     "level": 3,
+     "levelsTotal": 5,
+     "constructionYear": 1965,
+     "energyPassType": "Verbrauch",
+     "bathrooms": 1,
+     "occupationDate": "01.11.2026",
+     "deeplink": "https://www.inberlinwohnen.de/wohnung/900001",
+     "createdAt": "2026-09-04T17:59:02.000000Z"
+    },
+    "merkmale": {
+     "3": "Balkon",
+     "7": "Aufzug"
+    }
+   },
+   "output": {
+    "id": 900001,
+    "quelle": "inberlinwohnen",
+    "titel": "Helle 2-Zimmer-Wohnung mit Balkon & Aufzug",
+    "gesellschaft": "Beispiel Wohnungsbaugesellschaft mbH",
+    "strasse": "Musterstraße 12a",
+    "plz": "10245",
+    "bezirk": "Friedrichshain-Kreuzberg",
+    "lat": 52.5071,
+    "lon": 13.4545,
+    "zimmer": 2.0,
+    "flaeche_qm": 54.32,
+    "kaltmiete": 351.3,
+    "nebenkosten": 68.0,
+    "weitere_kosten": 70.0,
+    "gesamtmiete": 489.3,
+    "kalt_pro_qm": 6.47,
+    "warm_pro_qm": 9.01,
+    "wbs": "erforderlich",
+    "etage": 3,
+    "etagen_gesamt": 5,
+    "baujahr": "1965",
+    "heizung": "Fernwärme",
+    "energiekennwert": 98.5,
+    "energieausweis": "Verbrauch",
+    "baeder": 1,
+    "bezugsfertig_ab": "01.11.2026",
+    "eingestellt_am": "04.09.2026",
+    "ausstattung": "Aufzug; Balkon; WBS erforderlich",
+    "expose_url": "https://www.inberlinwohnen.de/wohnung/900001",
+    "erfasst_am": "2026-09-04T17:59:02Z"
+   },
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": 900002,
+     "title": "Wohnung",
+     "company": null,
+     "address": {
+      "street": "Beispielweg",
+      "number": null,
+      "zipCode": "",
+      "district": null,
+      "lat": "52.45117026",
+      "lon": "52.45117026"
+     },
+     "area": 61.5,
+     "rentNet": 512.0,
+     "extraCosts": null,
+     "rentGross": "600,00",
+     "details": [],
+     "attributes": [],
+     "rooms": 3,
+     "createdAt": "2026-09-05 08:00:00"
+    },
+    "merkmale": {
+     "3": "Balkon",
+     "7": "Aufzug"
+    }
+   },
+   "output": {
+    "id": 900002,
+    "quelle": "inberlinwohnen",
+    "titel": "Wohnung",
+    "gesellschaft": "",
+    "strasse": "Beispielweg",
+    "plz": null,
+    "bezirk": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 3.0,
+    "flaeche_qm": 61.5,
+    "kaltmiete": 512.0,
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": 600.0,
+    "kalt_pro_qm": 8.33,
+    "warm_pro_qm": 9.76,
+    "wbs": "unbekannt",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": null,
+    "erfasst_am": "2026-09-05T08:00:00Z"
+   },
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": 900003,
+     "title": "Unbekannte Werte",
+     "address": {},
+     "area": "unbekannt",
+     "rentNet": "400",
+     "extraCosts": "100",
+     "details": [
+      {
+       "label": "WBS",
+       "value": "nicht erforderlich"
+      }
+     ],
+     "createdAt": null,
+     "rooms": "2,5"
+    },
+    "merkmale": {
+     "3": "Balkon",
+     "7": "Aufzug"
+    }
+   },
+   "output": {
+    "id": 900003,
+    "quelle": "inberlinwohnen",
+    "titel": "Unbekannte Werte",
+    "gesellschaft": "",
+    "strasse": "",
+    "plz": null,
+    "bezirk": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.5,
+    "flaeche_qm": null,
+    "kaltmiete": 400.0,
+    "nebenkosten": 100.0,
+    "weitere_kosten": null,
+    "gesamtmiete": 500.0,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": null,
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "parse_page",
+   "args": {
+    "page": "inberlinwohnen/seite-2.html"
+   },
+   "output": {
+    "900004": {
+     "id": 900004,
+     "title": "Seite zwei",
+     "address": {
+      "zipCode": "12043"
+     },
+     "attributes": [
+      {
+       "flat_attribute_id": 11
+      }
+     ],
+     "rentNet": "300",
+     "area": "30"
+    }
+   },
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "52,5071"
+   },
+   "output": 52.5071,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "52.45117026"
+   },
+   "output": 52.45117026,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "1.234,56 €"
+   },
+   "output": 1234.56,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "54,32 m²"
+   },
+   "output": 54.32,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "unbekannt"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": 7
+   },
+   "output": 7.0,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "<b>12</b>"
+   },
+   "output": 12.0,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "-3,5"
+   },
+   "output": -3.5,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_zahl",
+   "args": {
+    "value": "ca. 60"
+   },
+   "output": 60.0,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_utc",
+   "args": {
+    "value": "2026-09-04T17:59:02.000000Z"
+   },
+   "output": "2026-09-04T17:59:02Z",
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_utc",
+   "args": {
+    "value": "2026-09-05 08:00:00"
+   },
+   "output": "2026-09-05T08:00:00Z",
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_utc",
+   "args": {
+    "value": "2026-09-05"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_utc",
+   "args": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "_utc",
+   "args": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "inberlinwohnen",
+   "function": "hole_bestand",
+   "args": {
+    "web": [
+     "https://www.inberlinwohnen.de/wohnungsfinder/",
+     "https://www.inberlinwohnen.de/wohnungsfinder/?page=2",
+     "https://www.inberlinwohnen.de/wohnungsfinder/?page=3"
+    ],
+    "requested": [
+     "https://www.inberlinwohnen.de/wohnungsfinder/",
+     "https://www.inberlinwohnen.de/wohnungsfinder/?page=2",
+     "https://www.inberlinwohnen.de/wohnungsfinder/?page=3"
+    ]
+   },
+   "output": [
+    [
+     {
+      "id": 900001,
+      "quelle": "inberlinwohnen",
+      "titel": "Helle 2-Zimmer-Wohnung mit Balkon & Aufzug",
+      "gesellschaft": "Beispiel Wohnungsbaugesellschaft mbH",
+      "strasse": "Musterstraße 12a",
+      "plz": "10245",
+      "bezirk": "Friedrichshain-Kreuzberg",
+      "lat": 52.5071,
+      "lon": 13.4545,
+      "zimmer": 2.0,
+      "flaeche_qm": 54.32,
+      "kaltmiete": 351.3,
+      "nebenkosten": 68.0,
+      "weitere_kosten": 70.0,
+      "gesamtmiete": 489.3,
+      "kalt_pro_qm": 6.47,
+      "warm_pro_qm": 9.01,
+      "wbs": "erforderlich",
+      "etage": 3,
+      "etagen_gesamt": 5,
+      "baujahr": "1965",
+      "heizung": "Fernwärme",
+      "energiekennwert": 98.5,
+      "energieausweis": "Verbrauch",
+      "baeder": 1,
+      "bezugsfertig_ab": "01.11.2026",
+      "eingestellt_am": "04.09.2026",
+      "ausstattung": "Aufzug; Balkon; WBS erforderlich",
+      "expose_url": "https://www.inberlinwohnen.de/wohnung/900001",
+      "erfasst_am": "2026-09-04T17:59:02Z"
+     },
+     {
+      "id": 900002,
+      "quelle": "inberlinwohnen",
+      "titel": "Wohnung",
+      "gesellschaft": "",
+      "strasse": "Beispielweg",
+      "plz": null,
+      "bezirk": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 3.0,
+      "flaeche_qm": 61.5,
+      "kaltmiete": 512.0,
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": 600.0,
+      "kalt_pro_qm": 8.33,
+      "warm_pro_qm": 9.76,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": null,
+      "erfasst_am": "2026-09-05T08:00:00Z"
+     },
+     {
+      "id": 900003,
+      "quelle": "inberlinwohnen",
+      "titel": "Unbekannte Werte",
+      "gesellschaft": "",
+      "strasse": "",
+      "plz": null,
+      "bezirk": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 2.5,
+      "flaeche_qm": null,
+      "kaltmiete": 400.0,
+      "nebenkosten": 100.0,
+      "weitere_kosten": null,
+      "gesamtmiete": 500.0,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": "nicht erforderlich",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": null,
+      "erfasst_am": null
+     },
+     {
+      "id": 900004,
+      "quelle": "inberlinwohnen",
+      "titel": "Seite zwei",
+      "gesellschaft": "",
+      "strasse": "",
+      "plz": "12043",
+      "bezirk": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": null,
+      "flaeche_qm": 30.0,
+      "kaltmiete": 300.0,
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 10.0,
+      "warm_pro_qm": null,
+      "wbs": "unbekannt",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": null,
+      "erfasst_am": null
+     }
+    ],
+    1203
+   ],
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "parse_page",
+   "args": {
+    "page": "kleinanzeigen/seite-1.html"
+   },
+   "output": {
+    "3100000001": {
+     "id": "3100000001",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/helle-2-zimmer/3100000001-203-3331",
+     "plz": "10245",
+     "ort": "Friedrichshain",
+     "beschreibung": "Helle 2-Zimmer-Wohnung | Ruhige Lage, Nachmieter ab November",
+     "flaeche": "54,5",
+     "zimmer": "2",
+     "preis": "650"
+    },
+    "3100000002": {
+     "id": "3100000002",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/altbau/3100000002-203-3331",
+     "plz": "10405",
+     "ort": "Prenzlauer Berg",
+     "beschreibung": "Altbau mit Dielen | Kaltmiete zuzüglich Nebenkosten",
+     "flaeche": "1.250",
+     "zimmer": "4",
+     "preis": "1.250"
+    },
+    "3100000003": {
+     "id": "3100000003",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/tausch/3100000003-203-3331",
+     "plz": "13086",
+     "ort": "Weissensee",
+     "beschreibung": "Wohnungstausch 2 gegen 3 | Tausche meine Wohnung",
+     "flaeche": "60",
+     "zimmer": "2",
+     "preis": "500"
+    },
+    "3100000004": {
+     "id": "3100000004",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/gesuch/3100000004-203-3331",
+     "plz": "12043",
+     "ort": "Neukölln",
+     "beschreibung": "Suche eine Wohnung | Paar sucht Wohnung",
+     "flaeche": "50",
+     "zimmer": "2",
+     "preis": "600"
+    },
+    "3100000005": {
+     "id": "3100000005",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/moebliert/3100000005-203-3331",
+     "plz": "10115",
+     "ort": "Mitte",
+     "beschreibung": "Möbliertes Apartment | Zwischenmiete befristet",
+     "flaeche": "30",
+     "zimmer": "1",
+     "preis": "900"
+    },
+    "3100000006": {
+     "id": "3100000006",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/ohne-ort/3100000006-203-3331",
+     "plz": null,
+     "ort": null,
+     "beschreibung": "",
+     "flaeche": "45,00",
+     "zimmer": "1,5",
+     "preis": "480"
+    },
+    "3100000007": {
+     "id": "3100000007",
+     "url": null,
+     "plz": "10999",
+     "ort": "Kreuzberg",
+     "beschreibung": "",
+     "flaeche": null,
+     "zimmer": null,
+     "preis": null
+    }
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000001",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/helle-2-zimmer/3100000001-203-3331",
+     "plz": "10245",
+     "ort": "Friedrichshain",
+     "beschreibung": "Helle 2-Zimmer-Wohnung | Ruhige Lage, Nachmieter ab November",
+     "flaeche": "54,5",
+     "zimmer": "2",
+     "preis": "650"
+    }
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000001",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/helle-2-zimmer/3100000001-203-3331",
+     "plz": "10245",
+     "ort": "Friedrichshain",
+     "beschreibung": "Helle 2-Zimmer-Wohnung | Ruhige Lage, Nachmieter ab November",
+     "flaeche": "54,5",
+     "zimmer": "2",
+     "preis": "650"
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000001",
+    "quelle": "Kleinanzeigen",
+    "titel": "Helle 2-Zimmer-Wohnung",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": "10245",
+    "bezirk": "Friedrichshain-Kreuzberg",
+    "ortsteil_gemeldet": "Friedrichshain",
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.0,
+    "flaeche_qm": 54.5,
+    "kaltmiete": 650.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 11.93,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.kleinanzeigen.de/s-anzeige/helle-2-zimmer/3100000001-203-3331",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000002",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/altbau/3100000002-203-3331",
+     "plz": "10405",
+     "ort": "Prenzlauer Berg",
+     "beschreibung": "Altbau mit Dielen | Kaltmiete zuzüglich Nebenkosten",
+     "flaeche": "1.250",
+     "zimmer": "4",
+     "preis": "1.250"
+    }
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000002",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/altbau/3100000002-203-3331",
+     "plz": "10405",
+     "ort": "Prenzlauer Berg",
+     "beschreibung": "Altbau mit Dielen | Kaltmiete zuzüglich Nebenkosten",
+     "flaeche": "1.250",
+     "zimmer": "4",
+     "preis": "1.250"
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000002",
+    "quelle": "Kleinanzeigen",
+    "titel": "Altbau mit Dielen",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": "10405",
+    "bezirk": "Pankow",
+    "ortsteil_gemeldet": "Prenzlauer Berg",
+    "lat": null,
+    "lon": null,
+    "zimmer": 4.0,
+    "flaeche_qm": 1250.0,
+    "kaltmiete": 1250.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 1.0,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.kleinanzeigen.de/s-anzeige/altbau/3100000002-203-3331",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000003",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/tausch/3100000003-203-3331",
+     "plz": "13086",
+     "ort": "Weissensee",
+     "beschreibung": "Wohnungstausch 2 gegen 3 | Tausche meine Wohnung",
+     "flaeche": "60",
+     "zimmer": "2",
+     "preis": "500"
+    }
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000003",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/tausch/3100000003-203-3331",
+     "plz": "13086",
+     "ort": "Weissensee",
+     "beschreibung": "Wohnungstausch 2 gegen 3 | Tausche meine Wohnung",
+     "flaeche": "60",
+     "zimmer": "2",
+     "preis": "500"
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000003",
+    "quelle": "Kleinanzeigen",
+    "titel": "Wohnungstausch 2 gegen 3",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": "13086",
+    "bezirk": "Pankow",
+    "ortsteil_gemeldet": "Weissensee",
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.0,
+    "flaeche_qm": 60.0,
+    "kaltmiete": 500.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 8.33,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.kleinanzeigen.de/s-anzeige/tausch/3100000003-203-3331",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000004",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/gesuch/3100000004-203-3331",
+     "plz": "12043",
+     "ort": "Neukölln",
+     "beschreibung": "Suche eine Wohnung | Paar sucht Wohnung",
+     "flaeche": "50",
+     "zimmer": "2",
+     "preis": "600"
+    }
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000004",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/gesuch/3100000004-203-3331",
+     "plz": "12043",
+     "ort": "Neukölln",
+     "beschreibung": "Suche eine Wohnung | Paar sucht Wohnung",
+     "flaeche": "50",
+     "zimmer": "2",
+     "preis": "600"
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000004",
+    "quelle": "Kleinanzeigen",
+    "titel": "Suche eine Wohnung",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": "12043",
+    "bezirk": "Neukölln",
+    "ortsteil_gemeldet": "Neukölln",
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.0,
+    "flaeche_qm": 50.0,
+    "kaltmiete": 600.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 12.0,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.kleinanzeigen.de/s-anzeige/gesuch/3100000004-203-3331",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000005",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/moebliert/3100000005-203-3331",
+     "plz": "10115",
+     "ort": "Mitte",
+     "beschreibung": "Möbliertes Apartment | Zwischenmiete befristet",
+     "flaeche": "30",
+     "zimmer": "1",
+     "preis": "900"
+    }
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000005",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/moebliert/3100000005-203-3331",
+     "plz": "10115",
+     "ort": "Mitte",
+     "beschreibung": "Möbliertes Apartment | Zwischenmiete befristet",
+     "flaeche": "30",
+     "zimmer": "1",
+     "preis": "900"
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000005",
+    "quelle": "Kleinanzeigen",
+    "titel": "Möbliertes Apartment",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": "10115",
+    "bezirk": "Mitte",
+    "ortsteil_gemeldet": "Mitte",
+    "lat": null,
+    "lon": null,
+    "zimmer": 1.0,
+    "flaeche_qm": 30.0,
+    "kaltmiete": 900.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 30.0,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.kleinanzeigen.de/s-anzeige/moebliert/3100000005-203-3331",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000006",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/ohne-ort/3100000006-203-3331",
+     "plz": null,
+     "ort": null,
+     "beschreibung": "",
+     "flaeche": "45,00",
+     "zimmer": "1,5",
+     "preis": "480"
+    }
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000006",
+     "url": "https://www.kleinanzeigen.de/s-anzeige/ohne-ort/3100000006-203-3331",
+     "plz": null,
+     "ort": null,
+     "beschreibung": "",
+     "flaeche": "45,00",
+     "zimmer": "1,5",
+     "preis": "480"
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000006",
+    "quelle": "Kleinanzeigen",
+    "titel": "Anzeige ohne Titel",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": null,
+    "bezirk": null,
+    "ortsteil_gemeldet": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 1.5,
+    "flaeche_qm": 45.0,
+    "kaltmiete": 480.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 10.67,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.kleinanzeigen.de/s-anzeige/ohne-ort/3100000006-203-3331",
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "brauchbar",
+   "args": {
+    "raw": {
+     "id": "3100000007",
+     "url": null,
+     "plz": "10999",
+     "ort": "Kreuzberg",
+     "beschreibung": "",
+     "flaeche": null,
+     "zimmer": null,
+     "preis": null
+    }
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "3100000007",
+     "url": null,
+     "plz": "10999",
+     "ort": "Kreuzberg",
+     "beschreibung": "",
+     "flaeche": null,
+     "zimmer": null,
+     "preis": null
+    },
+    "ortsteile_bezirke": {
+     "Friedrichshain": "Friedrichshain-Kreuzberg",
+     "Prenzlauer Berg": "Pankow",
+     "Weißensee": "Pankow",
+     "Neukölln": "Neukölln"
+    }
+   },
+   "output": {
+    "id": "ka:3100000007",
+    "quelle": "Kleinanzeigen",
+    "titel": "Anzeige ohne Titel",
+    "gesellschaft": "privat oder gewerblich",
+    "strasse": "",
+    "plz": "10999",
+    "bezirk": "Kreuzberg",
+    "ortsteil_gemeldet": "Kreuzberg",
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": null,
+    "kaltmiete": null,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": "nicht erforderlich",
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "ausstattung": "",
+    "expose_url": null,
+    "erfasst_am": null
+   },
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "54,5"
+   },
+   "output": 54.5,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "1.250"
+   },
+   "output": 1250.0,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "1.25"
+   },
+   "output": 1.25,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "1.2500"
+   },
+   "output": 1.25,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "650"
+   },
+   "output": 650.0,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "abc"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_zahl",
+   "args": {
+    "value": "1.234,5"
+   },
+   "output": 1234.5,
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_schluessel",
+   "args": {
+    "value": "Weissensee"
+   },
+   "output": "weissensee",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_schluessel",
+   "args": {
+    "value": "Weißensee"
+   },
+   "output": "weissensee",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_schluessel",
+   "args": {
+    "value": "Prenzlauer Berg"
+   },
+   "output": "prenzlauerberg",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_schluessel",
+   "args": {
+    "value": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "_schluessel",
+   "args": {
+    "value": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "suche_url",
+   "args": {
+    "seite": "",
+    "hoechstpreis": 700
+   },
+   "output": "https://www.kleinanzeigen.de/s-wohnung-mieten/berlin/preis::700/c203l3331",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "suche_url",
+   "args": {
+    "seite": "seite:2/",
+    "hoechstpreis": 700
+   },
+   "output": "https://www.kleinanzeigen.de/s-wohnung-mieten/berlin/seite:2/preis::700/c203l3331",
+   "exception": null
+  },
+  {
+   "group": "kleinanzeigen",
+   "function": "hole_bestand",
+   "args": {
+    "hoechstpreis": 700,
+    "seiten": 3,
+    "web": [
+     "https://www.kleinanzeigen.de/s-wohnung-mieten/berlin/preis::700/c203l3331",
+     "https://www.kleinanzeigen.de/s-wohnung-mieten/berlin/seite:2/preis::700/c203l3331"
+    ],
+    "requested": [
+     "https://www.kleinanzeigen.de/s-wohnung-mieten/berlin/preis::700/c203l3331",
+     "https://www.kleinanzeigen.de/s-wohnung-mieten/berlin/seite:2/preis::700/c203l3331"
+    ]
+   },
+   "output": [
+    [
+     {
+      "id": "ka:3100000001",
+      "quelle": "Kleinanzeigen",
+      "titel": "Helle 2-Zimmer-Wohnung",
+      "gesellschaft": "privat oder gewerblich",
+      "strasse": "",
+      "plz": "10245",
+      "bezirk": "Friedrichshain-Kreuzberg",
+      "ortsteil_gemeldet": "Friedrichshain",
+      "lat": null,
+      "lon": null,
+      "zimmer": 2.0,
+      "flaeche_qm": 54.5,
+      "kaltmiete": 650.0,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 11.93,
+      "warm_pro_qm": null,
+      "wbs": "nicht erforderlich",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.kleinanzeigen.de/s-anzeige/helle-2-zimmer/3100000001-203-3331",
+      "erfasst_am": null
+     },
+     {
+      "id": "ka:3100000002",
+      "quelle": "Kleinanzeigen",
+      "titel": "Altbau mit Dielen",
+      "gesellschaft": "privat oder gewerblich",
+      "strasse": "",
+      "plz": "10405",
+      "bezirk": "Pankow",
+      "ortsteil_gemeldet": "Prenzlauer Berg",
+      "lat": null,
+      "lon": null,
+      "zimmer": 4.0,
+      "flaeche_qm": 1250.0,
+      "kaltmiete": 1250.0,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 1.0,
+      "warm_pro_qm": null,
+      "wbs": "nicht erforderlich",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.kleinanzeigen.de/s-anzeige/altbau/3100000002-203-3331",
+      "erfasst_am": null
+     },
+     {
+      "id": "ka:3100000006",
+      "quelle": "Kleinanzeigen",
+      "titel": "Anzeige ohne Titel",
+      "gesellschaft": "privat oder gewerblich",
+      "strasse": "",
+      "plz": null,
+      "bezirk": null,
+      "ortsteil_gemeldet": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 1.5,
+      "flaeche_qm": 45.0,
+      "kaltmiete": 480.0,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 10.67,
+      "warm_pro_qm": null,
+      "wbs": "nicht erforderlich",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.kleinanzeigen.de/s-anzeige/ohne-ort/3100000006-203-3331",
+      "erfasst_am": null
+     },
+     {
+      "id": "ka:3100000007",
+      "quelle": "Kleinanzeigen",
+      "titel": "Anzeige ohne Titel",
+      "gesellschaft": "privat oder gewerblich",
+      "strasse": "",
+      "plz": "10999",
+      "bezirk": "Kreuzberg",
+      "ortsteil_gemeldet": "Kreuzberg",
+      "lat": null,
+      "lon": null,
+      "zimmer": null,
+      "flaeche_qm": null,
+      "kaltmiete": null,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": "nicht erforderlich",
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "ausstattung": "",
+      "expose_url": null,
+      "erfasst_am": null
+     }
+    ],
+    7
+   ],
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "ag-exemple-001",
+     "title": " Appartement lumineux ",
+     "accountType": "agency",
+     "accountDisplayName": "Agence Exemple",
+     "propertyType": "flat",
+     "adTypeFR": "location",
+     "city": "Hœrdt",
+     "postalCode": "67720",
+     "departmentCode": "67",
+     "district": {
+      "insee_code": "67202"
+     },
+     "blurInfo": {
+      "position": {
+       "lat": 48.69,
+       "lon": 7.78
+      }
+     },
+     "price": 880,
+     "charges": 60,
+     "rentWithoutCharges": 820,
+     "surfaceArea": 58.02,
+     "roomsQuantity": 3,
+     "bedroomsQuantity": 2,
+     "agencyRentalFee": 450.5,
+     "safetyDeposit": 820,
+     "isFurnished": false,
+     "floor": 2,
+     "floorQuantity": 4,
+     "heating": "individuel gaz",
+     "energyValue": 150,
+     "energyClassification": "D",
+     "bathroomsQuantity": 1,
+     "publicationDate": "2026-09-08T11:54:43.211Z",
+     "modificationDate": "2026-09-10T08:00:00.000Z",
+     "hasElevator": true,
+     "hasCellar": true,
+     "hasBalcony": false,
+     "parkingPlacesQuantity": 1,
+     "photos": [
+      {
+       "url_photo": "https://file.bienici.com/photo/exemple.jpg"
+      }
+     ]
+    }
+   },
+   "output": {
+    "id": "bienici:ag-exemple-001",
+    "quelle": "bienici",
+    "titel": "Appartement lumineux",
+    "gesellschaft": "Agence Exemple",
+    "objektart": "Wohnung",
+    "strasse": "",
+    "plz": "67720",
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Hœrdt",
+    "gemeinde": "Hœrdt",
+    "gemeinde_code": "67202",
+    "lat": 48.69,
+    "lon": 7.78,
+    "zimmer": 3.0,
+    "schlafzimmer": 2.0,
+    "flaeche_qm": 58.02,
+    "kaltmiete": 820.0,
+    "preisart": "kalt",
+    "nebenkosten": 60.0,
+    "weitere_kosten": 450.5,
+    "kaution": 820.0,
+    "gesamtmiete": 880.0,
+    "kalt_pro_qm": 14.13,
+    "warm_pro_qm": 15.17,
+    "wbs": null,
+    "moebliert": false,
+    "etage": 2,
+    "etagen_gesamt": 4,
+    "baujahr": null,
+    "heizung": "individuel gaz",
+    "energiekennwert": 150.0,
+    "energieausweis": "D",
+    "baeder": 1.0,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "08.09.2026",
+    "eingestellt_am_iso": "2026-09-08T11:54:43.211Z",
+    "geaendert_am": "10.09.2026",
+    "ausstattung": "Aufzug, Keller, Stellplatz",
+    "expose_url": "https://www.bienici.com/annonce/location/hoerdt/appartement/3pieces/ag-exemple-001",
+    "bild_url": "https://file.bienici.com/photo/exemple.jpg"
+   },
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "particulier-002",
+     "title": "",
+     "accountType": "individual",
+     "accountDisplayName": "M. Exemple",
+     "propertyType": "house",
+     "city": "Raon-l'Étape",
+     "postalCode": "88110",
+     "departmentCode": "88",
+     "district": {
+      "code_insee": "88372"
+     },
+     "blurInfo": {
+      "centroid": {
+       "lat": 48.4,
+       "lon": 6.84
+      }
+     },
+     "price": 700,
+     "charges": 50,
+     "surfaceArea": 90,
+     "roomsQuantity": 1,
+     "isFurnished": true,
+     "publicationDate": "1970-01-01T00:00:00.000Z",
+     "showerRoomsQuantity": 1,
+     "hasTerrace": true,
+     "hasGarden": true
+    }
+   },
+   "output": {
+    "id": "bienici:particulier-002",
+    "quelle": "bienici",
+    "titel": "Angebot ohne Bezeichnung",
+    "gesellschaft": "M. Exemple",
+    "objektart": "Haus",
+    "strasse": "",
+    "plz": "88110",
+    "bezirk": "Vosges",
+    "departement": "88",
+    "ortsteil": "Raon-l'Étape",
+    "gemeinde": "Raon-l'Étape",
+    "gemeinde_code": "88372",
+    "lat": 48.4,
+    "lon": 6.84,
+    "zimmer": 1.0,
+    "schlafzimmer": null,
+    "flaeche_qm": 90.0,
+    "kaltmiete": 650.0,
+    "preisart": "kalt",
+    "nebenkosten": 50.0,
+    "weitere_kosten": null,
+    "kaution": null,
+    "gesamtmiete": 700.0,
+    "kalt_pro_qm": 7.22,
+    "warm_pro_qm": 7.78,
+    "wbs": null,
+    "moebliert": true,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": 1.0,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "eingestellt_am_iso": null,
+    "geaendert_am": null,
+    "ausstattung": "Terrasse, Garten, möbliert",
+    "expose_url": "https://www.bienici.com/annonce/location/raon-l-etape/maison/1piece/particulier-002",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "ohne-nebenkosten-003",
+     "accountType": "agency",
+     "propertyType": "loft",
+     "city": "Châtenois",
+     "departmentCode": "99",
+     "price": 640.456,
+     "surfaceArea": null,
+     "roomsQuantity": 0,
+     "publicationDate": null
+    }
+   },
+   "output": {
+    "id": "bienici:ohne-nebenkosten-003",
+    "quelle": "bienici",
+    "titel": "Angebot ohne Bezeichnung",
+    "gesellschaft": "",
+    "objektart": "Loft",
+    "strasse": "",
+    "plz": null,
+    "bezirk": "99",
+    "departement": "99",
+    "ortsteil": "Châtenois",
+    "gemeinde": "Châtenois",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 0.0,
+    "schlafzimmer": null,
+    "flaeche_qm": null,
+    "kaltmiete": null,
+    "preisart": "warm",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "kaution": null,
+    "gesamtmiete": 640.46,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "moebliert": false,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "eingestellt_am_iso": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.bienici.com/annonce/ohne-nebenkosten-003",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "id": "",
+     "title": "ohne Kennung"
+    }
+   },
+   "output": {
+    "id": "bienici:",
+    "quelle": "bienici",
+    "titel": "ohne Kennung",
+    "gesellschaft": "",
+    "objektart": "unbekannt",
+    "strasse": "",
+    "plz": null,
+    "bezirk": null,
+    "departement": null,
+    "ortsteil": null,
+    "gemeinde": null,
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "schlafzimmer": null,
+    "flaeche_qm": null,
+    "kaltmiete": null,
+    "preisart": "warm",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "kaution": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "moebliert": false,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "eingestellt_am_iso": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "expose_url": null,
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_datum",
+   "args": {
+    "value": "2026-09-08T11:54:43.211Z"
+   },
+   "output": "08.09.2026",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_datum",
+   "args": {
+    "value": "1970-01-01T00:00:00.000Z"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_datum",
+   "args": {
+    "value": "08.09.2026"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_datum",
+   "args": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_datum",
+   "args": {
+    "value": 5
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": "Hœrdt"
+   },
+   "output": "hoerdt",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": "Raon-l'Étape"
+   },
+   "output": "raon-l-etape",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": "Châtenois"
+   },
+   "output": "chatenois",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": "  Saint Dié  "
+   },
+   "output": "saint-die",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "_ortsform",
+   "args": {
+    "value": "Æbeltoft"
+   },
+   "output": "aebeltoft",
+   "exception": null
+  },
+  {
+   "group": "bienici",
+   "function": "hole_bestand",
+   "args": {
+    "zonen": [
+     "-7415"
+    ],
+    "seitengroesse": 2,
+    "web": [
+     "https://www.bienici.com/realEstateAds.json?filters=%7B%22showAllModels%22%3A%20false%2C%20%22filterType%22%3A%20%22rent%22%2C%20%22propertyType%22%3A%20%5B%22flat%22%2C%20%22house%22%5D%2C%20%22maxPrice%22%3A%201100%2C%20%22sortBy%22%3A%20%22publicationDate%22%2C%20%22sortOrder%22%3A%20%22desc%22%2C%20%22onTheMarket%22%3A%20%5Btrue%5D%2C%20%22zoneIdsByTypes%22%3A%20%7B%22zoneIds%22%3A%20%5B%22-7415%22%5D%7D%2C%20%22minRooms%22%3A%201%2C%20%22maxRooms%22%3A%203%2C%20%22size%22%3A%202%2C%20%22page%22%3A%201%2C%20%22from%22%3A%200%7D",
+     "https://www.bienici.com/realEstateAds.json?filters=%7B%22showAllModels%22%3A%20false%2C%20%22filterType%22%3A%20%22rent%22%2C%20%22propertyType%22%3A%20%5B%22flat%22%2C%20%22house%22%5D%2C%20%22maxPrice%22%3A%201100%2C%20%22sortBy%22%3A%20%22publicationDate%22%2C%20%22sortOrder%22%3A%20%22desc%22%2C%20%22onTheMarket%22%3A%20%5Btrue%5D%2C%20%22zoneIdsByTypes%22%3A%20%7B%22zoneIds%22%3A%20%5B%22-7415%22%5D%7D%2C%20%22minRooms%22%3A%201%2C%20%22maxRooms%22%3A%203%2C%20%22size%22%3A%202%2C%20%22page%22%3A%202%2C%20%22from%22%3A%202%7D",
+     "https://www.bienici.com/realEstateAds.json?filters=%7B%22showAllModels%22%3A%20false%2C%20%22filterType%22%3A%20%22rent%22%2C%20%22propertyType%22%3A%20%5B%22flat%22%2C%20%22house%22%5D%2C%20%22maxPrice%22%3A%201100%2C%20%22sortBy%22%3A%20%22publicationDate%22%2C%20%22sortOrder%22%3A%20%22desc%22%2C%20%22onTheMarket%22%3A%20%5Btrue%5D%2C%20%22zoneIdsByTypes%22%3A%20%7B%22zoneIds%22%3A%20%5B%22-7415%22%5D%7D%2C%20%22minRooms%22%3A%201%2C%20%22maxRooms%22%3A%203%2C%20%22size%22%3A%202%2C%20%22page%22%3A%203%2C%20%22from%22%3A%204%7D"
+    ],
+    "requested": [
+     "https://www.bienici.com/realEstateAds.json?filters=%7B%22showAllModels%22%3A%20false%2C%20%22filterType%22%3A%20%22rent%22%2C%20%22propertyType%22%3A%20%5B%22flat%22%2C%20%22house%22%5D%2C%20%22maxPrice%22%3A%201100%2C%20%22sortBy%22%3A%20%22publicationDate%22%2C%20%22sortOrder%22%3A%20%22desc%22%2C%20%22onTheMarket%22%3A%20%5Btrue%5D%2C%20%22zoneIdsByTypes%22%3A%20%7B%22zoneIds%22%3A%20%5B%22-7415%22%5D%7D%2C%20%22minRooms%22%3A%201%2C%20%22maxRooms%22%3A%203%2C%20%22size%22%3A%202%2C%20%22page%22%3A%201%2C%20%22from%22%3A%200%7D",
+     "https://www.bienici.com/realEstateAds.json?filters=%7B%22showAllModels%22%3A%20false%2C%20%22filterType%22%3A%20%22rent%22%2C%20%22propertyType%22%3A%20%5B%22flat%22%2C%20%22house%22%5D%2C%20%22maxPrice%22%3A%201100%2C%20%22sortBy%22%3A%20%22publicationDate%22%2C%20%22sortOrder%22%3A%20%22desc%22%2C%20%22onTheMarket%22%3A%20%5Btrue%5D%2C%20%22zoneIdsByTypes%22%3A%20%7B%22zoneIds%22%3A%20%5B%22-7415%22%5D%7D%2C%20%22minRooms%22%3A%201%2C%20%22maxRooms%22%3A%203%2C%20%22size%22%3A%202%2C%20%22page%22%3A%202%2C%20%22from%22%3A%202%7D",
+     "https://www.bienici.com/realEstateAds.json?filters=%7B%22showAllModels%22%3A%20false%2C%20%22filterType%22%3A%20%22rent%22%2C%20%22propertyType%22%3A%20%5B%22flat%22%2C%20%22house%22%5D%2C%20%22maxPrice%22%3A%201100%2C%20%22sortBy%22%3A%20%22publicationDate%22%2C%20%22sortOrder%22%3A%20%22desc%22%2C%20%22onTheMarket%22%3A%20%5Btrue%5D%2C%20%22zoneIdsByTypes%22%3A%20%7B%22zoneIds%22%3A%20%5B%22-7415%22%5D%7D%2C%20%22minRooms%22%3A%201%2C%20%22maxRooms%22%3A%203%2C%20%22size%22%3A%202%2C%20%22page%22%3A%203%2C%20%22from%22%3A%204%7D"
+    ]
+   },
+   "output": [
+    [
+     {
+      "id": "bienici:ag-exemple-001",
+      "quelle": "bienici",
+      "titel": "Appartement lumineux",
+      "gesellschaft": "Agence Exemple",
+      "objektart": "Wohnung",
+      "strasse": "",
+      "plz": "67720",
+      "bezirk": "Bas-Rhin",
+      "departement": "67",
+      "ortsteil": "Hœrdt",
+      "gemeinde": "Hœrdt",
+      "gemeinde_code": "67202",
+      "lat": 48.69,
+      "lon": 7.78,
+      "zimmer": 3.0,
+      "schlafzimmer": 2.0,
+      "flaeche_qm": 58.02,
+      "kaltmiete": 820.0,
+      "preisart": "kalt",
+      "nebenkosten": 60.0,
+      "weitere_kosten": 450.5,
+      "kaution": 820.0,
+      "gesamtmiete": 880.0,
+      "kalt_pro_qm": 14.13,
+      "warm_pro_qm": 15.17,
+      "wbs": null,
+      "moebliert": false,
+      "etage": 2,
+      "etagen_gesamt": 4,
+      "baujahr": null,
+      "heizung": "individuel gaz",
+      "energiekennwert": 150.0,
+      "energieausweis": "D",
+      "baeder": 1.0,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "08.09.2026",
+      "eingestellt_am_iso": "2026-09-08T11:54:43.211Z",
+      "geaendert_am": "10.09.2026",
+      "ausstattung": "Aufzug, Keller, Stellplatz",
+      "expose_url": "https://www.bienici.com/annonce/location/hoerdt/appartement/3pieces/ag-exemple-001",
+      "bild_url": "https://file.bienici.com/photo/exemple.jpg"
+     },
+     {
+      "id": "bienici:particulier-002",
+      "quelle": "bienici",
+      "titel": "Angebot ohne Bezeichnung",
+      "gesellschaft": "M. Exemple",
+      "objektart": "Haus",
+      "strasse": "",
+      "plz": "88110",
+      "bezirk": "Vosges",
+      "departement": "88",
+      "ortsteil": "Raon-l'Étape",
+      "gemeinde": "Raon-l'Étape",
+      "gemeinde_code": "88372",
+      "lat": 48.4,
+      "lon": 6.84,
+      "zimmer": 1.0,
+      "schlafzimmer": null,
+      "flaeche_qm": 90.0,
+      "kaltmiete": 650.0,
+      "preisart": "kalt",
+      "nebenkosten": 50.0,
+      "weitere_kosten": null,
+      "kaution": null,
+      "gesamtmiete": 700.0,
+      "kalt_pro_qm": 7.22,
+      "warm_pro_qm": 7.78,
+      "wbs": null,
+      "moebliert": true,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": 1.0,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "eingestellt_am_iso": null,
+      "geaendert_am": null,
+      "ausstattung": "Terrasse, Garten, möbliert",
+      "expose_url": "https://www.bienici.com/annonce/location/raon-l-etape/maison/1piece/particulier-002",
+      "bild_url": null
+     },
+     {
+      "id": "bienici:ohne-nebenkosten-003",
+      "quelle": "bienici",
+      "titel": "Angebot ohne Bezeichnung",
+      "gesellschaft": "",
+      "objektart": "Loft",
+      "strasse": "",
+      "plz": null,
+      "bezirk": "99",
+      "departement": "99",
+      "ortsteil": "Châtenois",
+      "gemeinde": "Châtenois",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 0.0,
+      "schlafzimmer": null,
+      "flaeche_qm": null,
+      "kaltmiete": null,
+      "preisart": "warm",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "kaution": null,
+      "gesamtmiete": 640.46,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "moebliert": false,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "eingestellt_am_iso": null,
+      "geaendert_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.bienici.com/annonce/ohne-nebenkosten-003",
+      "bild_url": null
+     }
+    ],
+    3
+   ],
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "katalog",
+   "args": {
+    "page": "citya/seite-1.html"
+   },
+   "output": [
+    {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-67000/100001",
+     "price": "650.5",
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location appartement de 3 pièces de 58.02m² à Strasbourg",
+      "address": {
+       "postalCode": "67000",
+       "addressLocality": "Strasbourg"
+      }
+     }
+    },
+    {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-68000/100002",
+     "price": 1100,
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location maison de 5 pieces de 120,5m² à Colmar",
+      "address": {
+       "postalCode": "68000",
+       "addressLocality": "Colmar"
+      }
+     }
+    },
+    {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-57000/100003",
+     "price": "65",
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location parking de 12m² à Metz",
+      "address": {
+       "postalCode": "57000",
+       "addressLocality": "Metz"
+      }
+     }
+    },
+    {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-54000/100004",
+     "price": "n.c.",
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location studio à Nancy",
+      "address": {
+       "postalCode": "54000",
+       "addressLocality": "Nancy"
+      }
+     }
+    },
+    {
+     "@type": "Offer",
+     "url": "",
+     "price": 900,
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location local commercial de 40m² à Épinal",
+      "address": {
+       "postalCode": "88000",
+       "addressLocality": "Épinal"
+      }
+     }
+    }
+   ],
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "gesamtzahl",
+   "args": {
+    "page": "citya/seite-1.html"
+   },
+   "output": 362,
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "katalog",
+   "args": {
+    "page": "citya/leer.html"
+   },
+   "output": [],
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "ist_wohnraum",
+   "args": {
+    "name": "Location appartement de 3 pièces de 58.02m² à Strasbourg"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-67000/100001",
+     "price": "650.5",
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location appartement de 3 pièces de 58.02m² à Strasbourg",
+      "address": {
+       "postalCode": "67000",
+       "addressLocality": "Strasbourg"
+      }
+     }
+    },
+    "dep_name": "Bas-Rhin",
+    "dep_code": "67"
+   },
+   "output": {
+    "id": "citya:100001",
+    "quelle": "citya",
+    "titel": "Location appartement de 3 pièces de 58.02m² à Strasbourg",
+    "gesellschaft": "Citya Immobilier",
+    "objektart": "Wohnung",
+    "strasse": "",
+    "plz": "67000",
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Strasbourg",
+    "gemeinde": "Strasbourg",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 3.0,
+    "flaeche_qm": 58.02,
+    "kaltmiete": 650.5,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 11.21,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "beschreibung": "",
+    "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-67000/100001",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "ist_wohnraum",
+   "args": {
+    "name": "Location maison de 5 pieces de 120,5m² à Colmar"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-68000/100002",
+     "price": 1100,
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location maison de 5 pieces de 120,5m² à Colmar",
+      "address": {
+       "postalCode": "68000",
+       "addressLocality": "Colmar"
+      }
+     }
+    },
+    "dep_name": "Bas-Rhin",
+    "dep_code": "67"
+   },
+   "output": {
+    "id": "citya:100002",
+    "quelle": "citya",
+    "titel": "Location maison de 5 pieces de 120,5m² à Colmar",
+    "gesellschaft": "Citya Immobilier",
+    "objektart": "Haus",
+    "strasse": "",
+    "plz": "68000",
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Colmar",
+    "gemeinde": "Colmar",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 5.0,
+    "flaeche_qm": 120.5,
+    "kaltmiete": 1100.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 9.13,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "beschreibung": "",
+    "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-68000/100002",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "ist_wohnraum",
+   "args": {
+    "name": "Location parking de 12m² à Metz"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-57000/100003",
+     "price": "65",
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location parking de 12m² à Metz",
+      "address": {
+       "postalCode": "57000",
+       "addressLocality": "Metz"
+      }
+     }
+    },
+    "dep_name": "Bas-Rhin",
+    "dep_code": "67"
+   },
+   "output": {
+    "id": "citya:100003",
+    "quelle": "citya",
+    "titel": "Location parking de 12m² à Metz",
+    "gesellschaft": "Citya Immobilier",
+    "objektart": "unbekannt",
+    "strasse": "",
+    "plz": "57000",
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Metz",
+    "gemeinde": "Metz",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": 12.0,
+    "kaltmiete": 65.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 5.42,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "beschreibung": "",
+    "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-57000/100003",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "ist_wohnraum",
+   "args": {
+    "name": "Location studio à Nancy"
+   },
+   "output": true,
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "Offer",
+     "url": "https://www.citya.com/annonces/location/appartement/exemple-54000/100004",
+     "price": "n.c.",
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location studio à Nancy",
+      "address": {
+       "postalCode": "54000",
+       "addressLocality": "Nancy"
+      }
+     }
+    },
+    "dep_name": "Bas-Rhin",
+    "dep_code": "67"
+   },
+   "output": {
+    "id": "citya:100004",
+    "quelle": "citya",
+    "titel": "Location studio à Nancy",
+    "gesellschaft": "Citya Immobilier",
+    "objektart": "Wohnung",
+    "strasse": "",
+    "plz": "54000",
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Nancy",
+    "gemeinde": "Nancy",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": null,
+    "kaltmiete": null,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "beschreibung": "",
+    "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-54000/100004",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "ist_wohnraum",
+   "args": {
+    "name": "Location local commercial de 40m² à Épinal"
+   },
+   "output": false,
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "normalise",
+   "args": {
+    "raw": {
+     "@type": "Offer",
+     "url": "",
+     "price": 900,
+     "itemOffered": {
+      "@type": "Accommodation",
+      "name": "Location local commercial de 40m² à Épinal",
+      "address": {
+       "postalCode": "88000",
+       "addressLocality": "Épinal"
+      }
+     }
+    },
+    "dep_name": "Bas-Rhin",
+    "dep_code": "67"
+   },
+   "output": {
+    "id": "citya:Location local commercial de 40m² à Épin",
+    "quelle": "citya",
+    "titel": "Location local commercial de 40m² à Épinal",
+    "gesellschaft": "Citya Immobilier",
+    "objektart": "unbekannt",
+    "strasse": "",
+    "plz": "88000",
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Épinal",
+    "gemeinde": "Épinal",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": null,
+    "flaeche_qm": 40.0,
+    "kaltmiete": 900.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 22.5,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "beschreibung": "",
+    "expose_url": "",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "citya",
+   "function": "hole_bestand",
+   "args": {
+    "departements": [
+     "bas-rhin-67"
+    ],
+    "web": [
+     "https://www.citya.com/annonces/location/bas-rhin-67?page=1",
+     "https://www.citya.com/annonces/location/bas-rhin-67?page=2"
+    ],
+    "requested": [
+     "https://www.citya.com/annonces/location/bas-rhin-67?page=1",
+     "https://www.citya.com/annonces/location/bas-rhin-67?page=2"
+    ]
+   },
+   "output": [
+    [
+     {
+      "id": "citya:100001",
+      "quelle": "citya",
+      "titel": "Location appartement de 3 pièces de 58.02m² à Strasbourg",
+      "gesellschaft": "Citya Immobilier",
+      "objektart": "Wohnung",
+      "strasse": "",
+      "plz": "67000",
+      "bezirk": "Bas-Rhin",
+      "departement": "67",
+      "ortsteil": "Strasbourg",
+      "gemeinde": "Strasbourg",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 3.0,
+      "flaeche_qm": 58.02,
+      "kaltmiete": 650.5,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 11.21,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "geaendert_am": null,
+      "ausstattung": "",
+      "beschreibung": "",
+      "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-67000/100001",
+      "bild_url": null
+     },
+     {
+      "id": "citya:100002",
+      "quelle": "citya",
+      "titel": "Location maison de 5 pieces de 120,5m² à Colmar",
+      "gesellschaft": "Citya Immobilier",
+      "objektart": "Haus",
+      "strasse": "",
+      "plz": "68000",
+      "bezirk": "Bas-Rhin",
+      "departement": "67",
+      "ortsteil": "Colmar",
+      "gemeinde": "Colmar",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 5.0,
+      "flaeche_qm": 120.5,
+      "kaltmiete": 1100.0,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 9.13,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "geaendert_am": null,
+      "ausstattung": "",
+      "beschreibung": "",
+      "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-68000/100002",
+      "bild_url": null
+     },
+     {
+      "id": "citya:100004",
+      "quelle": "citya",
+      "titel": "Location studio à Nancy",
+      "gesellschaft": "Citya Immobilier",
+      "objektart": "Wohnung",
+      "strasse": "",
+      "plz": "54000",
+      "bezirk": "Bas-Rhin",
+      "departement": "67",
+      "ortsteil": "Nancy",
+      "gemeinde": "Nancy",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": null,
+      "flaeche_qm": null,
+      "kaltmiete": null,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "geaendert_am": null,
+      "ausstattung": "",
+      "beschreibung": "",
+      "expose_url": "https://www.citya.com/annonces/location/appartement/exemple-54000/100004",
+      "bild_url": null
+     }
+    ],
+    362
+   ],
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_karten",
+   "args": {
+    "page": "paruvendu/seite-1.html"
+   },
+   "output": [
+    " annonce\" data-id=\"1262000001\"><a href=\"/immobilier/location/appartement/huttenheim-67230/1262000001\" title=\" Appartement 3 pièces 65 m²\"><h3>Appartement 3 pièces 65 m²</h3></a><div class=\"ergov3-priceannonce\">780&euro; <sup>CC</sup></div><p>Huttenheim (67)</p><span>12/09/2026</span></div> <div ",
+    " annonce\" data-id=\"1262000002\"><a href=\"/immobilier/location/maison/colmar-68000/1262000002\" title=\" Maison 5 pièces 120,5 m²\"><h3>Maison 5 pièces 120,5 m²</h3></a><div class=\"ergov3-priceannonce\">1 100 &euro; HC</div><p>Colmar (68)</p><span>11/09/2026</span></div> <div ",
+    " annonce\" data-id=\"1262000003\"><a href=\"/immobilier/location/appartement/metz-57000/1262000003\" title=\" Studio 1 pièce 22 m²\"><h3>Studio 1 pièce 22 m²</h3></a><div class=\"ergov3-priceannonce\">450&euro;</div><p>Metz (57)</p><span></span></div> <div ",
+    " annonce\" data-id=\"1262000004\"><a href=\"/immobilier/location/appartement/nulle-part/1262000004\" title=\" Loft 2 pièces\"><h3>Loft 2 pièces</h3></a><div class=\"ergov3-priceannonce\">prix sur demande</div><p>sans département</p><span>01/09/2026</span></div> <div ",
+    "\"><p>Werbung ohne Kennung</p></div> </body></html>"
+   ],
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "normalise",
+   "args": {
+    "block": " annonce\" data-id=\"1262000001\"><a href=\"/immobilier/location/appartement/huttenheim-67230/1262000001\" title=\" Appartement 3 pièces 65 m²\"><h3>Appartement 3 pièces 65 m²</h3></a><div class=\"ergov3-priceannonce\">780&euro; <sup>CC</sup></div><p>Huttenheim (67)</p><span>12/09/2026</span></div> <div ",
+    "dep_name": "Bas-Rhin",
+    "art_vorgabe": "appartement"
+   },
+   "output": {
+    "id": "pv:1262000001",
+    "quelle": "paruvendu",
+    "titel": "Appartement 3 pièces 65 m²",
+    "gesellschaft": "",
+    "objektart": "Wohnung",
+    "strasse": "",
+    "plz": null,
+    "bezirk": "Bas-Rhin",
+    "departement": "67",
+    "ortsteil": "Huttenheim",
+    "gemeinde": "Huttenheim",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 3.0,
+    "flaeche_qm": 65.0,
+    "kaltmiete": null,
+    "preisart": "warm",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": 780.0,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": 12.0,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "12.09.2026",
+    "geaendert_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.paruvendu.fr/immobilier/location/appartement/huttenheim-67230/1262000001",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "normalise",
+   "args": {
+    "block": " annonce\" data-id=\"1262000002\"><a href=\"/immobilier/location/maison/colmar-68000/1262000002\" title=\" Maison 5 pièces 120,5 m²\"><h3>Maison 5 pièces 120,5 m²</h3></a><div class=\"ergov3-priceannonce\">1 100 &euro; HC</div><p>Colmar (68)</p><span>11/09/2026</span></div> <div ",
+    "dep_name": "Bas-Rhin",
+    "art_vorgabe": "appartement"
+   },
+   "output": {
+    "id": "pv:1262000002",
+    "quelle": "paruvendu",
+    "titel": "Maison 5 pièces 120,5 m²",
+    "gesellschaft": "",
+    "objektart": "Haus",
+    "strasse": "",
+    "plz": null,
+    "bezirk": "Haut-Rhin",
+    "departement": "68",
+    "ortsteil": "Colmar",
+    "gemeinde": "Colmar",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 5.0,
+    "flaeche_qm": 120.5,
+    "kaltmiete": 1100.0,
+    "preisart": "kalt",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 9.13,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "11.09.2026",
+    "geaendert_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.paruvendu.fr/immobilier/location/maison/colmar-68000/1262000002",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "normalise",
+   "args": {
+    "block": " annonce\" data-id=\"1262000003\"><a href=\"/immobilier/location/appartement/metz-57000/1262000003\" title=\" Studio 1 pièce 22 m²\"><h3>Studio 1 pièce 22 m²</h3></a><div class=\"ergov3-priceannonce\">450&euro;</div><p>Metz (57)</p><span></span></div> <div ",
+    "dep_name": "Bas-Rhin",
+    "art_vorgabe": "appartement"
+   },
+   "output": {
+    "id": "pv:1262000003",
+    "quelle": "paruvendu",
+    "titel": "Studio 1 pièce 22 m²",
+    "gesellschaft": "",
+    "objektart": "unbekannt",
+    "strasse": "",
+    "plz": null,
+    "bezirk": "Moselle",
+    "departement": "57",
+    "ortsteil": "Metz",
+    "gemeinde": "Metz",
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 1.0,
+    "flaeche_qm": 22.0,
+    "kaltmiete": 450.0,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": 20.45,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": null,
+    "geaendert_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.paruvendu.fr/immobilier/location/appartement/metz-57000/1262000003",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "normalise",
+   "args": {
+    "block": " annonce\" data-id=\"1262000004\"><a href=\"/immobilier/location/appartement/nulle-part/1262000004\" title=\" Loft 2 pièces\"><h3>Loft 2 pièces</h3></a><div class=\"ergov3-priceannonce\">prix sur demande</div><p>sans département</p><span>01/09/2026</span></div> <div ",
+    "dep_name": "Bas-Rhin",
+    "art_vorgabe": "appartement"
+   },
+   "output": {
+    "id": "pv:1262000004",
+    "quelle": "paruvendu",
+    "titel": "Loft 2 pièces",
+    "gesellschaft": "",
+    "objektart": "unbekannt",
+    "strasse": "",
+    "plz": null,
+    "bezirk": "Bas-Rhin",
+    "departement": null,
+    "ortsteil": null,
+    "gemeinde": null,
+    "gemeinde_code": null,
+    "lat": null,
+    "lon": null,
+    "zimmer": 2.0,
+    "flaeche_qm": null,
+    "kaltmiete": null,
+    "preisart": "unklar",
+    "nebenkosten": null,
+    "weitere_kosten": null,
+    "gesamtmiete": null,
+    "kalt_pro_qm": null,
+    "warm_pro_qm": null,
+    "wbs": null,
+    "etage": null,
+    "etagen_gesamt": null,
+    "baujahr": null,
+    "heizung": "unbekannt",
+    "energiekennwert": null,
+    "energieausweis": null,
+    "baeder": null,
+    "bezugsfertig_ab": null,
+    "eingestellt_am": "01.09.2026",
+    "geaendert_am": null,
+    "ausstattung": "",
+    "expose_url": "https://www.paruvendu.fr/immobilier/location/appartement/nulle-part/1262000004",
+    "bild_url": null
+   },
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "normalise",
+   "args": {
+    "block": "\"><p>Werbung ohne Kennung</p></div> </body></html>",
+    "dep_name": "Bas-Rhin",
+    "art_vorgabe": "appartement"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_zahl",
+   "args": {
+    "value": "1 100"
+   },
+   "output": 1100.0,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_zahl",
+   "args": {
+    "value": "780"
+   },
+   "output": 780.0,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_zahl",
+   "args": {
+    "value": "1 250,50"
+   },
+   "output": 1250.5,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_zahl",
+   "args": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_zahl",
+   "args": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "_zahl",
+   "args": {
+    "value": "abc"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "paruvendu",
+   "function": "hole_bestand",
+   "args": {
+    "departements": [
+     "bas-rhin-67"
+    ],
+    "arten": [
+     "appartement"
+    ],
+    "web": [
+     "https://www.paruvendu.fr/immobilier/recherche/location/appartement/bas-rhin-67?px1=1100&p=1"
+    ],
+    "requested": [
+     "https://www.paruvendu.fr/immobilier/recherche/location/appartement/bas-rhin-67?px1=1100&p=1"
+    ]
+   },
+   "output": [
+    [
+     {
+      "id": "pv:1262000001",
+      "quelle": "paruvendu",
+      "titel": "Appartement 3 pièces 65 m²",
+      "gesellschaft": "",
+      "objektart": "Wohnung",
+      "strasse": "",
+      "plz": null,
+      "bezirk": "Bas-Rhin",
+      "departement": "67",
+      "ortsteil": "Huttenheim",
+      "gemeinde": "Huttenheim",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 3.0,
+      "flaeche_qm": 65.0,
+      "kaltmiete": null,
+      "preisart": "warm",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": 780.0,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": 12.0,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "12.09.2026",
+      "geaendert_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.paruvendu.fr/immobilier/location/appartement/huttenheim-67230/1262000001",
+      "bild_url": null
+     },
+     {
+      "id": "pv:1262000002",
+      "quelle": "paruvendu",
+      "titel": "Maison 5 pièces 120,5 m²",
+      "gesellschaft": "",
+      "objektart": "Haus",
+      "strasse": "",
+      "plz": null,
+      "bezirk": "Haut-Rhin",
+      "departement": "68",
+      "ortsteil": "Colmar",
+      "gemeinde": "Colmar",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 5.0,
+      "flaeche_qm": 120.5,
+      "kaltmiete": 1100.0,
+      "preisart": "kalt",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 9.13,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "11.09.2026",
+      "geaendert_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.paruvendu.fr/immobilier/location/maison/colmar-68000/1262000002",
+      "bild_url": null
+     },
+     {
+      "id": "pv:1262000003",
+      "quelle": "paruvendu",
+      "titel": "Studio 1 pièce 22 m²",
+      "gesellschaft": "",
+      "objektart": "unbekannt",
+      "strasse": "",
+      "plz": null,
+      "bezirk": "Moselle",
+      "departement": "57",
+      "ortsteil": "Metz",
+      "gemeinde": "Metz",
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 1.0,
+      "flaeche_qm": 22.0,
+      "kaltmiete": 450.0,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": 20.45,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": null,
+      "geaendert_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.paruvendu.fr/immobilier/location/appartement/metz-57000/1262000003",
+      "bild_url": null
+     },
+     {
+      "id": "pv:1262000004",
+      "quelle": "paruvendu",
+      "titel": "Loft 2 pièces",
+      "gesellschaft": "",
+      "objektart": "unbekannt",
+      "strasse": "",
+      "plz": null,
+      "bezirk": "Bas-Rhin",
+      "departement": null,
+      "ortsteil": null,
+      "gemeinde": null,
+      "gemeinde_code": null,
+      "lat": null,
+      "lon": null,
+      "zimmer": 2.0,
+      "flaeche_qm": null,
+      "kaltmiete": null,
+      "preisart": "unklar",
+      "nebenkosten": null,
+      "weitere_kosten": null,
+      "gesamtmiete": null,
+      "kalt_pro_qm": null,
+      "warm_pro_qm": null,
+      "wbs": null,
+      "etage": null,
+      "etagen_gesamt": null,
+      "baujahr": null,
+      "heizung": "unbekannt",
+      "energiekennwert": null,
+      "energieausweis": null,
+      "baeder": null,
+      "bezugsfertig_ab": null,
+      "eingestellt_am": "01.09.2026",
+      "geaendert_am": null,
+      "ausstattung": "",
+      "expose_url": "https://www.paruvendu.fr/immobilier/location/appartement/nulle-part/1262000004",
+      "bild_url": null
+     }
+    ],
+    4
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "667.000,00"
+   },
+   "output": 667000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "65.000,-"
+   },
+   "output": 65000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "80,000,-"
+   },
+   "output": 80000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "725,12"
+   },
+   "output": 725.12,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "725,1"
+   },
+   "output": 725.1,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "1.250.000"
+   },
+   "output": 1250000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "12 500,00 €"
+   },
+   "output": 12500.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "EUR 9.800"
+   },
+   "output": 9800.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "-"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "abc"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "1,5"
+   },
+   "output": 1.5,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "100"
+   },
+   "output": 100.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "0,-"
+   },
+   "output": 0.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_money_amount",
+   "args": {
+    "value": "3.000.000,00 EUR"
+   },
+   "output": 3000000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_de_number",
+   "args": {
+    "value": "945,80"
+   },
+   "output": 945.8,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_de_number",
+   "args": {
+    "value": "2015"
+   },
+   "output": 201.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_de_number",
+   "args": {
+    "value": "1.234,5"
+   },
+   "output": 1234.5,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_de_number",
+   "args": {
+    "value": "ca. 120,5 m²"
+   },
+   "output": 120.5,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_de_number",
+   "args": {
+    "value": "keine Angabe"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_de_number",
+   "args": {
+    "value": "12.345.678,99"
+   },
+   "output": 12345678.99,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_market_value",
+   "args": {
+    "value": "Verkehrswert in €: 245.000,00 € Termin:"
+   },
+   "output": 245000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_market_value",
+   "args": {
+    "value": "Verkehrswert in €: Gesamtverkehrswert 1.200.000,- EUR, Einzelwert 200.000,00 €"
+   },
+   "output": 1200000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_market_value",
+   "args": {
+    "value": "Verkehrswert in €: 50.000,00 € 25.000,00 € Sicherheitsleistung 7.500,00 €"
+   },
+   "output": 75000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_market_value",
+   "args": {
+    "value": "Verkehrswert in €: laut Gutachten ohne Betrag"
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_market_value",
+   "args": {
+    "value": "Verkehrswert in €: 80,000,-€ IBAN siehe Bekanntmachung 12.345,00 €"
+   },
+   "output": 80000.0,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_market_value",
+   "args": {
+    "value": ""
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Einfamilienhaus, Musterstraße 12, 35390 Musterstadt"
+   },
+   "output": [
+    "Musterstraße",
+    "12",
+    "35390",
+    "Musterstadt"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Am Eichbühel 30, 61476 Kronberg im Taunus"
+   },
+   "output": [
+    "Am Eichbühel",
+    "30",
+    "61476",
+    "Kronberg im Taunus"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Oberdorf 1, 34369 Musterdorf"
+   },
+   "output": [
+    "Oberdorf",
+    "1",
+    "34369",
+    "Musterdorf"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Mehrfamilienhaus, Hauptstr. 2 A, 2 B, 34369 Musterdorf"
+   },
+   "output": [
+    "Hauptstr.",
+    "2 A, 2 B",
+    "34369",
+    "Musterdorf"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Doppelhaus, Beispielweg 16 + 16 B, 35578 Wetzlar"
+   },
+   "output": [
+    "Beispielweg",
+    "16 + 16 B",
+    "35578",
+    "Wetzlar"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Reihenhaus, Lindenallee 16-18, 64283 Darmstadt"
+   },
+   "output": [
+    "Lindenallee",
+    "16-18",
+    "64283",
+    "Darmstadt"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Grundstück, Parkstraße, 65307 Bad Schwalbach"
+   },
+   "output": [
+    "Parkstraße",
+    null,
+    "65307",
+    "Bad Schwalbach"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Garage, Am Wasser, 35287 Amöneburg"
+   },
+   "output": [
+    "Am Wasser",
+    null,
+    "35287",
+    "Amöneburg"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Waldfläche, Der Schillersberg, 36037 Fulda"
+   },
+   "output": [
+    "Der Schillersberg",
+    null,
+    "36037",
+    "Fulda"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Flur 3 Flurstück 17, Gemarkung Musterau, 00000 Musterau"
+   },
+   "output": [
+    null,
+    null,
+    null,
+    "Musterau"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Wohnung Nr. 5, 60311 Frankfurt am Main"
+   },
+   "output": [
+    null,
+    null,
+    "60311",
+    "Frankfurt am Main"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Gebäude, Str. 3, 12345 Ort"
+   },
+   "output": [
+    null,
+    "3",
+    "12345",
+    "Ort"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "ohne jede Adresse"
+   },
+   "output": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": ""
+   },
+   "output": [
+    null,
+    null,
+    null,
+    null
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "extract_address",
+   "args": {
+    "value": "Grundbuch von Musterau Blatt 123, 35390 Musterstadt"
+   },
+   "output": [
+    "Grundbuch von Musterau Blatt",
+    "123",
+    "35390",
+    "Musterstadt"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Wohn- und Geschäftshaus"
+   },
+   "output": "wohn_geschaeftshaus",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Mehrfamilienhaus mit 6 Wohnungen"
+   },
+   "output": "mfh",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Reihenendhaus"
+   },
+   "output": "rh",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Doppelhaushälfte"
+   },
+   "output": "dhh",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Eigentumswohnung mit Tiefgaragenstellplatz"
+   },
+   "output": "etw",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Einfamilienhaus"
+   },
+   "output": "efh",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Ladenlokal"
+   },
+   "output": "ladenlokal",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Hotel mit Restaurant"
+   },
+   "output": "gastronomie",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Arztpraxis"
+   },
+   "output": "buero",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Lagerhalle"
+   },
+   "output": "halle_lager",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Betriebsgrundstück"
+   },
+   "output": "gewerbe",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "unbebautes Grundstück"
+   },
+   "output": "grundstueck",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Tiefgaragenstellplatz"
+   },
+   "output": "garage_stellplatz",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Schloss"
+   },
+   "output": "sonstige",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "classify_type",
+   "args": {
+    "value": "Wohnhaus mit 3 Wohnungen"
+   },
+   "output": "mfh",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "StraÃŸe"
+   },
+   "output": "Straße",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "StraÃŸe"
+   },
+   "output": "Straße",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "GrÃ¼nland"
+   },
+   "output": "Grünland",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "GrÃ¼nland"
+   },
+   "output": "Grünland",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "MÃ¤rz"
+   },
+   "output": "März",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "MÃ¤rz"
+   },
+   "output": "März",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "WohnflÃ¤che 98 mÂ²"
+   },
+   "output": "Wohnfläche 98 m²",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "WohnflÃ¤che 98 mÂ²"
+   },
+   "output": "Wohnfläche 98 m²",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "Ã¼ber"
+   },
+   "output": "über",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "Ã¼ber"
+   },
+   "output": "über",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "ok"
+   },
+   "output": "ok",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "ok"
+   },
+   "output": "ok",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": ""
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "x"
+   },
+   "output": "x",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "x"
+   },
+   "output": "x",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "fix_mojibake",
+   "args": {
+    "value": "Caf�"
+   },
+   "output": "Caf",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "clean",
+   "args": {
+    "value": "Caf�"
+   },
+   "output": "Caf",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": "Graubergerstr."
+   },
+   "output": "Graubergerstraße",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": "Graubergerstr."
+   },
+   "output": "graubergerstraße",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": "Hauptstr"
+   },
+   "output": "Hauptstraße",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": "Hauptstr"
+   },
+   "output": "hauptstraße",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": "Marktpl."
+   },
+   "output": "Marktplatz",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": "Marktpl."
+   },
+   "output": "marktplatz",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": "Str. 3"
+   },
+   "output": "Straße 3",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": "Str. 3"
+   },
+   "output": "straße3",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": "Am Markt"
+   },
+   "output": "Am Markt",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": "Am Markt"
+   },
+   "output": "ammarkt",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": null
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": null
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "expand_street",
+   "args": {
+    "value": "Lindenstr, 5"
+   },
+   "output": "Lindenstraße, 5",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "_norm_street",
+   "args": {
+    "value": "Lindenstr, 5"
+   },
+   "output": "lindenstraße,5",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "decode_portal_response",
+   "args": {
+    "label": "utf-8",
+    "body_hex": "3c703e4772c3bc6e6c616e6420616e206465722053747261c39f652c204d61c39f203132206dc2b22c20436166c3a93c2f703e"
+   },
+   "output": "<p>Grünland an der Straße, Maß 12 m², Café</p>",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "decode_portal_response",
+   "args": {
+    "label": "cp1252",
+    "body_hex": "3c703e4772fc6e6c616e6420616e206465722053747261df652c204d61df203132206db22c20436166e93c2f703e"
+   },
+   "output": "<p>Grünland an der Straße, Maß 12 m², Café</p>",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "decode_portal_response",
+   "args": {
+    "label": "iso-8859-1",
+    "body_hex": "3c703e4772fc6e6c616e6420616e206465722053747261df652c204d61df203132206db22c20436166e93c2f703e"
+   },
+   "output": "<p>Grünland an der Straße, Maß 12 m², Café</p>",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "decode_portal_response",
+   "args": {
+    "label": "utf-8-double",
+    "body_hex": "3c703e4772c383c2bc6e6c616e6420616e206465722053747261c383c29f652c204d61c383c29f203132206dc382c2b22c20436166c383c2a93c2f703e"
+   },
+   "output": "<p>Grnland an der Strae, Ma 12 m, Caf</p>",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "decode_portal_response",
+   "args": {
+    "label": "invalid-bytes",
+    "body_hex": "fffe3c703e818d8f909d3c2f703e"
+   },
+   "output": "ÿþ<p></p>",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_listing_akten",
+   "args": {
+    "page": "zvg/liste.html",
+    "land": "he"
+   },
+   "output": {
+    "880001": "5 K 12/24",
+    "880002": "12 K 7/2025",
+    "880003": "3 L 1/23"
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_listing_akten",
+   "args": {
+    "page": "zvg/liste-roh.html",
+    "land": "he"
+   },
+   "output": {
+    "880001": "5 K 12/24",
+    "880002": "12 K 7/2025",
+    "880003": "3 L 1/23"
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_listing_akten",
+   "args": {
+    "page": "zvg/liste.html",
+    "land": "rp"
+   },
+   "output": {
+    "990001": "9 K 1/24"
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_listing_akten",
+   "args": {
+    "page": "zvg/liste-roh.html",
+    "land": "rp"
+   },
+   "output": {
+    "990001": "9 K 1/24"
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "ZvgPortal.search_court",
+   "args": {
+    "court_id": "M1201",
+    "land": "he",
+    "page": "zvg/liste.html"
+   },
+   "output": [],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "ZvgPortal.search_court",
+   "args": {
+    "court_id": "M1201",
+    "land": "he",
+    "page": "zvg/liste-roh.html"
+   },
+   "output": [
+    "880001",
+    "880002",
+    "880003",
+    "880004"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "ZvgPortal.detail",
+   "args": {
+    "zvg_id": "880001",
+    "land": "he"
+   },
+   "output": "<html>detail</html>",
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "portal_requests",
+   "args": {},
+   "output": [
+    {
+     "method": "POST",
+     "params": {
+      "button": "Suchen"
+     },
+     "data": {
+      "button": "Suchen",
+      "land_abk": "he",
+      "ger_id": "M1201",
+      "order_by": "2",
+      "art": "",
+      "gbuch": ""
+     }
+    },
+    {
+     "method": "POST",
+     "params": {
+      "button": "Suchen"
+     },
+     "data": {
+      "button": "Suchen",
+      "land_abk": "he",
+      "ger_id": "M1201",
+      "order_by": "2",
+      "art": "",
+      "gbuch": ""
+     }
+    },
+    {
+     "method": "GET",
+     "params": {
+      "button": "showZvg",
+      "zvg_id": "880001",
+      "land_abk": "he"
+     },
+     "referer": "https://www.zvg-portal.de/index.php?button=Suchen"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-efh.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Einfamilienhaus, Musterstraße 12, 35390 Musterstadt",
+    "description": "Einfamilienhaus, Baujahr 1968, Wohnfläche ca. 120,5 m², Garage",
+    "street": "Musterstraße",
+    "house_number": "12",
+    "postal_code": "35390",
+    "city": "Musterstadt",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": 120.5,
+    "build_year": 1968,
+    "market_value": null,
+    "property_type": "efh",
+    "termin": "2026-10-14T09:00:00+00:00",
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [
+     "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=101&zvg_id=880001",
+     "https://www.zvg-portal.de/index.php?button=showAnhang&land_abk=he&file_id=102&zvg_id=880001"
+    ],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-etw-dual-address.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Eigentumswohnung, Beispielstr. 5, 60311 Frankfurt am Main",
+    "description": "Wohnungseigentum im 2. OG, Beispielstraße 5 a, 60311 Frankfurt am Main, Wohnfläche 64 m², Baujahr 1995",
+    "street": "Beispielstr.",
+    "house_number": "5",
+    "postal_code": "60311",
+    "city": "Frankfurt am Main",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": 64.0,
+    "build_year": 1995,
+    "market_value": 667000.0,
+    "property_type": "etw",
+    "termin": "2027-03-03T13:30:00+00:00",
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-tausender-komma.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Grundstück, unbebaut, Am Eichbühel 30, 61476 Kronberg",
+    "description": "Gartenland, Flurstück 12/3",
+    "street": "Am Eichbühel",
+    "house_number": "30",
+    "postal_code": "61476",
+    "city": "Kronberg",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": null,
+    "build_year": null,
+    "market_value": 80000.0,
+    "property_type": "grundstueck",
+    "termin": "2026-01-05T10:00:00+00:00",
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-summe-ohne-gesamt.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Mehrfamilienhaus mit 6 Wohnungen, Hauptstr. 2 A, 2 B, 34369 Musterdorf",
+    "description": "Wohnhaus mit 6 Einheiten, Wohnfläche 465 m², Baujahr 1962",
+    "street": "Hauptstr.",
+    "house_number": "2 A, 2 B",
+    "postal_code": "34369",
+    "city": "Musterdorf",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": 465.0,
+    "build_year": 1962,
+    "market_value": 415000.0,
+    "property_type": "mfh",
+    "termin": "2026-10-30T08:30:00+00:00",
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-ohne-beschreibung.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Tiefgaragenstellplatz, Parkstraße, 65307 Bad Schwalbach",
+    "description": "Tiefgaragenstellplatz, Parkstraße, 65307 Bad Schwalbach",
+    "street": "Parkstraße",
+    "house_number": null,
+    "postal_code": "65307",
+    "city": "Bad Schwalbach",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": null,
+    "build_year": null,
+    "market_value": 12500.0,
+    "property_type": "garage_stellplatz",
+    "termin": "2029-02-01T11:00:00+00:00",
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-mojibake.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Reihenhaus, Gartenstraße 7, 36037 Fulda",
+    "description": "Reihenmittelhaus, Wohnfläche 98 m², Baujahr 2031",
+    "street": "Gartenstraße",
+    "house_number": "7",
+    "postal_code": "36037",
+    "city": "Fulda",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": 98.0,
+    "build_year": null,
+    "market_value": 310000.0,
+    "property_type": "rh",
+    "termin": null,
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-flur-kein-strasse.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "5 K 12/24",
+    "court_name": "Frankfurt am Main",
+    "title": "Landwirtschaftsfläche, Flur 3 Flurstück 17, Gemarkung Musterau, 00000 Musterau",
+    "description": "Ackerland, Grünland",
+    "street": null,
+    "house_number": null,
+    "postal_code": null,
+    "city": "Musterau",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": null,
+    "build_year": null,
+    "market_value": 9800.0,
+    "property_type": "grundstueck",
+    "termin": null,
+    "termin_location": null,
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-gewerbe.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "7 K 244/2024",
+    "court_name": "Frankfurt am Main",
+    "title": "Wohn- und Geschäftshaus, Marktplatz 1, 63065 Offenbach am Main",
+    "description": "Laden im EG, Büro im 1. OG, Wohnung im DG.",
+    "street": "Marktplatz",
+    "house_number": "1",
+    "postal_code": "63065",
+    "city": "Offenbach am Main",
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": null,
+    "build_year": null,
+    "market_value": 1480000.0,
+    "property_type": "wohn_geschaeftshaus",
+    "termin": "2025-03-11T01:00:00+00:00",
+    "termin_location": "Amtsgericht Musterstadt, Saal 2",
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "parse_detail",
+   "args": {
+    "page": "zvg/detail-ohne-alles.html",
+    "reference_year": 2026
+   },
+   "output": {
+    "zvg_id": "880001",
+    "land": "he",
+    "court_id": "M1201",
+    "file_number": "",
+    "court_name": "Frankfurt am Main",
+    "title": "",
+    "description": "",
+    "street": null,
+    "house_number": null,
+    "postal_code": null,
+    "city": null,
+    "alt_street": null,
+    "alt_house_number": null,
+    "living_area_sqm": null,
+    "build_year": null,
+    "market_value": null,
+    "property_type": "sonstige",
+    "termin": null,
+    "termin_location": null,
+    "detail_url": "https://www.zvg-portal.de/index.php?button=showZvg&zvg_id=880001&land_abk=he",
+    "documents": [],
+    "lat": null,
+    "lon": null
+   },
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "resolve_courts",
+   "args": {
+    "arg": "kern"
+   },
+   "output": [
+    "M1201",
+    "M1906",
+    "M1103",
+    "M1114",
+    "M1607",
+    "M1406",
+    "M1502",
+    "M1301",
+    "M1706",
+    "M1809",
+    "T2304"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "resolve_courts",
+   "args": {
+    "arg": "M1201, T2304,"
+   },
+   "output": [
+    "M1201",
+    "T2304"
+   ],
+   "exception": null
+  },
+  {
+   "group": "zvg",
+   "function": "courts",
+   "args": {},
+   "output": {
+    "he": {
+     "M1401": "Alsfeld",
+     "M1305": "Bad Hersfeld",
+     "M1202": "Bad Homburg v. d. Höhe",
+     "M1905": "Bad Schwalbach",
+     "M1102": "Bensheim",
+     "M1801": "Biedenkopf",
+     "M1402": "Büdingen",
+     "M1103": "Darmstadt",
+     "M1104": "Dieburg",
+     "M1702": "Dillenburg",
+     "M1705": "Dillenburg Zweigstelle Herborn",
+     "M1602": "Eschwege",
+     "M1803": "Frankenberg (Eder)",
+     "M1201": "Frankfurt am Main",
+     "M1405": "Friedberg (Hessen)",
+     "M1603": "Fritzlar",
+     "M1105": "Fürth",
+     "M1301": "Fulda",
+     "M1501": "Gelnhausen",
+     "M1406": "Gießen",
+     "M1106": "Groß-Gerau",
+     "M1502": "Hanau",
+     "M1307": "Hünfeld",
+     "M1903": "Idstein",
+     "M1607": "Kassel",
+     "M1605": "Kassel Zweigstelle Hofgeismar",
+     "M1807": "Kirchhain",
+     "M1203": "Königstein im Taunus",
+     "M1608": "Korbach",
+     "M1111": "Lampertheim",
+     "M1112": "Langen (Hessen)",
+     "M1706": "Limburg a. d. Lahn",
+     "M1809": "Marburg",
+     "M1609": "Melsungen",
+     "M1113": "Michelstadt",
+     "M1114": "Offenbach am Main",
+     "M1904": "Rüdesheim am Rhein",
+     "M1107": "Rüsselsheim",
+     "M1812": "Schwalmstadt",
+     "M1117": "Seligenstadt",
+     "M1709": "Weilburg",
+     "M1710": "Wetzlar",
+     "M1906": "Wiesbaden"
+    },
+    "rp": {
+     "T2304": "Mainz"
+    },
+    "kern": [
+     "M1201",
+     "M1906",
+     "M1103",
+     "M1114",
+     "M1607",
+     "M1406",
+     "M1502",
+     "M1301",
+     "M1706",
+     "M1809",
+     "T2304"
+    ]
+   },
+   "exception": null
+  }
+ ],
+ "lifecycle": {
+  "status": "OBSERVED",
+  "database": "PostgreSQL 16.4 (Debian 16.4-1.pgdg110+2) on x86_64-pc-linux-gnu",
+  "steps": [
+   {
+    "step": "initial",
+    "state": {
+     "anderes-gericht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-21T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "mark_seen",
+    "court": "M1201",
+    "now_before": "2026-09-23T11:45:26.873603+00:00",
+    "listed": [
+     "wieder-gelistet",
+     "gesehen-heute-zukunft",
+     "unbekannt"
+    ],
+    "state": {
+     "anderes-gericht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-21T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "close_vanished",
+    "court": "M1201",
+    "grace_days": 3,
+    "now_before": "2026-09-23T11:45:26.876768+00:00",
+    "closed": 5,
+    "state": {
+     "anderes-gericht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-21T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "mark_seen",
+    "court": "M1201",
+    "listed": [],
+    "state": {
+     "anderes-gericht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-21T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "close_vanished",
+    "court": "M1906",
+    "grace_days": 0,
+    "now_before": "2026-09-23T11:45:26.880598+00:00",
+    "closed": 1,
+    "state": {
+     "anderes-gericht": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.880793+00:00",
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-21T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "upsert",
+    "court": "M1201",
+    "file_number": "verschwunden-termin-vorbei",
+    "now_before": "2026-09-23T11:45:26.882809+00:00",
+    "termin": "2026-10-13T11:45:26.848146+00:00",
+    "state": {
+     "anderes-gericht": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.880793+00:00",
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:27.004790+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-13T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "upsert",
+    "court": "M1201",
+    "file_number": "verschwunden-ohne-termin",
+    "now_before": "2026-09-23T11:45:27.035105+00:00",
+    "termin": null,
+    "state": {
+     "anderes-gericht": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.880793+00:00",
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-23T11:45:27.035906+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:27.004790+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-13T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-30T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   },
+   {
+    "step": "upsert",
+    "court": "M1201",
+    "file_number": "verschwunden-termin-zukunft",
+    "now_before": "2026-09-23T11:45:27.042930+00:00",
+    "termin": "2026-09-22T11:45:26.848146+00:00",
+    "state": {
+     "anderes-gericht": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.880793+00:00",
+      "deleted": false,
+      "court": "Wiesbaden",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "bereits-abgehalten": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "geloescht": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-14T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": true,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-18T11:45:26.848146+00:00"
+      ]
+     },
+     "gesehen-heute-zukunft": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-03T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-grenze-3-tage": {
+      "status": "abgehalten",
+      "last_seen_at": "2026-09-20T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "karenz-nicht-abgelaufen": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-21T11:45:26.848146+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "nie-gesehen": {
+      "status": "erfasst",
+      "last_seen_at": null,
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-gemischt": {
+      "status": "aufgehoben",
+      "last_seen_at": "2026-09-18T11:45:26.848146+00:00",
+      "closed_at": "2026-09-23T11:45:26.876977+00:00",
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-08-24T11:45:26.848146+00:00",
+       "2026-09-26T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-ohne-termin": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-23T11:45:27.035906+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": []
+     },
+     "verschwunden-termin-vorbei": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:27.004790+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-10-13T11:45:26.848146+00:00"
+      ]
+     },
+     "verschwunden-termin-zukunft": {
+      "status": "erfasst",
+      "last_seen_at": "2026-09-23T11:45:27.043434+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-22T11:45:26.848146+00:00"
+      ]
+     },
+     "wieder-gelistet": {
+      "status": "terminiert",
+      "last_seen_at": "2026-09-23T11:45:26.873838+00:00",
+      "closed_at": null,
+      "deleted": false,
+      "court": "Frankfurt am Main",
+      "dates": [
+       "2026-09-27T11:45:26.848146+00:00"
+      ]
+     }
+    }
+   }
+  ]
+ }
+}
