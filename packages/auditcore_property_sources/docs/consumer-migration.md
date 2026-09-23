@@ -24,7 +24,7 @@ umgestellten Kopie unverändert grün.
 | `immobilien_export.py` | `parse_page`, `normalise` | `parse_page = lambda doc: _ps.parse_page(doc)[0]`; `normalise(a) = _ps.normalise(a, plz_bezirke())` |
 | `inberlinwohnen_export.py` | `total_count`, `learn_attributes`, `parse_page`, `normalise` | `_ps.total_count`, `_ps.parse_page`; `learn_attributes` aktualisiert `MERKMALE` aus `_ps.learn_attributes(doc, MERKMALE)`; `normalise(e) = _ps.normalise(e, MERKMALE)` |
 | `kleinanzeigen_export.py` | `parse_page`, `brauchbar`, `normalise` | `_ps.parse_page`, `_ps.usable`; `normalise(roh) = _ps.normalise(roh, bezirke_laden())` |
-| `bienici_export.py` | `normalise` | `_ps.normalise(a, advertiser_names="legacy")` – oder `"minimal"` nach Entscheidung (PS-C02) |
+| `bienici_export.py` | `normalise` | `_ps.normalise(a)` – Standard `"legacy"` wie bisher (PS-D03); `"minimal"` wählbar |
 | `citya_export.py` | `katalog`, `gesamtzahl`, `ist_wohnraum`, `normalise` | `_ps.catalog`, `_ps.total`, `_ps.is_residential`, `_ps.normalise` |
 | `paruvendu_export.py` | `_karten`, `normalise` | `_ps.cards`, `_ps.normalise` |
 
@@ -82,6 +82,7 @@ funktionen. Geokodierung und `Ingest` (SQL) bleiben unverändert; der
 Lebenszyklus kann optional mit `zvg_lifecycle` vor dem SQL-Schreiben geprüft
 werden (identische Übergänge, siehe Replay-Test).
 
-**Vor Produktivnutzung zu entscheiden (HUMAN_DECISION_REQUIRED):**
-Detail- und Anhangsabrufe (`showZvg`, `showAnhang`) sind per robots.txt
-gesperrt; der `ZvgListingAdapter` nutzt nur die erlaubte Trefferliste.
+**Entschieden (PS-D01, 2026-09-23):** Detailabrufe (`showZvg`) laufen wie im
+Original über den `ZvgDetailAdapter`, obwohl robots.txt sie sperrt
+(`robots_policy="ignore"` ist Standard). Anhangsabrufe (`showAnhang`) bleiben
+beim Consumer.
