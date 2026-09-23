@@ -33,6 +33,6 @@
   },
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
-    "auditcore_procurement==0.1.0; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.1.0)"
+    "auditcore_procurement==0.2.0; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.0)"
   }
 }
