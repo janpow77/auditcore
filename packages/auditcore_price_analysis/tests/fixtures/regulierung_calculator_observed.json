@@ -1,0 +1,8463 @@
+{
+ "cases": [
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-001",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-002",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2025-06-30"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2025-06-30"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-003",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.3,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3747.6,
+    "mischpreis_ct_kwh": 13.88,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 86.7,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-004",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2026-09-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.3,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3747.6,
+    "mischpreis_ct_kwh": 13.88,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2026-09-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 86.7,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-005",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2020-02-29"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2020-02-29"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-006",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": {
+     "$date": "2025-07-01"
+    }
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.3,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3747.6,
+    "mischpreis_ct_kwh": 13.88,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 86.7,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-007",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": {
+     "$date": "2025-06-30"
+    }
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2025-06-30"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "can't compare datetime.datetime to datetime.date",
+    "type": "TypeError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-008",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": {
+     "$datetime": "2025-07-01T12:00:00"
+    }
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "Invalid isoformat string: '01.07.2025'",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-009",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "01.07.2025"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "month must be in 1..12",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-010",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2025-13-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "Invalid isoformat string: '2025-07-01T00:00:00'",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-011",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2025-07-01T00:00:00"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-012",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 11.45,
+     "emissionspreis_ct_kwh": 0.72,
+     "grundpreis_eur_kw": 32.1,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 180.0,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-stichtag",
+   "id": "nw-stichtag-013",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 3091.5,
+    "emissionspreis_anteil": 194.4,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 14.3,
+    "grundpreis_anteil": 385.2,
+    "jahreskosten": 3956.4,
+    "mischpreis_ct_kwh": 14.65,
+    "parameter": {
+     "kw": 12,
+     "kwh": 27000,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 85.7,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 180.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-umlage",
+   "id": "nw-umlage-001",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.8,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3601.8,
+    "mischpreis_ct_kwh": 13.34,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 86.2,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-umlage",
+   "id": "nw-umlage-002",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.3,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3747.6,
+    "mischpreis_ct_kwh": 13.88,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 86.7,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-umlage",
+   "id": "nw-umlage-003",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.8,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3601.8,
+    "mischpreis_ct_kwh": 13.34,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 86.2,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-umlage",
+   "id": "nw-umlage-004",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": -0.1
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-umlage",
+   "id": "nw-umlage-005",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": -0.1
+    }
+   ],
+   "error": {
+    "message": "waermeumlagenpreis_ct_kwh darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-umlage",
+   "id": "nw-umlage-006",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-001",
+   "kwargs": {
+    "kw": 5,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 8.5,
+    "grundpreis_anteil": 142.5,
+    "jahreskosten": 3507.6,
+    "mischpreis_ct_kwh": 12.99,
+    "parameter": {
+     "kw": 5,
+     "kwh": 27000,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 91.5,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-002",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 50000,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 5410.0,
+    "emissionspreis_anteil": 340.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 7.7,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 6441.8,
+    "mischpreis_ct_kwh": 12.88,
+    "parameter": {
+     "kw": 12,
+     "kwh": 50000,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 195.0,
+    "variablekostenanteil_pct": 92.3,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-003",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 4.6,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 3365.1,
+    "mischpreis_ct_kwh": 12.46,
+    "parameter": {
+     "kw": 0,
+     "kwh": 27000,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 95.4,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-004",
+   "kwargs": {
+    "kw": 12,
+    "kwh": 0,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 100.0,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 496.8,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 12,
+     "kwh": 0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 0.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-005",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 0,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 100.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 154.8,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 0,
+     "kwh": 0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 0.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-006",
+   "kwargs": {
+    "kw": 12.5,
+    "kwh": 27000.5,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.45,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.7,
+    "grundpreis_anteil": 356.25,
+    "jahreskosten": 3721.41,
+    "mischpreis_ct_kwh": 13.78,
+    "parameter": {
+     "kw": 12.5,
+     "kwh": 27000.5,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.3,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-007",
+   "kwargs": {
+    "kw": "12",
+    "kwh": "27000",
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": "12",
+     "kwh": "27000",
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-008",
+   "kwargs": {
+    "kw": {
+     "$decimal": "12"
+    },
+    "kwh": {
+     "$decimal": "27000"
+    },
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": {
+      "$decimal": "12"
+     },
+     "kwh": {
+      "$decimal": "27000"
+     },
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-009",
+   "kwargs": {
+    "kw": null,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 4.6,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 3365.1,
+    "mischpreis_ct_kwh": 12.46,
+    "parameter": {
+     "kw": null,
+     "kwh": 27000,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 95.4,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-010",
+   "kwargs": {
+    "kw": 12,
+    "kwh": null,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 100.0,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 496.8,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 12,
+     "kwh": null,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 0.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "kw darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-011",
+   "kwargs": {
+    "kw": -1,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "kwh darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-012",
+   "kwargs": {
+    "kw": 12,
+    "kwh": -0.01,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "kw muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-013",
+   "kwargs": {
+    "kw": "12,5",
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "kw muss endlich sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-014",
+   "kwargs": {
+    "kw": {
+     "$float": "nan"
+    },
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "kwh muss endlich sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-015",
+   "kwargs": {
+    "kw": 12,
+    "kwh": {
+     "$float": "inf"
+    },
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "kw muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-016",
+   "kwargs": {
+    "kw": true,
+    "kwh": 27000,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-017",
+   "kwargs": {
+    "kw": 1000000000.0,
+    "kwh": 1000000000.0,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 108200000.0,
+    "emissionspreis_anteil": 6800000.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 99.6,
+    "grundpreis_anteil": 28500000000.0,
+    "jahreskosten": 28618900154.8,
+    "mischpreis_ct_kwh": 2861.89,
+    "parameter": {
+     "kw": 1000000000.0,
+     "kwh": 1000000000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 3900000.0,
+    "variablekostenanteil_pct": 0.4,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-verbrauch",
+   "id": "nw-verbrauch-018",
+   "kwargs": {
+    "kw": 0.1,
+    "kwh": 0.3,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.03,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 100.0,
+    "grundpreis_anteil": 2.85,
+    "jahreskosten": 157.69,
+    "mischpreis_ct_kwh": 52561.89,
+    "parameter": {
+     "kw": 0.1,
+     "kwh": 0.3,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 0.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-001",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [
+     "grundpreis_eur_kw"
+    ],
+    "fixkostenanteil_pct": 4.6,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 3365.1,
+    "mischpreis_ct_kwh": 12.46,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 95.4,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": null,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-002",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [
+     "grundpreis_eur_kw"
+    ],
+    "fixkostenanteil_pct": 4.5,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 3405.6,
+    "mischpreis_ct_kwh": 12.61,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 95.5,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-003",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [
+     "arbeitspreis_ct_kwh"
+    ],
+    "fixkostenanteil_pct": 63.2,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 785.7,
+    "mischpreis_ct_kwh": 2.91,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 36.8,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": null,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-004",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [
+     "arbeitspreis_ct_kwh"
+    ],
+    "fixkostenanteil_pct": 60.1,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 826.2,
+    "mischpreis_ct_kwh": 3.06,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 39.9,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-005",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 9.6,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3552.3,
+    "mischpreis_ct_kwh": 13.16,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 90.4,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": null,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-006",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 9.5,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3592.8,
+    "mischpreis_ct_kwh": 13.31,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 90.5,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-007",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 14.1,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3523.5,
+    "mischpreis_ct_kwh": 13.05,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 85.9,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": null,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-008",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.9,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3564.0,
+    "mischpreis_ct_kwh": 13.2,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 86.1,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-009",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.8,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3601.8,
+    "mischpreis_ct_kwh": 13.34,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 86.2,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": null,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-010",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.3,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3747.6,
+    "mischpreis_ct_kwh": 13.88,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 145.8,
+    "variablekostenanteil_pct": 86.7,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-011",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": null
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-012",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.8,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3601.8,
+    "mischpreis_ct_kwh": 13.34,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-07-01"
+    },
+    "umlage_typ": "waermeumlagenpreis",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 86.2,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {}
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-013",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "grundpreis_eur_kw",
+     "arbeitspreis_ct_kwh"
+    ],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.0,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {}
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-014",
+   "kwargs": {
+    "kwh": 0,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "grundpreis_eur_kw",
+     "arbeitspreis_ct_kwh"
+    ],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.0,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 0,
+     "grundpreis_eur_kw": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-015",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.0,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "grundpreis_eur_kw": 25.0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-fehlt",
+   "id": "nw-fehlt-016",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_ct_kwh"
+    ],
+    "fixkostenanteil_pct": 100.0,
+    "grundpreis_anteil": 300.0,
+    "jahreskosten": 300.0,
+    "mischpreis_ct_kwh": 1.11,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 0.0,
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": "10,82",
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-001",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": "abc",
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-002",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": "",
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-003",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": true,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-004",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": false,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-005",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": -1,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-006",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": {
+      "$float": "nan"
+     },
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss endlich sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-007",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": [
+      1
+     ],
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-008",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": {
+      "v": 1
+     },
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_ct_kwh muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-009",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": "1e2",
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-010",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 27000.0,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 1.8,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 27785.7,
+    "mischpreis_ct_kwh": 102.91,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 98.2,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": " 7 ",
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-011",
+   "kwargs": {
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 1890.0,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 18.6,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 2675.7,
+    "mischpreis_ct_kwh": 9.91,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 81.4,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": {
+      "$decimal": "28.5"
+     },
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-012",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": "28.50",
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-013",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "verrechnungspreis_eur_jahr": 0.0,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-014",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 9.6,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3552.3,
+    "mischpreis_ct_kwh": 13.16,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 90.4,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.82,
+     "emissionspreis_ct_kwh": 0.68,
+     "grundpreis_eur_kw": 28.5,
+     "umlagenpreis_ct_kwh": 0.39,
+     "unbekannt_ct_kwh": 9.9,
+     "verrechnungspreis_eur_jahr": 154.8,
+     "waermeumlagenpreis_ct_kwh": 0.54
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-ungueltig",
+   "id": "nw-ungueltig-015",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 2921.4,
+    "emissionspreis_anteil": 183.6,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 13.4,
+    "grundpreis_anteil": 342.0,
+    "jahreskosten": 3707.1,
+    "mischpreis_ct_kwh": 13.73,
+    "parameter": {
+     "kw": 12.0,
+     "kwh": 27000.0,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 105.3,
+    "variablekostenanteil_pct": 86.6,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 154.8
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 0.005,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-001",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.01,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.01,
+    "mischpreis_ct_kwh": 0.01,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 1.005,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-002",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 1.01,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 1.01,
+    "mischpreis_ct_kwh": 1.01,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 2.675,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-003",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2.68,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 2.68,
+    "mischpreis_ct_kwh": 2.68,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 0.015,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-004",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.02,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.02,
+    "mischpreis_ct_kwh": 0.02,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 0.025,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-005",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.03,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.03,
+    "mischpreis_ct_kwh": 0.03,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 10.825,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-006",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 10.83,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 10.83,
+    "mischpreis_ct_kwh": 10.83,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 1e-09,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-007",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.0,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 123456.789,
+     "grundpreis_eur_kw": 0,
+     "verrechnungspreis_eur_jahr": 0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-008",
+   "kwargs": {
+    "kw": 0,
+    "kwh": 100,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 123456.79,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 0.0,
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 123456.79,
+    "mischpreis_ct_kwh": 123456.79,
+    "parameter": {
+     "kw": 0,
+     "kwh": 100,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 100.0,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 0.001,
+     "emissionspreis_ct_kwh": 0.001,
+     "grundpreis_eur_kw": 0.001,
+     "umlagenpreis_ct_kwh": 0.001,
+     "verrechnungspreis_eur_jahr": 0.004
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-009",
+   "kwargs": {
+    "kw": 5,
+    "kwh": 500,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.01,
+    "emissionspreis_anteil": 0.01,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 37.5,
+    "grundpreis_anteil": 0.01,
+    "jahreskosten": 0.02,
+    "mischpreis_ct_kwh": 0.0,
+    "parameter": {
+     "kw": 5,
+     "kwh": 500,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.01,
+    "variablekostenanteil_pct": 62.5,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_ct_kwh": 1.0,
+     "grundpreis_eur_kw": 1.0,
+     "verrechnungspreis_eur_jahr": 1.0
+    }
+   ],
+   "function": "calculate_nahwaerme",
+   "group": "nw-rundung",
+   "id": "nw-rundung-010",
+   "kwargs": {
+    "kw": 1,
+    "kwh": 3,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.03,
+    "emissionspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "fixkostenanteil_pct": 98.5,
+    "grundpreis_anteil": 1.0,
+    "jahreskosten": 2.03,
+    "mischpreis_ct_kwh": 67.67,
+    "parameter": {
+     "kw": 1,
+     "kwh": 3,
+     "stichtag": "2025-01-01"
+    },
+    "umlage_typ": "gasspeicherumlage",
+    "umlagenpreis_anteil": 0.0,
+    "variablekostenanteil_pct": 1.5,
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 1.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-standard",
+   "id": "wa-standard-001",
+   "kwargs": {
+    "m3": 150,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-standard",
+   "id": "wa-standard-002",
+   "kwargs": {},
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150.0,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-001",
+   "kwargs": {
+    "m3": 0,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 102.0,
+    "mischpreis_eur_m3": 0.0,
+    "parameter": {
+     "m3": 0,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-002",
+   "kwargs": {
+    "m3": 50,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 107.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 214.5,
+    "mischpreis_eur_m3": 4.29,
+    "parameter": {
+     "m3": 50,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 5.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-003",
+   "kwargs": {
+    "m3": 150,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-004",
+   "kwargs": {
+    "m3": 180,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 387.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 507.0,
+    "mischpreis_eur_m3": 2.82,
+    "parameter": {
+     "m3": 180,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 18.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-005",
+   "kwargs": {
+    "m3": 500,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 1075.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 1227.0,
+    "mischpreis_eur_m3": 2.45,
+    "parameter": {
+     "m3": 500,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 50.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-006",
+   "kwargs": {
+    "m3": 2.5,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 5.38,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 107.63,
+    "mischpreis_eur_m3": 43.05,
+    "parameter": {
+     "m3": 2.5,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.25
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-007",
+   "kwargs": {
+    "m3": "150",
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": "150",
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-008",
+   "kwargs": {
+    "m3": {
+     "$decimal": "150"
+    },
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": {
+      "$decimal": "150"
+     },
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-009",
+   "kwargs": {
+    "m3": null,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 102.0,
+    "mischpreis_eur_m3": 0.0,
+    "parameter": {
+     "m3": null,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "m3 darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-010",
+   "kwargs": {
+    "m3": -1,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-011",
+   "kwargs": {
+    "m3": "1,5",
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "m3 muss endlich sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-verbrauch",
+   "id": "wa-verbrauch-012",
+   "kwargs": {
+    "m3": {
+     "$float": "inf"
+    },
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-001",
+   "kwargs": {
+    "m3": 150,
+    "q3": 2.5,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 2.5,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-002",
+   "kwargs": {
+    "m3": 150,
+    "q3": 10,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 10,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-003",
+   "kwargs": {
+    "m3": 150,
+    "q3": 0,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-004",
+   "kwargs": {
+    "m3": 150,
+    "q3": null,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": null,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "q3 darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-005",
+   "kwargs": {
+    "m3": 150,
+    "q3": -4,
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "q3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-006",
+   "kwargs": {
+    "m3": 150,
+    "q3": "x",
+    "stichtag": "2025-01-01"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-q3",
+   "id": "wa-q3-007",
+   "kwargs": {
+    "m3": 150,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-stichtag",
+   "id": "wa-stichtag-001",
+   "kwargs": {
+    "stichtag": "2025-07-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150.0,
+     "q3": 4.0,
+     "stichtag": "2025-07-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-stichtag",
+   "id": "wa-stichtag-002",
+   "kwargs": {
+    "stichtag": {
+     "$date": "2024-01-01"
+    }
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150.0,
+     "q3": 4.0,
+     "stichtag": "2024-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Invalid isoformat string: '31.12.2025'",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-stichtag",
+   "id": "wa-stichtag-003",
+   "kwargs": {
+    "stichtag": "31.12.2025"
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-stichtag",
+   "id": "wa-stichtag-004",
+   "kwargs": {
+    "stichtag": {
+     "$datetime": "2025-01-01T00:00:00"
+    }
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150.0,
+     "q3": 4.0,
+     "stichtag": "2025-01-01T00:00:00"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-001",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [
+     "grundpreis_eur_monat"
+    ],
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 337.5,
+    "mischpreis_eur_m3": 2.25,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": null,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-002",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [
+     "grundpreis_eur_monat"
+    ],
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 337.5,
+    "mischpreis_eur_m3": 2.25,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-003",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 117.0,
+    "mischpreis_eur_m3": 0.78,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": null,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-004",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 117.0,
+    "mischpreis_eur_m3": 0.78,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-005",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": null,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-006",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-007",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 424.5,
+    "mischpreis_eur_m3": 2.83,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": null
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-008",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 424.5,
+    "mischpreis_eur_m3": 2.83,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {}
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-009",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "grundpreis_eur_monat",
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.0,
+    "mischpreis_eur_m3": 0.0,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {}
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-fehlt",
+   "id": "wa-fehlt-010",
+   "kwargs": {
+    "m3": 0
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "grundpreis_eur_monat",
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 0.0,
+    "mischpreis_eur_m3": 0.0,
+    "parameter": {
+     "m3": 0,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": "2,15",
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_eur_m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-ungueltig",
+   "id": "wa-ungueltig-001",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": true,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_eur_m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-ungueltig",
+   "id": "wa-ungueltig-002",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": -0.01,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_eur_m3 darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-ungueltig",
+   "id": "wa-ungueltig-003",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": "nan",
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_eur_m3 muss endlich sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-ungueltig",
+   "id": "wa-ungueltig-004",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": [
+      2.15
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "arbeitspreis_eur_m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-ungueltig",
+   "id": "wa-ungueltig-005",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 1.07,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-rundung",
+   "id": "wa-rundung-001",
+   "kwargs": {
+    "m3": 2.5
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2.68,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 104.93,
+    "mischpreis_eur_m3": 41.97,
+    "parameter": {
+     "m3": 2.5,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.25
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 1.07,
+     "grundpreis_eur_monat": 0,
+     "verrechnungspreis_eur_monat": 0,
+     "wasserentnahmeentgelt_eur_m3": 0
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-rundung",
+   "id": "wa-rundung-002",
+   "kwargs": {
+    "m3": 2.5
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2.68,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 2.68,
+    "mischpreis_eur_m3": 1.07,
+    "parameter": {
+     "m3": 2.5,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 0.001,
+     "grundpreis_eur_monat": 0.001,
+     "verrechnungspreis_eur_monat": 0.001,
+     "wasserentnahmeentgelt_eur_m3": 0.001
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-rundung",
+   "id": "wa-rundung-003",
+   "kwargs": {
+    "m3": 5
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.01,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 0.01,
+    "jahreskosten": 0.03,
+    "mischpreis_eur_m3": 0.01,
+    "parameter": {
+     "m3": 5,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.01,
+    "wee_anteil": 0.01
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 1.005,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-rundung",
+   "id": "wa-rundung-004",
+   "kwargs": {
+    "m3": 1
+   },
+   "ok": {
+    "arbeitspreis_anteil": 1.01,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 103.11,
+    "mischpreis_eur_m3": 103.11,
+    "parameter": {
+     "m3": 1,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 0.1
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-001",
+   "kwargs": {
+    "m3": 0,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 150.0,
+    "mischpreis_eur_m3": 0.0,
+    "parameter": {
+     "m3": 0,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 0.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-002",
+   "kwargs": {
+    "m3": 25,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 45.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 198.75,
+    "mischpreis_eur_m3": 7.95,
+    "parameter": {
+     "m3": 25,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 3.75
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-003",
+   "kwargs": {
+    "m3": 49.999,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 90.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 247.5,
+    "mischpreis_eur_m3": 4.95,
+    "parameter": {
+     "m3": 49.999,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 7.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-004",
+   "kwargs": {
+    "m3": 50,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 90.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 247.5,
+    "mischpreis_eur_m3": 4.95,
+    "parameter": {
+     "m3": 50,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 7.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-005",
+   "kwargs": {
+    "m3": 50.001,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 90.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 247.5,
+    "mischpreis_eur_m3": 4.95,
+    "parameter": {
+     "m3": 50.001,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 7.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-006",
+   "kwargs": {
+    "m3": 150,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 310.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 482.5,
+    "mischpreis_eur_m3": 3.22,
+    "parameter": {
+     "m3": 150,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-007",
+   "kwargs": {
+    "m3": 200,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 420.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 600.0,
+    "mischpreis_eur_m3": 3.0,
+    "parameter": {
+     "m3": 200,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 30.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-008",
+   "kwargs": {
+    "m3": 200.5,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 421.25,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 601.33,
+    "mischpreis_eur_m3": 3.0,
+    "parameter": {
+     "m3": 200.5,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 30.08
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-009",
+   "kwargs": {
+    "m3": 500,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 1170.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 1395.0,
+    "mischpreis_eur_m3": 2.79,
+    "parameter": {
+     "m3": 500,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 75.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-010",
+   "kwargs": {
+    "m3": 750,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 1795.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 2057.5,
+    "mischpreis_eur_m3": 2.74,
+    "parameter": {
+     "m3": 750,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 112.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffel",
+   "id": "wa-staffel-011",
+   "kwargs": {
+    "m3": 1000000.0,
+    "q3": 4,
+    "stichtag": "2025-01-01"
+   },
+   "ok": {
+    "arbeitspreis_anteil": 2499920.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 2650070.0,
+    "mischpreis_eur_m3": 2.65,
+    "parameter": {
+     "m3": 1000000.0,
+     "q3": 4,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 150000.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-001",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 275.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 447.5,
+    "mischpreis_eur_m3": 2.98,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-002",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 275.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 392.0,
+    "mischpreis_eur_m3": 2.61,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      },
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-003",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 275.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 447.5,
+    "mischpreis_eur_m3": 2.98,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      },
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-004",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 275.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 392.0,
+    "mischpreis_eur_m3": 2.61,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-005",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 300.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 472.5,
+    "mischpreis_eur_m3": 3.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-006",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 300.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 417.0,
+    "mischpreis_eur_m3": 2.78,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 50,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelgrenzen muessen eindeutig sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-007",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 50,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelgrenzen muessen eindeutig sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-008",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 0,
+       "preis": 1.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-009",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 0,
+       "preis": 1.5
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-010",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": null,
+       "preis": 1.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-011",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": null,
+       "preis": 1.5
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-012",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": null,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 2.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-013",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": null,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 2.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-014",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": null
+      },
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-015",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 200.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 372.5,
+    "mischpreis_eur_m3": 2.48,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": null
+      },
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-016",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 200.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 317.0,
+    "mischpreis_eur_m3": 2.11,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-017",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-018",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 117.0,
+    "mischpreis_eur_m3": 0.78,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-019",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 muss groesser als 0 sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-020",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": -5,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-021",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": -5,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.bis_m3 darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-022",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": -2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.preis darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-023",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": -2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1.preis darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-024",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": "50",
+       "preis": "1.5"
+      },
+      {
+       "bis_m3": "100,5",
+       "preis": "2"
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 2.bis_m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-025",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": "50",
+       "preis": "1.5"
+      },
+      {
+       "bis_m3": "100,5",
+       "preis": "2"
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 2.bis_m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-026",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50.5,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 100.25,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-027",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 274.75,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 447.25,
+    "mischpreis_eur_m3": 2.98,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50.5,
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 100.25,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-028",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 274.75,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 391.75,
+    "mischpreis_eur_m3": 2.61,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      [
+       "50",
+       "1.5"
+      ]
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1 muss ein Objekt sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-029",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      [
+       "50",
+       "1.5"
+      ]
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1 muss ein Objekt sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-030",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      "50"
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1 muss ein Objekt sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-031",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      "50"
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "error": {
+    "message": "Staffelstufe 1 muss ein Objekt sein",
+    "type": "ValueError"
+   },
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-032",
+   "kwargs": {
+    "m3": 150
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-033",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-034",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": {
+      "staffeln": [
+       {
+        "bis_m3": 50,
+        "preis": 1.8
+       },
+       {
+        "bis_m3": 200,
+        "preis": 2.2
+       }
+      ]
+     },
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-035",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 310.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 482.5,
+    "mischpreis_eur_m3": 3.22,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": {
+      "staffeln": [
+       {
+        "bis_m3": 50,
+        "preis": 1.8
+       },
+       {
+        "bis_m3": 200,
+        "preis": 2.2
+       }
+      ]
+     },
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-036",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 310.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 427.0,
+    "mischpreis_eur_m3": 2.85,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": {
+      "staffeln": []
+     },
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-037",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": {
+      "staffeln": []
+     },
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-038",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": {
+      "stufen": [
+       {
+        "bis_m3": 50,
+        "preis": 1.8
+       }
+      ]
+     },
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-039",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": {
+      "stufen": [
+       {
+        "bis_m3": 50,
+        "preis": 1.8
+       }
+      ]
+     },
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-040",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": {},
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-041",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": {},
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-042",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": "50:1.8",
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-043",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": "50:1.8",
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-044",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": null,
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-045",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 0.0,
+    "fehlende_komponenten": [
+     "arbeitspreis_eur_m3"
+    ],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 172.5,
+    "mischpreis_eur_m3": 1.15,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": null,
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-046",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 322.5,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 439.5,
+    "mischpreis_eur_m3": 2.93,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "extra": "x",
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-047",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 275.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 447.5,
+    "mischpreis_eur_m3": 2.98,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": 2.15,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "extra": "x",
+       "preis": 1.5
+      },
+      {
+       "bis_m3": 100,
+       "preis": 2.0
+      }
+     ],
+     "grundpreis_eur_monat": 8.5,
+     "verrechnungspreis_eur_monat": 0.0,
+     "wasserentnahmeentgelt_eur_m3": 0.1
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-048",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 275.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 102.0,
+    "jahreskosten": 392.0,
+    "mischpreis_eur_m3": 2.61,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 0.0,
+    "wee_anteil": 15.0
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-049",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 310.0,
+    "fehlende_komponenten": [
+     "grundpreis_eur_monat"
+    ],
+    "grundpreis_anteil": 0.0,
+    "jahreskosten": 362.5,
+    "mischpreis_eur_m3": 2.42,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": false,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    {
+     "arbeitspreis_eur_m3": null,
+     "arbeitspreis_staffel": [
+      {
+       "bis_m3": 50,
+       "preis": 1.8
+      },
+      {
+       "bis_m3": 200,
+       "preis": 2.2
+      },
+      {
+       "bis_m3": 500,
+       "preis": 2.5
+      }
+     ],
+     "grundpreis_eur_monat": 10.0,
+     "verrechnungspreis_eur_monat": 2.5,
+     "wasserentnahmeentgelt_eur_m3": 0.15
+    }
+   ],
+   "function": "calculate_wasser",
+   "group": "wa-staffelform",
+   "id": "wa-staffelform-050",
+   "kwargs": {
+    "m3": 150
+   },
+   "ok": {
+    "arbeitspreis_anteil": 310.0,
+    "fehlende_komponenten": [],
+    "grundpreis_anteil": 120.0,
+    "jahreskosten": 482.5,
+    "mischpreis_eur_m3": 3.22,
+    "parameter": {
+     "m3": 150,
+     "q3": 4.0,
+     "stichtag": "2025-01-01"
+    },
+    "vergleichsfaehig": true,
+    "verrechnungspreis_anteil": 30.0,
+    "wee_anteil": 22.5
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     },
+     {
+      "bis_m3": 300,
+      "preis": 2.5
+     }
+    ],
+    150
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-001",
+   "kwargs": {},
+   "ok": 325.0
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     },
+     {
+      "bis_m3": 300,
+      "preis": 2.5
+     }
+    ],
+    50
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-002",
+   "kwargs": {},
+   "ok": 100.0
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     },
+     {
+      "bis_m3": 300,
+      "preis": 2.5
+     }
+    ],
+    400
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-003",
+   "kwargs": {},
+   "ok": 950.0
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     },
+     {
+      "bis_m3": 300,
+      "preis": 2.5
+     }
+    ],
+    0
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-004",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    [],
+    150
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-005",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 50,
+      "preis": 1.5
+     },
+     {
+      "bis_m3": 50,
+      "preis": 2.0
+     }
+    ],
+    100
+   ],
+   "error": {
+    "message": "Staffelgrenzen muessen eindeutig sein",
+    "type": "ValueError"
+   },
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-006",
+   "kwargs": {}
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 10,
+      "preis": 0.333
+     }
+    ],
+    1
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-007",
+   "kwargs": {},
+   "ok": 0.33
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 10,
+      "preis": 0.335
+     }
+    ],
+    1
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-008",
+   "kwargs": {},
+   "ok": 0.34
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 10,
+      "preis": 1.005
+     }
+    ],
+    1
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-009",
+   "kwargs": {},
+   "ok": 1.01
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     }
+    ],
+    -1
+   ],
+   "error": {
+    "message": "m3 darf nicht negativ sein",
+    "type": "ValueError"
+   },
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-010",
+   "kwargs": {}
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     }
+    ],
+    null
+   ],
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-011",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    [
+     {
+      "bis_m3": 100,
+      "preis": 2.0
+     }
+    ],
+    "1,5"
+   ],
+   "error": {
+    "message": "m3 muss eine gueltige Zahl sein",
+    "type": "ValueError"
+   },
+   "function": "_calculate_staffel",
+   "group": "staffel",
+   "id": "staffel-012",
+   "kwargs": {}
+  },
+  {
+   "args": [
+    120,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-001",
+   "kwargs": {},
+   "ok": 20.0
+  },
+  {
+   "args": [
+    80,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-002",
+   "kwargs": {},
+   "ok": -20.0
+  },
+  {
+   "args": [
+    100,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-003",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    100,
+    0
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-004",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    0,
+    0
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-005",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    100,
+    -100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-006",
+   "kwargs": {},
+   "ok": -200.0
+  },
+  {
+   "args": [
+    100.25,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-007",
+   "kwargs": {},
+   "ok": 0.2
+  },
+  {
+   "args": [
+    100.35,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-008",
+   "kwargs": {},
+   "ok": 0.3
+  },
+  {
+   "args": [
+    100.05,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-009",
+   "kwargs": {},
+   "ok": 0.0
+  },
+  {
+   "args": [
+    1.1,
+    1.0
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-010",
+   "kwargs": {},
+   "ok": 10.0
+  },
+  {
+   "args": [
+    3.3,
+    3.0
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-011",
+   "kwargs": {},
+   "ok": 10.0
+  },
+  {
+   "args": [
+    0,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-012",
+   "kwargs": {},
+   "ok": -100.0
+  },
+  {
+   "args": [
+    1000000000000.0,
+    1
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-013",
+   "kwargs": {},
+   "ok": 99999999999900.0
+  },
+  {
+   "args": [
+    1,
+    3
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-014",
+   "kwargs": {},
+   "ok": -66.7
+  },
+  {
+   "args": [
+    2,
+    3
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-015",
+   "kwargs": {},
+   "ok": -33.3
+  },
+  {
+   "args": [
+    100.15,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-016",
+   "kwargs": {},
+   "ok": 0.2
+  },
+  {
+   "args": [
+    100.45,
+    100
+   ],
+   "function": "calculate_delta",
+   "group": "delta",
+   "id": "delta-017",
+   "kwargs": {},
+   "ok": 0.5
+  },
+  {
+   "args": [
+    100,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-001",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    115,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-002",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    125,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-003",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "rot"
+  },
+  {
+   "args": [
+    110,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-004",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    110.01,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-005",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    120,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-006",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    120.01,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-007",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "rot"
+  },
+  {
+   "args": [
+    50,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-008",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    100,
+    0
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-009",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    100,
+    -5
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-010",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    0,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-011",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    1.1,
+    1.0
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-012",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    1.2,
+    1.0
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-013",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    3.3,
+    3.0
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-014",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    3.6,
+    3.0
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-015",
+   "kwargs": {
+    "schwelle_pct": 20
+   },
+   "ok": "rot"
+  },
+  {
+   "args": [
+    100,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-016",
+   "kwargs": {
+    "schwelle_pct": 0
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    100.01,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-017",
+   "kwargs": {
+    "schwelle_pct": 0
+   },
+   "ok": "rot"
+  },
+  {
+   "args": [
+    105,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-018",
+   "kwargs": {
+    "schwelle_pct": 10
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    105.0000001,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-019",
+   "kwargs": {
+    "schwelle_pct": 10
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    100,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-020",
+   "kwargs": {
+    "schwelle_pct": -10
+   },
+   "ok": "rot"
+  },
+  {
+   "args": [
+    90,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-021",
+   "kwargs": {
+    "schwelle_pct": -10
+   },
+   "ok": "gruen"
+  },
+  {
+   "args": [
+    130,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-022",
+   "kwargs": {
+    "schwelle_pct": 50
+   },
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    115,
+    100
+   ],
+   "function": "determine_compliance",
+   "group": "compliance",
+   "id": "compliance-023",
+   "kwargs": {},
+   "ok": "gelb"
+  },
+  {
+   "args": [
+    []
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-001",
+   "kwargs": {},
+   "ok": {
+    "count": 0,
+    "max": 0.0,
+    "mean": 0.0,
+    "median": 0.0,
+    "min": 0.0,
+    "stddev": 0.0
+   }
+  },
+  {
+   "args": [
+    [
+     100.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-002",
+   "kwargs": {},
+   "ok": {
+    "count": 1,
+    "max": 100.0,
+    "mean": 100.0,
+    "median": 100.0,
+    "min": 100.0,
+    "stddev": 0.0
+   }
+  },
+  {
+   "args": [
+    [
+     100.0,
+     200.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-003",
+   "kwargs": {},
+   "ok": {
+    "count": 2,
+    "max": 200.0,
+    "mean": 150.0,
+    "median": 150.0,
+    "min": 100.0,
+    "stddev": 50.0
+   }
+  },
+  {
+   "args": [
+    [
+     300.0,
+     100.0,
+     200.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-004",
+   "kwargs": {},
+   "ok": {
+    "count": 3,
+    "max": 300.0,
+    "mean": 200.0,
+    "median": 200.0,
+    "min": 100.0,
+    "stddev": 81.65
+   }
+  },
+  {
+   "args": [
+    [
+     1.0,
+     2.0,
+     3.0,
+     4.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-005",
+   "kwargs": {},
+   "ok": {
+    "count": 4,
+    "max": 4.0,
+    "mean": 2.5,
+    "median": 2.5,
+    "min": 1.0,
+    "stddev": 1.12
+   }
+  },
+  {
+   "args": [
+    [
+     0.125,
+     0.135
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-006",
+   "kwargs": {},
+   "ok": {
+    "count": 2,
+    "max": 0.14,
+    "mean": 0.13,
+    "median": 0.13,
+    "min": 0.12,
+    "stddev": 0.01
+   }
+  },
+  {
+   "args": [
+    [
+     2.675,
+     2.675
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-007",
+   "kwargs": {},
+   "ok": {
+    "count": 2,
+    "max": 2.67,
+    "mean": 2.67,
+    "median": 2.67,
+    "min": 2.67,
+    "stddev": 0.0
+   }
+  },
+  {
+   "args": [
+    [
+     1.005,
+     1.015,
+     1.025
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-008",
+   "kwargs": {},
+   "ok": {
+    "count": 3,
+    "max": 1.02,
+    "mean": 1.01,
+    "median": 1.01,
+    "min": 1.0,
+    "stddev": 0.01
+   }
+  },
+  {
+   "args": [
+    [
+     -10.0,
+     10.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-009",
+   "kwargs": {},
+   "ok": {
+    "count": 2,
+    "max": 10.0,
+    "mean": 0.0,
+    "median": 0.0,
+    "min": -10.0,
+    "stddev": 10.0
+   }
+  },
+  {
+   "args": [
+    [
+     1000000000.0,
+     1000000001.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-010",
+   "kwargs": {},
+   "ok": {
+    "count": 2,
+    "max": 1000000001.0,
+    "mean": 1000000000.5,
+    "median": 1000000000.5,
+    "min": 1000000000.0,
+    "stddev": 0.5
+   }
+  },
+  {
+   "args": [
+    [
+     0.1,
+     0.2,
+     0.3
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-011",
+   "kwargs": {},
+   "ok": {
+    "count": 3,
+    "max": 0.3,
+    "mean": 0.2,
+    "median": 0.2,
+    "min": 0.1,
+    "stddev": 0.08
+   }
+  },
+  {
+   "args": [
+    [
+     5,
+     5,
+     5,
+     5
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-012",
+   "kwargs": {},
+   "ok": {
+    "count": 4,
+    "max": 5,
+    "mean": 5.0,
+    "median": 5.0,
+    "min": 5,
+    "stddev": 0.0
+   }
+  },
+  {
+   "args": [
+    [
+     3707.1,
+     3747.6,
+     3956.4,
+     4012.35,
+     2890.0
+    ]
+   ],
+   "function": "calculate_cluster_statistics",
+   "group": "cluster",
+   "id": "cluster-013",
+   "kwargs": {},
+   "ok": {
+    "count": 5,
+    "max": 4012.35,
+    "mean": 3662.69,
+    "median": 3747.6,
+    "min": 2890.0,
+    "stddev": 403.67
+   }
+  },
+  {
+   "args": [
+    []
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-001",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     null,
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null
+      }
+     }
+    ]
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-002",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "a"
+     },
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     }
+    ]
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-003",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 7
+      }
+     },
+     {
+      "$obj": {
+       "id": 9,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 3
+      }
+     },
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "c",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "d",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": 1
+      }
+     }
+    ]
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-004",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 7
+      }
+     },
+     {
+      "$obj": {
+       "id": 9,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 3
+      }
+     },
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "c",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "d",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": 1
+      }
+     }
+    ],
+    {
+     "$set": [
+      7
+     ]
+    }
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-005",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "a"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 7
+      }
+     },
+     {
+      "$obj": {
+       "id": 9,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 3
+      }
+     },
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "c",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "d",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": 1
+      }
+     }
+    ],
+    {
+     "$set": [
+      1
+     ]
+    }
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-006",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 7
+      }
+     },
+     {
+      "$obj": {
+       "id": 9,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 3
+      }
+     },
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "c",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "d",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": 1
+      }
+     }
+    ],
+    {
+     "$set": [
+      3,
+      7
+     ]
+    }
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-007",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 7
+      }
+     },
+     {
+      "$obj": {
+       "id": 9,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 3
+      }
+     },
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "c",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "d",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": 1
+      }
+     }
+    ],
+    {
+     "$set": []
+    }
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-008",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 7
+      }
+     },
+     {
+      "$obj": {
+       "id": 9,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 3
+      }
+     },
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "c",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "d",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": 1
+      }
+     }
+    ],
+    null
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-009",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 5,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     }
+    ]
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-010",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "b"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 5,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 0
+      }
+     },
+     {
+      "$obj": {
+       "id": null,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null
+      }
+     }
+    ]
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-011",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "a"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "a",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": 2
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "b",
+       "stichtag": {
+        "$date": "2026-01-01"
+       }
+      }
+     }
+    ]
+   ],
+   "function": "waehle_preis_deterministisch",
+   "group": "auswahl",
+   "id": "auswahl-012",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "a"
+     },
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [],
+    4
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-001",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     null,
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    4
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-002",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q4-alt"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    4.0
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-003",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q4-alt"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    4.005
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-004",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q4-alt"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    4.01
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-005",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q4-alt"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    3.995
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-006",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q4-alt"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    10
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-007",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q10-neu"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    2.5
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-008",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q2.5"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    6
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-009",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q10-neu"
+     },
+     "nicht_verfuegbar_fuer_q3",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    null
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-010",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q10-neu"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    0
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-011",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q10-neu"
+     },
+     "nicht_verfuegbar_fuer_q3",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "q4-alt",
+       "stichtag": {
+        "$date": "2025-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "q10-neu",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 10.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "q2.5",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": 2.5
+      }
+     },
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    {
+     "$decimal": "4.0"
+    }
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-012",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "q4-alt"
+     },
+     "ok",
+     false
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 1,
+       "ref": "v1",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 5,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 2,
+       "ref": "v2",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": 2,
+       "zaehlergroesse_q3": 4.0
+      }
+     },
+     {
+      "$obj": {
+       "id": 3,
+       "ref": "v3",
+       "stichtag": {
+        "$date": "2026-01-01"
+       },
+       "variant_id": 9,
+       "zaehlergroesse_q3": 10.0
+      }
+     }
+    ],
+    4,
+    {
+     "$set": [
+      5
+     ]
+    }
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-013",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "v1"
+     },
+     "ok",
+     true
+    ]
+   }
+  },
+  {
+   "args": [
+    [
+     {
+      "$obj": {
+       "id": 4,
+       "ref": "qnone",
+       "stichtag": {
+        "$date": "2025-07-01"
+       },
+       "variant_id": null,
+       "zaehlergroesse_q3": null
+      }
+     }
+    ],
+    4
+   ],
+   "function": "waehle_wasser_preis",
+   "group": "wasser-auswahl",
+   "id": "wasser-auswahl-014",
+   "kwargs": {},
+   "ok": {
+    "$tuple": [
+     {
+      "$ref": "qnone"
+     },
+     "nicht_verfuegbar_fuer_q3",
+     false
+    ]
+   }
+  }
+ ],
+ "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+ "constants": {
+  "CENT": "0.01",
+  "DATENSTATUS_KEIN_Q3_TARIF": "nicht_verfuegbar_fuer_q3",
+  "DATENSTATUS_OK": "ok",
+  "Q3_TOLERANZ": 0.01,
+  "UMLAGEN_STICHTAG": "2025-07-01",
+  "ZEHNTEL": "0.1"
+ },
+ "files": [
+  {
+   "git_blob": "1d40c9ef739e8933b4ec8195226f5eef117389ba",
+   "path": "backend/app/services/calculator.py"
+  },
+  {
+   "git_blob": "89b5cec43867794918cfcb851878eb6dfddf1abc",
+   "path": "backend/app/services/preisauswahl.py"
+  }
+ ],
+ "python": "3.12.3",
+ "repository": "janpow77/regulierung",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "status": "OBSERVED"
+}

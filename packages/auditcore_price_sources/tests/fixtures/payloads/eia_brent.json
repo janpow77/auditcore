@@ -1,0 +1,92 @@
+{
+ "response": {
+  "total": "6",
+  "dateFormat": "YYYY-MM-DD",
+  "frequency": "daily",
+  "data": [
+   {
+    "period": "2026-09-01",
+    "duoarea": "",
+    "area-name": "NA",
+    "product": "EPCBRENT",
+    "product-name": "UK Brent Crude Oil",
+    "process": "PF4",
+    "process-name": "Spot Price FOB",
+    "series": "RBRTE",
+    "series-description": "Europe Brent Spot Price FOB (Dollars per Barrel)",
+    "value": "71.25",
+    "units": "$/BBL"
+   },
+   {
+    "period": "2026-08-31",
+    "duoarea": "",
+    "area-name": "NA",
+    "product": "EPCBRENT",
+    "product-name": "UK Brent Crude Oil",
+    "process": "PF4",
+    "process-name": "Spot Price FOB",
+    "series": "RBRTE",
+    "series-description": "Europe Brent Spot Price FOB (Dollars per Barrel)",
+    "value": 70.8,
+    "units": "$/BBL"
+   },
+   {
+    "period": "2026-08-30",
+    "duoarea": "",
+    "area-name": "NA",
+    "product": "EPCBRENT",
+    "product-name": "UK Brent Crude Oil",
+    "process": "PF4",
+    "process-name": "Spot Price FOB",
+    "series": "RBRTE",
+    "series-description": "Europe Brent Spot Price FOB (Dollars per Barrel)",
+    "value": null,
+    "units": "$/BBL"
+   },
+   {
+    "period": "2026-08-29",
+    "duoarea": "",
+    "area-name": "NA",
+    "product": "EPCBRENT",
+    "product-name": "UK Brent Crude Oil",
+    "process": "PF4",
+    "process-name": "Spot Price FOB",
+    "series": "RBRTE",
+    "series-description": "Europe Brent Spot Price FOB (Dollars per Barrel)",
+    "value": "",
+    "units": "$/BBL"
+   },
+   {
+    "period": "2026-08-2x",
+    "duoarea": "",
+    "area-name": "NA",
+    "product": "EPCBRENT",
+    "product-name": "UK Brent Crude Oil",
+    "process": "PF4",
+    "process-name": "Spot Price FOB",
+    "series": "RBRTE",
+    "series-description": "Europe Brent Spot Price FOB (Dollars per Barrel)",
+    "value": "69.90",
+    "units": "$/BBL"
+   },
+   {
+    "period": "2026-08-28",
+    "duoarea": "",
+    "area-name": "NA",
+    "product": "EPCBRENT",
+    "product-name": "UK Brent Crude Oil",
+    "process": "PF4",
+    "process-name": "Spot Price FOB",
+    "series": "RBRTE",
+    "series-description": "Europe Brent Spot Price FOB (Dollars per Barrel)",
+    "value": "69.95",
+    "units": "$/BBL"
+   }
+  ],
+  "description": "Synthetic fixture in the EIA API v2 response shape"
+ },
+ "request": {
+  "command": "/v2/petroleum/pri/spt/data/"
+ },
+ "apiVersion": "2.1.0"
+}

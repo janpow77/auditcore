@@ -1,0 +1,1827 @@
+{
+ "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+ "files": [
+  {
+   "git_blob": "cf67c20cb1fb8d76108258c0f776ebf3d120d9a3",
+   "path": "backend/app/services/external_apis/__init__.py"
+  },
+  {
+   "git_blob": "dc180b95bae211e8cf6add23bdb3c01d6805200a",
+   "path": "backend/app/services/external_apis/base.py"
+  },
+  {
+   "git_blob": "3c25597a220a3826e45462bd371f0cb8e62edc82",
+   "path": "backend/app/services/external_apis/harvest_kern.py"
+  },
+  {
+   "git_blob": "5cc335bac17c31d8c2fe79e058753f3f864d6dc7",
+   "path": "backend/app/services/external_apis/bundesbank.py"
+  },
+  {
+   "git_blob": "f3463f6cad07e9d31a58f17468f90dcdf645b5c4",
+   "path": "backend/app/services/external_apis/destatis_genesis.py"
+  },
+  {
+   "git_blob": "2b457beefc576d70124695b57fb98241a5694031",
+   "path": "backend/app/services/external_apis/eia_brent.py"
+  },
+  {
+   "git_blob": "f21bbe053dffb81f4346e8fda519bbbd141835ee",
+   "path": "backend/app/services/external_apis/eu_oil_bulletin.py"
+  },
+  {
+   "git_blob": "fd615381e0a278b19f47110c50284994715886e6",
+   "path": "backend/app/services/external_apis/mtsk.py"
+  },
+  {
+   "git_blob": "d687fbdddb520cdf2cb962edf14aa0fb244d5c0f",
+   "path": "backend/app/services/external_apis/overpass.py"
+  },
+  {
+   "git_blob": "ebd3472e8fdaef86f25d9d72e6fe897d20f9ddbe",
+   "path": "backend/app/services/external_apis/tankerkoenig.py"
+  },
+  {
+   "git_blob": "5777f1b3266106cfa9fb3bb3c860869f5a439776",
+   "path": "backend/app/api/admin/external_apis.py"
+  }
+ ],
+ "payload_sha256": {
+  "bundesbank_empty.json": "8b0cd6ae33210cc935b76635ada7fa54320e746a4a1468f9e3ab8df946b328a8",
+  "bundesbank_fx.json": "b59ef5935395ceb910d6ac85669d8f3b5424d3424cdf6dbc0be6beb9c105707d",
+  "destatis_61241-0004.csv": "5f36a25f9d3d176611de83fd584c8d881ea9f74101012cade964412fd7a41803",
+  "destatis_61243-0001.csv": "5c57d8c21e037ab152cc742d885eb12443c6a0564c126f4b7433f2f31c958b67",
+  "eia_brent.json": "167f214cdb6e04c094d82efb2ee875c8c18fd69b66ad2ea14ca2b95f9043e545",
+  "eia_brent_page1.json": "73a2bb078001de789881dbfab15d5bbce03f0a2bff037a61e6c5ce8a4f7f89d9",
+  "eia_brent_page2.json": "190142fb401e0b458afb0c934e068739c8edb1f14d85335d478ea7f77747dd11",
+  "eu_oil_bulletin.html": "f6bd9d6e151b3be9d3ea5eec8f9af55512e7ef60b8f397e3bad42a4b59df1fd5",
+  "overpass_fuel.json": "c7a3357e19d260fe834ce39d7d52799a2f050e5d28bb08d92bbb15518302d669",
+  "overpass_remark.json": "e646801ca3bfbbf30164ba4f8c7f5aab1712686c985b65c186953cd68252f116",
+  "tankerkoenig_error.json": "4266a7a407ed982d90ef7362bf26d8ead056c928c94ddb5eb368a17ff005ced3",
+  "tankerkoenig_list.json": "9be00fc4859fa5995d2e80ca531d62f0e712e1c7cfd8412ffcb1fefaee769991"
+ },
+ "python": "3.12.3",
+ "repository": "janpow77/regulierung",
+ "scenarios": [
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 2,
+   "connector": "BundesbankConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "application/json",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "format": "json",
+      "lastNObservations": "30"
+     },
+     "secret_params_present": [],
+     "url": "https://example.invalid/api/data/BBEX3/D.USD.EUR.BB.AC.000",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 3,
+    "fehlermeldung": null,
+    "metadaten": {
+     "flow_ref": "BBEX3",
+     "format": "sdmx-json",
+     "persistiert": 3,
+     "series_key": "D.USD.EUR.BB.AC.000"
+    },
+    "paket_sha256": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
+    "rohdaten": {
+     "$bytes_sha256": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
+     "length": 2007
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 3,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "flow_ref": "BBEX3",
+      "format": "sdmx-json",
+      "persistiert": 3,
+      "series_key": "D.USD.EUR.BB.AC.000"
+     },
+     "paket_sha256": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
+     "status": "erfolg"
+    },
+    {
+     "$type": "Wechselkurs",
+     "eingegangen_am": null,
+     "id": null,
+     "kurs": 1.1012,
+     "quelle": "BUNDESBANK",
+     "stichtag": {
+      "$date": "2026-08-28"
+     },
+     "waehrung_basis": "USD",
+     "waehrung_kurs": "EUR"
+    },
+    {
+     "$type": "Wechselkurs",
+     "eingegangen_am": null,
+     "id": null,
+     "kurs": 1.0987,
+     "quelle": "BUNDESBANK",
+     "stichtag": {
+      "$date": "2026-08-31"
+     },
+     "waehrung_basis": "USD",
+     "waehrung_kurs": "EUR"
+    },
+    {
+     "$type": "Wechselkurs",
+     "eingegangen_am": null,
+     "id": null,
+     "kurs": 1.105,
+     "quelle": "BUNDESBANK",
+     "stichtag": {
+      "$date": "2026-09-01"
+     },
+     "waehrung_basis": "USD",
+     "waehrung_kurs": "EUR"
+    }
+   ],
+   "scenario": "bundesbank-ok"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 2,
+   "connector": "BundesbankConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "application/json",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "format": "json",
+      "lastNObservations": "30"
+     },
+     "secret_params_present": [],
+     "url": "https://example.invalid/api/data/BBEX3/D.USD.EUR.BB.AC.000",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 2,
+    "fehlermeldung": null,
+    "metadaten": {
+     "flow_ref": "BBEX3",
+     "format": "sdmx-json",
+     "persistiert": 2,
+     "series_key": "D.USD.EUR.BB.AC.000"
+    },
+    "paket_sha256": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
+    "rohdaten": {
+     "$bytes_sha256": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
+     "length": 2007
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 2,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "flow_ref": "BBEX3",
+      "format": "sdmx-json",
+      "persistiert": 2,
+      "series_key": "D.USD.EUR.BB.AC.000"
+     },
+     "paket_sha256": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
+     "status": "erfolg"
+    },
+    {
+     "$type": "Wechselkurs",
+     "eingegangen_am": null,
+     "id": null,
+     "kurs": 1.1012,
+     "quelle": "BUNDESBANK",
+     "stichtag": {
+      "$date": "2026-08-28"
+     },
+     "waehrung_basis": "USD",
+     "waehrung_kurs": "EUR"
+    },
+    {
+     "$type": "Wechselkurs",
+     "eingegangen_am": null,
+     "id": null,
+     "kurs": 1.0987,
+     "quelle": "BUNDESBANK",
+     "stichtag": {
+      "$date": "2026-08-31"
+     },
+     "waehrung_basis": "USD",
+     "waehrung_kurs": "EUR"
+    }
+   ],
+   "scenario": "bundesbank-ok-existing-day"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "BundesbankConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "application/json",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "format": "json",
+      "lastNObservations": "30"
+     },
+     "secret_params_present": [],
+     "url": "https://example.invalid/api/data/BBEX3/D.USD.EUR.BB.AC.000",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": null,
+    "metadaten": {
+     "flow_ref": "BBEX3",
+     "format": "sdmx-json",
+     "persistiert": 0,
+     "series_key": "D.USD.EUR.BB.AC.000"
+    },
+    "paket_sha256": "82a3e4fbf51ce50f65d6ce578af9768c9c3dd6d7ca3fe72ba9afaeac5d6ebfc1",
+    "rohdaten": {
+     "$bytes_sha256": "82a3e4fbf51ce50f65d6ce578af9768c9c3dd6d7ca3fe72ba9afaeac5d6ebfc1",
+     "length": 76
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "flow_ref": "BBEX3",
+      "format": "sdmx-json",
+      "persistiert": 0,
+      "series_key": "D.USD.EUR.BB.AC.000"
+     },
+     "paket_sha256": "82a3e4fbf51ce50f65d6ce578af9768c9c3dd6d7ca3fe72ba9afaeac5d6ebfc1",
+     "status": "erfolg"
+    }
+   ],
+   "scenario": "bundesbank-empty"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "BundesbankConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "HTTP 500: Fehlerseite",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "application/json",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "format": "json",
+      "lastNObservations": "30"
+     },
+     "secret_params_present": [],
+     "url": "https://example.invalid/api/data/BBEX3/D.USD.EUR.BB.AC.000",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "HTTP 500: Fehlerseite",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "HTTP 500: Fehlerseite",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {},
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "bundesbank-http-500"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "BundesbankConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "Antwort ist kein gültiges JSON",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "application/json",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "format": "json",
+      "lastNObservations": "30"
+     },
+     "secret_params_present": [],
+     "url": "https://example.invalid/api/data/BBEX3/D.USD.EUR.BB.AC.000",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "Antwort ist kein gültiges JSON",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "Antwort ist kein gültiges JSON",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {},
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "bundesbank-not-json"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 0,
+   "connector": "BundesbankConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "HEAD",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": [
+    true,
+    null
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "bundesbank-health-head-200"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 2,
+   "connector": "EiaBrentConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "data[0]": "value",
+      "end": "2026-09-02",
+      "facets[product][]": "EPCBRENT",
+      "frequency": "daily",
+      "length": "5000",
+      "sort[0][column]": "period",
+      "sort[0][direction]": "desc",
+      "start": "2026-08-03"
+     },
+     "secret_params_present": [
+      "api_key"
+     ],
+     "url": "https://example.invalid/api/petroleum/pri/spt/data/",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 6,
+    "fehlermeldung": null,
+    "metadaten": {
+     "bis": "2026-09-02",
+     "frequency": "daily",
+     "persistiert": 3,
+     "product": "EPCBRENT",
+     "unit": "USD/Barrel",
+     "von": "2026-08-03"
+    },
+    "paket_sha256": "9e861ba865ece28f21352668db958b6c3ea6beb84553588656269004fac522d0",
+    "rohdaten": {
+     "$bytes_sha256": "9e861ba865ece28f21352668db958b6c3ea6beb84553588656269004fac522d0",
+     "length": 2036
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 6,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "bis": "2026-09-02",
+      "frequency": "daily",
+      "persistiert": 3,
+      "product": "EPCBRENT",
+      "unit": "USD/Barrel",
+      "von": "2026-08-03"
+     },
+     "paket_sha256": "9e861ba865ece28f21352668db958b6c3ea6beb84553588656269004fac522d0",
+     "status": "erfolg"
+    },
+    {
+     "$type": "Rohstoffpreis",
+     "eingegangen_am": null,
+     "einheit": "USD/Barrel",
+     "id": null,
+     "preis_usd": 71.25,
+     "quelle": "EIA",
+     "rohstoff": "BRENT",
+     "stichtag": {
+      "$date": "2026-09-01"
+     }
+    },
+    {
+     "$type": "Rohstoffpreis",
+     "eingegangen_am": null,
+     "einheit": "USD/Barrel",
+     "id": null,
+     "preis_usd": 70.8,
+     "quelle": "EIA",
+     "rohstoff": "BRENT",
+     "stichtag": {
+      "$date": "2026-08-31"
+     }
+    },
+    {
+     "$type": "Rohstoffpreis",
+     "eingegangen_am": null,
+     "einheit": "USD/Barrel",
+     "id": null,
+     "preis_usd": 69.95,
+     "quelle": "EIA",
+     "rohstoff": "BRENT",
+     "stichtag": {
+      "$date": "2026-08-28"
+     }
+    }
+   ],
+   "scenario": "eia-ok"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 0,
+   "connector": "EiaBrentConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "Keine Zugangsdaten - ENV-Variable UNSET_FIXTURE_VAR ist nicht gesetzt",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "eia-no-key"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 0,
+   "connector": "EiaBrentConnector",
+   "method": "harvest",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "EIA_API_KEY nicht gesetzt - kostenlose Registrierung unter https://www.eia.gov/opendata/register.php",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "eia-no-key-harvest"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "EiaBrentConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "HTTP 403",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "data[0]": "value",
+      "end": "2026-09-02",
+      "facets[product][]": "EPCBRENT",
+      "frequency": "daily",
+      "length": "5000",
+      "sort[0][column]": "period",
+      "sort[0][direction]": "desc",
+      "start": "2026-08-03"
+     },
+     "secret_params_present": [
+      "api_key"
+     ],
+     "url": "https://example.invalid/api/petroleum/pri/spt/data/",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "HTTP 403",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "HTTP 403",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {},
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "eia-http-403"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "EuOilBulletinConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": null,
+    "metadaten": {
+     "hinweis": "XLSX-Download per Admin-UI; automatisches Parsing geplant für Phase 3 (KO-04)."
+    },
+    "paket_sha256": "f6bd9d6e151b3be9d3ea5eec8f9af55512e7ef60b8f397e3bad42a4b59df1fd5",
+    "rohdaten": null,
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "hinweis": "XLSX-Download per Admin-UI; automatisches Parsing geplant für Phase 3 (KO-04)."
+     },
+     "paket_sha256": "f6bd9d6e151b3be9d3ea5eec8f9af55512e7ef60b8f397e3bad42a4b59df1fd5",
+     "status": "erfolg"
+    }
+   ],
+   "scenario": "eu-oil-ok"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "EuOilBulletinConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "HTTP 404",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "HTTP 404",
+    "metadaten": {
+     "hinweis": "XLSX-Download per Admin-UI; automatisches Parsing geplant für Phase 3 (KO-04)."
+    },
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "HTTP 404",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "hinweis": "XLSX-Download per Admin-UI; automatisches Parsing geplant für Phase 3 (KO-04)."
+     },
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "eu-oil-404"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 0,
+   "connector": "TankerkoenigConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "lat": "50.6",
+      "lng": "9.0",
+      "rad": "1",
+      "type": "all"
+     },
+     "secret_params_present": [
+      "apikey"
+     ],
+     "url": "https://example.invalid/api/list.php",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": [
+    true,
+    null
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "tankerkoenig-health-ok"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 0,
+   "connector": "TankerkoenigConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "lat": "50.6",
+      "lng": "9.0",
+      "rad": "1",
+      "type": "all"
+     },
+     "secret_params_present": [
+      "apikey"
+     ],
+     "url": "https://example.invalid/api/list.php",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": [
+    false,
+    "apikey nicht angegeben, falsch, oder im falschen Format"
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "tankerkoenig-health-api-error"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 0,
+   "connector": "TankerkoenigConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "lat": "50.6",
+      "lng": "9.0",
+      "rad": "1",
+      "type": "all"
+     },
+     "secret_params_present": [
+      "apikey"
+     ],
+     "url": "https://example.invalid/api/list.php",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": [
+    false,
+    "HTTP 500"
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "tankerkoenig-health-http-500"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 0,
+   "connector": "TankerkoenigConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [],
+   "result": [
+    false,
+    "API-Key fehlt (ENV TANKERKOENIG_API_KEY)"
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "tankerkoenig-health-no-key"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 1,
+   "connector": "TankerkoenigConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": null,
+    "metadaten": {
+     "hinweis": "Live-Ingestion deaktiviert (ADR-005): list.php ohne Änderungszeitstempel und max. 25 km Radius. KPAnG-Daten kommen aus dem täglichen Tankerkoenig-History-Import."
+    },
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "hinweis": "Live-Ingestion deaktiviert (ADR-005): list.php ohne Änderungszeitstempel und max. 25 km Radius. KPAnG-Daten kommen aus dem täglichen Tankerkoenig-History-Import."
+     },
+     "paket_sha256": null,
+     "status": "erfolg"
+    }
+   ],
+   "scenario": "tankerkoenig-run"
+  },
+  {
+   "client_timeouts": [
+    "180.0"
+   ],
+   "commits": 2,
+   "connector": "OverpassConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": "data=%0A%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%0Aarea%5B%22ISO3166-2%22%3D%22DE-HE%22%5D-%3E.hessen%3B%0A%28%0A++node%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A++way%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A%29%3B%0Aout+center+tags%3B%0A",
+     "method": "POST",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 6,
+    "fehlermeldung": null,
+    "metadaten": {
+     "lizenz": "ODbL (OpenStreetMap)",
+     "neu_in_db": 4,
+     "query": "Hessen / amenity=fuel"
+    },
+    "paket_sha256": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
+    "rohdaten": {
+     "$bytes_sha256": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
+     "length": 1093
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 6,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "lizenz": "ODbL (OpenStreetMap)",
+      "neu_in_db": 4,
+      "query": "Hessen / amenity=fuel"
+     },
+     "paket_sha256": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
+     "status": "erfolg"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": "5",
+     "id": null,
+     "ist_demo": null,
+     "marke": "Beispiel",
+     "mtsk_id": "osm-node-1001",
+     "name": "Beispiel Tank",
+     "ort": "Frankfurt am Main",
+     "plz": "60311",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(8.6821 50.1109)",
+     "strasse": "Musterallee 5"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": "7",
+     "id": null,
+     "ist_demo": null,
+     "marke": "Marke",
+     "mtsk_id": "osm-way-2002",
+     "name": "Marke",
+     "ort": "Gießen-Ost",
+     "plz": "35390123",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(8.6784 50.5841)",
+     "strasse": "Ring 7"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": null,
+     "id": null,
+     "ist_demo": null,
+     "marke": null,
+     "mtsk_id": "osm-node-1003",
+     "name": "Tankstelle",
+     "ort": "Unbekannt",
+     "plz": "00000",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(9.4797 51.3127)",
+     "strasse": "Unbekannt"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": null,
+     "id": null,
+     "ist_demo": null,
+     "marke": null,
+     "mtsk_id": "osm-relation-3005",
+     "name": "Relation",
+     "ort": "Unbekannt",
+     "plz": "00000",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(8.0 50.0)",
+     "strasse": "Unbekannt"
+    }
+   ],
+   "scenario": "overpass-ok"
+  },
+  {
+   "client_timeouts": [
+    "180.0"
+   ],
+   "commits": 2,
+   "connector": "OverpassConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": "data=%0A%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%0Aarea%5B%22ISO3166-2%22%3D%22DE-HE%22%5D-%3E.hessen%3B%0A%28%0A++node%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A++way%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A%29%3B%0Aout+center+tags%3B%0A",
+     "method": "POST",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 6,
+    "fehlermeldung": null,
+    "metadaten": {
+     "lizenz": "ODbL (OpenStreetMap)",
+     "neu_in_db": 3,
+     "query": "Hessen / amenity=fuel"
+    },
+    "paket_sha256": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
+    "rohdaten": {
+     "$bytes_sha256": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
+     "length": 1093
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 6,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "lizenz": "ODbL (OpenStreetMap)",
+      "neu_in_db": 3,
+      "query": "Hessen / amenity=fuel"
+     },
+     "paket_sha256": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
+     "status": "erfolg"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": "7",
+     "id": null,
+     "ist_demo": null,
+     "marke": "Marke",
+     "mtsk_id": "osm-way-2002",
+     "name": "Marke",
+     "ort": "Gießen-Ost",
+     "plz": "35390123",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(8.6784 50.5841)",
+     "strasse": "Ring 7"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": null,
+     "id": null,
+     "ist_demo": null,
+     "marke": null,
+     "mtsk_id": "osm-node-1003",
+     "name": "Tankstelle",
+     "ort": "Unbekannt",
+     "plz": "00000",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(9.4797 51.3127)",
+     "strasse": "Unbekannt"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": null,
+     "id": null,
+     "ist_demo": null,
+     "marke": null,
+     "mtsk_id": "osm-relation-3005",
+     "name": "Relation",
+     "ort": "Unbekannt",
+     "plz": "00000",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(8.0 50.0)",
+     "strasse": "Unbekannt"
+    }
+   ],
+   "scenario": "overpass-ok-existing"
+  },
+  {
+   "client_timeouts": [
+    "180.0"
+   ],
+   "commits": 2,
+   "connector": "OverpassConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": "data=%0A%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%0Aarea%5B%22ISO3166-2%22%3D%22DE-HE%22%5D-%3E.hessen%3B%0A%28%0A++node%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A++way%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A%29%3B%0Aout+center+tags%3B%0A",
+     "method": "POST",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 1,
+    "fehlermeldung": null,
+    "metadaten": {
+     "lizenz": "ODbL (OpenStreetMap)",
+     "neu_in_db": 1,
+     "query": "Hessen / amenity=fuel"
+    },
+    "paket_sha256": "67375c384a1e0b862a54a3dc391545615edcc3b0bdd980d57d3543c352ca9dda",
+    "rohdaten": {
+     "$bytes_sha256": "67375c384a1e0b862a54a3dc391545615edcc3b0bdd980d57d3543c352ca9dda",
+     "length": 494
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 1,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "lizenz": "ODbL (OpenStreetMap)",
+      "neu_in_db": 1,
+      "query": "Hessen / amenity=fuel"
+     },
+     "paket_sha256": "67375c384a1e0b862a54a3dc391545615edcc3b0bdd980d57d3543c352ca9dda",
+     "status": "erfolg"
+    },
+    {
+     "$type": "Tankstelle",
+     "aenderungsgrund": "Import OpenStreetMap (Overpass)",
+     "bundesland": "HE",
+     "eingegangen_am": null,
+     "gueltig_bis": null,
+     "gueltig_von": "<gueltig_von>",
+     "hausnummer": "5",
+     "id": null,
+     "ist_demo": null,
+     "marke": "Beispiel",
+     "mtsk_id": "osm-node-1001",
+     "name": "Beispiel Tank",
+     "ort": "Frankfurt am Main",
+     "plz": "60311",
+     "stamm_id": "<stamm_id>",
+     "standort": "SRID=4326;POINT(8.6821 50.1109)",
+     "strasse": "Musterallee 5"
+    }
+   ],
+   "scenario": "overpass-remark"
+  },
+  {
+   "client_timeouts": [
+    "180.0"
+   ],
+   "commits": 1,
+   "connector": "OverpassConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "Overpass Rate-Limit (429), später wiederholen",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": "data=%0A%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%0Aarea%5B%22ISO3166-2%22%3D%22DE-HE%22%5D-%3E.hessen%3B%0A%28%0A++node%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A++way%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A%29%3B%0Aout+center+tags%3B%0A",
+     "method": "POST",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "Overpass Rate-Limit (429), später wiederholen",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "Overpass Rate-Limit (429), später wiederholen",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {},
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "overpass-429"
+  },
+  {
+   "client_timeouts": [
+    "180.0"
+   ],
+   "commits": 1,
+   "connector": "OverpassConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "HTTP 504",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": "data=%0A%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%0Aarea%5B%22ISO3166-2%22%3D%22DE-HE%22%5D-%3E.hessen%3B%0A%28%0A++node%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A++way%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A%29%3B%0Aout+center+tags%3B%0A",
+     "method": "POST",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "HTTP 504",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "HTTP 504",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {},
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "overpass-504"
+  },
+  {
+   "client_timeouts": [
+    "180.0"
+   ],
+   "commits": 1,
+   "connector": "OverpassConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "Expecting value: line 1 column 1 (char 0)",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": "data=%0A%5Bout%3Ajson%5D%5Btimeout%3A120%5D%3B%0Aarea%5B%22ISO3166-2%22%3D%22DE-HE%22%5D-%3E.hessen%3B%0A%28%0A++node%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A++way%5B%22amenity%22%3D%22fuel%22%5D%28area.hessen%29%3B%0A%29%3B%0Aout+center+tags%3B%0A",
+     "method": "POST",
+     "params": {},
+     "secret_params_present": [],
+     "url": "https://example.invalid/api",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "Expecting value: line 1 column 1 (char 0)",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": null,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "Expecting value: line 1 column 1 (char 0)",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": null,
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "overpass-not-json"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 1,
+   "connector": "MtskConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "MTS-K-Pull noch nicht aktiviert. Wartet auf Mustervereinbarung Bund-Länder (OP-01). Eingehende Daten werden über den Push-Endpoint POST /api/kpang/ingestion/mtsk verarbeitet.",
+    "letzter_status": "fehler"
+   },
+   "requests": [],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "MTS-K-Pull noch nicht aktiviert. Wartet auf Mustervereinbarung Bund-Länder (OP-01). Eingehende Daten werden über den Push-Endpoint POST /api/kpang/ingestion/mtsk verarbeitet.",
+    "metadaten": {
+     "hinweis": "OP-01",
+     "modus": "push"
+    },
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "MTS-K-Pull noch nicht aktiviert. Wartet auf Mustervereinbarung Bund-Länder (OP-01). Eingehende Daten werden über den Push-Endpoint POST /api/kpang/ingestion/mtsk verarbeitet.",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "hinweis": "OP-01",
+      "modus": "push"
+     },
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "mtsk-run"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 0,
+   "connector": "MtskConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [],
+   "result": [
+    false,
+    "SFTP-Host nicht konfiguriert (OP-01 offen)"
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "mtsk-health-unconfigured"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 0,
+   "connector": "MtskConnector",
+   "method": "health_check",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [],
+   "result": [
+    true,
+    null
+   ],
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "mtsk-health-configured"
+  },
+  {
+   "client_timeouts": [
+    "30.0",
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "DestatisGenesisConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "erfolg"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "area": "all",
+      "compress": "false",
+      "format": "ffcsv",
+      "language": "de",
+      "name": "61243-0001",
+      "transpose": "false",
+      "username": "fixture-user"
+     },
+     "secret_params_present": [
+      "password"
+     ],
+     "url": "https://example.invalid/api/data/tablefile",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    },
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "area": "all",
+      "compress": "false",
+      "format": "ffcsv",
+      "language": "de",
+      "name": "61241-0004",
+      "transpose": "false",
+      "username": "fixture-user"
+     },
+     "secret_params_present": [
+      "password"
+     ],
+     "url": "https://example.invalid/api/data/tablefile",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 5,
+    "fehlermeldung": null,
+    "metadaten": {
+     "abgerufene_tabellen": 2,
+     "tabellen": [
+      "61243-0001",
+      "61241-0004"
+     ]
+    },
+    "paket_sha256": "8c12c8d6c84c7944c22ce60930da05df8eea7715393ae09820524c585a965756",
+    "rohdaten": {
+     "$bytes_sha256": "8c12c8d6c84c7944c22ce60930da05df8eea7715393ae09820524c585a965756",
+     "length": 1322
+    },
+    "status": "erfolg"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 5,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "abgerufene_tabellen": 2,
+      "tabellen": [
+       "61243-0001",
+       "61241-0004"
+      ]
+     },
+     "paket_sha256": "8c12c8d6c84c7944c22ce60930da05df8eea7715393ae09820524c585a965756",
+     "status": "erfolg"
+    }
+   ],
+   "scenario": "destatis-ok"
+  },
+  {
+   "client_timeouts": [
+    "30.0",
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "DestatisGenesisConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": "teilweise"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "area": "all",
+      "compress": "false",
+      "format": "ffcsv",
+      "language": "de",
+      "name": "61243-0001",
+      "transpose": "false",
+      "username": "fixture-user"
+     },
+     "secret_params_present": [
+      "password"
+     ],
+     "url": "https://example.invalid/api/data/tablefile",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    },
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "area": "all",
+      "compress": "false",
+      "format": "ffcsv",
+      "language": "de",
+      "name": "61241-0004",
+      "transpose": "false",
+      "username": "fixture-user"
+     },
+     "secret_params_present": [
+      "password"
+     ],
+     "url": "https://example.invalid/api/data/tablefile",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 1,
+    "fehlermeldung": null,
+    "metadaten": {
+     "abgerufene_tabellen": 1,
+     "tabellen": [
+      "61243-0001",
+      "61241-0004"
+     ]
+    },
+    "paket_sha256": "5f36a25f9d3d176611de83fd584c8d881ea9f74101012cade964412fd7a41803",
+    "rohdaten": {
+     "$bytes_sha256": "5f36a25f9d3d176611de83fd584c8d881ea9f74101012cade964412fd7a41803",
+     "length": 440
+    },
+    "status": "teilweise"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 1,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": null,
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {
+      "abgerufene_tabellen": 1,
+      "tabellen": [
+       "61243-0001",
+       "61241-0004"
+      ]
+     },
+     "paket_sha256": "5f36a25f9d3d176611de83fd584c8d881ea9f74101012cade964412fd7a41803",
+     "status": "teilweise"
+    }
+   ],
+   "scenario": "destatis-one-table-500"
+  },
+  {
+   "client_timeouts": [
+    "30.0"
+   ],
+   "commits": 1,
+   "connector": "DestatisGenesisConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": "Keine Tabelle erfolgreich abgerufen (Tabelle 61243-0001: Antwort enthält Binärdaten statt ffcsv.)",
+    "letzter_status": "fehler"
+   },
+   "requests": [
+    {
+     "accept": "*/*",
+     "body": null,
+     "method": "GET",
+     "params": {
+      "area": "all",
+      "compress": "false",
+      "format": "ffcsv",
+      "language": "de",
+      "name": "61243-0001",
+      "transpose": "false",
+      "username": "fixture-user"
+     },
+     "secret_params_present": [
+      "password"
+     ],
+     "url": "https://example.invalid/api/data/tablefile",
+     "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+    }
+   ],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "Keine Tabelle erfolgreich abgerufen (Tabelle 61243-0001: Antwort enthält Binärdaten statt ffcsv.)",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [
+    {
+     "$type": "ExternalApiLauf",
+     "anzahl_datensaetze": 0,
+     "api_id": 1,
+     "beendet_am": {
+      "$datetime": "<wall-clock>"
+     },
+     "fehlermeldung": "Keine Tabelle erfolgreich abgerufen (Tabelle 61243-0001: Antwort enthält Binärdaten statt ffcsv.)",
+     "gestartet_am": null,
+     "id": null,
+     "metadaten": {},
+     "paket_sha256": null,
+     "status": "fehler"
+    }
+   ],
+   "scenario": "destatis-binary"
+  },
+  {
+   "client_timeouts": [],
+   "commits": 0,
+   "connector": "DestatisGenesisConnector",
+   "method": "run",
+   "registry_after": {
+    "letzte_fehlermeldung": null,
+    "letzter_status": null
+   },
+   "requests": [],
+   "result": {
+    "anzahl_datensaetze": 0,
+    "fehlermeldung": "Keine Zugangsdaten - ENV-Variable None ist nicht gesetzt",
+    "metadaten": {},
+    "paket_sha256": null,
+    "rohdaten": null,
+    "status": "fehler"
+   },
+   "rollbacks": 0,
+   "rows": [],
+   "scenario": "destatis-no-token"
+  }
+ ],
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "static": {
+  "bundesbank": {
+   "flow_ref": "BBEX3",
+   "series_key": "D.USD.EUR.BB.AC.000"
+  },
+  "connectors": [
+   "adac",
+   "bundesbank",
+   "clever_tanken",
+   "destatis_genesis",
+   "eia_brent",
+   "eu_oil_bulletin",
+   "geoportal_hessen",
+   "handelsregister",
+   "mehr_tanken",
+   "mtsk",
+   "overpass",
+   "tankerkoenig"
+  ],
+  "default_timeout": 30.0,
+  "destatis_source": {
+   "adapter_version": "1.0.0",
+   "auth": "token",
+   "capabilities": {
+    "deletions": false,
+    "full_snapshot": true,
+    "incremental": false,
+    "pagination": true
+   },
+   "data_format": "text/csv (ffcsv)",
+   "family": "price",
+   "filters": [],
+   "profile_version": "2026.09.1",
+   "snapshot_semantics": "append_only",
+   "source_id": "price.destatis_genesis",
+   "title": "Destatis GENESIS (Kraftstofftabellen)"
+  },
+  "destatis_tables": [
+   "61243-0001",
+   "61241-0004"
+  ],
+  "eia_product": "EPCBRENT",
+  "overpass_query": "\n[out:json][timeout:120];\narea[\"ISO3166-2\"=\"DE-HE\"]->.hessen;\n(\n  node[\"amenity\"=\"fuel\"](area.hessen);\n  way[\"amenity\"=\"fuel\"](area.hessen);\n);\nout center tags;\n",
+  "tankerkoenig_probe": {
+   "lat": 50.6,
+   "lng": 9.0
+  },
+  "user_agent": "HPP-Hessen/1.0 (+https://www.lkb.hessen.de)"
+ },
+ "status": "OBSERVED"
+}

@@ -1,0 +1,5 @@
+﻿statistics_code;statistics_label;time_code;time_label;time;1_variable_code;1_variable_label;1_variable_attribute_code;1_variable_attribute_label;2_variable_code;2_variable_label;2_variable_attribute_code;2_variable_attribute_label;value;value_unit;value_variable_code;value_variable_label
+61243;Verbraucherpreise;JAHR;Jahr;2026;MONAT;Monate;MONAT07;Juli;CC13A4;Güter;CC13-0722;Kraftstoffe;118,4;2020=100;PREIS1;Verbraucherpreisindex
+61243;Verbraucherpreise;JAHR;Jahr;2026;MONAT;Monate;MONAT08;August;CC13A4;Güter;CC13-0722;Kraftstoffe;117,9;2020=100;PREIS1;Verbraucherpreisindex
+61243;Verbraucherpreise;JAHR;Jahr;2026;MONAT;Monate;MONAT09;September;CC13A4;Güter;CC13-0722;Kraftstoffe;...;2020=100;PREIS1;Verbraucherpreisindex
+61243;Verbraucherpreise;JAHR;Jahr;2025-P1Y;MONAT;Monate;MONAT12;Dezember;CC13A4;Güter;CC13-0722;Kraftstoffe;-;2020=100;PREIS1;Verbraucherpreisindex
