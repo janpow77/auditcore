@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_dataprotection"
+version = "0.1.0"
+description = "Framework-independent records of processing activities and DPIA calculation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = []
+
+[project.optional-dependencies]
+excel = ["openpyxl>=3.0.9,<4", "auditcore_reporting[excel]==0.2.0"]
+pdf = ["weasyprint>=60.2"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "openpyxl>=3.1.5",
+    "auditcore_reporting[excel]==0.2.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_dataprotection = ["py.typed", "provenance.json", "profiles/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["openpyxl.*", "weasyprint.*", "auditcore_reporting.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]

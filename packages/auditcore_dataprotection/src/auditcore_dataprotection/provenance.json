@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_dataprotection",
+  "version": "0.1.0",
+  "source": {
+    "repository": "janpow77/regulierung",
+    "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+    "github_head_verified_on": "2026-09-22",
+    "files": [
+      {
+        "path": "backend/app/services/dsfa/bewertung.py",
+        "git_blob": "2a34de1d708e3bd83bdd366b0f7dbf09be177a5a",
+        "sha256": "31ff7d75fb3279c5b0ee6a85319e41b0ec6e3780aa327cd8603041aaaf492f7f"
+      },
+      {
+        "path": "backend/app/services/dsfa/katalog.py",
+        "git_blob": "8be23a5163342f0f69b32f2d40b2ef2d60ba8783",
+        "sha256": "4e5fa6af60e633e2d4f950ea102c0c644a5c43fff70de1d205ecec27340ce023"
+      },
+      {
+        "path": "backend/app/services/dsfa/verwaltung.py",
+        "git_blob": "eba4ffd8965980736b8bb325c027f34faf4542ac",
+        "sha256": "e341504ec115f5c4725bbb3a72b08d54ad2e3f34fa86039ecd02a846c6831a18"
+      },
+      {
+        "path": "backend/app/services/dsfa/export.py",
+        "git_blob": "e2a14999a49823813cf790843595fdbec0449801",
+        "sha256": "42fbb60ed8bad2c52320dfea63eedad4f6cdbf875085a4c9dab8326e7ccfe510"
+      },
+      {
+        "path": "backend/app/services/mandant_dsgvo_service.py",
+        "git_blob": "992aeadc70b8f289aaf996263f93c9fe1375cc1a",
+        "sha256": "4f2ee0a30f3a71343355ddef66ee4aa0522e6b1c7cf8bdd76094240c5dd26c30"
+      }
+    ],
+    "symbols": {
+      "backend/app/services/dsfa/bewertung.py": [
+        "Antwort",
+        "Szenario",
+        "Schwellwertergebnis",
+        "Risikoergebnis",
+        "Vorschlag",
+        "risikostufe",
+        "vorbelegung_aus_taetigkeit",
+        "werte_schwellwert_aus",
+        "werte_risiko_aus",
+        "erstelle_vorschlag",
+        "vorschlag_als_json",
+        "VORSCHLAG_TEXT",
+        "VORSCHLAG_TEXT_JI"
+      ],
+      "backend/app/services/dsfa/katalog.py": [
+        "KATALOG",
+        "MASSNAHMEN",
+        "NORMEN",
+        "DIMENSIONEN",
+        "SDM_DIMENSIONEN",
+        "SCHWERE",
+        "WAHRSCHEINLICHKEIT",
+        "STANDPUNKT_BEGRUENDUNGEN",
+        "BLOCK_TITEL",
+        "REGIME_TITEL",
+        "REGIME_ERLAEUTERUNG",
+        "REGIME_HINWEIS_JI",
+        "fundstelle",
+        "norm",
+        "katalog_als_json"
+      ],
+      "backend/app/services/dsfa/verwaltung.py": [
+        "_antworten_aus_json",
+        "_szenarien_aus_json",
+        "berechne_vorschlag",
+        "pruefe_regime",
+        "regime_vorschlag",
+        "vergleiche_taetigkeit",
+        "WESENTLICHE_FELDER",
+        "MINDESTLAENGE_BEGRUENDUNG",
+        "speichere",
+        "entscheide",
+        "dsb_stellungnahme",
+        "dsb_folgerung",
+        "freigeben",
+        "pruefe_auf_aenderungen",
+        "neubewertung",
+        "taetigkeiten",
+        "referate"
+      ],
+      "backend/app/services/dsfa/export.py": [
+        "baue_bericht_html",
+        "baue_bericht_pdf",
+        "baue_uebersicht_workbook",
+        "STATUS_TEXT",
+        "VOTUM_TEXT"
+      ],
+      "backend/app/services/mandant_dsgvo_service.py": [
+        "taetigkeit_kennung",
+        "taetigkeiten_mit_kennung",
+        "speichere_entwurf",
+        "freigeben",
+        "baue_verarbeitungsverzeichnis_workbook",
+        "fuelle_platzhalter",
+        "_VERZEICHNIS_SPALTEN",
+        "VERZEICHNIS_FUNDSTELLEN"
+      ]
+    },
+    "excluded": [
+      "backend/app/data/dsgvo_vorbelegung.json (BfDI-Muster, CC-BY-SA 4.0; nicht übernommen)",
+      "ORM-Modelle MandantDsfa/MandantDsgvoDokument (Persistenzadapter der Anwendung)",
+      "STANDARD_REFERAT-Zuschnitt KPAnG (anwendungsspezifisch)",
+      "vorbelegen() mit Mandanten-/AuditLog-Zugriff"
+    ]
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "github_private": true,
+    "github_license": null,
+    "historical_source_license_status": "UNKNOWN",
+    "contributors": [
+      "janpow77",
+      "claude"
+    ],
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "Ja, MIT-Freigabe: Ich bin berechtigt und gebe die genannten regulierung-Quellen einschließlich der Katalogtexte unter MIT frei.",
+      "scope": {
+        "repository": "janpow77/regulierung",
+        "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+        "paths": [
+          "backend/app/services/dsfa/bewertung.py",
+          "backend/app/services/dsfa/katalog.py",
+          "backend/app/services/dsfa/verwaltung.py",
+          "backend/app/services/dsfa/export.py",
+          "backend/app/services/mandant_dsgvo_service.py"
+        ]
+      },
+      "limitation": "Gilt für die genannten VVT-/DSFA-Quellen und Katalogtexte, nicht für das übrige Repository und nicht für die BfDI-Mustervorlage."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/regulierung_legacy_observed.json",
+    "tool": "tools/capture_regulierung_legacy.py",
+    "pure_cases": 241,
+    "workflow_steps": 65,
+    "exports": [
+      "overview_rows",
+      "overview_workbook",
+      "reassessment_record",
+      "reassessment_report_html",
+      "register_workbook",
+      "register_workbook_bytes",
+      "register_workbook_document",
+      "register_workbook_empty",
+      "report_html",
+      "report_pdf",
+      "report_record"
+    ],
+    "environment": {
+      "python": "3.12.3",
+      "sqlalchemy": "2.0.36",
+      "openpyxl": "3.1.5",
+      "database": "sqlite+aiosqlite:///:memory: (isolated, created by this tool)",
+      "clock": "fixed, one minute per datetime.now() call from 2026-09-01T08:00Z"
+    },
+    "classification": "OBSERVED",
+    "legal_validation": "NOT_PERFORMED"
+  },
+  "profiles": [
+    "regulierung.dsgvo 2026.09.1",
+    "regulierung.hdsig_ji 2026.09.1"
+  ],
+  "behavior_changes": "docs/behavior-changes.md"
+}
