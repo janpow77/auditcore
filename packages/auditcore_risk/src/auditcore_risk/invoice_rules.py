@@ -180,6 +180,7 @@ def _identifier_equal(p: Mapping[str, Any], table: Table, ctx: Context) -> Outco
     out = Outcome.constant(len(table), False)
 
     def norm(value: Any) -> str:
+        """Identifier comparison form: upper case, stripped, separators removed."""
         text = str(value).upper().strip() if p["upper"] else str(value).strip()
         for char in p["remove_chars"]:
             text = text.replace(char, "")
@@ -259,6 +260,7 @@ def _first_window(
 
 def _check_numbers(*keys: str) -> Any:
     def check(params: Mapping[str, Any], where: str) -> None:
+        """Each named parameter must be a finite number."""
         for key in keys:
             need(is_number(params[key]), where, f"{key} muss eine endliche Zahl sein")
 

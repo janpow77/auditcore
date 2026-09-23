@@ -215,6 +215,7 @@ def score_signals(signals: Mapping[str, Any], profile: FraudProfile) -> SignalAs
     score = 0.0
 
     def add(name: str, value: float, detail: Mapping[str, Any]) -> None:
+        """Add one score component in the source's order and record it."""
         nonlocal score
         score += value
         components.append({"component": name, "contribution": value, **detail})

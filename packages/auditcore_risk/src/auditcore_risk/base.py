@@ -135,9 +135,11 @@ _OPS = {"gt": ">", "ge": "≥", "lt": "<", "le": "≤"}
 
 
 def need(condition: bool, where: str, message: str) -> None:
+    """Raise ``ProfileError`` with location unless ``condition`` holds."""
     if not condition:
         raise ProfileError(f"{where}: {message}")
 
 
 def is_number(value: Any) -> bool:
+    """Finite ``int``/``float`` (booleans excluded)."""
     return isinstance(value, int | float) and not isinstance(value, bool) and math.isfinite(value)
