@@ -145,6 +145,156 @@
       "symbols": [
         "ResearchResult (genutzte Felder)"
       ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/context.py",
+      "git_blob": "9d3af1d6ed8317e54f7a23285505ce56eebb3b06",
+      "symbols": [
+        "RunStatus",
+        "ComputeProfile",
+        "StageMetrics",
+        "OcrMetrics",
+        "ValidationResult",
+        "PipelineArtifacts",
+        "OcrSettings",
+        "ParserSettings",
+        "LlmSettings",
+        "PostProcessingSettings",
+        "RagConfig",
+        "PipelineProfile",
+        "AnalysisModules",
+        "PipelineContext"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/hashing.py",
+      "git_blob": "f08e18530bb64492ea5b9f3f45ec28760ecd60a9",
+      "symbols": [
+        "HashingService"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/audit.py",
+      "git_blob": "922d061585a1f4b46a323cedcf7d3df285296211",
+      "symbols": [
+        "AuditEventType",
+        "AuditEventCreate (Felder)",
+        "AuditService.log_event (Vertrag)"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/retention.py",
+      "git_blob": "68b7b0e0d4dc5b76432a834b5a9e718b78827ccd",
+      "symbols": [
+        "RetentionPolicyConfig",
+        "RetentionService._process_artifacts",
+        "_anonymize_db_record",
+        "_soft_delete_db_record",
+        "_hard_delete_db_record",
+        "_delete_file_if_exists",
+        "run_sweeper (Jobergebnis)"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/orchestrator.py",
+      "git_blob": "dad63a5e8bffc04b18693331a7446ce868841807",
+      "symbols": [
+        "PipelineOrchestrator",
+        "ComputeProfileEnforcer"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/base.py",
+      "git_blob": "92d6c3c7280c297e7ab4bdfa0ce9bf63e58c1d35",
+      "symbols": [
+        "StageError",
+        "PipelineStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/ingestion.py",
+      "git_blob": "9327abd953df8c6ec94c75318a6c8b52751dd571",
+      "symbols": [
+        "IngestionStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/preprocess.py",
+      "git_blob": "942d411f49906f4368d14b550137cc10e08fa2d4",
+      "symbols": [
+        "PreprocessStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/ocr.py",
+      "git_blob": "5fae527f85f5ac27e17b4b322c7c64fe339b6994",
+      "symbols": [
+        "_should_use_router",
+        "_looks_like_pdf",
+        "_rasterize_pdf",
+        "OcrStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/postprocess.py",
+      "git_blob": "d858e7055d29c1024518f07508fb6fed9823883b",
+      "symbols": [
+        "PostprocessStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/validation.py",
+      "git_blob": "679954a2396984ad4ae05a4244f5e38e11dda2c6",
+      "symbols": [
+        "IbanChecksumRule",
+        "VatIdFormatRule",
+        "TotalSumPlausibilityRule",
+        "OcrConfidenceRule",
+        "FraudDetectionRule",
+        "ValidationStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/persist.py",
+      "git_blob": "7d292b0bf5a35dd05fad83fc64f9afab3ab7779e",
+      "symbols": [
+        "PersistStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/export.py",
+      "git_blob": "381dcf647ca44b6c6fd51320268c23faef5f671a",
+      "symbols": [
+        "WebhookExport",
+        "FileExport",
+        "ExportStage"
+      ]
     }
   ],
   "rights": {
@@ -155,13 +305,17 @@
       "janpow77/audit_designer": {
         "private": true,
         "license": null
+      },
+      "janpow77/flowinvoice": {
+        "private": true,
+        "license": null
       }
     },
     "authorization": {
       "status": "USER_AUTHORIZED_MIT",
       "date": "2026-09-22",
       "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
-      "scope": "Extrahierter Bibliothekscode in auditcore_documents",
+      "scope": "Extrahierter Bibliothekscode in auditcore_documents (audit_designer document_compare, flowinvoice pipeline)",
       "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Dienste separat."
     },
     "test_data": {
@@ -218,7 +372,19 @@
         "sources/kassensichv_gii_2025-06-01.html": "55f601caf612f855a632291cc379b74d48e825d0c2607b8c14a298ffa41d9b03",
         "sources/kassensichv_gii_2026-05-06.xml": "9ffb459d864c27f639ac1e4e084d06b1122fd13c0d58eb78254dc18e14b91741"
       },
-      "synthetic": "tests/fixtures/synthetic und tests/fixtures/errors: frei erfunden, keine Echtdaten"
+      "synthetic": "tests/fixtures/synthetic und tests/fixtures/errors: frei erfunden, keine Echtdaten",
+      "pipeline_fixtures": {
+        "files": "tests/fixtures/pipeline",
+        "origin": "synthetisch (auditcore_invoicegenerator Seed 42, erfundene Texte)",
+        "builder": "tools/build_pipeline_fixtures.py",
+        "sha256": {
+          "invoice_1.pdf": "d4efda7e2229efa6f49ec44c516f214913daa01d44f3f4e638359bda1c1ddab0",
+          "invoice_2.pdf": "ecddc9d2b390104ba9b8af2edc37bcf97de93983a983f29a1d3bb81dc550f3a2",
+          "invoice_3.pdf": "3e90be93bb7b1e600329be5e2946349c28f3e3190d2a3221fd96edec9089fcb4",
+          "notiz.txt": "d58f952c09ccee14d3636d7a8dccd9d03372f4839b689c0e027d1af8f62b90a6",
+          "pixel.png": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e"
+        }
+      }
     }
   },
   "excluded": [
@@ -228,7 +394,11 @@
     "ecohesion worker: resource.setrlimit, Research-PDF-Renderer, Dateiablage (bleibt Anwendung; Datensätze als synopsis_records)",
     "configuration.default_config_path: Umgebungsvariable/Benutzerverzeichnis nur in auditcore_documents.legacy",
     "flowinvoice services/parser.py:PDFParser (OCR/torch/transformers) – nicht übernommen",
-    "ecohesion research_pdf: Werkzeug-spezifische Ergebnisquellen (Quellenbefund-Objekte) nur als generische Datensätze übernommen"
+    "ecohesion research_pdf: Werkzeug-spezifische Ergebnisquellen (Quellenbefund-Objekte) nur als generische Datensätze übernommen",
+    "flowinvoice pipeline/models.py, AuditEvent-/RetentionPolicy-/RetentionJob-ORM, AuditService-Abfragen, QuotaService (Datenbank; bleiben Anwendung)",
+    "flowinvoice services/chandra_ocr.py (GPU/torch-Engine; Anbindung über ChandraPort), services/parser.py:PDFParser (OCR/torch/transformers)",
+    "flowinvoice services/extraction_quality_watchdog.py (geplant; Meldungstexte ohne Umlaute, HUMAN_DECISION_REQUIRED)",
+    "flowinvoice Einstellungen (get_settings), httpx-Abruf, ai_router_client (als Ports)"
   ],
   "characterization": {
     "fixture": "tests/fixtures/legacy_observed.json",
@@ -252,5 +422,25 @@
     },
     "method": "Unveränderte, Blob-geprüfte Originalmodule importiert und ausgeführt; MCP/FlowAgent, Celery, DB und Research-PDF durch aufzeichnende Stellvertreter ersetzt; zwei Läufe mit unterschiedlichem PYTHONHASHSEED byte-gleich"
   },
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "characterization_pipeline": {
+    "fixture": "tests/fixtures/pipeline_observed.json",
+    "tool": "tools/capture_pipeline.py",
+    "scenarios": 30,
+    "original_tests": {
+      "files": "backend/tests/pipeline/*, test_extraction_quality_watchdog.py, test_pipeline_profiles.py",
+      "passed": 164
+    },
+    "environment": {
+      "python": "3.11.16",
+      "pydantic": "2.11.9",
+      "sqlalchemy": "2.0.43",
+      "python-magic": "0.4.27",
+      "pypdf": "6.16.2",
+      "pypdfium2": "4.30.0",
+      "pillow": "11.3.0"
+    },
+    "method": "Unveränderte, Blob-geprüfte Module ausgeführt; Gateway-OCR, Chandra, Tesseract-Parser, Audit-Dienst, Einstellungen und asyncio.sleep durch aufzeichnende Stellvertreter ersetzt"
+  },
+  "behavior_changes_pipeline": "docs/pipeline.md"
 }
