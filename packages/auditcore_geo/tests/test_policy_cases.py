@@ -52,7 +52,7 @@ def test_t11_geocoder_records_contain_no_contact_or_agent() -> None:
         "laufart": "einmalig",
     }
     clock = FixedClock()
-    rate, request = empfohlene_laufparameter(konfig, "p")
+    rate, request = empfohlene_laufparameter(konfig, "p", heute_bereits_gesendet=0)
     sink = ListSink()
     HarvestEngine(
         _T(), StaticCredentials({}), MemoryStateStore(), clock, ClockSleeper(clock), rate_limit=rate

@@ -23,6 +23,12 @@ from .koordinaten import Punkt
 Ring = tuple[tuple[float, float], ...]
 
 
+#: Empfohlene Randregel (Entscheidung vom 23.09.2026, vom Nutzer delegiert):
+#: Randpunkte zählen als innen – ein möglicher Schutzgebietsbezug wird eher
+#: gemeldet als übersehen. ``enthaelt`` verlangt die Angabe weiterhin ausdrücklich.
+EMPFOHLEN_RAND_GILT_ALS_INNEN = True
+
+
 class Lage(StrEnum):
     """Lage eines Punktes zu einer Fläche."""
 
