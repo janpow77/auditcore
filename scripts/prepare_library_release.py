@@ -66,6 +66,9 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         {("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a")}
     ),
 }
+#: Renderer extras with published, hash-locked requirement files and their owner.
+#: Other packages may declare extras of the same name; those stay ordinary extras.
+RENDERER_OWNERS = {"pdf": "auditcore_invoicegenerator", "excel": "auditcore_reporting"}
 PACKAGES = {
     "auditcore_dummygenerator",
     "auditcore_invoicegenerator",
@@ -298,7 +301,9 @@ def optional_assets(
                     "all_requires": metadata.get_all("Requires-Dist", []),
                     "requires": [r for r in metadata.get_all("Requires-Dist", []) if ";" not in r],
                 }
-                for extra in set(metadata.get_all("Provides-Extra", [])) & {"pdf", "excel"}:
+                for extra in set(metadata.get_all("Provides-Extra", [])) & set(RENDERER_OWNERS):
+                    if RENDERER_OWNERS[extra] != package:
+                        continue  # same extra name, ordinary extra without a published lock
                     if extra in features:
                         raise ValueError("Renderer extra has ambiguous package ownership")
                     features[extra] = package
