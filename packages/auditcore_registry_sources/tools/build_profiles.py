@@ -599,6 +599,170 @@ def company_verification() -> None:
     )
 
 
+DECIDED_VERSION = "2026.09.2"
+DECISION = {"status": "DECIDED", "date": "2026-09-23", "quote": "alle empfehlungen"}
+DECIDED_LEGAL = (
+    "Nutzerentscheidung vom 23.09.2026 („alle empfehlungen“), abgeleitet aus dem "
+    "gebundenen Quellprofil; keine Rechtsauskunft, keine Freigabe einzelner Ergebnisse."
+)
+
+
+def decided_profile(
+    base_id: str,
+    purpose: str | None,
+    decisions: list[dict[str, Any]],
+    change: Any = None,
+    legal_basis: str | None = None,
+) -> None:
+    """New version of a source profile as recommended profile; the source file stays as is."""
+    base = json.loads((OUT / f"{base_id}-{VERSION}.json").read_text())
+    document = dict(base)
+    document["version"] = DECIDED_VERSION
+    document["status"] = "USER_DECIDED"
+    document["legal_status"] = DECIDED_LEGAL
+    document["decisions"] = [{**DECISION, **d} for d in decisions]
+    document["derived_from"] = {"id": base_id, "version": VERSION}
+    if purpose:
+        document["recommended_for"] = [purpose]
+    if legal_basis:
+        document["legal_basis"] = legal_basis
+    settings = json.loads(json.dumps(base["settings"]))
+    if change:
+        change(settings)
+    document["settings"] = settings
+    path = OUT / f"{base_id}-{DECIDED_VERSION}.json"
+    path.write_text(json.dumps(document, ensure_ascii=False, indent=1, sort_keys=True) + "\n")
+
+
+def decided() -> None:
+    def designer(settings: dict[str, Any]) -> None:
+        settings["normalization"] = {"id": "audit_designer.sanctions", "version": "2026.09.3"}
+        settings["rows_without_id_or_name"] = "skip_and_block_delisting"
+
+    decided_profile(
+        "audit_designer.sanctions_screening",
+        "sanctions_screening",
+        [
+            {"id": "R1", "text": "Designer-Screening-Profil und -Schwellen maßgeblich."},
+            {"id": "R2", "text": "Zerlegt geschriebene Umlaute werden per NFC zusammengeführt."},
+            {"id": "R8", "text": "Kein Auslisten, wenn eine Lieferung fehlerhafte Zeilen hat."},
+            {
+                "id": "R9",
+                "text": "Der Designer-Werkzeugeintrag („phonetische Varianten“) wird bei der "
+                "Consumer-Migration korrigiert; es gibt kein phonetisches Verfahren.",
+            },
+        ],
+        designer,
+    )
+
+    def workshop(settings: dict[str, Any]) -> None:
+        settings["normalization"] = {"id": "flowworkshop.sanctions", "version": "2026.09.3"}
+
+    decided_profile(
+        "flowworkshop.sanctions_screening",
+        None,
+        [
+            {
+                "id": "R1",
+                "text": "Maßgeblich ist das Designer-Profil; dieses Profil bleibt für "
+                "flowworkshop wählbar (Mindestwert 70 wie Router und Oberfläche).",
+            },
+            {"id": "R2", "text": "Zerlegt geschriebene Umlaute werden per NFC zusammengeführt."},
+        ],
+        workshop,
+    )
+
+    def pep(settings: dict[str, Any]) -> None:
+        settings["normalization"] = {"id": "flowinvoice.pep", "version": "2026.09.2"}
+
+    decided_profile(
+        "flowinvoice.pep_bulk",
+        "pep_bulk",
+        [
+            {"id": "R3", "text": "PEP-Abgleich nach der mueller-Regel (Umschrift, NFC)."},
+            {
+                "id": "A2",
+                "text": "OpenSanctions-Datennutzung: „abgedeckt durch Nutzung“; Lizenz "
+                "CC BY-NC 4.0 bleibt genannt, Verantwortung beim Betreiber.",
+            },
+        ],
+        pep,
+    )
+    decided_profile(
+        "flowsearch.pep_risk",
+        "pep_risk",
+        [{"id": "R6", "text": "PEP-Risikostufen wie bisher (Legacy-Regeln als empfohlen)."}],
+    )
+    decided_profile(
+        "flowinvoice.company_verification",
+        "company_verification",
+        [{"id": "R7", "text": "Gewichte der Firmenprüfung wie bisher (0,3/0,1/0,05)."}],
+    )
+
+    def ubo(settings: dict[str, Any]) -> None:
+        settings["voting_threshold"] = 25.0
+        settings["missing_type"] = "unknown"
+
+    decided_profile(
+        "flowsearch.ubo",
+        "ubo",
+        [
+            {
+                "id": "R4",
+                "text": "Wirtschaftlich Berechtigte nach GwG: mehr als 25 % der Kapitalanteile "
+                "oder mehr als 25 % der Stimmrechte; mittelbare Anteile werden entlang der "
+                "Kette eingerechnet. Anteilseigner ohne Typ gelten nicht als natürliche "
+                "Person, sondern werden zur Klärung ausgewiesen.",
+            }
+        ],
+        ubo,
+        legal_basis="§ 3 Abs. 2 GwG (mehr als 25 % der Kapitalanteile oder Stimmrechte)",
+    )
+
+    def sme(settings: dict[str, Any]) -> None:
+        settings.clear()
+        settings.update(
+            {
+                "method": "agvo_annex_i",
+                "micro": {
+                    "employees_below": 10,
+                    "turnover_max": 2_000_000,
+                    "balance_sheet_max": 2_000_000,
+                },
+                "small": {
+                    "employees_below": 50,
+                    "turnover_max": 10_000_000,
+                    "balance_sheet_max": 10_000_000,
+                },
+                "medium": {
+                    "employees_below": 250,
+                    "turnover_max": 50_000_000,
+                    "balance_sheet_max": 43_000_000,
+                },
+                "aggregation": {"linked": "full", "partner": "proportional_share"},
+                "not_evaluated": [
+                    "Art. 3 Abs. 4 Anhang I (Kontrolle durch öffentliche Stellen)",
+                    "Art. 4 Abs. 2 Anhang I (Überschreiten in zwei aufeinanderfolgenden Jahren)",
+                ],
+            }
+        )
+
+    decided_profile(
+        "flowsearch.kmu",
+        "sme",
+        [
+            {
+                "id": "R5",
+                "text": "KMU-Einstufung nach Anhang I AGVO: Mitarbeiterzahl und Umsatz ODER "
+                "Bilanzsumme je Klasse; verbundene Unternehmen voll, Partnerunternehmen "
+                "anteilig zusammengerechnet.",
+            }
+        ],
+        sme,
+        legal_basis="Anhang I VO (EU) Nr. 651/2014 (AGVO), Art. 2 bis 6",
+    )
+
+
 def main() -> None:
     for old in OUT.glob("*.json"):
         old.unlink()
@@ -607,6 +771,7 @@ def main() -> None:
     match_api()
     ownership()
     company_verification()
+    decided()
     print(sorted(p.name for p in OUT.glob("*.json")))
 
 

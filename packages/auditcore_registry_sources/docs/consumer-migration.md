@@ -47,11 +47,19 @@ Pushes in Consumer-Repositories.
 4. flowinvoice: Parser → `parse_xml_list(data, "<format>", dates="legacy")`,
    `_parse_date_safe` → `parse_date_legacy`, PEP → `legacy.flowinvoice_pep_normalize_name`
    und `bulk_screening.pep_score` mit `flowinvoice.pep_bulk`.
-5. Optional, **mit fachlicher Freigabe** (ändert Ergebnisse): korrigierte
-   Verträge `screen()` (Befund je Liste, Indikatoren), `company.check_vat`/
-   `verify_company` (flowinvoice meldet heute jede USt-IdNr. als ungültig,
-   REG-C07), `MatchClient` statt der flowsearch-Clients (REG-C15),
-   Harvest-Adapter statt der eigenen Downloads (REG-C16).
+5. **Entschieden am 23.09.2026 (R10, „alle empfehlungen“):** Bei der Umstellung
+   nach v0.3.0 werden die korrigierten Verträge eingesetzt: `screen()` mit
+   `recommended_profile("sanctions_screening")` (Befund je Liste, Indikatoren),
+   `company.check_vat`/`verify_company` mit `recommended_profile("company_verification")`
+   in flowinvoice (heute gilt dort jede USt-IdNr. als ungültig, REG-C07),
+   `MatchClient` statt der flowsearch-Clients (REG-C15; Schlüssel beschafft jeder
+   Betreiber selbst, A3), PEP über `recommended_profile("pep_bulk")` (R3),
+   Harvest-Adapter statt der eigenen Downloads (REG-C16; kein Auslisten bei
+   fehlerhaften Zeilen, R8). Diese Umstellung ändert Ergebnisse gewollt.
+6. **Entschieden am 23.09.2026 (R9):** Der Werkzeugeintrag `sanctions-screening`
+   in audit_designer (`app/core/shared/research/registry.py`, `methodology_de`/
+   `methodology_en`) wird korrigiert: kein „phonetische … Varianten“, sondern
+   „unscharfer Namensabgleich (Token-Set) über Namen und Aliase“.
 
 ## Nicht angebunden (geplant)
 

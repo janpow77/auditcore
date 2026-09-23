@@ -30,7 +30,9 @@ KINDS = frozenset(
         "company_verification",
     }
 )
-STATUSES = frozenset({"SOURCE_CHARACTERIZED", "HUMAN_DECISION_REQUIRED", "LEGACY_ONLY"})
+STATUSES = frozenset(
+    {"SOURCE_CHARACTERIZED", "HUMAN_DECISION_REQUIRED", "LEGACY_ONLY", "USER_DECIDED"}
+)
 
 
 def fingerprint(data: Mapping[str, Any]) -> str:
@@ -113,6 +115,24 @@ def profile_from_dict(data: Mapping[str, Any]) -> RegistryProfile:
         )
     except (KeyError, TypeError, AttributeError) as exc:
         raise ProfileError(f"Profil ist unvollständig oder fehlerhaft: {exc!r}") from exc
+
+
+def recommended_profile(purpose: str) -> RegistryProfile:
+    """The profile recommended for ``purpose`` after the user decisions of 23.09.2026.
+
+    Purposes: ``sanctions_screening``, ``pep_bulk``, ``pep_risk``, ``ubo``,
+    ``sme``, ``company_verification``. Named profiles keep their results; the
+    recommendation only says which one to choose.
+    """
+    found = []
+    for entry in resources.files("auditcore_registry_sources.profile_data").iterdir():
+        if entry.name.endswith(".json"):
+            data = json.loads(entry.read_text(encoding="utf-8"))
+            if purpose in data.get("recommended_for", []):
+                found.append((str(data["id"]), str(data["version"])))
+    if len(found) != 1:
+        raise ProfileError(f"Für '{purpose}' ist kein eindeutiges empfohlenes Profil hinterlegt.")
+    return load_profile(*found[0])
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
