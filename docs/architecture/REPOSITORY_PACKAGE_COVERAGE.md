@@ -410,6 +410,21 @@ Ein `auditcore_property_sources` mit getrennten Quellprofilen ist ein Kandidat;
 Preis-/Flächen-/Adress-Normalisierung und Statuswechsel benötigen Fixtures.
 Ein HTTP-Client allein beweist keine gleiche Fachsemantik der Portale.
 
+**Umsetzung (2026-09-23): `auditcore_property_sources` 0.1.0** unter
+`packages/auditcore_property_sources` – sieben getrennte Quellprofile
+(immobilien.de, inberlinwohnen, Kleinanzeigen, bienici, Citya, ParuVendu,
+ZVG-Portal) mit Harvest-Adaptern (Extra `sources`), reinem ZVG-Lebenszyklus
+(`erfasst`/`terminiert`/`abgehalten`/`aufgehoben`, gegen die Original-SQL auf
+PostgreSQL charakterisiert) und Zugangskatalog. Characterization auf
+synthetischen, strukturabgeleiteten Seiten (in beiden Repos liegen keine
+gespeicherten Portalseiten), 228 Funktionsfälle exakt. Consumer
+wohnungsmonitor und versteigerung: **geplant** (Nutzerentscheidung
+2026-09-23: „der mehrfache Nutzen kommt noch“); je Quelle heute ein Consumer.
+Befunde: robots.txt sperrt die Kleinanzeigen-Suchadresse (`/*/preis:*`) und die
+ZVG-Detail-/Anhangsseiten – HUMAN_DECISION_REQUIRED; Nutzungsbedingungen aller
+Portale REVIEW_REQUIRED. Bericht:
+[PROPERTY_SOURCES_PACKAGE_REPORT](../reports/PROPERTY_SOURCES_PACKAGE_REPORT.md).
+
 `krypto` enthält zahlreiche Provideradapter und einen Polars-basierten
 Indikatorkern `backend/app/services/indicators/base.py` mit `returns`,
 `log_returns`, `sma`, `ema`, `rsi`, `atr`, `adx`. Ein spezifischer
