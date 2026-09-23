@@ -192,7 +192,7 @@ class PersistStage(PipelineStage):
                     await self.store.store(f"{context.storage_key}/{name}", data)
                 except Exception as exc:  # noqa: BLE001 - Original: Warnung, weiter
                     self._report(name, exc)
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type="PERSISTED",
                 document_id=context.document_id,

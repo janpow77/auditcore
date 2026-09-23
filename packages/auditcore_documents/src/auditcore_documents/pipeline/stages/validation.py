@@ -424,7 +424,7 @@ class ValidationStage(PipelineStage):
             context.status = RunStatus.REVIEW_NEEDED
         elif context.status == RunStatus.RUNNING:
             context.status = RunStatus.OK
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type="VALIDATION_COMPLETE",
                 document_id=context.document_id,

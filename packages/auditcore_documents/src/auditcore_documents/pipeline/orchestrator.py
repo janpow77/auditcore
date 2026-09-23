@@ -89,9 +89,9 @@ class PipelineOrchestrator:
         self.sleep = sleep
         self.preserve_review = preserve_review
         for stage in self.stages:
-            if not stage.audit:
+            if stage.audit is None:
                 stage.audit = audit_service
-            if not stage.hashing:
+            if stage.hashing is None:
                 stage.hashing = self.hashing
 
     async def run(
@@ -100,7 +100,7 @@ class PipelineOrchestrator:
         start_from_stage: str | None = None,
         stop_after_stage: str | None = None,
     ) -> PipelineContext:
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type="PIPELINE_STARTED",
                 document_id=context.document_id,
@@ -170,7 +170,7 @@ class PipelineOrchestrator:
         elif self.preserve_review and review_seen and context.status == RunStatus.OK:
             context.status = RunStatus.REVIEW_NEEDED
 
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type=(
                     "PIPELINE_COMPLETED"

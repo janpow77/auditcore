@@ -54,7 +54,7 @@ class PipelineStage(ABC):
 
     async def pre_execute(self, context: PipelineContext) -> None:
         context.start_stage(self.name)
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type=f"{self.name.upper()}_STARTED",
                 document_id=context.document_id,
@@ -67,7 +67,7 @@ class PipelineStage(ABC):
         self, context: PipelineContext, success: bool, error: BaseException | None = None
     ) -> None:
         stage_hash = None
-        if success and self.hashing:
+        if success and self.hashing is not None:
             stage_hash = self.hashing.hash_string(context.artifacts_json())
         context.complete_stage(self.name, success=success, error=error, stage_hash=stage_hash)
         duration_ms = None
@@ -76,7 +76,7 @@ class PipelineStage(ABC):
                 duration_ms = metric.duration_ms
                 break
         event_type = f"{self.name.upper()}_DONE" if success else f"{self.name.upper()}_FAILED"
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type=event_type,
                 document_id=context.document_id,

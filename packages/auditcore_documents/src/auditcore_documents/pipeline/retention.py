@@ -142,7 +142,7 @@ class RetentionSweeper:
                 if policy.anonymize_instead_of_delete:
                     anonymize_record(item)
                     outcome.anonymized += 1
-                    if self.audit:
+                    if self.audit is not None:
                         await self.audit.log_event(
                             event_type="ANONYMIZED_BY_POLICY",
                             document_id=getattr(item, "document_id", "unknown"),
@@ -160,7 +160,7 @@ class RetentionSweeper:
                     else:
                         outcome.bytes_freed += await self._hard_delete(item)
                     outcome.deleted += 1
-                    if self.audit:
+                    if self.audit is not None:
                         await self.audit.log_event(
                             event_type="DELETED_BY_POLICY",
                             document_id=getattr(item, "document_id", "unknown"),

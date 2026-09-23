@@ -158,7 +158,7 @@ class ExportStage(PipelineStage):
                         message=f"Export to {target.name} raised exception: {exc}",
                         recoverable=True,
                     ) from exc
-        if self.audit:
+        if self.audit is not None:
             await self.audit.log_event(
                 event_type="EXPORTED",
                 document_id=context.document_id,

@@ -112,7 +112,7 @@ class IngestionStage(PipelineStage):
                 recoverable=False,
                 details={"file_size": file_size, "max_size": self.MAX_FILE_SIZE},
             )
-        if self.hashing:
+        if self.hashing is not None:
             context.hash_original = self.hashing.hash_bytes(document_bytes)
         context.artifacts.file_size_bytes = file_size
         context.artifacts.mime_type = mime_type

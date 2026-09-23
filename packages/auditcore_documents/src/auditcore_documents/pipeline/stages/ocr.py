@@ -479,7 +479,7 @@ class OcrStage(PipelineStage):
         if avg >= self.min_confidence_review:
             context.add_validation_flag("LOW_OCR_CONFIDENCE")
             context.status = RunStatus.REVIEW_NEEDED
-            if self.audit:
+            if self.audit is not None:
                 await self.audit.log_event(
                     event_type="OCR_CONFIDENCE_LOW",
                     document_id=context.document_id,

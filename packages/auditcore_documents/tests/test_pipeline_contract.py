@@ -184,3 +184,19 @@ def test_corrected_profile_keeps_valid_iban_on_real_text(tmp_path: Path) -> None
     assert corrected["context"]["artifacts"]["normalized_json"]["iban"] == "DE89370400440532013000"
     assert corrected["context"]["status"] == "ok"
     assert json.loads(corrected["artifacts_json"])["normalized_json"]["total"] == 1190.0
+
+
+def test_empty_in_memory_audit_log_is_used_as_sink() -> None:
+    """Regression: ein leeres Protokoll ist „falsy“ (``__len__``), zählt aber als Senke."""
+    from auditcore_documents.pipeline import PipelineOrchestrator, PostprocessStage
+
+    audit = InMemoryAuditLog()
+    context = PipelineContext(document_id="d", run_id="r")
+    context.artifacts.ocr_text = "Rechnungsnummer: RE-1\nGesamtbetrag: 1,00\n"
+    asyncio.run(PipelineOrchestrator([PostprocessStage()], audit_service=audit).run(context))
+    assert [e.event_type for e in audit] == [
+        "PIPELINE_STARTED",
+        "POSTPROCESS_STARTED",
+        "POSTPROCESS_DONE",
+        "PIPELINE_COMPLETED",
+    ]
