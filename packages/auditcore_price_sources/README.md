@@ -53,8 +53,9 @@ Speicherung: `legacy_exchange_rate_rows`, `legacy_commodity_rows`,
 - Quellenkatalog mit Herkunft, Consumer, Konfiguration, Einheit, Zeitbezug,
   Datenrechten (`REVIEW_REQUIRED`) und Live-Prüfstatus:
   `src/auditcore_price_sources/catalog.json`.
-- Beobachtetes Originalverhalten und Abweichungen PS-C01 bis PS-C13, offene
-  Entscheidungen PS-H01/PS-H02: [docs/behavior-changes.md](docs/behavior-changes.md).
+- Beobachtetes Originalverhalten und Abweichungen PS-C01 bis PS-C13,
+  Entscheidungen PS-H01/PS-H02 (DECIDED 23.09.2026: `teilweise` bei Hinweisen;
+  Tankerkönig nicht speichern): [docs/behavior-changes.md](docs/behavior-changes.md).
 - Umstellung von regulierung: [docs/consumer-migration.md](docs/consumer-migration.md).
 - Eigene Adapter: Anleitung und Contract-Suite in `auditcore_harvest`
   (`docs/adapter-guide.md`, `auditcore_harvest.testing.assert_adapter`); alle

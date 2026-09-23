@@ -10,7 +10,8 @@ This adapter therefore marks every record explicitly: time reference
 ``abrufzeitpunkt`` (retrieval time from the engine clock, **not** a price
 change time), purpose ``vorpruefung`` and ``beweismittel: false``. Prices
 are EUR per litre; ``false``/``null`` mean "no price" and stay ``None``.
-Whether a consumer stores these records is its decision (regulierung: no).
+Decision PS-H02 (2026-09-23): regulierung does **not** store these records as
+a pre-check source; the adapter serves the health check only.
 """
 
 from __future__ import annotations

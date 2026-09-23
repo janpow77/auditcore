@@ -112,6 +112,15 @@ class CalculationResult:
     release: ReleaseStatus
     issues: tuple[str, ...]
 
+    @property
+    def completeness(self) -> str:
+        """``vollstaendig`` or ``unvollstaendig`` (some component missing; total is a lower bound).
+
+        Decision PA-H01 (2026-09-23): missing optional components do not block
+        comparability, but the result is always marked as incomplete.
+        """
+        return "unvollstaendig" if self.total_is_lower_bound else "vollstaendig"
+
     def line(self, name: str) -> Line:
         """The (applicable) line with the given result name, e.g. ``umlagenpreis_anteil``."""
         for item in self.lines:
@@ -133,6 +142,7 @@ class CalculationResult:
             "total": str(self.total),
             "total_rounded": str(self.total_rounded),
             "total_is_lower_bound": self.total_is_lower_bound,
+            "vollstaendigkeit": self.completeness,
             "missing_required": list(self.missing_required),
             "missing_optional": list(self.missing_optional),
             "comparable": self.comparable,

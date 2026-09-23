@@ -23,20 +23,28 @@ PROVENANCE = json.loads((ROOT / "provenance.json").read_text(encoding="utf-8"))
 
 def test_shipped_profiles_and_versions() -> None:
     rows = available_profiles()
-    assert [(r["profile_id"], r["version"], r["type"]) for r in rows] == [
-        ("regulierung.hpp.nahwaerme", "2026.09.1", "calculation"),
-        ("regulierung.hpp.vergleich", "2026.09.1", "comparison"),
-        ("regulierung.hpp.wasser", "2026.09.1", "calculation"),
+    assert [(r["profile_id"], r["version"], r["type"], r["status"]) for r in rows] == [
+        ("regulierung.hpp.nahwaerme", "2026.09.1", "calculation", "SOURCE_CHARACTERIZED"),
+        ("regulierung.hpp.nahwaerme", "2026.09.2", "calculation", "DECIDED"),
+        ("regulierung.hpp.vergleich", "2026.09.1", "comparison", "SOURCE_CHARACTERIZED"),
+        ("regulierung.hpp.vergleich", "2026.09.2", "comparison", "DECIDED"),
+        ("regulierung.hpp.wasser", "2026.09.1", "calculation", "SOURCE_CHARACTERIZED"),
+        ("regulierung.hpp.wasser", "2026.09.2", "calculation", "DECIDED"),
     ]
-    assert all(r["status"] == "SOURCE_CHARACTERIZED" and len(r["fingerprint"]) == 64 for r in rows)
+    assert [r["recommended"] for r in rows] == [False, True] * 3
+    assert all(len(r["fingerprint"]) == 64 for r in rows)
     listed = {f"{r['profile_id']}@{r['version']}" for r in rows}
     assert listed == set(PROVENANCE["profiles"])
 
 
 def test_profiles_are_bound_to_the_characterized_source_blobs() -> None:
     blobs = {f["path"]: f["git_blob"] for f in PROVENANCE["sources"][0]["files"]}
-    for name in ("regulierung.hpp.nahwaerme", "regulierung.hpp.wasser"):
-        source = load_calculation_profile(name, "2026.09.1").source
+    for name, version in (
+        (n, v)
+        for n in ("regulierung.hpp.nahwaerme", "regulierung.hpp.wasser")
+        for v in ("2026.09.1", "2026.09.2")
+    ):
+        source = load_calculation_profile(name, version).source
         assert source["commit"] == PROVENANCE["sources"][0]["commit"]
         assert blobs[source["path"]] == source["git_blob"]
     comparison = load_comparison_profile("regulierung.hpp.vergleich", "2026.09.1").source

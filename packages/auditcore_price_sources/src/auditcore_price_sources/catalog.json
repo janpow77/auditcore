@@ -45,6 +45,9 @@
         "records": 5,
         "requests": 1,
         "note": "lastNObservations=5"
+      },
+      "storage": {
+        "status": "CONSUMER_DEFINED"
       }
     },
     {
@@ -88,6 +91,9 @@
         "status": "NOT_CONFIGURED",
         "date": null,
         "note": "GENESIS-Kennung (username) und Token nicht in der Prüfumgebung"
+      },
+      "storage": {
+        "status": "CONSUMER_DEFINED"
       }
     },
     {
@@ -133,6 +139,9 @@
         "records": 16,
         "requests": 1,
         "note": "Fenster 30 Tage"
+      },
+      "storage": {
+        "status": "CONSUMER_DEFINED"
       }
     },
     {
@@ -176,6 +185,9 @@
         "records": 1,
         "requests": 1,
         "note": "eine Abfrage"
+      },
+      "storage": {
+        "status": "CONSUMER_DEFINED"
       }
     },
     {
@@ -222,6 +234,9 @@
         "records": 120,
         "requests": 1,
         "note": "Gebiet DE-HB (klein) statt DE-HE, um den öffentlichen Dienst zu schonen"
+      },
+      "storage": {
+        "status": "CONSUMER_DEFINED"
       }
     },
     {
@@ -268,6 +283,13 @@
         "records": 11,
         "requests": 1,
         "note": "Umkreis 2 km"
+      },
+      "storage": {
+        "status": "DO_NOT_STORE",
+        "decision": "PS-H02",
+        "date": "2026-09-23",
+        "quote": "alle empfehlungen … p3 180",
+        "note": "Nicht als Vorprüfungsquelle speichern; nur Health-Check (ADR-005, § 7 MTSKraftV)."
       }
     }
   ],

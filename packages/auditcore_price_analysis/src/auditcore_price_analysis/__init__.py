@@ -38,6 +38,10 @@ from .profiles import (
     comparison_profile_from_dict,
     load_calculation_profile,
     load_comparison_profile,
+    load_recommended_calculation_profile,
+    load_recommended_comparison_profile,
+    recommended_version,
+    standard_consumption,
 )
 from .selection import STATUS_NONE, STATUS_OK, STATUS_Q3_FALLBACK, Selection, select_tariff
 from .tariff import ReleaseStatus, Tariff, Tier, ignored_tier_keys, parse_tiers
@@ -79,11 +83,15 @@ __all__ = [
     "ignored_tier_keys",
     "load_calculation_profile",
     "load_comparison_profile",
+    "load_recommended_calculation_profile",
+    "load_recommended_comparison_profile",
     "non_negative",
     "parse_day",
     "parse_decimal",
     "parse_tiers",
+    "recommended_version",
     "select_tariff",
+    "standard_consumption",
     "tiered_amount",
     "traffic_light",
 ]

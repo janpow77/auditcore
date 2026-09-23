@@ -47,22 +47,36 @@ bzw. Fehler in `tests/fixtures/regulierung_calculator_observed.json`.
   `stichtag <= Stichtag`; `select_tariff` bildet genau diese Regeln ab und
   listet ausgeschlossene Zeilen mit Grund. Die Bibliothek setzt nie einen Status.
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED, 23.09.2026)
 
-- **PA-H01** Sollen fehlende optionale Bestandteile (Verrechnungspreis,
-  Emissionspreis, Umlage des geltenden Regimes, Wasserentnahmeentgelt) die
-  Vergleichbarkeit ausschließen? Legacy: nein. Profil
-  `optional_missing_blocks_comparison` ist `false` (wie Legacy); die Lücke ist
-  aber immer sichtbar.
-- **PA-H02** Umstellung von Abweichung, Ampel und Gruppenstatistik auf exakte
-  Dezimalrundung (PA-L11 bis PA-L13) ändert Anzeigen an Grenzwerten.
-- **PA-H03** Standardverbrauch Wasser: `calculate_wasser` nutzt 150 m³
-  (Aufrufer `export_routes`, `provider_routes`, `flagging`), die Einstellung
-  `wasser_standard_m3` ist 180 m³ (Aufrufer `calculate_routes`). Der neue
-  Vertrag verlangt den Verbrauch ausdrücklich und entscheidet das nicht.
-- **PA-H04** Soll `valid_to` einer Preiszeile bei der Tarifauswahl beachtet
-  werden? Legacy: nein (nur `valid_to` der Standardvariante). Profilregel
-  `respect_valid_to` ist `false`.
+Nutzerentscheidung vom 23.09.2026, Zitat: „alle empfehlungen … p3 180“. Umgesetzt in den empfohlenen
+Profilen `regulierung.hpp.nahwaerme`, `.wasser`, `.vergleich` **@2026.09.2**
+(`recommended: true`, `load_recommended_calculation_profile`,
+`load_recommended_comparison_profile`). Die charakterisierten Profile
+@2026.09.1 und das Legacy-Modul bleiben bitgenau unverändert.
 
-Der Umlagenstichtag 01.07.2025 steht im Profil mit `SOURCE_STATED`; die
-Rechtsquelle ist in regulierung nicht zitiert und wurde hier nicht geprüft.
+- **PA-H01 – DECIDED:** Fehlende optionale Preisbestandteile schließen die
+  Vergleichbarkeit nicht aus; das Ergebnis wird sichtbar als
+  `vollstaendigkeit: unvollstaendig` markiert (`CalculationResult.completeness`,
+  Summe als Untergrenze, Lücken in `missing_optional`).
+- **PA-H02 – DECIDED:** Abweichung, Ampel und Gruppenstatistik mit exakter
+  Dezimalrundung (ROUND_HALF_UP) – `delta_pct`, `traffic_light`,
+  `group_statistics` des korrigierten Vertrags.
+- **PA-H03 – DECIDED:** Standardverbrauch Wasser **180 m³**, einzige Quelle ist
+  die Einstellung `wasser_standard_m3`; das Profil @2026.09.2 nennt ihn
+  (`standard_consumption`). Der Vorgabewert 150 m³ gilt nur noch im
+  Legacy-Modul (bitgenaue Nachbildung) und entfällt bei der Umstellung.
+- **PA-H04 – DECIDED:** `valid_to` der Preiszeile wird bei der Tarifauswahl
+  beachtet (`selection.respect_valid_to: true`, Ausschlussgrund `abgelaufen`).
+
+## REVIEW_REQUIRED
+
+- **Umlagenstichtag 01.07.2025:** Recherche vom 23.09.2026 ohne belastbare
+  Rechtsgrundlage für einen Wechsel zu einem „Wärmeumlagenpreis“. Zum
+  01.07.2025 änderte sich nur die Höhe der Gasspeicherumlage nach § 35e EnWG
+  (0,289 ct/kWh); die Umlage entfiel erst zum 01.01.2026 durch Änderung des
+  EnWG (Bundestag 06.11.2025, Bundesrat 21.11.2025). Für Fernwärme gilt das
+  EnWG nicht unmittelbar (Preisänderungsklauseln nach AVBFernwärmeV). Der
+  „Wärmeumlagenpreis“ ist danach ein vertraglicher Preisbestandteil. Wert
+  unverändert, Status und Quellen im Profil @2026.09.2 (`legal_dates`).
+- Datenrechte: keine Versorgerdaten enthalten (synthetische Fixtures).

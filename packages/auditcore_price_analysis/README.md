@@ -44,8 +44,11 @@ Vertrag `auditcore_price_analysis.contract/1`:
 - **`auditcore_price_analysis.legacy`**: exakte Nachbildung der Originalfunktionen
   für die schrittweise Umstellung des Consumers.
 
-Beobachtetes Originalverhalten, Korrekturen (PA-L01 bis PA-L17) und offene
-fachliche Entscheidungen (PA-H01 bis PA-H04): [docs/behavior-changes.md](docs/behavior-changes.md).
+Empfohlen sind die Profile **@2026.09.2** mit den Nutzerentscheidungen vom
+23.09.2026 (PA-H01 bis PA-H04 DECIDED; Wasser-Standardverbrauch 180 m³,
+`load_recommended_calculation_profile`, `standard_consumption`). Beobachtetes
+Originalverhalten, Korrekturen (PA-L01 bis PA-L17) und Entscheidungen:
+[docs/behavior-changes.md](docs/behavior-changes.md).
 Umstellung von regulierung: [docs/consumer-migration.md](docs/consumer-migration.md).
 
 LLM-Extraktion, Plausibilisierung, Reviewqueue, Scheduler, Datenbank und

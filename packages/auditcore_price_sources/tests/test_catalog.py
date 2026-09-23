@@ -45,3 +45,10 @@ def test_not_implemented_sources_carry_a_reason() -> None:
 
 def test_version_matches_package() -> None:
     assert CATALOG["version"] == auditcore_price_sources.__version__
+
+
+def test_tankerkoenig_is_not_stored_by_decision() -> None:
+    entries = {e["source_id"]: e for e in CATALOG["sources"]}
+    storage = entries["price.tankerkoenig"]["storage"]
+    assert storage["status"] == "DO_NOT_STORE" and storage["decision"] == "PS-H02"
+    assert storage["date"] == "2026-09-23"
