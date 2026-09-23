@@ -1,0 +1,130 @@
+{
+ "filler_words": [
+  "deutschland",
+  "europe",
+  "european",
+  "germany",
+  "group",
+  "gruppe",
+  "holding",
+  "international"
+ ],
+ "id": "designer.state_aid",
+ "legal_suffixes": [
+  "ab",
+  "ag",
+  "bv",
+  "co",
+  "cokg",
+  "company",
+  "corp",
+  "ev",
+  "fz",
+  "fzc",
+  "ggmbh",
+  "gmbh",
+  "inc",
+  "jsc",
+  "kg",
+  "kgaa",
+  "limited",
+  "llc",
+  "lp",
+  "ltd",
+  "mbh",
+  "nv",
+  "ohg",
+  "ojsc",
+  "ooo",
+  "oy",
+  "pjsc",
+  "plc",
+  "sa",
+  "sarl",
+  "sas",
+  "se",
+  "sl",
+  "sp",
+  "spa",
+  "spzoo",
+  "srl",
+  "ug",
+  "und",
+  "zao"
+ ],
+ "schema": "auditcore_funding_sources.name_profile/1",
+ "source": {
+  "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+  "files": [
+   {
+    "git_blob": "88f8d649c6a43607daaabab93a16cb6fdf82a8b2",
+    "path": "backend/app/core/shared/research/register/beneficiaries.py"
+   },
+   {
+    "git_blob": "79fb0ab5aa2082a3c080867bec9e8e14d3245b06",
+    "path": "backend/app/core/shared/research/register/state_aid.py"
+   },
+   {
+    "git_blob": "e0a660aa902933d5c7f6a550b908e8b0b1b0be16",
+    "path": "backend/app/core/shared/research/register/de_minimis.py"
+   },
+   {
+    "git_blob": "9ad78b1bf491d546caea4e161d8a140d8853e161",
+    "path": "backend/app/core/shared/research/register/de_minimis_ernte.py"
+   },
+   {
+    "git_blob": "b73451505740935ff201968295ce5b2e2c12b582",
+    "path": "backend/app/core/shared/research/register/de_minimis_models.py"
+   },
+   {
+    "git_blob": "56e1f5053ba1aa356be64a505b6c62d8a3489d52",
+    "path": "backend/app/core/shared/research/register/de_minimis_zuordnung.py"
+   }
+  ],
+  "repository": "janpow77/audit_designer",
+  "variant": "designer"
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "transliteration": {
+  "Ä": "ae",
+  "Ö": "oe",
+  "Ü": "ue",
+  "ß": "ss",
+  "à": "a",
+  "á": "a",
+  "â": "a",
+  "ã": "a",
+  "ä": "ae",
+  "å": "a",
+  "ç": "c",
+  "è": "e",
+  "é": "e",
+  "ê": "e",
+  "ë": "e",
+  "ì": "i",
+  "í": "i",
+  "î": "i",
+  "ï": "i",
+  "ñ": "n",
+  "ò": "o",
+  "ó": "o",
+  "ô": "o",
+  "õ": "o",
+  "ö": "oe",
+  "ù": "u",
+  "ú": "u",
+  "û": "u",
+  "ü": "ue",
+  "ý": "y",
+  "č": "c",
+  "đ": "d",
+  "ł": "l",
+  "ń": "n",
+  "ś": "s",
+  "š": "s",
+  "ź": "z",
+  "ż": "z",
+  "ž": "z"
+ },
+ "version": "2026.09.1"
+}

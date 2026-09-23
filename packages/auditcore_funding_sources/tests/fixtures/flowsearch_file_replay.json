@@ -1,0 +1,16 @@
+{
+ "provenance": "Datei aus tests/fixtures/files (synthetisch im Originalformat)",
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://daten.example.invalid/bw/liste.csv",
+    "json": null
+   },
+   "response": {
+    "status": 200,
+    "body_b64": "VGl0ZWx6ZWlsZQpCZWfDvG5zdGlndGVyO1ZvcmhhYmVuO0dlc2FtdGtvc3RlbjtFVS1CZWl0cmFnO09ydDtCZWdpbm4KQmVpc3BpZWwgR21iSDtFbmVyZ2llOzEuMjM0LDU2OzYwMCwwMDs3MDE3MyBTdHV0dGdhcnQ7MDEuMDIuMjAyNApad2VpdGUgQUc7RGlnaXRhbDs7O1N0dXR0Z2FydDsyMDI0LTAzLTE1Cg=="
+   }
+  }
+ ]
+}

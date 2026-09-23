@@ -1,0 +1,147 @@
+{
+ "provenance": "SYNTHETIC: Feldnamen und Antwortformen aus audit_designer@030a71e (de_minimis.py SPALTEN, EAidRegisterClient); keine aufgezeichnete Live-Antwort (Live-Abruf NOT_CONFIGURED).",
+ "exchanges": [
+  {
+   "request": {
+    "method": "POST",
+    "url": "https://aid-register.ec.europa.eu/eair/public/api/de-minimis-aid-awards",
+    "json": {
+     "country": "CountryDEU",
+     "languageCode": "de",
+     "pageNumber": 0,
+     "pageSize": 2
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": [
+     {
+      "referenceNumber": "DE-DM-2026-00001",
+      "beneficiaryName": "Beispiel 1 GmbH",
+      "beneficiaryReferenceNumber": "B-100000001",
+      "amountEur": 1000.5,
+      "currency": "EUR",
+      "amount": 1000.5,
+      "grantingDate": "2026-02-11",
+      "deMinimisType": "GENERAL",
+      "grantingAuthorityName": "Bundesamt für Wirtschaft und Ausfuhrkontrolle (BAFA)",
+      "sector": "C",
+      "instrument": "GRANT",
+      "publishedDate": "2026-02-20 08:00:00",
+      "country": "CountryDEU"
+     },
+     {
+      "referenceNumber": "DE-DM-2026-00002",
+      "beneficiaryName": "Beispiel 2 GmbH",
+      "beneficiaryReferenceNumber": "B-100000002",
+      "amountEur": 2001.0,
+      "currency": "EUR",
+      "amount": 2001.0,
+      "grantingDate": "2026-03-12",
+      "deMinimisType": "GENERAL",
+      "grantingAuthorityName": "DE-RP-ISB Mainz",
+      "sector": "C",
+      "instrument": "GRANT",
+      "publishedDate": "2026-02-20 08:00:00",
+      "country": "CountryDEU"
+     }
+    ]
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "url": "https://aid-register.ec.europa.eu/eair/public/api/de-minimis-aid-awards/counters",
+    "json": {
+     "country": "CountryDEU",
+     "languageCode": "de"
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": {
+     "count": 5
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "url": "https://aid-register.ec.europa.eu/eair/public/api/de-minimis-aid-awards",
+    "json": {
+     "country": "CountryDEU",
+     "languageCode": "de",
+     "pageNumber": 1,
+     "pageSize": 2
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": [
+     {
+      "referenceNumber": "DE-DM-2026-00003",
+      "beneficiaryName": "Beispiel 3 GmbH",
+      "beneficiaryReferenceNumber": "B-100000000",
+      "amountEur": 3001.5,
+      "currency": "EUR",
+      "amount": 3001.5,
+      "grantingDate": "2026-04-13",
+      "deMinimisType": "GENERAL",
+      "grantingAuthorityName": "Hessisches Ministerium für Wirtschaft",
+      "sector": "C",
+      "instrument": "GRANT",
+      "publishedDate": "2026-02-20 08:00:00",
+      "country": "CountryDEU"
+     },
+     {
+      "referenceNumber": "DE-DM-2026-00004",
+      "beneficiaryName": "Her************",
+      "beneficiaryReferenceNumber": "B-100000001",
+      "amountEur": 4002.0,
+      "currency": "EUR",
+      "amount": 4002.0,
+      "grantingDate": "2026-05-14",
+      "deMinimisType": "GENERAL",
+      "grantingAuthorityName": "Bundesamt für Wirtschaft und Ausfuhrkontrolle (BAFA)",
+      "sector": "C",
+      "instrument": "GRANT",
+      "publishedDate": "2026-02-20 08:00:00",
+      "country": "CountryDEU"
+     }
+    ]
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "url": "https://aid-register.ec.europa.eu/eair/public/api/de-minimis-aid-awards",
+    "json": {
+     "country": "CountryDEU",
+     "languageCode": "de",
+     "pageNumber": 2,
+     "pageSize": 2
+    }
+   },
+   "response": {
+    "status": 200,
+    "body_json": [
+     {
+      "referenceNumber": "DE-DM-2026-00005",
+      "beneficiaryName": "Beispiel 5 GmbH",
+      "beneficiaryReferenceNumber": "B-100000002",
+      "amountEur": 5002.5,
+      "currency": "EUR",
+      "amount": 5002.5,
+      "grantingDate": "2026-06-15",
+      "deMinimisType": "GENERAL",
+      "grantingAuthorityName": "DE-RP-ISB Mainz",
+      "sector": "C",
+      "instrument": "GRANT",
+      "publishedDate": "2026-02-20 08:00:00",
+      "country": "CountryDEU"
+     }
+    ]
+   }
+  }
+ ]
+}

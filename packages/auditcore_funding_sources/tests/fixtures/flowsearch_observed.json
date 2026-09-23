@@ -1,0 +1,2856 @@
+{
+ "status": "OBSERVED",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "variant": "flowsearch",
+ "source": {
+  "repository": "janpow77/flowsearch",
+  "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+  "head": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+  "files": [
+   {
+    "path": "backend/app/services/eu_beneficiary_harvester_v2.py",
+    "git_blob": "4cbc58a2057e896808a079808d8f6fa968c2f79f",
+    "pinned_blob": "4cbc58a2057e896808a079808d8f6fa968c2f79f"
+   },
+   {
+    "path": "backend/app/services/harvest_source_manager.py",
+    "git_blob": "9768fc66299f933e643349579d351050c789d101",
+    "pinned_blob": "9768fc66299f933e643349579d351050c789d101"
+   }
+  ],
+  "checkout_clean": true,
+  "migrated": false,
+  "library": null
+ },
+ "environment": {
+  "python": "3.12.3",
+  "database": "unreachable/scratch URL; only in-memory SQLite for de-minimis harvest"
+ },
+ "constants": {
+  "$dict": [
+   [
+    "nuts1",
+    {
+     "$dict": [
+      [
+       "Baden-Württemberg",
+       "DE1"
+      ],
+      [
+       "Bayern",
+       "DE2"
+      ],
+      [
+       "Berlin",
+       "DE3"
+      ],
+      [
+       "Brandenburg",
+       "DE4"
+      ],
+      [
+       "Bremen",
+       "DE5"
+      ],
+      [
+       "Hamburg",
+       "DE6"
+      ],
+      [
+       "Hessen",
+       "DE7"
+      ],
+      [
+       "Mecklenburg-Vorpommern",
+       "DE8"
+      ],
+      [
+       "Niedersachsen",
+       "DE9"
+      ],
+      [
+       "Nordrhein-Westfalen",
+       "DEA"
+      ],
+      [
+       "Rheinland-Pfalz",
+       "DEB"
+      ],
+      [
+       "Saarland",
+       "DEC"
+      ],
+      [
+       "Sachsen",
+       "DED"
+      ],
+      [
+       "Sachsen-Anhalt",
+       "DEE"
+      ],
+      [
+       "Schleswig-Holstein",
+       "DEF"
+      ],
+      [
+       "Thüringen",
+       "DEG"
+      ]
+     ]
+    }
+   ],
+   [
+    "fallback_mapping",
+    {
+     "$dict": [
+      [
+       "name",
+       "Fallback für unbekannte Formate"
+      ],
+      [
+       "format",
+       "xlsx"
+      ],
+      [
+       "skip_rows",
+       0
+      ],
+      [
+       "fuzzy_column_names",
+       {
+        "$dict": [
+         [
+          "beneficiary_name",
+          [
+           "name",
+           "begünstig",
+           "beneficiary",
+           "zuwendung",
+           "empfänger",
+           "auftragnehmer"
+          ]
+         ],
+         [
+          "project_name",
+          [
+           "bezeichnung",
+           "vorhaben",
+           "projekt",
+           "operation",
+           "title"
+          ]
+         ],
+         [
+          "project_purpose",
+          [
+           "zweck",
+           "errungenschaft",
+           "purpose",
+           "achievement",
+           "beschreibung"
+          ]
+         ],
+         [
+          "start_date",
+          [
+           "beginn",
+           "start",
+           "anfang"
+          ]
+         ],
+         [
+          "end_date",
+          [
+           "abschluss",
+           "ende",
+           "completion",
+           "end"
+          ]
+         ],
+         [
+          "total_cost",
+          [
+           "gesamtkosten",
+           "kosten",
+           "total",
+           "cost",
+           "summe"
+          ]
+         ],
+         [
+          "eu_contribution",
+          [
+           "union",
+           "eu",
+           "efre",
+           "esf",
+           "kofinanz",
+           "contribution"
+          ]
+         ],
+         [
+          "location",
+          [
+           "standort",
+           "ort",
+           "location",
+           "geolok",
+           "plz",
+           "stadt"
+          ]
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   [
+    "mapping_keys",
+    [
+     "_fallback",
+     "bb_efre_2021_2027",
+     "bb_esf_2021_2027",
+     "be_efre_2021_2027",
+     "be_esf_2021_2027",
+     "bund_amif_2021_2027",
+     "bund_isf_2021_2027",
+     "bw_efre_2021_2027",
+     "bw_esf_2021_2027",
+     "by_efre_2021_2027",
+     "by_esf_2021_2027",
+     "hb_efre_2021_2027",
+     "hb_esf_2021_2027",
+     "he_efre_2021_2027",
+     "he_esf_2021_2027",
+     "hh_efre_2021_2027",
+     "hh_esf_2021_2027",
+     "mv_efre_2021_2027",
+     "mv_esf_2021_2027",
+     "ni_efre_2021_2027",
+     "ni_esf_2021_2027",
+     "nrw_efre_2021_2027",
+     "nrw_esf_2021_2027",
+     "rp_efre_2021_2027",
+     "rp_esf_2021_2027",
+     "sh_efre_2021_2027",
+     "sh_esf_2021_2027",
+     "sn_efre_2021_2027",
+     "sn_esf_2021_2027",
+     "st_efre_2021_2027",
+     "st_esf_2021_2027",
+     "th_efre_2021_2027",
+     "th_esf_2021_2027"
+    ]
+   ]
+  ]
+ },
+ "cases": [
+  {
+   "name": "parse_amount-0",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      null
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-1",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      ""
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-2",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      " "
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-3",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "-"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-4",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "—"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-5",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "–"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-6",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "0"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-7",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1234"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1234.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-8",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.234"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.234"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-9",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.234.567"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-10",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.234,56"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1234.56"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-11",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1,234.56"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1234.56"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-12",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1,234,567"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-13",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1,5"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-14",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1,50"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-15",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1,500"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-16",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "12,3456"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "12.3456"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-17",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.2.3"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-18",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.000.000,00 €"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1000000.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-19",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "€ 1.200"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.2"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-20",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "EUR 1.200,00"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1200.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-21",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.200,00 EUR"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1200.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-22",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "usd 10"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-23",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "150.000,00 €"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "150000.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-24",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "500,001 to 1,000,000"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-25",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "500.001 bis 1.000.000"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-26",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "less than 100,000"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-27",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "weniger als 100.000"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-28",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "< 50000"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-29",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "more than 30,000,000"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-30",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "mehr als 5"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-31",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "> 10"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-32",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1 234,56"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-33",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1 234 567"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-34",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "-1.500,00"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "-1500.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-35",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "abc"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-36",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "12e3"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "12000.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-37",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "0,5"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-38",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1.5"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-39",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "100."
+     ]
+    ]
+   },
+   "output": {
+    "$float": "100.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-40",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      ".5"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-41",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1,2,3"
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-42",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      1234
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1234.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-43",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      {
+       "$float": "1234.5"
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1234.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-44",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      0
+     ]
+    ]
+   },
+   "output": {
+    "$float": "0.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-45",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      -3
+     ]
+    ]
+   },
+   "output": {
+    "$float": "-3.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-46",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      {
+       "$float": "nan"
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$float": "nan"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-47",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      {
+       "$decimal": "12.50"
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$float": "12.5"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_amount-48",
+   "operation": "flowsearch.parse_amount",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      true
+     ]
+    ]
+   },
+   "output": {
+    "$float": "1.0"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-0",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      null
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-1",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      ""
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-2",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "2024-03-15"
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-03-15"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-3",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "15.03.2024"
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-03-15"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-4",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "15/03/2024"
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-03-15"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-5",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "2024/03/15"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-6",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "15.03.24"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-7",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "2024-03-15T00:00:00"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-8",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "2024-03-15 10:00"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-9",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "31.02.2024"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-10",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "3/4/2024"
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-04-03"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-11",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      " 2024-01-01 "
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-01-01"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-12",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "01.01.1900"
+     ]
+    ]
+   },
+   "output": {
+    "$date": "1900-01-01"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-13",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "20240315"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-14",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      {
+       "$datetime": "2024-03-15T12:30:00"
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-03-15"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-15",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      {
+       "$date": "2024-03-15"
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$date": "2024-03-15"
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_date-16",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      45000
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_date-17",
+   "operation": "flowsearch.parse_date",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Q1 2024"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "normalize_name-1",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      ""
+     ]
+    ]
+   },
+   "output": "",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-2",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Beispiel GmbH"
+     ]
+    ]
+   },
+   "output": "beispiel",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-3",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "  BEISPIEL   gmbh  "
+     ]
+    ]
+   },
+   "output": "beispiel",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-4",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Müller & Söhne KG"
+     ]
+    ]
+   },
+   "output": "müller söhne",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-5",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Fraunhofer-Gesellschaft e.V."
+     ]
+    ]
+   },
+   "output": "fraunhofer gesellschaft e v",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-6",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "ÄÖÜ Straße ß GmbH & Co. KG"
+     ]
+    ]
+   },
+   "output": "äöü straße ß co",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-7",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Holding Group Deutschland AG"
+     ]
+    ]
+   },
+   "output": "holding group deutschland",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-8",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "ACME Ltd."
+     ]
+    ]
+   },
+   "output": "acme ltd",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-9",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Société Générale S.A."
+     ]
+    ]
+   },
+   "output": "société générale s a",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-10",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Łódź Sp. z o.o."
+     ]
+    ]
+   },
+   "output": "łódź sp z o o",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-11",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Dvořák s.r.o."
+     ]
+    ]
+   },
+   "output": "dvořák s r o",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-12",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "gGmbH Stiftung"
+     ]
+    ]
+   },
+   "output": "stiftung",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-13",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Co. KG"
+     ]
+    ]
+   },
+   "output": "co",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-14",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Gruppe International"
+     ]
+    ]
+   },
+   "output": "gruppe international",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-15",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "123 GmbH"
+     ]
+    ]
+   },
+   "output": "123",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-16",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Her************"
+     ]
+    ]
+   },
+   "output": "her",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-17",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "o’Brien & Co"
+     ]
+    ]
+   },
+   "output": "o brien co",
+   "exception": null
+  },
+  {
+   "name": "normalize_name-18",
+   "operation": "flowsearch.normalize_name",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Peter\tMeier\nGmbH"
+     ]
+    ]
+   },
+   "output": "peter meier",
+   "exception": null
+  },
+  {
+   "name": "parse_location-0",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      null
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     null,
+     null
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-1",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      ""
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     null,
+     null
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-2",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "70173 Stuttgart"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "Stuttgart",
+     "70173"
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-3",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Stuttgart, 70173"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "Stuttgart",
+     "70173"
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-4",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "70173"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     null,
+     "70173"
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-5",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Stuttgart"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "Stuttgart",
+     null
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-6",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "1234 Wien"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "1234 Wien",
+     null
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-7",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      " 01067  Dresden "
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "Dresden",
+     "01067"
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-8",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "Berlin,12345"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "Berlin",
+     "12345"
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "parse_location-9",
+   "operation": "flowsearch.parse_location",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "D-12345 Berlin"
+     ]
+    ]
+   },
+   "output": {
+    "$tuple": [
+     "D-12345 Berlin",
+     null
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "truncate-0",
+   "operation": "flowsearch.truncate",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      null
+     ],
+     [
+      "max",
+      5
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "truncate-1",
+   "operation": "flowsearch.truncate",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "abc"
+     ],
+     [
+      "max",
+      5
+     ]
+    ]
+   },
+   "output": "abc",
+   "exception": null
+  },
+  {
+   "name": "truncate-2",
+   "operation": "flowsearch.truncate",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "abcdef"
+     ],
+     [
+      "max",
+      5
+     ]
+    ]
+   },
+   "output": "abcde",
+   "exception": null
+  },
+  {
+   "name": "truncate-3",
+   "operation": "flowsearch.truncate",
+   "inputs": {
+    "$dict": [
+     [
+      "value",
+      "äöüßäöüßäöüß"
+     ],
+     [
+      "max",
+      5
+     ]
+    ]
+   },
+   "output": "äöüßä",
+   "exception": null
+  },
+  {
+   "name": "extract-beneficiary_name",
+   "operation": "flowsearch.extract_mapped_field",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Name",
+         "Beispiel GmbH"
+        ],
+        [
+         "Begünstigter Name",
+         "Fuzzy AG"
+        ],
+        [
+         "Kosten",
+         ""
+        ],
+        [
+         "Leer",
+         null
+        ]
+       ]
+      }
+     ],
+     [
+      "columns",
+      {
+       "$dict": [
+        [
+         "beneficiary_name",
+         "Name"
+        ],
+        [
+         "total_cost",
+         "Kosten"
+        ],
+        [
+         "location",
+         "Fehlt"
+        ]
+       ]
+      }
+     ],
+     [
+      "field",
+      "beneficiary_name"
+     ]
+    ]
+   },
+   "output": "Beispiel GmbH",
+   "exception": null
+  },
+  {
+   "name": "extract-total_cost",
+   "operation": "flowsearch.extract_mapped_field",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Name",
+         "Beispiel GmbH"
+        ],
+        [
+         "Begünstigter Name",
+         "Fuzzy AG"
+        ],
+        [
+         "Kosten",
+         ""
+        ],
+        [
+         "Leer",
+         null
+        ]
+       ]
+      }
+     ],
+     [
+      "columns",
+      {
+       "$dict": [
+        [
+         "beneficiary_name",
+         "Name"
+        ],
+        [
+         "total_cost",
+         "Kosten"
+        ],
+        [
+         "location",
+         "Fehlt"
+        ]
+       ]
+      }
+     ],
+     [
+      "field",
+      "total_cost"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "extract-location",
+   "operation": "flowsearch.extract_mapped_field",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Name",
+         "Beispiel GmbH"
+        ],
+        [
+         "Begünstigter Name",
+         "Fuzzy AG"
+        ],
+        [
+         "Kosten",
+         ""
+        ],
+        [
+         "Leer",
+         null
+        ]
+       ]
+      }
+     ],
+     [
+      "columns",
+      {
+       "$dict": [
+        [
+         "beneficiary_name",
+         "Name"
+        ],
+        [
+         "total_cost",
+         "Kosten"
+        ],
+        [
+         "location",
+         "Fehlt"
+        ]
+       ]
+      }
+     ],
+     [
+      "field",
+      "location"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "extract-project_name",
+   "operation": "flowsearch.extract_mapped_field",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Name",
+         "Beispiel GmbH"
+        ],
+        [
+         "Begünstigter Name",
+         "Fuzzy AG"
+        ],
+        [
+         "Kosten",
+         ""
+        ],
+        [
+         "Leer",
+         null
+        ]
+       ]
+      }
+     ],
+     [
+      "columns",
+      {
+       "$dict": [
+        [
+         "beneficiary_name",
+         "Name"
+        ],
+        [
+         "total_cost",
+         "Kosten"
+        ],
+        [
+         "location",
+         "Fehlt"
+        ]
+       ]
+      }
+     ],
+     [
+      "field",
+      "project_name"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "parse_csv",
+   "operation": "flowsearch.parse_csv",
+   "inputs": {
+    "$dict": [
+     [
+      "file",
+      "flowsearch_quelle.csv"
+     ],
+     [
+      "mapping",
+      {
+       "$dict": [
+        [
+         "delimiter",
+         ";"
+        ],
+        [
+         "skip_rows",
+         1
+        ],
+        [
+         "header_row",
+         2
+        ],
+        [
+         "columns",
+         {
+          "$dict": [
+           [
+            "beneficiary_name",
+            "Begünstigter"
+           ],
+           [
+            "project_name",
+            "Vorhaben"
+           ],
+           [
+            "total_cost",
+            "Gesamtkosten"
+           ],
+           [
+            "eu_contribution",
+            "EU-Beitrag"
+           ],
+           [
+            "location",
+            "Ort"
+           ],
+           [
+            "start_date",
+            "Beginn"
+           ]
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": [
+    {
+     "$dict": [
+      [
+       "Begünstigter",
+       "Beispiel GmbH"
+      ],
+      [
+       "Vorhaben",
+       "Energie"
+      ],
+      [
+       "Gesamtkosten",
+       "1.234,56"
+      ],
+      [
+       "EU-Beitrag",
+       "600,00"
+      ],
+      [
+       "Ort",
+       "70173 Stuttgart"
+      ],
+      [
+       "Beginn",
+       "01.02.2024"
+      ]
+     ]
+    },
+    {
+     "$dict": [
+      [
+       "Begünstigter",
+       ""
+      ],
+      [
+       "Vorhaben",
+       "Summe"
+      ],
+      [
+       "Gesamtkosten",
+       "1.234,56"
+      ],
+      [
+       "EU-Beitrag",
+       ""
+      ],
+      [
+       "Ort",
+       ""
+      ],
+      [
+       "Beginn",
+       ""
+      ]
+     ]
+    },
+    {
+     "$dict": [
+      [
+       "Begünstigter",
+       "Zweite AG"
+      ],
+      [
+       "Vorhaben",
+       "Digital"
+      ],
+      [
+       "Gesamtkosten",
+       ""
+      ],
+      [
+       "EU-Beitrag",
+       ""
+      ],
+      [
+       "Ort",
+       "Stuttgart"
+      ],
+      [
+       "Beginn",
+       "2024-03-15"
+      ]
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "parse_excel",
+   "operation": "flowsearch.parse_excel",
+   "inputs": {
+    "$dict": [
+     [
+      "file",
+      "flowsearch_quelle.xlsx"
+     ],
+     [
+      "mapping",
+      {
+       "$dict": [
+        [
+         "delimiter",
+         ";"
+        ],
+        [
+         "skip_rows",
+         1
+        ],
+        [
+         "header_row",
+         2
+        ],
+        [
+         "columns",
+         {
+          "$dict": [
+           [
+            "beneficiary_name",
+            "Begünstigter"
+           ],
+           [
+            "project_name",
+            "Vorhaben Name"
+           ],
+           [
+            "total_cost",
+            "Gesamtkosten"
+           ],
+           [
+            "eu_contribution",
+            "EU-Beitrag"
+           ],
+           [
+            "location",
+            "Ort"
+           ],
+           [
+            "start_date",
+            "Beginn"
+           ]
+          ]
+         }
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": [
+    {
+     "$dict": [
+      [
+       "Begünstigter",
+       "Beispiel GmbH"
+      ],
+      [
+       "Vorhaben Name",
+       "Energie"
+      ],
+      [
+       "Gesamtkosten",
+       {
+        "$float": "1234.56"
+       }
+      ],
+      [
+       "EU-Beitrag",
+       600
+      ],
+      [
+       "Ort",
+       "70173 Stuttgart"
+      ],
+      [
+       "Beginn",
+       {
+        "$datetime": "2024-02-01T00:00:00"
+       }
+      ]
+     ]
+    },
+    {
+     "$dict": [
+      [
+       "Begünstigter",
+       "Zweite AG"
+      ],
+      [
+       "Vorhaben Name",
+       "Digital"
+      ],
+      [
+       "Gesamtkosten",
+       null
+      ],
+      [
+       "EU-Beitrag",
+       null
+      ],
+      [
+       "Ort",
+       "Stuttgart"
+      ],
+      [
+       "Beginn",
+       "15.03.2024"
+      ]
+     ]
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "extract_zip",
+   "operation": "flowsearch.extract_from_zip",
+   "inputs": {
+    "$dict": [
+     [
+      "file",
+      "flowsearch_quelle.zip"
+     ]
+    ]
+   },
+   "output": {
+    "$bytes_sha256": "250425abf34e800749496d67ab36a2e4a10a4d96def957b3a0fb6dc9ce660558",
+    "length": 194
+   },
+   "exception": null
+  },
+  {
+   "name": "extract_zip_empty",
+   "operation": "flowsearch.extract_from_zip",
+   "inputs": {
+    "$dict": [
+     [
+      "file",
+      "(no table)"
+     ]
+    ]
+   },
+   "output": null,
+   "exception": {
+    "type": "ValueError",
+    "message": "Keine Tabellendatei in ZIP gefunden"
+   }
+  },
+  {
+   "name": "import_record-0",
+   "operation": "flowsearch.import_record",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Begünstigter",
+         "Beispiel GmbH"
+        ],
+        [
+         "Vorhaben",
+         "Energie"
+        ],
+        [
+         "Gesamtkosten",
+         "1.234,56"
+        ],
+        [
+         "EU-Beitrag",
+         "600,00"
+        ],
+        [
+         "Ort",
+         "70173 Stuttgart"
+        ],
+        [
+         "Beginn",
+         "01.02.2024"
+        ]
+       ]
+      }
+     ],
+     [
+      "source",
+      {
+       "$dict": [
+        [
+         "source_key",
+         "test_quelle"
+        ],
+        [
+         "bundesland",
+         "Hessen"
+        ],
+        [
+         "fonds",
+         "EFRE"
+        ],
+        [
+         "url",
+         "https://example.invalid/liste.csv"
+        ],
+        [
+         "portal",
+         "https://example.invalid/"
+        ],
+        [
+         "periode",
+         "2021-2027"
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$dict": [
+     [
+      "project_id",
+      "c353e9cc5f45a64d"
+     ],
+     [
+      "beneficiary_name",
+      "Beispiel GmbH"
+     ],
+     [
+      "beneficiary_name_normalized",
+      "beispiel"
+     ],
+     [
+      "fund_type",
+      "EFRE"
+     ],
+     [
+      "nuts0",
+      "DE"
+     ],
+     [
+      "nuts1",
+      "DE7"
+     ],
+     [
+      "eu_cofinancing",
+      {
+       "$float": "600.0"
+      }
+     ],
+     [
+      "national_cofinancing",
+      {
+       "$float": "634.56"
+      }
+     ],
+     [
+      "total_amount",
+      {
+       "$float": "1234.56"
+      }
+     ],
+     [
+      "total_eligible_expenditure",
+      {
+       "$float": "1234.56"
+      }
+     ],
+     [
+      "project_title",
+      "Energie"
+     ],
+     [
+      "project_summary",
+      ""
+     ],
+     [
+      "start_date",
+      {
+       "$date": "2024-02-01"
+      }
+     ],
+     [
+      "end_date",
+      null
+     ],
+     [
+      "city",
+      "Stuttgart"
+     ],
+     [
+      "postal_code",
+      "70173"
+     ],
+     [
+      "data_source",
+      "Hessen EFRE"
+     ],
+     [
+      "data_source_url",
+      "https://example.invalid/"
+     ],
+     [
+      "programming_period",
+      "2021-2027"
+     ]
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "import_record-1",
+   "operation": "flowsearch.import_record",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Begünstigter",
+         ""
+        ],
+        [
+         "Vorhaben",
+         "Summe"
+        ],
+        [
+         "Gesamtkosten",
+         "1.234,56"
+        ],
+        [
+         "EU-Beitrag",
+         ""
+        ],
+        [
+         "Ort",
+         ""
+        ],
+        [
+         "Beginn",
+         ""
+        ]
+       ]
+      }
+     ],
+     [
+      "source",
+      {
+       "$dict": [
+        [
+         "source_key",
+         "test_quelle"
+        ],
+        [
+         "bundesland",
+         "Hessen"
+        ],
+        [
+         "fonds",
+         "EFRE"
+        ],
+        [
+         "url",
+         "https://example.invalid/liste.csv"
+        ],
+        [
+         "portal",
+         "https://example.invalid/"
+        ],
+        [
+         "periode",
+         "2021-2027"
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "import_record-2",
+   "operation": "flowsearch.import_record",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Begünstigter",
+         "Zweite AG"
+        ],
+        [
+         "Vorhaben",
+         "Digital"
+        ],
+        [
+         "Gesamtkosten",
+         ""
+        ],
+        [
+         "EU-Beitrag",
+         ""
+        ],
+        [
+         "Ort",
+         "Stuttgart"
+        ],
+        [
+         "Beginn",
+         "2024-03-15"
+        ]
+       ]
+      }
+     ],
+     [
+      "source",
+      {
+       "$dict": [
+        [
+         "source_key",
+         "test_quelle"
+        ],
+        [
+         "bundesland",
+         "Hessen"
+        ],
+        [
+         "fonds",
+         "EFRE"
+        ],
+        [
+         "url",
+         "https://example.invalid/liste.csv"
+        ],
+        [
+         "portal",
+         "https://example.invalid/"
+        ],
+        [
+         "periode",
+         "2021-2027"
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": {
+    "$dict": [
+     [
+      "project_id",
+      "eaa222cc1dae3071"
+     ],
+     [
+      "beneficiary_name",
+      "Zweite AG"
+     ],
+     [
+      "beneficiary_name_normalized",
+      "zweite"
+     ],
+     [
+      "fund_type",
+      "EFRE"
+     ],
+     [
+      "nuts0",
+      "DE"
+     ],
+     [
+      "nuts1",
+      "DE7"
+     ],
+     [
+      "eu_cofinancing",
+      {
+       "$float": "0.0"
+      }
+     ],
+     [
+      "national_cofinancing",
+      {
+       "$float": "0.0"
+      }
+     ],
+     [
+      "total_amount",
+      {
+       "$float": "0.0"
+      }
+     ],
+     [
+      "total_eligible_expenditure",
+      {
+       "$float": "0.0"
+      }
+     ],
+     [
+      "project_title",
+      "Digital"
+     ],
+     [
+      "project_summary",
+      ""
+     ],
+     [
+      "start_date",
+      {
+       "$date": "2024-03-15"
+      }
+     ],
+     [
+      "end_date",
+      null
+     ],
+     [
+      "city",
+      "Stuttgart"
+     ],
+     [
+      "postal_code",
+      null
+     ],
+     [
+      "data_source",
+      "Hessen EFRE"
+     ],
+     [
+      "data_source_url",
+      "https://example.invalid/"
+     ],
+     [
+      "programming_period",
+      "2021-2027"
+     ]
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "import_record-3",
+   "operation": "flowsearch.import_record",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Begünstigter",
+         "  "
+        ]
+       ]
+      }
+     ],
+     [
+      "source",
+      {
+       "$dict": [
+        [
+         "source_key",
+         "test_quelle"
+        ],
+        [
+         "bundesland",
+         "Hessen"
+        ],
+        [
+         "fonds",
+         "EFRE"
+        ],
+        [
+         "url",
+         "https://example.invalid/liste.csv"
+        ],
+        [
+         "portal",
+         "https://example.invalid/"
+        ],
+        [
+         "periode",
+         "2021-2027"
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  },
+  {
+   "name": "import_record-4",
+   "operation": "flowsearch.import_record",
+   "inputs": {
+    "$dict": [
+     [
+      "record",
+      {
+       "$dict": [
+        [
+         "Unbekannt",
+         "x"
+        ]
+       ]
+      }
+     ],
+     [
+      "source",
+      {
+       "$dict": [
+        [
+         "source_key",
+         "test_quelle"
+        ],
+        [
+         "bundesland",
+         "Hessen"
+        ],
+        [
+         "fonds",
+         "EFRE"
+        ],
+        [
+         "url",
+         "https://example.invalid/liste.csv"
+        ],
+        [
+         "portal",
+         "https://example.invalid/"
+        ],
+        [
+         "periode",
+         "2021-2027"
+        ]
+       ]
+      }
+     ]
+    ]
+   },
+   "output": null,
+   "exception": null
+  }
+ ]
+}

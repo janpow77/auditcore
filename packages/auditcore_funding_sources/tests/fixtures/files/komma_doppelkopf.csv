@@ -1,0 +1,4 @@
+Name des Begünstigten,Vorhaben,Gesamtkosten,PLZ,Beginn
+beneficiary_name,operation_name,total_cost,postcode,start_date
+"ACME Ltd.","Wind, Solar","1,200,000.50",12345,2024-01-01
+Solo Firma,Projekt B,500,,2024-02-01

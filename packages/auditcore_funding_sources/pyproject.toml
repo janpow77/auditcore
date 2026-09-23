@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_funding_sources"
+version = "0.1.0"
+description = "Beneficiary, state aid and de-minimis source parsers, identities and cumulation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["auditcore_harvest==0.1.0"]
+
+[project.optional-dependencies]
+xlsx = ["openpyxl>=3.0.9,<4", "defusedxml>=0.7.1"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "openpyxl>=3.0.9,<4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_funding_sources = ["py.typed", "provenance.json", "data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["openpyxl.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]
