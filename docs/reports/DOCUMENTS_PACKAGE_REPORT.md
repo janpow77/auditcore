@@ -61,7 +61,7 @@ byte-gleich; nach Umformatierung des Werkzeugs erneut byte-gleich. Die
 
 Das Profil LEGACY reproduziert alle Fälle exakt, auch den DOCX-Hauptteil, die
 Kopf- und die Fußzeile; die PDF-Synopse stimmt in Seitentext, Titel und Autor
-überein (reportlab 4.0.8 im Original, 5.0.1 im Test). Korrekturen DC-C01 bis DC-C10 und beibehaltenes
+überein (reportlab 4.0.8 im Original, 5.0.1 im Test). Korrekturen DC-C01 bis DC-C11 und beibehaltenes
 Originalverhalten DC-L01 bis DC-L09 stehen in
 `packages/auditcore_documents/docs/behavior-changes.md`. Unabhängig von der
 Aufzeichnung prüfen die Tests die Anwendung von Artikel 15 gegen den Wortlaut

@@ -3,7 +3,7 @@
 ``DocumentCompareService`` hat dieselben Namen, Signaturen, Konstanten und
 Fehlertexte wie ``app.modules.document_compare.service`` am Quellstand
 030a71e0 und verwendet das Profil ``LEGACY``. Unterschiede sind in
-``docs/behavior-changes.md`` begründet (DC-C01 bis DC-C06). Die KI-Anbindung
+``docs/behavior-changes.md`` begründet (DC-C01 bis DC-C11). Die KI-Anbindung
 ist ein Port: Die Anwendung setzt ``DocumentCompareService.reason_provider``.
 """
 

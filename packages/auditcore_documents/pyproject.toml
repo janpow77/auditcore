@@ -29,7 +29,6 @@ dev = [
     "rapidfuzz>=3.10.1,<4",
     "bandit>=1.7",
     "reportlab>=4.5.1,<6",
-    "lxml-stubs>=0.5",
 ]
 
 [project.scripts]
@@ -56,7 +55,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["rapidfuzz.*", "docx.*", "pypdf.*", "reportlab.*"]
+module = ["rapidfuzz.*", "docx.*", "pypdf.*", "reportlab.*", "lxml.*"]
 ignore_missing_imports = true
 
 [tool.auditcore-bibquality]
