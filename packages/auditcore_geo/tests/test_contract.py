@@ -248,7 +248,7 @@ def test_invalid_geometry_is_an_error_not_zero(case: dict[str, Any]) -> None:
 @pytest.mark.parametrize(
     "geometrie",
     [
-        {"type": "Polygon", "coordinates": [[[0, 0], [1, 0], [0, 0]]]},
+        {"type": "Polygon", "coordinates": [[]]},
         {"type": "Polygon", "coordinates": [[[0, 0], [1, 0], ["x", 1], [0, 0]]]},
         {"type": "Polygon", "coordinates": [[[0, 0], [1, 0], [math.nan, 1], [0, 0]]]},
         {"type": "MultiPolygon", "coordinates": [[]]},
@@ -257,6 +257,7 @@ def test_invalid_geometry_is_an_error_not_zero(case: dict[str, Any]) -> None:
     ],
 )
 def test_malformed_rings_are_rejected(geometrie: dict[str, Any]) -> None:
+    """Unlesbar bleibt Fehler; zusammengefallene Ringe regelt GEO-C16 (test_entartete_ringe)."""
     with pytest.raises(GeometrieFehler):
         flaeche_aus_geojson(geometrie)
 
