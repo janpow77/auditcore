@@ -169,3 +169,20 @@ def test_extracted_authorization_fails_closed(change):
     change(provenance)
     with pytest.raises(ValueError, match="authorization missing"):
         release.check_extracted_authorization("auditcore_statistics", provenance)
+
+
+def test_same_named_extra_of_another_package_is_not_a_published_renderer():
+    wheel = "auditcore_dataprotection-0.1.0-py3-none-any.whl"
+    assets = {
+        wheel: fixture_wheel(
+            "auditcore_dataprotection",
+            "0.1.0",
+            "Provides-Extra: excel\nProvides-Extra: pdf\n"
+            'Requires-Dist: openpyxl>=3.0.9; extra == "excel"\n',
+        )
+    }
+    assert release.optional_assets(assets, None, "0.2.0") == {}
+    assert release.RENDERER_OWNERS == {
+        "pdf": "auditcore_invoicegenerator",
+        "excel": "auditcore_reporting",
+    }
