@@ -11,6 +11,22 @@ ausgeführt (`tools/capture_legacy.py`, 440 Fälle, rapidfuzz 3.10.1). Das Modul
 | EM-C03 | Drei Normalisierungen mit unterschiedlichem Ergebnis: state_aid `Müller → mueller`, `SOCIÉTÉ → société`; sanctions/designer `Müller → muller`, `SOCIÉTÉ → societe`. entity_resolution nutzt die state_aid-Variante. | Getrennte Profile `flowworkshop.state_aid`, `flowworkshop.sanctions`, `audit_designer.sanctions`; keine Vereinheitlichung. | Unterschiedliche Vergleichsformen erzeugen unterschiedliche Treffer. |
 | EM-C04 | Schwellen (75 Entity Resolution, 70 Designer-Mindestwert, Klassen 97/90/80) als Konstanten im Code. | Nur als benannte Profilwerte; `best_match` verlangt `min_score` ausdrücklich. | Schwellen sind fachliche Einstellungen. |
 
+## Ergänzung 0.2.0: Profil `riskanalysis.payee`
+
+Quelle: `riskanalysis@b5c523b`, `backend/app/pipeline/payee_normalizer.py:normalize_name`
+(Blob `fceae5b`), tatsächlich ausgeführt mit `tools/capture_riskanalysis_payee.py`
+(55 Normalisierungs- und 25 Paarfälle, rapidfuzz 3.14.5). Neuer Algorithmus
+`nfkd_lower_regex`; alle Fälle werden exakt reproduziert.
+
+| ID | Original | Bibliothek | Begründung |
+|---|---|---|---|
+| EM-C05 | `normalize_name` wandelt jede Eingabe mit `str()` um (`None → ""`, `NaN → "nan"`, `12345 → "12345"`). | `normalize` nimmt nur Text; der Aufrufer wandelt ausdrücklich um (so tut es `auditcore_risk`). | Keine stille Typumwandlung in der Bibliothek. |
+| EM-L01 | NFKD vor dem Zeichenmuster `[^a-z0-9äöüß ]` zerlegt Umlaute: `Müller → mu ller`, `ÄRZTE → a rzte`; `ß` bleibt. | Unverändert als Legacyverhalten des Profils. | Eine Korrektur würde RF09-Treffer ändern; `HUMAN_DECISION_REQUIRED` (siehe unten). |
+
+`pair_score(left, right, scorer)` liefert den rapidfuzz-Wert zweier bereits mit
+demselben Profil normalisierter Namen. Mindestlängen, Enthaltensein-Regel und
+Schwellen der Red-Flag-Regel bleiben im Regelprofil von `auditcore_risk`.
+
 sanctions (flowworkshop) und `normalisiere_name` (audit_designer) lieferten in
 allen 51 Namensfällen identische Ergebnisse und haben identische Tabellen. Sie
 bleiben trotzdem zwei Profile, weil sie getrennte Quellen und Consumer haben.
@@ -44,3 +60,6 @@ bleiben trotzdem zwei Profile, weil sie getrennte Quellen und Consumer haben.
    Transliteration nach Entscheidung 1.
 2. Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen sind nicht
    Teil dieser Bibliothek.
+3. Ob die RF09-Selbstbeauftragungsprüfung (riskanalysis) von `riskanalysis.payee`
+   (Umlautzerlegung, EM-L01) auf das empfohlene Profil `flowworkshop.state_aid`
+   umgestellt wird. Die Umstellung ändert Ähnlichkeitswerte und Treffer.

@@ -1,0 +1,292 @@
+{
+ "id": "audit_designer.flowstat_belegliste",
+ "kind": "belegliste_red_flag_counts",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten zur Stichprobenpriorisierung; keine rechtliche Bewertung, keine Fehlerquote und keine fachliche Freigabe der Schwellen oder Muster. Die Quelle liefert nur Codes; die Bezeichnungen sind ergänzt.",
+ "open_decisions": [
+  "BL_RF08 verwendet ≥/> 25.000 anders als RF08 (riskanalysis) und prüft keine Platzhalter oder Kostenarten; keine Vereinheitlichung ohne Entscheidung.",
+  "BL_RF09 trifft Teilzeichenketten ('Jahresvertrag', '10')."
+ ],
+ "output": {},
+ "rules": [
+  {
+   "code": "BL_RF01_ROUND_AMOUNT",
+   "kind": "round_multiple",
+   "label": "Runder Tausenderbetrag",
+   "origin": {
+    "lines": "452-473",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "field": "projektbetrag",
+    "missing_value": 0.0,
+    "multiple": 1000,
+    "parse": "coerce",
+    "positive_only": true
+   },
+   "requires": [
+    "projektbetrag"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF02_NEAR_THRESHOLD",
+   "kind": "near_threshold",
+   "label": "Betrag knapp unter Vergabeschwelle",
+   "note": "Zählt Treffer je Schwelle (Summe über alle Schwellen).",
+   "origin": {
+    "lines": "147, 474-483",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "count": "all",
+    "field": "projektbetrag",
+    "lower": {
+     "factor": 0.9
+    },
+    "missing_value": 0.0,
+    "parse": "coerce",
+    "thresholds": {
+     "static": [
+      1000.0,
+      5000.0,
+      10000.0,
+      15000.0,
+      25000.0,
+      50000.0,
+      100000.0,
+      221000.0
+     ]
+    }
+   },
+   "requires": [
+    "projektbetrag"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF03_MISSING_PAYMENT_DATE",
+   "kind": "missing_value",
+   "label": "Zahlungsdatum fehlt",
+   "origin": {
+    "lines": "484-487",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "field": "zahlungsdatum"
+   },
+   "requires": [
+    "zahlungsdatum"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF04_PAYMENT_BEFORE_INVOICE",
+   "kind": "date_before",
+   "label": "Zahlung vor Rechnungsdatum",
+   "origin": {
+    "lines": "488-491",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "before_field": "rechnungsdatum",
+    "field": "zahlungsdatum"
+   },
+   "requires": [
+    "rechnungsdatum",
+    "zahlungsdatum"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF05_DUPLICATE_INVOICE",
+   "kind": "duplicate_key",
+   "label": "Doppelte Rechnung",
+   "origin": {
+    "lines": "492-501",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "fields": [
+     "rechnungsnummer",
+     "rechnungssteller",
+     "projektbetrag"
+    ]
+   },
+   "requires": [
+    "rechnungsnummer",
+    "rechnungssteller",
+    "projektbetrag"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF06_CUT_WITHOUT_REASON",
+   "kind": "nonzero_without_text",
+   "label": "Kürzung ohne Kürzungsgrund",
+   "origin": {
+    "lines": "502-513",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "amount_field": "kuerzungsbetrag",
+    "missing_value": 0.0,
+    "parse": "coerce",
+    "text_field": "kuerzungsgrund"
+   },
+   "requires": [
+    "kuerzungsbetrag",
+    "kuerzungsgrund"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF07_ACCEPTED_MISMATCH",
+   "kind": "balance_mismatch",
+   "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+   "origin": {
+    "lines": "514-521",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "minuend": "projektbetrag",
+    "missing_value": 0.0,
+    "parse": "coerce",
+    "subtrahends": [
+     "kuerzungsbetrag",
+     "anerkannter_betrag"
+    ],
+    "tolerance": 0.01
+   },
+   "requires": [
+    "projektbetrag",
+    "kuerzungsbetrag",
+    "anerkannter_betrag"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF08_PROCUREMENT_MISSING",
+   "kind": "missing_procurement",
+   "label": "Betrag > 25.000 ohne Vergabeangabe",
+   "origin": {
+    "lines": "522-534",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "amount_field": "projektbetrag",
+    "amount_gt": 25000,
+    "blank_casefold": false,
+    "blank_values": [
+     "",
+     "nan",
+     "None"
+    ],
+    "id_column_missing": "error",
+    "id_field": "vergabe",
+    "missing_value": 0.0,
+    "parse": "coerce",
+    "placeholder_pattern": null,
+    "relevance": null
+   },
+   "requires": [
+    "projektbetrag",
+    "vergabe"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF09_DIRECT_AWARD_HIGH_AMOUNT",
+   "kind": "amount_with_marker",
+   "label": "Direktvergabe über 25.000",
+   "note": "Muster trifft Teilzeichenketten (z. B. '10 Angebote', 'Jahresvertrag').",
+   "origin": {
+    "lines": "535-549",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "amount_field": "projektbetrag",
+    "amount_gt": 25000,
+    "lowercase": true,
+    "marker_field": "direktvergabe",
+    "marker_pattern": "ja|true|1",
+    "missing_value": 0.0,
+    "parse": "coerce"
+   },
+   "requires": [
+    "projektbetrag",
+    "direktvergabe"
+   ],
+   "when_missing_columns": "skip"
+  },
+  {
+   "code": "BL_RF10_VENDOR_CONCENTRATION",
+   "kind": "top_share",
+   "label": "Konzentration auf einen Rechnungssteller (≥ 50 % der Summe)",
+   "origin": {
+    "lines": "550-566",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "symbol": "_red_flags"
+   },
+   "params": {
+    "amount_field": "projektbetrag",
+    "group_field": "rechnungssteller",
+    "share_ge": 0.5
+   },
+   "requires": [
+    "rechnungssteller",
+    "projektbetrag"
+   ],
+   "when_missing_columns": "skip"
+  }
+ ],
+ "schema": "auditcore_risk.profile/1",
+ "source": {
+  "characterization": "tests/fixtures/flowstat_observed.json",
+  "input_contract": "Spalten wie nach normalize_belegliste (Beträge als Zahl, Datumsfelder als Datum).",
+  "sources": [
+   {
+    "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+    "git_blob": "d03738cb7e250e3cd838c88157992e0b4093ef35",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "repository": "janpow77/audit_designer",
+    "rights": "USER_AUTHORIZED_MIT",
+    "symbols": [
+     "PROCUREMENT_THRESHOLDS",
+     "_jsonable",
+     "_red_flags"
+    ]
+   },
+   {
+    "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+    "git_blob": "d03738cb7e250e3cd838c88157992e0b4093ef35",
+    "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+    "repository": "janpow77/audit-portal",
+    "rights": "USER_AUTHORIZED_MIT",
+    "symbols": [
+     "PROCUREMENT_THRESHOLDS",
+     "_jsonable",
+     "_red_flags"
+    ]
+   }
+  ]
+ },
+ "status": "LEGACY_CHARACTERIZED",
+ "summary": {
+  "format": "flowstat.counts",
+  "origin": {
+   "lines": "451-567",
+   "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+   "symbol": "_red_flags"
+  }
+ },
+ "version": "1254591156d3"
+}

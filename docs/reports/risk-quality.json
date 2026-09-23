@@ -1,0 +1,2314 @@
+{
+  "api": {
+    "__init__": {
+      "kind": "module"
+    },
+    "engine": {
+      "kind": "module"
+    },
+    "engine.DatasetFinding": {
+      "bases": "",
+      "fields": "code: str\nlabel: str\ntriggered: bool\nvalue: float | None\nreason: str\nevidence: Mapping[str, Any]\norigin: Mapping[str, Any]",
+      "kind": "class"
+    },
+    "engine.Evaluation": {
+      "bases": "",
+      "fields": "profile: Mapping[str, str]\nrecords: tuple[RecordResult, ...]\ndataset: tuple[DatasetFinding, ...]\nskipped: Mapping[str, str]\nsummary: tuple[Mapping[str, Any], ...]\nlibrary: str = LIBRARY",
+      "kind": "class"
+    },
+    "engine.Evaluation.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "engine.FlagHit": {
+      "bases": "",
+      "fields": "code: str\nlabel: str\nreason: str\nevidence: Mapping[str, Any]\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]",
+      "kind": "class"
+    },
+    "engine.RecordResult": {
+      "bases": "",
+      "fields": "index: int\nflags: Mapping[str, bool | None]\nhits: tuple[FlagHit, ...]\nundetermined: Mapping[str, str]\nvalues: Mapping[str, Any]",
+      "kind": "class"
+    },
+    "engine.RecordResult.codes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[str, ...]",
+      "signature": "self"
+    },
+    "engine.evaluate": {
+      "kind": "function",
+      "raises": "InputError,ProfileError",
+      "returns": "Evaluation",
+      "signature": "records: Iterable[Mapping[str, Any]], profile: RiskProfile, *, columns: Iterable[str] | None=None, reference_date: date | None=None"
+    },
+    "engine.identifier_missing": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "bool",
+      "signature": "rule: Rule, value: Any"
+    },
+    "engine.missing_columns": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, list[str]]",
+      "signature": "profile: RiskProfile, columns: Iterable[str]"
+    },
+    "engine.name_similarity": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "float",
+      "signature": "rule: Rule, left: Any, right: Any"
+    },
+    "errors": {
+      "kind": "module"
+    },
+    "errors.DependencyError": {
+      "bases": "RiskError,ImportError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.InputError": {
+      "bases": "RiskError,ValueError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.ProfileError": {
+      "bases": "RiskError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.RiskError": {
+      "bases": "Exception",
+      "fields": "",
+      "kind": "class"
+    },
+    "frame": {
+      "kind": "module"
+    },
+    "frame.annotate": {
+      "kind": "function",
+      "raises": "InputError,ProfileError",
+      "returns": "Any",
+      "signature": "frame: Any, evaluation: Evaluation, profile: RiskProfile"
+    },
+    "frame.compute_red_flags": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Any",
+      "signature": "frame: Any, profile: RiskProfile, *, reference_date: date | None=None"
+    },
+    "frame.evaluate_frame": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "Evaluation",
+      "signature": "frame: Any, profile: RiskProfile, *, reference_date: date | None=None"
+    },
+    "frame.red_flag_summary": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "list[dict[str, Any]]",
+      "signature": "frame: Any, profile: RiskProfile"
+    },
+    "profile_data": {
+      "kind": "module"
+    },
+    "profiles": {
+      "kind": "module"
+    },
+    "profiles.RiskProfile": {
+      "bases": "",
+      "fields": "id: str\nversion: str\nkind: str\nstatus: str\nlegal_status: str\nsource: Mapping[str, Any]\nrules: tuple[Rule, ...]\noutput: Mapping[str, Any]\nsummary: Mapping[str, Any]\nopen_decisions: tuple[str, ...]\nfingerprint: str",
+      "kind": "class"
+    },
+    "profiles.RiskProfile.reference": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, str]",
+      "signature": "self"
+    },
+    "profiles.RiskProfile.rule": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "Rule",
+      "signature": "self, code: str"
+    },
+    "profiles.Rule": {
+      "bases": "",
+      "fields": "code: str\nlabel: str\nkind: str\nparams: Mapping[str, Any]\nrequires: tuple[str, ...]\nwhen_missing_columns: str\ncolumn: str | None\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]",
+      "kind": "class"
+    },
+    "profiles.Rule.scope": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "profiles.available_profiles": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[tuple[str, str], ...]",
+      "signature": ""
+    },
+    "profiles.fingerprint": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "data: Mapping[str, Any]"
+    },
+    "profiles.load_profile": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "RiskProfile",
+      "signature": "profile_id: str, version: str"
+    },
+    "profiles.profile_from_dict": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "RiskProfile",
+      "signature": "data: Mapping[str, Any]"
+    },
+    "rules": {
+      "kind": "module"
+    },
+    "rules.Context": {
+      "bases": "",
+      "fields": "reference_date: date | None = None\ncache: dict[Any, Any] = field(default_factory=dict)",
+      "kind": "class"
+    },
+    "rules.Kind": {
+      "bases": "",
+      "fields": "scope: str\nrequired: frozenset[str]\noptional: frozenset[str]\nrun: Callable[[Mapping[str, Any], Table, Context], Outcome]",
+      "kind": "class"
+    },
+    "rules.Outcome": {
+      "bases": "",
+      "fields": "flags: list[bool | None]\nreasons: list[str | None]\nevidence: list[dict[str, Any] | None]\nmatches: list[int] | None = None\nvalues: dict[str, list[Any]] = field(default_factory=dict)\ndataset: dict[str, Any] | None = None",
+      "kind": "class"
+    },
+    "rules.Outcome.constant": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Outcome",
+      "signature": "cls, n: int, flag: bool | None"
+    },
+    "rules.Table": {
+      "bases": "",
+      "fields": "rows: Sequence[Mapping[str, Any]]\ncolumns: tuple[str, ...]",
+      "kind": "class"
+    },
+    "rules.Table.has": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self, *names: str"
+    },
+    "rules.Table.value": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Any",
+      "signature": "self, index: int, name: str"
+    },
+    "rules.identifier_state": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "p: Mapping[str, Any], raw: Any"
+    },
+    "rules.pair_similarity": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[float, str, str, str]",
+      "signature": "p: Mapping[str, Any], raw_a: Any, raw_b: Any, ctx: Context"
+    },
+    "rules.validate_params": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "None",
+      "signature": "kind: str, params: Mapping[str, Any], where: str"
+    },
+    "values": {
+      "kind": "module"
+    },
+    "values.as_date": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "date | None",
+      "signature": "value: Any, field: str"
+    },
+    "values.coerce_number": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "float | None",
+      "signature": "value: Any, field: str"
+    },
+    "values.fmt": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "number: float"
+    },
+    "values.hashable": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "Any",
+      "signature": "value: Any, field: str"
+    },
+    "values.is_missing": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "value: Any"
+    },
+    "values.strict_amount": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "float | None",
+      "signature": "value: Any, field: str, missing_value: float | None"
+    },
+    "values.text": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "value: Any"
+    }
+  },
+  "findings": [
+    {
+      "code": "AC-POL-001",
+      "evidence": [
+        "15f5338f783f2c7d5760a9bb299be06d27326be0"
+      ],
+      "line": 0,
+      "message": "Framework applicability evaluated before security gates",
+      "path": "",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "code": "AC-COMP-001",
+      "evidence": [],
+      "line": 349,
+      "message": "Complexity=24, nesting=4, args=3",
+      "path": "rules.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-COMP-001",
+      "evidence": [],
+      "line": 841,
+      "message": "Complexity=16, nesting=3, args=3",
+      "path": "rules.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-OSS-001",
+      "evidence": [],
+      "line": 105,
+      "message": "Potential internal or personal identifier; review required",
+      "path": "profile_data/riskanalysis.legacy-b5c523bf7eaa.json",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "code": "AC-OSS-001",
+      "evidence": [],
+      "line": 110,
+      "message": "Potential internal or personal identifier; review required",
+      "path": "profile_data/riskanalysis.year_bound-2026.09.1.json",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "code": "AC-SYN-001",
+      "evidence": [],
+      "line": 0,
+      "message": "Parsed 8 files",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-API-001",
+      "evidence": [],
+      "line": 0,
+      "message": "No API comparison baseline supplied",
+      "path": "",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "code": "AC-LINT-001",
+      "evidence": [
+        "ruff check /home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
+      ],
+      "line": 0,
+      "message": "ruff exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-TYPE-001",
+      "evidence": [
+        "mypy /home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
+      ],
+      "line": 0,
+      "message": "mypy exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-SEC-002",
+      "evidence": [
+        "bandit -q -ll -r /home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk"
+      ],
+      "line": 0,
+      "message": "bandit exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-DEP-001",
+      "evidence": [
+        "pip-audit --timeout 60 --format json"
+      ],
+      "line": 0,
+      "message": "pip-audit exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-TEST-001",
+      "evidence": [
+        "python -m pytest tests -q"
+      ],
+      "line": 0,
+      "message": "python exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-SUPPLY-001",
+      "evidence": [
+        ".auditcore/build/supply-chain-report.json"
+      ],
+      "line": 0,
+      "message": "Artifact/SBOM digest and schema-validation evidence checked",
+      "path": "",
+      "status": "PASS"
+    }
+  ],
+  "generated_at": "2026-09-23T11:43:45.318968+00:00",
+  "ignored": [],
+  "path": "/home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk",
+  "policy": {
+    "applicability_context": {
+      "ai_usage": "none",
+      "analytical_runs": true,
+      "artifact_type": "library",
+      "authentication": "none",
+      "binding_decisions": "none",
+      "data_space": "single_project",
+      "delegation": false,
+      "deployment_target": "internal_test",
+      "document_storage": false,
+      "documents": false,
+      "dsfa_required": "UNKNOWN",
+      "export_formats": [],
+      "exports": false,
+      "external_interfaces": false,
+      "graphical_ui": false,
+      "interactive_workspace": false,
+      "international_users": false,
+      "modular_capabilities": false,
+      "personal_data": "possible",
+      "protection_need": "UNKNOWN",
+      "protection_need_source": "UNKNOWN",
+      "real_data_for_test_generation": false,
+      "structured_imports": false,
+      "uploads": false,
+      "user_model": "no_users",
+      "versioned_artifact_types": [
+        "rulebook"
+      ],
+      "versioned_artifacts": true,
+      "workflow": "calculation_only"
+    },
+    "approved_deviations": [],
+    "artifact": "auditcore_risk",
+    "blocking_requirements": [],
+    "framework_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+    "framework_repository": "janpow77/verwaltung-app-framework",
+    "overall_status": "REVIEW_REQUIRED",
+    "profiles": [
+      "LIBRARY"
+    ],
+    "requirements": [
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-01"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-01.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "data_space",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"data_space\", \"in\": [\"multi_tenant\"]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-01"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-01",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "data_space",
+          "in": [
+            "multi_tenant"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-02",
+          "T-03",
+          "T-04"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-02.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "user_model",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"user_model\", \"in\": [\"multi_user\", \"external_users\"]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-02",
+          "T-03",
+          "T-04"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-02",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "user_model",
+          "in": [
+            "multi_user",
+            "external_users"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-05",
+          "T-08",
+          "T-20"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-03.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "workflow",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"workflow\", \"in\": [\"simple_crud\", \"procedural\", \"state_machine\"]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-05",
+          "T-08",
+          "T-20"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-03",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "workflow",
+          "in": [
+            "simple_crud",
+            "procedural",
+            "state_machine"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-09",
+          "T-10",
+          "A-08"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-04.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "exports",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"exports\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-09",
+          "T-10",
+          "A-08"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-04",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "exports",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-11",
+          "T-12",
+          "T-36"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-05.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "personal_data",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "{\"field\": \"personal_data\", \"in\": [\"possible\", \"yes\"]}",
+        "applicable": "TRUE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-11",
+          "T-12",
+          "T-36"
+        ],
+        "evidence": [],
+        "gate_status": "REVIEW_REQUIRED",
+        "requirement_id": "F-05",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "APPLICABLE",
+        "trigger": {
+          "field": "personal_data",
+          "in": [
+            "possible",
+            "yes"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-06"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-06.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "binding_decisions",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"binding_decisions\", \"in\": [\"yes\"]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-06"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-06",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "binding_decisions",
+          "in": [
+            "yes"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Unknown context or framework adapter drift: {\"all\": [{\"field\": \"protection_need\", \"known\": true}, {\"field\": \"authentication\", \"known\": true}, {\"field\": \"uploads\", \"known\": true}, {\"field\": \"external_interfaces\", \"known\": true}, {\"field\": \"ai_usage\", \"known\": true}]}",
+        "applicable": "UNKNOWN",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-07",
+          "T-13",
+          "T-14",
+          "T-19",
+          "T-36",
+          "T-37"
+        ],
+        "evidence": [],
+        "gate_status": "REVIEW_REQUIRED",
+        "requirement_id": "F-07.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "OPEN",
+        "trigger": {
+          "all": [
+            {
+              "field": "protection_need",
+              "known": true
+            },
+            {
+              "field": "authentication",
+              "known": true
+            },
+            {
+              "field": "uploads",
+              "known": true
+            },
+            {
+              "field": "external_interfaces",
+              "known": true
+            },
+            {
+              "field": "ai_usage",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Unknown context or framework adapter drift: {\"any\": [{\"field\": \"authentication\", \"in\": [\"local\", \"oidc\", \"other\"]}, {\"field\": \"uploads\", \"in\": [true]}, {\"field\": \"external_interfaces\", \"in\": [true]}, {\"field\": \"ai_usage\", \"in\": [\"local\", \"external_provider\", \"multiple_providers\", \"byok\"]}, {\"field\": \"protection_need\", \"in\": [\"high\", \"very_high\"]}]}",
+        "applicable": "UNKNOWN",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-07",
+          "T-13",
+          "T-14",
+          "T-19",
+          "T-36",
+          "T-37"
+        ],
+        "evidence": [],
+        "gate_status": "REVIEW_REQUIRED",
+        "requirement_id": "F-07",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "OPEN",
+        "trigger": {
+          "any": [
+            {
+              "field": "authentication",
+              "in": [
+                "local",
+                "oidc",
+                "other"
+              ]
+            },
+            {
+              "field": "uploads",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "external_interfaces",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "ai_usage",
+              "in": [
+                "local",
+                "external_provider",
+                "multiple_providers",
+                "byok"
+              ]
+            },
+            {
+              "field": "protection_need",
+              "in": [
+                "high",
+                "very_high"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-15",
+          "T-36",
+          "T-37"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-08.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "deployment_target",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"deployment_target\", \"in\": [\"pilot\", \"production\"]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-15",
+          "T-36",
+          "T-37"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-08",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "deployment_target",
+          "in": [
+            "pilot",
+            "production"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-38"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-09.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "artifact_type",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "{\"constant\": \"TRUE\"}",
+        "applicable": "TRUE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-38"
+        ],
+        "evidence": [
+          ".auditcore/policy-proof.json"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-09",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "VERIFIED",
+        "trigger": {
+          "constant": "TRUE"
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-16",
+          "T-17",
+          "T-18",
+          "A-01",
+          "A-02",
+          "A-03",
+          "A-04",
+          "A-05",
+          "A-06",
+          "A-07",
+          "A-08",
+          "A-09",
+          "A-10"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-10.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "graphical_ui",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"graphical_ui\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-16",
+          "T-17",
+          "T-18",
+          "A-01",
+          "A-02",
+          "A-03",
+          "A-04",
+          "A-05",
+          "A-06",
+          "A-07",
+          "A-08",
+          "A-09",
+          "A-10"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-10",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-21",
+          "T-22"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-11.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "graphical_ui",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"graphical_ui\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-21",
+          "T-22"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-11",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-23"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-12.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "international_users",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"international_users\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-23"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-12",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "international_users",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-24"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-13.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "modular_capabilities",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"modular_capabilities\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-24"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-13",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "modular_capabilities",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-25"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-14.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "ai_usage",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"ai_usage\", \"in\": [\"multiple_providers\", \"byok\"]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-25"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-14",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "ai_usage",
+          "in": [
+            "multiple_providers",
+            "byok"
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-26",
+          "T-27",
+          "T-28",
+          "T-29"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-15.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "versioned_artifacts",
+              "known": true
+            },
+            {
+              "any": [
+                {
+                  "field": "versioned_artifacts",
+                  "in": [
+                    false
+                  ]
+                },
+                {
+                  "field": "versioned_artifact_types",
+                  "known": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "{\"field\": \"versioned_artifacts\", \"in\": [true]}",
+        "applicable": "TRUE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-26",
+          "T-27",
+          "T-28",
+          "T-29"
+        ],
+        "evidence": [
+          ".auditcore/policy-proof.json"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-15",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "VERIFIED",
+        "trigger": {
+          "field": "versioned_artifacts",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-30"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-16.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "structured_imports",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"structured_imports\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-30"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-16",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "structured_imports",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-29",
+          "T-31",
+          "T-32"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-17.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "analytical_runs",
+              "known": true
+            },
+            {
+              "field": "interactive_workspace",
+              "known": true
+            },
+            {
+              "field": "ai_usage",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "{\"any\": [{\"field\": \"analytical_runs\", \"in\": [true]}, {\"field\": \"interactive_workspace\", \"in\": [true]}, {\"field\": \"ai_usage\", \"in\": [\"local\", \"external_provider\", \"multiple_providers\", \"byok\"]}]}",
+        "applicable": "TRUE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-29",
+          "T-31",
+          "T-32"
+        ],
+        "evidence": [
+          ".auditcore/policy-proof.json"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-17",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "VERIFIED",
+        "trigger": {
+          "any": [
+            {
+              "field": "analytical_runs",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "interactive_workspace",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "ai_usage",
+              "in": [
+                "local",
+                "external_provider",
+                "multiple_providers",
+                "byok"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+        "applicable": "TRUE",
+        "binding_level": "MUSS",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-33",
+          "T-34",
+          "T-35"
+        ],
+        "evidence": [
+          "applicability_context"
+        ],
+        "gate_status": "PASS",
+        "requirement_id": "F-18.ASSESS",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "IMPLEMENTED",
+        "trigger": {
+          "all": [
+            {
+              "field": "real_data_for_test_generation",
+              "known": true
+            }
+          ]
+        }
+      },
+      {
+        "applicability_reason": "Trigger not present in explicit context: {\"field\": \"real_data_for_test_generation\", \"in\": [true]}",
+        "applicable": "FALSE",
+        "binding_level": "BEDINGT",
+        "decision_reference": null,
+        "derived_checks": [
+          "T-33",
+          "T-34",
+          "T-35"
+        ],
+        "evidence": [],
+        "gate_status": "NOT_APPLICABLE_WITH_REASON",
+        "requirement_id": "F-18",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "trigger": {
+          "field": "real_data_for_test_generation",
+          "in": [
+            true
+          ]
+        }
+      },
+      {
+        "applicability_reason": "{\"constant\": \"TRUE\"}",
+        "applicable": "TRUE",
+        "binding_level": "SOLL",
+        "decision_reference": null,
+        "derived_checks": [],
+        "evidence": [],
+        "gate_status": "WARNING",
+        "requirement_id": "SOLL-01",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/verbindlichkeit.md",
+        "status": "OPEN",
+        "trigger": {
+          "constant": "TRUE"
+        }
+      }
+    ],
+    "review_required": [
+      "F-05",
+      "F-07.ASSESS",
+      "F-07",
+      "T-12"
+    ],
+    "source_status": "POLICY_SOURCE_CURRENT",
+    "tests": {
+      "T-01": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"data_space\", \"in\": [\"multi_tenant\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-01, getrennte Datenräume",
+          "IDs von A in Lesen, Suche, Änderung und Export unter B einsetzen",
+          "Keine fremden Inhalte oder Änderungen"
+        ],
+        "trigger": {
+          "field": "data_space",
+          "in": [
+            "multi_tenant"
+          ]
+        }
+      },
+      "T-02": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"user_model\", \"in\": [\"multi_user\", \"external_users\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-02, Rollen",
+          "Direkten API-Aufruf ohne erforderliches Recht senden",
+          "Zugriff verweigert, auch bei sichtbarer UI"
+        ],
+        "trigger": {
+          "field": "user_model",
+          "in": [
+            "multi_user",
+            "external_users"
+          ]
+        }
+      },
+      "T-03": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"user_model\", \"in\": [\"multi_user\", \"external_users\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-02, Rechteentzug",
+          "Sitzung öffnen, Nutzer sperren, erneut zugreifen",
+          "Entzug innerhalb der festgelegten Frist wirksam"
+        ],
+        "trigger": {
+          "field": "user_model",
+          "in": [
+            "multi_user",
+            "external_users"
+          ]
+        }
+      },
+      "T-04": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"delegation\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-02, Vertretung",
+          "Vor, während und nach Vertretungszeit handeln",
+          "Nur im zulässigen Zeit- und Aufgabenbereich erlaubt"
+        ],
+        "trigger": {
+          "field": "delegation",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-05": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"workflow\", \"in\": [\"simple_crud\", \"procedural\", \"state_machine\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-03, Prozess",
+          "Unzulässigen Sprung, Rückgabe und erneute Bearbeitung versuchen",
+          "Übergangsmatrix durchgesetzt; Historie bleibt erhalten"
+        ],
+        "trigger": {
+          "field": "workflow",
+          "in": [
+            "simple_crud",
+            "procedural",
+            "state_machine"
+          ]
+        }
+      },
+      "T-06": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"binding_decisions\", \"in\": [\"yes\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-06, verbindliche Freigabe",
+          "Ersteller versucht Selbstfreigabe und spätere Änderung",
+          "Selbstfreigabe abgewiesen; Korrektur erzeugt Folgefassung"
+        ],
+        "trigger": {
+          "field": "binding_decisions",
+          "in": [
+            "yes"
+          ]
+        }
+      },
+      "T-07": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"uploads\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-07, Upload",
+          "Übergröße, falschen Typ, manipulierten Pfad und fremde Vorgangs-ID verwenden",
+          "Nach festgelegter Regel abweisen; keine fremden Dateien überschreiben"
+        ],
+        "trigger": {
+          "field": "uploads",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-08": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"documents\", \"in\": [true]}, {\"field\": \"document_storage\", \"in\": [true]}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-03/F-07, Dokumente",
+          "Fehlenden bzw. veränderten gespeicherten Inhalt abrufen",
+          "Verständlicher Fehler oder Integritätsbefund; kein stiller Erfolg"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "documents",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "document_storage",
+              "in": [
+                true
+              ]
+            }
+          ]
+        }
+      },
+      "T-09": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"exports\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-04, Export",
+          "Auswahl mit bekannter Zahl, Filter und Berechtigung exportieren",
+          "Umfang, Datensätze, Metadaten und Version stimmen"
+        ],
+        "trigger": {
+          "field": "exports",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-10": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"exports\", \"in\": [true]}, {\"contains_any\": [\"csv\", \"tsv\", \"xls\", \"xlsx\", \"ods\", \"zip\", \"tar\", \"archive\"], \"field\": \"export_formats\"}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-04, Tabellen/Archive",
+          "Formeleingaben, Sonderzeichen, gleiche Namen und Pfadsegmente exportieren",
+          "Sichere, eindeutige Ausgabe; keine unbeabsichtigte Formel oder Archivpfade"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "exports",
+              "in": [
+                true
+              ]
+            },
+            {
+              "contains_any": [
+                "csv",
+                "tsv",
+                "xls",
+                "xlsx",
+                "ods",
+                "zip",
+                "tar",
+                "archive"
+              ],
+              "field": "export_formats"
+            }
+          ]
+        }
+      },
+      "T-11": {
+        "adapter_current": true,
+        "applicable": "TRUE",
+        "reason": "{\"field\": \"personal_data\", \"in\": [\"possible\", \"yes\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_EXECUTED",
+        "text": [
+          "F-05, personenbezogene Verarbeitung",
+          "Datenmodell und Datenfluss gegen VVT-Arbeitsfassung vergleichen",
+          "Zwecke, Kategorien, Empfänger und offene Entscheidungen nachvollziehbar"
+        ],
+        "trigger": {
+          "field": "personal_data",
+          "in": [
+            "possible",
+            "yes"
+          ]
+        }
+      },
+      "T-12": {
+        "adapter_current": true,
+        "applicable": "UNKNOWN",
+        "reason": "{\"field\": \"dsfa_required\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "REVIEW_REQUIRED",
+        "text": [
+          "F-05, DSFA",
+          "Verarbeitung ändern und Vorprüfung unvollständig lassen",
+          "Neubewertungsbedarf sichtbar; keine simulierte Freigabe"
+        ],
+        "trigger": {
+          "field": "dsfa_required",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-13": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"authentication\", \"in\": [\"local\", \"oidc\", \"other\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-07, Anmeldung",
+          "Fehlendes, abgelaufenes und für andere Anwendung bestimmtes Token senden",
+          "Geschützte Aktion abgewiesen"
+        ],
+        "trigger": {
+          "field": "authentication",
+          "in": [
+            "local",
+            "oidc",
+            "other"
+          ]
+        }
+      },
+      "T-14": {
+        "adapter_current": true,
+        "applicable": "TRUE",
+        "reason": "{\"constant\": \"TRUE\"}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_EXECUTED",
+        "text": [
+          "F-07, Protokolle",
+          "Fehler, Login und Export auslösen, Logs prüfen",
+          "Erforderliche Nachweise, keine Tokens oder unnötigen Inhaltsdaten"
+        ],
+        "trigger": {
+          "constant": "TRUE"
+        }
+      },
+      "T-15": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"deployment_target\", \"in\": [\"pilot\", \"production\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-08, Betrieb",
+          "Sicherung in isolierter Umgebung wiederherstellen",
+          "Daten und benötigte Konfiguration nutzbar; Dauer dokumentiert"
+        ],
+        "trigger": {
+          "field": "deployment_target",
+          "in": [
+            "pilot",
+            "production"
+          ]
+        }
+      },
+      "T-16": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"graphical_ui\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-10, Oberfläche",
+          "Hauptablauf ausschließlich mit Tastatur bedienen",
+          "Sichtbarer Fokus, sinnvolle Reihenfolge, keine Tastaturfalle"
+        ],
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-17": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"graphical_ui\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-10, Formulare",
+          "Felder mit assistiver Technik prüfen, Fehler auslösen",
+          "Verständliche Beschriftungen, Zuordnung und Statusmeldungen"
+        ],
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-18": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"graphical_ui\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-10, Darstellung",
+          "Zoom, schmale Ansicht, Kontrast und reduzierte Bewegung prüfen",
+          "Inhalte und Aktionen nutzbar; Bedeutung nicht nur über Farbe"
+        ],
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-19": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"documents\", \"in\": [true]}, {\"field\": \"ai_usage\", \"in\": [\"local\", \"external_provider\", \"multiple_providers\", \"byok\"]}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-07, KI verarbeitet Dokumente",
+          "Dokument enthält Anweisung zum Datenabfluss",
+          "Dokument als Daten behandelt; keine unberechtigte Aktion"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "documents",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "ai_usage",
+              "in": [
+                "local",
+                "external_provider",
+                "multiple_providers",
+                "byok"
+              ]
+            }
+          ]
+        }
+      },
+      "T-20": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"workflow\", \"in\": [\"simple_crud\", \"procedural\", \"state_machine\"]}, {\"field\": \"user_model\", \"in\": [\"multi_user\", \"external_users\"]}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-03, parallele Bearbeitung",
+          "Widersprechende Änderungen gleichzeitig ausführen",
+          "Kein stilles Überschreiben; fachliche Konsistenz erhalten"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "workflow",
+              "in": [
+                "simple_crud",
+                "procedural",
+                "state_machine"
+              ]
+            },
+            {
+              "field": "user_model",
+              "in": [
+                "multi_user",
+                "external_users"
+              ]
+            }
+          ]
+        }
+      },
+      "T-21": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"graphical_ui\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-11, Mehrfachansichten",
+          "Dasselbe Objekt in Tabelle, Board/Galerie und weiterer aktiver View ändern",
+          "Alle Ansichten zeigen denselben Fachstand; View-Layout erzeugt keinen Parallelbestand"
+        ],
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-22": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"graphical_ui\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-11, Bilder/Hintergründe",
+          "Große/ungültige Bilddatei und erlaubtes Cover/Hintergrundbild verwenden",
+          "Regeln zu Typ/Größe/Thumbnail greifen; visuelle Einstellung verändert keine Fachdaten"
+        ],
+        "trigger": {
+          "field": "graphical_ui",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-23": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"international_users\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-12, Internationalisierung",
+          "Sprache/Locale wechseln und Datum, Zahl, Prozent, Währung prüfen",
+          "UI wechselt vollständig; Fachwerte bleiben identisch; Formate folgen Locale"
+        ],
+        "trigger": {
+          "field": "international_users",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-24": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"modular_capabilities\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-13, Capability",
+          "Modul deaktivieren, direkten API-Aufruf versuchen, wieder aktivieren",
+          "UI blendet aus; API bleibt nach Rechten geschützt; Daten bleiben erhalten"
+        ],
+        "trigger": {
+          "field": "modular_capabilities",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-25": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"ai_usage\", \"in\": [\"multiple_providers\", \"byok\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-14, persönliche KI-Verbindung",
+          "Nutzer A legt Key an; Nutzer B versucht Lesen/Nutzen; Fehler/Logs prüfen",
+          "Kein Zugriff auf fremdes Secret; Key nie im Klartext in Antwort, Log oder Client-Speicher"
+        ],
+        "trigger": {
+          "field": "ai_usage",
+          "in": [
+            "multiple_providers",
+            "byok"
+          ]
+        }
+      },
+      "T-26": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"versioned_artifacts\", \"in\": [true]}, {\"contains_any\": [\"prompt\"], \"field\": \"versioned_artifact_types\"}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-15, Prompt-Version/Diff",
+          "Prompt ändern: Text, Variable, Config, Tool und Testfall; Version vergleichen",
+          "Alte Version unverändert; Diff zeigt alle Änderungsklassen und Commit-Message"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "versioned_artifacts",
+              "in": [
+                true
+              ]
+            },
+            {
+              "contains_any": [
+                "prompt"
+              ],
+              "field": "versioned_artifact_types"
+            }
+          ]
+        }
+      },
+      "T-27": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"versioned_artifacts\", \"in\": [true]}, {\"contains_any\": [\"prompt\"], \"field\": \"versioned_artifact_types\"}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-15, Prompt-Suche/Metadaten",
+          "Über Kategorie, Tags, Keywords, Sprache, Label und Institution suchen",
+          "Erwartete Versionen auffindbar; nicht berechtigte Artefakte erscheinen weder Treffer noch Facette"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "versioned_artifacts",
+              "in": [
+                true
+              ]
+            },
+            {
+              "contains_any": [
+                "prompt"
+              ],
+              "field": "versioned_artifact_types"
+            }
+          ]
+        }
+      },
+      "T-28": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"versioned_artifacts\", \"in\": [true]}, {\"contains_any\": [\"prompt\", \"agent\"], \"field\": \"versioned_artifact_types\"}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-15, Labels/Fork/Agent",
+          "Label auf neue Version setzen; Prompt/Agent forken; Toolrecht in Agent-Revision ändern",
+          "Label eindeutig und historisiert; Fork-Herkunft vorhanden; Agent-Diff markiert Toolrecht deutlich"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "versioned_artifacts",
+              "in": [
+                true
+              ]
+            },
+            {
+              "contains_any": [
+                "prompt",
+                "agent"
+              ],
+              "field": "versioned_artifact_types"
+            }
+          ]
+        }
+      },
+      "T-29": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"all\": [{\"field\": \"versioned_artifacts\", \"in\": [true]}, {\"contains_any\": [\"prompt\"], \"field\": \"versioned_artifact_types\"}, {\"field\": \"ai_usage\", \"in\": [\"local\", \"external_provider\", \"multiple_providers\", \"byok\"]}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-15/F-17, Evaluation",
+          "Zwei Prompt-Versionen mit demselben Testset/Modell evaluieren",
+          "Ergebnisse referenzieren exakte Prompt-Version, Testset, Modell und Run-Manifest; Vergleich nachvollziehbar"
+        ],
+        "trigger": {
+          "all": [
+            {
+              "field": "versioned_artifacts",
+              "in": [
+                true
+              ]
+            },
+            {
+              "contains_any": [
+                "prompt"
+              ],
+              "field": "versioned_artifact_types"
+            },
+            {
+              "field": "ai_usage",
+              "in": [
+                "local",
+                "external_provider",
+                "multiple_providers",
+                "byok"
+              ]
+            }
+          ]
+        }
+      },
+      "T-30": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"structured_imports\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-16, Mapping",
+          "Quellspalten umbenennen/fehlen lassen, Zahlen-/Datumsformat ändern und Mapping-Version wechseln",
+          "Vorschau zeigt Transformation/Fehler; Historie bleibt alter Mapping-Version zugeordnet"
+        ],
+        "trigger": {
+          "field": "structured_imports",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-31": {
+        "adapter_current": true,
+        "applicable": "TRUE",
+        "reason": "{\"any\": [{\"field\": \"analytical_runs\", \"in\": [true]}, {\"field\": \"interactive_workspace\", \"in\": [true]}, {\"field\": \"ai_usage\", \"in\": [\"local\", \"external_provider\", \"multiple_providers\", \"byok\"]}]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_EXECUTED",
+        "text": [
+          "F-17, Reproduzierbarkeit",
+          "Analyse mit identischer Daten-/Tool-Version und Seed wiederholen",
+          "Soweit methodisch deterministisch gleiches Ergebnis; Manifest enthält Versionen, Parameter und Fingerprints"
+        ],
+        "trigger": {
+          "any": [
+            {
+              "field": "analytical_runs",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "interactive_workspace",
+              "in": [
+                true
+              ]
+            },
+            {
+              "field": "ai_usage",
+              "in": [
+                "local",
+                "external_provider",
+                "multiple_providers",
+                "byok"
+              ]
+            }
+          ]
+        }
+      },
+      "T-32": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"interactive_workspace\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-17, Workspace",
+          "Fremde Notebook-/Workspace-ID direkt aufrufen und Ressourcenlimit provozieren",
+          "Kein Zugriff auf fremden Workspace; Ressourcenlimit und Session-Regeln greifen"
+        ],
+        "trigger": {
+          "field": "interactive_workspace",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-33": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"real_data_for_test_generation\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-18, PDF-Redaction",
+          "Text im PDF schwärzen und danach kopieren/suchen/extrahieren",
+          "Der entfernte Inhalt ist über die vorgesehenen Zugriffspfade nicht wiederherstellbar; Review zeigt Status"
+        ],
+        "trigger": {
+          "field": "real_data_for_test_generation",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-34": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"real_data_for_test_generation\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-18, Pseudonymisierung",
+          "Dieselbe Identität in mehreren Dokumenten bereinigen und Testfall exportieren",
+          "Konsistentes Pseudonym; Zuordnungstabelle getrennt und nicht im Testexport"
+        ],
+        "trigger": {
+          "field": "real_data_for_test_generation",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-35": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"real_data_for_test_generation\", \"in\": [true]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-18, Synthetic Twin",
+          "Fall mit definierter Ground Truth synthetisieren und Originalidentitäten suchen",
+          "Ground Truth/Fachrelationen erhalten; absichtlich zu ersetzende Originalidentitäten nicht enthalten"
+        ],
+        "trigger": {
+          "field": "real_data_for_test_generation",
+          "in": [
+            true
+          ]
+        }
+      },
+      "T-36": {
+        "adapter_current": true,
+        "applicable": "FALSE",
+        "reason": "{\"field\": \"deployment_target\", \"in\": [\"pilot\", \"production\"]}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_APPLICABLE_WITH_REASON",
+        "text": [
+          "F-05/F-07/F-08, Betrieb",
+          "Synthetische Vorfall-Tischübung nach Sicherheitsvorfall-Leitfaden durchführen",
+          "Zuständigkeiten, Fristbewertung, sichere Belege und Wiederanlaufentscheidung nachvollziehbar"
+        ],
+        "trigger": {
+          "field": "deployment_target",
+          "in": [
+            "pilot",
+            "production"
+          ]
+        }
+      },
+      "T-37": {
+        "adapter_current": true,
+        "applicable": "TRUE",
+        "reason": "{\"constant\": \"TRUE\"}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_EXECUTED",
+        "text": [
+          "F-07/F-08, auslieferbare Software",
+          "SBOM gegen Schema und Artefakt prüfen; falschen Digest, Versionswechsel und Testbefund einspielen",
+          "Abweichungen erkannt; Bewertung, Korrektur und Nachtest dokumentiert"
+        ],
+        "trigger": {
+          "constant": "TRUE"
+        }
+      },
+      "T-38": {
+        "adapter_current": true,
+        "applicable": "TRUE",
+        "reason": "{\"constant\": \"TRUE\"}",
+        "source_commit": "15f5338f783f2c7d5760a9bb299be06d27326be0",
+        "source_path": "docs/pruefkatalog.md",
+        "status": "NOT_EXECUTED",
+        "text": [
+          "F-09, Architektur",
+          "Fachmodulabhängigkeiten und direkte Zugriffe auf geschützte Persistenz im Code und Architekturtest untersuchen",
+          "Kein Umgehen zentraler Rechte-, Mandanten- und Freigaberegeln; zulässige Schnittstellen belegt"
+        ],
+        "trigger": {
+          "constant": "TRUE"
+        }
+      }
+    }
+  },
+  "source_digest": "96ca0949e656f7663bfbb97b67ca57bc4bb8620fa3d97c5fb65b9e0bb41d07b5",
+  "status": "REVIEW_REQUIRED"
+}
