@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_documents",
+  "version": "0.1.0",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/types.py",
+      "git_blob": "295ed31cd6b0bf73af2fe9aa844d9f819c68b7a8",
+      "symbols": [
+        "CompareItem",
+        "CompareRow",
+        "ComparisonResult"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/parsing.py",
+      "git_blob": "bb0904344c0bf77b8587e23f3f8debf43423c810",
+      "symbols": [
+        "HEADING_RE",
+        "PAGE_NUMBER_RE",
+        "ParseError",
+        "normalise_for_match",
+        "normalise_semantic",
+        "normalise_verbatim",
+        "word_diff",
+        "accept_revisions",
+        "visible_text",
+        "_checklist_items",
+        "_text_items_from_paragraphs",
+        "_docx_text_items",
+        "_extract_pdf_pages",
+        "_remove_repeating_margins",
+        "_paragraphs_from_pdf_pages",
+        "pdf_text_items",
+        "detect_mode",
+        "read_document"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/matching.py",
+      "git_blob": "1344667a7b85b809fd9a0477fa7c448b988b3ad1",
+      "symbols": [
+        "similarity",
+        "checklist_matches",
+        "_ordered_fuzzy_block",
+        "text_matches",
+        "erkenne_verschiebungen",
+        "build_rows"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/article_law.py",
+      "git_blob": "9156134ae74a79d65f4c7d161a54fc855b62c240",
+      "symbols": [
+        "LawParagraph",
+        "COMMAND_PATTERNS",
+        "apply_commands",
+        "compare_article_law"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/service.py",
+      "git_blob": "265948ea3ac493c3f754d7ef88c7de4667ee9976",
+      "symbols": [
+        "LEGAL_REFERENCE_RE",
+        "CompareError",
+        "_verify_legal_references",
+        "DocumentCompareService"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/rendering.py",
+      "git_blob": "e706e91e526f48c40bc9f8490700bddb60b7a57a",
+      "symbols": [
+        "render_docx"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/configuration.py",
+      "git_blob": "3c324de7073d2cfbfff370c0624d07c27cd2bca2",
+      "symbols": [
+        "DEFAULT_SETTINGS",
+        "sanitise_settings",
+        "load_settings",
+        "save_settings",
+        "merge_settings"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/cli.py",
+      "git_blob": "ead8b5402f28b6a364841c8396edc12f787df0b1",
+      "symbols": [
+        "read_document",
+        "compare_documents"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/tasks.py",
+      "git_blob": "5f7d1b1c54fb30b2366c2d09dc80d8e1fcbeb69e",
+      "symbols": [
+        "run_document_comparison (Begründungsschleife)"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/ecohesion/comparisons/worker.py",
+      "git_blob": "f8300bea36d09ef7964fff4a1e5d8e4a9e04c2a6",
+      "symbols": [
+        "main (Synopse-Datensätze)"
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "historical_source_license_status": "UNKNOWN",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "github": {
+      "janpow77/audit_designer": {
+        "private": true,
+        "license": null
+      }
+    },
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "scope": "Extrahierter Bibliothekscode in auditcore_documents",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Dienste separat."
+    },
+    "test_data": {
+      "status": "PUBLIC_DOMAIN_OFFICIAL_WORKS_AND_SYNTHETIC",
+      "basis": "§ 5 Abs. 1 UrhG: Gesetze und Verordnungen sind amtliche Werke ohne urheberrechtlichen Schutz; einzelne Dokumente, kein wesentlicher Datenbankteil (§ 87b UrhG).",
+      "public_fixtures": [
+        {
+          "file": "KassenSichV_2023-06-10.pdf",
+          "origin_url": "https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "retrieved_via": "http://web.archive.org/web/20230610182008id_/https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "state": "Stand: zuletzt geändert durch Art. 2 V v. 30.7.2021"
+        },
+        {
+          "file": "KassenSichV_2026-08-27.pdf",
+          "origin_url": "https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "retrieved_via": "http://web.archive.org/web/20260827161939id_/https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "state": "Stand: zuletzt geändert durch Art. 3 V v. 14.1.2026 I Nr. 10"
+        },
+        {
+          "file": "bgbl-2025-I-301-seite55.pdf",
+          "origin_url": "https://www.recht.bund.de/bgbl/1/2025/301/regelungstext.pdf?__blob=publicationFile&v=3",
+          "original_sha256": "674d68c367cf719b5af7753526168cce85a8fba1a7bae41b0291b77c3187bf93",
+          "derivation": "pdfseparate -f 55 -l 55 (Seite 55 von 68, Artikel 13–17)"
+        },
+        {
+          "file": "sources/kassensichv_gii_2025-06-01.html",
+          "retrieved_via": "http://web.archive.org/web/20250601051248id_/https://www.gesetze-im-internet.de/kassensichv/BJNR351500017.html"
+        },
+        {
+          "file": "sources/kassensichv_gii_2026-05-06.xml",
+          "origin_url": "https://www.gesetze-im-internet.de/kassensichv/xml.zip",
+          "note": "builddate 20260506175930"
+        },
+        {
+          "file": "KassenSichV_2025-06-01.docx",
+          "derivation": "tools/build_fixtures.py aus sources/kassensichv_gii_2025-06-01.html (ein Word-Absatz je Absatz, juris-Hinweise „(+++ … +++)“ ausgelassen)"
+        },
+        {
+          "file": "KassenSichV_2026-05-06.docx",
+          "derivation": "tools/build_fixtures.py aus sources/kassensichv_gii_2026-05-06.xml"
+        },
+        {
+          "file": "BGBl-2025-I-301-Art15.docx",
+          "derivation": "Wortlaut von Artikel 15 aus bgbl-2025-I-301-seite55.pdf, beim Bau gegen die Seite geprüft"
+        }
+      ],
+      "sha256": {
+        "BGBl-2025-I-301-Art15.docx": "5f642dd7116777be0c85ba4ba6dce39f8af4262e27f9965a5b359d04a7cbc034",
+        "KassenSichV_2023-06-10.pdf": "4127ed75ba182c946678f85ebf58a500d552b4a1c7b4a7b78146c9bbcc2d7fb5",
+        "KassenSichV_2025-06-01.docx": "4e2bc15b686cc0bbdeb5ec044b5f39e9717753cc9916b297add2a1fee4a1987f",
+        "KassenSichV_2026-05-06.docx": "d233dcc1303d402cb7fbb6f3cc16390fb22644a6712b98d8fd5ae73583aa2827",
+        "KassenSichV_2026-08-27.pdf": "e5351ca28768ece983f25c28376c74d06fc2f22d2ed3f5195c97f9074030c303",
+        "bgbl-2025-I-301-seite55.pdf": "4406b4688083d24fc532ab74143ffa72067d9fd614772d28ddbee3a58eb2e047",
+        "sources/kassensichv_gii_2025-06-01.html": "55f601caf612f855a632291cc379b74d48e825d0c2607b8c14a298ffa41d9b03",
+        "sources/kassensichv_gii_2026-05-06.xml": "9ffb459d864c27f639ac1e4e084d06b1122fd13c0d58eb78254dc18e14b91741"
+      },
+      "synthetic": "tests/fixtures/synthetic und tests/fixtures/errors: frei erfunden, keine Echtdaten"
+    }
+  },
+  "excluded": [
+    "DocumentCompareService.generate_reason: Import von app.modules.standards.mcp_tools (FlowAgent) – ersetzt durch den Port ReasonProvider",
+    "tasks.py: Celery, Datenbanksitzungen, Fortschrittsspeicherung, Aufräumaufgabe, OCR über ai_router_client (bleibt Anwendung; Begründungsschleife als apply_reasons_worker)",
+    "api/document_comparisons.py: Uploads, Rechte, Presets, Downloads, Aufbewahrung (bleibt Anwendung)",
+    "ecohesion worker: resource.setrlimit, Research-PDF-Renderer, Dateiablage (bleibt Anwendung; Datensätze als synopsis_records)",
+    "configuration.default_config_path: Umgebungsvariable/Benutzerverzeichnis nur in auditcore_documents.legacy",
+    "flowinvoice services/parser.py:PDFParser (OCR/torch/transformers) – nicht übernommen"
+  ],
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_observed.json",
+    "tool": "tools/capture_legacy.py",
+    "fixture_builder": "tools/build_fixtures.py",
+    "original_tests": {
+      "file": "backend/tests/test_document_compare_service.py",
+      "passed": 9
+    },
+    "environment": {
+      "python": "3.11.16",
+      "lxml": "5.1.0",
+      "python-docx": "1.1.0",
+      "pypdf": "6.16.2",
+      "rapidfuzz": "3.14.5",
+      "pdftotext": "22.12.0",
+      "timezone": "Europe/Berlin",
+      "image": "python:3.11-slim-bookworm + poppler-utils (Versionen wie audit_designer_backend)"
+    },
+    "method": "Unveränderte, Blob-geprüfte Originalmodule importiert und ausgeführt; MCP/FlowAgent, Celery, DB und Research-PDF durch aufzeichnende Stellvertreter ersetzt; zwei Läufe mit unterschiedlichem PYTHONHASHSEED byte-gleich"
+  },
+  "behavior_changes": "docs/behavior-changes.md"
+}
