@@ -1,0 +1,3527 @@
+{
+ "schema": "auditcore_geo.entartet_observed/1",
+ "sources": {
+  "audit_designer": {
+   "repository": "janpow77/audit_designer",
+   "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20"
+  },
+  "flowsearch": {
+   "repository": "janpow77/flowsearch",
+   "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"
+  }
+ },
+ "auditcore_geo_010": {
+  "tag": "v0.3.0",
+  "version": "0.1.0"
+ },
+ "environment": {
+  "python": "3.12.3",
+  "pyproj": "3.8.0",
+  "proj": "9.8.1",
+  "shapely": "2.1.2"
+ },
+ "cases": [
+  {
+   "name": "punkt_1_position",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": null
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.68,
+     50.11
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 71.50388152135835
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.03433468834347
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 99.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.10543332635876
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867326823206
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4420.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4434.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 35.751941119771395
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 660.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 660.9834093170383
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4991.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.265094542277
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4992.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.547769467233
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 6520.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6537.717778681751
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 13499.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  },
+  {
+   "name": "punkt_2_gleich",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": null
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.68,
+     50.11
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 71.50388152135835
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.03433468834347
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 99.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.10543332635876
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867326823206
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4420.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4434.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 35.751941119771395
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 660.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 660.9834093170383
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4991.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.265094542277
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4992.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.547769467233
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 6520.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6537.717778681751
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": null
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 13499.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  },
+  {
+   "name": "punkt_3_gleich",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.68,
+     50.10999999999999
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.68,
+     50.10999999999999
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 71.31115363223593
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 71.50388152135835
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 50.03778610517072
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.03433468834347
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 99.8356150852063
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 99.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.10543332635876
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 100.07557221034143
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867326823206
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4419.932082900278
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4420.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4434.202511495517
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4434.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 35.655576816181295
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 35.751941119771395
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 356.55576816130633
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 660.5052685324265
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 660.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 660.9834093170383
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4991.780754259301
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4991.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.265094542277
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4992.038247854323
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4992.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.547769467233
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 6519.985499864958
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 6520.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6537.717778681751
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 13501.997784506546
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 13499.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  },
+  {
+   "name": "punkt_4_gleich",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.68,
+     50.11
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.68,
+     50.11
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 71.31115363223593
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 71.50388152135835
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 50.03778610517072
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.03433468834347
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 99.8356150852063
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 99.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.10543332635876
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 100.07557221034143
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867326823206
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4419.932082900278
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4420.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4434.202511495517
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4434.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 35.655576816181295
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 35.751941119771395
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 356.55576816130633
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 660.5052685324265
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 660.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 660.9834093170383
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4991.780754259301
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4991.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.265094542277
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4992.038247854323
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4992.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.547769467233
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 6519.985499864958
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 6520.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6537.717778681751
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 13501.997784506546
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 13499.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  },
+  {
+   "name": "linie_2_punkte",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.682,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.680666666666667,
+     50.10999999999999
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.680666666666667,
+     50.10999999999999
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.681000000000001,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 50.03778610517072
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.03433468384754
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 42.8
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 100.07557221034143
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867325922128
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4419.932082900278
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4420.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4434.202511495517
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4434.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 356.55576816130633
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 595.7228629184331
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 595.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 595.8906390849285
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4849.158446994703
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4849.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4862.257349628116
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4849.42653528843
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4849.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4862.54984880826
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 6379.705109438889
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 6380.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6397.029990889477
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 13501.997784506546
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 13499.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  },
+  {
+   "name": "kollinear_dezimal",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.61,
+       50.11
+      ],
+      [
+       8.62,
+       50.12
+      ],
+      [
+       8.63,
+       50.13
+      ],
+      [
+       8.61,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "ok": 1
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.6175,
+     50.1175
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.6175,
+     50.1175
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.62,
+    50.12
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4202.254148450889
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4201.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4209.726717175686
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4262.927781706063
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4262.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4270.59452067707
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4175.9605555447715
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4175.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4183.497862246699
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4287.288929701791
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4286.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4295.033287713068
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4150.103704187664
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4149.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4157.705684191689
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 30.009066341501423
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 55.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 29.915011423614104
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4232.549501181222
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4231.9
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4240.119176464692
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3901.7849001908153
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3903.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 3908.641347157083
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4802.552036273776
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4806.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4810.8363681855535
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 8841.593716820944
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 8839.9
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 8862.208339478646
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 8827.68681634743
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 8826.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 8848.378830045298
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 10038.312083364532
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 10037.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 10064.130738900367
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 12252.324268950737
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 12252.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 12251.471527172642
+    }
+   ]
+  },
+  {
+   "name": "kollinear_hin_und_zurueck",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.681,
+       50.11
+      ],
+      [
+       8.682,
+       50.11
+      ],
+      [
+       8.681,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "ok": 1
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.6808,
+     50.11
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.6808,
+     50.11
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.681,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 50.03778610517072
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.034334687217125
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 28.5
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 100.07557221034143
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867326596989
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4419.932082900278
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4420.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4434.202511495517
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4434.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 356.55576816130633
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 595.7228629184331
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 595.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 595.8906390849285
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4849.158446994703
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4849.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4862.257349628116
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4849.42653528843
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4849.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4862.54984880826
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 6379.705109438889
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 6380.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6397.029990889477
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 13501.997784506546
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 13499.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  },
+  {
+   "name": "loch_als_linie",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.66,
+       50.1
+      ],
+      [
+       8.7,
+       50.1
+      ],
+      [
+       8.7,
+       50.12
+      ],
+      [
+       8.66,
+       50.12
+      ],
+      [
+       8.66,
+       50.1
+      ]
+     ],
+     [
+      [
+       8.67,
+       50.11
+      ],
+      [
+       8.69,
+       50.11
+      ],
+      [
+       8.67,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 1: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.67625,
+     50.10875
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.675999999999998,
+     50.108
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 713.1
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 641.8
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 714.9
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 613.3
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 720.1
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 2851.850473767518
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 2851.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 2859.5645531616465
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 2852.362586078958
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 2852.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 2860.09002387779
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 677.5
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 660.5
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3565.5576816138228
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3734.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 3575.1875886324524
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3565.5204547229728
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3718.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 3575.150364864341
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4990.894823305011
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4990.9
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5004.396058149394
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 11917.826908190673
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 11916.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 11919.58583534679
+    }
+   ]
+  },
+  {
+   "name": "loch_als_punkt",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.66,
+       50.1
+      ],
+      [
+       8.7,
+       50.1
+      ],
+      [
+       8.7,
+       50.12
+      ],
+      [
+       8.66,
+       50.12
+      ],
+      [
+       8.66,
+       50.1
+      ]
+     ],
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 1: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.677777777777777,
+     50.10888888888889
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.675999999999998,
+     50.108
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 99.8
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 2851.850473767518
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 2851.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 2859.5645531616465
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 2852.362586078958
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 2852.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 2860.09002387779
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 660.5
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3565.5576816138228
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3734.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 3575.1875886324524
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3565.5204547229728
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3718.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 3575.150364864341
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4990.894823305011
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4990.9
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5004.396058149394
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 11917.826908190673
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 11916.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 11919.58583534679
+    }
+   ]
+  },
+  {
+   "name": "multi_mit_punktteil",
+   "geometrie": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        8.66,
+        50.1
+       ],
+       [
+        8.7,
+        50.1
+       ],
+       [
+        8.7,
+        50.12
+       ],
+       [
+        8.66,
+        50.12
+       ],
+       [
+        8.66,
+        50.1
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        8.75,
+        50.11
+       ],
+       [
+        8.75,
+        50.11
+       ],
+       [
+        8.75,
+        50.11
+       ],
+       [
+        8.75,
+        50.11
+       ]
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 1, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.708888888888888,
+     50.10888888888889
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.675999999999998,
+     50.108
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1808.3
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1752.7
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1778.0
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1730.7
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1748.6
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 2851.850473767518
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 2851.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 2859.5645531616465
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 2852.362586078958
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 2852.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 2860.09002387779
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1780.4
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1542.8
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": true
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1205.7
+     },
+     "referenz_lage": "innen",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 55.59754011703192
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 55.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 55.593566114805824
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 1835.9075283145853
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 1836.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 1838.9686296255825
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 11917.826908190673
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 11916.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 11919.58583534679
+    }
+   ]
+  },
+  {
+   "name": "multi_nur_entartet",
+   "geometrie": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        8.75,
+        50.11
+       ],
+       [
+        8.75,
+        50.11
+       ],
+       [
+        8.75,
+        50.11
+       ],
+       [
+        8.75,
+        50.11
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        8.76,
+        50.12
+       ],
+       [
+        8.78,
+        50.12
+       ],
+       [
+        8.76,
+        50.12
+       ]
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.757142857142856,
+     50.114285714285714
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.75,
+     50.11
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.77,
+    50.12
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4991.780754259301
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4991.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.265094542277
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4920.469600627066
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4920.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4933.761220762955
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4991.984634715941
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4992.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.491717344874
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4891.945139174096
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4891.9
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4905.159671991936
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4992.690021350158
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4992.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5006.218418540996
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 9334.976544788447
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 9335.9
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 9360.803378768822
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 9341.666189024705
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 9342.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 9367.52141742266
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4956.12517744312
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4956.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4969.513157321574
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 5348.336522420607
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 5348.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5362.784503306723
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4668.929834879814
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4668.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4681.116801062935
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 55.59754011703192
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 55.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 55.593566114805824
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 44.4780320933095
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 714.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 44.427028198517476
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 16265.091671447406
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 16257.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 16275.340489354063
+    }
+   ]
+  },
+  {
+   "name": "aussen_entartet_mit_loch",
+   "geometrie": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ],
+      [
+       8.68,
+       50.11
+      ]
+     ],
+     [
+      [
+       8.67,
+       50.105
+      ],
+      [
+       8.69,
+       50.105
+      ],
+      [
+       8.69,
+       50.115
+      ],
+      [
+       8.67,
+       50.105
+      ]
+     ]
+    ]
+   },
+   "auditcore_geo_010_flaeche_aus_geojson": {
+    "error": "GeometrieFehler",
+    "message": "Polygon 0, Ring 0: Ring mit weniger als drei verschiedenen Punkten."
+   },
+   "designer_gis_geometry_centroid": {
+    "ok": [
+     8.68,
+     50.10875
+    ]
+   },
+   "flowsearch_get_geometry_center": {
+    "ok": [
+     8.68,
+     50.11
+    ]
+   },
+   "referenz_shapely_schwerpunkt": [
+    8.68,
+    50.11
+   ],
+   "punkte": [
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 0.0
+     },
+     "referenz_lage": "rand",
+     "referenz_utm32_abstand_m": 0.0
+    },
+    {
+     "punkt_lonlat": [
+      8.681,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 43.8462896154595
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 71.3
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 71.50388152135835
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.11045
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 39.46152046896509
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 50.0
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 50.03433468834347
+    },
+    {
+     "punkt_lonlat": [
+      8.6814,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 61.384805461690085
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 99.8
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.10543332635876
+    },
+    {
+     "punkt_lonlat": [
+      8.68,
+      50.1109
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 78.9227605611474
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 100.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 100.06867326823206
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.12
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3935.7172412051436
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3936.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4431.5439001658815
+    },
+    {
+     "punkt_lonlat": [
+      8.62,
+      50.1205
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 3959.5657623110255
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 3960.1
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 4445.796597840789
+    },
+    {
+     "punkt_lonlat": [
+      8.6805,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 21.923144807768722
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 35.7
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 35.751941119771395
+    },
+    {
+     "punkt_lonlat": [
+      8.675,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 219.23144807737543
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 357.51945084075294
+    },
+    {
+     "punkt_lonlat": [
+      8.685,
+      50.105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 0.0
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 356.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 660.9834093170383
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.11
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4278.669217936563
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4314.4
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.265094542277
+    },
+    {
+     "punkt_lonlat": [
+      8.75,
+      50.1105
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 4278.624545667542
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 4307.6
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 5005.547769467233
+    },
+    {
+     "punkt_lonlat": [
+      8.77,
+      50.1204
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 5735.172637358964
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 5735.5
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 6537.717778681751
+    },
+    {
+     "punkt_lonlat": [
+      8.6,
+      50.0
+     ],
+     "designer_gis_point_in_geometry": {
+      "ok": false
+     },
+     "designer_gis_edge_distance_m": {
+      "ok": 12702.334335053902
+     },
+     "designer_company_distance_to_geometry_m": {
+      "ok": 12700.2
+     },
+     "referenz_lage": "aussen",
+     "referenz_utm32_abstand_m": 13504.909892654601
+    }
+   ]
+  }
+ ]
+}

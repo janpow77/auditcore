@@ -14,6 +14,7 @@ from auditcore_geo import (
     grosskreis_km,
     lage,
     legacy,
+    randabstand_m,
     umkreis,
     utm_nach_geographisch,
 )
@@ -22,7 +23,7 @@ from auditcore_geo import (
 def main() -> None:
     """Profile, Umkreis, Fläche mit Rand, UTM und die optionale Adaptergrenze aufrufen."""
     paket = distribution("auditcore_geo")
-    assert paket.version == "0.1.0"
+    assert paket.version == "0.2.0"
     assert not [r for r in paket.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     frankfurt, berlin = Punkt(50.1106, 8.6821), Punkt(52.52, 13.405)
@@ -39,6 +40,19 @@ def main() -> None:
     )
     assert lage(Punkt(5, 10), quadrat) is Lage.RAND
     assert lage(Punkt(5, 5), quadrat) is Lage.INNEN
+    # GEO-C16: zusammengefallene Teilfläche bleibt als Punkt mit Abstand erhalten.
+    mit_punkt = flaeche_aus_geojson(
+        {
+            "type": "MultiPolygon",
+            "coordinates": [
+                [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]],
+                [[[20, 5], [20, 5], [20, 5], [20, 5]]],
+            ],
+        }
+    )
+    assert len(mit_punkt.polygone) == 1 and "GEO-C16" in mit_punkt.hinweise[0]
+    assert lage(Punkt(5, 20), mit_punkt) is Lage.RAND
+    assert 0 < randabstand_m(Punkt(5, 20.001), mit_punkt, KUGEL_MITTLERER_RADIUS) < 200
     punkt = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
     assert (punkt.lon, punkt.lat) == legacy.osint_utm_nach_wgs84(477000.0, 5550000.0)
     assert len(douglas_peucker([(0, 0), (1, 0.001), (2, 0)], 0.01)) == 2
@@ -53,7 +67,10 @@ def main() -> None:
         from auditcore_geo.nominatim import NominatimAdapter
 
         assert NominatimAdapter.source.source_id == "geo.nominatim_search"
-    print("PASS: installed auditcore_geo profiles, radius, boundary, UTM and extra boundary")
+    print(
+        "PASS: installed auditcore_geo profiles, radius, boundary, degenerate rings, UTM "
+        "and extra boundary"
+    )
 
 
 if __name__ == "__main__":

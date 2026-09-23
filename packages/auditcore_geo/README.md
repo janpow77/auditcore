@@ -43,7 +43,7 @@ utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)  # ETRS89, keine Datum
 |---|---|
 | `koordinaten` | `Punkt(lat, lon)` mit Wertebereichsprüfung; Konstruktoren nur mit ausdrücklicher Achsenfolge; Bezugssysteme EPSG:4326/OGC:CRS84/EPSG:4258/EPSG:25832 als Beschreibung; `achsenfolge_erkennen` (→ `UNBEKANNT` statt still „nicht drehen“). |
 | `distanz` | Profile `kugel.r1_6371008_8m` (osint, designer gis) und `kugel.6371000m` (designer register/company, flowsearch); `grosskreis_m/_km`; `umkreis` mit exaktem Kugel-Vorfilter (Pole, Datumsgrenze); `abstand_zur_strecke_lokal_m` (lokale Näherung wie designer). |
-| `flaeche` | GeoJSON `Polygon`/`MultiPolygon` mit Löchern; `lage` (innen/außen/Rand, optional Meter-Toleranz), `enthaelt(..., rand_gilt_als_innen=...)`, `randabstand_m`, `naechster_stuetzpunkt_m`, `flaechenschwerpunkt`. Ungültige Geometrie ist ein Fehler, nie 0 m oder (0, 0). |
+| `flaeche` | GeoJSON `Polygon`/`MultiPolygon` mit Löchern (`flaeche_aus_geojson`, `flaeche_aus_ringen`, `flaeche_aus_gpkg`); `lage` (innen/außen/Rand, optional Meter-Toleranz), `enthaelt(..., rand_gilt_als_innen=...)`, `randabstand_m`, `randbefund`, `flaechen_im_umkreis`, `naechster_stuetzpunkt_m`, `flaechenschwerpunkt`. Zu Punkt/Linie zusammengefallene Ringe (0.2.0, GEO-C16) verwerfen die Fläche nicht: Außenringe zählen als Objekt ohne Fläche mit Abstand, Löcher entfallen, jeder Fall steht in `Flaeche.hinweise` (`strikt=True` weist ab). Unlesbare Geometrie ist ein Fehler, nie 0 m oder (0, 0). |
 | `projektion` | UTM-Zonen 1–60, Nord/Süd, GRS80/WGS 84; bitgleich mit osint `utm_nach_wgs84` (Zone 32N), ≤ 0,71 mm zu PROJ. |
 | `gpkg` | GeoPackageBinary + ISO-WKB (2D Polygon/MultiPolygon) mit `srs_id`; strikt. |
 | `vereinfachung` | Douglas-Peucker iterativ, ergebnisgleich mit osint; `ring_vereinfachen(..., stellen=)`. |
@@ -52,11 +52,11 @@ utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)  # ETRS89, keine Datum
 
 Herkunft: `osint@d361ddb`, `audit_designer@1254591`, `flowsearch@10cb2a3`,
 `flowworkshop@3d1cb40`; MIT-Freigabe für den extrahierten Bibliothekscode
-(`NOTICE`, `provenance.json`). Abweichungen vom Original (GEO-C01–C15) und
-getroffene Entscheidungen (D1–D5, 23.09.2026): [docs/behavior-changes.md](docs/behavior-changes.md).
+(`NOTICE`, `provenance.json`). Abweichungen vom Original (GEO-C01–C16) und
+getroffene Entscheidungen (D1–D6, 23.09.2026): [docs/behavior-changes.md](docs/behavior-changes.md).
 Umstellung der Anwendungen: [docs/consumer-integration.md](docs/consumer-integration.md).
-Consumer sind nach Nutzerentscheidung vom 23.09.2026 **geplant** („der mehrfache
-Nutzen kommt noch“). Debian-Paket: `python3-auditcore-geo`.
+audit_designer nutzt 0.1.0 (Release v0.3.0); mit 0.2.0 entfällt dort der Workaround
+`geo_flaeche.py`. Weitere Consumer sind **geplant**. Debian-Paket: `python3-auditcore-geo`.
 
 Empfohlen (Entscheidung 23.09.2026): `EMPFOHLENES_ERDMODELL` (R1) für neue gemeinsame
 Bestände und `EMPFOHLEN_RAND_GILT_ALS_INNEN` (Randpunkte innen); beide werden

@@ -1,9 +1,237 @@
 # Consumer-Umstellung
 
-Status: **geplant**. Nutzerentscheidung vom 23.09.2026: auditcore_geo wird gebaut,
-auch ohne bereits umgestellten Consumer – „der mehrfache Nutzen kommt noch“.
-Umgestellt wird erst nach dem zentralen Release (v0.3.0); bis dahin keine
-Requirements-Änderung und kein Push in Consumer-Repositories.
+Status: audit_designer nutzt 0.1.0 (PR janpow77/audit_designer#382, Release
+v0.3.0); osint, flowsearch und flowworkshop sind **geplant**. Für 0.2.0 gilt wie
+zuvor: keine Requirements-Änderung und kein Push in Consumer-Repositories aus
+diesem Repository; die Umstellung ist unten beschrieben und getestet.
+
+## audit_designer: Workaround `geo_flaeche.py` entfällt mit 0.2.0
+
+Stand: audit_designer `main@7226382` (PR #382, gemergt) nutzt `auditcore_geo`
+0.1.0 und liest Flächen über den eigenen Workaround
+`backend/app/core/shared/geo_flaeche.py` (`GeoFlaeche`, `lies_flaeche`), weil
+0.1.0 Geometrien mit zu Punkt/Linie zusammengefallenen Ringen als Ganzes
+verwarf (15 von 1 051 hessischen Natura-2000-Gebieten betroffen, 10 davon
+vollständig). 0.2.0 behandelt diese Ringe selbst (GEO-C16) mit derselben
+Semantik: echte Teilflächen bleiben Fläche, zusammengefallene Außenringe
+zählen als Punkt/Linie mit Abstand, zusammengefallene Löcher entfallen – und
+nennt jeden Fall in `Flaeche.hinweise`. **Nach dem Umstieg auf 0.2.0 kann
+`geo_flaeche.py` ersatzlos gelöscht werden.**
+
+Getestet in einer Wegwerf-Kopie (`git archive` von `audit_designer@7226382`,
+isolierte venv, kein Push, keine Datenbank) mit dem gebauten Wheel
+`auditcore_geo-0.2.0-py3-none-any.whl`:
+
+| Lauf | `tests/test_geo_auditcore.py` + `tests/test_vpai_gis_helpers.py` |
+|---|---|
+| designer unverändert, Wheel 0.1.0 (Release v0.3.0) | 53 passed |
+| designer unverändert, Wheel 0.2.0 (Workaround aktiv) | 53 passed |
+| designer umgestellt (Patch unten, `geo_flaeche.py` gelöscht), Wheel 0.2.0 | 53 passed |
+
+`tests/test_flowstat_geo_handler.py` braucht PostgreSQL: NOT_EXECUTED.
+Vergleich Workaround gegen Umstellung auf den 12 Geometrien × 14 Punkten von
+`tests/fixtures/entartet_observed.json` (`_point_in_geometry`,
+`_geometry_edge_distance_m`, `_NaturaClient._distance_to_geometry_m`,
+`_geometry_centroid`): alle Abstände identisch. Zwei bewusste Unterschiede:
+
+- Ein Punkt **genau auf** einem zusammengefallenen Außenring liegt jetzt auf
+  dem Rand und zählt nach D2 als innen (`_point_in_geometry` → `True`,
+  vorher `False`; Abstand in beiden Fällen 0). 11 von 168 Punkten; so
+  verhielt sich der Workaround bereits bei kollinearen Ringen mit drei
+  verschiedenen Punkten.
+- Schwerpunkt eines Gebiets **ohne** echte Teilfläche: Linien
+  längengewichtet, sonst Punktmittel (wie shapely), statt Mittel aller
+  verschiedenen Punkte (1 von 12 Geometrien: `multi_nur_entartet`).
+
+Umstellung (nach Anhebung der Requirements auf `auditcore_geo[geocoder]==0.2.0`,
+Debian `python3-auditcore-geo (>= 0.2.0)`) – `backend/app/core/shared/geo_flaeche.py`
+löschen und:
+
+```diff
+diff --git a/backend/app/api/vpai_notebook/gis/_common.py b/backend/app/api/vpai_notebook/gis/_common.py
+index ea02be1..e04da62 100644
+--- a/backend/app/api/vpai_notebook/gis/_common.py
++++ b/backend/app/api/vpai_notebook/gis/_common.py
+@@ -19,14 +19,25 @@ from datetime import datetime
+ from decimal import Decimal
+ from typing import Any
+ 
+-from auditcore_geo import KUGEL_MITTLERER_RADIUS, KoordinatenFehler, Punkt, grosskreis_m
++from auditcore_geo import (
++    EMPFOHLEN_RAND_GILT_ALS_INNEN,
++    KUGEL_MITTLERER_RADIUS,
++    Flaeche,
++    GeometrieFehler,
++    KoordinatenFehler,
++    Punkt,
++    enthaelt,
++    flaeche_aus_geojson,
++    flaechenschwerpunkt,
++    grosskreis_m,
++    randabstand_m,
++)
+ from fastapi import HTTPException
+ from pydantic import BaseModel, Field
+ from sqlalchemy.orm import Session
+ 
+ from app.core.config import settings
+ from app.core.shared import nominatim
+-from app.core.shared.geo_flaeche import GeoFlaeche, lies_flaeche
+ from app.models.vpai_notebook import (
+     VpaiGisFeature,
+     VpaiGisLayer,
+@@ -228,17 +239,23 @@ def _iter_ring_coordinates(geometry: dict[str, Any]) -> list[list[tuple[float, f
+ # ``auditcore_geo`` rechnet je Teilfläche mit eigenem Außenring und eigenen
+ # Löchern; Randpunkte zählen als innen (D2). Schwerpunkte sind
+ # flächengewichtet (GEO-C09) statt Mittel aller Stützpunkte. Erdmodell:
+-# Mittelradius R1 = 6 371 008,8 m wie bisher.
++# Mittelradius R1 = 6 371 008,8 m wie bisher. Zu Punkt oder Linie
++# zusammengefallene Ringe (gerundete Kleinstgebiete) behandelt auditcore_geo
++# ab 0.2.0 selbst (GEO-C16): Objekt ohne Fläche mit Abstand, Hinweis in
++# ``Flaeche.hinweise``.
+ # ---------------------------------------------------------------------------
+ 
+ 
+-def _geo_flaeche(geometry: dict[str, Any] | GeoFlaeche) -> GeoFlaeche | None:
+-    """GeoJSON-Polygon/-MultiPolygon als Fläche; unbrauchbar → ``None``.
+-
+-    Zu Punkt oder Linie zusammengefallene Ringe bleiben als solche erhalten,
+-    siehe :mod:`app.core.shared.geo_flaeche`.
+-    """
+-    return lies_flaeche(geometry)
++def _geo_flaeche(geometry: dict[str, Any] | Flaeche) -> Flaeche | None:
++    """GeoJSON-Polygon/-MultiPolygon als Fläche; unbrauchbar → ``None`` (GEO-C06)."""
++    if isinstance(geometry, Flaeche):
++        return geometry
++    if not isinstance(geometry, dict):
++        return None
++    try:
++        return flaeche_aus_geojson(geometry)
++    except GeometrieFehler:
++        return None
+ 
+ 
+ def _geo_punkt(lon: float, lat: float) -> Punkt | None:
+@@ -249,24 +266,24 @@ def _geo_punkt(lon: float, lat: float) -> Punkt | None:
+ 
+ 
+ def _point_in_geometry(
+-    lon: float, lat: float, geometry: dict[str, Any] | GeoFlaeche
++    lon: float, lat: float, geometry: dict[str, Any] | Flaeche
+ ) -> bool:
+     """Punkt in der Fläche (Randpunkte zählen als innen, D2)."""
+     flaeche = _geo_flaeche(geometry)
+     punkt = _geo_punkt(lon, lat)
+     if flaeche is None or punkt is None:
+         return False
+-    return flaeche.enthaelt(punkt)
++    return enthaelt(flaeche, punkt, rand_gilt_als_innen=EMPFOHLEN_RAND_GILT_ALS_INNEN)
+ 
+ 
+ def _geometry_centroid(
+-    geometry: dict[str, Any] | GeoFlaeche,
++    geometry: dict[str, Any] | Flaeche,
+ ) -> tuple[float, float] | None:
+     """Flächengewichteter Schwerpunkt als ``(lon, lat)``; unbrauchbar → ``None``."""
+     flaeche = _geo_flaeche(geometry)
+     if flaeche is None:
+         return None
+-    schwerpunkt = flaeche.schwerpunkt()
++    schwerpunkt = flaechenschwerpunkt(flaeche)
+     return schwerpunkt.lon, schwerpunkt.lat
+ 
+ 
+@@ -281,14 +298,14 @@ def _haversine_distance_m(
+ 
+ 
+ def _geometry_edge_distance_m(
+-    lon: float, lat: float, geometry: dict[str, Any] | GeoFlaeche
++    lon: float, lat: float, geometry: dict[str, Any] | Flaeche
+ ) -> float | None:
+     """Abstand zum nächsten Rand in Metern; 0 innen/auf dem Rand, ``None`` ohne Fläche."""
+     flaeche = _geo_flaeche(geometry)
+     punkt = _geo_punkt(lon, lat)
+     if flaeche is None or punkt is None:
+         return None
+-    return flaeche.randabstand_m(punkt, KUGEL_MITTLERER_RADIUS)
++    return randabstand_m(punkt, flaeche, KUGEL_MITTLERER_RADIUS)
+ 
+ 
+ def _natura_props(feature: dict[str, Any]) -> tuple[str, str, str]:
+diff --git a/backend/app/modules/vp_ai/services/company/company_records.py b/backend/app/modules/vp_ai/services/company/company_records.py
+index 037fcc0..de0f5ab 100644
+--- a/backend/app/modules/vp_ai/services/company/company_records.py
++++ b/backend/app/modules/vp_ai/services/company/company_records.py
+@@ -1244,18 +1244,26 @@ class _NaturaClient:
+         unbrauchbare Geometrie ergibt ``None`` statt 0,0 („im Gebiet“,
+         GEO-C06). Erdmodell 6 371 000 m wie bisher.
+         """
+-        from auditcore_geo import KUGEL_6371_KM, KoordinatenFehler, Punkt
+-
+-        from app.core.shared.geo_flaeche import lies_flaeche
++        from auditcore_geo import (
++            KUGEL_6371_KM,
++            GeometrieFehler,
++            KoordinatenFehler,
++            Punkt,
++            flaeche_aus_geojson,
++            randabstand_m,
++        )
+ 
+-        flaeche = lies_flaeche(geometry)
++        try:
++            flaeche = flaeche_aus_geojson(geometry) if isinstance(geometry, dict) else None
++        except GeometrieFehler:
++            flaeche = None
+         try:
+             punkt = Punkt(float(lat), float(lng))
+         except (KoordinatenFehler, TypeError, ValueError):
+             return None
+         if flaeche is None:
+             return None
+-        return round(flaeche.randabstand_m(punkt, KUGEL_6371_KM), 1)
++        return round(randabstand_m(punkt, flaeche, KUGEL_6371_KM), 1)
+ 
+     def check(self, location: str) -> tuple[float, float, list[dict], list[dict]]:
+         """Prüft FFH- und Vogelschutzgebiete für einen Standort."""
+diff --git a/backend/tests/test_geo_auditcore.py b/backend/tests/test_geo_auditcore.py
+index 0ee15ef..fb14fd7 100644
+--- a/backend/tests/test_geo_auditcore.py
++++ b/backend/tests/test_geo_auditcore.py
+@@ -6,6 +6,7 @@ import json
+ from datetime import datetime
+ 
+ import pytest
++from auditcore_geo import flaeche_aus_geojson
+ from auditcore_harvest import Response, TransportError
+ 
+ from app.api.vpai_notebook.gis._common import (
+@@ -14,7 +15,6 @@ from app.api.vpai_notebook.gis._common import (
+     _point_in_geometry,
+ )
+ from app.core.shared import nominatim
+-from app.core.shared.geo_flaeche import lies_flaeche
+ from app.modules.vp_ai.services.company.company_records import _NaturaClient
+ 
+ 
+@@ -74,8 +74,9 @@ def test_zusammengefallenes_gebiet_bleibt_in_der_pruefung() -> None:
+         "type": "MultiPolygon",
+         "coordinates": [[[[9.212, 50.2062]] * 5]],
+     }
+-    flaeche = lies_flaeche(punktgebiet)
+-    assert flaeche is not None and flaeche.flaeche is None
++    flaeche = flaeche_aus_geojson(punktgebiet)
++    assert flaeche.polygone == () and len(flaeche.objekte_ohne_flaeche) == 1
++    assert "GEO-C16" in flaeche.hinweise[0]  # sichtbar, nicht still
+     abstand = _geometry_edge_distance_m(9.213, 50.2062, punktgebiet)
+     assert abstand == pytest.approx(71.3, abs=0.5)
+     assert _point_in_geometry(9.213, 50.2062, punktgebiet) is False
+```
+
+Empfehlung (nicht Teil des Patches): `natura.py` kann `flaeche.hinweise` in die
+Ergebniszeilen übernehmen, damit Prüfende sehen, dass ein Abstand auf ein zu
+einem Punkt gerundetes Gebiet zurückgeht; `randbefund(...)` liefert dazu den
+maßgeblichen `EntarteterRing`. Wer lieber scheitert, liest mit `strikt=True`.
 
 ## Getestete Integrationsvariante: osint `ortsdienst/dienst.py`
 

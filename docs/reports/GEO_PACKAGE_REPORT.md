@@ -101,3 +101,46 @@ Umsetzung auf Branch `feat/auditcore-geo-entscheidungen`, Version bleibt 0.1.0:
    (`heute_bereits_gesendet`, GEO-C15).
 
 Merge des Erstpakets: PR #13 (`253aed9`); KIRA `6aae35b9-1c5c-45be-baa4-ff414da11dff`.
+
+## 0.2.0: zusammengefallene Ringe (GEO-C16, Nutzerentscheidung „c3. ja“, 23.09.2026)
+
+Anlass: Bei der Umstellung von audit_designer (PR janpow77/audit_designer#382)
+verwarf `flaeche_aus_geojson` 0.1.0 jede Geometrie mit einem auf Punkt oder
+Linie zusammengefallenen Ring als Ganzes – 10 von 1 051 hessischen
+Natura-2000-Gebieten fielen still aus der Prüfung (15 enthalten solche Ringe).
+0.1.0 ist in v0.3.0 veröffentlicht und bleibt unverändert; die Korrektur ist
+Version **0.2.0** (Branch `feat/auditcore-geo-ringe`, Basis `main@6560370`).
+
+Umfang: Zusammengefallene Außenringe bleiben als Punkt-/Linienobjekt mit
+Abstand erhalten (`lage`/`enthaelt`, `randabstand_m`, neu `randbefund`,
+`flaechen_im_umkreis`, `naechster_stuetzpunkt_m`, `flaechenschwerpunkt`),
+zusammengefallene Löcher entfallen, gültige Teilflächen bleiben Fläche; jeder
+Fall steht als `EntarteterRing` in `Flaeche.entartet` und als Hinweis in
+`Flaeche.hinweise`. Neu `flaeche_aus_ringen` und `flaeche_aus_gpkg`
+(projizierte GeoPackages nur mit ausdrücklicher Umrechnung); `strikt=True`
+weist ab. Semantik des designer-Workarounds `geo_flaeche.py` (`82e1ca5`)
+übernommen, Code nicht. Legacy-Replay unverändert.
+
+| Prüfung (tatsächlich ausgeführt, Python 3.12.3) | Ergebnis |
+|---|---|
+| Characterization `tools/capture_entartet.py` | 12 Geometrien × 14 Punkte = 168 Fälle; designer gis/company, flowsearch, `auditcore_geo` 0.1.0 (Tag v0.3.0), Referenz shapely 2.1.2/pyproj 3.8.0 |
+| Paket-pytest | **994 passed** (neu 387 in `test_entartete_ringe.py`; Vertrag 297, Legacy-Replay 279 unverändert, Nominatim 26, Policy 3, Architektur 2) |
+| Lage gegen shapely / Abstand gegen EPSG:25832 | 168/168 gleich / ≤ 0,5 % |
+| Abstand gegen designer gis (wo es Ringe ab drei Positionen behielt) | 9 Geometrien, rel. 1e-9 gleich |
+| ruff / ruff format / mypy strict (`src`) / bandit -ll | PASS |
+| `scripts/verify_domain_packages.py` harvest+geo `--apt` | **28/28 PASS** (Build, Hash-Requirements, `pip check`, Smoke inkl. GEO-C16, selektive Installation, Debian-Pakete, signierte APT-Quelle, Install/Upgrade 1→2/Remove) |
+
+Wheel `auditcore_geo-0.2.0-py3-none-any.whl` SHA-256
+`6a460f39bb1a41ce3c547a6c09eb23ea5a9b43348e3cdd8baad1e058e12d4ee5`
+(reproduzierbar, `SOURCE_DATE_EPOCH=1700000000`); harvest unverändert
+`bc6cf59f…` (= Release v0.3.0).
+
+Consumer audit_designer (`main@7226382`, Wegwerf-Kopie, isolierte venv, keine
+Datenbank, kein Push): `test_geo_auditcore.py` + `test_vpai_gis_helpers.py`
+53 passed mit 0.1.0, mit 0.2.0 und nach Umstellung ohne `geo_flaeche.py`.
+Vergleich Workaround/Umstellung auf 168 Fällen: Abstände identisch; bewusst
+anders nur Punkte genau auf einem zusammengefallenen Außenring (jetzt Rand =
+innen nach D2) und der Schwerpunkt reiner Punkt-/Liniengebiete (wie shapely).
+Anleitung und Patch: `packages/auditcore_geo/docs/consumer-integration.md`.
+`test_flowstat_geo_handler.py` (PostgreSQL) NOT_EXECUTED. Requirements-Umstellung
+im designer auf `auditcore_geo==0.2.0` erst nach einem Release, das 0.2.0 enthält.
