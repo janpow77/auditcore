@@ -1,0 +1,49 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Risikostufen",
+   "text": "Die Stufen sind Softwareregeln ohne belegte fachliche Quelle; „Former PEP“ gilt für jeden PEP ohne laufende Position, unabhängig von der Frist nach § 1 Abs. 12 ff. GwG."
+  }
+ ],
+ "id": "flowsearch.pep_risk",
+ "kind": "match_api",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "active_high_above": 0.9,
+  "labels": {
+   "active": "PEP (aktiv)",
+   "former": "Former PEP",
+   "rca": "RCA (Relative/Close Associate)",
+   "unknown": "Unknown"
+  },
+  "local_threshold": 0.7,
+  "low_below": 0.8,
+  "medium_band": [
+   0.7,
+   0.85
+  ],
+  "senior_high_above": 0.85,
+  "senior_keywords": [
+   "minister",
+   "präsident",
+   "senator",
+   "direktor"
+  ]
+ },
+ "source": {
+  "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+  "git_blob": "2337f4ce14804c4102e9cbf46868e5413e9a4957",
+  "path": "backend/app/services/api_clients/pep_screening.py",
+  "repository": "janpow77/flowsearch",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_determine_pep_type",
+   "_assess_risk",
+   "_categorize_pep"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

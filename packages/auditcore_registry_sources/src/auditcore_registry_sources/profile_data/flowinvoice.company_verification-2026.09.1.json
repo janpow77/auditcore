@@ -1,0 +1,96 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Gewichte",
+   "text": "Abzüge 0,3/0,1/0,05 und „verifiziert = kein kritischer Indikator“ sind Softwareregeln ohne belegte fachliche Quelle."
+  }
+ ],
+ "id": "flowinvoice.company_verification",
+ "kind": "company_verification",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "critical": [
+   "INVALID_VAT_ID",
+   "COMPANY_DISSOLVED"
+  ],
+  "deduction": {
+   "critical": 0.3,
+   "other": 0.05,
+   "warning": 0.1
+  },
+  "legal_forms": [
+   "gmbh",
+   "ag",
+   "kg",
+   "ohg",
+   "ug",
+   "e.k.",
+   "gbr",
+   "gmbh & co. kg",
+   "gmbh & co kg",
+   "& co. kg",
+   "& co kg",
+   "limited",
+   "ltd",
+   "inc",
+   "corp",
+   "llc"
+  ],
+  "name_match": {
+   "leading_words": 3,
+   "threshold": 0.7
+  },
+  "rate_limits": {
+   "offeneregister": [
+    100,
+    3600
+   ],
+   "vies": [
+    100,
+    3600
+   ]
+  },
+  "register_countries": [
+   "DE"
+  ],
+  "register_endpoint": "https://db.offeneregister.de/openregister",
+  "register_query": {
+   "limit": 5,
+   "max_length": 100
+  },
+  "register_status": {
+   "active": [
+    "registered"
+   ],
+   "dissolved": [
+    "dissolved",
+    "liquidation"
+   ]
+  },
+  "score_digits": 2,
+  "vies_endpoint": "https://ec.europa.eu/taxation_customs/vies/services/checkVatService",
+  "warning": [
+   "VAT_NAME_MISMATCH",
+   "COMPANY_INACTIVE",
+   "NOT_IN_REGISTER"
+  ]
+ },
+ "source": {
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "a34ee1a077afbb1173210ad08bcee91db55498a0",
+  "path": "backend/app/services/fraud_detection/company_verifier.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "CompanyVerifier.verify_company",
+   "validate_vat_id",
+   "search_offene_register",
+   "_names_match",
+   "_normalize_company_name"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

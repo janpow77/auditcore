@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_registry_sources"
+version = "0.1.0"
+description = "Register, sanctions and PEP source adapters, list parsers and screening profiles"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["auditcore_harvest==0.1.0", "auditcore_entity_matching==0.2.0"]
+
+[project.optional-dependencies]
+fuzzy = ["rapidfuzz>=3.10.1,<4"]
+xml = ["defusedxml>=0.7.1"]
+html = ["beautifulsoup4>=4.11.2,<5"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "rapidfuzz==3.10.1",
+    "defusedxml>=0.7.1",
+    "beautifulsoup4>=4.11.2,<5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_registry_sources = ["py.typed", "provenance.json", "profile_data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+# Keine feste python_version: rapidfuzz zieht numpy-Stubs nach (siehe entity_matching).
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["rapidfuzz.*", "defusedxml.*", "bs4.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]
