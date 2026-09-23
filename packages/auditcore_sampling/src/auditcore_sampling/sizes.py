@@ -10,8 +10,11 @@ results; neither is chosen silently:
 * ``portal.mus_poisson`` — ``audit-portal@d8eefa4`` formula
   ``n = ceil(RF·V / max(M - V·r, M/2))`` with Poisson reliability factors.
 
-Which method an application uses is a documented human decision
-(``HUMAN_DECISION_REQUIRED``, see ``docs/behavior-changes.md``).
+Decision of the rights holder and user on 2026-09-23 ("mus 30"):
+``portal.mus_poisson`` is the authoritative MUS sample-size method
+(``RECOMMENDED_MUS_METHOD``, ``recommended_mus_size``). ``flowstat.mus_z_attribute``
+stays available as a named, superseded legacy method for replay and
+migration; existing named functions keep their behavior.
 """
 
 from __future__ import annotations
@@ -47,9 +50,10 @@ MUS_Z_ATTRIBUTE = Method(
     f"janpow77/flowstat@{FLOWSTAT_COMMIT}:backend/app/services/sampling_service.py"
     ":_calculate_mus_sample_size",
     MappingProxyType({0.90: 1.645, 0.95: 1.96, 0.99: 2.576}),
-    "LEGACY_CHARACTERIZED",
+    "SUPERSEDED",
     "Nenner M² + z²(1-r): bei üblicher Wesentlichkeit Stichprobenumfang 1. "
-    "In audit-portal als mathematisch falsch ersetzt. HUMAN_DECISION_REQUIRED.",
+    "Fachlich abgelöst durch portal.mus_poisson (Nutzerentscheidung vom 23.09.2026); "
+    "nur noch für Nachvollzug und Migration.",
 )
 MUS_POISSON = Method(
     "portal.mus_poisson",
@@ -57,7 +61,7 @@ MUS_POISSON = Method(
     f"janpow77/audit-portal@{PORTAL_COMMIT}:backend/app/modules/flowstat/services/"
     "sampling_service.py:_calculate_mus_sample_size",
     MappingProxyType({0.50: 0.70, 0.80: 1.61, 0.90: 2.31, 0.95: 3.00, 0.97: 3.51, 0.99: 4.61}),
-    "LEGACY_CHARACTERIZED",
+    "RECOMMENDED",
     "Poisson-Zuverlässigkeitsfaktoren; die Quelle nennt EU-KOM Guidance Note "
     "'Sampling for Audit' / ISA 530 Annex II (fachlich nicht durch diese Bibliothek geprüft).",
 )
@@ -79,6 +83,22 @@ SRS_PORTAL = Method(
     "LEGACY_CHARACTERIZED",
     "Gleiche Formel, größere z-Tabelle (50/80 %).",
 )
+#: Authoritative MUS method, decided by the user on 2026-09-23.
+RECOMMENDED_MUS_METHOD = MUS_POISSON.id
+MUS_DECISION = MappingProxyType(
+    {
+        "method": MUS_POISSON.id,
+        "superseded": MUS_Z_ATTRIBUTE.id,
+        "decided_on": "2026-09-23",
+        "decided_by": "Rechteinhaber/Nutzer (janpow77)",
+        "statement": "mus 30",
+        "reference_case": (
+            "475.478,94 € Grundgesamtheit, 50.000 € Wesentlichkeit, 0,5 %, 95 % → n = 30 "
+            "(aufgezeichneter Fall portal-run_mus_standard-uniform100-50000.0-0)"
+        ),
+    }
+)
+
 METHODS = MappingProxyType(
     {m.id: m for m in (MUS_Z_ATTRIBUTE, MUS_POISSON, SRS_FLOWSTAT, SRS_PORTAL)}
 )
@@ -229,4 +249,26 @@ def srs_size(
             }
         ),
         warnings,
+    )
+
+
+def recommended_mus_method() -> Method:
+    """The decided MUS method (``portal.mus_poisson``), see ``MUS_DECISION``."""
+    return METHODS[RECOMMENDED_MUS_METHOD]
+
+
+def recommended_mus_size(
+    *,
+    population_value: float,
+    materiality: float,
+    expected_error_rate: float,
+    confidence_level: float,
+) -> SizePlan:
+    """MUS sample size with the decided method; same contract as :func:`mus_size`."""
+    return mus_size(
+        RECOMMENDED_MUS_METHOD,
+        population_value=population_value,
+        materiality=materiality,
+        expected_error_rate=expected_error_rate,
+        confidence_level=confidence_level,
     )

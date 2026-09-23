@@ -75,7 +75,14 @@
     "NumPy-Zufallsziehung (bleibt beim Consumer)"
   ],
   "human_decisions": [
-    "Wahl der MUS-Methode (flowstat.mus_z_attribute vs. portal.mus_poisson)"
+    {
+      "topic": "Wahl der MUS-Methode",
+      "status": "DECIDED",
+      "decided_on": "2026-09-23",
+      "decided_by": "Nutzer/Rechteinhaber (janpow77)",
+      "statement": "mus 30",
+      "result": "portal.mus_poisson maßgeblich; flowstat.mus_z_attribute SUPERSEDED (bleibt für Replay)"
+    }
   ],
   "behavior_changes": "docs/behavior-changes.md"
 }

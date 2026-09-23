@@ -11,7 +11,7 @@ und die Aufteilung der geschichteten SRS. Die Zufallsziehung selbst
 
 | ID | Original | Neuer Vertrag | Begründung |
 |---|---|---|---|
-| SA-C01 | flowstat: `n = ceil(V·z²(1-r) / (M² + z²(1-r)))` – bei 515.000 € und Wesentlichkeit 50.000 € ist n = 1. audit-portal ersetzt das durch Poisson-Faktoren (n = 30) und nennt die alte Formel „mathematisch falsch“. | Beide als benannte Methoden `flowstat.mus_z_attribute` und `portal.mus_poisson`; keine Standardmethode; Warnhinweis bei der flowstat-Formel. | **HUMAN_DECISION_REQUIRED**: Welche Methode gilt, entscheidet die Fachseite. |
+| SA-C01 | flowstat: `n = ceil(V·z²(1-r) / (M² + z²(1-r)))` – im aufgezeichneten Fall (475.478,94 €, Wesentlichkeit 50.000 €, 0,5 %, 95 %) ist n = 1. audit-portal ersetzt das durch Poisson-Faktoren (n = 30) und nennt die alte Formel „mathematisch falsch“. | Beide als benannte Methoden `flowstat.mus_z_attribute` und `portal.mus_poisson`; keine Standardmethode; Warnhinweis bei der flowstat-Formel. | **Entschieden am 23.09.2026** durch den Nutzer („mus 30“): `portal.mus_poisson` ist maßgeblich (`recommended_mus_size`); `flowstat.mus_z_attribute` bleibt als abgelöste Legacy-Methode (`SUPERSEDED`). |
 | SA-C02 | Unbekannte Konfidenzniveaus werden still als 95 % (z = 1,96) gerechnet. | Nur in der Methode definierte Niveaus; sonst Fehler. | Keine stillen Ersatzwerte. |
 | SA-C03 | Negative Grundgesamtheit, Fehlerrate ≥ 1, Wesentlichkeit 0 ergeben Fehler, negative oder unsinnige Umfänge (flowstat). | Validierung der Eingaben in beiden Methoden. | Definierter Wertebereich. |
 | SA-C04 | Zufall aus globalem NumPy-Zustand (flowstat ohne Seed; portal optional). | Zufall nur über ausdrücklich übergebenes `random.Random`; mit Seed reproduzierbar. | F-17 Reproduzierbarkeit. |

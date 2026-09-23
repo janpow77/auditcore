@@ -48,7 +48,7 @@ def test_sa_c01_method_conflict_is_visible() -> None:
     )
     z = mus_size("flowstat.mus_z_attribute", **kwargs)
     poisson = mus_size("portal.mus_poisson", **kwargs)
-    assert z.sample_size == 1 and "HUMAN_DECISION_REQUIRED" in z.warnings[0]
+    assert z.sample_size == 1 and "abgelöst" in z.warnings[0]
     assert poisson.sample_size == math.ceil(3.0 * 515_000.0 / (50_000.0 - 515_000.0 * 0.005))
     assert (z.sample_size, z.interval) == legacy.flowstat_mus_size(**kwargs)
     assert (poisson.sample_size, poisson.interval) == legacy.portal_mus_size(**kwargs)
@@ -152,3 +152,50 @@ def test_plans_carry_method_inputs_and_library() -> None:
     ).to_dict()
     assert data["library"] == "auditcore_sampling 0.1.0"
     assert data["method"] == "portal.mus_poisson" and data["inputs"]["factor"] == 2.31
+
+
+def test_decision_2026_09_23_poisson_is_recommended_flowstat_superseded() -> None:
+    from auditcore_sampling import (
+        MUS_DECISION,
+        MUS_POISSON,
+        MUS_Z_ATTRIBUTE,
+        RECOMMENDED_MUS_METHOD,
+        recommended_mus_method,
+        recommended_mus_size,
+    )
+
+    assert RECOMMENDED_MUS_METHOD == "portal.mus_poisson" == recommended_mus_method().id
+    assert MUS_POISSON.status == "RECOMMENDED" and MUS_Z_ATTRIBUTE.status == "SUPERSEDED"
+    assert MUS_DECISION["decided_on"] == "2026-09-23" and MUS_DECISION["statement"] == "mus 30"
+    plan = recommended_mus_size(
+        population_value=475_478.94,
+        materiality=50_000.0,
+        expected_error_rate=0.005,
+        confidence_level=0.95,
+    )
+    assert plan.sample_size == 30 and plan.method == "portal.mus_poisson"
+    larger = recommended_mus_size(
+        population_value=515_000.0,
+        materiality=50_000.0,
+        expected_error_rate=0.005,
+        confidence_level=0.95,
+    )
+    assert larger.sample_size == 33
+    assert plan == mus_size(
+        "portal.mus_poisson",
+        population_value=475_478.94,
+        materiality=50_000.0,
+        expected_error_rate=0.005,
+        confidence_level=0.95,
+    )
+    # the superseded method stays callable and unchanged for replay
+    assert (
+        mus_size(
+            "flowstat.mus_z_attribute",
+            population_value=515_000.0,
+            materiality=50_000.0,
+            expected_error_rate=0.005,
+            confidence_level=0.95,
+        ).sample_size
+        == 1
+    )
