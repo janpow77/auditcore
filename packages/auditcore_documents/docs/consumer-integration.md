@@ -104,8 +104,22 @@ Produktionsdatenbank), Wheel `auditcore_documents-0.1.0` per
 
 Verhaltensunterschiede für die Anwendung: Dokumente mit DTD werden mit
 `CompareError` abgelehnt (DC-C02, ECOHESION prüft das bereits beim Upload);
-ohne rapidfuzz kein stiller Rückfall (DC-C01). Das Profil bleibt `LEGACY`;
-die Übernahme von `CORRECTED` (DC-C04) ist HUMAN_DECISION_REQUIRED.
+ohne rapidfuzz kein stiller Rückfall (DC-C01). Die Umstellung beginnt mit
+`LEGACY` (bitgleich zum bisherigen Verhalten); danach wechselt audit_designer
+auf das entschiedene Profil `RECOMMENDED` (= `CORRECTED`, D1/D2 vom 2026-09-23).
+
+## flowinvoice (nach Release v0.3.0)
+
+Die Pipeline-Umstellung steht in `docs/pipeline.md` (Abschnitt „Consumer
+flowinvoice“). Entschiedene Umstellung (S2, 2026-09-23, Nutzerzitat „alle
+empfehlungen“): Mit dem Wechsel auf `auditcore_documents` legt flowinvoice eine
+Alembic-Migration an, die `pipeline_audit_events` (bisher nur über
+`create_all`) anlegt und mit einem WORM-Trigger wie Migration 011 für
+`audit_events` gegen UPDATE und DELETE sichert. Löschungen nach Ablauf der
+Aufbewahrungsfrist `audit_events_days` (D7) laufen ausschließlich über den
+`ArtifactRetentionStore` der Anwendung mit einer dafür vorgesehenen,
+protokollierten Ausnahme des Triggers. Dieser Schritt ist beim Consumer
+umzusetzen; in diesem Paket wird nichts an flowinvoice geändert.
 
 ## Verhältnis zu auditdatabase `packages/docformatter`
 
