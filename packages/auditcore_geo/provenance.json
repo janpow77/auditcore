@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_geo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "classification": "Kleiner Geokern (H4) mit Nominatim-Adapter auf auditcore_harvest als Extra [geocoder]",
   "multi_use_evidence": {
     "haversine": "6 Implementierungen in osint, audit_designer (3), flowsearch (2)",
@@ -258,6 +258,22 @@
       "id": "D5",
       "subject": "öffentliches Nominatim",
       "decision": "≤ 1 Anfrage/s (Zeitplan 15 s), ≤ 1 000 Anfragen je Tag und Consumer, cachen; darüber eigene Instanz oder Import (GEO-C15)"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "Nutzerentscheidung „c3. ja“",
+      "id": "D6",
+      "subject": "zusammengefallene Ringe (10 von 1 051 hessischen Natura-2000-Gebieten fielen mit 0.1.0 still heraus)",
+      "decision": "explizit behandeln statt verwerfen: Außenringe als Punkt-/Linienobjekt mit Abstand, zusammengefallene Löcher entfallen, Hinweise im Ergebnis; strikt=True weist ab (GEO-C16); Version 0.2.0"
     }
-  ]
+  ],
+  "characterization_entartete_ringe": {
+    "fixture": "tests/fixtures/entartet_observed.json",
+    "tool": "tools/capture_entartet.py",
+    "geometries": 12,
+    "points": 168,
+    "executed": "audit_designer gis/company und flowsearch _get_geometry_center (gleiche Blobs wie characterization), auditcore_geo 0.1.0 aus Tag v0.3.0, Referenz shapely 2.1.2/pyproj 3.8.0 (EPSG:25832)",
+    "design_reference": "Semantik übernommen aus dem Workaround janpow77/audit_designer PR #382, backend/app/core/shared/geo_flaeche.py (Commit 82e1ca5); kein Code übernommen"
+  }
 }

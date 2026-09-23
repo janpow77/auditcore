@@ -67,4 +67,29 @@ bitte“); entschieden hat der koordinierende Agent:
 |---|---|---|---|
 | GEO-C15 | Keine Tagesgrenze; designer ohne Takt, flowworkshop/osint 1,1 s ohne Obergrenze. | Tagesgrenze 1 000 Anfragen je Consumer am öffentlichen Endpunkt, vor dem Lauf geprüft. | Entscheidung D5; OSMF: keine intensive Nutzung. |
 
+## Zusammengefallene Ringe (0.2.0, Nutzerentscheidung „c3. ja“ vom 23.09.2026)
+
+Anlass: Bei der Umstellung von audit_designer (PR janpow77/audit_designer#382)
+verwarf `flaeche_aus_geojson` 0.1.0 jede Geometrie mit einem Ring aus weniger
+als drei verschiedenen Punkten als Ganzes. Im hessischen Natura-2000-Bestand
+betrifft das 15 von 1 051 Gebieten; 10 davon bestehen nur noch aus solchen
+Ringen und fielen damit still aus der Prüfung (kleine Gebiete oder Teilflächen,
+die das Runden auf vier Nachkommastellen – osint `ring_vereinfachen` rundet
+nach der Punktzahlprüfung – auf einen Punkt oder eine Linie zusammenzieht).
+Der designer hat dafür `backend/app/core/shared/geo_flaeche.py` (Commit
+`82e1ca5`) geschrieben; dessen Semantik ist übernommen, der Code nicht.
+
+Tatsächlich ausgeführt mit `tools/capture_entartet.py` (12 synthetische
+Geometrien × 14 Punkte = 168 Fälle; Originale aus audit_designer@`1254591` und
+flowsearch@`10cb2a3` mit denselben Blobs wie oben, `auditcore_geo` 0.1.0 aus
+Tag `v0.3.0`, Referenz shapely 2.1.2/pyproj 3.8.0 in EPSG:25832):
+
+| ID | Original / 0.1.0 (beobachtet) | Bibliothek 0.2.0 | Begründung |
+|---|---|---|---|
+| GEO-C16 | designer gis `_designer_ringe` behält Ringe ab drei **Positionen** (auch `[A, A, A]`) und rechnet den Abstand zum zusammengefallenen Ring; Ringe mit ein oder zwei Positionen fallen still weg (Gebiet → `None`). company rechnet zum nächsten Stützpunkt. **0.1.0**: `GeometrieFehler` für die ganze Fläche, sobald ein Ring (auch ein Loch oder eine einzelne Teilfläche) weniger als drei verschiedene Punkte hat; kollineare Ringe mit drei verschiedenen Punkten nahm 0.1.0 dagegen still als Polygon ohne Fläche an. | Ein Ring ist **zusammengefallen**, wenn alle Punkte gleich sind (`Entartung.PUNKT`) oder auf einer Geraden liegen (`Entartung.LINIE`, Abweichung ≤ 1e-12 der Ausdehnung). Zusammengefallener **Außenring**: bleibt als Objekt ohne Fläche erhalten; `lage` → `RAND` genau darauf (sonst `AUSSEN`), `randabstand_m`/`randbefund`/`flaechen_im_umkreis`/`naechster_stuetzpunkt_m` rechnen den Abstand zu ihm; seine Löcher entfallen. Zusammengefallenes **Loch**: entfällt (Fläche 0, Punkt darauf `INNEN`). Gültige Teilflächen bleiben Fläche. Jeder Fall steht als `EntarteterRing` in `Flaeche.entartet` und als Text in `Flaeche.hinweise` („… (GEO-C16).“); `randbefund` nennt den maßgeblichen Ring. `flaechenschwerpunkt`: echte Teilflächen bestimmen ihn; ohne sie Linien längengewichtet, sonst Punktmittel (= shapely). `flaeche_aus_ringen`/`flaeche_aus_gpkg` (GeoPackage, projizierte Daten nur mit Umrechnung) wenden dieselbe Regel an. `strikt=True` weist jeden zusammengefallenen Ring ab (auch kollineare). Unlesbares (keine Zahlen, nicht endlich, leerer Ring, fehlende Ringliste) bleibt `GeometrieFehler` (GEO-C06). | Ein Vorhaben 50 m neben einem zu einem Punkt gerundeten Schutzgebiet muss gemeldet werden; die Behandlung ist sichtbar statt still. Lage gegen shapely in 168/168 Fällen gleich; Abstand zur Referenz ≤ 0,5 %; wo designer gis Ringe ab drei Positionen behielt (9 Geometrien), abstandsgleich (rel. 1e-9). |
+
+Legacy-Replay (`legacy.*`, `tests/fixtures/legacy_observed.json`) ist
+unverändert. Entscheidung D6 (Nutzer, 23.09.2026, „c3. ja“): umsetzen als
+0.2.0; 0.1.0 (Release v0.3.0) bleibt unverändert.
+
 Keine offenen HUMAN_DECISION_REQUIRED für dieses Paket.
