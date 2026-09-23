@@ -1,0 +1,714 @@
+{
+ "assessment": {
+  "cap": null,
+  "default_stage": "keine_pruefung",
+  "detail_template": null,
+  "kind": "points_stages",
+  "points_override": "forbidden",
+  "source_version": "WIBANK-RBVK V1.21 (Profildatei)",
+  "stages": [
+   {
+    "min": 19,
+    "stage": "vollpruefung"
+   },
+   {
+    "min": 8,
+    "stage": "teilpruefung"
+   }
+  ]
+ },
+ "id": "flowinvoice.rbvk_wibank",
+ "kind": "points_score",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten der Verwaltungskontrolle (VerwK); Punkte und Stufen ausschließlich dieses Profils, keine Vereinheitlichung mit anderen Scores. Nach Profildatei RBVK WIBANK V1.21 korrigiert (Entscheidung K11 vom 23.09.2026).",
+ "open_decisions": [
+  "Eingaben: offene_auflagen_anzahl (Zahl), externe_kuerzung (Prüfungsfeststellungen KOM/ERH/PB), vorherige_verwk_quote (eigene frühere Verwaltungskontrollen), vorherige_kuerzungsgruende (Codes wie '1.3', '13.1', auch aus eigenen früheren Mittelabrufen – prior_familie korrekt setzen). Aufbereitung beim Consumer.",
+  "K8/K9 und K17/K18 wie im Code (1,5–5 Mio bzw. 25–50 % ohne Überlappung)."
+ ],
+ "output": {},
+ "rules": [
+  {
+   "code": "K1",
+   "kind": "truthy_all",
+   "label": "Verbundvorhaben",
+   "origin": {
+    "lines": "237",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "verbundvorhaben"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K2",
+   "kind": "text_in_set",
+   "label": "FPG 1008/1009/1010",
+   "origin": {
+    "lines": "238",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
+   },
+   "params": {
+    "field": "fpg",
+    "missing_text": "",
+    "values": [
+     "1008",
+     "1009",
+     "1010"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K3",
+   "kind": "truthy_all",
+   "label": "Bau",
+   "origin": {
+    "lines": "239",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "hat_bau"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K4",
+   "kind": "truthy_all",
+   "label": "Abschreibung",
+   "origin": {
+    "lines": "240",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "hat_absch"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 2
+  },
+  {
+   "code": "K5",
+   "kind": "truthy_all",
+   "label": "Sachleistung",
+   "origin": {
+    "lines": "241",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "hat_sachleist"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K7",
+   "kind": "truthy_all",
+   "label": "Beihilfefrei und Trennungsrechnung",
+   "origin": {
+    "lines": "242",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "beihilfefrei",
+     "trennungsrechnung_erforderlich"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K8",
+   "kind": "number_range",
+   "label": "Projektbudget 1,5 Mio – 5 Mio",
+   "origin": {
+    "lines": "243-244",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
+   },
+   "params": {
+    "field": "projekt_budget",
+    "lower": 1500000,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 5000000,
+    "upper_inclusive": true
+   },
+   "points": 1
+  },
+  {
+   "code": "K9",
+   "kind": "number_range",
+   "label": "Projektbudget > 5 Mio",
+   "origin": {
+    "lines": "243, 245",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
+   },
+   "params": {
+    "field": "projekt_budget",
+    "lower": 5000000,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 1
+  },
+  {
+   "code": "K10",
+   "kind": "number_range",
+   "label": "Bewilligte offene Auflagen (1. Auflage)",
+   "origin": {
+    "lines": "nr 10",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "offene_auflagen_anzahl",
+    "lower": 1,
+    "lower_inclusive": true,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 1
+  },
+  {
+   "code": "K10b",
+   "kind": "number_range",
+   "label": "Bewilligte offene Auflagen (2. Auflage, score_max 2)",
+   "origin": {
+    "lines": "nr 10",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "offene_auflagen_anzahl",
+    "lower": 2,
+    "lower_inclusive": true,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 1
+  },
+  {
+   "code": "K11",
+   "kind": "truthy_all",
+   "label": "Kein früheres Vorhaben des Begünstigten",
+   "origin": {
+    "lines": "247",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "erstes_vorhaben"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 3
+  },
+  {
+   "code": "K12",
+   "kind": "number_range",
+   "label": "Kürzung aufgrund von Feststellungen der KOM, Rechnungshöfe oder Prüfbehörde",
+   "origin": {
+    "lines": "nr 12",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "externe_kuerzung",
+    "lower": 0,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 2
+  },
+  {
+   "code": "K13",
+   "kind": "truthy_all",
+   "label": "Öffentlich-rechtlich",
+   "origin": {
+    "lines": "249",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "oeffentlich_rechtlich"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": -1
+  },
+  {
+   "code": "K14",
+   "kind": "truthy_all",
+   "label": "Öffentlicher Auftraggeber",
+   "origin": {
+    "lines": "250",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "oeffentlicher_auftraggeber"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 2
+  },
+  {
+   "code": "K16",
+   "kind": "number_range",
+   "label": "Schlechte Ergebnisse vorheriger Verwaltungskontrollen",
+   "origin": {
+    "lines": "nr 16",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_verwk_quote",
+    "lower": 0,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 2
+  },
+  {
+   "code": "K17",
+   "kind": "number_range",
+   "label": "Historische Differenz über 25 Prozent",
+   "origin": {
+    "lines": "nr 17",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_verwk_quote",
+    "lower": 25,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 50,
+    "upper_inclusive": true
+   },
+   "points": 1
+  },
+  {
+   "code": "K18",
+   "kind": "number_range",
+   "label": "Historische Differenz über 50 Prozent",
+   "origin": {
+    "lines": "nr 18",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_verwk_quote",
+    "lower": 50,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 1
+  },
+  {
+   "code": "K19",
+   "kind": "number_range",
+   "label": "Historische Differenz unter 5 Prozent",
+   "origin": {
+    "lines": "nr 19",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_verwk_quote",
+    "lower": 0,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 5,
+    "upper_inclusive": false
+   },
+   "points": -2
+  },
+  {
+   "code": "K20",
+   "kind": "set_overlap",
+   "label": "Vorherige Kürzungsgründe 1.1 bis 1.24",
+   "origin": {
+    "lines": "nr 20",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_kuerzungsgruende",
+    "mode": "any",
+    "values": [
+     "1.1",
+     "1.2",
+     "1.3",
+     "1.4",
+     "1.5",
+     "1.6",
+     "1.7",
+     "1.8",
+     "1.9",
+     "1.10",
+     "1.11",
+     "1.12",
+     "1.13",
+     "1.14",
+     "1.15",
+     "1.16",
+     "1.17",
+     "1.18",
+     "1.19",
+     "1.20",
+     "1.21",
+     "1.22",
+     "1.23",
+     "1.24"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K21",
+   "kind": "set_overlap",
+   "label": "Vorherige Kürzungsgründe 5.1 oder 5.2",
+   "origin": {
+    "lines": "nr 21",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_kuerzungsgruende",
+    "mode": "any",
+    "values": [
+     "5.1",
+     "5.2"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K22",
+   "kind": "set_overlap",
+   "label": "Vorherige Kürzungsgründe 8.1–8.3, 8.8 oder 13.1",
+   "origin": {
+    "lines": "nr 22",
+    "path": "backend/app/verwk/data/rbvk_wibank.json",
+    "symbol": "scoring.kriterien"
+   },
+   "params": {
+    "field": "vorherige_kuerzungsgruende",
+    "mode": "any",
+    "values": [
+     "8.1",
+     "8.2",
+     "8.3",
+     "8.8",
+     "13.1"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K23",
+   "kind": "truthy_all",
+   "label": "Vergabe vorhanden",
+   "origin": {
+    "lines": "258",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "hat_vergabe"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K24",
+   "kind": "truthy_all",
+   "label": "EU-weite Vergabe",
+   "origin": {
+    "lines": "259",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "eu_vergaberelevant"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K25",
+   "kind": "number_range",
+   "label": "Direkte Belege > 80",
+   "origin": {
+    "lines": "260",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
+   },
+   "params": {
+    "field": "n_direct",
+    "lower": 80,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 1
+  },
+  {
+   "code": "K26",
+   "kind": "truthy_all",
+   "label": "Sachkosten",
+   "origin": {
+    "lines": "261",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
+   },
+   "params": {
+    "fields": [
+     "hat_sach"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
+   },
+   "points": 1
+  },
+  {
+   "code": "K28",
+   "kind": "number_range",
+   "label": "Abrufanteil > 0,5",
+   "origin": {
+    "lines": "262",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
+   },
+   "params": {
+    "field": "abruf_anteil",
+    "lower": 0.5,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 2
+  }
+ ],
+ "schema": "auditcore_risk.profile/1",
+ "source": {
+  "also_present_in": {
+   "janpow77/riskanalysis@b5c523b": {
+    "backend/app/pipeline/exante_score.py": "bc1725b5fdbca689275e9890e707eb4d90953023",
+    "backend/app/pipeline/rbvk_wibank_scorer.py": "6ebd3a2ce56db09228ea770fe681089dc0c4391f",
+    "difference": "Importpfade/Closure bzw. eine ungenutzte Zeile; fachlich gleich"
+   }
+  },
+  "characterization": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "decision": {
+   "decided_on": "2026-09-23",
+   "decisions": [
+    "K11"
+   ],
+   "effect": "K10 je offene Auflage bis 2 Punkte, K12 externe Prüfungsfeststellungen getrennt von K16 Verwaltungskontrolle, K20–K22 nach Kürzungsgrund-Codes.",
+   "quote": "alle empfehlungen"
+  },
+  "derived_from": {
+   "profile": "flowinvoice.rbvk_wibank",
+   "version": "fb2d18568d2e"
+  },
+  "git_blob": "24e04c04d8d98ae033c5d78508a29d4c900be4d1",
+  "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+  "profile_file": {
+   "git_blob": "f1434e6eeaa6b257cc3b6ed11623cb118af3ffd9",
+   "path": "backend/app/verwk/data/rbvk_wibank.json",
+   "stand": "2025-01-07",
+   "version": "1.21"
+  },
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "score_mittelabrufe"
+  ]
+ },
+ "status": "APPROVED",
+ "summary": {
+  "format": "none"
+ },
+ "version": "2026.09.2"
+}

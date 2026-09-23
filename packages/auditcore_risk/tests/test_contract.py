@@ -100,11 +100,11 @@ def test_rk_c03_name_matching_requires_rapidfuzz(monkeypatch: pytest.MonkeyPatch
 def test_rk_c04_year_bound_profile_requires_procurement(monkeypatch: pytest.MonkeyPatch) -> None:
     import importlib.util
 
-    import auditcore_risk.rules as rules
+    import auditcore_risk.base as risk_base
 
     real = importlib.util.find_spec
     monkeypatch.setattr(
-        rules, "find_spec", lambda name: None if name == "auditcore_procurement" else real(name)
+        risk_base, "find_spec", lambda name: None if name == "auditcore_procurement" else real(name)
     )
     year = load_profile("riskanalysis.year_bound", "2026.09.1")
     with pytest.raises(DependencyError):

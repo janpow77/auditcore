@@ -30,10 +30,11 @@ Mindestumfang 50, z-Test je Ziffer mit 2,576, stille Ausschlüsse, Texte wie
 |---|---|---|---|
 | ST-C07 | `±inf` führt zu einer Endlosschleife. | `ValueError`. | Kein hängender Aufruf. |
 
-HUMAN_DECISION_REQUIRED: Ob die Betrugsprüfung in flowinvoice/audit-portal auf
-`benford_test` (exakte Erwartungswerte, echter p-Wert, ausdrückliches α)
-umgestellt wird; das ändert Ergebnisse (Grenzfall χ² zwischen 15,507 und 15,51:
-„anomal“ bei ausgewiesenem p = 0,08).
+DECIDED (23.09.2026, „alle empfehlungen“, K10): Die Betrugsprüfung wird auf
+`benford_test` umgestellt – `recommended_flowinvoice_benford(values)` ruft
+`benford_test(values, digits=1, significance_level=0.05)` auf (exakte
+Erwartungswerte, echter p-Wert). `legacy_flowinvoice_benford` bleibt zur
+Reproduktion.
 
 Nicht übernommen: die abweichende Implementierung in `audit-portal`
 (`audit_tests_service.benford_test`); sie wäre ein eigenes, getrennt zu
