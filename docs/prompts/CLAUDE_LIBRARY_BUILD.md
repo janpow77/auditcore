@@ -13,6 +13,8 @@ Lies zuerst vollständig:
 - `docs/architecture/IMPLEMENTATION_PLAN.md`
 - `docs/architecture/DOMAIN_PACKAGE_PLAN.md`
 - `docs/architecture/REPOSITORY_PACKAGE_COVERAGE.md`
+- `docs/architecture/FUNCTION_OVERVIEW.md` und die dort verlinkten Detailberichte
+- `docs/architecture/FUNCTIONS_REGULIERUNG_MIGRATION.md`
 - die aktuellen Berichte unter `docs/reports/`
 - die anwendbaren `AGENTS.md`-Dateien.
 
@@ -31,6 +33,18 @@ Bestehende Bibliotheken `auditcore_dummygenerator`, `auditcore_invoicegenerator`
 und `auditcore_reporting` wiederverwenden. Prüfe, welche PDF-/Excel-Erweiterungen
 bereits implementiert oder noch in Arbeit sind. Bestehende Releases sind
 unveränderlich; Änderungen benötigen neue Versionen.
+
+Erster konkreter Consumer nach Herstellung der benötigten Bibliotheken ist
+`janpow77/regulierung`. Richte die Priorisierung an dessen belegten Verträgen aus:
+VVT/DSFA einschließlich Berechnung und Lebenszyklus, Preisberechnung, Harvest-
+Adapter sowie tatsächlich benötigte Dokument-/Reportingfunktionen. Nutze den
+konkreten Refactoring-/Debianplan. Installiere versionierte Pakete über die
+Requirements der Anwendung und stelle echte Imports um; keine bloße Parallelkopie.
+Danach Regression/Integration, Policy-Reevaluation und ein natives Debian-Paket
+mit vorgebautem Frontend, offline verfügbarer Runtime und getesteten Installations-,
+Upgrade-, Restore- und Entfernungspfaden. Der heutige Compose-Updater ist kein
+Nachweis einer bereits vorhandenen nativen App-Paketierung. Seine Signatur- und
+Sicherungsgarantien erhalten. `READY_FOR_DEPLOYMENT` erst mit tatsächlichen Belegen.
 
 Wenn ein anderer Agent arbeitet oder uncommittierte Änderungen vorhanden sind,
 überschreibe sie nicht. Verwende einen eigenen Branch/Worktree auf einem
