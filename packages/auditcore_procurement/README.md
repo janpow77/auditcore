@@ -13,8 +13,8 @@ versioniertes Precheck-Profil. Der Kern benötigt nur die Standardbibliothek.
 | `sources` | Harvest-Adapter `procurement.ted_awards` und `procurement.had_search` auf `auditcore_harvest==0.1.0` |
 
 ```bash
-pip install auditcore_procurement==0.1.0                     # reiner Kern
-pip install 'auditcore_procurement[sources,html]==0.1.0'      # plus Online-Abruf
+pip install auditcore_procurement==0.2.0                     # reiner Kern
+pip install 'auditcore_procurement[sources,html]==0.2.0'      # plus Online-Abruf
 ```
 
 ```python
@@ -23,7 +23,7 @@ from decimal import Decimal
 from auditcore_procurement import load_profile, normalize_notice, run_prechecks
 
 datensatz = normalize_notice({"publication-number": "1-2024", "winner-name": "Beispiel GmbH"})
-profil = load_profile("procurement.hvtg", "2026.09.2")
+profil = load_profile("procurement.hvtg", "2026.09.3")
 bericht = run_prechecks(profil, Decimal("50000"), None, None, "Liefer-/Dienstleistungen",
                         "Oeffentliche Ausschreibung", "BELOW_EU", [], mode="strict",
                         reference_date=date(2026, 3, 1), authority_type="sub_central")
@@ -49,10 +49,13 @@ bericht = run_prechecks(profil, Decimal("50000"), None, None, "Liefer-/Dienstlei
   `mode="strict"` korrigiert P-C01…P-C04 und P-C10…P-C12 und nennt Profil-ID,
   Version, Fingerprint und den angewandten EU-Schwellenwert samt Fundstelle.
   Ein Precheck-Ergebnis ist keine Prüfentscheidung.
-- **EU-Schwellenwerte je Zeitraum** (Profil `procurement.hvtg 2026.09.2`):
-  2024–2025 (VO (EU) 2023/2495) und 2026–2027 (VO (EU) 2025/2152), Auswahl über
-  Datum der Maßnahme/Bekanntmachung oder Jahr; fehlt ein Zeitraum, lautet der
-  Befund `REVIEW_REQUIRED` (`eu_period` wirft `ThresholdUnavailable`).
+- **EU-Schwellenwerte je Zeitraum** (Profil `procurement.hvtg 2026.09.3`):
+  2014–2027 in Zweijahreszeiträumen, je Wert mit amtlicher Fundstelle (VO (EU)
+  Nr. 1336/2013, 2015/2170 und 2015/2342, 2017/2365, 2019/1828, 2021/1952,
+  2023/2495, 2025/2152). Das freigegebene Profil 2026.09.2 (2024–2027) bleibt
+  unverändert ladbar. Auswahl über Datum der Maßnahme/Bekanntmachung oder Jahr;
+  fehlt ein Zeitraum, lautet der Befund `REVIEW_REQUIRED` (`eu_period` wirft
+  `ThresholdUnavailable`).
 - **Quellenkatalog** `sources_catalog.json` im Format `auditcore_harvest.catalog/1`.
 
 Die Anwendung behält Feature-Flag, Offline-Sperren, Zugriffsrechte, Importjobs,

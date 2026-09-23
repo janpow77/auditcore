@@ -8,12 +8,13 @@ exactly. ``mode="strict"`` applies the corrections listed in
 ``docs/behavior-changes.md`` (P-C01…P-C05, P-C10…P-C12); it never decides a
 procurement case, it only reports rule results.
 
-Profiles with schema 2 (``procurement.hvtg`` 2026.09.2) hold the EU thresholds
-per validity period with their official source. In ``strict`` mode the EU
-threshold is selected by the date of the measure/notice (``reference_date``) or
-an explicit ``year``; a missing period yields ``REVIEW_REQUIRED``, never a
-fallback to another period. National tiers remain application rules
-(REVIEW_REQUIRED). ``legacy`` mode keeps the source table unchanged.
+Profiles with schema 2 (``procurement.hvtg`` 2026.09.2: 2024–2027; 2026.09.3:
+2014–2027) hold the EU thresholds per validity period with their official
+source. In ``strict`` mode the EU threshold is selected by the date of the
+measure/notice (``reference_date``) or an explicit ``year``; a missing period
+yields ``REVIEW_REQUIRED``, never a fallback to another period. National tiers
+remain application rules (REVIEW_REQUIRED). ``legacy`` mode keeps the source
+table unchanged.
 """
 
 from __future__ import annotations
@@ -212,16 +213,20 @@ def _schema2(
     return tuple(periods), eu_tier, categories, names, str(national["status"])
 
 
-def _packaged_eu_block() -> dict[str, Any]:
-    """EU table and national block of the packaged ``procurement.hvtg`` profile."""
-    entry = resources.files("auditcore_procurement.profiles").joinpath(
-        f"{CURRENT_PROFILE[0]}-{CURRENT_PROFILE[1]}.json"
-    )
+def _packaged_eu_block(version: str) -> dict[str, Any]:
+    """EU table and national block of a packaged ``procurement.hvtg`` profile version."""
+    name = f"{CURRENT_PROFILE[0]}-{version}.json"
+    entry = resources.files("auditcore_procurement.profiles").joinpath(name)
+    if "/" in name or "\\" in name or not entry.is_file():
+        raise ProfileError(f"Profil {name[:-5]} ist nicht vorhanden.")
     data = json.loads(entry.read_text(encoding="utf-8"))
+    if data.get("schema") != SCHEMAS[1]:
+        raise ProfileError(f"Profil {CURRENT_PROFILE[0]} {version} hat keine Jahrestabelle.")
     return {"eu_thresholds": data["eu_thresholds"], "national_tiers": data["national_tiers"]}
 
 
-CURRENT_PROFILE = ("procurement.hvtg", "2026.09.2")
+#: Newest packaged year-bound profile (2014–2027). 2026.09.2 (2024–2027) stays loadable.
+CURRENT_PROFILE = ("procurement.hvtg", "2026.09.3")
 
 
 def profile_from_ruleset(
@@ -231,14 +236,17 @@ def profile_from_ruleset(
     version: str,
     source: Mapping[str, Any],
     year_bound: bool = False,
+    eu_version: str = CURRENT_PROFILE[1],
 ) -> PrecheckProfile:
     """Profile from an application ruleset with ``threshold_rules`` and
     ``required_documents_by_procedure`` (source format), so a consumer keeps its
     own rule authority. Tier order and values are taken over unchanged.
 
     ``year_bound=True`` adds the verified year-bound EU table of the packaged
-    ``procurement.hvtg`` profile for ``strict`` mode (schema 2); the ruleset's
-    own ``BELOW_EU`` maxima are then used only by ``legacy`` mode."""
+    ``procurement.hvtg`` profile ``eu_version`` (default: ``CURRENT_PROFILE``,
+    2026.09.3; pin ``"2026.09.2"`` to reproduce 0.1.0) for ``strict`` mode
+    (schema 2); the ruleset's own ``BELOW_EU`` maxima are then used only by
+    ``legacy`` mode."""
     try:
         tiers = {
             category: [
@@ -255,7 +263,7 @@ def profile_from_ruleset(
         required = ruleset["required_documents_by_procedure"]
     except (KeyError, AttributeError, TypeError) as exc:
         raise ProfileError(f"Regelwerk ohne threshold_rules/required_documents: {exc!r}") from exc
-    extra = _packaged_eu_block() if year_bound else {}
+    extra = _packaged_eu_block(eu_version) if year_bound else {}
     return profile_from_dict(
         {
             "schema": f"auditcore_procurement.precheck-profile/{2 if year_bound else 1}",
