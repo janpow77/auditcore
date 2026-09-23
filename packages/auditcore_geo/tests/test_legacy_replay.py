@@ -135,12 +135,21 @@ def test_invalid_geometry_distances(case: dict[str, Any]) -> None:
 
 @pytest.mark.parametrize("case", CASES["schwerpunkt"], ids=lambda c: c["geometrie"])
 def test_centre_variants(case: dict[str, Any]) -> None:
+    # Die Originale mitteln mit ``sum()``; ab Python 3.12 summiert ``sum`` Gleitkommazahlen
+    # kompensiert (Neumaier). Die Aufzeichnung (3.12) weicht unter 3.11 im letzten Bit ab –
+    # eine Eigenschaft des Interpreters, nicht des Originals; daher relativ 1e-12.
     geometrie = GEOMETRIEN[case["geometrie"]]
-    same(
-        case["flowsearch_get_geometry_center"],
-        lambda: legacy.flowsearch_geometriezentrum(geometrie),
-    )
-    same(case["designer_gis_geometry_centroid"], lambda: legacy.designer_gis_schwerpunkt(geometrie))
+    for name, funktion in (
+        ("flowsearch_get_geometry_center", legacy.flowsearch_geometriezentrum),
+        ("designer_gis_geometry_centroid", legacy.designer_gis_schwerpunkt),
+    ):
+        erwartet = case[name]["ok"]
+        ergebnis = funktion(geometrie)
+        if erwartet is None:
+            assert ergebnis is None
+        else:
+            assert ergebnis is not None
+            assert list(ergebnis) == pytest.approx(erwartet, rel=1e-12)
 
 
 @pytest.mark.parametrize("case", CASES["achsenfolge"], ids=lambda c: c["name"])
