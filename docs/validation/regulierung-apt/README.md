@@ -55,6 +55,20 @@ unbewertete Schemaänderungen und prüft bei kompatiblen Updates zuvor Backup/Re
 
 Nach dem privaten Paketbuild können zwei tatsächlich gebaute Versionen geprüft werden:
 
+Nach dem Paketdownload richtet ein Intranet-Administrator die Anwendung mit
+einem einzigen interaktiven Schritt ein:
+
+```bash
+sudo apt install ./regulierung_....deb
+sudo regulierung-admin bootstrap-intranet \
+  --username admin --email admin@example.org
+```
+
+Der Befehl erkennt eine private Serveradresse und gibt die Login-URL aus. Eine
+Adresse kann mit `--listen-address 192.168.1.50` fest vorgegeben werden.
+
+Für den isolierten Upgrade-Nachweis:
+
 ```bash
 printf '{}\n' > /tmp/regulierung-test.json
 python scripts/regulierung_package_test.py /private/old.deb /private/new.deb \
