@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "passed": 1702,
+  "skipped": 0,
+  "warnings": [
+    "Hypothesis readonly default database: used memory",
+    "WeasyPrint requests HarfBuzz-Subset for future releases"
+  ],
+  "duration_seconds": 65.75,
+  "exact_locked_versions_verified": 84,
+  "mismatches": {},
+  "lock_sha256": "3368d9887741fedf8b0c25d88ed1115cdc20d65d4f79d04f3a6ebfde0434c355",
+  "test_log_sha256": "9ef0d468e29653f19b34e31c091b771cddd1f2bbbad1026407562ae63147ba84",
+  "pip_check": "PASS",
+  "installation": "--no-index --require-hashes --find-links=/runtime/wheels -r /runtime/requirements.lock",
+  "scope": "Entire regulierung backend suite including source-repository fixtures/frontend files; disposable Postgres+Timescale+PostGIS; not native Debian installation validation"
+}

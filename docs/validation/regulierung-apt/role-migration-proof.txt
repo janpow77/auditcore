@@ -1,0 +1,8 @@
+regulierung|f|f|f
+owi047
+pg_trgm|1.6
+plpgsql|1.0
+postgis|3.6.4
+postgis_topology|3.6.4
+timescaledb|2.30.0
+unaccent|1.1

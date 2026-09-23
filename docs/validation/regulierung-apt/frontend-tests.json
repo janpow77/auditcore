@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "npm_audit_before": {
+    "info": 0,
+    "low": 1,
+    "moderate": 2,
+    "high": 1,
+    "critical": 1,
+    "total": 5
+  },
+  "npm_audit_final": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "build": "PASS tsc -b && vite build Node20",
+  "browser_smoke": {
+    "status": "PASS",
+    "scope": "built application browser smoke; synthetic API/auth fixtures, no backend authentication validation",
+    "errors": [],
+    "requests": [
+      "/api/kpang/vollzug/postfach/anzahl",
+      "/api/kpang/vollzug/tankstellen",
+      "/api/kpang/vollzug/karte/preisentwicklung"
+    ],
+    "workers": [
+      "http://127.0.0.1:41063/assets/maplibre-gl-worker-FTGB28Rp.js"
+    ],
+    "webgl2": true,
+    "synthetic_markers": 1,
+    "rendered_marker_popup": true,
+    "bundled_worker_verified": true
+  },
+  "build_warning": "Vite chunk >500kB informational performance warning retained",
+  "maplibre_version": "6.11.0",
+  "browser_requirement": "WebGL2 and ES2022",
+  "package_lock_sha256": "a43d01a3df13bd02753ec2990c8a843040e0c1fc3687618210660507f15fdedd",
+  "source_files": {
+    "package.json": "530c4bcd17f52cc383f33714b985d270f414d9f72f8954da1c49e52a1a588cf7",
+    "package-lock.json": "a43d01a3df13bd02753ec2990c8a843040e0c1fc3687618210660507f15fdedd",
+    "src/pages/kraftstoff/TankstellenListe.tsx": "77bf8bff3f6fe9023ef1bca83c85c7a95300709b544270826f33a59e8dab45cd",
+    "src/pages/kraftstoff/KartePreisentwicklungView.tsx": "330e501c38a3cd80063c83942261858f5962738aed98c1cdcda2900343a216c9"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "status": "REVIEW_REQUIRED",
+  "public_dependencies_audited": 81,
+  "unique_advisories": [
+    {
+      "package": "ecdsa",
+      "version": "0.19.2",
+      "advisory": "PYSEC-2026-1325",
+      "fix_versions": []
+    }
+  ],
+  "scanner_exit_code": 1,
+  "lock_sha256": "3368d9887741fedf8b0c25d88ed1115cdc20d65d4f79d04f3a6ebfde0434c355",
+  "raw_report": "library-evidence/security-final.json",
+  "applicability": {
+    "ecdsa/PYSEC-2026-1325": "NOT_APPLICABLE_WITH_REASON: static application paths perform OIDC signature verification only; affected signing/keygen/ECDH unused. See dependency-applicability.json."
+  },
+  "private_local_distributions": {
+    "auditcore_dataprotection==0.1.0": "NOT_EXECUTED: absent from public advisory database; actual413unit tests and static/provenance checks separate",
+    "auditcore_harvest==0.1.0": "NOT_EXECUTED: absent from public advisory database; actual57unit tests and static/provenance checks separate",
+    "auditcore_reporting==0.2.0": "NOT_EXECUTED: absent from public advisory database; existing prior package tests separate"
+  },
+  "remaining_release_reviews": [
+    "operator configuration and protection assessment",
+    "native OS dependency vulnerabilities not covered by pip-audit"
+  ],
+  "consumer_verification": "PASS: 1702 tests; exact84 locked distributions verified"
+}
