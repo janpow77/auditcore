@@ -127,9 +127,8 @@ Umstellungsanleitung und Vorlage: `packages/auditcore_risk/docs/consumer-integra
 ## Entscheidungen (DECIDED, 23.09.2026, „alle empfehlungen“)
 
 K1 kein gemeinsamer Score; K2 netto; K3 `riskanalysis.year_bound 2026.09.2`
-freigegeben (EU-Schwelle je Jahr, 2026: 216.000 €); K4 „mueller“-Umschrift folgt
-als Nachzügler, sobald `auditcore_entity_matching` die neue Profilversion
-`riskanalysis.payee` enthält; K5 RF12 gruppenintern; K6 unverändert je Profil;
+freigegeben (EU-Schwelle je Jahr, 2026: 216.000 €); K4 „mueller“-Umschrift in
+`riskanalysis.year_bound 2026.09.3` (RF09 mit `riskanalysis.payee 2026.09.2`); K5 RF12 gruppenintern; K6 unverändert je Profil;
 K7 RiskChecker nicht aktivieren; K8 TED-Legitimität 0–1, Warnungen nach
 Dublettenentfernung; K9 Splitting mit EU-Schwelle je Jahr; K10
 `recommended_flowinvoice_benford` (statistics); K11 WIBANK nach Profildatei V1.21

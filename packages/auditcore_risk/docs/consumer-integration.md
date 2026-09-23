@@ -90,7 +90,7 @@ Produktionsdatenbank).
 ## Empfohlene Profile nach der Entscheidung vom 23.09.2026
 
 Neue Consumer-Umstellungen verwenden die freigegebenen Profile
-`riskanalysis.year_bound 2026.09.2` (Spalte `nettobetrag` bereitstellen, z. B.
+`riskanalysis.year_bound 2026.09.3` (Spalte `nettobetrag` bereitstellen, z. B.
 aus „Gesamt Netto“), `flowinvoice.rbvk_wibank 2026.09.2` (Eingaben
 `offene_auflagen_anzahl`, `externe_kuerzung`, `vorherige_verwk_quote`,
 `vorherige_kuerzungsgruende`), `flowinvoice.fraud_signals`/`ted_contractor
