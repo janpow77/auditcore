@@ -1,0 +1,19 @@
+auditcore_entity_matching 0.1.0 — source attribution and authorization
+
+Derived from (unchanged Git blobs, verified against GitHub on 2026-09-22):
+  janpow77/flowworkshop@a05bb2143bd96d5e981f9462f05b965e1658be36
+    auditworkshop/backend/services/entity_resolution.py  d7a799b65e0444e8be8e606b35bd2cc1ecbdfac0
+    auditworkshop/backend/services/state_aid_service.py  e41be2700affb91c2a6436a7e3ce488696b07116
+    auditworkshop/backend/services/sanctions_service.py  3e7ad8bd826eed4da15f9860af267f9fe8a9076b
+  janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a
+    backend/app/core/shared/research/register/sanctions.py  3d48504d92207d6c5a03c038d22fcdf09be63235
+
+Both source repositories have no license file (historical status UNKNOWN).
+On 2026-09-22 the rights holder decided: "die bibliotheken sollen mit sein,
+die anderen repos nicht. die bibliotheken kommen ja nach auditcore".
+Status: USER_AUTHORIZED_MIT for the extracted library code in this package.
+The source repositories themselves are not relicensed.
+
+Profiles are characterized software behavior, not a validated matching
+method; screening thresholds remain decisions of the consuming application.
+Test LEIs are public identifiers of legal entities (GLEIF), no personal data.

@@ -1,0 +1,47 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://publications.europa.eu/webapi/rdf/sparql",
+    "params": {
+     "query": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(?date >= \"2024-01-31\"^^xsd:date)\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"1303/2013\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        ",
+     "format": "application/sparql-results+json"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/sparql-results+json"
+    },
+    "body_json": {
+     "head": {
+      "vars": [
+       "celex",
+       "date",
+       "title"
+      ]
+     },
+     "results": {
+      "bindings": [
+       {
+        "celex": {
+         "type": "literal",
+         "value": "32024R0500"
+        },
+        "title": {
+         "type": "literal",
+         "value": "Neue Durchführungs-VO ESF"
+        },
+        "date": {
+         "type": "literal",
+         "value": "2024-02-10"
+        }
+       }
+      ]
+     }
+    }
+   }
+  }
+ ]
+}
