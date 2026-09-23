@@ -117,3 +117,55 @@ def test_optional_release_rejects_stale_or_incomplete_bindings(tmp_path, change)
     (tmp_path / "result.json").write_text(json.dumps(report))
     with pytest.raises(ValueError):
         release.optional_assets(assets, tmp_path, "0.2.0")
+
+
+def test_expected_sources_cover_every_completed_distribution():
+    completed = {
+        path.parent.name
+        for path in (Path(__file__).resolve().parents[1] / "packages").glob("*/pyproject.toml")
+    }
+    assert completed == release.PACKAGES
+
+
+@pytest.mark.parametrize("name", sorted(release.EXPECTED_SOURCES))
+def test_real_packaged_provenance_passes_the_authorization_check(name):
+    root = Path(__file__).resolve().parents[1] / "packages" / name / "src" / name
+    release.check_extracted_authorization(name, json.loads((root / "provenance.json").read_text()))
+
+
+def _extracted_provenance():
+    return {
+        "sources": [
+            {
+                "repository": "janpow77/flowstat",
+                "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",
+            }
+        ],
+        "rights": {
+            "authorization": {
+                "status": "USER_AUTHORIZED_MIT",
+                "date": "2026-09-22",
+                "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht",
+            }
+        },
+    }
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda p: p["rights"]["authorization"].pop("status"),
+        lambda p: p["rights"]["authorization"].update(status="UNKNOWN"),
+        lambda p: p["rights"]["authorization"].update(date="2026-09-21"),
+        lambda p: p["rights"]["authorization"].pop("confirmation"),
+        lambda p: p["sources"].append({"repository": "janpow77/regulierung", "commit": "a" * 40}),
+        lambda p: p["sources"][0].update(commit="b" * 40),
+        lambda p: p.pop("sources"),
+    ],
+)
+def test_extracted_authorization_fails_closed(change):
+    provenance = _extracted_provenance()
+    release.check_extracted_authorization("auditcore_statistics", provenance)
+    change(provenance)
+    with pytest.raises(ValueError, match="authorization missing"):
+        release.check_extracted_authorization("auditcore_statistics", provenance)

@@ -15,7 +15,63 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGES = {"auditcore_dummygenerator", "auditcore_invoicegenerator", "auditcore_reporting"}
+#: Exactly reviewed source bindings of the extracted packages released under the
+#: rights holder's MIT authorization of 2026-09-22 ("die bibliotheken sollen mit
+#: sein, die anderen repos nicht"). The provenance of each wheel must list exactly
+#: these repository/commit pairs; any other or missing binding fails the release.
+EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
+    "auditcore_dataprotection": frozenset(
+        {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
+    ),
+    "auditcore_entity_matching": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+        }
+    ),
+    "auditcore_funding_sources": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
+            ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+        }
+    ),
+    "auditcore_harvest": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
+            ("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743"),
+        }
+    ),
+    "auditcore_legal_sources": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
+        }
+    ),
+    "auditcore_procurement": frozenset(
+        {
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+        }
+    ),
+    "auditcore_sampling": frozenset(
+        {
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a"),
+        }
+    ),
+    "auditcore_statistics": frozenset(
+        {("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a")}
+    ),
+}
+PACKAGES = {
+    "auditcore_dummygenerator",
+    "auditcore_invoicegenerator",
+    "auditcore_reporting",
+    *EXPECTED_SOURCES,
+}
 
 
 def digest(data: bytes) -> str:
@@ -36,6 +92,36 @@ def bound_bytes(path: Path, root: Path, expected: str) -> bytes:
     return data
 
 
+def _source_bindings(value: Any) -> set[tuple[str, str]]:
+    """All repository/commit pairs recorded anywhere in a provenance document."""
+    found: set[tuple[str, str]] = set()
+    if isinstance(value, dict):
+        repository = value.get("repository")
+        commit = value.get("commit") or value.get("commit_sha")
+        if isinstance(repository, str) and isinstance(commit, str):
+            found.add((repository, commit))
+        for item in value.values():
+            found |= _source_bindings(item)
+    elif isinstance(value, list):
+        for item in value:
+            found |= _source_bindings(item)
+    return found
+
+
+def check_extracted_authorization(name: str, provenance: dict[str, Any]) -> None:
+    """Dated USER_AUTHORIZED_MIT statement and exactly the reviewed source commits."""
+    authorization = provenance.get("rights", {}).get("authorization", {})
+    statement = authorization.get("confirmation")
+    if (
+        authorization.get("status") != "USER_AUTHORIZED_MIT"
+        or authorization.get("date") != "2026-09-22"
+        or not isinstance(statement, str)
+        or "mit" not in statement.casefold()
+        or _source_bindings(provenance) != EXPECTED_SOURCES[name]
+    ):
+        raise ValueError(f"Source-scoped user MIT authorization missing: {name}")
+
+
 def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
     """Fail closed before creating assets or signing keys."""
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", release_version):
@@ -45,7 +131,7 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
         raise ValueError("Successful real-domain installation report required")
     packages = report.get("packages", [])
     if {p["name"] for p in packages} != PACKAGES or len(packages) != len(PACKAGES):
-        raise ValueError("Exactly the three reviewed preview distributions are required")
+        raise ValueError("Exactly the reviewed release distributions are required")
     checks = report["checks"]
     required = {
         "installed-platform",
@@ -111,7 +197,11 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
             license_text = archive.read(f"{name}-{version}.dist-info/licenses/LICENSE")
             if b"Permission is hereby granted, free of charge" not in license_text:
                 raise ValueError("Actual MIT license text is missing")
-            if name != "auditcore_reporting":
+            if name in EXPECTED_SOURCES:
+                check_extracted_authorization(
+                    name, json.loads(archive.read(f"{name}/provenance.json"))
+                )
+            elif name != "auditcore_reporting":
                 provenance = json.loads(archive.read(f"{name}/provenance.json"))
                 authorization = provenance.get("license_authorization") or provenance.get(
                     "rights", {}
