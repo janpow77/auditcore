@@ -1,0 +1,3160 @@
+{
+ "schema": "auditcore_harvest.catalog/1",
+ "version": "2026.09.1",
+ "sources": [
+  {
+   "source_id": "funding.eu_beneficiaries",
+   "title": "EU-Begünstigtendaten (Kohäsion/FTS)",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/eu_beneficiary_harvester_v2.py",
+     "symbols": [
+      "EUBeneficiaryHarvesterV2"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+     "path": "auditworkshop/backend/services/beneficiary_harvester.py",
+     "symbols": [
+      "parse_xlsx_or_csv",
+      "compute_record_hash"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/beneficiaries.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch harvest_eu_beneficiaries_v2.py",
+    "flowworkshop routers/beneficiaries.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "smart/full-refresh/force/snapshot bleiben getrennte Profile."
+  },
+  {
+   "source_id": "funding.state_aid",
+   "title": "State Aid Transparency",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/state_aid_harvester.py",
+     "symbols": [
+      "StateAidHarvester"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+     "path": "auditworkshop/backend/services/state_aid_service.py",
+     "symbols": [
+      "parse_amount",
+      "parse_date"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/state_aid.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch harvest_state_aid.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "funding.de_minimis_eaid",
+   "title": "De-minimis / eAidRegister",
+   "family": "funding",
+   "target_package": "auditcore_funding_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/de_minimis.py",
+     "symbols": [
+      "EAidRegisterClient",
+      "berechne_kumulierung"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/core/shared/research/register/de_minimis_ernte.py",
+     "symbols": [
+      "ernte"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "audit_designer register/de_minimis_ernte.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Eigenes Profil neben State Aid; Kumulierung ist ein getrennter Fachvertrag."
+  },
+  {
+   "source_id": "registry.openregister",
+   "title": "OpenRegister",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/openregister.py",
+     "symbols": [
+      "OpenRegisterAPIClient"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch services/recherche_orchestrator.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "registry.handelsregister",
+   "title": "Handelsregister",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/handelsregister.py",
+     "symbols": [
+      "HandelsregisterAPIClient"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/handelsregister.py",
+     "symbols": [],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+     "path": "backend/app/services/handelsregister_service.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch services/recherche_orchestrator.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Tatsächlichen Provider je Profil prüfen."
+  },
+  {
+   "source_id": "registry.sanctions",
+   "title": "Sanktionslisten",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/sanctions.py",
+     "symbols": [
+      "SanctionsAPIClient"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch api/screening.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "registry.pep",
+   "title": "PEP-Screening",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/pep_screening.py",
+     "symbols": [
+      "PEPScreeningAPIClient"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch api/screening.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "price.bundesbank",
+   "title": "Deutsche Bundesbank",
+   "family": "price",
+   "target_package": "auditcore_price_sources",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/bundesbank.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "price.destatis_genesis",
+   "title": "Destatis GENESIS",
+   "family": "price",
+   "target_package": "auditcore_price_sources",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/destatis_genesis.py",
+     "symbols": [
+      "DestatisGenesisConnector"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "token",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     },
+     "credential_name": {
+      "type": "string",
+      "description": "Name des Geheimnisses beim Credential-Provider (kein Wert)"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Consumer-Integration über auditcore_harvest in regulierung (anwendungseigener Adapter)."
+  },
+  {
+   "source_id": "price.eia_brent",
+   "title": "EIA Brent",
+   "family": "price",
+   "target_package": "auditcore_price_sources",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/eia_brent.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "price.eu_oil_bulletin",
+   "title": "EU Oil Bulletin",
+   "family": "price",
+   "target_package": "auditcore_price_sources",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/eu_oil_bulletin.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "price.tankerkoenig",
+   "title": "Tankerkönig",
+   "family": "price",
+   "target_package": "auditcore_price_sources",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/tankerkoenig.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "api_key",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     },
+     "credential_name": {
+      "type": "string",
+      "description": "Name des Geheimnisses beim Credential-Provider (kein Wert)"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Quellkommentar nennt CC-BY; ungeprüft."
+  },
+  {
+   "source_id": "price.mtsk",
+   "title": "MTS-K",
+   "family": "price",
+   "target_package": "auditcore_price_sources",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/mtsk.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "geo.overpass",
+   "title": "Overpass (OpenStreetMap)",
+   "family": "geo",
+   "target_package": "auditcore_geo",
+   "origins": [
+    {
+     "repository": "janpow77/regulierung",
+     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+     "path": "backend/app/services/external_apis/overpass.py",
+     "symbols": [
+      "OverpassConnector"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "regulierung api/admin/external_apis.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Quellkommentar nennt ODbL; ungeprüft."
+  },
+  {
+   "source_id": "geo.natura2000",
+   "title": "Natura 2000",
+   "family": "geo",
+   "target_package": "auditcore_geo",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/natura2000_service.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch api/natura2000.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "geo.geocoding",
+   "title": "Geocoding (vorhandene Anbindungen)",
+   "family": "geo",
+   "target_package": "auditcore_geo",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/geocoding_service.py",
+     "symbols": [],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/osint",
+     "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+     "path": "ortsdienst/dienst.py",
+     "symbols": [
+      "haversine_km"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch",
+    "osint"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Geocoder-Budgets bleiben beim Consumer."
+  },
+  {
+   "source_id": "property.bienici",
+   "title": "Bien'ici",
+   "family": "property",
+   "target_package": "auditcore_property_sources",
+   "origins": [
+    {
+     "repository": "janpow77/wohnungsmonitor",
+     "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+     "path": "bienici_export.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "wohnungsmonitor"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": "Zugangs-/Nutzungsrechte vor Übernahme prüfen."
+  },
+  {
+   "source_id": "property.citya",
+   "title": "Citya",
+   "family": "property",
+   "target_package": "auditcore_property_sources",
+   "origins": [
+    {
+     "repository": "janpow77/wohnungsmonitor",
+     "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+     "path": "citya_export.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "wohnungsmonitor"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "property.paruvendu",
+   "title": "ParuVendu",
+   "family": "property",
+   "target_package": "auditcore_property_sources",
+   "origins": [
+    {
+     "repository": "janpow77/wohnungsmonitor",
+     "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+     "path": "paruvendu_export.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "wohnungsmonitor"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "property.kleinanzeigen",
+   "title": "Kleinanzeigen",
+   "family": "property",
+   "target_package": "auditcore_property_sources",
+   "origins": [
+    {
+     "repository": "janpow77/wohnungsmonitor",
+     "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+     "path": "kleinanzeigen_export.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "wohnungsmonitor"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "property.inberlinwohnen",
+   "title": "inberlinwohnen",
+   "family": "property",
+   "target_package": "auditcore_property_sources",
+   "origins": [
+    {
+     "repository": "janpow77/wohnungsmonitor",
+     "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+     "path": "inberlinwohnen_export.py",
+     "symbols": [],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "wohnungsmonitor"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "property.zvg",
+   "title": "ZVG-Portal (Zwangsversteigerungen)",
+   "family": "property",
+   "target_package": "auditcore_property_sources",
+   "origins": [
+    {
+     "repository": "janpow77/versteigerung",
+     "commit": "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448",
+     "path": "backend/app/crawler/zvg_crawler.py",
+     "symbols": [
+      "ZvgPortal"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "versteigerung"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen und Datenlizenz nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "url": {
+      "type": "string",
+      "description": "Basisadresse"
+     }
+    }
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null
+   },
+   "note": ""
+  },
+  {
+   "source_id": "legal.dip_bundestag",
+   "title": "Bundestag DIP – Drucksachen",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/dip.py",
+     "symbols": [
+      "DIPHarvester"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/bundestag_dip.py",
+     "symbols": [
+      "BundestagDIPHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": [
+    "auditdatabase.esi@2026.09.1",
+    "audit_designer.vp_ai@2026.09.1"
+   ],
+   "auth": "api_key",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "DIP-API-Nutzungsbedingungen; API-Schlüssel beim Consumer."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "profile"
+    ],
+    "properties": {
+     "profile": {
+      "type": "object",
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+     },
+     "keywords": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "api_key": {
+      "type": "string",
+      "secret": true,
+      "description": "über CredentialProvider, nie in der Konfiguration"
+     }
+    }
+   },
+   "fixtures": [
+    "tests/fixtures/replay/dip.json",
+    "tests/fixtures/replay/dip_partial.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_legal_sources.adapters:legal.dip_bundestag",
+    "characterization": "tests/fixtures/legacy_*_observed.json"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "note": "Kein DIP-API-Schlüssel konfiguriert; der Schlüssel im Quellcode wurde bewusst nicht verwendet."
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.eurlex",
+   "title": "EUR-Lex (Cellar SPARQL)",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/eurlex.py",
+     "symbols": [
+      "EURLexHarvester"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/eurlex.py",
+     "symbols": [
+      "EURLexHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": [
+    "auditdatabase.esi@2026.09.1",
+    "audit_designer.vp_ai@2026.09.1"
+   ],
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Weiterverwendung nach Beschluss 2011/833/EU mit Quellenangabe."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "profile"
+    ],
+    "properties": {
+     "profile": {
+      "type": "object",
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+     }
+    }
+   },
+   "fixtures": [
+    "tests/fixtures/replay/eurlex.json",
+    "tests/fixtures/replay/eurlex_update.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_legal_sources.adapters:legal.eurlex",
+    "characterization": "tests/fixtures/legacy_*_observed.json"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "note": "Kein Live-Abruf ausgeführt."
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.bafin",
+   "title": "BaFin RSS",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/rss.py",
+     "symbols": [
+      "BaFinHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": [
+    "auditdatabase.esi@2026.09.1",
+    "audit_designer.vp_ai@2026.09.1"
+   ],
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der BaFin-Feeds nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "profile"
+    ],
+    "properties": {
+     "profile": {
+      "type": "object",
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+     },
+     "relevant_only": {
+      "type": "boolean"
+     }
+    }
+   },
+   "fixtures": [
+    "tests/fixtures/replay/bafin.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_legal_sources.adapters:legal.bafin",
+    "characterization": "tests/fixtures/legacy_*_observed.json"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "note": "Kein Live-Abruf ausgeführt."
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.curia",
+   "title": "CURIA RSS (EuGH/EuG)",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/rss.py",
+     "symbols": [
+      "CURIAHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": [
+    "auditdatabase.esi@2026.09.1",
+    "audit_designer.vp_ai@2026.09.1"
+   ],
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Rechtshinweise curia.europa.eu nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "profile"
+    ],
+    "properties": {
+     "profile": {
+      "type": "object",
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+     },
+     "relevant_only": {
+      "type": "boolean"
+     }
+    }
+   },
+   "fixtures": [
+    "tests/fixtures/replay/curia.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_legal_sources.adapters:legal.curia",
+    "characterization": "tests/fixtures/legacy_*_observed.json"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "note": "Kein Live-Abruf ausgeführt."
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.eca",
+   "title": "Europäischer Rechnungshof – Publikationen",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/rss.py",
+     "symbols": [
+      "ECAHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    },
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": [
+    "auditdatabase.esi@2026.09.1",
+    "audit_designer.vp_ai@2026.09.1"
+   ],
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Wiederverwendungsregeln eca.europa.eu nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "profile"
+    ],
+    "properties": {
+     "profile": {
+      "type": "object",
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+     }
+    }
+   },
+   "fixtures": [
+    "tests/fixtures/replay/eca.json",
+    "tests/fixtures/replay/eca_unavailable.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_legal_sources.adapters:legal.eca",
+    "characterization": "tests/fixtures/legacy_*_observed.json"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "note": "Kein Live-Abruf ausgeführt."
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.auditdatabase_bundesrat",
+   "title": "Bundesrat",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/bundesrat.py",
+     "symbols": [
+      "BundesratHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.auditdatabase_hessen_landtag",
+   "title": "Hessischer Landtag",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/hessen_landtag.py",
+     "symbols": [
+      "HessenLandtagHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.auditdatabase_brh",
+   "title": "Bundesrechnungshof",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/rechnungshoefe.py",
+     "symbols": [
+      "BRHHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.auditdatabase_landesrechnungshoefe",
+   "title": "Landesrechnungshöfe (16)",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/landesrechnungshoefe.py",
+     "symbols": [
+      "LRHHessenHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.auditdatabase_international",
+   "title": "OECD, OLAF, GRECO, UNODC, FATF, INTOSAI, EC Regio",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+     "path": "backend/app/harvester/international.py",
+     "symbols": [
+      "OLAFHarvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/auditdatabase",
+     "path": "backend/app/services/scheduler_service.py",
+     "call": "get_harvester(source_id, db=db).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_curia",
+   "title": "CURIA",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/curia.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_eca",
+   "title": "Europäischer Rechnungshof",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/eca.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_olaf",
+   "title": "OLAF",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/olaf.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_gesetze_im_internet",
+   "title": "Gesetze im Internet",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/gesetze_im_internet.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_hessenrecht",
+   "title": "Hessenrecht",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/hessenrecht.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_brh",
+   "title": "Bundesrechnungshof",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/brh.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_landesrechnungshoefe",
+   "title": "Landesrechnungshöfe",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/landesrechnungshoefe.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_rechnungshof_at",
+   "title": "Rechnungshof Österreich",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/rechnungshof_at.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_bundesrat",
+   "title": "Bundesrat",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/bundesrat.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_hessischer_landtag",
+   "title": "Hessischer Landtag",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/hessischer_landtag.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_eu_parliament",
+   "title": "Europäisches Parlament",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/eu_parliament.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_eu_council",
+   "title": "Rat der EU",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/eu_council.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_kom_guidance",
+   "title": "KOM-Leitlinien",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/kom_guidance.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_kom_swd",
+   "title": "KOM-SWD",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/kom_swd.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_iia",
+   "title": "IIA",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/iia.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_idw",
+   "title": "IDW",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/idw.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_ifac",
+   "title": "IFAC",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/ifac.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_intosai",
+   "title": "INTOSAI",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/intosai.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_eurosai",
+   "title": "EUROSAI",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/eurosai.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_diir",
+   "title": "DIIR",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/diir.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_acfe",
+   "title": "ACFE",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/acfe.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_greco",
+   "title": "GRECO",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/greco.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_fatf",
+   "title": "FATF",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/fatf.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_oecd",
+   "title": "OECD",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/oecd.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_unodc",
+   "title": "UNODC",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/unodc.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "legal.designer_eucrim",
+   "title": "eucrim",
+   "family": "legal",
+   "target_package": "auditcore_legal_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/harvester/eucrim.py",
+     "symbols": [
+      "Harvester"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/harvester/scheduler.py",
+     "call": "get_harvester(source_id).harvest()"
+    }
+   ],
+   "profile": "noch nicht charakterisiert",
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Nutzungsbedingungen der Quelle nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED"
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED"
+   },
+   "catalog_import": {
+    "from": "catalog.json",
+    "package_commit": "e066329"
+   }
+  },
+  {
+   "source_id": "procurement.ted_awards",
+   "title": "TED – Zuschlagsbekanntmachungen mit Auftragnehmer",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+     "path": "backend/app/services/ted_harvester_service.py",
+     "symbols": [
+      "build_ted_query",
+      "fetch_ted_notices",
+      "_DEFAULT_FIELDS"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+     "path": "backend/audit_prep/ted_normalize.py",
+     "symbols": [
+      "normalize_notice",
+      "parse_ted_file"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit-portal",
+     "path": "backend/app/api/external_data.py"
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "path": "backend/audit_prep/source_fetch.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.ted_awards",
+    "version": "2026.09.1",
+    "coverage": "award_notices_with_winner"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "api_url"
+    ],
+    "properties": {
+     "api_url": {
+      "type": "string",
+      "default": "https://api.ted.europa.eu/v3/notices/search"
+     },
+     "page_size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 250,
+      "default": 100
+     },
+     "fields": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/replay/ted_awards.json",
+    "packages/auditcore_procurement/tests/fixtures/procurement_legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_procurement.sources:TedAwardsAdapter"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "note": "Kein zulässig konfigurierter Live-Abruf im Prüflauf."
+   },
+   "catalog_import": {
+    "from": "sources_catalog.json",
+    "package_commit": "3160af4"
+   }
+  },
+  {
+   "source_id": "procurement.had_search",
+   "title": "HAD – Hessische Ausschreibungsdatenbank, Suchergebnisse",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+     "symbols": [
+      "_HADClient.search",
+      "HADNotice"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "company_records.py",
+     "symbols": [
+      "_HADClient.search",
+      "HADNotice"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py"
+    },
+    {
+     "repository": "janpow77/flowinvoice",
+     "path": "company_records.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.had_search",
+    "version": "2026.09.1",
+    "variants": [
+     "designer",
+     "flowinvoice"
+    ]
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen von had.de und Zulässigkeit automatisierter Abfragen nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "variant": {
+      "type": "string",
+      "enum": [
+       "designer",
+       "flowinvoice"
+      ],
+      "default": "designer"
+     }
+    }
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/replay/had_search.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_procurement.sources:HadSearchAdapter",
+    "extras": [
+     "html",
+     "sources"
+    ],
+    "note": "Parser nur mit synthetischer Seite belegt."
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED"
+   },
+   "catalog_import": {
+    "from": "sources_catalog.json",
+    "package_commit": "3160af4"
+   }
+  },
+  {
+   "source_id": "procurement.ted_company_flowinvoice",
+   "title": "TED-Unternehmenssuche (Mnemonik-Felder, Flowinvoice-Variante)",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "company_records.py",
+     "symbols": [
+      "_TEDClient.search",
+      "TEDNotice"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "path": "company_records.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.ted_company",
+    "variant": "flowinvoice"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/procurement_legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "LEGACY_ONLY",
+    "functions": [
+     "auditcore_procurement.company_sources:ted_company_request",
+     "ted_company_result"
+    ],
+    "note": "Request/Antwortauswertung vorhanden, kein Harvest-Adapter; Endpunkt /api/v3.0 gegen heutige API nicht geprüft."
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED"
+   },
+   "catalog_import": {
+    "from": "sources_catalog.json",
+    "package_commit": "3160af4"
+   }
+  },
+  {
+   "source_id": "procurement.ted_company_designer",
+   "title": "TED-Unternehmenssuche (Mnemonik-Felder, Designer-Variante)",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+     "symbols": [
+      "_TEDClient.search",
+      "_TEDClient._extract_title",
+      "TEDNotice"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.ted_company",
+    "variant": "designer"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/procurement_legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "LEGACY_ONLY",
+    "functions": [
+     "auditcore_procurement.company_sources:ted_company_request",
+     "ted_company_result"
+    ]
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED"
+   },
+   "catalog_import": {
+    "from": "sources_catalog.json",
+    "package_commit": "3160af4"
+   }
+  }
+ ]
+}
