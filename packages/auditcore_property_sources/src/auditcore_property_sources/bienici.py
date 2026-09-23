@@ -11,14 +11,15 @@ charges the cold rent stays unknown and the price counts as warm. The
 publication date 1970-01-01 means "unknown". Positions are blurred (~50 m) by
 the portal.
 
-Privacy (PS-C02): for ``accountType == "individual"`` the display name of the
-private advertiser is replaced by "Privatangebot" unless
-``advertiser_names="legacy"`` is requested explicitly; the original keeps the
-name.
+Advertiser names (PS-C02, DECIDED 2026-09-23 by the user): the default
+``advertiser_names="legacy"`` keeps the display name of private advertisers
+like the original; ``advertiser_names="minimal"`` replaces it for
+``accountType == "individual"`` by "Privatangebot".
 
-Access: the original sends a browser user agent because the portal answers
-its own identifier with 403 — REVIEW_REQUIRED (see catalog); the library sends
-no headers of its own, the consumer's transport decides.
+Access (PS-D02, DECIDED 2026-09-23 by the user): the portal answers its own
+identifier with 403, so the original sends a browser user agent.
+:func:`request_headers` reproduces the original request headers; the adapter
+sends them by default.
 """
 
 from __future__ import annotations
@@ -37,6 +38,25 @@ SEARCH = BASE + "/realEstateAds.json?filters={filter}"
 AD = BASE + "/annonce/{kennung}"
 AD_LONG = BASE + "/annonce/{art_geschaeft}/{ort}/{art}/{zimmer}/{kennung}"
 QUELLE = "bienici"
+DEFAULT_ADVERTISER_NAMES: Literal["minimal", "legacy"] = "legacy"
+BROWSER_USER_AGENT = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/140.0.0.0 Safari/537.36"
+)
+
+
+def request_headers(user_agent: str | None = BROWSER_USER_AGENT) -> dict[str, str]:
+    """Request headers of the original ``_hole`` (``user_agent=None``: no user agent)."""
+    headers = {
+        "Accept": "application/json",
+        "Accept-Language": "fr-FR,fr;q=0.9,de;q=0.8",
+        "Referer": BASE + "/recherche/location/france",
+    }
+    if user_agent is not None:
+        headers = {"User-Agent": user_agent, **headers}
+    return headers
+
+
 LIGATURES = {"œ": "oe", "æ": "ae", "ø": "o", "ß": "ss", "đ": "d", "ł": "l"}
 DEPARTEMENTS = {
     "67": "Bas-Rhin",
@@ -136,7 +156,9 @@ def date(iso: Any) -> str | None:
 
 
 def normalise(
-    ad: Mapping[str, Any], *, advertiser_names: Literal["minimal", "legacy"] = "minimal"
+    ad: Mapping[str, Any],
+    *,
+    advertiser_names: Literal["minimal", "legacy"] = DEFAULT_ADVERTISER_NAMES,
 ) -> dict[str, Any]:
     """Ad in the stock format of the consumer (original ``normalise``, PS-C02)."""
     kennung = ad.get("id")

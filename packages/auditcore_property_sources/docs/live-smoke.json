@@ -2,10 +2,6 @@
  "executed_at": "2026-09-23T11:53:28+00:00",
  "user_agent": "auditcore-property-sources-smoke/0.1 (einmalige Strukturpruefung, janpow77/auditcore)",
  "terms_of_use": "REVIEW_REQUIRED",
- "not_requested": {
-  "property.kleinanzeigen": "robots.txt Disallow: /*/preis:*",
-  "property.zvg_detail": "robots.txt Disallow: /index.php?button=showZvg*"
- },
  "results": {
   "immobilien_de": {
    "source_id": "property.immobilien_de",
@@ -112,7 +108,6 @@
    "source_id": "property.zvg",
    "requests": [
     "GET www.zvg-portal.de",
-    "GET www.zvg-portal.de",
     "POST www.zvg-portal.de"
    ],
    "status": "complete",
@@ -125,6 +120,46 @@
     "court_id": 8
    },
    "total_hint_seen": 8
+  },
+  "kleinanzeigen": {
+   "source_id": "property.kleinanzeigen",
+   "requests": [
+    "GET www.kleinanzeigen.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 7,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 7,
+    "flaeche_qm": 7,
+    "kaltmiete": 7,
+    "gesamtmiete": 0,
+    "preisart": 7
+   },
+   "total_hint_seen": 7
+  },
+  "zvg_detail": {
+   "source_id": "property.zvg_detail",
+   "requests": [
+    "GET www.zvg-portal.de",
+    "GET www.zvg-portal.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 1,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "file_number": 1,
+    "court_id": 1
+   }
   }
+ },
+ "robots_policy": "ignore (Nutzerentscheidung 2026-09-23, PS-D01)",
+ "addendum_2026_09_23": {
+  "executed_at": "2026-09-23T13:50:47+00:00",
+  "reason": "PS-D01: Kleinanzeigen-Suche und ZVG-Detailseite je einmal nach Nutzerentscheidung"
  }
 }
