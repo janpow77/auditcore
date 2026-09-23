@@ -57,6 +57,11 @@ KUGEL_6371_KM = Kugelprofil(
     ),
 )
 
+#: Empfohlenes Profil für neue gemeinsame Bestände (Entscheidung vom 23.09.2026,
+#: vom Nutzer delegiert). Keine Funktion verwendet es still; es wird ausdrücklich
+#: übergeben. ``KUGEL_6371_KM`` bleibt für Replay und Altbestände.
+EMPFOHLENES_ERDMODELL = KUGEL_MITTLERER_RADIUS
+
 KUGELPROFILE: dict[str, Kugelprofil] = {
     p.profil_id: p for p in (KUGEL_MITTLERER_RADIUS, KUGEL_6371_KM)
 }

@@ -30,6 +30,7 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
             ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
         }
     ),
     "auditcore_funding_sources": frozenset(
@@ -70,6 +71,20 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
         }
     ),
+    "auditcore_property_sources": frozenset(
+        {
+            ("janpow77/versteigerung", "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448"),
+            ("janpow77/wohnungsmonitor", "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91"),
+        }
+    ),
+    "auditcore_risk": frozenset(
+        {
+            ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
+        }
+    ),
     "auditcore_sampling": frozenset(
         {
             ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
@@ -77,7 +92,10 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         }
     ),
     "auditcore_statistics": frozenset(
-        {("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a")}
+        {
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a"),
+        }
     ),
 }
 #: Renderer extras with published, hash-locked requirement files and their owner.

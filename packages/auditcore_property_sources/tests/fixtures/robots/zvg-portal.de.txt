@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /gerichte/
+Disallow: /templates/template.internet.showZvg.php
+Disallow: /templates/template.internet.showAnhang.php
+Disallow: /templates/template.internet.showAll.php
+
+Disallow: /index.php?button=showAnhang*
+Disallow: /index.php\?button=showAnhang*
+Disallow: /index.php?button=showZvg*
+Disallow: /index.php\?button=showZvg*
+
+

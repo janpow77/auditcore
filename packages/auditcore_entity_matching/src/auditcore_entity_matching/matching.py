@@ -48,6 +48,23 @@ class MatchResult:
     profile: dict[str, str]
 
 
+PAIR_SCORERS = frozenset({"ratio", "token_set_ratio", "token_sort_ratio", "WRatio"})
+
+
+def pair_score(left: str, right: str, scorer: str) -> float:
+    """Score (0–100) of two already normalised names with one named rapidfuzz scorer.
+
+    The caller normalises both sides with the same profile; the scorer is an
+    explicit argument, never a default. Requires the extra ``fuzzy``.
+    """
+    if scorer not in PAIR_SCORERS:
+        raise ProfileError(f"Unbekannter Scorer {scorer!r}.")
+    if not isinstance(left, str) or not isinstance(right, str):
+        raise TypeError("Namen sind als Text zu übergeben.")
+    fuzz, _ = _rapidfuzz()
+    return float(getattr(fuzz, scorer)(left, right))
+
+
 def _usable(query: str, min_token_length: int) -> bool:
     return bool(query) and any(len(t) >= min_token_length for t in query.split())
 

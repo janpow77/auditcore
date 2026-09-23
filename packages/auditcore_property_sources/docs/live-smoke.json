@@ -1,0 +1,130 @@
+{
+ "executed_at": "2026-09-23T11:53:28+00:00",
+ "user_agent": "auditcore-property-sources-smoke/0.1 (einmalige Strukturpruefung, janpow77/auditcore)",
+ "terms_of_use": "REVIEW_REQUIRED",
+ "not_requested": {
+  "property.kleinanzeigen": "robots.txt Disallow: /*/preis:*",
+  "property.zvg_detail": "robots.txt Disallow: /index.php?button=showZvg*"
+ },
+ "results": {
+  "immobilien_de": {
+   "source_id": "property.immobilien_de",
+   "requests": [
+    "GET www.immobilien.de",
+    "GET www.immobilien.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 24,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 24,
+    "flaeche_qm": 24,
+    "kaltmiete": 24,
+    "gesamtmiete": 0,
+    "preisart": 24
+   },
+   "total_hint_seen": 24
+  },
+  "inberlinwohnen": {
+   "source_id": "property.inberlinwohnen",
+   "requests": [
+    "GET www.inberlinwohnen.de",
+    "GET www.inberlinwohnen.de"
+   ],
+   "status": "partial",
+   "pages": 1,
+   "records": 10,
+   "issues": 0,
+   "errors": [
+    "limit_reached"
+   ],
+   "field_presence": {
+    "plz": 10,
+    "flaeche_qm": 10,
+    "kaltmiete": 10,
+    "gesamtmiete": 10
+   },
+   "total_hint_seen": 10
+  },
+  "bienici": {
+   "source_id": "property.bienici",
+   "requests": [
+    "GET www.bienici.com",
+    "GET www.bienici.com"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 24,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 24,
+    "flaeche_qm": 24,
+    "kaltmiete": 23,
+    "gesamtmiete": 24,
+    "preisart": 24
+   },
+   "total_hint_seen": 24
+  },
+  "citya": {
+   "source_id": "property.citya",
+   "requests": [
+    "GET www.citya.com",
+    "GET www.citya.com"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 17,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 17,
+    "flaeche_qm": 17,
+    "kaltmiete": 17,
+    "gesamtmiete": 0,
+    "preisart": 17
+   },
+   "total_hint_seen": 17
+  },
+  "paruvendu": {
+   "source_id": "property.paruvendu",
+   "requests": [
+    "GET www.paruvendu.fr",
+    "GET www.paruvendu.fr"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 30,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 0,
+    "flaeche_qm": 29,
+    "kaltmiete": 0,
+    "gesamtmiete": 30,
+    "preisart": 30
+   },
+   "total_hint_seen": 30
+  },
+  "zvg_liste": {
+   "source_id": "property.zvg",
+   "requests": [
+    "GET www.zvg-portal.de",
+    "GET www.zvg-portal.de",
+    "POST www.zvg-portal.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 8,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "file_number": 8,
+    "court_id": 8
+   },
+   "total_hint_seen": 8
+  }
+ }
+}

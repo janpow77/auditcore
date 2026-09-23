@@ -1,0 +1,31 @@
+{
+ "id": "riskanalysis.payee",
+ "kind": "normalization",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Normalisierung. Umlaute werden durch NFKD und das Zeichenmuster in zwei Tokens zerlegt (Müller → mu ller); das bleibt als Legacyverhalten erhalten.",
+ "normalization": {
+  "algorithm": "nfkd_lower_regex",
+  "ampersand": null,
+  "compact_tokens": false,
+  "filler_words": [],
+  "fold_map": {},
+  "legal_suffixes": [],
+  "nonword_pattern": "[^a-z0-9äöüß ]",
+  "removal_pattern": "\\b(gmbh|mbh|ggmbh|ag|kg|kgaa|ohg|gbr|ug|se|ek|e\\s?k|e\\s?v|ev|co|kg|partg|mbb|gesellschaft|stiftung|verein|und|the)\\b"
+ },
+ "schema": "auditcore_entity_matching.profile/1",
+ "source": {
+  "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+  "git_blob": "fceae5b0d3364c5b20cc638ce4453ac082085aa7",
+  "path": "backend/app/pipeline/payee_normalizer.py",
+  "repository": "janpow77/riskanalysis",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_LEGAL",
+   "_NONWORD",
+   "_WS",
+   "normalize_name"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

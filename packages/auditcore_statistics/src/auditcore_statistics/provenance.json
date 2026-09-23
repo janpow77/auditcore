@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_statistics",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "source": {
     "repository": "janpow77/flowstat",
     "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",
@@ -18,6 +18,11 @@
     "source_repositories": [
       {
         "repository": "janpow77/flowstat",
+        "github_private": true,
+        "github_license": null
+      },
+      {
+        "repository": "janpow77/flowinvoice",
         "github_private": true,
         "github_license": null
       }
@@ -46,5 +51,27 @@
     "audit-portal analysis_core_service.run_benford → audit_tests_service.benford_test (abweichende Implementierung, eigenes Profil erst nach Characterization)",
     "run_outlier, run_duplicates und weitere Analysen"
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "additional_sources": [
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/benfords_law.py",
+      "git_blob": "77bf2b1e003634a9f52b079a6eb9c52d2a41a7e5",
+      "symbols": [
+        "BenfordsLawAnalyzer.analyze",
+        "_extract_first_digit",
+        "_chi_square_p_value",
+        "BENFORD_EXPECTED"
+      ],
+      "profile": "flowinvoice.fraud_benford (legacy_flowinvoice_benford)",
+      "added_in": "0.2.0",
+      "characterization": {
+        "fixture": "tests/fixtures/flowinvoice_benford_observed.json",
+        "tool": "tools/capture_flowinvoice_benford.py",
+        "cases": 65
+      },
+      "also_identical_in": "janpow77/audit-portal backend/app/services/fraud_detection/benfords_law.py (gleicher Blob)"
+    }
+  ]
 }
