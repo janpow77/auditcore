@@ -66,6 +66,8 @@ class ConsumptionRule:
     unit: str
     legacy_default: Decimal | None
     note: str = ""
+    standard: Decimal | None = None
+    standard_source: str | None = None
 
 
 @dataclass(frozen=True)
@@ -136,6 +138,7 @@ class CalculationProfile:
     require_released_for_comparison: bool
     fingerprint: str
     raw: Mapping[str, Any]
+    recommended: bool = False
 
     @property
     def reference(self) -> dict[str, str]:
@@ -175,6 +178,7 @@ class ComparisonProfile:
     prefer_standard_variants: bool
     fingerprint: str
     raw: Mapping[str, Any]
+    recommended: bool = False
 
     @property
     def reference(self) -> dict[str, str]:
@@ -208,6 +212,8 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
             if c.get("legacy_default") is None
             else _dec(c, "legacy_default", "consumption"),
             note=str(c.get("note", "")),
+            standard=None if c.get("standard") is None else _dec(c, "standard", "consumption"),
+            standard_source=c.get("standard_source"),
         )
         for c in data.get("consumption", [])
     )
@@ -281,6 +287,7 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
         require_released_for_comparison=bool(release.get("require_released_for_comparison", True)),
         fingerprint=_fingerprint(data),
         raw=data,
+        recommended=bool(data.get("recommended", False)),
     )
 
 
@@ -314,6 +321,7 @@ def comparison_profile_from_dict(data: Mapping[str, Any]) -> ComparisonProfile:
         prefer_standard_variants=bool(selection["prefer_standard_variants"]),
         fingerprint=_fingerprint(data),
         raw=data,
+        recommended=bool(data.get("recommended", False)),
     )
 
 
@@ -327,7 +335,7 @@ def _shipped() -> dict[tuple[str, str], Mapping[str, Any]]:
     return found
 
 
-def available_profiles() -> list[dict[str, str]]:
+def available_profiles() -> list[dict[str, Any]]:
     """Shipped profiles with id, version, type, status and fingerprint."""
     return sorted(
         (
@@ -336,6 +344,7 @@ def available_profiles() -> list[dict[str, str]]:
                 "version": version,
                 "type": str(data["type"]),
                 "status": str(data.get("status", "UNKNOWN")),
+                "recommended": bool(data.get("recommended", False)),
                 "fingerprint": _fingerprint(data),
             }
             for (pid, version), data in _shipped().items()
@@ -361,3 +370,34 @@ def load_calculation_profile(profile_id: str, version: str) -> CalculationProfil
 def load_comparison_profile(profile_id: str, version: str) -> ComparisonProfile:
     """Shipped comparison profile; the version must be named explicitly."""
     return comparison_profile_from_dict(_load(profile_id, version))
+
+
+def recommended_version(profile_id: str) -> str:
+    """Version of ``profile_id`` marked as recommended (decided rules); exactly one must exist."""
+    versions = [
+        v for (pid, v), data in _shipped().items() if pid == profile_id and data.get("recommended")
+    ]
+    if len(versions) != 1:
+        raise ProfileError(f"Für {profile_id} ist nicht genau eine empfohlene Version hinterlegt.")
+    return versions[0]
+
+
+def load_recommended_calculation_profile(profile_id: str) -> CalculationProfile:
+    """The recommended (decided) calculation profile, e.g. ``regulierung.hpp.wasser``."""
+    return load_calculation_profile(profile_id, recommended_version(profile_id))
+
+
+def load_recommended_comparison_profile(profile_id: str) -> ComparisonProfile:
+    """The recommended (decided) comparison profile."""
+    return load_comparison_profile(profile_id, recommended_version(profile_id))
+
+
+def standard_consumption(profile: CalculationProfile) -> dict[str, Decimal]:
+    """Standard consumption stated by the profile (single source); error if a value is missing."""
+    missing = [c.name for c in profile.consumption if c.standard is None]
+    if missing:
+        raise ProfileError(
+            f"Profil {profile.profile_id}@{profile.version} nennt keinen Standardverbrauch "
+            f"für {missing}; Verbrauch ausdrücklich angeben."
+        )
+    return {c.name: c.standard for c in profile.consumption if c.standard is not None}

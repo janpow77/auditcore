@@ -21,10 +21,13 @@ def main() -> None:
         load_calculation_profile,
         load_comparison_profile,
         select_tariff,
+        standard_consumption,
         traffic_light,
     )
 
-    assert len(available_profiles()) == 3
+    assert len(available_profiles()) == 6
+    empfohlen = load_calculation_profile("regulierung.hpp.wasser", "2026.09.2")
+    assert empfohlen.recommended and str(standard_consumption(empfohlen)["m3"]) == "180"
     wasser = load_calculation_profile("regulierung.hpp.wasser", "2026.09.1")
     tarif = Tariff.from_mapping(
         {

@@ -61,6 +61,7 @@ PROFILE_TESTS = [
     "tests/test_calculation.py",
     "tests/test_comparison.py",
     "tests/test_selection.py",
+    "tests/test_decisions.py",
 ]
 
 

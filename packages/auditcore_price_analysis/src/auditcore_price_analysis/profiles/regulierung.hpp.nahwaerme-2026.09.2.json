@@ -1,0 +1,154 @@
+{
+  "schema": "auditcore_price_analysis.profile/1",
+  "type": "calculation",
+  "profile_id": "regulierung.hpp.nahwaerme",
+  "version": "2026.09.2",
+  "kind": "nahwaerme",
+  "title": "Jahreskosten Nahwärme (HPP, Anhang C)",
+  "status": "DECIDED",
+  "source": {
+    "repository": "janpow77/regulierung",
+    "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+    "path": "backend/app/services/calculator.py",
+    "git_blob": "1d40c9ef739e8933b4ec8195226f5eef117389ba",
+    "symbols": [
+      "calculate_nahwaerme",
+      "UMLAGEN_STICHTAG"
+    ]
+  },
+  "formula": "G = P_G × Q_kW + P_A × Q_kWh / 100 + P_V + P_E × Q_kWh / 100 + P_U × Q_kWh / 100",
+  "consumption": [
+    {
+      "name": "kw",
+      "unit": "kW",
+      "legacy_default": "12",
+      "note": "Anschlussleistung",
+      "standard": "12",
+      "standard_source": "regulierung app/config.py Settings.nahwaerme_standard_kw"
+    },
+    {
+      "name": "kwh",
+      "unit": "kWh/a",
+      "legacy_default": "27000",
+      "note": "Jahresverbrauch",
+      "standard": "27000",
+      "standard_source": "regulierung app/config.py Settings.nahwaerme_standard_kwh"
+    }
+  ],
+  "components": [
+    {
+      "name": "grundpreis_eur_kw",
+      "line": "grundpreis_anteil",
+      "unit": "EUR/(kW·a)",
+      "basis": "kw",
+      "factor": "1",
+      "required": true,
+      "fixed": true
+    },
+    {
+      "name": "arbeitspreis_ct_kwh",
+      "line": "arbeitspreis_anteil",
+      "unit": "ct/kWh",
+      "basis": "kwh",
+      "factor": "0.01",
+      "required": true,
+      "fixed": false
+    },
+    {
+      "name": "verrechnungspreis_eur_jahr",
+      "line": "verrechnungspreis_anteil",
+      "unit": "EUR/a",
+      "basis": null,
+      "factor": "1",
+      "required": false,
+      "fixed": true
+    },
+    {
+      "name": "emissionspreis_ct_kwh",
+      "line": "emissionspreis_anteil",
+      "unit": "ct/kWh",
+      "basis": "kwh",
+      "factor": "0.01",
+      "required": false,
+      "fixed": false
+    },
+    {
+      "name": "umlagenpreis_ct_kwh",
+      "line": "umlagenpreis_anteil",
+      "label": "gasspeicherumlage",
+      "unit": "ct/kWh",
+      "basis": "kwh",
+      "factor": "0.01",
+      "required": false,
+      "fixed": false,
+      "valid_until": "2025-06-30"
+    },
+    {
+      "name": "waermeumlagenpreis_ct_kwh",
+      "line": "umlagenpreis_anteil",
+      "label": "waermeumlagenpreis",
+      "unit": "ct/kWh",
+      "basis": "kwh",
+      "factor": "0.01",
+      "required": false,
+      "fixed": false,
+      "valid_from": "2025-07-01"
+    }
+  ],
+  "tiers": null,
+  "mixed_price": {
+    "name": "mischpreis_ct_kwh",
+    "unit": "ct/kWh",
+    "basis": "kwh",
+    "factor": "100"
+  },
+  "rounding": {
+    "money": {
+      "places": "0.01",
+      "mode": "ROUND_HALF_UP"
+    },
+    "percent": {
+      "places": "0.1",
+      "mode": "ROUND_HALF_UP"
+    },
+    "mixed_price": {
+      "places": "0.01",
+      "mode": "ROUND_HALF_UP"
+    }
+  },
+  "missing": {
+    "optional_missing_blocks_comparison": false,
+    "mark_incomplete": true
+  },
+  "release": {
+    "require_released_for_comparison": true
+  },
+  "legal_dates": [
+    {
+      "date": "2025-07-01",
+      "meaning": "Wärmeumlagenpreis ersetzt Gasspeicherumlage (Stichtag ≥ Datum)",
+      "status": "REVIEW_REQUIRED",
+      "research": {
+        "date": "2026-09-23",
+        "result": "Keine gesetzliche Grundlage für einen Wechsel zu einem ‚Wärmeumlagenpreis‘ zum 01.07.2025 belegbar. Zum 01.07.2025 wurde nur die Höhe der Gasspeicherumlage nach § 35e EnWG geändert (Festlegung des Marktgebietsverantwortlichen, 0,289 ct/kWh); die Gasspeicherumlage entfiel erst zum 01.01.2026 durch Änderung des EnWG (Bundestag 06.11.2025, Bundesrat 21.11.2025). Für Fernwärme gilt das EnWG nicht unmittelbar (Preisänderungsklauseln nach AVBFernwärmeV). Der ‚Wärmeumlagenpreis‘ ist nach Recherche ein vertraglicher Preisbestandteil der Versorger, keine gesetzliche Umlage.",
+        "sources": [
+          "https://www.bundeswirtschaftsministerium.de/Redaktion/DE/Downloads/Gesetz/2025/20250806-gesetzentwurf-abschaffung-gasspeicherumlage-kabinettsvorlage.pdf",
+          "https://www.roedl.com/insights/abschaffung-gasspeicherumlage-auswirkungen-waermepreisbildung-regulatorische-implikationen/",
+          "https://wm-energy.de/detail/gasspeicherumlage-ab-juli-2025"
+        ]
+      },
+      "note": "Wert unverändert aus der Quelle (UMLAGEN_STICHTAG); fachliche Prüfung offen."
+    }
+  ],
+  "recommended": true,
+  "derived_from": "regulierung.hpp.nahwaerme@2026.09.1",
+  "decisions": [
+    {
+      "code": "PA-H01",
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "quote": "„alle empfehlungen … p3 180“",
+      "decision": "Fehlende optionale Preisbestandteile schließen die Vergleichbarkeit nicht aus; das Ergebnis wird als ‚unvollständig‘ markiert."
+    }
+  ]
+}

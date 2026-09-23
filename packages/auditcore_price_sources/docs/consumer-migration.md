@@ -40,4 +40,4 @@ Requirements werden erst mit dem zentralen Release v0.3.0 geändert. Patch:
    ```
    (`auditcore_harvest==0.1.0` ist bereits gebunden.)
 2. Patch anwenden (Teil `external_apis`).
-3. Fachliche Abnahme PS-H01 (Anzeige `teilweise`).
+3. PS-H01 entschieden (23.09.2026): Anzeige `teilweise` bei Hinweisen. PS-H02 entschieden: Tankerkönig-`harvest()` bleibt deaktiviert, nichts speichern.

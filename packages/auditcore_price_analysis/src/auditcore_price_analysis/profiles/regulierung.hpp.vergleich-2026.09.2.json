@@ -1,0 +1,80 @@
+{
+  "schema": "auditcore_price_analysis.profile/1",
+  "type": "comparison",
+  "profile_id": "regulierung.hpp.vergleich",
+  "version": "2026.09.2",
+  "title": "Vergleichsgruppe: Abweichung, Ampel, Kennzahlen, Tarifauswahl (HPP)",
+  "status": "DECIDED",
+  "source": {
+    "repository": "janpow77/regulierung",
+    "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+    "files": [
+      {
+        "path": "backend/app/services/calculator.py",
+        "git_blob": "1d40c9ef739e8933b4ec8195226f5eef117389ba",
+        "symbols": [
+          "calculate_delta",
+          "determine_compliance",
+          "calculate_cluster_statistics"
+        ]
+      },
+      {
+        "path": "backend/app/services/preisauswahl.py",
+        "git_blob": "89b5cec43867794918cfcb851878eb6dfddf1abc",
+        "symbols": [
+          "waehle_preis_deterministisch",
+          "waehle_wasser_preis",
+          "lade_wasser_preis",
+          "lade_nahwaerme_preis"
+        ]
+      }
+    ]
+  },
+  "delta": {
+    "rounding": {
+      "places": "0.1",
+      "mode": "ROUND_HALF_UP"
+    },
+    "reference_must_be_positive": true
+  },
+  "traffic_light": {
+    "threshold_pct": "20",
+    "yellow_from_fraction": "0.5",
+    "rule": "Abweichung ≤ Schwelle × 0,5: gruen; ≤ Schwelle: gelb; sonst rot",
+    "note": "algorithmisch, keine Rechtsfolge (Quelle)"
+  },
+  "statistics": {
+    "rounding": {
+      "places": "0.01",
+      "mode": "ROUND_HALF_UP"
+    },
+    "stddev": "population",
+    "median": "mean_of_middle_pair"
+  },
+  "selection": {
+    "only_released": true,
+    "not_after_reference_date": true,
+    "respect_valid_to": true,
+    "q3_tolerance": "0.01",
+    "prefer_standard_variants": true,
+    "note": "PA-H04 entschieden: valid_to der Preiszeile wird beachtet."
+  },
+  "recommended": true,
+  "derived_from": "regulierung.hpp.vergleich@2026.09.1",
+  "decisions": [
+    {
+      "code": "PA-H02",
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "quote": "„alle empfehlungen … p3 180“",
+      "decision": "Abweichung, Ampel und Gruppenstatistik mit exakter Dezimalrundung (ROUND_HALF_UP)."
+    },
+    {
+      "code": "PA-H04",
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "quote": "„alle empfehlungen … p3 180“",
+      "decision": "valid_to der Preiszeile wird bei der Tarifauswahl beachtet."
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schema": "auditcore_price_analysis.profile/1",
+  "type": "calculation",
+  "profile_id": "regulierung.hpp.wasser",
+  "version": "2026.09.2",
+  "kind": "wasser",
+  "title": "Jahreskosten Wasser (HPP)",
+  "status": "DECIDED",
+  "source": {
+    "repository": "janpow77/regulierung",
+    "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+    "path": "backend/app/services/calculator.py",
+    "git_blob": "1d40c9ef739e8933b4ec8195226f5eef117389ba",
+    "symbols": [
+      "calculate_wasser",
+      "_calculate_staffel"
+    ]
+  },
+  "formula": "G = GP(Q3) × 12 + V_m³ × AP (oder Staffel) + VP × 12 + V_m³ × WEE",
+  "consumption": [
+    {
+      "name": "q3",
+      "unit": "m³/h (Zählergröße Q3)",
+      "legacy_default": "4",
+      "note": "wählt den Tarif, geht nicht in die Formel ein",
+      "standard": "4",
+      "standard_source": "regulierung app/config.py Settings.wasser_standard_q3"
+    },
+    {
+      "name": "m3",
+      "unit": "m³/a",
+      "legacy_default": "150",
+      "note": "PA-H03 entschieden: 180 m³; der Vorgabewert 150 des Rechners entfällt im korrigierten Vertrag",
+      "standard": "180",
+      "standard_source": "regulierung app/config.py Settings.wasser_standard_m3 (einzige Quelle)"
+    }
+  ],
+  "components": [
+    {
+      "name": "grundpreis_eur_monat",
+      "line": "grundpreis_anteil",
+      "unit": "EUR/Monat",
+      "basis": null,
+      "factor": "12",
+      "required": true,
+      "fixed": true
+    },
+    {
+      "name": "arbeitspreis_eur_m3",
+      "line": "arbeitspreis_anteil",
+      "unit": "EUR/m³",
+      "basis": "m3",
+      "factor": "1",
+      "required": true,
+      "fixed": false,
+      "tiered_by": "arbeitspreis_staffel"
+    },
+    {
+      "name": "verrechnungspreis_eur_monat",
+      "line": "verrechnungspreis_anteil",
+      "unit": "EUR/Monat",
+      "basis": null,
+      "factor": "12",
+      "required": false,
+      "fixed": true
+    },
+    {
+      "name": "wasserentnahmeentgelt_eur_m3",
+      "line": "wee_anteil",
+      "unit": "EUR/m³",
+      "basis": "m3",
+      "factor": "1",
+      "required": false,
+      "fixed": false
+    }
+  ],
+  "tiers": {
+    "field": "arbeitspreis_staffel",
+    "quantity": "m3",
+    "limit_key": "bis_m3",
+    "price_key": "preis",
+    "unit": "EUR/m³",
+    "wrapper_key": "staffeln",
+    "open_last": true,
+    "note": "Letzte Stufe gilt unbegrenzt, auch mit Grenze (Quellregel)."
+  },
+  "mixed_price": {
+    "name": "mischpreis_eur_m3",
+    "unit": "EUR/m³",
+    "basis": "m3",
+    "factor": "1"
+  },
+  "rounding": {
+    "money": {
+      "places": "0.01",
+      "mode": "ROUND_HALF_UP"
+    },
+    "percent": {
+      "places": "0.1",
+      "mode": "ROUND_HALF_UP"
+    },
+    "mixed_price": {
+      "places": "0.01",
+      "mode": "ROUND_HALF_UP"
+    }
+  },
+  "missing": {
+    "optional_missing_blocks_comparison": false,
+    "mark_incomplete": true
+  },
+  "release": {
+    "require_released_for_comparison": true
+  },
+  "legal_dates": [],
+  "recommended": true,
+  "derived_from": "regulierung.hpp.wasser@2026.09.1",
+  "decisions": [
+    {
+      "code": "PA-H01",
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "quote": "„alle empfehlungen … p3 180“",
+      "decision": "Fehlende optionale Preisbestandteile schließen die Vergleichbarkeit nicht aus; das Ergebnis wird als ‚unvollständig‘ markiert."
+    },
+    {
+      "code": "PA-H03",
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "quote": "„alle empfehlungen … p3 180“",
+      "decision": "Standardverbrauch Wasser 180 m³, einzige Quelle ist die Einstellung wasser_standard_m3."
+    }
+  ]
+}

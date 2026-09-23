@@ -39,10 +39,44 @@ geändert. Der vollständige Änderungssatz liegt als Patch unter
    `preisauswahl.py`).
 3. Tests wie oben gegen eine Wegwerf-Datenbank ausführen.
 
-## Weiterer Schritt: korrigierter Vertrag
+## Weiterer Schritt: korrigierter Vertrag (empfohlene Profile @2026.09.2)
 
-Neue Aufrufe sollten `Tariff.from_mapping(..., release=ReleaseStatus.from_legacy(p.freigabe_status),
-valid_from=p.stichtag)` und `calculate(..., consumption={...}, stichtag=...)`
-nutzen. Dabei **`None` durchreichen** statt `float(x or 0)`, sonst bleibt ein
-fehlender Preis unsichtbar. Vor dieser Umstellung sind PA-H01 bis PA-H04
-(`behavior-changes.md`) zu entscheiden.
+Neue Aufrufe nutzen die entschiedenen Profile:
+
+```python
+from auditcore_price_analysis import (
+    ReleaseStatus,
+    Tariff,
+    calculate,
+    load_recommended_calculation_profile,
+    standard_consumption,
+)
+
+profil = load_recommended_calculation_profile("regulierung.hpp.wasser")  # @2026.09.2
+tarif = Tariff.from_mapping(
+    preisdaten,
+    profil,
+    release=ReleaseStatus.from_legacy(p.freigabe_status),
+    valid_from=p.valid_from,
+    valid_to=p.valid_to,
+    q3=p.zaehlergroesse_q3,
+)
+verbrauch = {"q3": settings.wasser_standard_q3, "m3": settings.wasser_standard_m3}  # 180 m³
+ergebnis = calculate(tarif, profil, consumption=verbrauch, stichtag=stichtag)
+```
+
+- **PA-H03 (180 m³, eine Quelle):** Der Vorgabewert **150 m³** des Rechners
+  wird ersetzt. Heute rufen `calculate_wasser` ohne `m3` auf und bekommen damit
+  150 m³: `api/export_routes.py` (Zeilen 258, 596), `api/provider_routes.py`
+  (963), `services/flagging.py` (427, 725, 728, 836). Diese Aufrufe übergeben
+  künftig `m3=settings.wasser_standard_m3` (180), wie es
+  `api/calculate_routes.py` bereits tut; `standard_consumption(profil)` liefert
+  denselben Wert für Prüfungen. Die Einstellung bleibt die einzige Quelle.
+- **PA-H01:** `ergebnis.completeness == "unvollstaendig"` in der Oberfläche
+  anzeigen; die Vergleichbarkeit bleibt bestehen.
+- **PA-H02:** `delta_pct`, `traffic_light`, `group_statistics` statt der
+  Legacy-Gleitkommafunktionen.
+- **PA-H04:** `select_tariff(..., profile=load_recommended_comparison_profile("regulierung.hpp.vergleich"))`
+  schließt abgelaufene Preiszeilen (`valid_to`) aus.
+- `None` durchreichen statt `float(x or 0)`, sonst bleibt ein fehlender Preis
+  unsichtbar.

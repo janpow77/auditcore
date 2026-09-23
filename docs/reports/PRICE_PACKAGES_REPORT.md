@@ -101,15 +101,27 @@ veröffentlichten, hashgleichen Wheels; Wegwerf-Postgres-Container.
 Weitere Consumer (Clustering, Flagging, Indexreihen, `genesis_sync.py`,
 andere Repositories): **geplant**, nicht belegt.
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED 23.09.2026, Zitat „alle empfehlungen … p3 180“)
 
-1. PA-H01 fehlende optionale Preisbestandteile und Vergleichbarkeit.
-2. PA-H02 Umstellung Abweichung/Ampel/Statistik auf exakte Rundung.
-3. PA-H03 Standardverbrauch Wasser 150 m³ (Rechner) vs. 180 m³ (Einstellung).
-4. PA-H04 `valid_to` der Preiszeile bei der Tarifauswahl.
-5. PS-H01 Anzeige `teilweise` bei Antworten mit Hinweisen.
-6. PS-H02 Tankerkönig `list.php` als gespeicherte Vorprüfungsquelle (ADR-005).
-7. Datenrechte der Dienste; Umlagenstichtag 01.07.2025 ohne zitierte Rechtsquelle.
+Umgesetzt im Folge-PR (Versionen bleiben 0.1.0, noch nicht veröffentlicht):
+
+1. PA-H01: fehlende optionale Bestandteile bleiben vergleichbar, Ergebnis `unvollstaendig` markiert.
+2. PA-H02: Abweichung/Ampel/Statistik mit exakter Dezimalrundung.
+3. PA-H03: Wasser-Standardverbrauch 180 m³, einzige Quelle `wasser_standard_m3`.
+4. PA-H04: `valid_to` der Preiszeile wird bei der Tarifauswahl beachtet.
+5. PS-H01: Status `teilweise` bei Antworten mit Hinweisen.
+6. PS-H02: Tankerkönig `list.php` wird nicht gespeichert.
+
+Die Entscheidungen stecken in den empfohlenen Profilen @2026.09.2; die
+charakterisierten Profile @2026.09.1 und das Legacy-Modul bleiben bitgenau.
+
+## REVIEW_REQUIRED
+
+- Umlagenstichtag 01.07.2025: keine belastbare Rechtsgrundlage für einen
+  „Wärmeumlagenpreis“ gefunden (01.07.2025 nur Höhenänderung der
+  Gasspeicherumlage nach § 35e EnWG; Wegfall zum 01.01.2026); Wert bleibt,
+  Rechercheergebnis mit Quellen im Profil.
+- Datenrechte der Dienste.
 
 ## Offene Punkte
 

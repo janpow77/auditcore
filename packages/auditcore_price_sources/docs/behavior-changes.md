@@ -47,12 +47,18 @@ Fehlertexte bei fehlerhaften Antworten (unten).
 | PS-C12 | Destatis-Datensatz nur mit Tabelle und Zeilenzahl | Adapter 1.1.0 ergänzt `inhalt` (Zeitangaben, Periodencodes, Einheiten, Werte/Fehlwerte); Paging-Profil 2026.09.1 unverändert |
 | PS-C13 | Overpass-Consumer: doppelte Elemente einer Antwort hätten zweimal angelegt werden können | Consumer führt den Bestand während des Laufs fort |
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED, 23.09.2026)
 
-- **PS-H01** Anzeige `teilweise` statt `erfolg` bei Antworten mit Hinweisen
-  (PS-C02, PS-C03, PS-C07) ändert die Admin-Übersicht; fachliche Abnahme nötig.
-- **PS-H02** Soll `list.php` von Tankerkönig künftig als Vorprüfungsquelle
-  gespeichert werden? Die Bibliothek kennzeichnet Zeitbezug und Zweck; die
-  Entscheidung (ADR-005, § 7 MTSKraftV) bleibt beim Consumer. Bis dahin
-  unverändert deaktiviert.
-- **Datenrechte** aller Dienste: `REVIEW_REQUIRED` (Katalog `licence_access`).
+Nutzerentscheidung vom 23.09.2026, Zitat: „alle empfehlungen … p3 180“.
+
+- **PS-H01 – DECIDED:** Antworten mit Hinweisen (PS-C02, PS-C03, PS-C07)
+  ergeben den Status `teilweise` (`legacy_status`), nicht `erfolg`.
+- **PS-H02 – DECIDED:** Tankerkönig `list.php` wird **nicht** als
+  Vorprüfungsquelle gespeichert. `harvest()` des Consumers bleibt deaktiviert
+  (ADR-005); der Adapter dient nur dem Health-Check bzw. einer nicht
+  gespeicherten Sichtprüfung (Katalogfeld `storage`).
+
+## REVIEW_REQUIRED
+
+- **Datenrechte** aller Dienste bleiben dokumentiert und ungeprüft
+  (Katalog `licence_access`).
