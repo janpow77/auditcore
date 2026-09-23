@@ -1,0 +1,27 @@
+{
+ "invoice_pages": {
+  "invoice_1.pdf": [
+   "SYNTHETIC TEST INVOICE\nDocument: DOC-00001\nInvoice: RG-2025-0001\nInvoice date: 2026-01-15\nSupply date: 2026-01-14\nDue date: 2026-02-14\nSUPPLIER\nName: TechCorp GmbH\nAddress: Berliner Straße 63, 10115 Berlin\nCity: Berlin\nCountry: DE\nVat Id: SYNTHETIC-NOT-A-REGISTERED-VAT-ID\nBENEFICIARY\nName: Digital Solutions AG\nAddress: Waldstraße 23b, 20095 Hamburg\nCity: Hamburg\nCountry: DE\nVat Id: SYNTHETIC-NOT-A-REGISTERED-VAT-ID\nLINE ITEMS\n1. Business Process Analysis\n   Quantity: 1 | Unit price: 3837.84 EUR | Amount: 3837.84 EUR\n2. Strategic Consulting Services\n   Quantity: 1 | Unit price: 7382.50 EUR | Amount: 7382.50 EUR\n3. Feasibility Study\n   Quantity: 1 | Unit price: 3691.52 EUR | Amount: 3691.52 EUR\n4. Regulatory Compliance Consulting\n   Quantity: 1 | Unit price: 2464.53 EUR | Amount: 2464.53 EUR\n5. Strategic Consulting Services\n   Quantity: 1 | Unit price: 874.65 EUR | Amount: 874.65 EUR\nTOTALS\nSubtotal: 18251.04 EUR\nVAT: 3467.70 EUR\nTotal: 21718.74 EUR\nVAT rate: 0.19\nSynthetic training data - not a real invoice\nPage 1\n"
+  ],
+  "invoice_2.pdf": [
+   "SYNTHETIC TEST INVOICE\nDocument: DOC-00002\nInvoice: INV-2026-0002\nInvoice date: 2026-01-16\nSupply date: 2026-01-15\nDue date: 2026-02-15\nSUPPLIER\nName: TechCorp GmbH\nAddress: Hauptstraße 24, 50667 Köln\nCity: Köln\nCountry: DE\nVat Id: SYNTHETIC-NOT-A-REGISTERED-VAT-ID\nBENEFICIARY\nName: WebTech AG\nAddress: Bergstraße 7b, 20095 Hamburg\nCity: Hamburg\nCountry: DE\nVat Id: SYNTHETIC-NOT-A-REGISTERED-VAT-ID\nLINE ITEMS\n1. Technical Advisory (56h)\n   Quantity: 1 | Unit price: 6497.44 EUR | Amount: 6497.44 EUR\n2. Business Process Analysis\n   Quantity: 1 | Unit price: 1976.50 EUR | Amount: 1976.50 EUR\n3. Technology Assessment\n   Quantity: 1 | Unit price: 7610.06 EUR | Amount: 7610.06 EUR\n4. Regulatory Compliance Consulting\n   Quantity: 1 | Unit price: 2536.54 EUR | Amount: 2536.54 EUR\n5. Feasibility Study\n   Quantity: 1 | Unit price: 456.58 EUR | Amount: 456.58 EUR\nTOTALS\nSubtotal: 19077.12 EUR\nVAT: 3624.65 EUR\nTotal: 22702.77 EUR\nVAT rate: 0.19\nSynthetic training data - not a real invoice\nPage 1\n"
+  ],
+  "invoice_3.pdf": [
+   "SYNTHETIC TEST INVOICE\nDocument: DOC-00003\nInvoice: RG-2025-0003\nInvoice date: 2026-01-17\nSupply date: 2026-01-16\nDue date: 2026-02-16\nSUPPLIER\nName: WebTech AG\nAddress: Lindenstraße 57a, 20095 Hamburg\nCity: Hamburg\nCountry: DE\nVat Id:\nBENEFICIARY\nName: CloudSys AG\nAddress: Hauptstraße 41c, 60311 Frankfurt\nCity: Frankfurt\nCountry: DE\nVat Id: SYNTHETIC-NOT-A-REGISTERED-VAT-ID\nLINE ITEMS\n1. Strategic Consulting Services\n   Quantity: 1 | Unit price: 2277.54 EUR | Amount: 2277.54 EUR\n2. Feasibility Study\n   Quantity: 1 | Unit price: 226.72 EUR | Amount: 226.72 EUR\n3. Market Research & Analysis\n   Quantity: 1 | Unit price: 183.39 EUR | Amount: 183.39 EUR\nTOTALS\nSubtotal: 2687.65 EUR\nVAT: 510.65 EUR\nTotal: 3198.30 EUR\nVAT rate: 0.19\nSynthetic training data - not a real invoice\nPage 1\n"
+  ]
+ },
+ "german": {
+  "de_gueltig": "Muster Handels GmbH\nRechnungsnummer: RE-2026/0042\nRechnungsdatum: 03.02.2026\nUSt-IdNr.: DE123456789\nIBAN: DE89 3704 0044 0532 0130 00\n\n\n\nNettobetrag: 1.000,00 EUR\nMwSt 19 %: 190,00 EUR\nGesamtbetrag: 1.190,00 EUR\n",
+  "de_iban_falsch": "Rechnungsnummer: RE-2026/0043\nDatum: 04.02.26\nIBAN: DE89 3704 0044 0532 0130 01\nNettobetrag: 100,00 EUR\nUSt 7%: 7,00\nGesamtbetrag: 107,00 EUR\n",
+  "de_summe_falsch": "Re.-Nr.: 77/2026\nDatum: 2026-02-05\nUSt-Id: ATU12345678\nZwischensumme: 200,00\nUmsatzsteuer 20 %: 40,00\nSumme: 250,00 €\n",
+  "de_land_unbekannt": "Invoice No: INV-9\nDate: 06/02/2026\nVAT ID: XX123456789\nSubtotal: 10.00\nVAT 19%: 1.90\nTotal: 11.90\n",
+  "de_datum_unlesbar": "Rechnungsnummer: A1\nRechnungsdatum: 31.02.2026\nGesamtbetrag: abc EUR\nNetto: 0,00\nMwSt: 0,00\n"
+ },
+ "sha256": {
+  "invoice_1.pdf": "d4efda7e2229efa6f49ec44c516f214913daa01d44f3f4e638359bda1c1ddab0",
+  "invoice_2.pdf": "ecddc9d2b390104ba9b8af2edc37bcf97de93983a983f29a1d3bb81dc550f3a2",
+  "invoice_3.pdf": "3e90be93bb7b1e600329be5e2946349c28f3e3190d2a3221fd96edec9089fcb4",
+  "notiz.txt": "d58f952c09ccee14d3636d7a8dccd9d03372f4839b689c0e027d1af8f62b90a6",
+  "pixel.png": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e"
+ }
+}

@@ -11,8 +11,10 @@
   "documents": true,
   "dsfa_required": "UNKNOWN",
   "export_formats": [
+    "csv",
     "docx",
-    "json"
+    "json",
+    "pdf"
   ],
   "exports": true,
   "external_interfaces": false,

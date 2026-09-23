@@ -24,7 +24,10 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
     ),
     "auditcore_documents": frozenset(
-        {("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a")}
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+        }
     ),
     "auditcore_entity_matching": frozenset(
         {
