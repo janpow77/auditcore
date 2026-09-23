@@ -1,0 +1,17 @@
+{
+ "note": "synthetischer RSS-2.0-Feed",
+ "exchanges": [
+  {
+   "request": {
+    "url": "https://feed.example.invalid/rss"
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/rss+xml"
+    },
+    "body_text": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><rss version=\"2.0\"><channel><title>Beispiel</title>\n<item><title>Bericht 1</title><link>https://feed.example.invalid/1</link><guid>urn:beispiel:1</guid><pubDate>Mon, 01 Sep 2026 08:00:00 GMT</pubDate><description>Prüfbericht über Förderung</description></item>\n<item><title>Bericht 2</title><link>https://feed.example.invalid/2</link><pubDate>Tue, 02 Sep 2026 08:00:00 GMT</pubDate></item>\n</channel></rss>"
+   }
+  }
+ ]
+}
