@@ -1,0 +1,185 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://publications.europa.eu/webapi/rdf/sparql",
+    "params": {
+     "query": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date ?type WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n                OPTIONAL { ?work cdm:resource_legal_type ?type . }\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"2021/1058\") ||\n                    CONTAINS(STR(?title), \"1303/2013\") ||\n                    CONTAINS(STR(?title), \"regionale Entwicklung\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 200\n        ",
+     "format": "application/sparql-results+json"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/sparql-results+json"
+    },
+    "body_json": {
+     "head": {
+      "vars": [
+       "celex",
+       "date",
+       "title"
+      ]
+     },
+     "results": {
+      "bindings": [
+       {
+        "celex": {
+         "type": "literal",
+         "value": "32021R1060"
+        },
+        "title": {
+         "type": "literal",
+         "value": "Dublette Dachverordnung"
+        },
+        "date": {
+         "type": "literal",
+         "value": "2021-06-24"
+        }
+       },
+       {
+        "celex": {
+         "type": "literal",
+         "value": "32022R0001"
+        },
+        "title": {
+         "type": "literal",
+         "value": "Delegierte VO zu 2021/1060 EFRE"
+        },
+        "date": {
+         "type": "literal",
+         "value": "2022-05-04"
+        }
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://publications.europa.eu/webapi/rdf/sparql",
+    "params": {
+     "query": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?celex), \"32021\") ||\n                    CONTAINS(STR(?celex), \"32022\") ||\n                    CONTAINS(STR(?celex), \"32023\") ||\n                    CONTAINS(STR(?celex), \"32024\")\n                )\n                FILTER(\n                    CONTAINS(STR(?title), \"Delegierte\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"Kohäsion\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+     "format": "application/sparql-results+json"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/sparql-results+json"
+    },
+    "body_json": {
+     "head": {
+      "vars": [
+       "celex",
+       "date",
+       "title"
+      ]
+     },
+     "results": {
+      "bindings": [
+       {
+        "celex": {
+         "type": "literal",
+         "value": "32022R0001"
+        },
+        "title": {
+         "type": "literal",
+         "value": "Doppelt aus zweiter Abfrage"
+        },
+        "date": {
+         "type": "literal",
+         "value": "2022-05-04"
+        }
+       },
+       {
+        "celex": {
+         "type": "literal",
+         "value": "32023R0100"
+        },
+        "title": {
+         "type": "literal",
+         "value": "Delegierte VO Kohäsion"
+        },
+        "date": {
+         "type": "literal",
+         "value": "2023-01-15"
+        }
+       }
+      ]
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://publications.europa.eu/webapi/rdf/sparql",
+    "params": {
+     "query": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Durchführung\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"EFRE\") ||\n                        CONTAINS(STR(?title), \"ESF\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+     "format": "application/sparql-results+json"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/sparql-results+json"
+    },
+    "body_json": {
+     "head": {
+      "vars": []
+     },
+     "results": {
+      "bindings": []
+     }
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://publications.europa.eu/webapi/rdf/sparql",
+    "params": {
+     "query": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    (CONTAINS(STR(?celex), \"52021\") || CONTAINS(STR(?celex), \"52022\") ||\n                     CONTAINS(STR(?celex), \"52023\") || CONTAINS(STR(?celex), \"52024\")) &&\n                    (\n                        CONTAINS(STR(?title), \"Kohäsion\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"EFRE\") ||\n                        CONTAINS(STR(?title), \"ESF\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        ",
+     "format": "application/sparql-results+json"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/sparql-results+json"
+    },
+    "body_json": {
+     "head": {
+      "vars": [
+       "celex",
+       "date",
+       "title"
+      ]
+     },
+     "results": {
+      "bindings": [
+       {
+        "celex": {
+         "type": "literal",
+         "value": "52023DC0010"
+        },
+        "title": {
+         "type": "literal",
+         "value": "Mitteilung Kohäsion 2021-2027"
+        },
+        "date": {
+         "type": "literal",
+         "value": "2023-02"
+        }
+       }
+      ]
+     }
+    }
+   }
+  }
+ ]
+}
