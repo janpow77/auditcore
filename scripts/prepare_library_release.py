@@ -27,6 +27,7 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
             ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
         }
     ),
     "auditcore_funding_sources": frozenset(

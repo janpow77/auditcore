@@ -11,6 +11,11 @@ Two algorithms exist in the sources and are kept apart:
   folding, a small fold map (``ß → ss``, ``ø → o`` …), NFKD decomposition
   without combining marks (``ä → a``), punctuation → space, legal-form tokens
   removed.
+* ``nfkd_lower_regex`` (riskanalysis payee normaliser): NFKD decomposition,
+  ``lower()``, every character matched by ``nonword_pattern`` → space (this
+  also turns the combining diaeresis of ``ü`` into a space: ``Müller → mu
+  ller``), legal-form/generic words matched by ``removal_pattern`` → space,
+  whitespace collapsed. Reproduced as characterized, not corrected.
 """
 
 from __future__ import annotations
@@ -38,6 +43,11 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         return ""
     if not isinstance(text, str):
         raise TypeError("Namen sind als Text zu übergeben.")
+    if rules.algorithm == "nfkd_lower_regex":
+        value = unicodedata.normalize("NFKD", text).lower()
+        value = re.sub(str(rules.nonword_pattern), " ", value)
+        value = re.sub(str(rules.removal_pattern), " ", value)
+        return _SPACE.sub(" ", value).strip()
     if rules.algorithm == "translate_then_casefold":
         table: dict[str, str | int | None] = dict(rules.translation)
         value = text.translate(str.maketrans(table)).casefold()
