@@ -1,0 +1,68 @@
+{
+ "version": 0.6,
+ "generator": "Overpass API (synthetic fixture)",
+ "osm3s": {
+  "timestamp_osm_base": "2026-09-01T06:00:00Z",
+  "timestamp_areas_base": "2026-08-31T22:00:00Z",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+ },
+ "elements": [
+  {
+   "type": "node",
+   "id": 1001,
+   "lat": 50.1109,
+   "lon": 8.6821,
+   "tags": {
+    "amenity": "fuel",
+    "name": "Beispiel Tank",
+    "brand": "Beispiel",
+    "addr:street": "Musterallee",
+    "addr:housenumber": "5",
+    "addr:postcode": "60311",
+    "addr:city": "Frankfurt am Main"
+   }
+  },
+  {
+   "type": "way",
+   "id": 2002,
+   "center": {
+    "lat": 50.5841,
+    "lon": 8.6784
+   },
+   "tags": {
+    "amenity": "fuel",
+    "brand": "Marke",
+    "addr:street": "Ring 7",
+    "addr:housenumber": "7",
+    "addr:postcode": "35390123",
+    "addr:place": "Gießen-Ost"
+   }
+  },
+  {
+   "type": "node",
+   "id": 1003,
+   "lat": 51.3127,
+   "lon": 9.4797
+  },
+  {
+   "type": "way",
+   "id": 2004,
+   "tags": {
+    "amenity": "fuel",
+    "name": "Ohne Koordinaten"
+   }
+  },
+  {
+   "type": "relation",
+   "id": 3005,
+   "center": {
+    "lat": 50.0,
+    "lon": 8.0
+   },
+   "tags": {
+    "amenity": "fuel",
+    "name": "Relation"
+   }
+  }
+ ]
+}

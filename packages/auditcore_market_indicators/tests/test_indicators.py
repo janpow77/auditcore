@@ -344,3 +344,32 @@ def test_method_reference_names_library_method_parameters_and_profile(
         mi.method_reference("rsi", n=14)
     with pytest.raises(mi.IndicatorInputError, match="Unbekannter"):
         mi.method_reference("stochastic")
+
+
+def test_decided_profile_uses_wilder_atr_and_flat_rsi_of_fifty() -> None:
+    decided = mi.load_profile(*mi.RECOMMENDED_PROFILE)
+    base = mi.load_profile("krypto.indicators_base", "2026.09.1")
+    high, low, close = walk(300)
+    tr = mi.true_range(high, low, close)
+    atr = mi.atr(high, low, close, 14, profile=decided)
+    state = sum(tr[:14]) / 14  # type: ignore[arg-type]
+    for index in range(14, 300):
+        state = (state * 13 + tr[index]) / 14  # type: ignore[operator]
+    assert atr[-1] == approx(state, rel=1e-12)
+    assert atr[-1] != mi.atr(high, low, close, 14, profile=base)[-1]
+    assert mi.rsi([7.0] * 20, 14, profile=decided)[-1] == 50.0
+    assert mi.rsi(close, 14, profile=decided) == mi.rsi(close, 14, profile=base)
+    assert mi.ema(close, 50, profile=decided) == mi.ema(close, 50, profile=base)
+
+
+def test_recommended_lookback_removes_the_start_dependence_of_ema50() -> None:
+    """MI-K03 entschieden: 250 Kerzen statt 60; EMA(50) ist dann praktisch startunabhängig."""
+    decided = mi.load_profile(*mi.RECOMMENDED_PROFILE)
+    assert decided.min_lookback == 250
+    _, _, close = walk(600)
+    full = mi.ema(close, 50, profile=decided)[-1]
+    short = mi.ema(close[-60:], 50, profile=decided)[-1]
+    long = mi.ema(close[-decided.min_lookback :], 50, profile=decided)[-1]
+    assert full is not None and short is not None and long is not None
+    # gemessen: 60 Kerzen 1,5 % Abweichung, 250 Kerzen 1,4e-6
+    assert abs(long - full) / full < 1e-5 and abs(short - full) / full > 1e-3

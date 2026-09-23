@@ -393,6 +393,19 @@ Tarife, Gültigkeitsdaten, Rundung und Freigabestatus brauchen eigene Profile.
 Die vorhandene LLM-Extraktion, Plausibilisierung, Reviewqueue und Scheduler
 bleiben zunächst in der Anwendung; keine automatische Preisfreigabe.
 
+**Stand 23.09.2026:** Beide Distributionen sind gebaut (je 0.1.0, MIT,
+Quellbindung `regulierung@853676d2`), siehe
+[Bericht](../reports/PRICE_PACKAGES_REPORT.md). `auditcore_price_analysis`
+(nur Standardbibliothek) enthält `calculator.py` und die reinen Auswahlregeln
+aus `preisauswahl.py` als exakten Legacy-Vertrag (274 Fälle) und als
+korrigierten Decimal-Vertrag mit versionierten Profilen;
+`auditcore_price_sources` (auf `auditcore_harvest==0.1.0`) enthält Bundesbank,
+Destatis (verschoben), EIA, Tankerkönig, Overpass-Tankstellen und den
+EU-Oil-Bulletin-Snapshot. Die Trennung ist belegt: keine gemeinsamen Symbole,
+getrennte Consumer-Module (HPP-Preisvergleich bzw. Marktbeobachtung/KPAnG) und
+Netzwerk-/Datenrechte nur bei den Quellen. Clustering, Flagging, Indexreihen
+und `genesis_sync.py` bleiben vorerst in regulierung (geplant).
+
 Ein kleiner `auditcore_geo`-Kern ist über OSINT `ortsdienst/dienst.py:haversine_km`
 und `werkzeuge/bundeslaender_holen.py:utm_nach_wgs84`, `wkb_polygone`,
 `douglas_peucker` sowie Natura-/Geocodingpfade in Flowsearch/Workshop prüfbar.

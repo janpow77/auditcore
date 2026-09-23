@@ -1,0 +1,236 @@
+{
+ "meta": {
+  "id": "BBEX3_D_USD_EUR_BB_AC_000",
+  "test": false,
+  "prepared": "2026-09-02T14:10:00.000Z",
+  "sender": {
+   "id": "BBK"
+  }
+ },
+ "data": {
+  "structure": {
+   "dimensions": {
+    "dataSet": [
+     {
+      "id": "DATAFLOW",
+      "keyPosition": 0,
+      "default": "BBEX3",
+      "values": [
+       {
+        "id": "BBEX3",
+        "name": "BBEX3"
+       }
+      ]
+     }
+    ],
+    "series": [
+     {
+      "id": "BBK_STD_FREQ",
+      "keyPosition": 1,
+      "values": [
+       {
+        "id": "D",
+        "name": "D"
+       }
+      ]
+     },
+     {
+      "id": "BBK_STD_CURRENCY",
+      "keyPosition": 2,
+      "values": [
+       {
+        "id": "USD",
+        "name": "USD"
+       }
+      ]
+     },
+     {
+      "id": "BBK_ERX_PARTNER_CURRENCY",
+      "keyPosition": 3,
+      "values": [
+       {
+        "id": "EUR",
+        "name": "EUR"
+       }
+      ]
+     },
+     {
+      "id": "BBK_ERX_SERIES_TYPE",
+      "keyPosition": 4,
+      "values": [
+       {
+        "id": "BB",
+        "name": "BB"
+       }
+      ]
+     },
+     {
+      "id": "BBK_ERX_RATE_TYPE",
+      "keyPosition": 5,
+      "values": [
+       {
+        "id": "AC",
+        "name": "AC"
+       }
+      ]
+     },
+     {
+      "id": "BBK_ERX_SUFFIX",
+      "keyPosition": 6,
+      "values": [
+       {
+        "id": "000",
+        "name": "000"
+       }
+      ]
+     }
+    ],
+    "observation": [
+     {
+      "id": "TIME_PERIOD",
+      "keyPosition": 7,
+      "values": [
+       {
+        "id": "2026-08-28",
+        "name": "2026-08-28"
+       },
+       {
+        "id": "2026-08-29",
+        "name": "2026-08-29"
+       },
+       {
+        "id": "2026-08-30",
+        "name": "2026-08-30"
+       },
+       {
+        "id": "2026-08-31",
+        "name": "2026-08-31"
+       },
+       {
+        "id": "2026-09-01",
+        "name": "2026-09-01"
+       },
+       {
+        "id": "2026-09-02",
+        "name": "2026-09-02"
+       },
+       {
+        "id": "",
+        "name": ""
+       }
+      ]
+     }
+    ]
+   },
+   "attributes": {
+    "series": [
+     {
+      "id": "TIME_FORMAT",
+      "values": [
+       null,
+       {
+        "name": "P1D"
+       }
+      ]
+     },
+     {
+      "id": "BBK_DECIMALS",
+      "values": [
+       null,
+       {
+        "name": "4"
+       }
+      ]
+     },
+     {
+      "id": "BBK_ID",
+      "values": [
+       null,
+       {
+        "name": "BBEX3.D.USD.EUR.BB.AC.000"
+       }
+      ]
+     },
+     {
+      "id": "BBK_UNIT",
+      "values": [
+       null,
+       {
+        "name": "USD"
+       }
+      ]
+     },
+     {
+      "id": "BBK_UNIT_MULT",
+      "values": [
+       null,
+       {
+        "name": "0"
+       }
+      ]
+     },
+     {
+      "id": "BBK_TITLE",
+      "values": [
+       null,
+       {
+        "name": "Euro-Referenzkurs der EZB / 1 EUR = ... USD / Vereinigte Staaten"
+       }
+      ]
+     }
+    ],
+    "observation": [
+     {
+      "id": "OBS_STATUS",
+      "values": [
+       null,
+       {
+        "name": "K"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "dataSets": [
+   {
+    "action": "Replace",
+    "validFrom": "2026-09-02T14:10:00.000Z",
+    "series": {
+     "0:0:0:0:0:0": {
+      "attributes": [
+       1,
+       1,
+       1,
+       1,
+       1,
+       1
+      ],
+      "observations": {
+       "0": [
+        "1.1012",
+        0
+       ],
+       "1": [
+        null,
+        1
+       ],
+       "2": [
+        null,
+        1
+       ],
+       "3": [
+        "1.0987",
+        0
+       ],
+       "4": [
+        "1.1050",
+        0
+       ]
+      }
+     }
+    }
+   }
+  ]
+ }
+}

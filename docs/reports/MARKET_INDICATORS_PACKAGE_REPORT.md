@@ -85,7 +85,7 @@ Requirements-Installation, `pip check`, Importherkunft, Smoke aus dem
 installierten Wheel, selektive Installation und Entfernung, zwei Debian-Revisionen,
 signierte APT-Quelle, Installation, Upgrade 0.1.0-1 → 0.1.0-2 und Entfernung im
 netzlosen bookworm-Container (System-Python 3.11). Wheel-SHA256
-`dd2e128f97ac1a25e6e45f86f3b8fa919688622a95c401542a59f54e8ed75af6`.
+`a4b7a52044384b0b82abae3ef46c5bb8dc86668016ece5a38de6c7d6784e5b16` (Stand nach den Entscheidungen; erste Fassung `dd2e128f…`).
 Zusätzlich `installed_polars_smoke.py` nach `pip install '…whl[polars]'` PASS.
 Das Debian-Paket enthält den Kern; für den polars-Adapter gibt es in bookworm
 kein `python3-polars`, er ist daher nur über pip nutzbar (kein Suggests-Eintrag).
@@ -99,13 +99,23 @@ installiertem Wheel. `tools/migrate_krypto.py` stellt sechs Stellen um (siehe
 Indikator-, Scoring- und Regime-Tests laufen gegen die installierte Bibliothek.
 `ruff check app`: dieselben 63 Altbefunde, kein neuer. Keine Datenbank, kein Push.
 
+## Entscheidungen vom 23.09.2026
+
+Nutzer: „5. 250 kerzen. 6 ja wilder, rsi“.
+
+- **MI-K03 DECIDED:** Rückblick 250 Kerzen (`warmup.min_lookback`); in der
+  krypto-Kopie Pipeline-Vorgabe und die Aufrufe stündlich/4-stündlich (60) und
+  täglich (90) auf 250 umgestellt.
+- **MI-K04 DECIDED:** neues empfohlenes Profil `krypto.entschieden` 2026.09.1
+  (ATR Wilder, RSI flach = 50). Die charakterisierten Profile bleiben
+  unverändert, der Replay bleibt bitgenau.
+- Nachweis: Paket-pytest 2097 passed; krypto-Kopie mit `krypto.entschieden`
+  und Rückblick 250: `pytest tests` 1345 passed, keine neuen ruff-Befunde;
+  `verify_domain_packages.py --apt` erneut 21/21 PASS, auditcore-quality strict PASS.
+
 ## Offene Punkte
 
-1. **HUMAN_DECISION_REQUIRED MI-K03:** 60-Kerzen-Rückblick der Pipeline macht
-   EMA(50) und RSI(14) startabhängig; gespeichert bleibt der erste Wert.
-2. **HUMAN_DECISION_REQUIRED MI-K04:** ATR als SMA (Docstring sagt Wilder) und
-   RSI 100 gegenüber 50 bei flachem Markt fachlich bestätigen.
-3. Umstellung in krypto: nach Release v0.3.0 Requirements binden,
+1. Umstellung in krypto: nach Release v0.3.0 Requirements binden,
    `polars>=1.21`, `pipeline_version` erhöhen – **MIGRATION_BLOCKED** bis zur
    Veröffentlichung.
-4. Weitere Consumer: geplant laut Nutzerentscheidung, derzeit keiner belegt.
+2. Weitere Consumer: geplant laut Nutzerentscheidung, derzeit keiner belegt.

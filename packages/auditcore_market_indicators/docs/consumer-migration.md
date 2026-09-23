@@ -10,8 +10,9 @@ zentralen Release v0.3.0).
 
 | Datei | Symbol | Profil |
 |---|---|---|
-| `backend/app/services/indicators/base.py` | alle zwölf Funktionen | `krypto.indicators_base` (polars-Adapter) |
-| `backend/app/services/indicators/pipeline.py` | `vma_20 = vol.rolling_mean(…, min_samples=20)` → `sma(vol, 20)` | – |
+| `backend/app/services/indicators/base.py` | alle zwölf Funktionen | `krypto.entschieden` = `RECOMMENDED_PROFILE` (polars-Adapter) |
+| `backend/app/services/indicators/pipeline.py` | `vma_20 = vol.rolling_mean(…, min_samples=20)` → `sma(vol, 20)`; `lookback: int = 60` → `250` | `min_lookback` |
+| `backend/app/services/pipelines/hourly.py`, `four_hour.py`, `daily.py` | `lookback=60` / `60` / `90` → `lookback=250` | `min_lookback` |
 | `backend/app/services/scoring/rsi_macd.py` | `compute_rsi`, `_ema` (damit `compute_macd`) | `krypto.scoring_rsi_macd` |
 | `backend/app/services/scoring/confluence.py` | `_ema_numpy` | `krypto.scoring_confluence` |
 | `backend/app/services/regime/hmm.py` | `_ema`, `_annualized_vol` | `krypto.regime_hmm`, `rolling_std` |
@@ -32,11 +33,16 @@ python tools/migrate_krypto.py <kopie-von-krypto> --ruff <krypto-venv>/bin/ruff
    `auditcore_market_indicators[polars]==0.1.0` ergänzen (nach Veröffentlichung
    von v0.3.0; bis dahin Wheel aus dem Release-Artefakt).
 2. `tools/migrate_krypto.py` anwenden oder die Tabelle oben von Hand umsetzen.
-3. `pipeline_version` der Indikator-Pipeline erhöhen (z. B. `v1.1.0`): Fenster
-   werden jetzt korrekt gerundet summiert (Abweichung ≤ 1·10⁻¹⁰ relativ), so dass
-   neu berechnete Zeilen als eigene Fassung gespeichert werden. Bestehende Zeilen
-   bleiben unverändert (Idempotenzregel §10.6).
-4. Tests: `pytest` im Verzeichnis `backend`.
+3. Entscheidungen vom 23.09.2026 übernehmen: `base.py` rechnet mit dem Profil
+   `krypto.entschieden` (ATR nach Wilder, RSI 50 bei flachem Markt; „6 ja
+   wilder, rsi“), Rückblick der Pipeline von 60 (täglich 90) auf 250 Kerzen
+   („5. 250 kerzen“). Die Scoring-/Regime-Module behalten ihre charakterisierten
+   Profile (`rsi_macd` liefert bei flachem Markt bereits 50).
+4. `pipeline_version` der Indikator-Pipeline erhöhen (z. B. `v2.0.0`): ATR und
+   flacher RSI ändern sich fachlich, EMA/RSI durch den längeren Rückblick, die
+   Fenster werden korrekt gerundet summiert. Neu berechnete Zeilen werden als
+   eigene Fassung gespeichert, bestehende bleiben unverändert (Idempotenzregel §10.6).
+5. Tests: `pytest` im Verzeichnis `backend`.
 
 ## Tatsächlich geprüft (lokal, Kopie, keine Produktionsdatenbank, kein Push)
 
@@ -44,11 +50,11 @@ python tools/migrate_krypto.py <kopie-von-krypto> --ruff <krypto-venv>/bin/ruff
   'backend[dev]'`), Wheel `auditcore_market_indicators-0.1.0-py3-none-any.whl[polars]`
   installiert.
 - Vorher: `pytest tests` → **1345 passed** (nicht als Integration markierte Tests).
-- Nach `migrate_krypto.py`: `pytest tests` → **1345 passed**; die Indikator-,
+- Nach `migrate_krypto.py` (Profil `krypto.entschieden`, Rückblick 250):
+  `pytest tests` → **1345 passed**; die Indikator-,
   Scoring- (RSI/MACD, Confluence, ADX-Trend, MA-Crossover) und Regime-Tests
   (92) laufen gegen die installierte Bibliothek.
 - `ruff check app`: dieselben 63 Altbefunde wie vor der Umstellung, kein neuer.
 
-Offene fachliche Entscheidungen vor der Umstellung: MI-K03 (Rückblick/Einschwingen)
-und MI-K04 (ATR-Glättung, RSI bei flachem Markt), siehe
-[behavior-changes.md](behavior-changes.md).
+MI-K03 (Rückblick) und MI-K04 (ATR-Glättung, RSI bei flachem Markt) sind seit
+dem 23.09.2026 entschieden, siehe [behavior-changes.md](behavior-changes.md).

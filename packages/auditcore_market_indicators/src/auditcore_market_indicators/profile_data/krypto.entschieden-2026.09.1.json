@@ -1,0 +1,49 @@
+{
+ "adx": {
+  "gaps": "zero_move"
+ },
+ "atr": {
+  "smoothing": "wilder"
+ },
+ "decision": {
+  "date": "2026-09-23",
+  "derived_from": {
+   "id": "krypto.indicators_base",
+   "version": "2026.09.1"
+  },
+  "meaning": "ATR mit Wilder-Glättung, RSI ohne jede Bewegung = 50, empfohlener Mindest-Rückblick 250 Kerzen",
+  "quote": "5. 250 kerzen. 6 ja wilder, rsi"
+ },
+ "ema": {
+  "gaps": "skip",
+  "seed": "sma"
+ },
+ "id": "krypto.entschieden",
+ "legal_status": "Nutzerentscheidung vom 23.09.2026 auf Basis des charakterisierten Profils krypto.indicators_base; keine methodische Validierung und keine Anlage- oder Handelsempfehlung.",
+ "macd": {},
+ "rsi": {
+  "flat_value": 50.0,
+  "gaps": "zero_move",
+  "smoothing": "wilder"
+ },
+ "schema": "auditcore_market_indicators.profile/1",
+ "source": {
+  "commit": "34d601726227f913548a118e144de5519eee0f3f",
+  "git_blob": "1bad05faad43915662f87971ef0d8ae55a1b4fe0",
+  "path": "backend/app/services/indicators/base.py",
+  "repository": "janpow77/krypto",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "ema",
+   "rsi",
+   "atr",
+   "adx"
+  ]
+ },
+ "status": "DECIDED",
+ "summation": "neumaier",
+ "version": "2026.09.1",
+ "warmup": {
+  "min_lookback": 250
+ }
+}
