@@ -1,0 +1,330 @@
+{
+  "schema": "auditcore_price_sources.catalog/1",
+  "version": "0.1.0",
+  "sources": [
+    {
+      "source_id": "price.bundesbank",
+      "adapter": "BundesbankSeriesAdapter",
+      "harvest_catalog_id": "price.bundesbank",
+      "origins": [
+        {
+          "repository": "janpow77/regulierung",
+          "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+          "path": "backend/app/services/external_apis/bundesbank.py",
+          "symbols": [
+            "BundesbankConnector"
+          ]
+        }
+      ],
+      "consumers": [
+        "regulierung api/admin/external_apis.py (CONNECTORS, connector.run(), health_check); Marktbeobachtung kraftstoff/markt/korrelation.py (Wechselkurs)"
+      ],
+      "auth": "none",
+      "unit": "aus Quelle (BBK_UNIT, Währungsdimensionen): USD je 1 EUR",
+      "time_reference": "tag (TIME_PERIOD)",
+      "snapshot_semantics": "append_only",
+      "config_schema": {
+        "url": "REST-Basis, z. B. https://api.statistiken.bundesbank.de/rest",
+        "flow_ref": "BBEX3",
+        "series_key": "D.USD.EUR.BB.AC.000",
+        "last_n_observations": "1..1000 (Vorgabe 30)"
+      },
+      "licence_access": {
+        "status": "REVIEW_REQUIRED",
+        "note": "Nutzungsbedingungen der Bundesbank-Statistikdaten nicht geprüft; keine Echtdaten in Fixtures."
+      },
+      "family": "price",
+      "profile_version": "2026.09.1",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "package": "auditcore_price_sources"
+      },
+      "live_test": {
+        "status": "PASS",
+        "date": "2026-09-23",
+        "records": 5,
+        "requests": 1,
+        "note": "lastNObservations=5"
+      }
+    },
+    {
+      "source_id": "price.destatis_genesis",
+      "adapter": "DestatisTabellenAdapter",
+      "harvest_catalog_id": "price.destatis_genesis",
+      "origins": [
+        {
+          "repository": "janpow77/regulierung",
+          "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+          "path": "backend/app/services/external_apis/destatis_genesis.py",
+          "symbols": [
+            "DestatisTabellenAdapter",
+            "DestatisGenesisConnector",
+            "KRAFTSTOFF_TABELLEN"
+          ]
+        }
+      ],
+      "consumers": [
+        "regulierung api/admin/external_apis.py (CONNECTORS, connector.run(), health_check)"
+      ],
+      "auth": "token (Credential 'token', Parameter password) + username",
+      "unit": "je Tabelle aus value_unit (z. B. 2020=100)",
+      "time_reference": "time/1_variable_attribute_code der Tabelle (zusammengefasst)",
+      "snapshot_semantics": "append_only",
+      "config_schema": {
+        "url": "…/genesisws/rest/2020/data/tablefile",
+        "username": "Kennung (kein Geheimnis)"
+      },
+      "licence_access": {
+        "status": "REVIEW_REQUIRED",
+        "note": "GENESIS-Nutzungsbedingungen (Datenlizenz Deutschland) nicht geprüft."
+      },
+      "family": "price",
+      "profile_version": "2026.09.1",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "package": "auditcore_price_sources"
+      },
+      "live_test": {
+        "status": "NOT_CONFIGURED",
+        "date": null,
+        "note": "GENESIS-Kennung (username) und Token nicht in der Prüfumgebung"
+      }
+    },
+    {
+      "source_id": "price.eia_brent",
+      "adapter": "EiaSpotPriceAdapter",
+      "harvest_catalog_id": "price.eia_brent",
+      "origins": [
+        {
+          "repository": "janpow77/regulierung",
+          "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+          "path": "backend/app/services/external_apis/eia_brent.py",
+          "symbols": [
+            "EiaBrentConnector"
+          ]
+        }
+      ],
+      "consumers": [
+        "regulierung api/admin/external_apis.py (CONNECTORS, connector.run(), health_check); Marktbeobachtung kraftstoff/markt/korrelation.py (Rohstoffpreis)"
+      ],
+      "auth": "api_key (Credential 'api_key')",
+      "unit": "aus Zeile units ($/BBL → USD/Barrel), sonst Profil USD/Barrel markiert",
+      "time_reference": "handelstag (period)",
+      "snapshot_semantics": "append_only",
+      "config_schema": {
+        "url": "https://api.eia.gov/v2",
+        "product": "EPCBRENT",
+        "window_days": "1..366 (Vorgabe 30)",
+        "page_size": "1..5000"
+      },
+      "licence_access": {
+        "status": "REVIEW_REQUIRED",
+        "note": "EIA-Daten laut Anbieter gemeinfrei (US-Bundesbehörde); nicht rechtlich geprüft."
+      },
+      "family": "price",
+      "profile_version": "2026.09.1",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "package": "auditcore_price_sources"
+      },
+      "live_test": {
+        "status": "PASS",
+        "date": "2026-09-23",
+        "records": 16,
+        "requests": 1,
+        "note": "Fenster 30 Tage"
+      }
+    },
+    {
+      "source_id": "price.eu_oil_bulletin",
+      "adapter": "PageSnapshotAdapter",
+      "harvest_catalog_id": "price.eu_oil_bulletin",
+      "origins": [
+        {
+          "repository": "janpow77/regulierung",
+          "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+          "path": "backend/app/services/external_apis/eu_oil_bulletin.py",
+          "symbols": [
+            "EuOilBulletinConnector"
+          ]
+        }
+      ],
+      "consumers": [
+        "regulierung api/admin/external_apis.py (CONNECTORS, connector.run(), health_check)"
+      ],
+      "auth": "none",
+      "unit": "keine Preise (nur Seiten-Snapshot)",
+      "time_reference": "abrufzeitpunkt (provenance.retrieved_at)",
+      "snapshot_semantics": "append_only",
+      "config_schema": {
+        "url": "Veröffentlichungsseite",
+        "max_bytes": "Vorgabe 5 MiB"
+      },
+      "licence_access": {
+        "status": "REVIEW_REQUIRED",
+        "note": "Wiederverwendung der Kommissionsinhalte nicht geprüft."
+      },
+      "family": "price",
+      "profile_version": "2026.09.1",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "package": "auditcore_price_sources"
+      },
+      "live_test": {
+        "status": "PASS",
+        "date": "2026-09-23",
+        "records": 1,
+        "requests": 1,
+        "note": "eine Abfrage"
+      }
+    },
+    {
+      "source_id": "price.overpass_fuel_stations",
+      "adapter": "OverpassFuelStationAdapter",
+      "harvest_catalog_id": "geo.overpass",
+      "origins": [
+        {
+          "repository": "janpow77/regulierung",
+          "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+          "path": "backend/app/services/external_apis/overpass.py",
+          "symbols": [
+            "OverpassConnector",
+            "HESSEN_TANKSTELLEN_QUERY"
+          ]
+        }
+      ],
+      "consumers": [
+        "regulierung api/admin/external_apis.py (CONNECTORS, connector.run(), health_check)"
+      ],
+      "auth": "none",
+      "unit": "keine Preise (Stammdaten, WGS84-Koordinaten)",
+      "time_reference": "datenstand (osm3s.timestamp_osm_base, raw.datenstand)",
+      "snapshot_semantics": "append_only",
+      "config_schema": {
+        "url": "https://overpass-api.de/api/interpreter",
+        "area_iso": "ISO 3166-2, Vorgabe DE-HE",
+        "timeout_seconds": "Vorgabe 180"
+      },
+      "licence_access": {
+        "status": "REVIEW_REQUIRED",
+        "note": "OSM-Daten unter ODbL (Quellkommentar); Namensnennung/Share-alike beim Consumer prüfen."
+      },
+      "note": "Fachprofil Tankstellen der allgemeinen Quelle geo.overpass; ein allgemeiner Geo-Adapter bleibt auditcore_geo vorbehalten.",
+      "family": "price",
+      "profile_version": "2026.09.1",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "package": "auditcore_price_sources"
+      },
+      "live_test": {
+        "status": "PASS",
+        "date": "2026-09-23",
+        "records": 120,
+        "requests": 1,
+        "note": "Gebiet DE-HB (klein) statt DE-HE, um den öffentlichen Dienst zu schonen"
+      }
+    },
+    {
+      "source_id": "price.tankerkoenig",
+      "adapter": "TankerkoenigListAdapter",
+      "harvest_catalog_id": "price.tankerkoenig",
+      "origins": [
+        {
+          "repository": "janpow77/regulierung",
+          "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+          "path": "backend/app/services/external_apis/tankerkoenig.py",
+          "symbols": [
+            "TankerkoenigConnector",
+            "HESSEN_BBOX"
+          ]
+        }
+      ],
+      "consumers": [
+        "regulierung api/admin/external_apis.py (CONNECTORS, connector.run(), health_check) (nur health_check; Ingestion bewusst deaktiviert, ADR-005)"
+      ],
+      "auth": "api_key (Credential 'api_key', Parameter apikey)",
+      "unit": "EUR/Liter (Profil)",
+      "time_reference": "abrufzeitpunkt – kein Preisänderungszeitpunkt",
+      "snapshot_semantics": "unknown",
+      "config_schema": {
+        "url": "https://creativecommons.tankerkoenig.de/json",
+        "lat": "Breite",
+        "lng": "Länge",
+        "rad": "km, >0..25"
+      },
+      "licence_access": {
+        "status": "REVIEW_REQUIRED",
+        "note": "CC BY 4.0 laut Anbieter; Zweckbindung § 7 MTSKraftV: nur Hinweisgewinnung, kein Beweismittel."
+      },
+      "family": "price",
+      "profile_version": "2026.09.1",
+      "implementation": {
+        "status": "IMPLEMENTED",
+        "package": "auditcore_price_sources"
+      },
+      "live_test": {
+        "status": "PASS",
+        "date": "2026-09-23",
+        "records": 11,
+        "requests": 1,
+        "note": "Umkreis 2 km"
+      }
+    }
+  ],
+  "not_implemented": [
+    {
+      "source_id": "price.mtsk",
+      "status": "NOT_APPLICABLE",
+      "reason": "regulierung mtsk.py: Pull nicht aktiviert (OP-01), Daten kommen per Push-Endpunkt; kein Abrufvertrag zu übernehmen.",
+      "origin": {
+        "repository": "janpow77/regulierung",
+        "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+        "path": "backend/app/services/external_apis/mtsk.py",
+        "symbols": [
+          "MtskConnector"
+        ]
+      }
+    },
+    {
+      "source_id": "price.vid_secondary",
+      "status": "NOT_APPLICABLE",
+      "reason": "vid_secondary.py: Stubs ohne vertraglichen Zugang (mehr-tanken, clever-tanken, ADAC).",
+      "origin": {
+        "repository": "janpow77/regulierung",
+        "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+        "path": "backend/app/services/external_apis/vid_secondary.py",
+        "symbols": [
+          "MehrTankenConnector",
+          "CleverTankenConnector",
+          "AdacConnector"
+        ]
+      }
+    },
+    {
+      "source_id": "registry.handelsregister",
+      "status": "OUT_OF_SCOPE",
+      "reason": "Registerquelle, Zielpaket auditcore_registry_sources.",
+      "origin": {
+        "repository": "janpow77/regulierung",
+        "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+        "path": "backend/app/services/external_apis/handelsregister.py",
+        "symbols": [
+          "HandelsregisterConnector"
+        ]
+      }
+    },
+    {
+      "source_id": "geo.geoportal_hessen",
+      "status": "OUT_OF_SCOPE",
+      "reason": "Geodienst (nur Health-Check), Zielpaket auditcore_geo.",
+      "origin": {
+        "repository": "janpow77/regulierung",
+        "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+        "path": "backend/app/services/external_apis/geoportal_hessen.py",
+        "symbols": [
+          "GeoportalHessenConnector"
+        ]
+      }
+    }
+  ]
+}

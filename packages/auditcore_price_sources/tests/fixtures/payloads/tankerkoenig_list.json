@@ -1,0 +1,53 @@
+{
+ "ok": true,
+ "license": "CC BY 4.0 -  https://creativecommons.tankerkoenig.de",
+ "data": "MTS-K",
+ "status": "ok",
+ "stations": [
+  {
+   "id": "00000000-0000-4000-8000-000000000001",
+   "name": "Beispiel Tankstelle Nord",
+   "brand": "BEISPIEL",
+   "street": "Musterstraße",
+   "place": "Musterstadt",
+   "lat": 50.6012,
+   "lng": 9.0041,
+   "dist": 0.4,
+   "diesel": 1.659,
+   "e5": 1.799,
+   "e10": 1.739,
+   "isOpen": true,
+   "houseNumber": "12",
+   "postCode": 35390
+  },
+  {
+   "id": "00000000-0000-4000-8000-000000000002",
+   "name": "Freie Tankstelle Süd",
+   "brand": "",
+   "street": "Hauptweg",
+   "place": "Beispielort",
+   "lat": 50.5988,
+   "lng": 9.0102,
+   "dist": 0.9,
+   "diesel": false,
+   "e5": null,
+   "e10": 1.745,
+   "isOpen": false,
+   "houseNumber": "",
+   "postCode": 6108
+  },
+  {
+   "id": "00000000-0000-4000-8000-000000000003",
+   "name": "Ohne Preise",
+   "brand": "X",
+   "street": "Weg",
+   "place": "Ort",
+   "lat": 50.6,
+   "lng": 9.0,
+   "dist": 1.0,
+   "isOpen": true,
+   "houseNumber": null,
+   "postCode": null
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+auditcore_price_sources 0.1.0 — source attribution and authorization
+
+The adapters derive from the executed and characterized connectors of this
+private repository (pinned revision, Git blobs in provenance.json, GitHub
+HEAD verified on 2026-09-23):
+
+  janpow77/regulierung@853676d2b1ab792395d63c62c9f96d5edcca8c2d
+    backend/app/services/external_apis/{base,bundesbank,destatis_genesis,
+      eia_brent,eu_oil_bulletin,harvest_kern,mtsk,overpass,tankerkoenig}.py
+    backend/app/api/admin/external_apis.py
+Observed contributors of the sources: janpow77, claude.
+The Destatis adapter was moved from regulierung (it already ran on
+auditcore_harvest 0.1.0); the other adapters are new implementations of the
+characterized request/parse contracts on auditcore_harvest.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library. The source repository keeps
+its own (unlicensed, private) status; this is no relicensing of it.
+
+Data of the services (Deutsche Bundesbank, Destatis GENESIS, U.S. EIA,
+Tankerkönig/MTS-K, OpenStreetMap/Overpass (ODbL), European Commission Weekly
+Oil Bulletin) is not part of this package; terms of use and purpose limits
+(e.g. § 7 MTSKraftV for Tankerkönig) must be reviewed per source
+(catalog field licence_access: REVIEW_REQUIRED). All fixtures are synthetic
+payloads in the observed response formats.
