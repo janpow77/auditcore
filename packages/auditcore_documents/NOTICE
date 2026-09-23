@@ -1,0 +1,32 @@
+auditcore_documents 0.1.0 — source attribution and authorization
+
+Derived from (unchanged Git blobs, verified against GitHub on 2026-09-23):
+  janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a
+    backend/app/modules/document_compare/types.py          295ed31cd6b0bf73af2fe9aa844d9f819c68b7a8
+    backend/app/modules/document_compare/parsing.py        bb0904344c0bf77b8587e23f3f8debf43423c810
+    backend/app/modules/document_compare/matching.py       1344667a7b85b809fd9a0477fa7c448b988b3ad1
+    backend/app/modules/document_compare/article_law.py    9156134ae74a79d65f4c7d161a54fc855b62c240
+    backend/app/modules/document_compare/service.py        265948ea3ac493c3f754d7ef88c7de4667ee9976
+    backend/app/modules/document_compare/rendering.py      e706e91e526f48c40bc9f8490700bddb60b7a57a
+    backend/app/modules/document_compare/configuration.py  3c324de7073d2cfbfff370c0624d07c27cd2bca2
+    backend/app/modules/document_compare/cli.py            ead8b5402f28b6a364841c8396edc12f787df0b1
+    backend/app/modules/document_compare/tasks.py          5f7d1b1c54fb30b2366c2d09dc80d8e1fcbeb69e
+    backend/app/modules/ecohesion/comparisons/worker.py    f8300bea36d09ef7964fff4a1e5d8e4a9e04c2a6
+    backend/app/modules/ecohesion/services/research_pdf.py 3ca2a3fca8975f8ba7523d84c01e251acbdd7e80
+    backend/app/core/shared/research/contracts.py          1eef9877cd06bc8f5afd32d5077707df9e7abea4
+
+The source repository is private and has no license file (historical status
+UNKNOWN). On 2026-09-22 the rights holder decided: "die Bibliotheken sollen
+MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for the extracted library code in this package.
+The source repository itself is not relicensed; data rights of services are
+separate.
+
+Test data: tests/fixtures/public contains German federal legal texts
+(Kassensicherungsverordnung in two versions from gesetze-im-internet.de,
+retrieved via the Internet Archive, and page 55 of BGBl. 2025 I Nr. 301 from
+recht.bund.de). Laws and ordinances are official works without copyright
+protection (§ 5 Abs. 1 UrhG); only single documents are used. All other
+fixtures are synthetic and contain no real case data.
+
+A comparison is a work aid. It states differences; it makes no audit decision.
