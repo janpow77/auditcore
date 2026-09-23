@@ -1,13 +1,15 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Preview v0.3.0](https://github.com/janpow77/auditcore/releases/tag/v0.3.0)**
-mit neunzehn Distributionen (126 Assets, Tag auf `cbe1b6d`). Downloadpfad
-`https://github.com/janpow77/auditcore/releases/download/v0.3.0`; derselbe
-Signaturschlüssel wie v0.1.0. Pro Paket gibt es `requirements-<paket>.txt`
+**Aktuell: [Preview v0.3.1](https://github.com/janpow77/auditcore/releases/tag/v0.3.1)**
+mit neunzehn Distributionen (126 Assets, Tag auf `a8b9b74`), darunter neu
+auditcore_procurement 0.2.0, auditcore_risk 0.2.0 und auditcore_geo 0.2.0.
+Downloadpfad `https://github.com/janpow77/auditcore/releases/download/v0.3.1`;
+derselbe Signaturschlüssel wie v0.1.0. Pro Paket gibt es `requirements-<paket>.txt`
 (hashgebunden, `--no-index`), dazu `requirements-all-locked.txt` und die
 Renderer-Locks für invoice (`pdf`) und reporting (`excel`). Anonyme pip- und
 APT-Installation aller neunzehn Pakete samt Funktionsprüfung und Entfernung wurde am
 23.09.2026 gegen den öffentlichen Pfad ausgeführt:
+[Nachweis](../reports/domain-public-installation-v0.3.1.json). Vorgänger v0.3.0:
 [Nachweis](../reports/domain-public-installation-v0.3.0.json).
 
 Zusätzlich gibt es einen Paketindex nach PEP 503 auf GitHub Pages, der die
