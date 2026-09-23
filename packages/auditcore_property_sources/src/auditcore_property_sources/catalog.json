@@ -23,7 +23,7 @@
     "_hit_plausible",
     "Ingest"
    ],
-   "reason": "Geokodierung ist ein eigener Dienst (Nominatim-Nutzungsrichtlinie, laut Lastenheft Self-Hosting) und gehört zur Geo-Domäne; SQL/Upsert bleibt Anwendung, der Lebenszyklus ist als reine Funktion extrahiert."
+   "reason": "Geokodierung ist ein eigener Dienst (Nominatim-Nutzungsrichtlinie, laut Lastenheft Self-Hosting) und gehört zur Geo-Domäne (auditcore_geo mit Nominatim-Adapter); SQL/Upsert bleibt Anwendung, der Lebenszyklus ist als reine Funktion extrahiert."
   },
   {
    "repository": "janpow77/versteigerung",
