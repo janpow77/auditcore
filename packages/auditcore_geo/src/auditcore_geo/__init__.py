@@ -21,15 +21,24 @@ from .distanz import (
 from .errors import GeoError, GeometrieFehler, KoordinatenFehler, ProfilFehler
 from .flaeche import (
     EMPFOHLEN_RAND_GILT_ALS_INNEN,
+    VERTRAG_ENTARTETE_RINGE,
+    EntarteterRing,
+    Entartung,
     Flaeche,
     Lage,
     Polygon,
+    Randbefund,
+    RingRolle,
     enthaelt,
     flaeche_aus_geojson,
+    flaeche_aus_gpkg,
+    flaeche_aus_ringen,
+    flaechen_im_umkreis,
     flaechenschwerpunkt,
     lage,
     naechster_stuetzpunkt_m,
     randabstand_m,
+    randbefund,
 )
 from .gpkg import GpkgGeometrie, lies_gpkg_polygone
 from .koordinaten import (
@@ -56,25 +65,28 @@ from .projektion import (
 )
 from .vereinfachung import douglas_peucker, ring_vereinfachen
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "BEREICH_DEUTSCHLAND_OSINT",
-    "EMPFOHLEN_RAND_GILT_ALS_INNEN",
     "EMPFOHLENES_ERDMODELL",
+    "EMPFOHLEN_RAND_GILT_ALS_INNEN",
+    "EPSG_25832",
     "EPSG_4258",
     "EPSG_4326",
-    "EPSG_25832",
     "ETRS89_UTM32N",
     "GRS80",
+    "KUGELPROFILE",
     "KUGEL_6371_KM",
     "KUGEL_MITTLERER_RADIUS",
-    "KUGELPROFILE",
     "OGC_CRS84",
+    "VERTRAG_ENTARTETE_RINGE",
     "WGS84",
     "Achsenfolge",
     "Bereich",
     "Ellipsoid",
+    "EntarteterRing",
+    "Entartung",
     "Flaeche",
     "GeoError",
     "GeometrieFehler",
@@ -86,6 +98,8 @@ __all__ = [
     "Polygon",
     "ProfilFehler",
     "Punkt",
+    "Randbefund",
+    "RingRolle",
     "Treffer",
     "UtmZone",
     "__version__",
@@ -94,6 +108,9 @@ __all__ = [
     "douglas_peucker",
     "enthaelt",
     "flaeche_aus_geojson",
+    "flaeche_aus_gpkg",
+    "flaeche_aus_ringen",
+    "flaechen_im_umkreis",
     "flaechenschwerpunkt",
     "geographisch_nach_utm",
     "grosskreis_km",
@@ -103,6 +120,7 @@ __all__ = [
     "lies_gpkg_polygone",
     "naechster_stuetzpunkt_m",
     "randabstand_m",
+    "randbefund",
     "ring_vereinfachen",
     "umkreis",
     "utm_nach_geographisch",
