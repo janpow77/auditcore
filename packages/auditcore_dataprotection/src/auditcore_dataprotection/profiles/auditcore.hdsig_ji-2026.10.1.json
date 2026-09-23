@@ -565,7 +565,7 @@
    {
     "block": "dsk_muss_liste",
     "effect": "hart",
-    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts oder der Nutzung einer Dienstleistung. Beispiel der Liste: biometrische Zutrittskontrolle.",
+    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts, der Nutzung einer Dienstleistung oder der Durchführung eines Vertrags. Beispiel der Liste: biometrische Zutrittskontrolle.",
     "key": "dsk_nr01_biometrie",
     "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 1 (biometrische Daten)",
     "legal_basis_ji": null,
@@ -576,7 +576,7 @@
    {
     "block": "dsk_muss_liste",
     "effect": "hart",
-    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts oder der Nutzung einer Dienstleistung.",
+    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts, der Nutzung einer Dienstleistung oder der Durchführung eines Vertrags.",
     "key": "dsk_nr02_genetik",
     "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 2 (genetische Daten)",
     "legal_basis_ji": null,
@@ -615,7 +615,7 @@
     "legal_basis_ji": null,
     "prefill": null,
     "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 (Zusammenführung als Entscheidungsgrundlage); im Dritten Teil HDSIG § 62 Abs. 1 HDSIG",
-    "text": "Werden Daten aus verschiedenen Quellen in großem Umfang zusammengeführt und verarbeitet, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um Grundlagen für Entscheidungen mit Rechtswirkung oder ähnlich erheblicher Beeinträchtigung zu schaffen?"
+    "text": "Werden Daten aus verschiedenen Quellen zusammengeführt und verarbeitet, wobei die Zusammenführung oder die Verarbeitung in großem Umfang erfolgt, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um Grundlagen für Entscheidungen mit Rechtswirkung oder ähnlich erheblicher Beeinträchtigung zu schaffen?"
    },
    {
     "block": "dsk_muss_liste",
@@ -670,7 +670,7 @@
     "legal_basis_ji": null,
     "prefill": null,
     "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 10 (Zusammenführung zur Mustererkennung); im Dritten Teil HDSIG § 62 Abs. 1 HDSIG",
-    "text": "Werden Daten aus verschiedenen Quellen in großem Umfang zusammengeführt und verarbeitet, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um vorher unbekannte Zusammenhänge für nicht im Vorhinein bestimmte Zwecke zu entdecken?"
+    "text": "Werden Daten aus verschiedenen Quellen zusammengeführt und verarbeitet, wobei die Zusammenführung oder die Verarbeitung in großem Umfang erfolgt, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um vorher unbekannte Zusammenhänge für nicht im Vorhinein bestimmte Zwecke zu entdecken?"
    },
    {
     "block": "dsk_muss_liste",

@@ -649,8 +649,10 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
             )
         gross = scenario.severity * scenario.likelihood
         net = net_s * net_l
+        # Only a justified explicit residual severity lifts a severity floor.
+        justified_severity = "severity" in explicit and bool(scenario.residual_justification)
         gross_band, net_band, net_floor = _bands(
-            profile, scenario, gross, net, net_s, net_l, "severity" in explicit
+            profile, scenario, gross, net, net_s, net_l, justified_severity
         )
         if net_floor:
             floored.append(index)

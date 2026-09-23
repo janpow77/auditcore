@@ -701,3 +701,18 @@ def test_library_profiles_carry_no_application_specific_texts(profile_id: str) -
         assert term not in text, term
     keys = [t["schluessel"] for t in load_profile(profile_id, VERSION).data_subject_view_templates]
     assert keys == ["eingeholt", "unangemessen_aufwand", "schutz_interessen"]
+
+
+def test_unjustified_residual_severity_keeps_the_floor() -> None:
+    profile = _profile_with_low_cell()
+    unjustified = {**SEVERE_UNLIKELY, "residual_severity": 2}
+    risk = assess_risk(profile, [unjustified])
+    assert risk.scenarios[0].net_band == "mittel" and risk.scenarios[0].edpb["net_floor"]
+    assert any(i.code == "residual_without_justification" for i in risk.issues)
+
+
+def test_list_entries_5_and_10_follow_the_wording_of_the_list() -> None:
+    for key in ("dsk_nr05_zusammenfuehrung_entscheidung", "dsk_nr10_zusammenfuehrung_analyse"):
+        assert "die Zusammenführung oder die Verarbeitung in großem Umfang" in (
+            edpb().question(key).text
+        )
