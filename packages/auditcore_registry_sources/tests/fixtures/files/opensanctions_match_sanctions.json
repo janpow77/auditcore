@@ -1,0 +1,134 @@
+{
+ "responses": {
+  "entity1": {
+   "status": 200,
+   "results": [
+    {
+     "id": "NK-demo1",
+     "caption": "Müller-Lüdenscheidt Handels GmbH",
+     "schema": "Company",
+     "properties": {
+      "name": [
+       "Müller-Lüdenscheidt Handels GmbH"
+      ],
+      "topics": [
+       "sanction"
+      ],
+      "country": [
+       "de"
+      ],
+      "listingDate": [
+       "2023-05-10"
+      ],
+      "reason": [
+       "Synthetischer Grund"
+      ]
+     },
+     "datasets": [
+      "eu_fsf",
+      "demo_list"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.96,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo2",
+     "caption": "Mueller Handel AG",
+     "schema": "Company",
+     "properties": {
+      "name": [
+       "Mueller Handel AG"
+      ],
+      "topics": [
+       "sanction.linked"
+      ],
+      "modifiedAt": [
+       "2024-02-02"
+      ]
+     },
+     "datasets": [
+      "demo_list"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.74,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo3",
+     "caption": "Müller Holding",
+     "schema": "Company",
+     "properties": {
+      "name": [
+       "Müller Holding"
+      ],
+      "topics": [
+       "role.pep"
+      ]
+     },
+     "datasets": [
+      "demo_peps"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.71,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo4",
+     "caption": "Muster GmbH",
+     "schema": "Company",
+     "properties": {
+      "name": [
+       "Muster GmbH"
+      ],
+      "topics": [
+       "sanction"
+      ]
+     },
+     "datasets": [
+      "eu_fsf"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.65,
+     "explanations": {},
+     "match": false
+    }
+   ],
+   "total": {
+    "value": 4,
+    "relation": "eq"
+   },
+   "query": {
+    "schema": "LegalEntity",
+    "properties": {
+     "name": [
+      "Müller-Lüdenscheidt Handels GmbH"
+     ],
+     "country": [
+      "DE"
+     ]
+    }
+   }
+  }
+ },
+ "limit": 5
+}

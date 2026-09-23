@@ -1,0 +1,48 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Stimmrechte",
+   "text": "Quelle: Kontrolle erst ab mehr als 50 % Stimmrechten; § 3 Abs. 2 GwG nennt mehr als 25 % der Stimmrechte."
+  },
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Mittelbare Beteiligung",
+   "text": "Quelle multipliziert Anteile entlang der Kette; § 3 Abs. 2 GwG stellt bei mittelbarer Beteiligung auf Kontrolle der Zwischengesellschaft ab."
+  },
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Fehlender Typ",
+   "text": "Anteilseigner ohne Typangabe gelten in der Quelle als natürliche Person."
+  }
+ ],
+ "id": "flowsearch.ubo",
+ "kind": "ownership",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "indirect_rule": "multiply_shares",
+  "max_depth": 10,
+  "missing_type": "person",
+  "share_comparison": "greater_than",
+  "share_threshold": 25.0,
+  "voting_comparison": "greater_than",
+  "voting_threshold": 50.0
+ },
+ "source": {
+  "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+  "git_blob": "15de1235fe57088aac874e3b14c4b0f36d6cb431",
+  "path": "backend/app/services/ubo_engine.py",
+  "repository": "janpow77/flowsearch",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "UBOEngine.UBO_THRESHOLD",
+   "MAX_DEPTH",
+   "traverse_ownership",
+   "identify_ubos",
+   "build_ownership_chain"
+  ]
+ },
+ "status": "HUMAN_DECISION_REQUIRED",
+ "version": "2026.09.1"
+}

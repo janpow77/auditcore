@@ -1,0 +1,94 @@
+{
+ "decisions": [],
+ "id": "audit_designer.sanctions_lists",
+ "kind": "list_catalog",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "lists": [
+   {
+    "data_licence": {
+     "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "opensanctions_targets_simple_csv",
+    "issuer": "Europäische Kommission",
+    "key": "eu_fsf",
+    "licence_claimed_in_source": "CC BY 4.0",
+    "name": "Konsolidierte Finanzsanktionsliste der Union (FSF)",
+    "provider": "OpenSanctions",
+    "source_key": "eu_sanktionsliste",
+    "url": "https://data.opensanctions.org/datasets/latest/eu_fsf/targets.simple.csv"
+   },
+   {
+    "data_licence": {
+     "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "opensanctions_targets_simple_csv",
+    "issuer": "Sicherheitsrat der Vereinten Nationen",
+    "key": "un_sc",
+    "licence_claimed_in_source": "gemeinfrei",
+    "name": "Konsolidierte Liste des Sicherheitsrats der Vereinten Nationen",
+    "provider": "OpenSanctions",
+    "source_key": "un_sanktionslisten",
+    "url": "https://data.opensanctions.org/datasets/latest/un_sc_sanctions/targets.simple.csv"
+   },
+   {
+    "data_licence": {
+     "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "opensanctions_targets_simple_csv",
+    "issuer": "US-Finanzministerium, OFAC",
+    "key": "us_ofac_sdn",
+    "licence_claimed_in_source": "gemeinfrei",
+    "name": "SDN-Liste des amerikanischen Finanzministeriums",
+    "provider": "OpenSanctions",
+    "source_key": "ofac_sdn",
+    "url": "https://data.opensanctions.org/datasets/latest/us_ofac_sdn/targets.simple.csv"
+   },
+   {
+    "data_licence": {
+     "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "opensanctions_targets_simple_csv",
+    "issuer": "Foreign, Commonwealth & Development Office / HM Treasury",
+    "key": "gb_fcdo_sanctions",
+    "licence_claimed_in_source": "UK Open Government Licence",
+    "name": "Konsolidierte Liste des Vereinigten Königreichs (FCDO/OFSI)",
+    "provider": "OpenSanctions",
+    "source_key": null,
+    "url": "https://data.opensanctions.org/datasets/latest/gb_fcdo_sanctions/targets.simple.csv"
+   },
+   {
+    "data_licence": {
+     "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "opensanctions_targets_simple_csv",
+    "issuer": "Staatssekretariat für Wirtschaft SECO",
+    "key": "ch_seco",
+    "licence_claimed_in_source": "gemeinfrei",
+    "name": "Sanktionsliste des Schweizer SECO",
+    "provider": "OpenSanctions",
+    "source_key": null,
+    "url": "https://data.opensanctions.org/datasets/latest/ch_seco_sanctions/targets.simple.csv"
+   }
+  ]
+ },
+ "source": {
+  "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+  "git_blob": "5c064ddecb473b3f1a4341a0dc6513268d106295",
+  "path": "backend/app/core/shared/research/register/sanctions.py",
+  "repository": "janpow77/audit_designer",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "Sanktionsliste",
+   "SANKTIONSLISTEN"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

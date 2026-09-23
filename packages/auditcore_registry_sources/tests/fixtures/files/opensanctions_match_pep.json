@@ -1,0 +1,164 @@
+{
+ "responses": {
+  "entity1": {
+   "status": 200,
+   "results": [
+    {
+     "id": "NK-demo11",
+     "caption": "Anna Beispiel",
+     "schema": "Person",
+     "properties": {
+      "name": [
+       "Anna Beispiel"
+      ],
+      "topics": [
+       "role.pep"
+      ],
+      "position": [
+       "Ministerin für Beispiele"
+      ],
+      "country": [
+       "at"
+      ],
+      "birthDate": [
+       "1980-07-01"
+      ],
+      "nationality": [
+       "at"
+      ],
+      "startDate": [
+       "2020-01-01"
+      ]
+     },
+     "datasets": [
+      "demo_peps"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.95,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo12",
+     "caption": "Anna Beispiel-Muster",
+     "schema": "Person",
+     "properties": {
+      "name": [
+       "Anna Beispiel-Muster"
+      ],
+      "topics": [
+       "role.pep"
+      ],
+      "position": [
+       "Stadträtin"
+      ],
+      "startDate": [
+       "2010-01-01"
+      ],
+      "endDate": [
+       "2014-12-31"
+      ]
+     },
+     "datasets": [
+      "demo_peps"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.82,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo13",
+     "caption": "Annemarie Beispiel",
+     "schema": "Person",
+     "properties": {
+      "name": [
+       "Annemarie Beispiel"
+      ],
+      "topics": [
+       "role.rca"
+      ]
+     },
+     "datasets": [
+      "demo_peps"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.78,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo14",
+     "caption": "Anne Beispiel",
+     "schema": "Person",
+     "properties": {
+      "name": [
+       "Anne Beispiel"
+      ],
+      "topics": []
+     },
+     "datasets": [
+      "demo_other"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.72,
+     "explanations": {},
+     "match": true
+    },
+    {
+     "id": "NK-demo15",
+     "caption": "A. Beispiel",
+     "schema": "Person",
+     "properties": {
+      "name": [
+       "A. Beispiel"
+      ],
+      "topics": [
+       "role.pep"
+      ]
+     },
+     "datasets": [
+      "demo_peps"
+     ],
+     "referents": [],
+     "target": true,
+     "first_seen": "2022-03-01T00:00:00",
+     "last_seen": "2026-09-22T00:00:00",
+     "last_change": "2024-01-15T00:00:00",
+     "score": 0.5,
+     "explanations": {},
+     "match": true
+    }
+   ],
+   "total": {
+    "value": 5,
+    "relation": "eq"
+   },
+   "query": {
+    "schema": "Person",
+    "properties": {
+     "name": [
+      "Anna Beispiel"
+     ]
+    }
+   }
+  }
+ },
+ "limit": 5
+}

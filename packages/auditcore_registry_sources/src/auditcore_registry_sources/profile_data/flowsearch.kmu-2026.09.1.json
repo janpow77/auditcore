@@ -1,0 +1,41 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "KMU-Schwellen",
+   "text": "Die Quelle ordnet Kleinst- und Kleinunternehmen nur nach Umsatz ein; Anhang I AGVO lässt Umsatz oder Bilanzsumme genügen. Partner- und verbundene Unternehmen werden nicht zusammengerechnet (TODO der Quelle)."
+  }
+ ],
+ "id": "flowsearch.kmu",
+ "kind": "sme",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "aggregation": "none",
+  "micro": {
+   "employees_below": 10,
+   "turnover_max": 2000000
+  },
+  "small": {
+   "employees_below": 50,
+   "turnover_max": 10000000
+  },
+  "sme": {
+   "balance_sheet_max": 43000000,
+   "employees_below": 250,
+   "turnover_max": 50000000
+  }
+ },
+ "source": {
+  "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+  "git_blob": "15de1235fe57088aac874e3b14c4b0f36d6cb431",
+  "path": "backend/app/services/ubo_engine.py",
+  "repository": "janpow77/flowsearch",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "UBOEngine.calculate_kmu_status"
+  ]
+ },
+ "status": "HUMAN_DECISION_REQUIRED",
+ "version": "2026.09.1"
+}

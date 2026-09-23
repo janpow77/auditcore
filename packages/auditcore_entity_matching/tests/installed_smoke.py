@@ -21,7 +21,7 @@ def main() -> None:
     assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 5
+    assert len(available_profiles()) == 10
     assert check_lei("529900T8BM49AURSDO55").valid
     assert not check_lei("7LTWFZYICNSX8D621K87").valid
     assert legacy.flowworkshop_is_valid_lei("7LTWFZYICNSX8D621K87")
@@ -30,6 +30,9 @@ def main() -> None:
     sanctions = load_profile("flowworkshop.sanctions", "2026.09.1")
     assert normalize("Müller GmbH", state_aid) == "mueller"
     assert normalize("Müller GmbH", sanctions) == "muller"
+    umschrift = load_profile("audit_designer.sanctions", "2026.09.2")
+    assert normalize("Mu\u0308ller-Søren GmbH", umschrift) == "mueller soren"
+    assert legacy.flowworkshop_normalize_name_umschrift("Müller") == "mueller"
     payee = load_profile("riskanalysis.payee", "2026.09.1")
     assert normalize("Müller GmbH", payee) == "mu ller"
     if find_spec("rapidfuzz") is None:

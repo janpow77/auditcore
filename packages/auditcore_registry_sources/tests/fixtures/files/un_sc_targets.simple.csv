@@ -1,0 +1,3 @@
+"id","schema","name","aliases","birth_date","countries","addresses","identifiers","sanctions","phones","emails","program_ids","dataset","first_seen","last_seen","last_change"
+"un-demo-0001","Person","Iwan Musterow","Ivan Musterov","1961","ru","","","UN Beispielregime","","","UN-DEMO-A","un_sc_sanctions","2021-01-01T00:00:00","2026-09-22T00:00:00","2021-01-01T00:00:00"
+"un-demo-0002","Organization","Demo Trade Holdings Ltd","Demo Trade Holding","","gb","","","UN Beispielregime","","","UN-DEMO-B","un_sc_sanctions","2021-01-01T00:00:00","2026-09-22T00:00:00","2021-01-01T00:00:00"

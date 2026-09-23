@@ -70,6 +70,60 @@
         "normalize_name"
       ],
       "added_in": "0.2.0"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+      "path": "backend/app/core/shared/research/register/sanctions.py",
+      "git_blob": "5c064ddecb473b3f1a4341a0dc6513268d106295",
+      "symbols": [
+        "RECHTSFORMZUSAETZE",
+        "_FALTUNG",
+        "_NICHT_WORT",
+        "falte_diakritika",
+        "normalisiere_name",
+        "klassifiziere",
+        "STANDARD_MINDESTWERT"
+      ],
+      "profile": "audit_designer.sanctions 2026.09.2",
+      "pull_request": "janpow77/audit_designer#380"
+    },
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+      "path": "auditworkshop/backend/services/sanctions_service.py",
+      "git_blob": "5b9de79484373428f45ddeb879a497b671a29e1c",
+      "symbols": [
+        "UMLAUT_UMSCHRIFT",
+        "normalize_name",
+        "_classify"
+      ],
+      "profile": "flowworkshop.sanctions 2026.09.2",
+      "pull_request": "janpow77/flowworkshop#49"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/pep_checker.py",
+      "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1",
+      "symbols": [
+        "PEPChecker._normalize_name"
+      ],
+      "profile": "flowinvoice.pep 2026.09.1"
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+      "path": "backend/audit_prep/normalization.py",
+      "git_blob": "c9f9c3dbb211cd6c215464293bccc5efebf0fc7d",
+      "symbols": [
+        "LEGAL_SUFFIXES",
+        "_UMLAUT_FOLD",
+        "strip_accents",
+        "normalize_name",
+        "normalize_name_folded"
+      ],
+      "profile": "audit_portal.name / audit_portal.name_folded 2026.09.1"
     }
   ],
   "rights": {
@@ -87,6 +141,14 @@
       "janpow77/riskanalysis": {
         "private": true,
         "license": null
+      },
+      "janpow77/flowinvoice": {
+        "private": true,
+        "license": null
+      },
+      "janpow77/audit-portal": {
+        "private": true,
+        "license": "proprietär (NOASSERTION)"
       }
     },
     "authorization": {
@@ -132,7 +194,7 @@
       "date": "2026-09-23",
       "subject": "Maßgebliche Normalisierung für gemeinsamen Entitätsbestand",
       "decision": "mueller wenn es kein umlaut gibt",
-      "effect": "Transliteration ä→ae, ö→oe, ü→ue, ß→ss; empfohlenes Profil flowworkshop.state_aid 2026.09.1; Legacy-Profile unverändert"
+      "effect": "Transliteration ä→ae, ö→oe, ü→ue, ß→ss; empfohlenes Profil flowworkshop.state_aid 2026.09.1; Legacy-Profile unverändert; Profile audit_designer.sanctions und flowworkshop.sanctions 2026.09.2 bilden die umgestellten Quellen ab (0.2.0)"
     },
     {
       "status": "HUMAN_DECISION",
@@ -140,6 +202,48 @@
       "subject": "LEI-Prüfziffernprüfung ISO 7064 MOD 97-10",
       "decision": "eingeschaltet",
       "effect": "check_lei/extract_lei im Consumer flowworkshop; falsche Prüfziffern ungültig, kein LEI-Treffer mit Konfidenz 100"
+    },
+    {
+      "status": "HUMAN_DECISION_REQUIRED",
+      "date": "2026-09-23",
+      "subject": "PEP-Normalisierung flowinvoice",
+      "decision": null,
+      "effect": "flowinvoice.pep faltet Müller → muller und verliert ß/ø/ł sowie nicht-lateinische Schriften; Umstellung auf die Umschrift nicht entschieden"
     }
-  ]
+  ],
+  "characterization_transliteration": {
+    "fixture": "tests/fixtures/transliteration_observed.json",
+    "tool": "tools/capture_transliteration.py",
+    "cases": 220,
+    "environment": {
+      "python": "3.12.3",
+      "rapidfuzz": "3.10.1",
+      "unicode": "15.0.0",
+      "auditcore_entity_matching_called_by_workshop": "0.1.0"
+    },
+    "method": "AST-Extraktion der Blob-geprüften Definitionen; der flowworkshop-Stand ruft die installierte Bibliothek 0.1.0 auf und wurde in einer Umgebung mit genau dieser Version ausgeführt"
+  },
+  "release_history": [
+    {
+      "version": "0.1.0",
+      "profiles": 4
+    },
+    {
+      "version": "0.2.0",
+      "profiles": 10,
+      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten); Profil riskanalysis.payee 2026.09.1 (Algorithmus nfkd_lower_regex, auditcore_risk)"
+    }
+  ],
+  "characterization_flowinvoice": {
+    "fixture": "tests/fixtures/flowinvoice_observed.json",
+    "tool": "tools/capture_flowinvoice.py",
+    "cases": 73,
+    "method": "Modul pep_checker unter Paket-Stellvertreter geladen (das Paket-__init__ zieht die ganze Anwendung nach), Blob-geprüft"
+  },
+  "characterization_portal": {
+    "fixture": "tests/fixtures/portal_observed.json",
+    "tool": "tools/capture_portal.py",
+    "cases": 140,
+    "method": "audit_prep (nur Standardbibliothek) direkt aus dem Blob-geprüften Checkout importiert"
+  }
 }

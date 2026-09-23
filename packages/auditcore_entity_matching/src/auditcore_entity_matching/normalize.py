@@ -11,6 +11,14 @@ Two algorithms exist in the sources and are kept apart:
   folding, a small fold map (``ß → ss``, ``ø → o`` …), NFKD decomposition
   without combining marks (``ä → a``), punctuation → space, legal-form tokens
   removed.
+* ``casefold_nfc_fold_nfkd`` (audit_designer sanctions from 2026.09.2): as
+  above, but the case-folded text is first composed to NFC so that a
+  decomposed umlaut (``u`` + combining diaeresis) meets the fold map
+  (``ü → ue``) instead of losing only its diaeresis.
+* ``lower_nfkd_ascii`` (flowinvoice PEP bulk screening): ``str.lower``,
+  NFKD without combining marks, then every character outside ``a-z``,
+  ``0-9`` and whitespace becomes a separator. ``ß``, ``ø``, ``ł`` and all
+  non-Latin scripts are therefore lost (``Straße → stra e``).
 * ``nfkd_lower_regex`` (riskanalysis payee normaliser): NFKD decomposition,
   ``lower()``, every character matched by ``nonword_pattern`` → space (this
   also turns the combining diaeresis of ``ü`` into a space: ``Müller → mu
@@ -27,6 +35,7 @@ from .errors import ProfileError
 from .profiles import Profile
 
 _WORD = re.compile(r"[^\w\s]", re.UNICODE)
+_ASCII_WORD = re.compile(r"[^a-z0-9\s]")
 _SPACE = re.compile(r"\s+")
 
 
@@ -48,7 +57,11 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         value = re.sub(str(rules.nonword_pattern), " ", value)
         value = re.sub(str(rules.removal_pattern), " ", value)
         return _SPACE.sub(" ", value).strip()
-    if rules.algorithm == "translate_then_casefold":
+    if rules.algorithm == "lower_nfkd_ascii":
+        decomposed = unicodedata.normalize("NFKD", text.lower().strip())
+        value = "".join(c for c in decomposed if not unicodedata.combining(c))
+        value = _ASCII_WORD.sub(" ", value)
+    elif rules.algorithm == "translate_then_casefold":
         table: dict[str, str | int | None] = dict(rules.translation)
         value = text.translate(str.maketrans(table)).casefold()
         if rules.ampersand is not None:
@@ -56,6 +69,8 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         value = _SPACE.sub(" ", _WORD.sub(" ", value)).strip()
     else:
         value = text.casefold()
+        if rules.algorithm == "casefold_nfc_fold_nfkd":
+            value = unicodedata.normalize("NFC", value)
         for source, target in rules.fold_map.items():
             if source in value:
                 value = value.replace(source, target)

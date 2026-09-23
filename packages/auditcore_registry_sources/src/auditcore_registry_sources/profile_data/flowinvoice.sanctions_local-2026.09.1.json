@@ -1,0 +1,36 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Abweichende Screening-Variante",
+   "text": "difflib-Ähnlichkeit 0–1 ohne Normalisierung und Rechtsformbehandlung, Schwelle 0,75; widerspricht den rapidfuzz-Profilen (0–100, Schwelle 70) des Designers und von flowworkshop."
+  }
+ ],
+ "id": "flowinvoice.sanctions_local",
+ "kind": "screening",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "algorithm": "difflib_ratio",
+  "default_min_score": 0.75,
+  "exact_from": 0.99,
+  "lists": {
+   "id": "official.sanctions_lists",
+   "version": "2026.09.1"
+  },
+  "query_form": "lower_strip",
+  "score_digits": 3
+ },
+ "source": {
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "f003318086914f9d8ea53a566f40289e8e278c39",
+  "path": "backend/app/services/fraud_detection/sanctions_checker.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "SanctionsChecker.check_entity_local"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

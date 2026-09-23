@@ -1,0 +1,84 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Mindestwert",
+   "text": "Dienst-Voreinstellung 65, Router und Oberfläche 70; die Bibliothek übernimmt 70 als Profilwert und führt 65 nur als Beleg."
+  }
+ ],
+ "id": "flowworkshop.sanctions_screening",
+ "kind": "screening",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "algorithm": "rapidfuzz_token_set",
+  "alias_output_cap": 8,
+  "country": {
+   "bonus": 4.0,
+   "malus": 10.0
+  },
+  "date_of_birth": {
+   "bonus": 6.0,
+   "compare": "year",
+   "malus": 18.0
+  },
+  "default_min_score": 70.0,
+  "empty_list": "skipped_silently",
+  "entity_schemas": [
+   "Person",
+   "Organization"
+  ],
+  "extract_limit": {
+   "factor": 8,
+   "floor": null
+  },
+  "limitations": [
+   "Ein phonetisches Verfahren ist nicht im Einsatz. Kyrillische, arabische und chinesische Namen werden nur gefunden, wenn die Liste selbst eine lateinische Schreibweise als Alias führt; Transliterationsvarianten bleiben sonst unerkannt. Umgekehrt erzeugen häufige Namen Treffer ohne jeden Bezug. Der Abgleich ist damit in beide Richtungen unvollständig — ein Treffer ist zu verifizieren, ein Nullbefund belegt keine Unbedenklichkeit."
+  ],
+  "lists": {
+   "id": "flowworkshop.sanctions_lists",
+   "version": "2026.09.1"
+  },
+  "method_title": "Wie der Abgleich arbeitet",
+  "min_query_length": 2,
+  "min_score_range": [
+   40.0,
+   100.0
+  ],
+  "normalization": {
+   "id": "flowworkshop.sanctions",
+   "version": "2026.09.2"
+  },
+  "notice": "Ein Treffer ist ein Prüfhinweis, keine Feststellung.",
+  "per_list_limit": {
+   "factor": 2,
+   "floor": 5
+  },
+  "rows_without_id_or_name": "index",
+  "score_range": [
+   0.0,
+   100.0
+  ],
+  "service_default_min_score": 65.0,
+  "stored_comparison_form": "stored_if_present"
+ },
+ "source": {
+  "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+  "git_blob": "5b9de79484373428f45ddeb879a497b671a29e1c",
+  "path": "auditworkshop/backend/services/sanctions_service.py",
+  "repository": "janpow77/flowworkshop",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_DOB_MATCH_BONUS",
+   "_DOB_CONFLICT_MALUS",
+   "_COUNTRY_MATCH_BONUS",
+   "_COUNTRY_CONFLICT_MALUS",
+   "_adjust_score_for_dob_country",
+   "SanctionsListIndex.search",
+   "MultiSanctionsService.search",
+   "routers/sanctions.py:SANCTIONS_DEFAULT_MIN_SCORE"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

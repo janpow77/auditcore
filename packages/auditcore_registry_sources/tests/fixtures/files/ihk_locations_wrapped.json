@@ -1,0 +1,37 @@
+{
+ "locations": [
+  {
+   "zip": "60313",
+   "country": "Hessen",
+   "mail": "info@example.invalid",
+   "city": "Frankfurt am Main",
+   "ihknr": "901",
+   "link": [
+    {
+     "url": "https://example.invalid/"
+    }
+   ],
+   "shorturlname": "beispiel",
+   "shortname": "Beispiel",
+   "phone": "+49 69 0000",
+   "street": "Beispielplatz 1",
+   "name": "Industrie- und Handelskammer Beispielstadt",
+   "fax": "",
+   "geodata": [
+    50.1109,
+    8.6821
+   ],
+   "themen": ""
+  },
+  {
+   "zip": "01067",
+   "country": "Sachsen",
+   "city": "Dresden",
+   "ihknr": "902",
+   "street": "Musterstraße 2",
+   "name": " Industrie- und Handelskammer Musterland ",
+   "geodata": [],
+   "themen": ""
+  }
+ ]
+}

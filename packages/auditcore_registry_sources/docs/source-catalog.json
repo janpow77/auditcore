@@ -1,0 +1,753 @@
+{
+ "schema": "auditcore_harvest.catalog/1",
+ "version": "2026.09.1",
+ "sources": [
+  {
+   "source_id": "registry.opensanctions_lists",
+   "title": "Sanktions- und PEP-Listen im OpenSanctions-Format targets.simple.csv (EU FSF, UN SC, OFAC SDN, UK FCDO/OFSI, SECO, PEPs)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+     "path": "backend/app/core/shared/research/register/sanctions.py",
+     "symbols": [
+      "SANKTIONSLISTEN",
+      "hole_liste",
+      "SanktionslistenDienst.spiele_ein",
+      "SanktionslistenDienst.aktualisiere"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+     "path": "auditworkshop/backend/services/sanctions_service.py",
+     "symbols": [
+      "DEFAULT_SANCTIONS_SOURCES",
+      "download_csv",
+      "load_from_csv_to_db",
+      "_row_to_record"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "backend/app/services/fraud_detection/pep_checker.py",
+     "symbols": [
+      "PEPChecker.PEP_CSV_URL",
+      "_download_and_parse"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+     "path": "backend/audit_prep/sanctions.py",
+     "symbols": [
+      "parse_sanctions_csv",
+      "row_to_record"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "audit_designer register/sanctions.py SanktionslistenDienst (geplant)",
+    "flowworkshop services/sanctions_service.py MultiSanctionsService (geplant)",
+    "flowinvoice fraud_detection/pep_checker.py PEPChecker (geplant)"
+   ],
+   "profile": {
+    "version": "audit_designer.sanctions_lists / flowworkshop.sanctions_lists 2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "OpenSanctions-Massendaten: CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz), geprüft 2026-09-23. Code-Lizenz dieses Pakets (MIT) gilt nicht für die Daten."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "list_key",
+     "url"
+    ],
+    "properties": {
+     "list_key": {
+      "type": "string",
+      "description": "Listenschlüssel aus dem Listenkatalogprofil"
+     },
+     "url": {
+      "type": "string",
+      "description": "Adresse der targets.simple.csv"
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/eu_fsf_targets.simple.csv",
+    "auditcore_registry_sources/tests/fixtures/files/un_sc_targets.simple.csv",
+    "auditcore_registry_sources/tests/fixtures/files/peps_targets.simple.csv",
+    "auditcore_registry_sources/tests/fixtures/legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.adapters.OpenSanctionsListAdapter"
+   },
+   "live_test": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "note": "{\"status\": \"complete\", \"records\": 6135, \"issues\": 0, \"snapshot_complete\": true, \"errors\": [], \"as_of\": [\"Wed, 23 Sep 2026 10:58:26 GMT\"]}"
+   },
+   "note": "Kopfzeile (16 Spalten) am 2026-09-23 live bestätigt. Ausgelistete Einträge nur nach snapshot_complete kennzeichnen."
+  },
+  {
+   "source_id": "registry.official_sanctions_xml",
+   "title": "Amtliche Sanktionslisten im XML-Original (EU FSF 1.1, OFAC SDN, UN SC)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "backend/app/services/fraud_detection/sanctions_downloader.py",
+     "symbols": [
+      "SanctionsDownloader._parse_eu_fsf",
+      "_parse_ofac_sdn",
+      "_parse_un_sc",
+      "import_to_database"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+     "path": "backend/audit_prep/sanctions_xml.py",
+     "symbols": [
+      "_parse_eu_fsf",
+      "_parse_ofac_sdn",
+      "_parse_un_sc",
+      "parser_dict_to_simple_csv_row",
+      "parser_dicts_to_simple_csv_bytes"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowinvoice api/fraud_detection.py download_and_import_sanctions (geplant)",
+    "audit-portal audit_prep/cli.py (Quelle, kein Consumer-Auftrag)"
+   ],
+   "profile": {
+    "version": "official.sanctions_lists 2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "EU: Weiterverwendung nach Beschluss 2011/833/EU, Abruf-Token der FSF-Datei nicht geprüft; OFAC: Werk einer US-Bundesbehörde; UN: Nutzungsbedingungen nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "list_key",
+     "url",
+     "format"
+    ],
+    "properties": {
+     "list_key": {
+      "type": "string"
+     },
+     "url": {
+      "type": "string"
+     },
+     "format": {
+      "enum": [
+       "eu_fsf_xml",
+       "ofac_sdn_xml",
+       "un_sc_xml"
+      ]
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/eu_fsf_export.xml",
+    "auditcore_registry_sources/tests/fixtures/files/ofac_sdn.xml",
+    "auditcore_registry_sources/tests/fixtures/files/un_sc_consolidated.xml",
+    "auditcore_registry_sources/tests/fixtures/legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.adapters.OfficialSanctionsXmlAdapter"
+   },
+   "live_test": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "note": "{\"status\": \"complete\", \"records\": 1011, \"issues\": 0, \"snapshot_complete\": true, \"errors\": [], \"as_of\": [\"Tue, 22 Sep 2026 23:02:38 GMT\"]}"
+   },
+   "note": "Live geprüft: UN SC. EU FSF (Token-URL) und OFAC SDN nicht live abgerufen (NOT_EXECUTED für diese beiden)."
+  },
+  {
+   "source_id": "registry.opensanctions_match",
+   "title": "OpenSanctions-Abgleichs-API /match (Sanktionen und PEP)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/sanctions.py",
+     "symbols": [
+      "SanctionsAPIClient.check_sanctions"
+     ],
+     "verified": true
+    },
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/pep_screening.py",
+     "symbols": [
+      "PEPScreeningAPIClient.check_person",
+      "_assess_risk",
+      "_determine_pep_type",
+      "_categorize_pep"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch api/screening.py (geplant)",
+    "flowsearch services/recherche_orchestrator.py (geplant)"
+   ],
+   "profile": {
+    "version": "flowsearch.opensanctions_match / flowsearch.pep_risk 2026.09.1",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "api_key",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "API-Schlüssel nötig (Header 'Authorization: ApiKey …', Doku geprüft 2026-09-23); OpenSanctions-Massendaten: CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz), geprüft 2026-09-23. Code-Lizenz dieses Pakets (MIT) gilt nicht für die Daten."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "base_url": {
+      "type": "string"
+     },
+     "dataset": {
+      "type": "string"
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/opensanctions_match_sanctions.json",
+    "auditcore_registry_sources/tests/fixtures/files/opensanctions_match_pep.json",
+    "auditcore_registry_sources/tests/fixtures/legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.opensanctions_api.MatchClient"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "date": null,
+    "note": "Kein Schlüssel konfiguriert; ohne Schlüssel antwortet die API HTTP 401."
+   },
+   "note": "flowsearch sendet keinen bzw. einen Bearer-Schlüssel und liest result.entity; mit der dokumentierten Antwort (yente 5.5.0) findet der Quellcode nie einen Treffer."
+  },
+  {
+   "source_id": "registry.sanctions_network",
+   "title": "sanctions.network Suche (flowinvoice)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "backend/app/services/fraud_detection/sanctions_checker.py",
+     "symbols": [
+      "SanctionsChecker.check_entity",
+      "_check_sanctions_network"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowinvoice api/fraud_detection.py",
+    "flowinvoice services/procurement_analyzer.py"
+   ],
+   "profile": {
+    "version": "flowinvoice.sanctions_network 2026.09.1 (LEGACY_ONLY)",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Dienst nicht erreichbar; Bedingungen nicht prüfbar."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/sanctions_network_search.json"
+   ],
+   "implementation": {
+    "status": "LEGACY_ONLY",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "FAIL",
+    "date": "2026-09-23",
+    "note": "Hostname search.sanctions.network nicht auflösbar."
+   },
+   "note": "check_entity scheitert im Original bei jedem Cache-Fehlschlag mit UnboundLocalError; die Listen-Aktualität wird mit 'heute, verifiziert' erfunden. Nur als Legacy-Abbildung vorhanden."
+  },
+  {
+   "source_id": "registry.vies",
+   "title": "EU VIES USt-IdNr.-Prüfung (checkVat)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "backend/app/services/fraud_detection/company_verifier.py",
+     "symbols": [
+      "CompanyVerifier.validate_vat_id"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowinvoice api/fraud_detection.py CompanyVerifier (geplant)"
+   ],
+   "profile": {
+    "version": "flowinvoice.company_verification 2026.09.1",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der Kommission für automatisierte VIES-Abfragen nicht geprüft; Profil: 100 Anfragen/Stunde."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/vies_de_000000000_live.xml",
+    "auditcore_registry_sources/tests/fixtures/files/vies_valid_ns2.xml",
+    "auditcore_registry_sources/tests/fixtures/files/vies_fault.xml"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.company.check_vat"
+   },
+   "live_test": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "note": "{\"status\": \"INVALID\"}"
+   },
+   "note": "Antwort nutzt ns2-Präfixe; flowinvoice erkennt deshalb keine gültige Nummer."
+  },
+  {
+   "source_id": "registry.offeneregister",
+   "title": "OffeneRegister.de (datasette, OpenCorporates-Daten DE)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "backend/app/services/fraud_detection/company_verifier.py",
+     "symbols": [
+      "CompanyVerifier.search_offene_register"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowinvoice api/fraud_detection.py CompanyVerifier (geplant)"
+   ],
+   "profile": {
+    "version": "flowinvoice.company_verification 2026.09.1",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Datenlizenz von OffeneRegister/OpenCorporates nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/offeneregister_datasette.json",
+    "auditcore_registry_sources/tests/fixtures/files/offeneregister_liquidation.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.company.lookup_register"
+   },
+   "live_test": {
+    "status": "FAIL",
+    "date": "2026-09-23",
+    "note": "{\"status\": \"UNAVAILABLE\", \"company\": null, \"candidates\": 0, \"error\": \"Serverfehler HTTP 502.\"}"
+   },
+   "note": "Datasette-Endpunkt antwortete am 2026-09-23 mit HTTP 502."
+  },
+  {
+   "source_id": "registry.openregister",
+   "title": "OpenRegister API (flowsearch)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/openregister.py",
+     "symbols": [
+      "OpenRegisterAPIClient"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch services/recherche_orchestrator.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "UNKNOWN",
+    "note": "Angenommene API existiert nicht."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "LEGACY_ONLY",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "FAIL",
+    "date": "2026-09-23",
+    "note": "https://offeneregister.de/api/v1/companies antwortet HTTP 404."
+   },
+   "note": "Nur die Anteilslogik (UBO) ist als Profil flowsearch.ubo übernommen; kein Adapter für einen nicht existierenden Endpunkt."
+  },
+  {
+   "source_id": "registry.handelsregister",
+   "title": "Handelsregister",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowsearch",
+     "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+     "path": "backend/app/services/api_clients/handelsregister.py",
+     "symbols": [
+      "HandelsregisterAPIClient"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowsearch services/recherche_orchestrator.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "unknown",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen von handelsregister.de nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null,
+    "note": ""
+   },
+   "note": "flowsearch-Client ist ein Platzhalter ohne Abruf (charakterisiert). Die im Harvest-Katalog genannten Pfade in regulierung und audit-portal sind hier nicht übernommen."
+  },
+  {
+   "source_id": "registry.zer",
+   "title": "Zuwendungsempfängerregister des BZSt (§ 60b AO)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/osint",
+     "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+     "path": "werkzeuge/traeger_quellen.py",
+     "symbols": [
+      "zer_holen",
+      "ZER_ABRUF",
+      "ZER_STATUS"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "osint werkzeuge/traeger_quellen.py (geplant)"
+   ],
+   "profile": {
+    "version": "2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen des BZSt für den Volldump nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "register_url",
+     "status_url"
+    ],
+    "properties": {
+     "register_url": {
+      "type": "string"
+     },
+     "status_url": {
+      "type": "string"
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/zer_register.json",
+    "auditcore_registry_sources/tests/fixtures/files/zer_status.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.adapters.ZerRegisterAdapter"
+   },
+   "live_test": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "note": "{\"total\": 529437, \"note\": \"Volldump (~300 MB) bewusst nicht abgerufen\"}"
+   },
+   "note": "Live nur der Status-Endpunkt (Gesamtzahl); Volldump bewusst nicht abgerufen."
+  },
+  {
+   "source_id": "registry.ihk",
+   "title": "Industrie- und Handelskammern (DIHK-App-Service)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/osint",
+     "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+     "path": "werkzeuge/traeger_quellen.py",
+     "symbols": [
+      "ihk_holen",
+      "IHK_ABRUF"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "osint werkzeuge/traeger_quellen.py (geplant)"
+   ],
+   "profile": {
+    "version": "2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Offene JSON-Schnittstelle ohne ausgewiesene Lizenz."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "url"
+    ],
+    "properties": {
+     "url": {
+      "type": "string"
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/ihk_locations.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.adapters.IhkLocationsAdapter"
+   },
+   "live_test": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "note": "{\"status\": \"complete\", \"records\": 79, \"issues\": 0, \"snapshot_complete\": true, \"errors\": [], \"as_of\": []}"
+   },
+   "note": ""
+  },
+  {
+   "source_id": "registry.hwk",
+   "title": "Handwerkskammern (Adressseite des ZDH)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/osint",
+     "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+     "path": "werkzeuge/traeger_quellen.py",
+     "symbols": [
+      "hwk_holen",
+      "kammern_holen",
+      "ZDH_SEITE"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "osint werkzeuge/traeger_quellen.py (geplant)"
+   ],
+   "profile": {
+    "version": "2026.09.1",
+    "snapshot_semantics": "full_snapshot_replace"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Auslesen einer Webseite; Zulässigkeit automatisierter Abrufe nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "url"
+    ],
+    "properties": {
+     "url": {
+      "type": "string"
+     },
+     "expected": {
+      "type": "integer"
+     }
+    }
+   },
+   "fixtures": [
+    "auditcore_registry_sources/tests/fixtures/files/zdh_handwerkskammern.html"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_registry_sources.adapters.HwkPageAdapter"
+   },
+   "live_test": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "note": "{\"status\": \"complete\", \"records\": 53, \"issues\": 0, \"snapshot_complete\": true, \"errors\": [], \"as_of\": []}"
+   },
+   "note": "Extra html (BeautifulSoup)."
+  },
+  {
+   "source_id": "registry.gleif",
+   "title": "GLEIF-/Wikidata-Konzernverbund (flowworkshop)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/flowworkshop",
+     "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+     "path": "auditworkshop/backend/services/corporate_registry.py",
+     "symbols": [
+      "_GleifClient",
+      "lookup_corporate_group"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "flowworkshop services/state_aid_audit_report.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "GLEIF-Daten CC0 laut Anbieter, Wikidata CC0; nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null,
+    "note": ""
+   },
+   "note": "Nicht Teil dieses Pakets; Kandidat für eine Folgeversion."
+  },
+  {
+   "source_id": "registry.company_register_file",
+   "title": "Unternehmensregister-Export (Handelsregister.ai/OffeneRegister, CSV/XLSX)",
+   "family": "registry",
+   "target_package": "auditcore_registry_sources",
+   "origins": [
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+     "path": "backend/audit_prep/company_register.py",
+     "symbols": [
+      "parse_company_register_file",
+      "build_column_map"
+     ],
+     "verified": true
+    }
+   ],
+   "consumers": [
+    "audit-portal audit_prep/cli.py"
+   ],
+   "profile": {
+    "version": "UNKNOWN",
+    "snapshot_semantics": "unknown"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Datenrechte der Exporte nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [],
+   "implementation": {
+    "status": "PLANNED",
+    "adapter": null
+   },
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "date": null,
+    "note": ""
+   },
+   "note": "Nicht Teil dieses Pakets."
+  }
+ ]
+}

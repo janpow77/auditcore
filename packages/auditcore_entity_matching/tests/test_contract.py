@@ -79,8 +79,13 @@ def test_em_c03_variants_stay_separate() -> None:
 def test_profiles_are_explicit_source_bound_and_fingerprinted() -> None:
     assert available_profiles() == (
         ("audit_designer.sanctions", V),
+        ("audit_designer.sanctions", "2026.09.2"),
+        ("audit_portal.name", V),
+        ("audit_portal.name_folded", V),
+        ("flowinvoice.pep", V),
         ("flowworkshop.entity_resolution", V),
         ("flowworkshop.sanctions", V),
+        ("flowworkshop.sanctions", "2026.09.2"),
         ("flowworkshop.state_aid", V),
         ("riskanalysis.payee", V),
     )

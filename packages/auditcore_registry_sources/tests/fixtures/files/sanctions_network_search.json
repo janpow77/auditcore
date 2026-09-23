@@ -1,0 +1,6 @@
+{"results": [
+ {"score": 0.995, "name": "Iwan Petrowitsch Musterow", "source": "eu_fsf", "type": "individual", "programs": ["DEMO"], "identifiers": {"passport": "PASS-DEMO-0001"}},
+ {"score": 0.86, "name": "Ivan Musterov", "source": "ofac_sdn", "type": "individual", "programs": ["DEMO-EO00000"], "identifiers": {}},
+ {"score": 0.8, "name": "I. Musterow", "source": "un_sc"},
+ {"score": 0.79, "name": "Iwan Muster", "source": "ofac_sdn", "type": "entity"}
+]}

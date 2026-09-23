@@ -1,0 +1,30 @@
+{
+ "decision": {
+  "status": "HUMAN_DECISION_REQUIRED",
+  "text": "Widerspricht der Entscheidung vom 23.09.2026 („mueller wenn es kein umlaut gibt“): Müller → muller, Straße → stra e; nicht-lateinische Schriften entfallen."
+ },
+ "id": "flowinvoice.pep",
+ "kind": "normalization",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Normalisierung oder Schwellen.",
+ "normalization": {
+  "algorithm": "lower_nfkd_ascii",
+  "ampersand": null,
+  "compact_tokens": false,
+  "filler_words": [],
+  "fold_map": {},
+  "legal_suffixes": []
+ },
+ "schema": "auditcore_entity_matching.profile/1",
+ "source": {
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1",
+  "path": "backend/app/services/fraud_detection/pep_checker.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "PEPChecker._normalize_name"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

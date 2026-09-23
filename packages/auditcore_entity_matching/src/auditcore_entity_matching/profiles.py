@@ -19,7 +19,15 @@ from typing import Any
 from .errors import ProfileError
 
 SCHEMA = "auditcore_entity_matching.profile/1"
-ALGORITHMS = frozenset({"translate_then_casefold", "casefold_fold_nfkd", "nfkd_lower_regex"})
+ALGORITHMS = frozenset(
+    {
+        "translate_then_casefold",
+        "casefold_fold_nfkd",
+        "casefold_nfc_fold_nfkd",
+        "lower_nfkd_ascii",
+        "nfkd_lower_regex",
+    }
+)
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,1 @@
+<Envelope><Body><checkVatResponse><countryCode>AT</countryCode><vatNumber>U00000000</vatNumber><requestDate>2026-09-23</requestDate><valid>true</valid><name>Beispiel Handels GmbH</name><address>Beispielgasse 1, 1010 Wien</address></checkVatResponse></Body></Envelope>

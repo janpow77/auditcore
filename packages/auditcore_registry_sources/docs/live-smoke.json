@@ -1,0 +1,66 @@
+{
+ "executed_at": "2026-09-23T11:50:49+00:00",
+ "user_agent": "auditcore-registry-sources/0.1.0 (Prüfabruf; Repository janpow77/auditcore)",
+ "checks": {
+  "registry.opensanctions_lists:eu_fsf": {
+   "result": "PASS",
+   "status": "complete",
+   "records": 6135,
+   "issues": 0,
+   "snapshot_complete": true,
+   "errors": [],
+   "as_of": [
+    "Wed, 23 Sep 2026 10:58:26 GMT"
+   ]
+  },
+  "registry.official_sanctions_xml:un_sc": {
+   "result": "PASS",
+   "status": "complete",
+   "records": 1011,
+   "issues": 0,
+   "snapshot_complete": true,
+   "errors": [],
+   "as_of": [
+    "Tue, 22 Sep 2026 23:02:38 GMT"
+   ]
+  },
+  "registry.ihk": {
+   "result": "PASS",
+   "status": "complete",
+   "records": 79,
+   "issues": 0,
+   "snapshot_complete": true,
+   "errors": [],
+   "as_of": []
+  },
+  "registry.hwk": {
+   "result": "PASS",
+   "status": "complete",
+   "records": 53,
+   "issues": 0,
+   "snapshot_complete": true,
+   "errors": [],
+   "as_of": []
+  },
+  "registry.zer:status": {
+   "result": "PASS",
+   "total": 529437,
+   "note": "Volldump (~300 MB) bewusst nicht abgerufen"
+  },
+  "registry.vies": {
+   "result": "PASS",
+   "status": "INVALID"
+  },
+  "registry.offeneregister": {
+   "result": "FAIL",
+   "status": "UNAVAILABLE",
+   "company": null,
+   "candidates": 0,
+   "error": "Serverfehler HTTP 502."
+  },
+  "registry.opensanctions_match": {
+   "result": "NOT_CONFIGURED",
+   "note": "Kein OPENSANCTIONS_API_KEY; ein Abruf ohne Schlüssel beantwortet die API mit HTTP 401 (am 2026-09-23 einmal beobachtet)."
+  }
+ }
+}
