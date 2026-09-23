@@ -17,10 +17,10 @@ from auditcore_entity_matching import (
 def main() -> None:
     """Exercise normalisation, LEI checks and the optional fuzzy boundary."""
     package = distribution("auditcore_entity_matching")
-    assert package.version == "0.1.0"
+    assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 4
+    assert len(available_profiles()) == 6
     assert check_lei("529900T8BM49AURSDO55").valid
     assert not check_lei("7LTWFZYICNSX8D621K87").valid
     assert legacy.flowworkshop_is_valid_lei("7LTWFZYICNSX8D621K87")
@@ -29,6 +29,9 @@ def main() -> None:
     sanctions = load_profile("flowworkshop.sanctions", "2026.09.1")
     assert normalize("Müller GmbH", state_aid) == "mueller"
     assert normalize("Müller GmbH", sanctions) == "muller"
+    umschrift = load_profile("audit_designer.sanctions", "2026.09.2")
+    assert normalize("Mu\u0308ller-Søren GmbH", umschrift) == "mueller soren"
+    assert legacy.flowworkshop_normalize_name_umschrift("Müller") == "mueller"
     if find_spec("rapidfuzz") is None:
         try:
             legacy.flowworkshop_fuzzy_best("siemens", [(1, "siemens")])

@@ -17,11 +17,14 @@ from .normalize import normalize
 from .profiles import Profile, load_profile
 
 PROFILE_VERSION = "2026.09.1"
+#: Sanctions normalisation after the decision of 23.09.2026 („mueller wenn es
+#: kein umlaut gibt“): audit_designer@1254591 (PR #380), flowworkshop@3d1cb40 (PR #49).
+TRANSLITERATION_VERSION = "2026.09.2"
 
 
 @cache
-def _profile(profile_id: str) -> Profile:
-    return load_profile(profile_id, PROFILE_VERSION)
+def _profile(profile_id: str, version: str = PROFILE_VERSION) -> Profile:
+    return load_profile(profile_id, version)
 
 
 def flowworkshop_normalize_company_name(text: str | None, *, drop_filler: bool = False) -> str:
@@ -37,6 +40,16 @@ def flowworkshop_normalize_name(text: str) -> str:
 def designer_normalisiere_name(text: str) -> str:
     """``register.sanctions.normalisiere_name`` (audit_designer@030a71e)."""
     return normalize(text, _profile("audit_designer.sanctions"))
+
+
+def designer_normalisiere_name_umschrift(text: str) -> str:
+    """``register.sanctions.normalisiere_name`` (audit_designer@1254591, ``Müller → mueller``)."""
+    return normalize(text, _profile("audit_designer.sanctions", TRANSLITERATION_VERSION))
+
+
+def flowworkshop_normalize_name_umschrift(text: str) -> str:
+    """``sanctions_service.normalize_name`` (flowworkshop@3d1cb40, ``Müller → mueller``)."""
+    return normalize(text, _profile("flowworkshop.sanctions", TRANSLITERATION_VERSION))
 
 
 def flowworkshop_is_valid_lei(value: str | None) -> bool:

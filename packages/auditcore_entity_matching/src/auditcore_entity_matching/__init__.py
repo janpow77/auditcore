@@ -6,7 +6,7 @@ from .matching import Candidate, MatchResult, best_match, classify
 from .normalize import normalize
 from .profiles import Profile, available_profiles, load_profile
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Candidate",

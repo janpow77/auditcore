@@ -38,9 +38,33 @@ bleiben trotzdem zwei Profile, weil sie getrennte Quellen und Consumer haben.
    `flowworkshop_extract_lei_from_text` bleiben zur Reproduktion des alten
    Verhaltens erhalten.
 
+## 0.2.0: Profile 2026.09.2 für den umgestellten Sanktionsabgleich
+
+Beide Quellanwendungen haben die Entscheidung 1 für ihr Sanktionsscreening
+umgesetzt (audit_designer PR #380, Merge `1254591`; flowworkshop PR #49,
+Merge `3d1cb40`). Kein vorhandenes Profil bildet das ab: `flowworkshop.state_aid`
+schreibt zwar `ä → ae` um, lässt aber `ø`, `ł`, `É` stehen und hat andere
+Rechtsform-/Füllwortlisten. Deshalb neue Profilversionen, bestehende Profile
+und Legacy-Funktionen bleiben unverändert (tatsächlich ausgeführt:
+`tools/capture_transliteration.py`, 220 Fälle, `tests/fixtures/transliteration_observed.json`):
+
+| Profil | Quelle | Verfahren |
+|---|---|---|
+| `audit_designer.sanctions` 2026.09.2 | `falte_diakritika`/`normalisiere_name` | neuer Algorithmus `casefold_nfc_fold_nfkd`: Kleinschreibung, **NFC**, Faltungstabelle mit `ä/ö/ü → ae/oe/ue`, `ß → ss`, `ø → o`, `ł → l`, `æ → ae`, `œ → oe` …, danach NFKD ohne Akzente |
+| `flowworkshop.sanctions` 2026.09.2 | `UMLAUT_UMSCHRIFT` + `normalize_name` | bisheriger Algorithmus `casefold_fold_nfkd`; die vor der Kleinschreibung angewandte Umschrift ist nach `casefold` gleichwertig als Faltungseintrag abgebildet (alle 110 Namensfälle identisch) |
+
+Einziger beobachteter Unterschied der beiden Varianten: zerlegt geschriebene
+Umlaute (`u` + kombinierendes Trema). Der Designer setzt vorher NFC ein
+(`Mu\u0308ller → mueller`), flowworkshop nicht (`→ muller`); bei `A\u0308G`
+entfällt in flowworkshop dadurch sogar der Token als Rechtsform `ag`.
+Legacy-Funktionen: `designer_normalisiere_name_umschrift`,
+`flowworkshop_normalize_name_umschrift`.
+
 ## HUMAN_DECISION_REQUIRED
 
-1. Umstellung des Sanktionsscreenings (flowworkshop, audit_designer) auf die
-   Transliteration nach Entscheidung 1.
+1. ~~Umstellung des Sanktionsscreenings auf die Transliteration~~ — in beiden
+   Anwendungen am 23.09.2026 umgesetzt (Profile 2026.09.2). Offen bleibt nur,
+   ob zerlegt geschriebene Umlaute wie im Designer (NFC) auch in flowworkshop
+   umgeschrieben werden sollen.
 2. Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen sind nicht
    Teil dieser Bibliothek.

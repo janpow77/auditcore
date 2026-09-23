@@ -1,4 +1,4 @@
-auditcore_entity_matching 0.1.0 — source attribution and authorization
+auditcore_entity_matching 0.2.0 — source attribution and authorization
 
 Derived from (unchanged Git blobs, verified against GitHub on 2026-09-22):
   janpow77/flowworkshop@a05bb2143bd96d5e981f9462f05b965e1658be36
@@ -7,6 +7,12 @@ Derived from (unchanged Git blobs, verified against GitHub on 2026-09-22):
     auditworkshop/backend/services/sanctions_service.py  3e7ad8bd826eed4da15f9860af267f9fe8a9076b
   janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a
     backend/app/core/shared/research/register/sanctions.py  3d48504d92207d6c5a03c038d22fcdf09be63235
+
+Profile versions 2026.09.2 (added in 0.2.0, verified against GitHub on 2026-09-23):
+  janpow77/audit_designer@1254591156d3bdf6ccdf4050dec7713a61ad4a20 (PR #380)
+    backend/app/core/shared/research/register/sanctions.py  5c064ddecb473b3f1a4341a0dc6513268d106295
+  janpow77/flowworkshop@3d1cb40221645935c323392d70d84102d05ac7bb (PR #49)
+    auditworkshop/backend/services/sanctions_service.py  5b9de79484373428f45ddeb879a497b671a29e1c
 
 Both source repositories have no license file (historical status UNKNOWN).
 On 2026-09-22 the rights holder decided: "die bibliotheken sollen mit sein,

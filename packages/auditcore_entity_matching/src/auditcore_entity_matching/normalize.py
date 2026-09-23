@@ -11,6 +11,10 @@ Two algorithms exist in the sources and are kept apart:
   folding, a small fold map (``ß → ss``, ``ø → o`` …), NFKD decomposition
   without combining marks (``ä → a``), punctuation → space, legal-form tokens
   removed.
+* ``casefold_nfc_fold_nfkd`` (audit_designer sanctions from 2026.09.2): as
+  above, but the case-folded text is first composed to NFC so that a
+  decomposed umlaut (``u`` + combining diaeresis) meets the fold map
+  (``ü → ue``) instead of losing only its diaeresis.
 """
 
 from __future__ import annotations
@@ -46,6 +50,8 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         value = _SPACE.sub(" ", _WORD.sub(" ", value)).strip()
     else:
         value = text.casefold()
+        if rules.algorithm == "casefold_nfc_fold_nfkd":
+            value = unicodedata.normalize("NFC", value)
         for source, target in rules.fold_map.items():
             if source in value:
                 value = value.replace(source, target)

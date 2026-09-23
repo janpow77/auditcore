@@ -18,7 +18,9 @@ from typing import Any
 from .errors import ProfileError
 
 SCHEMA = "auditcore_entity_matching.profile/1"
-ALGORITHMS = frozenset({"translate_then_casefold", "casefold_fold_nfkd"})
+ALGORITHMS = frozenset(
+    {"translate_then_casefold", "casefold_fold_nfkd", "casefold_nfc_fold_nfkd"}
+)
 
 
 @dataclass(frozen=True)
