@@ -56,6 +56,12 @@
       "returns": "None",
       "signature": "condition: bool, where: str, message: str"
     },
+    "base.seq_sum": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Any",
+      "signature": "values: Iterable[Any], start: Any=0"
+    },
     "engine": {
       "kind": "module"
     },
@@ -95,7 +101,7 @@
       "kind": "function",
       "raises": "InputError,ProfileError",
       "returns": "Evaluation",
-      "signature": "records: Iterable[Mapping[str, Any]], profile: RiskProfile, *, columns: Iterable[str] | None=None, reference_date: date | None=None"
+      "signature": "records: Iterable[Mapping[str, Any]], profile: RiskProfile, *, columns: Iterable[str] | None=None, reference_date: date | None=None, points: Mapping[str, float] | None=None"
     },
     "engine.flatten_record": {
       "kind": "function",
@@ -297,7 +303,7 @@
     },
     "profiles.Rule": {
       "bases": "",
-      "fields": "code: str\nlabel: str\nkind: str\nparams: Mapping[str, Any]\nrequires: tuple[str, ...]\nwhen_missing_columns: str\ncolumn: str | None\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]\nseverity: str | None = None\nmessages: Mapping[str, Mapping[str, str]] | None = None\necho_fields: Mapping[str, str] | None = None",
+      "fields": "code: str\nlabel: str\nkind: str\nparams: Mapping[str, Any]\nrequires: tuple[str, ...]\nwhen_missing_columns: str\ncolumn: str | None\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]\nseverity: str | None = None\nmessages: Mapping[str, Mapping[str, str]] | None = None\necho_fields: Mapping[str, str] | None = None\npoints: float | None = None",
       "kind": "class"
     },
     "profiles.Rule.scope": {
@@ -356,6 +362,9 @@
       "raises": "ProfileError",
       "returns": "None",
       "signature": "kind: str, params: Mapping[str, Any], where: str"
+    },
+    "score_rules": {
+      "kind": "module"
     },
     "values": {
       "kind": "module"
@@ -417,15 +426,15 @@
     {
       "code": "AC-COMP-001",
       "evidence": [],
-      "line": 228,
-      "message": "Complexity=18, nesting=4, args=4",
+      "line": 260,
+      "message": "Complexity=19, nesting=4, args=5",
       "path": "engine.py",
       "status": "WARNING"
     },
     {
       "code": "AC-COMP-001",
       "evidence": [],
-      "line": 159,
+      "line": 160,
       "message": "Complexity=34, nesting=8, args=2",
       "path": "fraud.py",
       "status": "WARNING"
@@ -433,7 +442,7 @@
     {
       "code": "AC-COMP-001",
       "evidence": [],
-      "line": 249,
+      "line": 250,
       "message": "Complexity=24, nesting=4, args=3",
       "path": "rules.py",
       "status": "WARNING"
@@ -441,7 +450,7 @@
     {
       "code": "AC-COMP-001",
       "evidence": [],
-      "line": 734,
+      "line": 736,
       "message": "Complexity=17, nesting=3, args=3",
       "path": "rules.py",
       "status": "WARNING"
@@ -474,7 +483,7 @@
       "code": "AC-SYN-001",
       "evidence": [],
       "line": 0,
-      "message": "Parsed 12 files",
+      "message": "Parsed 13 files",
       "path": "",
       "status": "PASS"
     },
@@ -547,7 +556,7 @@
       "status": "PASS"
     }
   ],
-  "generated_at": "2026-09-23T12:09:23.231835+00:00",
+  "generated_at": "2026-09-23T12:26:44.255353+00:00",
   "ignored": [],
   "path": "/home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk",
   "policy": {
@@ -2461,6 +2470,6 @@
       }
     }
   },
-  "source_digest": "8906b321191139df00fad48c3b254ce670564840b56ee7f9471113ef76320650",
+  "source_digest": "bf265fa4cddf418579c16225cdb9a42f87ecfdedc6b942c8f935d463b2ba18df",
   "status": "REVIEW_REQUIRED"
 }

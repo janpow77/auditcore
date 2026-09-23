@@ -36,6 +36,9 @@ for merkmal in ergebnis.records[0].hits:
 | `audit_designer.flowstat_belegliste` | `1254591156d3` | `LEGACY_CHARACTERIZED` | Flowstat `_red_flags` (BL_RF01–BL_RF10) in audit_designer und audit-portal |
 | `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | wie Legacy, RF02 mit jahresbezogener EU-Schwelle aus `auditcore_procurement` |
 | `flowinvoice.risk_checker` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | flowinvoice/audit-portal `RiskChecker` (9 Rechnungsindikatoren, Texte und Legacy-Score dieses Profils) |
+| `flowinvoice.rbvk_wibank` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | WIBANK-RBVK-Punkte je Mittelabruf (Codeverhalten), Stufen 8/19 |
+| `flowinvoice.exante_basis` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 7 Ex-ante-Indikatoren, Basisgewichte, Klassen 30/55; kalibrierte Gewichte ausdrücklich über `points` |
+| `flowinvoice.exante_heuristik` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | Vergleichsheuristik des Ex-ante-Scores (Deckel 100) |
 
 Betrugsprüfungen aus flowinvoice `fraud_detection` haben eigene Profile
 (Schema `auditcore_risk.fraud-profile/1`, `load_fraud_profile`):
@@ -62,6 +65,7 @@ Ergebnis nennt Profil, Version, Fingerabdruck und Status.
 | `engine` | `evaluate`, `flatten_record`, `name_similarity`, `identifier_missing`, `missing_columns` | – |
 | `invoice_rules` | Regelarten je Rechnung (`amount_or_statistic`, `share_above`, `all_missing`, `round_amount_terms`, `date_outside_range`, `text_patterns`, `names_differ`, `identifier_equal`, `split_window`) | – |
 | `fraud` | Signalscore, TED-Auftragnehmerprofil, Dubletten | – |
+| `score_rules` | Kriterien für Punkte-Scores (`truthy_all`, `text_in_set`, `number_range`, `set_overlap`) mit Bewertung `points_stages` | – |
 | `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `annotate` | Extra `pandas` |
 | Namensabgleich (RF09) | Normalisierung über `auditcore_entity_matching` (Profil `riskanalysis.payee`) | Extra `fuzzy` (rapidfuzz) |
 | Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` (`procurement.hvtg 2026.09.2`), nicht dupliziert | Extra `procurement` |

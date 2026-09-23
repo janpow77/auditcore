@@ -6,7 +6,19 @@ auf Branch `feat/auditcore-risk-flowinvoice`. Nicht veröffentlicht; der
 zentrale Release v0.3.0 folgt nach allen Paketen. Mit diesem Paket steigen
 `auditcore_entity_matching` auf 0.2.0 (Profil `riskanalysis.payee`,
 `pair_score`) und `auditcore_statistics` auf 0.2.0 (Legacyvariante
-`legacy_flowinvoice_benford`), jeweils additiv.
+`legacy_flowinvoice_benford`), jeweils additiv. Teil 2 gemergt als PR #21
+(`f07574e`); Teil 3 (VerwK-Punkte-Scores WIBANK-RBVK und Ex-ante) gemergt als
+PR #24 (`b038581`).
+
+## CI, KIRA, Graphify
+
+| Nachweis | Ergebnis |
+|---|---|
+| GitHub-CI PR #17 | quality und domain-packages auf Python 3.11/3.12/3.13 PASS (Läufe 35856612377, 35856612521, 35856625352, 35856625418) |
+| GitHub-CI PR #21 | erster Lauf unter 3.11 FAIL (Interpreter-abhängige `sum()`-Semantik, RK-L07), nach Korrektur alle PASS (Läufe 35859478313, 35859478441, 35859482904, 35859483111) |
+| GitHub-CI PR #24 | alle PASS (Läufe 35860540857, 35860540945, 35860546501, 35860546513) |
+| KIRA | Eintrag `b2c38a7f-8f28-4779-81ef-51c7a86c8358` (architecture); Dublettensuche war wegen nicht erreichbarem Einbettungsdienst NOT_EXECUTED, Listenprüfung des Projekts ohne Treffer |
+| Graphify | `graphify update` über `packages/auditcore_risk/{src,tools}` (main): 442 Knoten, 1.215 Kanten, 15 Communities |
 
 ## Umfang
 
@@ -26,6 +38,7 @@ Keine Laufzeitabhängigkeit auf `auditcore`.
 | Entitätsabgleich | RF09 über `auditcore_entity_matching` (Profil `riskanalysis.payee`, `pair_score`) |
 | pandas-Adapter | `compute_red_flags`/`red_flag_summary` als Drop-in für riskanalysis und flowinvoice |
 | Rechnungsindikatoren (Teil 2) | Profil `flowinvoice.risk_checker`: 9 Indikatoren mit Schweregrad, Texten und dem Legacy-Score **dieses** Profils (Summe der Schweregewichte / 5) |
+| VerwK-Punkte (Teil 3) | `flowinvoice.rbvk_wibank` (WIBANK-RBVK-Kriterien, Stufen 8/19), `flowinvoice.exante_basis` (7 Indikatoren, Basisgewichte oder ausdrücklich übergebene kalibrierte Gewichte, Klassen 30/55), `flowinvoice.exante_heuristik` |
 | Betrugsprüfungen (Teil 2) | `flowinvoice.fraud_signals` (Blocker/Warnungen/Score aus Teilprüfungen; Sanktionen/PEP/Firma nur als Signale), `flowinvoice.ted_contractor` (über `notice/1`-Datensätze aus `auditcore_procurement`), `flowinvoice.duplicates`; Benford in `auditcore_statistics` |
 
 ## Quellen, Rechte
@@ -60,6 +73,7 @@ Geprüft und nicht übernommen: `vp_ai` `ScorecardService`
 
 | flowinvoice `RiskChecker.assess` | `tools/capture_flowinvoice_risk_checker.py` (unverändert importiert) | flowinvoice-Umgebung (`requirements-production.txt`) | 338 Anfragen | exakt (Indikatoren, Schwere, Texte, Score, Zusammenfassung) |
 | flowinvoice Manager, TED, Dubletten | `tools/capture_flowinvoice_fraud.py` (Teilprüfungen durch Stellvertreter ersetzt; SQL NOT_EXECUTED) | dito | 268 / 129 / 250 Fälle | exakt; 23 Originalabbrüche (`TypeError`) als `InputError` (RK-C09) |
+| flowinvoice VerwK `score_mittelabrufe`, `_features`, `kalibriere_und_score`, `heuristik_score` | `tools/capture_flowinvoice_verwk_scores.py` (unverändert ausgeführt, lokale Variablen per `sys.settrace`) | flowinvoice VerwK-Umgebung, Python 3.12 wie `Dockerfile.verwk` | 777 WIBANK-Zeilen, 125 Merkmalszeilen, 3 Kalibrierungsläufe (Fallback) | exakt; kalibrierter Gewichtspfad NOT_EXECUTED (Demodaten ohne positive Fälle) |
 | flowinvoice `BenfordsLawAnalyzer` | `auditcore_statistics/tools/capture_flowinvoice_benford.py` | Standardbibliothek | 65 Fälle | exakt |
 
 Alle Capture-Läufe sind reproduzierbar (Wiederholung bytegleich).
@@ -70,11 +84,11 @@ Bewusste Abweichungen RK-C01 … RK-C07 und erhaltene Eigenheiten RK-L03:
 
 | Prüfung | Ergebnis |
 |---|---|
-| Paket-pytest (Python 3.12, pandas 3.0.6, rapidfuzz 3.10.1) | Teil 1: 573 passed; mit Teil 2: **1.573 passed** (zusätzlich Replay RiskChecker 340, Replay Betrugsprüfungen 648, Betrugsvertrag 12; Fixtures unter Python 3.11 wie die Produktionsimages erzeugt, RK-L07) |
+| Paket-pytest (Python 3.12, pandas 3.0.6, rapidfuzz 3.10.1) | Teil 1: 573 passed; mit Teil 2: 1.573 passed; mit Teil 3: **2.356 passed** (Replay VerwK 783) (zusätzlich Replay RiskChecker 340, Replay Betrugsprüfungen 648, Betrugsvertrag 12; Fixtures unter Python 3.11 wie die Produktionsimages erzeugt, RK-L07) |
 | `auditcore_statistics` 0.2.0 | 159 passed (davon 68 neu) |
 | `auditcore_entity_matching` 0.2.0 | 543 passed (davon 84 neu für `riskanalysis.payee`) |
 | ruff, ruff format, mypy strict (src und gesamtes Paket), bandit -ll | PASS |
-| Plattform (`pytest`, `ruff check .`, `mypy src`, CLI-Hilfen) | Teil 1: 281 passed; mit Teil 2 und main-Stand: 284 passed, PASS |
+| Plattform (`pytest`, `ruff check .`, `mypy src`, CLI-Hilfen) | Teil 1: 281; Teil 2: 284; Teil 3 mit main-Stand: 286 passed, PASS |
 | auditcore-quality strict (`--framework` verwaltung-app-framework@15f5338, Kontext, SBOM) | Syntax, Lint, Typen, bandit, pip-audit, Tests, Supply Chain PASS; API-Vergleich NOT_EXECUTED (erste Version, keine Basis); 2 × AC-OSS-001 REVIEW_REQUIRED (Regex-Platzhaltermuster in Profil/Fixture, kein Kennzeichen); Gesamt REVIEW_REQUIRED wegen Policy ([risk-quality.json](risk-quality.json)) |
 | Policy (`tools/policy_proof.py`) | F-09, F-15, F-17 VERIFIED und artefaktgebunden (T-11, T-14, T-31, T-38, Profilprüfungen); F-05 REVIEW_REQUIRED (Namen können natürliche Personen bezeichnen, Bewertung beim Consumer), F-07/F-07.ASSESS offen (Schutzbedarf UNKNOWN) |
 
@@ -91,8 +105,8 @@ Wheel-SHA256 `auditcore_risk-0.1.0` (Teil 1):
 (`auditcore_entity_matching-0.2.0`: `34730c6f…`). Teil 2 erneut mit
 harvest, entity_matching 0.2.0, procurement, statistics 0.2.0 und risk:
 **PASS 49/49 Prüfungen** inkl. APT-Lebenszyklus (statistics 0.2.0
-`5a01b4f5…`). Anschließend alle Quelltestsuiten gegen die installierten
-Wheels: PASS.
+`5a01b4f5…`). Teil 3 erneut: PASS 49/49 (risk `e2fc1dc8…`). Anschließend
+alle Quelltestsuiten gegen die installierten Wheels: PASS.
 
 ## Consumer
 
@@ -103,6 +117,9 @@ Wheels: PASS.
 | audit_designer, audit-portal (Flowstat) | `belegliste_analysis_service.py:_red_flags` | Replay 112 Originalfälle; Anwendungstests NOT_EXECUTED | geplant |
 | flowinvoice Betrugsprüfung | `services/fraud_detection/{manager,ted_checker,duplicate_detector,benfords_law}.py` (API `/api/fraud/*`, Pipeline-Regel) | Replay aller Originalfälle; flowinvoice hat keine Tests dieser Module (NOT_EXECUTED) | geplant |
 | flowinvoice/audit-portal RiskChecker | `services/risk_checker.py` | kein Laufzeitaufrufer in beiden Anwendungen | geplant |
+| flowinvoice VerwK WIBANK | `verwk/pipeline/rbvk_wibank_scorer.py:score_mittelabrufe` (Aufrufer `pruefplan.py`) | Bewertungsschritt in Checkout-Kopie ersetzt: 410 Mittelabrufe identisch; `tests/verwk` mit Demobestand 572 passed vorher/nachher | getestet, Umstellung nach v0.3.0 |
+| flowinvoice VerwK Ex-ante | `exante_score.py:kalibriere_und_score` | Replay im Paket | geplant |
+| riskanalysis WIBANK/Ex-ante | `pipeline/rbvk_wibank_scorer.py`, `exante_score.py` (fachlich gleich) | – | geplant |
 
 Umstellungsanleitung und Vorlage: `packages/auditcore_risk/docs/consumer-integration.md`,
 `packages/auditcore_risk/docs/consumers/riskanalysis_red_flags.py`.
@@ -121,3 +138,13 @@ Umstellungsanleitung und Vorlage: `packages/auditcore_risk/docs/consumer-integra
 8. Betrugs-Signalscore: Skala der TED-Legitimität (0–1 oder 0–100), Zählung der Warnungen vor/nach Deduplizierung.
 9. Rechnungssplitting-Schwellen (1.000–50.000, 80 %) vs. RF02 und jahresbezogene EU-Schwellen.
 10. Benford der Betrugsprüfung: Umstellung auf `benford_test` (exakte Erwartungswerte, echter p-Wert).
+11. WIBANK-RBVK: Codeverhalten vs. Profildatei V1.21 (K10, K21/K22, K12/K16); K22 durch nie gesetzte `prior_familie`.
+12. Ex-ante: Kalibrierung und Klassengrenzen (Methodikhoheit der Verwaltungsbehörde).
+
+## Geprüft, nicht in auditcore_risk (Status)
+
+`auffaelligkeiten.py` (geplant, nach Binomialtest/Benjamini-Hochberg in
+`auditcore_statistics`), `konzentration.py` und VerwK-`benford.py` (geplant als
+Methodenprofile in `auditcore_statistics`), `montecarlo.py` (Anwendung; kein
+passender Vertrag in `auditcore_sampling`), `fuzzy_link.py` (geplant in
+`auditcore_entity_matching`), `eu_typologie.py`/`fehlerursachen.py` (Anwendung).

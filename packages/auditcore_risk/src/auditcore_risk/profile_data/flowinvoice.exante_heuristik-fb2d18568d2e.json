@@ -1,0 +1,310 @@
+{
+ "assessment": {
+  "cap": 100,
+  "default_stage": null,
+  "detail_template": null,
+  "kind": "points_stages",
+  "points_override": "forbidden",
+  "source_version": "heuristik_score",
+  "stages": []
+ },
+ "id": "flowinvoice.exante_heuristik",
+ "kind": "points_score",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten der Verwaltungskontrolle (VerwK); Punkte und Stufen ausschließlich dieses Profils, keine Vereinheitlichung mit anderen Scores. Bisherige gesetzte Vergleichsheuristik (nur Validierung).",
+ "open_decisions": [
+  "Nur Vergleichsbasis der Kalibrierung; kein produktiver Score."
+ ],
+ "output": {},
+ "rules": [
+  {
+   "code": "H1",
+   "kind": "number_range",
+   "label": "Budget > 1 Mio",
+   "origin": {
+    "lines": "88-89",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "brutto",
+    "lower": 1000000,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 20
+  },
+  {
+   "code": "H2",
+   "kind": "number_range",
+   "label": "Budget 500 T – 1 Mio",
+   "origin": {
+    "lines": "90-91",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "brutto",
+    "lower": 500000,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 1000000,
+    "upper_inclusive": true
+   },
+   "points": 15
+  },
+  {
+   "code": "H3",
+   "kind": "number_range",
+   "label": "Kürzungsquote > 20",
+   "origin": {
+    "lines": "92-93",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "kuerzungsquote",
+    "lower": 20,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 15
+  },
+  {
+   "code": "H4",
+   "kind": "number_range",
+   "label": "Kürzungsquote 10–20",
+   "origin": {
+    "lines": "94-95",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "kuerzungsquote",
+    "lower": 10,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 20,
+    "upper_inclusive": true
+   },
+   "points": 8
+  },
+  {
+   "code": "H5",
+   "kind": "number_range",
+   "label": "Laufzeit > 36 Monate",
+   "origin": {
+    "lines": "96-98",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "laufzeit_monate",
+    "lower": 36,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 10
+  },
+  {
+   "code": "H6",
+   "kind": "number_range",
+   "label": "Laufzeit 24–36 Monate",
+   "origin": {
+    "lines": "99-100",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "laufzeit_monate",
+    "lower": 24,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 36,
+    "upper_inclusive": true
+   },
+   "points": 6
+  },
+  {
+   "code": "H7",
+   "kind": "number_range",
+   "label": "Mittelabrufe > 5",
+   "origin": {
+    "lines": "101-102",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "ma",
+    "lower": 5,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 10
+  },
+  {
+   "code": "H8",
+   "kind": "number_range",
+   "label": "Belege > 200",
+   "origin": {
+    "lines": "103-104",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "belege",
+    "lower": 200,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 15
+  },
+  {
+   "code": "H9",
+   "kind": "number_range",
+   "label": "Belege 100–200",
+   "origin": {
+    "lines": "105-106",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "belege",
+    "lower": 100,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 200,
+    "upper_inclusive": true
+   },
+   "points": 10
+  },
+  {
+   "code": "H10",
+   "kind": "number_range",
+   "label": "Gruppe mit höchstens einem Vorhaben",
+   "origin": {
+    "lines": "107-109",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "gruppe_vorhaben",
+    "lower": null,
+    "lower_inclusive": false,
+    "missing_value": 1,
+    "upper": 1,
+    "upper_inclusive": true
+   },
+   "points": 20
+  },
+  {
+   "code": "H11",
+   "kind": "number_range",
+   "label": "Gruppe mit mehr als drei Vorhaben",
+   "origin": {
+    "lines": "110-111",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "gruppe_vorhaben",
+    "lower": 3,
+    "lower_inclusive": false,
+    "missing_value": 1,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 15
+  },
+  {
+   "code": "H12",
+   "kind": "number_range",
+   "label": "FPG-Quote > 15",
+   "origin": {
+    "lines": "112-113",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "fpg_quote",
+    "lower": 15,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 20
+  },
+  {
+   "code": "H13",
+   "kind": "number_range",
+   "label": "FPG-Quote 2–15",
+   "origin": {
+    "lines": "114-115",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "fpg_quote",
+    "lower": 2,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 15,
+    "upper_inclusive": true
+   },
+   "points": 10
+  },
+  {
+   "code": "H14",
+   "kind": "number_range",
+   "label": "FPG-Rückgabequote > 40",
+   "origin": {
+    "lines": "116-117",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "heuristik_score"
+   },
+   "params": {
+    "field": "fpg_rueckgabequote",
+    "lower": 40,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 10
+  }
+ ],
+ "schema": "auditcore_risk.profile/1",
+ "source": {
+  "also_present_in": {
+   "janpow77/riskanalysis@b5c523b": {
+    "backend/app/pipeline/exante_score.py": "bc1725b5fdbca689275e9890e707eb4d90953023",
+    "backend/app/pipeline/rbvk_wibank_scorer.py": "6ebd3a2ce56db09228ea770fe681089dc0c4391f",
+    "difference": "Importpfade/Closure bzw. eine ungenutzte Zeile; fachlich gleich"
+   }
+  },
+  "characterization": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "1f05d3f7a00d65b17ba79c7812fa05b52f8bccba",
+  "path": "backend/app/verwk/pipeline/exante_score.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "heuristik_score"
+  ]
+ },
+ "status": "LEGACY_CHARACTERIZED",
+ "summary": {
+  "format": "none"
+ },
+ "version": "fb2d18568d2e"
+}

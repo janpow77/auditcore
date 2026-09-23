@@ -68,6 +68,46 @@ gehen als Signale (Port-Vertrag, einfache Zuordnungen) in `score_signals` ein.
 Die Benford-Prüfung (`benfords_law.py`) liegt als Legacyvariante in
 `auditcore_statistics` 0.2.0.
 
+## flowinvoice VerwK: Punkte-Scores (Verwaltungskontrolle)
+
+Quelle `flowinvoice@fb2d185 backend/app/verwk/pipeline/{rbvk_wibank_scorer,exante_score}.py`
+(Blobs `24e04c0`, `1f05d3f`; in riskanalysis fachlich gleich, Blobs `6ebd3a2`,
+`bc1725b`). Mit `tools/capture_flowinvoice_verwk_scores.py` wurden die
+unveränderten Funktionen auf drei Demobeständen des flowinvoice-Generators und
+60 synthetischen Mittelabruf-Rahmen ausgeführt und ihre lokalen Variablen am
+Bewertungsschritt per `sys.settrace` gelesen (Python 3.12 wie
+`Dockerfile.verwk`): 777 WIBANK-Zeilen, 125 Ex-ante-Merkmalszeilen, 3
+Kalibrierungsläufe (alle im Basisgewichts-Fallback). Alle reproduziert.
+
+| ID | Original | Bibliothek | Begründung |
+|---|---|---|---|
+| RK-L08 | WIBANK-Punkte (K1–K28 ohne 6/15/27), Stufen 8/19 im Code; die Profildatei `rbvk_wibank.json` wird nicht gelesen und weicht ab (K10, K21/K22, K12/K16). | Profil `flowinvoice.rbvk_wibank` bildet das **Codeverhalten** ab. | Legacy exakt; Abweichung zur Profildatei ist fachlich zu klären. |
+| RK-L09 | Ex-ante: Gewichte zur Laufzeit per Logit kalibriert, Fallback-Basisgewichte 20/15/6/10/10/10/15, Klassen 30/55, Vergleichsheuristik `heuristik_score` (Deckel 100). | `flowinvoice.exante_basis` (Basisgewichte; kalibrierte Gewichte nur ausdrücklich über `points`), `flowinvoice.exante_heuristik`. | Kalibrierung bleibt Modellierung beim Consumer. |
+| RK-C11 | Merkmalsaufbereitung, Vorhistorie (CSV, MA-Versionen) und „nicht abbildbar“ im selben Aufruf. | Die Bibliothek bewertet aufbereitete Merkmale (`prior_k`, `prior_q`, `prior_families`, `erstes_vorhaben` …); Aufbereitung und Historie bleiben in der Anwendung. | Anwendungsspezifische Feldaliase und Datenquellen. |
+
+Geprüft und **nicht** in `auditcore_risk` übernommen (Stand, Begründung):
+
+* `auffaelligkeiten.py` (nur flowinvoice): Gruppen-Übermaß mit einseitigem
+  Binomialtest und Benjamini-Hochberg. Wiederverwendbares Merkmal, aber der
+  statistische Kern gehört nach `auditcore_statistics` und existiert dort noch
+  nicht. Status: geplant (erst Methodenprofil in statistics, dann Regelart hier).
+* `konzentration.py` (Pareto, Gini/Lorenz, HHI; beschreibend, ohne Merkmale):
+  gehört nach `auditcore_statistics`. Status: geplant.
+* `benford.py` (VerwK): Erstziffern gegen die **eigene** Bestandsverteilung,
+  MAD/χ² ohne p-Wert je Gruppe ≥ 300 Belege – methodisch verschieden von
+  `benford_test` und `legacy_flowinvoice_benford`. Status: geplant als eigenes
+  Methodenprofil in `auditcore_statistics`.
+* `montecarlo.py`: Simulationsvergleich PPS-mit-Zurücklegen gegen Zufallsauswahl
+  (numpy-Generator), passt zu keiner Funktion in `auditcore_sampling`; Population
+  unterscheidet sich zwischen flowinvoice (2021–2029) und riskanalysis (2014–2024).
+  Status: bleibt in der Anwendung, ggf. später Werkzeug in `auditcore_sampling`.
+* `fuzzy_link.py`/`payee_normalizer._fuzzy_merge`: transitive Namensclusterung
+  gehört nach `auditcore_entity_matching` (Normalisierung dort bereits als
+  `riskanalysis.payee`). Status: geplant.
+* `eu_typologie.py`, `fehlerursachen.py`: Berichtsklassifikationen an den
+  ACR-Katalog bzw. die Nummerierung 2014–2020 gebunden und zwischen den Repos
+  auseinandergelaufen – bleiben in der Anwendung.
+
 ## Nicht übernommen (geprüft)
 
 * `audit_designer` `vp_ai/services/scorecard_service.py:ScorecardService` —
@@ -101,3 +141,8 @@ Die Benford-Prüfung (`benfords_law.py`) liegt als Legacyvariante in
    Warnungen vor oder nach der Deduplizierung zählen.
 9. **Rechnungssplitting-Schwellen** (1.000–50.000, 80 %) weichen von RF02 und den
    jahresbezogenen EU-Schwellen ab; keine Angleichung ohne Entscheidung.
+10. **WIBANK-RBVK:** Codeverhalten gegen Profildatei V1.21 (K10 +1 statt bis 2;
+    13.* als Beihilfe; K22 greift für jede eigene Vorgeschichte, weil
+    `prior_familie` nie gesetzt wird).
+11. **Ex-ante-Score:** Kalibrierung (Logit, Signifikanz p < 0,10, Skalierung auf
+    25) und Klassen 30/55 sind Methodikhoheit der Verwaltungsbehörde.
