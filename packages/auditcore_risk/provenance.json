@@ -174,8 +174,9 @@
       "tool": "tools/capture_flowinvoice_risk_checker.py",
       "cases": 338,
       "environment": {
-        "python": "3.12.3",
-        "pydantic": "flowinvoice requirements-production.txt"
+        "python": "3.11.16 (Container python:3.11-slim, wie flowinvoice Dockerfile/Dockerfile.production)",
+        "pydantic": "2.13.5",
+        "sqlalchemy": "2.0.54"
       },
       "method": "RiskChecker.assess unverändert aus dem Blob-geprüften Checkout ausgeführt"
     },
@@ -187,7 +188,12 @@
         "ted": 129,
         "duplicates": 250
       },
-      "method": "Manager mit Stellvertretern der Teilprüfungen; TED-Statistik/-Merkmale/-Legitimität und Dublettenlogik unverändert; SQL-Auswahl NOT_EXECUTED"
+      "method": "Manager mit Stellvertretern der Teilprüfungen; TED-Statistik/-Merkmale/-Legitimität und Dublettenlogik unverändert; SQL-Auswahl NOT_EXECUTED",
+      "environment": {
+        "python": "3.11.16 (Container python:3.11-slim, wie flowinvoice Dockerfile/Dockerfile.production)",
+        "pydantic": "2.13.5",
+        "sqlalchemy": "2.0.54"
+      }
     }
   },
   "profiles": [

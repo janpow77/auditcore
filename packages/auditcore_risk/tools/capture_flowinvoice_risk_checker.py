@@ -8,7 +8,12 @@ network is touched::
     PYTHONPATH=<flowinvoice>/backend python tools/capture_flowinvoice_risk_checker.py \
         <flowinvoice checkout> tests/fixtures/flowinvoice_risk_checker_observed.json
 
-The assessment timestamp is excluded from the record. All data are synthetic.
+The assessment timestamp is excluded from the record. Run it with **Python
+3.11** like the production images (flowinvoice ``Dockerfile``/
+``Dockerfile.production``): Python 3.12 compensates float sums in ``sum()``
+and changes some legacy results in the last binary digit.
+
+All data are synthetic.
 """
 
 from __future__ import annotations

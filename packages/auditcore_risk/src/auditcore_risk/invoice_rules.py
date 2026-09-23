@@ -18,7 +18,7 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
-from .base import Context, Kind, Outcome, Table, is_number, need
+from .base import Context, Kind, Outcome, Table, is_number, need, seq_sum
 from .errors import InputError, ProfileError
 from .values import as_date, is_missing
 
@@ -226,7 +226,7 @@ def _split_window(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
             ordered = sorted(near, key=lambda it: it[1])
             hit = _first_window(ordered, minimum, window)
             if hit is not None:
-                total = sum(it[0] for it in hit)
+                total = seq_sum(it[0] for it in hit)
                 out.flags[i] = True
                 out.evidence[i] = {
                     "count": len(hit),

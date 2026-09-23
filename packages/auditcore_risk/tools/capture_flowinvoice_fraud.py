@@ -19,6 +19,10 @@ pinned commit with its own environment):
     PYTHONPATH=<flowinvoice>/backend python tools/capture_flowinvoice_fraud.py \
         <flowinvoice checkout> tests/fixtures/flowinvoice_fraud_observed.json
 
+Run it with **Python 3.11** like the production images (flowinvoice
+``Dockerfile``/``Dockerfile.production``): Python 3.12 compensates float sums in
+``sum()`` and changes some legacy results in the last binary digit.
+
 All data are synthetic.
 """
 

@@ -28,6 +28,7 @@ from importlib import resources
 from types import MappingProxyType
 from typing import Any
 
+from .base import seq_sum
 from .errors import InputError, ProfileError
 from .profiles import check_template, fingerprint
 from .values import is_missing
@@ -341,7 +342,7 @@ def assess_contractor(
     if not n:
         stats = dict(p["empty_statistics"])
     else:
-        total_value: Any = sum(v or 0 for v in values)
+        total_value: Any = seq_sum(v or 0 for v in values)
         counts: dict[str, int] = {}
         for authority in authorities:
             counts[authority] = counts.get(authority, 0) + 1

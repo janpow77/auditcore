@@ -70,7 +70,7 @@ Bewusste Abweichungen RK-C01 … RK-C07 und erhaltene Eigenheiten RK-L03:
 
 | Prüfung | Ergebnis |
 |---|---|
-| Paket-pytest (Python 3.12, pandas 3.0.6, rapidfuzz 3.10.1) | Teil 1: 573 passed; mit Teil 2: **1.573 passed** (zusätzlich Replay RiskChecker 340, Replay Betrugsprüfungen 648, Betrugsvertrag 12) |
+| Paket-pytest (Python 3.12, pandas 3.0.6, rapidfuzz 3.10.1) | Teil 1: 573 passed; mit Teil 2: **1.573 passed** (zusätzlich Replay RiskChecker 340, Replay Betrugsprüfungen 648, Betrugsvertrag 12; Fixtures unter Python 3.11 wie die Produktionsimages erzeugt, RK-L07) |
 | `auditcore_statistics` 0.2.0 | 159 passed (davon 68 neu) |
 | `auditcore_entity_matching` 0.2.0 | 543 passed (davon 84 neu für `riskanalysis.payee`) |
 | ruff, ruff format, mypy strict (src und gesamtes Paket), bandit -ll | PASS |

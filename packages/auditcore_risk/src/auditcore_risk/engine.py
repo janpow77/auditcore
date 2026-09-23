@@ -14,7 +14,7 @@ from datetime import date
 from types import MappingProxyType
 from typing import Any
 
-from .base import Context, Outcome, Table, _sum
+from .base import Context, Outcome, Table, _sum, seq_sum
 from .errors import InputError, ProfileError
 from .profiles import RiskProfile, Rule
 from .rules import KINDS, identifier_state, pair_similarity
@@ -170,7 +170,7 @@ def _assessment(profile: RiskProfile, hits: list[FlagHit]) -> dict[str, Any]:
     if spec is None:
         raise ProfileError(f"Profil {profile.id} enthält keine Bewertung.")
     weights = spec["weights"]
-    total = sum(float(weights.get(h.severity, spec["fallback_weight"])) for h in hits)
+    total = seq_sum(float(weights.get(h.severity, spec["fallback_weight"])) for h in hits)
     score = min(total / float(spec["divisor"]), float(spec["cap"])) if hits else 0.0
     highest = next(
         (level for level in spec["severity_order"] if any(h.severity == level for h in hits)),

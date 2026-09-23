@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
@@ -98,11 +98,24 @@ def _amounts(table: Table, params: Mapping[str, Any], name_key: str = "field") -
     return out
 
 
+def seq_sum(values: Iterable[Any], start: Any = 0) -> Any:
+    """Plain left-to-right addition, i.e. Python ≤ 3.11 ``sum``.
+
+    Python 3.12 compensates float sums in ``sum``; the source applications run
+    on Python 3.11 (their Dockerfiles), so legacy profiles must not depend on
+    the interpreter the library happens to run on.
+    """
+    total = start
+    for value in values:
+        total = total + value
+    return total
+
+
 def _sum(values: Sequence[float]) -> float:
     """Correctly rounded sum; non-finite values follow IEEE arithmetic."""
     if all(math.isfinite(v) for v in values):
         return math.fsum(values)
-    return float(sum(values))
+    return float(seq_sum(values))
 
 
 def _relevance(table: Table, spec: Mapping[str, Any] | None) -> list[bool]:

@@ -20,7 +20,7 @@
 "difference": "nur Formatierung zweier List-Comprehensions"
 },
 "environment": {
-"python": "3.12.3",
+"python": "3.11.16",
 "pydantic": "2.13.5"
 },
 "constants": {
@@ -3725,7 +3725,7 @@
 "recommendation": "Prüfung ob eine absichtliche Aufteilung zur Umgehung von Vergabeschwellen vorliegt. Gegebenenfalls zusammengefasste Beauftragung prüfen."
 }
 ],
-"risk_score": 0.42000000000000004,
+"risk_score": 0.41999999999999993,
 "highest_severity": "CRITICAL",
 "summary": "4 Risiken erkannt, höchste Priorität: kritischer",
 "assessment_version": "1.0.0"
@@ -4624,7 +4624,7 @@
 "recommendation": "Konkrete Projektbezug in Leistungsbeschreibung anfordern"
 }
 ],
-"risk_score": 0.22000000000000003,
+"risk_score": 0.21999999999999997,
 "highest_severity": "HIGH",
 "summary": "3 Risiken erkannt, höchste Priorität: hoher",
 "assessment_version": "1.0.0"
@@ -5474,7 +5474,7 @@
 "recommendation": "Prüfung ob Rechnung dem richtigen Projekt zugeordnet ist"
 }
 ],
-"risk_score": 0.28,
+"risk_score": 0.27999999999999997,
 "highest_severity": "MEDIUM",
 "summary": "5 Risiken erkannt, höchste Priorität: mittlerer",
 "assessment_version": "1.0.0"
@@ -9166,7 +9166,7 @@
 "recommendation": "KRITISCH: Selbstrechnungen sind nicht förderfähig. Sofortige Prüfung erforderlich."
 }
 ],
-"risk_score": 0.33999999999999997,
+"risk_score": 0.34,
 "highest_severity": "CRITICAL",
 "summary": "4 Risiken erkannt, höchste Priorität: kritischer",
 "assessment_version": "1.0.0"
@@ -12103,7 +12103,7 @@
 "recommendation": "Prüfung ob Rechnung dem richtigen Projekt zugeordnet ist"
 }
 ],
-"risk_score": 0.26,
+"risk_score": 0.25999999999999995,
 "highest_severity": "HIGH",
 "summary": "3 Risiken erkannt, höchste Priorität: hoher",
 "assessment_version": "1.0.0"
@@ -13436,7 +13436,7 @@
 "recommendation": "KRITISCH: Selbstrechnungen sind nicht förderfähig. Sofortige Prüfung erforderlich."
 }
 ],
-"risk_score": 0.33999999999999997,
+"risk_score": 0.34,
 "highest_severity": "CRITICAL",
 "summary": "4 Risiken erkannt, höchste Priorität: kritischer",
 "assessment_version": "1.0.0"
