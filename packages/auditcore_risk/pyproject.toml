@@ -30,7 +30,7 @@ dev = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-auditcore_risk = ["py.typed", "provenance.json", "profile_data/*.json"]
+auditcore_risk = ["py.typed", "provenance.json", "profile_data/*.json", "fraud_profiles/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -23,6 +23,7 @@ ALLOWED = {
     "math",
     "numbers",
     "re",
+    "string",
     "types",
     "typing",
     "auditcore_risk",
