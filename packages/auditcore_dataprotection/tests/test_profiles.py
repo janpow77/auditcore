@@ -28,10 +28,12 @@ def raw(profile_id: str = "regulierung.dsgvo") -> dict[str, Any]:
     return json.loads(entry.read_text(encoding="utf-8"))
 
 
-def test_available_profiles_are_exactly_the_two_source_regimes() -> None:
+def test_available_profiles_are_the_two_regimes_in_both_versions() -> None:
     assert available_profiles() == (
         ("regulierung.dsgvo", VERSION),
+        ("regulierung.dsgvo", "2026.10.1"),
         ("regulierung.hdsig_ji", VERSION),
+        ("regulierung.hdsig_ji", "2026.10.1"),
     )
 
 
