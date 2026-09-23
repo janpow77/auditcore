@@ -400,6 +400,12 @@ Coordinate Reference System, Achsenfolge, Distanzmaß, Randpunkte und Einheiten
 charakterisieren. HTTP-Dienste, Geocoder-Budgets und PostGIS bleiben Adapter;
 nicht jede Geometriefunktion benötigt eine eigene Distribution.
 
+**Umgesetzt (23.09.2026):** `packages/auditcore_geo` 0.1.0 mit Erdmodell-Profilen,
+Umkreis, Punkt in Fläche mit Rand, UTM, GeoPackage, Douglas-Peucker und
+Nominatim-Adapter (Extra `geocoder` auf `auditcore_harvest`); 290 charakterisierte
+Originalfälle, Consumer geplant (Nutzerentscheidung). Bericht:
+[GEO_PACKAGE_REPORT.md](../reports/GEO_PACKAGE_REPORT.md).
+
 ### H5 — Immobilien- und Finanzmarktdaten bleiben eigene Domänen
 
 `wohnungsmonitor` enthält konkrete Portalparser, beispielsweise
