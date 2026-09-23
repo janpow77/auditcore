@@ -1,0 +1,50 @@
+{
+ "decision": {
+  "date": "2026-09-23",
+  "derived_from": "flowinvoice.pep 2026.09.1",
+  "id": "R3",
+  "quote": "alle empfehlungen",
+  "status": "DECIDED",
+  "text": "flowinvoice-PEP an die mueller-Regel angleichen (Umschrift ä/ö/ü/ß, ø/ł/æ/œ/ð/þ wie im Designer-Profil)"
+ },
+ "id": "flowinvoice.pep",
+ "kind": "normalization",
+ "legal_status": "Nutzerentscheidung vom 23.09.2026; abgeleitet aus dem gebundenen Quellprofil, keine Aussage über eine Rechtslage.",
+ "normalization": {
+  "algorithm": "lower_nfkd_ascii",
+  "ampersand": null,
+  "compact_tokens": false,
+  "compose": "NFC",
+  "filler_words": [],
+  "fold_map": {
+   "ß": "ss",
+   "ä": "ae",
+   "æ": "ae",
+   "ð": "d",
+   "ö": "oe",
+   "ø": "o",
+   "ü": "ue",
+   "þ": "th",
+   "đ": "d",
+   "ł": "l",
+   "œ": "oe"
+  },
+  "legal_suffixes": []
+ },
+ "recommended_for": [
+  "pep_screening"
+ ],
+ "schema": "auditcore_entity_matching.profile/1",
+ "source": {
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1",
+  "path": "backend/app/services/fraud_detection/pep_checker.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "PEPChecker._normalize_name"
+  ]
+ },
+ "status": "USER_DECIDED",
+ "version": "2026.09.2"
+}

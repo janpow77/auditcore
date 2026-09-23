@@ -204,11 +204,18 @@
       "effect": "check_lei/extract_lei im Consumer flowworkshop; falsche Prüfziffern ungültig, kein LEI-Treffer mit Konfidenz 100"
     },
     {
-      "status": "HUMAN_DECISION_REQUIRED",
+      "status": "DECIDED",
       "date": "2026-09-23",
       "subject": "PEP-Normalisierung flowinvoice",
-      "decision": null,
-      "effect": "flowinvoice.pep faltet Müller → muller und verliert ß/ø/ł sowie nicht-lateinische Schriften; Umstellung auf die Umschrift nicht entschieden"
+      "decision": "alle empfehlungen",
+      "effect": "flowinvoice.pep 2026.09.2 (Umschrift, NFC) als empfohlenes Profil; 2026.09.1 bleibt Legacy"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "subject": "R1/R2/K4: empfohlene Profile",
+      "decision": "alle empfehlungen",
+      "effect": "audit_designer.sanctions 2026.09.3, flowworkshop.sanctions 2026.09.3, flowworkshop.state_aid 2026.09.2, riskanalysis.payee 2026.09.2 (USER_DECIDED, recommended_profile); bestehende Profile unverändert"
     }
   ],
   "characterization_transliteration": {
@@ -230,8 +237,8 @@
     },
     {
       "version": "0.2.0",
-      "profiles": 10,
-      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten); Profil riskanalysis.payee 2026.09.1 (Algorithmus nfkd_lower_regex, auditcore_risk)"
+      "profiles": 15,
+      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten); Profil riskanalysis.payee 2026.09.1 (Algorithmus nfkd_lower_regex, auditcore_risk); empfohlene Profile nach den Nutzerentscheidungen vom 23.09.2026 (Profilfeld compose, recommended_profile)"
     }
   ],
   "characterization_flowinvoice": {

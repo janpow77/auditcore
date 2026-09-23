@@ -43,6 +43,9 @@ class Normalization:
     compact_tokens: bool
     #: Only ``nfkd_lower_regex``: characters replaced by a space after NFKD/lower().
     nonword_pattern: str | None = None
+    #: Optional ``"NFC"``: compose decomposed characters first (decision R2 of
+    #: 23.09.2026). Absent in all source-characterized profiles.
+    compose: str | None = None
     #: Only ``nfkd_lower_regex``: legal-form/generic tokens replaced by a space.
     removal_pattern: str | None = None
 
@@ -148,9 +151,12 @@ def profile_from_dict(data: Mapping[str, Any]) -> Profile:
                 filler_words=_strings(n["filler_words"], "filler_words"),
                 compact_tokens=bool(n["compact_tokens"]),
                 nonword_pattern=n.get("nonword_pattern"),
+                compose=n.get("compose"),
                 removal_pattern=n.get("removal_pattern"),
             )
             _check_patterns(normalization)
+            if normalization.compose not in (None, "NFC"):
+                raise ProfileError("compose kennt nur 'NFC'.")
         if "classification" in data:
             c = data["classification"]
             classification = Classification(
@@ -196,6 +202,24 @@ def profile_from_dict(data: Mapping[str, Any]) -> Profile:
         )
     except (KeyError, TypeError, ValueError) as exc:
         raise ProfileError(f"Profil ist unvollständig oder fehlerhaft: {exc!r}") from exc
+
+
+def recommended_profile(purpose: str) -> Profile:
+    """The profile marked as recommended for ``purpose`` (user decisions of 23.09.2026).
+
+    Purposes: ``entity_normalization``, ``sanctions_screening``,
+    ``pep_screening``, ``payee``. Exactly one packaged profile carries each
+    purpose; the recommendation never changes a result of a named profile.
+    """
+    found = []
+    for entry in resources.files("auditcore_entity_matching.profile_data").iterdir():
+        if entry.name.endswith(".json"):
+            data = json.loads(entry.read_text(encoding="utf-8"))
+            if purpose in data.get("recommended_for", []):
+                found.append((str(data["id"]), str(data["version"])))
+    if len(found) != 1:
+        raise ProfileError(f"Für '{purpose}' ist kein eindeutiges empfohlenes Profil hinterlegt.")
+    return load_profile(*found[0])
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:

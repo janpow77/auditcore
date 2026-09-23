@@ -94,18 +94,19 @@ Faltungstabelle (`Müller → muller`), `name_folded` mit `ä/ö/ü/ß → ae/oe
 (`Müller → mueller`), jeweils mit der Portal-Rechtsformliste (zusätzlich
 `ggmbh`, `mbh`). `ø`/`ł` bleiben in beiden Formen stehen.
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen vom 23.09.2026 (DECIDED)
 
-1. ~~Umstellung des Sanktionsscreenings auf die Transliteration~~ — in beiden
-   Anwendungen am 23.09.2026 umgesetzt (Profile 2026.09.2). Offen bleibt nur,
-   ob zerlegt geschriebene Umlaute wie im Designer (NFC) auch in flowworkshop
-   umgeschrieben werden sollen.
-2. Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen sind nicht
-   Teil dieser Bibliothek.
-3. flowinvoice-PEP-Normalisierung (`flowinvoice.pep`): widerspricht der
-   Entscheidung „mueller wenn es kein umlaut gibt“ und verliert `ß`, `ø`, `ł`
-   sowie nicht-lateinische Schriften. Ob flowinvoice auf ein Umschrift-Profil
-   umgestellt wird, ist nicht entschieden; das Profil bleibt Legacy.
-4. Ob die RF09-Selbstbeauftragungsprüfung (riskanalysis) von `riskanalysis.payee`
-   (Umlautzerlegung, EM-L01) auf das empfohlene Profil `flowworkshop.state_aid`
-   umgestellt wird. Die Umstellung ändert Ähnlichkeitswerte und Treffer.
+Nutzer, 23.09.2026: „alle empfehlungen“. Umsetzung als **neue empfohlene
+Profile** (`status: USER_DECIDED`, Feld `recommended_for`, Abruf über
+`recommended_profile(zweck)`); alle bisherigen Profile und Legacy-Funktionen
+bleiben bitgenau, alle Replays unverändert grün.
+
+| ID | Entscheidung | Neues Profil (empfohlen für) |
+|---|---|---|
+| R1 | Designer-Screening-Profil maßgeblich | `audit_designer.sanctions` 2026.09.3 (`sanctions_screening`), inhaltsgleich zu 2026.09.2 |
+| R2 | Zerlegt geschriebene Umlaute überall per NFC zusammenführen | `flowworkshop.sanctions` 2026.09.3, `flowworkshop.state_aid` 2026.09.2 (`entity_normalization`); neues Profilfeld `compose: "NFC"` |
+| R3 | flowinvoice-PEP an die mueller-Regel angleichen | `flowinvoice.pep` 2026.09.2 (`pep_screening`): NFC, ä/ö/ü/ß umgeschrieben, ø/ł/æ/œ/ð/þ wie im Designer gefaltet |
+| K4 | RF09-Rechnungssteller auf die mueller-Umschrift | `riskanalysis.payee` 2026.09.2 (`payee`): NFC, Umschrift vor NFKD, verbleibende Akzente entfernt statt als Trenner (`Müller → mueller`, `Café → cafe`) |
+
+Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen gehören
+weiterhin nicht zu dieser Bibliothek (siehe `auditcore_registry_sources`).
