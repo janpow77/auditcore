@@ -55,7 +55,7 @@ mit Stellvertretern): **290 Fälle** (Distanz 47, Umkreis 5, Punkt in Fläche 12
 Abstände 13, Schwerpunkte 8, Achsenfolge 6, UTM 29, WKB 15, Douglas-Peucker 30,
 Nominatim-Anfragebildung 12). Zweimal ausgeführt, identisch. Referenzen
 pyproj 3.8.0/PROJ 9.8.1 und shapely 2.1.2 nur zum Vergleich. Befunde
-GEO-C01–C14, u. a.: Umkreis-Vorfilter verliert Treffer (995 km bei 60° N,
+GEO-C01–C15, u. a.: Umkreis-Vorfilter verliert Treffer (995 km bei 60° N,
 Datumsgrenze), MultiPolygon-Fehler in designer gis (Punkt in zweiter Teilfläche
 277,99 m „außerhalb“), ungültige Geometrie → 0,0 m bzw. (0, 0), EWKB-Z still
 falsch gelesen, erfundene Geocoder-Konfidenz, Netzfehler = kein Treffer.
@@ -64,7 +64,7 @@ falsch gelesen, erfundene Geocoder-Konfidenz, Netzfehler = kein Treffer.
 
 | Prüfung | Ergebnis |
 |---|---|
-| Paket-pytest | **605 passed** (Vertrag 296, Legacy-Replay 279, Nominatim 25, Policy-Fälle 3, Architektur 2) |
+| Paket-pytest | **607 passed** (Vertrag 297, Legacy-Replay 279, Nominatim 26, Policy-Fälle 3, Architektur 2) |
 | ruff / ruff format / mypy strict / bandit -ll | PASS |
 | auditcore-quality strict (Framework `15f5338`) | Syntax, Lint, Typen, bandit, pip-audit, Tests, Supply Chain PASS; API-Baseline neu (NOT_EXECUTED beim ersten Lauf, Vergleich danach); Gesamt REVIEW_REQUIRED wegen Policy |
 | Policy (verwaltung-app-framework@15f5338, frischer Klon) | F-07, F-09, F-15 VERIFIED (T-11, T-14, T-37, T-38, Profile); offen F-05, F-07.ASSESS, T-12 (Schutzbedarf/DSFA UNKNOWN) |
@@ -73,7 +73,7 @@ falsch gelesen, erfundene Geocoder-Konfidenz, Netzfehler = kein Treffer.
 | `scripts/verify_domain_packages.py` harvest+geo `--apt` | alle 28 Schritte PASS: Build, SBOM, Hash-Requirements, `pip check`, Importherkunft, Smoke, selektive Installation (geo ohne harvest), Entfernung, Debian-Pakete, signierte APT-Quelle, Install/Upgrade 1→2/Remove im netzlosen Container |
 
 Wheel `auditcore_geo-0.1.0-py3-none-any.whl` SHA-256
-`2b74f9e7731a6d59f47cdc9bd9624cf359d60ac66c548e1cc74c6588ac76c3f6` (reproduzierbar).
+`2b74f9e7731a6d59f47cdc9bd9624cf359d60ac66c548e1cc74c6588ac76c3f6` (Erstfassung, reproduzierbar); nach Umsetzung der Entscheidungen `efeab5924e7598d55e783a7092b15608bab8eb4a4a2e570e0607908e84f973a0` (verify_domain_packages harvest+geo `--apt` erneut 28/28 PASS).
 
 ## Consumer (geplant)
 
@@ -85,10 +85,19 @@ flowworkshop: `packages/auditcore_geo/docs/consumer-integration.md`.
 Browser-Tests von osint (Playwright) NOT_EXECUTED. **MIGRATION_BLOCKED** bis
 zum zentralen Release v0.3.0.
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED, 23.09.2026, vom Nutzer delegiert)
 
-1. Erdradius eines gemeinsamen Bestands (R1 gegenüber 6371 km).
-2. Zählen Randpunkte als „im Schutzgebiet“/welchem Kreis zugeordnet?
-3. Umstellung der designer-Natura-Analyse auf korrekte Multipolygone (ändert Ergebnisse).
-4. Stützpunkt- statt Kantenabstand in `company_records`.
-5. Zahlenmäßige Obergrenze für Massenläufe am öffentlichen Nominatim.
+Die fünf zuvor offenen Fragen hat der Nutzer delegiert („entscheide du bitte“);
+Umsetzung auf Branch `feat/auditcore-geo-entscheidungen`, Version bleibt 0.1.0:
+
+1. **Erdradius (D1):** R1 = 6 371 008,8 m empfohlen für neue gemeinsame Bestände
+   (`EMPFOHLENES_ERDMODELL`); 6 371 000 m bleibt für Replay/Altbestände; kein stiller Standard.
+2. **Randpunkte (D2):** zählen als innen (`EMPFOHLEN_RAND_GILT_ALS_INNEN`); Parameter bleibt ausdrücklich.
+3. **designer-Natura-Analyse (D3):** Umstellung auf korrekte Multipolygone (bewusste Korrektur GEO-C04/C05).
+4. **company (D4):** Kantenabstand statt Stützpunktabstand (GEO-C09).
+5. **Öffentliches Nominatim (D5):** ≤ 1 Anfrage/s, Zeitplanläufe 15 s, ≤ 1 000 Anfragen je Tag
+   und Consumer, cachen; darüber eigene Instanz oder Import. Durchgesetzt in
+   `validate_config`, `pruefe_laufparameter` und `empfohlene_laufparameter`
+   (`heute_bereits_gesendet`, GEO-C15).
+
+Merge des Erstpakets: PR #13 (`253aed9`); KIRA `6aae35b9-1c5c-45be-baa4-ff414da11dff`.
