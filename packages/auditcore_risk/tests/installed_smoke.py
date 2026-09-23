@@ -22,7 +22,7 @@ def main() -> None:
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_entity_matching==0.2.0"], runtime
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 10
+    assert len(available_profiles()) == 11
     assert len(available_fraud_profiles()) == 5
     flowstat = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
     result = evaluate([{"projektbetrag": 24_500.0}, {"projektbetrag": 5_000.0}], flowstat)

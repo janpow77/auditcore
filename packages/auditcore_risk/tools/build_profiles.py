@@ -1787,7 +1787,33 @@ def decided_profiles(
     )
     ted["parameters"]["legitimacy"]["unit"] = "fraction"
     ted["parameters"]["legitimacy"]["digits"] = 3
-    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, rc, wb)]
+    ra3 = clone(ra)
+    ra3["version"] = "2026.09.3"
+    ra3["legal_status"] = ra["legal_status"].replace(
+        "RF12 nur innerhalb der Gruppe (K5).",
+        "RF12 nur innerhalb der Gruppe (K5), RF09 mit Umschrift 'mueller' (K4).",
+    )
+    ra3["source"]["derived_from"] = {"profile": ra["id"], "version": ra["version"]}
+    ra3["source"]["decision"] = _decision(
+        ["K2", "K3", "K4", "K5"],
+        "Wie 2026.09.2; RF09 normalisiert mit riskanalysis.payee 2026.09.2 "
+        "(Müller → mueller, auch zerlegte Umlaute).",
+    )
+    for rule in ra3["rules"]:
+        if rule["code"] == "RF09":
+            rule["params"]["normalization"] = {
+                "profile": "riskanalysis.payee",
+                "version": "2026.09.2",
+            }
+            rule["note"] = (
+                "Rechnungssteller-Normalisierung riskanalysis.payee 2026.09.2 "
+                "(auditcore_entity_matching, Umschrift ä → ae, K4); rapidfuzz Pflicht."
+            )
+    ra3["open_decisions"] = [
+        "Stichtag der EU-Schwelle ist das Rechnungsdatum (rechnungsdatum_dt); Auftraggebertyp "
+        "subzentral und Kategorie Liefer-/Dienstleistungen je Beleg sind Profilvorgaben.",
+    ]
+    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, ra3, rc, wb)]
     fraud = [(f"{d['id']}-{d['version']}.json", d) for d in (fraud_sig, ted)]
     return risk, fraud
 

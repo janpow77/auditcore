@@ -128,8 +128,8 @@ bleiben für die Reproduktion bestehen.
 |---|---|---|
 | K1 | Kein gemeinsamer Risikoscore. | Festgeschrieben: die Bibliothek bietet keinen profilübergreifenden Score; Scores gibt es nur als Bewertung eines einzelnen Profils. |
 | K2 | Schwellenprüfung netto. | `riskanalysis.year_bound 2026.09.2`: RF02 und RF08 prüfen `nettobetrag` (Pflichtspalte, kein stiller Rückfall auf brutto); runde Beträge und Volumen bleiben brutto. |
-| K3 | `riskanalysis.year_bound` freigeben. | `riskanalysis.year_bound 2026.09.2` (`APPROVED`): nationale Wertgrenzen 1.000–100.000 plus EU-Schwelle des Rechnungsjahres aus `auditcore_procurement` (`procurement.hvtg 2026.09.2`, 2026: 216.000 €). Der Kandidat 2026.09.1 bleibt als abgelöste Fassung. |
-| K4 | RF09 auf „mueller“-Umschrift. | Offen bis `auditcore_entity_matching` die neue Profilversion `riskanalysis.payee` bereitstellt (Aufgabe des registry-Pakets); dann Nachzügler-Profil. `riskanalysis.year_bound 2026.09.2` nutzt bis dahin `riskanalysis.payee 2026.09.1`. |
+| K3 | `riskanalysis.year_bound` freigeben. | `riskanalysis.year_bound 2026.09.2`, fortgeführt in 2026.09.3 (`APPROVED`): nationale Wertgrenzen 1.000–100.000 plus EU-Schwelle des Rechnungsjahres aus `auditcore_procurement` (`procurement.hvtg 2026.09.2`, 2026: 216.000 €). Der Kandidat 2026.09.1 bleibt als abgelöste Fassung. |
+| K4 | RF09 auf „mueller“-Umschrift. | `riskanalysis.year_bound 2026.09.3` (`APPROVED`, empfohlen): RF09 normalisiert mit `riskanalysis.payee 2026.09.2` aus `auditcore_entity_matching` 0.2.0 (Müller → mueller, auch zerlegte Umlaute); sonst identisch mit 2026.09.2, das als abgelöste Fassung bleibt. |
 | K5 | RF12 nur innerhalb derselben Gruppe. | Parameter `propagation: same_group` in `riskanalysis.year_bound 2026.09.2`. |
 | K6 | BL_RF08/09 vs. RF08 wie bisher je Profil. | Keine Änderung. |
 | K7 | RiskChecker nicht aktivieren. | Consumer-Dokumentation; `flowinvoice.risk_checker 2026.09.2` steht nur für eine spätere Aktivierung bereit. |

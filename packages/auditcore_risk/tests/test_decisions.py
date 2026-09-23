@@ -166,3 +166,24 @@ def test_k8_ted_legitimacy_as_fraction() -> None:
         assert new["rating"] == old["rating"]
         assert new["score"] == pytest.approx(old["score"] / 100, abs=0.0011)
         assert 0 <= new["score"] <= 1
+
+
+def test_k4_rf09_uses_the_transliterating_payee_profile() -> None:
+    k4 = load_profile("riskanalysis.year_bound", "2026.09.3")
+    assert k4.status == "APPROVED"
+    assert "K4" in k4.source["decision"]["decisions"]
+    assert dict(k4.rule("RF09").params["normalization"]) == {
+        "profile": "riskanalysis.payee",
+        "version": "2026.09.2",
+    }
+    rows = [row(Name="Müller Bau GmbH", zahlungsempfaenger="Mueller Bau KG")]
+    assert evaluate(rows, k4).records[0].flags["RF09"] is True
+    assert evaluate(rows, RA).records[0].values["name_match"] < 1.0  # 2026.09.2: 'mu ller'
+    hit = evaluate(rows, k4).records[0].hits
+    rf09 = next(h for h in hit if h.code == "RF09")
+    assert rf09.evidence["left"] == "mueller bau"
+    assert rf09.evidence["normalization"]["version"] == "2026.09.2"
+    # all other rules identical to the superseded 2026.09.2
+    for a, b in zip(RA.rules, k4.rules, strict=True):
+        if a.code != "RF09":
+            assert a == b
