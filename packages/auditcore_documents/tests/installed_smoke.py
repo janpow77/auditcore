@@ -14,7 +14,9 @@ def main() -> None:
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert DocumentCompareService.VERSION == "1.1.0"
-    old = [ad.CompareItem("0", text="Die Prüfbehörde prüft das Vorhaben.", location="§ 1, Absatz 1")]
+    old = [
+        ad.CompareItem("0", text="Die Prüfbehörde prüft das Vorhaben.", location="§ 1, Absatz 1")
+    ]
     new = [
         ad.CompareItem("0", text="Der Begünstigte legt Belege vor.", location="§ 1, Absatz 1"),
         ad.CompareItem("1", text="Die Prüfbehörde prüft das Vorhaben.", location="§ 1, Absatz 2"),
