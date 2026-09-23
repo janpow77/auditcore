@@ -12,7 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from importlib import resources
 from types import MappingProxyType
 from typing import Any
@@ -20,6 +20,11 @@ from typing import Any
 from .errors import ProfileError
 
 PROFILE_SCHEMA = "auditcore_dataprotection.profile/1"
+#: Schema 2 adds sources, decisions, consultation grounds, severity floors,
+#: measure categories, implementation states and DPIA master data, aligned with
+#: the EDPB template for data protection impact assessments (2026, v1.0).
+PROFILE_SCHEMA_EDPB = "auditcore_dataprotection.profile/2"
+PROFILE_SCHEMAS = frozenset({PROFILE_SCHEMA, PROFILE_SCHEMA_EDPB})
 
 EFFECT_HARD = "hart"
 EFFECT_POINT = "punkt"
@@ -33,6 +38,14 @@ RECOMMENDATION_RELEASE_WITH_CONDITIONS = "freigabe_mit_auflagen"
 RECOMMENDATION_CONSULTATION = "konsultation_aufsichtsbehoerde"
 #: New in this library: the survey does not allow a recommendation yet.
 RECOMMENDATION_INCOMPLETE = "unvollstaendig"
+#: Schema 2 only: the controller abandons the processing ("REJECTED" in the
+#: EDPB template, section 6). Never proposed by the system, only decided.
+DECISION_REJECTED = "verworfen"
+
+#: Wording of the WP 248 criteria in schema 1 profiles (source behaviour).
+LEGACY_CRITERIA_LABEL = "Kriterien des Europäischen Datenschutzausschusses"
+
+DOSSIER_KINDS = frozenset({"text", "date", "choice"})
 
 DECISIONS = (
     RECOMMENDATION_SCREENING_ONLY,
@@ -67,6 +80,41 @@ class Measure:
     reduces_likelihood: int
     reduces_severity: int
     explanation: str
+    category: str = ""
+
+
+@dataclass(frozen=True)
+class Source:
+    """A guideline, standard or template the profile relies on, cited by name."""
+
+    key: str
+    title: str
+    issuer: str
+    date: str
+    status: str
+    reference: str
+    used_for: str
+
+
+@dataclass(frozen=True)
+class SeverityFloor:
+    """From this severity on, a scenario is at least in ``min_band``."""
+
+    severity: int
+    min_band: str
+    reference: str
+
+
+@dataclass(frozen=True)
+class DossierField:
+    """A master-data field of the DPIA (EDPB template, sections 0 to 2)."""
+
+    key: str
+    title: str
+    reference: str
+    kind: str
+    required: bool
+    choices: tuple[tuple[str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -118,6 +166,26 @@ class RuleProfile:
     register_references: Mapping[str, str]
     source: Mapping[str, Any]
     fingerprint: str
+    schema: str = PROFILE_SCHEMA
+    criteria_label: str = LEGACY_CRITERIA_LABEL
+    sources: tuple[Source, ...] = ()
+    decisions: tuple[str, ...] = DECISIONS
+    decision_titles: Mapping[str, str] = field(default_factory=dict)
+    consultation_grounds: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+    conditions_required_for: frozenset[str] = frozenset()
+    severity_floors: tuple[SeverityFloor, ...] = ()
+    measure_categories: Mapping[str, tuple[str, str]] = field(default_factory=dict)
+    implementation_states: Mapping[str, str] = field(default_factory=dict)
+    acceptance_levels: Mapping[str, str] = field(default_factory=dict)
+    dossier_fields: tuple[DossierField, ...] = ()
+    risk_matrix: Mapping[tuple[int, int], str] = field(default_factory=dict)
+    risk_method: str = ""
+    band_recommendations: Mapping[str, str] = field(default_factory=dict)
+
+    @property
+    def edpb(self) -> bool:
+        """True for schema 2 profiles aligned with the EDPB DPIA template."""
+        return self.schema == PROFILE_SCHEMA_EDPB
 
     @property
     def reference(self) -> dict[str, str]:
@@ -151,6 +219,37 @@ class RuleProfile:
             if band.up_to is None or value <= band.up_to:
                 return band.label
         raise ProfileError("Risikostufen des Profils decken den Wert nicht ab.")
+
+    def band_rank(self, label: str) -> int:
+        """Order of a band label, lowest first."""
+        for index, band in enumerate(self.bands):
+            if band.label == label:
+                return index
+        raise ProfileError(f"Unbekannte Risikostufe '{label}' im Profil {self.id}.")
+
+    def matrix_band(self, severity: int, likelihood: int) -> str:
+        """Band of a severity/likelihood pair from the profile's risk matrix (schema 2)."""
+        try:
+            return self.risk_matrix[(severity, likelihood)]
+        except KeyError as exc:
+            raise ProfileError(
+                f"Die Risikomatrix des Profils {self.id} deckt Schwere {severity} und "
+                f"Wahrscheinlichkeit {likelihood} nicht ab."
+            ) from exc
+
+    def severity_floor(self, severity: int) -> SeverityFloor | None:
+        """Strictest floor that applies to a severity level, if any."""
+        applicable = [f for f in self.severity_floors if severity >= f.severity]
+        if not applicable:
+            return None
+        return max(applicable, key=lambda f: self.band_rank(f.min_band))
+
+    def dossier_field(self, key: str) -> DossierField:
+        """Return one master-data field or raise ``ProfileError``."""
+        for item in self.dossier_fields:
+            if item.key == key:
+                return item
+        raise ProfileError(f"Unbekanntes Feld '{key}' der Folgenabschätzung im Profil {self.id}.")
 
     @property
     def question_keys(self) -> tuple[str, ...]:
@@ -209,9 +308,113 @@ def _measures(items: Any) -> tuple[Measure, ...]:
             reduces_likelihood=int(m["reduces_likelihood"]),
             reduces_severity=int(m["reduces_severity"]),
             explanation=m["explanation"],
+            category=str(m.get("category", "")),
         )
         for m in items
     )
+
+
+def _edpb_fields(data: Mapping[str, Any], measures: tuple[Measure, ...]) -> dict[str, Any]:
+    """Schema 2 sections; every one is required, nothing is defaulted."""
+    risk = data["risk"]
+    recommendation = data["recommendation"]
+    workflow = data["workflow"]
+    decisions = tuple(str(d["key"]) for d in recommendation["decisions"])
+    _require(len(decisions) == len(set(decisions)), "Doppelte Entscheidungen im Profil.")
+    _require(
+        set(DECISIONS) <= set(decisions), "Das Profil muss alle Vorschläge als Entscheidung kennen."
+    )
+    _require(DECISION_REJECTED in decisions, "Die Entscheidung 'verworfen' fehlt im Profil.")
+    grounds = {
+        str(g["key"]): (str(g["title"]), str(g["reference"]))
+        for g in recommendation["consultation_grounds"]
+    }
+    _require(bool(grounds), "Das Profil nennt keinen Grund für eine Konsultation.")
+    conditional = frozenset(str(k) for k in workflow["conditions_required_for"])
+    _require(conditional <= set(decisions), "Bedingungen für eine unbekannte Entscheidung.")
+    bands = [b["label"] for b in risk["bands"]]
+    scale = risk["scale"]
+    floors = tuple(
+        SeverityFloor(int(f["severity"]), str(f["min_band"]), str(f["reference"]))
+        for f in risk["severity_floors"]
+    )
+    _require(
+        all(f.min_band in bands and scale["min"] <= f.severity <= scale["max"] for f in floors),
+        "Ungültige Mindeststufe im Profil.",
+    )
+    categories = {
+        str(c["key"]): (str(c["title"]), str(c["reference"])) for c in risk["measure_categories"]
+    }
+    _require(all(m.category in categories for m in measures), "Maßnahme ohne bekannte Kategorie.")
+    levels = range(int(scale["min"]), int(scale["max"]) + 1)
+    matrix = {
+        (int(s), int(lik)): str(label)
+        for s, row in risk["matrix"].items()
+        for lik, label in row.items()
+    }
+    _require(
+        set(matrix) == {(s, lik) for s in levels for lik in levels}
+        and all(label in bands for label in matrix.values()),
+        "Die Risikomatrix muss jede Kombination der Skala mit einer bekannten Stufe belegen.",
+    )
+    by_band = {str(k): str(v) for k, v in recommendation["by_band"].items()}
+    _require(
+        set(matrix.values()) <= set(by_band) and set(by_band.values()) <= set(DECISIONS),
+        "Jede Stufe der Risikomatrix braucht einen Vorschlag.",
+    )
+    method = str(risk["method"])
+    _require(bool(method.strip()), "Das Profil muss seine Risikomethode beschreiben.")
+    dossier = tuple(
+        DossierField(
+            key=str(f["key"]),
+            title=str(f["title"]),
+            reference=str(f["reference"]),
+            kind=str(f["kind"]),
+            required=bool(f["required"]),
+            choices=tuple((str(c["key"]), str(c["title"])) for c in f.get("choices", ())),
+        )
+        for f in data["dossier"]["fields"]
+    )
+    _require(all(f.kind in DOSSIER_KINDS for f in dossier), "Unbekannte Feldart im Profil.")
+    _require(
+        all(bool(f.choices) == (f.kind == "choice") for f in dossier),
+        "Auswahlfelder brauchen Auswahlwerte, andere Felder keine.",
+    )
+    _require(
+        len({f.key for f in dossier}) == len(dossier), "Doppelte Felder der Folgenabschätzung."
+    )
+    sources = tuple(
+        Source(
+            key=str(q["key"]),
+            title=str(q["title"]),
+            issuer=str(q["issuer"]),
+            date=str(q["date"]),
+            status=str(q["status"]),
+            reference=str(q["reference"]),
+            used_for=str(q["used_for"]),
+        )
+        for q in data["sources"]
+    )
+    _require(bool(sources), "Ein Profil nach Schema 2 muss seine Quellen nennen.")
+    return {
+        "schema": PROFILE_SCHEMA_EDPB,
+        "criteria_label": str(data["screening"]["criteria_label"]),
+        "sources": sources,
+        "decisions": decisions,
+        "decision_titles": _frozen(
+            {str(d["key"]): str(d["title"]) for d in recommendation["decisions"]}
+        ),
+        "consultation_grounds": _frozen(grounds),
+        "conditions_required_for": conditional,
+        "severity_floors": floors,
+        "measure_categories": _frozen(categories),
+        "implementation_states": _ordered(risk["implementation_states"]),
+        "acceptance_levels": _ordered(risk["acceptance_levels"]),
+        "dossier_fields": dossier,
+        "risk_matrix": MappingProxyType(matrix),
+        "risk_method": method,
+        "band_recommendations": _frozen(by_band),
+    }
 
 
 def _validate(
@@ -247,7 +450,7 @@ def profile_from_dict(data: Mapping[str, Any]) -> RuleProfile:
             inconsistent thresholds. Nothing is defaulted silently.
     """
     try:
-        _require(data["schema"] == PROFILE_SCHEMA, "Unbekanntes Profilschema.")
+        _require(data["schema"] in PROFILE_SCHEMAS, "Unbekanntes Profilschema.")
         screening = data["screening"]
         risk = data["risk"]
         recommendation = data["recommendation"]
@@ -305,6 +508,7 @@ def profile_from_dict(data: Mapping[str, Any]) -> RuleProfile:
             register_references=_frozen(data["register"]["legal_references"]),
             source=_frozen(data["source"]),
             fingerprint=fingerprint(data),
+            **(_edpb_fields(data, measures) if data["schema"] == PROFILE_SCHEMA_EDPB else {}),
         )
     except (KeyError, TypeError, ValueError, IndexError) as exc:
         if isinstance(exc, ProfileError):

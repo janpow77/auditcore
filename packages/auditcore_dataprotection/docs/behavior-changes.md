@@ -67,3 +67,37 @@ Vertrag wird von `ReportTable` nicht abgedeckt. Sie bleiben deshalb ein eigener
 openpyxl-Adapter mit derselben Formelsicherheit (DP-C15). Der HTML-Bericht ist
 reine Standardbibliothek; PDF bleibt ein optionaler WeasyPrint-Adapter wie im
 Original. Geprüft mit openpyxl 3.1.5 und 3.0.10 (Debian Bookworm).
+
+## Profilfassung 2026.10.1 (Schema 2, EDSA-Vorlage 2026 v1.0)
+
+Neue, neutrale Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji`
+`2026.10.1`, abgeleitet aus `regulierung.*` `2026.09.1`. Anwendungsbezogene
+Textbausteine der Ursprungsanwendung (Standpunkt über Wirtschaftsverbände,
+Anhörung nach § 55 OWiG, Beispiele zum KPAnG) sind entfernt; der Standpunkt
+der Betroffenen hat den neutralen Baustein „Eingeholt“. Die Profile
+`regulierung.*` `2026.09.1`, der `legacy`-Vertrag und alle Replay-Ergebnisse
+bleiben unverändert.
+
+| ID | Änderung | Grundlage |
+|---|---|---|
+| DP-E01 | Die Risikostufe jedes Szenarios ergibt sich Feld für Feld aus der Matrix des DSK-Kurzpapiers Nr. 18 (S. 5), nicht aus den Produktgrenzen 4/9; der Vorschlag folgt der höchsten Stufe nach Maßnahmen (gering → Freigabe, mittel → mit Auflagen, hoch → Konsultation). Abweichend von 2026.09.1: 4×2 und 3×3 hoch, 3×1, 2×1, 2×2, 1×3 und 1×4 mittel. Geteilte Felder nach überwiegendem Flächenanteil: 4×2 (63 % hoch), 3×3 (59 % hoch), 2×1 (53 % Risiko), 1×2 (56 % gering). | Fachliche Festlegung vom 23.09.2026; KP 18, S. 5 |
+| DP-E10 | Ab Schwere 4 vor Maßnahmen gilt mindestens `mittel`; Maßnahmen heben das nicht auf, nur ein ausdrücklich begründeter Rest-Schweregrad. Mit der Matrix wirkt die Regel derzeit als Absicherung, weil Schwere 2 bereits überall `mittel` ergibt. | Fachliche Festlegung vom 23.09.2026; EDSA-Explainer Fn. 9 |
+| DP-E02 | Entscheidung `verworfen`; wird nie vorgeschlagen, verlangt daher eine Begründung; eine sonst nötige Konsultation entfällt. | EDSA-Vorlage Abschnitt 6 |
+| DP-E03 | `freigabe_mit_auflagen` verlangt mindestens eine Bedingung; eine inhaltliche Änderung setzt sie mit der Entscheidung zurück. | EDSA-Vorlage Abschnitt 6 |
+| DP-E04 | Konsultation mit Grund; im DSGVO-Profil auch Art. 36 Abs. 5 DSGVO. | EDSA-Vorlage Abschnitt 6 |
+| DP-E05 | Szenarien mit Risikoquelle, Umständen und getrennter Hinnehmbarkeit vor Maßnahmen und des Restrisikos. | EDSA-Vorlage 3.1, 4.1.a, 4.1.c, 4.2.b |
+| DP-E06 | Maßnahmen mit Bereich und Umsetzungsstand; im DSGVO-Profil fünf dokumentierende Maßnahmen ohne rechnerische Minderung. | EDSA-Vorlage 2.3, 4.2.a |
+| DP-E07 | Maßnahmenplan (Vorhaben, Verantwortlich, Termin). | EDSA-Vorlage 4.2.c |
+| DP-E08 | Stammdaten der Abschätzung; „Beteiligte“ und „Umfang“ sperren die Freigabe, wenn sie fehlen. | EDSA-Vorlage 0.5 |
+| DP-E09 | WP 248 wird der Art.-29-Datenschutzgruppe zugeordnet (vom EDSA am 25.05.2018 bestätigt), nicht dem EDSA. | WP 248 rev.01 |
+| DP-E11 | Änderungen nur an Umsetzungsstand oder Maßnahmenplan lassen Entscheidung, Votum und Bedingungen bestehen; Stammdaten, Antworten und Szenarien setzen sie weiter zurück. | Fachliche Festlegung vom 23.09.2026 |
+| DP-E12 | Eine Abschätzung nach Schema 2 kann nicht auf ein Profil nach Schema 1 wechseln (Bearbeitung oder Neubewertung); bei einer Neubewertung werden Stammdaten, Umsetzungsstand und Plan gegen das neue Profil geprüft. | Kein stiller Datenverlust |
+| DP-E14 | Die Muss-Liste nach Art. 35 Abs. 4 DSGVO (DSK, Version 1.1 vom 17.10.2018) ist vollständig abgebildet: 17 harte Fragen, je Nummer eine, eng am Wortlaut; bisher fassten 5 Fragen 8 Nummern zusammen und formulierten Nr. 1, 4, 5 und 10 enger als die Liste. Nr. 1 und 2 setzen wie die Liste ein weiteres WP-248-Kriterium voraus. Die Schwellwertanalyse hat damit 30 statt 18 Fragen. | Art. 35 Abs. 4 DSGVO; DSK-Liste 1.1 |
+| DP-E13 | „verworfen“: keine Konsultationszeile im Bericht; folgt die Entscheidung einer ablehnenden Stellungnahme, entfallen Abweichungsbegründung und Leitungsvorlage. Konsultationsgrund „hohes Restrisiko“ nur, wenn die Bewertung eine Konsultation verlangt. | Art. 36 Abs. 1; WP 243 Ziff. 4.2 |
+
+Offen (HUMAN_DECISION_REQUIRED): die Normen des Dritten Teils HDSIG zu den
+Maßnahmenbereichen im JI-Profil (bewusst nicht geraten); ob die förmliche
+Billigung und ihr Datum (Explainer Rn. 10) Pflichtfelder werden; die
+Zuordnung der vier geteilten Matrixfelder; ob nicht umgesetzte Maßnahmen eine Freigabe ohne Auflagen
+sperren statt nur einen Hinweis auszulösen; Übernahme der Endfassung der
+EDSA-Vorlage nach der Konsultation.
