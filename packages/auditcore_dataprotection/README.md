@@ -72,17 +72,21 @@ Die Regelprofile sind charakterisiertes Softwareverhalten
 (`SOURCE_CHARACTERIZED`), keine rechtliche Prüfung. Rechtsregime (DSGVO,
 Dritter Teil HDSIG) bleiben getrennte Profile.
 
-### Profile 2026.10.1: EDSA-Vorlage 2026
+### Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji` (2026.10.1)
 
-Seit 0.2.0 gibt es zu beiden Regimen die Profilfassung `2026.10.1`
-(Schema `auditcore_dataprotection.profile/2`). Sie richtet die Dokumentation an
+Seit 0.2.0 hat die Bibliothek eigene, neutrale Regelprofile
+`auditcore.dsgvo` und `auditcore.hdsig_ji` in der Fassung `2026.10.1`
+(Schema `auditcore_dataprotection.profile/2`), ohne Textbausteine der
+Ursprungsanwendung. Die Profile `regulierung.*` 2026.09.1 bleiben
+unverändert zur Nachvollziehbarkeit und für den `legacy`-Vertrag.
+Die neuen Profile Sie richtet die Dokumentation an
 der Vorlage des Europäischen Datenschutzausschusses für
 Datenschutz-Folgenabschätzungen aus (2026, Version 1.0, Konsultationsfassung)
 und bildet die Risikostufen Feld für Feld aus der Matrix des
 DSK-Kurzpapiers Nr. 18 (S. 5) statt aus Produktgrenzen. Die Fassungen
 `2026.09.1` verhalten sich unverändert (Ausgaben byte-gleich zu 0.1.0).
 
-| Neu in 2026.10.1 | EDSA-Vorlage |
+| Neu in `auditcore.*` 2026.10.1 | EDSA-Vorlage |
 |---|---|
 | Entscheidung `verworfen` (Verarbeitung unterbleibt) | Abschnitt 6 |
 | Bedingungen einer Freigabe mit Auflagen, vor der Freigabe Pflicht | Abschnitt 6 |

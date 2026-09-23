@@ -32,10 +32,10 @@ def main() -> None:
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert available_profiles() == (
+        ("auditcore.dsgvo", "2026.10.1"),
+        ("auditcore.hdsig_ji", "2026.10.1"),
         ("regulierung.dsgvo", "2026.09.1"),
-        ("regulierung.dsgvo", "2026.10.1"),
         ("regulierung.hdsig_ji", "2026.09.1"),
-        ("regulierung.hdsig_ji", "2026.10.1"),
     )
     profile = load_profile("regulierung.dsgvo", "2026.09.1")
     assert propose(profile, {}).recommendation == "unvollstaendig"

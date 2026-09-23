@@ -43,14 +43,14 @@ VERSION = "2026.10.1"
 
 
 def edpb() -> Any:
-    return load_profile("regulierung.dsgvo", VERSION)
+    return load_profile("auditcore.dsgvo", VERSION)
 
 
 def edpb_ji() -> Any:
-    return load_profile("regulierung.hdsig_ji", VERSION)
+    return load_profile("auditcore.hdsig_ji", VERSION)
 
 
-def raw(profile_id: str = "regulierung.dsgvo") -> dict[str, Any]:
+def raw(profile_id: str = "auditcore.dsgvo") -> dict[str, Any]:
     entry = resources.files("auditcore_dataprotection.profiles").joinpath(
         f"{profile_id}-{VERSION}.json"
     )
@@ -111,12 +111,16 @@ def filled(w: World, **extra: Any) -> Assessment:
 # ------------------------------------------------------------------ profile
 
 
-@pytest.mark.parametrize("profile_id", ["regulierung.dsgvo", "regulierung.hdsig_ji"])
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
 def test_schema2_profiles_load_with_sources_and_derivation(profile_id: str) -> None:
     profile = load_profile(profile_id, VERSION)
     data = raw(profile_id)
     assert profile.schema == PROFILE_SCHEMA_EDPB and profile.edpb
-    assert data["derived_from"] == {"id": profile_id, "version": "2026.09.1"}
+    assert data["derived_from"] == {
+        "id": profile_id.replace("auditcore", "regulierung"),
+        "version": "2026.09.1",
+    }
+    assert profile.status == "LIBRARY_PROFILE_EDPB_ALIGNED"
     assert DECISION_REJECTED in profile.decisions and set(DECISIONS) <= set(profile.decisions)
     assert {s.key for s in profile.sources} >= {"edpb_dpia_template_2026", "wp248", "wp243"}
     assert "Art.-29-Datenschutzgruppe" in profile.criteria_label
@@ -666,7 +670,7 @@ def test_screening_only_needs_no_dpia_master_data() -> None:
     assert w.service.release_blockers(a) == ()
 
 
-@pytest.mark.parametrize("profile_id", ["regulierung.dsgvo", "regulierung.hdsig_ji"])
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
 def test_all_17_entries_of_the_dsk_list_are_hard_questions(profile_id: str) -> None:
     profile = load_profile(profile_id, VERSION)
     listed = [q for q in profile.questions if q.block == "dsk_muss_liste"]
@@ -678,3 +682,22 @@ def test_all_17_entries_of_the_dsk_list_are_hard_questions(profile_id: str) -> N
     screening = propose(profile, answers).screening
     assert screening.outcome == "pflicht"
     assert screening.hard_triggers == ("dsk_nr17_leistungsfaehigkeit",)
+
+
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
+def test_library_profiles_carry_no_application_specific_texts(profile_id: str) -> None:
+    data = raw(profile_id)
+    for key in ("source", "derived_from"):
+        data.pop(key)
+    text = json.dumps(data, ensure_ascii=False)
+    for term in (
+        "KPAnG",
+        "OWiG",
+        "Wirtschaftsverb",
+        "Preisvergleich",
+        "Marktbeobacht",
+        "Tankstell",
+    ):
+        assert term not in text, term
+    keys = [t["schluessel"] for t in load_profile(profile_id, VERSION).data_subject_view_templates]
+    assert keys == ["eingeholt", "unangemessen_aufwand", "schutz_interessen"]

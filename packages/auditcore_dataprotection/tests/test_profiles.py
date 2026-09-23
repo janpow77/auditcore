@@ -30,10 +30,10 @@ def raw(profile_id: str = "regulierung.dsgvo") -> dict[str, Any]:
 
 def test_available_profiles_are_the_two_regimes_in_both_versions() -> None:
     assert available_profiles() == (
+        ("auditcore.dsgvo", "2026.10.1"),
+        ("auditcore.hdsig_ji", "2026.10.1"),
         ("regulierung.dsgvo", VERSION),
-        ("regulierung.dsgvo", "2026.10.1"),
         ("regulierung.hdsig_ji", VERSION),
-        ("regulierung.hdsig_ji", "2026.10.1"),
     )
 
 

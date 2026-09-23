@@ -70,9 +70,13 @@ Original. Geprüft mit openpyxl 3.1.5 und 3.0.10 (Debian Bookworm).
 
 ## Profilfassung 2026.10.1 (Schema 2, EDSA-Vorlage 2026 v1.0)
 
-Neue Profilfassungen `regulierung.dsgvo` und `regulierung.hdsig_ji`
-`2026.10.1`, abgeleitet aus `2026.09.1`. Die Fassungen `2026.09.1`, der
-`legacy`-Vertrag und alle Replay-Ergebnisse bleiben unverändert.
+Neue, neutrale Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji`
+`2026.10.1`, abgeleitet aus `regulierung.*` `2026.09.1`. Anwendungsbezogene
+Textbausteine der Ursprungsanwendung (Standpunkt über Wirtschaftsverbände,
+Anhörung nach § 55 OWiG, Beispiele zum KPAnG) sind entfernt; der Standpunkt
+der Betroffenen hat den neutralen Baustein „Eingeholt“. Die Profile
+`regulierung.*` `2026.09.1`, der `legacy`-Vertrag und alle Replay-Ergebnisse
+bleiben unverändert.
 
 | ID | Änderung | Grundlage |
 |---|---|---|

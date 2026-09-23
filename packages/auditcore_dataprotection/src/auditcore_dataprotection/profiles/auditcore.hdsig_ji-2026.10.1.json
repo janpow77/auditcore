@@ -98,8 +98,8 @@
    }
   ]
  },
- "id": "regulierung.hdsig_ji",
- "legal_status": "Aus Version 2026.09.1 abgeleitet und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: alle 17 Nummern der Muss-Liste als eigene Fragen, Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18 statt aus Produktgrenzen und Mindeststufe ‚mittel‘ ab Schwere 4 vor Maßnahmen (fachliche Festlegungen vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
+ "id": "auditcore.hdsig_ji",
+ "legal_status": "Neutrales Regelprofil der Bibliothek, abgeleitet aus dem Profil der Ursprungsanwendung (regulierung, Version 2026.09.1) ohne deren anwendungsbezogene Textbausteine, und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: alle 17 Nummern der Muss-Liste als eigene Fragen, Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18 statt aus Produktgrenzen und Mindeststufe ‚mittel‘ ab Schwere 4 vor Maßnahmen (fachliche Festlegungen vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
  "prefill": {
   "large_scale_threshold": 10000
  },
@@ -149,7 +149,7 @@
   }
  },
  "regime": {
-  "explanation": "Verarbeitung zur Verhütung, Ermittlung, Aufdeckung, Verfolgung oder Ahndung von Straftaten oder Ordnungswidrigkeiten (§ 40 Abs. 1 HDSIG, Richtlinie (EU) 2016/680). Für das Bußgeldverfahren nach dem KPAnG ist das der maßgebliche Rahmen. Weil die Abgrenzung zur Verordnung auf europäischer Ebene ungeklärt ist, werden die Anforderungen der DSGVO zusätzlich angewandt, soweit sie strenger sind.",
+  "explanation": "Verarbeitung zur Verhütung, Ermittlung, Aufdeckung, Verfolgung oder Ahndung von Straftaten oder Ordnungswidrigkeiten (§ 40 Abs. 1 HDSIG, Richtlinie (EU) 2016/680). Weil die Abgrenzung zur Verordnung auf europäischer Ebene ungeklärt ist, werden die Anforderungen der DSGVO zusätzlich angewandt, soweit sie strenger sind.",
   "key": "hdsig_ji",
   "norms": {
    "automatisierte_entscheidung": "§ 49 HDSIG",
@@ -949,7 +949,7 @@
    "used_for": "Gewährleistungsziele als Schutzdimensionen"
   }
  ],
- "status": "SOURCE_CHARACTERIZED_EDPB_ALIGNED",
+ "status": "LIBRARY_PROFILE_EDPB_ALIGNED",
  "version": "2026.10.1",
  "workflow": {
   "conditions_required_for": [
@@ -957,14 +957,9 @@
   ],
   "data_subject_view_templates": [
    {
-    "schluessel": "eingeholt_verband",
-    "text": "Der Standpunkt ist auf Ebene der Verarbeitungstätigkeit über die betroffenen Wirtschaftsverbände eingeholt worden. Ein laufendes Bußgeldverfahren war davon nicht berührt, weil die Beteiligung die Verarbeitung als solche betraf und keinen Einzelfall.",
-    "titel": "Eingeholt, über Verbände"
-   },
-   {
-    "schluessel": "einzelfall_owig",
-    "text": "Auf Ebene des Einzelfalls tritt die Anhörung nach § 55 OWiG an die Stelle einer Beteiligung nach Art. 35 Abs. 9 DSGVO. Die betroffene Person wird im Verfahren förmlich angehört und kann sich zur Sache äußern; eine zusätzliche Befragung zur Verarbeitung als solcher würde den Ermittlungszweck gefährden.",
-    "titel": "Nicht eingeholt: Einzelfall folgt § 55 OWiG"
+    "schluessel": "eingeholt",
+    "text": "Der Standpunkt der betroffenen Personen oder ihrer Vertreter ist eingeholt worden. Art, Zeitpunkt und Ergebnis der Beteiligung sind in der Abschätzung beschrieben.",
+    "titel": "Eingeholt"
    },
    {
     "schluessel": "unangemessen_aufwand",
