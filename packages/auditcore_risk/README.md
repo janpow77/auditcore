@@ -35,6 +35,19 @@ for merkmal in ergebnis.records[0].hits:
 | `riskanalysis.legacy` | `b5c523bf7eaa` | `LEGACY_CHARACTERIZED` | riskanalysis `red_flags.py` (RF01, RF02, RF08–RF15), exakt reproduziert |
 | `audit_designer.flowstat_belegliste` | `1254591156d3` | `LEGACY_CHARACTERIZED` | Flowstat `_red_flags` (BL_RF01–BL_RF10) in audit_designer und audit-portal |
 | `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | wie Legacy, RF02 mit jahresbezogener EU-Schwelle aus `auditcore_procurement` |
+| `flowinvoice.risk_checker` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | flowinvoice/audit-portal `RiskChecker` (9 Rechnungsindikatoren, Texte und Legacy-Score dieses Profils) |
+
+Betrugsprüfungen aus flowinvoice `fraud_detection` haben eigene Profile
+(Schema `auditcore_risk.fraud-profile/1`, `load_fraud_profile`):
+
+| Profil | Funktion | Inhalt |
+|---|---|---|
+| `flowinvoice.fraud_signals` | `score_signals` | Blocker, Warnungen, Score und Stufe aus den Ergebnissen der Teilprüfungen (Sanktions-, PEP- und Firmenprüfung werden nur als Signale konsumiert) |
+| `flowinvoice.ted_contractor` | `select_contracts`, `assess_contractor` | Statistik, Merkmale und Legitimitätswert öffentlicher Aufträge (TED-Datensätze im `notice/1`-Vertrag von `auditcore_procurement`) |
+| `flowinvoice.duplicates` | `find_duplicates` | exakte und unscharfe Rechnungsdubletten unter vorausgewählten Kandidaten |
+
+Die Benford-Prüfung derselben Quelle liegt als `legacy_flowinvoice_benford`
+in `auditcore_statistics` 0.2.0 (methodisch nicht gleich `benford_test`).
 
 `load_profile(id, version)` verlangt beides ausdrücklich; es gibt kein
 Standardprofil. Profile sind JSON-Dokumente mit Fingerabdruck (SHA-256); das
@@ -46,7 +59,9 @@ Ergebnis nennt Profil, Version, Fingerabdruck und Status.
 |---|---|---|
 | `profiles` | Laden und strenge Prüfung der Profile | – |
 | `rules` | Regelarten (Mechanik): `round_multiple`, `near_threshold`, `missing_procurement`, `name_similarity`, `counterparty_concentration`, `ratio_history`, `leave_one_out_rate`, `numeric_compare`, `text_equals`, `missing_value`, `date_before`, `duplicate_key`, `nonzero_without_text`, `balance_mismatch`, `amount_with_marker`, `top_share` | – |
-| `engine` | `evaluate`, `name_similarity`, `identifier_missing`, `missing_columns` | – |
+| `engine` | `evaluate`, `flatten_record`, `name_similarity`, `identifier_missing`, `missing_columns` | – |
+| `invoice_rules` | Regelarten je Rechnung (`amount_or_statistic`, `share_above`, `all_missing`, `round_amount_terms`, `date_outside_range`, `text_patterns`, `names_differ`, `identifier_equal`, `split_window`) | – |
+| `fraud` | Signalscore, TED-Auftragnehmerprofil, Dubletten | – |
 | `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `annotate` | Extra `pandas` |
 | Namensabgleich (RF09) | Normalisierung über `auditcore_entity_matching` (Profil `riskanalysis.payee`) | Extra `fuzzy` (rapidfuzz) |
 | Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` (`procurement.hvtg 2026.09.2`), nicht dupliziert | Extra `procurement` |
