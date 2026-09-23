@@ -47,6 +47,20 @@ LEGACY_CRITERIA_LABEL = "Kriterien des Europäischen Datenschutzausschusses"
 
 DOSSIER_KINDS = frozenset({"text", "date", "choice"})
 
+#: DP-C21 (user decision A5 of 2026-09-23): the consultation notice under
+#: Art. 36 Abs. 1 DSGVO is only given once the assessment is final and only if
+#: the net risk after measures is still high. Profiles without a
+#: ``consultation_notice`` section keep the immediate notice of the source.
+CONSULTATION_TIMING_FINAL = "nach_abschliessender_bewertung"
+#: No consultation notice (risk not high, or the assessment is incomplete).
+NOTICE_NONE = "kein_hinweis"
+#: Preliminary, clearly marked notice before the final assessment.
+NOTICE_PRELIMINARY = "voraussichtlich_erforderlich"
+#: Final notice: the net risk is still high after the final assessment.
+NOTICE_REQUIRED = "erforderlich"
+#: Final result: no prior consultation under Art. 36 Abs. 1 DSGVO.
+NOTICE_NOT_REQUIRED = "nicht_erforderlich"
+
 DECISIONS = (
     RECOMMENDATION_SCREENING_ONLY,
     RECOMMENDATION_RELEASE,
@@ -118,6 +132,19 @@ class DossierField:
 
 
 @dataclass(frozen=True)
+class ConsultationNotice:
+    """When and how the prior consultation of the authority is notified (DP-C21)."""
+
+    timing: str
+    legal_basis: str
+    decision_reference: str
+    preliminary_text: str
+    final_text: str
+    not_required_text: str
+    rejected_text: str
+
+
+@dataclass(frozen=True)
 class RiskBand:
     """Inclusive upper bound of a product value; ``None`` means open-ended."""
 
@@ -178,6 +205,7 @@ class RuleProfile:
     implementation_states: Mapping[str, str] = field(default_factory=dict)
     acceptance_levels: Mapping[str, str] = field(default_factory=dict)
     dossier_fields: tuple[DossierField, ...] = ()
+    consultation_notice: ConsultationNotice | None = None
 
     @property
     def edpb(self) -> bool:
@@ -385,6 +413,41 @@ def _edpb_fields(data: Mapping[str, Any], measures: tuple[Measure, ...]) -> dict
     }
 
 
+def _consultation_notice(recommendation: Mapping[str, Any]) -> ConsultationNotice | None:
+    """Optional notice timing (DP-C21); absent in source-characterised profiles."""
+    raw = recommendation.get("consultation_notice")
+    if raw is None:
+        return None
+    notice = ConsultationNotice(
+        timing=str(raw["timing"]),
+        legal_basis=str(raw["legal_basis"]),
+        decision_reference=str(raw["decision_reference"]),
+        preliminary_text=str(raw["preliminary_text"]),
+        final_text=str(raw["final_text"]),
+        not_required_text=str(raw["not_required_text"]),
+        rejected_text=str(raw["rejected_text"]),
+    )
+    _require(
+        notice.timing == CONSULTATION_TIMING_FINAL,
+        f"Unbekannter Zeitpunkt des Konsultationshinweises '{notice.timing}'.",
+    )
+    _require(
+        all(
+            getattr(notice, name).strip()
+            for name in (
+                "legal_basis",
+                "decision_reference",
+                "preliminary_text",
+                "final_text",
+                "not_required_text",
+                "rejected_text",
+            )
+        ),
+        "Der Konsultationshinweis des Profils ist unvollständig.",
+    )
+    return notice
+
+
 def _validate(
     questions: tuple[Question, ...],
     block_keys: list[str],
@@ -476,6 +539,7 @@ def profile_from_dict(data: Mapping[str, Any]) -> RuleProfile:
             register_references=_frozen(data["register"]["legal_references"]),
             source=_frozen(data["source"]),
             fingerprint=fingerprint(data),
+            consultation_notice=_consultation_notice(recommendation),
             **(_edpb_fields(data, measures) if data["schema"] == PROFILE_SCHEMA_EDPB else {}),
         )
     except (KeyError, TypeError, ValueError, IndexError) as exc:
