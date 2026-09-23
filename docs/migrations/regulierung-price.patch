@@ -1,0 +1,1463 @@
+From 40bfa825b62d7ac3bdce302769b5132c2bee8d24 Mon Sep 17 00:00:00 2001
+From: Jan Riener <janpow77@users.noreply.github.com>
+Date: Wed, 23 Sep 2026 13:44:47 +0200
+Subject: [PATCH] refactor(preise): Rechenkern und Preisquellen aus
+ auditcore_price_analysis/auditcore_price_sources 0.1.0 (lokale
+ Integrationsvariante)
+
+---
+ backend/app/services/calculator.py            | 379 ++----------------
+ .../app/services/external_apis/bundesbank.py  | 134 +++----
+ .../external_apis/destatis_genesis.py         |  93 +----
+ .../app/services/external_apis/eia_brent.py   |  92 ++---
+ .../services/external_apis/eu_oil_bulletin.py |  30 +-
+ .../services/external_apis/harvest_kern.py    |  73 ++++
+ .../app/services/external_apis/overpass.py    | 149 +++----
+ .../services/external_apis/tankerkoenig.py    |  10 +-
+ backend/app/services/preisauswahl.py          |  98 +----
+ backend/tests/test_auditcore_preis_bindung.py | 137 +++++++
+ 10 files changed, 426 insertions(+), 769 deletions(-)
+ create mode 100644 backend/tests/test_auditcore_preis_bindung.py
+
+diff --git a/backend/app/services/calculator.py b/backend/app/services/calculator.py
+index 1d40c9e..7f39052 100644
+--- a/backend/app/services/calculator.py
++++ b/backend/app/services/calculator.py
+@@ -1,356 +1,41 @@
+ """
+ HPP Calculator - Kern-Berechnungslogik.
+ 
+-Nahwärme und Wasser Preisberechnungen nach Anhang C.
+-Testabgesichert durch pytest (test_calculator.py).
++Die Berechnung kommt aus der Bibliothek ``auditcore_price_analysis``
++(janpow77/auditcore). Dieses Modul bindet deren Legacy-Vertrag, der das
++bisherige Verhalten fallgenau nachbildet (274 charakterisierte Fälle);
++Aufrufer und API bleiben unverändert. Der korrigierte Vertrag
++(``auditcore_price_analysis.calculate`` mit versionierten Profilen) ist für
++die schrittweise Umstellung vorgesehen; offene Fachentscheidungen PA-H01 bis
++PA-H04 siehe docs/behavior-changes.md der Bibliothek.
+ 
+ Formeln:
+   Nahwärme: G = (P_G × Q_kW) + (P_A × Q_kWh / 100) + P_V + (P_E × Q_kWh / 100) + (P_U × Q_kWh / 100)
+   Wasser:   G = GP(Q3) × 12 + (V_m³ × AP) + VP × 12 [+ V_m³ × WEE]
+ """
+ 
+-from datetime import date
+-from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
+-
+-# Umlagen-Stichtag: Ab 01.07.2025 gilt Wärmeumlagenpreis statt Gasspeicherumlage
+-UMLAGEN_STICHTAG = date(2025, 7, 1)
+-CENT = Decimal("0.01")
+-ZEHNTEL = Decimal("0.1")
+-
+-
+-def _decimal(value: object, *, feld: str, default: str = "0") -> Decimal:
+-    """Konvertiert externe Zahlen verlustfrei und lehnt ungueltige Werte ab."""
+-    if value is None:
+-        value = default
+-    try:
+-        result = Decimal(str(value))
+-    except (InvalidOperation, ValueError, TypeError) as exc:
+-        raise ValueError(f"{feld} muss eine gueltige Zahl sein") from exc
+-    if not result.is_finite():
+-        raise ValueError(f"{feld} muss endlich sein")
+-    return result
+-
+-
+-def _nicht_negativ(value: object, *, feld: str) -> Decimal:
+-    result = _decimal(value, feld=feld)
+-    if result < 0:
+-        raise ValueError(f"{feld} darf nicht negativ sein")
+-    return result
+-
+-
+-def _round(value: Decimal, places: Decimal = CENT) -> float:
+-    """Explizite kaufmaennische Rundung fuer API-Ergebnisse."""
+-    return float(value.quantize(places, rounding=ROUND_HALF_UP))
+-
+-
+-def calculate_nahwaerme(
+-    preisdaten: dict,
+-    kw: float = 12.0,
+-    kwh: float = 27000.0,
+-    stichtag: str | date = "2025-01-01",
+-) -> dict:
+-    """
+-    Berechnet die Jahreskosten für Nahwärme.
+-
+-    Args:
+-        preisdaten: Dict mit Preiskomponenten:
+-            - grundpreis_eur_kw: Grundpreis in €/kW/a
+-            - arbeitspreis_ct_kwh: Arbeitspreis in ct/kWh
+-            - verrechnungspreis_eur_jahr: Verrechnungspreis in €/a
+-            - emissionspreis_ct_kwh: Emissionspreis (CO2) in ct/kWh
+-            - umlagenpreis_ct_kwh: Gasspeicherumlage in ct/kWh (vor 01.07.2025)
+-            - waermeumlagenpreis_ct_kwh: Wärmeumlagenpreis in ct/kWh (ab 01.07.2025)
+-        kw: Anschlussleistung in kW (Standard: 12)
+-        kwh: Jahresverbrauch in kWh (Standard: 27.000)
+-        stichtag: Betrachtungsstichtag (bestimmt Umlagentyp)
+-
+-    Returns:
+-        Dict mit Berechnungsergebnissen
+-    """
+-    if isinstance(stichtag, str):
+-        stichtag = date.fromisoformat(stichtag)
+-
+-    kw_d = _nicht_negativ(kw, feld="kw")
+-    kwh_d = _nicht_negativ(kwh, feld="kwh")
+-
+-    # Decimal vermeidet binaere Rundungsartefakte bei Geldbetraegen.
+-    p_g = _nicht_negativ(preisdaten.get("grundpreis_eur_kw"), feld="grundpreis_eur_kw")
+-    p_a = _nicht_negativ(preisdaten.get("arbeitspreis_ct_kwh"), feld="arbeitspreis_ct_kwh")
+-    p_v = _nicht_negativ(
+-        preisdaten.get("verrechnungspreis_eur_jahr"), feld="verrechnungspreis_eur_jahr"
+-    )
+-    p_e = _nicht_negativ(preisdaten.get("emissionspreis_ct_kwh"), feld="emissionspreis_ct_kwh")
+-
+-    # Umlagentyp nach Stichtag
+-    if stichtag >= UMLAGEN_STICHTAG:
+-        umlage_typ = "waermeumlagenpreis"
+-        p_u = _nicht_negativ(
+-            preisdaten.get("waermeumlagenpreis_ct_kwh"), feld="waermeumlagenpreis_ct_kwh"
+-        )
+-    else:
+-        umlage_typ = "gasspeicherumlage"
+-        p_u = _nicht_negativ(preisdaten.get("umlagenpreis_ct_kwh"), feld="umlagenpreis_ct_kwh")
+-
+-    # G = Grundpreis + Arbeitspreis + Verrechnungspreis
+-    #     + Emissionspreis + Umlagepreis
+-    grundpreis_anteil = p_g * kw_d
+-    arbeitspreis_anteil = p_a * kwh_d / 100
+-    verrechnungspreis_anteil = p_v
+-    emissionspreis_anteil = p_e * kwh_d / 100
+-    umlagenpreis_anteil = p_u * kwh_d / 100
+-
+-    jahreskosten = (
+-        grundpreis_anteil
+-        + arbeitspreis_anteil
+-        + verrechnungspreis_anteil
+-        + emissionspreis_anteil
+-        + umlagenpreis_anteil
+-    )
+-
+-    # Abgeleitete Kennzahlen
+-    mischpreis_ct_kwh = (jahreskosten / kwh_d * 100) if kwh_d > 0 else Decimal(0)
+-    fixkosten = grundpreis_anteil + verrechnungspreis_anteil
+-    fixkostenanteil_pct = fixkosten / jahreskosten * 100 if jahreskosten > 0 else Decimal(0)
+-    variablekostenanteil_pct = Decimal(100) - fixkostenanteil_pct
+-
+-    # Vollstaendigkeit kennzeichnen: fehlende Kernkomponenten machen das
+-    # Ergebnis kuenstlich billig und gehoeren nicht in Median/Ranking.
+-    kern_komponenten = ("grundpreis_eur_kw", "arbeitspreis_ct_kwh")
+-    fehlende_komponenten = [k for k in kern_komponenten if preisdaten.get(k) is None]
+-
+-    return {
+-        "jahreskosten": _round(jahreskosten),
+-        "vergleichsfaehig": not fehlende_komponenten,
+-        "fehlende_komponenten": fehlende_komponenten,
+-        "mischpreis_ct_kwh": _round(mischpreis_ct_kwh),
+-        "fixkostenanteil_pct": _round(fixkostenanteil_pct, ZEHNTEL),
+-        "variablekostenanteil_pct": _round(variablekostenanteil_pct, ZEHNTEL),
+-        "grundpreis_anteil": _round(grundpreis_anteil),
+-        "arbeitspreis_anteil": _round(arbeitspreis_anteil),
+-        "verrechnungspreis_anteil": _round(verrechnungspreis_anteil),
+-        "emissionspreis_anteil": _round(emissionspreis_anteil),
+-        "umlagenpreis_anteil": _round(umlagenpreis_anteil),
+-        "umlage_typ": umlage_typ,
+-        "parameter": {
+-            "kw": kw,
+-            "kwh": kwh,
+-            "stichtag": stichtag.isoformat(),
+-        },
+-    }
+-
+-
+-def calculate_wasser(
+-    preisdaten: dict,
+-    q3: float = 4.0,
+-    m3: float = 150.0,
+-    stichtag: str | date = "2025-01-01",
+-) -> dict:
+-    """
+-    Berechnet die Jahreskosten für Wasser.
+-
+-    Args:
+-        preisdaten: Dict mit Preiskomponenten:
+-            - grundpreis_eur_monat: Grundpreis pro Monat für Zählergröße Q3
+-            - arbeitspreis_eur_m3: Arbeitspreis in €/m³
+-            - arbeitspreis_staffel: Optional, Liste von Staffeltarifen
+-                [{bis_m3: 50, preis: 1.80}, {bis_m3: 200, preis: 2.10}]
+-            - verrechnungspreis_eur_monat: Verrechnungspreis in €/Monat
+-            - wasserentnahmeentgelt_eur_m3: Wassercent in €/m³
+-        q3: Zählergröße Q3 (Standard: 4)
+-        m3: Jahresverbrauch in m³ (Standard: 150)
+-        stichtag: Betrachtungsstichtag
+-
+-    Returns:
+-        Dict mit Berechnungsergebnissen
+-    """
+-    if isinstance(stichtag, str):
+-        stichtag = date.fromisoformat(stichtag)
+-
+-    _nicht_negativ(q3, feld="q3")
+-    m3_d = _nicht_negativ(m3, feld="m3")
+-    gp = _nicht_negativ(preisdaten.get("grundpreis_eur_monat"), feld="grundpreis_eur_monat")
+-    vp = _nicht_negativ(
+-        preisdaten.get("verrechnungspreis_eur_monat"), feld="verrechnungspreis_eur_monat"
+-    )
+-    wee = _nicht_negativ(
+-        preisdaten.get("wasserentnahmeentgelt_eur_m3"),
+-        feld="wasserentnahmeentgelt_eur_m3",
+-    )
+-    staffel = preisdaten.get("arbeitspreis_staffel")
+-    if isinstance(staffel, dict):
+-        # Harvesting liefert vereinzelt ein Wrapper-Objekt {"staffeln": [...]}
+-        staffel = staffel.get("staffeln", [])
+-
+-    # Arbeitspreis berechnen (einfach oder gestaffelt)
+-    if isinstance(staffel, list) and len(staffel) > 0:
+-        arbeitspreis_anteil = _calculate_staffel_decimal(staffel, m3_d)
+-    else:
+-        ap = _nicht_negativ(preisdaten.get("arbeitspreis_eur_m3"), feld="arbeitspreis_eur_m3")
+-        arbeitspreis_anteil = m3_d * ap
+-
+-    # Formel: G = GP(Q3) × 12 + (V_m³ × AP) + VP × 12 [+ V_m³ × WEE]
+-    grundpreis_anteil = gp * 12
+-    verrechnungspreis_anteil = vp * 12
+-    wee_anteil = m3_d * wee
+-
+-    jahreskosten = grundpreis_anteil + arbeitspreis_anteil + verrechnungspreis_anteil + wee_anteil
+-
+-    # Abgeleitete Kennzahlen
+-    mischpreis_eur_m3 = (jahreskosten / m3_d) if m3_d > 0 else Decimal(0)
+-
+-    # Vollstaendigkeit kennzeichnen (analog Nahwaerme): Arbeitspreis kann
+-    # als Einzelpreis ODER Staffel vorliegen.
+-    fehlende_komponenten: list[str] = []
+-    if preisdaten.get("grundpreis_eur_monat") is None:
+-        fehlende_komponenten.append("grundpreis_eur_monat")
+-    hat_staffel = isinstance(staffel, list) and len(staffel) > 0
+-    if not hat_staffel and preisdaten.get("arbeitspreis_eur_m3") is None:
+-        fehlende_komponenten.append("arbeitspreis_eur_m3")
+-
+-    return {
+-        "jahreskosten": _round(jahreskosten),
+-        "vergleichsfaehig": not fehlende_komponenten,
+-        "fehlende_komponenten": fehlende_komponenten,
+-        "mischpreis_eur_m3": _round(mischpreis_eur_m3),
+-        "grundpreis_anteil": _round(grundpreis_anteil),
+-        "arbeitspreis_anteil": _round(arbeitspreis_anteil),
+-        "verrechnungspreis_anteil": _round(verrechnungspreis_anteil),
+-        "wee_anteil": _round(wee_anteil),
+-        "parameter": {
+-            "q3": q3,
+-            "m3": m3,
+-            "stichtag": stichtag.isoformat(),
+-        },
+-    }
+-
+-
+-def _calculate_staffel(staffel: list[dict], m3: float) -> float:
+-    """
+-    Berechnet den Arbeitspreis bei Staffeltarifen.
+-
+-    Staffel-Format: [{bis_m3: 50, preis: 1.80}, {bis_m3: 200, preis: 2.10}, ...]
+-    Letzte Stufe gilt unbegrenzt - auch wenn sie ein bis_m3 traegt, sonst
+-    bliebe Verbrauch oberhalb der letzten Stufengrenze unbepreist.
+-    """
+-    return _round(_calculate_staffel_decimal(staffel, _nicht_negativ(m3, feld="m3")))
+-
+-
+-def _calculate_staffel_decimal(staffel: list[dict], m3: Decimal) -> Decimal:
+-    """Validierte Staffelberechnung ohne Float-Zwischenschritte."""
+-    if not staffel:
+-        return Decimal(0)
+-
+-    normalisiert: list[tuple[Decimal, Decimal]] = []
+-    for index, stufe in enumerate(staffel, start=1):
+-        if not isinstance(stufe, dict):
+-            raise ValueError(f"Staffelstufe {index} muss ein Objekt sein")
+-        limit = _nicht_negativ(stufe.get("bis_m3"), feld=f"Staffelstufe {index}.bis_m3")
+-        preis = _nicht_negativ(stufe.get("preis"), feld=f"Staffelstufe {index}.preis")
+-        if limit <= 0:
+-            raise ValueError(f"Staffelstufe {index}.bis_m3 muss groesser als 0 sein")
+-        normalisiert.append((limit, preis))
+-
+-    normalisiert.sort(key=lambda item: item[0])
+-    if len({limit for limit, _ in normalisiert}) != len(normalisiert):
+-        raise ValueError("Staffelgrenzen muessen eindeutig sein")
+-
+-    total = Decimal(0)
+-    remaining = m3
+-    prev_limit = Decimal(0)
+-
+-    for i, (deklarierte_grenze, preis) in enumerate(normalisiert):
+-        ist_letzte = i == len(normalisiert) - 1
+-        band = remaining if ist_letzte else min(remaining, deklarierte_grenze - prev_limit)
+-
+-        if band <= 0:
+-            continue
+-
+-        total += band * preis
+-        remaining -= band
+-        prev_limit = deklarierte_grenze
+-
+-        if remaining <= 0:
+-            break
+-
+-    return total
+-
+-
+-def calculate_delta(
+-    aktuell: float,
+-    standard: float,
+-) -> float:
+-    """
+-    Berechnet die prozentuale Abweichung.
+-
+-    Delta (%) = (G_aktuell - G_standard) / G_standard × 100
+-    """
+-    if standard == 0:
+-        return 0.0
+-    return round((aktuell - standard) / standard * 100, 1)
+-
+-
+-def determine_compliance(
+-    jahreskosten: float,
+-    cluster_median: float,
+-    schwelle_pct: float = 20.0,
+-) -> str:
+-    """
+-    Bestimmt den Compliance-Status (algorithmisch, keine Rechtsfolgen).
+-
+-    Returns:
+-        'gruen' | 'gelb' | 'rot'
+-    """
+-    if cluster_median <= 0:
+-        return "gruen"
+-
+-    abweichung_pct = (jahreskosten - cluster_median) / cluster_median * 100
+-
+-    if abweichung_pct <= schwelle_pct * 0.5:
+-        return "gruen"
+-    elif abweichung_pct <= schwelle_pct:
+-        return "gelb"
+-    else:
+-        return "rot"
+-
+-
+-def calculate_cluster_statistics(jahreskosten_list: list[float]) -> dict:
+-    """
+-    Berechnet Cluster-Statistiken.
+-
+-    Returns:
+-        Dict mit median, mean, stddev, min, max, count
+-    """
+-    if not jahreskosten_list:
+-        return {
+-            "median": 0.0,
+-            "mean": 0.0,
+-            "stddev": 0.0,
+-            "min": 0.0,
+-            "max": 0.0,
+-            "count": 0,
+-        }
+-
+-    sorted_list = sorted(jahreskosten_list)
+-    n = len(sorted_list)
+-
+-    # Median
+-    if n % 2 == 0:
+-        median = (sorted_list[n // 2 - 1] + sorted_list[n // 2]) / 2
+-    else:
+-        median = sorted_list[n // 2]
+-
+-    # Mean
+-    mean = sum(sorted_list) / n
+-
+-    # Standard deviation
+-    variance = sum((x - mean) ** 2 for x in sorted_list) / n
+-    stddev = variance**0.5
+-
+-    return {
+-        "median": round(median, 2),
+-        "mean": round(mean, 2),
+-        "stddev": round(stddev, 2),
+-        "min": round(sorted_list[0], 2),
+-        "max": round(sorted_list[-1], 2),
+-        "count": n,
+-    }
++from auditcore_price_analysis.legacy import (
++    CENT,
++    UMLAGEN_STICHTAG,
++    ZEHNTEL,
++    _calculate_staffel,
++    _calculate_staffel_decimal,
++    calculate_cluster_statistics,
++    calculate_delta,
++    calculate_nahwaerme,
++    calculate_wasser,
++    determine_compliance,
++)
++
++__all__ = [
++    "CENT",
++    "UMLAGEN_STICHTAG",
++    "ZEHNTEL",
++    "_calculate_staffel",
++    "_calculate_staffel_decimal",
++    "calculate_cluster_statistics",
++    "calculate_delta",
++    "calculate_nahwaerme",
++    "calculate_wasser",
++    "determine_compliance",
++]
+diff --git a/backend/app/services/external_apis/bundesbank.py b/backend/app/services/external_apis/bundesbank.py
+index 5cc335b..607fe71 100644
+--- a/backend/app/services/external_apis/bundesbank.py
++++ b/backend/app/services/external_apis/bundesbank.py
+@@ -13,119 +13,83 @@ Rate-Limit: keiner explizit
+ 
+ from __future__ import annotations
+ 
+-import json
+-from datetime import date
++import asyncio
+ from typing import Any
+ 
++from auditcore_price_sources import (
++    BundesbankSeriesAdapter,
++    canonical_json_bytes,
++    error_text,
++    legacy_exchange_rate_rows,
++    legacy_status,
++)
++from auditcore_price_sources.bundesbank import DEFAULT_FLOW_REF, DEFAULT_SERIES_KEY
+ from sqlalchemy import select
+ 
+ from app.models.marktbeobachtung import Wechselkurs
+ from app.services.external_apis.base import BaseConnector, HarvestResult
++from app.services.external_apis.harvest_kern import fuehre_aus
+ 
+ 
+ class BundesbankConnector(BaseConnector):
+     SCHLUESSEL = "bundesbank"
+     # Reihen-Identifier: <flowRef>.<key>. flowRef = Tabelle, key = Filter.
+-    FLOW_REF = "BBEX3"
+-    SERIES_KEY = "D.USD.EUR.BB.AC.000"  # ECB Reference Rate USD/EUR daily
++    FLOW_REF = DEFAULT_FLOW_REF
++    SERIES_KEY = DEFAULT_SERIES_KEY  # ECB Reference Rate USD/EUR daily
+ 
+     async def harvest(self) -> HarvestResult:
+-        url = f"{self.basis_url}/data/{self.FLOW_REF}/{self.SERIES_KEY}"
+-        params = {"format": "json", "lastNObservations": 30}
+-
+-        async with self._httpx_client(headers={"Accept": "application/json"}) as client:
+-            response = await client.get(url, params=params)
+-
+-        if response.status_code != 200:
+-            return HarvestResult(
+-                status="fehler",
+-                fehlermeldung=f"HTTP {response.status_code}: {response.text[:300]}",
+-            )
+-
+-        try:
+-            payload = response.json()
+-        except json.JSONDecodeError:
+-            return HarvestResult(
+-                status="fehler",
+-                fehlermeldung="Antwort ist kein gültiges JSON",
+-            )
+-
+-        # SDMX-JSON: data.dataSets[0].series enthaelt Beobachtungen
+-        # Persistiere Tagesschluss-Kurse in marktbeobachtung.wechselkurs
+-        anzahl = await self._persist_kurse(payload)
+-
+-        rohdaten = json.dumps(payload, sort_keys=True).encode()
++        """Abruf und SDMX-Auswertung über auditcore_price_sources; Speicherung bleibt hier."""
++        ergebnis, datensaetze, snapshots = await asyncio.to_thread(
++            fuehre_aus,
++            BundesbankSeriesAdapter(),
++            {
++                "url": self.basis_url,
++                "flow_ref": self.FLOW_REF,
++                "series_key": self.SERIES_KEY,
++                "last_n_observations": 30,
++            },
++            user_agent=self.USER_AGENT,
++            timeout=self.DEFAULT_TIMEOUT,
++        )
++        status = legacy_status(ergebnis)
++        if status == "fehler":
++            return HarvestResult(status="fehler", fehlermeldung=error_text(ergebnis))
++        anzahl = await self._persist_kurse(legacy_exchange_rate_rows(datensaetze))
++        rohdaten = canonical_json_bytes(snapshots[-1].body)
+         return HarvestResult(
+-            status="erfolg",
++            status=status,
+             anzahl_datensaetze=anzahl,
+             paket_sha256=self._sha256(rohdaten),
++            fehlermeldung=error_text(ergebnis) if status == "teilweise" else None,
+             metadaten={
+                 "flow_ref": self.FLOW_REF,
+                 "series_key": self.SERIES_KEY,
+                 "format": "sdmx-json",
+                 "persistiert": anzahl,
++                "einheit": (datensaetze[0].normalized.get("einheit") or {}).get("text")
++                if datensaetze
++                else None,
++                "fehlwerte": sum(1 for d in datensaetze if d.normalized.get("wert") is None),
+             },
+             rohdaten=rohdaten,
+         )
+ 
+-    async def _persist_kurse(self, payload: dict[str, Any]) -> int:
+-        """Schreibt SDMX-JSON Wechselkurse nach marktbeobachtung.wechselkurs.
+-
+-        SDMX-JSON-Struktur (Bundesbank):
+-            data.dataSets[0].series["0:0:..."].observations["0"] = [wert]
+-            data.structure.dimensions.observation[0].values = [{"id": "2026-04-30"}]
+-        """
++    async def _persist_kurse(self, zeilen: list[dict[str, Any]]) -> int:
++        """Schreibt neue Tageskurse nach marktbeobachtung.wechselkurs (Bestand bleibt)."""
+         try:
+-            data = payload.get("data", {})
+-            datasets = data.get("dataSets", [])
+-            if not datasets:
+-                return 0
+-            structure = data.get("structure", {})
+-            observations_dim = structure.get("dimensions", {}).get(
+-                "observation", []
+-            )
+-            if not observations_dim:
+-                return 0
+-            obs_values = observations_dim[0].get("values", [])
+-            zeitwerte = [v.get("id") for v in obs_values]
+-
+             persistiert = 0
+-            for series_data in datasets[0].get("series", {}).values():
+-                obs = series_data.get("observations", {})
+-                for idx_str, beobachtung in obs.items():
+-                    idx = int(idx_str)
+-                    if idx >= len(zeitwerte):
+-                        continue
+-                    tag_str = zeitwerte[idx]
+-                    if not tag_str or not isinstance(beobachtung, list):
+-                        continue
+-                    if not beobachtung or beobachtung[0] is None:
+-                        continue
+-                    try:
+-                        kurs_wert = float(beobachtung[0])
+-                        tag = date.fromisoformat(tag_str)
+-                    except (TypeError, ValueError):
+-                        continue
+-
+-                    bestand = await self.session.execute(
+-                        select(Wechselkurs).where(
+-                            Wechselkurs.waehrung_basis == "USD",
+-                            Wechselkurs.waehrung_kurs == "EUR",
+-                            Wechselkurs.stichtag == tag,
+-                        )
+-                    )
+-                    if bestand.scalar_one_or_none() is not None:
+-                        continue
+-                    self.session.add(
+-                        Wechselkurs(
+-                            waehrung_basis="USD",
+-                            waehrung_kurs="EUR",
+-                            stichtag=tag,
+-                            kurs=kurs_wert,
+-                            quelle="BUNDESBANK",
+-                        )
++            for zeile in zeilen:
++                bestand = await self.session.execute(
++                    select(Wechselkurs).where(
++                        Wechselkurs.waehrung_basis == zeile["waehrung_basis"],
++                        Wechselkurs.waehrung_kurs == zeile["waehrung_kurs"],
++                        Wechselkurs.stichtag == zeile["stichtag"],
+                     )
+-                    persistiert += 1
++                )
++                if bestand.scalar_one_or_none() is not None:
++                    continue
++                self.session.add(Wechselkurs(**zeile))
++                persistiert += 1
+             await self.session.commit()
+             return persistiert
+         except Exception:  # noqa: BLE001
+diff --git a/backend/app/services/external_apis/destatis_genesis.py b/backend/app/services/external_apis/destatis_genesis.py
+index f3463f6..221d141 100644
+--- a/backend/app/services/external_apis/destatis_genesis.py
++++ b/backend/app/services/external_apis/destatis_genesis.py
+@@ -16,7 +16,8 @@ Konfiguration zurueck und ergaenzt sie um die fuer Kraftstoff
+ relevanten Tabellen 61243-0001 (Verbraucherpreise Kraftstoffe) und
+ 61241-0004 (Erzeugerpreise Mineraloelerzeugnisse).
+ 
+-Der Abruf laeuft ueber den gemeinsamen Kern ``auditcore_harvest``: je
++Der Adapter kommt aus ``auditcore_price_sources`` (dorthin verschoben),
++der Abruf laeuft ueber den gemeinsamen Kern ``auditcore_harvest``: je
+ Tabelle eine Seite, Cursor = Tabellenindex. Wie bisher wird eine Tabelle
+ mit HTTP-Status ungleich 200 uebersprungen (als Hinweis im Kernergebnis)
+ und nicht wiederholt; das Ergebnis bleibt erfolg | teilweise | fehler.
+@@ -30,92 +31,18 @@ from __future__ import annotations
+ 
+ import asyncio
+ import base64
+-from collections.abc import Mapping
+-from typing import Any
+-
+-from auditcore_harvest import (
+-    AuthKind,
+-    Capabilities,
+-    FetchContext,
+-    HarvestEngine,
+-    HarvestRecord,
+-    HarvestRequest,
+-    PageResult,
+-    PageStatus,
+-    ParserError,
+-    RecordIssue,
+-    RetryPolicy,
+-    SnapshotSemantics,
+-    Source,
++
++from auditcore_harvest import HarvestEngine, HarvestRequest, RetryPolicy
++from auditcore_price_sources.destatis import (
++    KRAFTSTOFF_TABELLEN,
++    QUELLE,
++    DestatisTabellenAdapter,
+ )
+ 
+ from app.services.external_apis.base import BaseConnector, HarvestResult
+ from app.services.external_apis.harvest_kern import HttpxTransport, LaufSenke, LaufZustand
+ 
+-KRAFTSTOFF_TABELLEN = ["61243-0001", "61241-0004"]
+-
+-QUELLE = Source(
+-    source_id="price.destatis_genesis",
+-    title="Destatis GENESIS (Kraftstofftabellen)",
+-    family="price",
+-    adapter_version="1.0.0",
+-    profile_version="2026.09.1",
+-    data_format="text/csv (ffcsv)",
+-    auth=AuthKind.TOKEN,
+-    capabilities=Capabilities(pagination=True, incremental=False, full_snapshot=True,
+-                              deletions=False),
+-    snapshot_semantics=SnapshotSemantics.APPEND_ONLY,
+-)
+-
+-
+-class DestatisTabellenAdapter:
+-    """Eine Seite je Kraftstofftabelle; Rohdaten bleiben bytegenau erhalten."""
+-
+-    source = QUELLE
+-
+-    def validate_config(self, config: Mapping[str, Any]) -> None:
+-        if not isinstance(config.get("url"), str) or not isinstance(config.get("username"), str):
+-            from auditcore_harvest import ConfigError
+-
+-            raise ConfigError("url und username sind anzugeben.")
+-
+-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+-        index = int((cursor or {}).get("tabelle", 0))
+-        tabelle = KRAFTSTOFF_TABELLEN[index]
+-        params = {
+-            "username": str(context.config["username"]),
+-            "password": context.secret(QUELLE.source_id, "token"),
+-            "name": tabelle,
+-            "area": "all",
+-            "compress": "false",
+-            "transpose": "false",
+-            "format": "ffcsv",
+-            "language": "de",
+-        }
+-        antwort = context.transport.request(
+-            "GET", str(context.config["url"]), params=params, timeout=context.timeout
+-        )
+-        weiter = index + 1 < len(KRAFTSTOFF_TABELLEN)
+-        folge = {"tabelle": index + 1} if weiter else None
+-        if antwort.status != 200:
+-            return PageResult((), folge, complete=not weiter, status=PageStatus.PARTIAL,
+-                              issues=(RecordIssue(tabelle, f"HTTP {antwort.status}"),))
+-        try:
+-            text = antwort.body.decode("utf-8")
+-        except UnicodeDecodeError as exc:
+-            raise ParserError(f"Tabelle {tabelle}: Antwort ist kein UTF-8-Text.") from exc
+-        if "\x00" in text:
+-            raise ParserError(f"Tabelle {tabelle}: Antwort enthält Binärdaten statt ffcsv.")
+-        zeilen = text.splitlines()
+-        roh = {"tabelle": tabelle, "inhalt_b64": base64.b64encode(antwort.body).decode()}
+-        datensatz = HarvestRecord(
+-            source_id=QUELLE.source_id,
+-            record_id=tabelle,
+-            raw=roh,
+-            normalized={"tabelle": tabelle, "datensaetze": max(0, len(zeilen) - 1)},
+-            provenance=context.provenance(QUELLE, tabelle, roh),
+-        )
+-        return PageResult((datensatz,), folge, complete=not weiter)
++__all__ = ["KRAFTSTOFF_TABELLEN", "QUELLE", "DestatisGenesisConnector", "DestatisTabellenAdapter"]
+ 
+ 
+ class _Zugang:
+@@ -190,7 +117,7 @@ class DestatisGenesisConnector(BaseConnector):
+             anzahl_datensaetze=gesamt_records,
+             paket_sha256=self._sha256(gesamt_blob),
+             metadaten={
+-                "tabellen": KRAFTSTOFF_TABELLEN,
++                "tabellen": list(KRAFTSTOFF_TABELLEN),
+                 "abgerufene_tabellen": len(rohpakete),
+             },
+             rohdaten=gesamt_blob,
+diff --git a/backend/app/services/external_apis/eia_brent.py b/backend/app/services/external_apis/eia_brent.py
+index 2b457be..bad8b22 100644
+--- a/backend/app/services/external_apis/eia_brent.py
++++ b/backend/app/services/external_apis/eia_brent.py
+@@ -11,14 +11,21 @@ Rate-Limit: 5000 Requests/Tag/Key
+ 
+ from __future__ import annotations
+ 
+-import json
+-from datetime import date, timedelta
++import asyncio
+ from typing import Any
+ 
++from auditcore_price_sources import (
++    EiaSpotPriceAdapter,
++    canonical_json_bytes,
++    error_text,
++    legacy_commodity_rows,
++    legacy_status,
++)
+ from sqlalchemy import select
+ 
+ from app.models.marktbeobachtung import Rohstoffpreis
+ from app.services.external_apis.base import BaseConnector, HarvestResult
++from app.services.external_apis.harvest_kern import fuehre_aus
+ 
+ 
+ class EiaBrentConnector(BaseConnector):
+@@ -32,78 +39,51 @@ class EiaBrentConnector(BaseConnector):
+                 fehlermeldung="EIA_API_KEY nicht gesetzt - kostenlose "
+                 "Registrierung unter https://www.eia.gov/opendata/register.php",
+             )
+-
+-        end = date.today()
+-        start = end - timedelta(days=30)
+-        url = f"{self.basis_url}/petroleum/pri/spt/data/"
+-        params = {
+-            "api_key": self._api_key,
+-            "frequency": "daily",
+-            "data[0]": "value",
+-            "facets[product][]": self.PRODUCT_BRENT,
+-            "start": start.isoformat(),
+-            "end": end.isoformat(),
+-            "sort[0][column]": "period",
+-            "sort[0][direction]": "desc",
+-            "length": 5000,
+-        }
+-
+-        async with self._httpx_client() as client:
+-            response = await client.get(url, params=params)
+-        if response.status_code != 200:
+-            return HarvestResult(
+-                status="fehler", fehlermeldung=f"HTTP {response.status_code}"
+-            )
+-
+-        payload = response.json()
+-        data_section = payload.get("response", {}).get("data", [])
+-        persistiert = await self._persist(data_section)
+-        rohdaten = json.dumps(payload, sort_keys=True).encode()
++        ergebnis, datensaetze, snapshots = await asyncio.to_thread(
++            fuehre_aus,
++            EiaSpotPriceAdapter(),
++            {"url": self.basis_url, "product": self.PRODUCT_BRENT, "window_days": 30},
++            user_agent=self.USER_AGENT,
++            timeout=self.DEFAULT_TIMEOUT,
++            zugang={("price.eia_brent", "api_key"): self._api_key},
++        )
++        status = legacy_status(ergebnis)
++        if status == "fehler":
++            return HarvestResult(status="fehler", fehlermeldung=error_text(ergebnis))
++        persistiert = await self._persist(legacy_commodity_rows(datensaetze))
++        rohdaten = b"\n".join(canonical_json_bytes(s.body) for s in snapshots)
++        fenster = snapshots[0].params
+         return HarvestResult(
+-            status="erfolg",
+-            anzahl_datensaetze=len(data_section),
++            status=status,
++            anzahl_datensaetze=len(datensaetze),
+             paket_sha256=self._sha256(rohdaten),
++            fehlermeldung=error_text(ergebnis) if status == "teilweise" else None,
+             metadaten={
+                 "product": self.PRODUCT_BRENT,
+                 "frequency": "daily",
+                 "unit": "USD/Barrel",
+-                "von": start.isoformat(),
+-                "bis": end.isoformat(),
++                "von": fenster.get("start"),
++                "bis": fenster.get("end"),
+                 "persistiert": persistiert,
++                "seiten": ergebnis.pages,
++                "fehlwerte": sum(1 for d in datensaetze if d.normalized.get("wert") is None),
+             },
+             rohdaten=rohdaten,
+         )
+ 
+-    async def _persist(self, data_section: list[dict[str, Any]]) -> int:
++    async def _persist(self, zeilen: list[dict[str, Any]]) -> int:
+         anzahl = 0
+-        for row in data_section:
+-            tag_str = row.get("period")
+-            wert = row.get("value")
+-            if not tag_str or wert in (None, ""):
+-                continue
+-            try:
+-                tag = date.fromisoformat(tag_str)
+-                preis = float(wert)
+-            except (TypeError, ValueError):
+-                continue
++        for zeile in zeilen:
+             bestand = await self.session.execute(
+                 select(Rohstoffpreis).where(
+-                    Rohstoffpreis.rohstoff == "BRENT",
+-                    Rohstoffpreis.stichtag == tag,
+-                    Rohstoffpreis.quelle == "EIA",
++                    Rohstoffpreis.rohstoff == zeile["rohstoff"],
++                    Rohstoffpreis.stichtag == zeile["stichtag"],
++                    Rohstoffpreis.quelle == zeile["quelle"],
+                 )
+             )
+             if bestand.scalar_one_or_none() is not None:
+                 continue
+-            self.session.add(
+-                Rohstoffpreis(
+-                    rohstoff="BRENT",
+-                    stichtag=tag,
+-                    preis_usd=preis,
+-                    einheit="USD/Barrel",
+-                    quelle="EIA",
+-                )
+-            )
++            self.session.add(Rohstoffpreis(**zeile))
+             anzahl += 1
+         await self.session.commit()
+         return anzahl
+diff --git a/backend/app/services/external_apis/eu_oil_bulletin.py b/backend/app/services/external_apis/eu_oil_bulletin.py
+index f21bbe0..82d3f37 100644
+--- a/backend/app/services/external_apis/eu_oil_bulletin.py
++++ b/backend/app/services/external_apis/eu_oil_bulletin.py
+@@ -12,7 +12,14 @@ Rate-Limit: keiner; faire Nutzung
+ 
+ from __future__ import annotations
+ 
++import asyncio
++
++from auditcore_price_sources import PageSnapshotAdapter, error_text, legacy_status
++
+ from app.services.external_apis.base import BaseConnector, HarvestResult
++from app.services.external_apis.harvest_kern import fuehre_aus
++
++HINWEIS = "XLSX-Download per Admin-UI; automatisches Parsing geplant für Phase 3 (KO-04)."
+ 
+ 
+ class EuOilBulletinConnector(BaseConnector):
+@@ -22,17 +29,20 @@ class EuOilBulletinConnector(BaseConnector):
+         # Die Veroeffentlichungs-URL aendert sich woechentlich; das Bulletin
+         # ist als XLSX hinter einem Klick-Routing erreichbar. Im MVP wird
+         # das Bulletin manuell ueber den Admin-Upload-Endpoint eingelesen;
+-        # dieser Connector dokumentiert die Quelle in der Registry.
+-        async with self._httpx_client() as client:
+-            response = await client.get(self.basis_url)
+-        ok = response.status_code == 200
++        # dieser Connector sichert nur einen Snapshot der Quellseite.
++        ergebnis, datensaetze, _ = await asyncio.to_thread(
++            fuehre_aus,
++            PageSnapshotAdapter(),
++            {"url": self.basis_url},
++            user_agent=self.USER_AGENT,
++            timeout=self.DEFAULT_TIMEOUT,
++        )
++        status = legacy_status(ergebnis)
++        ok = status != "fehler" and bool(datensaetze)
+         return HarvestResult(
+             status="erfolg" if ok else "fehler",
+             anzahl_datensaetze=0,
+-            paket_sha256=self._sha256(response.content) if ok else None,
+-            fehlermeldung=None if ok else f"HTTP {response.status_code}",
+-            metadaten={
+-                "hinweis": "XLSX-Download per Admin-UI; automatisches Parsing "
+-                "geplant für Phase 3 (KO-04)."
+-            },
++            paket_sha256=datensaetze[0].normalized["sha256"] if ok else None,
++            fehlermeldung=None if ok else error_text(ergebnis),
++            metadaten={"hinweis": HINWEIS},
+         )
+diff --git a/backend/app/services/external_apis/harvest_kern.py b/backend/app/services/external_apis/harvest_kern.py
+index 3c25597..e87ae23 100644
+--- a/backend/app/services/external_apis/harvest_kern.py
++++ b/backend/app/services/external_apis/harvest_kern.py
+@@ -81,3 +81,76 @@ class LaufZustand:
+         if self.stand.get(checkpoint.source_id) != expected:
+             raise CheckpointConflict("Checkpoint wurde parallel geändert.")
+         self.stand[checkpoint.source_id] = checkpoint
++
++
++class LokaleUhr:
++    """Uhr des Kerns in lokaler Zeitzone (Zeitfenster wie bisher ``date.today()``)."""
++
++    def now(self) -> Any:
++        from datetime import datetime
++
++        return datetime.now().astimezone()
++
++    def monotonic(self) -> float:
++        import time
++
++        return time.monotonic()
++
++
++class Warten:
++    """Wartezeiten des Kerns (Wiederholungen, Rate-Limit)."""
++
++    def sleep(self, seconds: float) -> None:
++        import time
++
++        time.sleep(seconds)
++
++
++class Zugang:
++    """Zugangsdaten eines einzelnen Laufs ``{(source_id, name): wert}``; nie protokolliert."""
++
++    def __init__(self, werte: dict[tuple[str, str], str | None] | None = None) -> None:
++        self._werte = {k: v for k, v in (werte or {}).items() if v}
++
++    def get(self, source_id: str, name: str) -> str | None:
++        return self._werte.get((source_id, name))
++
++
++def fuehre_aus(
++    adapter: Any,
++    konfiguration: dict[str, Any],
++    *,
++    user_agent: str,
++    timeout: float,
++    zugang: dict[tuple[str, str], str | None] | None = None,
++    filter: dict[str, Any] | None = None,
++) -> tuple[Any, list[HarvestRecord], list[Any]]:
++    """Ein begrenzter Lauf über ``auditcore_harvest`` (synchron, für ``asyncio.to_thread``).
++
++    Liefert das strukturierte Kernergebnis, die Datensätze in Abrufreihenfolge
++    und die Quellen-Snapshots (Rohantworten ohne Geheimnisse) für Paket-Hash
++    und Archiv. Wiederholungen sind auf zwei Versuche begrenzt, Retry-After
++    auf höchstens 30 Sekunden.
++    """
++    from auditcore_harvest import HarvestEngine, HarvestRequest, RetryPolicy
++    from auditcore_price_sources import RecordingTransport
++
++    transport = RecordingTransport(HttpxTransport(user_agent))
++    senke = LaufSenke()
++    kern = HarvestEngine(
++        transport=transport,
++        credentials=Zugang(zugang),
++        state=LaufZustand(),
++        clock=LokaleUhr(),
++        sleeper=Warten(),
++        retry=RetryPolicy(max_attempts=2, base_delay=1.0, max_retry_after=30.0),
++        request_timeout=timeout,
++    )
++    quelle = adapter.source.source_id
++    ergebnis = kern.run(
++        adapter,
++        HarvestRequest(quelle, run_id=quelle, filters=filter or {}, resume=False),
++        senke,
++        config=konfiguration,
++    )
++    return ergebnis, list(senke.datensaetze.values()), list(transport.snapshots)
+diff --git a/backend/app/services/external_apis/overpass.py b/backend/app/services/external_apis/overpass.py
+index d687fbd..c397360 100644
+--- a/backend/app/services/external_apis/overpass.py
++++ b/backend/app/services/external_apis/overpass.py
+@@ -13,144 +13,89 @@ Lizenz: ODbL (OSM)
+ 
+ from __future__ import annotations
+ 
+-import json
++import asyncio
+ import logging
+ import uuid
+ from datetime import UTC, datetime
+-from typing import Any
+ 
++from auditcore_price_sources import (
++    OverpassFuelStationAdapter,
++    canonical_json_bytes,
++    error_text,
++    fuel_query,
++    legacy_station_fields,
++    legacy_status,
++)
+ from sqlalchemy import select
+ 
+ from app.models.kraftstoff import Tankstelle
+ from app.services.external_apis.base import BaseConnector, HarvestResult
++from app.services.external_apis.harvest_kern import fuehre_aus
+ 
+ logger = logging.getLogger(__name__)
+ 
+-# Overpass-QL: alle Tankstellen in Hessen (admin_level=4 + name=Hessen)
+-HESSEN_TANKSTELLEN_QUERY = """
+-[out:json][timeout:120];
+-area["ISO3166-2"="DE-HE"]->.hessen;
+-(
+-  node["amenity"="fuel"](area.hessen);
+-  way["amenity"="fuel"](area.hessen);
+-);
+-out center tags;
+-"""
++# Overpass-QL: alle Tankstellen in Hessen (Text unverändert, aus der Bibliothek)
++HESSEN_TANKSTELLEN_QUERY = fuel_query("DE-HE")
+ 
+ 
+ class OverpassConnector(BaseConnector):
+     SCHLUESSEL = "overpass"
+ 
+     async def harvest(self) -> HarvestResult:
+-        async with self._httpx_client(timeout=180.0) as client:
+-            response = await client.post(
+-                self.basis_url,
+-                data={"data": HESSEN_TANKSTELLEN_QUERY},
+-            )
+-
+-        if response.status_code == 429:
+-            return HarvestResult(
+-                status="fehler",
+-                fehlermeldung="Overpass Rate-Limit (429), später wiederholen",
+-            )
+-        if response.status_code != 200:
+-            return HarvestResult(
+-                status="fehler",
+-                fehlermeldung=f"HTTP {response.status_code}",
++        ergebnis, datensaetze, snapshots = await asyncio.to_thread(
++            fuehre_aus,
++            OverpassFuelStationAdapter(),
++            {"url": self.basis_url, "area_iso": "DE-HE", "timeout_seconds": 180.0},
++            user_agent=self.USER_AGENT,
++            timeout=self.DEFAULT_TIMEOUT,
++        )
++        status = legacy_status(ergebnis)
++        if status == "fehler":
++            codes = [e.get("code") for e in ergebnis.errors]
++            meldung = (
++                "Overpass Rate-Limit (429), später wiederholen"
++                if "rate_limited" in codes
++                else error_text(ergebnis)
+             )
+-
+-        payload = response.json()
+-        elements = payload.get("elements", [])
+-        rohdaten = json.dumps(payload, sort_keys=True).encode()
+-
+-        # Tankstellen in kpang_vollzug.tankstelle persistieren (mit
+-        # OSM-Geokoordinaten). Matching-Schluessel: 'osm-{type}-{id}'
+-        # in mtsk_id-Feld solange MTS-K-IDs noch nicht verfuegbar sind.
+-        persistiert = await self._persist_tankstellen(elements)
+-
++            return HarvestResult(status="fehler", fehlermeldung=meldung)
++        rohdaten = canonical_json_bytes(snapshots[-1].body)
++        persistiert = await self._persist_tankstellen(datensaetze)
+         return HarvestResult(
+-            status="erfolg",
+-            anzahl_datensaetze=len(elements),
++            status=status,
++            anzahl_datensaetze=len(datensaetze),
+             paket_sha256=self._sha256(rohdaten),
++            fehlermeldung=error_text(ergebnis) if status == "teilweise" else None,
+             metadaten={
+                 "lizenz": "ODbL (OpenStreetMap)",
+                 "query": "Hessen / amenity=fuel",
+                 "neu_in_db": persistiert,
++                "ohne_koordinaten": sum(
++                    1 for d in datensaetze if d.normalized.get("koordinaten_herkunft") == "fehlt"
++                ),
+             },
+             rohdaten=rohdaten,
+         )
+ 
+-    async def _persist_tankstellen(self, elements: list[dict[str, Any]]) -> int:
+-        """Schreibt OSM-Tankstellen als Stammdaten in kpang_vollzug.tankstelle.
+-
+-        Bestehende Eintraege (gemeinsamer Schluessel im mtsk_id-Feld als
+-        'osm-<type>-<id>') werden uebersprungen. lat/lng werden aus
+-        node-Koordinaten oder ways-`center` gelesen.
+-        """
+-        # Bestand der osm-Tankstellen einmal lesen
++    async def _persist_tankstellen(self, datensaetze: list) -> int:
++        """Schreibt neue OSM-Tankstellen als Stammdaten (Zuordnung wie bisher, nur neue)."""
+         result = await self.session.execute(
+             select(Tankstelle.mtsk_id).where(
+                 Tankstelle.mtsk_id.like("osm-%"), Tankstelle.gueltig_bis.is_(None)
+             )
+         )
+         bestand = {row[0] for row in result.fetchall()}
+-
+         neu = 0
+-        for el in elements:
+-            try:
+-                el_type = el.get("type")
+-                el_id = el.get("id")
+-                if not el_type or el_id is None:
+-                    continue
+-                osm_key = f"osm-{el_type}-{el_id}"
+-                if osm_key in bestand:
+-                    continue
+-
+-                # lat/lng entweder direkt (node) oder im 'center'-Block (way)
+-                lat = el.get("lat")
+-                lng = el.get("lon")
+-                if lat is None or lng is None:
+-                    center = el.get("center") or {}
+-                    lat = center.get("lat")
+-                    lng = center.get("lon")
+-                if lat is None or lng is None:
+-                    continue
+-
+-                tags = el.get("tags") or {}
+-                name = tags.get("name") or tags.get("brand") or "Tankstelle"
+-                marke = tags.get("brand")
+-                strasse = tags.get("addr:street") or ""
+-                hausnummer = tags.get("addr:housenumber")
+-                plz = (tags.get("addr:postcode") or "")[:8] or "00000"
+-                ort = (tags.get("addr:city") or tags.get("addr:place") or "")[:128]
+-
+-                # Hausnummer ggf. an Strasse anhaengen wenn separat fehlt
+-                if hausnummer and hausnummer not in strasse:
+-                    strasse = f"{strasse} {hausnummer}".strip()
+-
+-                self.session.add(
+-                    Tankstelle(
+-                        stamm_id=uuid.uuid4(),
+-                        mtsk_id=osm_key,
+-                        name=name[:256],
+-                        marke=marke,
+-                        strasse=(strasse or "Unbekannt")[:256],
+-                        hausnummer=hausnummer,
+-                        plz=plz,
+-                        ort=ort or "Unbekannt",
+-                        bundesland="HE",
+-                        standort=f"SRID=4326;POINT({lng} {lat})",
+-                        gueltig_von=datetime.now(UTC),
+-                        aenderungsgrund="Import OpenStreetMap (Overpass)",
+-                    )
+-                )
+-                neu += 1
+-                if neu % 200 == 0:
+-                    await self.session.flush()
+-            except Exception as exc:  # noqa: BLE001
+-                logger.warning("OSM-Tankstelle %s uebersprungen: %s", el.get("id"), exc)
++        for datensatz in datensaetze:
++            felder = legacy_station_fields(datensatz.normalized, bundesland="HE")
++            if felder is None or felder["mtsk_id"] in bestand:
+                 continue
+-
++            self.session.add(
++                Tankstelle(stamm_id=uuid.uuid4(), gueltig_von=datetime.now(UTC), **felder)
++            )
++            bestand.add(felder["mtsk_id"])
++            neu += 1
++            if neu % 200 == 0:
++                await self.session.flush()
+         await self.session.commit()
+         logger.info("Overpass-Import: %d neue Tankstellen", neu)
+         return neu
+diff --git a/backend/app/services/external_apis/tankerkoenig.py b/backend/app/services/external_apis/tankerkoenig.py
+index ebd3472..7105bdd 100644
+--- a/backend/app/services/external_apis/tankerkoenig.py
++++ b/backend/app/services/external_apis/tankerkoenig.py
+@@ -14,6 +14,8 @@ Rate-Limit: faire Nutzung, max. ein Request pro Minute pro Bounding-Box
+ 
+ from __future__ import annotations
+ 
++from auditcore_price_sources import check_list_response
++
+ from app.services.external_apis.base import BaseConnector, HarvestResult
+ 
+ # Referenzpunkt Mitte Hessen (nur fuer den Health-Check-Proberequest).
+@@ -43,12 +45,8 @@ class TankerkoenigConnector(BaseConnector):
+         try:
+             async with self._httpx_client() as client:
+                 response = await client.get(url, params=params)
+-            if response.status_code != 200:
+-                return False, f"HTTP {response.status_code}"
+-            payload = response.json()
+-            if not payload.get("ok"):
+-                return False, payload.get("message", "API meldet Fehler")
+-            return True, None
++            # Bewertung wie bisher, aus auditcore_price_sources
++            return check_list_response(response.status_code, response.content)
+         except Exception as exc:  # noqa: BLE001
+             return False, str(exc)
+ 
+diff --git a/backend/app/services/preisauswahl.py b/backend/app/services/preisauswahl.py
+index 89b5cec..43c73e6 100644
+--- a/backend/app/services/preisauswahl.py
++++ b/backend/app/services/preisauswahl.py
+@@ -14,9 +14,17 @@ Regeln:
+ 
+ from __future__ import annotations
+ 
+-from collections.abc import Sequence
+ from datetime import date
+ 
++# Reine Auswahlregeln aus auditcore_price_analysis (Legacy-Vertrag, fallgenau
++# charakterisiert); die DB-Lader unten bleiben in der Anwendung.
++from auditcore_price_analysis.legacy import (
++    DATENSTATUS_KEIN_Q3_TARIF,
++    DATENSTATUS_OK,
++    Q3_TOLERANZ,
++    waehle_preis_deterministisch,
++    waehle_wasser_preis,
++)
+ from sqlalchemy import select
+ from sqlalchemy.ext.asyncio import AsyncSession
+ 
+@@ -24,85 +32,15 @@ from app.models.nahwaerme import NahwaermePreis
+ from app.models.price_variant import PriceVariant
+ from app.models.wasser import WasserPreis
+ 
+-# Toleranz beim Q3-Vergleich (Float-Spalte, Werte wie 2.5 / 4 / 6 / 10)
+-Q3_TOLERANZ = 0.01
+-
+-DATENSTATUS_OK = "ok"
+-DATENSTATUS_KEIN_Q3_TARIF = "nicht_verfuegbar_fuer_q3"
+-
+-
+-def _sortier_schluessel(preis) -> tuple:
+-    """Stabiler Sortierschluessel: variant_id aufsteigend (NULL zuletzt),
+-    dann id als Tiebreaker."""
+-    variant_id = getattr(preis, "variant_id", None)
+-    zeilen_id = getattr(preis, "id", None)
+-    return (
+-        variant_id is None,
+-        variant_id if variant_id is not None else 0,
+-        zeilen_id if zeilen_id is not None else 0,
+-    )
+-
+-
+-def waehle_preis_deterministisch(
+-    kandidaten: Sequence,
+-    bevorzugte_variant_ids: set[int] | None = None,
+-) -> tuple[object | None, bool]:
+-    """Waehlt aus Preiszeilen deterministisch genau eine aus.
+-
+-    Neuester Stichtag gewinnt; bei mehreren Zeilen am gleichen Stichtag
+-    wird stabil nach variant_id/id sortiert (optimierung.md 3.3).
+-
+-    Returns:
+-        (preis | None, variante_mehrdeutig)
+-    """
+-    if not kandidaten:
+-        return None, False
+-    max_stichtag = max(p.stichtag for p in kandidaten)
+-    am_stichtag = list(
+-        (p for p in kandidaten if p.stichtag == max_stichtag),
+-    )
+-    bevorzugt = [
+-        p
+-        for p in am_stichtag
+-        if getattr(p, "variant_id", None) in (bevorzugte_variant_ids or set())
+-    ]
+-    auswahl = bevorzugt or am_stichtag
+-    return sorted(auswahl, key=_sortier_schluessel)[0], len(am_stichtag) > 1
+-
+-
+-def waehle_wasser_preis(
+-    kandidaten: Sequence,
+-    q3: float | None,
+-    bevorzugte_variant_ids: set[int] | None = None,
+-) -> tuple[object | None, str, bool]:
+-    """Waehlt den Wasser-Tarif fuer die angefragte Zaehlergroesse Q3.
+-
+-    Exakter Q3-Treffer bevorzugt (auch wenn dessen Stichtag aelter ist
+-    als der eines fremden Q3-Tarifs). Ohne exakten Treffer: Fallback
+-    auf den vorhandenen Tarif, gekennzeichnet mit datenstatus
+-    'nicht_verfuegbar_fuer_q3' (optimierung.md 3.2).
+-
+-    Returns:
+-        (preis | None, datenstatus, variante_mehrdeutig)
+-    """
+-    if not kandidaten:
+-        return None, DATENSTATUS_OK, False
+-
+-    if q3 is not None:
+-        exakt = [
+-            p
+-            for p in kandidaten
+-            if p.zaehlergroesse_q3 is not None
+-            and abs(float(p.zaehlergroesse_q3) - float(q3)) < Q3_TOLERANZ
+-        ]
+-        if exakt:
+-            preis, mehrdeutig = waehle_preis_deterministisch(exakt, bevorzugte_variant_ids)
+-            return preis, DATENSTATUS_OK, mehrdeutig
+-        preis, mehrdeutig = waehle_preis_deterministisch(kandidaten, bevorzugte_variant_ids)
+-        return preis, DATENSTATUS_KEIN_Q3_TARIF, mehrdeutig
+-
+-    preis, mehrdeutig = waehle_preis_deterministisch(kandidaten, bevorzugte_variant_ids)
+-    return preis, DATENSTATUS_OK, mehrdeutig
++__all__ = [
++    "DATENSTATUS_KEIN_Q3_TARIF",
++    "DATENSTATUS_OK",
++    "Q3_TOLERANZ",
++    "lade_nahwaerme_preis",
++    "lade_wasser_preis",
++    "waehle_preis_deterministisch",
++    "waehle_wasser_preis",
++]
+ 
+ 
+ async def lade_wasser_preis(
+diff --git a/backend/tests/test_auditcore_preis_bindung.py b/backend/tests/test_auditcore_preis_bindung.py
+new file mode 100644
+index 0000000..0609361
+--- /dev/null
++++ b/backend/tests/test_auditcore_preis_bindung.py
+@@ -0,0 +1,137 @@
++"""Bindung an auditcore_price_analysis und auditcore_price_sources.
++
++Geprüft werden: Rechenkern und Tarifauswahl stammen aus der installierten
++Bibliothek (Legacy-Vertrag, unverändertes Verhalten), die Connectoren laufen
++über die Adapter und speichern dieselben Fachzeilen wie zuvor; fehlerhafte
++Antworten werden als ``teilweise`` sichtbar.
++"""
++
++from __future__ import annotations
++
++import asyncio
++import json
++from importlib.metadata import version
++from types import SimpleNamespace
++
++import httpx
++
++from app.services import calculator, preisauswahl
++from app.services.external_apis.bundesbank import BundesbankConnector
++from app.services.external_apis.overpass import HESSEN_TANKSTELLEN_QUERY, OverpassConnector
++
++
++class _Ergebnis:
++    def __init__(self, zeilen=()):
++        self._zeilen = list(zeilen)
++
++    def scalar_one_or_none(self):
++        return None
++
++    def fetchall(self):
++        return self._zeilen
++
++
++class _Sitzung:
++    def __init__(self, osm=()):
++        self.eintraege: list = []
++        self.osm = list(osm)
++
++    def add(self, obj) -> None:
++        self.eintraege.append(obj)
++
++    async def flush(self) -> None:
++        return None
++
++    async def commit(self) -> None:
++        return None
++
++    async def rollback(self) -> None:
++        return None
++
++    async def execute(self, _stmt):
++        return _Ergebnis([(k,) for k in self.osm])
++
++
++def _registry():
++    return SimpleNamespace(
++        id=1, basis_url="https://example.invalid/api", secret_env_var=None, auth_typ="none",
++        konfiguration={}, letzter_lauf=None, letzter_status=None, letzte_fehlermeldung=None,
++    )
++
++
++def _mit_antwort(monkeypatch, antwort) -> None:
++    original = httpx.Client
++
++    class Client(original):
++        def __init__(self, *args, **kwargs):
++            kwargs["transport"] = httpx.MockTransport(antwort)
++            super().__init__(*args, **kwargs)
++
++    monkeypatch.setattr(httpx, "Client", Client)
++
++
++def test_rechenkern_und_auswahl_kommen_aus_der_bibliothek():
++    assert version("auditcore_price_analysis") == "0.1.0"
++    assert calculator.calculate_nahwaerme.__module__ == "auditcore_price_analysis.legacy"
++    assert preisauswahl.waehle_wasser_preis.__module__ == "auditcore_price_analysis.legacy"
++    ergebnis = calculator.calculate_wasser(
++        {"grundpreis_eur_monat": 0, "arbeitspreis_eur_m3": 1.07,
++         "verrechnungspreis_eur_monat": 0, "wasserentnahmeentgelt_eur_m3": 0},
++        m3=2.5,
++    )
++    assert ergebnis["jahreskosten"] == 2.68
++
++
++def test_bundesbank_speichert_kurse_und_zeigt_fehlwerte(monkeypatch):
++    assert version("auditcore_price_sources") == "0.1.0"
++    daten = {
++        "data": {
++            "structure": {
++                "dimensions": {
++                    "series": [
++                        {"id": "BBK_STD_CURRENCY", "values": [{"id": "USD"}]},
++                        {"id": "BBK_ERX_PARTNER_CURRENCY", "values": [{"id": "EUR"}]},
++                    ],
++                    "observation": [{"values": [{"id": "2026-09-01"}, {"id": "2026-09-02"}]}],
++                },
++                "attributes": {"series": [], "observation": []},
++            },
++            "dataSets": [{"series": {"0:0": {"observations": {"0": ["1.1050"], "1": [None]}}}}],
++        }
++    }
++    _mit_antwort(monkeypatch, lambda r: httpx.Response(200, json=daten))
++    sitzung = _Sitzung()
++    connector = BundesbankConnector(_registry(), sitzung)
++    ergebnis = asyncio.run(connector.harvest())
++    kurse = [e for e in sitzung.eintraege if type(e).__name__ == "Wechselkurs"]
++    assert ergebnis.status == "erfolg" and ergebnis.anzahl_datensaetze == 1
++    assert [(str(k.stichtag), str(k.kurs)) for k in kurse] == [("2026-09-01", "1.1050")]
++    assert ergebnis.metadaten["fehlwerte"] == 1
++    assert ergebnis.metadaten["einheit"] == "USD je 1 EUR"
++    assert ergebnis.paket_sha256 == connector._sha256(json.dumps(daten, sort_keys=True).encode())
++
++
++def test_overpass_legt_tankstellen_wie_bisher_an_und_meldet_teilergebnis(monkeypatch):
++    daten = {
++        "osm3s": {"timestamp_osm_base": "2026-09-01T06:00:00Z"},
++        "elements": [
++            {"type": "node", "id": 1, "lat": 50.1, "lon": 8.6, "tags": {"brand": "B"}},
++            {"type": "way", "id": 2, "tags": {"name": "ohne Koordinaten"}},
++        ],
++        "remark": "runtime error: Query timed out",
++    }
++
++    def antwort(request):
++        assert request.method == "POST"
++        assert b"out+center+tags" in request.content
++        return httpx.Response(200, json=daten)
++
++    _mit_antwort(monkeypatch, antwort)
++    sitzung = _Sitzung()
++    ergebnis = asyncio.run(OverpassConnector(_registry(), sitzung).harvest())
++    stationen = [e for e in sitzung.eintraege if type(e).__name__ == "Tankstelle"]
++    assert [(s.mtsk_id, s.name, s.plz, s.ort) for s in stationen] == [
++        ("osm-node-1", "B", "00000", "Unbekannt")
++    ]
++    assert ergebnis.status == "teilweise" and "Query timed out" in ergebnis.fehlermeldung
++    assert "out center tags;" in HESSEN_TANKSTELLEN_QUERY
+-- 
+2.43.0
+

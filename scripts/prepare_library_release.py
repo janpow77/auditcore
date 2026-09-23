@@ -49,6 +49,12 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
         }
     ),
+    "auditcore_price_analysis": frozenset(
+        {("janpow77/regulierung", "853676d2b1ab792395d63c62c9f96d5edcca8c2d")}
+    ),
+    "auditcore_price_sources": frozenset(
+        {("janpow77/regulierung", "853676d2b1ab792395d63c62c9f96d5edcca8c2d")}
+    ),
     "auditcore_procurement": frozenset(
         {
             ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
