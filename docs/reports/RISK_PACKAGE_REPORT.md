@@ -74,11 +74,11 @@ Bewusste Abweichungen RK-C01 … RK-C07 und erhaltene Eigenheiten RK-L03:
 
 | Prüfung | Ergebnis |
 |---|---|
-| Paket-pytest (Python 3.12, pandas 3.0.6, rapidfuzz 3.10.1) | Teil 1: 573 passed; mit Teil 2: **1.573 passed** (zusätzlich Replay RiskChecker 340, Replay Betrugsprüfungen 648, Betrugsvertrag 12; Fixtures unter Python 3.11 wie die Produktionsimages erzeugt, RK-L07) |
+| Paket-pytest (Python 3.12, pandas 3.0.6, rapidfuzz 3.10.1) | Teil 1: 573 passed; mit Teil 2: 1.573 passed; mit Teil 3: **2.356 passed** (Replay VerwK 783) (zusätzlich Replay RiskChecker 340, Replay Betrugsprüfungen 648, Betrugsvertrag 12; Fixtures unter Python 3.11 wie die Produktionsimages erzeugt, RK-L07) |
 | `auditcore_statistics` 0.2.0 | 159 passed (davon 68 neu) |
 | `auditcore_entity_matching` 0.2.0 | 543 passed (davon 84 neu für `riskanalysis.payee`) |
 | ruff, ruff format, mypy strict (src und gesamtes Paket), bandit -ll | PASS |
-| Plattform (`pytest`, `ruff check .`, `mypy src`, CLI-Hilfen) | Teil 1: 281 passed; mit Teil 2 und main-Stand: 284 passed, PASS |
+| Plattform (`pytest`, `ruff check .`, `mypy src`, CLI-Hilfen) | Teil 1: 281; Teil 2: 284; Teil 3 mit main-Stand: 286 passed, PASS |
 | auditcore-quality strict (`--framework` verwaltung-app-framework@15f5338, Kontext, SBOM) | Syntax, Lint, Typen, bandit, pip-audit, Tests, Supply Chain PASS; API-Vergleich NOT_EXECUTED (erste Version, keine Basis); 2 × AC-OSS-001 REVIEW_REQUIRED (Regex-Platzhaltermuster in Profil/Fixture, kein Kennzeichen); Gesamt REVIEW_REQUIRED wegen Policy ([risk-quality.json](risk-quality.json)) |
 | Policy (`tools/policy_proof.py`) | F-09, F-15, F-17 VERIFIED und artefaktgebunden (T-11, T-14, T-31, T-38, Profilprüfungen); F-05 REVIEW_REQUIRED (Namen können natürliche Personen bezeichnen, Bewertung beim Consumer), F-07/F-07.ASSESS offen (Schutzbedarf UNKNOWN) |
 
@@ -95,8 +95,8 @@ Wheel-SHA256 `auditcore_risk-0.1.0` (Teil 1):
 (`auditcore_entity_matching-0.2.0`: `34730c6f…`). Teil 2 erneut mit
 harvest, entity_matching 0.2.0, procurement, statistics 0.2.0 und risk:
 **PASS 49/49 Prüfungen** inkl. APT-Lebenszyklus (statistics 0.2.0
-`5a01b4f5…`). Anschließend alle Quelltestsuiten gegen die installierten
-Wheels: PASS.
+`5a01b4f5…`). Teil 3 erneut: PASS 49/49 (risk `e2fc1dc8…`). Anschließend
+alle Quelltestsuiten gegen die installierten Wheels: PASS.
 
 ## Consumer
 
