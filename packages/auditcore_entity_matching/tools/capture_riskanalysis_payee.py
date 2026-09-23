@@ -129,7 +129,8 @@ PAIRS: list[tuple[Any, Any]] = [
 
 
 def git_blob(raw: bytes) -> str:
-    return hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+    header = b"blob " + str(len(raw)).encode() + b"\0"
+    return hashlib.sha1(header + raw, usedforsecurity=False).hexdigest()
 
 
 def load(checkout: Path) -> dict[str, Any]:
@@ -150,7 +151,7 @@ def load(checkout: Path) -> dict[str, Any]:
         raise SystemExit("missing definitions in payee_normalizer.py")
     module = ast.Module(body=wanted, type_ignores=[])
     namespace: dict[str, Any] = {"re": re, "unicodedata": unicodedata}
-    exec(compile(module, PATH, "exec"), namespace)  # noqa: S102 - pinned source
+    exec(compile(module, PATH, "exec"), namespace)  # noqa: S102  # nosec B102 - pinned source
     return namespace
 
 
@@ -176,7 +177,7 @@ def load_name_match(checkout: Path, normalize_name: Any) -> Any:
         "SequenceMatcher": SequenceMatcher,
     }
     module = ast.Module(body=wanted, type_ignores=[])
-    exec(compile(module, RED_FLAGS_PATH, "exec"), namespace)  # noqa: S102 - pinned source
+    exec(compile(module, RED_FLAGS_PATH, "exec"), namespace)  # noqa: S102  # nosec B102 - pinned source
     return namespace["_name_match"]
 
 
