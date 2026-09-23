@@ -1,0 +1,39 @@
+{
+ "id": "flowworkshop.entity_resolution",
+ "kind": "resolution",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Normalisierung oder Schwellen.",
+ "resolution": {
+  "confidence": {
+   "identifier": 95.0,
+   "lei": 100.0,
+   "name_exact": 90.0
+  },
+  "fuzzy_threshold": 75.0,
+  "lei_checksum": false,
+  "lei_pattern": "^[A-Z0-9]{18}\\d{2}$",
+  "min_token_length": 3,
+  "normalization_profile": "flowworkshop.state_aid",
+  "per_scorer_limit": 10,
+  "scorers": [
+   "token_set_ratio",
+   "WRatio"
+  ]
+ },
+ "schema": "auditcore_entity_matching.profile/1",
+ "source": {
+  "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+  "git_blob": "d7a799b65e0444e8be8e606b35bd2cc1ecbdfac0",
+  "path": "auditworkshop/backend/services/entity_resolution.py",
+  "repository": "janpow77/flowworkshop",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_LEI_RE",
+   "CONFIDENCE_FUZZY_THRESHOLD",
+   "is_valid_lei",
+   "extract_lei_from_text",
+   "_find_by_name_fuzzy"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}
