@@ -105,6 +105,19 @@ Dokumentation hinter der Vorlage zurückbleibt. Der Bericht behält seine
 Gliederung und ergänzt die neuen Angaben in den bestehenden Abschnitten. Die
 Vorlage ist noch nicht endgültig; eine Endfassung wird eine neue Profilfassung.
 
+### Profile 2026.10.2: Konsultationshinweis erst nach abschließender Bewertung
+
+Die Fassung `2026.10.2` der Profile `auditcore.dsgvo` und `auditcore.hdsig_ji`
+entspricht `2026.10.1` und setzt die Nutzerentscheidung
+A5 vom 23.09.2026 um (DP-C21): Der Hinweis auf die vorherige Konsultation der
+Aufsichtsbehörde (Art. 36 Abs. 1 DSGVO, Erwägungsgrund 94 DSGVO; im JI-Profil
+§ 64 HDSIG) wird erst mit der abschließenden Bewertung (`decide`) gegeben und
+nur, wenn das Nettorisiko nach Maßnahmen hoch bleibt. Vorher trägt der
+Vorschlag höchstens `consultation_notice.status == "voraussichtlich_erforderlich"`
+mit dem Text „Vorläufiger Hinweis: …“ und nie `consultation_required=True`.
+`finalize_consultation(profil, vorschlag, entscheidung)` bildet den endgültigen
+Hinweis. Empfohlen für neue Abschätzungen; ältere Fassungen bleiben unverändert.
+
 ```bash
 python -m pip install -e '.[dev]'
 python -m pytest

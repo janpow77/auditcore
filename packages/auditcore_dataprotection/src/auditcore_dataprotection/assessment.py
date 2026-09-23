@@ -23,6 +23,7 @@ from typing import Any
 from .calculation import (
     Answer,
     Scenario,
+    finalize_consultation,
     parse_answers,
     parse_scenarios,
     prefill_from_activity,
@@ -212,8 +213,11 @@ class AssessmentService:
     ``require_consultation_record``: when the proposal recommends consulting
     the supervisory authority, a release requires the documented consultation
     (framework requirement ``release_dsfa``). The source application released
-    without it; this is marked ``HUMAN_DECISION_REQUIRED`` in the docs and can
-    be disabled explicitly by a consumer that decided otherwise.
+    without it; it can be disabled explicitly by a consumer that decided
+    otherwise. With profiles that define ``consultation_notice`` (2026.10.2,
+    DP-C21, user decision A5 of 2026-09-23) the notice only becomes final with
+    the decision on a complete assessment and only if the net risk is still
+    high (Art. 36 Abs. 1 DSGVO, Erwägungsgrund 94 DSGVO).
     """
 
     assessments: AssessmentRepository
@@ -499,6 +503,11 @@ class AssessmentService:
         )
         if reset:
             updated = _without_review(updated)
+        elif updated.decision is not None and rules.consultation_notice is not None:
+            # DP-C21: unchanged content keeps the final notice of the decision.
+            updated = replace(
+                updated, proposal=finalize_consultation(rules, proposal, updated.decision)
+            )
         self._store(current, updated)
         self._event(actor, "assessment.updated", updated, review_reset=reset)
         return updated
@@ -535,6 +544,19 @@ class AssessmentService:
                 f"{', '.join(rules.decisions)}."
             )
         condition_list = _conditions(conditions, decision, rules)
+        if rules.consultation_notice is not None:
+            open_issues = [
+                str(i.get("message"))
+                for i in current.proposal.get("issues") or ()
+                if i.get("blocking")
+            ]
+            if open_issues:
+                # DP-C21: the final assessment, and with it the final consultation
+                # notice, requires a complete survey without blocking issues.
+                raise ConflictError(
+                    "Die Bewertung ist noch nicht abschließend; vor der Entscheidung sind "
+                    "die blockierenden Prüfhinweise zu erledigen: " + " ".join(open_issues)
+                )
         if not isinstance(justification, str):
             raise ValidationError("Die Begründung muss Text sein.")
         deviation = decision != recommendation
@@ -545,8 +567,14 @@ class AssessmentService:
                 "nachvollziehbar darlegen, warum die Einschätzung des Systems hier "
                 "nicht trägt (Art. 5 Abs. 2 DSGVO)."
             )
+        proposal = (
+            current.proposal
+            if rules.consultation_notice is None
+            else finalize_consultation(rules, current.proposal, decision)
+        )
         updated = replace(
             current,
+            proposal=proposal,
             decision=decision,
             deviation=deviation,
             deviation_justification=justification.strip() if deviation else None,
@@ -558,12 +586,14 @@ class AssessmentService:
             revision=current.revision + 1,
         )
         self._store(current, updated)
+        notice = proposal.get("consultation_notice") or {}
         self._event(
             actor,
             "assessment.decided",
             updated,
             decision=decision,
             deviation=deviation,
+            **({"consultation_notice": notice["status"]} if notice else {}),
             **({"conditions": list(condition_list)} if condition_list else {}),
         )
         return updated

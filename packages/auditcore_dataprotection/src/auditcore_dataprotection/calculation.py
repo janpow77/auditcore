@@ -19,9 +19,14 @@ from typing import Any
 
 from .errors import ValidationError
 from .rules import (
+    DECISION_REJECTED,
     EFFECT_FRIA,
     EFFECT_HARD,
     EFFECT_POINT,
+    NOTICE_NONE,
+    NOTICE_NOT_REQUIRED,
+    NOTICE_PRELIMINARY,
+    NOTICE_REQUIRED,
     RECOMMENDATION_CONSULTATION,
     RECOMMENDATION_INCOMPLETE,
     RECOMMENDATION_RELEASE,
@@ -210,6 +215,9 @@ class Proposal:
     issues: tuple[Issue, ...]
     calculation: str = CALCULATION_VERSION
     trace: tuple[Mapping[str, Any], ...] = field(default_factory=tuple)
+    #: DP-C21: only for profiles with a ``consultation_notice`` section. The
+    #: proposal never carries the final notice; see ``finalize_consultation``.
+    consultation_notice: Mapping[str, Any] | None = None
 
     @property
     def blocking_issues(self) -> tuple[Issue, ...]:
@@ -227,6 +235,11 @@ class Proposal:
             "reasoning": self.reasoning,
             "consultation_required": self.consultation_required,
             "consultation_reference": self.consultation_reference,
+            **(
+                {}
+                if self.consultation_notice is None
+                else {"consultation_notice": dict(self.consultation_notice)}
+            ),
             "issues": [i.to_dict() for i in self.issues],
             "screening": {
                 "outcome": self.screening.outcome,
@@ -808,6 +821,22 @@ def propose(
     ) -> Proposal:
         """Build the proposal for one recommendation."""
         trace.append({"step": "recommendation", "value": recommendation})
+        notice: dict[str, Any] | None = None
+        if profile.consultation_notice is not None:
+            # DP-C21: before the final assessment at most a preliminary notice.
+            rule = profile.consultation_notice
+            preliminary = recommendation == RECOMMENDATION_CONSULTATION
+            notice = {
+                "timing": rule.timing,
+                "final": False,
+                "status": NOTICE_PRELIMINARY if preliminary else NOTICE_NONE,
+                "text": rule.preliminary_text if preliminary else "",
+                "legal_basis": rule.legal_basis,
+            }
+            if preliminary:
+                text = rule.preliminary_text
+            consultation = False
+            trace.append({"step": "consultation_notice", "status": notice["status"]})
         return Proposal(
             profile=profile.reference,
             regime=profile.regime,
@@ -820,6 +849,7 @@ def propose(
             consultation_reference=consultation_reference,
             issues=tuple(issues),
             trace=tuple(trace),
+            consultation_notice=notice,
         )
 
     risk = assess_risk(profile, scenarios)
@@ -905,6 +935,52 @@ def propose(
         risk,
         recommendation == RECOMMENDATION_CONSULTATION,
     )
+
+
+def finalize_consultation(
+    profile: RuleProfile, proposal: Mapping[str, Any], decision: str
+) -> dict[str, Any]:
+    """Final consultation notice after the final assessment (DP-C21).
+
+    Called with the decision of the controller on a complete proposal. The
+    notice is final and says "erforderlich" only if the net risk after
+    measures is still high (the proposal recommends the consultation) and the
+    processing is not abandoned. Profiles without a ``consultation_notice``
+    section return the proposal unchanged.
+    """
+    rule = profile.consultation_notice
+    result = dict(proposal)
+    if rule is None:
+        return result
+    if proposal.get("recommendation") in (None, RECOMMENDATION_INCOMPLETE):
+        raise ValidationError(
+            "Ein endgültiger Konsultationshinweis setzt eine vollständige Bewertung voraus."
+        )
+    high = proposal.get("recommendation") == RECOMMENDATION_CONSULTATION
+    rejected = decision == DECISION_REJECTED
+    required = high and not rejected
+    if required:
+        status, text = NOTICE_REQUIRED, rule.final_text
+        result["recommendation_text"] = rule.final_text
+    elif high:
+        status, text = NOTICE_NOT_REQUIRED, rule.rejected_text
+    else:
+        status, text = NOTICE_NOT_REQUIRED, rule.not_required_text
+    result["consultation_required"] = required
+    result["consultation_notice"] = {
+        "timing": rule.timing,
+        "final": True,
+        "status": status,
+        "text": text,
+        "legal_basis": rule.legal_basis,
+        "net_risk_high": high,
+        "decision": decision,
+    }
+    result["trace"] = [
+        *(proposal.get("trace") or ()),
+        {"step": "consultation_notice", "status": status, "final": True},
+    ]
+    return result
 
 
 # ---------------------------------------------------------------------------

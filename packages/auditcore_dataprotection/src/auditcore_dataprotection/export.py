@@ -150,6 +150,11 @@ def assessment_report(
             "profile": _plain(proposal.get("profile")),
             "issues": _plain(proposal.get("issues") or []),
             "trace": _plain(proposal.get("trace") or []),
+            **(
+                {"consultation_notice": _plain(proposal["consultation_notice"])}
+                if proposal.get("consultation_notice")
+                else {}
+            ),
         },
         "decision": {
             "decision": assessment.decision,
@@ -591,6 +596,10 @@ def _html_decision(report: Mapping[str, Any]) -> list[str]:
             f"<td>erforderlich ({_text(proposal.get('consultation_reference'))}), "
             "noch nicht dokumentiert</td></tr>"
         )
+    notice = proposal.get("consultation_notice") or {}
+    if not consultation and notice and notice.get("status") != "erforderlich" and notice["text"]:
+        label = "Hinweis zur Konsultation" + ("" if notice.get("final") else " (vorläufig)")
+        parts.append(f"<tr><th>{escape(label)}</th><td>{_text(notice['text'])}</td></tr>")
     parts += [
         f"<tr><th>Erstellt</th><td>{_text(life['created_by'])} am {_text(life['created_at'])}"
         f"; bearbeitet von {_text(life['editors'])}</td></tr>",
