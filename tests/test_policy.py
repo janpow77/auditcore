@@ -137,6 +137,20 @@ def test_offline_is_stale_missing_unavailable(policy_provider, tmp_path):
     assert provider.evaluate(ApplicabilityContext()).source_status == "POLICY_SOURCE_UNAVAILABLE"
 
 
+def test_deployment_context_fallback_is_loaded(tmp_path):
+    from dataclasses import asdict
+
+    from auditcore.tools.common import write_json
+    from auditcore.tools.policy.framework import context_from_project
+
+    root = tmp_path / "deployment"
+    write_json(
+        root / "deploy/apt/auditcore-context.json",
+        {**asdict(ApplicabilityContext()), "ai_usage": "none"},
+    )
+    assert context_from_project(root).ai_usage == "none"
+
+
 def test_project_evidence_is_loaded_without_cross_project_leakage(
     policy_provider, library_context, tmp_path
 ):
