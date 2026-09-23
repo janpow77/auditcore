@@ -52,24 +52,28 @@ Die Namensnormalisierung stammt aus `auditcore_entity_matching` 0.2.0 (Profile
 | REG-C17 | ZER-Gesamtzahl und „weniger als 53 Handwerkskammern“ nur als Konsolenausgabe. | Abweichung → Issue, Lauf `partial`. | Teilfehler sichtbar. |
 | REG-C18 | flowworkshop nutzt gespeicherte Vergleichsformen, der Designer bildet sie neu. | Vergleichsform immer aus der Listenschreibweise mit dem benannten Profil. | Anfrage und Liste müssen dieselbe Regel nutzen. |
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen vom 23.09.2026 (DECIDED)
 
-1. Maßgebliches Screening-Profil für einen gemeinsamen Consumer: Designer
-   (Mindestwert 70, zulässig 50–100, mindestens 3 Zeichen, Listenlimit = Limit)
-   oder flowworkshop (70 laut Router, 65 im Dienst, zulässig 40–100, 2 Zeichen,
-   Listenlimit max(Limit,5)·2). Beide bleiben Profile.
-2. Zerlegt geschriebene Umlaute: Designer (NFC) → `mueller`, flowworkshop → `muller`.
-3. flowinvoice-Varianten (difflib 0,75 ohne Normalisierung; PEP-Token-F1 0,8 mit
-   ASCII-Normalisierung) gegenüber den rapidfuzz-Profilen.
-4. UBO: Stimmrechtsschwelle 50 % (Quelle) gegenüber 25 % (§ 3 Abs. 2 GwG),
-   Multiplikation mittelbarer Anteile, Anteilseigner ohne Typ = Person.
-5. KMU: Kleinst-/Kleinunternehmen nur nach Umsatz, keine Zusammenrechnung
-   (Anhang I AGVO).
-6. PEP-Risikostufen (flowsearch) ohne fachliche Quelle; „Former PEP“ ohne Frist.
-7. Gewichte der Firmenprüfung (0,3/0,1/0,05) und „verifiziert“-Regel.
-8. Auslisten trotz Zeilenproblemen: Die Bibliothek meldet solche Läufe als
-   unvollständig; ob ein Consumer dennoch auslisten darf, entscheidet er.
-9. Datenlizenz: OpenSanctions-Daten stehen unter CC BY-NC 4.0; ob die Nutzung
-   durch eine Behörde als nicht kommerziell gilt, ist rechtlich zu klären.
-10. Methodenbeschreibung des Designer-Werkzeugeintrags („phonetische Varianten“)
-    widerspricht dem Dienst.
+Nutzer, 23.09.2026: „alle empfehlungen, ... A2 abgedeckt durch nutzung, A3 sollte
+jeder dann selber holen können“. Umgesetzt als **neue empfohlene Profile**
+(Version 2026.09.2, `status: USER_DECIDED`, Abruf über `recommended_profile(zweck)`).
+Die charakterisierten Quellprofile 2026.09.1 und alle Replays bleiben bitgenau;
+ihre ursprünglichen Markierungen `HUMAN_DECISION_REQUIRED` dokumentieren den
+Quellstand, der entschiedene Nachfolger ist jeweils benannt.
+
+| ID | Entscheidung | Umsetzung |
+|---|---|---|
+| R1 | Designer-Screening-Profil und -Schwellen maßgeblich | `audit_designer.sanctions_screening` 2026.09.2 (`sanctions_screening`): Mindestwert 70, 50–100, mindestens 3 Zeichen; Normalisierung `audit_designer.sanctions` 2026.09.3. flowworkshop behält ein wählbares Profil. |
+| R2 | Zerlegt geschriebene Umlaute überall per NFC | Designer bereits NFC; `flowworkshop.sanctions_screening` 2026.09.2 mit `flowworkshop.sanctions` 2026.09.3 (NFC); entity_matching-Profile mit `compose: "NFC"`. |
+| R3 | flowinvoice-PEP an die mueller-Regel | `flowinvoice.pep_bulk` 2026.09.2 (`pep_bulk`) mit `flowinvoice.pep` 2026.09.2. |
+| R4 | UBO nach GwG: 25 %, mittelbare Anteile eingerechnet | `flowsearch.ubo` 2026.09.2 (`ubo`): mehr als 25 % Kapital **oder** Stimmrechte, Anteile entlang der Kette multipliziert; Anteilseigner ohne Typ sind keine natürlichen Personen, sondern erscheinen in `unclassified_holders` zur Klärung. Grundlage § 3 Abs. 2 GwG. |
+| R5 | KMU nach Anhang I AGVO | `flowsearch.kmu` 2026.09.2 (`sme`, Methode `agvo_annex_i`): Beschäftigte und Umsatz **oder** Bilanzsumme je Klasse (Kleinst 10/2 Mio./2 Mio., Klein 50/10/10, Mittel 250/50/43); verbundene Unternehmen voll, Partner anteilig; fehlende Werte → „Nicht bestimmbar“ mit Hinweis. Nicht ausgewertet (Hinweis im Ergebnis): Art. 3 Abs. 4 und Art. 4 Abs. 2 Anhang I. |
+| R6 | PEP-Risikostufen wie bisher | `flowsearch.pep_risk` 2026.09.2 (`pep_risk`), Werte unverändert. |
+| R7 | Gewichte der Firmenprüfung wie bisher | `flowinvoice.company_verification` 2026.09.2 (`company_verification`), Werte unverändert. |
+| R8 | Kein Auslisten bei fehlerhaften Zeilen | Vertrag der Adapter (REG-C16): Zeilenprobleme → Lauf `partial`, `snapshot_complete` falsch; Consumer listen dann nicht aus. |
+| R9 | Designer-Werkzeugeintrag („phonetische Varianten“) korrigieren | Consumer-Migration nach v0.3.0, siehe `consumer-migration.md`. |
+| R10 | Korrigierte Verträge einsetzen, inkl. VIES in flowinvoice | Consumer-Migration nach v0.3.0, siehe `consumer-migration.md`. |
+| A2 | OpenSanctions-Datennutzung „abgedeckt durch Nutzung“ | Im Quellenkatalog dokumentiert; Lizenz CC BY-NC 4.0 bleibt genannt, Verantwortung beim Betreiber. |
+| A3 | API-Schlüssel holt sich jeder Betreiber selbst | `MatchClient(api_key=…)` oder `credentials_from_environment(os.environ)` (`OPENSANCTIONS_API_KEY`); ohne Schlüssel `status == "NOT_CONFIGURED"` und `AuthError` mit Bezugsquelle https://www.opensanctions.org/api/. |
+
+Offen bleibt nur, was die Consumer bei ihrer Umstellung selbst ausführen (R9, R10).
