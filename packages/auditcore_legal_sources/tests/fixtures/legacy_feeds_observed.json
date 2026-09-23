@@ -1,0 +1,746 @@
+{
+ "status": "OBSERVED",
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION_SYNTHETIC_FEEDS_NO_NETWORK",
+ "source": {
+  "repository": "janpow77/auditdatabase",
+  "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+  "files": [
+   {
+    "path": "backend/app/harvester/rss.py",
+    "git_blob": "0918dfd90aca1804df8b30c9190ebc3b8282a54a"
+   }
+  ]
+ },
+ "environment": {
+  "feedparser": "6.0.11",
+  "PYTHONHASHSEED": "0"
+ },
+ "documents": {
+  "bafin_rss": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\"><channel><title>Synthetisch</title><link>https://example.invalid</link>\n<description>Synthetischer Feed</description>\n<item><title>Allgemeinverfügung zur Vergabe von Fördermitteln</title>\n<link>https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html</link>\n<description>Kurzfassung mit &lt;b&gt;Markup&lt;/b&gt;</description>\n<pubDate>Fri, 15 Mar 2024 10:20:30 +0100</pubDate><category>Aufsicht</category></item>\n<item><title>Eintrag ohne Link</title><description>Nur Text</description>\n<pubDate>kein Datum</pubDate></item>\n<item><title>Allgemeinverfügung zur Vergabe von Fördermitteln</title>\n<link>https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html</link></item>\n</channel></rss>",
+  "curia_rss": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<rss version=\"2.0\"><channel><title>CURIA synthetisch</title><link>https://example.invalid</link>\n<description>x</description>\n<item><title>Urteil in der Rechtssache C-123/22 zur EFRE-Förderung</title>\n<link>https://example.invalid/juris/document/document.jsf?docid=1</link>\n<description>Zusammenfassung zur Kohäsionspolitik</description>\n<pubDate>Tue, 05 Mar 2024 09:00:00 +0100</pubDate></item>\n<item><title>Pressemitteilung ohne Förderbezug</title>\n<link>https://example.invalid/press/cp240001de.pdf</link>\n<description>Allgemeines Thema</description></item>\n</channel></rss>",
+  "atom": "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<feed xmlns=\"http://www.w3.org/2005/Atom\"><title>Atom synthetisch</title>\n<entry><title>Atom-Eintrag Vergabe</title><link href=\"https://example.invalid/a/1\"/>\n<id>urn:uuid:1</id><updated>2024-02-01T10:00:00Z</updated><summary>Text</summary></entry>\n</feed>",
+  "eca_html": "<html><body>\n<a href=\"/de/publications/SR-2024-01\">Sonderbericht 01/2024: Synthetischer Titel zur Prüfung</a>\n<a href=\"https://example.invalid/report/annual-2023\">Jahresbericht 2023 synthetisch lang genug</a>\n<a href=\"/de/other\">Kurz</a><a href=\"/de/report/x\">kurz</a>\n</body></html>"
+ },
+ "profile": {
+  "bafin_feeds": {
+   "aufsicht": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml",
+   "massnahmen": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Massnahmen.xml",
+   "presse": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Presse.xml"
+  },
+  "bafin_alternative_feeds": {
+   "alle": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/rssnewsfeed.xml",
+   "alle_alt": "https://www.bafin.de/rss/rssnewsfeed.xml"
+  },
+  "curia_feeds": {
+   "gerichtshof": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=de",
+   "gericht": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=de",
+   "pressemitteilungen": "https://curia.europa.eu/jcms/rss.jsp?lang=de&secondLang=en"
+  },
+  "curia_alternative_feeds": {
+   "gerichtshof_en": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=en",
+   "gericht_en": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=en"
+  },
+  "eca_publication_urls": [
+   "https://www.eca.europa.eu/de/publications",
+   "https://www.eca.europa.eu/en/publications",
+   "https://www.eca.europa.eu/Lists/ECADocuments"
+  ],
+  "eca_feeds": {
+   "publications": "https://www.eca.europa.eu/_layouts/15/FeedReader/FeedReader.aspx"
+  }
+ },
+ "cases": [
+  {
+   "name": "bafin-entry-aufsicht-0",
+   "operation": "bafin_entry",
+   "inputs": {
+    "feed": "aufsicht",
+    "entry": {
+     "title": "Allgemeinverfügung zur Vergabe von Fördermitteln",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Allgemeinverfügung zur Vergabe von Fördermitteln"
+     },
+     "links": [
+      {
+       "rel": "alternate",
+       "type": "text/html",
+       "href": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html"
+      }
+     ],
+     "link": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html",
+     "summary": "Kurzfassung mit <b>Markup</b>",
+     "summary_detail": {
+      "type": "text/html",
+      "language": null,
+      "base": "",
+      "value": "Kurzfassung mit <b>Markup</b>"
+     },
+     "published": "Fri, 15 Mar 2024 10:20:30 +0100",
+     "published_parsed": [
+      2024,
+      3,
+      15,
+      9,
+      20,
+      30,
+      4,
+      75,
+      0
+     ],
+     "tags": [
+      {
+       "term": "Aufsicht",
+       "scheme": null,
+       "label": null
+      }
+     ]
+    },
+    "index": 0
+   },
+   "output": {
+    "id": "bafin_meldung_2024_03_15.html",
+    "title": "Allgemeinverfügung zur Vergabe von Fördermitteln",
+    "document_type": "BaFin Aufsicht",
+    "source": "bafin",
+    "source_url": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "2024-03-15T09:20:30",
+    "metadata": {
+     "feed": "aufsicht",
+     "categories": [
+      "Aufsicht"
+     ]
+    },
+    "content": "Allgemeinverfügung zur Vergabe von Fördermitteln\n\nKurzfassung mit <b>Markup</b>"
+   },
+   "exception": null
+  },
+  {
+   "name": "bafin-entry-aufsicht-1",
+   "operation": "bafin_entry",
+   "inputs": {
+    "feed": "aufsicht",
+    "entry": {
+     "title": "Eintrag ohne Link",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Eintrag ohne Link"
+     },
+     "summary": "Nur Text",
+     "summary_detail": {
+      "type": "text/html",
+      "language": null,
+      "base": "",
+      "value": "Nur Text"
+     },
+     "published": "kein Datum",
+     "published_parsed": null
+    },
+    "index": 1
+   },
+   "output": {
+    "id": "bafin_6153675010567227533",
+    "title": "Eintrag ohne Link",
+    "document_type": "BaFin Aufsicht",
+    "source": "bafin",
+    "source_url": "",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "",
+    "metadata": {
+     "feed": "aufsicht",
+     "categories": []
+    },
+    "content": "Eintrag ohne Link\n\nNur Text"
+   },
+   "exception": null
+  },
+  {
+   "name": "bafin-entry-aufsicht-2",
+   "operation": "bafin_entry",
+   "inputs": {
+    "feed": "aufsicht",
+    "entry": {
+     "title": "Allgemeinverfügung zur Vergabe von Fördermitteln",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Allgemeinverfügung zur Vergabe von Fördermitteln"
+     },
+     "links": [
+      {
+       "rel": "alternate",
+       "type": "text/html",
+       "href": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html"
+      }
+     ],
+     "link": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html"
+    },
+    "index": 2
+   },
+   "output": {
+    "id": "bafin_meldung_2024_03_15.html",
+    "title": "Allgemeinverfügung zur Vergabe von Fördermitteln",
+    "document_type": "BaFin Aufsicht",
+    "source": "bafin",
+    "source_url": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "",
+    "metadata": {
+     "feed": "aufsicht",
+     "categories": []
+    },
+    "content": "Allgemeinverfügung zur Vergabe von Fördermitteln\n\n"
+   },
+   "exception": null
+  },
+  {
+   "name": "bafin-entry-atom-0",
+   "operation": "bafin_entry",
+   "inputs": {
+    "feed": "atom",
+    "entry": {
+     "title": "Atom-Eintrag Vergabe",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Atom-Eintrag Vergabe"
+     },
+     "links": [
+      {
+       "href": "https://example.invalid/a/1",
+       "rel": "alternate",
+       "type": "text/html"
+      }
+     ],
+     "link": "https://example.invalid/a/1",
+     "id": "urn:uuid:1",
+     "guidislink": false,
+     "updated": "2024-02-01T10:00:00Z",
+     "updated_parsed": [
+      2024,
+      2,
+      1,
+      10,
+      0,
+      0,
+      3,
+      32,
+      0
+     ],
+     "summary": "Text",
+     "summary_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Text"
+     }
+    },
+    "index": 0
+   },
+   "output": {
+    "id": "bafin_1",
+    "title": "Atom-Eintrag Vergabe",
+    "document_type": "BaFin Atom",
+    "source": "bafin",
+    "source_url": "https://example.invalid/a/1",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "",
+    "metadata": {
+     "feed": "atom",
+     "categories": []
+    },
+    "content": "Atom-Eintrag Vergabe\n\nText"
+   },
+   "exception": null
+  },
+  {
+   "name": "curia-entry-gerichtshof-0",
+   "operation": "curia_entry",
+   "inputs": {
+    "feed": "gerichtshof",
+    "entry": {
+     "title": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung"
+     },
+     "links": [
+      {
+       "rel": "alternate",
+       "type": "text/html",
+       "href": "https://example.invalid/juris/document/document.jsf?docid=1"
+      }
+     ],
+     "link": "https://example.invalid/juris/document/document.jsf?docid=1",
+     "summary": "Zusammenfassung zur Kohäsionspolitik",
+     "summary_detail": {
+      "type": "text/html",
+      "language": null,
+      "base": "",
+      "value": "Zusammenfassung zur Kohäsionspolitik"
+     },
+     "published": "Tue, 05 Mar 2024 09:00:00 +0100",
+     "published_parsed": [
+      2024,
+      3,
+      5,
+      8,
+      0,
+      0,
+      1,
+      65,
+      0
+     ]
+    },
+    "index": 0
+   },
+   "output": {
+    "id": "curia_C-123/22",
+    "title": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung",
+    "document_type": "Pressemitteilung",
+    "source": "curia",
+    "source_url": "https://example.invalid/juris/document/document.jsf?docid=1",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "Tue, 05 Mar 2024 09:00:00 +0100",
+    "metadata": {
+     "feed": "gerichtshof",
+     "case_number": "C-123/22"
+    },
+    "content": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung\n\nZusammenfassung zur Kohäsionspolitik"
+   },
+   "exception": null
+  },
+  {
+   "name": "curia-entry-gerichtshof-1",
+   "operation": "curia_entry",
+   "inputs": {
+    "feed": "gerichtshof",
+    "entry": {
+     "title": "Pressemitteilung ohne Förderbezug",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Pressemitteilung ohne Förderbezug"
+     },
+     "links": [
+      {
+       "rel": "alternate",
+       "type": "text/html",
+       "href": "https://example.invalid/press/cp240001de.pdf"
+      }
+     ],
+     "link": "https://example.invalid/press/cp240001de.pdf",
+     "summary": "Allgemeines Thema",
+     "summary_detail": {
+      "type": "text/html",
+      "language": null,
+      "base": "",
+      "value": "Allgemeines Thema"
+     }
+    },
+    "index": 1
+   },
+   "output": {
+    "id": "curia_cp240001de.pdf",
+    "title": "Pressemitteilung ohne Förderbezug",
+    "document_type": "Pressemitteilung",
+    "source": "curia",
+    "source_url": "https://example.invalid/press/cp240001de.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "",
+    "metadata": {
+     "feed": "gerichtshof",
+     "case_number": ""
+    },
+    "content": "Pressemitteilung ohne Förderbezug\n\nAllgemeines Thema"
+   },
+   "exception": null
+  },
+  {
+   "name": "curia-entry-urteile-0",
+   "operation": "curia_entry",
+   "inputs": {
+    "feed": "urteile",
+    "entry": {
+     "title": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung"
+     },
+     "links": [
+      {
+       "rel": "alternate",
+       "type": "text/html",
+       "href": "https://example.invalid/juris/document/document.jsf?docid=1"
+      }
+     ],
+     "link": "https://example.invalid/juris/document/document.jsf?docid=1",
+     "summary": "Zusammenfassung zur Kohäsionspolitik",
+     "summary_detail": {
+      "type": "text/html",
+      "language": null,
+      "base": "",
+      "value": "Zusammenfassung zur Kohäsionspolitik"
+     },
+     "published": "Tue, 05 Mar 2024 09:00:00 +0100",
+     "published_parsed": [
+      2024,
+      3,
+      5,
+      8,
+      0,
+      0,
+      1,
+      65,
+      0
+     ]
+    },
+    "index": 0
+   },
+   "output": {
+    "id": "curia_C-123/22",
+    "title": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung",
+    "document_type": "Urteil",
+    "source": "curia",
+    "source_url": "https://example.invalid/juris/document/document.jsf?docid=1",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "Tue, 05 Mar 2024 09:00:00 +0100",
+    "metadata": {
+     "feed": "urteile",
+     "case_number": "C-123/22"
+    },
+    "content": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung\n\nZusammenfassung zur Kohäsionspolitik"
+   },
+   "exception": null
+  },
+  {
+   "name": "curia-entry-urteile-1",
+   "operation": "curia_entry",
+   "inputs": {
+    "feed": "urteile",
+    "entry": {
+     "title": "Pressemitteilung ohne Förderbezug",
+     "title_detail": {
+      "type": "text/plain",
+      "language": null,
+      "base": "",
+      "value": "Pressemitteilung ohne Förderbezug"
+     },
+     "links": [
+      {
+       "rel": "alternate",
+       "type": "text/html",
+       "href": "https://example.invalid/press/cp240001de.pdf"
+      }
+     ],
+     "link": "https://example.invalid/press/cp240001de.pdf",
+     "summary": "Allgemeines Thema",
+     "summary_detail": {
+      "type": "text/html",
+      "language": null,
+      "base": "",
+      "value": "Allgemeines Thema"
+     }
+    },
+    "index": 1
+   },
+   "output": {
+    "id": "curia_cp240001de.pdf",
+    "title": "Pressemitteilung ohne Förderbezug",
+    "document_type": "Urteil",
+    "source": "curia",
+    "source_url": "https://example.invalid/press/cp240001de.pdf",
+    "funding_period": "2021-2027",
+    "fund": "EFRE",
+    "published_date": "",
+    "metadata": {
+     "feed": "urteile",
+     "case_number": ""
+    },
+    "content": "Pressemitteilung ohne Förderbezug\n\nAllgemeines Thema"
+   },
+   "exception": null
+  },
+  {
+   "name": "eca-core-reports",
+   "operation": "eca_core",
+   "inputs": {},
+   "output": [
+    {
+     "id": "eca_sr_2024_cohesion",
+     "title": "Sonderbericht: Kohäsionspolitik 2021-2027 - Vereinfachung und Leistungsorientierung",
+     "document_type": "Sonderbericht",
+     "source": "eca",
+     "source_url": "https://www.eca.europa.eu/de/publications",
+     "funding_period": "2021-2027",
+     "fund": "EFRE",
+     "content": "ECA Sonderbericht zur Kohäsionspolitik der Förderperiode 2021-2027"
+    },
+    {
+     "id": "eca_sr_2023_erdf",
+     "title": "Sonderbericht: EFRE-Förderung - Wirksamkeit und Wirtschaftlichkeit",
+     "document_type": "Sonderbericht",
+     "source": "eca",
+     "source_url": "https://www.eca.europa.eu/de/publications",
+     "funding_period": "2021-2027",
+     "fund": "EFRE",
+     "content": "ECA Sonderbericht zur EFRE-Förderung"
+    },
+    {
+     "id": "eca_annual_2023",
+     "title": "Jahresbericht 2023 zum EU-Haushalt",
+     "document_type": "Jahresbericht",
+     "source": "eca",
+     "source_url": "https://www.eca.europa.eu/de/publications",
+     "funding_period": "2021-2027",
+     "fund": "EFRE",
+     "content": "Jahresbericht des Europäischen Rechnungshofs zum EU-Haushalt 2023"
+    }
+   ],
+   "exception": null
+  },
+  {
+   "name": "rss-shared-feed-cache",
+   "operation": "rss_flow",
+   "inputs": {},
+   "output": {
+    "bafin": {
+     "source_id": "bafin",
+     "method_used": {
+      "$enum": "RSS"
+     },
+     "documents": [
+      {
+       "id": "bafin_meldung_2024_03_15.html",
+       "title": "Allgemeinverfügung zur Vergabe von Fördermitteln",
+       "document_type": "BaFin Aufsicht",
+       "source": "bafin",
+       "source_url": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "2024-03-15T09:20:30",
+       "metadata": {
+        "feed": "aufsicht",
+        "categories": [
+         "Aufsicht"
+        ]
+       },
+       "content": "Allgemeinverfügung zur Vergabe von Fördermitteln\n\nKurzfassung mit <b>Markup</b>"
+      },
+      {
+       "id": "bafin_6153675010567227533",
+       "title": "Eintrag ohne Link",
+       "document_type": "BaFin Aufsicht",
+       "source": "bafin",
+       "source_url": "",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "",
+       "metadata": {
+        "feed": "aufsicht",
+        "categories": []
+       },
+       "content": "Eintrag ohne Link\n\nNur Text"
+      }
+     ],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T19:03:53.499883"
+     }
+    },
+    "bafin_calls": [
+     "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml",
+     "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Massnahmen.xml",
+     "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Presse.xml",
+     "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml"
+    ],
+    "curia": {
+     "source_id": "curia",
+     "method_used": {
+      "$enum": "RSS"
+     },
+     "documents": [
+      {
+       "id": "curia_meldung_2024_03_15.html",
+       "title": "Allgemeinverfügung zur Vergabe von Fördermitteln",
+       "document_type": "Pressemitteilung",
+       "source": "curia",
+       "source_url": "https://example.invalid/DE/Meldung/2024/meldung_2024_03_15.html",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "Fri, 15 Mar 2024 10:20:30 +0100",
+       "metadata": {
+        "feed": "aufsicht",
+        "case_number": ""
+       },
+       "content": "Allgemeinverfügung zur Vergabe von Fördermitteln\n\nKurzfassung mit <b>Markup</b>"
+      }
+     ],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T19:03:53.501011"
+     }
+    },
+    "curia_calls": [
+     "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml"
+    ],
+    "cache_shared": true
+   },
+   "exception": null
+  },
+  {
+   "name": "curia-harvest-fresh-cache",
+   "operation": "rss_flow",
+   "inputs": {},
+   "output": {
+    "result": {
+     "source_id": "curia",
+     "method_used": {
+      "$enum": "RSS"
+     },
+     "documents": [
+      {
+       "id": "curia_C-123/22",
+       "title": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung",
+       "document_type": "Pressemitteilung",
+       "source": "curia",
+       "source_url": "https://example.invalid/juris/document/document.jsf?docid=1",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "published_date": "Tue, 05 Mar 2024 09:00:00 +0100",
+       "metadata": {
+        "feed": "gerichtshof",
+        "case_number": "C-123/22"
+       },
+       "content": "Urteil in der Rechtssache C-123/22 zur EFRE-Förderung\n\nZusammenfassung zur Kohäsionspolitik"
+      }
+     ],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T19:03:53.502654"
+     }
+    },
+    "calls": [
+     "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=de",
+     "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=de",
+     "https://curia.europa.eu/jcms/rss.jsp?lang=de&secondLang=en",
+     "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=de"
+    ]
+   },
+   "exception": null
+  },
+  {
+   "name": "eca-harvest",
+   "operation": "eca_flow",
+   "inputs": {
+    "html": "<html><body>\n<a href=\"/de/publications/SR-2024-01\">Sonderbericht 01/2024: Synthetischer Titel zur Prüfung</a>\n<a href=\"https://example.invalid/report/annual-2023\">Jahresbericht 2023 synthetisch lang genug</a>\n<a href=\"/de/other\">Kurz</a><a href=\"/de/report/x\">kurz</a>\n</body></html>"
+   },
+   "output": {
+    "scraped": {
+     "source_id": "eca",
+     "method_used": {
+      "$enum": "RSS"
+     },
+     "documents": [
+      {
+       "id": "eca_-7950206050195407901",
+       "title": "Sonderbericht 01/2024: Synthetischer Titel zur Prüfung",
+       "document_type": "Bericht",
+       "source": "eca",
+       "source_url": "https://www.eca.europa.eu/de/publications/SR-2024-01",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "content": "Sonderbericht 01/2024: Synthetischer Titel zur Prüfung"
+      },
+      {
+       "id": "eca_-2087178097346663751",
+       "title": "Jahresbericht 2023 synthetisch lang genug",
+       "document_type": "Bericht",
+       "source": "eca",
+       "source_url": "https://example.invalid/report/annual-2023",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "content": "Jahresbericht 2023 synthetisch lang genug"
+      }
+     ],
+     "success": true,
+     "error": null,
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T19:03:53.535526"
+     }
+    },
+    "fallback": {
+     "source_id": "eca",
+     "method_used": {
+      "$enum": "RSS"
+     },
+     "documents": [
+      {
+       "id": "eca_sr_2024_cohesion",
+       "title": "Sonderbericht: Kohäsionspolitik 2021-2027 - Vereinfachung und Leistungsorientierung",
+       "document_type": "Sonderbericht",
+       "source": "eca",
+       "source_url": "https://www.eca.europa.eu/de/publications",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "content": "ECA Sonderbericht zur Kohäsionspolitik der Förderperiode 2021-2027"
+      },
+      {
+       "id": "eca_sr_2023_erdf",
+       "title": "Sonderbericht: EFRE-Förderung - Wirksamkeit und Wirtschaftlichkeit",
+       "document_type": "Sonderbericht",
+       "source": "eca",
+       "source_url": "https://www.eca.europa.eu/de/publications",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "content": "ECA Sonderbericht zur EFRE-Förderung"
+      },
+      {
+       "id": "eca_annual_2023",
+       "title": "Jahresbericht 2023 zum EU-Haushalt",
+       "document_type": "Jahresbericht",
+       "source": "eca",
+       "source_url": "https://www.eca.europa.eu/de/publications",
+       "funding_period": "2021-2027",
+       "fund": "EFRE",
+       "content": "Jahresbericht des Europäischen Rechnungshofs zum EU-Haushalt 2023"
+      }
+     ],
+     "success": true,
+     "error": "Nur Fallback-Dokumente verfügbar",
+     "fallback_used": false,
+     "harvested_at": {
+      "$datetime": "2026-09-22T19:03:53.535788"
+     }
+    }
+   },
+   "exception": null
+  }
+ ]
+}

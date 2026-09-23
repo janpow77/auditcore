@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_harvest",
+  "version": "0.1.0",
+  "contract": "auditcore_harvest.contract/1",
+  "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "files": [
+        {
+          "git_blob": "7e5b9b652c9db72c8c661e38a8e5f7ce10d7f86e",
+          "path": "backend/app/modules/vp_ai/harvester/base.py"
+        },
+        {
+          "git_blob": "f67579071cfdb8c03ec249de231675e792c58966",
+          "path": "backend/app/modules/vp_ai/harvester/_funding_period.py"
+        },
+        {
+          "git_blob": "c286bf2f2f2f4054052f05397a1a87fb16d4018b",
+          "path": "backend/app/modules/vp_ai/harvester/scheduler.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/auditdatabase",
+      "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+      "files": [
+        {
+          "git_blob": "fcefbe13ecdd3d8bb1fff83f04a53c56ad700c4b",
+          "path": "backend/app/harvester/base.py"
+        },
+        {
+          "git_blob": "de4a26ed623989ef6b84dec92b3d7c1e7eb3af62",
+          "path": "backend/app/harvester/dip.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+      "files": [
+        {
+          "git_blob": "dc180b95bae211e8cf6add23bdb3c01d6805200a",
+          "path": "backend/app/services/external_apis/base.py"
+        },
+        {
+          "git_blob": "75438ec8436077148b1f32bf70c155b714f1a96d",
+          "path": "backend/app/services/external_apis/destatis_genesis.py"
+        },
+        {
+          "git_blob": "d687fbdddb520cdf2cb962edf14aa0fb244d5c0f",
+          "path": "backend/app/services/external_apis/overpass.py"
+        }
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Dienste separat."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_harvest_observed.json",
+    "tool": "tools/capture_legacy_harvest.py",
+    "cases": 46,
+    "scenarios": 14
+  },
+  "catalog": {
+    "file": "src/auditcore_harvest/catalogs/sources.json",
+    "tool": "tools/build_catalog.py"
+  }
+}

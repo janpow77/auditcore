@@ -1,0 +1,215 @@
+{
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+    "params": {
+     "format": "json",
+     "num": "30",
+     "f.titel": "EFRE"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/json"
+    },
+    "body_json": {
+     "numFound": 4,
+     "cursor": "AoE1",
+     "documents": [
+      {
+       "id": "270001",
+       "titel": "Synthetische Drucksache 1 zur EFRE-Förderung",
+       "dokumentnummer": "20/1001",
+       "wahlperiode": 20,
+       "datum": "2024-03-15",
+       "drucksachetyp": "Kleine Anfrage",
+       "fundstelle": {
+        "pdf_url": "https://example.invalid/btd/20/1.pdf"
+       },
+       "urheber": [
+        {
+         "titel": "Fraktion X"
+        }
+       ],
+       "autoren_anzeige": [],
+       "vorgangsbezug": [],
+       "abstract": ""
+      },
+      {
+       "id": "270002",
+       "titel": "Synthetische Drucksache 2 zur EFRE-Förderung",
+       "dokumentnummer": "20/1002",
+       "wahlperiode": 20,
+       "datum": "2024-03-15",
+       "drucksachetyp": "Kleine Anfrage",
+       "fundstelle": {
+        "pdf_url": "https://example.invalid/btd/20/2.pdf"
+       },
+       "urheber": [
+        {
+         "titel": "Fraktion X"
+        }
+       ],
+       "autoren_anzeige": [],
+       "vorgangsbezug": [],
+       "abstract": ""
+      }
+     ]
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+    "params": {
+     "format": "json",
+     "num": "30",
+     "f.titel": "EFRE",
+     "cursor": "AoE1"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/json"
+    },
+    "body_json": {
+     "numFound": 4,
+     "cursor": "AoE2",
+     "documents": [
+      {
+       "id": "270003",
+       "titel": "Synthetische Drucksache 3 zur EFRE-Förderung",
+       "dokumentnummer": "20/1003",
+       "wahlperiode": 20,
+       "datum": "2019-06-01",
+       "drucksachetyp": "Kleine Anfrage",
+       "fundstelle": {
+        "pdf_url": "https://example.invalid/btd/20/3.pdf"
+       },
+       "urheber": [
+        {
+         "titel": "Fraktion X"
+        }
+       ],
+       "autoren_anzeige": [],
+       "vorgangsbezug": [],
+       "abstract": ""
+      }
+     ]
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+    "params": {
+     "format": "json",
+     "num": "30",
+     "f.titel": "EFRE",
+     "cursor": "AoE2"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/json"
+    },
+    "body_json": {
+     "numFound": 4,
+     "cursor": "AoE2",
+     "documents": []
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+    "params": {
+     "format": "json",
+     "num": "30",
+     "f.titel": "Strukturfonds"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/json"
+    },
+    "body_json": {
+     "numFound": 4,
+     "cursor": "B1",
+     "documents": [
+      {
+       "id": "270002",
+       "titel": "Synthetische Drucksache 2 zur EFRE-Förderung",
+       "dokumentnummer": "20/1002",
+       "wahlperiode": 20,
+       "datum": "2024-03-15",
+       "drucksachetyp": "Kleine Anfrage",
+       "fundstelle": {
+        "pdf_url": "https://example.invalid/btd/20/2.pdf"
+       },
+       "urheber": [
+        {
+         "titel": "Fraktion X"
+        }
+       ],
+       "autoren_anzeige": [],
+       "vorgangsbezug": [],
+       "abstract": ""
+      },
+      {
+       "id": "270004",
+       "titel": "Synthetische Drucksache 4 zur EFRE-Förderung",
+       "dokumentnummer": "20/1004",
+       "wahlperiode": 20,
+       "datum": "2024-03-15",
+       "drucksachetyp": "Kleine Anfrage",
+       "fundstelle": {
+        "pdf_url": "https://example.invalid/btd/20/4.pdf"
+       },
+       "urheber": [
+        {
+         "titel": "Fraktion X"
+        }
+       ],
+       "autoren_anzeige": [],
+       "vorgangsbezug": [],
+       "abstract": ""
+      }
+     ]
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://search.dip.bundestag.de/api/v1/drucksache",
+    "params": {
+     "format": "json",
+     "num": "30",
+     "f.titel": "Strukturfonds",
+     "cursor": "B1"
+    }
+   },
+   "response": {
+    "status": 200,
+    "headers": {
+     "content-type": "application/json"
+    },
+    "body_json": {
+     "numFound": 4,
+     "cursor": "B1",
+     "documents": []
+    }
+   }
+  }
+ ]
+}

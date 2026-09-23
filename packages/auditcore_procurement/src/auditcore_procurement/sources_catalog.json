@@ -1,0 +1,266 @@
+{
+ "schema": "auditcore_harvest.catalog/1",
+ "version": "2026.09.1",
+ "sources": [
+  {
+   "source_id": "procurement.ted_awards",
+   "title": "TED – Zuschlagsbekanntmachungen mit Auftragnehmer",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+     "path": "backend/app/services/ted_harvester_service.py",
+     "symbols": [
+      "build_ted_query",
+      "fetch_ted_notices",
+      "_DEFAULT_FIELDS"
+     ]
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+     "path": "backend/audit_prep/ted_normalize.py",
+     "symbols": [
+      "normalize_notice",
+      "parse_ted_file"
+     ]
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit-portal",
+     "path": "backend/app/api/external_data.py"
+    },
+    {
+     "repository": "janpow77/audit-portal",
+     "path": "backend/audit_prep/source_fetch.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.ted_awards",
+    "version": "2026.09.1",
+    "coverage": "award_notices_with_winner"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "required": [
+     "api_url"
+    ],
+    "properties": {
+     "api_url": {
+      "type": "string",
+      "default": "https://api.ted.europa.eu/v3/notices/search"
+     },
+     "page_size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 250,
+      "default": 100
+     },
+     "fields": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    }
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/replay/ted_awards.json",
+    "packages/auditcore_procurement/tests/fixtures/procurement_legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_procurement.sources:TedAwardsAdapter"
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED",
+    "note": "Kein zulässig konfigurierter Live-Abruf im Prüflauf."
+   }
+  },
+  {
+   "source_id": "procurement.had_search",
+   "title": "HAD – Hessische Ausschreibungsdatenbank, Suchergebnisse",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+     "symbols": [
+      "_HADClient.search",
+      "HADNotice"
+     ]
+    },
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "company_records.py",
+     "symbols": [
+      "_HADClient.search",
+      "HADNotice"
+     ]
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py"
+    },
+    {
+     "repository": "janpow77/flowinvoice",
+     "path": "company_records.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.had_search",
+    "version": "2026.09.1",
+    "variants": [
+     "designer",
+     "flowinvoice"
+    ]
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen von had.de und Zulässigkeit automatisierter Abfragen nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {
+     "variant": {
+      "type": "string",
+      "enum": [
+       "designer",
+       "flowinvoice"
+      ],
+      "default": "designer"
+     }
+    }
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/replay/had_search.json"
+   ],
+   "implementation": {
+    "status": "SUPPORTED",
+    "adapter": "auditcore_procurement.sources:HadSearchAdapter",
+    "extras": [
+     "html",
+     "sources"
+    ],
+    "note": "Parser nur mit synthetischer Seite belegt."
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED"
+   }
+  },
+  {
+   "source_id": "procurement.ted_company_flowinvoice",
+   "title": "TED-Unternehmenssuche (Mnemonik-Felder, Flowinvoice-Variante)",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+     "path": "company_records.py",
+     "symbols": [
+      "_TEDClient.search",
+      "TEDNotice"
+     ]
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/flowinvoice",
+     "path": "company_records.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.ted_company",
+    "variant": "flowinvoice"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/procurement_legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "LEGACY_ONLY",
+    "functions": [
+     "auditcore_procurement.company_sources:ted_company_request",
+     "ted_company_result"
+    ],
+    "note": "Request/Antwortauswertung vorhanden, kein Harvest-Adapter; Endpunkt /api/v3.0 gegen heutige API nicht geprüft."
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED"
+   }
+  },
+  {
+   "source_id": "procurement.ted_company_designer",
+   "title": "TED-Unternehmenssuche (Mnemonik-Felder, Designer-Variante)",
+   "family": "procurement",
+   "target_package": "auditcore_procurement",
+   "origins": [
+    {
+     "repository": "janpow77/audit_designer",
+     "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+     "symbols": [
+      "_TEDClient.search",
+      "_TEDClient._extract_title",
+      "TEDNotice"
+     ]
+    }
+   ],
+   "consumers": [
+    {
+     "repository": "janpow77/audit_designer",
+     "path": "backend/app/modules/vp_ai/services/company/company_records.py"
+    }
+   ],
+   "profile": {
+    "id": "procurement.ted_company",
+    "variant": "designer"
+   },
+   "auth": "none",
+   "licence_access": {
+    "status": "REVIEW_REQUIRED",
+    "note": "Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) nicht geprüft."
+   },
+   "config_schema": {
+    "type": "object",
+    "properties": {}
+   },
+   "fixtures": [
+    "packages/auditcore_procurement/tests/fixtures/procurement_legacy_observed.json"
+   ],
+   "implementation": {
+    "status": "LEGACY_ONLY",
+    "functions": [
+     "auditcore_procurement.company_sources:ted_company_request",
+     "ted_company_result"
+    ]
+   },
+   "live_test": {
+    "status": "NOT_CONFIGURED"
+   }
+  }
+ ]
+}
