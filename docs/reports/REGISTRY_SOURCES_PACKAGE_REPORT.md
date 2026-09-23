@@ -1,7 +1,7 @@
 # auditcore_registry_sources 0.1.0 (und auditcore_entity_matching 0.2.0) — Bericht
 
 Stand: 23. September 2026. Branch `feat/auditcore-registry-sources`
-(Worktree `auditcore-wt-registry`, Basis `main@886a53a`).
+(Worktree `auditcore-wt-registry`, Basis `main@886a53a`, danach `main@c1f436c` zusammengeführt). PR #22.
 
 ## Umfang
 
@@ -62,13 +62,13 @@ nicht auflösbar; `build_ownership_chain` terminiert bei Selbstverweis nicht.
 | Prüfung | Ergebnis |
 |---|---|
 | Paket-pytest registry_sources (Python 3.12) | 505 passed (Replay 452 in vier Dateien, Adapter/Harvest-Vertrag 10, Verträge Screening/Formate/Firma/API/Eigentum 30, Profile/Katalog/Architektur/Policy 13) |
-| Paket-pytest entity_matching 0.2.0 | 897 passed |
+| Paket-pytest entity_matching 0.2.0 (nach Zusammenführung mit `riskanalysis.payee` aus #17) | 981 passed; auditcore_risk gegen die zusammengeführte Version 573 passed |
 | Plattform-pytest / ruff / mypy | 281 passed / PASS / PASS |
 | ruff, ruff format, mypy strict, bandit -ll (beide Pakete) | PASS |
 | auditcore-quality strict | Syntax, Lint, Typen, bandit, pip-audit, Tests, Supply Chain PASS; 2 Komplexitätswarnungen (XML-Parser in Originalstruktur); API-Vergleich NOT_EXECUTED (erste Version); Gesamt REVIEW_REQUIRED wegen Policy |
 | Policy (verwaltung-app-framework@15f5338, GitHub-HEAD) | F-04, F-07, F-09, F-15, F-16 VERIFIED (T-09/14/30/37/38, Profile); offen F-05, F-07.ASSESS, T-12 (Personenbezug der Listen, Schutzbedarf/DSFA-Pflicht UNKNOWN) |
-| `scripts/verify_domain_packages.py` (harvest, entity_matching, registry_sources) mit `--apt` | 35/35 PASS: Build, SBOM, hashgebundene Installation, `pip check`, Importherkunft, Smoke aus Wheel, selektive Installation, Entfernung, Debian-Pakete, signierte APT-Quelle, Installation/Upgrade 1→2/Entfernung im netzlosen Container |
-| Wheel-SHA256 | registry_sources `49dada43a67ca891c0afe8e6dbb9c3511ffc8e9d94be6195308a07bbd937e7b2`, entity_matching 0.2.0 `e6fc6d7e4cbc53fe1eec570de8f457f48270327e776b073dc795a6e1eee52e3b`, harvest unverändert `bc6cf59f…` |
+| `scripts/verify_domain_packages.py` (harvest, entity_matching, registry_sources) mit `--apt`, vor und nach dem Merge von `main` | je 35/35 PASS: Build, SBOM, hashgebundene Installation, `pip check`, Importherkunft, Smoke aus Wheel, selektive Installation, Entfernung, Debian-Pakete, signierte APT-Quelle, Installation/Upgrade 1→2/Entfernung im netzlosen Container |
+| Wheel-SHA256 | registry_sources `49dada43a67ca891c0afe8e6dbb9c3511ffc8e9d94be6195308a07bbd937e7b2`, entity_matching 0.2.0 (zusammengeführt) `40d83815a15d7bf686b981f6116a0e7b0ba512a0cafc0d88ad9a74bc7acc5d73`, harvest unverändert `bc6cf59f…` |
 | Graphify (Laufzeitmodule) | PASS, 471 Knoten, 1121 Kanten |
 
 ## Live-Prüfung (wenige zulässige Abrufe, keine Daten gespeichert)
