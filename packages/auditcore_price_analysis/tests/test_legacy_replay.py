@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from typing import Any
 
 import pytest
@@ -11,6 +12,11 @@ from auditcore_price_analysis import legacy
 
 FIXTURE = load_fixture()
 CASES = FIXTURE["cases"]
+#: errors raised by the Python interpreter itself (not by the source code); their
+#: wording changed between Python versions (3.12: "can't compare datetime.datetime
+#: to datetime.date", 3.13: "'>=' not supported between instances of ..."), so
+#: only the exception type is part of the contract on other Python versions
+INTERPRETER_MESSAGES = {"nw-stichtag-008"}
 
 
 def test_fixture_is_bound_to_the_verified_source() -> None:
@@ -42,4 +48,8 @@ def test_exact_replay(case: dict[str, Any]) -> None:
     except Exception as exc:  # noqa: BLE001 - errors are part of the legacy contract
         observed = {"error": {"type": type(exc).__name__, "message": str(exc)}}
     expected = {k: case[k] for k in ("ok", "error") if k in case}
+    same_python = sys.version.split()[0].rsplit(".", 1)[0] == FIXTURE["python"].rsplit(".", 1)[0]
+    if case["id"] in INTERPRETER_MESSAGES and not same_python:
+        assert observed["error"]["type"] == expected["error"]["type"]
+        return
     assert observed == expected
