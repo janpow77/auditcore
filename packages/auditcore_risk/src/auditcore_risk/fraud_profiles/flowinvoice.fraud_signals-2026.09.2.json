@@ -1,0 +1,115 @@
+{
+ "id": "flowinvoice.fraud_signals",
+ "kind": "signal_score",
+ "legal_status": "Legacy-Score des FraudDetectionManager; Sanktions-, PEP- und Firmenergebnisse werden nur als Eingaben verarbeitet. Kein übergreifender Score.",
+ "open_decisions": [],
+ "parameters": {
+  "derivation": {
+   "company": {
+    "blocker_indicators": [
+     "INVALID_VAT_ID",
+     "COMPANY_DISSOLVED"
+    ],
+    "failed_warning": "COMPANY_CHECK_FAILED",
+    "ignored_indicators": [
+     "NOT_IN_REGISTER",
+     "VIES_SERVICE_UNAVAILABLE"
+    ],
+    "performed": "company_verification"
+   },
+   "duplicate": {
+    "exact_blocker": "EXACT_DUPLICATE_FOUND",
+    "failed_warning": "DUPLICATE_CHECK_FAILED",
+    "fuzzy_warning": "POTENTIAL_DUPLICATE_FOUND",
+    "performed": "duplicate_check"
+   },
+   "pep": {
+    "error_warning": "PEP_CHECK_ERROR",
+    "failed_warning": "PEP_CHECK_FAILED",
+    "hit_warning": "PEP_HIT_FOUND",
+    "performed": "pep_check"
+   },
+   "sanctions": {
+    "error_warning": "SANCTIONS_CHECK_ERROR",
+    "failed_warning": "SANCTIONS_CHECK_FAILED",
+    "hit_blocker": "SANCTIONED_ENTITY",
+    "performed": "sanctions_check"
+   },
+   "ted": {
+    "default_severity": "low",
+    "failed_warning": "TED_CHECK_FAILED",
+    "performed": "ted_check",
+    "unknown_type": "UNKNOWN",
+    "warning_prefix": "TED_",
+    "warning_severities": [
+     "critical",
+     "high"
+    ]
+   }
+  },
+  "levels": {
+   "blocker_level": "critical",
+   "default": "low",
+   "thresholds": [
+    {
+     "level": "high",
+     "min": 0.7
+    },
+    {
+     "level": "medium",
+     "min": 0.4
+    }
+   ]
+  },
+  "order": [
+   "duplicate",
+   "sanctions",
+   "pep",
+   "company",
+   "ted"
+  ],
+  "policy": {
+   "ted_legitimacy_scale": "unit_interval",
+   "warning_count": "after_dedup"
+  },
+  "score": {
+   "cap": 1.0,
+   "company_weight": 0.2,
+   "duplicate_weight": 0.3,
+   "output_digits": 3,
+   "pep_weight": 0.4,
+   "per_blocker": 0.4,
+   "per_warning": 0.1,
+   "sanctions_weight": 0.5,
+   "ted_weight": 0.2
+  }
+ },
+ "schema": "auditcore_risk.fraud-profile/1",
+ "source": {
+  "characterization": "tests/fixtures/flowinvoice_fraud_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "decision": {
+   "decided_on": "2026-09-23",
+   "decisions": [
+    "K8"
+   ],
+   "effect": "TED-Legitimität 0–1, Warnungen nach Dublettenentfernung zählen.",
+   "quote": "alle empfehlungen"
+  },
+  "derived_from": {
+   "profile": "flowinvoice.fraud_signals",
+   "version": "fb2d18568d2e"
+  },
+  "git_blob": "0a48b36753546c8954604616d4e1028b6c9b9b24",
+  "path": "backend/app/services/fraud_detection/manager.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "FraudDetectionManager.analyze_invoice",
+   "_calculate_risk_score",
+   "_determine_risk_level"
+  ]
+ },
+ "status": "APPROVED",
+ "version": "2026.09.2"
+}

@@ -33,7 +33,9 @@ def raw(name: str) -> dict[str, Any]:
 def test_profiles_are_explicit_and_kind_checked() -> None:
     assert available_fraud_profiles() == (
         ("flowinvoice.duplicates", V),
+        ("flowinvoice.fraud_signals", "2026.09.2"),
         ("flowinvoice.fraud_signals", V),
+        ("flowinvoice.ted_contractor", "2026.09.2"),
         ("flowinvoice.ted_contractor", V),
     )
     with pytest.raises(ProfileError):

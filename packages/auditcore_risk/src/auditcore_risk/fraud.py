@@ -221,8 +221,12 @@ def score_signals(signals: Mapping[str, Any], profile: FraudProfile) -> SignalAs
         score += value
         components.append({"component": name, "contribution": value, **detail})
 
-    add("blockers", len(blockers) * w["per_blocker"], {"count": len(blockers)})
-    add("warnings", len(warnings) * w["per_warning"], {"count": len(warnings)})
+    policy = p.get("policy", {})
+    after = policy.get("warning_count", "before_dedup") == "after_dedup"
+    n_blockers = len(dict.fromkeys(blockers)) if after else len(blockers)
+    n_warnings = len(dict.fromkeys(warnings)) if after else len(warnings)
+    add("blockers", n_blockers * w["per_blocker"], {"count": n_blockers})
+    add("warnings", n_warnings * w["per_warning"], {"count": n_warnings})
     if "company" in results:
         verification = _number(results["company"]["verification_score"], "company")
         add(
@@ -250,6 +254,8 @@ def score_signals(signals: Mapping[str, Any], profile: FraudProfile) -> SignalAs
                 "TED-Legitimität muss eine Zahl zwischen 0 und 1 sein; die Quelle liefert ein "
                 "Wörterbuch (0–100) und bricht an dieser Stelle ab (siehe RK-C09)."
             )
+        if policy.get("ted_legitimacy_scale") == "unit_interval" and not 0 <= legitimacy <= 1:
+            raise InputError("TED-Legitimität muss im Intervall 0–1 liegen (Entscheidung K8).")
         add("ted", (1.0 - legitimacy) * w["ted_weight"], {"legitimacy_score": legitimacy})
     raw = min(float(w["cap"]), score)
     levels = p["levels"]
@@ -273,8 +279,18 @@ def score_signals(signals: Mapping[str, Any], profile: FraudProfile) -> SignalAs
 
 def _validate_signal(p: Mapping[str, Any]) -> None:
     need = {"order", "derivation", "score", "levels"}
-    if set(p) != need:
-        raise ProfileError(f"signal_score braucht {sorted(need)}.")
+    if not need <= set(p) or set(p) - need - {"policy"}:
+        raise ProfileError(f"signal_score braucht {sorted(need)} (optional policy).")
+    policy = p.get("policy", {})
+    if (
+        set(policy) - {"warning_count", "ted_legitimacy_scale"}
+        or policy.get("warning_count", "before_dedup") not in ("before_dedup", "after_dedup")
+        or policy.get("ted_legitimacy_scale", "legacy") not in ("legacy", "unit_interval")
+    ):
+        raise ProfileError(
+            "policy: warning_count before_dedup/after_dedup, "
+            "ted_legitimacy_scale legacy/unit_interval."
+        )
     if sorted(p["order"]) != sorted(p["derivation"]) or len(set(p["order"])) != len(p["order"]):
         raise ProfileError("Reihenfolge und Ableitungsregeln müssen übereinstimmen.")
     known = {"duplicate", "sanctions", "pep", "company", "ted"}
@@ -393,6 +409,8 @@ def assess_contractor(
     rating = next(
         (r["rating"] for r in legit["ratings"] if score >= r["min"]), legit["default_rating"]
     )
+    if legit.get("unit") == "fraction":
+        score = score / 100
     legitimacy = {
         "score": round(score, int(legit["digits"])),
         "rating": rating,
@@ -418,6 +436,8 @@ def _holds(left: Any, op: str, right: float) -> bool:
 
 def _validate_ted(p: Mapping[str, Any]) -> None:
     need = {"top_n", "empty_statistics", "unknown_authority", "flags", "legitimacy"}
+    if p.get("legitimacy", {}).get("unit", "percent") not in ("percent", "fraction"):
+        raise ProfileError("legitimacy.unit muss percent/fraction sein.")
     if set(p) != need:
         raise ProfileError(f"ted_contractor braucht {sorted(need)}.")
     metrics = {

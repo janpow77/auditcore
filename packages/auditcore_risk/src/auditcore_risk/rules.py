@@ -30,10 +30,13 @@ from .base import (
 )
 from .base import is_number as _number
 from .base import need as _need
+from .base import (
+    procurement_threshold as _procurement_threshold,
+)
 from .errors import DependencyError, InputError, ProfileError
 from .invoice_rules import INVOICE_KINDS
 from .score_rules import SCORE_KINDS
-from .values import as_date, coerce_number, fmt, hashable, is_missing, text
+from .values import coerce_number, fmt, hashable, is_missing, text
 
 # --------------------------------------------------------------------------- kinds
 
@@ -49,49 +52,6 @@ def _round_multiple(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome
             out.reasons[i] = f"Betrag {fmt(a)} ist ein glattes Vielfaches von {fmt(multiple)}."
             out.evidence[i] = {"amount": a, "multiple": multiple}
     return out
-
-
-def _procurement_threshold(
-    spec: Mapping[str, Any], table: Table, index: int, ctx: Context
-) -> tuple[float | None, dict[str, Any]]:
-    """Year-bound EU threshold from ``auditcore_procurement``; never a neighbouring year."""
-    if find_spec("auditcore_procurement") is None:
-        raise DependencyError(
-            "Jahresbezogene Vergabeschwellen verlangen 'auditcore_risk[procurement]'."
-        )
-    from auditcore_procurement import prechecks
-
-    key = ("procurement", spec["profile"], spec["version"])
-    if key not in ctx.cache:
-        ctx.cache[key] = prechecks.load_profile(spec["profile"], spec["version"])
-    profile = ctx.cache[key]
-    if spec["date_source"] == "record":
-        on = as_date(table.value(index, spec["date_field"]), spec["date_field"])
-    else:
-        on = ctx.reference_date
-        if on is None:
-            raise InputError("Das Profil verlangt einen ausdrücklichen Stichtag (reference_date).")
-    source = {
-        "profile": spec["profile"],
-        "version": spec["version"],
-        "category": spec["category"],
-        "authority_type": spec["authority_type"],
-        "date": None if on is None else on.isoformat(),
-    }
-    if on is None:
-        return None, {**source, "unavailable": "Datum fehlt"}
-    try:
-        period = prechecks.eu_period(profile, on)
-        threshold = prechecks.eu_threshold(
-            profile, spec["category"], period, spec["authority_type"]
-        )
-    except prechecks.ThresholdUnavailable as exc:
-        return None, {**source, "unavailable": str(exc)}
-    return float(threshold.value), {
-        **source,
-        **threshold.to_dict(),
-        "fingerprint": profile.fingerprint,
-    }
 
 
 def _near_threshold(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
@@ -384,12 +344,17 @@ def _leave_one_out(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
             triggered.setdefault(case, []).append(
                 {"group": group, "rate_percent": rate, "cases_in_group": len(g_cases)}
             )
+    same_group = p.get("propagation", "case_any_group") == "same_group"
     out = Outcome.constant(n, False)
     for i in range(n):
         case = table.value(i, case_f)
         if not is_missing(case) and case in triggered:
             hits = triggered[case]
             own = table.value(i, group_f)
+            if same_group:
+                hits = [h for h in hits if not is_missing(own) and h["group"] == own]
+                if not hits:
+                    continue
             out.flags[i] = True
             detail = "; ".join(
                 f"Gruppe {h['group']!r}: {h['rate_percent']:.2f} % ohne dieses Vorhaben"
@@ -690,7 +655,7 @@ KINDS: dict[str, Kind] = {
             }
         )
         | _AMOUNT,
-        frozenset(),
+        frozenset({"propagation"}),
         _leave_one_out,
     ),
     "numeric_compare": Kind(
@@ -833,6 +798,12 @@ def validate_params(kind: str, params: Mapping[str, Any], where: str) -> None:
         value = next(iter(lower.values()))
         _need(_number(value) and 0 < value < 1, where, "lower muss zwischen 0 und 1 liegen")
         _need(params["count"] in ("first", "all"), where, "count muss first/all sein")
+    if "propagation" in params:
+        _need(
+            params["propagation"] in ("case_any_group", "same_group"),
+            where,
+            "propagation muss case_any_group/same_group sein",
+        )
     if kind == "numeric_compare":
         _need(params["op"] in _OPS, where, f"op muss eine von {sorted(_OPS)} sein")
     if kind == "missing_procurement":
