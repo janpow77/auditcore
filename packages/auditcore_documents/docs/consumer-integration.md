@@ -59,7 +59,10 @@ Produktionsdatenbank), Wheel `auditcore_documents-0.1.0` per
    ```python
    from auditcore_documents.errors import ParseError
    from auditcore_documents.normalize import (
-       normalise_for_match, normalise_semantic, normalise_verbatim, word_diff,
+       normalise_for_match,
+       normalise_semantic,
+       normalise_verbatim,
+       word_diff,
    )
    from auditcore_documents.pdftext import paragraphs_from_pdf_pages as _paragraphs_from_pdf_pages
    from auditcore_documents.pdftext import remove_repeating_margins as _remove_repeating_margins
@@ -76,11 +79,14 @@ Produktionsdatenbank), Wheel `auditcore_documents-0.1.0` per
    from auditcore_documents.legacy import DocumentCompareService as _LibraryService
    from auditcore_documents.model import CompareItem, CompareRow, ComparisonResult
 
+
    def flowagent_reason(old_text, new_text, model):
        from app.modules.standards import mcp_tools
+
        return mcp_tools.ausfuehren(
            "document_compare_reason", {"alt": old_text, "neu": new_text, "modell": model}
        )
+
 
    class DocumentCompareService(_LibraryService):
        reason_provider = staticmethod(flowagent_reason)

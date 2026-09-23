@@ -212,6 +212,7 @@ def compare_files(
     has_pdf = old.suffix.casefold() == ".pdf" or new.suffix.casefold() == ".pdf"
     if options.mode == "auto" and has_pdf:
         effective_mode = "text"
+
     def read(path: Path) -> tuple[str, list[CompareItem]]:
         return read_document(
             path,

@@ -81,9 +81,7 @@ def test_t09_docx_export_scope_records_metadata_and_version(tmp_path: Path) -> N
     )
     changed = [r for r in result.rows if r.status == "changed"]
     changed[0].selected = False  # vom Prüfer abgewählt
-    expected = [
-        r for r in result.rows if r.selected and r.status in {"changed", "removed"}
-    ]
+    expected = [r for r in result.rows if r.selected and r.status in {"changed", "removed"}]
     groups = {r.status for r in expected}
     target = tmp_path / "export.docx"
     render_docx(result, target, user="Prüfer")

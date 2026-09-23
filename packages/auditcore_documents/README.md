@@ -28,20 +28,23 @@ from pathlib import Path
 import auditcore_documents as ad
 
 result = ad.compare_files(
-    Path("alt.docx"), Path("neu.docx"),
-    profile=ad.LEGACY,                       # charakterisiertes Original
+    Path("alt.docx"),
+    Path("neu.docx"),
+    profile=ad.LEGACY,  # charakterisiertes Original
     options=ad.CompareOptions(mode="auto", threshold=85),
 )
 print(result.changed_count, result.removed_count, result.added_count, result.moved_count)
 
 synopse = ad.compare_files(
-    Path("KassenSichV.docx"), Path("BGBl-Art15.docx"),
-    profile=ad.CORRECTED,                    # liest auch „§ … wird aufgehoben“
+    Path("KassenSichV.docx"),
+    Path("BGBl-Art15.docx"),
+    profile=ad.CORRECTED,  # liest auch „§ … wird aufgehoben“
     options=ad.CompareOptions(comparison_type="article_law"),
 )
-print(synopse.metadata["open_commands"])     # nicht anwendbare Befehle bleiben sichtbar
+print(synopse.metadata["open_commands"])  # nicht anwendbare Befehle bleiben sichtbar
 
 from auditcore_documents.render_docx import render_docx
+
 render_docx(result, Path("Vergleich.docx"), user="Prüfer", profile="memo")
 
 columns, rows = ad.synopsis_records(result)  # z. B. für auditcore_reporting.ReportTable
