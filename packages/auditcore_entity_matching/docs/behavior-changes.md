@@ -15,13 +15,32 @@ sanctions (flowworkshop) und `normalisiere_name` (audit_designer) lieferten in
 allen 51 Namensfällen identische Ergebnisse und haben identische Tabellen. Sie
 bleiben trotzdem zwei Profile, weil sie getrennte Quellen und Consumer haben.
 
+## Getroffene fachliche Entscheidungen (HUMAN_DECISION, 23.09.2026)
+
+1. **Maßgebliche Normalisierung für einen gemeinsamen Entitätsbestand**, wörtlich:
+   „mueller wenn es kein umlaut gibt“. Bleiben Umlaute nicht erhalten, wird
+   transliteriert: ä → ae, ö → oe, ü → ue, ß → ss. Das entspricht dem Profil
+   `flowworkshop.state_aid`; es ist das **empfohlene Profil für neue Consumer**
+   (`load_profile("flowworkshop.state_aid", "2026.09.1")`). Die Profile
+   `flowworkshop.sanctions` und `audit_designer.sanctions` (`Müller → muller`)
+   bleiben unverändert als Legacy-Profile reproduzierbar; bestehende Funktionen
+   werden nicht still umgestellt. Die Bibliothek hat keine profilunabhängige
+   Einstiegsfunktion; `normalize` verlangt weiterhin ein ausdrücklich gewähltes
+   Profil. Offen bleibt, ob das Sanktionsscreening in flowworkshop und
+   audit_designer umgestellt wird: Anfrage und Liste werden dort mit derselben
+   Variante normalisiert, eine Umstellung ändert Scores und ist deshalb nicht
+   fachlich eindeutig (dokumentiert, nicht umgesetzt).
+2. **LEI-Prüfziffernprüfung (EM-C01/EM-C02) wird eingeschaltet.** flowworkshop
+   nutzt `check_lei`/`extract_lei`; LEIs mit falschen Prüfziffern, auch `000…0`,
+   gelten nicht als gültig und begründen keinen Treffer mit Konfidenz 100
+   (flowworkshop-Commit `9fbd950`, Branch `feat/auditcore-entity-matching`).
+   Die Legacy-Funktionen `flowworkshop_is_valid_lei` und
+   `flowworkshop_extract_lei_from_text` bleiben zur Reproduktion des alten
+   Verhaltens erhalten.
+
 ## HUMAN_DECISION_REQUIRED
 
-1. Welche Normalisierung (Umlaut → `ae` oder → `a`) für einen gemeinsamen
-   Entitätsbestand maßgeblich ist; heute vergleicht entity_resolution mit der
-   state_aid-Variante, das Sanktionsscreening mit der NFKD-Variante.
-2. Übernahme der Prüfziffernprüfung (EM-C01) in flowworkshop: bestehende
-   Entitäten mit formal passenden, aber ungültigen LEIs würden nicht mehr mit
-   Konfidenz 100 zugeordnet.
-3. Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen sind nicht
+1. Umstellung des Sanktionsscreenings (flowworkshop, audit_designer) auf die
+   Transliteration nach Entscheidung 1.
+2. Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen sind nicht
    Teil dieser Bibliothek.

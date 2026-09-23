@@ -17,7 +17,7 @@ assert normalize("Brüder Weiß GmbH & Co. KG", profil) == "brueder weiss"
 | Modul | Inhalt |
 |---|---|
 | `profiles` | Versionierte, quellengebundene Profile mit Fingerprint: `flowworkshop.state_aid`, `flowworkshop.sanctions`, `audit_designer.sanctions`, `flowworkshop.entity_resolution`. |
-| `normalize` | Vergleichsform nach genau einem Profil. Varianten bleiben getrennt. |
+| `normalize` | Vergleichsform nach genau einem Profil. Varianten bleiben getrennt. Empfohlen für neue Consumer (Entscheidung 23.09.2026): `flowworkshop.state_aid` mit ä → ae, ö → oe, ü → ue, ß → ss. |
 | `lei` | Formatprüfung, Prüfziffern ISO 7064 MOD 97-10, Extraktion aus Freitext. |
 | `matching` | `best_match` mit Einzelwerten je Scorer und Profilidentität; `classify` für Screening-Klassen. Benötigt `[fuzzy]`. |
 | `legacy` | Verhaltensgleiche Funktionen der Quellanwendungen. |

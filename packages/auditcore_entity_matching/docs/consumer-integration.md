@@ -1,7 +1,8 @@
 # Consumer-Anbindung flowworkshop
 
 Branch `feat/auditcore-entity-matching` in `janpow77/flowworkshop` (lokal,
-nicht gepusht), Basis `a05bb21`: Commits `dd7e5c5` (Umstellung) und `2de6a09` (Test).
+nicht gepusht), Basis `a05bb21`: Commits `dd7e5c5` (Umstellung), `2de6a09` (Test) und
+`9fbd950` (LEI-Prüfziffern nach Entscheidung vom 23.09.2026).
 
 - Delegiert an `auditcore_entity_matching.legacy`: `normalize_company_name`,
   `sanctions_service.normalize_name`, `_classify`, `is_valid_lei`,
@@ -19,3 +20,7 @@ nicht gepusht), Basis `a05bb21`: Commits `dd7e5c5` (Umstellung) und `2de6a09` (T
 - Nicht ausgeführt: Integrations-Tests gegen die laufende Anwendung
   (`tests/conftest.py` zielt auf `localhost:8006`), Harvester-Tests
   (`test_state_aid_smart_mode`, Umfang der Fördermittel-Bibliothek).
+- Nach `9fbd950`: 94 Tests PASS (ein neuer Test für den Wegfall des LEI-Treffers);
+  Replay 295 von 299 Fällen unverändert, 4 bewusst geändert (LEIs mit falschen
+  Prüfziffern). Das Sanktionsscreening nutzt weiter das Legacy-Profil
+  `flowworkshop.sanctions` (`muller`), siehe `behavior-changes.md`.

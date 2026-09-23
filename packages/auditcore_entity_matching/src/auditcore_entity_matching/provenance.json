@@ -97,5 +97,21 @@
     },
     "method": "AST-Extraktion der unveränderten, Blob-geprüften Definitionen; ORM-Aufrufe in _find_by_name_fuzzy durch aufzeichnende Stellvertreter ersetzt"
   },
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "decisions": [
+    {
+      "status": "HUMAN_DECISION",
+      "date": "2026-09-23",
+      "subject": "Maßgebliche Normalisierung für gemeinsamen Entitätsbestand",
+      "decision": "mueller wenn es kein umlaut gibt",
+      "effect": "Transliteration ä→ae, ö→oe, ü→ue, ß→ss; empfohlenes Profil flowworkshop.state_aid 2026.09.1; Legacy-Profile unverändert"
+    },
+    {
+      "status": "HUMAN_DECISION",
+      "date": "2026-09-23",
+      "subject": "LEI-Prüfziffernprüfung ISO 7064 MOD 97-10",
+      "decision": "eingeschaltet",
+      "effect": "check_lei/extract_lei im Consumer flowworkshop; falsche Prüfziffern ungültig, kein LEI-Treffer mit Konfidenz 100"
+    }
+  ]
 }
