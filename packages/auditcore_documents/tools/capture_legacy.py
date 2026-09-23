@@ -52,6 +52,10 @@ BLOBS = {
     _DC + "configuration.py": "3c324de7073d2cfbfff370c0624d07c27cd2bca2",
     _DC + "cli.py": "ead8b5402f28b6a364841c8396edc12f787df0b1",
     _DC + "tasks.py": "5f7d1b1c54fb30b2366c2d09dc80d8e1fcbeb69e",
+    "backend/app/modules/ecohesion/services/research_pdf.py": (
+        "3ca2a3fca8975f8ba7523d84c01e251acbdd7e80"
+    ),
+    "backend/app/core/shared/research/contracts.py": ("1eef9877cd06bc8f5afd32d5077707df9e7abea4"),
     "backend/app/modules/ecohesion/comparisons/worker.py": (
         "f8300bea36d09ef7964fff4a1e5d8e4a9e04c2a6"
     ),
@@ -1102,32 +1106,51 @@ def capture(source: Path) -> dict[str, Any]:  # noqa: C901, PLR0915 - bewusst li
 
 
 WORKER_RUNNER = r"""
-import json, sys, types
+import dataclasses, hashlib, importlib.util, io, json, re, sys, types
 from pathlib import Path
 sys.path.insert(0, sys.argv[1])
 recorded = {}
-contracts = types.ModuleType("app.core.shared.research.contracts")
-class ResearchResult:
-    def __init__(self, **kwargs):
-        recorded["research_result"] = kwargs
-contracts.ResearchResult = ResearchResult
-pdf = types.ModuleType("app.modules.ecohesion.services.research_pdf")
-def render_pdf(title, result, options):
-    recorded["render_pdf"] = {"title": title, "options": options}
-    return b"%PDF-stellvertreter"
-pdf.render_pdf = render_pdf
-sys.modules["app.core.shared.research.contracts"] = contracts
-sys.modules["app.modules.ecohesion.services.research_pdf"] = pdf
-# Paket-__init__ von ecohesion importiert FastAPI/DB; nur die Namensräume
-# bereitstellen, damit das unveränderte worker-Modul selbst geladen wird.
+# Paket-__init__ von core.shared und ecohesion importieren FastAPI/DB; nur die
+# Namensräume bereitstellen, damit die unveränderten Module selbst laden.
 import app.modules
-for name in ("app.modules.ecohesion", "app.modules.ecohesion.comparisons"):
+import app.core
+for name in (
+    "app.core.shared",
+    "app.core.shared.research",
+    "app.modules.ecohesion",
+    "app.modules.ecohesion.services",
+    "app.modules.ecohesion.comparisons",
+):
     namespace = types.ModuleType(name)
     namespace.__path__ = [str(Path(sys.argv[1], *name.split(".")))]
     sys.modules[name] = namespace
+from app.core.shared.research import contracts
+real_result = contracts.ResearchResult
+class RecordingResult(real_result):
+    def __init__(self, **kwargs):
+        recorded["research_result"] = kwargs
+        super().__init__(**kwargs)
+contracts.ResearchResult = RecordingResult
+from app.modules.ecohesion.services import research_pdf
+real_render = research_pdf.render_pdf
+def render_pdf(title, result, options):
+    recorded["render_pdf"] = {"title": title, "options": options}
+    data = real_render(title, result, options)
+    from pypdf import PdfReader
+    reader = PdfReader(io.BytesIO(data))
+    recorded["pdf"] = {
+        "pages": [page.extract_text() for page in reader.pages],
+        "title": reader.metadata.get("/Title"),
+        "author": reader.metadata.get("/Author"),
+        "sha256_without_dates": hashlib.sha256(
+            re.sub(rb"/(CreationDate|ModDate) \\(D:[^)]*\\)|/ID\\s*\\[[^\\]]*\\]", b"", data)
+        ).hexdigest(),
+    }
+    return data
+research_pdf.render_pdf = render_pdf
 from app.modules.ecohesion.comparisons import worker
 code = worker.main(Path(sys.argv[2]))
-payload = json.dumps({"code": code, **recorded}, ensure_ascii=False)
+payload = json.dumps({"code": code, **recorded}, ensure_ascii=False, default=str)
 (Path(sys.argv[2]) / "recorded.json").write_text(payload)
 """
 
@@ -1144,6 +1167,14 @@ def capture_worker(source: Path) -> list[dict[str, Any]]:
             False,
         ),
         ("synthetic/tx_struktur_alt.docx", "synthetic/cl_basis_neu.docx", "auto", 85, False),
+        ("synthetic/tx_verschoben_alt.docx", "synthetic/tx_verschoben_neu.docx", "text", 85, False),
+        (
+            "public/KassenSichV_2025-06-01.docx",
+            "public/KassenSichV_2026-05-06.docx",
+            "auto",
+            90,
+            True,
+        ),
     ]
     entries = []
     for old, new, mode, threshold, editorial in cases:
@@ -1200,9 +1231,7 @@ def capture_worker(source: Path) -> list[dict[str, Any]]:
                     if (folder / "error.json").exists()
                     else None,
                     "docx_written": (folder / "comparison.docx").is_file(),
-                    "pdf_bytes": (folder / "comparison.pdf").read_bytes().decode()
-                    if (folder / "comparison.pdf").exists()
-                    else None,
+                    "pdf_written": (folder / "comparison.pdf").is_file(),
                 }
             )
     return entries

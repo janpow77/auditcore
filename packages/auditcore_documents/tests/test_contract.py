@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from conftest import fixture_path
+from conftest import fixture_path, recorded_page_source
 
 import auditcore_documents as ad
 from auditcore_documents import cli, legacy
@@ -302,9 +302,12 @@ def test_cli_read_compare_and_config(tmp_path: Path, capsys: pytest.CaptureFixtu
             str(js),
             "--config",
             str(config),
+            "--pdf",
+            str(tmp_path / "v.pdf"),
         ]
     )
     assert code == 0 and out.read_bytes()[:2] == b"PK"
+    assert (tmp_path / "v.pdf").read_bytes()[:5] == b"%PDF-"
     assert json.loads(js.read_text())["metadata"]["recognised_commands"] == 5
     assert "geändert=3 entfallen=1 neu=1" in capsys.readouterr().out
     assert cli.main(["compare", str(config), str(config)]) == 2
@@ -332,3 +335,37 @@ def test_legacy_default_config_path(monkeypatch: pytest.MonkeyPatch, tmp_path: P
         legacy.read_document(fixture_path("synthetic/cl_basis_alt.docx"), "checklist")[0]["text"]
         == "Frage unverändert"
     )
+
+
+def test_synopsis_pdf_contains_rows_hashes_and_notice() -> None:
+    pytest.importorskip("reportlab")
+    import io
+    from datetime import UTC, datetime
+
+    from pypdf import PdfReader
+
+    from auditcore_documents.render_pdf import render_synopsis_pdf, synopsis_report
+
+    result = ad.compare_files(
+        fixture_path("public/KassenSichV_2023-06-10.pdf"),
+        fixture_path("public/KassenSichV_2026-08-27.pdf"),
+        profile=ad.LEGACY,
+        context=ad.ReadContext(page_source=recorded_page_source),
+    )
+    report = synopsis_report(result, generated_at=datetime(2026, 9, 23, 12, 0, tzinfo=UTC))
+    data = render_synopsis_pdf(
+        "KassenSichV 2021/2026", report, header_text="Prüfbehörde", footer_text="intern"
+    )
+    text = "\n".join(p.extract_text() for p in PdfReader(io.BytesIO(data)).pages)
+    assert "Recherche vom 23.09.2026, 14:00 (Europe/Berlin)" in text
+    assert f"{report.total} Datensätze im PDF" in text
+    assert result.old_sha256 in text.replace("\n", "") and "Prüfbehörde" in text
+    assert "PDF-Dateien werden stets als Fließtext behandelt." in text
+    empty = render_synopsis_pdf("Leer", ad_report_empty())
+    assert b"%PDF-" in empty[:8]
+
+
+def ad_report_empty() -> object:
+    from auditcore_documents.render_pdf import SynopsisReport
+
+    return SynopsisReport(tool="document-comparison")

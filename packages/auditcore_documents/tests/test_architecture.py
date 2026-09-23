@@ -28,7 +28,9 @@ STDLIB = {
     "subprocess",
     "sys",
     "typing",
+    "xml",
     "zipfile",
+    "zoneinfo",
 }
 #: Optionale Extras dürfen nur innerhalb von Funktionen importiert werden.
 LAZY = {
@@ -36,6 +38,7 @@ LAZY = {
     "rapidfuzz": {"fuzzy"},
     "pypdf": {"pdf-text"},
     "docx": {"docx-render"},
+    "reportlab": {"pdf-render"},
 }
 FORBIDDEN = {
     "fastapi",
@@ -104,7 +107,8 @@ def test_subprocess_only_in_pdftotext_adapter() -> None:
 def test_import_loads_no_optional_dependency() -> None:
     code = (
         "import sys, auditcore_documents, auditcore_documents.legacy, auditcore_documents.cli;"
-        "bad = {'lxml', 'rapidfuzz', 'pypdf', 'docx', 'auditcore_reporting'} & set(sys.modules);"
+        "bad = {'lxml', 'rapidfuzz', 'pypdf', 'docx', 'reportlab', 'auditcore_reporting'}"
+        " & set(sys.modules);"
         "assert not bad, bad"
     )
     subprocess.run([sys.executable, "-c", code], check=True)

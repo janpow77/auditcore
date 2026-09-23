@@ -34,6 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("new", type=Path)
     compare.add_argument("-o", "--output", type=Path, help="DOCX-Ziel (Extra docx-render)")
     compare.add_argument("--json", type=Path, help="Ergebnis als JSON-Datei")
+    compare.add_argument("--pdf", type=Path, help="Synopse als PDF (Extra pdf-render)")
     compare.add_argument("--config", type=Path, help="Einstellungsdatei (sonst Vorgaben)")
     compare.add_argument(
         "--profile", choices=sorted(PROFILES), default="audit_designer.document_compare"
@@ -98,6 +99,15 @@ def _compare(args: argparse.Namespace) -> dict[str, Any]:
             user=args.user,
             profile=output_profile,
             layout=layout,
+        )
+    if args.pdf:
+        from auditcore_documents.render_pdf import render_synopsis_pdf, synopsis_report
+
+        args.pdf.write_bytes(
+            render_synopsis_pdf(
+                args.title or f"Vergleich: {result.old_filename} / {result.new_filename}",
+                synopsis_report(result),
+            )
         )
     data = result.to_dict()
     if args.json:

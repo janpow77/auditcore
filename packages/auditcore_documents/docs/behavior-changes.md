@@ -9,7 +9,8 @@ TZ Europe/Berlin). Aufgezeichnet: 19 Normalisierungen, 7 Wortdifferenzen,
 7 Seitenregeln, 62 Standardvergleiche (31 Fälle × 2 Ähnlichkeitsmaße),
 7 Gesetzessynopsen, 31 Einstellungs-, 5 Schichtungs-, 4 Lade- und 1 Speicherfall,
 5 Fundstellenprüfungen, 6 Begründungsantworten, 8 DOCX-Renderings,
-3 CLI-Läufe, 5 Celery-Abläufe und 3 ecohesion-Worker-Läufe. Zwei Läufe mit
+3 CLI-Läufe, 5 Celery-Abläufe und 5 ecohesion-Worker-Läufe (davon 4 mit echter
+PDF-Synopse über `research_pdf.render_pdf`, reportlab 4.0.8, DejaVuSans). Zwei Läufe mit
 unterschiedlichem `PYTHONHASHSEED` sind byte-gleich. Die 9 Originaltests
 bestehen gegen das Original und – umgestellt – gegen die Bibliothek.
 
@@ -30,6 +31,7 @@ aufgezeichneten Fälle exakt, einschließlich DOCX-Hauptteil, Kopf- und Fußzeil
 | DC-C07 | `load_settings`/`save_settings` lesen ohne Pfad `AUDIT_DOCUMENT_COMPARE_CONFIG` bzw. `~/.config/audit_designer/…`. | Pfad ist Pflicht; der Standardpfad des Originals liegt in `legacy.audit_designer_config_path()`. | Eine Bibliothek liest keine Anwendungsumgebung. |
 | DC-C08 | `generate_reason` importiert `app.modules.standards.mcp_tools` (FlowAgent). | Port `ReasonProvider`; `mcp_tool_provider(execute)` bildet den Aufruf `("document_compare_reason", {"alt", "neu", "modell"})` exakt nach. Ohne Port: `CompareError`. | Keine KI-Abhängigkeit im Kern. |
 | DC-C09 | `ParseError(ValueError)` getrennt von `CompareError(ValueError)`, die Fassade übersetzt. | `ParseError`, `DependencyError`, `LimitExceededError` sind Unterklassen von `CompareError`; Texte unverändert. | Ein `except CompareError` erfasst alle fachlichen Fehler. |
+| DC-C11 | PDF-Synopse über ECOHESION `research_pdf.render_pdf` mit festen Texten „ECOHESION · Recherche & Auswertung“, „ecohesion.flowaudit.de“, Autor „ECOHESION“ und fest verdrahtetem Schriftpfad. | `render_synopsis_pdf`: Kopf-, Fußzeile, Autor und Schriftdatei sind Parameter; Vorgaben sind die Originaltexte. Seitentext, Titel und Autor sind mit reportlab 4.0.8 (Original) und 5.0.1 gleich. | Nutzbar außerhalb von ECOHESION ohne Codekopie. |
 | DC-C10 | Uhr, PDF-Seitenquelle und Protokollierung fest verdrahtet (`logger.warning` in der Celery-Schleife). | `ReadContext(now, page_source, ocr_callback, limits)`; `apply_reasons_worker(on_progress, on_error)`; die Bibliothek protokolliert nicht. | Testbarkeit, T-14. |
 
 ## Beibehaltenes, fachlich fragwürdiges Originalverhalten (DC-L)

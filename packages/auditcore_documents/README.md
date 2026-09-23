@@ -19,7 +19,8 @@ python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.1
 | `docx` | lxml ≥ 6.1.0 | DOCX/DOCM lesen (gehärteter Parser; 6.1.0 behebt CVE-2026-41066) |
 | `pdf-text` | pypdf ≥ 4 | PDF-Text ohne pdftotext |
 | `fuzzy` | rapidfuzz ≥ 3.10 | Ähnlichkeitsmaß der Produktion (`token_set_ratio`) |
-| `docx-render` | python-docx ≥ 1.1 | Synopse als DOCX |
+| `docx-render` | python-docx ≥ 1.1 | Synopse als DOCX (Vermerk/Text wie im Designer) |
+| `pdf-render` | reportlab ≥ 4.0.8 | Synopse als PDF (wie ECOHESION `comparison.pdf`) |
 
 ## Nutzung
 
@@ -47,11 +48,15 @@ from auditcore_documents.render_docx import render_docx
 
 render_docx(result, Path("Vergleich.docx"), user="Prüfer", profile="memo")
 
+from auditcore_documents.render_pdf import render_synopsis_pdf, synopsis_report
+
+Path("Vergleich.pdf").write_bytes(render_synopsis_pdf("Vergleich", synopsis_report(result)))
+
 columns, rows = ad.synopsis_records(result)  # z. B. für auditcore_reporting.ReportTable
 ```
 
 Kommandozeile: `auditcore-documents read DATEI`, `auditcore-documents compare
-ALT NEU -o synopse.docx --json ergebnis.json [--comparison-type article_law]
+ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-type article_law]
 [--profile auditcore.document_compare]`, `auditcore-documents create-config PFAD`.
 
 ## Vertrag
@@ -81,8 +86,11 @@ ALT NEU -o synopse.docx --json ergebnis.json [--comparison-type article_law]
   Kompatibilitätsfassade für audit_designer (gleiche Namen, Signaturen,
   Fehlertexte).
 
-`auditcore_reporting` 0.2.0 kennt nur XLSX; der DOCX-Renderer bleibt deshalb
-als Extra hier. Für XLSX liefert `synopsis_records` passende Datensätze.
+**Ausgabeformate wie im Designer:** JSON (`to_dict`), DOCX-Synopse
+(`render_docx`, Vermerk- oder Textprofil, byte-gleich zum Original geprüft) und
+PDF-Synopse (`render_synopsis_pdf`, Seitentext, Titel und Autor gleich dem
+Original). `auditcore_reporting` 0.2.0 kennt nur XLSX; beide Renderer bleiben
+deshalb Extras hier. Für XLSX liefert `synopsis_records` passende Datensätze.
 
 Nachweise, Abweichungen und offene Entscheidungen: `docs/behavior-changes.md`,
 `docs/consumer-integration.md`, `provenance.json`, `NOTICE`.

@@ -511,6 +511,7 @@ def build_synthetic() -> dict[str, str]:
 
 ERRORS = ROOT / "tests" / "fixtures" / "errors"
 
+
 def blank_pdf() -> bytes:
     """Gültiges PDF (mit Querverweistabelle) mit einer leeren Seite ohne Textebene."""
     objects = [

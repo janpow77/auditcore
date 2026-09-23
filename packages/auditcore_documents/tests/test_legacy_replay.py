@@ -507,11 +507,47 @@ def test_ecohesion_worker_flow(index: int) -> None:
     columns, rows = synopsis_records(result)
     extra = synopsis_extra(result)
     recorded = entry["recorded"]["research_result"]
+    assert_pdf_matches(result, entry)
     assert rows == recorded["rows"]
     assert columns == recorded["columns"]
     assert len(rows) == recorded["total"]
     assert extra["notes"] == recorded["notes"]
     assert extra["extra"] == recorded["extra"]
+
+
+def assert_pdf_matches(result: ad.ComparisonResult, entry: dict[str, Any]) -> None:
+    """comparison.pdf des Workers: Seiten, Text, Titel und Autor wie im Original."""
+    import io
+    import re
+
+    pytest.importorskip("reportlab")
+    from pypdf import PdfReader
+
+    from auditcore_documents.render_pdf import (
+        DEFAULT_FONT_FILE,
+        render_synopsis_pdf,
+        synopsis_report,
+    )
+
+    recorded = entry["recorded"]["pdf"]
+    if not DEFAULT_FONT_FILE.is_file():
+        pytest.skip("DejaVuSans nicht installiert (Original nutzt die Schrift, sonst Helvetica)")
+    stamp = re.search(r"Recherche vom (\d\d\.\d\d\.\d{4}, \d\d:\d\d)", recorded["pages"][0])
+    assert stamp
+    from zoneinfo import ZoneInfo
+
+    generated = datetime.strptime(stamp.group(1), "%d.%m.%Y, %H:%M").replace(
+        tzinfo=ZoneInfo("Europe/Berlin")
+    )
+    data = render_synopsis_pdf(
+        entry["recorded"]["render_pdf"]["title"],
+        synopsis_report(result, generated_at=generated),
+        entry["recorded"]["render_pdf"]["options"],
+    )
+    reader = PdfReader(io.BytesIO(data))
+    assert [page.extract_text() for page in reader.pages] == recorded["pages"]
+    assert reader.metadata.get("/Title") == recorded["title"]
+    assert reader.metadata.get("/Author") == recorded["author"]
 
 
 def test_task_for_missing_record_is_consumer_logic() -> None:

@@ -127,6 +127,24 @@
       "symbols": [
         "main (Synopse-Datensätze)"
       ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/ecohesion/services/research_pdf.py",
+      "git_blob": "3ca2a3fca8975f8ba7523d84c01e251acbdd7e80",
+      "symbols": [
+        "render_pdf"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/core/shared/research/contracts.py",
+      "git_blob": "1eef9877cd06bc8f5afd32d5077707df9e7abea4",
+      "symbols": [
+        "ResearchResult (genutzte Felder)"
+      ]
     }
   ],
   "rights": {
@@ -209,7 +227,8 @@
     "api/document_comparisons.py: Uploads, Rechte, Presets, Downloads, Aufbewahrung (bleibt Anwendung)",
     "ecohesion worker: resource.setrlimit, Research-PDF-Renderer, Dateiablage (bleibt Anwendung; Datensätze als synopsis_records)",
     "configuration.default_config_path: Umgebungsvariable/Benutzerverzeichnis nur in auditcore_documents.legacy",
-    "flowinvoice services/parser.py:PDFParser (OCR/torch/transformers) – nicht übernommen"
+    "flowinvoice services/parser.py:PDFParser (OCR/torch/transformers) – nicht übernommen",
+    "ecohesion research_pdf: Werkzeug-spezifische Ergebnisquellen (Quellenbefund-Objekte) nur als generische Datensätze übernommen"
   ],
   "characterization": {
     "fixture": "tests/fixtures/legacy_observed.json",
@@ -227,7 +246,9 @@
       "rapidfuzz": "3.14.5",
       "pdftotext": "22.12.0",
       "timezone": "Europe/Berlin",
-      "image": "python:3.11-slim-bookworm + poppler-utils (Versionen wie audit_designer_backend)"
+      "image": "python:3.11-slim-bookworm + poppler-utils (Versionen wie audit_designer_backend)",
+      "reportlab": "4.0.8",
+      "fonts": "fonts-dejavu-core (DejaVuSans wie im audit_designer_backend)"
     },
     "method": "Unveränderte, Blob-geprüfte Originalmodule importiert und ausgeführt; MCP/FlowAgent, Celery, DB und Research-PDF durch aufzeichnende Stellvertreter ersetzt; zwei Läufe mit unterschiedlichem PYTHONHASHSEED byte-gleich"
   },
