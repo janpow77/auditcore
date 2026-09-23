@@ -37,7 +37,7 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("--pdf", type=Path, help="Synopse als PDF (Extra pdf-render)")
     compare.add_argument("--config", type=Path, help="Einstellungsdatei (sonst Vorgaben)")
     compare.add_argument(
-        "--profile", choices=sorted(PROFILES), default="audit_designer.document_compare"
+        "--profile", choices=sorted(PROFILES), default="auditcore.document_compare"
     )
     compare.add_argument("--mode", choices=["auto", "checklist", "text"])
     compare.add_argument("--comparison-type", choices=["standard", "article_law"])
