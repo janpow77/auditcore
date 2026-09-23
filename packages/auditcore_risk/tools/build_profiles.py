@@ -1813,9 +1813,64 @@ def decided_profiles(
         "Stichtag der EU-Schwelle ist das Rechnungsdatum (rechnungsdatum_dt); Auftraggebertyp "
         "subzentral und Kategorie Liefer-/Dienstleistungen je Beleg sind Profilvorgaben.",
     ]
-    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, ra3, rc, wb)]
+    ra4, rc3 = historic_threshold_profiles(ra3, rc, clone)
+    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, ra3, ra4, rc, rc3, wb)]
     fraud = [(f"{d['id']}-{d['version']}.json", d) for d in (fraud_sig, ted)]
     return risk, fraud
+
+
+HISTORIC_DECISION = {
+    "decided_on": DECIDED_ON,
+    "quote": "c2. ja",
+    "decisions": ["C2"],
+    "effect": "EU-Schwelle aus procurement.hvtg 2026.09.3 (2014–2027 mit amtlicher Fundstelle) "
+    "statt 2026.09.2 (2024–2027); übrige Regeln unverändert.",
+}
+EU_HISTORIC = {**EU_SUPPLY, "version": "2026.09.3"}
+
+
+def historic_threshold_profiles(
+    ra3: dict[str, Any], rc: dict[str, Any], clone: Any
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """User decision C2 of 23.09.2026: historic EU thresholds 2014–2023.
+
+    Only the ``procurement_eu`` reference changes (2026.09.2 → 2026.09.3), so
+    invoices dated 2014–2023 are compared with the EU threshold of their year
+    instead of staying undetermined. The superseded versions stay unchanged.
+    """
+    ra4 = clone(ra3)
+    ra4["version"] = "2026.09.4"
+    ra4["legal_status"] = ra3["legal_status"] + (
+        " EU-Schwellen 2014–2027 nach Nutzerentscheidung vom 23.09.2026 ('c2. ja')."
+    )
+    ra4["source"]["derived_from"] = {"profile": ra3["id"], "version": ra3["version"]}
+    ra4["source"]["decision"] = HISTORIC_DECISION
+    for rule in ra4["rules"]:
+        if rule["code"] == "RF02":
+            rule["params"]["thresholds"]["procurement_eu"] = {
+                **EU_HISTORIC,
+                "date_field": "rechnungsdatum_dt",
+            }
+            rule["note"] = (
+                "Nettobetrag (K2) gegen nationale Wertgrenzen und die EU-Schwelle des "
+                "Rechnungsjahres aus auditcore_procurement procurement.hvtg 2026.09.3 (K3, C2; "
+                "2014–2027, z. B. 2019: 221.000 €, 2026: 216.000 €). Ohne belegten Zeitraum "
+                "(vor 2014, ab 2028) bleibt der Beleg unbestimmt."
+            )
+    rc3 = clone(rc)
+    rc3["version"] = "2026.09.3"
+    rc3["source"]["derived_from"] = {"profile": rc["id"], "version": rc["version"]}
+    rc3["source"]["decision"] = HISTORIC_DECISION
+    for rule in rc3["rules"]:
+        if rule["code"] == "SPLIT_INVOICE":
+            rule["params"]["procurement_eu"] = {**EU_HISTORIC, "date_field": "invoice_date"}
+            rule["note"] = (
+                "Schwellenliste 1.000–50.000 plus EU-Schwelle des Rechnungsjahres aus "
+                "auditcore_procurement procurement.hvtg 2026.09.3 (K9, C2; 2014–2027). Fehlt "
+                "der belegte Zeitraum und trifft keine nationale Schwelle, bleibt die Rechnung "
+                "unbestimmt."
+            )
+    return ra4, rc3
 
 
 def main() -> None:

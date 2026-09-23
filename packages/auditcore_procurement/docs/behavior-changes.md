@@ -51,6 +51,37 @@ Profils. Die nationalen Stufen 1.000 €/25.000 € stammen aus dem Regelwerk de
 Anwendungen und bleiben `REVIEW_REQUIRED`. Der Legacy-Modus nutzt unverändert die
 Quelltabelle; audit-portal bleibt beim Legacy-Modus (keine Verhaltensänderung).
 
+## Nachtrag 2014–2023 (Profil `procurement.hvtg` 2026.09.3, Paketversion 0.2.0)
+
+Nutzerentscheidung vom 23.09.2026: „c2. ja“ (historische EU-Schwellen je Jahr
+nachtragen). 2026.09.2 bleibt byte-gleich (SHA-256 `ac28af97…`, Fingerprint
+`fbb7f26e…`) und liefert vor 2024 weiterhin `REVIEW_REQUIRED`. Jede Zahl wurde im
+amtlichen deutschen Text der ändernden Verordnung gelesen (Cellar des Amts für
+Veröffentlichungen, weil eur-lex.europa.eu automatisierte Abrufe mit einer
+Challenge-Seite beantwortet); das Profil hält CELEX, ABl.-Fundstelle, EUR-Lex-URL
+und SHA-256 des gelesenen Dokuments je Zeitraum.
+
+| Zeitraum | Bau | Liefer/Dienst zentral | Liefer/Dienst sonstige | Quelle |
+|---|---:|---:|---:|---|
+| 01.01.2014–31.12.2015 | 5.186.000 € | 134.000 € | 207.000 € | VO (EU) Nr. 1336/2013, ABl. L 335 vom 14.12.2013, S. 17 (Art. 7 RL 2004/18/EG) |
+| 01.01.2016–31.12.2017 | 5.225.000 € | 135.000 € | 209.000 € | Delegierte VO (EU) 2015/2170, ABl. L 307 vom 25.11.2015, S. 5 (RL 2014/24/EU), zugleich VO (EU) 2015/2342, ABl. L 330 vom 16.12.2015, S. 18 (RL 2004/18/EG) |
+| 01.01.2018–31.12.2019 | 5.548.000 € | 144.000 € | 221.000 € | Delegierte VO (EU) 2017/2365, ABl. L 337 vom 19.12.2017, S. 19 |
+| 01.01.2020–31.12.2021 | 5.350.000 € | 139.000 € | 214.000 € | Delegierte VO (EU) 2019/1828, ABl. L 279 vom 31.10.2019, S. 25 |
+| 01.01.2022–31.12.2023 | 5.382.000 € | 140.000 € | 215.000 € | Delegierte VO (EU) 2021/1952, ABl. L 398 vom 11.11.2021, S. 23 |
+| 2024–2027 | wie 2026.09.2 | | | gegen VO (EU) 2023/2495 und 2025/2152 erneut geprüft, unverändert |
+
+- **Richtlinienwechsel 2016:** RL 2004/18/EG galt bis 17.04.2016 (Art. 91 RL
+  2014/24/EU). Für 01.01.–17.04.2016 setzt VO (EU) 2015/2342 in RL 2004/18/EG
+  dieselben Werte wie VO (EU) 2015/2170 in RL 2014/24/EU; der Zeitraum 2016–2017
+  ist daher durchgehend und nennt beide Fundstellen.
+- **Nicht eingetragen:** vor 2014 und ab 2028; Konzessionen (RL 2014/23/EU),
+  Sektoren (RL 2014/25/EU), soziale und andere besondere Dienstleistungen
+  (Art. 4 lit. d RL 2014/24/EU) und Wettbewerbe – das Profilschema kennt diese
+  Kategorien nicht. Nationale Stufen unverändert `REVIEW_REQUIRED`.
+- **`CURRENT_PROFILE`** ist jetzt 2026.09.3. `profile_from_ruleset(...,
+  year_bound=True)` übernimmt damit 2014–2027; mit `eu_version="2026.09.2"` bleibt
+  das Verhalten von 0.1.0 reproduzierbar.
+
 ## Offene fachliche Entscheidungen (HUMAN_DECISION_REQUIRED)
 
 1. **Nationale Stufen** (1.000/25.000 €), Verfahrenszuordnung nach HVTG und

@@ -34,6 +34,8 @@ def test_packaged_profiles_and_status() -> None:
         for p in ("riskanalysis.year_bound", "flowinvoice.risk_checker", "flowinvoice.rbvk_wibank")
     ]
     decided.append(("riskanalysis.year_bound", "2026.09.3"))
+    decided.append(("riskanalysis.year_bound", "2026.09.4"))
+    decided.append(("flowinvoice.risk_checker", "2026.09.3"))
     assert available_profiles() == tuple(
         sorted([LEGACY, YEAR, FLOWSTAT, RISK_CHECKER, *VERWK, *decided])
     )

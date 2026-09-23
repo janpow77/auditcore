@@ -36,8 +36,10 @@ for merkmal in ergebnis.records[0].hits:
 | `audit_designer.flowstat_belegliste` | `1254591156d3` | `LEGACY_CHARACTERIZED` | Flowstat `_red_flags` (BL_RF01–BL_RF10) in audit_designer und audit-portal |
 | `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | abgelöst durch 2026.09.2 |
 | `riskanalysis.year_bound` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 |
-| `riskanalysis.year_bound` | `2026.09.3` | `APPROVED` (empfohlen) | Entscheidung 23.09.2026: netto, EU-Schwelle des Jahres, RF12 gruppenintern, RF09 mit Umschrift „mueller“ |
-| `flowinvoice.risk_checker` | `2026.09.2` | `APPROVED` (nicht aktiviert) | Splitting mit EU-Schwelle des Jahres |
+| `riskanalysis.year_bound` | `2026.09.3` | `APPROVED` | abgelöst durch 2026.09.4 (EU-Schwellen nur 2024–2027) |
+| `riskanalysis.year_bound` | `2026.09.4` | `APPROVED` (empfohlen) | Entscheidung 23.09.2026: netto, EU-Schwelle des Jahres (2014–2027, `procurement.hvtg 2026.09.3`), RF12 gruppenintern, RF09 mit Umschrift „mueller“ |
+| `flowinvoice.risk_checker` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 (EU-Schwellen nur 2024–2027) |
+| `flowinvoice.risk_checker` | `2026.09.3` | `APPROVED` (nicht aktiviert) | Splitting mit EU-Schwelle des Jahres (2014–2027) |
 | `flowinvoice.rbvk_wibank` | `2026.09.2` | `APPROVED` (empfohlen) | nach Profildatei V1.21 |
 | `flowinvoice.risk_checker` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | flowinvoice/audit-portal `RiskChecker` (9 Rechnungsindikatoren, Texte und Legacy-Score dieses Profils) |
 | `flowinvoice.rbvk_wibank` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | WIBANK-RBVK-Punkte je Mittelabruf (Codeverhalten), Stufen 8/19 |
@@ -73,10 +75,10 @@ Ergebnis nennt Profil, Version, Fingerabdruck und Status.
 | `score_rules` | Kriterien für Punkte-Scores (`truthy_all`, `text_in_set`, `number_range`, `set_overlap`) mit Bewertung `points_stages` | – |
 | `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `annotate` | Extra `pandas` |
 | Namensabgleich (RF09) | Normalisierung über `auditcore_entity_matching` (Profil `riskanalysis.payee`) | Extra `fuzzy` (rapidfuzz) |
-| Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` (`procurement.hvtg 2026.09.2`), nicht dupliziert | Extra `procurement` |
+| Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` 0.2.0 (`procurement.hvtg 2026.09.3`: 2014–2027; abgelöste Profilfassungen: 2026.09.2), nicht dupliziert | Extra `procurement` |
 
-Ein Beleg, dessen Jahr keinen belegten Schwellenzeitraum hat, bleibt
-**unbestimmt** (`None`, mit Grund), statt still als unauffällig zu gelten.
+Ein Beleg, dessen Jahr keinen belegten Schwellenzeitraum hat (mit 2026.09.3:
+vor 2014 oder ab 2028), bleibt **unbestimmt** (`None`, mit Grund), statt still als unauffällig zu gelten.
 
 Herkunft, Rechte und Charakterisierung: [`provenance.json`](provenance.json),
 [`NOTICE`](NOTICE). Unterschiede zum Original und offene fachliche

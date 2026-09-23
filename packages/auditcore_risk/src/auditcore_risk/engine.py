@@ -21,7 +21,7 @@ from .rules import KINDS, identifier_state, pair_similarity
 from .values import strict_amount
 
 #: Library identity recorded in every evaluation (T-31).
-LIBRARY = "auditcore_risk 0.1.0"
+LIBRARY = "auditcore_risk 0.2.0"
 
 
 @dataclass(frozen=True)

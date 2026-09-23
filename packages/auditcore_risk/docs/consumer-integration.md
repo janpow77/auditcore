@@ -1,7 +1,7 @@
 # Consumer-Umstellung
 
-Stand 23.09.2026. Die Consumer werden erst nach dem zentralen Release v0.3.0
-per Requirements umgestellt; bis dahin sind die Umstellungen lokal gegen die
+Stand 23.09.2026. Die Consumer werden erst nach dem nächsten zentralen Release
+(v0.3.0 enthält noch 0.1.0) per Requirements umgestellt; bis dahin sind die Umstellungen lokal gegen die
 installierten Wheels geprüft (keine Pushes in die Consumer-Repositories, keine
 Produktionsdatenbank).
 
@@ -12,7 +12,7 @@ Produktionsdatenbank).
   `RED_FLAG_CODES`, `RED_FLAG_LABELS`); Aufrufer `pipeline/aggregation.py:73, 381–390`,
   `services/pseudonymization.py:27, 274`.
 * Umstellung: `backend/requirements.txt` um
-  `auditcore_risk[fuzzy,pandas]==0.1.0` ergänzen (zieht
+  `auditcore_risk[fuzzy,pandas]==0.2.0` ergänzen (zieht
   `auditcore_entity_matching[fuzzy]==0.2.0`) und `red_flags.py` durch
   [`consumers/riskanalysis_red_flags.py`](consumers/riskanalysis_red_flags.py)
   ersetzen. Die Symbole bleiben erhalten; Aufrufer ändern sich nicht.
@@ -33,7 +33,7 @@ Produktionsdatenbank).
   Aufrufer `verwk/pipeline/aggregation.py:74, 382`,
   `verwk/services/pseudonymization.py:32`.
 * Umstellung: `backend/requirements-verwk.txt` um
-  `auditcore_risk[fuzzy,pandas]==0.1.0` ergänzen und die Datei durch dieselbe
+  `auditcore_risk[fuzzy,pandas]==0.2.0` ergänzen und die Datei durch dieselbe
   Vorlage ersetzen.
 * Nachweis (Checkout-Kopie von `fb2d185`, venv mit
   `requirements-production.txt` + `requirements-verwk.txt`, `--noconftest`, weil
@@ -78,7 +78,7 @@ Produktionsdatenbank).
   Laufzeitaufrufer: `api/fraud_detection.py` (`/api/fraud/check-invoice`,
   `/fraud/analyze-benford`, `/projects/{id}/fraud-analysis`, `/fraud/check-ted`)
   und die Pipeline-Regel `FraudDetectionRule`.
-* Umstellung: `requirements-production.txt` um `auditcore_risk==0.1.0` und
+* Umstellung: `requirements-production.txt` um `auditcore_risk==0.2.0` und
   `auditcore_statistics==0.2.0` ergänzen; der Manager übergibt seine
   Teilergebnisse als Zuordnungen an `score_signals`, die SQL-Abfragen bleiben.
 * Nachweis: Replay aller Originalfälle im Paket. flowinvoice hat für diese
@@ -90,8 +90,8 @@ Produktionsdatenbank).
 ## Empfohlene Profile nach der Entscheidung vom 23.09.2026
 
 Neue Consumer-Umstellungen verwenden die freigegebenen Profile
-`riskanalysis.year_bound 2026.09.3` (Spalte `nettobetrag` bereitstellen, z. B.
-aus „Gesamt Netto“), `flowinvoice.rbvk_wibank 2026.09.2` (Eingaben
+`riskanalysis.year_bound 2026.09.4` (Spalte `nettobetrag` bereitstellen, z. B.
+aus „Gesamt Netto“; EU-Schwellen 2014–2027 über das Extra `procurement`), `flowinvoice.rbvk_wibank 2026.09.2` (Eingaben
 `offene_auflagen_anzahl`, `externe_kuerzung`, `vorherige_verwk_quote`,
 `vorherige_kuerzungsgruende`), `flowinvoice.fraud_signals`/`ted_contractor
 2026.09.2` und `auditcore_statistics.recommended_flowinvoice_benford`. Die
