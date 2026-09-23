@@ -65,7 +65,7 @@ def main() -> int:
         "countrycodes": "de",
         "limit": 1,
     }
-    rate, request = empfohlene_laufparameter(konfig, "live-smoke")
+    rate, request = empfohlene_laufparameter(konfig, "live-smoke", heute_bereits_gesendet=0)
     engine = HarvestEngine(
         modul.UrllibTransport(kennung),
         StaticCredentials({}),

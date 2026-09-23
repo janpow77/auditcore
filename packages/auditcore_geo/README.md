@@ -48,15 +48,19 @@ utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)  # ETRS89, keine Datum
 | `gpkg` | GeoPackageBinary + ISO-WKB (2D Polygon/MultiPolygon) mit `srs_id`; strikt. |
 | `vereinfachung` | Douglas-Peucker iterativ, ergebnisgleich mit osint; `ring_vereinfachen(..., stellen=)`. |
 | `legacy` | Verhaltensgleiche Nachbildungen der Quellfunktionen für Umstellung und Nachweis. |
-| `nominatim` | `NominatimAdapter` (`geo.nominatim_search`), `pruefe_laufparameter`, `empfohlene_laufparameter` – erzwingen die prüfbaren OSMF-Bedingungen (≥ 1 s, regelmäßig ≥ 15 s, identifizierender User-Agent, Budget, https). |
+| `nominatim` | `NominatimAdapter` (`geo.nominatim_search`), `pruefe_laufparameter`, `empfohlene_laufparameter` – erzwingen die prüfbaren OSMF-Bedingungen (≥ 1 s, regelmäßig ≥ 15 s, höchstens 1 000 Anfragen je Tag und Consumer, identifizierender User-Agent, Budget, https). |
 
 Herkunft: `osint@d361ddb`, `audit_designer@1254591`, `flowsearch@10cb2a3`,
 `flowworkshop@3d1cb40`; MIT-Freigabe für den extrahierten Bibliothekscode
-(`NOTICE`, `provenance.json`). Abweichungen vom Original (GEO-C01–C14) und
-offene fachliche Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
+(`NOTICE`, `provenance.json`). Abweichungen vom Original (GEO-C01–C15) und
+getroffene Entscheidungen (D1–D5, 23.09.2026): [docs/behavior-changes.md](docs/behavior-changes.md).
 Umstellung der Anwendungen: [docs/consumer-integration.md](docs/consumer-integration.md).
 Consumer sind nach Nutzerentscheidung vom 23.09.2026 **geplant** („der mehrfache
 Nutzen kommt noch“). Debian-Paket: `python3-auditcore-geo`.
+
+Empfohlen (Entscheidung 23.09.2026): `EMPFOHLENES_ERDMODELL` (R1) für neue gemeinsame
+Bestände und `EMPFOHLEN_RAND_GILT_ALS_INNEN` (Randpunkte innen); beide werden
+ausdrücklich übergeben.
 
 Nominatim-Ergebnisse stehen unter ODbL; Anwendungen zeigen „© OpenStreetMap
 contributors“ an und speichern Ergebnisse zwischen. Das Paket enthält keine

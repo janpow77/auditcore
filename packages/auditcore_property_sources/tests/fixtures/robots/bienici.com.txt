@@ -1,0 +1,18 @@
+User-agent: *
+Disallow: /*/contact$
+Disallow: /*/contact?
+Disallow: /*?mode=*
+Disallow: /*&mode=*
+Disallow : /recherche/*&*
+Disallow : /recherche/*,*
+Disallow : /annonces-*
+Disallow : /*tri=*
+Disallow : /recherche/*temps-de-transport*
+Allow: /recherche/*?neuf=oui&page=*
+
+Disallow: /agences-immobilieres?qui=*
+
+Disallow: /prix-immo/bien-vendu
+Disallow: /prix-immo/biens-vendus
+
+Sitemap: https://www.bienici.com/sitemap-index.xml

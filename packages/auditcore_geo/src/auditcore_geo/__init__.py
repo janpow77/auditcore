@@ -6,6 +6,7 @@ Laufzeit nur Standardbibliothek. Der Nominatim-Adapter liegt in
 """
 
 from .distanz import (
+    EMPFOHLENES_ERDMODELL,
     KUGEL_6371_KM,
     KUGEL_MITTLERER_RADIUS,
     KUGELPROFILE,
@@ -19,6 +20,7 @@ from .distanz import (
 )
 from .errors import GeoError, GeometrieFehler, KoordinatenFehler, ProfilFehler
 from .flaeche import (
+    EMPFOHLEN_RAND_GILT_ALS_INNEN,
     Flaeche,
     Lage,
     Polygon,
@@ -58,6 +60,8 @@ __version__ = "0.1.0"
 
 __all__ = [
     "BEREICH_DEUTSCHLAND_OSINT",
+    "EMPFOHLEN_RAND_GILT_ALS_INNEN",
+    "EMPFOHLENES_ERDMODELL",
     "EPSG_4258",
     "EPSG_4326",
     "EPSG_25832",

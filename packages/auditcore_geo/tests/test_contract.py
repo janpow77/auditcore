@@ -371,3 +371,19 @@ def test_douglas_peucker_long_line_without_recursion_limit() -> None:
     assert len(douglas_peucker(punkte, 0.0)) >= 2
     with pytest.raises(GeometrieFehler):
         douglas_peucker([(0.0, 0.0), (math.nan, 1.0)], 0.1)
+
+
+def test_decisions_of_2026_09_23_are_exported_not_silent() -> None:
+    """Empfehlungen (vom Nutzer delegiert) sind Konstanten; Funktionen verlangen weiter Angaben."""
+    import inspect
+
+    from auditcore_geo import EMPFOHLEN_RAND_GILT_ALS_INNEN, EMPFOHLENES_ERDMODELL
+
+    assert EMPFOHLENES_ERDMODELL is KUGEL_MITTLERER_RADIUS
+    assert EMPFOHLEN_RAND_GILT_ALS_INNEN is True
+    for funktion in (grosskreis_m, umkreis, randabstand_m):
+        assert inspect.signature(funktion).parameters["profil"].default is inspect.Parameter.empty
+    parameter = inspect.signature(enthaelt).parameters["rand_gilt_als_innen"]
+    assert parameter.default is inspect.Parameter.empty
+    quadrat = flaeche_aus_geojson(GEOMETRIEN["quadrat"])
+    assert enthaelt(quadrat, Punkt(10.0, 5.0), rand_gilt_als_innen=EMPFOHLEN_RAND_GILT_ALS_INNEN)

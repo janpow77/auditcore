@@ -25,7 +25,7 @@ parametrisierten Bibliothekscode. Der Bibliotheksvertrag weicht nur hier ab:
 |---|---|---|---|
 | GEO-C01 | Sechs Haversine-Varianten: Radius 6371,0088 km (osint) bzw. 6 371 008,8 m (designer gis) gegenüber 6371 km/6 371 000 m (designer register, company, flowsearch ×2); Einheiten km/m; Achsenfolge (lat, lon) außer designer gis (lon, lat); Formeln asin/atan2, teils ohne Klemmung. Frankfurt–Berlin: 423,5505 km gegenüber 423,5499 km. | Zwei benannte `Kugelprofil`e (`kugel.r1_6371008_8m`, `kugel.6371000m`) ohne Standardwert; Ergebnis stets in m (`grosskreis_m`) bzw. ausdrücklich km; `Punkt` mit benannten Feldern. Abweichung zu jedem Original ≤ 1e-7 relativ. | Varianten nicht still vereinheitlichen; Achsenfolgefehler ausschließen. |
 | GEO-C02 | `Bestand.umkreis`: Rechteckvorfilter `km/111`, `km/(111·cos φ)`. Verliert Treffer im Umkreis: bei 60° N/1000 km ein Punkt in 995,1 km; an der Datumsgrenze (0°, 179,9°) ein Punkt in 16,7 km bei 50 km Radius. | `umkreis`: exakter Kugel-Vorfilter (`asin(sin θ/cos φ)`), Pole und Datumsgrenze; gegen Vollsuche geprüft (40 Zufallsläufe). Grenze inklusive wie im Original. | Für Hessen-Radien ohne Wirkung, für allgemeine Nutzung falsch-negativ. |
-| GEO-C03 | Strahlverfahren (alle drei Quellen): Punkte auf linker/unterer Kante gelten als innen, auf rechter/oberer als außen; auf Lochkanten umgekehrt; Ecken uneinheitlich. | `lage()` liefert `INNEN`/`AUSSEN`/`RAND` (Rand exakt oder mit Meter-Toleranz); `enthaelt(..., rand_gilt_als_innen=...)` verlangt eine ausdrückliche Entscheidung. Gegen shapely in allen 125 Fällen gleich. | Randpunkte sind fachlich zu entscheiden (siehe HUMAN_DECISION_REQUIRED 2). |
+| GEO-C03 | Strahlverfahren (alle drei Quellen): Punkte auf linker/unterer Kante gelten als innen, auf rechter/oberer als außen; auf Lochkanten umgekehrt; Ecken uneinheitlich. | `lage()` liefert `INNEN`/`AUSSEN`/`RAND` (Rand exakt oder mit Meter-Toleranz); `enthaelt(..., rand_gilt_als_innen=...)` verlangt eine ausdrückliche Entscheidung. Gegen shapely in allen 125 Fällen gleich. | Randpunkte fachlich entschieden: innen (D2). |
 | GEO-C04 | designer gis `_point_in_geometry`: bei MultiPolygon gilt nur der erste Außenring, alle weiteren Ringe (auch Außenringe weiterer Teile) als Löcher. Punkt im zweiten Teil → außen. designer register rechnet dagegen korrekt je Teilfläche. | Je Polygon Außenring und eigene Löcher (Semantik von designer register). | Schutzgebiete sind häufig Multipolygone. |
 | GEO-C05 | Folge von C04 in `_geometry_edge_distance_m`: Punkt innerhalb des zweiten Teils erhält 277,99 m Randabstand statt 0. | `randabstand_m` = 0 innen/auf dem Rand; sonst Minimum über alle Kanten aller Ringe (gleiche lokale Näherung, Abweichung zu PROJ/shapely ≤ 0,5 %). | Natura-Nähe würde unterschätzt bzw. „nicht im Gebiet“ gemeldet. |
 | GEO-C06 | Ungültige/fehlende Geometrie: company `_distance_to_geometry_m` → **0,0 m** (liest sich als „im Gebiet“), designer gis → `None`, flowsearch `_get_geometry_center` → **(0, 0)** (Golf von Guinea, Abstand ≈ 5 600 km = „weit weg“). | `flaeche_aus_geojson` wirft `GeometrieFehler`; nie ein Ersatzwert. | Fehlende Daten dürfen weder Betroffenheit noch Nichtbetroffenheit erzeugen. |
@@ -50,20 +50,21 @@ parametrisierten Bibliothekscode. Der Bibliotheksvertrag weicht nur hier ab:
   flowworkshop, flowsearch) bleibt datengebunden in den Anwendungen.
 - PostGIS-Abfragen (flowsearch `ST_DWithin`) bleiben Consumer.
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED, 23.09.2026, vom Nutzer delegiert)
 
-1. **Erdradius eines gemeinsamen Bestands.** osint/designer gis nutzen R1,
-   designer register/company/flowsearch 6371 km (0,6 m Unterschied auf 424 km).
-   Jede Anwendung behält ihr Profil; ein gemeinsamer Wert ist nicht entschieden.
-2. **Randpunkte bei Schutzgebieten/Kreisen.** Zählt ein Punkt auf dem Rand
-   als „im Gebiet“ (Betroffenheit) bzw. welchem Kreis wird er zugeordnet?
-   Die Bibliothek verlangt die Angabe; empfohlen (nicht entschieden):
-   Betroffenheit konservativ `rand_gilt_als_innen=True`.
-3. **Umstellung der Natura-Analyse in audit_designer auf C04/C05** ändert
-   Ergebnisse (Punkte in weiteren Teilflächen werden 0 m statt > 0 m).
-4. **Stützpunkt- statt Kantenabstand** in company `_NaturaClient`: Umstellung
-   auf `randabstand_m` verkleinert gemeldete Abstände.
-5. **Zahlenmäßige Obergrenze** für Massenläufe am öffentlichen Nominatim:
-   Die Bibliothek erzwingt Takt, Budget und Kennung; eine feste Höchstzahl je
-   Lauf ist nicht festgelegt (designer register hält Massenläufe für nicht
-   gedeckt).
+Der Nutzer hat die fünf offenen Fragen am 23.09.2026 delegiert („entscheide du
+bitte“); entschieden hat der koordinierende Agent:
+
+| Nr. | Frage | Entscheidung | Umsetzung |
+|---|---|---|---|
+| D1 | Erdradius eines gemeinsamen Bestands | IUGG-Mittelradius R1 = 6 371 008,8 m (`kugel.r1_6371008_8m`) ist **empfohlen** für neue gemeinsame Bestände; `kugel.6371000m` bleibt für Replay und Altbestände. | Konstante `EMPFOHLENES_ERDMODELL`; weiterhin kein stiller Standardwert, das Profil wird ausdrücklich übergeben. |
+| D2 | Randpunkte | Randpunkte zählen als **innen** (konservativ: ein möglicher Schutzgebietsbezug wird eher gemeldet als übersehen). | Konstante `EMPFOHLEN_RAND_GILT_ALS_INNEN = True`; `enthaelt(..., rand_gilt_als_innen=)` bleibt ausdrücklich. |
+| D3 | Natura-Analyse in audit_designer | **Umstellen** auf korrekte Multipolygone; das bisherige Verhalten (weitere Teilflächen als Löcher) ist ein Fehler. | Bewusste Korrektur GEO-C04/GEO-C05: `lage`/`randabstand_m`; Punkte in weiteren Teilflächen erhalten 0 m. Legacy-Replay bleibt (`legacy.designer_gis_*`). |
+| D4 | Abstandsmaß in company `_NaturaClient` | **Kantenabstand** statt Stützpunktabstand. | Bewusste Korrektur GEO-C09: `randabstand_m` statt `naechster_stuetzpunkt_m`; gemeldete Abstände werden kleiner (Beispiel 264,2 m → 143 m). Legacy bleibt reproduzierbar. |
+| D5 | Öffentliches Nominatim | Höchstens 1 Anfrage/s (Läufe nach Zeitplan 15 s), **höchstens 1 000 Anfragen je Tag und Consumer**, Ergebnisse zwischenspeichern; darüber eigene Nominatim-Instanz oder Import. | GEO-C15: `OEFFENTLICH_TAGESGRENZE = 1000`; `validate_config` weist `budget > 1000` am öffentlichen Endpunkt ab; `pruefe_laufparameter`/`empfohlene_laufparameter` verlangen `heute_bereits_gesendet` (Tageszählung des Consumers) und weisen Läufe über der Grenze ab. Eigene Instanzen sind nicht begrenzt. |
+
+| ID | Original | Bibliothek | Begründung |
+|---|---|---|---|
+| GEO-C15 | Keine Tagesgrenze; designer ohne Takt, flowworkshop/osint 1,1 s ohne Obergrenze. | Tagesgrenze 1 000 Anfragen je Consumer am öffentlichen Endpunkt, vor dem Lauf geprüft. | Entscheidung D5; OSMF: keine intensive Nutzung. |
+
+Keine offenen HUMAN_DECISION_REQUIRED für dieses Paket.

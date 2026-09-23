@@ -15,8 +15,10 @@ Anfrage je Sekunde, ein einzelner Thread, identifizierender User-Agent
 Namensnennung „© OpenStreetMap contributors“ (ODbL); Läufe über einen Tag
 oder in regelmäßigen Abständen höchstens 4 Anfragen je Minute; keine
 systematischen Abfragen (vollständige Listen von Postleitzahlen/Orten),
-keine Autovervollständigung. :func:`pruefe_laufparameter` setzt die
-prüfbaren Punkte vor dem Lauf durch; die übrigen verantwortet der Consumer.
+keine Autovervollständigung. Zusätzlich gilt nach Entscheidung vom
+23.09.2026 eine Obergrenze von 1 000 Anfragen je Tag und Consumer.
+:func:`pruefe_laufparameter` setzt die prüfbaren Punkte vor dem Lauf durch;
+Zwischenspeicher und Tageszählung verantwortet der Consumer.
 """
 
 from __future__ import annotations
@@ -57,6 +59,9 @@ NAMENSNENNUNG = "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/c
 MINDESTABSTAND_EINMALIG_S = 1.0
 #: Läufe über einen Tag oder regelmäßig: höchstens 4 Anfragen je Minute.
 MINDESTABSTAND_REGELMAESSIG_S = 15.0
+#: Entscheidung vom 23.09.2026 (vom Nutzer delegiert): höchstens 1 000 Anfragen je
+#: Tag und Consumer am öffentlichen Endpunkt; darüber eigene Instanz oder Import.
+OEFFENTLICH_TAGESGRENZE = 1000
 LAUFARTEN = ("einmalig", "regelmaessig")
 STRUKTUR_FELDER = ("street", "city", "county", "state", "country", "postalcode")
 #: Standardkennungen von HTTP-Bibliotheken und Browsern identifizieren keine Anwendung.
@@ -181,6 +186,11 @@ class NominatimAdapter:
             raise ConfigError("basis_url muss eine http(s)-Adresse sein.")
         if ist_oeffentlicher_endpunkt(basis) and urlsplit(basis).scheme != "https":
             raise ConfigError("Der öffentliche Endpunkt wird nur über https angesprochen.")
+        if ist_oeffentlicher_endpunkt(basis) and budget > OEFFENTLICH_TAGESGRENZE:
+            raise ConfigError(
+                f"budget über der Tagesgrenze {OEFFENTLICH_TAGESGRENZE} des öffentlichen "
+                "Endpunkts; eigene Nominatim-Instanz oder Import verwenden."
+            )
         mindestabstand_s(basis, str(config.get("laufart", "")))
         limit = config.get("limit", 1)
         if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 40:
@@ -319,15 +329,29 @@ def _treffer(daten: list[Any], kennung: str) -> tuple[list[dict[str, Any]], list
 
 
 def pruefe_laufparameter(
-    config: Mapping[str, Any], rate_limit: RateLimit, request: HarvestRequest
+    config: Mapping[str, Any],
+    rate_limit: RateLimit,
+    request: HarvestRequest,
+    *,
+    heute_bereits_gesendet: int,
 ) -> None:
-    """Vor dem Lauf: Mindestabstand am Endpunkt und Budget gegen die Seitenzahl prüfen.
+    """Vor dem Lauf: Mindestabstand, Budget und Tagesgrenze prüfen.
 
     Der Adapter kann den Takt nicht selbst durchsetzen (Adapter schlafen
     nicht); deshalb prüft der Consumer den Engine-Takt hier, bevor er
-    ``engine.run`` aufruft. Eine Verletzung ist ein :class:`ConfigError`.
+    ``engine.run`` aufruft. ``heute_bereits_gesendet`` zählt der Consumer
+    (Anfragen dieses Consumers an denselben Endpunkt am laufenden Tag). Am
+    öffentlichen Endpunkt dürfen damit höchstens
+    :data:`OEFFENTLICH_TAGESGRENZE` Anfragen je Tag entstehen. Eine
+    Verletzung ist ein :class:`ConfigError`.
     """
     NominatimAdapter().validate_config(config)
+    if (
+        isinstance(heute_bereits_gesendet, bool)
+        or not isinstance(heute_bereits_gesendet, int)
+        or heute_bereits_gesendet < 0
+    ):
+        raise ConfigError("heute_bereits_gesendet muss eine nicht negative ganze Zahl sein.")
     basis = str(config.get("basis_url", OEFFENTLICHER_ENDPUNKT))
     noetig = mindestabstand_s(basis, str(config["laufart"]))
     if rate_limit.min_interval_seconds < noetig:
@@ -337,12 +361,21 @@ def pruefe_laufparameter(
         )
     if request.max_pages > int(config["budget"]):
         raise ConfigError("max_pages des Laufs überschreitet das Budget.")
+    if (
+        ist_oeffentlicher_endpunkt(basis)
+        and heute_bereits_gesendet + request.max_pages > OEFFENTLICH_TAGESGRENZE
+    ):
+        raise ConfigError(
+            f"Tagesgrenze {OEFFENTLICH_TAGESGRENZE} Anfragen je Consumer am öffentlichen "
+            f"Endpunkt überschritten ({heute_bereits_gesendet} bereits gesendet, "
+            f"{request.max_pages} geplant); eigene Nominatim-Instanz oder Import verwenden."
+        )
 
 
 def empfohlene_laufparameter(
-    config: Mapping[str, Any], run_id: str
+    config: Mapping[str, Any], run_id: str, *, heute_bereits_gesendet: int
 ) -> tuple[RateLimit, HarvestRequest]:
-    """``RateLimit`` und ``HarvestRequest`` passend zu Endpunkt, Laufart und Budget."""
+    """``RateLimit`` und ``HarvestRequest`` passend zu Endpunkt, Laufart, Budget und Tagesgrenze."""
     NominatimAdapter().validate_config(config)
     basis = str(config.get("basis_url", OEFFENTLICHER_ENDPUNKT))
     rate = RateLimit(mindestabstand_s(basis, str(config["laufart"])))
@@ -350,5 +383,5 @@ def empfohlene_laufparameter(
     request = HarvestRequest(
         NominatimAdapter.source.source_id, run_id, max_pages=anzahl, max_records=anzahl
     )
-    pruefe_laufparameter(config, rate, request)
+    pruefe_laufparameter(config, rate, request, heute_bereits_gesendet=heute_bereits_gesendet)
     return rate, request

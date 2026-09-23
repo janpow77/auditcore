@@ -217,5 +217,47 @@
         ]
       }
     ]
-  }
+  },
+  "decisions": [
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D1",
+      "subject": "Erdradius gemeinsamer Bestände",
+      "decision": "IUGG-Mittelradius R1 = 6 371 008,8 m empfohlen (EMPFOHLENES_ERDMODELL); 6371000 m bleibt für Replay/Altbestände; kein stiller Standard"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D2",
+      "subject": "Randpunkte",
+      "decision": "zählen als innen (EMPFOHLEN_RAND_GILT_ALS_INNEN); Parameter bleibt ausdrücklich"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D3",
+      "subject": "designer-Natura-Analyse",
+      "decision": "auf korrekte Multipolygone umstellen (GEO-C04/C05 bewusste Korrektur); Legacy-Replay bleibt"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D4",
+      "subject": "company-Abstandsmaß",
+      "decision": "Kantenabstand statt Stützpunktabstand (GEO-C09)"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D5",
+      "subject": "öffentliches Nominatim",
+      "decision": "≤ 1 Anfrage/s (Zeitplan 15 s), ≤ 1 000 Anfragen je Tag und Consumer, cachen; darüber eigene Instanz oder Import (GEO-C15)"
+    }
+  ]
 }

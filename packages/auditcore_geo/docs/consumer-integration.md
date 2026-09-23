@@ -125,17 +125,21 @@ Wirkung) und Koordinaten außerhalb des Wertebereichs werden beim Laden
 | Repository | Stelle | Umstellung | Achtung |
 |---|---|---|---|
 | osint | `werkzeuge/bundeslaender_holen.py`: `utm_nach_wgs84`, `wkb_polygone`, `douglas_peucker`, `ring_vereinfachen` | `utm_nach_geographisch_lonlat(x, y, ETRS89_UTM32N)`, `lies_gpkg_polygone(blob).polygone`, `douglas_peucker`, `ring_vereinfachen(r, t, stellen=4)` | Ergebnisgleich; `lies_gpkg_polygone` weist fehlerhafte Blobs ab (GEO-C07). |
-| osint | `werkzeuge/betroffenheit.py`: `_achsen_drehen`, `_im_ring` | `achsenfolge_erkennen(ringe, BEREICH_DEUTSCHLAND_OSINT)`; `lage()` je Gebiet | `UNBEKANNT` behandeln (GEO-C08); Randpunkte entscheiden (HDR 2). |
+| osint | `werkzeuge/betroffenheit.py`: `_achsen_drehen`, `_im_ring` | `achsenfolge_erkennen(ringe, BEREICH_DEUTSCHLAND_OSINT)`; `lage()` je Gebiet | `UNBEKANNT` behandeln (GEO-C08); Randpunkte als innen (D2). |
 | osint | `werkzeuge/vorhaben_verorten.py`: `abfragen` | `NominatimAdapter` + `empfohlene_laufparameter` + eigener Transport und Zwischenspeicher als Senke | User-Agent enthält heute „privat“; Kontakt ergänzen. |
-| audit_designer | `core/shared/research/register/geocoding.py`: `_entfernung_km`, `_punkt_in_gebiet`, `naechste_nuts3` | `grosskreis_km(..., KUGEL_6371_KM)`, `lage()`, `naechster_stuetzpunkt_m(..., nur_aussenringe=True)` | Profil 6371 km beibehalten (GEO-C01). |
-| audit_designer | `api/vpai_notebook/gis/_common.py`: `_point_in_geometry`, `_geometry_edge_distance_m`, `_geometry_centroid`, `_geocode_address` | `lage`, `randabstand_m(..., KUGEL_MITTLERER_RADIUS)`, `flaechenschwerpunkt`, Nominatim-Adapter | Ergebnisänderung bei Multipolygonen (GEO-C04/C05, HDR 3); erfundene Konfidenz entfällt (GEO-C12). |
-| audit_designer | `modules/vp_ai/services/company/company_records.py`: `_NaturaClient._distance_to_geometry_m` | `naechster_stuetzpunkt_m(..., KUGEL_6371_KM, nur_aussenringe=False)` (gleich) oder `randabstand_m` (korrigiert) | 0,0 m bei ungültiger Geometrie entfällt (GEO-C06, HDR 4). |
+| audit_designer | `core/shared/research/register/geocoding.py`: `_entfernung_km`, `_punkt_in_gebiet`, `naechste_nuts3` | `grosskreis_km(..., KUGEL_6371_KM)`, `lage()`, `naechster_stuetzpunkt_m(..., nur_aussenringe=True)` | Bestehender Register-Bestand: Profil 6371 km beibehalten (GEO-C01); neue gemeinsame Bestände `EMPFOHLENES_ERDMODELL` (D1). |
+| audit_designer | `api/vpai_notebook/gis/_common.py`: `_point_in_geometry`, `_geometry_edge_distance_m`, `_geometry_centroid`, `_geocode_address` | `lage`, `randabstand_m(..., KUGEL_MITTLERER_RADIUS)`, `flaechenschwerpunkt`, Nominatim-Adapter | **Entschieden (D3): umstellen.** Punkte in weiteren Teilflächen erhalten 0 m (bewusste Korrektur GEO-C04/C05); Randpunkte als innen (D2); erfundene Konfidenz entfällt (GEO-C12). |
+| audit_designer | `modules/vp_ai/services/company/company_records.py`: `_NaturaClient._distance_to_geometry_m` | **Entschieden (D4):** `randabstand_m(punkt, flaeche_aus_geojson(geometrie), KUGEL_6371_KM)` statt Stützpunktabstand | Gemeldete Abstände werden kleiner (bewusste Korrektur GEO-C09); 0,0 m bei ungültiger Geometrie entfällt (GEO-C06). |
 | flowsearch | `api/eu_beneficiaries.py:calculate_distance`, `services/natura2000_service.py:_calculate_distance/_get_geometry_center` | `grosskreis_km/_m(..., KUGEL_6371_KM)`, `flaechenschwerpunkt` | `(0, 0)` bei unbekannter Geometrie entfällt (GEO-C06). |
 | flowworkshop | `services/geocoding_service.py:geocode_single` (Netzpfad) | Nominatim-Adapter; Offline-PLZ/Stadt/NUTS bleiben | Netzfehler ≠ kein Treffer (GEO-C10); `format=json` → `jsonv2` (GEO-C11). |
 
 Nominatim im Consumer: Transport (z. B. httpx oder
 `auditcore_harvest/docs/examples/urllib_transport.py`) und eine Senke, die als
 Zwischenspeicher dient, stellt die Anwendung. Vor jedem Lauf
-`empfohlene_laufparameter(konfig, run_id)` bzw. `pruefe_laufparameter(...)`
-aufrufen und das `RateLimit` an den `HarvestEngine` übergeben. Keine parallelen
+`empfohlene_laufparameter(konfig, run_id, heute_bereits_gesendet=n)` bzw.
+`pruefe_laufparameter(..., heute_bereits_gesendet=n)` aufrufen (`n` = Anfragen
+dieses Consumers am öffentlichen Endpunkt am laufenden Tag, vom Consumer
+gezählt) und das `RateLimit` an den `HarvestEngine` übergeben. Am öffentlichen
+Endpunkt höchstens 1 000 Anfragen je Tag und Consumer (D5); darüber eine eigene
+Nominatim-Instanz (`basis_url`) oder einen Import verwenden. Keine parallelen
 Läufe gegen den öffentlichen Endpunkt; Namensnennung anzeigen.
