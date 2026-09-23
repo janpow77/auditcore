@@ -15,6 +15,7 @@ from enum import Enum
 from html import escape
 from typing import Any
 
+from .edpb import edpb_hints
 from .model import Assessment, RegisterVersion
 from .register import check_register, group_by_department
 from .rules import RuleProfile
@@ -152,6 +153,8 @@ def assessment_report(
         },
         "decision": {
             "decision": assessment.decision,
+            "decision_title": profile.decision_titles.get(assessment.decision or "", None),
+            "conditions": list(assessment.conditions),
             "deviation": assessment.deviation,
             "deviation_justification": assessment.deviation_justification,
             "decided_by": assessment.decided_by,
@@ -180,7 +183,69 @@ def assessment_report(
         },
         "changes_to_predecessor": _plain(list(assessment.changes_to_predecessor)),
     }
+    if profile.edpb:
+        report["meta"]["profile"]["schema"] = profile.schema
+        report["edpb"] = _edpb_section(assessment, profile)
+        if consultation and consultation.ground:
+            report["consultation"]["ground_title"] = profile.consultation_grounds[
+                consultation.ground
+            ][0]
+            report["consultation"]["ground_reference"] = profile.consultation_grounds[
+                consultation.ground
+            ][1]
     return report
+
+
+def _edpb_section(assessment: Assessment, profile: RuleProfile) -> dict[str, Any]:
+    """Documentation along the EDPB template 2026 v1.0 (schema 2 profiles only)."""
+    used = {k for s in assessment.scenarios for k in s.measures}
+    measures = []
+    for measure in profile.measures:
+        state = assessment.measure_status.get(measure.key)
+        if state is None and measure.key not in used:
+            continue
+        category_title, category_reference = profile.measure_categories[measure.category]
+        measures.append(
+            {
+                "key": measure.key,
+                "title": measure.title,
+                "legal_basis": measure.legal_basis,
+                "category": measure.category,
+                "category_title": category_title,
+                "category_reference": category_reference,
+                "status": state.get("status") if state else None,
+                "status_title": profile.implementation_states.get(state["status"], "")
+                if state
+                else "nicht angegeben",
+                "note": state.get("note", "") if state else "",
+                "used_in_scenarios": measure.key in used,
+            }
+        )
+    occasion = (
+        f"Änderung einer bestehenden Verarbeitung ({profile.norm('ueberpruefung')})"
+        if assessment.predecessor_id
+        else "Neue Verarbeitungstätigkeit"
+    )
+    return {
+        "template": "EDSA, Template for DPIA 2026, Version 1.0 (Konsultationsfassung)",
+        "occasion": occasion,
+        "dossier": [
+            {
+                "key": f.key,
+                "title": f.title,
+                "reference": f.reference,
+                "required": f.required,
+                "value": dict(f.choices).get(assessment.dossier.get(f.key, ""), None)
+                if f.kind == "choice"
+                else assessment.dossier.get(f.key),
+            }
+            for f in profile.dossier_fields
+        ],
+        "measures": measures,
+        "action_plan": [dict(item) for item in assessment.action_plan],
+        "hints": list(edpb_hints(assessment, profile)),
+        "sources": [_plain(source) for source in profile.sources],
+    }
 
 
 def register_report(version: RegisterVersion, profile: RuleProfile) -> dict[str, Any]:
@@ -284,8 +349,17 @@ def _html_head_and_subject(report: Mapping[str, Any]) -> list[str]:
     parts.append(
         f"<tr><th>Fassung</th><td>Nummer {_text(meta['version'])}, Stand "
         f"{_text(meta['status_text'])}; beruht auf Fassung {_text(meta['register_version'])} "
-        "des Verzeichnisses von Verarbeitungstätigkeiten</td></tr></table>"
+        "des Verzeichnisses von Verarbeitungstätigkeiten</td></tr>"
     )
+    edpb = report.get("edpb")
+    if edpb:
+        parts.append(f"<tr><th>Anlass der Abschätzung</th><td>{_text(edpb['occasion'])}</td></tr>")
+        for item in edpb["dossier"]:
+            parts.append(
+                f"<tr><th>{_text(item['title'])}</th><td>{_text(item['value'])}"
+                f"<br><span class='klein'>{_text(item['reference'])}</span></td></tr>"
+            )
+    parts.append("</table>")
     return parts
 
 
@@ -366,7 +440,7 @@ def _html_risk(report: Mapping[str, Any]) -> list[str]:
             explicit = " (ausdrücklich gesetzt)" if s.get("explicit_residual") else ""
             parts.append(
                 f"<tr><td>{_text(s['dimension_title'])}{' (SDM)' if s.get('sdm') else ''}</td>"
-                f"<td>{_text(s['description'])}</td>"
+                f"<td>{_text(s['description'])}{_scenario_details(s)}</td>"
                 f"<td>Schwere {s['gross_severity']}, Wahrscheinlichkeit {s['gross_likelihood']}"
                 f" = {s['gross']} ({_text(s['gross_band'])})</td>"
                 f"<td class='klein'>{_text(s['measure_titles'])}</td>"
@@ -383,6 +457,58 @@ def _html_risk(report: Mapping[str, Any]) -> list[str]:
             f"</table><p class='klein'>Höchstwert vor Maßnahmen {risk.get('gross_maximum')}, "
             f"nach Maßnahmen {risk.get('net_maximum')} ({_text(risk.get('net_band'))}).</p>"
         )
+    parts.extend(_html_measures(report))
+    return parts
+
+
+def _scenario_details(s: Mapping[str, Any]) -> str:
+    """Risk source, modulating factors, acceptance and floor of a schema 2 scenario."""
+    if "net_level" not in s:
+        return ""
+    lines = []
+    if s.get("risk_source"):
+        lines.append(f"Risikoquelle: {_text(s['risk_source'])}")
+    if s.get("modulating_factors"):
+        lines.append(f"Umstände: {_text(s['modulating_factors'])}")
+    if s.get("acceptance"):
+        note = f" – {_text(s['acceptance_note'])}" if s.get("acceptance_note") else ""
+        lines.append(f"Restrisiko {_text(s['acceptance_title'])}{note}")
+    if s.get("net_floor"):
+        lines.append(
+            f"Mindeststufe {_text(s['net_band'])} wegen der Schwere ({_text(s['net_floor'])})"
+        )
+    return "".join(f"<br><span class='klein'>{line}</span>" for line in lines)
+
+
+def _html_measures(report: Mapping[str, Any]) -> list[str]:
+    """Measures by area with implementation status and the action plan (schema 2)."""
+    edpb = report.get("edpb")
+    if not edpb:
+        return []
+    parts: list[str] = []
+    if edpb["measures"]:
+        parts.append(
+            "<h3>Maßnahmen nach Bereichen und Umsetzungsstand</h3><table><tr><th>Bereich</th>"
+            "<th>Maßnahme</th><th>Stand</th><th>Hinweis</th></tr>"
+        )
+        for m in sorted(edpb["measures"], key=lambda m: m["category_title"]):
+            parts.append(
+                f"<tr><td>{_text(m['category_title'])}</td><td>{_text(m['title'])}"
+                f"<br><span class='klein'>{_text(m['legal_basis'])}</span></td>"
+                f"<td>{_text(m['status_title'])}</td><td>{_text(m['note'], '')}</td></tr>"
+            )
+        parts.append("</table>")
+    if edpb["action_plan"]:
+        parts.append(
+            "<h3>Maßnahmenplan</h3><table><tr><th>Vorhaben</th><th>Verantwortlich</th>"
+            "<th>Termin</th></tr>"
+        )
+        for item in edpb["action_plan"]:
+            parts.append(
+                f"<tr><td>{_text(item.get('activity'))}</td>"
+                f"<td>{_text(item.get('responsible'))}</td><td>{_text(item.get('due'))}</td></tr>"
+            )
+        parts.append("</table>")
     return parts
 
 
@@ -399,8 +525,15 @@ def _html_decision(report: Mapping[str, Any]) -> list[str]:
         f"<td>{_text(proposal['recommendation_text'])}</td></tr>",
         f"<tr><th>Begründung</th><td>{_text(proposal['reasoning'])}</td></tr>",
         f"<tr><th>Berechnung</th><td class='klein'>{_text(proposal['calculation'])}</td></tr>",
-        f"<tr><th>Entscheidung</th><td>{_text(decision['decision'], 'noch offen')}</td></tr>",
+        "<tr><th>Entscheidung</th><td>"
+        f"{_text(decision.get('decision_title') or decision['decision'], 'noch offen')}</td></tr>",
     ]
+    if decision.get("conditions"):
+        parts.append(
+            "<tr><th>Bedingungen vor Beginn der Verarbeitung</th><td>"
+            + "<br>".join(f"{i}. {_text(c)}" for i, c in enumerate(decision["conditions"], 1))
+            + "</td></tr>"
+        )
     if decision.get("deviation"):
         parts.append(
             f"<tr><th>Abweichung vom Vorschlag</th>"
@@ -425,7 +558,14 @@ def _html_decision(report: Mapping[str, Any]) -> list[str]:
     if consultation:
         parts.append(
             f"<tr><th>Konsultation der Aufsichtsbehörde</th><td>{_text(consultation['authority'])}"
-            f", {_text(consultation['consulted_on'])}: {_text(consultation['result'])}</td></tr>"
+            f", {_text(consultation['consulted_on'])}: {_text(consultation['result'])}"
+            + (
+                f"<br><span class='klein'>Grund: {_text(consultation['ground_title'])} "
+                f"({_text(consultation['ground_reference'])})</span>"
+                if consultation.get("ground_title")
+                else ""
+            )
+            + "</td></tr>"
         )
     elif proposal.get("consultation_required"):
         parts.append(
@@ -452,11 +592,14 @@ def _html_issues_and_changes(report: Mapping[str, Any]) -> list[str]:
     proposal = report["proposal"]
     parts: list[str] = []
     issues = proposal.get("issues") or []
-    if issues:
+    hints = (report.get("edpb") or {}).get("hints") or []
+    if issues or hints:
         parts.append("<h2>Prüfhinweise</h2><ul>")
         for issue in issues:
             mark = " (blockiert die Freigabe)" if issue.get("blocking") else ""
             parts.append(f"<li>{_text(issue.get('message'))}{escape(mark)}</li>")
+        for hint in hints:
+            parts.append(f"<li>{_text(hint)}</li>")
         parts.append("</ul>")
     changes = report.get("changes_to_predecessor") or []
     if changes:
@@ -474,6 +617,26 @@ def _html_issues_and_changes(report: Mapping[str, Any]) -> list[str]:
     return parts
 
 
+def _html_sources(report: Mapping[str, Any]) -> list[str]:
+    """Guidelines and templates the profile relies on (EDPB template 0.5)."""
+    edpb = report.get("edpb")
+    if not edpb:
+        return []
+    parts = [
+        "<h2>Grundlagen der Abschätzung</h2><table><tr><th>Quelle</th><th>Stand</th>"
+        "<th>Verwendet für</th></tr>"
+    ]
+    for source in edpb["sources"]:
+        parts.append(
+            f"<tr><td>{_text(source['issuer'])}: {_text(source['title'])}"
+            f"<br><span class='klein'>{_text(source['reference'])}</span></td>"
+            f"<td>{_text(source['date'])}; {_text(source['status'])}</td>"
+            f"<td>{_text(source['used_for'])}</td></tr>"
+        )
+    parts.append("</table>")
+    return parts
+
+
 def render_assessment_html(report: Mapping[str, Any]) -> str:
     """Self-contained, escaped HTML report of :func:`assessment_report` data."""
     parts = [
@@ -483,6 +646,7 @@ def render_assessment_html(report: Mapping[str, Any]) -> str:
         *_html_risk(report),
         *_html_decision(report),
         *_html_issues_and_changes(report),
+        *_html_sources(report),
     ]
     parts.append(
         "<p class='klein'>Der Vorschlag ist eine Berechnung auf Grundlage des genannten "

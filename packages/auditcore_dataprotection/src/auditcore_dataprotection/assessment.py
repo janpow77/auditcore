@@ -28,6 +28,13 @@ from .calculation import (
     prefill_from_activity,
     propose,
 )
+from .edpb import (
+    edpb_hints,
+    parse_action_plan,
+    parse_dossier,
+    parse_measure_status,
+    reject_edpb_fields,
+)
 from .errors import (
     AuthorizationError,
     ConflictError,
@@ -53,7 +60,7 @@ from .model import (
 from .ports import AssessmentRepository, AuditSink, Authorizer, Clock, IdFactory, RegisterRepository
 from .register import activity_changes, find_activity
 from .rules import (
-    DECISIONS,
+    DECISION_REJECTED,
     RECOMMENDATION_CONSULTATION,
     RECOMMENDATION_INCOMPLETE,
     RECOMMENDATION_SCREENING_ONLY,
@@ -85,6 +92,7 @@ def _changed(
     texts: Mapping[str, str],
     rules: RuleProfile,
     activity: Mapping[str, Any],
+    documentation: Mapping[str, Any] | None = None,
 ) -> bool:
     """True if content, profile or the activity snapshot differ from the stored version."""
     stored_profile = {
@@ -98,7 +106,19 @@ def _changed(
         or any(texts[name] != getattr(current, name) for name in texts)
         or rules.reference != stored_profile
         or dict(activity) != dict(current.activity_snapshot)
+        or any(
+            value != _documentation(current)[name] for name, value in (documentation or {}).items()
+        )
     )
+
+
+def _documentation(assessment: Assessment) -> dict[str, Any]:
+    """Schema 2 documentation in comparable form."""
+    return {
+        "dossier": dict(assessment.dossier),
+        "measure_status": {k: dict(v) for k, v in assessment.measure_status.items()},
+        "action_plan": tuple(dict(item) for item in assessment.action_plan),
+    }
 
 
 def _without_review(assessment: Assessment) -> Assessment:
@@ -120,7 +140,51 @@ def _without_review(assessment: Assessment) -> Assessment:
         leadership_presented_to=None,
         leadership_presented_at=None,
         consultation=None,
+        conditions=(),
     )
+
+
+def _conditions(conditions: Sequence[str], decision: str, rules: RuleProfile) -> tuple[str, ...]:
+    """Conditions of a conditional approval (EDPB template, section 6)."""
+    if isinstance(conditions, str) or not isinstance(conditions, Sequence):
+        raise ValidationError("Bedingungen sind als Liste von Texten anzugeben.")
+    items = []
+    for item in conditions:
+        if not isinstance(item, str):
+            raise ValidationError("Jede Bedingung muss Text sein.")
+        if item.strip():
+            items.append(item.strip())
+    if items and not rules.edpb:
+        raise ValidationError("Bedingungen kennt nur ein Profil nach der EDSA-Vorlage.")
+    if decision in rules.conditions_required_for and not items:
+        raise ValidationError(
+            "Eine Freigabe mit Auflagen braucht mindestens eine Bedingung, die vor Beginn "
+            "der Verarbeitung zu erfüllen ist (EDSA-Vorlage 2026, Abschnitt 6)."
+        )
+    if items and decision not in rules.conditions_required_for:
+        raise ValidationError(f"Zur Entscheidung '{decision}' werden keine Bedingungen erfasst.")
+    return tuple(items)
+
+
+def _edpb_blockers(assessment: Assessment, rules: RuleProfile) -> list[str]:
+    """Release blockers of schema 2 profiles: required master data and conditions."""
+    reasons: list[str] = []
+    screening_only = assessment.decision == RECOMMENDATION_SCREENING_ONLY
+    missing = [
+        f.title
+        for f in rules.dossier_fields
+        if f.required and not screening_only and not assessment.dossier.get(f.key)
+    ]
+    if missing:
+        reasons.append(
+            "Vor der Freigabe fehlen Angaben zur Folgenabschätzung: " + "; ".join(missing) + "."
+        )
+    if assessment.decision in rules.conditions_required_for and not assessment.conditions:
+        reasons.append(
+            "Die Freigabe mit Auflagen braucht die Bedingungen, die vor Beginn der "
+            "Verarbeitung zu erfüllen sind."
+        )
+    return reasons
 
 
 @dataclass
@@ -329,11 +393,16 @@ class AssessmentService:
         proportionality: str = UNSET,
         data_subject_view: str = UNSET,
         profile: RuleProfile = UNSET,
+        dossier: Mapping[str, Any] = UNSET,
+        measure_status: Mapping[str, Any] = UNSET,
+        action_plan: Sequence[Any] = UNSET,
     ) -> Assessment:
         """Change the survey; the proposal is recalculated with the current register data.
 
         Omitted fields keep their value. A substantive change after a decision
         or DPO statement removes both, because they referred to other content.
+        ``dossier``, ``measure_status`` and ``action_plan`` (EDPB template
+        sections 0.5, 2.3/4.2.a and 4.2.c) require a schema 2 profile.
         """
         self._allow(actor, Permission.ASSESSMENT_EDIT, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
@@ -354,11 +423,30 @@ class AssessmentService:
             proportionality=proportionality,
             data_subject_view=data_subject_view,
         )
+        documentation = _documentation(current)
+        given = {"dossier": dossier, "measure_status": measure_status, "action_plan": action_plan}
+        if not rules.edpb:
+            reject_edpb_fields(
+                {
+                    **{k: v for k, v in documentation.items() if v},
+                    **{k: v for k, v in given.items() if v is not UNSET},
+                },
+                rules,
+            )
+        else:
+            if dossier is not UNSET:
+                documentation["dossier"] = parse_dossier(dossier, rules)
+            if measure_status is not UNSET:
+                documentation["measure_status"] = parse_measure_status(measure_status, rules)
+            if action_plan is not UNSET:
+                documentation["action_plan"] = parse_action_plan(action_plan, rules)
         activity, register = find_activity(
             self._effective(tenant_id, current.register_id), current.activity_id
         )
         proposal = propose(rules, new_answers, new_scenarios).to_dict()
-        substantive = _changed(current, new_answers, new_scenarios, texts, rules, activity)
+        substantive = _changed(
+            current, new_answers, new_scenarios, texts, rules, activity, documentation
+        )
         reset = substantive and (current.decision is not None or current.dpo_vote is not None)
         updated = replace(
             current,
@@ -377,6 +465,9 @@ class AssessmentService:
             necessity=texts["necessity"],
             proportionality=texts["proportionality"],
             data_subject_view=texts["data_subject_view"],
+            dossier=documentation["dossier"],
+            measure_status=documentation["measure_status"],
+            action_plan=documentation["action_plan"],
         )
         if reset:
             updated = _without_review(updated)
@@ -393,8 +484,14 @@ class AssessmentService:
         expected_revision: int,
         decision: str,
         justification: str = "",
+        conditions: Sequence[str] = (),
     ) -> Assessment:
-        """Adopt the proposal or deviate with a substantive justification."""
+        """Adopt the proposal or deviate with a substantive justification.
+
+        Schema 2 profiles also accept ``verworfen`` (the processing is
+        abandoned) and require the conditions of a conditional approval
+        (EDPB template, section 6).
+        """
         self._allow(actor, Permission.ASSESSMENT_DECIDE, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
         rules = self._profile(current)
@@ -404,10 +501,12 @@ class AssessmentService:
                 "Die Erhebung ist unvollständig; über den Vorschlag kann erst nach vollständiger "
                 "Schwellwertanalyse und Risikobetrachtung entschieden werden."
             )
-        if decision not in DECISIONS:
+        if decision not in rules.decisions:
             raise ValidationError(
-                f"Unbekannte Entscheidung '{decision}'. Zulässig sind: {', '.join(DECISIONS)}."
+                f"Unbekannte Entscheidung '{decision}'. Zulässig sind: "
+                f"{', '.join(rules.decisions)}."
             )
+        condition_list = _conditions(conditions, decision, rules)
         if not isinstance(justification, str):
             raise ValidationError("Die Begründung muss Text sein.")
         deviation = decision != recommendation
@@ -425,6 +524,7 @@ class AssessmentService:
             deviation_justification=justification.strip() if deviation else None,
             decided_by=actor.id,
             decided_at=self.clock.now(),
+            conditions=condition_list,
             editors=self._with_editor(current, actor),
             updated_at=self.clock.now(),
             revision=current.revision + 1,
@@ -536,10 +636,25 @@ class AssessmentService:
         authority: str,
         result: str,
         consulted_on: date,
+        ground: str | None = None,
     ) -> Assessment:
-        """Result of the prior consultation of the supervisory authority."""
+        """Result of the prior consultation of the supervisory authority.
+
+        Schema 2 profiles require the ground, for example high residual risk
+        (Art. 36 Abs. 1) or a national law (Art. 36 Abs. 5 DSGVO).
+        """
         self._allow(actor, Permission.ASSESSMENT_EDIT, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
+        rules = self._profile(current)
+        if rules.edpb and ground not in rules.consultation_grounds:
+            raise ValidationError(
+                "Der Grund der Konsultation ist anzugeben. Zulässig sind: "
+                f"{', '.join(rules.consultation_grounds)}."
+            )
+        if not rules.edpb and ground is not None:
+            raise ValidationError(
+                "Einen Grund der Konsultation kennt nur ein Profil nach der EDSA-Vorlage."
+            )
         if not isinstance(authority, str) or not authority.strip():
             raise ValidationError("Die konsultierte Aufsichtsbehörde ist anzugeben.")
         if not isinstance(result, str) or not result.strip():
@@ -554,6 +669,7 @@ class AssessmentService:
                 consulted_on=consulted_on.isoformat(),
                 recorded_by=actor.id,
                 recorded_at=self.clock.now(),
+                ground=ground,
             ),
             editors=self._with_editor(current, actor),
             updated_at=self.clock.now(),
@@ -602,8 +718,8 @@ class AssessmentService:
                 "risk_assessment_missing",
             ):
                 reasons.append(str(issue.get("message")))
-        consult = assessment.decision == RECOMMENDATION_CONSULTATION or bool(
-            proposal.get("consultation_required")
+        consult = assessment.decision == RECOMMENDATION_CONSULTATION or (
+            bool(proposal.get("consultation_required")) and assessment.decision != DECISION_REJECTED
         )
         if self.require_consultation_record and consult and assessment.consultation is None:
             reasons.append(
@@ -630,7 +746,14 @@ class AssessmentService:
                     "vor der Freigabe der Behördenleitung vorzulegen; die Verantwortung für die "
                     "Verarbeitung liegt bei ihr (Art. 24 DSGVO). Die Vorlage ist zu dokumentieren."
                 )
+        if rules.edpb:
+            reasons.extend(_edpb_blockers(assessment, rules))
         return tuple(reasons)
+
+    def hints(self, assessment: Assessment) -> tuple[str, ...]:
+        """Non-blocking notes against the EDPB template (schema 2 profiles only)."""
+        rules = self._profile(assessment)
+        return edpb_hints(assessment, rules) if rules.edpb else ()
 
     def release(
         self, tenant_id: str, actor: Actor, assessment_id: str, *, expected_revision: int
@@ -786,6 +909,9 @@ class AssessmentService:
             data_subject_view=previous.data_subject_view,
             predecessor_id=previous.assessment_id,
             changes_to_predecessor=changes,
+            dossier=dict(previous.dossier) if rules.edpb else {},
+            measure_status=dict(previous.measure_status) if rules.edpb else {},
+            action_plan=tuple(previous.action_plan) if rules.edpb else (),
         )
         self.assessments.add(created)
         self._event(

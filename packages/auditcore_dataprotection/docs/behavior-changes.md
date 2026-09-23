@@ -67,3 +67,27 @@ Vertrag wird von `ReportTable` nicht abgedeckt. Sie bleiben deshalb ein eigener
 openpyxl-Adapter mit derselben Formelsicherheit (DP-C15). Der HTML-Bericht ist
 reine Standardbibliothek; PDF bleibt ein optionaler WeasyPrint-Adapter wie im
 Original. Geprüft mit openpyxl 3.1.5 und 3.0.10 (Debian Bookworm).
+
+## Profilfassung 2026.10.1 (Schema 2, EDSA-Vorlage 2026 v1.0)
+
+Neue Profilfassungen `regulierung.dsgvo` und `regulierung.hdsig_ji`
+`2026.10.1`, abgeleitet aus `2026.09.1`. Die Fassungen `2026.09.1`, der
+`legacy`-Vertrag und alle Replay-Ergebnisse bleiben unverändert.
+
+| ID | Änderung | Grundlage |
+|---|---|---|
+| DP-E01 | Schwere 4 ergibt mindestens die Stufe `mittel`, auch wenn das Produkt darunter liegt; Vorschlag und Begründung folgen der angehobenen Stufe. | Fachliche Festlegung vom 23.09.2026; EDSA-Explainer Fn. 9; DSK-Kurzpapier Nr. 18, S. 5 |
+| DP-E02 | Entscheidung `verworfen`; wird nie vorgeschlagen, verlangt daher eine Begründung; eine sonst nötige Konsultation entfällt. | EDSA-Vorlage Abschnitt 6 |
+| DP-E03 | `freigabe_mit_auflagen` verlangt mindestens eine Bedingung; eine inhaltliche Änderung setzt sie mit der Entscheidung zurück. | EDSA-Vorlage Abschnitt 6 |
+| DP-E04 | Konsultation mit Grund; im DSGVO-Profil auch Art. 36 Abs. 5 DSGVO. | EDSA-Vorlage Abschnitt 6 |
+| DP-E05 | Szenarien mit Risikoquelle, Umständen und Hinnehmbarkeit. | EDSA-Vorlage 3.1, 4.1, 4.2.b |
+| DP-E06 | Maßnahmen mit Bereich und Umsetzungsstand; im DSGVO-Profil fünf dokumentierende Maßnahmen ohne rechnerische Minderung. | EDSA-Vorlage 2.3, 4.2.a |
+| DP-E07 | Maßnahmenplan (Vorhaben, Verantwortlich, Termin). | EDSA-Vorlage 4.2.c |
+| DP-E08 | Stammdaten der Abschätzung; „Beteiligte“ und „Umfang“ sperren die Freigabe, wenn sie fehlen. | EDSA-Vorlage 0.5 |
+| DP-E09 | WP 248 wird der Art.-29-Datenschutzgruppe zugeordnet (vom EDSA am 25.05.2018 bestätigt), nicht dem EDSA. | WP 248 rev.01 |
+
+Offen (HUMAN_DECISION_REQUIRED): die Normen des Dritten Teils HDSIG zu den
+Maßnahmenbereichen im JI-Profil; ob die förmliche Billigung (Explainer Rn. 10)
+Pflichtfeld wird; ob nicht umgesetzte Maßnahmen eine Freigabe ohne Auflagen
+sperren statt nur einen Hinweis auszulösen; Übernahme der Endfassung der
+EDSA-Vorlage nach der Konsultation.

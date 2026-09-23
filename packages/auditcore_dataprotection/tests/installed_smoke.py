@@ -28,12 +28,14 @@ from auditcore_dataprotection.memory import (
 def main() -> None:
     """Create a register, calculate and release a DPIA, reproduce a legacy result."""
     package = distribution("auditcore_dataprotection")
-    assert package.version == "0.1.0"
+    assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert available_profiles() == (
         ("regulierung.dsgvo", "2026.09.1"),
+        ("regulierung.dsgvo", "2026.10.1"),
         ("regulierung.hdsig_ji", "2026.09.1"),
+        ("regulierung.hdsig_ji", "2026.10.1"),
     )
     profile = load_profile("regulierung.dsgvo", "2026.09.1")
     assert propose(profile, {}).recommendation == "unvollstaendig"
