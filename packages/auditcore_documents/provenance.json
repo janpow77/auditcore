@@ -295,6 +295,32 @@
         "FileExport",
         "ExportStage"
       ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/extraction_quality_watchdog.py",
+      "git_blob": "16f5e7a071e7e59b6f862d2a1ac1416132cdea76",
+      "symbols": [
+        "EscalationLevel",
+        "FindingCategory",
+        "WatchdogFinding",
+        "ExtractionQualityMetrics",
+        "WatchdogResult",
+        "MANDATORY_FIELDS_USTG_14",
+        "ExtractionQualityWatchdog",
+        "validate_extraction_quality"
+      ],
+      "note": "Meldungstexte mit Umlauten (Entscheidung D8, 2026-09-23); Logging entfernt; Uhr injizierbar"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/tests/test_extraction_quality_watchdog.py",
+      "git_blob": "3606ddc1350949ace2153c0078f0d62df81f95fd",
+      "symbols": [
+        "tests/test_watchdog_original.py"
+      ]
     }
   ],
   "rights": {
@@ -397,7 +423,6 @@
     "ecohesion research_pdf: Werkzeug-spezifische Ergebnisquellen (Quellenbefund-Objekte) nur als generische Datensätze übernommen",
     "flowinvoice pipeline/models.py, AuditEvent-/RetentionPolicy-/RetentionJob-ORM, AuditService-Abfragen, QuotaService (Datenbank; bleiben Anwendung)",
     "flowinvoice services/chandra_ocr.py (GPU/torch-Engine; Anbindung über ChandraPort), services/parser.py:PDFParser (OCR/torch/transformers)",
-    "flowinvoice services/extraction_quality_watchdog.py (geplant; Meldungstexte ohne Umlaute, HUMAN_DECISION_REQUIRED)",
     "flowinvoice Einstellungen (get_settings), httpx-Abruf, ai_router_client (als Ports)"
   ],
   "characterization": {

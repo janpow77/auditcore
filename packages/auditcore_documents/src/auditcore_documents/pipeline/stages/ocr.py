@@ -274,6 +274,7 @@ class OcrStage(PipelineStage):
         chandra: ChandraPort | None = None,
         tesseract: TesseractPort | None = None,
         timer: Callable[[], float] = time.time,
+        gateway_outage_is_error: bool = False,
         **kwargs: object,
     ) -> None:
         super().__init__(*args, **kwargs)  # type: ignore[arg-type]
@@ -290,6 +291,8 @@ class OcrStage(PipelineStage):
         self.chandra = chandra
         self.tesseract = tesseract
         self.timer = timer
+        #: Entscheidung D6: Gateway-Ausfall ist ein wiederholbarer Fehler, keine Ablehnung.
+        self.gateway_outage_is_error = gateway_outage_is_error
 
     def _chandra_available(self) -> bool:
         try:
@@ -382,13 +385,28 @@ class OcrStage(PipelineStage):
                         "model": page_result.model,
                     }
                 )
+            if not page_texts:
+                self._raise_outage("; ".join(page_errors) or "no_result")
             return combine_router_pages(
                 page_texts, page_errors, len(page_images), self._elapsed_ms(start)
             )
         result, error = await self.router(
             file_bytes, filename=filename, model="auto", language="auto"
         )
+        if error or result is None:
+            self._raise_outage(str(error) if error else "no_result")
         return single_router_result(result, error, self._elapsed_ms(start))
+
+    def _raise_outage(self, reason: str) -> None:
+        """Entscheidung D6: Gateway-Ausfall als wiederholbarer Fehler statt Ablehnung."""
+        if self.gateway_outage_is_error:
+            raise StageError(
+                stage=self.name,
+                error_code="OCR_GATEWAY_UNAVAILABLE",
+                message=f"OCR-Gateway nicht verfügbar: {reason}",
+                recoverable=True,
+                retry_after_sec=5,
+            )
 
     def select_backend(self) -> str:
         if self.backend != "auto":

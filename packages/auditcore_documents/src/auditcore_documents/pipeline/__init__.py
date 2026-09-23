@@ -41,9 +41,17 @@ from auditcore_documents.pipeline.profiles import (
     CORRECTED_PIPELINE,
     LEGACY_PIPELINE,
     PIPELINE_PROFILES,
+    RECOMMENDED_PIPELINE,
     PipelineProfile,
 )
-from auditcore_documents.pipeline.retention import RetentionPolicyConfig, RetentionSweeper
+from auditcore_documents.pipeline.retention import (
+    ALL_CATEGORIES,
+    LEGACY_CATEGORIES,
+    ArtifactRetentionStore,
+    RetentionPolicyConfig,
+    RetentionStore,
+    RetentionSweeper,
+)
 from auditcore_documents.pipeline.stages.base import PipelineStage, StageError
 from auditcore_documents.pipeline.stages.export import ExportStage, FileExport, WebhookExport
 from auditcore_documents.pipeline.stages.ingestion import (
@@ -59,9 +67,13 @@ from auditcore_documents.pipeline.stages.ocr import (
     RouterResult,
 )
 from auditcore_documents.pipeline.stages.persist import FileArtifactStore, PersistStage
-from auditcore_documents.pipeline.stages.postprocess import PostprocessStage
+from auditcore_documents.pipeline.stages.postprocess import PostprocessStage, parse_amount
 from auditcore_documents.pipeline.stages.preprocess import PreprocessStage
-from auditcore_documents.pipeline.stages.validation import FraudAssessment, ValidationStage
+from auditcore_documents.pipeline.stages.validation import (
+    AmountFormatRule,
+    FraudAssessment,
+    ValidationStage,
+)
 
 
 def build_pipeline(
@@ -81,12 +93,20 @@ def build_pipeline(
     hashing = hashing or HashingService()
     postprocess = PostprocessStage(audit_service=audit, hashing_service=hashing)
     postprocess.patterns = {k: list(v) for k, v in profile.field_patterns.items()}
+    postprocess.amount_mode = profile.amount_mode  # type: ignore[assignment]
+    ocr_stage = ocr or OcrStage(audit_service=audit, hashing_service=hashing)
+    ocr_stage.gateway_outage_is_error = profile.gateway_outage_is_error
+    validation_stage = validation or ValidationStage(audit_service=audit, hashing_service=hashing)
+    if profile.amount_mode == "locale-aware" and not any(
+        isinstance(rule, AmountFormatRule) for rule in validation_stage.rules
+    ):
+        validation_stage.rules = [*validation_stage.rules, AmountFormatRule()]
     stages: list[PipelineStage] = [
         ingestion or IngestionStage(audit_service=audit, hashing_service=hashing),
         PreprocessStage(audit_service=audit, hashing_service=hashing),
-        ocr or OcrStage(audit_service=audit, hashing_service=hashing),
+        ocr_stage,
         postprocess,
-        validation or ValidationStage(audit_service=audit, hashing_service=hashing),
+        validation_stage,
         persist or PersistStage(audit_service=audit, hashing_service=hashing),
         *(extra_stages or []),
     ]
@@ -96,14 +116,33 @@ def build_pipeline(
         hashing_service=hashing,
         compute_enforcer=compute_enforcer,
         preserve_review=profile.preserve_review,
+        retry_gateway=profile.retry_gateway,
     )
     if sleep is not None:
         orchestrator.sleep = sleep
     return orchestrator
 
 
+def build_retention_sweeper(
+    *,
+    profile: PipelineProfile,
+    store: RetentionStore,
+    audit: AuditSink | None = None,
+) -> RetentionSweeper:
+    """Löschlauf mit den Aufbewahrungskategorien des Profils (D7)."""
+    return RetentionSweeper(store, audit, categories=profile.retention_categories)
+
+
 __all__ = [
+    "ALL_CATEGORIES",
     "CORRECTED_PIPELINE",
+    "LEGACY_CATEGORIES",
+    "RECOMMENDED_PIPELINE",
+    "AmountFormatRule",
+    "ArtifactRetentionStore",
+    "RetentionStore",
+    "build_retention_sweeper",
+    "parse_amount",
     "LEGACY_PIPELINE",
     "PIPELINE_PROFILES",
     "AnalysisModules",

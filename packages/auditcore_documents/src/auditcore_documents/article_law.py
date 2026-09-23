@@ -127,9 +127,14 @@ def _append_command(target: LawParagraph, command: str) -> None:
 
 
 def apply_commands(
-    paragraphs: list[LawParagraph], commands: list[str]
+    paragraphs: list[LawParagraph], commands: list[str], *, renumber_after_insert: bool = False
 ) -> tuple[list[LawParagraph], list[str], int]:
-    """Befehle der Reihe nach anwenden; nicht anwendbare bleiben offen."""
+    """Befehle der Reihe nach anwenden; nicht anwendbare bleiben offen.
+
+    ``renumber_after_insert`` (Entscheidung D2): Nach einer Einfügung rücken die
+    folgenden Absätze desselben Paragrafen ab der neuen Nummer um eins auf;
+    spätere Befehle beziehen sich auf die neue Zählung.
+    """
     open_commands: list[str] = []
     recognised = 0
     index = 0
@@ -154,7 +159,7 @@ def apply_commands(
                 if old_value not in basis:
                     open_commands.append(f"{command} [zu ersetzender Wortlaut nicht gefunden]")
                     break
-                # Legacy: jedes Vorkommen im Absatz wird ersetzt (DC-L02).
+                # Jedes Vorkommen im Absatz wird ersetzt (DC-L02, entschieden D2).
                 target.new_text = basis.replace(old_value, data.get("new") or "")
                 _append_command(target, command)
                 recognised += 1
@@ -199,8 +204,17 @@ def apply_commands(
                     command=command,
                     inserted=True,
                 )
+                position = paragraphs.index(target) + 1
+                if renumber_after_insert:
+                    section_key = _normalise_section(target.section)
+                    for item in paragraphs[position:]:
+                        if (
+                            _normalise_section(item.section) == section_key
+                            and item.paragraph >= new_number
+                        ):
+                            item.paragraph += 1
                 # Legacy: nachfolgende Absätze werden nicht umnummeriert (DC-L01).
-                paragraphs.insert(paragraphs.index(target) + 1, inserted)
+                paragraphs.insert(position, inserted)
                 index += 1
                 recognised += 1
             break
