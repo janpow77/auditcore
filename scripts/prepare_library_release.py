@@ -36,6 +36,14 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
         }
     ),
+    "auditcore_geo": frozenset(
+        {
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
+            ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
+            ("janpow77/osint", "d361ddb9a502bb899065e799d50104f306cfdc89"),
+        }
+    ),
     "auditcore_harvest": frozenset(
         {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
