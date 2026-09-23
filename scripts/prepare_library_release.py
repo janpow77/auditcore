@@ -57,6 +57,13 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
         }
     ),
+    "auditcore_risk": frozenset(
+        {
+            ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
+        }
+    ),
     "auditcore_sampling": frozenset(
         {
             ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),

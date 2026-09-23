@@ -20,5 +20,9 @@
   "auditcore_funding_sources": {
     "openpyxl<4,>=3.0.9; extra == \"xlsx\"": "python3-openpyxl (>= 3.0.9)",
     "defusedxml>=0.7.1; extra == \"xlsx\"": "python3-defusedxml (>= 0.7.1)"
+  },
+  "auditcore_risk": {
+    "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
+    "auditcore_procurement==0.1.0; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.1.0)"
   }
 }
