@@ -77,3 +77,25 @@ def test_previous_versions_are_unchanged() -> None:
     assert normalize("Müller GmbH", load_profile("flowworkshop.sanctions", "2026.09.1")) == (
         "muller"
     )
+
+
+FLOWINVOICE = json.loads(
+    (Path(__file__).parent / "fixtures" / "flowinvoice_observed.json").read_text()
+)
+
+
+@pytest.mark.parametrize(
+    "case", FLOWINVOICE["cases"], ids=[c["name"] for c in FLOWINVOICE["cases"]]
+)
+def test_flowinvoice_pep_normalisation_is_reproduced(case: dict[str, Any]) -> None:
+    assert case["exception"] is None
+    assert legacy.flowinvoice_pep_normalize_name(case["inputs"]["text"]) == case["output"]
+
+
+def test_flowinvoice_profile_is_a_separate_variant() -> None:
+    profile = load_profile("flowinvoice.pep", "2026.09.1")
+    assert normalize("Müller", profile) == "muller"
+    assert normalize("Straße", profile) == "stra e"
+    assert normalize("ПАО Газпром", profile) == ""
+    assert len(FLOWINVOICE["cases"]) == 73
+    assert FLOWINVOICE["sources"][0]["commit"] == "fb2d18568d2eaf64574d131ceae51a936b9aac02"

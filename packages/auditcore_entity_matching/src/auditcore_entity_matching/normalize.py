@@ -15,6 +15,10 @@ Two algorithms exist in the sources and are kept apart:
   above, but the case-folded text is first composed to NFC so that a
   decomposed umlaut (``u`` + combining diaeresis) meets the fold map
   (``ü → ue``) instead of losing only its diaeresis.
+* ``lower_nfkd_ascii`` (flowinvoice PEP bulk screening): ``str.lower``,
+  NFKD without combining marks, then every character outside ``a-z``,
+  ``0-9`` and whitespace becomes a separator. ``ß``, ``ø``, ``ł`` and all
+  non-Latin scripts are therefore lost (``Straße → stra e``).
 """
 
 from __future__ import annotations
@@ -26,6 +30,7 @@ from .errors import ProfileError
 from .profiles import Profile
 
 _WORD = re.compile(r"[^\w\s]", re.UNICODE)
+_ASCII_WORD = re.compile(r"[^a-z0-9\s]")
 _SPACE = re.compile(r"\s+")
 
 
@@ -42,7 +47,11 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         return ""
     if not isinstance(text, str):
         raise TypeError("Namen sind als Text zu übergeben.")
-    if rules.algorithm == "translate_then_casefold":
+    if rules.algorithm == "lower_nfkd_ascii":
+        decomposed = unicodedata.normalize("NFKD", text.lower().strip())
+        value = "".join(c for c in decomposed if not unicodedata.combining(c))
+        value = _ASCII_WORD.sub(" ", value)
+    elif rules.algorithm == "translate_then_casefold":
         table: dict[str, str | int | None] = dict(rules.translation)
         value = text.translate(str.maketrans(table)).casefold()
         if rules.ampersand is not None:

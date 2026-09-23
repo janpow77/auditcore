@@ -52,6 +52,11 @@ def flowworkshop_normalize_name_umschrift(text: str) -> str:
     return normalize(text, _profile("flowworkshop.sanctions", TRANSLITERATION_VERSION))
 
 
+def flowinvoice_pep_normalize_name(name: str) -> str:
+    """``PEPChecker._normalize_name`` (flowinvoice@fb2d185, ``Straße → stra e``)."""
+    return normalize(name, _profile("flowinvoice.pep"))
+
+
 def flowworkshop_is_valid_lei(value: str | None) -> bool:
     """``entity_resolution.is_valid_lei``: format only, check digits not verified."""
     return is_lei_format(value)

@@ -1,0 +1,678 @@
+{
+ "cases": [
+  {
+   "exception": null,
+   "inputs": {
+    "text": null
+   },
+   "name": "flowinvoice-pep-0",
+   "operation": "flowinvoice_pep_normalize",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": ""
+   },
+   "name": "flowinvoice-pep-1",
+   "operation": "flowinvoice_pep_normalize",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "   "
+   },
+   "name": "flowinvoice-pep-2",
+   "operation": "flowinvoice_pep_normalize",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "flowinvoice-pep-3",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "muller gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "name": "flowinvoice-pep-4",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "muller gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "name": "flowinvoice-pep-5",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "muller gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "name": "flowinvoice-pep-6",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "stra e sohne kg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "name": "flowinvoice-pep-7",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "strasse sohne kg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "name": "flowinvoice-pep-8",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "fraunhofer gesellschaft e v"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "name": "flowinvoice-pep-9",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "fraunhofer gesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "name": "flowinvoice-pep-10",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "societe generale s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "name": "flowinvoice-pep-11",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "societe generale sa"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "name": "flowinvoice-pep-12",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "jose strau"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "name": "flowinvoice-pep-13",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "s ren rsted a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "name": "flowinvoice-pep-14",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "odz sp z o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "name": "flowinvoice-pep-15",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "bruder wei gmbh co kg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "name": "flowinvoice-pep-16",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "siemens ag"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "name": "flowinvoice-pep-17",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "siemens aktiengesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "name": "flowinvoice-pep-18",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "deutsche bank ag holding group"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "name": "flowinvoice-pep-19",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "acme holding gmbh deutschland"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "name": "flowinvoice-pep-20",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ther uvre ltd"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "name": "flowinvoice-pep-21",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "or a plc"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "name": "flowinvoice-pep-22",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "tra e gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "name": "flowinvoice-pep-23",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "cafe creme sarl"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "name": "flowinvoice-pep-24",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "doppelte leerzeichen gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "name": "flowinvoice-pep-25",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ggmbh stiftung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "name": "flowinvoice-pep-26",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "firma co kg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "name": "flowinvoice-pep-27",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "alpha co kg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "name": "flowinvoice-pep-28",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "omega inc llc"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "name": "flowinvoice-pep-29",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "o reilly media inc"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "name": "flowinvoice-pep-30",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "name mit unterstrich gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "name": "flowinvoice-pep-31",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "zahl 123 ag"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "name": "flowinvoice-pep-32",
+   "operation": "flowinvoice_pep_normalize",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "北京公司"
+   },
+   "name": "flowinvoice-pep-33",
+   "operation": "flowinvoice_pep_normalize",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "name": "flowinvoice-pep-34",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "osaka kogyo k k"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "name": "flowinvoice-pep-35",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "krakow s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "name": "flowinvoice-pep-36",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "capek s r o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "name": "flowinvoice-pep-37",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "or evic d o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "name": "flowinvoice-pep-38",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "nandu s l"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "name": "flowinvoice-pep-39",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "yves emile"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "name": "flowinvoice-pep-40",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "istanbul a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "GmbH"
+   },
+   "name": "flowinvoice-pep-41",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "name": "flowinvoice-pep-42",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ag co"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "name": "flowinvoice-pep-43",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ug haftungsbeschrankt"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "name": "flowinvoice-pep-44",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "finance flow gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "name": "flowinvoice-pep-45",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "viii holding"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "①②③"
+   },
+   "name": "flowinvoice-pep-46",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "name": "flowinvoice-pep-47",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "tab name line"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "name": "flowinvoice-pep-48",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "emoji gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "name": "flowinvoice-pep-49",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "vladimir vladimirovich putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "putin"
+   },
+   "name": "flowinvoice-pep-50",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "flowinvoice-pep-51",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "muller gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER"
+   },
+   "name": "flowinvoice-pep-52",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Mueller GmbH"
+   },
+   "name": "flowinvoice-pep-53",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "mueller gmbh"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller-Lüdenscheidt Söhne"
+   },
+   "name": "flowinvoice-pep-54",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "muller ludenscheidt sohne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÄÖÜ äöü ß ẞ"
+   },
+   "name": "flowinvoice-pep-55",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "aou aou"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Grüße aus Köln"
+   },
+   "name": "flowinvoice-pep-56",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "gru e aus koln"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Göteborg Bröd AB"
+   },
+   "name": "flowinvoice-pep-57",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "goteborg brod ab"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Jørgen Ødegård"
+   },
+   "name": "flowinvoice-pep-58",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "j rgen degard"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łukasz Wałęsa"
+   },
+   "name": "flowinvoice-pep-59",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ukasz wa esa"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Björk Guðmundsdóttir"
+   },
+   "name": "flowinvoice-pep-60",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "bjork gu mundsdottir"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ærø Œnologie"
+   },
+   "name": "flowinvoice-pep-61",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "r nologie"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zürich Versicherung AG"
+   },
+   "name": "flowinvoice-pep-62",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "zurich versicherung ag"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Österreichische Post AG"
+   },
+   "name": "flowinvoice-pep-63",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "osterreichische post ag"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Übersee-Handel GmbH & Co. KG"
+   },
+   "name": "flowinvoice-pep-64",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ubersee handel gmbh co kg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÂÊÎÔÛ âêîôû"
+   },
+   "name": "flowinvoice-pep-65",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "aeiou aeiou"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ärger ÄG"
+   },
+   "name": "flowinvoice-pep-66",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "arger ag"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "öko"
+   },
+   "name": "flowinvoice-pep-67",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "oko"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße"
+   },
+   "name": "flowinvoice-pep-68",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "stra e"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE"
+   },
+   "name": "flowinvoice-pep-69",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ivan Petrov"
+   },
+   "name": "flowinvoice-pep-70",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "ivan petrov"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "A B"
+   },
+   "name": "flowinvoice-pep-71",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "a b"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "x\u001cy"
+   },
+   "name": "flowinvoice-pep-72",
+   "operation": "flowinvoice_pep_normalize",
+   "output": "x y"
+  }
+ ],
+ "environment": {
+  "python": "3.12.3",
+  "unicode": "15.0.0"
+ },
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "sources": [
+  {
+   "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+   "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1",
+   "path": "backend/app/services/fraud_detection/pep_checker.py",
+   "repository": "janpow77/flowinvoice",
+   "symbols": [
+    "PEPChecker._normalize_name"
+   ]
+  }
+ ],
+ "status": "OBSERVED"
+}

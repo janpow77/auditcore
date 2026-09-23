@@ -80,6 +80,7 @@ def test_profiles_are_explicit_source_bound_and_fingerprinted() -> None:
     assert available_profiles() == (
         ("audit_designer.sanctions", V),
         ("audit_designer.sanctions", "2026.09.2"),
+        ("flowinvoice.pep", V),
         ("flowworkshop.entity_resolution", V),
         ("flowworkshop.sanctions", V),
         ("flowworkshop.sanctions", "2026.09.2"),

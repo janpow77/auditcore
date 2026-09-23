@@ -19,7 +19,7 @@ from .errors import ProfileError
 
 SCHEMA = "auditcore_entity_matching.profile/1"
 ALGORITHMS = frozenset(
-    {"translate_then_casefold", "casefold_fold_nfkd", "casefold_nfc_fold_nfkd"}
+    {"translate_then_casefold", "casefold_fold_nfkd", "casefold_nfc_fold_nfkd", "lower_nfkd_ascii"}
 )
 
 

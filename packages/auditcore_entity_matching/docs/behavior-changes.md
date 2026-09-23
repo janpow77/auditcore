@@ -60,6 +60,15 @@ entfällt in flowworkshop dadurch sogar der Token als Rechtsform `ag`.
 Legacy-Funktionen: `designer_normalisiere_name_umschrift`,
 `flowworkshop_normalize_name_umschrift`.
 
+## 0.2.0: Profil `flowinvoice.pep` 2026.09.1
+
+`PEPChecker._normalize_name` aus flowinvoice (`fb2d185`) ist eine vierte
+Variante (tatsächlich ausgeführt: `tools/capture_flowinvoice.py`, 73 Fälle):
+`str.lower`, NFKD ohne Akzente, danach wird alles außer `a-z`, `0-9` und
+Leerraum zum Trenner. Folge: `Müller → muller`, `Straße → stra e`,
+`Jørgen Ødegård → j rgen degard`, kyrillische Namen werden leer. Neuer
+Algorithmus `lower_nfkd_ascii`, Legacy-Funktion `flowinvoice_pep_normalize_name`.
+
 ## HUMAN_DECISION_REQUIRED
 
 1. ~~Umstellung des Sanktionsscreenings auf die Transliteration~~ — in beiden
@@ -68,3 +77,7 @@ Legacy-Funktionen: `designer_normalisiere_name_umschrift`,
    umgeschrieben werden sollen.
 2. Schwellen, Geburtsdatums-/Länder-Bonus/-Malus und Konfidenzklassen sind nicht
    Teil dieser Bibliothek.
+3. flowinvoice-PEP-Normalisierung (`flowinvoice.pep`): widerspricht der
+   Entscheidung „mueller wenn es kein umlaut gibt“ und verliert `ß`, `ø`, `ł`
+   sowie nicht-lateinische Schriften. Ob flowinvoice auf ein Umschrift-Profil
+   umgestellt wird, ist nicht entschieden; das Profil bleibt Legacy.

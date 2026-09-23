@@ -87,6 +87,16 @@
       ],
       "profile": "flowworkshop.sanctions 2026.09.2",
       "pull_request": "janpow77/flowworkshop#49"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/pep_checker.py",
+      "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1",
+      "symbols": [
+        "PEPChecker._normalize_name"
+      ],
+      "profile": "flowinvoice.pep 2026.09.1"
     }
   ],
   "rights": {
@@ -98,6 +108,10 @@
         "license": null
       },
       "janpow77/audit_designer": {
+        "private": true,
+        "license": null
+      },
+      "janpow77/flowinvoice": {
         "private": true,
         "license": null
       }
@@ -142,6 +156,13 @@
       "subject": "LEI-Prüfziffernprüfung ISO 7064 MOD 97-10",
       "decision": "eingeschaltet",
       "effect": "check_lei/extract_lei im Consumer flowworkshop; falsche Prüfziffern ungültig, kein LEI-Treffer mit Konfidenz 100"
+    },
+    {
+      "status": "HUMAN_DECISION_REQUIRED",
+      "date": "2026-09-23",
+      "subject": "PEP-Normalisierung flowinvoice",
+      "decision": null,
+      "effect": "flowinvoice.pep faltet Müller → muller und verliert ß/ø/ł sowie nicht-lateinische Schriften; Umstellung auf die Umschrift nicht entschieden"
     }
   ],
   "characterization_transliteration": {
@@ -163,8 +184,14 @@
     },
     {
       "version": "0.2.0",
-      "profiles": 6,
-      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert"
+      "profiles": 7,
+      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung)"
     }
-  ]
+  ],
+  "characterization_flowinvoice": {
+    "fixture": "tests/fixtures/flowinvoice_observed.json",
+    "tool": "tools/capture_flowinvoice.py",
+    "cases": 73,
+    "method": "Modul pep_checker unter Paket-Stellvertreter geladen (das Paket-__init__ zieht die ganze Anwendung nach), Blob-geprüft"
+  }
 }
