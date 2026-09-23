@@ -240,12 +240,12 @@ def test_explicit_justified_residual_severity_lifts_the_floor() -> None:
 
 
 def test_screening_names_article_29_working_party() -> None:
-    answers = {**no_answers(edpb()), "edsa_01_bewerten": True, "edsa_03_ueberwachung": True}
-    assert "Art.-29-Datenschutzgruppe" in propose(edpb(), answers).screening.reasoning
+    points = {"edsa_01_bewerten": True, "edsa_03_ueberwachung": True}
+    assert "Art.-29-Datenschutzgruppe" in (
+        propose(edpb(), {**no_answers(edpb()), **points}).screening.reasoning
+    )
     assert "Europäischen Datenschutzausschusses erfüllt" in (
-        propose(
-            dsgvo(), {**no_answers(dsgvo()), **{k: v for k, v in answers.items()}}
-        ).screening.reasoning
+        propose(dsgvo(), {**no_answers(dsgvo()), **points}).screening.reasoning
     )
 
 
@@ -664,3 +664,17 @@ def test_screening_only_needs_no_dpia_master_data() -> None:
         TENANT, DORA, a.assessment_id, **rev(a), vote="zugestimmt", statement="ok"
     )
     assert w.service.release_blockers(a) == ()
+
+
+@pytest.mark.parametrize("profile_id", ["regulierung.dsgvo", "regulierung.hdsig_ji"])
+def test_all_17_entries_of_the_dsk_list_are_hard_questions(profile_id: str) -> None:
+    profile = load_profile(profile_id, VERSION)
+    listed = [q for q in profile.questions if q.block == "dsk_muss_liste"]
+    assert len(listed) == 17 and all(q.effect == "hart" for q in listed)
+    numbers = [int(q.key[6:8]) for q in listed]
+    assert numbers == list(range(1, 18))
+    assert all(f"Nr. {n} (" in q.reference for n, q in zip(numbers, listed, strict=True))
+    answers = {**no_answers(profile), "dsk_nr17_leistungsfaehigkeit": True}
+    screening = propose(profile, answers).screening
+    assert screening.outcome == "pflicht"
+    assert screening.hard_triggers == ("dsk_nr17_leistungsfaehigkeit",)

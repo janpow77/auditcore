@@ -94,6 +94,7 @@ DSK-Kurzpapiers Nr. 18 (S. 5) statt aus Produktgrenzen. Die Fassungen
 | Maßnahmenplan | Abschnitt 4.2.c |
 | Stammdaten der Abschätzung (Team und Umfang Pflicht, Billigung mit Datum) | Abschnitte 0.4, 0.5, 1.1.c, 1.4, 2.2.b |
 | Quellenliste im Profil und im Bericht | Abschnitt 0.5 |
+| Alle 17 Nummern der DSK-Muss-Liste als eigene harte Fragen (bisher 8 Nummern in 5 Fragen) | Art. 35 Abs. 4 DSGVO |
 
 `AssessmentService.hints()` liefert nicht blockierende Hinweise, wo die
 Dokumentation hinter der Vorlage zurückbleibt. Der Bericht behält seine

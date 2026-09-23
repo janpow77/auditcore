@@ -99,7 +99,7 @@
   ]
  },
  "id": "regulierung.dsgvo",
- "legal_status": "Aus Version 2026.09.1 abgeleitet und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18 statt aus Produktgrenzen und Mindeststufe ‚mittel‘ ab Schwere 4 vor Maßnahmen (fachliche Festlegungen vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
+ "legal_status": "Aus Version 2026.09.1 abgeleitet und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: alle 17 Nummern der Muss-Liste als eigene Fragen, Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18 statt aus Produktgrenzen und Mindeststufe ‚mittel‘ ab Schwere 4 vor Maßnahmen (fachliche Festlegungen vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
  "prefill": {
   "large_scale_threshold": 10000
  },
@@ -565,7 +565,7 @@
    },
    {
     "key": "dsk_muss_liste",
-    "title": "Liste nach Artikel 35 Absatz 4 DSGVO (in Hessen die vom Hessischen Beauftragten für Datenschutz und Informationsfreiheit veröffentlichte Liste der Datenschutzkonferenz, Fassung 1.1 vom 17.10.2018)"
+    "title": "Liste nach Artikel 35 Absatz 4 DSGVO (Liste der Datenschutzkonferenz, Version 1.1 vom 17.10.2018, in Hessen vom HBDI veröffentlicht; alle 17 Nummern, die Liste ist nicht abschließend)"
    },
    {
     "key": "edsa_wp248",
@@ -615,57 +615,189 @@
    {
     "block": "dsk_muss_liste",
     "effect": "hart",
-    "explanation": "",
-    "key": "dsk_01_telemetrie",
-    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 4 (Aufenthaltsdaten), auch Nr. 12 und Nr. 14",
-    "legal_basis_ji": null,
-    "prefill": null,
-    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 4 (Aufenthaltsdaten), auch Nr. 12 und Nr. 14",
-    "text": "Werden Standort-, Verkehrs- oder Sensordaten von Mobilgeräten, Fahrzeugen oder vernetzten Geräten systematisch erhoben, um umfassende Verhaltens- oder Bewegungsprofile zu bilden?"
-   },
-   {
-    "block": "dsk_muss_liste",
-    "effect": "hart",
-    "explanation": "Erfasst auch die Auswertung von Kommunikationsmetadaten und biometrische Zeiterfassung mit Verhaltensprofil.",
-    "key": "dsk_02_beschaeftigte",
-    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 8 (Verhalten von Beschäftigten); § 23 HDSIG",
-    "legal_basis_ji": null,
-    "prefill": null,
-    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 8 (Verhalten von Beschäftigten); § 23 HDSIG",
-    "text": "Werden technische Systeme eingesetzt, die Beschäftigte systematisch, lückenlos oder softwaregestützt überwachen, bewerten oder in ihrer Leistung kontrollieren?"
-   },
-   {
-    "block": "dsk_muss_liste",
-    "effect": "hart",
-    "explanation": "Insbesondere Gesichtserkennung, Stimmmuster, Venenabgleich.",
-    "key": "dsk_03_biometrie",
+    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts oder der Nutzung einer Dienstleistung. Beispiel der Liste: biometrische Zutrittskontrolle.",
+    "key": "dsk_nr01_biometrie",
     "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 1 (biometrische Daten)",
     "legal_basis_ji": null,
     "prefill": null,
     "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 1 (biometrische Daten)",
-    "text": "Werden biometrische Verfahren zur Identifizierung oder Zutrittskontrolle in großem Umfang oder bei schutzbedürftigen Personen eingesetzt?"
+    "text": "Werden biometrische Daten zur eindeutigen Identifizierung natürlicher Personen verarbeitet, und trifft zusätzlich mindestens ein weiteres Kriterium aus WP 248 rev.01 zu?"
    },
    {
     "block": "dsk_muss_liste",
     "effect": "hart",
-    "explanation": "",
-    "key": "dsk_04_zusammenfuehrung",
-    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 und Nr. 10 (Zusammenführung aus verschiedenen Quellen)",
+    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts oder der Nutzung einer Dienstleistung.",
+    "key": "dsk_nr02_genetik",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 2 (genetische Daten)",
     "legal_basis_ji": null,
     "prefill": null,
-    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 und Nr. 10 (Zusammenführung aus verschiedenen Quellen)",
-    "text": "Werden umfangreiche Datenbestände aus verschiedenen Bereichen oder von Dritten zusammengeführt, um Scoring, Betrugserkennung oder Bonitätsprüfungen zu betreiben?"
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 2 (genetische Daten)",
+    "text": "Werden genetische Daten im Sinne von Art. 4 Nr. 13 DSGVO verarbeitet, und trifft zusätzlich mindestens ein weiteres Kriterium aus WP 248 rev.01 zu?"
    },
    {
     "block": "dsk_muss_liste",
     "effect": "hart",
     "explanation": "",
-    "key": "dsk_05_sozialdaten",
+    "key": "dsk_nr03_geheimnis",
     "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 3 (Sozial-, Berufs- oder besonderes Amtsgeheimnis)",
     "legal_basis_ji": null,
     "prefill": null,
     "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 3 (Sozial-, Berufs- oder besonderes Amtsgeheimnis)",
     "text": "Werden Daten, die einem Sozial-, Berufs- oder besonderen Amtsgeheimnis unterliegen, umfangreich verarbeitet, auch wenn es sich nicht um Daten nach Artikel 9 Absatz 1 oder Artikel 10 DSGVO handelt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Etwa Standort- oder Fahrzeugdaten.",
+    "key": "dsk_nr04_aufenthalt",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 4 (Aufenthaltsdaten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 4 (Aufenthaltsdaten)",
+    "text": "Werden personenbezogene Daten über den Aufenthalt natürlicher Personen umfangreich verarbeitet?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Alle genannten Voraussetzungen müssen zusammen vorliegen. Beispiel der Liste: Systeme zur Betrugsprävention.",
+    "key": "dsk_nr05_zusammenfuehrung_entscheidung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 (Zusammenführung als Entscheidungsgrundlage)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 (Zusammenführung als Entscheidungsgrundlage)",
+    "text": "Werden Daten aus verschiedenen Quellen in großem Umfang zusammengeführt und verarbeitet, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um Grundlagen für Entscheidungen mit Rechtswirkung oder ähnlich erheblicher Beeinträchtigung zu schaffen?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr06_mobile_videoerfassung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 6 (mobile optisch-elektronische Erfassung)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 6 (mobile optisch-elektronische Erfassung)",
+    "text": "Werden personenbezogene Daten in öffentlichen Bereichen mobil optisch-elektronisch erfasst und aus einem oder mehreren Erfassungssystemen in großem Umfang zentral zusammengeführt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Beispiel der Liste: Bewertungsportale.",
+    "key": "dsk_nr07_bewertung_veroeffentlichung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 7 (Bewertungsdaten für Dritte)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 7 (Bewertungsdaten für Dritte)",
+    "text": "Werden Daten zur Bewertung des Verhaltens oder anderer persönlicher Aspekte umfangreich erhoben und veröffentlicht oder übermittelt, sodass Dritte damit Entscheidungen mit Rechtswirkung oder ähnlich erheblicher Beeinträchtigung treffen können?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Beispiel der Liste: Systeme zur Verhinderung von Datenabflüssen (Data Loss Prevention).",
+    "key": "dsk_nr08_beschaeftigte",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 8 (Verhalten von Beschäftigten); § 23 HDSIG",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 8 (Verhalten von Beschäftigten); § 23 HDSIG",
+    "text": "Werden Daten über das Verhalten von Beschäftigten umfangreich verarbeitet, die zur Bewertung ihrer Arbeitstätigkeit so eingesetzt werden können, dass sich Rechtsfolgen ergeben oder die Beschäftigten erheblich beeinträchtigt werden?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr09_persoenlichkeitsprofile",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 9 (Profile über Interessen, Beziehungen, Persönlichkeit)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 9 (Profile über Interessen, Beziehungen, Persönlichkeit)",
+    "text": "Werden umfassende Profile über die Interessen, das Netz persönlicher Beziehungen oder die Persönlichkeit der Betroffenen erstellt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Alle genannten Voraussetzungen müssen zusammen vorliegen. Beispiel der Liste: Big-Data-Analyse von Kundendaten.",
+    "key": "dsk_nr10_zusammenfuehrung_analyse",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 10 (Zusammenführung zur Mustererkennung)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 10 (Zusammenführung zur Mustererkennung)",
+    "text": "Werden Daten aus verschiedenen Quellen in großem Umfang zusammengeführt und verarbeitet, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um vorher unbekannte Zusammenhänge für nicht im Vorhinein bestimmte Zwecke zu entdecken?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr11_kuenstliche_intelligenz",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 11 (künstliche Intelligenz)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 11 (künstliche Intelligenz)",
+    "text": "Wird künstliche Intelligenz eingesetzt, um mit personenbezogenen Daten die Interaktion mit den Betroffenen zu steuern oder persönliche Aspekte der Betroffenen zu bewerten?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr12_mobilfunksensoren",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 12 (Sensoren und Funksignale von Mobilgeräten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 12 (Sensoren und Funksignale von Mobilgeräten)",
+    "text": "Werden Sensoren von Mobilfunkgeräten der Betroffenen oder deren Funksignale nicht bestimmungsgemäß genutzt, um Aufenthaltsort oder Bewegung über einen substanziellen Zeitraum zu bestimmen?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr13_video_audio",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 13 (Auswertung von Video- und Audioaufnahmen)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 13 (Auswertung von Video- und Audioaufnahmen)",
+    "text": "Werden Video- oder Audioaufnahmen automatisiert ausgewertet, um die Persönlichkeit der Betroffenen zu bewerten?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr14_bewegung_kaufverhalten",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 14 (Profile über Bewegung und Kaufverhalten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 14 (Profile über Bewegung und Kaufverhalten)",
+    "text": "Werden umfassende Profile über die Bewegung und das Kaufverhalten der Betroffenen erstellt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "„Nicht nur im Einzelfall“ bezieht sich auf die Zahl der Betroffenen und die Angaben je Person.",
+    "key": "dsk_nr15_anonymisierung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 15 (Anonymisierung besonderer Kategorien)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 15 (Anonymisierung besonderer Kategorien)",
+    "text": "Werden besondere Kategorien personenbezogener Daten nach Art. 9 DSGVO nicht nur im Einzelfall anonymisiert, um sie an Dritte zu übermitteln?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr16_sensoren_art9",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 16 (Art. 9/10-Daten über Sensoren oder Apps)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 16 (Art. 9/10-Daten über Sensoren oder Apps)",
+    "text": "Werden Daten nach Art. 9 Abs. 1 oder Art. 10 DSGVO wiederholt mittels innovativer Nutzung von Sensoren oder mobilen Anwendungen erhoben und von einer zentralen Stelle empfangen und aufbereitet, auch wenn die Verarbeitung nicht umfangreich ist?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr17_leistungsfaehigkeit",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 17 (Leistungsfähigkeit durch neue Technologien)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 17 (Leistungsfähigkeit durch neue Technologien)",
+    "text": "Verwenden Anbieter neuer Technologien Daten nach Art. 9 Abs. 1 oder Art. 10 DSGVO, um die Leistungsfähigkeit von Personen zu bestimmen, auch wenn die Verarbeitung nicht umfangreich ist?"
    },
    {
     "block": "edsa_wp248",
@@ -846,7 +978,7 @@
    "reference": "Art. 35 Abs. 4 DSGVO",
    "status": "Version 1.1",
    "title": "Liste der Verarbeitungstätigkeiten, für die eine DSFA durchzuführen ist",
-   "used_for": "Harte Auslöser der Schwellwertanalyse"
+   "used_for": "Harte Auslöser der Schwellwertanalyse: alle 17 Nummern als eigene Fragen"
   },
   {
    "date": "2018-04-26",
