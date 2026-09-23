@@ -20,7 +20,7 @@ from auditcore_procurement.ted import dump_records
 def main() -> None:
     """Normalise, import, check and precheck with the installed pure core."""
     package = distribution("auditcore_procurement")
-    assert package.version == "0.1.0"
+    assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     notice = {
@@ -75,6 +75,23 @@ def main() -> None:
         hvtg, Decimal("1"), None, None, "Bauleistungen", None, None, [], mode="strict", year=2023
     )
     assert missing["overall_status"] == "REVIEW_REQUIRED"
+    historic = load_profile("procurement.hvtg", "2026.09.3")
+    y2019 = run_prechecks(
+        historic,
+        Decimal("220000"),
+        None,
+        None,
+        "Liefer-/Dienstleistungen",
+        None,
+        None,
+        [],
+        mode="strict",
+        year=2019,
+        authority_type="sub_central",
+    )
+    assert y2019["checks"][0]["calculated_tier"] == "BELOW_EU"
+    assert y2019["checks"][0]["eu_threshold"]["value"] == 221000
+    assert y2019["checks"][0]["eu_threshold"]["official_journal"].startswith("ABl. L 337")
     assert ted_company_result(500, None, "DE", "designer").status == "failed"
     if find_spec("auditcore_harvest") is not None:
         from auditcore_procurement.sources import TedAwardsAdapter

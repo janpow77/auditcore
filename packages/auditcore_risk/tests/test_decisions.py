@@ -187,3 +187,64 @@ def test_k4_rf09_uses_the_transliterating_payee_profile() -> None:
     for a, b in zip(RA.rules, k4.rules, strict=True):
         if a.code != "RF09":
             assert a == b
+
+
+C2_RA = load_profile("riskanalysis.year_bound", "2026.09.4")
+C2_RC = load_profile("flowinvoice.risk_checker", "2026.09.3")
+
+
+def test_c2_profiles_reference_the_historic_procurement_profile() -> None:
+    k4 = load_profile("riskanalysis.year_bound", "2026.09.3")
+    for new, old in ((C2_RA, k4), (C2_RC, load_profile("flowinvoice.risk_checker", D))):
+        assert new.status == "APPROVED"
+        assert new.source["decision"]["quote"] == "c2. ja"
+        assert new.source["derived_from"] == {"profile": old.id, "version": old.version}
+        assert new.fingerprint != old.fingerprint
+    rf02 = C2_RA.rule("RF02").params["thresholds"]["procurement_eu"]
+    assert (rf02["profile"], rf02["version"]) == ("procurement.hvtg", "2026.09.3")
+    split = C2_RC.rule("SPLIT_INVOICE").params["procurement_eu"]
+    assert (split["profile"], split["version"]) == ("procurement.hvtg", "2026.09.3")
+    # only the procurement reference differs from the superseded versions
+    for a, b in zip(k4.rules, C2_RA.rules, strict=True):
+        if a.code != "RF02":
+            assert a == b
+        else:
+            assert a.params["thresholds"]["static"] == b.params["thresholds"]["static"]
+            assert a.params["field"] == b.params["field"] and a.params["lower"] == b.params["lower"]
+
+
+def test_c2_rf02_2019_is_decided_instead_of_undetermined() -> None:
+    k4 = load_profile("riskanalysis.year_bound", "2026.09.3")
+    rows = [
+        row(bruttobetrag=8_330.0, nettobetrag=7_000.0, rechnungsdatum_dt=date(2019, 5, 1)),
+        row(bruttobetrag=238_000.0, nettobetrag=200_000.0, rechnungsdatum_dt=date(2019, 5, 1)),
+        row(bruttobetrag=238_000.0, nettobetrag=200_000.0, rechnungsdatum_dt=date(2015, 5, 1)),
+        row(bruttobetrag=238_000.0, nettobetrag=200_000.0, rechnungsdatum_dt=date(2013, 5, 1)),
+        row(bruttobetrag=238_000.0, nettobetrag=200_000.0, rechnungsdatum_dt=date(2028, 1, 1)),
+    ]
+    before = [r.flags["RF02"] for r in evaluate(rows, k4).records]
+    assert before == [None, None, None, None, None]  # 2026.09.2 covers only 2024–2027
+    result = evaluate(rows, C2_RA).records
+    # 2019: 221.000 € -> [198.900; 221.000); 2015: 207.000 € -> [186.300; 207.000)
+    assert [r.flags["RF02"] for r in result] == [False, True, True, None, None]
+    hit = next(h for h in result[1].hits if h.code == "RF02")
+    match = hit.evidence["matches"][0]
+    assert match["threshold"] == 221000.0 and match["version"] == "2026.09.3"
+    assert match["official_journal"] == "ABl. L 337 vom 19.12.2017, S. 19"
+    assert "2013" in result[3].undetermined["RF02"]
+
+
+def test_c2_splitting_uses_the_threshold_of_the_invoice_year() -> None:
+    near_2019 = [200_000.0, 205_000.0, 210_000.0]  # within [176.800; 221.000] in 2019
+    request = split_request("2019-04-01", near_2019)
+    assert evaluate([request], C2_RC).records[0].flags["SPLIT_INVOICE"] is True
+    assert (
+        evaluate([request], load_profile("flowinvoice.risk_checker", D))
+        .records[0]
+        .flags["SPLIT_INVOICE"]
+        is None
+    )
+    hit = evaluate([request], C2_RC).records[0].hits
+    assert hit[0].evidence["threshold"] == 221000.0
+    early = evaluate([split_request("2013-04-01", near_2019)], C2_RC).records[0]
+    assert early.flags["SPLIT_INVOICE"] is None

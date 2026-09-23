@@ -1,0 +1,319 @@
+{
+ "schema": "auditcore_procurement.precheck-profile/2",
+ "id": "procurement.hvtg",
+ "version": "2026.09.3",
+ "status": "SOURCE_CHARACTERIZED",
+ "legal_status": "EU-Schwellenwerte je Geltungszeitraum 2014–2027 mit amtlicher Fundstelle (Nachtrag 2014–2023 nach Nutzerentscheidung vom 23.09.2026); nur belegte Zeiträume sind eingetragen. Nationale Stufen, Verfahren, Mindestangebote und Pflichtdokumente stammen aus dem Regelwerk PROCUREMENT_HVTG der Anwendungen und sind fachlich nicht bestätigt: REVIEW_REQUIRED.",
+ "source": {
+  "repositories": [
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "e76961b1bdab273f8c2441a4bfe2108a2c71f9eb"
+   },
+   {
+    "repository": "janpow77/audit-portal",
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/services/procurement_analyzer.py",
+    "git_blob": "a3fa3be4d0c486f2cf0d161a94b3795e6f46455b"
+   },
+   {
+    "repository": "janpow77/flowinvoice",
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "path": "backend/app/seeds/procurement_ruleset.py",
+    "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1"
+   }
+  ],
+  "rights": "USER_AUTHORIZED_MIT"
+ },
+ "construction_marker": "Bau",
+ "tiers": {
+  "supply_service": [
+   {
+    "tier": "BELOW_1K",
+    "max": 1000,
+    "procedure": "Direktvergabe",
+    "min_bids": 1
+   },
+   {
+    "tier": "BELOW_25K",
+    "max": 25000,
+    "procedure": "Verhandlungsvergabe",
+    "min_bids": 3
+   },
+   {
+    "tier": "BELOW_EU",
+    "max": 221000,
+    "procedure": "Oeffentliche Ausschreibung",
+    "min_bids": 3
+   },
+   {
+    "tier": "ABOVE_EU",
+    "max": null,
+    "procedure": "EU-Verfahren",
+    "min_bids": 5
+   }
+  ],
+  "construction": [
+   {
+    "tier": "BELOW_1K",
+    "max": 1000,
+    "procedure": "Direktvergabe",
+    "min_bids": 1
+   },
+   {
+    "tier": "BELOW_25K",
+    "max": 25000,
+    "procedure": "Freihaendige Vergabe",
+    "min_bids": 3
+   },
+   {
+    "tier": "BELOW_EU",
+    "max": 5538000,
+    "procedure": "Oeffentliche Ausschreibung",
+    "min_bids": 3
+   },
+   {
+    "tier": "ABOVE_EU",
+    "max": null,
+    "procedure": "EU-Verfahren",
+    "min_bids": 5
+   }
+  ]
+ },
+ "fallback_tier": "ABOVE_EU",
+ "required_documents": {
+  "Direktvergabe": [
+   "VERGABEVERMERK"
+  ],
+  "Verhandlungsvergabe": [
+   "VERGABEVERMERK",
+   "ANGEBOT",
+   "ZUSCHLAG"
+  ],
+  "Freihaendige Vergabe": [
+   "VERGABEVERMERK",
+   "ANGEBOT",
+   "ZUSCHLAG"
+  ],
+  "Oeffentliche Ausschreibung": [
+   "VERGABEVERMERK",
+   "AUSSCHREIBUNG",
+   "ANGEBOT",
+   "SUBMISSIONSPROTOKOLL",
+   "ZUSCHLAG"
+  ],
+  "EU-Verfahren": [
+   "VERGABEVERMERK",
+   "AUSSCHREIBUNG",
+   "ANGEBOT",
+   "SUBMISSIONSPROTOKOLL",
+   "ZUSCHLAG",
+   "VERTRAG",
+   "COI",
+   "TARIFTREUEERKLAERUNG"
+  ]
+ },
+ "bid_document_type": "ANGEBOT",
+ "default_min_bids": 1,
+ "value_deviation": {
+  "warning_above_percent": 10,
+  "fail_above_percent": 20,
+  "fail_reference": "§ 132 GWB"
+ },
+ "eu_thresholds": {
+  "legal_basis": "Art. 4 Richtlinie 2014/24/EU (ab 18.04.2016) bzw. Art. 7 Richtlinie 2004/18/EG (bis 17.04.2016) in der jeweils durch (Delegierte) Verordnung der Kommission geänderten Fassung; § 106 Abs. 1 und 2 Nr. 1 GWB",
+  "comparison": "reached_or_exceeded",
+  "comparison_reference": "§ 106 Abs. 1 Satz 1 GWB: Anwendung, wenn der geschätzte Auftragswert den Schwellenwert erreicht oder überschreitet",
+  "tier": "BELOW_EU",
+  "categories": {
+   "construction": "works",
+   "supply_service": {
+    "central": "supplies_services_central",
+    "sub_central": "supplies_services_sub_central"
+   }
+  },
+  "periods": [
+   {
+    "valid_from": "2014-01-01",
+    "valid_to": "2015-12-31",
+    "values": {
+     "works": 5186000,
+     "supplies_services_central": 134000,
+     "supplies_services_sub_central": 207000
+    },
+    "source": {
+     "regulation": "Verordnung (EU) Nr. 1336/2013 der Kommission vom 13. Dezember 2013",
+     "amends": "Richtlinie 2004/18/EG, Artikel 7 Buchstaben a bis c (Artikel 2 Nr. 1)",
+     "official_journal": "ABl. L 335 vom 14.12.2013, S. 17",
+     "celex": "32013R1336",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32013R1336",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32013R1336",
+     "retrieved_sha256": "742dba08cadb29ec56acaf6f0335a29fa4b2e4c1974f6190c900946b4b844146",
+     "applies_from": "2014-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)",
+     "note": "Bis 17.04.2016 galt die Richtlinie 2004/18/EG (Aufhebung durch Art. 91 RL 2014/24/EU zum 18.04.2016). Artikel 7 Buchstabe a betrifft die in Anhang IV genannten zentralen Regierungsbehörden, Buchstabe b die übrigen öffentlichen Auftraggeber; die Werte stimmen mit der Ursprungsfassung von Art. 4 Buchstaben a bis c RL 2014/24/EU (ABl. L 94 vom 28.3.2014, S. 65) überein."
+    }
+   },
+   {
+    "valid_from": "2016-01-01",
+    "valid_to": "2017-12-31",
+    "values": {
+     "works": 5225000,
+     "supplies_services_central": 135000,
+     "supplies_services_sub_central": 209000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2015/2170 der Kommission vom 24. November 2015",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 307 vom 25.11.2015, S. 5",
+     "celex": "32015R2170",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2170",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2170",
+     "retrieved_sha256": "a13e12ebc9091340cf7ad83c8c37831a1ecc94da6e11051730c4e19dc2a73dd4",
+     "applies_from": "2016-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)",
+     "concurrent_source": {
+      "regulation": "Verordnung (EU) 2015/2342 der Kommission vom 15. Dezember 2015",
+      "amends": "Richtlinie 2004/18/EG, Artikel 7 Buchstaben a bis c",
+      "official_journal": "ABl. L 330 vom 16.12.2015, S. 18",
+      "celex": "32015R2342",
+      "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2342",
+      "retrieved_from": "http://publications.europa.eu/resource/celex/32015R2342",
+      "retrieved_sha256": "989cac3a9f939f65b99784d3549730cf4e20f87034fd49627bdff4d26f375e32",
+      "applies_from": "2016-01-01"
+     },
+     "note": "01.01.–17.04.2016 galt RL 2004/18/EG in der Fassung der VO (EU) 2015/2342, ab 18.04.2016 RL 2014/24/EU in der Fassung der Delegierten VO (EU) 2015/2170; beide setzen dieselben Werte fest, der Zeitraum ist daher durchgehend."
+    }
+   },
+   {
+    "valid_from": "2018-01-01",
+    "valid_to": "2019-12-31",
+    "values": {
+     "works": 5548000,
+     "supplies_services_central": 144000,
+     "supplies_services_sub_central": 221000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2017/2365 der Kommission vom 18. Dezember 2017",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 337 vom 19.12.2017, S. 19",
+     "celex": "32017R2365",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2365",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32017R2365",
+     "retrieved_sha256": "4a9cdce02e59ea8e4f73398c0f77f5ee2a25821e206e483debdea7a5b1d9cb8b",
+     "applies_from": "2018-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)"
+    }
+   },
+   {
+    "valid_from": "2020-01-01",
+    "valid_to": "2021-12-31",
+    "values": {
+     "works": 5350000,
+     "supplies_services_central": 139000,
+     "supplies_services_sub_central": 214000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2019/1828 der Kommission vom 30. Oktober 2019",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 279 vom 31.10.2019, S. 25",
+     "celex": "32019R1828",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1828",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32019R1828",
+     "retrieved_sha256": "f7685bad87f95b205ce07d2343c4778b5529cc3ece0f7f115794b58ff3da29c0",
+     "applies_from": "2020-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)"
+    }
+   },
+   {
+    "valid_from": "2022-01-01",
+    "valid_to": "2023-12-31",
+    "values": {
+     "works": 5382000,
+     "supplies_services_central": 140000,
+     "supplies_services_sub_central": 215000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2021/1952 der Kommission vom 10. November 2021",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L 398 vom 11.11.2021, S. 23",
+     "celex": "32021R1952",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1952",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32021R1952",
+     "retrieved_sha256": "7b612376694b1312d8475faf2c5313d0c607ae0bc924a6346cd74bddee6184ca",
+     "applies_from": "2022-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 bis 4 im amtlichen deutschen Text gelesen (Amt für Veröffentlichungen, Cellar-XHTML)"
+    }
+   },
+   {
+    "valid_from": "2024-01-01",
+    "valid_to": "2025-12-31",
+    "values": {
+     "works": 5538000,
+     "supplies_services_central": 143000,
+     "supplies_services_sub_central": 221000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2023/2495 der Kommission vom 15. November 2023",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L, 2023/2495, 16.11.2023",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202302495",
+     "applies_from": "2024-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Wortlaut von Artikel 1 und 2 auf EUR-Lex gelesen",
+     "legacy_note": "Die Quellwerte 221.000 EUR (supply_service BELOW_EU) und 5.538.000 EUR (construction BELOW_EU) entsprechen dieser Periode; der Wert für zentrale Regierungsbehörden (143.000 EUR) war im Quellregelwerk nicht abgebildet.",
+     "celex": "32023R2495",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32023R2495",
+     "retrieved_sha256": "ca2ef5aa1411ce71a330a3ececda60c1a777c841f2b99844222930249c06e8f1",
+     "rechecked_on": "2026-09-23"
+    }
+   },
+   {
+    "valid_from": "2026-01-01",
+    "valid_to": "2027-12-31",
+    "values": {
+     "works": 5404000,
+     "supplies_services_central": 140000,
+     "supplies_services_sub_central": 216000
+    },
+    "source": {
+     "regulation": "Delegierte Verordnung (EU) 2025/2152 der Kommission vom 22. Oktober 2025",
+     "amends": "Richtlinie 2014/24/EU, Artikel 4 Buchstaben a bis c",
+     "official_journal": "ABl. L, 2025/2152, 23.10.2025",
+     "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202502152",
+     "national_publication": "Bekanntmachung des BMWE vom 9. Dezember 2025, BAnz AT 18.12.2025 B4 (§ 106 Abs. 3 GWB)",
+     "applies_from": "2026-01-01",
+     "verified_on": "2026-09-23",
+     "verification": "Artikel 1 auf EUR-Lex und Bundesanzeiger-Bekanntmachung gelesen",
+     "celex": "32025R2152",
+     "retrieved_from": "http://publications.europa.eu/resource/celex/32025R2152",
+     "retrieved_sha256": "42a76b2d440449e63dd40d78ffe8db3c197dad35baefd0d63de198969f897c97",
+     "rechecked_on": "2026-09-23"
+    }
+   }
+  ],
+  "not_entered": "Zeiträume vor 2014 und ab 2028 sind nicht eingetragen (kein im Profil belegter Wert). Konzessionen (RL 2014/23/EU), Sektorenaufträge (RL 2014/25/EU), soziale und andere besondere Dienstleistungen (Art. 4 Buchst. d RL 2014/24/EU) und Wettbewerbe kennt das Profilschema nicht; sie sind daher nicht enthalten."
+ },
+ "national_tiers": {
+  "status": "REVIEW_REQUIRED",
+  "tiers": [
+   "BELOW_1K",
+   "BELOW_25K"
+  ],
+  "comparison": "inclusive_maximum",
+  "source": "Regelwerk PROCUREMENT_HVTG der Anwendungen (threshold_rules), siehe source.repositories; keine Norm im Regelwerk angegeben"
+ }
+}
