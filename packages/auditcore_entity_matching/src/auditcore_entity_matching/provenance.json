@@ -97,6 +97,20 @@
         "PEPChecker._normalize_name"
       ],
       "profile": "flowinvoice.pep 2026.09.1"
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+      "path": "backend/audit_prep/normalization.py",
+      "git_blob": "c9f9c3dbb211cd6c215464293bccc5efebf0fc7d",
+      "symbols": [
+        "LEGAL_SUFFIXES",
+        "_UMLAUT_FOLD",
+        "strip_accents",
+        "normalize_name",
+        "normalize_name_folded"
+      ],
+      "profile": "audit_portal.name / audit_portal.name_folded 2026.09.1"
     }
   ],
   "rights": {
@@ -114,6 +128,10 @@
       "janpow77/flowinvoice": {
         "private": true,
         "license": null
+      },
+      "janpow77/audit-portal": {
+        "private": true,
+        "license": "proprietär (NOASSERTION)"
       }
     },
     "authorization": {
@@ -184,8 +202,8 @@
     },
     {
       "version": "0.2.0",
-      "profiles": 7,
-      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung)"
+      "profiles": 9,
+      "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten)"
     }
   ],
   "characterization_flowinvoice": {
@@ -193,5 +211,11 @@
     "tool": "tools/capture_flowinvoice.py",
     "cases": 73,
     "method": "Modul pep_checker unter Paket-Stellvertreter geladen (das Paket-__init__ zieht die ganze Anwendung nach), Blob-geprüft"
+  },
+  "characterization_portal": {
+    "fixture": "tests/fixtures/portal_observed.json",
+    "tool": "tools/capture_portal.py",
+    "cases": 140,
+    "method": "audit_prep (nur Standardbibliothek) direkt aus dem Blob-geprüften Checkout importiert"
   }
 }

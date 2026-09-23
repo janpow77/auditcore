@@ -69,6 +69,15 @@ Leerraum zum Trenner. Folge: `Müller → muller`, `Straße → stra e`,
 `Jørgen Ødegård → j rgen degard`, kyrillische Namen werden leer. Neuer
 Algorithmus `lower_nfkd_ascii`, Legacy-Funktion `flowinvoice_pep_normalize_name`.
 
+## 0.2.0: Profile `audit_portal.name` und `audit_portal.name_folded` 2026.09.1
+
+`audit_prep.normalization` des Portals (`ac1ccc7`) liefert zwei Vergleichsformen
+je Namen; beide lassen sich mit dem bestehenden Algorithmus `casefold_fold_nfkd`
+ausdrücken (140 ausgeführte Fälle, `tools/capture_portal.py`): `name` ohne
+Faltungstabelle (`Müller → muller`), `name_folded` mit `ä/ö/ü/ß → ae/oe/ue/ss`
+(`Müller → mueller`), jeweils mit der Portal-Rechtsformliste (zusätzlich
+`ggmbh`, `mbh`). `ø`/`ł` bleiben in beiden Formen stehen.
+
 ## HUMAN_DECISION_REQUIRED
 
 1. ~~Umstellung des Sanktionsscreenings auf die Transliteration~~ — in beiden

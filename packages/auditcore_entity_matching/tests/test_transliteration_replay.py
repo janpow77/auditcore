@@ -99,3 +99,16 @@ def test_flowinvoice_profile_is_a_separate_variant() -> None:
     assert normalize("ПАО Газпром", profile) == ""
     assert len(FLOWINVOICE["cases"]) == 73
     assert FLOWINVOICE["sources"][0]["commit"] == "fb2d18568d2eaf64574d131ceae51a936b9aac02"
+
+
+PORTAL = json.loads((Path(__file__).parent / "fixtures" / "portal_observed.json").read_text())
+
+
+@pytest.mark.parametrize("case", PORTAL["cases"], ids=[c["name"] for c in PORTAL["cases"]])
+def test_audit_portal_comparison_forms_are_reproduced(case: dict[str, Any]) -> None:
+    assert case["exception"] is None
+    profile_id = (
+        "audit_portal.name" if case["operation"] == "portal_name" else ("audit_portal.name_folded")
+    )
+    profile = load_profile(profile_id, "2026.09.1")
+    assert normalize(case["inputs"]["text"], profile) == case["output"]

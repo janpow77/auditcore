@@ -1,0 +1,1329 @@
+{
+ "cases": [
+  {
+   "exception": null,
+   "inputs": {
+    "text": null
+   },
+   "name": "portal_name-0",
+   "operation": "portal_name",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": null
+   },
+   "name": "portal_name_folded-0",
+   "operation": "portal_name_folded",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": ""
+   },
+   "name": "portal_name-1",
+   "operation": "portal_name",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": ""
+   },
+   "name": "portal_name_folded-1",
+   "operation": "portal_name_folded",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "   "
+   },
+   "name": "portal_name-2",
+   "operation": "portal_name",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "   "
+   },
+   "name": "portal_name_folded-2",
+   "operation": "portal_name_folded",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "portal_name-3",
+   "operation": "portal_name",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "portal_name_folded-3",
+   "operation": "portal_name_folded",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "name": "portal_name-4",
+   "operation": "portal_name",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "name": "portal_name_folded-4",
+   "operation": "portal_name_folded",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "name": "portal_name-5",
+   "operation": "portal_name",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "name": "portal_name_folded-5",
+   "operation": "portal_name_folded",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "name": "portal_name-6",
+   "operation": "portal_name",
+   "output": "strasse sohne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "name": "portal_name_folded-6",
+   "operation": "portal_name_folded",
+   "output": "strasse soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "name": "portal_name-7",
+   "operation": "portal_name",
+   "output": "strasse sohne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "name": "portal_name_folded-7",
+   "operation": "portal_name_folded",
+   "output": "strasse soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "name": "portal_name-8",
+   "operation": "portal_name",
+   "output": "fraunhofer gesellschaft e v"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "name": "portal_name_folded-8",
+   "operation": "portal_name_folded",
+   "output": "fraunhofer gesellschaft e v"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "name": "portal_name-9",
+   "operation": "portal_name",
+   "output": "fraunhofer gesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "name": "portal_name_folded-9",
+   "operation": "portal_name_folded",
+   "output": "fraunhofer gesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "name": "portal_name-10",
+   "operation": "portal_name",
+   "output": "societe generale s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "name": "portal_name_folded-10",
+   "operation": "portal_name_folded",
+   "output": "societe generale s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "name": "portal_name-11",
+   "operation": "portal_name",
+   "output": "societe generale"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "name": "portal_name_folded-11",
+   "operation": "portal_name_folded",
+   "output": "societe generale"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "name": "portal_name-12",
+   "operation": "portal_name",
+   "output": "jose strauss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "name": "portal_name_folded-12",
+   "operation": "portal_name_folded",
+   "output": "jose strauss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "name": "portal_name-13",
+   "operation": "portal_name",
+   "output": "søren ørsted a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "name": "portal_name_folded-13",
+   "operation": "portal_name_folded",
+   "output": "søren ørsted a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "name": "portal_name-14",
+   "operation": "portal_name",
+   "output": "łodz sp z o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "name": "portal_name_folded-14",
+   "operation": "portal_name_folded",
+   "output": "łodz sp z o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "name": "portal_name-15",
+   "operation": "portal_name",
+   "output": "bruder weiss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "name": "portal_name_folded-15",
+   "operation": "portal_name_folded",
+   "output": "brueder weiss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "name": "portal_name-16",
+   "operation": "portal_name",
+   "output": "siemens"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "name": "portal_name_folded-16",
+   "operation": "portal_name_folded",
+   "output": "siemens"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "name": "portal_name-17",
+   "operation": "portal_name",
+   "output": "siemens aktiengesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "name": "portal_name_folded-17",
+   "operation": "portal_name_folded",
+   "output": "siemens aktiengesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "name": "portal_name-18",
+   "operation": "portal_name",
+   "output": "deutsche bank holding group"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "name": "portal_name_folded-18",
+   "operation": "portal_name_folded",
+   "output": "deutsche bank holding group"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "name": "portal_name-19",
+   "operation": "portal_name",
+   "output": "acme holding deutschland"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "name": "portal_name_folded-19",
+   "operation": "portal_name_folded",
+   "output": "acme holding deutschland"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "name": "portal_name-20",
+   "operation": "portal_name",
+   "output": "æther œuvre"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "name": "portal_name_folded-20",
+   "operation": "portal_name_folded",
+   "output": "æther œuvre"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "name": "portal_name-21",
+   "operation": "portal_name",
+   "output": "þor ðað"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "name": "portal_name_folded-21",
+   "operation": "portal_name_folded",
+   "output": "þor ðað"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "name": "portal_name-22",
+   "operation": "portal_name",
+   "output": "sstrasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "name": "portal_name_folded-22",
+   "operation": "portal_name_folded",
+   "output": "sstrasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "name": "portal_name-23",
+   "operation": "portal_name",
+   "output": "cafe creme"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "name": "portal_name_folded-23",
+   "operation": "portal_name_folded",
+   "output": "cafe creme"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "name": "portal_name-24",
+   "operation": "portal_name",
+   "output": "doppelte leerzeichen"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "name": "portal_name_folded-24",
+   "operation": "portal_name_folded",
+   "output": "doppelte leerzeichen"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "name": "portal_name-25",
+   "operation": "portal_name",
+   "output": "stiftung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "name": "portal_name_folded-25",
+   "operation": "portal_name_folded",
+   "output": "stiftung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "name": "portal_name-26",
+   "operation": "portal_name",
+   "output": "firma"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "name": "portal_name_folded-26",
+   "operation": "portal_name_folded",
+   "output": "firma"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "name": "portal_name-27",
+   "operation": "portal_name",
+   "output": "alpha"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "name": "portal_name_folded-27",
+   "operation": "portal_name_folded",
+   "output": "alpha"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "name": "portal_name-28",
+   "operation": "portal_name",
+   "output": "omega"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "name": "portal_name_folded-28",
+   "operation": "portal_name_folded",
+   "output": "omega"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "name": "portal_name-29",
+   "operation": "portal_name",
+   "output": "o reilly media"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "name": "portal_name_folded-29",
+   "operation": "portal_name_folded",
+   "output": "o reilly media"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "name": "portal_name-30",
+   "operation": "portal_name",
+   "output": "name_mit_unterstrich"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "name": "portal_name_folded-30",
+   "operation": "portal_name_folded",
+   "output": "name_mit_unterstrich"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "name": "portal_name-31",
+   "operation": "portal_name",
+   "output": "zahl 123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "name": "portal_name_folded-31",
+   "operation": "portal_name_folded",
+   "output": "zahl 123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "name": "portal_name-32",
+   "operation": "portal_name",
+   "output": "пао газпром"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "name": "portal_name_folded-32",
+   "operation": "portal_name_folded",
+   "output": "пао газпром"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "北京公司"
+   },
+   "name": "portal_name-33",
+   "operation": "portal_name",
+   "output": "北京公司"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "北京公司"
+   },
+   "name": "portal_name_folded-33",
+   "operation": "portal_name_folded",
+   "output": "北京公司"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "name": "portal_name-34",
+   "operation": "portal_name",
+   "output": "osaka kogyo k k"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "name": "portal_name_folded-34",
+   "operation": "portal_name_folded",
+   "output": "osaka kogyo k k"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "name": "portal_name-35",
+   "operation": "portal_name",
+   "output": "krakow s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "name": "portal_name_folded-35",
+   "operation": "portal_name_folded",
+   "output": "krakow s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "name": "portal_name-36",
+   "operation": "portal_name",
+   "output": "capek s r o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "name": "portal_name_folded-36",
+   "operation": "portal_name_folded",
+   "output": "capek s r o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "name": "portal_name-37",
+   "operation": "portal_name",
+   "output": "đorđevic d o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "name": "portal_name_folded-37",
+   "operation": "portal_name_folded",
+   "output": "đorđevic d o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "name": "portal_name-38",
+   "operation": "portal_name",
+   "output": "nandu s l"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "name": "portal_name_folded-38",
+   "operation": "portal_name_folded",
+   "output": "nandu s l"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "name": "portal_name-39",
+   "operation": "portal_name",
+   "output": "yves emile"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "name": "portal_name_folded-39",
+   "operation": "portal_name_folded",
+   "output": "yves emile"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "name": "portal_name-40",
+   "operation": "portal_name",
+   "output": "istanbul a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "name": "portal_name_folded-40",
+   "operation": "portal_name_folded",
+   "output": "istanbul a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "GmbH"
+   },
+   "name": "portal_name-41",
+   "operation": "portal_name",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "GmbH"
+   },
+   "name": "portal_name_folded-41",
+   "operation": "portal_name_folded",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "name": "portal_name-42",
+   "operation": "portal_name",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "name": "portal_name_folded-42",
+   "operation": "portal_name_folded",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "name": "portal_name-43",
+   "operation": "portal_name",
+   "output": "haftungsbeschrankt"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "name": "portal_name_folded-43",
+   "operation": "portal_name_folded",
+   "output": "haftungsbeschraenkt"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "name": "portal_name-44",
+   "operation": "portal_name",
+   "output": "finance flow"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "name": "portal_name_folded-44",
+   "operation": "portal_name_folded",
+   "output": "finance flow"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "name": "portal_name-45",
+   "operation": "portal_name",
+   "output": "viii holding"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "name": "portal_name_folded-45",
+   "operation": "portal_name_folded",
+   "output": "viii holding"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "①②③"
+   },
+   "name": "portal_name-46",
+   "operation": "portal_name",
+   "output": "123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "①②③"
+   },
+   "name": "portal_name_folded-46",
+   "operation": "portal_name_folded",
+   "output": "123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "name": "portal_name-47",
+   "operation": "portal_name",
+   "output": "tab name line"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "name": "portal_name_folded-47",
+   "operation": "portal_name_folded",
+   "output": "tab name line"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "name": "portal_name-48",
+   "operation": "portal_name",
+   "output": "emoji"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "name": "portal_name_folded-48",
+   "operation": "portal_name_folded",
+   "output": "emoji"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "name": "portal_name-49",
+   "operation": "portal_name",
+   "output": "vladimir vladimirovich putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "name": "portal_name_folded-49",
+   "operation": "portal_name_folded",
+   "output": "vladimir vladimirovich putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "putin"
+   },
+   "name": "portal_name-50",
+   "operation": "portal_name",
+   "output": "putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "putin"
+   },
+   "name": "portal_name_folded-50",
+   "operation": "portal_name_folded",
+   "output": "putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "portal_name-51",
+   "operation": "portal_name",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "portal_name_folded-51",
+   "operation": "portal_name_folded",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER"
+   },
+   "name": "portal_name-52",
+   "operation": "portal_name",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER"
+   },
+   "name": "portal_name_folded-52",
+   "operation": "portal_name_folded",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Mueller GmbH"
+   },
+   "name": "portal_name-53",
+   "operation": "portal_name",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Mueller GmbH"
+   },
+   "name": "portal_name_folded-53",
+   "operation": "portal_name_folded",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller-Lüdenscheidt Söhne"
+   },
+   "name": "portal_name-54",
+   "operation": "portal_name",
+   "output": "muller ludenscheidt sohne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller-Lüdenscheidt Söhne"
+   },
+   "name": "portal_name_folded-54",
+   "operation": "portal_name_folded",
+   "output": "mueller luedenscheidt soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÄÖÜ äöü ß ẞ"
+   },
+   "name": "portal_name-55",
+   "operation": "portal_name",
+   "output": "aou aou ss ss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÄÖÜ äöü ß ẞ"
+   },
+   "name": "portal_name_folded-55",
+   "operation": "portal_name_folded",
+   "output": "aeoeue aeoeue ss ss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Grüße aus Köln"
+   },
+   "name": "portal_name-56",
+   "operation": "portal_name",
+   "output": "grusse aus koln"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Grüße aus Köln"
+   },
+   "name": "portal_name_folded-56",
+   "operation": "portal_name_folded",
+   "output": "gruesse aus koeln"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Göteborg Bröd AB"
+   },
+   "name": "portal_name-57",
+   "operation": "portal_name",
+   "output": "goteborg brod"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Göteborg Bröd AB"
+   },
+   "name": "portal_name_folded-57",
+   "operation": "portal_name_folded",
+   "output": "goeteborg broed"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Jørgen Ødegård"
+   },
+   "name": "portal_name-58",
+   "operation": "portal_name",
+   "output": "jørgen ødegard"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Jørgen Ødegård"
+   },
+   "name": "portal_name_folded-58",
+   "operation": "portal_name_folded",
+   "output": "jørgen ødegard"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łukasz Wałęsa"
+   },
+   "name": "portal_name-59",
+   "operation": "portal_name",
+   "output": "łukasz wałesa"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łukasz Wałęsa"
+   },
+   "name": "portal_name_folded-59",
+   "operation": "portal_name_folded",
+   "output": "łukasz wałesa"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Björk Guðmundsdóttir"
+   },
+   "name": "portal_name-60",
+   "operation": "portal_name",
+   "output": "bjork guðmundsdottir"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Björk Guðmundsdóttir"
+   },
+   "name": "portal_name_folded-60",
+   "operation": "portal_name_folded",
+   "output": "bjoerk guðmundsdottir"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ærø Œnologie"
+   },
+   "name": "portal_name-61",
+   "operation": "portal_name",
+   "output": "ærø œnologie"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ærø Œnologie"
+   },
+   "name": "portal_name_folded-61",
+   "operation": "portal_name_folded",
+   "output": "ærø œnologie"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zürich Versicherung AG"
+   },
+   "name": "portal_name-62",
+   "operation": "portal_name",
+   "output": "zurich versicherung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zürich Versicherung AG"
+   },
+   "name": "portal_name_folded-62",
+   "operation": "portal_name_folded",
+   "output": "zuerich versicherung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Österreichische Post AG"
+   },
+   "name": "portal_name-63",
+   "operation": "portal_name",
+   "output": "osterreichische post"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Österreichische Post AG"
+   },
+   "name": "portal_name_folded-63",
+   "operation": "portal_name_folded",
+   "output": "oesterreichische post"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Übersee-Handel GmbH & Co. KG"
+   },
+   "name": "portal_name-64",
+   "operation": "portal_name",
+   "output": "ubersee handel"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Übersee-Handel GmbH & Co. KG"
+   },
+   "name": "portal_name_folded-64",
+   "operation": "portal_name_folded",
+   "output": "uebersee handel"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÂÊÎÔÛ âêîôû"
+   },
+   "name": "portal_name-65",
+   "operation": "portal_name",
+   "output": "aeiou aeiou"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÂÊÎÔÛ âêîôû"
+   },
+   "name": "portal_name_folded-65",
+   "operation": "portal_name_folded",
+   "output": "aeiou aeiou"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ärger ÄG"
+   },
+   "name": "portal_name-66",
+   "operation": "portal_name",
+   "output": "arger"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ärger ÄG"
+   },
+   "name": "portal_name_folded-66",
+   "operation": "portal_name_folded",
+   "output": "arger"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "öko"
+   },
+   "name": "portal_name-67",
+   "operation": "portal_name",
+   "output": "oko"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "öko"
+   },
+   "name": "portal_name_folded-67",
+   "operation": "portal_name_folded",
+   "output": "oko"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße"
+   },
+   "name": "portal_name-68",
+   "operation": "portal_name",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße"
+   },
+   "name": "portal_name_folded-68",
+   "operation": "portal_name_folded",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE"
+   },
+   "name": "portal_name-69",
+   "operation": "portal_name",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE"
+   },
+   "name": "portal_name_folded-69",
+   "operation": "portal_name_folded",
+   "output": "strasse"
+  }
+ ],
+ "constants": {
+  "legal_suffixes": [
+   "ab",
+   "ag",
+   "bv",
+   "co",
+   "company",
+   "corp",
+   "ev",
+   "fz",
+   "fzc",
+   "ggmbh",
+   "gmbh",
+   "inc",
+   "jsc",
+   "kg",
+   "limited",
+   "llc",
+   "lp",
+   "ltd",
+   "mbh",
+   "nv",
+   "ohg",
+   "ojsc",
+   "ooo",
+   "oy",
+   "pjsc",
+   "plc",
+   "sa",
+   "sarl",
+   "sas",
+   "se",
+   "sl",
+   "spa",
+   "srl",
+   "ug",
+   "zao"
+  ],
+  "umlaut_fold": {
+   "ß": "ss",
+   "ä": "ae",
+   "ö": "oe",
+   "ü": "ue"
+  }
+ },
+ "environment": {
+  "python": "3.12.3",
+  "unicode": "15.0.0"
+ },
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "sources": [
+  {
+   "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+   "git_blob": "c9f9c3dbb211cd6c215464293bccc5efebf0fc7d",
+   "path": "backend/audit_prep/normalization.py",
+   "repository": "janpow77/audit-portal",
+   "symbols": [
+    "LEGAL_SUFFIXES",
+    "_UMLAUT_FOLD",
+    "normalize_name",
+    "normalize_name_folded"
+   ]
+  }
+ ],
+ "status": "OBSERVED"
+}
