@@ -71,10 +71,10 @@ Nutzungsbedingungen aller Portale: REVIEW_REQUIRED (nicht geprüft).
 |---|---|
 | pytest (Python 3.12) | 289 passed: Replay 239, Adapter 24 (Contract-Suite für 7 Adapter), Lebenszyklus 9, robots 9, Katalog 3, Policy 3, Architektur 2 |
 | ruff, ruff format, mypy strict, bandit | PASS |
-| Plattform-pytest | 281 passed |
+| Plattform-pytest (nach Merge von main) | 284 passed |
 | auditcore-quality strict | Syntax, Lint, Typen, bandit, pip-audit, Tests, Supply Chain PASS; API NOT_EXECUTED (keine Baseline); 5× AC-OSS-001 geprüft (Regex-Muster, keine Kennungen); Gesamt REVIEW_REQUIRED wegen Policy |
 | Policy (verwaltung-app-framework@15f5338) | F-07, F-09, F-15, F-16 VERIFIED (T-11/14/30/37/38); offen: F-05 (Personenbezug möglich), F-07.ASSESS (Schutzbedarf UNKNOWN), SOLL-01 |
-| Wheel/sdist + SBOM | Wheel SHA-256 `6ff74bcd56b96f64ad979e03928d24ad26659a6cea0e6ab84e614416bddd7843` |
+| Wheel/sdist + SBOM | Wheel SHA-256 `130f2bd6028836580bdf82d6aa042f022c98929fafd6fee1f7164b2dc18d9d90` |
 | `scripts/verify_domain_packages.py --apt` (mit `auditcore_harvest`) | 28/28 PASS: hashgebundene Installation, `pip check`, Herkunft, Smoke, selektive Installation, Entfernung, Debian-Pakete, signierte APT-Quelle, Install/Upgrade/Remove im netzlosen Container |
 | Consumer-Integration (Kopien, installiertes Wheel) | 8/8 PASS; versteigerung-Tests auf der umgestellten Kopie 10 passed |
 
