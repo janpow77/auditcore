@@ -27,6 +27,7 @@ from auditcore_harvest.testing import assert_adapter
 
 from auditcore_geo.nominatim import (
     MINDESTABSTAND_REGELMAESSIG_S,
+    OEFFENTLICH_TAGESGRENZE,
     NominatimAdapter,
     empfohlene_laufparameter,
     pruefe_laufparameter,
@@ -56,7 +57,7 @@ KONFIG: dict[str, Any] = {
 def lauf(transport: Any, konfig: dict[str, Any] = KONFIG) -> tuple[Any, ListSink, ClockSleeper]:
     clock = FixedClock()
     sleeper = ClockSleeper(clock)
-    rate, request = empfohlene_laufparameter(konfig, "lauf-1")
+    rate, request = empfohlene_laufparameter(konfig, "lauf-1", heute_bereits_gesendet=0)
     engine = HarvestEngine(
         transport, StaticCredentials({}), MemoryStateStore(), clock, sleeper, rate_limit=rate
     )
@@ -138,17 +139,25 @@ def test_configuration_enforces_usage_policy(konfig: dict[str, Any]) -> None:
 def test_run_parameters_enforce_rate_and_budget() -> None:
     request = HarvestRequest("geo.nominatim_search", "x", max_pages=3)
     with pytest.raises(ConfigError):
-        pruefe_laufparameter(KONFIG, RateLimit(0.5), request)
+        pruefe_laufparameter(KONFIG, RateLimit(0.5), request, heute_bereits_gesendet=0)
     with pytest.raises(ConfigError):
-        pruefe_laufparameter(KONFIG, RateLimit(1.0), HarvestRequest("geo.nominatim_search", "x"))
-    pruefe_laufparameter(KONFIG, RateLimit(1.0), request)
+        pruefe_laufparameter(
+            KONFIG,
+            RateLimit(1.0),
+            HarvestRequest("geo.nominatim_search", "x"),
+            heute_bereits_gesendet=0,
+        )
+    pruefe_laufparameter(KONFIG, RateLimit(1.0), request, heute_bereits_gesendet=0)
     regelmaessig = _mit(laufart="regelmaessig")
     with pytest.raises(ConfigError):
-        pruefe_laufparameter(regelmaessig, RateLimit(1.0), request)
-    rate, _ = empfohlene_laufparameter(regelmaessig, "x")
+        pruefe_laufparameter(regelmaessig, RateLimit(1.0), request, heute_bereits_gesendet=0)
+    rate, _ = empfohlene_laufparameter(regelmaessig, "x", heute_bereits_gesendet=0)
     assert rate.min_interval_seconds == MINDESTABSTAND_REGELMAESSIG_S
     eigene = _mit(basis_url="https://geocoder.intern.example")
-    assert empfohlene_laufparameter(eigene, "x")[0].min_interval_seconds == 0.0
+    assert (
+        empfohlene_laufparameter(eigene, "x", heute_bereits_gesendet=0)[0].min_interval_seconds
+        == 0.0
+    )
 
 
 class _Aufzeichnung:
@@ -217,3 +226,27 @@ def test_email_is_sent_but_never_part_of_the_record() -> None:
     _, sink, _ = lauf(transport, konfig)
     assert transport.calls[0]["params"]["email"] == "kontakt@example.invalid"
     assert "example.invalid" not in json.dumps([r.normalized for r in sink.records.values()])
+
+
+def test_daily_limit_for_the_public_endpoint() -> None:
+    """Entscheidung 23.09.2026: höchstens 1 000 Anfragen je Tag und Consumer."""
+    assert OEFFENTLICH_TAGESGRENZE == 1000
+    request = HarvestRequest("geo.nominatim_search", "x", max_pages=3)
+    pruefe_laufparameter(KONFIG, RateLimit(1.0), request, heute_bereits_gesendet=997)
+    with pytest.raises(ConfigError, match="Tagesgrenze"):
+        pruefe_laufparameter(KONFIG, RateLimit(1.0), request, heute_bereits_gesendet=998)
+    with pytest.raises(ConfigError, match="Tagesgrenze"):
+        empfohlene_laufparameter(KONFIG, "x", heute_bereits_gesendet=1000)
+    for falsch in (-1, True, 1.5):
+        with pytest.raises(ConfigError):
+            pruefe_laufparameter(
+                KONFIG,
+                RateLimit(1.0),
+                request,
+                heute_bereits_gesendet=falsch,  # type: ignore[arg-type]
+            )
+    with pytest.raises(ConfigError, match="Tagesgrenze"):
+        NominatimAdapter().validate_config(_mit(budget=1001))
+    eigene = _mit(basis_url="https://geocoder.intern.example", budget=5000)
+    NominatimAdapter().validate_config(eigene)
+    pruefe_laufparameter(eigene, RateLimit(0.0), request, heute_bereits_gesendet=100_000)
