@@ -18,13 +18,15 @@ pip install 'auditcore_procurement[sources,html]==0.1.0'      # plus Online-Abru
 ```
 
 ```python
+from datetime import date
 from decimal import Decimal
 from auditcore_procurement import load_profile, normalize_notice, run_prechecks
 
 datensatz = normalize_notice({"publication-number": "1-2024", "winner-name": "Beispiel GmbH"})
-profil = load_profile("procurement.hvtg-legacy", "2026.09.1")
+profil = load_profile("procurement.hvtg", "2026.09.2")
 bericht = run_prechecks(profil, Decimal("50000"), None, None, "Liefer-/Dienstleistungen",
-                        "Oeffentliche Ausschreibung", "BELOW_EU", [], mode="strict")
+                        "Oeffentliche Ausschreibung", "BELOW_EU", [], mode="strict",
+                        reference_date=date(2026, 3, 1), authority_type="sub_central")
 ```
 
 ## Verträge
@@ -44,8 +46,13 @@ bericht = run_prechecks(profil, Decimal("50000"), None, None, "Liefer-/Dienstlei
   das Original einschließlich „Fehler = leere Liste“; `ted_company_result` und
   `had_result` liefern stattdessen `ok`/`no_hit`/`rate_limited`/`failed`.
 - **Prechecks** (`prechecks`): `mode="legacy"` ist ergebnisgleich zum Original,
-  `mode="strict"` korrigiert P-C01…P-C04 und nennt Profil-ID, Version und
-  Fingerprint. Ein Precheck-Ergebnis ist keine Prüfentscheidung.
+  `mode="strict"` korrigiert P-C01…P-C04 und P-C10…P-C12 und nennt Profil-ID,
+  Version, Fingerprint und den angewandten EU-Schwellenwert samt Fundstelle.
+  Ein Precheck-Ergebnis ist keine Prüfentscheidung.
+- **EU-Schwellenwerte je Zeitraum** (Profil `procurement.hvtg 2026.09.2`):
+  2024–2025 (VO (EU) 2023/2495) und 2026–2027 (VO (EU) 2025/2152), Auswahl über
+  Datum der Maßnahme/Bekanntmachung oder Jahr; fehlt ein Zeitraum, lautet der
+  Befund `REVIEW_REQUIRED` (`eu_period` wirft `ThresholdUnavailable`).
 - **Quellenkatalog** `sources_catalog.json` im Format `auditcore_harvest.catalog/1`.
 
 Die Anwendung behält Feature-Flag, Offline-Sperren, Zugriffsrechte, Importjobs,
@@ -61,8 +68,8 @@ Teil des Portal-Wheels; sein reiner TED-Kern wurde deshalb verhaltensgleich
 MIT für den extrahierten Bibliothekscode laut Entscheidung des Rechteinhabers
 vom 22.09.2026 (`NOTICE`); die Quell-Repositories werden nicht umlizenziert.
 Nutzungsbedingungen von TED und HAD sind nicht geprüft (REVIEW_REQUIRED),
-Fixtures sind synthetisch im Originalformat. Schwellenwerte des Profils sind
-Quellwerte ohne bestätigte Aktualität (HUMAN_DECISION_REQUIRED). Details:
+Fixtures sind synthetisch im Originalformat. EU-Schwellenwerte sind nur mit
+amtlicher Fundstelle je Zeitraum eingetragen; die nationalen Stufen sind Anwendungsregeln (REVIEW_REQUIRED). Details:
 [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ```bash

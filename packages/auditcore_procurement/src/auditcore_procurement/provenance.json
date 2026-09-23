@@ -138,7 +138,30 @@
     "legal_validation": "NOT_PERFORMED"
   },
   "profiles": [
-    "procurement.hvtg-legacy 2026.09.1"
+    "procurement.hvtg-legacy 2026.09.1",
+    "procurement.hvtg 2026.09.2"
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "eu_thresholds": {
+    "decision": {
+      "date": "2026-09-23",
+      "text": "vergabeschwellen sollen pro jahr hinterlegt sein"
+    },
+    "periods": [
+      {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "source": "Delegierte Verordnung (EU) 2023/2495, ABl. L 2023/2495 vom 16.11.2023",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202302495"
+      },
+      {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "source": "Delegierte Verordnung (EU) 2025/2152, ABl. L 2025/2152 vom 23.10.2025; BAnz AT 18.12.2025 B4",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202502152"
+      }
+    ],
+    "verified_on": "2026-09-23",
+    "national_tiers": "REVIEW_REQUIRED (Regelwerk der Anwendungen)"
+  }
 }

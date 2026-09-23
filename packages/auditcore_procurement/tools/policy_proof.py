@@ -67,6 +67,7 @@ PROFILE_TESTS = [
     "tests/test_corrected_contract.py::test_p_c05_profile_validation_and_identity",
     "tests/test_legacy_replay.py::test_ruleset_equals_profile",
     "tests/test_sources.py::test_catalog_entries_are_valid",
+    "tests/test_year_thresholds.py",
 ]
 
 

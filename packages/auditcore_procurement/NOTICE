@@ -23,5 +23,6 @@ The source repositories are not relicensed.
 Data from TED (EU Publications Office) and HAD (had.de) is not part of this
 package; fixtures are synthetic in the original response formats. Terms of
 use of both services and the admissibility of automated HAD queries are not
-reviewed here (REVIEW_REQUIRED). Threshold values of the precheck profile are
-source values without confirmed legal currency (HUMAN_DECISION_REQUIRED).
+reviewed here (REVIEW_REQUIRED). EU thresholds in profile procurement.hvtg
+2026.09.2 cite their delegated regulations (EUR-Lex); the national tiers of the
+application ruleset remain REVIEW_REQUIRED.

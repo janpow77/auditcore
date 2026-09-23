@@ -6,7 +6,7 @@ parser needs the extra ``html``.
 """
 
 from .company_sources import SearchResult, had_result, ted_company_result
-from .prechecks import PrecheckProfile, load_profile, run_prechecks
+from .prechecks import PrecheckProfile, ThresholdUnavailable, load_profile, run_prechecks
 from .records import (
     COVERAGE_ALL_NOTICES,
     COVERAGE_AWARDS_WITH_WINNER,
@@ -33,6 +33,7 @@ __all__ = [
     "Issue",
     "PrecheckProfile",
     "SearchResult",
+    "ThresholdUnavailable",
     "__version__",
     "build_ted_query",
     "had_result",

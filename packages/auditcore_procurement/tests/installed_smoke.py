@@ -55,6 +55,26 @@ def main() -> None:
         [{"procurement_doc_type": "VERGABEVERMERK"}],
     )
     assert report["overall_status"] == "FAIL"  # min_bids for BELOW_1K is 1 and no ANGEBOT
+    hvtg = load_profile("procurement.hvtg", "2026.09.2")
+    yearly = run_prechecks(
+        hvtg,
+        Decimal("218000"),
+        None,
+        None,
+        "Liefer-/Dienstleistungen",
+        None,
+        None,
+        [],
+        mode="strict",
+        year=2026,
+        authority_type="sub_central",
+    )
+    assert yearly["checks"][0]["calculated_tier"] == "ABOVE_EU"
+    assert yearly["checks"][0]["eu_threshold"]["value"] == 216000
+    missing = run_prechecks(
+        hvtg, Decimal("1"), None, None, "Bauleistungen", None, None, [], mode="strict", year=2023
+    )
+    assert missing["overall_status"] == "REVIEW_REQUIRED"
     assert ted_company_result(500, None, "DE", "designer").status == "failed"
     if find_spec("auditcore_harvest") is not None:
         from auditcore_procurement.sources import TedAwardsAdapter

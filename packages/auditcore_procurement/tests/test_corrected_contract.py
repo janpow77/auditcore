@@ -13,6 +13,7 @@ from auditcore_procurement import company_sources as cs
 from auditcore_procurement import prechecks, records, ted
 
 PROFILE = prechecks.load_profile("procurement.hvtg-legacy", "2026.09.1")
+HVTG = prechecks.load_profile("procurement.hvtg", "2026.09.2")
 SUPPLY = "Liefer-/Dienstleistungen"
 AWARD = {
     "publication-number": "1-2024",
@@ -38,7 +39,16 @@ def test_p_c01_unknown_tier_is_not_checked_instead_of_pass() -> None:
 def test_p_c02_zero_values_are_values_not_missing() -> None:
     legacy = prechecks.run_prechecks(PROFILE, Decimal("0"), None, None, SUPPLY, None, None, [])
     strict = prechecks.run_prechecks(
-        PROFILE, Decimal("0"), Decimal("0"), Decimal("5"), SUPPLY, None, None, [], mode="strict"
+        HVTG,
+        Decimal("0"),
+        Decimal("0"),
+        Decimal("5"),
+        SUPPLY,
+        None,
+        None,
+        [],
+        mode="strict",
+        year=2026,
     )
     assert legacy["checks"][0]["message"] == "Kein geschaetzter Auftragswert angegeben."
     assert strict["checks"][0]["status"] == "PASS"
