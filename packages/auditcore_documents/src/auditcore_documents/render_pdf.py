@@ -246,13 +246,13 @@ def render_synopsis_pdf(
 
         for key, value in report.extra.items():
             append_detail(key, value)
-    for section_title, value in (
+    for section_title, section_text in (
         ("Methodik", report.methodology),
         ("Fachliche Grenzen", report.limitations),
     ):
-        if value:
+        if section_text:
             story.append(Paragraph(section_title, heading))
-            story.append(Paragraph(text(value), body))
+            story.append(Paragraph(text(section_text), body))
     if report.data_sources or report.source_findings:
         story.append(Paragraph("Datenquellen und Quellenbefunde", heading))
         for source in [*report.data_sources, *report.source_findings]:
