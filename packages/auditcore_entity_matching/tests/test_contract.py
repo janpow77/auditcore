@@ -80,18 +80,23 @@ def test_profiles_are_explicit_source_bound_and_fingerprinted() -> None:
     assert available_profiles() == (
         ("audit_designer.sanctions", V),
         ("audit_designer.sanctions", "2026.09.2"),
+        ("audit_designer.sanctions", "2026.09.3"),
         ("audit_portal.name", V),
         ("audit_portal.name_folded", V),
         ("flowinvoice.pep", V),
+        ("flowinvoice.pep", "2026.09.2"),
         ("flowworkshop.entity_resolution", V),
         ("flowworkshop.sanctions", V),
         ("flowworkshop.sanctions", "2026.09.2"),
+        ("flowworkshop.sanctions", "2026.09.3"),
         ("flowworkshop.state_aid", V),
+        ("flowworkshop.state_aid", "2026.09.2"),
         ("riskanalysis.payee", V),
+        ("riskanalysis.payee", "2026.09.2"),
     )
     for profile_id, version in available_profiles():
         profile = load_profile(profile_id, version)
-        assert profile.status == "SOURCE_CHARACTERIZED"
+        assert profile.status in ("SOURCE_CHARACTERIZED", "USER_DECIDED")
         assert profile.source["rights"] == "USER_AUTHORIZED_MIT"
         assert len(profile.fingerprint) == 64
     data = json.loads((DATA / f"flowworkshop.sanctions-{V}.json").read_text())

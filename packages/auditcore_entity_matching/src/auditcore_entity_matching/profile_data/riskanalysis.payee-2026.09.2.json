@@ -1,0 +1,55 @@
+{
+ "decision": {
+  "date": "2026-09-23",
+  "derived_from": "riskanalysis.payee 2026.09.1",
+  "id": "K4",
+  "quote": "alle empfehlungen",
+  "status": "DECIDED",
+  "text": "Rechnungssteller-Normalisierung auf die mueller-Umschrift umstellen (Müller → mueller statt mu ller); ø/ł/æ/œ/ð/þ wie im Designer-Profil gefaltet"
+ },
+ "id": "riskanalysis.payee",
+ "kind": "normalization",
+ "legal_status": "Nutzerentscheidung vom 23.09.2026; abgeleitet aus dem gebundenen Quellprofil, keine Aussage über eine Rechtslage.",
+ "normalization": {
+  "algorithm": "nfkd_lower_regex",
+  "ampersand": null,
+  "compact_tokens": false,
+  "compose": "NFC",
+  "filler_words": [],
+  "fold_map": {
+   "ß": "ss",
+   "ä": "ae",
+   "æ": "ae",
+   "ð": "d",
+   "ö": "oe",
+   "ø": "o",
+   "ü": "ue",
+   "þ": "th",
+   "đ": "d",
+   "ł": "l",
+   "œ": "oe"
+  },
+  "legal_suffixes": [],
+  "nonword_pattern": "[^a-z0-9äöüß ]",
+  "removal_pattern": "\\b(gmbh|mbh|ggmbh|ag|kg|kgaa|ohg|gbr|ug|se|ek|e\\s?k|e\\s?v|ev|co|kg|partg|mbb|gesellschaft|stiftung|verein|und|the)\\b"
+ },
+ "recommended_for": [
+  "payee"
+ ],
+ "schema": "auditcore_entity_matching.profile/1",
+ "source": {
+  "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+  "git_blob": "fceae5b0d3364c5b20cc638ce4453ac082085aa7",
+  "path": "backend/app/pipeline/payee_normalizer.py",
+  "repository": "janpow77/riskanalysis",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_LEGAL",
+   "_NONWORD",
+   "_WS",
+   "normalize_name"
+  ]
+ },
+ "status": "USER_DECIDED",
+ "version": "2026.09.2"
+}

@@ -10,7 +10,7 @@ from __future__ import annotations
 import contextlib
 import re
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 
 from auditcore_documents.pipeline.context import PipelineContext
 from auditcore_documents.pipeline.stages.base import PipelineStage
@@ -54,6 +54,58 @@ FIELD_PATTERNS: dict[str, list[str]] = {
     ],
 }
 
+AMOUNT_FIELDS = ("total", "net_amount", "vat_amount")
+AmountMode = Literal["legacy-de", "locale-aware"]
+_LETTER = r"(?<![A-Za-zÄÖÜäöüß])"
+
+
+def corrected_patterns(patterns: dict[str, list[str]]) -> dict[str, list[str]]:
+    """Muster enden am Zeilenende und beginnen an einer Wortgrenze (Entscheidung D5).
+
+    Im Original überspringt ``\\s*`` Zeilenumbrüche („INVOICE⏎Document:“ ergibt die
+    Rechnungsnummer „Document“) und „Total“ trifft „Subtotal“.
+    """
+    result: dict[str, list[str]] = {}
+    for name, candidates in patterns.items():
+        result[name] = [
+            _LETTER + c.replace(r"\s*", r"[ \t]*").replace(r"\s+", r"[ \t]+") for c in candidates
+        ]
+    return result
+
+
+def parse_amount(raw: str) -> tuple[float | None, str]:
+    """Betrag gebietsschemabewusst lesen: (Wert, "ok"|"ambiguous"|"invalid").
+
+    Enthält der Text Punkt und Komma, ist das letzte Zeichen das Dezimaltrennzeichen.
+    Ein einzelnes Trennzeichen vor genau drei Ziffern (``1.234``, ``1,234``) ist
+    mehrdeutig und wird nicht geraten (Entscheidung D5).
+    """
+    text = raw.strip()
+    if not re.fullmatch(r"\d(?:[\d.,]*\d)?", text):
+        return None, "invalid"
+    dots, commas = text.count("."), text.count(",")
+    if dots and commas:
+        decimal = "," if text.rfind(",") > text.rfind(".") else "."
+        thousands = "." if decimal == "," else ","
+        whole, _, fraction = text.rpartition(decimal)
+        if thousands in fraction or not re.fullmatch(
+            rf"\d{{1,3}}(?:{re.escape(thousands)}\d{{3}})*", whole
+        ):
+            return None, "invalid"
+        return float(whole.replace(thousands, "") + "." + fraction), "ok"
+    separator = "." if dots else "," if commas else ""
+    if not separator:
+        return float(text), "ok"
+    count = dots or commas
+    if count > 1:
+        if re.fullmatch(rf"\d{{1,3}}(?:{re.escape(separator)}\d{{3}})+", text):
+            return float(text.replace(separator, "")), "ok"
+        return None, "invalid"
+    if re.fullmatch(rf"\d{{1,3}}{re.escape(separator)}\d{{3}}", text):
+        return None, "ambiguous"
+    return float(text.replace(separator, ".")), "ok"
+
+
 DATE_FORMATS = ("%d.%m.%Y", "%d/%m/%Y", "%d.%m.%y", "%d/%m/%y", "%Y-%m-%d")
 
 
@@ -85,13 +137,19 @@ def normalize_date(date_str: str) -> str | None:
     return date_str
 
 
-def normalize_fields(fields: dict[str, Any]) -> dict[str, Any]:
+def normalize_fields(
+    fields: dict[str, Any], amount_mode: AmountMode = "legacy-de"
+) -> dict[str, Any]:
+    """Normalisierung; ``locale-aware`` setzt mehrdeutige/ungültige Beträge auf ``None``."""
     normalized = fields.copy()
     if normalized.get("iban"):
         normalized["iban"] = re.sub(r"\s+", "", normalized["iban"]).upper()
-    for amount_field in ("total", "net_amount", "vat_amount"):
+    for amount_field in AMOUNT_FIELDS:
         raw_amount = normalized.get(amount_field)
         if not isinstance(raw_amount, str):
+            continue
+        if amount_mode == "locale-aware":
+            normalized[amount_field] = parse_amount(raw_amount)[0]
             continue
         amount_str = raw_amount.replace(".", "").replace(",", ".")
         with contextlib.suppress(ValueError):
@@ -110,6 +168,7 @@ class PostprocessStage(PipelineStage):
     def __init__(self, *args: object, **kwargs: object) -> None:
         super().__init__(*args, **kwargs)  # type: ignore[arg-type]
         self.patterns = {name: list(values) for name, values in FIELD_PATTERNS.items()}
+        self.amount_mode: AmountMode = "legacy-de"
 
     async def execute(self, context: PipelineContext) -> PipelineContext:
         self.validate_context(context)
@@ -119,5 +178,5 @@ class PostprocessStage(PipelineStage):
         cleaned = cleanup_text(ocr_text)
         extracted = extract_fields(cleaned, self.patterns)
         context.artifacts.extracted_fields = extracted
-        context.artifacts.normalized_json = normalize_fields(extracted)
+        context.artifacts.normalized_json = normalize_fields(extracted, self.amount_mode)
         return context

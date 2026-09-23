@@ -11,6 +11,7 @@ from .calculation import (
     Proposal,
     Scenario,
     assess_risk,
+    finalize_consultation,
     parse_answers,
     parse_scenarios,
     prefill_from_activity,
@@ -42,7 +43,7 @@ from .model import (
 from .register import RegisterService, check_activity, check_register, normalize_content
 from .rules import RuleProfile, available_profiles, load_profile
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Actor",
@@ -75,6 +76,7 @@ __all__ = [
     "available_profiles",
     "check_activity",
     "check_register",
+    "finalize_consultation",
     "load_profile",
     "normalize_content",
     "parse_answers",

@@ -9,8 +9,8 @@ Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
-pip install auditcore_dataprotection==0.1.0            # Kern
-pip install 'auditcore_dataprotection[excel]==0.1.0'    # zusätzlich XLSX
+pip install auditcore_dataprotection==0.2.0            # Kern
+pip install 'auditcore_dataprotection[excel]==0.2.0'    # zusätzlich XLSX
 ```
 
 ## Bausteine
@@ -71,6 +71,52 @@ fachliche Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 Die Regelprofile sind charakterisiertes Softwareverhalten
 (`SOURCE_CHARACTERIZED`), keine rechtliche Prüfung. Rechtsregime (DSGVO,
 Dritter Teil HDSIG) bleiben getrennte Profile.
+
+### Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji` (2026.10.1)
+
+Seit 0.2.0 hat die Bibliothek eigene, neutrale Regelprofile
+`auditcore.dsgvo` und `auditcore.hdsig_ji` in der Fassung `2026.10.1`
+(Schema `auditcore_dataprotection.profile/2`), ohne Textbausteine der
+Ursprungsanwendung. Die Profile `regulierung.*` 2026.09.1 bleiben
+unverändert zur Nachvollziehbarkeit und für den `legacy`-Vertrag.
+Die neuen Profile Sie richtet die Dokumentation an
+der Vorlage des Europäischen Datenschutzausschusses für
+Datenschutz-Folgenabschätzungen aus (2026, Version 1.0, Konsultationsfassung)
+und bildet die Risikostufen Feld für Feld aus der Matrix des
+DSK-Kurzpapiers Nr. 18 (S. 5) statt aus Produktgrenzen. Die Fassungen
+`2026.09.1` verhalten sich unverändert (Ausgaben byte-gleich zu 0.1.0).
+
+| Neu in `auditcore.*` 2026.10.1 | EDSA-Vorlage |
+|---|---|
+| Entscheidung `verworfen` (Verarbeitung unterbleibt) | Abschnitt 6 |
+| Bedingungen einer Freigabe mit Auflagen, vor der Freigabe Pflicht | Abschnitt 6 |
+| Grund der Konsultation, u. a. Art. 36 Abs. 5 DSGVO | Abschnitt 6 |
+| Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18; Methode im Bericht | Abschnitt 4.1.b; KP 18, S. 5 |
+| Mindeststufe `mittel` ab Schwere 4 vor Maßnahmen | Explainer Fn. 9; KP 18, S. 5 |
+| Risikoquelle, Umstände, Hinnehmbarkeit vor und nach Maßnahmen | Abschnitte 3.1, 4.1.a, 4.1.c, 4.2.b |
+| Maßnahmenbereiche und Umsetzungsstand | Abschnitte 2.3, 4.2.a |
+| Maßnahmenplan | Abschnitt 4.2.c |
+| Stammdaten der Abschätzung (Team und Umfang Pflicht, Billigung mit Datum) | Abschnitte 0.4, 0.5, 1.1.c, 1.4, 2.2.b |
+| Quellenliste im Profil und im Bericht | Abschnitt 0.5 |
+| Alle 17 Nummern der DSK-Muss-Liste als eigene harte Fragen (bisher 8 Nummern in 5 Fragen) | Art. 35 Abs. 4 DSGVO |
+
+`AssessmentService.hints()` liefert nicht blockierende Hinweise, wo die
+Dokumentation hinter der Vorlage zurückbleibt. Der Bericht behält seine
+Gliederung und ergänzt die neuen Angaben in den bestehenden Abschnitten. Die
+Vorlage ist noch nicht endgültig; eine Endfassung wird eine neue Profilfassung.
+
+### Profile 2026.10.2: Konsultationshinweis erst nach abschließender Bewertung
+
+Die Fassung `2026.10.2` der Profile `auditcore.dsgvo` und `auditcore.hdsig_ji`
+entspricht `2026.10.1` und setzt die Nutzerentscheidung
+A5 vom 23.09.2026 um (DP-C21): Der Hinweis auf die vorherige Konsultation der
+Aufsichtsbehörde (Art. 36 Abs. 1 DSGVO, Erwägungsgrund 94 DSGVO; im JI-Profil
+§ 64 HDSIG) wird erst mit der abschließenden Bewertung (`decide`) gegeben und
+nur, wenn das Nettorisiko nach Maßnahmen hoch bleibt. Vorher trägt der
+Vorschlag höchstens `consultation_notice.status == "voraussichtlich_erforderlich"`
+mit dem Text „Vorläufiger Hinweis: …“ und nie `consultation_required=True`.
+`finalize_consultation(profil, vorschlag, entscheidung)` bildet den endgültigen
+Hinweis. Empfohlen für neue Abschätzungen; ältere Fassungen bleiben unverändert.
 
 ```bash
 python -m pip install -e '.[dev]'

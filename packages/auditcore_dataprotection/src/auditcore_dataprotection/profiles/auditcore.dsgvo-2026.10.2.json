@@ -1,0 +1,1099 @@
+{
+ "derived_from": {
+  "id": "auditcore.dsgvo",
+  "version": "2026.10.1"
+ },
+ "dossier": {
+  "fields": [
+   {
+    "key": "team",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5",
+    "required": true,
+    "title": "An der Abschätzung Beteiligte (Rollen und Aufgaben)"
+   },
+   {
+    "key": "umfang",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5",
+    "required": true,
+    "title": "Umfang der Abschätzung (was einbezogen ist, was nicht und warum)"
+   },
+   {
+    "key": "beginn",
+    "kind": "date",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.4",
+    "required": false,
+    "title": "Geplanter Beginn der Verarbeitung"
+   },
+   {
+    "key": "ende",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.4",
+    "required": false,
+    "title": "Geplantes Ende oder Befristung der Verarbeitung"
+   },
+   {
+    "key": "abschluss",
+    "kind": "date",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5",
+    "required": false,
+    "title": "Abschluss der Abschätzung"
+   },
+   {
+    "key": "billigung",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5; Explainer Rn. 10",
+    "required": false,
+    "title": "Förmliche Billigung durch (Funktion)"
+   },
+   {
+    "key": "billigung_datum",
+    "kind": "date",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5; Explainer Rn. 10",
+    "required": false,
+    "title": "Datum der förmlichen Billigung"
+   },
+   {
+    "choices": [
+     {
+      "key": "nein",
+      "title": "nein"
+     },
+     {
+      "key": "veroeffentlichung",
+      "title": "wird veröffentlicht"
+     },
+     {
+      "key": "weitergabe",
+      "title": "wird an Dritte weitergegeben"
+     }
+    ],
+    "key": "veroeffentlichung",
+    "kind": "choice",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 0.5",
+    "required": false,
+    "title": "Veröffentlichung oder Weitergabe"
+   },
+   {
+    "key": "weiterverwendung",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 1.1.c",
+    "required": false,
+    "title": "Weiterverwendung oder vereinbare Zwecke"
+   },
+   {
+    "key": "verhaltensregeln",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 1.4",
+    "required": false,
+    "title": "Genehmigte Verhaltensregeln"
+   },
+   {
+    "key": "datenqualitaet",
+    "kind": "text",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 2.2.b",
+    "required": false,
+    "title": "Anforderungen an die Datenqualität"
+   }
+  ]
+ },
+ "id": "auditcore.dsgvo",
+ "legal_status": "Aus Version 2026.10.1 dieses Profils abgeleitet und bis auf den Konsultationshinweis unverändert. Neu: Der Hinweis auf die vorherige Konsultation wird erst mit der abschließenden Bewertung und nur bei weiterhin hohem Nettorisiko gegeben; vorher höchstens als vorläufiger, gekennzeichneter Hinweis (DP-C21, Nutzerentscheidung A5 vom 23.09.2026). Neutrales Regelprofil der Bibliothek, abgeleitet aus dem Profil der Ursprungsanwendung (regulierung, Version 2026.09.1) ohne deren anwendungsbezogene Textbausteine, und an der Vorlage des Europäischen Datenschutzausschusses für Datenschutz-Folgenabschätzungen (2026, Version 1.0, Konsultationsfassung vom 10.03.2026) ausgerichtet. Neu: alle 17 Nummern der Muss-Liste als eigene Fragen, Entscheidung ‚verworfen‘, Konsultationsgrund, Bedingungen einer Freigabe mit Auflagen, Risikostufen aus der Matrix des DSK-Kurzpapiers Nr. 18 statt aus Produktgrenzen und Mindeststufe ‚mittel‘ ab Schwere 4 vor Maßnahmen (fachliche Festlegungen vom 23.09.2026), Maßnahmenbereiche, Umsetzungsstand und Stammdaten der Abschätzung. Keine rechtliche Prüfung oder Bestätigung der Auslegung, Schwellen oder Gewichtungen durch diese Bibliothek.",
+ "prefill": {
+  "large_scale_threshold": 10000
+ },
+ "recommendation": {
+  "by_band": {
+   "gering": "freigabe",
+   "hoch": "konsultation_aufsichtsbehoerde",
+   "mittel": "freigabe_mit_auflagen"
+  },
+  "conditions_from": 5,
+  "consult_from": 10,
+  "consultation_grounds": [
+   {
+    "key": "hohes_restrisiko",
+    "reference": "Art. 36 Abs. 1 DSGVO",
+    "title": "Hohes Restrisiko trotz Maßnahmen"
+   },
+   {
+    "key": "nationales_recht",
+    "reference": "Art. 36 Abs. 5 DSGVO",
+    "title": "Konsultation oder Genehmigung nach nationalem Recht bei Aufgaben im öffentlichen Interesse"
+   }
+  ],
+  "consultation_notice": {
+   "decision_reference": "Nutzerentscheidung A5 vom 23.09.2026 („alle empfehlungen“): Konsultationshinweis erst nach der abschließenden Bewertung und nur bei weiterhin hohem Nettorisiko.",
+   "final_text": "Die abschließende Bewertung ergibt, dass trotz der vorgesehenen Maßnahmen ein hohes Risiko verbleibt. Vor Beginn der Verarbeitung ist die Aufsichtsbehörde zu konsultieren (Art. 36 Abs. 1 DSGVO; Erwägungsgrund 94 DSGVO); bis zu deren Rückmeldung darf die Verarbeitung nicht aufgenommen werden.",
+   "legal_basis": "Art. 36 Abs. 1 DSGVO; Erwägungsgrund 94 DSGVO",
+   "not_required_text": "Die abschließende Bewertung ergibt kein hohes Risiko nach den vorgesehenen Maßnahmen. Eine vorherige Konsultation der Aufsichtsbehörde nach Art. 36 Abs. 1 DSGVO ist nicht erforderlich.",
+   "preliminary_text": "Vorläufiger Hinweis: Nach dem derzeitigen Stand der Bewertung ist eine vorherige Konsultation der Aufsichtsbehörde voraussichtlich erforderlich. Endgültig steht das erst mit der abschließenden Bewertung fest, und nur wenn das Risiko auch nach den vorgesehenen Maßnahmen hoch bleibt (Art. 36 Abs. 1 DSGVO; Erwägungsgrund 94 DSGVO).",
+   "rejected_text": "Das Risiko bleibt nach den vorgesehenen Maßnahmen hoch; die Verarbeitung wird jedoch nicht aufgenommen (verworfen). Eine vorherige Konsultation nach Art. 36 Abs. 1 DSGVO entfällt damit.",
+   "timing": "nach_abschliessender_bewertung"
+  },
+  "decisions": [
+   {
+    "key": "nur_schwellwert",
+    "title": "Keine Folgenabschätzung erforderlich"
+   },
+   {
+    "key": "freigabe",
+    "title": "Freigabe"
+   },
+   {
+    "key": "freigabe_mit_auflagen",
+    "title": "Freigabe mit Auflagen"
+   },
+   {
+    "key": "konsultation_aufsichtsbehoerde",
+    "title": "Konsultation der Aufsichtsbehörde"
+   },
+   {
+    "key": "verworfen",
+    "title": "Verarbeitung wird nicht aufgenommen (verworfen)"
+   }
+  ],
+  "maximum_product": 16,
+  "texts": {
+   "freigabe": "Das verbleibende Risiko ist gering. Die Verarbeitung kann nach Beteiligung der oder des Datenschutzbeauftragten freigegeben werden (Art. 35 Abs. 2 DSGVO).",
+   "freigabe_mit_auflagen": "Die Verarbeitung ist vertretbar, solange die beschriebenen Maßnahmen umgesetzt und überwacht werden. Die Umsetzung ist zu dokumentieren und regelmäßig zu überprüfen (Art. 32 Abs. 1, Art. 35 Abs. 11 DSGVO).",
+   "konsultation_aufsichtsbehoerde": "Trotz der vorgesehenen Maßnahmen verbleibt ein hohes Risiko. Vor Beginn der Verarbeitung ist die Aufsichtsbehörde zu konsultieren (Art. 36 Abs. 1 DSGVO); bis zu deren Rückmeldung darf die Verarbeitung nicht aufgenommen werden.",
+   "nur_schwellwert": "Eine Datenschutz-Folgenabschätzung ist nicht erforderlich. Die Schwellwertanalyse ist als Nachweis der Rechenschaftspflicht zu den Akten zu nehmen (Art. 5 Abs. 2 DSGVO)."
+  }
+ },
+ "regime": {
+  "explanation": "Allgemeines Datenschutzrecht. Gilt für alle Verarbeitungen, die nicht der Verhütung, Ermittlung, Aufdeckung, Verfolgung oder Ahndung von Straftaten oder Ordnungswidrigkeiten dienen.",
+  "key": "dsgvo",
+  "norms": {
+   "automatisierte_entscheidung": "Art. 22 DSGVO",
+   "besondere_kategorien": "Art. 9 und Art. 10 DSGVO",
+   "dsb": "Art. 35 Abs. 2 DSGVO",
+   "dsfa": "Art. 35 DSGVO",
+   "konsultation": "Art. 36 Abs. 1 DSGVO",
+   "massnahmen": "Art. 35 Abs. 7 lit. d DSGVO",
+   "mindestinhalt": "Art. 35 Abs. 7 DSGVO",
+   "muss_liste": "Art. 35 Abs. 4 DSGVO",
+   "nachweis": "Art. 5 Abs. 2 DSGVO",
+   "notwendigkeit": "Art. 35 Abs. 7 lit. b DSGVO",
+   "pflicht": "Art. 35 Abs. 1 DSGVO",
+   "risiko": "Art. 35 Abs. 7 lit. c DSGVO",
+   "sicherheit": "Art. 32 DSGVO",
+   "standpunkt": "Art. 35 Abs. 9 DSGVO",
+   "ueberpruefung": "Art. 35 Abs. 11 DSGVO",
+   "verzeichnis": "Art. 30 DSGVO"
+  },
+  "notice": "",
+  "title": "Datenschutz-Grundverordnung"
+ },
+ "register": {
+  "columns": [
+   {
+    "key": "name",
+    "title": "Datenverarbeitungsvorgang"
+   },
+   {
+    "key": "zweck",
+    "title": "Zweck der Verarbeitung"
+   },
+   {
+    "key": "ermaechtigungsgrundlage",
+    "title": "Fachgesetzliche Ermächtigungsgrundlage"
+   },
+   {
+    "key": "ansprechperson",
+    "title": "Ansprechperson im Fachreferat"
+   },
+   {
+    "key": "kategorien_betroffene",
+    "title": "Kategorien betroffener Personen"
+   },
+   {
+    "key": "kategorien_daten",
+    "title": "Kategorien personenbezogener Daten"
+   },
+   {
+    "key": "kategorien_empfaenger",
+    "title": "Kategorien von Empfängern"
+   },
+   {
+    "key": "name_empfaenger",
+    "title": "Name des Empfängers"
+   },
+   {
+    "key": "drittlandtransfer",
+    "title": "Drittlandsdatentransfer"
+   },
+   {
+    "key": "name_empfaenger_drittland",
+    "title": "Name Empfänger Drittland"
+   },
+   {
+    "key": "drittland_garantien",
+    "title": "Garantien der Drittlandsübermittlung (Art. 46/49)"
+   },
+   {
+    "key": "avv_besteht",
+    "title": "AVV besteht (Art. 28 Abs. 3)"
+   },
+   {
+    "key": "auftragsverarbeiter",
+    "title": "Auftragsverarbeiter"
+   },
+   {
+    "key": "gemeinsame_verantwortlichkeit",
+    "title": "Gemeinsame Verantwortlichkeit (Art. 26)"
+   },
+   {
+    "key": "gemeinsame_verantwortliche",
+    "title": "Gemeinsame Verantwortliche"
+   },
+   {
+    "key": "speicherdauer",
+    "title": "Speicherdauer"
+   },
+   {
+    "key": "loeschfrist_rechtsgrundlage",
+    "title": "Gesetzliche Grundlage Löschfrist/Aufbewahrung"
+   },
+   {
+    "key": "tom",
+    "title": "Technische und organisatorische Maßnahmen (Art. 32 Abs. 1)"
+   },
+   {
+    "key": "anmerkungen",
+    "title": "Anmerkungen"
+   }
+  ],
+  "legal_references": {
+   "anmerkungen": "ohne Entsprechung; Feld für Hinweise der Fachabteilung",
+   "ansprechperson": "Art. 30 Abs. 1 lit. a DSGVO, hier je Tätigkeit",
+   "auftragsverarbeiter": "Art. 28, Art. 30 Abs. 2 DSGVO",
+   "avv_besteht": "Art. 28 Abs. 3 DSGVO",
+   "drittland_garantien": "Art. 30 Abs. 1 lit. e Halbsatz 2 DSGVO in Verbindung mit Art. 45, 46, 49 Abs. 1 UAbs. 2 DSGVO",
+   "drittlandtransfer": "Art. 30 Abs. 1 lit. e DSGVO; § 65 HDSIG",
+   "ermaechtigungsgrundlage": "über Art. 30 hinaus: Nachweis der Rechtmäßigkeit (Art. 5 Abs. 1 lit. a und Abs. 2, Art. 6 Abs. 1 DSGVO; § 42 HDSIG)",
+   "gemeinsame_verantwortliche": "Art. 26 Abs. 1 DSGVO",
+   "gemeinsame_verantwortlichkeit": "Art. 26 DSGVO",
+   "kategorien_betroffene": "Art. 30 Abs. 1 lit. c DSGVO; § 65 HDSIG",
+   "kategorien_daten": "Art. 30 Abs. 1 lit. c DSGVO; § 65 HDSIG",
+   "kategorien_empfaenger": "Art. 30 Abs. 1 lit. d DSGVO; § 65 HDSIG",
+   "loeschfrist_rechtsgrundlage": "Art. 5 Abs. 1 lit. e, Art. 17 DSGVO; § 42 HDSIG",
+   "name": "Art. 30 Abs. 1 Satz 1 DSGVO; § 65 HDSIG",
+   "name_empfaenger": "Art. 30 Abs. 1 lit. d DSGVO",
+   "name_empfaenger_drittland": "Art. 30 Abs. 1 lit. e DSGVO",
+   "speicherdauer": "Art. 30 Abs. 1 lit. f DSGVO; § 65 HDSIG",
+   "tom": "Art. 30 Abs. 1 lit. g in Verbindung mit Art. 32 Abs. 1 DSGVO; § 59 HDSIG",
+   "zweck": "Art. 30 Abs. 1 lit. b DSGVO; § 65 HDSIG"
+  }
+ },
+ "risk": {
+  "acceptance_levels": [
+   {
+    "key": "hinnehmbar",
+    "title": "hinnehmbar"
+   },
+   {
+    "key": "nicht_hinnehmbar",
+    "title": "nicht hinnehmbar"
+   }
+  ],
+  "bands": [
+   {
+    "label": "offen",
+    "up_to": 0
+   },
+   {
+    "label": "gering",
+    "up_to": 4
+   },
+   {
+    "label": "mittel",
+    "up_to": 9
+   },
+   {
+    "label": "hoch",
+    "up_to": null
+   }
+  ],
+  "dimensions": [
+   {
+    "key": "vertraulichkeit",
+    "title": "Verlust der Vertraulichkeit (unbefugte Kenntnisnahme)"
+   },
+   {
+    "key": "integritaet",
+    "title": "Verlust der Integrität (Verfälschung, Fehlberechnung)"
+   },
+   {
+    "key": "verfuegbarkeit",
+    "title": "Verlust der Verfügbarkeit (Ausfall, Zerstörung)"
+   },
+   {
+    "key": "datenminimierung",
+    "title": "Verstoß gegen die Datenminimierung (mehr Daten, länger oder für mehr Zwecke verarbeitet als erforderlich)"
+   },
+   {
+    "key": "nichtverkettung",
+    "title": "Verkettung über den Zweck hinaus (Zusammenführung von Daten, die getrennt erhoben wurden)"
+   },
+   {
+    "key": "transparenz",
+    "title": "Verlust der Transparenz (betroffene Person kann Verarbeitung, Herkunft und Empfänger nicht nachvollziehen; Auskunft und Benachrichtigung greifen nicht)"
+   },
+   {
+    "key": "intervenierbarkeit",
+    "title": "Verlust der Intervenierbarkeit (Berichtigung, Löschung, Einschränkung und Widerspruch laufen leer)"
+   },
+   {
+    "key": "rechteverletzung",
+    "title": "Rechteverletzung oder Diskriminierung (Ungleichbehandlung)"
+   }
+  ],
+  "implementation_states": [
+   {
+    "key": "geplant",
+    "title": "geplant"
+   },
+   {
+    "key": "teilweise_umgesetzt",
+    "title": "teilweise umgesetzt"
+   },
+   {
+    "key": "umgesetzt",
+    "title": "umgesetzt"
+   }
+  ],
+  "likelihood": {
+   "1": "sehr unwahrscheinlich (nur unter außergewöhnlichen Bedingungen denkbar)",
+   "2": "unwahrscheinlich (wirksame Barrieren, Ausnutzung erfordert erheblichen Aufwand)",
+   "3": "wahrscheinlich (bekannte Schwachstellen, übliche Angriffswege greifen)",
+   "4": "sehr wahrscheinlich (keine wirksamen Barrieren, im Betrieb angelegt)"
+  },
+  "matrix": {
+   "1": {
+    "1": "gering",
+    "2": "gering",
+    "3": "mittel",
+    "4": "mittel"
+   },
+   "2": {
+    "1": "mittel",
+    "2": "mittel",
+    "3": "mittel",
+    "4": "mittel"
+   },
+   "3": {
+    "1": "mittel",
+    "2": "mittel",
+    "3": "hoch",
+    "4": "hoch"
+   },
+   "4": {
+    "1": "mittel",
+    "2": "hoch",
+    "3": "hoch",
+    "4": "hoch"
+   }
+  },
+  "measure_categories": [
+   {
+    "key": "grundsaetze",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 2.3.a; Art. 5 Abs. 1 DSGVO",
+    "title": "Grundsätze der Verarbeitung"
+   },
+   {
+    "key": "betroffenenrechte",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 2.3.b; Art. 12 bis 22 DSGVO",
+    "title": "Rechte der betroffenen Personen"
+   },
+   {
+    "key": "weitere_pflichten",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 2.3.c; Art. 7, 28, Kapitel V DSGVO",
+    "title": "Weitere Pflichten (Einwilligung, Auftragsverarbeitung, Drittland)"
+   },
+   {
+    "key": "technikgestaltung",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 2.3.d; Art. 25 DSGVO",
+    "title": "Datenschutz durch Technikgestaltung und Voreinstellungen"
+   },
+   {
+    "key": "sicherheit",
+    "reference": "EDSA, Template for Data Protection Impact Assessment 2026, Version 1.0, Abschn. 2.3.e; Art. 32 DSGVO",
+    "title": "Sicherheit der Verarbeitung"
+   }
+  ],
+  "measures": [
+   {
+    "category": "sicherheit",
+    "explanation": "Transportverschlüsselung ab TLS 1.3, Speicherung mit AES-256 und getrennter Schlüsselverwaltung.",
+    "key": "verschluesselung",
+    "legal_basis": "Art. 32 Abs. 1 lit. a DSGVO",
+    "reduces_likelihood": 2,
+    "reduces_severity": 0,
+    "title": "Verschlüsselung bei Übertragung und Speicherung"
+   },
+   {
+    "category": "technikgestaltung",
+    "explanation": "Hashverfahren mit Salt; die Zuordnungstabelle wird getrennt verwahrt.",
+    "key": "pseudonymisierung",
+    "legal_basis": "Art. 32 Abs. 1 lit. a, Art. 25 Abs. 1 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 2,
+    "title": "Pseudonymisierung und Trennung von Identitäts- und Nutzdaten"
+   },
+   {
+    "category": "sicherheit",
+    "explanation": "",
+    "key": "zugriffskontrolle",
+    "legal_basis": "Art. 32 Abs. 1 lit. b DSGVO",
+    "reduces_likelihood": 2,
+    "reduces_severity": 0,
+    "title": "Rollenbasierte Zugriffskontrolle, Mehrfaktor-Anmeldung, geringste Rechte"
+   },
+   {
+    "category": "grundsaetze",
+    "explanation": "",
+    "key": "loeschkonzept",
+    "legal_basis": "Art. 5 Abs. 1 lit. e, Art. 17 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 1,
+    "title": "Automatisierte Löschung nach hinterlegten Fristen"
+   },
+   {
+    "category": "betroffenenrechte",
+    "explanation": "Keine automatisierte Entscheidung wird ohne Prüfung wirksam; ein Nothalt ist vorgesehen.",
+    "key": "menschliche_aufsicht",
+    "legal_basis": "Art. 22 Abs. 3 DSGVO; Art. 14 der Verordnung (EU) 2024/1689",
+    "reduces_likelihood": 1,
+    "reduces_severity": 1,
+    "title": "Menschliche Aufsicht mit Vier-Augen-Prinzip und Abschaltmöglichkeit"
+   },
+   {
+    "category": "sicherheit",
+    "explanation": "",
+    "key": "protokollierung",
+    "legal_basis": "Art. 32 Abs. 1 lit. b, Art. 5 Abs. 2 DSGVO",
+    "reduces_likelihood": 1,
+    "reduces_severity": 0,
+    "title": "Protokollierung der Zugriffe und regelmäßige Auswertung"
+   },
+   {
+    "category": "sicherheit",
+    "explanation": "",
+    "key": "wiederherstellung",
+    "legal_basis": "Art. 32 Abs. 1 lit. c DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 1,
+    "title": "Gesicherte Wiederherstellbarkeit und erprobtes Notfallverfahren"
+   },
+   {
+    "category": "betroffenenrechte",
+    "explanation": "Dokumentierende Maßnahme nach der EDSA-Vorlage; sie mindert das Risiko rechnerisch nicht.",
+    "key": "informationspflichten",
+    "legal_basis": "Art. 12 bis 14 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 0,
+    "title": "Information der betroffenen Personen"
+   },
+   {
+    "category": "betroffenenrechte",
+    "explanation": "Dokumentierende Maßnahme nach der EDSA-Vorlage; sie mindert das Risiko rechnerisch nicht.",
+    "key": "betroffenenanfragen",
+    "legal_basis": "Art. 15 bis 21 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 0,
+    "title": "Verfahren für Auskunft, Berichtigung, Löschung, Einschränkung und Widerspruch"
+   },
+   {
+    "category": "weitere_pflichten",
+    "explanation": "Dokumentierende Maßnahme nach der EDSA-Vorlage; sie mindert das Risiko rechnerisch nicht.",
+    "key": "auftragsverarbeitung",
+    "legal_basis": "Art. 28 Abs. 3 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 0,
+    "title": "Vertrag zur Auftragsverarbeitung"
+   },
+   {
+    "category": "weitere_pflichten",
+    "explanation": "Dokumentierende Maßnahme nach der EDSA-Vorlage; sie mindert das Risiko rechnerisch nicht.",
+    "key": "drittlandgarantien",
+    "legal_basis": "Art. 44 bis 49 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 0,
+    "title": "Garantien für Übermittlungen in Drittländer"
+   },
+   {
+    "category": "technikgestaltung",
+    "explanation": "Dokumentierende Maßnahme nach der EDSA-Vorlage; sie mindert das Risiko rechnerisch nicht.",
+    "key": "datenschutzfreundliche_voreinstellungen",
+    "legal_basis": "Art. 25 Abs. 2 DSGVO",
+    "reduces_likelihood": 0,
+    "reduces_severity": 0,
+    "title": "Datenschutzfreundliche Voreinstellungen"
+   }
+  ],
+  "method": "Schwere und Eintrittswahrscheinlichkeit werden je auf vier Stufen eingeschätzt. Die Risikostufe ergibt sich Feld für Feld aus der Risikomatrix des DSK-Kurzpapiers Nr. 18 (S. 5): gering, mittel (im Kurzpapier „Risiko“) oder hoch. Geteilte Felder sind nach dem überwiegenden Flächenanteil zugeordnet. Das Produkt aus Schwere und Wahrscheinlichkeit wird nur zur Information angezeigt. Ab Schwere 4 vor Maßnahmen gilt mindestens die Stufe mittel. Maßgeblich für den Vorschlag ist die höchste Stufe nach Maßnahmen: gering führt zur Freigabe, mittel zur Freigabe mit Auflagen, hoch zur Konsultation der Aufsichtsbehörde.",
+  "mitigation": {
+   "cap_per_axis": 2,
+   "floor": 1
+  },
+  "scale": {
+   "max": 4,
+   "min": 1
+  },
+  "sdm_dimensions": [
+   "datenminimierung",
+   "integritaet",
+   "intervenierbarkeit",
+   "nichtverkettung",
+   "transparenz",
+   "verfuegbarkeit",
+   "vertraulichkeit"
+  ],
+  "severity": {
+   "1": "vernachlässigbar (geringfügige Belästigung, kein finanzieller Schaden)",
+   "2": "begrenzt (vorübergehende Unannehmlichkeit, geringer Schaden, behebbar)",
+   "3": "erheblich (Diskriminierung, finanzieller Verlust, Identitätsdiebstahl, Rufschaden)",
+   "4": "maximal (Gefahr für Leib und Leben, wirtschaftlicher Ruin, dauerhafte Benachteiligung)"
+  },
+  "severity_floors": [
+   {
+    "min_band": "mittel",
+    "reference": "Fachliche Festlegung vom 23.09.2026; EDSA, Explainer zur DSFA-Vorlage 2026 v1.0, Fn. 9; DSK-Kurzpapier Nr. 18, S. 5",
+    "severity": 4
+   }
+  ]
+ },
+ "schema": "auditcore_dataprotection.profile/2",
+ "screening": {
+  "blocks": [
+   {
+    "key": "art35_abs3",
+    "title": "Muss-Kriterien nach Artikel 35 Absatz 3 DSGVO"
+   },
+   {
+    "key": "dsk_muss_liste",
+    "title": "Liste nach Artikel 35 Absatz 4 DSGVO (Liste der Datenschutzkonferenz, Version 1.1 vom 17.10.2018, in Hessen vom HBDI veröffentlicht; alle 17 Nummern, die Liste ist nicht abschließend)"
+   },
+   {
+    "key": "edsa_wp248",
+    "title": "Kriterien aus WP 248 rev.01 (Leitlinien der Art.-29-Datenschutzgruppe, vom Europäischen Datenschutzausschuss bestätigt)"
+   },
+   {
+    "key": "ki_verordnung",
+    "title": "Hochrisiko-KI nach Anhang III der Verordnung (EU) 2024/1689"
+   }
+  ],
+  "criteria_label": "Kriterien aus WP 248 rev.01 (Art.-29-Datenschutzgruppe, vom Europäischen Datenschutzausschuss am 25.05.2018 bestätigt)",
+  "points_threshold": 2,
+  "questions": [
+   {
+    "block": "art35_abs3",
+    "effect": "hart",
+    "explanation": "Erfasst insbesondere Scoring und Profilbildung, an die eine belastende Entscheidung anknüpft (Erwägungsgrund 71).",
+    "key": "art35_3_a",
+    "legal_basis": "Art. 35 Abs. 3 lit. a DSGVO in Verbindung mit Art. 22 DSGVO",
+    "legal_basis_ji": "§ 49 HDSIG (automatisierte Einzelentscheidung)",
+    "prefill": null,
+    "reference": "Art. 35 Abs. 3 lit. a DSGVO in Verbindung mit Art. 22 DSGVO",
+    "text": "Werden persönliche Aspekte natürlicher Personen systematisch und umfassend bewertet, gestützt auf automatisierte Verarbeitung einschließlich Profiling, und dient das als Grundlage für Entscheidungen, die Rechtswirkung entfalten oder die betroffene Person in ähnlich erheblicher Weise beeinträchtigen?"
+   },
+   {
+    "block": "art35_abs3",
+    "effect": "hart",
+    "explanation": "Umfangreich beurteilt sich nach Zahl der Betroffenen, Datenmenge, Dauer und geografischer Ausdehnung (WP 248 rev.01).",
+    "key": "art35_3_b",
+    "legal_basis": "Art. 35 Abs. 3 lit. b DSGVO, Erwägungsgrund 91",
+    "legal_basis_ji": "§ 43 HDSIG (besondere Kategorien personenbezogener Daten)",
+    "prefill": "besondere_kategorien_und_umfangreich",
+    "reference": "Art. 35 Abs. 3 lit. b DSGVO, Erwägungsgrund 91",
+    "text": "Werden besondere Kategorien personenbezogener Daten nach Artikel 9 Absatz 1 DSGVO oder Daten über strafrechtliche Verurteilungen und Straftaten nach Artikel 10 DSGVO umfangreich verarbeitet?"
+   },
+   {
+    "block": "art35_abs3",
+    "effect": "hart",
+    "explanation": "",
+    "key": "art35_3_c",
+    "legal_basis": "Art. 35 Abs. 3 lit. c DSGVO",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Art. 35 Abs. 3 lit. c DSGVO",
+    "text": "Werden öffentlich zugängliche Bereiche systematisch und umfangreich überwacht?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts, der Nutzung einer Dienstleistung oder der Durchführung eines Vertrags. Beispiel der Liste: biometrische Zutrittskontrolle.",
+    "key": "dsk_nr01_biometrie",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 1 (biometrische Daten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 1 (biometrische Daten)",
+    "text": "Werden biometrische Daten zur eindeutigen Identifizierung natürlicher Personen verarbeitet, und trifft zusätzlich mindestens ein weiteres Kriterium aus WP 248 rev.01 zu?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Zusätzlich muss mindestens ein weiteres Kriterium aus WP 248 rev.01 zutreffen: Daten zu schutzbedürftigen Betroffenen, systematische Überwachung, innovative Nutzung oder Anwendung neuer technologischer oder organisatorischer Lösungen, Bewerten oder Einstufen (Scoring), Abgleichen oder Zusammenführen von Datensätzen, automatisierte Entscheidungsfindung mit Rechtswirkung oder ähnlich bedeutsamer Wirkung, Hinderung an der Ausübung eines Rechts, der Nutzung einer Dienstleistung oder der Durchführung eines Vertrags.",
+    "key": "dsk_nr02_genetik",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 2 (genetische Daten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 2 (genetische Daten)",
+    "text": "Werden genetische Daten im Sinne von Art. 4 Nr. 13 DSGVO verarbeitet, und trifft zusätzlich mindestens ein weiteres Kriterium aus WP 248 rev.01 zu?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr03_geheimnis",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 3 (Sozial-, Berufs- oder besonderes Amtsgeheimnis)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 3 (Sozial-, Berufs- oder besonderes Amtsgeheimnis)",
+    "text": "Werden Daten, die einem Sozial-, Berufs- oder besonderen Amtsgeheimnis unterliegen, umfangreich verarbeitet, auch wenn es sich nicht um Daten nach Artikel 9 Absatz 1 oder Artikel 10 DSGVO handelt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Etwa Standort- oder Fahrzeugdaten.",
+    "key": "dsk_nr04_aufenthalt",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 4 (Aufenthaltsdaten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 4 (Aufenthaltsdaten)",
+    "text": "Werden personenbezogene Daten über den Aufenthalt natürlicher Personen umfangreich verarbeitet?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Alle genannten Voraussetzungen müssen zusammen vorliegen. Beispiel der Liste: Systeme zur Betrugsprävention.",
+    "key": "dsk_nr05_zusammenfuehrung_entscheidung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 (Zusammenführung als Entscheidungsgrundlage)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 5 (Zusammenführung als Entscheidungsgrundlage)",
+    "text": "Werden Daten aus verschiedenen Quellen zusammengeführt und verarbeitet, wobei die Zusammenführung oder die Verarbeitung in großem Umfang erfolgt, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um Grundlagen für Entscheidungen mit Rechtswirkung oder ähnlich erheblicher Beeinträchtigung zu schaffen?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr06_mobile_videoerfassung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 6 (mobile optisch-elektronische Erfassung)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 6 (mobile optisch-elektronische Erfassung)",
+    "text": "Werden personenbezogene Daten in öffentlichen Bereichen mobil optisch-elektronisch erfasst und aus einem oder mehreren Erfassungssystemen in großem Umfang zentral zusammengeführt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Beispiel der Liste: Bewertungsportale.",
+    "key": "dsk_nr07_bewertung_veroeffentlichung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 7 (Bewertungsdaten für Dritte)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 7 (Bewertungsdaten für Dritte)",
+    "text": "Werden Daten zur Bewertung des Verhaltens oder anderer persönlicher Aspekte umfangreich erhoben und veröffentlicht oder übermittelt, sodass Dritte damit Entscheidungen mit Rechtswirkung oder ähnlich erheblicher Beeinträchtigung treffen können?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Beispiel der Liste: Systeme zur Verhinderung von Datenabflüssen (Data Loss Prevention).",
+    "key": "dsk_nr08_beschaeftigte",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 8 (Verhalten von Beschäftigten); § 23 HDSIG",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 8 (Verhalten von Beschäftigten); § 23 HDSIG",
+    "text": "Werden Daten über das Verhalten von Beschäftigten umfangreich verarbeitet, die zur Bewertung ihrer Arbeitstätigkeit so eingesetzt werden können, dass sich Rechtsfolgen ergeben oder die Beschäftigten erheblich beeinträchtigt werden?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr09_persoenlichkeitsprofile",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 9 (Profile über Interessen, Beziehungen, Persönlichkeit)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 9 (Profile über Interessen, Beziehungen, Persönlichkeit)",
+    "text": "Werden umfassende Profile über die Interessen, das Netz persönlicher Beziehungen oder die Persönlichkeit der Betroffenen erstellt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "Alle genannten Voraussetzungen müssen zusammen vorliegen. Beispiel der Liste: Big-Data-Analyse von Kundendaten.",
+    "key": "dsk_nr10_zusammenfuehrung_analyse",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 10 (Zusammenführung zur Mustererkennung)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 10 (Zusammenführung zur Mustererkennung)",
+    "text": "Werden Daten aus verschiedenen Quellen zusammengeführt und verarbeitet, wobei die Zusammenführung oder die Verarbeitung in großem Umfang erfolgt, für Zwecke, für die nicht alle Daten bei den Betroffenen selbst erhoben wurden, mit für sie nicht nachvollziehbaren Algorithmen, um vorher unbekannte Zusammenhänge für nicht im Vorhinein bestimmte Zwecke zu entdecken?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr11_kuenstliche_intelligenz",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 11 (künstliche Intelligenz)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 11 (künstliche Intelligenz)",
+    "text": "Wird künstliche Intelligenz eingesetzt, um mit personenbezogenen Daten die Interaktion mit den Betroffenen zu steuern oder persönliche Aspekte der Betroffenen zu bewerten?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr12_mobilfunksensoren",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 12 (Sensoren und Funksignale von Mobilgeräten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 12 (Sensoren und Funksignale von Mobilgeräten)",
+    "text": "Werden Sensoren von Mobilfunkgeräten der Betroffenen oder deren Funksignale nicht bestimmungsgemäß genutzt, um Aufenthaltsort oder Bewegung über einen substanziellen Zeitraum zu bestimmen?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr13_video_audio",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 13 (Auswertung von Video- und Audioaufnahmen)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 13 (Auswertung von Video- und Audioaufnahmen)",
+    "text": "Werden Video- oder Audioaufnahmen automatisiert ausgewertet, um die Persönlichkeit der Betroffenen zu bewerten?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr14_bewegung_kaufverhalten",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 14 (Profile über Bewegung und Kaufverhalten)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 14 (Profile über Bewegung und Kaufverhalten)",
+    "text": "Werden umfassende Profile über die Bewegung und das Kaufverhalten der Betroffenen erstellt?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "„Nicht nur im Einzelfall“ bezieht sich auf die Zahl der Betroffenen und die Angaben je Person.",
+    "key": "dsk_nr15_anonymisierung",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 15 (Anonymisierung besonderer Kategorien)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 15 (Anonymisierung besonderer Kategorien)",
+    "text": "Werden besondere Kategorien personenbezogener Daten nach Art. 9 DSGVO nicht nur im Einzelfall anonymisiert, um sie an Dritte zu übermitteln?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr16_sensoren_art9",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 16 (Art. 9/10-Daten über Sensoren oder Apps)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 16 (Art. 9/10-Daten über Sensoren oder Apps)",
+    "text": "Werden Daten nach Art. 9 Abs. 1 oder Art. 10 DSGVO wiederholt mittels innovativer Nutzung von Sensoren oder mobilen Anwendungen erhoben und von einer zentralen Stelle empfangen und aufbereitet, auch wenn die Verarbeitung nicht umfangreich ist?"
+   },
+   {
+    "block": "dsk_muss_liste",
+    "effect": "hart",
+    "explanation": "",
+    "key": "dsk_nr17_leistungsfaehigkeit",
+    "legal_basis": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 17 (Leistungsfähigkeit durch neue Technologien)",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Liste nach Art. 35 Abs. 4 DSGVO, Nr. 17 (Leistungsfähigkeit durch neue Technologien)",
+    "text": "Verwenden Anbieter neuer Technologien Daten nach Art. 9 Abs. 1 oder Art. 10 DSGVO, um die Leistungsfähigkeit von Personen zu bestimmen, auch wenn die Verarbeitung nicht umfangreich ist?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_01_bewerten",
+    "legal_basis": "WP 248 rev.01, Kriterium 1; Erwägungsgründe 71, 91",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 1; Erwägungsgründe 71, 91",
+    "text": "Werden betroffene Personen bewertet oder eingestuft, etwa nach Arbeitsleistung, wirtschaftlicher Lage, Gesundheit, Vorlieben oder Verhalten?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_02_automatisierte_entscheidung",
+    "legal_basis": "WP 248 rev.01, Kriterium 2; Art. 22 DSGVO",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 2; Art. 22 DSGVO",
+    "text": "Werden Entscheidungen automatisiert getroffen, die betroffenen Personen den Zugang zu einer Leistung oder einem Vertrag eröffnen oder verwehren?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_03_ueberwachung",
+    "legal_basis": "WP 248 rev.01, Kriterium 3",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 3",
+    "text": "Werden betroffene Personen systematisch überwacht, beobachtet oder kontrolliert, auch über Netze, Kameras oder Schnittstellen?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_04_sensible_daten",
+    "legal_basis": "WP 248 rev.01, Kriterium 4; Art. 9, 10 DSGVO",
+    "legal_basis_ji": null,
+    "prefill": "besondere_kategorien",
+    "reference": "WP 248 rev.01, Kriterium 4; Art. 9, 10 DSGVO",
+    "text": "Werden besonders schutzwürdige Daten verarbeitet, etwa nach Artikel 9 oder 10 DSGVO, Standortdaten oder Finanzdaten?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_05_umfang",
+    "legal_basis": "WP 248 rev.01, Kriterium 5; Erwägungsgrund 91",
+    "legal_basis_ji": null,
+    "prefill": "grosser_umfang",
+    "reference": "WP 248 rev.01, Kriterium 5; Erwägungsgrund 91",
+    "text": "Erfolgt die Verarbeitung in großem Umfang, gemessen an Zahl der Betroffenen, Datenmenge, Dauer und geografischer Ausdehnung?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_06_abgleich",
+    "legal_basis": "WP 248 rev.01, Kriterium 6",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 6",
+    "text": "Werden Datensätze zusammengeführt oder abgeglichen, die für unterschiedliche Zwecke oder von verschiedenen Verantwortlichen erhoben wurden?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_07_schutzbeduerftige",
+    "legal_basis": "WP 248 rev.01, Kriterium 7; Erwägungsgrund 75",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 7; Erwägungsgrund 75",
+    "text": "Betrifft die Verarbeitung schutzbedürftige Personen, die dem Verantwortlichen in einem Ungleichgewicht gegenüberstehen, etwa Kinder, Beschäftigte, Patientinnen und Patienten?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_08_neue_technologien",
+    "legal_basis": "WP 248 rev.01, Kriterium 8; Art. 35 Abs. 1 DSGVO",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 8; Art. 35 Abs. 1 DSGVO",
+    "text": "Werden neuartige Technologien eingesetzt, etwa maschinelles Lernen, Verfahren zur Aufhebung von Anonymisierung, verteilte Register oder vernetzte Sensorik?"
+   },
+   {
+    "block": "edsa_wp248",
+    "effect": "punkt",
+    "explanation": "",
+    "key": "edsa_09_rechtsausuebung",
+    "legal_basis": "WP 248 rev.01, Kriterium 9",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "WP 248 rev.01, Kriterium 9",
+    "text": "Hindert die Verarbeitung betroffene Personen daran, ein Recht auszuüben, eine Leistung in Anspruch zu nehmen oder einen Vertrag zu schließen?"
+   },
+   {
+    "block": "ki_verordnung",
+    "effect": "fria",
+    "explanation": "Bei ja ist zusätzlich eine Grundrechte-Folgenabschätzung zu erstellen. Nach Art. 27 Abs. 4 der Verordnung darf sie mit dieser Datenschutz-Folgenabschätzung verbunden werden.",
+    "key": "ki_01_hochrisiko",
+    "legal_basis": "Art. 6 in Verbindung mit Anhang III und Art. 27 der Verordnung (EU) 2024/1689",
+    "legal_basis_ji": null,
+    "prefill": null,
+    "reference": "Art. 6 in Verbindung mit Anhang III und Art. 27 der Verordnung (EU) 2024/1689",
+    "text": "Handelt es sich um ein Hochrisiko-KI-System nach Anhang III der Verordnung (EU) 2024/1689, etwa zur biometrischen Fernidentifizierung, zur Auswahl von Bewerbungen, zur Kreditwürdigkeitsprüfung oder zur Priorisierung von Notrufen?"
+   }
+  ]
+ },
+ "source": {
+  "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",
+  "files": [
+   {
+    "git_blob": "2a34de1d708e3bd83bdd366b0f7dbf09be177a5a",
+    "path": "backend/app/services/dsfa/bewertung.py",
+    "sha256": "31ff7d75fb3279c5b0ee6a85319e41b0ec6e3780aa327cd8603041aaaf492f7f"
+   },
+   {
+    "git_blob": "8be23a5163342f0f69b32f2d40b2ef2d60ba8783",
+    "path": "backend/app/services/dsfa/katalog.py",
+    "sha256": "4e5fa6af60e633e2d4f950ea102c0c644a5c43fff70de1d205ecec27340ce023"
+   },
+   {
+    "git_blob": "eba4ffd8965980736b8bb325c027f34faf4542ac",
+    "path": "backend/app/services/dsfa/verwaltung.py",
+    "sha256": "e341504ec115f5c4725bbb3a72b08d54ad2e3f34fa86039ecd02a846c6831a18"
+   },
+   {
+    "git_blob": "e2a14999a49823813cf790843595fdbec0449801",
+    "path": "backend/app/services/dsfa/export.py",
+    "sha256": "42fbb60ed8bad2c52320dfea63eedad4f6cdbf875085a4c9dab8326e7ccfe510"
+   },
+   {
+    "git_blob": "992aeadc70b8f289aaf996263f93c9fe1375cc1a",
+    "path": "backend/app/services/mandant_dsgvo_service.py",
+    "sha256": "4f2ee0a30f3a71343355ddef66ee4aa0522e6b1c7cf8bdd76094240c5dd26c30"
+   }
+  ],
+  "repository": "janpow77/regulierung",
+  "rights": "USER_AUTHORIZED_MIT"
+ },
+ "sources": [
+  {
+   "date": "2026-03-10",
+   "issuer": "Europäischer Datenschutzausschuss",
+   "key": "edpb_dpia_template_2026",
+   "reference": "https://www.edpb.europa.eu/public-consultations/edpb-dpia-template_en",
+   "status": "Version 1.0, zur öffentlichen Konsultation angenommen (bis 09.06.2026); Endfassung ausstehend",
+   "title": "Template for Data Protection Impact Assessment ('DPIA'), mit Explainer",
+   "used_for": "Stammdaten, Maßnahmenbereiche, Umsetzungsstand, Risikoquelle, Bewertung der Hinnehmbarkeit, Maßnahmenplan, Entscheidungen"
+  },
+  {
+   "date": "2017-10-04",
+   "issuer": "Art.-29-Datenschutzgruppe; vom Europäischen Datenschutzausschuss am 25.05.2018 bestätigt",
+   "key": "wp248",
+   "reference": "Abschn. III.B.a (S. 10–12), III.D (S. 17), III.E (S. 23), Anhang 2",
+   "status": "geltend",
+   "title": "Leitlinien zur Datenschutz-Folgenabschätzung (WP 248 rev.01)",
+   "used_for": "Neun Kriterien und Schwelle 2, Überprüfung, Konsultation, Mindestinhalt"
+  },
+  {
+   "date": "2017-04-05",
+   "issuer": "Art.-29-Datenschutzgruppe; vom Europäischen Datenschutzausschuss am 25.05.2018 bestätigt",
+   "key": "wp243",
+   "reference": "Ziff. 4.2 (S. 20 f.)",
+   "status": "geltend",
+   "title": "Leitlinien in Bezug auf Datenschutzbeauftragte (WP 243 rev.01)",
+   "used_for": "Rat der oder des DSB, schriftliche Begründung bei Abweichung"
+  },
+  {
+   "date": "2018-10-17",
+   "issuer": "Datenschutzkonferenz; in Hessen veröffentlicht vom HBDI",
+   "key": "dsk_muss_liste",
+   "reference": "Art. 35 Abs. 4 DSGVO",
+   "status": "Version 1.1",
+   "title": "Liste der Verarbeitungstätigkeiten, für die eine DSFA durchzuführen ist",
+   "used_for": "Harte Auslöser der Schwellwertanalyse: alle 17 Nummern als eigene Fragen"
+  },
+  {
+   "date": "2018-04-26",
+   "issuer": "Datenschutzkonferenz",
+   "key": "dsk_kp18",
+   "reference": "S. 4 f.",
+   "status": "geltend",
+   "title": "Kurzpapier Nr. 18: Risiko für die Rechte und Freiheiten natürlicher Personen",
+   "used_for": "Vier Stufen je Achse (S. 4) und Risikomatrix Feld für Feld (S. 5); Mindeststufe bei großer Schwere"
+  },
+  {
+   "date": "2024-05-14",
+   "issuer": "Datenschutzkonferenz",
+   "key": "sdm",
+   "reference": "Teil C1",
+   "status": "Version 3.1",
+   "title": "Das Standard-Datenschutzmodell",
+   "used_for": "Gewährleistungsziele als Schutzdimensionen"
+  }
+ ],
+ "status": "LIBRARY_PROFILE_EDPB_ALIGNED",
+ "version": "2026.10.2",
+ "workflow": {
+  "conditions_required_for": [
+   "freigabe_mit_auflagen"
+  ],
+  "data_subject_view_templates": [
+   {
+    "schluessel": "eingeholt",
+    "text": "Der Standpunkt der betroffenen Personen oder ihrer Vertreter ist eingeholt worden. Art, Zeitpunkt und Ergebnis der Beteiligung sind in der Abschätzung beschrieben.",
+    "titel": "Eingeholt"
+   },
+   {
+    "schluessel": "unangemessen_aufwand",
+    "text": "Von der Einholung ist abgesehen worden. Die Verarbeitung beruht auf einer gesetzlichen Aufgabe ohne Gestaltungsspielraum der Behörde; eine Beteiligung könnte am Zuschnitt der Verarbeitung nichts ändern und stünde außer Verhältnis zum Aufwand (Art. 35 Abs. 9 DSGVO, „gegebenenfalls“).",
+    "titel": "Nicht eingeholt: unverhältnismäßiger Aufwand"
+   },
+   {
+    "schluessel": "schutz_interessen",
+    "text": "Von der Einholung ist abgesehen worden, weil ihr der Schutz gewerblicher oder öffentlicher Interessen oder die Sicherheit der Verarbeitungsvorgänge entgegensteht (Art. 35 Abs. 9 Halbsatz 2 DSGVO).",
+    "titel": "Nicht eingeholt: entgegenstehende Interessen"
+   }
+  ],
+  "dpo_votes": [
+   "zugestimmt",
+   "zugestimmt_mit_auflagen",
+   "abgelehnt"
+  ],
+  "min_justification_length": 50,
+  "significant_fields": [
+   {
+    "key": "name",
+    "title": "Bezeichnung"
+   },
+   {
+    "key": "zweck",
+    "title": "Zweck"
+   },
+   {
+    "key": "ermaechtigungsgrundlage",
+    "title": "Rechtsgrundlage"
+   },
+   {
+    "key": "kategorien_betroffene",
+    "title": "Kategorien betroffener Personen"
+   },
+   {
+    "key": "kategorien_daten",
+    "title": "Kategorien der Daten"
+   },
+   {
+    "key": "kategorien_empfaenger",
+    "title": "Kategorien der Empfänger"
+   },
+   {
+    "key": "drittlandtransfer",
+    "title": "Übermittlung in ein Drittland"
+   },
+   {
+    "key": "besondere_kategorien",
+    "title": "Besondere Kategorien nach Artikel 9"
+   },
+   {
+    "key": "daten_art10",
+    "title": "Daten nach Artikel 10"
+   },
+   {
+    "key": "anzahl_betroffene",
+    "title": "Zahl der betroffenen Personen"
+   },
+   {
+    "key": "auftragsverarbeiter",
+    "title": "Auftragsverarbeiter"
+   }
+  ],
+  "status_texts": {
+   "abgeloest": "abgelöst",
+   "dsb_beteiligung": "Stellungnahme eingeholt",
+   "entwurf": "Entwurf",
+   "freigegeben": "freigegeben",
+   "pruefung_erforderlich": "Überprüfung erforderlich"
+  },
+  "vote_texts": {
+   "abgelehnt": "abgelehnt",
+   "zugestimmt": "zugestimmt",
+   "zugestimmt_mit_auflagen": "zugestimmt mit Auflagen"
+  }
+ }
+}

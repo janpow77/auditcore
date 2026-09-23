@@ -22,17 +22,26 @@ from .errors import DependencyError, FormatError, ProfileError, QueryError, Regi
 from .lists import find_list, list_catalog, load_lists
 from .model import ListEntry, ListSnapshot, ParsedList, RowIssue, SanctionsList
 from .opensanctions_api import (
+    KeyCredentials,
     MatchClient,
     MatchQuery,
     assess_pep,
     assess_sanctions,
+    configuration_status,
+    credentials_from_environment,
     parse_response,
     person_query,
     sanctions_query,
 )
 from .opensanctions_csv import parse_targets_simple_csv, serialize_targets_simple_csv
-from .ownership import beneficial_owners, ownership_chain, sme_status, traverse
-from .profiles import RegistryProfile, available_profiles, load_profile
+from .ownership import (
+    beneficial_owners,
+    ownership_chain,
+    sme_status,
+    traverse,
+    unclassified_holders,
+)
+from .profiles import RegistryProfile, available_profiles, load_profile, recommended_profile
 from .sanctions_xml import parse_xml_list, xml_entries
 from .screening import ListFinding, ScreeningHit, ScreeningResult, screen
 
@@ -44,6 +53,7 @@ __all__ = [
     "BulkHit",
     "BulkResult",
     "CompanyVerification",
+    "KeyCredentials",
     "DependencyError",
     "FormatError",
     "ListEntry",
@@ -88,5 +98,9 @@ __all__ = [
     "sme_status",
     "traverse",
     "verify_company",
+    "configuration_status",
+    "credentials_from_environment",
+    "recommended_profile",
+    "unclassified_holders",
     "xml_entries",
 ]

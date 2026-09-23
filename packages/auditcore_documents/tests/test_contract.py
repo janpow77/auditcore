@@ -34,7 +34,7 @@ def test_profiles_are_versioned_source_bound_and_fingerprinted() -> None:
         assert len(profile.fingerprint) == 64
         assert ad.get_profile(profile.profile_id) is profile
     assert ad.LEGACY.status == "SOURCE_CHARACTERIZED"
-    assert ad.CORRECTED.status.startswith("CORRECTED")
+    assert ad.CORRECTED.status == "DECIDED_RECOMMENDED" and ad.RECOMMENDED is ad.CORRECTED
     with pytest.raises(ValueError, match="Unbekanntes Vergleichsprofil"):
         ad.get_profile("x")
 

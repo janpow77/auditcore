@@ -101,6 +101,7 @@ class Consultation:
     consulted_on: str
     recorded_by: str
     recorded_at: datetime
+    ground: str | None = None
 
 
 @dataclass(frozen=True)
@@ -148,6 +149,11 @@ class Assessment:
     released_at: datetime | None = None
     predecessor_id: str | None = None
     changes_to_predecessor: tuple[Mapping[str, Any], ...] = ()
+    # Schema 2 (EDPB template 2026 v1.0); empty for schema 1 profiles.
+    dossier: Mapping[str, str] = field(default_factory=dict)
+    measure_status: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
+    action_plan: tuple[Mapping[str, str], ...] = ()
+    conditions: tuple[str, ...] = ()
 
     @property
     def locked(self) -> bool:

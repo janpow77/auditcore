@@ -193,3 +193,30 @@ Worker-Integrationstest → 165 passed; `pip check` mit
 Weitere offene Entscheidungen: Übernahme von `CORRECTED_PIPELINE`, Gebietsschema
 der Feldextraktion (PL-L01), Umgang mit Gateway-Ausfall (PL-L03), Löschkonzept
 (PL-L05), Meldungstexte des Watchdogs.
+
+## Teil 3: Umsetzung der Entscheidungen vom 2026-09-23
+
+Nutzerentscheidung „alle empfehlungen“; alle vorher als HUMAN_DECISION_REQUIRED
+markierten Punkte sind jetzt **DECIDED** (Version bleibt 0.1.0, unveröffentlicht).
+
+| Nr. | Umsetzung |
+|---|---|
+| D1 | `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare` 2026.09.2), CLI-Voreinstellung |
+| D2 | Absatznummerierung nach Einfügung korrigiert (`renumber_after_insert`); Ersetzungen treffen alle Vorkommen |
+| D3 | Empfohlenes Profil ohne rapidfuzz: `DependencyError`; `LEGACY_DIFFLIB` ausdrücklich wählbar |
+| D4 | `CORRECTED_PIPELINE` = `RECOMMENDED_PIPELINE` (`auditcore.pipeline` 2026.09.2) |
+| D5 | Beträge gebietsschemabewusst (`parse_amount`), mehrdeutige Beträge → `VAL_AMOUNT_FORMAT` → REVIEW_NEEDED; Feldmuster zeilengebunden |
+| D6 | Gateway-Ausfall → `OCR_GATEWAY_UNAVAILABLE`, drei Wiederholungen, danach FAILED (wiederholbar) |
+| D7 | Alle fünf Aufbewahrungsfristen über `ArtifactRetentionStore` / `build_retention_sweeper` |
+| D8 | Watchdog als `auditcore_documents.pipeline.watchdog`, Meldungen mit Umlauten |
+| S2 | WORM-Trigger auf `pipeline_audit_events` als entschiedener Umstellungsschritt in flowinvoice (nach v0.3.0), dokumentiert in `docs/consumer-integration.md` |
+
+| Prüfung | Ergebnis |
+|---|---|
+| `LEGACY`, `LEGACY_DIFFLIB`, `LEGACY_PIPELINE` | Replays unverändert exakt, Fingerabdrücke unverändert |
+| Referenzumgebung (pdftotext 22.12, lxml 5.1.0) `test_legacy_replay`, `test_original_suite` | 310 passed |
+| Watchdog: 18 aufgezeichnete Originalläufe (`tools/capture_watchdog.py`) | nach Rückumschrift exakt gleich; 30 Originaltests passed |
+| Paket-pytest gesamt (Python 3.12) | 565 passed, 3 skipped (pdftotext-Version) |
+| ruff, mypy strict | PASS |
+| Policy-Nachweis | F-04, F-07, F-09, F-15 VERIFIED |
+| `verify_domain_packages.py --apt` | 21/21 PASS, Wheel-SHA256 `380edf8d4e44b8866f19d69597cdd5cf16eed46e2a9b34af4a697acbd638e2b7` |

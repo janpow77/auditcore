@@ -236,6 +236,39 @@ class OcrConfidenceRule(ValidationRule):
         )
 
 
+class AmountFormatRule(ValidationRule):
+    """Mehrdeutige oder ungültige Beträge führen zur Prüfung statt zu geratenen Werten (D5)."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            rule_id="VAL_AMOUNT_FORMAT",
+            name="amount_format",
+            description="Beträge eindeutig lesbar (Dezimal-/Tausendertrennzeichen)",
+            severity="WARN",
+            action_on_fail="REVIEW_NEEDED",
+        )
+
+    async def evaluate(self, context: PipelineContext) -> ValidationResult:
+        from auditcore_documents.pipeline.stages.postprocess import AMOUNT_FIELDS, parse_amount
+
+        raw = context.artifacts.extracted_fields or {}
+        unclear = {}
+        for name in AMOUNT_FIELDS:
+            value = raw.get(name)
+            if isinstance(value, str):
+                parsed, state = parse_amount(value)
+                if parsed is None:
+                    unclear[name] = {"raw": value, "state": state}
+        if not unclear:
+            return self.result("INFO", "PASS", "All amounts unambiguous")
+        return self.result(
+            self.severity,
+            "REVIEW",
+            "Ambiguous or invalid amounts: " + ", ".join(sorted(unclear)),
+            evidence=unclear,
+        )
+
+
 @dataclass
 class FraudAssessment:
     """Ergebnis des Betrugsprüfungs-Ports (Auszug aus ``FraudAnalysisResult``)."""

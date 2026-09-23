@@ -77,6 +77,10 @@ def test_runtime_imports_are_stdlib_or_own_package() -> None:
 def test_profiles_are_packaged_data_not_code() -> None:
     profiles = PACKAGE / "profiles"
     assert sorted(p.name for p in profiles.glob("*.json")) == [
+        "auditcore.dsgvo-2026.10.1.json",
+        "auditcore.dsgvo-2026.10.2.json",
+        "auditcore.hdsig_ji-2026.10.1.json",
+        "auditcore.hdsig_ji-2026.10.2.json",
         "regulierung.dsgvo-2026.09.1.json",
         "regulierung.hdsig_ji-2026.09.1.json",
     ]

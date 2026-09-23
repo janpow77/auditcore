@@ -21,7 +21,7 @@ PINNED = {
 
 
 def test_all_profiles_load_and_are_bound_to_pinned_sources() -> None:
-    assert len(available_profiles()) == 13
+    assert len(available_profiles()) == 20
     for profile_id, version in available_profiles():
         profile = load_profile(profile_id, version)
         assert profile.source["commit"] == PINNED[profile.source["repository"]]

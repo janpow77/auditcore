@@ -1,10 +1,12 @@
-"""Minimal live smoke: at most one result page per portal whose robots.txt allows it.
+"""Minimal live smoke: at most one result page per portal.
 
-Manual tool, not part of the test suite. Each adapter reads robots.txt first
-and refuses disallowed addresses; Kleinanzeigen (``/*/preis:*``) and ZVG
-detail pages are therefore not requested. Terms of use are **not** reviewed
-(REVIEW_REQUIRED), so the result documents technical reachability and parser
-fit only. Only aggregates are written — no ad texts, names or addresses::
+Manual tool, not part of the test suite. Since the user decision of
+2026-09-23 (PS-D01) the adapters run with the default
+``robots_policy="ignore"``, so the Kleinanzeigen search (``/*/preis:*``) and one
+ZVG detail page (``showZvg``) are requested as well, exactly once each. Terms
+of use are **not** reviewed (REVIEW_REQUIRED), so the result documents
+technical reachability and parser fit only. Only aggregates are written — no
+ad texts, names or addresses::
 
     python tools/live_smoke.py <output.json>
 """
@@ -36,7 +38,9 @@ from auditcore_property_sources.adapters import (
     CityaAdapter,
     ImmobilienDeAdapter,
     InBerlinWohnenAdapter,
+    KleinanzeigenAdapter,
     ParuvenduAdapter,
+    ZvgDetailAdapter,
     ZvgListingAdapter,
 )
 
@@ -82,7 +86,9 @@ class CookieTransport:
             raise TransportError(f"Verbindung fehlgeschlagen: {type(error).__name__}") from error
 
 
-def smoke(name: str, adapter: Any, config: dict[str, Any]) -> dict[str, Any]:
+def smoke(
+    name: str, adapter: Any, config: dict[str, Any], first: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
     transport = CookieTransport()
     sink = ListSink()
     result = HarvestEngine(
@@ -99,6 +105,8 @@ def smoke(name: str, adapter: Any, config: dict[str, Any]) -> dict[str, Any]:
         config=config,
     )
     records = [dict(r.normalized) for r in sink.records.values()]
+    if first is not None and records:
+        first.append(records[0])
     return {
         "source_id": adapter.source.source_id,
         "requests": transport.calls,
@@ -143,17 +151,20 @@ def main() -> int:
             ParuvenduAdapter(),
             {"departements": ["bas-rhin-67"], "kinds": ["appartement"], "max_pages": 1},
         ),
-        "zvg_liste": (ZvgListingAdapter(), {"courts": ["M1201"]}),
+        "kleinanzeigen": (KleinanzeigenAdapter({}), {"max_price": 700, "pages": 1}),
     }
+    results = {name: smoke(name, adapter, config) for name, (adapter, config) in runs.items()}
+    notices: list[dict[str, Any]] = []
+    results["zvg_liste"] = smoke("zvg_liste", ZvgListingAdapter(), {"courts": ["M1201"]}, notices)
+    if notices:
+        notice = {k: notices[0][k] for k in ("zvg_id", "court_id", "file_number")}
+        results["zvg_detail"] = smoke("zvg_detail", ZvgDetailAdapter(), {"notices": [notice]})
     report = {
         "executed_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "user_agent": AGENT,
         "terms_of_use": "REVIEW_REQUIRED",
-        "not_requested": {
-            "property.kleinanzeigen": "robots.txt Disallow: /*/preis:*",
-            "property.zvg_detail": "robots.txt Disallow: /index.php?button=showZvg*",
-        },
-        "results": {name: smoke(name, adapter, config) for name, (adapter, config) in runs.items()},
+        "robots_policy": "ignore (Nutzerentscheidung 2026-09-23, PS-D01)",
+        "results": results,
     }
     with open(sys.argv[1], "w", encoding="utf-8") as handle:
         json.dump(report, handle, ensure_ascii=False, indent=1)

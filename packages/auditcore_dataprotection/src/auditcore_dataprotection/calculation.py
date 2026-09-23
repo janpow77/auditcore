@@ -19,9 +19,14 @@ from typing import Any
 
 from .errors import ValidationError
 from .rules import (
+    DECISION_REJECTED,
     EFFECT_FRIA,
     EFFECT_HARD,
     EFFECT_POINT,
+    NOTICE_NONE,
+    NOTICE_NOT_REQUIRED,
+    NOTICE_PRELIMINARY,
+    NOTICE_REQUIRED,
     RECOMMENDATION_CONSULTATION,
     RECOMMENDATION_INCOMPLETE,
     RECOMMENDATION_RELEASE,
@@ -69,10 +74,19 @@ class Scenario:
     residual_severity: int | None = None
     residual_likelihood: int | None = None
     residual_justification: str = ""
+    risk_source: str = ""
+    modulating_factors: str = ""
+    acceptance_inherent: str | None = None
+    acceptance_residual: str | None = None
+    acceptance_note: str = ""
 
     def to_dict(self) -> dict[str, Any]:
-        """JSON-serialisable form of the scenario."""
-        return {
+        """JSON-serialisable form of the scenario.
+
+        The schema 2 fields (EDPB template 4.1) appear only when they are set,
+        so schema 1 scenarios serialise exactly as before.
+        """
+        data: dict[str, Any] = {
             "dimension": self.dimension,
             "description": self.description,
             "severity": self.severity,
@@ -82,6 +96,21 @@ class Scenario:
             "residual_likelihood": self.residual_likelihood,
             "residual_justification": self.residual_justification,
         }
+        for name in EDPB_SCENARIO_FIELDS:
+            value = getattr(self, name)
+            if value not in (None, ""):
+                data[name] = value
+        return data
+
+
+#: Scenario fields that only schema 2 profiles accept (EDPB template, section 4).
+EDPB_SCENARIO_FIELDS = (
+    "risk_source",
+    "modulating_factors",
+    "acceptance_inherent",
+    "acceptance_residual",
+    "acceptance_note",
+)
 
 
 @dataclass(frozen=True)
@@ -147,6 +176,7 @@ class ScenarioResult:
     net_band: str
     explicit_residual: tuple[str, ...]
     residual_justification: str
+    edpb: Mapping[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -158,6 +188,9 @@ class RiskResult:
     net_maximum: int
     net_band: str
     issues: tuple[Issue, ...]
+    method: str | None = None
+    gross_band: str | None = None
+    floored: tuple[int, ...] = ()
 
     @property
     def assessed(self) -> bool:
@@ -182,6 +215,9 @@ class Proposal:
     issues: tuple[Issue, ...]
     calculation: str = CALCULATION_VERSION
     trace: tuple[Mapping[str, Any], ...] = field(default_factory=tuple)
+    #: DP-C21: only for profiles with a ``consultation_notice`` section. The
+    #: proposal never carries the final notice; see ``finalize_consultation``.
+    consultation_notice: Mapping[str, Any] | None = None
 
     @property
     def blocking_issues(self) -> tuple[Issue, ...]:
@@ -199,6 +235,11 @@ class Proposal:
             "reasoning": self.reasoning,
             "consultation_required": self.consultation_required,
             "consultation_reference": self.consultation_reference,
+            **(
+                {}
+                if self.consultation_notice is None
+                else {"consultation_notice": dict(self.consultation_notice)}
+            ),
             "issues": [i.to_dict() for i in self.issues],
             "screening": {
                 "outcome": self.screening.outcome,
@@ -239,9 +280,19 @@ class Proposal:
                         "net_band": s.net_band,
                         "explicit_residual": list(s.explicit_residual),
                         "residual_justification": s.residual_justification,
+                        **dict(s.edpb),
                     }
                     for s in self.risk.scenarios
                 ],
+                **(
+                    {}
+                    if self.risk.method is None
+                    else {
+                        "method": self.risk.method,
+                        "gross_band": self.risk.gross_band,
+                        "floored": list(self.risk.floored),
+                    }
+                ),
             },
             "trace": [dict(t) for t in self.trace],
         }
@@ -348,6 +399,7 @@ def _scenario(index: int, raw: Any, profile: RuleProfile) -> Scenario:
         "residual_severity",
         "residual_likelihood",
         "residual_justification",
+        *EDPB_SCENARIO_FIELDS,
     }
     unexpected = set(raw) - allowed
     if unexpected:
@@ -374,6 +426,7 @@ def _scenario(index: int, raw: Any, profile: RuleProfile) -> Scenario:
     justification = raw.get("residual_justification") or ""
     if not isinstance(justification, str):
         raise ValidationError(f"Risikoszenario {index}: Begründung des Restwerts muss Text sein.")
+    extra = _edpb_scenario_fields(index, raw, profile)
     severity = _level(raw.get("severity"), "Schwere", profile, optional=False)
     likelihood = _level(
         raw.get("likelihood"), "Eintrittswahrscheinlichkeit", profile, optional=False
@@ -392,7 +445,37 @@ def _scenario(index: int, raw: Any, profile: RuleProfile) -> Scenario:
             raw.get("residual_likelihood"), "Rest-Wahrscheinlichkeit", profile, optional=True
         ),
         residual_justification=justification.strip(),
+        **extra,
     )
+
+
+def _edpb_scenario_fields(
+    index: int, raw: Mapping[str, Any], profile: RuleProfile
+) -> dict[str, Any]:
+    """Validate risk source, modulating factors and acceptance (schema 2 only)."""
+    given = {
+        name: raw.get(name) for name in EDPB_SCENARIO_FIELDS if raw.get(name) not in (None, "")
+    }
+    if given and not profile.edpb:
+        raise ValidationError(
+            f"Risikoszenario {index}: {', '.join(sorted(given))} kennt nur ein Profil nach "
+            "der EDSA-Vorlage (Schema 2)."
+        )
+    result: dict[str, Any] = {}
+    for name in ("risk_source", "modulating_factors", "acceptance_note"):
+        value = given.get(name, "")
+        if not isinstance(value, str):
+            raise ValidationError(f"Risikoszenario {index}: '{name}' muss Text sein.")
+        result[name] = value.strip()
+    for name in ("acceptance_inherent", "acceptance_residual"):
+        value = given.get(name)
+        if value is not None and value not in profile.acceptance_levels:
+            raise ValidationError(
+                f"Risikoszenario {index}: unbekannte Bewertung {value!r}. Zulässig sind: "
+                f"{', '.join(profile.acceptance_levels)}."
+            )
+        result[name] = value
+    return result
 
 
 def parse_scenarios(raw: Iterable[Any], profile: RuleProfile) -> tuple[Scenario, ...]:
@@ -439,8 +522,8 @@ def _screening_outcome(
         return SCREENING_REQUIRED, _hard_trigger_reasoning(profile, hard)
     if score >= threshold:
         return SCREENING_REQUIRED, (
-            f"Es sind {score} der neun Kriterien des Europäischen "
-            f"Datenschutzausschusses erfüllt. Ab {threshold} Kriterien ist "
+            f"Es sind {score} der neun {profile.criteria_label} erfüllt. "
+            f"Ab {threshold} Kriterien ist "
             "regelmäßig von einem voraussichtlich hohen Risiko auszugehen "
             "(WP 248 rev.01); die Folgenabschätzung ist durchzuführen."
         )
@@ -453,7 +536,7 @@ def _screening_outcome(
         )
     return SCREENING_NOT_REQUIRED, (
         f"Kein Muss-Kriterium ist erfüllt und es sind {score} der neun "
-        f"Kriterien des Europäischen Datenschutzausschusses bejaht, also "
+        f"{profile.criteria_label} bejaht, also "
         f"weniger als {threshold}. Eine Folgenabschätzung ist damit "
         "nicht erforderlich; das Ergebnis ist gleichwohl zu dokumentieren "
         f"({profile.norm('nachweis')})."
@@ -543,6 +626,7 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
     parsed = parse_scenarios(scenarios, profile)
     results: list[ScenarioResult] = []
     issues: list[Issue] = []
+    floored: list[int] = []
     for index, scenario in enumerate(parsed, start=1):
         reduction_s = sum(profile.measure(m).reduces_severity for m in scenario.measures)
         reduction_l = sum(profile.measure(m).reduces_likelihood for m in scenario.measures)
@@ -578,6 +662,26 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
             )
         gross = scenario.severity * scenario.likelihood
         net = net_s * net_l
+        # Only a justified explicit residual severity lifts a severity floor.
+        justified_severity = "severity" in explicit and bool(scenario.residual_justification)
+        gross_band, net_band, net_floor = _bands(
+            profile, scenario, gross, net, net_s, net_l, justified_severity
+        )
+        if net_floor:
+            floored.append(index)
+        edpb: dict[str, Any] = {}
+        if profile.edpb:
+            titles = profile.acceptance_levels
+            edpb = {
+                "net_floor": net_floor,
+                "risk_source": scenario.risk_source,
+                "modulating_factors": scenario.modulating_factors,
+                "acceptance_inherent": scenario.acceptance_inherent,
+                "acceptance_inherent_title": titles.get(scenario.acceptance_inherent or "", ""),
+                "acceptance_residual": scenario.acceptance_residual,
+                "acceptance_residual_title": titles.get(scenario.acceptance_residual or "", ""),
+                "acceptance_note": scenario.acceptance_note,
+            }
         results.append(
             ScenarioResult(
                 index=index,
@@ -588,7 +692,7 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
                 gross_severity=scenario.severity,
                 gross_likelihood=scenario.likelihood,
                 gross=gross,
-                gross_band=profile.band(gross),
+                gross_band=gross_band,
                 measures=scenario.measures,
                 measure_titles=tuple(profile.measure(m).title for m in scenario.measures),
                 reduction_severity=min(cap, reduction_s),
@@ -596,20 +700,71 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
                 net_severity=net_s,
                 net_likelihood=net_l,
                 net=net,
-                net_band=profile.band(net),
+                net_band=net_band,
                 explicit_residual=tuple(explicit),
                 residual_justification=scenario.residual_justification,
+                edpb=edpb,
             )
         )
     gross_max = max((r.gross for r in results), default=0)
     net_max = max((r.net for r in results), default=0)
+    if not profile.edpb:
+        return RiskResult(
+            scenarios=tuple(results),
+            gross_maximum=gross_max,
+            net_maximum=net_max,
+            net_band=profile.band(net_max),
+            issues=tuple(issues),
+        )
     return RiskResult(
         scenarios=tuple(results),
         gross_maximum=gross_max,
         net_maximum=net_max,
-        net_band=profile.band(net_max),
+        net_band=_highest(profile, [r.net_band for r in results]),
         issues=tuple(issues),
+        method="matrix",
+        gross_band=_highest(profile, [r.gross_band for r in results]),
+        floored=tuple(floored),
     )
+
+
+def _highest(profile: RuleProfile, bands: Sequence[str]) -> str:
+    """Highest band of several scenarios; the lowest band when there is none."""
+    if not bands:
+        return profile.bands[0].label
+    return max(bands, key=profile.band_rank)
+
+
+def _bands(
+    profile: RuleProfile,
+    scenario: Scenario,
+    gross: int,
+    net: int,
+    net_s: int,
+    net_l: int,
+    explicit_severity: bool,
+) -> tuple[str, str, str | None]:
+    """Gross band, net band and the reference of an applied severity floor.
+
+    Schema 1: bands of the severity × likelihood product. Schema 2: bands from
+    the profile's risk matrix (DSK-Kurzpapier Nr. 18, S. 5). A severity floor
+    depends on the severity before measures, because a risk can be
+    unacceptable when its potential impact is very severe even if it is
+    unlikely (EDPB explainer, footnote 9). Measures do not remove the floor;
+    only an explicit, justified residual severity does.
+    """
+    if not profile.edpb:
+        return profile.band(gross), profile.band(net), None
+    gross_band = profile.matrix_band(scenario.severity, scenario.likelihood)
+    net_band = profile.matrix_band(net_s, net_l)
+    floor = profile.severity_floor(scenario.severity)
+    if floor is None:
+        return gross_band, net_band, None
+    if profile.band_rank(gross_band) < profile.band_rank(floor.min_band):
+        gross_band = floor.min_band
+    if explicit_severity or profile.band_rank(net_band) >= profile.band_rank(floor.min_band):
+        return gross_band, net_band, None
+    return gross_band, floor.min_band, floor.reference
 
 
 # ---------------------------------------------------------------------------
@@ -666,6 +821,22 @@ def propose(
     ) -> Proposal:
         """Build the proposal for one recommendation."""
         trace.append({"step": "recommendation", "value": recommendation})
+        notice: dict[str, Any] | None = None
+        if profile.consultation_notice is not None:
+            # DP-C21: before the final assessment at most a preliminary notice.
+            rule = profile.consultation_notice
+            preliminary = recommendation == RECOMMENDATION_CONSULTATION
+            notice = {
+                "timing": rule.timing,
+                "final": False,
+                "status": NOTICE_PRELIMINARY if preliminary else NOTICE_NONE,
+                "text": rule.preliminary_text if preliminary else "",
+                "legal_basis": rule.legal_basis,
+            }
+            if preliminary:
+                text = rule.preliminary_text
+            consultation = False
+            trace.append({"step": "consultation_notice", "status": notice["status"]})
         return Proposal(
             profile=profile.reference,
             regime=profile.regime,
@@ -678,6 +849,7 @@ def propose(
             consultation_reference=consultation_reference,
             issues=tuple(issues),
             trace=tuple(trace),
+            consultation_notice=notice,
         )
 
     risk = assess_risk(profile, scenarios)
@@ -714,22 +886,48 @@ def propose(
             risk,
             False,
         )
-    recommendation = _risk_recommendation(profile, risk.net_maximum)
-    trace.append(
-        {
-            "step": "risk",
-            "gross_maximum": risk.gross_maximum,
-            "net_maximum": risk.net_maximum,
-            "consult_from": profile.consult_from,
-            "conditions_from": profile.conditions_from,
-        }
-    )
-    reasoning = (
-        f"{screening.reasoning} Das höchste Risiko vor Maßnahmen beträgt "
-        f"{risk.gross_maximum} von {profile.maximum_product}, nach den vorgesehenen "
-        f"Maßnahmen {risk.net_maximum} von {profile.maximum_product} und ist damit als "
-        f"{risk.net_band} einzustufen."
-    )
+    if profile.edpb:
+        recommendation = profile.band_recommendations[risk.net_band]
+        trace.append(
+            {
+                "step": "risk",
+                "method": risk.method,
+                "gross_band": risk.gross_band,
+                "net_band": risk.net_band,
+                "gross_maximum": risk.gross_maximum,
+                "net_maximum": risk.net_maximum,
+                "floored": list(risk.floored),
+            }
+        )
+        reasoning = (
+            f"{screening.reasoning} Nach der Risikomatrix des Regelprofils liegt das höchste "
+            f"Risiko vor Maßnahmen in der Stufe {risk.gross_band}, nach den vorgesehenen "
+            f"Maßnahmen in der Stufe {risk.net_band}."
+        )
+        if risk.floored:
+            numbers = ", ".join(str(i) for i in risk.floored)
+            reasoning += (
+                f" Für Szenario {numbers} gilt wegen der Schwere vor Maßnahmen mindestens "
+                "diese Stufe, auch wenn der Eintritt unwahrscheinlich ist oder Maßnahmen die "
+                "Schwere mindern (Mindeststufe des Regelprofils)."
+            )
+    else:
+        recommendation = _risk_recommendation(profile, risk.net_maximum)
+        trace.append(
+            {
+                "step": "risk",
+                "gross_maximum": risk.gross_maximum,
+                "net_maximum": risk.net_maximum,
+                "consult_from": profile.consult_from,
+                "conditions_from": profile.conditions_from,
+            }
+        )
+        reasoning = (
+            f"{screening.reasoning} Das höchste Risiko vor Maßnahmen beträgt "
+            f"{risk.gross_maximum} von {profile.maximum_product}, nach den vorgesehenen "
+            f"Maßnahmen {risk.net_maximum} von {profile.maximum_product} und ist damit als "
+            f"{risk.net_band} einzustufen."
+        )
     return result(
         recommendation,
         profile.recommendation_texts[recommendation],
@@ -737,6 +935,52 @@ def propose(
         risk,
         recommendation == RECOMMENDATION_CONSULTATION,
     )
+
+
+def finalize_consultation(
+    profile: RuleProfile, proposal: Mapping[str, Any], decision: str
+) -> dict[str, Any]:
+    """Final consultation notice after the final assessment (DP-C21).
+
+    Called with the decision of the controller on a complete proposal. The
+    notice is final and says "erforderlich" only if the net risk after
+    measures is still high (the proposal recommends the consultation) and the
+    processing is not abandoned. Profiles without a ``consultation_notice``
+    section return the proposal unchanged.
+    """
+    rule = profile.consultation_notice
+    result = dict(proposal)
+    if rule is None:
+        return result
+    if proposal.get("recommendation") in (None, RECOMMENDATION_INCOMPLETE):
+        raise ValidationError(
+            "Ein endgültiger Konsultationshinweis setzt eine vollständige Bewertung voraus."
+        )
+    high = proposal.get("recommendation") == RECOMMENDATION_CONSULTATION
+    rejected = decision == DECISION_REJECTED
+    required = high and not rejected
+    if required:
+        status, text = NOTICE_REQUIRED, rule.final_text
+        result["recommendation_text"] = rule.final_text
+    elif high:
+        status, text = NOTICE_NOT_REQUIRED, rule.rejected_text
+    else:
+        status, text = NOTICE_NOT_REQUIRED, rule.not_required_text
+    result["consultation_required"] = required
+    result["consultation_notice"] = {
+        "timing": rule.timing,
+        "final": True,
+        "status": status,
+        "text": text,
+        "legal_basis": rule.legal_basis,
+        "net_risk_high": high,
+        "decision": decision,
+    }
+    result["trace"] = [
+        *(proposal.get("trace") or ()),
+        {"step": "consultation_notice", "status": status, "final": True},
+    ]
+    return result
 
 
 # ---------------------------------------------------------------------------

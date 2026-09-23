@@ -129,5 +129,19 @@
     "file": "src/auditcore_property_sources/catalog.json",
     "robots_snapshots": "tests/fixtures/robots (abgerufen 2026-09-23)"
   },
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "decisions": {
+    "date": "2026-09-23",
+    "by": "Nutzer",
+    "quotes": [
+      "1-4 bitte ignoriere die robots.txt. das klappt gerade gut",
+      "A1 erlauben",
+      "A1 ok"
+    ],
+    "items": {
+      "PS-D01": "robots_policy=\"ignore\" als Standard (Kleinanzeigen-Suche, ZVG-Detailseiten wie im Original)",
+      "PS-D02": "bienici mit Browser-Kennung des Originals",
+      "PS-D03": "advertiser_names=\"legacy\" als Standard"
+    }
+  }
 }

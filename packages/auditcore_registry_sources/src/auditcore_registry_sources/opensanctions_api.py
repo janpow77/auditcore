@@ -34,6 +34,39 @@ from .profiles import RegistryProfile
 
 SOURCE_ID = "registry.opensanctions_match"
 BASE_URL = "https://api.opensanctions.org"
+#: Environment variable a consumer may use for its own key (decision A3, 23.09.2026).
+ENV_VAR = "OPENSANCTIONS_API_KEY"
+#: Where an operator obtains a key (free for academia, non-profits and journalism).
+KEY_INFO_URL = "https://www.opensanctions.org/api/"
+NOT_CONFIGURED = (
+    "NOT_CONFIGURED: kein OpenSanctions-API-Schlüssel. Jeder Betreiber beschafft einen "
+    f"eigenen Schlüssel ({KEY_INFO_URL}) und übergibt ihn als Parameter api_key oder über "
+    f"die Umgebungsvariable {ENV_VAR} (credentials_from_environment)."
+)
+
+
+@dataclass(frozen=True)
+class KeyCredentials:
+    """Credential provider holding one operator key for the matching API."""
+
+    api_key: str | None
+
+    def get(self, source_id: str, name: str) -> str | None:
+        """The key for this source, else ``None``."""
+        if source_id == SOURCE_ID and name == "api_key" and self.api_key:
+            return self.api_key
+        return None
+
+
+def credentials_from_environment(environ: Mapping[str, str]) -> KeyCredentials:
+    """Key from ``environ[ENV_VAR]`` (pass ``os.environ``); empty values count as missing."""
+    value = (environ.get(ENV_VAR) or "").strip()
+    return KeyCredentials(value or None)
+
+
+def configuration_status(credentials: CredentialProvider) -> str:
+    """``CONFIGURED`` or ``NOT_CONFIGURED`` without revealing the key."""
+    return "CONFIGURED" if credentials.get(SOURCE_ID, "api_key") else "NOT_CONFIGURED"
 
 
 @dataclass(frozen=True)
@@ -171,15 +204,21 @@ class MatchClient:
     def __init__(
         self,
         transport: Transport,
-        credentials: CredentialProvider,
+        credentials: CredentialProvider | None = None,
         *,
+        api_key: str | None = None,
         base_url: str = BASE_URL,
         timeout: float = 30.0,
     ) -> None:
         self.transport = transport
-        self.credentials = credentials
+        self.credentials = credentials if credentials is not None else KeyCredentials(api_key)
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
+
+    @property
+    def status(self) -> str:
+        """``CONFIGURED`` or ``NOT_CONFIGURED``."""
+        return configuration_status(self.credentials)
 
     def match(
         self,
@@ -192,10 +231,7 @@ class MatchClient:
         """Send one request; raises harvest errors instead of returning empty results."""
         key = self.credentials.get(SOURCE_ID, "api_key")
         if not key:
-            raise AuthError(
-                "Für die OpenSanctions-Abgleichs-API ist kein Schlüssel konfiguriert "
-                "(NOT_CONFIGURED)."
-            )
+            raise AuthError(NOT_CONFIGURED)
         params: dict[str, str] = {}
         if threshold is not None:
             params["threshold"] = str(threshold)
