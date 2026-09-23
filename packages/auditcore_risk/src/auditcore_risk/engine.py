@@ -164,6 +164,38 @@ def _messages(rule: Rule, variant: str | None, values: Mapping[str, Any]) -> dic
         raise ProfileError(f"Regel {rule.code}: Textvorlage passt nicht ({exc!r}).") from exc
 
 
+def _points_assessment(
+    profile: RiskProfile, flags: Mapping[str, bool | None], points: Mapping[str, float]
+) -> dict[str, Any]:
+    """Legacy point score of *this* profile: sum of the points of true criteria."""
+    spec = profile.assessment
+    if spec is None:
+        raise ProfileError(f"Profil {profile.id} enthält keine Bewertung.")
+    score: Any = 0
+    detail = []
+    for rule in profile.rules:
+        if flags.get(rule.code):
+            score = score + points[rule.code]
+            if spec["detail_template"] is not None and points[rule.code] > 0:
+                detail.append(
+                    str(spec["detail_template"]).format(
+                        label=rule.label, points=points[rule.code], code=rule.code
+                    )
+                )
+    if spec["cap"] is not None:
+        score = min(score, spec["cap"])
+    stage = next((s["stage"] for s in spec["stages"] if score >= s["min"]), spec["default_stage"])
+    return {
+        "score": score,
+        "stage": stage,
+        "criteria": {code: bool(value) for code, value in flags.items()},
+        "detail": detail,
+        "points": dict(points),
+        "source_version": spec["source_version"],
+        "kind": spec["kind"],
+    }
+
+
 def _assessment(profile: RiskProfile, hits: list[FlagHit]) -> dict[str, Any]:
     """Legacy score of *this* profile: sum of severity weights in rule order."""
     spec = profile.assessment
@@ -231,6 +263,7 @@ def evaluate(
     *,
     columns: Iterable[str] | None = None,
     reference_date: date | None = None,
+    points: Mapping[str, float] | None = None,
 ) -> Evaluation:
     """Evaluate ``profile`` over ``records``.
 
@@ -242,6 +275,9 @@ def evaluate(
             Column presence matters for rules with defensive behavior.
         reference_date: key date for profiles whose year-bound thresholds use
             ``date_source = reference_date``.
+        points: criterion points supplied by the consumer (e.g. calibrated
+            weights); only for profiles whose assessment allows it, all codes
+            required. The profile's own points are used otherwise.
     """
     if not isinstance(profile, RiskProfile):
         raise ProfileError("Ein ausdrücklich geladenes Regelprofil ist erforderlich.")
@@ -250,6 +286,7 @@ def evaluate(
         raise InputError("Jeder Datensatz muss eine Zuordnung Spalte → Wert sein.")
     table = Table(rows, _columns(rows, columns))
     ctx = Context(reference_date=reference_date)
+    used_points = _points_for(profile, points)
     n = len(table)
     outcomes: dict[str, Outcome] = {}
     skipped: dict[str, str] = {}
@@ -313,9 +350,12 @@ def evaluate(
                         messages=_messages(rule, variant, {**evidence, **echo}),
                     )
                 )
-        assessment = (
-            None if profile.assessment is None else MappingProxyType(_assessment(profile, hits))
-        )
+        if profile.assessment is None:
+            assessment = None
+        elif profile.assessment["kind"] == "points_stages":
+            assessment = MappingProxyType(_points_assessment(profile, flags, used_points))
+        else:
+            assessment = MappingProxyType(_assessment(profile, hits))
         results.append(
             RecordResult(
                 i,
@@ -334,6 +374,25 @@ def evaluate(
         skipped=MappingProxyType(skipped),
         summary=tuple(MappingProxyType(s) for s in summary),
     )
+
+
+def _points_for(profile: RiskProfile, override: Mapping[str, float] | None) -> dict[str, float]:
+    spec = profile.assessment
+    if spec is None or spec["kind"] != "points_stages":
+        if override is not None:
+            raise ProfileError(f"Profil {profile.id} vergibt keine Punkte.")
+        return {}
+    if override is None:
+        return {r.code: r.points if r.points is not None else 0 for r in profile.rules}
+    if spec["points_override"] != "allowed":
+        raise ProfileError(f"Profil {profile.id} erlaubt keine übergebenen Punkte.")
+    codes = {r.code for r in profile.rules}
+    if set(override) != codes:
+        raise ProfileError(f"Punkte für genau {sorted(codes)} sind anzugeben.")
+    for value in override.values():
+        if isinstance(value, bool) or not isinstance(value, int | float):
+            raise ProfileError("Punkte müssen Zahlen sein.")
+    return dict(override)
 
 
 def _summary(

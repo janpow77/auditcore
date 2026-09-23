@@ -32,6 +32,7 @@ from .base import is_number as _number
 from .base import need as _need
 from .errors import DependencyError, InputError, ProfileError
 from .invoice_rules import INVOICE_KINDS
+from .score_rules import SCORE_KINDS
 from .values import as_date, coerce_number, fmt, hashable, is_missing, text
 
 # --------------------------------------------------------------------------- kinds
@@ -729,6 +730,7 @@ KINDS: dict[str, Kind] = {
 }
 
 KINDS.update(INVOICE_KINDS)
+KINDS.update(SCORE_KINDS)
 
 
 def validate_params(kind: str, params: Mapping[str, Any], where: str) -> None:

@@ -52,6 +52,7 @@ CASES: dict[str, tuple[str, list[str]]] = {
             "tests/test_replay_flowstat.py::test_fixture_scope_and_sources",
             "tests/test_replay_flowinvoice_risk_checker.py::test_fixture_scope",
             "tests/test_replay_flowinvoice_fraud.py::test_fixture_scope",
+            "tests/test_replay_flowinvoice_verwk.py::test_fixture_scope",
             "tests/test_fraud_contract.py::test_profiles_are_explicit_and_kind_checked",
         ],
     ),

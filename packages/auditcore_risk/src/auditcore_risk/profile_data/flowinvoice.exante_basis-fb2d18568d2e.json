@@ -1,0 +1,189 @@
+{
+ "assessment": {
+  "cap": null,
+  "default_stage": "niedrig",
+  "detail_template": "{label} (+{points})",
+  "kind": "points_stages",
+  "points_override": "allowed",
+  "source_version": "kalibriere_und_score (Basisgewichte)",
+  "stages": [
+   {
+    "min": 55,
+    "stage": "hoch"
+   },
+   {
+    "min": 30,
+    "stage": "mittel"
+   }
+  ]
+ },
+ "id": "flowinvoice.exante_basis",
+ "kind": "points_score",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten der Verwaltungskontrolle (VerwK); Punkte und Stufen ausschließlich dieses Profils, keine Vereinheitlichung mit anderen Scores. Sieben ex-ante-Indikatoren mit den dokumentierten Basisgewichten (Fallback); kalibrierte Gewichte kann der Consumer ausdrücklich übergeben.",
+ "open_decisions": [
+  "Produktive Gewichte entstehen zur Laufzeit per Logit-Kalibrierung (statsmodels); die Kalibrierung bleibt beim Consumer, übergebene Gewichte werden unverändert angewandt.",
+  "Klassengrenzen 30/55 gelten für kalibrierte und Basisgewichte gleichermaßen.",
+  "Eingaben erwartete Mittelabrufe (OLS) und Auftragnehmer-Risiko (leave-one-out) berechnet der Consumer."
+ ],
+ "output": {},
+ "rules": [
+  {
+   "code": "E1",
+   "kind": "number_range",
+   "label": "Budget > 1 Mio €",
+   "origin": {
+    "lines": "143, 245-253",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "brutto",
+    "lower": 1000000,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 20
+  },
+  {
+   "code": "E2",
+   "kind": "number_range",
+   "label": "Budget 500 T€–1 Mio €",
+   "origin": {
+    "lines": "144",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "brutto",
+    "lower": 500000,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": 1000000,
+    "upper_inclusive": true
+   },
+   "points": 15
+  },
+  {
+   "code": "E3",
+   "kind": "number_range",
+   "label": "Geplante Laufzeit > 24 M",
+   "origin": {
+    "lines": "145-147",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "laufzeit_monate",
+    "lower": 24,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 6
+  },
+  {
+   "code": "E4",
+   "kind": "number_range",
+   "label": "Erwartete Mittelabrufe hoch (> 4)",
+   "origin": {
+    "lines": "148-150",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "erw_ma",
+    "lower": 4,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 10
+  },
+  {
+   "code": "E5",
+   "kind": "number_range",
+   "label": "FPG-Fehlerquote historisch hoch (> 15 %)",
+   "origin": {
+    "lines": "151",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "fpgq",
+    "lower": 15,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 10
+  },
+  {
+   "code": "E6",
+   "kind": "number_range",
+   "label": "Erstantragsteller",
+   "origin": {
+    "lines": "152",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "grp_v",
+    "lower": null,
+    "lower_inclusive": false,
+    "missing_value": 1,
+    "upper": 1,
+    "upper_inclusive": true
+   },
+   "points": 10
+  },
+  {
+   "code": "E7",
+   "kind": "number_range",
+   "label": "Auftragnehmer-Risiko (> 30 %)",
+   "origin": {
+    "lines": "153",
+    "path": "backend/app/verwk/pipeline/exante_score.py",
+    "symbol": "_features, kalibriere_und_score"
+   },
+   "params": {
+    "field": "an_risiko",
+    "lower": 0.3,
+    "lower_inclusive": false,
+    "missing_value": 0,
+    "upper": null,
+    "upper_inclusive": false
+   },
+   "points": 15
+  }
+ ],
+ "schema": "auditcore_risk.profile/1",
+ "source": {
+  "also_present_in": {
+   "janpow77/riskanalysis@b5c523b": {
+    "backend/app/pipeline/exante_score.py": "bc1725b5fdbca689275e9890e707eb4d90953023",
+    "backend/app/pipeline/rbvk_wibank_scorer.py": "6ebd3a2ce56db09228ea770fe681089dc0c4391f",
+    "difference": "Importpfade/Closure bzw. eine ungenutzte Zeile; fachlich gleich"
+   }
+  },
+  "characterization": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "1f05d3f7a00d65b17ba79c7812fa05b52f8bccba",
+  "path": "backend/app/verwk/pipeline/exante_score.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_features",
+   "kalibriere_und_score"
+  ]
+ },
+ "status": "LEGACY_CHARACTERIZED",
+ "summary": {
+  "format": "none"
+ },
+ "version": "fb2d18568d2e"
+}

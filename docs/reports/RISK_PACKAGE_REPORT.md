@@ -6,7 +6,9 @@ auf Branch `feat/auditcore-risk-flowinvoice`. Nicht veröffentlicht; der
 zentrale Release v0.3.0 folgt nach allen Paketen. Mit diesem Paket steigen
 `auditcore_entity_matching` auf 0.2.0 (Profil `riskanalysis.payee`,
 `pair_score`) und `auditcore_statistics` auf 0.2.0 (Legacyvariante
-`legacy_flowinvoice_benford`), jeweils additiv.
+`legacy_flowinvoice_benford`), jeweils additiv. Teil 2 gemergt als PR #21
+(`f07574e`); Teil 3 (VerwK-Punkte-Scores WIBANK-RBVK und Ex-ante) auf Branch
+`feat/auditcore-risk-verwk`.
 
 ## Umfang
 
@@ -26,6 +28,7 @@ Keine Laufzeitabhängigkeit auf `auditcore`.
 | Entitätsabgleich | RF09 über `auditcore_entity_matching` (Profil `riskanalysis.payee`, `pair_score`) |
 | pandas-Adapter | `compute_red_flags`/`red_flag_summary` als Drop-in für riskanalysis und flowinvoice |
 | Rechnungsindikatoren (Teil 2) | Profil `flowinvoice.risk_checker`: 9 Indikatoren mit Schweregrad, Texten und dem Legacy-Score **dieses** Profils (Summe der Schweregewichte / 5) |
+| VerwK-Punkte (Teil 3) | `flowinvoice.rbvk_wibank` (WIBANK-RBVK-Kriterien, Stufen 8/19), `flowinvoice.exante_basis` (7 Indikatoren, Basisgewichte oder ausdrücklich übergebene kalibrierte Gewichte, Klassen 30/55), `flowinvoice.exante_heuristik` |
 | Betrugsprüfungen (Teil 2) | `flowinvoice.fraud_signals` (Blocker/Warnungen/Score aus Teilprüfungen; Sanktionen/PEP/Firma nur als Signale), `flowinvoice.ted_contractor` (über `notice/1`-Datensätze aus `auditcore_procurement`), `flowinvoice.duplicates`; Benford in `auditcore_statistics` |
 
 ## Quellen, Rechte
@@ -60,6 +63,7 @@ Geprüft und nicht übernommen: `vp_ai` `ScorecardService`
 
 | flowinvoice `RiskChecker.assess` | `tools/capture_flowinvoice_risk_checker.py` (unverändert importiert) | flowinvoice-Umgebung (`requirements-production.txt`) | 338 Anfragen | exakt (Indikatoren, Schwere, Texte, Score, Zusammenfassung) |
 | flowinvoice Manager, TED, Dubletten | `tools/capture_flowinvoice_fraud.py` (Teilprüfungen durch Stellvertreter ersetzt; SQL NOT_EXECUTED) | dito | 268 / 129 / 250 Fälle | exakt; 23 Originalabbrüche (`TypeError`) als `InputError` (RK-C09) |
+| flowinvoice VerwK `score_mittelabrufe`, `_features`, `kalibriere_und_score`, `heuristik_score` | `tools/capture_flowinvoice_verwk_scores.py` (unverändert ausgeführt, lokale Variablen per `sys.settrace`) | flowinvoice VerwK-Umgebung, Python 3.12 wie `Dockerfile.verwk` | 777 WIBANK-Zeilen, 125 Merkmalszeilen, 3 Kalibrierungsläufe (Fallback) | exakt; kalibrierter Gewichtspfad NOT_EXECUTED (Demodaten ohne positive Fälle) |
 | flowinvoice `BenfordsLawAnalyzer` | `auditcore_statistics/tools/capture_flowinvoice_benford.py` | Standardbibliothek | 65 Fälle | exakt |
 
 Alle Capture-Läufe sind reproduzierbar (Wiederholung bytegleich).
@@ -103,6 +107,9 @@ Wheels: PASS.
 | audit_designer, audit-portal (Flowstat) | `belegliste_analysis_service.py:_red_flags` | Replay 112 Originalfälle; Anwendungstests NOT_EXECUTED | geplant |
 | flowinvoice Betrugsprüfung | `services/fraud_detection/{manager,ted_checker,duplicate_detector,benfords_law}.py` (API `/api/fraud/*`, Pipeline-Regel) | Replay aller Originalfälle; flowinvoice hat keine Tests dieser Module (NOT_EXECUTED) | geplant |
 | flowinvoice/audit-portal RiskChecker | `services/risk_checker.py` | kein Laufzeitaufrufer in beiden Anwendungen | geplant |
+| flowinvoice VerwK WIBANK | `verwk/pipeline/rbvk_wibank_scorer.py:score_mittelabrufe` (Aufrufer `pruefplan.py`) | Bewertungsschritt in Checkout-Kopie ersetzt: 410 Mittelabrufe identisch; `tests/verwk` mit Demobestand 572 passed vorher/nachher | getestet, Umstellung nach v0.3.0 |
+| flowinvoice VerwK Ex-ante | `exante_score.py:kalibriere_und_score` | Replay im Paket | geplant |
+| riskanalysis WIBANK/Ex-ante | `pipeline/rbvk_wibank_scorer.py`, `exante_score.py` (fachlich gleich) | – | geplant |
 
 Umstellungsanleitung und Vorlage: `packages/auditcore_risk/docs/consumer-integration.md`,
 `packages/auditcore_risk/docs/consumers/riskanalysis_red_flags.py`.
@@ -121,3 +128,13 @@ Umstellungsanleitung und Vorlage: `packages/auditcore_risk/docs/consumer-integra
 8. Betrugs-Signalscore: Skala der TED-Legitimität (0–1 oder 0–100), Zählung der Warnungen vor/nach Deduplizierung.
 9. Rechnungssplitting-Schwellen (1.000–50.000, 80 %) vs. RF02 und jahresbezogene EU-Schwellen.
 10. Benford der Betrugsprüfung: Umstellung auf `benford_test` (exakte Erwartungswerte, echter p-Wert).
+11. WIBANK-RBVK: Codeverhalten vs. Profildatei V1.21 (K10, K21/K22, K12/K16); K22 durch nie gesetzte `prior_familie`.
+12. Ex-ante: Kalibrierung und Klassengrenzen (Methodikhoheit der Verwaltungsbehörde).
+
+## Geprüft, nicht in auditcore_risk (Status)
+
+`auffaelligkeiten.py` (geplant, nach Binomialtest/Benjamini-Hochberg in
+`auditcore_statistics`), `konzentration.py` und VerwK-`benford.py` (geplant als
+Methodenprofile in `auditcore_statistics`), `montecarlo.py` (Anwendung; kein
+passender Vertrag in `auditcore_sampling`), `fuzzy_link.py` (geplant in
+`auditcore_entity_matching`), `eu_typologie.py`/`fehlerursachen.py` (Anwendung).

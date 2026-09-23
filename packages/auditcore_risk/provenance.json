@@ -99,6 +99,30 @@
       ],
       "profile": "flowinvoice.duplicates fb2d18568d2e",
       "also_identical_in": "janpow77/audit-portal (gleicher Blob)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+      "git_blob": "24e04c04d8d98ae033c5d78508a29d4c900be4d1",
+      "symbols": [
+        "score_mittelabrufe"
+      ],
+      "profile": "flowinvoice.rbvk_wibank fb2d18568d2e",
+      "also_present_in": "janpow77/riskanalysis backend/app/pipeline/rbvk_wibank_scorer.py blob 6ebd3a2 (fachlich gleich)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/verwk/pipeline/exante_score.py",
+      "git_blob": "1f05d3f7a00d65b17ba79c7812fa05b52f8bccba",
+      "symbols": [
+        "_features",
+        "kalibriere_und_score",
+        "heuristik_score"
+      ],
+      "profile": "flowinvoice.exante_basis, flowinvoice.exante_heuristik fb2d18568d2e",
+      "also_present_in": "janpow77/riskanalysis backend/app/pipeline/exante_score.py blob bc1725b (fachlich gleich)"
     }
   ],
   "dependencies": {
@@ -143,7 +167,10 @@
     "riskanalysis payee_normalizer.add_payee_columns/_fuzzy_merge (Clustering, bleibt Anwendung)",
     "Gemeinsamer oder vereinheitlichter Risikoscore (HUMAN_DECISION_REQUIRED)",
     "flowinvoice fraud_detection sanctions_checker/pep_checker/company_verifier (Screening; Ergebnisse werden als Signale konsumiert, Quelle: registry-Bibliotheken)",
-    "flowinvoice fraud_detection benfords_law → auditcore_statistics 0.2.0 legacy_flowinvoice_benford (nicht dupliziert)"
+    "flowinvoice fraud_detection benfords_law → auditcore_statistics 0.2.0 legacy_flowinvoice_benford (nicht dupliziert)",
+    "flowinvoice verwk auffaelligkeiten/konzentration/benford/montecarlo/fuzzy_link/eu_typologie/fehlerursachen (Begründung docs/behavior-changes.md; Status geplant bzw. Anwendung)",
+    "WIBANK-Merkmalsaufbereitung _normalise_sources, Vorhistorie _historical_scopes, 'nicht abbildbar' (Anwendung)",
+    "Ex-ante-Kalibrierung (Logit) und erwartete_ma/an_risiko_loo (Anwendung/Modellierung)"
   ],
   "characterization": {
     "riskanalysis": {
@@ -194,6 +221,21 @@
         "pydantic": "2.13.5",
         "sqlalchemy": "2.0.54"
       }
+    },
+    "flowinvoice_verwk_scores": {
+      "fixture": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
+      "tool": "tools/capture_flowinvoice_verwk_scores.py",
+      "cases": {
+        "wibank": 777,
+        "exante_features": 125,
+        "exante_runs": 3
+      },
+      "environment": {
+        "python": "3.12.3 (wie Dockerfile.verwk)",
+        "pandas": "3.0.5",
+        "statsmodels": "0.14.6"
+      },
+      "method": "Unveränderte Funktionen auf Demobeständen und synthetischen Rahmen; lokale Variablen am Bewertungsschritt per sys.settrace gelesen"
     }
   },
   "profiles": [
@@ -234,6 +276,21 @@
       "version": "fb2d18568d2e",
       "status": "LEGACY_CHARACTERIZED",
       "schema": "auditcore_risk.fraud-profile/1"
+    },
+    {
+      "id": "flowinvoice.rbvk_wibank",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.exante_basis",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.exante_heuristik",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
     }
   ],
   "behavior_changes": "docs/behavior-changes.md"
