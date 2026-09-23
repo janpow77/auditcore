@@ -1,0 +1,71 @@
+{
+  "observed_at": "2026-09-22",
+  "github": {
+    "owner_repositories": 71,
+    "commit_verified": 70,
+    "empty_repositories": [
+      "janpow77/auditinvoice"
+    ]
+  },
+  "kira": {
+    "operation": "semantic_search_read_only",
+    "queries": [
+      {
+        "query": "flowworkshop state_aid checklist_package_service",
+        "status": "PASS",
+        "returned_hits": 19,
+        "complete_index_export": false
+      },
+      {
+        "query": "osint ortsdienst kartendienst map.flowaudit",
+        "status": "PASS",
+        "returned_hits": 20,
+        "complete_index_export": false
+      },
+      {
+        "query": "audit_designer flowstat mcp_http_server",
+        "status": "PASS",
+        "returned_hits": 8,
+        "complete_index_export": false
+      },
+      {
+        "query": "regulierung dsfa calculator deployment",
+        "status": "PASS",
+        "returned_hits": 13,
+        "complete_index_export": false
+      }
+    ]
+  },
+  "flowaudit_rag": {
+    "capabilities_read": true,
+    "code_reference_hits": 2,
+    "distinct_documents": 1,
+    "reranker_degraded": true,
+    "application_catalogue_complete": false
+  },
+  "graphify": {
+    "queried": true,
+    "nodes": 415247,
+    "edges": 1011698,
+    "communities": 2575,
+    "extracted_percent": 79,
+    "inferred_percent": 21,
+    "global_revision_verified": false,
+    "limitations": [
+      "BFS output truncated",
+      "ambiguous labels across repositories",
+      "full IDs rejected by neighbor lookup",
+      "pdf_editor alias for Designer paths",
+      "OSINT checked-in graph stale and companion reports inconsistent"
+    ]
+  },
+  "application_tests": "NOT_EXECUTED",
+  "live_harvest": "NOT_EXECUTED",
+  "application_migration": "NOT_EXECUTED",
+  "regulierung_package_build": "NOT_EXECUTED",
+  "evidence_sha256": {
+    ".auditcore/function-overview-kira.json": "9c4768600c66fa6711fa8b0f5535e56ed04de0ad2d36d3b1ecc37b027307bafe",
+    ".auditcore/function-overview-mcp-evidence.json": "bd1b0b541a14ec7009ce5767aff187c90c2692b16dda38b3fb9c4201a63f083d",
+    ".auditcore/function-landscape.json": "c9d8d67035ddacaa7f3f2f4e30e204737cef1051f1b87c377e67a4de4b25b967"
+  }
+}
