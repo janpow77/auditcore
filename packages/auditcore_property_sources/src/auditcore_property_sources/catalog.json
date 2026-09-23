@@ -1,0 +1,542 @@
+{
+ "schema": "auditcore_property_sources.catalog/1",
+ "version": "2026.09.1",
+ "note": "Zugangsstatus je Quelle. robots.txt einmalig am 2026-09-23 abgerufen (Schnappschüsse in tests/fixtures/robots). Nutzungsbedingungen nicht geprüft.",
+ "not_extracted": [
+  {
+   "repository": "janpow77/wohnungsmonitor",
+   "path": "details.py",
+   "reason": "Detailseiten-Anreicherung (Straße, Koordinaten privater Anbieter) bleibt Anwendung; personenbezogene Detaildaten, eigene Zwischenspeicher- und Mengenregeln."
+  },
+  {
+   "repository": "janpow77/wohnungsmonitor",
+   "path": "wohnungsmonitor.py",
+   "reason": "Entdopplung, Gebietsprüfung, Erstmals-gesehen-Zustand, Meldungen und Störungsüberwachung sind Anwendungslogik; LA-06 (Kennungen nur bei vollständigem Lauf ausscheiden) bildet die Engine über snapshot_complete ab."
+  },
+  {
+   "repository": "janpow77/versteigerung",
+   "path": "backend/app/crawler/zvg_crawler.py",
+   "symbols": [
+    "geocode_address",
+    "geocode_street_level",
+    "_nominatim_lookup",
+    "_hit_plausible",
+    "Ingest"
+   ],
+   "reason": "Geokodierung ist ein eigener Dienst (Nominatim-Nutzungsrichtlinie, laut Lastenheft Self-Hosting) und gehört zur Geo-Domäne (auditcore_geo mit Nominatim-Adapter); SQL/Upsert bleibt Anwendung, der Lebenszyklus ist als reine Funktion extrahiert."
+  },
+  {
+   "repository": "janpow77/versteigerung",
+   "path": "backend/app/ingest/gutachten_ingest.py",
+   "reason": "Gutachten-PDF-Download (showAnhang, per robots.txt gesperrt), OCR und Speicherung bleiben Anwendung."
+  }
+ ],
+ "sources": [
+  {
+   "source_id": "property.immobilien_de",
+   "title": "immobilien.de (Berlin, Miete)",
+   "module": "immobilien_de",
+   "adapter": "ImmobilienDeAdapter",
+   "origin": {
+    "repository": "janpow77/wohnungsmonitor",
+    "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+    "path": "immobilien_export.py",
+    "git_blob": "44233aea7651855d51b26c3d173f624ca96a389b",
+    "symbols": [
+     "parse_page",
+     "_mietarten",
+     "_mietart_zu",
+     "normalise",
+     "hole_bestand"
+    ],
+    "consumer": {
+     "repository": "janpow77/wohnungsmonitor",
+     "files": [
+      "wohnungsmonitor.py"
+     ],
+     "symbols": [
+      "erhebe",
+      "imde.hole_bestand"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "JSON-LD-Preis; Mietart aus dem Markup (Kaltmiete/Nettokaltmiete → kalt, Warmmiete → warm, sonst unklar)",
+    "area": "floorSize.value (m²)",
+    "address": "nur Postleitzahl; Bezirk über amtliche PLZ-Zuordnung des Consumers"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "/mieten/wohnung/berlin/?preis_bis=…&page=…",
+       "allowed": true
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    }
+   },
+   "personal_data": "Keine Anbieterangaben im Datensatz (gesellschaft = „über immobilien.de“).",
+   "robots_snapshot": "immobilien.de.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "PASS",
+    "executed_at": "2026-09-23T11:53:28+00:00",
+    "scope": "einmaliger Abruf einer Ergebnisseite nach robots.txt-Prüfung; nur Strukturprüfung, keine Inhalte gespeichert (docs/live-smoke.json)",
+    "records": 24,
+    "run_status": "complete",
+    "errors": []
+   }
+  },
+  {
+   "source_id": "property.inberlinwohnen",
+   "title": "inberlinwohnen (landeseigene Gesellschaften)",
+   "module": "inberlinwohnen",
+   "adapter": "InBerlinWohnenAdapter",
+   "origin": {
+    "repository": "janpow77/wohnungsmonitor",
+    "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+    "path": "inberlinwohnen_export.py",
+    "git_blob": "c044ed39271412c20978c41ec51e7f382def7336",
+    "symbols": [
+     "total_count",
+     "learn_attributes",
+     "parse_page",
+     "normalise",
+     "_zahl",
+     "_utc",
+     "hole_bestand"
+    ],
+    "consumer": {
+     "repository": "janpow77/wohnungsmonitor",
+     "files": [
+      "wohnungsmonitor.py"
+     ],
+     "symbols": [
+      "erhebe",
+      "ibw.hole_bestand"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "rentNet = kalt; Gesamtmiete aus der Angebotstafel (inkl. Heizkosten), sonst rentGross, sonst kalt + Nebenkosten",
+    "area": "area (m²)",
+    "address": "Straße, Hausnummer, PLZ, Bezirk, Koordinate (|lat−lon| < 0,5 verworfen)"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "/wohnungsfinder/ und ?page=N",
+       "allowed": true
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    }
+   },
+   "personal_data": "Anbieter sind Wohnungsbaugesellschaften (juristische Personen).",
+   "robots_snapshot": "inberlinwohnen.de.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "PASS",
+    "executed_at": "2026-09-23T11:53:28+00:00",
+    "scope": "einmaliger Abruf einer Ergebnisseite nach robots.txt-Prüfung; nur Strukturprüfung, keine Inhalte gespeichert (docs/live-smoke.json)",
+    "records": 10,
+    "run_status": "partial",
+    "errors": [
+     "limit_reached"
+    ]
+   }
+  },
+  {
+   "source_id": "property.kleinanzeigen",
+   "title": "Kleinanzeigen (Berlin, Mietwohnungen)",
+   "module": "kleinanzeigen",
+   "adapter": "KleinanzeigenAdapter",
+   "origin": {
+    "repository": "janpow77/wohnungsmonitor",
+    "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+    "path": "kleinanzeigen_export.py",
+    "git_blob": "8a7c8cba46e15b424f48ae95be43989a10c1b39f",
+    "symbols": [
+     "parse_page",
+     "brauchbar",
+     "normalise",
+     "_zahl",
+     "_schluessel",
+     "hole_bestand"
+    ],
+    "consumer": {
+     "repository": "janpow77/wohnungsmonitor",
+     "files": [
+      "wohnungsmonitor.py"
+     ],
+     "symbols": [
+      "erhebe",
+      "kle.hole_bestand"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "Anzeigenpreis, mal kalt, mal warm → kaltmiete mit preisart „unklar“",
+    "area": "„m² · Zi.“ aus der Trefferkarte",
+    "address": "PLZ und Ortsteil; Bezirk über Ortsteil-Zuordnung des Consumers"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "/s-wohnung-mieten/berlin/[seite:N/]preis::{max}/c203l3331",
+       "allowed": false,
+       "rule": "Disallow: /*/preis:*"
+      },
+      {
+       "address": "/s-wohnung-mieten/berlin/c203l3331 (ohne Preis)",
+       "allowed": true
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    },
+    "finding": "Die Suchadresse des Originals verstößt gegen robots.txt (/*/preis:*); der Moduldocstring nennt den Suchpfad fälschlich frei. HUMAN_DECISION_REQUIRED."
+   },
+   "personal_data": "Anzeigen von Privatpersonen; Titel/Beschreibung können personenbezogene Angaben enthalten. Fixtures sind synthetisch.",
+   "robots_snapshot": "kleinanzeigen.de.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "NOT_EXECUTED",
+    "note": "robots.txt sperrt die Suchadresse des Originals (/*/preis:*); kein Abruf."
+   }
+  },
+  {
+   "source_id": "property.bienici",
+   "title": "bien'ici (Frankreich, Miete)",
+   "module": "bienici",
+   "adapter": "BieniciAdapter",
+   "origin": {
+    "repository": "janpow77/wohnungsmonitor",
+    "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+    "path": "bienici_export.py",
+    "git_blob": "5a8cc85e222193c505b6fd4dec43394ffd5fb015",
+    "symbols": [
+     "normalise",
+     "_datum",
+     "_ortsform",
+     "_adresse",
+     "hole_bestand"
+    ],
+    "consumer": {
+     "repository": "janpow77/wohnungsmonitor",
+     "files": [
+      "wohnungsmonitor.py"
+     ],
+     "symbols": [
+      "erhebe_frankreich",
+      "bic.hole_bestand"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "price = warm (charges comprises), charges, rentWithoutCharges = kalt; kalt = price − charges, sonst warm",
+    "area": "surfaceArea (m²)",
+    "address": "Gemeinde, PLZ, INSEE-Code, unscharfe Koordinate (≈ 50 m)"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "/realEstateAds.json?filters=…",
+       "allowed": true
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    },
+    "finding": "Das Original sendet eine Browser-Kennung, weil das Portal die eigene Kennung mit 403 abweist – REVIEW_REQUIRED (möglicherweise Umgehung einer Zugangsregel). Am 2026-09-23 antwortete das Portal auf eine ehrliche, nicht als Browser getarnte Kennung mit HTTP 200 (docs/live-smoke.json)."
+   },
+   "personal_data": "accountDisplayName kann bei Privatanbietern ein Personenname sein; Standard „minimal“ ersetzt ihn durch „Privatangebot“ (PS-C02).",
+   "robots_snapshot": "bienici.com.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "PASS",
+    "executed_at": "2026-09-23T11:53:28+00:00",
+    "scope": "einmaliger Abruf einer Ergebnisseite nach robots.txt-Prüfung; nur Strukturprüfung, keine Inhalte gespeichert (docs/live-smoke.json)",
+    "records": 24,
+    "run_status": "complete",
+    "errors": []
+   }
+  },
+  {
+   "source_id": "property.citya",
+   "title": "Citya (Frankreich, Miete)",
+   "module": "citya",
+   "adapter": "CityaAdapter",
+   "origin": {
+    "repository": "janpow77/wohnungsmonitor",
+    "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+    "path": "citya_export.py",
+    "git_blob": "d5cc5d625bf19dca6f1c6a918069df6f35ae8509",
+    "symbols": [
+     "katalog",
+     "gesamtzahl",
+     "normalise",
+     "ist_wohnraum",
+     "hole_bestand"
+    ],
+    "consumer": {
+     "repository": "janpow77/wohnungsmonitor",
+     "files": [
+      "wohnungsmonitor.py"
+     ],
+     "symbols": [
+      "erhebe_frankreich",
+      "cya.hole_bestand"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "ein Betrag ohne Angabe zu Nebenkosten → kaltmiete mit preisart „unklar“",
+    "area": "aus der Bezeichnung („… de 58.02m² …“)",
+    "address": "PLZ und Gemeinde"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "/annonces/location/{dep}?page=N",
+       "allowed": true
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    }
+   },
+   "personal_data": "Anbieter ist die Hausverwaltung (juristische Person).",
+   "robots_snapshot": "citya.com.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "PASS",
+    "executed_at": "2026-09-23T11:53:28+00:00",
+    "scope": "einmaliger Abruf einer Ergebnisseite nach robots.txt-Prüfung; nur Strukturprüfung, keine Inhalte gespeichert (docs/live-smoke.json)",
+    "records": 17,
+    "run_status": "complete",
+    "errors": []
+   }
+  },
+  {
+   "source_id": "property.paruvendu",
+   "title": "ParuVendu (Frankreich, Miete)",
+   "module": "paruvendu",
+   "adapter": "ParuvenduAdapter",
+   "origin": {
+    "repository": "janpow77/wohnungsmonitor",
+    "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+    "path": "paruvendu_export.py",
+    "git_blob": "22f98c9f36d0299fe220743f40234b7119c7e62d",
+    "symbols": [
+     "_karten",
+     "normalise",
+     "_zahl",
+     "hole_bestand"
+    ],
+    "consumer": {
+     "repository": "janpow77/wohnungsmonitor",
+     "files": [
+      "wohnungsmonitor.py"
+     ],
+     "symbols": [
+      "erhebe_frankreich",
+      "pvd.hole_bestand"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "CC → warm, HC → kalt, ohne Angabe → kaltmiete mit preisart „unklar“",
+    "area": "aus dem Titel („… 65 m²“)",
+    "address": "nur Gemeinde und Département-Nummer"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "/immobilier/recherche/location/{art}/{dep}?px1=…&p=N",
+       "allowed": true
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    },
+    "finding": "Das Original sendet im User-Agent eine persönliche E-Mail-Adresse; die Bibliothek setzt keine Kopfzeilen (Transport des Consumers)."
+   },
+   "personal_data": "Auch Privatanbieter; die Trefferkarte enthält keine Anbieternamen.",
+   "robots_snapshot": "paruvendu.fr.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "PASS",
+    "executed_at": "2026-09-23T11:53:28+00:00",
+    "scope": "einmaliger Abruf einer Ergebnisseite nach robots.txt-Prüfung; nur Strukturprüfung, keine Inhalte gespeichert (docs/live-smoke.json)",
+    "records": 30,
+    "run_status": "complete",
+    "errors": []
+   }
+  },
+  {
+   "source_id": "property.zvg",
+   "title": "ZVG-Portal (Zwangsversteigerungen)",
+   "module": "zvg",
+   "adapter": "ZvgListingAdapter",
+   "origin": {
+    "repository": "janpow77/versteigerung",
+    "commit": "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448",
+    "path": "backend/app/crawler/zvg_crawler.py",
+    "git_blob": "b10ad2a63725246d3867bf9dd66329fc71e986cb",
+    "symbols": [
+     "ZvgPortal",
+     "parse_listing_akten",
+     "parse_detail",
+     "extract_address",
+     "extract_market_value",
+     "parse_money_amount",
+     "parse_de_number",
+     "classify_type",
+     "fix_mojibake",
+     "decode_portal_response",
+     "expand_street",
+     "_norm_street",
+     "Ingest.mark_seen",
+     "Ingest.close_vanished",
+     "Ingest.upsert"
+    ],
+    "consumer": {
+     "repository": "janpow77/versteigerung",
+     "files": [
+      "backend/app/crawler/zvg_crawler.py",
+      "backend/app/crawler/repair_market_values.py",
+      "backend/app/crawler/reparse_addresses.py",
+      "backend/app/crawler/regeocode.py",
+      "backend/app/worker.py"
+     ],
+     "symbols": [
+      "main",
+      "repair",
+      "merge_address",
+      "geocode_address",
+      "_run_module"
+     ]
+    }
+   },
+   "semantics": {
+    "price": "Verkehrswert (gerichtlich festgesetzt, EUR) – keine Miete, kein Angebotspreis",
+    "area": "Wohnfläche laut Bekanntmachung",
+    "address": "Objekt/Lage mit Beschreibung als zweiter Fundstelle; Platzhalter-PLZ 00000 verworfen"
+   },
+   "access": {
+    "robots": {
+     "checked_on": "2026-09-23",
+     "group": "*",
+     "snapshot": null,
+     "addresses": [
+      {
+       "address": "index.php?button=Termine suchen / button=Suchen (Trefferliste)",
+       "allowed": true
+      },
+      {
+       "address": "index.php?button=showZvg… (Detailseite)",
+       "allowed": false,
+       "rule": "Disallow: /index.php?button=showZvg*"
+      },
+      {
+       "address": "index.php?button=showAnhang… (Anhänge)",
+       "allowed": false,
+       "rule": "Disallow: /index.php?button=showAnhang*"
+      }
+     ]
+    },
+    "terms_of_use": {
+     "status": "REVIEW_REQUIRED",
+     "note": "Nutzungsbedingungen des Portals nicht geprüft; vor jedem Live-Betrieb juristisch klären."
+    },
+    "finding": "versteigerung ruft Detail- und Anhangsseiten ab, die robots.txt sperrt – im Widerspruch zum eigenen Lastenheft (Kap. 22.3/33: robots.txt beachten). HUMAN_DECISION_REQUIRED."
+   },
+   "personal_data": "Bekanntmachungen können Gläubiger- oder Eigentümerangaben enthalten; die Fixtures sind synthetisch ohne Personen.",
+   "robots_snapshot": "zvg-portal.de.txt",
+   "consumer_status": {
+    "status": "GEPLANT",
+    "decision": "Nutzerentscheidung 2026-09-23: Paket wird auch ohne bereits belegten Mehrfachnutzen gebaut – „der mehrfache Nutzen kommt noch“."
+   },
+   "profile_version": "2026.09.1",
+   "implementation": "SUPPORTED",
+   "live_test": {
+    "status": "PASS",
+    "executed_at": "2026-09-23T11:53:28+00:00",
+    "scope": "einmaliger Abruf einer Ergebnisseite nach robots.txt-Prüfung; nur Strukturprüfung, keine Inhalte gespeichert (docs/live-smoke.json)",
+    "records": 8,
+    "run_status": "complete",
+    "errors": [],
+    "note": "Nur Trefferliste (Amtsgericht Frankfurt am Main); Detailseiten nicht abgerufen (robots.txt)."
+   }
+  }
+ ]
+}

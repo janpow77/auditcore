@@ -21,6 +21,9 @@
     "openpyxl<4,>=3.0.9; extra == \"xlsx\"": "python3-openpyxl (>= 3.0.9)",
     "defusedxml>=0.7.1; extra == \"xlsx\"": "python3-defusedxml (>= 0.7.1)"
   },
+  "auditcore_property_sources": {
+    "auditcore_harvest==0.1.0; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.0)"
+  },
   "auditcore_geo": {
     "auditcore_harvest==0.1.0; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.0)"
   },
