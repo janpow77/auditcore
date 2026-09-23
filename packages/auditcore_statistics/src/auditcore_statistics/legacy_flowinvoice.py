@@ -145,3 +145,17 @@ def legacy_flowinvoice_benford(
         "null_hypothesis_rejected": is_anomalous,
         "sample_size_sufficient": True,
     }
+
+
+#: Recommended method for the flowinvoice fraud check (user decision K10,
+#: 23.09.2026, "alle empfehlungen"): the standard :func:`benford_test` with
+#: exact expected shares, exact chi-square p-value and an explicit α of 0.05.
+RECOMMENDED_PROFILE = "flowinvoice.fraud_benford.recommended"
+RECOMMENDED_PARAMETERS: dict[str, Any] = {"digits": 1, "significance_level": 0.05}
+
+
+def recommended_flowinvoice_benford(values: list[Any]) -> Any:
+    """``benford_test`` with the decided parameters (replaces the legacy variant)."""
+    from .benford import benford_test
+
+    return benford_test(values, **RECOMMENDED_PARAMETERS)

@@ -103,7 +103,7 @@ korrigierten Ablaufs statt des Legacy-Adapters ist HUMAN_DECISION_REQUIRED.
    **DECIDED** am 23.09.2026 (Nutzerentscheidung A5, „alle empfehlungen“):
    „Der Konsultationshinweis nach Art. 36 Abs. 1 DSGVO wird erst nach der
    abschließenden Bewertung gegeben, und nur wenn das Restrisiko weiterhin hoch
-   ist.“ Umgesetzt als DP-C21 in der Profilfassung `2026.10.2` (Art. 36 Abs. 1
+   ist.“ Umgesetzt als DP-C21 in `auditcore.dsgvo`/`auditcore.hdsig_ji` `2026.10.2` (Art. 36 Abs. 1
    DSGVO, ErwG 94 DSGVO; JI: § 64 HDSIG); ältere Fassungen und `legacy`
    unverändert. Siehe `packages/auditcore_dataprotection/docs/behavior-changes.md`.
 2. JI-Profil: DSGVO-Kriterien als „strengerer Maßstab“ bleiben ein Quellprofil.

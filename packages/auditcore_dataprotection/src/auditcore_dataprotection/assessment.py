@@ -145,6 +145,24 @@ def _without_review(assessment: Assessment) -> Assessment:
     )
 
 
+HIGH_RESIDUAL_RISK = "hohes_restrisiko"
+
+
+def _refuse_downgrade(stored: RuleProfile, target: RuleProfile) -> None:
+    """A schema 2 assessment cannot continue under a schema 1 profile.
+
+    Its master data, implementation status and scenario fields would be lost
+    or could no longer be edited; switching back is refused explicitly.
+    """
+    if stored.edpb and not target.edpb:
+        raise ValidationError(
+            f"Die Folgenabschätzung wurde nach Profil {stored.id} {stored.version} "
+            "(EDSA-Vorlage) erstellt. Ein Wechsel auf ein Profil nach Schema 1 "
+            f"({target.id} {target.version}) ist nicht möglich, weil Angaben zur Vorlage "
+            "verloren gingen."
+        )
+
+
 def _conditions(conditions: Sequence[str], decision: str, rules: RuleProfile) -> tuple[str, ...]:
     """Conditions of a conditional approval (EDPB template, section 6)."""
     if isinstance(conditions, str) or not isinstance(conditions, Sequence):
@@ -411,6 +429,7 @@ class AssessmentService:
         self._allow(actor, Permission.ASSESSMENT_EDIT, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
         rules = self._profile(current) if profile is UNSET else profile
+        _refuse_downgrade(self._profile(current), rules)
         new_answers: Mapping[str, Answer] = (
             current.answers if answers is UNSET else parse_answers(answers, rules)
         )
@@ -448,8 +467,17 @@ class AssessmentService:
             self._effective(tenant_id, current.register_id), current.activity_id
         )
         proposal = propose(rules, new_answers, new_scenarios).to_dict()
+        # Implementation status and action plan document how the assessment is
+        # carried out; they do not change the assessment itself and keep the
+        # decision and the DPO statement (decision of 23.09.2026).
         substantive = _changed(
-            current, new_answers, new_scenarios, texts, rules, activity, documentation
+            current,
+            new_answers,
+            new_scenarios,
+            texts,
+            rules,
+            activity,
+            {"dossier": documentation["dossier"]},
         )
         reset = substantive and (current.decision is not None or current.dpo_vote is not None)
         updated = replace(
@@ -566,6 +594,7 @@ class AssessmentService:
             decision=decision,
             deviation=deviation,
             **({"consultation_notice": notice["status"]} if notice else {}),
+            **({"conditions": list(condition_list)} if condition_list else {}),
         )
         return updated
 
@@ -682,10 +711,20 @@ class AssessmentService:
         self._allow(actor, Permission.ASSESSMENT_EDIT, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
         rules = self._profile(current)
-        if rules.edpb and ground not in rules.consultation_grounds:
+        if rules.edpb and (not isinstance(ground, str) or ground not in rules.consultation_grounds):
             raise ValidationError(
                 "Der Grund der Konsultation ist anzugeben. Zulässig sind: "
                 f"{', '.join(rules.consultation_grounds)}."
+            )
+        if (
+            rules.edpb
+            and ground == HIGH_RESIDUAL_RISK
+            and not current.proposal.get("consultation_required")
+        ):
+            raise ValidationError(
+                "Nach der Bewertung verbleibt kein hohes Restrisiko. Eine Konsultation aus "
+                "diesem Grund passt nicht zum Stand der Abschätzung; in Betracht kommt eine "
+                "Konsultation aufgrund nationalen Rechts."
             )
         if not rules.edpb and ground is not None:
             raise ValidationError(
@@ -712,7 +751,9 @@ class AssessmentService:
             revision=current.revision + 1,
         )
         self._store(current, updated)
-        self._event(actor, "assessment.consultation", updated)
+        self._event(
+            actor, "assessment.consultation", updated, **({"ground": ground} if ground else {})
+        )
         return updated
 
     # ------------------------------------------------------------- release
@@ -768,7 +809,7 @@ class AssessmentService:
                 "Die oder der Datenschutzbeauftragte hat mit Auflagen zugestimmt. Vor der "
                 "Freigabe ist zu dokumentieren, wie die Auflagen umgesetzt werden."
             )
-        if assessment.dpo_vote == "abgelehnt":
+        if assessment.dpo_vote == "abgelehnt" and assessment.decision != DECISION_REJECTED:
             if len(assessment.dpo_conclusion or "") < rules.min_justification_length:
                 reasons.append(
                     "Die oder der Datenschutzbeauftragte hat die Abschätzung abgelehnt. Eine "
@@ -913,6 +954,7 @@ class AssessmentService:
                 f"Zu dieser Tätigkeit ist bereits Fassung {open_[0].version} in Bearbeitung."
             )
         rules = profile or self._profile(previous)
+        _refuse_downgrade(self._profile(previous), rules)
         activity, register = find_activity(
             self._effective(tenant_id, previous.register_id), previous.activity_id
         )
@@ -945,9 +987,11 @@ class AssessmentService:
             data_subject_view=previous.data_subject_view,
             predecessor_id=previous.assessment_id,
             changes_to_predecessor=changes,
-            dossier=dict(previous.dossier) if rules.edpb else {},
-            measure_status=dict(previous.measure_status) if rules.edpb else {},
-            action_plan=tuple(previous.action_plan) if rules.edpb else (),
+            dossier=parse_dossier(previous.dossier, rules) if rules.edpb else {},
+            measure_status=parse_measure_status(previous.measure_status, rules)
+            if rules.edpb
+            else {},
+            action_plan=parse_action_plan(previous.action_plan, rules) if rules.edpb else (),
         )
         self.assessments.add(created)
         self._event(

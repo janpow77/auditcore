@@ -7,12 +7,20 @@ retries, rate limiting, checkpoints and partial failures belong to the
 ``HarvestEngine``; transport (including user agent, cookies and sessions) is
 injected by the consumer. Nothing here sleeps, stores or schedules.
 
-**Access rules.** Before the first request to an ``http(s)`` address the
-adapter reads the portal's robots.txt through the injected transport and
-refuses every disallowed address with :class:`AccessNotPermittedError`
-(non-retryable). The rules travel in the cursor, so a resumed run keeps the
-decision of its first page. ``file:`` addresses (archived pages served by a
-consumer ``FileTransport``) are not checked.
+**Access rules.** Config ``robots_policy`` selects the handling of robots.txt:
+
+* ``"ignore"`` (default, user decision of 2026-09-23: "1-4 bitte ignoriere die
+  robots.txt. das klappt gerade gut" and "A1 erlauben") fetches like the
+  originals without reading robots.txt. The robots findings of every portal
+  stay documented in the catalog (PS-D01).
+* ``"respect"`` reads the portal's robots.txt through the injected transport
+  before the first request to an ``http(s)`` address and refuses every
+  disallowed address with :class:`AccessNotPermittedError` (non-retryable).
+  The rules travel in the cursor, so a resumed run keeps the decision of its
+  first page.
+
+``file:`` addresses (archived pages served by a consumer ``FileTransport``)
+are never checked.
 """
 
 from __future__ import annotations
@@ -49,7 +57,9 @@ except ImportError as exc:  # pragma: no cover - exercised without the extra
 from . import bienici, citya, immobilien_de, inberlinwohnen, kleinanzeigen, paruvendu, zvg
 from .robots import RobotsRules, is_allowed, parse_robots, robots_url
 
-ADAPTER_VERSION = "1.0.0"
+ADAPTER_VERSION = "1.1.0"
+ROBOTS_POLICIES = ("ignore", "respect")
+DEFAULT_ROBOTS_POLICY = "ignore"
 Cursor = Mapping[str, Any] | None
 
 
@@ -76,6 +86,13 @@ def _source(source_id: str, title: str, data_format: str, filters: tuple[str, ..
     )
 
 
+def _robots_policy(config: Mapping[str, Any]) -> str:
+    value = config.get("robots_policy", DEFAULT_ROBOTS_POLICY)
+    if value not in ROBOTS_POLICIES:
+        raise ConfigError("'robots_policy' ist 'ignore' oder 'respect'.")
+    return str(value)
+
+
 def _positive(config: Mapping[str, Any], name: str, default: int) -> int:
     value = config.get(name, default)
     if isinstance(value, bool) or not isinstance(value, int) or value < 1:
@@ -100,6 +117,8 @@ class _Portal:
     token: str = "*"
 
     def _rules(self, context: FetchContext, cursor: Cursor, url: str) -> RobotsRules | None:
+        if _robots_policy(context.config) == "ignore":
+            return None
         if not url.startswith(("http://", "https://")):
             return None
         if cursor and cursor.get("robots") is not None:
@@ -175,6 +194,7 @@ class ImmobilienDeAdapter(_Portal):
         self.plz_bezirke = dict(plz_bezirke)
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         _positive(config, "max_price", 700)
         _positive(config, "pages", 3)
         _template(config, "url_template", immobilien_de.SEARCH, "hoechstpreis", "seite")
@@ -214,6 +234,7 @@ class InBerlinWohnenAdapter(_Portal):
         )
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         _template(config, "first_url", inberlinwohnen.BASE)
         _template(config, "page_url_template", inberlinwohnen.BASE + "?page={seite}", "seite")
 
@@ -263,7 +284,8 @@ class InBerlinWohnenAdapter(_Portal):
 
 
 class KleinanzeigenAdapter(_Portal):
-    """Kleinanzeigen result pages; the original address is disallowed by robots.txt."""
+    """Kleinanzeigen result pages (the original address is disallowed by robots.txt;
+    fetched anyway under the default ``robots_policy="ignore"``)."""
 
     def __init__(self, ortsteile_bezirke: Mapping[str, str]) -> None:
         self.source = _source(
@@ -272,6 +294,7 @@ class KleinanzeigenAdapter(_Portal):
         self.districts = kleinanzeigen.district_index(ortsteile_bezirke)
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         _positive(config, "max_price", 700)
         _positive(config, "pages", 5)
         _template(config, "url_template", kleinanzeigen.SEARCH, "seite", "hoechstpreis")
@@ -301,20 +324,31 @@ class KleinanzeigenAdapter(_Portal):
 # Alsace/Lorraine (wohnungsmonitor profile "frankreich")
 # --------------------------------------------------------------------------- #
 class BieniciAdapter(_Portal):
-    """bienici.com JSON search per zone list (config ``zones`` required)."""
+    """bienici.com JSON search per zone list (config ``zones`` required).
+
+    Sends the original request headers (browser user agent, ``Accept-Language``,
+    ``Referer``); ``user_agent=None`` leaves the user agent to the transport.
+    """
 
     def __init__(self) -> None:
         self.source = _source(bienici.SOURCE_ID, "bien'ici (Frankreich, Miete)", "application/json")
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         zones = require(config, "zones", list)
         if not zones or not all(isinstance(z, str) and z for z in zones):
             raise ConfigError("'zones' muss eine nicht leere Liste von Zonenkennungen sein.")
         _positive(config, "max_price", 1100)
         _positive(config, "page_size", 200)
         _positive(config, "max_pages", 20)
-        if config.get("advertiser_names", "minimal") not in ("minimal", "legacy"):
+        if config.get("advertiser_names", bienici.DEFAULT_ADVERTISER_NAMES) not in (
+            "minimal",
+            "legacy",
+        ):
             raise ConfigError("'advertiser_names' ist 'minimal' oder 'legacy'.")
+        agent = config.get("user_agent", bienici.BROWSER_USER_AGENT)
+        if agent is not None and (not isinstance(agent, str) or not agent.strip()):
+            raise ConfigError("'user_agent' ist eine Zeichenkette oder None.")
 
     def fetch_page(self, context: FetchContext, cursor: Cursor) -> PageResult:
         config = context.config
@@ -332,7 +366,16 @@ class BieniciAdapter(_Portal):
         url = bienici.search_url(filters)
         rules = self._rules(context, cursor, url)
         self._check(rules, url)
-        response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
+        response = raise_for_status(
+            context.transport.request(
+                "GET",
+                url,
+                headers=bienici.request_headers(
+                    config.get("user_agent", bienici.BROWSER_USER_AGENT)
+                ),
+                timeout=context.timeout,
+            )
+        )
         try:
             payload = json.loads(response.body)
         except ValueError as exc:
@@ -341,7 +384,7 @@ class BieniciAdapter(_Portal):
             raise ParserError("bienici-Antwort enthält keine Liste 'realEstateAds'.")
         ads = payload["realEstateAds"]
         seen = set((cursor or {}).get("seen", []))
-        mode = config.get("advertiser_names", "minimal")
+        mode = config.get("advertiser_names", bienici.DEFAULT_ADVERTISER_NAMES)
         records, issues, new = [], [], []
         for index, ad in enumerate(ads):
             ident = ad.get("id") if isinstance(ad, dict) else None
@@ -376,6 +419,7 @@ class CityaAdapter(_Portal):
         return value
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         self._departements(config)
         _positive(config, "max_pages", 8)
         _template(config, "url_template", citya.SEARCH, "dep", "seite")
@@ -460,6 +504,7 @@ class ParuvenduAdapter(_Portal):
         return deps, kinds
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         self._lists(config)
         _positive(config, "max_price", 1100)
         _positive(config, "max_pages", 3)
@@ -544,6 +589,7 @@ class ZvgListingAdapter(_Portal):
         return list(courts)
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         self._courts(config)
 
     def fetch_page(self, context: FetchContext, cursor: Cursor) -> PageResult:
@@ -619,11 +665,12 @@ class ZvgListingAdapter(_Portal):
 
 
 class ZvgDetailAdapter(_Portal):
-    """Detail pages of given notices (config ``notices``); disallowed live by robots.txt.
+    """Detail pages of given notices (config ``notices``).
 
-    Usable with archived detail pages (``detail_url_template`` with ``file:``)
-    that the consumer obtained lawfully. ``reference_year`` for the plausible
-    *Baujahr* comes from the injected clock.
+    robots.txt of the portal disallows ``showZvg``; the default
+    ``robots_policy="ignore"`` fetches them like the original. Archived detail
+    pages (``detail_url_template`` with ``file:``) work as well.
+    ``reference_year`` for the plausible *Baujahr* comes from the injected clock.
     """
 
     def __init__(self) -> None:
@@ -643,6 +690,7 @@ class ZvgDetailAdapter(_Portal):
         return notices
 
     def validate_config(self, config: Mapping[str, Any]) -> None:
+        _robots_policy(config)
         self._notices(config)
         _template(
             config,
@@ -667,9 +715,27 @@ class ZvgDetailAdapter(_Portal):
         url = template.format(zvg_id=zvg_id, land=land)
         rules = self._rules(context, cursor, url)
         self._check(rules, url)
-        response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
+        headers: dict[str, str] = {}
+        if url.startswith(("http://", "https://")):
+            # Wie ZvgPortal.__init__/detail: Sitzung über "Termine suchen", dann
+            # Detailabruf mit Referer der Trefferliste (PS-C09).
+            if not (cursor or {}).get("session"):
+                raise_for_status(
+                    context.transport.request(
+                        "GET",
+                        zvg.BASE,
+                        params={"button": "Termine suchen"},
+                        headers={"Accept-Language": "de"},
+                        timeout=context.timeout,
+                    )
+                )
+            headers = {"Accept-Language": "de", "Referer": _zvg_url({"button": "Suchen"})}
+        response = raise_for_status(
+            context.transport.request("GET", url, headers=headers, timeout=context.timeout)
+        )
         doc = zvg.decode_portal_bytes(response.body)
-        if "<html" not in doc[:4096].lower():
+        head = doc[:4096].lower()
+        if "<html" not in head and "<!doctype" not in head:
             raise ParserError(f"Detailseite {url} ist kein HTML-Dokument.")
         parsed = zvg.parse_detail(
             doc,
@@ -686,7 +752,11 @@ class ZvgDetailAdapter(_Portal):
         record = self._record(
             context, f"{land}:{zvg_id}", {"url": url, "length": len(doc)}, parsed.to_dict(), url
         )
-        following = self._cursor(rules, notice=index + 1) if index + 1 < len(notices) else None
+        following = (
+            self._cursor(rules, notice=index + 1, session=bool(headers))
+            if index + 1 < len(notices)
+            else None
+        )
         return self._page([record], [], following, len(notices))
 
 
@@ -694,6 +764,8 @@ __all__ = [
     "ADAPTER_VERSION",
     "AccessNotPermittedError",
     "BieniciAdapter",
+    "DEFAULT_ROBOTS_POLICY",
+    "ROBOTS_POLICIES",
     "CityaAdapter",
     "ImmobilienDeAdapter",
     "InBerlinWohnenAdapter",

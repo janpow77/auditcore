@@ -33,12 +33,12 @@ def main() -> None:
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert available_profiles() == (
+        ("auditcore.dsgvo", "2026.10.1"),
+        ("auditcore.dsgvo", "2026.10.2"),
+        ("auditcore.hdsig_ji", "2026.10.1"),
+        ("auditcore.hdsig_ji", "2026.10.2"),
         ("regulierung.dsgvo", "2026.09.1"),
-        ("regulierung.dsgvo", "2026.10.1"),
-        ("regulierung.dsgvo", "2026.10.2"),
         ("regulierung.hdsig_ji", "2026.09.1"),
-        ("regulierung.hdsig_ji", "2026.10.1"),
-        ("regulierung.hdsig_ji", "2026.10.2"),
     )
     profile = load_profile("regulierung.dsgvo", "2026.09.1")
     assert propose(profile, {}).recommendation == "unvollstaendig"
@@ -126,7 +126,7 @@ def main() -> None:
     assert "assessment.released" in audit.actions()
 
     # DP-C21: profile 2026.10.2 gives only a preliminary consultation notice.
-    a5 = load_profile("regulierung.dsgvo", "2026.10.2")
+    a5 = load_profile("auditcore.dsgvo", "2026.10.2")
     high = {**scenario, "severity": 4, "likelihood": 4, "measures": []}
     preliminary = propose(a5, {k: False for k in a5.question_keys} | {"art35_3_a": True}, [high])
     assert preliminary.recommendation == "konsultation_aufsichtsbehoerde"

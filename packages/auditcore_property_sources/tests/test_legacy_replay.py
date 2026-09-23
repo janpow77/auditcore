@@ -158,10 +158,17 @@ def test_pure_function_reproduces_the_original_exactly(case: dict[str, Any]) -> 
     assert plain(_call(case["group"], case["function"], case["args"])) == expected
 
 
+def test_bienici_default_keeps_advertiser_names_like_the_original() -> None:
+    """PS-C02 (DECIDED 2026-09-23): default ``advertiser_names="legacy"`` equals the original."""
+    for case in cases("bienici", "normalise"):
+        assert plain(bienici.normalise(case["args"]["raw"])) == case["output"]
+
+
 def test_bienici_minimal_mode_only_hides_private_advertiser_names() -> None:
     """PS-C02: the only difference to the original is the name of private advertisers."""
     for case in cases("bienici", "normalise"):
-        legacy, minimal = case["output"], bienici.normalise(case["args"]["raw"])
+        legacy = case["output"]
+        minimal = bienici.normalise(case["args"]["raw"], advertiser_names="minimal")
         if case["args"]["raw"].get("accountType") == "individual":
             assert legacy["gesellschaft"] == "M. Exemple"
             assert minimal["gesellschaft"] == "Privatangebot"

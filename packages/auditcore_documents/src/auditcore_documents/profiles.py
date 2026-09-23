@@ -29,12 +29,19 @@ class CompareProfile:
     amendment_reading: AmendmentReading
     #: Profilkennung in ``metadata["profile"]`` aufnehmen (Legacy: nein).
     record_profile: bool
+    #: Nach „Nach … wird folgender Absatz n eingefügt“ folgende Absätze umnummerieren (D2).
+    renumber_after_insert: bool
     status: str
     source: str
 
     @property
     def fingerprint(self) -> str:
-        payload = json.dumps(asdict(self), sort_keys=True, ensure_ascii=False)
+        data = asdict(self)
+        # Felder ab 2026.09.2 nur aufnehmen, wenn sie vom Originalverhalten
+        # abweichen: so bleiben die Fingerabdrücke der Originalprofile stabil.
+        if not data.get("renumber_after_insert"):
+            data.pop("renumber_after_insert", None)
+        payload = json.dumps(data, sort_keys=True, ensure_ascii=False)
         return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
     def identity(self) -> dict[str, str]:
@@ -54,6 +61,7 @@ LEGACY = CompareProfile(
     scorer="rapidfuzz-token-set",
     amendment_reading="legacy-skip-headings",
     record_profile=False,
+    renumber_after_insert=False,
     status="SOURCE_CHARACTERIZED",
     source=_SOURCE,
 )
@@ -66,22 +74,29 @@ LEGACY_DIFFLIB = CompareProfile(
     scorer="difflib-ratio",
     amendment_reading="legacy-skip-headings",
     record_profile=False,
+    renumber_after_insert=False,
     status="SOURCE_CHARACTERIZED",
     source=_SOURCE,
 )
 
-#: Korrigiertes Verhalten: Änderungsbefehle, die mit „§“ beginnen, werden
-#: gelesen (DC-C04); Profilidentität im Ergebnis.
+#: Korrigiertes, empfohlenes Verhalten (Nutzerentscheidung D1/D2 vom 23.09.2026):
+#: Änderungsbefehle, die mit „§“ beginnen, werden gelesen (DC-C04), nach einer
+#: Einfügung wird umnummeriert (DC-L01), Ersetzungen treffen alle Vorkommen
+#: (DC-L02), ohne rapidfuzz klarer Fehler (DC-C01); Profilidentität im Ergebnis.
 CORRECTED = CompareProfile(
     profile_id="auditcore.document_compare",
-    version="2026.09.1",
-    result_version="1.1.0+auditcore.2026.09.1",
+    version="2026.09.2",
+    result_version="1.1.0+auditcore.2026.09.2",
     scorer="rapidfuzz-token-set",
     amendment_reading="all-paragraphs",
     record_profile=True,
-    status="CORRECTED_REQUIRES_HUMAN_DECISION_FOR_ADOPTION",
+    renumber_after_insert=True,
+    status="DECIDED_RECOMMENDED",
     source=_SOURCE,
 )
+
+#: Empfohlenes Profil für neue Anwendungen (D1).
+RECOMMENDED = CORRECTED
 
 PROFILES = {p.profile_id: p for p in (LEGACY, LEGACY_DIFFLIB, CORRECTED)}
 

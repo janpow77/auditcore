@@ -17,6 +17,7 @@ assert normalize("Brüder Weiß GmbH & Co. KG", profil) == "brueder weiss"
 | Modul | Inhalt |
 |---|---|
 | `profiles` | Versionierte, quellengebundene Profile mit Fingerprint: `flowworkshop.state_aid`, `flowworkshop.sanctions`, `audit_designer.sanctions`, `flowworkshop.entity_resolution` (je 2026.09.1); seit 0.2.0 `audit_designer.sanctions` und `flowworkshop.sanctions` in 2026.09.2 (Sanktionsabgleich mit Umschrift `Müller → mueller`, ø/ł/æ/œ unverändert gefaltet), `flowinvoice.pep` (PEP-Massenabgleich, nur ASCII), `audit_portal.name`/`audit_portal.name_folded` (Vergleichsformen des Portals) und `riskanalysis.payee` (Rechnungssteller-Normalisierung der Red-Flag-Regel RF09), je 2026.09.1. |
+| `recommended_profile` | Empfohlene Profile nach den Nutzerentscheidungen vom 23.09.2026: `entity_normalization` → `flowworkshop.state_aid` 2026.09.2, `sanctions_screening` → `audit_designer.sanctions` 2026.09.3, `pep_screening` → `flowinvoice.pep` 2026.09.2, `payee` → `riskanalysis.payee` 2026.09.2 (alle NFC und Umschrift `Müller → mueller`). |
 | `normalize` | Vergleichsform nach genau einem Profil. Varianten bleiben getrennt. Empfohlen für neue Consumer (Entscheidung 23.09.2026): `flowworkshop.state_aid` mit ä → ae, ö → oe, ü → ue, ß → ss. |
 | `lei` | Formatprüfung, Prüfziffern ISO 7064 MOD 97-10, Extraktion aus Freitext. |
 | `matching` | `best_match` mit Einzelwerten je Scorer und Profilidentität; `classify` für Screening-Klassen; `pair_score` für den Vergleich zweier bereits normalisierter Namen mit ausdrücklich benanntem Scorer. Benötigt `[fuzzy]`. |

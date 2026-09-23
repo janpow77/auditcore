@@ -31,6 +31,13 @@
    "reason": "Gutachten-PDF-Download (showAnhang, per robots.txt gesperrt), OCR und Speicherung bleiben Anwendung."
   }
  ],
+ "access_policy": {
+  "robots_policy_default": "ignore",
+  "status": "DECIDED",
+  "decided_on": "2026-09-23",
+  "decision": "Nutzerentscheidung: „1-4 bitte ignoriere die robots.txt. das klappt gerade gut“, bestätigt mit „A1 erlauben“ / „A1 ok“. Die Adapter rufen standardmäßig wie die Originale ohne robots.txt ab (PS-D01); robots_policy=\"respect\" bleibt wählbar. Die robots.txt-Befunde je Quelle bleiben unten dokumentiert; Verantwortung für den Abruf liegt beim Betreiber.",
+  "bienici": "Browser-Kennung und Kopfzeilen des Originals als Standard (PS-D02); Namen privater Anbieter wie im Original (PS-D03)."
+ },
  "sources": [
   {
    "source_id": "property.immobilien_de",
@@ -75,7 +82,8 @@
        "address": "/mieten/wohnung/berlin/?preis_bis=…&page=…",
        "allowed": true
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",
@@ -144,7 +152,8 @@
        "address": "/wohnungsfinder/ und ?page=N",
        "allowed": true
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",
@@ -219,7 +228,8 @@
        "address": "/s-wohnung-mieten/berlin/c203l3331 (ohne Preis)",
        "allowed": true
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",
@@ -283,7 +293,8 @@
        "address": "/realEstateAds.json?filters=…",
        "allowed": true
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",
@@ -351,7 +362,8 @@
        "address": "/annonces/location/{dep}?page=N",
        "allowed": true
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",
@@ -417,7 +429,8 @@
        "address": "/immobilier/recherche/location/{art}/{dep}?px1=…&p=N",
        "allowed": true
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",
@@ -512,7 +525,8 @@
        "allowed": false,
        "rule": "Disallow: /index.php?button=showAnhang*"
       }
-     ]
+     ],
+     "enforced_by_default": false
     },
     "terms_of_use": {
      "status": "REVIEW_REQUIRED",

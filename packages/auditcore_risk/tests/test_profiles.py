@@ -29,10 +29,18 @@ def raw(profile_id: str, version: str) -> dict[str, Any]:
 
 
 def test_packaged_profiles_and_status() -> None:
-    assert available_profiles() == tuple(sorted([LEGACY, YEAR, FLOWSTAT, RISK_CHECKER, *VERWK]))
+    decided = [
+        (p, "2026.09.2")
+        for p in ("riskanalysis.year_bound", "flowinvoice.risk_checker", "flowinvoice.rbvk_wibank")
+    ]
+    decided.append(("riskanalysis.year_bound", "2026.09.3"))
+    assert available_profiles() == tuple(
+        sorted([LEGACY, YEAR, FLOWSTAT, RISK_CHECKER, *VERWK, *decided])
+    )
     assert load_profile(*LEGACY).status == "LEGACY_CHARACTERIZED"
     assert load_profile(*FLOWSTAT).status == "LEGACY_CHARACTERIZED"
-    assert load_profile(*YEAR).status == "CANDIDATE_HUMAN_DECISION_REQUIRED"
+    assert load_profile(*YEAR).status == "CANDIDATE_HUMAN_DECISION_REQUIRED"  # superseded
+    assert load_profile("riskanalysis.year_bound", "2026.09.2").status == "APPROVED"
     for pid, version in available_profiles():
         profile = load_profile(pid, version)
         assert len(profile.fingerprint) == 64

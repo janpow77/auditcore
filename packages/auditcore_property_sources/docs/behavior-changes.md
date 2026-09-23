@@ -27,13 +27,14 @@ dieselben Datensätze, alle Lebenszyklusschritte denselben Status.
 | ID | Original | Bibliothek | Begründung |
 |---|---|---|---|
 | PS-C01 | Modulglobale Zustände: `MERKMALE` (inberlinwohnen), `_PLZ_BEZIRKE` (immobilien.de), `_ZUORDNUNG` (Kleinanzeigen) werden aus Dateien neben dem Modul gelesen bzw. über Läufe hinweg angesammelt. | Zuordnungen werden ausdrücklich übergeben (`plz_bezirke`, `district_index(...)`, `attributes`). Die amtlichen Zuordnungsdateien bleiben Daten des Consumers. | Keine versteckten Dateizugriffe, keine Fremddaten im Paket, reproduzierbar. |
-| PS-C02 | bienici: bei Privatanbietern (`accountType = individual`) wird `accountDisplayName` – potenziell ein Personenname – als `gesellschaft` übernommen. | Standard `advertiser_names="minimal"` setzt „Privatangebot“; `"legacy"` reproduziert das Original exakt. | Datenminimierung (Art. 5 Abs. 1 lit. c, Art. 25 DSGVO); der Consumer kann das Original ausdrücklich wählen. |
+| PS-C02 | bienici: bei Privatanbietern (`accountType = individual`) wird `accountDisplayName` – potenziell ein Personenname – als `gesellschaft` übernommen. | **DECIDED 2026-09-23:** Standard `advertiser_names="legacy"` reproduziert das Original exakt; `"minimal"` setzt „Privatangebot“ und bleibt wählbar. | Nutzerentscheidung (siehe unten). `"minimal"` bleibt für Datenminimierung (Art. 5 Abs. 1 lit. c, Art. 25 DSGVO) verfügbar. |
 | PS-C03 | inberlinwohnen normalisiert erst am Ende mit den bis dahin gelernten Merkmalen aller Seiten. | Adapter normalisiert je Seite mit den bis einschließlich dieser Seite gelernten Merkmalen (im Cursor). | Seitenweise Übergabe an die Senke; auf den Fixtures identisch. Taucht ein Merkmalsname erst auf einer späteren Seite auf, fehlt er im früheren Datensatz. |
 | PS-C04 | `parse_detail` prüft das Baujahr gegen `datetime.now().year + 1`. | `reference_year` wird übergeben; der Detailadapter nimmt es aus der injizierten Uhr. | Deterministische Ergebnisse. |
 | PS-C05 | `Verfahren` trägt `lat`/`lon` aus der Nominatim-Geokodierung. | `ZvgNotice` ohne Koordinaten; Geokodierung bleibt beim Consumer. | Eigener Dienst mit Nutzungsrichtlinie (Lastenheft: Self-Hosting), Geo-Domäne (`auditcore_geo`). |
 | PS-C06 | Unlesbare JSON-LD-Blöcke, Livewire-Snapshots, bienici-Anzeigen ohne Kennung, Citya-Angebote ohne Adresse und ZVG-Treffer ohne Aktenzeichen werden still übergangen. | Dieselben Datensätze, zusätzlich `RecordIssue` und Seitenstatus `partial`. | Teilfehler sichtbar statt still. |
 | PS-C07 | `ZvgPortal`/`main` überspringen unbekannte Gerichte mit einer Konsolenmeldung. | `ZvgListingAdapter.validate_config` weist unbekannte Gerichte ab. | Konfigurationsfehler vor dem ersten Abruf. |
-| PS-C08 | Abrufe ohne Prüfung der robots.txt (Kleinanzeigen: gesperrter Pfad; ZVG: gesperrte Detail- und Anhangsseiten). | Adapter lesen robots.txt über den injizierten Transport und verweigern gesperrte Adressen (`access_not_permitted`, nicht wiederholbar). `file:`-Archive sind ausgenommen. | Lastenheft versteigerung Kap. 22.3/33 verlangt selbst die Beachtung der robots.txt. |
+| PS-C08 | Abrufe ohne Prüfung der robots.txt (Kleinanzeigen: gesperrter Pfad; ZVG: gesperrte Detail- und Anhangsseiten). | **DECIDED 2026-09-23:** Einstellung `robots_policy`. Standard `"ignore"` ruft wie das Original ohne robots.txt ab; `"respect"` liest robots.txt über den injizierten Transport und verweigert gesperrte Adressen (`access_not_permitted`, nicht wiederholbar). `file:`-Archive sind nie betroffen. | Nutzerentscheidung (siehe unten). Der robots.txt-Befund bleibt im Katalog dokumentiert; das Lastenheft versteigerung (Kap. 22.3/33) verlangt die Beachtung weiterhin – der Widerspruch ist bewusst in Kauf genommen. |
+| PS-C09 | `ZvgPortal` baut vor dem Detailabruf eine Sitzung auf (`button=Termine suchen`) und ruft `showZvg` mit Referer der Trefferliste ab. | Der `ZvgDetailAdapter` tut das seit 2026-09-23 ebenso (Sitzung einmal je Lauf, im Cursor vermerkt); zuvor rief er die Detailseite direkt ab und erhielt live keine auswertbare Seite. | Beim ersten Live-Abruf nach PS-D01 gefunden; danach Live-Smoke PASS (`docs/live-smoke.json`). |
 
 ## Bewusst beibehalten (PS-L)
 
@@ -47,7 +48,21 @@ dieselben Datensätze, alle Lebenszyklusschritte denselben Status.
 | PS-L06 | Lebenszyklus: Schließen nur bei `last_seen_at` **strikt** älter als die Karenz; `abgehalten` nur ohne Termin ab jetzt; Wiedererscheinen öffnet auch `abgehalten`. | Exakt als reine Funktionen. |
 | PS-L07 | Kleinanzeigen-Güterfilter und Citya-Wohnraumfilter verwerfen Einträge ohne Hinweis. | Übernommen (fachlicher Filter, kein Parserfehler). |
 
-## HUMAN_DECISION_REQUIRED
+## Entscheidungen (DECIDED, 2026-09-23, Nutzer)
+
+Wortlaut: „1-4 bitte ignoriere die robots.txt. das klappt gerade gut“; nach der Blockade durch die Rechteprüfung ausdrücklich
+bestätigt mit „A1 erlauben“ / „A1 ok“.
+
+| ID | Entscheidung | Umsetzung |
+|---|---|---|
+| PS-D01 | robots.txt wird nicht erzwungen (Punkte 1 und 2 unten). | `robots_policy="ignore"` als Standard, `"respect"` wählbar; Kleinanzeigen-Suche und ZVG-Detailseiten (`showZvg`) werden wie im Original abgerufen. `showAnhang` gehört nicht zum Paket. |
+| PS-D02 | bienici sendet die Browser-Kennung des Originals (Punkt 3). | `bienici.request_headers()` mit `BROWSER_USER_AGENT`, `Accept-Language` und `Referer` wie `_hole`; `user_agent=None` überlässt die Kennung dem Transport. |
+| PS-D03 | Namen privater Anbieter wie im Original (Punkt 5). | `advertiser_names="legacy"` als Standard. |
+
+Nutzungsbedingungen und Datenbankherstellerrecht (Punkt 4) bleiben
+`REVIEW_REQUIRED`; die Verantwortung für den Abruf liegt beim Betreiber.
+
+## Ursprünglich offene Punkte (vor der Entscheidung)
 
 1. **Kleinanzeigen:** Die Suchadresse `…/berlin/[seite:N/]preis::700/c203l3331`
    ist durch `Disallow: /*/preis:*` gesperrt; der Docstring des Exporters nennt

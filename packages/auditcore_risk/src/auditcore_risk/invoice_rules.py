@@ -18,7 +18,16 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Any
 
-from .base import Context, Kind, Outcome, Table, is_number, need, seq_sum
+from .base import (
+    Context,
+    Kind,
+    Outcome,
+    Table,
+    is_number,
+    need,
+    procurement_threshold,
+    seq_sum,
+)
 from .errors import InputError, ProfileError
 from .values import as_date, is_missing
 
@@ -218,7 +227,15 @@ def _split_window(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
             items.append((amount, day))
         if len(items) < minimum:
             continue
-        for threshold in p["thresholds"]:
+        thresholds = [float(t) for t in p["thresholds"]]
+        eu_info: dict[str, Any] | None = None
+        eu_spec = p.get("procurement_eu")
+        if eu_spec is not None:
+            value, eu_info = procurement_threshold(eu_spec, table, i, ctx)
+            if value is not None:
+                thresholds = sorted({*thresholds, value})
+        found = False
+        for threshold in thresholds:
             lower = float(threshold) * float(p["proximity"])
             near = [it for it in items if lower <= it[0] <= float(threshold)]
             if len(near) < minimum:
@@ -235,12 +252,21 @@ def _split_window(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
                     "total": total,
                     "window_days": window,
                     "dates": [it[1].isoformat() for it in hit],
+                    "eu_threshold": eu_info,
                 }
                 out.reasons[i] = (
                     f"{len(hit)} Rechnungen in [{lower:.2f}; {float(threshold):.2f}] "
                     f"innerhalb von {window} Tagen."
                 )
+                found = True
                 break
+        if not found and eu_info is not None and "unavailable" in eu_info:
+            out.flags[i] = None
+            out.evidence[i] = {"eu_threshold": eu_info}
+            out.reasons[i] = (
+                "Nicht entscheidbar: keine belegte jahresbezogene EU-Schwelle "
+                f"({eu_info['unavailable']})."
+            )
     return out
 
 
@@ -301,6 +327,14 @@ def _check_split(params: Mapping[str, Any], where: str) -> None:
         where,
         "window_days muss eine ganze Zahl ≥ 0 sein",
     )
+    eu = params.get("procurement_eu")
+    if eu is not None:
+        needed = {"profile", "version", "category", "authority_type", "date_source", "date_field"}
+        need(
+            isinstance(eu, dict) and set(eu) == needed and eu["date_source"] == "record",
+            where,
+            f"procurement_eu braucht {sorted(needed)} mit date_source record",
+        )
 
 
 def _check_round(params: Mapping[str, Any], where: str) -> None:
@@ -403,7 +437,7 @@ INVOICE_KINDS: dict[str, Kind] = {
                 "window_days",
             }
         ),
-        frozenset(),
+        frozenset({"procurement_eu"}),
         _split_window,
         _check_split,
     ),

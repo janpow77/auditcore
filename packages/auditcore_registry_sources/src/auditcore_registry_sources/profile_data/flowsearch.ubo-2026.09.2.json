@@ -1,0 +1,48 @@
+{
+ "decisions": [
+  {
+   "date": "2026-09-23",
+   "id": "R4",
+   "quote": "alle empfehlungen",
+   "status": "DECIDED",
+   "text": "Wirtschaftlich Berechtigte nach GwG: mehr als 25 % der Kapitalanteile oder mehr als 25 % der Stimmrechte; mittelbare Anteile werden entlang der Kette eingerechnet. Anteilseigner ohne Typ gelten nicht als natürliche Person, sondern werden zur Klärung ausgewiesen."
+  }
+ ],
+ "derived_from": {
+  "id": "flowsearch.ubo",
+  "version": "2026.09.1"
+ },
+ "id": "flowsearch.ubo",
+ "kind": "ownership",
+ "legal_basis": "§ 3 Abs. 2 GwG (mehr als 25 % der Kapitalanteile oder Stimmrechte)",
+ "legal_status": "Nutzerentscheidung vom 23.09.2026 („alle empfehlungen“), abgeleitet aus dem gebundenen Quellprofil; keine Rechtsauskunft, keine Freigabe einzelner Ergebnisse.",
+ "recommended_for": [
+  "ubo"
+ ],
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "indirect_rule": "multiply_shares",
+  "max_depth": 10,
+  "missing_type": "unknown",
+  "share_comparison": "greater_than",
+  "share_threshold": 25.0,
+  "voting_comparison": "greater_than",
+  "voting_threshold": 25.0
+ },
+ "source": {
+  "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+  "git_blob": "15de1235fe57088aac874e3b14c4b0f36d6cb431",
+  "path": "backend/app/services/ubo_engine.py",
+  "repository": "janpow77/flowsearch",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "UBOEngine.UBO_THRESHOLD",
+   "MAX_DEPTH",
+   "traverse_ownership",
+   "identify_ubos",
+   "build_ownership_chain"
+  ]
+ },
+ "status": "USER_DECIDED",
+ "version": "2026.09.2"
+}

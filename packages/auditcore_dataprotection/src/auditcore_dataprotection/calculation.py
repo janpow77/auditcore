@@ -76,7 +76,8 @@ class Scenario:
     residual_justification: str = ""
     risk_source: str = ""
     modulating_factors: str = ""
-    acceptance: str | None = None
+    acceptance_inherent: str | None = None
+    acceptance_residual: str | None = None
     acceptance_note: str = ""
 
     def to_dict(self) -> dict[str, Any]:
@@ -103,7 +104,13 @@ class Scenario:
 
 
 #: Scenario fields that only schema 2 profiles accept (EDPB template, section 4).
-EDPB_SCENARIO_FIELDS = ("risk_source", "modulating_factors", "acceptance", "acceptance_note")
+EDPB_SCENARIO_FIELDS = (
+    "risk_source",
+    "modulating_factors",
+    "acceptance_inherent",
+    "acceptance_residual",
+    "acceptance_note",
+)
 
 
 @dataclass(frozen=True)
@@ -181,7 +188,9 @@ class RiskResult:
     net_maximum: int
     net_band: str
     issues: tuple[Issue, ...]
-    net_level_maximum: int | None = None
+    method: str | None = None
+    gross_band: str | None = None
+    floored: tuple[int, ...] = ()
 
     @property
     def assessed(self) -> bool:
@@ -277,8 +286,12 @@ class Proposal:
                 ],
                 **(
                     {}
-                    if self.risk.net_level_maximum is None
-                    else {"net_level_maximum": self.risk.net_level_maximum}
+                    if self.risk.method is None
+                    else {
+                        "method": self.risk.method,
+                        "gross_band": self.risk.gross_band,
+                        "floored": list(self.risk.floored),
+                    }
                 ),
             },
             "trace": [dict(t) for t in self.trace],
@@ -454,13 +467,14 @@ def _edpb_scenario_fields(
         if not isinstance(value, str):
             raise ValidationError(f"Risikoszenario {index}: '{name}' muss Text sein.")
         result[name] = value.strip()
-    acceptance = given.get("acceptance")
-    if acceptance is not None and acceptance not in profile.acceptance_levels:
-        raise ValidationError(
-            f"Risikoszenario {index}: unbekannte Bewertung {acceptance!r}. Zulässig sind: "
-            f"{', '.join(profile.acceptance_levels)}."
-        )
-    result["acceptance"] = acceptance
+    for name in ("acceptance_inherent", "acceptance_residual"):
+        value = given.get(name)
+        if value is not None and value not in profile.acceptance_levels:
+            raise ValidationError(
+                f"Risikoszenario {index}: unbekannte Bewertung {value!r}. Zulässig sind: "
+                f"{', '.join(profile.acceptance_levels)}."
+            )
+        result[name] = value
     return result
 
 
@@ -612,7 +626,7 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
     parsed = parse_scenarios(scenarios, profile)
     results: list[ScenarioResult] = []
     issues: list[Issue] = []
-    levels: list[int] = []
+    floored: list[int] = []
     for index, scenario in enumerate(parsed, start=1):
         reduction_s = sum(profile.measure(m).reduces_severity for m in scenario.measures)
         reduction_l = sum(profile.measure(m).reduces_likelihood for m in scenario.measures)
@@ -648,20 +662,24 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
             )
         gross = scenario.severity * scenario.likelihood
         net = net_s * net_l
-        gross_level, gross_floor = _floored(profile, gross, scenario.severity)
-        net_level, net_floor = _floored(profile, net, net_s)
-        levels.append(net_level)
+        # Only a justified explicit residual severity lifts a severity floor.
+        justified_severity = "severity" in explicit and bool(scenario.residual_justification)
+        gross_band, net_band, net_floor = _bands(
+            profile, scenario, gross, net, net_s, net_l, justified_severity
+        )
+        if net_floor:
+            floored.append(index)
         edpb: dict[str, Any] = {}
         if profile.edpb:
+            titles = profile.acceptance_levels
             edpb = {
-                "gross_level": gross_level,
-                "net_level": net_level,
-                "gross_floor": gross_floor,
                 "net_floor": net_floor,
                 "risk_source": scenario.risk_source,
                 "modulating_factors": scenario.modulating_factors,
-                "acceptance": scenario.acceptance,
-                "acceptance_title": profile.acceptance_levels.get(scenario.acceptance or "", ""),
+                "acceptance_inherent": scenario.acceptance_inherent,
+                "acceptance_inherent_title": titles.get(scenario.acceptance_inherent or "", ""),
+                "acceptance_residual": scenario.acceptance_residual,
+                "acceptance_residual_title": titles.get(scenario.acceptance_residual or "", ""),
                 "acceptance_note": scenario.acceptance_note,
             }
         results.append(
@@ -674,7 +692,7 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
                 gross_severity=scenario.severity,
                 gross_likelihood=scenario.likelihood,
                 gross=gross,
-                gross_band=profile.band(gross_level),
+                gross_band=gross_band,
                 measures=scenario.measures,
                 measure_titles=tuple(profile.measure(m).title for m in scenario.measures),
                 reduction_severity=min(cap, reduction_s),
@@ -682,7 +700,7 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
                 net_severity=net_s,
                 net_likelihood=net_l,
                 net=net,
-                net_band=profile.band(net_level),
+                net_band=net_band,
                 explicit_residual=tuple(explicit),
                 residual_justification=scenario.residual_justification,
                 edpb=edpb,
@@ -690,31 +708,63 @@ def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> Ri
         )
     gross_max = max((r.gross for r in results), default=0)
     net_max = max((r.net for r in results), default=0)
-    level_max = max(levels, default=0)
+    if not profile.edpb:
+        return RiskResult(
+            scenarios=tuple(results),
+            gross_maximum=gross_max,
+            net_maximum=net_max,
+            net_band=profile.band(net_max),
+            issues=tuple(issues),
+        )
     return RiskResult(
         scenarios=tuple(results),
         gross_maximum=gross_max,
         net_maximum=net_max,
-        net_band=profile.band(level_max),
+        net_band=_highest(profile, [r.net_band for r in results]),
         issues=tuple(issues),
-        net_level_maximum=level_max if profile.edpb else None,
+        method="matrix",
+        gross_band=_highest(profile, [r.gross_band for r in results]),
+        floored=tuple(floored),
     )
 
 
-def _floored(profile: RuleProfile, product: int, severity: int) -> tuple[int, str | None]:
-    """Level for banding: the product, raised to the floor of a severe scenario.
+def _highest(profile: RuleProfile, bands: Sequence[str]) -> str:
+    """Highest band of several scenarios; the lowest band when there is none."""
+    if not bands:
+        return profile.bands[0].label
+    return max(bands, key=profile.band_rank)
 
-    A risk can be unacceptable when its impact is very severe even if it is
-    unlikely (EDPB template explainer, footnote 9; DSK-Kurzpapier Nr. 18, S. 5).
-    Schema 1 profiles have no floors and keep the plain product.
+
+def _bands(
+    profile: RuleProfile,
+    scenario: Scenario,
+    gross: int,
+    net: int,
+    net_s: int,
+    net_l: int,
+    explicit_severity: bool,
+) -> tuple[str, str, str | None]:
+    """Gross band, net band and the reference of an applied severity floor.
+
+    Schema 1: bands of the severity × likelihood product. Schema 2: bands from
+    the profile's risk matrix (DSK-Kurzpapier Nr. 18, S. 5). A severity floor
+    depends on the severity before measures, because a risk can be
+    unacceptable when its potential impact is very severe even if it is
+    unlikely (EDPB explainer, footnote 9). Measures do not remove the floor;
+    only an explicit, justified residual severity does.
     """
-    floor = profile.severity_floor(severity)
+    if not profile.edpb:
+        return profile.band(gross), profile.band(net), None
+    gross_band = profile.matrix_band(scenario.severity, scenario.likelihood)
+    net_band = profile.matrix_band(net_s, net_l)
+    floor = profile.severity_floor(scenario.severity)
     if floor is None:
-        return product, None
-    minimum = profile.band_floor_value(floor.min_band)
-    if product >= minimum:
-        return product, None
-    return minimum, floor.reference
+        return gross_band, net_band, None
+    if profile.band_rank(gross_band) < profile.band_rank(floor.min_band):
+        gross_band = floor.min_band
+    if explicit_severity or profile.band_rank(net_band) >= profile.band_rank(floor.min_band):
+        return gross_band, net_band, None
+    return gross_band, floor.min_band, floor.reference
 
 
 # ---------------------------------------------------------------------------
@@ -836,27 +886,47 @@ def propose(
             risk,
             False,
         )
-    level = risk.net_maximum if risk.net_level_maximum is None else risk.net_level_maximum
-    recommendation = _risk_recommendation(profile, level)
-    trace.append(
-        {
-            "step": "risk",
-            "gross_maximum": risk.gross_maximum,
-            "net_maximum": risk.net_maximum,
-            "consult_from": profile.consult_from,
-            "conditions_from": profile.conditions_from,
-        }
-    )
-    reasoning = (
-        f"{screening.reasoning} Das höchste Risiko vor Maßnahmen beträgt "
-        f"{risk.gross_maximum} von {profile.maximum_product}, nach den vorgesehenen "
-        f"Maßnahmen {risk.net_maximum} von {profile.maximum_product} und ist damit als "
-        f"{risk.net_band} einzustufen."
-    )
-    if level != risk.net_maximum:
-        reasoning += (
-            f" Wegen der Schwere möglicher Schäden gilt mindestens die Stufe {risk.net_band}, "
-            "auch wenn der Eintritt unwahrscheinlich ist (Mindeststufe des Regelprofils)."
+    if profile.edpb:
+        recommendation = profile.band_recommendations[risk.net_band]
+        trace.append(
+            {
+                "step": "risk",
+                "method": risk.method,
+                "gross_band": risk.gross_band,
+                "net_band": risk.net_band,
+                "gross_maximum": risk.gross_maximum,
+                "net_maximum": risk.net_maximum,
+                "floored": list(risk.floored),
+            }
+        )
+        reasoning = (
+            f"{screening.reasoning} Nach der Risikomatrix des Regelprofils liegt das höchste "
+            f"Risiko vor Maßnahmen in der Stufe {risk.gross_band}, nach den vorgesehenen "
+            f"Maßnahmen in der Stufe {risk.net_band}."
+        )
+        if risk.floored:
+            numbers = ", ".join(str(i) for i in risk.floored)
+            reasoning += (
+                f" Für Szenario {numbers} gilt wegen der Schwere vor Maßnahmen mindestens "
+                "diese Stufe, auch wenn der Eintritt unwahrscheinlich ist oder Maßnahmen die "
+                "Schwere mindern (Mindeststufe des Regelprofils)."
+            )
+    else:
+        recommendation = _risk_recommendation(profile, risk.net_maximum)
+        trace.append(
+            {
+                "step": "risk",
+                "gross_maximum": risk.gross_maximum,
+                "net_maximum": risk.net_maximum,
+                "consult_from": profile.consult_from,
+                "conditions_from": profile.conditions_from,
+            }
+        )
+        reasoning = (
+            f"{screening.reasoning} Das höchste Risiko vor Maßnahmen beträgt "
+            f"{risk.gross_maximum} von {profile.maximum_product}, nach den vorgesehenen "
+            f"Maßnahmen {risk.net_maximum} von {profile.maximum_product} und ist damit als "
+            f"{risk.net_band} einzustufen."
         )
     return result(
         recommendation,

@@ -7,10 +7,11 @@ import re
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date
+from importlib.util import find_spec
 from typing import Any
 
-from .errors import InputError, ProfileError
-from .values import coerce_number, strict_amount, text
+from .errors import DependencyError, InputError, ProfileError
+from .values import as_date, coerce_number, strict_amount, text
 
 WHEN_MISSING = ("error", "skip", "all_false")
 _MISSING_KEY = object()
@@ -156,3 +157,46 @@ def need(condition: bool, where: str, message: str) -> None:
 def is_number(value: Any) -> bool:
     """Finite ``int``/``float`` (booleans excluded)."""
     return isinstance(value, int | float) and not isinstance(value, bool) and math.isfinite(value)
+
+
+def procurement_threshold(
+    spec: Mapping[str, Any], table: Table, index: int, ctx: Context
+) -> tuple[float | None, dict[str, Any]]:
+    """Year-bound EU threshold from ``auditcore_procurement``; never a neighbouring year."""
+    if find_spec("auditcore_procurement") is None:
+        raise DependencyError(
+            "Jahresbezogene Vergabeschwellen verlangen 'auditcore_risk[procurement]'."
+        )
+    from auditcore_procurement import prechecks
+
+    key = ("procurement", spec["profile"], spec["version"])
+    if key not in ctx.cache:
+        ctx.cache[key] = prechecks.load_profile(spec["profile"], spec["version"])
+    profile = ctx.cache[key]
+    if spec["date_source"] == "record":
+        on = as_date(table.value(index, spec["date_field"]), spec["date_field"])
+    else:
+        on = ctx.reference_date
+        if on is None:
+            raise InputError("Das Profil verlangt einen ausdrücklichen Stichtag (reference_date).")
+    source = {
+        "profile": spec["profile"],
+        "version": spec["version"],
+        "category": spec["category"],
+        "authority_type": spec["authority_type"],
+        "date": None if on is None else on.isoformat(),
+    }
+    if on is None:
+        return None, {**source, "unavailable": "Datum fehlt"}
+    try:
+        period = prechecks.eu_period(profile, on)
+        threshold = prechecks.eu_threshold(
+            profile, spec["category"], period, spec["authority_type"]
+        )
+    except prechecks.ThresholdUnavailable as exc:
+        return None, {**source, "unavailable": str(exc)}
+    return float(threshold.value), {
+        **source,
+        **threshold.to_dict(),
+        "fingerprint": profile.fingerprint,
+    }

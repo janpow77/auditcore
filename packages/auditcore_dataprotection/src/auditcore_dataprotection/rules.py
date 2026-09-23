@@ -205,6 +205,9 @@ class RuleProfile:
     implementation_states: Mapping[str, str] = field(default_factory=dict)
     acceptance_levels: Mapping[str, str] = field(default_factory=dict)
     dossier_fields: tuple[DossierField, ...] = ()
+    risk_matrix: Mapping[tuple[int, int], str] = field(default_factory=dict)
+    risk_method: str = ""
+    band_recommendations: Mapping[str, str] = field(default_factory=dict)
     consultation_notice: ConsultationNotice | None = None
 
     @property
@@ -245,21 +248,29 @@ class RuleProfile:
                 return band.label
         raise ProfileError("Risikostufen des Profils decken den Wert nicht ab.")
 
-    def band_floor_value(self, label: str) -> int:
-        """Smallest product that falls into the band ``label``."""
-        lower = 0
-        for band in self.bands:
+    def band_rank(self, label: str) -> int:
+        """Order of a band label, lowest first."""
+        for index, band in enumerate(self.bands):
             if band.label == label:
-                return lower if lower else 1
-            lower = (band.up_to or 0) + 1
+                return index
         raise ProfileError(f"Unbekannte Risikostufe '{label}' im Profil {self.id}.")
+
+    def matrix_band(self, severity: int, likelihood: int) -> str:
+        """Band of a severity/likelihood pair from the profile's risk matrix (schema 2)."""
+        try:
+            return self.risk_matrix[(severity, likelihood)]
+        except KeyError as exc:
+            raise ProfileError(
+                f"Die Risikomatrix des Profils {self.id} deckt Schwere {severity} und "
+                f"Wahrscheinlichkeit {likelihood} nicht ab."
+            ) from exc
 
     def severity_floor(self, severity: int) -> SeverityFloor | None:
         """Strictest floor that applies to a severity level, if any."""
         applicable = [f for f in self.severity_floors if severity >= f.severity]
         if not applicable:
             return None
-        return max(applicable, key=lambda f: self.band_floor_value(f.min_band))
+        return max(applicable, key=lambda f: self.band_rank(f.min_band))
 
     def dossier_field(self, key: str) -> DossierField:
         """Return one master-data field or raise ``ProfileError``."""
@@ -363,6 +374,24 @@ def _edpb_fields(data: Mapping[str, Any], measures: tuple[Measure, ...]) -> dict
         str(c["key"]): (str(c["title"]), str(c["reference"])) for c in risk["measure_categories"]
     }
     _require(all(m.category in categories for m in measures), "Maßnahme ohne bekannte Kategorie.")
+    levels = range(int(scale["min"]), int(scale["max"]) + 1)
+    matrix = {
+        (int(s), int(lik)): str(label)
+        for s, row in risk["matrix"].items()
+        for lik, label in row.items()
+    }
+    _require(
+        set(matrix) == {(s, lik) for s in levels for lik in levels}
+        and all(label in bands for label in matrix.values()),
+        "Die Risikomatrix muss jede Kombination der Skala mit einer bekannten Stufe belegen.",
+    )
+    by_band = {str(k): str(v) for k, v in recommendation["by_band"].items()}
+    _require(
+        set(matrix.values()) <= set(by_band) and set(by_band.values()) <= set(DECISIONS),
+        "Jede Stufe der Risikomatrix braucht einen Vorschlag.",
+    )
+    method = str(risk["method"])
+    _require(bool(method.strip()), "Das Profil muss seine Risikomethode beschreiben.")
     dossier = tuple(
         DossierField(
             key=str(f["key"]),
@@ -410,6 +439,9 @@ def _edpb_fields(data: Mapping[str, Any], measures: tuple[Measure, ...]) -> dict
         "implementation_states": _ordered(risk["implementation_states"]),
         "acceptance_levels": _ordered(risk["acceptance_levels"]),
         "dossier_fields": dossier,
+        "risk_matrix": MappingProxyType(matrix),
+        "risk_method": method,
+        "band_recommendations": _frozen(by_band),
     }
 
 

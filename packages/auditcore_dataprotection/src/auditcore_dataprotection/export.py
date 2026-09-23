@@ -18,7 +18,7 @@ from typing import Any
 from .edpb import edpb_hints
 from .model import Assessment, RegisterVersion
 from .register import check_register, group_by_department
-from .rules import RuleProfile
+from .rules import DECISION_REJECTED, RuleProfile
 
 REPORT_SCHEMA = "auditcore_dataprotection.report/1"
 SNAPSHOT_FIELDS = (
@@ -158,8 +158,6 @@ def assessment_report(
         },
         "decision": {
             "decision": assessment.decision,
-            "decision_title": profile.decision_titles.get(assessment.decision or "", None),
-            "conditions": list(assessment.conditions),
             "deviation": assessment.deviation,
             "deviation_justification": assessment.deviation_justification,
             "decided_by": assessment.decided_by,
@@ -188,16 +186,21 @@ def assessment_report(
         },
         "changes_to_predecessor": _plain(list(assessment.changes_to_predecessor)),
     }
-    if profile.edpb:
-        report["meta"]["profile"]["schema"] = profile.schema
-        report["edpb"] = _edpb_section(assessment, profile)
-        if consultation and consultation.ground:
-            report["consultation"]["ground_title"] = profile.consultation_grounds[
-                consultation.ground
-            ][0]
-            report["consultation"]["ground_reference"] = profile.consultation_grounds[
-                consultation.ground
-            ][1]
+    if not profile.edpb:
+        # Schema 1 reports stay exactly as before.
+        if report["consultation"] is not None:
+            report["consultation"].pop("ground", None)
+        return report
+    report["meta"]["profile"]["schema"] = profile.schema
+    report["decision"]["decision_title"] = profile.decision_titles.get(
+        assessment.decision or "", None
+    )
+    report["decision"]["conditions"] = list(assessment.conditions)
+    report["edpb"] = _edpb_section(assessment, profile)
+    if consultation and consultation.ground:
+        title, reference = profile.consultation_grounds[consultation.ground]
+        report["consultation"]["ground_title"] = title
+        report["consultation"]["ground_reference"] = reference
     return report
 
 
@@ -226,13 +229,21 @@ def _edpb_section(assessment: Assessment, profile: RuleProfile) -> dict[str, Any
                 "used_in_scenarios": measure.key in used,
             }
         )
-    occasion = (
-        f"Änderung einer bestehenden Verarbeitung ({profile.norm('ueberpruefung')})"
-        if assessment.predecessor_id
-        else "Neue Verarbeitungstätigkeit"
-    )
+    if not assessment.predecessor_id:
+        occasion = "Erstmalige Abschätzung der Verarbeitungstätigkeit"
+    elif assessment.changes_to_predecessor:
+        occasion = (
+            "Die Verarbeitung hat sich gegenüber der Vorfassung geändert "
+            f"({profile.norm('ueberpruefung')})"
+        )
+    else:
+        occasion = (
+            "Neubewertung ohne geänderte Angaben im Verzeichnis, etwa nach einer neuen "
+            f"Profilfassung oder turnusmäßig ({profile.norm('ueberpruefung')})"
+        )
     return {
         "template": "EDSA, Template for DPIA 2026, Version 1.0 (Konsultationsfassung)",
+        "method": profile.risk_method,
         "occasion": occasion,
         "dossier": [
             {
@@ -462,25 +473,32 @@ def _html_risk(report: Mapping[str, Any]) -> list[str]:
             f"</table><p class='klein'>Höchstwert vor Maßnahmen {risk.get('gross_maximum')}, "
             f"nach Maßnahmen {risk.get('net_maximum')} ({_text(risk.get('net_band'))}).</p>"
         )
+    edpb = report.get("edpb")
+    if edpb and edpb.get("method"):
+        parts.append(f"<p class='klein'>Methode: {_text(edpb['method'])}</p>")
     parts.extend(_html_measures(report))
     return parts
 
 
 def _scenario_details(s: Mapping[str, Any]) -> str:
     """Risk source, modulating factors, acceptance and floor of a schema 2 scenario."""
-    if "net_level" not in s:
+    if "net_floor" not in s:
         return ""
     lines = []
     if s.get("risk_source"):
         lines.append(f"Risikoquelle: {_text(s['risk_source'])}")
     if s.get("modulating_factors"):
         lines.append(f"Umstände: {_text(s['modulating_factors'])}")
-    if s.get("acceptance"):
-        note = f" – {_text(s['acceptance_note'])}" if s.get("acceptance_note") else ""
-        lines.append(f"Restrisiko {_text(s['acceptance_title'])}{note}")
+    if s.get("acceptance_inherent"):
+        lines.append(f"Risiko vor Maßnahmen {_text(s['acceptance_inherent_title'])}")
+    if s.get("acceptance_residual"):
+        lines.append(f"Restrisiko {_text(s['acceptance_residual_title'])}")
+    if s.get("acceptance_note"):
+        lines.append(_text(s["acceptance_note"]))
     if s.get("net_floor"):
         lines.append(
-            f"Mindeststufe {_text(s['net_band'])} wegen der Schwere ({_text(s['net_floor'])})"
+            f"Mindeststufe {_text(s['net_band'])} wegen der Schwere vor Maßnahmen "
+            f"({_text(s['net_floor'])})"
         )
     return "".join(f"<br><span class='klein'>{line}</span>" for line in lines)
 
@@ -572,7 +590,7 @@ def _html_decision(report: Mapping[str, Any]) -> list[str]:
             )
             + "</td></tr>"
         )
-    elif proposal.get("consultation_required"):
+    elif proposal.get("consultation_required") and decision["decision"] != DECISION_REJECTED:
         parts.append(
             "<tr class='blockierend'><th>Konsultation der Aufsichtsbehörde</th>"
             f"<td>erforderlich ({_text(proposal.get('consultation_reference'))}), "

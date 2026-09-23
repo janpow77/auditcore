@@ -66,8 +66,8 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 - **Profile** (`PROFILES`, versioniert, mit Fingerprint):
   `audit_designer.document_compare` 1.1.0 (`LEGACY`, Produktionsverhalten),
   `…difflib` (`LEGACY_DIFFLIB`, Rückfall des Originals ohne rapidfuzz),
-  `auditcore.document_compare` 2026.09.1 (`CORRECTED`, siehe DC-C04; Übernahme
-  ist eine fachliche Entscheidung).
+  `auditcore.document_compare` 2026.09.2 (`CORRECTED` = `RECOMMENDED`,
+  entschieden am 2026-09-23: DC-C04 und Absatznummerierung nach Einfügung).
 - **Standardvergleich**: Checklisten (Tabellenzeilen; stabile Kennung aus
   Inhaltssteuerelementen, dann wortgleich, dann Ähnlichkeit ≥ Schwelle) oder
   Fließtext (reihenfolgetreu, unscharfe Ersetzungsblöcke); wortgleich
@@ -119,5 +119,5 @@ print(context.status, context.validation_flags, context.hash_chain)
 
 Details, Korrekturen PL-C01…PL-C08 und Befunde: `docs/pipeline.md`.
 
-Nachweise, Abweichungen und offene Entscheidungen: `docs/behavior-changes.md`,
+Nachweise, Abweichungen und Entscheidungen: `docs/behavior-changes.md`,
 `docs/consumer-integration.md`, `provenance.json`, `NOTICE`.

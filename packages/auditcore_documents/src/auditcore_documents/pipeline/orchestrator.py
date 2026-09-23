@@ -81,6 +81,7 @@ class PipelineOrchestrator:
         *,
         sleep: Sleep = asyncio.sleep,
         preserve_review: bool = False,
+        retry_gateway: bool = False,
     ) -> None:
         self.stages = stages
         self.audit = audit_service
@@ -88,6 +89,8 @@ class PipelineOrchestrator:
         self.compute_enforcer = compute_enforcer
         self.sleep = sleep
         self.preserve_review = preserve_review
+        #: Entscheidung D6: Gateway-Ausfall bis zu dreimal mit Wartezeit wiederholen.
+        self.retry_gateway = retry_gateway
         for stage in self.stages:
             if stage.audit is None:
                 stage.audit = audit_service
@@ -209,6 +212,8 @@ class PipelineOrchestrator:
             "LLM_UNAVAILABLE": self._recover_llm_unavailable,
             "HTTP_DOWNLOAD_FAILED": self._recover_http_download,
         }
+        if self.retry_gateway:
+            strategies["OCR_GATEWAY_UNAVAILABLE"] = self._recover_http_download
         strategy = strategies.get(error.error_code)
         if strategy:
             try:

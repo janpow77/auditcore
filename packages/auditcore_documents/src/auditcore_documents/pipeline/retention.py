@@ -10,6 +10,13 @@ nur ``processing_logs_days`` wird durchgesetzt (PL-L07), ein Probelauf
 zählt Einträge als „gelöscht“ (PL-L08), weich gelöschte Läufe ohne
 ``deleted_at`` erhalten den Status ``marked_for_deletion`` und werden danach
 nie mehr ausgewählt (PL-L09).
+
+Entscheidung D7 (2026-09-23, „alle empfehlungen“): Mit
+``categories=ALL_CATEGORIES`` setzt der Löschlauf alle fünf Fristen durch.
+Für die Kategorien außer ``processing_logs`` fragt er den optionalen
+Port ``find_expired_artifacts(category, cutoff, limit)`` ab. Fehlt dieser
+Port, wird das als Fehler je Kategorie gemeldet statt still übergangen.
+Die Voreinstellung ``LEGACY_CATEGORIES`` bleibt originalgetreu.
 """
 
 from __future__ import annotations
@@ -25,6 +32,17 @@ from auditcore_documents.pipeline.context import PipelineValueError, utc_now
 
 FINISHED_STATUSES = ("ok", "failed", "rejected")
 SWEEP_LIMIT = 1000
+
+#: Kategorie → Feld der Richtlinie mit der Frist in Tagen.
+CATEGORY_DAYS_FIELD = {
+    "original_documents": "original_document_days",
+    "ocr_raw_output": "ocr_raw_output_days",
+    "structured_extraction": "structured_extraction_days",
+    "processing_logs": "processing_logs_days",
+    "audit_events": "audit_events_days",
+}
+ALL_CATEGORIES: tuple[str, ...] = tuple(CATEGORY_DAYS_FIELD)
+LEGACY_CATEGORIES: tuple[str, ...] = ("processing_logs",)
 
 
 @dataclass
@@ -56,6 +74,14 @@ class RetentionStore(Protocol):
     async def delete_record(self, item: Any) -> None: ...
 
     async def commit(self) -> None: ...
+
+
+class ArtifactRetentionStore(RetentionStore, Protocol):
+    """Erweiterter Port für alle fünf Fristen (Entscheidung D7)."""
+
+    async def find_expired_artifacts(
+        self, category: str, cutoff: datetime, limit: int
+    ) -> list[Any]: ...
 
 
 FileRemover = Callable[[str], int]
@@ -120,19 +146,50 @@ class RetentionSweeper:
         *,
         remove_file: FileRemover = remove_local_file,
         clock: Callable[[], datetime] = utc_now,
+        categories: tuple[str, ...] = LEGACY_CATEGORIES,
     ) -> None:
+        unknown = [c for c in categories if c not in CATEGORY_DAYS_FIELD]
+        if unknown:
+            raise PipelineValueError(f"Unbekannte Aufbewahrungskategorie: {unknown}")
         self.store = store
         self.audit = audit_service
         self.remove_file = remove_file
         self.clock = clock
+        self.categories = tuple(categories)
 
     async def process(self, policy: RetentionPolicyConfig, dry_run: bool = False) -> SweepOutcome:
         now = self.clock()
         outcome = SweepOutcome()
-        artifact_type, days = "processing_logs", policy.processing_logs_days
-        items = await self.store.find_expired_runs(
-            cutoff_for(days, now), FINISHED_STATUSES, SWEEP_LIMIT
-        )
+        for category in self.categories:
+            days = int(getattr(policy, CATEGORY_DAYS_FIELD[category]))
+            cutoff = cutoff_for(days, now)
+            if category == "processing_logs":
+                items = await self.store.find_expired_runs(cutoff, FINISHED_STATUSES, SWEEP_LIMIT)
+            else:
+                finder = getattr(self.store, "find_expired_artifacts", None)
+                if finder is None:
+                    outcome.errors.append(
+                        {
+                            "artifact_type": category,
+                            "item_id": "*",
+                            "error": "Store unterstützt find_expired_artifacts nicht",
+                        }
+                    )
+                    continue
+                items = await finder(category, cutoff, SWEEP_LIMIT)
+            await self._sweep(category, days, items, policy, dry_run, outcome)
+        await self.store.commit()
+        return outcome
+
+    async def _sweep(
+        self,
+        artifact_type: str,
+        days: int,
+        items: list[Any],
+        policy: RetentionPolicyConfig,
+        dry_run: bool,
+        outcome: SweepOutcome,
+    ) -> None:
         outcome.processed += len(items)
         for item in items:
             try:
@@ -178,8 +235,6 @@ class RetentionSweeper:
                 outcome.errors.append(
                     {"artifact_type": artifact_type, "item_id": str(item_id), "error": str(exc)}
                 )
-        await self.store.commit()
-        return outcome
 
     async def _hard_delete(self, item: Any) -> int:
         freed = 0
@@ -187,6 +242,8 @@ class RetentionSweeper:
             freed += self.remove_file(item.input_uri)
         if getattr(item, "output_uri", None):
             freed += self.remove_file(item.output_uri)
+        if getattr(item, "file_path", None):
+            freed += self.remove_file(item.file_path)
         await self.store.delete_record(item)
         return freed
 

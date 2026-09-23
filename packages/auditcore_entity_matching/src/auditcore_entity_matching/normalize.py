@@ -24,6 +24,10 @@ Two algorithms exist in the sources and are kept apart:
   also turns the combining diaeresis of ``ü`` into a space: ``Müller → mu
   ller``), legal-form/generic words matched by ``removal_pattern`` → space,
   whitespace collapsed. Reproduced as characterized, not corrected.
+
+Optional ``compose = "NFC"`` and a fold map on ``nfkd_lower_regex`` and
+``lower_nfkd_ascii`` exist only in the user-decided profiles (23.09.2026):
+decomposed umlauts are composed first and ``ä/ö/ü/ß`` transliterated.
 """
 
 from __future__ import annotations
@@ -52,13 +56,27 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
         return ""
     if not isinstance(text, str):
         raise TypeError("Namen sind als Text zu übergeben.")
+    if rules.compose == "NFC":
+        text = unicodedata.normalize("NFC", text)
     if rules.algorithm == "nfkd_lower_regex":
-        value = unicodedata.normalize("NFKD", text).lower()
+        if rules.compose is None and not rules.fold_map:
+            value = unicodedata.normalize("NFKD", text).lower()
+        else:
+            # Decided variant: transliterate before decomposition, then drop the
+            # remaining combining marks instead of turning them into separators.
+            value = text.lower()
+            for source, target in rules.fold_map.items():
+                value = value.replace(source, target)
+            decomposed = unicodedata.normalize("NFKD", value)
+            value = "".join(c for c in decomposed if not unicodedata.combining(c))
         value = re.sub(str(rules.nonword_pattern), " ", value)
         value = re.sub(str(rules.removal_pattern), " ", value)
         return _SPACE.sub(" ", value).strip()
     if rules.algorithm == "lower_nfkd_ascii":
-        decomposed = unicodedata.normalize("NFKD", text.lower().strip())
+        lowered = text.lower().strip()
+        for source, target in rules.fold_map.items():
+            lowered = lowered.replace(source, target)
+        decomposed = unicodedata.normalize("NFKD", lowered)
         value = "".join(c for c in decomposed if not unicodedata.combining(c))
         value = _ASCII_WORD.sub(" ", value)
     elif rules.algorithm == "translate_then_casefold":

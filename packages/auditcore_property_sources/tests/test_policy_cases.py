@@ -29,7 +29,8 @@ def test_t11_fixtures_hold_no_personal_contact_data_and_private_names_are_minimi
             assert not MAIL.search(text), path
             assert not PHONE.search(text), path
     ad = {"id": "1", "accountType": "individual", "accountDisplayName": "M. Exemple"}
-    assert bienici.normalise(ad)["gesellschaft"] == "Privatangebot"
+    assert bienici.normalise(ad, advertiser_names="minimal")["gesellschaft"] == "Privatangebot"
+    assert bienici.normalise(ad)["gesellschaft"] == "M. Exemple"  # PS-C02 DECIDED: legacy
     assert observed()["inputs"].startswith("synthetic")
 
 
@@ -55,5 +56,5 @@ def test_t30_records_carry_profile_and_adapter_version_and_errors_are_visible() 
     assert result.status.value == "partial" and "Snapshot" in result.issues[0].message
     for record in sink.records.values():
         assert record.provenance.profile_version == "2026.09.1"
-        assert record.provenance.adapter_version == "1.0.0"
+        assert record.provenance.adapter_version == "1.1.0"
         assert record.provenance.raw_sha256

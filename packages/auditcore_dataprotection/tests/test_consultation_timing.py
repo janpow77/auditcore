@@ -37,24 +37,24 @@ from auditcore_dataprotection.rules import (
 VERSION = "2026.10.2"
 CONSULT = RECOMMENDATION_CONSULTATION
 
-#: Gross 4 × 4 = 16 (hoch).
+#: Gross 4 × 4 = 16, matrix band hoch.
 HIGH_GROSS = {
     "dimension": "vertraulichkeit",
     "description": "Offenlegung der Verfahrensakte",
     "severity": 4,
     "likelihood": 4,
 }
-#: Measures lower both axes by two: net 2 × 2 = 4 (gering).
+#: Measures lower both axes by two: net 2 × 2, band mittel (not hoch).
 LOWERED = {**HIGH_GROSS, "measures": ["pseudonymisierung", "verschluesselung"]}
-#: Measures lower the likelihood by one only: net 4 × 3 = 12 (still hoch).
+#: Measures lower the likelihood by one only: net 4 × 3, band still hoch.
 STILL_HIGH = {**HIGH_GROSS, "measures": ["protokollierung"]}
 
 
-def a5(profile_id: str = "regulierung.dsgvo") -> Any:
+def a5(profile_id: str = "auditcore.dsgvo") -> Any:
     return load_profile(profile_id, VERSION)
 
 
-def raw(profile_id: str = "regulierung.dsgvo", version: str = VERSION) -> dict[str, Any]:
+def raw(profile_id: str = "auditcore.dsgvo", version: str = VERSION) -> dict[str, Any]:
     entry = resources.files("auditcore_dataprotection.profiles").joinpath(
         f"{profile_id}-{version}.json"
     )
@@ -99,7 +99,7 @@ def with_dpo(w: World, a: Assessment) -> Assessment:
 # ------------------------------------------------------------------ profile
 
 
-@pytest.mark.parametrize("profile_id", ["regulierung.dsgvo", "regulierung.hdsig_ji"])
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
 def test_profile_cites_legal_basis_and_decision(profile_id: str) -> None:
     profile = a5(profile_id)
     notice = profile.consultation_notice
@@ -111,7 +111,7 @@ def test_profile_cites_legal_basis_and_decision(profile_id: str) -> None:
     assert "voraussichtlich erforderlich" in notice.preliminary_text
     assert "abschließende Bewertung" in notice.final_text
     assert raw(profile_id)["derived_from"] == {"id": profile_id, "version": "2026.10.1"}
-    if profile_id == "regulierung.hdsig_ji":
+    if profile_id == "auditcore.hdsig_ji":
         assert "§ 64 HDSIG" in notice.legal_basis
 
 
@@ -124,9 +124,11 @@ def test_profile_differs_from_2026_10_1_only_by_notice_and_identity() -> None:
     assert new == old
 
 
-@pytest.mark.parametrize("version", ["2026.09.1", "2026.10.1"])
-def test_earlier_profiles_keep_the_immediate_notice(version: str) -> None:
-    profile = load_profile("regulierung.dsgvo", version)
+@pytest.mark.parametrize(
+    "profile_id,version", [("regulierung.dsgvo", "2026.09.1"), ("auditcore.dsgvo", "2026.10.1")]
+)
+def test_earlier_profiles_keep_the_immediate_notice(profile_id: str, version: str) -> None:
+    profile = load_profile(profile_id, version)
     assert profile.consultation_notice is None
     proposal = propose(profile, required_answers(profile), [STILL_HIGH])
     assert proposal.recommendation == CONSULT and proposal.consultation_required is True
@@ -170,8 +172,8 @@ def test_high_gross_lowered_by_measures_gives_no_notice() -> None:
     profile = a5()
     proposal = propose(profile, required_answers(profile), [LOWERED])
     assert proposal.risk is not None
-    assert proposal.risk.gross_maximum == 16 and proposal.risk.net_maximum == 4
-    assert proposal.recommendation == "freigabe"
+    assert proposal.risk.gross_band == "hoch" and proposal.risk.net_band == "mittel"
+    assert proposal.recommendation == "freigabe_mit_auflagen"
     assert proposal.consultation_notice == {
         "timing": CONSULTATION_TIMING_FINAL,
         "final": False,
@@ -179,7 +181,7 @@ def test_high_gross_lowered_by_measures_gives_no_notice() -> None:
         "text": "",
         "legal_basis": profile.consultation_notice.legal_basis,
     }
-    final = finalize_consultation(profile, proposal.to_dict(), "freigabe")
+    final = finalize_consultation(profile, proposal.to_dict(), "freigabe_mit_auflagen")
     assert final["consultation_required"] is False
     assert final["consultation_notice"]["status"] == NOTICE_NOT_REQUIRED
     assert final["consultation_notice"]["final"] is True
@@ -237,8 +239,15 @@ def test_high_net_risk_gives_final_notice_at_decision_and_blocks_release() -> No
 def test_lowered_risk_releases_without_consultation() -> None:
     w = world()
     a = assessed(w, LOWERED)
-    assert a.proposal["recommendation"] == "freigabe"
-    a = w.service.decide(TENANT, ANNA, a.assessment_id, **rev(a), decision="freigabe")
+    assert a.proposal["recommendation"] == "freigabe_mit_auflagen"
+    a = w.service.decide(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        decision="freigabe_mit_auflagen",
+        conditions=["Pseudonymisierung vor Start aktiv"],
+    )
     assert a.proposal["consultation_notice"]["status"] == NOTICE_NOT_REQUIRED
     assert a.proposal["consultation_required"] is False
     a = with_dpo(w, a)

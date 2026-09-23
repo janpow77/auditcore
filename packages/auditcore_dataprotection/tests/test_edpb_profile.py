@@ -43,14 +43,14 @@ VERSION = "2026.10.1"
 
 
 def edpb() -> Any:
-    return load_profile("regulierung.dsgvo", VERSION)
+    return load_profile("auditcore.dsgvo", VERSION)
 
 
 def edpb_ji() -> Any:
-    return load_profile("regulierung.hdsig_ji", VERSION)
+    return load_profile("auditcore.hdsig_ji", VERSION)
 
 
-def raw(profile_id: str = "regulierung.dsgvo") -> dict[str, Any]:
+def raw(profile_id: str = "auditcore.dsgvo") -> dict[str, Any]:
     entry = resources.files("auditcore_dataprotection.profiles").joinpath(
         f"{profile_id}-{VERSION}.json"
     )
@@ -94,7 +94,8 @@ def filled(w: World, **extra: Any) -> Assessment:
                 "likelihood": 4,
                 "measures": ["zugriffskontrolle"],
                 "risk_source": "Innentäter mit zu weiten Rechten",
-                "acceptance": "hinnehmbar",
+                "acceptance_inherent": "nicht_hinnehmbar",
+                "acceptance_residual": "hinnehmbar",
             }
         ],
         necessity="N",
@@ -110,12 +111,16 @@ def filled(w: World, **extra: Any) -> Assessment:
 # ------------------------------------------------------------------ profile
 
 
-@pytest.mark.parametrize("profile_id", ["regulierung.dsgvo", "regulierung.hdsig_ji"])
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
 def test_schema2_profiles_load_with_sources_and_derivation(profile_id: str) -> None:
     profile = load_profile(profile_id, VERSION)
     data = raw(profile_id)
     assert profile.schema == PROFILE_SCHEMA_EDPB and profile.edpb
-    assert data["derived_from"] == {"id": profile_id, "version": "2026.09.1"}
+    assert data["derived_from"] == {
+        "id": profile_id.replace("auditcore", "regulierung"),
+        "version": "2026.09.1",
+    }
+    assert profile.status == "LIBRARY_PROFILE_EDPB_ALIGNED"
     assert DECISION_REJECTED in profile.decisions and set(DECISIONS) <= set(profile.decisions)
     assert {s.key for s in profile.sources} >= {"edpb_dpia_template_2026", "wp248", "wp243"}
     assert "Art.-29-Datenschutzgruppe" in profile.criteria_label
@@ -160,49 +165,111 @@ def test_schema2_validation_is_strict(mutate: Any, message: str) -> None:
 # ------------------------------------------------------------ calculation
 
 
-def test_severity_four_is_at_least_medium_in_schema2() -> None:
-    risk = assess_risk(edpb(), [SEVERE_UNLIKELY])
-    scenario = risk.scenarios[0]
-    assert (scenario.net, scenario.net_band) == (4, "mittel")
-    assert scenario.edpb["net_level"] == 5 and "Fn. 9" in scenario.edpb["net_floor"]
-    assert risk.net_maximum == 4 and risk.net_level_maximum == 5
-    proposal = propose(edpb(), {**no_answers(edpb()), "art35_3_a": True}, [SEVERE_UNLIKELY])
-    assert proposal.recommendation == "freigabe_mit_auflagen"
-    assert "Mindeststufe" in proposal.reasoning
+KP18 = {
+    4: ["mittel", "hoch", "hoch", "hoch"],
+    3: ["mittel", "mittel", "hoch", "hoch"],
+    2: ["mittel", "mittel", "mittel", "mittel"],
+    1: ["gering", "gering", "mittel", "mittel"],
+}
 
 
-def test_severity_four_stays_low_in_schema1() -> None:
+def test_matrix_follows_dsk_kurzpapier_18() -> None:
+    profile = edpb()
+    for severity, row in KP18.items():
+        assert [profile.matrix_band(severity, lik) for lik in range(1, 5)] == row
+    assert profile.band_recommendations == {
+        "gering": "freigabe",
+        "mittel": "freigabe_mit_auflagen",
+        "hoch": "konsultation_aufsichtsbehoerde",
+    }
+
+
+@pytest.mark.parametrize(
+    "severity,likelihood,band,recommendation",
+    [
+        (4, 1, "mittel", "freigabe_mit_auflagen"),
+        (4, 2, "hoch", "konsultation_aufsichtsbehoerde"),
+        (3, 1, "mittel", "freigabe_mit_auflagen"),
+        (1, 4, "mittel", "freigabe_mit_auflagen"),
+        (1, 2, "gering", "freigabe"),
+        (3, 3, "hoch", "konsultation_aufsichtsbehoerde"),
+    ],
+)
+def test_schema2_bands_come_from_the_matrix(
+    severity: int, likelihood: int, band: str, recommendation: str
+) -> None:
+    scenario = {**SEVERE_UNLIKELY, "severity": severity, "likelihood": likelihood}
+    risk = assess_risk(edpb(), [scenario])
+    assert risk.scenarios[0].net_band == band and risk.method == "matrix"
+    proposal = propose(edpb(), {**no_answers(edpb()), "art35_3_a": True}, [scenario])
+    assert proposal.recommendation == recommendation
+    assert f"in der Stufe {band}" in proposal.reasoning
+    assert proposal.trace[-2]["method"] == "matrix"
+
+
+def test_schema1_keeps_product_bands() -> None:
     risk = assess_risk(dsgvo(), [SEVERE_UNLIKELY])
-    assert risk.scenarios[0].net_band == "gering" and risk.net_level_maximum is None
+    assert risk.scenarios[0].net_band == "gering" and risk.method is None
     proposal = propose(dsgvo(), {**no_answers(dsgvo()), "art35_3_a": True}, [SEVERE_UNLIKELY])
     assert proposal.recommendation == "freigabe"
-    assert "net_level_maximum" not in proposal.to_dict()["risk"]
+    assert "method" not in proposal.to_dict()["risk"]
 
 
-def test_floor_does_not_lower_high_products() -> None:
-    risk = assess_risk(edpb(), [{**SEVERE_UNLIKELY, "likelihood": 3}])
-    assert risk.scenarios[0].net_band == "hoch" and risk.scenarios[0].edpb["net_floor"] is None
+def _profile_with_low_cell() -> Any:
+    data = copy.deepcopy(raw())
+    data["risk"]["matrix"]["2"]["1"] = "gering"
+    return profile_from_dict(data)
+
+
+def test_floor_depends_on_severity_before_measures() -> None:
+    profile = _profile_with_low_cell()
+    reduced = {**SEVERE_UNLIKELY, "measures": ["pseudonymisierung"]}
+    scenario = assess_risk(profile, [reduced]).scenarios[0]
+    assert (scenario.net_severity, scenario.net_likelihood) == (2, 1)
+    assert scenario.net_band == "mittel" and "Fn. 9" in scenario.edpb["net_floor"]
+    proposal = propose(profile, {**no_answers(profile), "art35_3_a": True}, [reduced])
+    assert proposal.recommendation == "freigabe_mit_auflagen"
+    assert "Schwere vor Maßnahmen" in proposal.reasoning and proposal.trace[-2]["floored"] == [1]
+
+
+def test_explicit_justified_residual_severity_lifts_the_floor() -> None:
+    profile = _profile_with_low_cell()
+    explicit = {
+        **SEVERE_UNLIKELY,
+        "residual_severity": 2,
+        "residual_justification": "Nur Pseudonyme verlassen das System.",
+    }
+    scenario = assess_risk(profile, [explicit]).scenarios[0]
+    assert scenario.net_band == "gering" and scenario.edpb["net_floor"] is None
 
 
 def test_screening_names_article_29_working_party() -> None:
-    answers = {**no_answers(edpb()), "edsa_01_bewerten": True, "edsa_03_ueberwachung": True}
-    assert "Art.-29-Datenschutzgruppe" in propose(edpb(), answers).screening.reasoning
+    points = {"edsa_01_bewerten": True, "edsa_03_ueberwachung": True}
+    assert "Art.-29-Datenschutzgruppe" in (
+        propose(edpb(), {**no_answers(edpb()), **points}).screening.reasoning
+    )
     assert "Europäischen Datenschutzausschusses erfüllt" in (
-        propose(
-            dsgvo(), {**no_answers(dsgvo()), **{k: v for k, v in answers.items()}}
-        ).screening.reasoning
+        propose(dsgvo(), {**no_answers(dsgvo()), **points}).screening.reasoning
     )
 
 
 def test_edpb_scenario_fields_only_in_schema2() -> None:
-    scenario = {**SEVERE_UNLIKELY, "risk_source": "Angreifer", "acceptance": "hinnehmbar"}
+    scenario = {
+        **SEVERE_UNLIKELY,
+        "risk_source": "Angreifer",
+        "acceptance_inherent": "nicht_hinnehmbar",
+        "acceptance_residual": "hinnehmbar",
+    }
     result = assess_risk(edpb(), [scenario]).scenarios[0]
     assert result.edpb["risk_source"] == "Angreifer"
-    assert result.edpb["acceptance_title"] == "hinnehmbar"
+    assert result.edpb["acceptance_inherent_title"] == "nicht hinnehmbar"
+    assert result.edpb["acceptance_residual_title"] == "hinnehmbar"
     with pytest.raises(ValidationError, match="Schema 2"):
         assess_risk(dsgvo(), [scenario])
     with pytest.raises(ValidationError, match="unbekannte Bewertung"):
-        assess_risk(edpb(), [{**SEVERE_UNLIKELY, "acceptance": "egal"}])
+        assess_risk(edpb(), [{**SEVERE_UNLIKELY, "acceptance_residual": "egal"}])
+    with pytest.raises(ValidationError, match="unbekannte Felder"):
+        assess_risk(edpb(), [{**SEVERE_UNLIKELY, "acceptance": "hinnehmbar"}])
 
 
 # ---------------------------------------------------------------- workflow
@@ -256,6 +323,54 @@ def test_documentation_change_resets_review() -> None:
         TENANT, ANNA, a.assessment_id, **rev(a), dossier={"team": "neu", "umfang": "u"}
     )
     assert a.decision is None and a.dpo_vote is None and a.conditions == ()
+
+
+def test_status_and_plan_changes_keep_the_review() -> None:
+    w = world()
+    a = filled(w)
+    a = w.service.decide(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        decision="freigabe_mit_auflagen",
+        conditions=["MFA vor Start"],
+    )
+    a = w.service.record_dpo_statement(
+        TENANT, DORA, a.assessment_id, **rev(a), vote="zugestimmt", statement="ok"
+    )
+    a = w.service.update(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        measure_status={"zugriffskontrolle": "teilweise_umgesetzt"},
+        action_plan=[{"activity": "MFA", "responsible": "IT", "measure": "zugriffskontrolle"}],
+    )
+    assert a.decision == "freigabe_mit_auflagen" and a.dpo_vote == "zugestimmt"
+    assert a.conditions == ("MFA vor Start",)
+    assert a.measure_status["zugriffskontrolle"]["status"] == "teilweise_umgesetzt"
+
+
+def test_switch_back_to_schema1_is_refused() -> None:
+    w = world()
+    a = filled(w)
+    with pytest.raises(ValidationError, match="nicht möglich"):
+        w.service.update(TENANT, ANNA, a.assessment_id, **rev(a), profile=dsgvo())
+    a = w.service.decide(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        decision="freigabe_mit_auflagen",
+        conditions=["MFA"],
+    )
+    a = w.service.record_dpo_statement(
+        TENANT, DORA, a.assessment_id, **rev(a), vote="zugestimmt", statement="ok"
+    )
+    released = w.service.release(TENANT, BERT, a.assessment_id, **rev(a))
+    with pytest.raises(ValidationError, match="nicht möglich"):
+        w.service.reassess(TENANT, ANNA, released.assessment_id, profile=dsgvo())
 
 
 def test_conditional_approval_requires_conditions() -> None:
@@ -316,6 +431,25 @@ def test_rejected_needs_justification_and_no_consultation() -> None:
     assert w.service.release_blockers(a) == ()
     released = w.service.release(TENANT, BERT, a.assessment_id, **rev(a))
     assert released.decision == DECISION_REJECTED
+    html = render_assessment_html(assessment_report(released, edpb()))
+    assert "noch nicht dokumentiert" not in html
+
+
+def test_rejected_follows_a_rejecting_dpo_without_leadership_submission() -> None:
+    w = world()
+    a = filled(w)
+    a = w.service.decide(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        decision=DECISION_REJECTED,
+        justification="Die Datenschutzbeauftragte rät ab; die Verarbeitung unterbleibt.",
+    )
+    a = w.service.record_dpo_statement(
+        TENANT, DORA, a.assessment_id, **rev(a), vote="abgelehnt", statement="Nicht vertretbar."
+    )
+    assert w.service.release_blockers(a) == ()
 
 
 def test_rejected_is_unknown_in_schema1() -> None:
@@ -364,6 +498,19 @@ def test_consultation_ground_required_in_schema2() -> None:
         ground="nationales_recht",
     )
     assert a.consultation is not None and a.consultation.ground == "nationales_recht"
+    assert w.audit.events[-1].details["ground"] == "nationales_recht"
+    for ground, message in [(["x"], "Grund der Konsultation"), ("hohes_restrisiko", "kein hohes")]:
+        with pytest.raises(ValidationError, match=message):
+            w.service.record_consultation(
+                TENANT,
+                ANNA,
+                a.assessment_id,
+                **rev(a),
+                authority="HBDI",
+                result="r",
+                consulted_on=date(2026, 9, 1),
+                ground=ground,
+            )
 
 
 def test_required_master_data_blocks_release() -> None:
@@ -406,6 +553,25 @@ def test_hints_follow_the_template() -> None:
     assert w2.service.hints(b) == ()
 
 
+def test_ji_hints_skip_areas_without_catalogue_measures() -> None:
+    w = world()
+    a = started(w, edpb_ji())
+    a = w.service.update(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        scenarios=[{**SEVERE_UNLIKELY, "measures": ["zugriffskontrolle"]}],
+        measure_status={
+            "zugriffskontrolle": "umgesetzt",
+            "loeschkonzept": "umgesetzt",
+            "menschliche_aufsicht": "umgesetzt",
+            "pseudonymisierung": "umgesetzt",
+        },
+    )
+    assert not any("Abschnitt 2.3" in h for h in w.service.hints(a))
+
+
 def test_reassessment_carries_documentation() -> None:
     w = world()
     a = filled(w)
@@ -421,9 +587,11 @@ def test_reassessment_carries_documentation() -> None:
         TENANT, DORA, a.assessment_id, **rev(a), vote="zugestimmt", statement="ok"
     )
     released = w.service.release(TENANT, BERT, a.assessment_id, **rev(a))
+    assert any(e.details.get("conditions") == ["MFA"] for e in w.audit.events)
     follow = w.service.reassess(TENANT, ANNA, released.assessment_id)
     assert follow.dossier == released.dossier and follow.measure_status == released.measure_status
     assert follow.conditions == () and follow.decision is None
+    assert assessment_report(follow, edpb())["edpb"]["occasion"].startswith("Neubewertung")
 
 
 # ------------------------------------------------------------------ report
@@ -442,7 +610,8 @@ def test_report_keeps_layout_and_adds_template_details() -> None:
     )
     report = assessment_report(a, edpb())
     section = report["edpb"]
-    assert section["occasion"] == "Neue Verarbeitungstätigkeit"
+    assert section["occasion"] == "Erstmalige Abschätzung der Verarbeitungstätigkeit"
+    assert "DSK-Kurzpapiers Nr. 18" in section["method"]
     assert {s["key"] for s in section["sources"]} >= {"edpb_dpia_template_2026", "wp248"}
     assert section["measures"][0]["category_title"] == "Sicherheit der Verarbeitung"
     assert report["decision"]["decision_title"] == "Freigabe mit Auflagen"
@@ -458,13 +627,34 @@ def test_report_keeps_layout_and_adds_template_details() -> None:
     assert "Maßnahmen nach Bereichen und Umsetzungsstand" in html
     assert "Bedingungen vor Beginn der Verarbeitung" in html and "MFA vor Start" in html
     assert "Grundlagen der Abschätzung" in html and "Risikoquelle: Innentäter" in html
+    assert "Risiko vor Maßnahmen nicht hinnehmbar" in html and "Restrisiko hinnehmbar" in html
+    assert "Methode: Schwere und Eintrittswahrscheinlichkeit" in html
 
 
 def test_schema1_report_has_no_template_section() -> None:
     w = world()
     a = started(w, dsgvo())
+    a = w.service.update(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        answers={**no_answers(dsgvo()), "art35_3_a": True},
+        scenarios=[{**SEVERE_UNLIKELY, "likelihood": 4}],
+    )
+    a = w.service.record_consultation(
+        TENANT,
+        ANNA,
+        a.assessment_id,
+        **rev(a),
+        authority="HBDI",
+        result="r",
+        consulted_on=date(2026, 9, 1),
+    )
     report = assessment_report(a, dsgvo())
     assert "edpb" not in report
+    assert "decision_title" not in report["decision"] and "conditions" not in report["decision"]
+    assert "ground" not in report["consultation"]
     html = render_assessment_html(report)
     assert "Grundlagen der Abschätzung" not in html and "Anlass der Abschätzung" not in html
 
@@ -478,3 +668,51 @@ def test_screening_only_needs_no_dpia_master_data() -> None:
         TENANT, DORA, a.assessment_id, **rev(a), vote="zugestimmt", statement="ok"
     )
     assert w.service.release_blockers(a) == ()
+
+
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
+def test_all_17_entries_of_the_dsk_list_are_hard_questions(profile_id: str) -> None:
+    profile = load_profile(profile_id, VERSION)
+    listed = [q for q in profile.questions if q.block == "dsk_muss_liste"]
+    assert len(listed) == 17 and all(q.effect == "hart" for q in listed)
+    numbers = [int(q.key[6:8]) for q in listed]
+    assert numbers == list(range(1, 18))
+    assert all(f"Nr. {n} (" in q.reference for n, q in zip(numbers, listed, strict=True))
+    answers = {**no_answers(profile), "dsk_nr17_leistungsfaehigkeit": True}
+    screening = propose(profile, answers).screening
+    assert screening.outcome == "pflicht"
+    assert screening.hard_triggers == ("dsk_nr17_leistungsfaehigkeit",)
+
+
+@pytest.mark.parametrize("profile_id", ["auditcore.dsgvo", "auditcore.hdsig_ji"])
+def test_library_profiles_carry_no_application_specific_texts(profile_id: str) -> None:
+    data = raw(profile_id)
+    for key in ("source", "derived_from"):
+        data.pop(key)
+    text = json.dumps(data, ensure_ascii=False)
+    for term in (
+        "KPAnG",
+        "OWiG",
+        "Wirtschaftsverb",
+        "Preisvergleich",
+        "Marktbeobacht",
+        "Tankstell",
+    ):
+        assert term not in text, term
+    keys = [t["schluessel"] for t in load_profile(profile_id, VERSION).data_subject_view_templates]
+    assert keys == ["eingeholt", "unangemessen_aufwand", "schutz_interessen"]
+
+
+def test_unjustified_residual_severity_keeps_the_floor() -> None:
+    profile = _profile_with_low_cell()
+    unjustified = {**SEVERE_UNLIKELY, "residual_severity": 2}
+    risk = assess_risk(profile, [unjustified])
+    assert risk.scenarios[0].net_band == "mittel" and risk.scenarios[0].edpb["net_floor"]
+    assert any(i.code == "residual_without_justification" for i in risk.issues)
+
+
+def test_list_entries_5_and_10_follow_the_wording_of_the_list() -> None:
+    for key in ("dsk_nr05_zusammenfuehrung_entscheidung", "dsk_nr10_zusammenfuehrung_analyse"):
+        assert "die Zusammenführung oder die Verarbeitung in großem Umfang" in (
+            edpb().question(key).text
+        )

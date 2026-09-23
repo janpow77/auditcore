@@ -183,28 +183,60 @@ def test_adapter_fulfils_the_harvest_contract(
     assert report.cases["missing_credentials"].startswith("SKIPPED")
 
 
-def test_kleinanzeigen_original_address_is_refused_by_robots() -> None:
-    """HUMAN_DECISION_REQUIRED: the original search path matches ``Disallow: /*/preis:*``."""
+def test_kleinanzeigen_original_address_is_fetched_by_default_without_robots() -> None:
+    """PS-D01 (DECIDED 2026-09-23): default ``robots_policy="ignore"`` fetches like the original."""
     adapter = KleinanzeigenAdapter(MAPPINGS["ortsteile_bezirke"])
     transport = with_robots(
         {kleinanzeigen.search_url(700, 1): page("kleinanzeigen/seite-1.html")},
         "www.kleinanzeigen.de",
     )()
-    result, sink = run(adapter, transport, {"max_price": 700})
+    result, sink = run(adapter, transport, {"max_price": 700, "pages": 1})
+    assert result.status is RunStatus.COMPLETE and sink.records
+    urls = [c["url"] for c in transport.calls]
+    assert "https://www.kleinanzeigen.de/robots.txt" not in urls
+    assert urls == [kleinanzeigen.search_url(700, 1)]
+
+
+def test_kleinanzeigen_original_address_is_refused_when_robots_are_respected() -> None:
+    """The original search path matches ``Disallow: /*/preis:*``."""
+    adapter = KleinanzeigenAdapter(MAPPINGS["ortsteile_bezirke"])
+    transport = with_robots(
+        {kleinanzeigen.search_url(700, 1): page("kleinanzeigen/seite-1.html")},
+        "www.kleinanzeigen.de",
+    )()
+    result, sink = run(adapter, transport, {"max_price": 700, "robots_policy": "respect"})
     assert result.status is RunStatus.FAILED and not sink.records
     assert result.errors[0]["code"] == "access_not_permitted"
     assert result.errors[0]["retryable"] is False and result.attempts == 1
     assert [c["url"] for c in transport.calls] == ["https://www.kleinanzeigen.de/robots.txt"]
 
 
-def test_zvg_detail_pages_are_refused_live_but_work_from_an_archive(tmp_path: Path) -> None:
+def test_zvg_detail_pages_are_fetched_live_by_default() -> None:
+    """PS-D01 (DECIDED 2026-09-23): ``showZvg`` is fetched like the original."""
+    notices = {"notices": [{"zvg_id": "880001", "court_id": "M1201"}]}
+    url = zvg.BASE + "?button=showZvg&zvg_id=880001&land_abk=he"
+    session = exchange(zvg.BASE, "<html>x</html>", params={"button": "Termine suchen"})
+    live = replay({url: page("zvg/detail-efh.html")}, robots=None, extra=[session])
+    result, sink = run(ZvgDetailAdapter(), live, notices)
+    assert result.status is RunStatus.COMPLETE and len(sink.records) == 1
+    # PS-C09: session first, then the detail page with the result list as referer
+    assert [(c["url"], c["params"]) for c in live.calls] == [
+        (zvg.BASE, {"button": "Termine suchen"}),
+        (url, {}),
+    ]
+    assert "referer" in live.calls[1]["header_names"]
+
+
+def test_zvg_detail_pages_are_refused_when_respected_but_work_from_an_archive(
+    tmp_path: Path,
+) -> None:
     notices = {"notices": [{"zvg_id": "880001", "court_id": "M1201"}]}
     live = replay(
         {},
         robots=None,
         extra=[exchange("https://www.zvg-portal.de/robots.txt", robots_text("zvg-portal.de"))],
     )
-    result, _ = run(ZvgDetailAdapter(), live, notices)
+    result, _ = run(ZvgDetailAdapter(), live, {**notices, "robots_policy": "respect"})
     assert result.errors[0]["code"] == "access_not_permitted"
     assert "showZvg" in result.errors[0]["message"]
 
@@ -244,6 +276,9 @@ def test_zvg_listing_request_shape_and_issues() -> None:
         (BieniciAdapter, {}),
         (BieniciAdapter, {"zones": []}),
         (BieniciAdapter, {"zones": ["1"], "advertiser_names": "alle"}),
+        (BieniciAdapter, {"zones": ["1"], "user_agent": ""}),
+        (BieniciAdapter, {"zones": ["1"], "robots_policy": "manchmal"}),
+        (InBerlinWohnenAdapter, {"robots_policy": True}),
         (CityaAdapter, {"departements": "bas-rhin-67"}),
         (ParuvenduAdapter, {"kinds": []}),
         (ZvgListingAdapter, {"courts": ["X9999"]}),
@@ -263,7 +298,7 @@ def test_invalid_configuration_is_rejected(
 
 def test_unavailable_robots_txt_means_no_rules_and_server_errors_are_retried() -> None:
     web = {inberlinwohnen.page_url(1): page("inberlinwohnen/leer.html")}
-    result, _ = run(InBerlinWohnenAdapter(), replay(web, robots=None), {})
+    result, _ = run(InBerlinWohnenAdapter(), replay(web, robots=None), {"robots_policy": "respect"})
     assert result.status is RunStatus.COMPLETE
     broken = ReplayTransport(
         (
@@ -271,7 +306,7 @@ def test_unavailable_robots_txt_means_no_rules_and_server_errors_are_retried() -
             exchange("https://www.inberlinwohnen.de/robots.txt", "", status=503),
         )
     )
-    result, _ = run(InBerlinWohnenAdapter(), broken, {})
+    result, _ = run(InBerlinWohnenAdapter(), broken, {"robots_policy": "respect"})
     assert result.status is RunStatus.FAILED and result.errors[0]["retryable"] is True
 
 
@@ -288,8 +323,37 @@ def test_zvg_listing_pages_through_the_courts_in_order() -> None:
         ),
         ordered=True,
     )
-    result, sink = run(ZvgListingAdapter(), transport, {"courts": ["M1201", "M1406"]})
+    result, sink = run(
+        ZvgListingAdapter(), transport, {"courts": ["M1201", "M1406"], "robots_policy": "respect"}
+    )
     assert result.status is RunStatus.COMPLETE and result.pages == 2
     courts = {r.normalized["zvg_id"]: r.normalized["court_id"] for r in sink.records.values()}
     assert courts["880001"] == "M1201" and courts["770001"] == "M1406"
     assert [c["method"] for c in transport.calls] == ["GET", "GET", "POST", "GET", "POST"]
+
+
+def _bienici_transport() -> ReplayTransport:
+    url = bienici.search_url(
+        bienici.search_filter(["-7415"], max_price=1100, page=1, page_size=200)
+    )
+    return replay({url: clean("bienici/seite-3.json")}, robots=None)
+
+
+def test_bienici_sends_the_original_browser_headers_by_default() -> None:
+    """PS-D02 (DECIDED 2026-09-23): browser user agent like the original ``_hole``."""
+    transport = _bienici_transport()
+    run(BieniciAdapter(), transport, {"zones": ["-7415"], "max_pages": 1})
+    assert transport.calls[0]["header_names"] == [
+        "accept",
+        "accept-language",
+        "referer",
+        "user-agent",
+    ]
+    assert bienici.request_headers()["User-Agent"].startswith("Mozilla/5.0 (X11; Linux x86_64)")
+
+
+def test_bienici_user_agent_none_leaves_the_agent_to_the_transport() -> None:
+    transport = _bienici_transport()
+    run(BieniciAdapter(), transport, {"zones": ["-7415"], "max_pages": 1, "user_agent": None})
+    assert "user-agent" not in transport.calls[0]["header_names"]
+    assert "User-Agent" not in bienici.request_headers(None)

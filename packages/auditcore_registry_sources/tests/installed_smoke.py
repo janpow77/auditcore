@@ -35,7 +35,7 @@ def main() -> None:
     required = sorted(r for r in package.requires or [] if "extra ==" not in r)
     assert required == ["auditcore_entity_matching==0.2.0", "auditcore_harvest==0.1.0"], required
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 13
+    assert len(available_profiles()) == 20
     parsed = parse_targets_simple_csv(CSV, list_key="eu_fsf")
     assert len(parsed.entries) == 1 and parsed.issues[0].reason == "Kennung fehlt"
     lists = load_lists("audit_designer.sanctions_lists", "2026.09.1")

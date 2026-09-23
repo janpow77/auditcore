@@ -163,7 +163,9 @@ def compare_article_law_files(
     except ValueError as exc:
         raise CompareError(str(exc)) from exc
     commands = _amendment_commands(amendment, profile, context)
-    paragraphs, open_commands, recognised = apply_commands(paragraphs, commands)
+    paragraphs, open_commands, recognised = apply_commands(
+        paragraphs, commands, renumber_after_insert=profile.renumber_after_insert
+    )
     result = article_law_result(
         paragraphs,
         open_commands,

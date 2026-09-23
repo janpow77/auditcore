@@ -59,13 +59,13 @@
     "flowinvoice fraud_detection/pep_checker.py PEPChecker (geplant)"
    ],
    "profile": {
-    "version": "audit_designer.sanctions_lists / flowworkshop.sanctions_lists 2026.09.1",
+    "version": "audit_designer.sanctions_lists / flowworkshop.sanctions_lists 2026.09.1; empfohlen: audit_designer.sanctions_screening 2026.09.2 (R1)",
     "snapshot_semantics": "full_snapshot_replace"
    },
    "auth": "none",
    "licence_access": {
-    "status": "REVIEW_REQUIRED",
-    "note": "OpenSanctions-Massendaten: CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz), geprüft 2026-09-23. Code-Lizenz dieses Pakets (MIT) gilt nicht für die Daten."
+    "status": "REVIEWED",
+    "note": "OpenSanctions-Massendaten: CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz), geprüft 2026-09-23. Code-Lizenz dieses Pakets (MIT) gilt nicht für die Daten. Nutzerentscheidung A2 vom 23.09.2026: Datennutzung „abgedeckt durch Nutzung“; die Lizenz CC BY-NC 4.0 bleibt genannt, die Verantwortung für die Nutzung liegt beim Betreiber."
    },
    "config_schema": {
     "type": "object",
@@ -224,8 +224,8 @@
    },
    "auth": "api_key",
    "licence_access": {
-    "status": "REVIEW_REQUIRED",
-    "note": "API-Schlüssel nötig (Header 'Authorization: ApiKey …', Doku geprüft 2026-09-23); OpenSanctions-Massendaten: CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz), geprüft 2026-09-23. Code-Lizenz dieses Pakets (MIT) gilt nicht für die Daten."
+    "status": "REVIEWED",
+    "note": "API-Schlüssel nötig (Header 'Authorization: ApiKey …', Doku geprüft 2026-09-23); OpenSanctions-Massendaten: CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz), geprüft 2026-09-23. Code-Lizenz dieses Pakets (MIT) gilt nicht für die Daten. Nutzerentscheidung A2 vom 23.09.2026: Datennutzung „abgedeckt durch Nutzung“; die Lizenz CC BY-NC 4.0 bleibt genannt, die Verantwortung für die Nutzung liegt beim Betreiber. Nutzerentscheidung A3: Jeder Betreiber holt sich einen eigenen Schlüssel (https://www.opensanctions.org/api/) und übergibt ihn als Parameter api_key oder über OPENSANCTIONS_API_KEY (credentials_from_environment); ohne Schlüssel Status NOT_CONFIGURED."
    },
    "config_schema": {
     "type": "object",
@@ -235,6 +235,10 @@
      },
      "dataset": {
       "type": "string"
+     },
+     "api_key_env": {
+      "type": "string",
+      "description": "Name der Umgebungsvariable mit dem Betreiber-Schlüssel (üblich: OPENSANCTIONS_API_KEY); Wert nie in der Konfiguration"
      }
     }
    },
@@ -250,7 +254,7 @@
    "live_test": {
     "status": "NOT_CONFIGURED",
     "date": null,
-    "note": "Kein Schlüssel konfiguriert; ohne Schlüssel antwortet die API HTTP 401."
+    "note": "Kein Schlüssel konfiguriert (A3: Betreiber beschafft ihn selbst); ohne Schlüssel antwortet die API HTTP 401."
    },
    "note": "flowsearch sendet keinen bzw. einen Bearer-Schlüssel und liest result.entity; mit der dokumentierten Antwort (yente 5.5.0) findet der Quellcode nie einen Treffer."
   },
