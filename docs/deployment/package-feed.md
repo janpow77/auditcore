@@ -1,16 +1,28 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Preview v0.2.0](https://github.com/janpow77/auditcore/releases/tag/v0.2.0)**
-mit elf Distributionen (78 Assets, Tag auf `c7853e3`). Downloadpfad
-`https://github.com/janpow77/auditcore/releases/download/v0.2.0`; derselbe
+**Aktuell: [Preview v0.3.0](https://github.com/janpow77/auditcore/releases/tag/v0.3.0)**
+mit neunzehn Distributionen (126 Assets, Tag auf `cbe1b6d`). Downloadpfad
+`https://github.com/janpow77/auditcore/releases/download/v0.3.0`; derselbe
 Signaturschlüssel wie v0.1.0. Pro Paket gibt es `requirements-<paket>.txt`
 (hashgebunden, `--no-index`), dazu `requirements-all-locked.txt` und die
 Renderer-Locks für invoice (`pdf`) und reporting (`excel`). Anonyme pip- und
-APT-Installation aller elf Pakete samt Funktionsprüfung und Entfernung wurde am
+APT-Installation aller neunzehn Pakete samt Funktionsprüfung und Entfernung wurde am
 23.09.2026 gegen den öffentlichen Pfad ausgeführt:
-[Nachweis](../reports/domain-public-installation-v0.2.0.json). Die folgenden
-Abschnitte beschreiben das Verfahren am Beispiel v0.1.0; für v0.2.0 gelten sie
-mit dem neuen Pfad und den Paketnamen des Releases.
+[Nachweis](../reports/domain-public-installation-v0.3.0.json).
+
+Zusätzlich gibt es einen Paketindex nach PEP 503 auf GitHub Pages, der die
+Release-Dateien aller Versionen mit SHA-256 verlinkt:
+
+```bash
+pip install auditcore-geo --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Mit `--index-url` (nicht `--extra-index-url`) besteht kein Risiko, dass ein
+gleichnamiges fremdes Paket von PyPI bezogen wird. Die folgenden Abschnitte
+beschreiben das Verfahren am Beispiel v0.1.0; für v0.3.0 gelten sie mit dem
+neuen Pfad und den Paketnamen des Releases. Vorgänger:
+[v0.2.0](https://github.com/janpow77/auditcore/releases/tag/v0.2.0)
+([Nachweis](../reports/domain-public-installation-v0.2.0.json)).
 
 Die drei Fachbibliotheken sind eigenständig installierbare Distributionen im
 Repository `auditcore`. Anwendungen behalten ihre eigenen Repositories und
