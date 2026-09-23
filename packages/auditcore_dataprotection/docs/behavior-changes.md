@@ -27,7 +27,7 @@ Zwei Verträge sind getrennt und beide getestet:
 | DP-C08 | Pflicht ohne Szenario ergibt Empfehlungsschlüssel `konsultation_aufsichtsbehoerde`. | `unvollstaendig` mit `risk_assessment_missing`; Text unverändert. | Ohne Risikobetrachtung liegt kein Konsultationsergebnis vor. |
 | DP-C09 | Beliebige Entscheidungswerte (`irgendwas`) werden mit Begründung angenommen. | Nur die vier Empfehlungswerte. | Eindeutige, auswertbare Entscheidung. |
 | DP-C10 | Nach DSB-Votum und Entscheidung geänderte Antworten behalten Votum und Entscheidung. | Inhaltliche Änderung entfernt Entscheidung, Stellungnahme, Folgerung und Konsultation; Status zurück auf `entwurf`; Audit-Ereignis `review_reset`. | Votum und Entscheidung bezogen sich auf anderen Inhalt (erneuter Prüfbedarf). |
-| DP-C11 | Empfehlung Konsultation: Freigabe ohne dokumentierte Konsultation möglich. | Freigabe verlangt die dokumentierte Konsultation (`require_consultation_record=True`). | Framework `release_dsfa`; **HUMAN_DECISION_REQUIRED**, ob die Konsultation vor der DSFA-Freigabe oder erst vor Verarbeitungsbeginn nachzuweisen ist. Abschaltbar nur ausdrücklich. |
+| DP-C11 | Empfehlung Konsultation: Freigabe ohne dokumentierte Konsultation möglich. | Freigabe verlangt die dokumentierte Konsultation (`require_consultation_record=True`). | Framework `release_dsfa`. Zeitpunkt **DECIDED** am 23.09.2026 (Nutzerentscheidung A5, siehe DP-C21): Der Hinweis entsteht mit der abschließenden Bewertung; der Nachweis ist vor der Freigabe zu führen. Abschaltbar nur ausdrücklich. |
 | DP-C12 | `verwaltung.lade(dsfa_id)` und die API-Routen prüfen den Mandanten der Fassung nicht (`dsfa-foreign-tenant-load`). | Jeder Zugriff ist mandantengebunden; Fremdobjekte verhalten sich wie nicht vorhanden. | Mandantentrennung (F-01). Consumer-Fix separat. |
 | DP-C13 | Vier-Augen vergleicht nur mit dem letzten Bearbeiter; frühere Bearbeiter dürfen freigeben. | Freigebende Person darf die Fassung nicht bearbeitet oder entschieden haben. | Framework: Ersteller und Freigeber verschieden. |
 | DP-C14 | DSB-Stellungnahme ist keiner Person zugeordnet; die oder der DSB könnte freigeben. | Stellungnahme mit Person; diese darf nicht freigeben. | Quellkommentar zu Art. 38 Abs. 3 und 6 DSGVO, im Original nicht erzwungen. |
@@ -45,7 +45,8 @@ Statusnamen sowie die Reihenfolge der Freigabeprüfungen und deren Meldungstexte
 
 ## Offene fachliche Entscheidungen (HUMAN_DECISION_REQUIRED)
 
-1. **DP-C11** Zeitpunkt der Konsultation im Freigabeablauf.
+1. ~~**DP-C11** Zeitpunkt der Konsultation im Freigabeablauf.~~ **DECIDED**
+   am 23.09.2026, siehe DP-C21.
 2. **JI-Profil:** Das Original wendet im Dritten Teil HDSIG die harten Kriterien
    der DSGVO als „strengeren Maßstab“ an. Das ist als Quellprofil
    `regulierung.hdsig_ji` versioniert, nicht als allgemeine Rechtsauslegung.
@@ -91,3 +92,46 @@ Maßnahmenbereichen im JI-Profil; ob die förmliche Billigung (Explainer Rn. 10)
 Pflichtfeld wird; ob nicht umgesetzte Maßnahmen eine Freigabe ohne Auflagen
 sperren statt nur einen Hinweis auszulösen; Übernahme der Endfassung der
 EDSA-Vorlage nach der Konsultation.
+
+## Profilfassung 2026.10.2: Zeitpunkt des Konsultationshinweises (DP-C21)
+
+**Status: DECIDED.** Nutzerentscheidung A5 vom 23.09.2026 („alle
+empfehlungen“; bis dahin HUMAN_DECISION_REQUIRED zu DP-C11, „weis nicht den
+zeitpunkt“): *Der Konsultationshinweis nach Art. 36 Abs. 1 DSGVO wird erst
+nach der abschließenden Bewertung gegeben, und nur wenn das Restrisiko
+(Nettorisiko nach Maßnahmen) weiterhin hoch ist.*
+
+Rechtsgrundlage: Art. 36 Abs. 1 DSGVO (Konsultation vor der Verarbeitung,
+wenn die Folgenabschätzung ein hohes Risiko ergibt, sofern der Verantwortliche
+keine Maßnahmen zur Eindämmung trifft) und Erwägungsgrund 94 DSGVO
+(Konsultation, wenn sich das Risiko nicht durch geeignete Maßnahmen eindämmen
+lässt). Im JI-Profil § 64 HDSIG (Art. 28 Abs. 1 Richtlinie (EU) 2016/680).
+Die Profile zitieren das im neuen Abschnitt `recommendation.consultation_notice`.
+
+| ID | Bisher (2026.09.1, 2026.10.1, `legacy`) | Ab Profilfassung 2026.10.2 | Begründung |
+|---|---|---|---|
+| DP-C21 | Sobald das Nettorisiko die Schwelle erreicht, setzt jeder Vorschlag `consultation_required=True` und nennt die Konsultation als feststehend – auch während der Erhebung. | Der Vorschlag setzt nie `consultation_required`. Er trägt `consultation_notice` mit `final=false` und höchstens dem Status `voraussichtlich_erforderlich` samt gekennzeichnetem Text „Vorläufiger Hinweis: …“. Endgültig wird der Hinweis mit der abschließenden Bewertung (`decide`): Status `erforderlich` nur bei weiterhin hohem Nettorisiko, sonst `nicht_erforderlich`; bei `verworfen` entfällt die Konsultation. | Nutzerentscheidung A5; Art. 36 Abs. 1 DSGVO, ErwG 94 DSGVO. |
+
+Einzelheiten:
+
+* **Abschließende Bewertung** ist die Entscheidung über den Vorschlag auf einer
+  vollständigen Erhebung. Mit einem Profil nach 2026.10.2 lehnt `decide`
+  Fassungen mit blockierenden Prüfhinweisen ab (offene oder unbekannte
+  Antworten, unbegründete Restwerte). Eine unvollständige Bewertung erhält daher
+  nie einen endgültigen Hinweis; `finalize_consultation` weist einen
+  unvollständigen Vorschlag mit `ValidationError` zurück.
+* Hohes Bruttorisiko, das die Maßnahmen unter die Schwelle senken, ergibt
+  keinen Hinweis und nach der Entscheidung `nicht_erforderlich`.
+* Eine inhaltliche Änderung nimmt mit der Entscheidung auch den endgültigen
+  Hinweis zurück (DP-C10); bis zur neuen Entscheidung gilt wieder der
+  vorläufige Hinweis. Speichern ohne inhaltliche Änderung behält ihn.
+* Die Freigabe verlangt weiterhin die dokumentierte Konsultation, wenn der
+  endgültige Hinweis `erforderlich` lautet oder die Entscheidung auf
+  Konsultation lautet (DP-C11).
+* Bericht: vorläufiger Hinweis als „Hinweis zur Konsultation (vorläufig)“;
+  endgültig erforderlich und nicht dokumentiert wie bisher als blockierende Zeile.
+* Keine stille Änderung: `2026.09.1`, `2026.10.1` und `legacy` enthalten den
+  Abschnitt nicht und verhalten sich exakt wie zuvor (Replay unverändert, ihre
+  Vorschläge enthalten keinen Schlüssel `consultation_notice`). Das Profil
+  2026.10.2 unterscheidet sich von 2026.10.1 nur durch diesen Abschnitt und die
+  Kennung (Test `test_profile_differs_from_2026_10_1_only_by_notice_and_identity`).
