@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_statistics",
+  "version": "0.1.0",
+  "source": {
+    "repository": "janpow77/flowstat",
+    "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",
+    "github_head_verified_on": "2026-09-22",
+    "path": "backend/app/services/analysis_core_service.py",
+    "git_blob": "f1d01534e7678fe65aa6eee1131fb52985614e7d",
+    "symbols": [
+      "run_benford"
+    ]
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "source_repositories": [
+      {
+        "repository": "janpow77/flowstat",
+        "github_private": true,
+        "github_license": null
+      }
+    ],
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+      "limitation": "MIT gilt für den in auditcore extrahierten Bibliothekscode; die Quell-Repositories werden nicht umlizenziert."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/flowstat_benford_observed.json",
+    "tool": "tools/capture_flowstat_benford.py",
+    "cases": 32,
+    "chisquare_references": 40,
+    "environment": {
+      "numpy": "1.26.2",
+      "pandas": "2.1.3",
+      "scipy": "1.11.4"
+    },
+    "classification": "OBSERVED",
+    "method_validation": "NOT_PERFORMED"
+  },
+  "not_extracted": [
+    "audit-portal analysis_core_service.run_benford → audit_tests_service.benford_test (abweichende Implementierung, eigenes Profil erst nach Characterization)",
+    "run_outlier, run_duplicates und weitere Analysen"
+  ],
+  "behavior_changes": "docs/behavior-changes.md"
+}
