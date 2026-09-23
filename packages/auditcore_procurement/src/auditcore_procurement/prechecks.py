@@ -682,6 +682,42 @@ def check_value_deviation(
     )
 
 
+def _deviation_step(
+    profile: PrecheckProfile,
+    contract_value: Decimal | None,
+    invoice_value: Decimal | None,
+    mode: str,
+) -> dict[str, Any] | None:
+    """Value deviation if both values are given; strict reports a single missing value."""
+    if mode == "strict":
+        if contract_value is not None and invoice_value is not None:
+            return check_value_deviation(profile, contract_value, invoice_value)
+        if (contract_value is None) != (invoice_value is None):
+            return _result(
+                "precheck_value_deviation",
+                "Wertabweichung",
+                NOT_CHECKED,
+                "Vertrags- oder Abrechnungswert fehlt.",
+            )
+        return None
+    if contract_value and invoice_value:
+        return check_value_deviation(profile, contract_value, invoice_value)
+    return None
+
+
+def _overall(results: Sequence[Mapping[str, Any]]) -> str:
+    """Worst status: FAIL > REVIEW_REQUIRED > WARNING > PASS (first FAIL wins)."""
+    overall = PASS
+    for row in results:
+        if row["status"] == FAIL:
+            return FAIL
+        if row["status"] == REVIEW_REQUIRED:
+            overall = REVIEW_REQUIRED
+        elif row["status"] == WARNING and overall != REVIEW_REQUIRED:
+            overall = WARNING
+    return overall
+
+
 def run_prechecks(
     profile: PrecheckProfile,
     estimated_value: Decimal | None,
@@ -728,32 +764,10 @@ def run_prechecks(
         )
     results.append(check_required_documents(profile, procurement_type, documents, mode))
     results.append(check_minimum_bids(profile, threshold_tier, service_type, documents, mode))
-    both = (
-        (contract_value is not None and invoice_value is not None)
-        if mode == "strict"
-        else (bool(contract_value) and bool(invoice_value))
-    )
-    if both:
-        assert contract_value is not None and invoice_value is not None
-        results.append(check_value_deviation(profile, contract_value, invoice_value))
-    elif mode == "strict" and (contract_value is None) != (invoice_value is None):
-        results.append(
-            _result(
-                "precheck_value_deviation",
-                "Wertabweichung",
-                NOT_CHECKED,
-                "Vertrags- oder Abrechnungswert fehlt.",
-            )
-        )
-    overall = PASS
-    for row in results:
-        if row["status"] == FAIL:
-            overall = FAIL
-            break
-        if row["status"] == REVIEW_REQUIRED:
-            overall = REVIEW_REQUIRED
-        elif row["status"] == WARNING and overall != REVIEW_REQUIRED:
-            overall = WARNING
+    deviation = _deviation_step(profile, contract_value, invoice_value, mode)
+    if deviation is not None:
+        results.append(deviation)
+    overall = _overall(results)
     report: dict[str, Any] = {
         "checks": results,
         "overall_status": overall,
