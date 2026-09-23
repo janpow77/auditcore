@@ -12,6 +12,7 @@ import pytest
 from auditcore_statistics import (
     METHOD,
     StatisticsInputError,
+    __version__,
     benford_test,
     expected_share,
     legacy_run_benford,
@@ -37,7 +38,7 @@ def test_first_digit_matches_legacy_on_regular_data() -> None:
     ]
     assert round(result.chi2_statistic, 4) == legacy["meta"]["chi2_statistic"]
     assert round(result.p_value, 4) == legacy["meta"]["p_value"]
-    assert result.method == METHOD and result.to_dict()["library"].endswith("0.1.0")
+    assert result.method == METHOD and result.to_dict()["library"].endswith(__version__)
 
 
 def test_st_c01_two_digit_analysis_does_not_crash_on_short_values() -> None:

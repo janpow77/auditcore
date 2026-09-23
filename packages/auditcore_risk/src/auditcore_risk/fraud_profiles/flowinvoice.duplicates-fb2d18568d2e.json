@@ -1,0 +1,79 @@
+{
+ "id": "flowinvoice.duplicates",
+ "kind": "duplicates",
+ "legal_status": "Legacy-Dublettenprüfung; Kandidatenvorauswahl (SQL-Zeitfenster über created_at, LIMIT 500) bleibt in der Anwendung.",
+ "open_decisions": [
+  "Namensheuristik: ein gemeinsames Wort unter den ersten drei genügt (z. B. 'gmbh').",
+  "USt-IdNr. wird trotz Parameter nicht verwendet; der berechnete Hash ist ungenutzt.",
+  "Mehrdeutige Datumsangaben: europäisches Format vor US-Format."
+ ],
+ "parameters": {
+  "exact": {
+   "amount_replacements": [
+    [
+     ",",
+     "."
+    ],
+    [
+     " ",
+     ""
+    ]
+   ],
+   "confidence": 1.0,
+   "invalid_amount": "0",
+   "missing_amount": "0",
+   "tolerance": "0.01"
+  },
+  "fuzzy": {
+   "amount_replacements": [
+    [
+     ",",
+     "."
+    ],
+    [
+     " ",
+     ""
+    ],
+    [
+     "€",
+     ""
+    ]
+   ],
+   "amount_tolerance": 0.02,
+   "amount_weight": 0.5,
+   "date_formats": [
+    "%Y-%m-%d",
+    "%d.%m.%Y",
+    "%d/%m/%Y",
+    "%m/%d/%Y",
+    "%d-%m-%Y",
+    "%Y/%m/%d"
+   ],
+   "date_range_days": 7,
+   "date_weight": 0.5,
+   "digits": 3,
+   "leading_words": 3,
+   "min_containment": 5,
+   "missing_amount": "0",
+   "name_chars": 100
+  }
+ },
+ "schema": "auditcore_risk.fraud-profile/1",
+ "source": {
+  "characterization": "tests/fixtures/flowinvoice_fraud_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "ad6c7ff993aa2e9bd3afd246811b8a9e942c6b1d",
+  "path": "backend/app/services/fraud_detection/duplicate_detector.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "DuplicateDetector._find_exact_duplicates",
+   "_find_fuzzy_duplicates",
+   "_names_similar",
+   "_parse_date",
+   "_compute_hash"
+  ]
+ },
+ "status": "LEGACY_CHARACTERIZED",
+ "version": "fb2d18568d2e"
+}

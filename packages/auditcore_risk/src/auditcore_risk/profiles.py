@@ -11,19 +11,23 @@ from __future__ import annotations
 
 import hashlib
 import json
+import string
 from collections.abc import Mapping
 from dataclasses import dataclass
 from importlib import resources
 from types import MappingProxyType
 from typing import Any
 
+from .base import WHEN_MISSING
 from .errors import ProfileError
-from .rules import KINDS, WHEN_MISSING, validate_params
+from .rules import KINDS, validate_params
 
 SCHEMA = "auditcore_risk.profile/1"
 STATUSES = frozenset({"LEGACY_CHARACTERIZED", "CANDIDATE_HUMAN_DECISION_REQUIRED", "APPROVED"})
 INTERPRETATIONS = frozenset({"indicator", "descriptive_prior"})
-SUMMARY_FORMATS = frozenset({"riskanalysis.red_flag_summary", "flowstat.counts"})
+SUMMARY_FORMATS = frozenset({"riskanalysis.red_flag_summary", "flowstat.counts", "none"})
+SEVERITIES = ("INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL")
+MESSAGE_PARTS = frozenset({"description", "evidence", "recommendation"})
 _TOP_KEYS = frozenset(
     {
         "schema",
@@ -37,6 +41,7 @@ _TOP_KEYS = frozenset(
         "output",
         "summary",
         "open_decisions",
+        "assessment",
     }
 )
 _RULE_KEYS = frozenset(
@@ -51,6 +56,9 @@ _RULE_KEYS = frozenset(
         "interpretation",
         "note",
         "origin",
+        "severity",
+        "messages",
+        "echo_fields",
     }
 )
 
@@ -69,6 +77,9 @@ class Rule:
     interpretation: str
     note: str | None
     origin: Mapping[str, Any]
+    severity: str | None = None
+    messages: Mapping[str, Mapping[str, str]] | None = None
+    echo_fields: Mapping[str, str] | None = None
 
     @property
     def scope(self) -> str:
@@ -91,6 +102,7 @@ class RiskProfile:
     summary: Mapping[str, Any]
     open_decisions: tuple[str, ...]
     fingerprint: str
+    assessment: Mapping[str, Any] | None = None
 
     @property
     def reference(self) -> dict[str, str]:
@@ -131,6 +143,35 @@ def _text(data: Mapping[str, Any], key: str, where: str) -> str:
     return value
 
 
+def check_template(template: Any, where: str) -> None:
+    """Message templates may only reference plain names (no attribute/index access)."""
+    if not isinstance(template, str):
+        raise ProfileError(f"{where}: Textvorlage muss Text sein.")
+    try:
+        parts = list(string.Formatter().parse(template))
+    except ValueError as exc:
+        raise ProfileError(f"{where}: ungültige Textvorlage: {exc}") from exc
+    for _literal, name, spec, conversion in parts:
+        if name is None:
+            continue
+        if not name.isidentifier() or conversion not in (None, "") or (spec and "{" in spec):
+            raise ProfileError(f"{where}: unzulässiger Platzhalter {name!r}.")
+
+
+def _messages(data: Any, where: str) -> Mapping[str, Mapping[str, str]] | None:
+    if data is None:
+        return None
+    if not isinstance(data, dict) or not data:
+        raise ProfileError(f"{where}: 'messages' muss ein Objekt je Variante sein.")
+    for variant, parts in data.items():
+        if not isinstance(parts, dict) or set(parts) != MESSAGE_PARTS:
+            raise ProfileError(f"{where}: Variante {variant!r} braucht {sorted(MESSAGE_PARTS)}.")
+        for template in parts.values():
+            check_template(template, where)
+    frozen: Mapping[str, Mapping[str, str]] = _freeze(data)
+    return frozen
+
+
 def _rule_from_dict(data: Any, index: int) -> Rule:
     where = f"Regel {index + 1}"
     if not isinstance(data, dict):
@@ -163,6 +204,17 @@ def _rule_from_dict(data: Any, index: int) -> Rule:
     if not isinstance(params, dict):
         raise ProfileError(f"{where}: 'params' muss ein Objekt sein.")
     validate_params(kind, params, where)
+    severity = data.get("severity")
+    if severity is not None and severity not in SEVERITIES:
+        raise ProfileError(f"{where}: unbekannte Schwere {severity!r}.")
+    echo = data.get("echo_fields")
+    if echo is not None and (
+        not isinstance(echo, dict)
+        or not all(
+            isinstance(k, str) and k.isidentifier() and isinstance(v, str) for k, v in echo.items()
+        )
+    ):
+        raise ProfileError(f"{where}: 'echo_fields' muss Name → Feld zuordnen.")
     return Rule(
         code=_text(data, "code", where),
         label=_text(data, "label", where),
@@ -174,6 +226,9 @@ def _rule_from_dict(data: Any, index: int) -> Rule:
         interpretation=interpretation,
         note=note,
         origin=_freeze(origin),
+        severity=severity,
+        messages=_messages(data.get("messages"), where),
+        echo_fields=None if echo is None else _freeze(echo),
     )
 
 
@@ -212,6 +267,9 @@ def profile_from_dict(data: Mapping[str, Any]) -> RiskProfile:
         summary.get("amount_field"), str
     ):
         raise ProfileError("Zusammenfassung verlangt 'amount_field'.")
+    assessment = data.get("assessment")
+    if assessment is not None:
+        _check_assessment(assessment, rules)
     decisions = data.get("open_decisions", [])
     if not isinstance(decisions, list) or not all(isinstance(d, str) for d in decisions):
         raise ProfileError("'open_decisions' muss eine Liste von Texten sein.")
@@ -227,7 +285,49 @@ def profile_from_dict(data: Mapping[str, Any]) -> RiskProfile:
         summary=_freeze(dict(summary)),
         open_decisions=tuple(decisions),
         fingerprint=fingerprint(data),
+        assessment=None if assessment is None else _freeze(dict(assessment)),
     )
+
+
+_ASSESSMENT_KEYS = frozenset(
+    {
+        "kind",
+        "weights",
+        "fallback_weight",
+        "divisor",
+        "cap",
+        "severity_order",
+        "summary",
+        "source_version",
+    }
+)
+_SUMMARY_KEYS = frozenset({"none", "one", "many", "level_words", "unknown_level"})
+
+
+def _check_assessment(data: Any, rules: tuple[Rule, ...]) -> None:
+    """Profile-local legacy aggregation (severity weights); never across profiles."""
+    where = "assessment"
+    if not isinstance(data, dict) or set(data) != _ASSESSMENT_KEYS:
+        raise ProfileError(f"{where}: Felder {sorted(_ASSESSMENT_KEYS)} sind Pflicht.")
+    if data["kind"] != "severity_weighted_sum":
+        raise ProfileError(f"{where}: unbekannte Art {data['kind']!r}.")
+    weights = data["weights"]
+    if not isinstance(weights, dict) or set(weights) != set(SEVERITIES):
+        raise ProfileError(f"{where}: Gewichte je Schwere {SEVERITIES} sind Pflicht.")
+    numbers = [*weights.values(), data["fallback_weight"], data["divisor"], data["cap"]]
+    if not all(isinstance(v, int | float) and not isinstance(v, bool) for v in numbers):
+        raise ProfileError(f"{where}: Gewichte und Grenzen müssen Zahlen sein.")
+    if data["divisor"] <= 0:
+        raise ProfileError(f"{where}: divisor muss positiv sein.")
+    if sorted(data["severity_order"]) != sorted(SEVERITIES):
+        raise ProfileError(f"{where}: severity_order muss alle Schweregrade enthalten.")
+    summary = data["summary"]
+    if not isinstance(summary, dict) or set(summary) != _SUMMARY_KEYS:
+        raise ProfileError(f"{where}: summary braucht {sorted(_SUMMARY_KEYS)}.")
+    for key in ("none", "one", "many"):
+        check_template(summary[key], where)
+    if not all(r.severity is not None or KINDS[r.kind].derives_severity for r in rules):
+        raise ProfileError(f"{where}: jede Regel braucht eine Schwere.")
 
 
 def _packaged() -> dict[tuple[str, str], Any]:

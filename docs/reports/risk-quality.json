@@ -3,6 +3,59 @@
     "__init__": {
       "kind": "module"
     },
+    "base": {
+      "kind": "module"
+    },
+    "base.Context": {
+      "bases": "",
+      "fields": "reference_date: date | None = None\ncache: dict[Any, Any] = field(default_factory=dict)",
+      "kind": "class"
+    },
+    "base.Kind": {
+      "bases": "",
+      "fields": "scope: str\nrequired: frozenset[str]\noptional: frozenset[str]\nrun: Callable[[Mapping[str, Any], Table, Context], Outcome]\nvalidate: Callable[[Mapping[str, Any], str], None] | None = None\nderives_severity: bool = False",
+      "kind": "class"
+    },
+    "base.Outcome": {
+      "bases": "",
+      "fields": "flags: list[bool | None]\nreasons: list[str | None]\nevidence: list[dict[str, Any] | None]\nmatches: list[int] | None = None\nvalues: dict[str, list[Any]] = field(default_factory=dict)\ndataset: dict[str, Any] | None = None\nvariants: list[str | None] | None = None\nseverities: list[str | None] | None = None",
+      "kind": "class"
+    },
+    "base.Outcome.constant": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Outcome",
+      "signature": "cls, n: int, flag: bool | None"
+    },
+    "base.Table": {
+      "bases": "",
+      "fields": "rows: Sequence[Mapping[str, Any]]\ncolumns: tuple[str, ...]",
+      "kind": "class"
+    },
+    "base.Table.has": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self, *names: str"
+    },
+    "base.Table.value": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Any",
+      "signature": "self, index: int, name: str"
+    },
+    "base.is_number": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "value: Any"
+    },
+    "base.need": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "None",
+      "signature": "condition: bool, where: str, message: str"
+    },
     "engine": {
       "kind": "module"
     },
@@ -24,12 +77,12 @@
     },
     "engine.FlagHit": {
       "bases": "",
-      "fields": "code: str\nlabel: str\nreason: str\nevidence: Mapping[str, Any]\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]",
+      "fields": "code: str\nlabel: str\nreason: str\nevidence: Mapping[str, Any]\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]\nseverity: str | None = None\nmessages: Mapping[str, str] | None = None",
       "kind": "class"
     },
     "engine.RecordResult": {
       "bases": "",
-      "fields": "index: int\nflags: Mapping[str, bool | None]\nhits: tuple[FlagHit, ...]\nundetermined: Mapping[str, str]\nvalues: Mapping[str, Any]",
+      "fields": "index: int\nflags: Mapping[str, bool | None]\nhits: tuple[FlagHit, ...]\nundetermined: Mapping[str, str]\nvalues: Mapping[str, Any]\nassessment: Mapping[str, Any] | None = None",
       "kind": "class"
     },
     "engine.RecordResult.codes": {
@@ -43,6 +96,12 @@
       "raises": "InputError,ProfileError",
       "returns": "Evaluation",
       "signature": "records: Iterable[Mapping[str, Any]], profile: RiskProfile, *, columns: Iterable[str] | None=None, reference_date: date | None=None"
+    },
+    "engine.flatten_record": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "record: Mapping[str, Any], separator: str='.'"
     },
     "engine.identifier_missing": {
       "kind": "function",
@@ -112,6 +171,107 @@
       "returns": "list[dict[str, Any]]",
       "signature": "frame: Any, profile: RiskProfile"
     },
+    "fraud": {
+      "kind": "module"
+    },
+    "fraud.DuplicateMatch": {
+      "bases": "",
+      "fields": "candidate_id: Any\nmatch_type: str\nconfidence: float\ndetails: Mapping[str, Any]",
+      "kind": "class"
+    },
+    "fraud.FraudProfile": {
+      "bases": "",
+      "fields": "id: str\nversion: str\nkind: str\nstatus: str\nlegal_status: str\nsource: Mapping[str, Any]\nparameters: Mapping[str, Any]\nopen_decisions: tuple[str, ...]\nfingerprint: str",
+      "kind": "class"
+    },
+    "fraud.FraudProfile.reference": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, str]",
+      "signature": "self"
+    },
+    "fraud.SignalAssessment": {
+      "bases": "",
+      "fields": "blockers: tuple[str, ...]\nwarnings: tuple[str, ...]\nchecks_performed: tuple[str, ...]\ncomponents: tuple[Mapping[str, Any], ...]\nraw_score: float\nscore: float\nlevel: str\nprofile: Mapping[str, str]",
+      "kind": "class"
+    },
+    "fraud.TedAssessment": {
+      "bases": "",
+      "fields": "total_contracts: int\nstatistics: Mapping[str, Any]\nred_flags: tuple[Mapping[str, Any], ...]\nlegitimacy_score: Mapping[str, Any]\nprofile: Mapping[str, str]",
+      "kind": "class"
+    },
+    "fraud.assess_contractor": {
+      "kind": "function",
+      "raises": "",
+      "returns": "TedAssessment",
+      "signature": "contracts: Sequence[Mapping[str, Any]], profile: FraudProfile"
+    },
+    "fraud.available_fraud_profiles": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[tuple[str, str], ...]",
+      "signature": ""
+    },
+    "fraud.exact_duplicates": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DuplicateMatch]",
+      "signature": "invoice: Mapping[str, Any], candidates: Iterable[Mapping[str, Any]], profile: FraudProfile"
+    },
+    "fraud.find_duplicates": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DuplicateMatch]",
+      "signature": "invoice: Mapping[str, Any], candidates: Sequence[Mapping[str, Any]], profile: FraudProfile"
+    },
+    "fraud.fraud_profile_from_dict": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "FraudProfile",
+      "signature": "data: Mapping[str, Any]"
+    },
+    "fraud.fuzzy_duplicates": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "list[DuplicateMatch]",
+      "signature": "invoice: Mapping[str, Any], candidates: Iterable[Mapping[str, Any]], profile: FraudProfile"
+    },
+    "fraud.load_fraud_profile": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "FraudProfile",
+      "signature": "profile_id: str, version: str, kind: str | None=None"
+    },
+    "fraud.names_similar": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "first: str, second: str, min_containment: int, leading_words: int"
+    },
+    "fraud.parse_date": {
+      "kind": "function",
+      "raises": "",
+      "returns": "date | None",
+      "signature": "value: str, formats: Sequence[str]"
+    },
+    "fraud.score_signals": {
+      "kind": "function",
+      "raises": "InputError",
+      "returns": "SignalAssessment",
+      "signature": "signals: Mapping[str, Any], profile: FraudProfile"
+    },
+    "fraud.select_contracts": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Mapping[str, Any]]",
+      "signature": "notices: Iterable[Mapping[str, Any]], name: str, vat_id: str | None"
+    },
+    "fraud_profiles": {
+      "kind": "module"
+    },
+    "invoice_rules": {
+      "kind": "module"
+    },
     "profile_data": {
       "kind": "module"
     },
@@ -120,7 +280,7 @@
     },
     "profiles.RiskProfile": {
       "bases": "",
-      "fields": "id: str\nversion: str\nkind: str\nstatus: str\nlegal_status: str\nsource: Mapping[str, Any]\nrules: tuple[Rule, ...]\noutput: Mapping[str, Any]\nsummary: Mapping[str, Any]\nopen_decisions: tuple[str, ...]\nfingerprint: str",
+      "fields": "id: str\nversion: str\nkind: str\nstatus: str\nlegal_status: str\nsource: Mapping[str, Any]\nrules: tuple[Rule, ...]\noutput: Mapping[str, Any]\nsummary: Mapping[str, Any]\nopen_decisions: tuple[str, ...]\nfingerprint: str\nassessment: Mapping[str, Any] | None = None",
       "kind": "class"
     },
     "profiles.RiskProfile.reference": {
@@ -137,7 +297,7 @@
     },
     "profiles.Rule": {
       "bases": "",
-      "fields": "code: str\nlabel: str\nkind: str\nparams: Mapping[str, Any]\nrequires: tuple[str, ...]\nwhen_missing_columns: str\ncolumn: str | None\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]",
+      "fields": "code: str\nlabel: str\nkind: str\nparams: Mapping[str, Any]\nrequires: tuple[str, ...]\nwhen_missing_columns: str\ncolumn: str | None\ninterpretation: str\nnote: str | None\norigin: Mapping[str, Any]\nseverity: str | None = None\nmessages: Mapping[str, Mapping[str, str]] | None = None\necho_fields: Mapping[str, str] | None = None",
       "kind": "class"
     },
     "profiles.Rule.scope": {
@@ -151,6 +311,12 @@
       "raises": "",
       "returns": "tuple[tuple[str, str], ...]",
       "signature": ""
+    },
+    "profiles.check_template": {
+      "kind": "function",
+      "raises": "ProfileError",
+      "returns": "None",
+      "signature": "template: Any, where: str"
     },
     "profiles.fingerprint": {
       "kind": "function",
@@ -172,44 +338,6 @@
     },
     "rules": {
       "kind": "module"
-    },
-    "rules.Context": {
-      "bases": "",
-      "fields": "reference_date: date | None = None\ncache: dict[Any, Any] = field(default_factory=dict)",
-      "kind": "class"
-    },
-    "rules.Kind": {
-      "bases": "",
-      "fields": "scope: str\nrequired: frozenset[str]\noptional: frozenset[str]\nrun: Callable[[Mapping[str, Any], Table, Context], Outcome]",
-      "kind": "class"
-    },
-    "rules.Outcome": {
-      "bases": "",
-      "fields": "flags: list[bool | None]\nreasons: list[str | None]\nevidence: list[dict[str, Any] | None]\nmatches: list[int] | None = None\nvalues: dict[str, list[Any]] = field(default_factory=dict)\ndataset: dict[str, Any] | None = None",
-      "kind": "class"
-    },
-    "rules.Outcome.constant": {
-      "kind": "function",
-      "raises": "",
-      "returns": "Outcome",
-      "signature": "cls, n: int, flag: bool | None"
-    },
-    "rules.Table": {
-      "bases": "",
-      "fields": "rows: Sequence[Mapping[str, Any]]\ncolumns: tuple[str, ...]",
-      "kind": "class"
-    },
-    "rules.Table.has": {
-      "kind": "function",
-      "raises": "",
-      "returns": "bool",
-      "signature": "self, *names: str"
-    },
-    "rules.Table.value": {
-      "kind": "function",
-      "raises": "",
-      "returns": "Any",
-      "signature": "self, index: int, name: str"
     },
     "rules.identifier_state": {
       "kind": "function",
@@ -289,7 +417,23 @@
     {
       "code": "AC-COMP-001",
       "evidence": [],
-      "line": 349,
+      "line": 228,
+      "message": "Complexity=18, nesting=4, args=4",
+      "path": "engine.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-COMP-001",
+      "evidence": [],
+      "line": 159,
+      "message": "Complexity=34, nesting=8, args=2",
+      "path": "fraud.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-COMP-001",
+      "evidence": [],
+      "line": 249,
       "message": "Complexity=24, nesting=4, args=3",
       "path": "rules.py",
       "status": "WARNING"
@@ -297,10 +441,18 @@
     {
       "code": "AC-COMP-001",
       "evidence": [],
-      "line": 841,
-      "message": "Complexity=16, nesting=3, args=3",
+      "line": 734,
+      "message": "Complexity=17, nesting=3, args=3",
       "path": "rules.py",
       "status": "WARNING"
+    },
+    {
+      "code": "AC-OSS-001",
+      "evidence": [],
+      "line": 231,
+      "message": "Potential internal or personal identifier; review required",
+      "path": "profile_data/flowinvoice.risk_checker-fb2d18568d2e.json",
+      "status": "REVIEW_REQUIRED"
     },
     {
       "code": "AC-OSS-001",
@@ -322,7 +474,7 @@
       "code": "AC-SYN-001",
       "evidence": [],
       "line": 0,
-      "message": "Parsed 8 files",
+      "message": "Parsed 12 files",
       "path": "",
       "status": "PASS"
     },
@@ -395,7 +547,7 @@
       "status": "PASS"
     }
   ],
-  "generated_at": "2026-09-23T11:43:45.318968+00:00",
+  "generated_at": "2026-09-23T12:09:23.231835+00:00",
   "ignored": [],
   "path": "/home/janpow/Projekte/auditcore-wt-risk/packages/auditcore_risk/src/auditcore_risk",
   "policy": {
@@ -2309,6 +2461,6 @@
       }
     }
   },
-  "source_digest": "96ca0949e656f7663bfbb97b67ca57bc4bb8620fa3d97c5fb65b9e0bb41d07b5",
+  "source_digest": "8906b321191139df00fad48c3b254ce670564840b56ee7f9471113ef76320650",
   "status": "REVIEW_REQUIRED"
 }

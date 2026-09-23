@@ -14,17 +14,40 @@ from .engine import (
     FlagHit,
     RecordResult,
     evaluate,
+    flatten_record,
     identifier_missing,
     missing_columns,
     name_similarity,
 )
 from .errors import DependencyError, InputError, ProfileError, RiskError
+from .fraud import (
+    DuplicateMatch,
+    FraudProfile,
+    SignalAssessment,
+    TedAssessment,
+    assess_contractor,
+    available_fraud_profiles,
+    find_duplicates,
+    load_fraud_profile,
+    score_signals,
+    select_contracts,
+)
 from .profiles import RiskProfile, Rule, available_profiles, load_profile, profile_from_dict
 from .rules import KINDS
 
 __version__ = "0.1.0"
 
 __all__ = [
+    "DuplicateMatch",
+    "FraudProfile",
+    "SignalAssessment",
+    "TedAssessment",
+    "assess_contractor",
+    "available_fraud_profiles",
+    "find_duplicates",
+    "load_fraud_profile",
+    "score_signals",
+    "select_contracts",
     "KINDS",
     "DatasetFinding",
     "DependencyError",
@@ -39,6 +62,7 @@ __all__ = [
     "__version__",
     "available_profiles",
     "evaluate",
+    "flatten_record",
     "identifier_missing",
     "load_profile",
     "missing_columns",

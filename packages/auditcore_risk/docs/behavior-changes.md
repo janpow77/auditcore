@@ -38,6 +38,36 @@ je Beleg, BL_RF02 Treffer je Schwelle. Nichts davon wird vereinheitlicht.
 | RK-C06 | Summen mit NumPy (paarweise) bzw. pandas-groupby (Kahan). | Korrekt gerundete Summe (`math.fsum`). In 2 von 112 Flowstat-Frames weicht der ausgegebene Konzentrationsanteil in der letzten Binärstelle ab; alle Entscheidungen, Zähler und alle riskanalysis-Volumina sind identisch. | Reihenfolgeunabhängige, exakte Summen. |
 | RK-C07 | `pd.to_numeric(errors="coerce")` auf ganzen Spalten. | Gleiche Skalarregel (Zahl, Dezimaltext mit Vorzeichen/Exponent/Leerraum, `inf`; sonst fehlend), charakterisiert; Wahrheitswerte → `InputError`. | Kein pandas im Kern. |
 
+## flowinvoice: Rechnungsindikatoren und Betrugsprüfungen
+
+Quelle flowinvoice@fb2d185 (gegen GitHub geprüft), tatsächlich ausgeführt:
+
+* `RiskChecker.assess` (`services/risk_checker.py`, Blob `b799e85`; audit-portal
+  nur formatverschieden): 338 Anfragen (`tools/capture_flowinvoice_risk_checker.py`).
+  `flowinvoice.risk_checker` reproduziert alle Indikatoren, Schweregrade, Texte,
+  Score, höchste Schwere und Zusammenfassung exakt.
+* `FraudDetectionManager.analyze_invoice` mit Stellvertretern der Teilprüfungen
+  (268 Fälle, davon 23 mit dem Originalabbruch `TypeError`), TED-Statistik,
+  -Merkmale und -Legitimität (129 Auftragsmengen), Dublettenlogik exakt/unscharf
+  (250 Fälle) mit `tools/capture_flowinvoice_fraud.py`: alle exakt reproduziert.
+  Die SQL-Auswahl (TED `_load_contracts`, Dubletten-Vorfilter) ist **NOT_EXECUTED**
+  (Postgres); `select_contracts` bildet die SQL-Bedingung nach.
+
+| ID | Original | Bibliothek | Begründung |
+|---|---|---|---|
+| RK-L04 | Legacy-Score des RiskChecker: Summe der Schweregewichte / 5, höchstens 1. | Unverändert, nur als `assessment` dieses Profils. | Kein profilübergreifender Score. |
+| RK-L05 | Namensheuristik der Dubletten: ein gemeinsames Wort unter den ersten drei genügt; europäisches vor US-Datumsformat; USt-IdNr. ungenutzt. | Unverändert im Profil `flowinvoice.duplicates`. | Legacy exakt; fachliche Bewertung offen. |
+| RK-L06 | TED: Zeitfenster 12/24/60 Monate = Gesamtzahl (TODO in der Quelle); Konzentrations-Merkmale feuern bei > 0,9 doppelt. | Unverändert. | Legacy exakt. |
+| RK-L07 | Summen über `sum()` hängen vom Interpreter ab: Python 3.12 kompensiert Gleitkommasummen, 3.11 nicht. Mit 3.12 ausgeführt weichen 6 von 338 RiskChecker-Scores und 33 von 129 TED-Statistiken in der letzten Stelle ab. | Maßgeblich ist die Produktionslaufzeit der Quelle (Python 3.11, `Dockerfile`/`Dockerfile.production`); die Bibliothek addiert ausdrücklich von links nach rechts und liefert auf jedem Interpreter das 3.11-Ergebnis. Fixtures im Container `python:3.11-slim` erzeugt. | Ergebnis unabhängig von der Laufzeit der Bibliothek. |
+| RK-C08 | Warnungen/Blocker über `list(set(...))` in zufälliger Reihenfolge. | Deterministische Reihenfolge der Ableitung, dedupliziert; Zählung für den Score wie im Original vor der Deduplizierung; Score-Komponenten einzeln ausgewiesen. | Reproduzierbarkeit, Nachvollziehbarkeit. |
+| RK-C09 | TED-Legitimität kommt als Wörterbuch (0–100) an und bricht die Scoreberechnung mit `TypeError` ab, sobald TED-Merkmale vorliegen. | `InputError` mit Hinweis; eine Zahl 0–1 wird wie im Code vorgesehen verrechnet. | Fehler sichtbar statt Absturz; Skala ist fachlich zu klären. |
+| RK-C10 | Unscharfe Dublette bei Betrag 0: `ZeroDivisionError`; Lieferantenname `None`: `AttributeError`. | `InputError` bzw. leerer Name. | Klarer Fehlervertrag. |
+
+Sanktions-, PEP- und Firmenprüfungen werden nicht nachgebaut; ihre Ergebnisse
+gehen als Signale (Port-Vertrag, einfache Zuordnungen) in `score_signals` ein.
+Die Benford-Prüfung (`benfords_law.py`) liegt als Legacyvariante in
+`auditcore_statistics` 0.2.0.
+
 ## Nicht übernommen (geprüft)
 
 * `audit_designer` `vp_ai/services/scorecard_service.py:ScorecardService` —
@@ -64,3 +94,10 @@ je Beleg, BL_RF02 Treffer je Schwelle. Nichts davon wird vereinheitlicht.
 5. **RF12:** Übertragung über gleiche Vorhabenkennung aus fremden Gruppen beibehalten oder beheben.
 6. **BL_RF08/BL_RF09 vs. RF08:** unterschiedliche Vergaberegeln bleiben getrennt;
    eine Angleichung ist eine fachliche Entscheidung.
+7. **flowinvoice RiskChecker:** ohne Laufzeit-Consumer; ob er aktiviert und mit
+   `RiskCheckerConfig` verbunden wird, ist offen. Bezugsgröße der
+   Lieferantenhäufung (Rechnungen oder Lieferanten) klären.
+8. **Betrugs-Signalscore:** Skala der TED-Legitimität (0–1 oder 0–100) und ob
+   Warnungen vor oder nach der Deduplizierung zählen.
+9. **Rechnungssplitting-Schwellen** (1.000–50.000, 80 %) weichen von RF02 und den
+   jahresbezogenen EU-Schwellen ab; keine Angleichung ohne Entscheidung.

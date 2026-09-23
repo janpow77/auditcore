@@ -11,128 +11,28 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Callable, Mapping, Sequence
-from dataclasses import dataclass, field
+from collections.abc import Mapping, Sequence
 from datetime import date, datetime
 from importlib.util import find_spec
 from typing import Any
 
+from .base import (
+    _MISSING_KEY,
+    _OPS,
+    Context,
+    Kind,
+    Outcome,
+    Table,
+    _amounts,
+    _compare,
+    _relevance,
+    _sum,
+)
+from .base import is_number as _number
+from .base import need as _need
 from .errors import DependencyError, InputError, ProfileError
-from .values import as_date, coerce_number, fmt, hashable, is_missing, strict_amount, text
-
-WHEN_MISSING = ("error", "skip", "all_false")
-_MISSING_KEY = object()
-
-
-@dataclass
-class Table:
-    """Records with an explicit column set (a key absent in one record is missing)."""
-
-    rows: Sequence[Mapping[str, Any]]
-    columns: tuple[str, ...]
-
-    def __len__(self) -> int:
-        return len(self.rows)
-
-    def has(self, *names: str) -> bool:
-        """Whether every named column is part of the column set."""
-        return all(n in self.columns for n in names)
-
-    def value(self, index: int, name: str) -> Any:
-        """Cell value; a key absent in the record reads as ``None`` (missing)."""
-        return self.rows[index].get(name)
-
-
-@dataclass
-class Context:
-    """Per-evaluation settings and caches (loaded dependent profiles)."""
-
-    reference_date: date | None = None
-    cache: dict[Any, Any] = field(default_factory=dict)
-
-
-@dataclass
-class Outcome:
-    """Result of one rule over all records."""
-
-    flags: list[bool | None]
-    reasons: list[str | None]
-    evidence: list[dict[str, Any] | None]
-    matches: list[int] | None = None
-    values: dict[str, list[Any]] = field(default_factory=dict)
-    dataset: dict[str, Any] | None = None
-
-    @classmethod
-    def constant(cls, n: int, flag: bool | None) -> Outcome:
-        """Outcome with the same flag for all ``n`` records and no evidence."""
-        return cls([flag] * n, [None] * n, [None] * n)
-
-
-@dataclass(frozen=True)
-class Kind:
-    """Parameter contract and implementation of one rule kind."""
-
-    scope: str
-    required: frozenset[str]
-    optional: frozenset[str]
-    run: Callable[[Mapping[str, Any], Table, Context], Outcome]
-
-
-# --------------------------------------------------------------------------- helpers
-
-
-def _amounts(table: Table, params: Mapping[str, Any], name_key: str = "field") -> list[Any]:
-    """Amount per record by ``parse`` (``strict``/``coerce``) and ``missing_value``."""
-    name = params[name_key]
-    missing = params["missing_value"]
-    if not table.has(name):
-        return [missing] * len(table)
-    out: list[Any] = []
-    for i in range(len(table)):
-        raw = table.value(i, name)
-        if params["parse"] == "strict":
-            out.append(strict_amount(raw, name, missing))
-        else:
-            number = coerce_number(raw, name)
-            out.append(missing if number is None else number)
-    return out
-
-
-def _sum(values: Sequence[float]) -> float:
-    """Correctly rounded sum; non-finite values follow IEEE arithmetic."""
-    if all(math.isfinite(v) for v in values):
-        return math.fsum(values)
-    return float(sum(values))
-
-
-def _relevance(table: Table, spec: Mapping[str, Any] | None) -> list[bool]:
-    """``True`` unless the cost type matches the exclusion pattern (missing = relevant)."""
-    if spec is None:
-        return [True] * len(table)
-    name = spec["field"]
-    if not table.has(name):
-        if spec["column_missing"] != "relevant":
-            raise InputError(f"Spalte {name!r} fehlt.")
-        return [True] * len(table)
-    pattern = re.compile(spec["exclude_pattern"], re.IGNORECASE if spec["ignore_case"] else 0)
-    out = []
-    for i in range(len(table)):
-        value = text(table.value(i, name))
-        out.append(value is None or pattern.search(value) is None)
-    return out
-
-
-def _compare(left: float, op: str, right: float) -> bool:
-    return {
-        "gt": left > right,
-        "ge": left >= right,
-        "lt": left < right,
-        "le": left <= right,
-    }[op]
-
-
-_OPS = {"gt": ">", "ge": "≥", "lt": "<", "le": "≤"}
-
+from .invoice_rules import INVOICE_KINDS
+from .values import as_date, coerce_number, fmt, hashable, is_missing, text
 
 # --------------------------------------------------------------------------- kinds
 
@@ -828,20 +728,22 @@ KINDS: dict[str, Kind] = {
     ),
 }
 
-
-def _need(condition: bool, where: str, message: str) -> None:
-    if not condition:
-        raise ProfileError(f"{where}: {message}")
-
-
-def _number(value: Any) -> bool:
-    return isinstance(value, int | float) and not isinstance(value, bool) and math.isfinite(value)
+KINDS.update(INVOICE_KINDS)
 
 
 def validate_params(kind: str, params: Mapping[str, Any], where: str) -> None:
     """Exact parameter set of the kind plus the value checks that matter for safety."""
     spec = KINDS[kind]
     keys = set(params)
+    if spec.validate is not None:
+        _need(spec.required <= keys, where, f"fehlende Parameter {sorted(spec.required - keys)}")
+        _need(
+            not keys - spec.required - spec.optional,
+            where,
+            f"unbekannte Parameter {sorted(keys - spec.required - spec.optional)}",
+        )
+        spec.validate(params, where)
+        return
     _need(spec.required <= keys, where, f"fehlende Parameter {sorted(spec.required - keys)}")
     unknown = keys - spec.required - spec.optional
     _need(not unknown, where, f"unbekannte Parameter {sorted(unknown)}")

@@ -16,6 +16,25 @@ p-Wert relativ ≤ 3·10⁻¹³). Parameter- und Spaltenprüfung bleiben beim Co
 | ST-C05 | Fehlende, Null- und negative Werte verschwinden ohne Ausweis. | Anzahlen `missing`, `zero`, `negative_absolute`, `short` im Ergebnis. | Nachvollziehbarkeit. |
 | ST-C06 | `significant = p < 0.05` fest eingebaut. | Aussage nur mit ausdrücklichem `significance_level`. | Keine automatisch gewählten Schwellen, keine Befunde. |
 
+## Ergänzung 0.2.0: `legacy_flowinvoice_benford`
+
+Quelle `flowinvoice@fb2d185 backend/app/services/fraud_detection/benfords_law.py`
+(Blob `77bf2b1`, in audit-portal identisch), ausgeführt mit
+`tools/capture_flowinvoice_benford.py`: 65 Fälle, alle exakt reproduziert.
+Methodisch **nicht** gleich `benford_test` (gerundete Erwartungswerte 0,301 …
+0,046, fester kritischer Wert 15,507 statt p-Wert, p-Wert als Stufenfunktion,
+Mindestumfang 50, z-Test je Ziffer mit 2,576, stille Ausschlüsse, Texte wie
+`"12.5"` zählen). Deshalb eigenes, benanntes Legacyprofil; keine Angleichung.
+
+| ID | Original | Bibliothek | Begründung |
+|---|---|---|---|
+| ST-C07 | `±inf` führt zu einer Endlosschleife. | `ValueError`. | Kein hängender Aufruf. |
+
+HUMAN_DECISION_REQUIRED: Ob die Betrugsprüfung in flowinvoice/audit-portal auf
+`benford_test` (exakte Erwartungswerte, echter p-Wert, ausdrückliches α)
+umgestellt wird; das ändert Ergebnisse (Grenzfall χ² zwischen 15,507 und 15,51:
+„anomal“ bei ausgewiesenem p = 0,08).
+
 Nicht übernommen: die abweichende Implementierung in `audit-portal`
 (`audit_tests_service.benford_test`); sie wäre ein eigenes, getrennt zu
 charakterisierendes Profil. HUMAN_DECISION_REQUIRED: Konvention für
