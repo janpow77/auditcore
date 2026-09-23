@@ -60,6 +60,9 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
         }
     ),
+    "auditcore_market_indicators": frozenset(
+        {("janpow77/krypto", "34d601726227f913548a118e144de5519eee0f3f")}
+    ),
     "auditcore_procurement": frozenset(
         {
             ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),

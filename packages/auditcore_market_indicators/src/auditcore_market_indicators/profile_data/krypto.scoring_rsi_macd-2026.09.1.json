@@ -1,0 +1,32 @@
+{
+ "adx": null,
+ "atr": null,
+ "ema": {
+  "gaps": "hold",
+  "seed": "sma"
+ },
+ "id": "krypto.scoring_rsi_macd",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche oder methodische Freigabe der Indikatorvariante und keine Anlage- oder Handelsempfehlung.",
+ "macd": {},
+ "rsi": {
+  "flat_value": 50.0,
+  "gaps": "zero_move",
+  "smoothing": "wilder"
+ },
+ "schema": "auditcore_market_indicators.profile/1",
+ "source": {
+  "commit": "34d601726227f913548a118e144de5519eee0f3f",
+  "git_blob": "a3e8960b35f650c10e24451786d57fba404ae764",
+  "path": "backend/app/services/scoring/rsi_macd.py",
+  "repository": "janpow77/krypto",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "compute_rsi",
+   "_ema",
+   "compute_macd"
+  ]
+ },
+ "status": "CHARACTERIZED",
+ "summation": "numpy_pairwise",
+ "version": "2026.09.1"
+}

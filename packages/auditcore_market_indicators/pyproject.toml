@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_market_indicators"
+version = "0.1.0"
+description = "Technical market indicators (returns, SMA/EMA, RSI, ATR, ADX, MACD …) with explicit source-bound variant profiles"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = []
+
+[project.optional-dependencies]
+polars = ["polars>=1.21"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "polars>=1.21"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_market_indicators = ["py.typed", "provenance.json", "profile_data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+# Keine feste python_version: jeder CI-Job prüft gegen seine eigene Laufzeit.
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["polars", "polars.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]

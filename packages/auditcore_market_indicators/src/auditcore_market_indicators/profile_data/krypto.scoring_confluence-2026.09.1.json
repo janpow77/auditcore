@@ -1,0 +1,26 @@
+{
+ "adx": null,
+ "atr": null,
+ "ema": {
+  "gaps": "error",
+  "seed": "sma"
+ },
+ "id": "krypto.scoring_confluence",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche oder methodische Freigabe der Indikatorvariante und keine Anlage- oder Handelsempfehlung.",
+ "macd": null,
+ "rsi": null,
+ "schema": "auditcore_market_indicators.profile/1",
+ "source": {
+  "commit": "34d601726227f913548a118e144de5519eee0f3f",
+  "git_blob": "52af074e196f454ce2715d316131841157de58cc",
+  "path": "backend/app/services/scoring/confluence.py",
+  "repository": "janpow77/krypto",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_ema_numpy"
+  ]
+ },
+ "status": "CHARACTERIZED",
+ "summation": "numpy_pairwise",
+ "version": "2026.09.1"
+}

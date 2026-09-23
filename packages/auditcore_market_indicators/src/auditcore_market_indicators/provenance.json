@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_market_indicators",
+  "version": "0.1.0",
+  "contract": "auditcore_market_indicators.indicators/1",
+  "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_SOURCES",
+  "source": {
+    "repository": "janpow77/krypto",
+    "commit": "34d601726227f913548a118e144de5519eee0f3f",
+    "github_head_verified_on": "2026-09-23",
+    "files": [
+      {
+        "path": "backend/app/services/indicators/base.py",
+        "git_blob": "1bad05faad43915662f87971ef0d8ae55a1b4fe0",
+        "symbols": [
+          "returns",
+          "log_returns",
+          "sma",
+          "ema",
+          "rsi",
+          "atr",
+          "adx",
+          "historical_volatility",
+          "volume_factor",
+          "zscore",
+          "normalized_range",
+          "breakout"
+        ]
+      },
+      {
+        "path": "backend/app/services/scoring/rsi_macd.py",
+        "git_blob": "a3e8960b35f650c10e24451786d57fba404ae764",
+        "symbols": [
+          "compute_rsi",
+          "_ema",
+          "compute_macd"
+        ]
+      },
+      {
+        "path": "backend/app/services/scoring/confluence.py",
+        "git_blob": "52af074e196f454ce2715d316131841157de58cc",
+        "symbols": [
+          "_ema_numpy"
+        ]
+      },
+      {
+        "path": "backend/app/services/regime/hmm.py",
+        "git_blob": "2ae11f35cd4a87ab74395a0a589dbfcab4f15d4e",
+        "symbols": [
+          "_ema",
+          "_annualized_vol"
+        ]
+      },
+      {
+        "path": "backend/app/services/scoring/ma_crossover.py",
+        "git_blob": "1266032a8d8eaf96576095eb815d3f7a70d973e1",
+        "symbols": [
+          "_rolling_mean"
+        ]
+      }
+    ]
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "source_repositories": [
+      {
+        "repository": "janpow77/krypto",
+        "github_private": true,
+        "github_license": null
+      }
+    ],
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Marktdatendienste separat."
+    }
+  },
+  "consumers": {
+    "status": "GEPLANT",
+    "decision": {
+      "date": "2026-09-23",
+      "quote": "der mehrfache Nutzen kommt noch",
+      "meaning": "Paket wird ohne bereits belegten repositoryübergreifenden Mehrfachnutzen gebaut (Nutzerentscheidung)."
+    },
+    "existing": [
+      {
+        "repository": "janpow77/krypto",
+        "path": "backend/app/services/indicators/pipeline.py",
+        "symbol": "recompute_indicators_for_interval",
+        "uses": [
+          "returns",
+          "ema",
+          "sma",
+          "rsi",
+          "atr",
+          "historical_volatility",
+          "zscore",
+          "normalized_range",
+          "breakout",
+          "volume_factor"
+        ],
+        "migration": "PLANNED"
+      },
+      {
+        "repository": "janpow77/krypto",
+        "path": "backend/app/services/scoring/adx_trend.py",
+        "symbol": "adx",
+        "migration": "PLANNED"
+      },
+      {
+        "repository": "janpow77/krypto",
+        "path": "backend/app/services/scoring/rsi_macd.py",
+        "symbol": "compute_rsi, _ema, compute_macd",
+        "migration": "PLANNED"
+      },
+      {
+        "repository": "janpow77/krypto",
+        "path": "backend/app/services/scoring/confluence.py",
+        "symbol": "_ema_numpy",
+        "migration": "PLANNED"
+      },
+      {
+        "repository": "janpow77/krypto",
+        "path": "backend/app/services/regime/hmm.py",
+        "symbol": "_ema, _annualized_vol",
+        "migration": "PLANNED"
+      },
+      {
+        "repository": "janpow77/krypto",
+        "path": "backend/app/services/scoring/ma_crossover.py",
+        "symbol": "_rolling_mean",
+        "migration": "PLANNED"
+      }
+    ],
+    "checked_without_indicator_use": [
+      "janpow77/kiraclaw server/market_client.py (CoinGecko-Abruf und Sparkline, keine Indikatorberechnung)",
+      "audit-portal/audit_designer flowstat chart_service.py (rolling mean mit min_periods=1 für Trendzerlegung, andere Semantik)",
+      "audit_designer flowstat node_handlers/period_metrics.py (gleitender Durchschnitt über Prüfperioden, andere Fachsemantik)"
+    ]
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/krypto_indicators_observed.json.gz",
+    "tool": "tools/capture_krypto_indicators.py",
+    "series": 31,
+    "observations": 1922,
+    "recorded_exceptions": 343,
+    "environment": {
+      "python": "3.12.3",
+      "polars": "1.44.2",
+      "numpy": "2.5.3"
+    },
+    "cross_version_check": {
+      "polars": "1.21.0",
+      "result": "Originalausgaben weichen zwischen polars 1.21.0 und 1.44.2 ab (Fensterstatistiken bis 7,9e-10 relativ; NaN/0.0/inf bei Nullvolumen)"
+    },
+    "classification": "OBSERVED",
+    "method_validation": "NOT_PERFORMED"
+  },
+  "not_extracted": [
+    "Datenabruf (backend/app/adapters, services/ingestion) — bleibt krypto",
+    "Scores, Mappings und Gewichte (map_rsi_to_score, map_macd_to_score, composite_core …) — Portfolio-/Handelsentscheidungen bleiben krypto",
+    "HMM-Regimemodell (hmm.build_features, Modellanpassung) — nur _ema/_annualized_vol charakterisiert",
+    "ma_crossover-Signallogik — nur _rolling_mean charakterisiert"
+  ],
+  "behavior_changes": "docs/behavior-changes.md"
+}

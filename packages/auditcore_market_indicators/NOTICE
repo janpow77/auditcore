@@ -1,0 +1,20 @@
+auditcore_market_indicators 0.1.0 — source attribution and authorization
+
+Derived from a private repository of the same rights holder (janpow77):
+  janpow77/krypto@34d601726227f913548a118e144de5519eee0f3f
+    backend/app/services/indicators/base.py (blob 1bad05faad43915662f87971ef0d8ae55a1b4fe0)
+    backend/app/services/scoring/rsi_macd.py (blob a3e8960b35f650c10e24451786d57fba404ae764)
+    backend/app/services/scoring/confluence.py (blob 52af074e196f454ce2715d316131841157de58cc)
+    backend/app/services/regime/hmm.py (blob 2ae11f35cd4a87ab74395a0a589dbfcab4f15d4e)
+    backend/app/services/scoring/ma_crossover.py (blob 1266032a8d8eaf96576095eb815d3f7a70d973e1)
+
+The source repository carries no open-source licence. On 2026-09-22 the rights
+holder decided: "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die
+Bibliotheken kommen nach auditcore". Status: USER_AUTHORIZED_MIT for the library
+code extracted into auditcore; the source repository is not relicensed.
+
+The numpy pairwise summation order in _numeric.py reproduces the documented
+behavior of NumPy's add.reduce; no NumPy code is included. Indicator
+definitions (Wilder 1978, Appel) are cited by name only. Indicator profiles are
+characterized software behavior, not validated trading methodology and no
+investment advice. All test series are synthetic.
