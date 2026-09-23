@@ -17,7 +17,8 @@ Designers, die flowinvoice-Dokumentpipeline (eigener Schritt).
 ## Getestete Integrationsvariante
 
 Kopie des Checkouts, Branch `feat/auditcore-documents`, lokale Commits
-`64675e53` (Umstellung) und `ea650452` (lxml 6.1.3), nicht gepusht. Die Fachmodule `matching.py`, `article_law.py`
+`64675e53` (Umstellung), `ea650452` (lxml 6.1.3) und `fe6dcb3b` (ECOHESION-PDF
+über die Bibliothek), nicht gepusht. Die Fachmodule `matching.py`, `article_law.py`
 und `rendering.py` entfallen; `types.py`, `parsing.py`, `configuration.py`
 und `service.py` werden zu dünnen Anbindungen, `cli.py` delegiert.
 `tasks.py`, `api/document_comparisons.py` und der ECOHESION-Worker bleiben
@@ -40,6 +41,7 @@ Produktionsdatenbank), Wheel `auditcore_documents-0.1.0` per
   `auditcore_documents[docx,pdf-text,fuzzy,docx-render]` und lxml 6.1.3:
   wieder 31 passed und 44/0. `pip check` meldet nur den bereits im Image
   vorhandenen Konflikt `wheel 0.46.3` ↔ `packaging 23.2`.
+- Dritter Lauf mit PDF über die Bibliothek im ECOHESION-Worker: 31 passed, 44/0.
 
 ## Umstellungsanleitung
 
@@ -91,7 +93,12 @@ Produktionsdatenbank), Wheel `auditcore_documents-0.1.0` per
    class DocumentCompareService(_LibraryService):
        reason_provider = staticmethod(flowagent_reason)
    ```
-7. `cli.py`: `compare_documents` ruft
+7. ECOHESION-Worker (optional, getestet): statt `ResearchResult` und
+   `research_pdf.render_pdf` erzeugt
+   `render_synopsis_pdf(spec["title"], synopsis_report(result), {})` die
+   `comparison.pdf`; Requirement dann mit Extra `pdf-render`. `research_pdf`
+   bleibt für die übrigen Recherchewerkzeuge in der Anwendung.
+8. `cli.py`: `compare_documents` ruft
    `auditcore_documents.legacy.compare_documents(..., config=config or default_config_path(),
    reason_provider=flowagent_reason, **overrides)`; `main` bleibt.
 
