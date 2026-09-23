@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_geo",
+  "version": "0.1.0",
+  "classification": "Kleiner Geokern (H4) mit Nominatim-Adapter auf auditcore_harvest als Extra [geocoder]",
+  "multi_use_evidence": {
+    "haversine": "6 Implementierungen in osint, audit_designer (3), flowsearch (2)",
+    "punkt_in_flaeche": "osint betroffenheit, audit_designer gis und register",
+    "nominatim": "osint vorhaben_verorten, flowworkshop geocoding_service, audit_designer gis (+ company_records)"
+  },
+  "sources": [
+    {
+      "repository": "janpow77/osint",
+      "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+      "path": "ortsdienst/dienst.py",
+      "git_blob": "d9e06518385971a45a82a6d796f8dc1356b4e727",
+      "symbols": [
+        "ERDRADIUS_KM",
+        "haversine_km",
+        "Bestand.umkreis"
+      ]
+    },
+    {
+      "repository": "janpow77/osint",
+      "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+      "path": "werkzeuge/bundeslaender_holen.py",
+      "git_blob": "4df5560ac0930c81c5f7397d2236a3190757db42",
+      "symbols": [
+        "utm_nach_wgs84",
+        "wkb_polygone",
+        "douglas_peucker",
+        "ring_vereinfachen"
+      ]
+    },
+    {
+      "repository": "janpow77/osint",
+      "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+      "path": "werkzeuge/betroffenheit.py",
+      "git_blob": "2b7a1f63e784e044c3029827eb5a356e6f9b01ef",
+      "symbols": [
+        "_achsen_drehen",
+        "_im_ring"
+      ]
+    },
+    {
+      "repository": "janpow77/osint",
+      "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+      "path": "werkzeuge/vorhaben_verorten.py",
+      "git_blob": "1b6057a7555c8a0532b89b3b094ddcd7a3cb5536",
+      "symbols": [
+        "KENNUNG",
+        "NOMINATIM",
+        "PAUSE",
+        "adresse_aufbereiten",
+        "abfragen"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+      "path": "backend/app/api/vpai_notebook/gis/_common.py",
+      "git_blob": "54b4f41c35fc51c4d3b1dbf2c84071fdc915270a",
+      "symbols": [
+        "_iter_ring_coordinates",
+        "_point_in_ring",
+        "_point_in_geometry",
+        "_geometry_centroid",
+        "_haversine_distance_m",
+        "_point_segment_distance_m",
+        "_geometry_edge_distance_m",
+        "_geocode_address"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+      "path": "backend/app/core/shared/research/register/geocoding.py",
+      "git_blob": "12056f39a1f6644db5f086410a3028e4a91fd529",
+      "symbols": [
+        "_entfernung_km",
+        "NutsGebiet",
+        "_punkt_in_ring",
+        "_punkt_in_gebiet",
+        "FLAECHEN_TOLERANZ_KM",
+        "naechste_nuts3"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+      "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+      "git_blob": "874901d0414976bbc3f9f9314894c7cf913c043a",
+      "symbols": [
+        "_NaturaClient._haversine_m",
+        "_NaturaClient._distance_to_geometry_m"
+      ]
+    },
+    {
+      "repository": "janpow77/flowsearch",
+      "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+      "path": "backend/app/api/eu_beneficiaries.py",
+      "git_blob": "b45c67919253c92519989a2842578f2b6fa695f6",
+      "symbols": [
+        "calculate_distance"
+      ]
+    },
+    {
+      "repository": "janpow77/flowsearch",
+      "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+      "path": "backend/app/services/natura2000_service.py",
+      "git_blob": "33f83f6748eb30fcf9775c159e06c99b7263504f",
+      "symbols": [
+        "Natura2000Service._calculate_distance",
+        "Natura2000Service._get_geometry_center"
+      ]
+    },
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+      "path": "auditworkshop/backend/services/geocoding_service.py",
+      "git_blob": "3c6ac686be9bc222749fc06b7271ef94c44c2cc3",
+      "symbols": [
+        "geocode_single"
+      ]
+    },
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+      "path": "auditworkshop/backend/services/country_profiles.py",
+      "git_blob": "80b7d05a41e6851036dff7d86a2680341a85a419",
+      "symbols": [
+        "get_country_profile",
+        "get_country_name"
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Dienste separat."
+    },
+    "data": {
+      "osm_nominatim": "Keine OSM-Daten (ODbL) im Paket oder in Fixtures; Nominatim-Fixtures sind synthetisch. Consumer müssen die Namensnennung anzeigen und die OSMF-Nutzungsbedingungen einhalten.",
+      "bkg_vg2500": "Nicht enthalten (dl-de/by-2-0 bleibt beim Consumer osint)."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_observed.json",
+    "tool": "tools/capture_legacy.py",
+    "cases": 290,
+    "environment": {
+      "python": "3.12.3",
+      "pyproj": "3.8.0",
+      "proj": "9.8.1",
+      "shapely": "2.1.2"
+    },
+    "method": "Blob-geprüfte Originaldateien; osint-Module unverändert importiert, audit_designer/flowsearch per AST extrahiert, flowworkshop mit Stellvertretern für config/database/requests; zweimal ausgeführt, identisch"
+  },
+  "excluded": [
+    "PLZ-/Orts-/NUTS-Referenzdaten und Offline-Verortung (datengebunden, Anwendungen)",
+    "flowworkshop lookup_nuts (Gradquadrat-Nächster; nur gelesen)",
+    "PostGIS-Abfragen (Consumer)",
+    "WFS/WMS-Abrufe (BfN, HLNUG) und Overpass (eigene Quellenadapter, nicht beauftragt)",
+    "Kartendarstellung/Leaflet/MapLibre (UI)"
+  ],
+  "behavior_changes": "docs/behavior-changes.md",
+  "live_smoke": {
+    "status": "PASS",
+    "date": "2026-09-23",
+    "requests": 2,
+    "endpoint": "https://nominatim.openstreetmap.org/search",
+    "tool": "tools/live_smoke.py",
+    "recorded": "nur Status, Trefferzahl, Hash"
+  },
+  "consumers": {
+    "status": "PLANNED",
+    "decision": {
+      "status": "HUMAN_DECISION",
+      "date": "2026-09-23",
+      "statement": "auditcore_geo wird gebaut, auch ohne bereits belegten Mehrfachnutzen – „der mehrfache Nutzen kommt noch“",
+      "effect": "Consumer sind geplant, nicht umgestellt; die Mechanik ist in vier Repositories mehrfach implementiert (multi_use_evidence)"
+    },
+    "candidates": [
+      {
+        "repository": "janpow77/osint",
+        "symbols": [
+          "ortsdienst/dienst.py:haversine_km",
+          "Bestand.umkreis",
+          "werkzeuge/bundeslaender_holen.py:utm_nach_wgs84/wkb_polygone/douglas_peucker",
+          "werkzeuge/betroffenheit.py:_achsen_drehen/_im_ring",
+          "werkzeuge/vorhaben_verorten.py:abfragen"
+        ]
+      },
+      {
+        "repository": "janpow77/audit_designer",
+        "symbols": [
+          "register/geocoding.py:_entfernung_km/_punkt_in_gebiet/naechste_nuts3",
+          "gis/_common.py:_point_in_geometry/_geometry_edge_distance_m/_haversine_distance_m/_geocode_address",
+          "company_records.py:_NaturaClient._distance_to_geometry_m"
+        ]
+      },
+      {
+        "repository": "janpow77/flowsearch",
+        "symbols": [
+          "eu_beneficiaries.py:calculate_distance",
+          "natura2000_service.py:_calculate_distance/_get_geometry_center"
+        ]
+      },
+      {
+        "repository": "janpow77/flowworkshop",
+        "symbols": [
+          "geocoding_service.py:geocode_single (Nominatim-Pfad)"
+        ]
+      }
+    ]
+  },
+  "decisions": [
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D1",
+      "subject": "Erdradius gemeinsamer Bestände",
+      "decision": "IUGG-Mittelradius R1 = 6 371 008,8 m empfohlen (EMPFOHLENES_ERDMODELL); 6371000 m bleibt für Replay/Altbestände; kein stiller Standard"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D2",
+      "subject": "Randpunkte",
+      "decision": "zählen als innen (EMPFOHLEN_RAND_GILT_ALS_INNEN); Parameter bleibt ausdrücklich"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D3",
+      "subject": "designer-Natura-Analyse",
+      "decision": "auf korrekte Multipolygone umstellen (GEO-C04/C05 bewusste Korrektur); Legacy-Replay bleibt"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D4",
+      "subject": "company-Abstandsmaß",
+      "decision": "Kantenabstand statt Stützpunktabstand (GEO-C09)"
+    },
+    {
+      "status": "DECIDED",
+      "date": "2026-09-23",
+      "delegation": "vom Nutzer delegiert („entscheide du bitte“)",
+      "id": "D5",
+      "subject": "öffentliches Nominatim",
+      "decision": "≤ 1 Anfrage/s (Zeitplan 15 s), ≤ 1 000 Anfragen je Tag und Consumer, cachen; darüber eigene Instanz oder Import (GEO-C15)"
+    }
+  ]
+}

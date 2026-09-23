@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_entity_matching",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "sources": [
     {
       "repository": "janpow77/flowworkshop",
@@ -57,6 +57,19 @@
         "klassifiziere",
         "STANDARD_MINDESTWERT"
       ]
+    },
+    {
+      "repository": "janpow77/riskanalysis",
+      "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+      "path": "backend/app/pipeline/payee_normalizer.py",
+      "git_blob": "fceae5b0d3364c5b20cc638ce4453ac082085aa7",
+      "symbols": [
+        "_LEGAL",
+        "_NONWORD",
+        "_WS",
+        "normalize_name"
+      ],
+      "added_in": "0.2.0"
     }
   ],
   "rights": {
@@ -70,6 +83,10 @@
       "janpow77/audit_designer": {
         "private": true,
         "license": null
+      },
+      "janpow77/riskanalysis": {
+        "private": true,
+        "license": null
       }
     },
     "authorization": {
@@ -77,7 +94,7 @@
       "date": "2026-09-22",
       "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
       "scope": "Extrahierter Bibliothekscode in auditcore_entity_matching",
-      "limitation": "Keine Umlizenzierung der Quell-Repositories flowworkshop und audit_designer."
+      "limitation": "Keine Umlizenzierung der Quell-Repositories flowworkshop, audit_designer und riskanalysis."
     }
   },
   "excluded": [
@@ -95,7 +112,18 @@
       "rapidfuzz": "3.10.1",
       "unicode": "15.0.0"
     },
-    "method": "AST-Extraktion der unveränderten, Blob-geprüften Definitionen; ORM-Aufrufe in _find_by_name_fuzzy durch aufzeichnende Stellvertreter ersetzt"
+    "method": "AST-Extraktion der unveränderten, Blob-geprüften Definitionen; ORM-Aufrufe in _find_by_name_fuzzy durch aufzeichnende Stellvertreter ersetzt",
+    "riskanalysis_payee": {
+      "fixture": "tests/fixtures/riskanalysis_payee_observed.json",
+      "tool": "tools/capture_riskanalysis_payee.py",
+      "cases": 80,
+      "environment": {
+        "python": "3.12.3",
+        "rapidfuzz": "3.14.5",
+        "unicode": "15.0.0"
+      },
+      "method": "AST-Extraktion der Blob-geprüften Definitionen aus payee_normalizer.py und red_flags._name_match (rapidfuzz-Zweig)"
+    }
   },
   "behavior_changes": "docs/behavior-changes.md",
   "decisions": [

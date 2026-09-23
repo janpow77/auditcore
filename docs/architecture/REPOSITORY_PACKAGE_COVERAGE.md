@@ -413,6 +413,12 @@ Coordinate Reference System, Achsenfolge, Distanzmaß, Randpunkte und Einheiten
 charakterisieren. HTTP-Dienste, Geocoder-Budgets und PostGIS bleiben Adapter;
 nicht jede Geometriefunktion benötigt eine eigene Distribution.
 
+**Umgesetzt (23.09.2026):** `packages/auditcore_geo` 0.1.0 mit Erdmodell-Profilen,
+Umkreis, Punkt in Fläche mit Rand, UTM, GeoPackage, Douglas-Peucker und
+Nominatim-Adapter (Extra `geocoder` auf `auditcore_harvest`); 290 charakterisierte
+Originalfälle, Consumer geplant (Nutzerentscheidung). Bericht:
+[GEO_PACKAGE_REPORT.md](../reports/GEO_PACKAGE_REPORT.md).
+
 ### H5 — Immobilien- und Finanzmarktdaten bleiben eigene Domänen
 
 `wohnungsmonitor` enthält konkrete Portalparser, beispielsweise
@@ -429,6 +435,16 @@ Indikatorkern `backend/app/services/indicators/base.py` mit `returns`,
 `auditcore_market_indicators`-Kern ist prüfbar; Datenabruf, Portfolioentscheidungen
 und Trading bleiben getrennt. Finanzmarkt- und Energiepreisadapter werden
 wegen gleicher HTTP-Technik nicht zu einem pauschalen Markt-Harvester vereinigt.
+
+**Umgesetzt (23.09.2026):** `packages/auditcore_market_indicators` 0.1.0 aus
+`krypto@34d6017` – Kern nur mit Standardbibliothek, polars als Extra, vier
+quellengebundene Profile (`indicators_base`, `scoring_rsi_macd`,
+`scoring_confluence`, `regime_hmm`) für EMA-Start, Wilder-/EMA-/SMA-Glättung,
+Lücken und Summationsreihenfolge; 1922 tatsächlich ausgeführte Originalaufrufe
+nachgespielt. Repositoryübergreifender Mehrfachnutzen ist nicht belegt; das
+Paket entsteht auf Nutzerentscheidung („der mehrfache Nutzen kommt noch“),
+Consumer krypto ist **geplant** und in einer Kopie mit 1345/1345 Tests geprüft.
+Bericht: [MARKET_INDICATORS_PACKAGE_REPORT.md](../reports/MARKET_INDICATORS_PACKAGE_REPORT.md).
 
 ### A — Weitere Analysen, Dokumente und Berichte
 

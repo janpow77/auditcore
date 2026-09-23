@@ -82,6 +82,7 @@ def test_profiles_are_explicit_source_bound_and_fingerprinted() -> None:
         ("flowworkshop.entity_resolution", V),
         ("flowworkshop.sanctions", V),
         ("flowworkshop.state_aid", V),
+        ("riskanalysis.payee", V),
     )
     for profile_id, version in available_profiles():
         profile = load_profile(profile_id, version)
