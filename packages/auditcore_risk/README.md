@@ -37,7 +37,8 @@ for merkmal in ergebnis.records[0].hits:
 | `riskanalysis.year_bound` | `2026.09.1` | `CANDIDATE_HUMAN_DECISION_REQUIRED` | abgelöst durch 2026.09.2 |
 | `riskanalysis.year_bound` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 |
 | `riskanalysis.year_bound` | `2026.09.3` | `APPROVED` | abgelöst durch 2026.09.4 (EU-Schwellen nur 2024–2027) |
-| `riskanalysis.year_bound` | `2026.09.4` | `APPROVED` (empfohlen) | Entscheidung 23.09.2026: netto, EU-Schwelle des Jahres (2014–2027, `procurement.hvtg 2026.09.3`), RF12 gruppenintern, RF09 mit Umschrift „mueller“ |
+| `riskanalysis.year_bound` | `2026.09.4` | `APPROVED` | abgelöst durch 2026.09.5 (ohne Nettobetrag Abbruch bzw. Ersatzbetrag 0) |
+| `riskanalysis.year_bound` | `2026.09.5` | `APPROVED` (empfohlen) | Entscheidungen 23.09.2026: netto, EU-Schwelle des Jahres (2014–2027, `procurement.hvtg 2026.09.3`), RF12 gruppenintern, RF09 mit Umschrift „mueller“; 24.09.2026: ohne Nettobetrag RF02/RF08 je Beleg unbestimmt („Nettobetrag fehlt in der Quelle“), kein Rückfall auf brutto |
 | `flowinvoice.risk_checker` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 (EU-Schwellen nur 2024–2027) |
 | `flowinvoice.risk_checker` | `2026.09.3` | `APPROVED` (nicht aktiviert) | Splitting mit EU-Schwelle des Jahres (2014–2027) |
 | `flowinvoice.rbvk_wibank` | `2026.09.2` | `APPROVED` (empfohlen) | nach Profildatei V1.21 |
@@ -85,3 +86,15 @@ Herkunft, Rechte und Charakterisierung: [`provenance.json`](provenance.json),
 Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 Consumer-Umstellung: [docs/consumer-integration.md](docs/consumer-integration.md).
 Debian-Paket: `python3-auditcore-risk`.
+
+## Fehlender Betrag: „unbestimmt“ statt Ersatzwert (ab 0.3.0)
+
+Die Regelarten `near_threshold` und `missing_procurement` kennen den optionalen
+Parameter `missing_amount_reason` (verlangt `missing_value: null`): Ein leerer
+Betrag ergibt dann `None` (unbestimmt) mit dieser Begründung statt eines
+Ersatzbetrags. `missing_procurement` bleibt `False`, wo der Betrag nicht
+entscheidet (echte Vergabekennung oder nicht vergaberelevante Kostenart).
+`when_missing_columns: "undetermined"` behandelt eine fehlende Betragsspalte wie
+leere Werte; zulässig nur für diese beiden Regelarten mit `missing_amount_reason`
+und nur, wenn die Betragsspalte die einzige Pflichtspalte ist. Bestehende
+Profile nutzen beides nicht und verhalten sich unverändert.

@@ -13,7 +13,10 @@ from typing import Any
 from .errors import DependencyError, InputError, ProfileError
 from .values import as_date, coerce_number, strict_amount, text
 
-WHEN_MISSING = ("error", "skip", "all_false")
+WHEN_MISSING = ("error", "skip", "all_false", "undetermined")
+# Betragsregeln, die einen fehlenden Betrag als „unbestimmt“ ausweisen können
+# (Parameter ``missing_amount_reason``), mit dem Schlüssel ihres Betragsfelds.
+MISSING_AMOUNT_FIELD = {"near_threshold": "field", "missing_procurement": "amount_field"}
 _MISSING_KEY = object()
 
 
@@ -83,7 +86,11 @@ class Kind:
 
 
 def _amounts(table: Table, params: Mapping[str, Any], name_key: str = "field") -> list[Any]:
-    """Amount per record by ``parse`` (``strict``/``coerce``) and ``missing_value``."""
+    """Amount per record by ``parse`` (``strict``/``coerce``) and ``missing_value``.
+
+    ``missing_value`` ``None`` (only with ``missing_amount_reason``) keeps a
+    missing amount — or an absent column — as ``None`` instead of a substitute.
+    """
     name = params[name_key]
     missing = params["missing_value"]
     if not table.has(name):

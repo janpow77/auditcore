@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_risk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "sources": [
     {
       "repository": "janpow77/riskanalysis",
@@ -127,7 +127,7 @@
   ],
   "dependencies": {
     "auditcore_entity_matching": "0.2.0 (Profil riskanalysis.payee für RF09)",
-    "auditcore_procurement": "0.2.0, Extra procurement (jahresbezogene EU-Schwellen, Profil procurement.hvtg 2026.09.3 in riskanalysis.year_bound 2026.09.4 und flowinvoice.risk_checker 2026.09.3; 2026.09.2 in den abgelösten Fassungen)"
+    "auditcore_procurement": "0.2.0, Extra procurement (jahresbezogene EU-Schwellen, Profil procurement.hvtg 2026.09.3 in riskanalysis.year_bound 2026.09.4 und 2026.09.5 sowie flowinvoice.risk_checker 2026.09.3; 2026.09.2 in den abgelösten Fassungen)"
   },
   "rights": {
     "license_status": "MIT",

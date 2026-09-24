@@ -18,7 +18,7 @@ from importlib import resources
 from types import MappingProxyType
 from typing import Any
 
-from .base import WHEN_MISSING
+from .base import MISSING_AMOUNT_FIELD, WHEN_MISSING
 from .errors import ProfileError
 from .rules import KINDS, validate_params
 
@@ -206,6 +206,18 @@ def _rule_from_dict(data: Any, index: int) -> Rule:
     if not isinstance(params, dict):
         raise ProfileError(f"{where}: 'params' muss ein Objekt sein.")
     validate_params(kind, params, where)
+    if when == "undetermined":
+        amount_key = MISSING_AMOUNT_FIELD.get(kind)
+        if amount_key is None or params.get("missing_amount_reason") is None:
+            raise ProfileError(
+                f"{where}: 'when_missing_columns' undetermined gilt nur für Betragsregeln "
+                f"({sorted(MISSING_AMOUNT_FIELD)}) mit 'missing_amount_reason'."
+            )
+        if set(requires) - {params[amount_key]}:
+            raise ProfileError(
+                f"{where}: bei undetermined darf nur die Betragsspalte "
+                f"{params[amount_key]!r} Pflichtspalte sein."
+            )
     severity = data.get("severity")
     if severity is not None and severity not in SEVERITIES:
         raise ProfileError(f"{where}: unbekannte Schwere {severity!r}.")

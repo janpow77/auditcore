@@ -21,7 +21,7 @@ from .rules import KINDS, identifier_state, pair_similarity
 from .values import strict_amount
 
 #: Library identity recorded in every evaluation (T-31).
-LIBRARY = "auditcore_risk 0.2.0"
+LIBRARY = "auditcore_risk 0.3.0"
 
 
 @dataclass(frozen=True)
@@ -253,6 +253,10 @@ def _run(rule: Rule, table: Table, ctx: Context) -> tuple[Outcome | None, str | 
             raise InputError(f"Regel {rule.code}: Spalten fehlen {missing}.")
         if rule.when_missing_columns == "skip":
             return None, f"Spalten fehlen: {', '.join(missing)}"
+        if rule.when_missing_columns == "undetermined":
+            # Nur die Betragsspalte darf fehlen (beim Laden geprüft); die Regelart
+            # weist jeden Datensatz, den der Betrag entscheiden würde, als unbestimmt aus.
+            return KINDS[rule.kind].run(rule.params, table, ctx), None
         return Outcome.constant(len(table), False), None
     return KINDS[rule.kind].run(rule.params, table, ctx), None
 

@@ -9,7 +9,7 @@ riskanalysis@b5c523b). RF10–RF12 bleiben [deskriptiv]: keine Fehlerquoten,
 nie neben der 2-%-Wesentlichkeit interpretieren.
 
 Voraussetzung (requirements.txt):
-    auditcore_risk[fuzzy,pandas]==0.2.0
+    auditcore_risk[fuzzy,pandas]==0.3.0
 """
 
 from __future__ import annotations

@@ -1814,7 +1814,8 @@ def decided_profiles(
         "subzentral und Kategorie Liefer-/Dienstleistungen je Beleg sind Profilvorgaben.",
     ]
     ra4, rc3 = historic_threshold_profiles(ra3, rc, clone)
-    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, ra3, ra4, rc, rc3, wb)]
+    ra5 = missing_net_profile(ra4, clone)
+    risk = [(f"{d['id']}-{d['version']}.json", d) for d in (ra, ra3, ra4, ra5, rc, rc3, wb)]
     fraud = [(f"{d['id']}-{d['version']}.json", d) for d in (fraud_sig, ted)]
     return risk, fraud
 
@@ -1871,6 +1872,52 @@ def historic_threshold_profiles(
                 "unbestimmt."
             )
     return ra4, rc3
+
+
+NET_MISSING_REASON = "Nettobetrag fehlt in der Quelle"
+NET_MISSING_DECISION = {
+    "decided_on": "2026-09-24",
+    "quote": "nur im Code vorgesehen sein",
+    "decisions": ["K2a"],
+    "effect": "RF02 und RF08 ohne Nettobetrag (Spalte fehlt oder Wert leer) je Beleg "
+    "unbestimmt statt Abbruch bzw. Ersatzbetrag 0; kein Rückfall auf brutto (K2 bleibt); "
+    "übrige Regeln unverändert.",
+}
+
+
+def missing_net_profile(ra4: dict[str, Any], clone: Any) -> dict[str, Any]:
+    """User decision of 24.09.2026: evaluate sources without net amounts.
+
+    RF02 and RF08 keep the net amount (K2, no fallback to gross) but no longer
+    substitute 0.0 for a missing value or abort on a missing column: the record
+    is undetermined with the reason ``NET_MISSING_REASON``. RF08 stays ``False``
+    where the amount cannot matter (genuine award id or non-relevant cost type).
+    2026.09.4 stays unchanged.
+    """
+    ra5 = clone(ra4)
+    ra5["version"] = "2026.09.5"
+    ra5["legal_status"] = ra4["legal_status"] + (
+        " Ohne Nettobetrag sind RF02/RF08 unbestimmt (Nutzerentscheidung vom 24.09.2026)."
+    )
+    ra5["source"]["derived_from"] = {"profile": ra4["id"], "version": ra4["version"]}
+    ra5["source"]["decision"] = NET_MISSING_DECISION
+    for rule in ra5["rules"]:
+        if rule["code"] in ("RF02", "RF08"):
+            rule["params"]["missing_value"] = None
+            rule["params"]["missing_amount_reason"] = NET_MISSING_REASON
+            rule["when_missing_columns"] = "undetermined"
+        if rule["code"] == "RF02":
+            rule["note"] = rule["note"] + (
+                " Ohne Nettobetrag (Spalte fehlt oder Wert leer) unbestimmt: "
+                "„Nettobetrag fehlt in der Quelle“; kein Rückfall auf brutto."
+            )
+        if rule["code"] == "RF08":
+            rule["note"] = (
+                "Bagatellgrenze gegen den Nettobetrag (K2). Ohne Nettobetrag unbestimmt "
+                "(„Nettobetrag fehlt in der Quelle“), außer bei echter Vergabekennung oder nicht "
+                "vergaberelevanter Kostenart (dann kein Merkmal); kein Rückfall auf brutto."
+            )
+    return ra5
 
 
 def main() -> None:
