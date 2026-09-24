@@ -309,8 +309,8 @@ class LocalDonut:
         try:
             import torch
             from transformers import (
-                AutoImageProcessor,
                 AutoTokenizer,
+                DonutImageProcessor,
                 VisionEncoderDecoderModel,
             )
         except ImportError as exc:
@@ -324,7 +324,7 @@ class LocalDonut:
         # Verzeichnis mit local_files_only=True; ein Hub-Download ist ausgeschlossen
         # (Test test_local_donut_verifies_hash_before_loading).
         local = str(self.model_dir)
-        processor = AutoImageProcessor.from_pretrained(local, local_files_only=True)  # nosec B615
+        processor = DonutImageProcessor.from_pretrained(local, local_files_only=True)  # nosec B615
         tokenizer = AutoTokenizer.from_pretrained(local, local_files_only=True)  # nosec B615
         model = VisionEncoderDecoderModel.from_pretrained(  # nosec B615
             local, use_safetensors=True, local_files_only=True
@@ -350,7 +350,6 @@ class LocalDonut:
                 pixel_values,
                 decoder_input_ids=prompt.to(device),
                 max_length=self.max_length,
-                early_stopping=True,
                 num_beams=1,
                 do_sample=False,
                 pad_token_id=tokenizer.pad_token_id,

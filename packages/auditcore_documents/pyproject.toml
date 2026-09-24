@@ -21,7 +21,7 @@ pdf-render = ["reportlab>=4.0.8,<6"]
 mime = ["python-magic>=0.4.27"]
 ocr-raster = ["pypdfium2>=4.30,<6", "pillow>=10"]
 # Offline-Inferenz (LocalDonut); CPU- oder CUDA-Build wählt die Anwendung über ihren Index.
-donut = ["transformers>=4.46,<5", "torch>=2.7", "sentencepiece>=0.2", "pillow>=10"]
+donut = ["transformers>=4.46,<6", "torch>=2.7", "sentencepiece>=0.2", "pillow>=10"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
