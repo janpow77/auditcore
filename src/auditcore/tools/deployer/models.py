@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -36,6 +37,9 @@ class ApplicationDeploymentProfile:
     database_strategy: str = "none"
     upgrade_strategy: str = "preserve data and configuration; explicit database migrations"
     ci_run: str = "local"
+    #: Fachliche Rauchtest-Fälle nach dem Deploy (Pflicht außer für internal_test),
+    #: siehe :mod:`auditcore.tools.deployer.smoke`.
+    functional_smoke: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass

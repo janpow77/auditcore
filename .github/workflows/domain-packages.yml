@@ -37,7 +37,7 @@ jobs:
           python -m pip install --upgrade pip build 'setuptools>=83' wheel
           python -m build
           python -m venv .auditcore/package-platform
-          .auditcore/package-platform/bin/python -m pip install --upgrade pip 'dist/auditcore-0.1.0-py3-none-any.whl[dev]'
+          .auditcore/package-platform/bin/python -m pip install --upgrade pip 'dist/auditcore-0.2.0-py3-none-any.whl[dev]'
       - name: Prepare Debian installation environment
         if: matrix.python == '3.12'
         run: >-
