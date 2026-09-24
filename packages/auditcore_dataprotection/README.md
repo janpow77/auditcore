@@ -9,8 +9,8 @@ Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
-pip install auditcore_dataprotection==0.3.0            # Kern
-pip install 'auditcore_dataprotection[excel]==0.3.0'    # zusätzlich XLSX
+pip install auditcore_dataprotection==0.4.0            # Kern
+pip install 'auditcore_dataprotection[excel]==0.4.0'    # zusätzlich XLSX
 ```
 
 ## Schnellstart in Python
@@ -79,6 +79,17 @@ Die wichtigsten Aufrufe: `load_profile`, `RegisterService.save_draft/release`,
 `AssessmentService.start/update/decide/record_dpo_request/record_dpo_statement/release`,
 `open_points` und `review_required` (Überprüfung nach Änderung des Verzeichnisses),
 dazu `assessment_report` und `render_assessment_html` für den Bericht.
+
+Das Verzeichnis selbst zeigt `render_register_html` als fertige Ansicht an, auf Wunsch
+mit dem Stand der Folgenabschätzung je Tätigkeit:
+
+```python
+from auditcore_dataprotection.export import register_report, render_register_html
+
+fassung = vvt.released("behoerde", anna)
+ansicht = render_register_html(
+    register_report(fassung, profil, overview=dsfa_dienst.overview("behoerde", anna)))
+```
 
 ## Bausteine
 
