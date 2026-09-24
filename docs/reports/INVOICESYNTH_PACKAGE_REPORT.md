@@ -40,3 +40,19 @@ sowie die Testbelege von `auditcore_documents` 0.2.0
   Ziel-JSON enthält den gedruckten Wert) – bei der Bewertung auf T1 beobachten.
 - Katalogtrennung Firmen-/Positionsnamen für Testsätze (Plan, Risiko
   „Überanpassung“) noch nicht umgesetzt.
+
+## Etappe E3: Nachtraining vorbereitet (kein Training ausgeführt)
+
+janpow-ai ist offline; ausgeführt wurden nur Werkzeug-, Wiederaufnahme- und
+CPU-Rauchtests. Einzelheiten und Voraussetzungen: `packages/auditcore_invoicesynth/docs/training.md`.
+
+| Prüfung | Ergebnis |
+|---|---|
+| pytest ohne Extra `train` | 70 passed, 1 skipped (Torch-Rauchtest) |
+| pytest mit torch 2.14.0+cpu, transformers 5.17.0 | 71 passed |
+| Stromausfall (Ersatzmodell), halb geschriebener Checkpoint | Wiederaufnahme ab letztem gültigem Checkpoint, Loss-Verlauf und Endzustand identisch |
+| `kill -9` eines laufenden Trainingsprozesses | Schritte 1–40 lückenlos, Loss je Schritt identisch mit ununterbrochenem Lauf |
+| CPU-Rauchtest winziges Donut-Modell | 6 Schritte, Abbruch nach 3, Wiederaufnahme ab 2 mit gleichem Loss für Schritt 3; Checkpoint mit safetensors, Optimierer, Scheduler, RNG, Prüfsummen |
+| DDP `torchrun --nproc_per_node=2` (gloo, CPU) | manuell PASS |
+| Checkpoint → `auditcore_documents.LocalDonut` | manuell PASS (Prüfsumme, Inferenz) |
+| NOT_EXECUTED | GPU-Training, VRAM-Spitze, bf16 auf Blackwell, 8-bit-AdamW, echtes `donut-base`, Pilot 3 Epochen × 2 000, hartes Ausschalten während eines GPU-Checkpoints |
