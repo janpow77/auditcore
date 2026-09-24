@@ -11,7 +11,9 @@ import auditcore_invoicesynth
 
 PACKAGE = Path(auditcore_invoicesynth.__file__).parent
 ALLOWED = {"auditcore_invoicesynth", "auditcore_invoicegenerator"}
-LAZY_PIL = {"render.py", "augment.py", "dataset.py"}
+LAZY_PIL = {"render.py", "augment.py", "dataset.py", "torch_backend.py"}
+#: Extra ``train``: nur verzögert und nur im Torch-Adapter.
+TRAIN_ONLY = {"torch", "transformers", "tokenizers", "safetensors", "bitsandbytes"}
 
 
 def test_imports() -> None:
@@ -27,7 +29,10 @@ def test_imports() -> None:
                 names = [node.module or ""]
             for name in names:
                 root = name.split(".")[0]
-                if root == "PIL":
+                if root in TRAIN_ONLY:
+                    assert path.name == "torch_backend.py", path.name
+                    assert id(node) not in top_level, f"{path.name}: {root} nur verzögert"
+                elif root == "PIL":
                     assert path.name in LAZY_PIL, path.name
                     assert id(node) not in top_level, f"{path.name}: PIL nur verzögert"
                 else:

@@ -14,10 +14,20 @@ dependencies = ["auditcore_invoicegenerator==0.2.0"]
 
 [project.optional-dependencies]
 render = ["pillow>=9.4"]
+# Nachtraining (E3): CPU- oder CUDA-Build (cu128 für Blackwell) über den Paketindex wählen.
+train = [
+    "torch>=2.7",
+    "transformers>=4.46,<6",
+    "tokenizers>=0.20",
+    "sentencepiece>=0.2",
+    "safetensors>=0.4",
+    "pillow>=9.4",
+]
 dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "bandit>=1.7", "pillow>=9.4"]
 
 [project.scripts]
 auditcore-invoicesynth = "auditcore_invoicesynth.cli:main"
+auditcore-invoicesynth-train = "auditcore_invoicesynth.train.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -37,11 +47,10 @@ target-version = "py311"
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.mypy]
-python_version = "3.11"
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["PIL.*"]
+module = ["PIL.*", "torch.*", "transformers.*", "tokenizers.*", "safetensors.*", "bitsandbytes.*"]
 ignore_missing_imports = true
 
 [tool.auditcore-bibquality]
