@@ -27,10 +27,57 @@ def pipeline_smoke() -> None:
     assert len(result.hash_chain) == 2 and len(audit) == 7
 
 
+def donut_smoke() -> None:
+    """DONUT_PIPELINE mit FakeDonut: Plausibilität, Abgleich, LEGACY unverändert (ohne torch)."""
+    import asyncio
+    import tempfile
+    from pathlib import Path
+
+    from auditcore_documents import pipeline as pl
+
+    assert pl.LEGACY_PIPELINE.fingerprint.startswith("aaec1633e2ec")
+    fields = {
+        "invoice_number": "RE-1",
+        "invoice_date": "15.01.2026",
+        "supplier": {"name": "Beispiel GmbH", "vat_id": "DE136695976"},
+        "net_amount": "100,00 €",
+        "vat_lines": [{"rate": "19 %", "amount": "19,00 €"}],
+        "total": "119,00 €",
+        "iban": "DE89 3704 0044 0532 0130 00",
+    }
+    text = (
+        "Rechnungsnummer: RE-1\nRechnungsdatum: 15.01.2026\nUSt-IdNr.: DE136695976\n"
+        "Nettobetrag: 100,00 €\nUSt 19 %: 19,00 €\nGesamtbetrag: 119,00 €\n"
+        "IBAN: DE89 3704 0044 0532 0130 00\n"
+    )
+
+    class Tesseract:
+        def parse(self, path: Path) -> pl.ParsedDocument:
+            return pl.ParsedDocument(text, [pl.ParsedPage(text, 0.95)])
+
+    def run(total: str) -> pl.PipelineContext:
+        donut = pl.FakeDonut([pl.DonutResult(fields={**fields, "total": total})])
+        ocr = pl.OcrStage(donut=donut, tesseract=Tesseract())
+        pipeline = pl.build_pipeline(profile=pl.DONUT_PIPELINE, ocr=ocr)
+        with tempfile.TemporaryDirectory() as tmp:
+            source = Path(tmp) / "beleg.png"
+            source.write_bytes(b"\x89PNG\r\n\x1a\n" + b"0" * 32)
+            context = pl.PipelineContext(document_id="d", run_id="r", input_uri=str(source))
+            return asyncio.run(pipeline.run(context))
+
+    good = run("119,00 €")
+    assert good.artifacts.normalized_json["total"] == 119.0, good.validation_flags
+    assert good.status == pl.RunStatus.REVIEW_NEEDED  # ohne Feldkonfidenz nie automatisch OK
+    bad = run("1190,00 €")
+    assert bad.status == pl.RunStatus.REVIEW_NEEDED
+    assert "FAIL_VAL_DONUT_PLAUSIBILITY" in bad.validation_flags
+    assert bad.artifacts.normalized_json["total"] == 119.0  # Regex-Wert aus Tesseract bleibt
+
+
 def main() -> None:
     """Pure comparison, article-law commands, reasons port and extra boundaries."""
     package = distribution("auditcore_documents")
-    assert package.version == "0.1.0"
+    assert package.version == "0.2.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert DocumentCompareService.VERSION == "1.1.0"
@@ -59,6 +106,7 @@ def main() -> None:
     assert reason == "Nach § 7." and meta["missing_references"] == ["§ 7"]
     assert ad.sanitise_settings({"threshold": 5})["threshold"] == 70
     pipeline_smoke()
+    donut_smoke()
     if find_spec("rapidfuzz") is None:
         try:
             ad.get_scorer("rapidfuzz-token-set")

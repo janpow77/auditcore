@@ -50,7 +50,12 @@ LAZY = {
     "reportlab": {"pdf-render"},
     "magic": {"mime"},
     "pypdfium2": {"ocr-raster"},
+    # Extra ``donut`` (0.2.0): nur verzögert und nur im Donut-Adapter (siehe unten).
+    "torch": {"donut"},
+    "transformers": {"donut"},
+    "PIL": {"donut", "ocr-raster"},
 }
+DONUT_ONLY = {"torch", "transformers", "PIL"}
 FORBIDDEN = {
     "fastapi",
     "sqlalchemy",
@@ -58,8 +63,6 @@ FORBIDDEN = {
     "redis",
     "requests",
     "httpx",
-    "torch",
-    "transformers",
     "app",
     "auditcore",
 }
@@ -96,6 +99,8 @@ def test_runtime_imports() -> None:
             optional = roots & set(LAZY)
             if optional:
                 assert in_function, (path.name, optional)
+                if optional & DONUT_ONLY:
+                    assert path.name == "donut.py", (path.name, optional)
                 continue
             assert roots <= STDLIB | {"auditcore_documents"}, (path.name, roots)
         for node in ast.walk(tree):

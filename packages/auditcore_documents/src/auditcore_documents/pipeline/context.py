@@ -55,6 +55,7 @@ class OcrBackend(StrEnum):
     CHANDRA = "chandra"
     TESSERACT = "tesseract"
     NONE = "none"
+    DONUT = "donut"
 
 
 class ExtractionMethod(StrEnum):
