@@ -49,6 +49,7 @@ RA_LOADER_NET = "riskanalysis@9a5b624 `backend/app/pipeline/mdb_loader.py` (`loa
 RA_FLAGS = f"{RA} `backend/app/pipeline/red_flags.py`"
 RA_PAYEE = f"{RA} `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)"
 RA_PSEUDO = f"{RA} `backend/app/services/pseudonymization.py`"
+RA_SCHEMA = "Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)"
 DECISIONS = "`docs/behavior-changes.md` (K2, K2a)"
 AD_BELEGLISTE = (
     "audit_designer@1254591 `backend/app/modules/flowstat/services/"
@@ -120,14 +121,14 @@ def _riskanalysis() -> dict[str, Meaning]:
             RA_PSEUDO,
         ),
         "Anzahl_Versionen": Meaning(
-            "Anzahl der Versionen in der Mittelabruf-Historie (RF11). `load_raw` erzeugt "
-            "die Spalte nicht.",
-            f"{RA_FLAGS} (`_compute_rf11`); {RA_LOADER}",
+            "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle "
+            "`t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+            f"{RA_FLAGS} (`_compute_rf11`); {RA_SCHEMA}",
         ),
         "Anzahl_ungueltige_Versionen": Meaning(
-            "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). "
-            "`load_raw` erzeugt die Spalte nicht.",
-            f"{RA_FLAGS} (`_compute_rf11`); {RA_LOADER}",
+            "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der "
+            "Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+            f"{RA_FLAGS} (`_compute_rf11`); {RA_SCHEMA}",
         ),
         "rechnungsdatum_dt": Meaning(
             "Rechnungsdatum als Datum (`pd.to_datetime` der Quellspalte "
