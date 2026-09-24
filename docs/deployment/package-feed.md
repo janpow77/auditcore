@@ -1,16 +1,17 @@
 # Öffentliche Preview-Paketquelle verwenden
 
-**Aktuell: [Preview v0.3.1](https://github.com/janpow77/auditcore/releases/tag/v0.3.1)**
-mit neunzehn Distributionen (126 Assets, Tag auf `a8b9b74`), darunter neu
-auditcore_procurement 0.2.0, auditcore_risk 0.2.0 und auditcore_geo 0.2.0.
-Downloadpfad `https://github.com/janpow77/auditcore/releases/download/v0.3.1`;
+**Aktuell: [Preview v0.3.2](https://github.com/janpow77/auditcore/releases/tag/v0.3.2)**
+mit zwanzig Distributionen (132 Assets), darunter neu auditcore_risk 0.3.0
+(fehlender Nettobetrag → RF02/RF08 „unbestimmt“), auditcore_documents 0.2.0
+(Donut-Port), auditcore_invoicesynth 0.1.0 und auditcore_dataprotection 0.4.0.
+Downloadpfad `https://github.com/janpow77/auditcore/releases/download/v0.3.2`;
 derselbe Signaturschlüssel wie v0.1.0. Pro Paket gibt es `requirements-<paket>.txt`
 (hashgebunden, `--no-index`), dazu `requirements-all-locked.txt` und die
 Renderer-Locks für invoice (`pdf`) und reporting (`excel`). Anonyme pip- und
-APT-Installation aller neunzehn Pakete samt Funktionsprüfung und Entfernung wurde am
-23.09.2026 gegen den öffentlichen Pfad ausgeführt:
-[Nachweis](../reports/domain-public-installation-v0.3.1.json). Vorgänger v0.3.0:
-[Nachweis](../reports/domain-public-installation-v0.3.0.json).
+APT-Installation aller zwanzig Pakete samt Funktionsprüfung und Entfernung wurde am
+24.09.2026 gegen den öffentlichen Pfad ausgeführt:
+[Nachweis](../reports/domain-public-installation-v0.3.2.json). Vorgänger v0.3.1:
+[Nachweis](../reports/domain-public-installation-v0.3.1.json).
 
 Zusätzlich gibt es einen Paketindex nach PEP 503 auf GitHub Pages, der die
 Release-Dateien aller Versionen mit SHA-256 verlinkt:
