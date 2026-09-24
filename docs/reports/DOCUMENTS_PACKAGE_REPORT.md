@@ -220,3 +220,20 @@ markierten Punkte sind jetzt **DECIDED** (Version bleibt 0.1.0, unveröffentlich
 | ruff, mypy strict | PASS |
 | Policy-Nachweis | F-04, F-07, F-09, F-15 VERIFIED |
 | `verify_domain_packages.py --apt` | 21/21 PASS, Wheel-SHA256 `380edf8d4e44b8866f19d69597cdd5cf16eed46e2a9b34af4a697acbd638e2b7` |
+
+## 0.2.0: Donut-Port (24.09.2026, nicht veröffentlicht)
+
+Plan `docs/architecture/DONUT_OCR_PLAN.md` 2a, Entscheidungen E1–E9 vom
+24.09.2026 („Donut alle Empfehlungen“). Neuimplementierung ohne übernommenen
+Fremdcode; keine neue Quellbindung (`EXPECTED_SOURCES` unverändert).
+
+| Punkt | Stand |
+|---|---|
+| Neu | `DonutPort`, `DonutResult`, `HttpDonut` (vision-service `/v1/vision/parse`, `flowagent_donut` → `/api/v1/ai/apps/<app>/v1/vision/parse`), `FakeDonut`, `LocalDonut` (Extra `donut`), `OcrBackend.DONUT`, `DonutFieldMergeStage`, Regeln `VAL_DONUT_PLAUSIBILITY`/`VAL_DONUT_DISAGREEMENT`, Profil `DONUT_PIPELINE` (`auditcore.pipeline.donut` 2026.09.24, `EXPERIMENTAL`) |
+| Pflicht-Plausibilität | netto + USt = brutto, Steuerzeile = Basis × Satz, IBAN mod 97, USt-IdNr. DE (MOD 11,10) / UID AT, zulässige Sätze DE 19/7/0 und AT 20/13/10/0, Rechnungsnummer, Datum ≤ 1 Jahr Zukunft, Fälligkeit; Übernahme nur mit Konfidenz ≥ 0,90 oder Tesseract-Bestätigung; Beträge ohne rechenbare Summe nur mit Textbestätigung; sonst Regex-Wert + REVIEW_NEEDED |
+| Unverändert | `LEGACY_PIPELINE` (Fingerabdruck `aaec1633…`, 30 Replays), `CORRECTED_PIPELINE` (`4b7edabd…`) |
+| Tests | 580 passed, 4 skipped (davon 16 neue Donut-Tests mit `FakeDonut` und 6 synthetischen Belegbildern aus `auditcore_invoicesynth`, `tools/build_donut_fixtures.py`) |
+| Gates lokal | ruff, mypy --strict, bandit (-ll) PASS; B615 an drei `from_pretrained`-Aufrufen als geprüfte Fehlmeldung markiert (nur lokales, per SHA-256 geprüftes Verzeichnis, `local_files_only=True`) |
+| pip/APT lokal | `verify_domain_packages.py packages/auditcore_documents --apt`: PASS (Build, Hash-Install, Rauchtest inkl. `donut_smoke`, Selektivinstallation, zwei Debian-Revisionen, signierte APT-Quelle, Lifecycle) |
+| LocalDonut | manuell gegen ein winziges, im CPU-Rauchtest trainiertes Modell (torch 2.14.0+cpu, transformers 5.17.0): Laden mit Prüfsumme, Inferenz, Hash-Abweichung → `DONUT_MODEL_HASH_MISMATCH` |
+| Offen | echtes Modell (E3/E4 auf janpow-ai), vision-service-Anbindung des neuen Modells und flowinvoice-Schattenbetrieb (E6), Release |
