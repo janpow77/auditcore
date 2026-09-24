@@ -232,6 +232,57 @@ liefern (Abschlusskriterium E2). Umfang: Pilot 2 000; Vollsatz 20 000 Training,
 Laufzeit-Schätzung (in E3 zu messen): 0,6–1,2 s je Beispiel → Vollsatz
 (≈ 120 000 Beispielschritte) ≈ 20–40 GPU-Stunden, verteilt auf mehrere Nächte.
 
+### 2c-bis. Rechenorte: janpow-ai (zwei GPUs) über den FlowAgent
+
+Nutzerwunsch vom 24.09.2026: „Donut soll auch meine beiden gpus aus janpow ai
+nutzen können.“ Es gilt der Grundsatz vom 28.08.2026 **„FlowAgent ist der
+einzige GPU-Weg“** (so bereits für Whisper large-v3 auf der RTX 5070 Ti von
+janpow-ai umgesetzt). Donut greift deshalb nie direkt per SSH/HTTP auf GPUs
+zu, sondern über die Flow-Agent Control Plane (`agent.flowaudit.de`, Spokes
+mit Fähigkeiten und Telemetrie).
+
+| Rechenort | GPU(s) | Rolle für Donut | Zugang |
+|---|---|---|---|
+| **janpow-ai** (Tailscale 100.114.73.106) | 2 GPUs, u. a. RTX 5070 Ti 16 GB (zweite GPU beim ersten Kontakt per Telemetrie erfassen) | **Haupt-Trainingsort** und bevorzugter Inferenzort | FlowAgent-Spoke(s), Fähigkeiten `train:donut`, `ocr`/`vision` |
+| NUC (100.102.132.11) | RTX 5060 Laptop 8 GB (+ optional eGPU) | Pilot-/Rückfall-Training (Profil 8 GB aus 2c), Inferenz-Rückfall | FlowAgent-Spoke `nuc-vision` (Tailscale-Adresse, nicht Docker-Name) |
+| EVO-X2 | AMD, kein CUDA | nicht für Donut-Training (Torch/CUDA-Pfad) | – |
+
+**Training auf zwei GPUs:**
+
+- **Gleiche GPU-Klasse und ≥ 16 GB je Karte:** PyTorch DDP (`torchrun
+  --nproc_per_node=2`), je GPU Batch 2–4 ohne 8-bit-Optimierer, effektive
+  Batchgröße 16 über weniger Akkumulationsschritte; erwartete Laufzeit etwa
+  halb so lang wie auf einer Karte. bf16 wie 2c.
+- **Ungleiche Karten** (unterschiedlicher VRAM/Takt): kein DDP (die langsamere
+  Karte bremst), stattdessen **zwei unabhängige Läufe parallel** – z. B.
+  Bildgröße 1280×960 und 1536×1152 oder zwei Seeds – und Auswahl per
+  Evaluation (2d). Entscheidung automatisch aus der Spoke-Telemetrie.
+- Profil `donut_train_janpow_ai` mit eigenem VRAM-Budget je Karte; der
+  8-GB-Pfad aus 2c bleibt als Profil `donut_train_8gb` für die NUC erhalten.
+- Wiederaufnahme wie 2c (atomare Checkpoints mit Prüfsummen). Checkpoints
+  liegen auf janpow-ai lokal und werden nach jedem Checkpoint zusätzlich auf
+  die NUC gespiegelt (rsync über Tailscale), damit ein Lauf bei Ausfall von
+  janpow-ai auf der NUC weiterlaufen kann (mit 8-GB-Profil, gleiche Lauf-ID).
+- Auftrag über den FlowAgent als Job (Container-Image mit Torch ≥ 2.7/CUDA
+  12.8, Datensatz per Hash, Konfiguration, Ziel-Checkpoint-Pfad); der FlowAgent
+  meldet Fortschritt (Schritt, Loss, VRAM, Temperatur) zurück. Ist janpow-ai
+  offline (Stand 24.09.2026: seit 24 Tagen offline), startet kein Lauf dort;
+  die Planung zeigt den Rechenort „nicht verfügbar“ statt still auf die NUC
+  auszuweichen – der Rückfall auf die NUC ist eine ausdrückliche Wahl.
+
+**Inferenz:** Das nachtrainierte Modell wird als Fähigkeit `ocr`/`vision`
+(Modellname `auditcore-donut-invoice-v1`) auf den GPU-Spokes von janpow-ai
+bereitgestellt; der vision-service der NUC bleibt Rückfall. flowinvoice ruft
+wie heute nur die Plattform auf (`/api/v1/ai/apps/flowinvoice/v1/ocr`); die
+Plattform wählt den Spoke. Spokes melden ausschließlich über Tailscale
+erreichbare Adressen (Lehre aus dem OCR-Ausfall vom 24.09.2026: Docker-
+Containernamen sind von Hetzner aus nicht auflösbar).
+
+**Voraussetzungen vor E3:** janpow-ai einschalten und als FlowAgent-Spoke
+registrieren (Ein-Befehl-Installer `install.sh --enroll`), Telemetrie beider
+GPUs prüfen, NVIDIA-Treiber ≥ 570 für Blackwell, freier Plattenplatz ≥ 200 GB
+für Datensatz, Checkpoints und Container.
+
 ### 2d. Evaluation
 
 Ein gemeinsames Bewertungswerkzeug (`auditcore_invoicesynth.eval`, rein
@@ -407,5 +458,6 @@ laufen.
 | E4 | Echte anonymisierte Belege für die Evaluation (T4)? Wenn ja: Rechtsgrundlage, Anonymisierungsverfahren, Löschfrist | zunächst nein; eigene Privatbelege oder gedruckte Synthetik (T3) genügen für die Abnahme |
 | E5 | Prüfziffer-gültige, aber fiktive IBAN/USt-IdNr. in den Trainingsbelegen? | ja, mit sichtbarer Synthetik-Kennzeichnung |
 | E6 | Abnahmeschwellen aus 2d bestätigen | wie vorgeschlagen |
-| E7 | Betrieb: vision-service auf GPU umstellen (xtts-Konflikt) oder CPU/asynchron? Darf xtts für Trainingsnächte pausieren? | GPU-Image für Inferenz, Training nachts mit pausiertem xtts |
+| E7 | Betrieb: Training und Inferenz auf den zwei GPUs von janpow-ai über den FlowAgent (Nutzerwunsch 24.09.2026); NUC nur als Rückfall. Darf xtts auf der NUC für Rückfall-Trainingsnächte pausieren? | janpow-ai als Hauptort (DDP bei gleichen Karten, sonst zwei parallele Läufe); NUC-Rückfall nur ausdrücklich; xtts-Pause ja |
+| E9 | janpow-ai dauerhaft betreiben (Strom/Kosten) oder nur für Trainingsläufe einschalten? | nur für Trainingsläufe und bei Bedarf für Inferenz; Rückfall NUC |
 | E8 | Umfang Version 1: nur Kopf-/Summenfelder oder auch Positionen? | nur Kopf-/Summenfelder; Positionen in Version 2 |
