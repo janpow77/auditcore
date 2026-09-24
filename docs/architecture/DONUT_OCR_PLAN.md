@@ -1,8 +1,9 @@
 # Umsetzungsplan: Donut-basierte Belegerkennung mit auditcore
 
-Stand: 24. September 2026. Status: **PLAN**, keine Implementierung, keine
-fachliche Freigabe. Anlass: Nutzerfrage „kann man donut vision auch mit
-auditcore selber erstellen?“ und Auftrag „plane donut“.
+Stand: 24. September 2026. Status: **PLAN, Entscheidungen E1–E9 DECIDED**
+(24.09.2026, Nutzerzitat „Donut alle Empfehlungen“, siehe
+[Abschnitt 6](#6-entscheidungen)). Anlass: Nutzerfrage „kann man donut vision
+auch mit auditcore selber erstellen?“ und Auftrag „plane donut“.
 
 **Kurzantwort:** Ja. auditcore kann (1) die Trainingsdaten aus
 `auditcore_invoicegenerator` erzeugen, (2) ein eigenes Donut-Modell für deutsche
@@ -19,7 +20,7 @@ Repository und nicht in ein Wheel.
 3. [Machbarkeitsprobe (Ausgangswert)](#3-machbarkeitsprobe-ausgangswert)
 4. [Etappen, Aufwand, Abschlusskriterien](#4-etappen-aufwand-abschlusskriterien)
 5. [Risiken](#5-risiken)
-6. [Offene Entscheidungen](#6-offene-entscheidungen)
+6. [Entscheidungen](#6-entscheidungen)
 
 ## Ausgangslage (gelesen, nicht verändert)
 
@@ -42,12 +43,12 @@ Geprüft am 24.09.2026 über die Hugging-Face-API und GitHub.
 | Donut-Code | `clovaai/donut` | MIT, © 2022-present NAVER Corp. | **Nein**, nicht nötig | Modell und Prozessor stellt `transformers` (Apache-2.0) bereit (`VisionEncoderDecoderModel`, `DonutProcessor`). Wird dennoch ein Stück übernommen (etwa `json2token` aus dem Trainingsbeispiel), dann mit Datei `LICENSES/donut-MIT.txt` und Eintrag in `NOTICE` des betreffenden Pakets. |
 | Gewichte `naver-clova-ix/donut-base` | HF-Revision `a959cf33c20e09215873e338299c900f57047c61` | MIT (Modellkarte) | **Nein** | Download mit fester Revision und SHA-256 der Gewichtsdatei; Prüfsumme im Trainingsmanifest. Vortrainiert auf IIT-CDIP und SynthDoG; die Rechte an diesen Vortrainingsdaten klären wir nicht, wir übernehmen die MIT-Freigabe der Gewichte (Restrisiko: REVIEW_REQUIRED, niedrig). |
 | Gewichte `…/donut-base-finetuned-cord-v2` | HF-Revision `8003d433113256b4ce3a0f5bf604b29ff78a7451` | MIT | **Nein** | Nur Vergleichsmodell (heutiger vision-service), **kein** Startpunkt fürs Nachtraining. |
-| Datensatz CORD v2 | `naver-clova-ix/cord-v2`, Revision `7f0115a4b758a71d6473b8d085751692da2fef98`; GitHub `clovaai/cord` | CC-BY-4.0 | **Nein** | Indonesische Kassenbons, fachlich ungeeignet. Wird er (Entscheidung E3) als Beimischung gegen Vergessen genutzt, dann Namensnennung in der Modellkarte; das Modell bleibt dann weiter verteilbar (CC-BY verlangt nur Attribution). Empfehlung: nicht verwenden. |
+| Datensatz CORD v2 | `naver-clova-ix/cord-v2`, Revision `7f0115a4b758a71d6473b8d085751692da2fef98`; GitHub `clovaai/cord` | CC-BY-4.0 | **Nein** | Indonesische Kassenbons, fachlich ungeeignet. **Entscheidung E3 (24.09.2026): nicht verwenden.** (Würde er beigemischt, wäre Namensnennung in der Modellkarte nötig.) |
 | Eigene synthetische Daten | erzeugt aus `auditcore_invoicegenerator`/`auditcore_dummygenerator` (MIT, eigene Kerne) | eigene Daten | **Nur Generator, Manifest und höchstens eine Handvoll Beispielbelege als Testfixtures** | Datensatz ist aus Seed + Versionen reproduzierbar; im Repository steht das Manifest mit Datensatz-Hash, nicht die Bilder. Ablage des vollständigen Satzes lokal oder als Release-Asset. |
 | Schriften für die Layouts | Systempakete `fonts-dejavu` (Bitstream-Vera-Lizenz), `fonts-liberation2` (OFL-1.1), `fonts-noto-core` (OFL-1.1) | frei | **Nein** | Nicht einbetten; Generator verlangt die Pfade als Konfiguration und schreibt Name, Paketversion und SHA-256 jeder Schriftdatei ins Manifest. |
 | Scanrauschen, Hintergründe | prozedural (Pillow/NumPy) | eigen | ja (Code) | Keine Foto-/Textur-Datensätze fremder Herkunft. |
 | Echte Belege | Prüf- oder Privatbelege | personenbezogen, ggf. Geschäftsgeheimnis | **Niemals** | Nur lokal, nur zur Evaluation, nur nach Entscheidung E4 (Rechtsgrundlage, Anonymisierung, Löschfrist). Nicht fürs Training, solange das Modell verteilt werden soll (Memorisierungsrisiko). |
-| Nachtrainiertes Modell | eigene Gewichte, abgeleitet von MIT-Gewichten | Entscheidung E2 | **Nein** (kein Wheel, kein Git) | Release-Asset mit SHA-256 oder privates HF-Repository; Modellkarte mit MIT-Hinweis auf NAVER. |
+| Nachtrainiertes Modell | eigene Gewichte, abgeleitet von MIT-Gewichten | MIT (Entscheidung E2, 24.09.2026) | **Nein** (kein Wheel, kein Git) | Öffentliches GitHub-Release-Asset mit SHA-256 (E2); Modellkarte mit MIT-Hinweis auf NAVER. |
 | Laufzeitbibliotheken | `torch` (BSD-3), `transformers` (Apache-2.0), `sentencepiece` (Apache-2.0), `Pillow` (MIT-CMU) | frei | als Extra | Nur optionale Extras, nicht in der Kernabhängigkeit. |
 
 Synthetische Kennungen: IBAN mit gültiger Prüfziffer (sonst lernt das Modell
@@ -419,7 +420,7 @@ Aufwand in Arbeitstagen (AT) für die Umsetzung plus GPU-Zeit (unbeaufsichtigt).
 
 | Etappe | Inhalt | Aufwand | Abschlusskriterium |
 |---|---|---|---|
-| E0 | Entscheidungen E1–E8 einholen; Lizenzvermerke (Abschnitt 1) in `docs/provenance/` | 0,5 AT | Entscheidungen dokumentiert (DECIDED mit Datum/Zitat) |
+| E0 | Entscheidungen E1–E9 einholen (**erledigt 24.09.2026**); Lizenzvermerke (Abschnitt 1) in `docs/provenance/donut.json` | 0,5 AT | Entscheidungen dokumentiert (DECIDED mit Datum/Zitat) |
 | E1 | Bewertungswerkzeug + T1/T2-Miniaturen (je 50) + Ausgangswerte aller verfügbaren Kandidaten | 1–2 AT | reproduzierbarer Ausgangswert-Bericht in `docs/reports/`; Bewertungslogik mit Unit-Tests |
 | E2 | `auditcore_invoicesynth`: Anreicherung, ≥ 8 Layouts, Schriften, Augmentierung, Manifest, Splits; Paketgerüst mit Tests, Provenienz, Quality Gates | 4–6 AT | Pilot 2 000 Belege; zweiter Lauf gleicher Hash; Sichtprüfung von 50 zufälligen Belegen ohne Befund; `pytest`, `ruff`, `mypy --strict`, `auditcore-bibquality` grün |
 | E3 | Trainingswerkzeug mit Checkpoint-/Wiederaufnahme-Logik; Pilotlauf 3 Epochen × 2 000 | 2–3 AT + ≈ 4 GPU-h | **Stromausfall-Test:** `kill -9` und hartes Ausschalten während Schreiben eines Checkpoints → Wiederaufnahme ab letztem vollständigem Checkpoint, Schrittzähler und Loss-Verlauf stimmen; VRAM-Spitze gemessen ≤ 7 GiB; Pilot schlägt Donut-CORD auf T1 deutlich |
@@ -448,16 +449,32 @@ laufen.
 | Rechte an Vortrainingsdaten von `donut-base` | Rest-Unsicherheit | MIT-Freigabe der Gewichte dokumentieren; REVIEW_REQUIRED (niedrig) |
 | Synthetische Kennungen kollidieren mit realen | Anschein realer Daten | sichtbare Synthetik-Kennzeichnung; fiktive BLZ-Liste (E5) |
 
-## 6. Offene Entscheidungen
+## 6. Entscheidungen
 
-| Nr. | Frage | Empfehlung |
+Entschieden am **24.09.2026** durch den Nutzer. Zitat: **„Donut alle
+Empfehlungen“**. Status vorher: offen (HUMAN_DECISION_REQUIRED), jetzt
+**DECIDED**; es gilt jeweils die Empfehlung aus der Planfassung vom 24.09.2026.
+
+| Nr. | Frage | Entscheidung (DECIDED, 24.09.2026) | Folge für die Umsetzung |
+|---|---|---|---|
+| E1 | Trainingsdaten als neue Distribution `auditcore_invoicesynth` oder als Extra von `auditcore_invoicegenerator` 0.3.0? | **Neue Distribution `auditcore_invoicesynth`** (klar getrennter Zweck, Generator bleibt schlank und charakterisiert) | `packages/auditcore_invoicesynth` 0.1.0, abhängig von `auditcore_invoicegenerator==0.2.0`; der Generator bleibt unverändert. |
+| E2 | Lizenz und Ablage des nachtrainierten Modells | **MIT + öffentliches GitHub-Release-Asset**, solange nur synthetische Daten eingehen | Modellkarte mit MIT-Hinweis auf NAVER; kein HF-Privat-Repository; kein Git-LFS, kein Wheel. Geht je ein nicht synthetischer Beleg ins Training ein, ist E2 neu zu entscheiden. |
+| E3 | CORD v2 beimischen? | **Nein** | Kein CORD-Datensatz im Training; CORD-Modell nur Vergleichskandidat. |
+| E4 | Echte anonymisierte Belege für die Evaluation (T4)? | **Nein** (zunächst) | Abnahme mit T1–T3 (synthetisch, T3 gedruckt/gescannt); keine echten Belege in Training, Evaluation oder Repository. |
+| E5 | Prüfziffer-gültige, aber fiktive IBAN/USt-IdNr.? | **Ja, sichtbar als synthetisch markiert** | IBAN mit gültiger ISO-13616-Prüfziffer aus fiktiver Bankleitzahlliste, USt-IdNr. DE mit gültiger Prüfziffer (ISO 7064 MOD 11,10), AT mit gültiger Prüfziffer; jede Seite trägt die Kennzeichnung `SYNTHETISCH`. |
+| E6 | Abnahmeschwellen aus 2d | **Wie vorgeschlagen** | T2/T3: Gesamtbetrag ≥ 98 %, Datum ≥ 98 %, Rechnungsnummer ≥ 95 %, IBAN und USt-IdNr. ≥ 97 %; Falschwert-Quote nach Plausibilität ≤ 0,5 % je Feld; auf T3 besser als Tesseract + Regex in ≥ 4 von 5 Pflichtfeldern. |
+| E7 | Betrieb: Training und Inferenz | **janpow-ai (2 GPUs) über den FlowAgent als Hauptort**; NUC nur als ausdrücklicher Rückfall; **xtts-Pause ja** | DDP bei gleichen Karten, sonst zwei parallele Läufe (2c-bis); kein stilles Ausweichen auf die NUC; für Rückfall-Trainingsnächte auf der NUC darf xtts pausieren. |
+| E8 | Umfang Version 1 | **Nur Kopf-/Summenfelder** | Ziel-JSON `<s_auditcore_invoice_v1>` ohne Positionen; Positionen erst in Version 2 (neue Schema-Major-Version). |
+| E9 | janpow-ai dauerhaft betreiben? | **Nein, nur für Trainingsläufe und bei Bedarf für Inferenz**; Rückfall NUC | Planung meldet janpow-ai als „nicht verfügbar“, solange der Rechner aus ist; Inferenz-Rückfall über den vision-service der NUC. |
+
+### Umsetzungsstand (Runde vom 24.09.2026)
+
+Die Etappen dieser Umsetzungsrunde sind anders zugeschnitten als die
+Planetappen in Abschnitt 4:
+
+| Runde | Inhalt | Planetappe |
 |---|---|---|
-| E1 | Trainingsdaten als neue Distribution `auditcore_invoicesynth` oder als Extra von `auditcore_invoicegenerator` 0.3.0? | neue Distribution (klar getrennter Zweck, Generator bleibt schlank und charakterisiert) |
-| E2 | Lizenz und Ablage des nachtrainierten Modells: öffentlich (MIT, Release-Asset) oder privat (HF privat)? | MIT + öffentliches Release-Asset, solange nur synthetische Daten eingehen |
-| E3 | CORD v2 beimischen? | nein |
-| E4 | Echte anonymisierte Belege für die Evaluation (T4)? Wenn ja: Rechtsgrundlage, Anonymisierungsverfahren, Löschfrist | zunächst nein; eigene Privatbelege oder gedruckte Synthetik (T3) genügen für die Abnahme |
-| E5 | Prüfziffer-gültige, aber fiktive IBAN/USt-IdNr. in den Trainingsbelegen? | ja, mit sichtbarer Synthetik-Kennzeichnung |
-| E6 | Abnahmeschwellen aus 2d bestätigen | wie vorgeschlagen |
-| E7 | Betrieb: Training und Inferenz auf den zwei GPUs von janpow-ai über den FlowAgent (Nutzerwunsch 24.09.2026); NUC nur als Rückfall. Darf xtts auf der NUC für Rückfall-Trainingsnächte pausieren? | janpow-ai als Hauptort (DDP bei gleichen Karten, sonst zwei parallele Läufe); NUC-Rückfall nur ausdrücklich; xtts-Pause ja |
-| E9 | janpow-ai dauerhaft betreiben (Strom/Kosten) oder nur für Trainingsläufe einschalten? | nur für Trainingsläufe und bei Bedarf für Inferenz; Rückfall NUC |
-| E8 | Umfang Version 1: nur Kopf-/Summenfelder oder auch Positionen? | nur Kopf-/Summenfelder; Positionen in Version 2 |
+| E0 | Entscheidungen dokumentiert (dieser Abschnitt) | E0 |
+| E1 | Paket `auditcore_invoicesynth` 0.1.0 (Anreicherung, Layouts, Augmentierung, Manifest, Bewertung) | E1 + E2 |
+| E2 | `auditcore_documents` 0.2.0: `DonutPort`, `HttpDonut`, `FakeDonut`, `LocalDonut` (Extra `donut`), `DonutFieldMergeStage`, `DONUT_PIPELINE` | E5 |
+| E3 | Trainingswerkzeug **vorbereitet** (Profile, Checkpoints, Wiederaufnahme, systemd-Vorlage, FlowAgent-Job) mit CPU-Rauchtest; **kein** Training, janpow-ai ist offline | Teil von E3 |
