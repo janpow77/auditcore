@@ -39,6 +39,9 @@ _LEGACY_DEFAULTS: dict[str, object] = {
     "gateway_outage_is_error": False,
     "retry_gateway": False,
     "retention_categories": LEGACY_CATEGORIES,
+    # ab 2026.09.24 (Donut): Vorgaben entsprechen dem bisherigen Verhalten.
+    "ocr_backend": None,
+    "donut_min_field_confidence": None,
 }
 
 
@@ -54,6 +57,10 @@ class PipelineProfile:
     retention_categories: tuple[str, ...] = LEGACY_CATEGORIES
     status: str = "SOURCE_CHARACTERIZED"
     source: str = _SOURCE
+    #: Ausdrücklich gewähltes OCR-Backend des Profils (``None`` = wie bisher per Stufe).
+    ocr_backend: str | None = None
+    #: Schwellwert der Feldkonfidenz für die Donut-Zusammenführung.
+    donut_min_field_confidence: float | None = None
 
     @property
     def fingerprint(self) -> str:
@@ -95,4 +102,25 @@ CORRECTED_PIPELINE = PipelineProfile(
 #: Empfohlenes Profil (Entscheidung D4 vom 2026-09-23).
 RECOMMENDED_PIPELINE = CORRECTED_PIPELINE
 
-PIPELINE_PROFILES = {p.profile_id: p for p in (LEGACY_PIPELINE, CORRECTED_PIPELINE)}
+#: Donut-Belegerkennung (Plan DONUT_OCR_PLAN.md 2a, Entscheidungen E1–E9 vom 24.09.2026):
+#: abgeleitet von ``CORRECTED_PIPELINE``; OCR-Backend ``donut`` mit Tesseract-Abgleich,
+#: ``DonutFieldMergeStage`` und Pflicht-Plausibilität. Nur ausdrücklich wählbar.
+DONUT_PIPELINE = PipelineProfile(
+    profile_id="auditcore.pipeline.donut",
+    version="2026.09.24",
+    preserve_review=True,
+    field_patterns=dict(CORRECTED_PIPELINE.field_patterns),
+    amount_mode="locale-aware",
+    gateway_outage_is_error=True,
+    retry_gateway=True,
+    retention_categories=ALL_CATEGORIES,
+    status="EXPERIMENTAL",
+    source="auditcore docs/architecture/DONUT_OCR_PLAN.md 2a (abgeleitet von auditcore.pipeline "
+    "2026.09.2)",
+    ocr_backend="donut",
+    donut_min_field_confidence=0.90,
+)
+
+PIPELINE_PROFILES = {
+    p.profile_id: p for p in (LEGACY_PIPELINE, CORRECTED_PIPELINE, DONUT_PIPELINE)
+}

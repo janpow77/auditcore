@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_documents",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "sources": [
     {
       "repository": "janpow77/audit_designer",
@@ -467,5 +467,17 @@
     },
     "method": "Unveränderte, Blob-geprüfte Module ausgeführt; Gateway-OCR, Chandra, Tesseract-Parser, Audit-Dienst, Einstellungen und asyncio.sleep durch aufzeichnende Stellvertreter ersetzt"
   },
-  "behavior_changes_pipeline": "docs/pipeline.md"
+  "behavior_changes_pipeline": "docs/pipeline.md",
+  "donut": {
+    "version_added": "0.2.0",
+    "origin": "Neuimplementierung nach docs/architecture/DONUT_OCR_PLAN.md 2a; kein Code aus clovaai/donut, vision-service oder anderen Repositories übernommen (Tokenfolge <s_feld>…</s_feld> eigenständig umgesetzt).",
+    "decisions": {
+      "status": "DECIDED",
+      "date": "2026-09-24",
+      "confirmation": "Donut alle Empfehlungen"
+    },
+    "profile": "auditcore.pipeline.donut 2026.09.24 (EXPERIMENTAL)",
+    "model": "nicht enthalten; LocalDonut lädt nur lokale Verzeichnisse mit geprüfter SHA-256 (E2: Modell als Release-Asset)",
+    "legacy_pipeline": "unverändert (Fingerabdruck aaec1633…, alle 30 Replays)"
+  }
 }

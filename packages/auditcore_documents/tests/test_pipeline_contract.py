@@ -39,7 +39,11 @@ def scenario(name: str) -> dict[str, Any]:
 
 
 def test_profiles_are_versioned_and_fingerprinted() -> None:
-    assert set(PIPELINE_PROFILES) == {"flowinvoice.pipeline", "auditcore.pipeline"}
+    assert set(PIPELINE_PROFILES) == {
+        "flowinvoice.pipeline",
+        "auditcore.pipeline",
+        "auditcore.pipeline.donut",
+    }
     assert LEGACY_PIPELINE.fingerprint != CORRECTED_PIPELINE.fingerprint
     assert "fb2d18568d2eaf64574d131ceae51a936b9aac02" in LEGACY_PIPELINE.source
     assert LEGACY_PIPELINE.preserve_review is False and CORRECTED_PIPELINE.preserve_review is True
