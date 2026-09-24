@@ -41,5 +41,16 @@
     "embedded": false,
     "catalog": "fonts.FONT_CATALOG (DejaVu: Bitstream-Vera; Liberation, Noto: OFL-1.1)",
     "evidence": "Name, Datei, Lizenz und SHA-256 je verwendeter Schrift im Datensatz-Manifest"
+  },
+  "training": {
+    "status": "PREPARED_NOT_EXECUTED",
+    "plan": "DONUT_OCR_PLAN.md 2c/2c-bis",
+    "base_model": {
+      "id": "naver-clova-ix/donut-base",
+      "revision": "a959cf33c20e09215873e338299c900f57047c61",
+      "license": "MIT",
+      "distributed": false
+    },
+    "note": "Nur Werkzeug; Gewichte und Datensätze werden nicht mit dem Paket verteilt."
   }
 }
