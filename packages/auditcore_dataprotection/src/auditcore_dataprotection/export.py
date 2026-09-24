@@ -270,12 +270,21 @@ def _edpb_section(assessment: Assessment, profile: RuleProfile) -> dict[str, Any
     }
 
 
-def register_report(version: RegisterVersion, profile: RuleProfile) -> dict[str, Any]:
-    """Report data of one register version with content check results."""
+def register_report(
+    version: RegisterVersion,
+    profile: RuleProfile,
+    *,
+    overview: Sequence[Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Report data of one register version with content check results.
+
+    ``overview`` (rows of ``AssessmentService.overview``) adds the state of
+    the newest DPIA per activity; without it the report is unchanged.
+    """
     content = version.content
     activities = [dict(a) for a in version.activities]
     groups = group_by_department(activities, list(content.get("referate") or []))
-    return {
+    report = {
         "schema": REPORT_SCHEMA,
         "kind": "register",
         "meta": {
@@ -303,6 +312,159 @@ def register_report(version: RegisterVersion, profile: RuleProfile) -> dict[str,
         "departments": [{"name": name, "activities": _plain(rows)} for name, rows in groups],
         "issues": [i.to_dict() for i in check_register(content, profile)],
     }
+    if overview is not None:
+        report["dsfa"] = {
+            str(row.get("id")): _plain(row.get("dsfa")) for row in overview if row.get("id")
+        }
+    return report
+
+
+REGISTER_STATUS_TEXT = {
+    "entwurf": "Entwurf",
+    "freigegeben": "freigegeben",
+    "abgeloest": "abgelöst",
+}
+DSFA_STATUS_TEXT = {
+    "entwurf": "Entwurf",
+    "dsb_beteiligung": "DSB beteiligt",
+    "freigegeben": "freigegeben",
+    "abgeloest": "abgelöst",
+}
+COVER_TITLES = {
+    "verantwortlicher": "Verantwortlicher",
+    "dsb": "Datenschutzbeauftragte/r",
+    "vertreter": "Vertreter",
+}
+
+
+def _cover_rows(value: Any, title: str) -> list[str]:
+    """Rows of the cover sheet; nested mappings become indented field lists."""
+    if isinstance(value, Mapping):
+        inner = "<br>".join(
+            f"{_text(str(k).replace('_', ' ').capitalize())}: {_text(v)}"
+            for k, v in value.items()
+            if not isinstance(v, Mapping)
+        )
+        return [f"<tr><th style='width:32%'>{_text(title)}</th><td>{inner or '–'}</td></tr>"]
+    return [f"<tr><th style='width:32%'>{_text(title)}</th><td>{_text(value)}</td></tr>"]
+
+
+def _dsfa_state(state: Mapping[str, Any] | None) -> str:
+    if not state:
+        return "keine Folgenabschätzung angelegt"
+    parts = [
+        f"Fassung {_text(state.get('version'))}",
+        _text(DSFA_STATUS_TEXT.get(str(state.get("status")), state.get("status"))),
+    ]
+    if state.get("entscheidung"):
+        parts.append(f"Entscheidung: {_text(state['entscheidung'])}")
+    if state.get("freigegeben_am"):
+        parts.append(f"freigegeben am {_text(str(state['freigegeben_am'])[:10])}")
+    if state.get("pruefung_erforderlich"):
+        parts.append("<b>Überprüfung erforderlich</b>")
+    return ", ".join(parts)
+
+
+def render_register_html(report: Mapping[str, Any]) -> str:
+    """Self-contained, escaped HTML view of :func:`register_report` data.
+
+    A read-only view of the record of processing activities that any
+    consuming application can show or print: version and status, cover
+    sheet, completeness notes, and every activity by department with all
+    fields and their legal references; with ``overview`` data also the state
+    of the DPIA per activity.
+    """
+    meta = report["meta"]
+    columns = report["columns"]
+    status = REGISTER_STATUS_TEXT.get(meta["status"], meta["status"])
+    parts = [
+        "<!DOCTYPE html><html lang='de'><head><meta charset='utf-8'>",
+        "<title>Verzeichnis von Verarbeitungstätigkeiten</title>",
+        _STYLE,
+        "</head><body>",
+        "<h1>Verzeichnis von Verarbeitungstätigkeiten</h1>",
+        f"<p class='klein'>Regelprofil {_text(meta['profile_id'])} Version "
+        f"{_text(meta['profile_version'])}; Fassung {_text(meta['version'])}, {_text(status)}</p>",
+        "<h2>Fassung</h2><table>",
+        f"<tr><th style='width:32%'>Fassung</th><td>{_text(meta['version'])} ({_text(status)})"
+        + (
+            f"; ersetzt Fassung {_text(meta['predecessor_version'])}"
+            if meta.get("predecessor_version")
+            else ""
+        )
+        + "</td></tr>",
+        f"<tr><th>Erstellt</th><td>{_text(meta['created_by'])} am "
+        f"{_text(str(meta['created_at'])[:10])}; bearbeitet von {_text(meta['editors'])}</td></tr>",
+        "<tr><th>Freigegeben</th><td>"
+        + (
+            f"{_text(meta['released_by'])} am {_text(str(meta['released_at'])[:10])}"
+            if meta.get("released_by")
+            else "noch nicht freigegeben"
+        )
+        + "</td></tr>",
+        f"<tr><th>Prüfsumme des Inhalts</th><td class='klein'>{_text(meta['content_hash'])}</td>"
+        "</tr></table>",
+        "<h2>Deckblatt</h2><table>",
+    ]
+    cover = report.get("cover") or {}
+    for key, value in cover.items():
+        parts.extend(_cover_rows(value, COVER_TITLES.get(str(key), str(key).capitalize())))
+    if not cover:
+        parts.append("<tr><td>Kein Deckblatt erfasst.</td></tr>")
+    parts.append("</table>")
+    issues = report.get("issues") or []
+    if issues:
+        parts.append("<h2>Prüfhinweise zur Vollständigkeit</h2><ul>")
+        for issue in issues:
+            mark = " (vor der Freigabe zu ergänzen)" if issue.get("blocking") else ""
+            parts.append(f"<li>{_text(issue.get('message'))}{escape(mark)}</li>")
+        parts.append("</ul>")
+    departments = report.get("departments") or []
+    parts.append("<h2>Übersicht</h2><table><tr><th>Nr.</th><th>Tätigkeit</th><th>Referat</th>")
+    with_dsfa = "dsfa" in report
+    if with_dsfa:
+        parts.append("<th>Folgenabschätzung</th>")
+    parts.append("</tr>")
+    number = 0
+    for dept in departments:
+        for activity in dept["activities"]:
+            number += 1
+            row = (
+                f"<tr><td>{number}</td><td>{_text(activity.get('name'))}</td>"
+                f"<td>{_text(dept['name'])}</td>"
+            )
+            if with_dsfa:
+                row += f"<td>{_dsfa_state(report['dsfa'].get(str(activity.get('id'))))}</td>"
+            parts.append(row + "</tr>")
+    parts.append("</table>")
+    number = 0
+    for dept in departments:
+        parts.append(f"<h2>{_text(dept['name'])}</h2>")
+        for activity in dept["activities"]:
+            number += 1
+            parts.append(
+                f"<h3>{number}. {_text(activity.get('name'))}</h3><table>"
+                "<tr><th style='width:28%'>Angabe</th><th>Inhalt</th>"
+                "<th style='width:24%'>Fundstelle</th></tr>"
+            )
+            for column in columns:
+                parts.append(
+                    f"<tr><td>{_text(column['title'])}</td>"
+                    f"<td>{_text(activity.get(column['key']))}</td>"
+                    f"<td class='klein'>{_text(column['reference'], '')}</td></tr>"
+                )
+            if with_dsfa:
+                parts.append(
+                    "<tr><td>Folgenabschätzung</td><td>"
+                    f"{_dsfa_state(report['dsfa'].get(str(activity.get('id'))))}</td>"
+                    "<td class='klein'>Art. 35 DSGVO / § 62 HDSIG</td></tr>"
+                )
+            parts.append("</table>")
+    parts.append(
+        "<p class='klein'>Ansicht einer Fassung des Verzeichnisses. Freigegebene Fassungen "
+        "sind unveränderlich; Änderungen ergeben eine neue Fassung.</p></body></html>"
+    )
+    return "".join(parts)
 
 
 def overview_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
