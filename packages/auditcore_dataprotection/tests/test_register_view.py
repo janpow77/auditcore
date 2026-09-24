@@ -51,6 +51,13 @@ def test_view_with_overview_shows_the_dpia_state() -> None:
     html = render_register_html(report)
     assert "Fassung 1, Entwurf" in html
     assert "keine Folgenabschätzung angelegt" in html
+    a = w.service.versions(TENANT, ANNA, "a1")[0]
+    a = w.service.decide(
+        TENANT, ANNA, a.assessment_id, expected_revision=a.revision, decision="freigabe"
+    )
+    rows = w.service.overview(TENANT, ANNA)
+    html = render_register_html(register_report(version, profile, overview=rows))
+    assert "Entscheidung: Freigabe" in html and "Entscheidung: freigabe" not in html
 
 
 def test_report_without_overview_is_unchanged() -> None:

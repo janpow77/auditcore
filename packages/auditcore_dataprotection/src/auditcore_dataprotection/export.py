@@ -330,6 +330,13 @@ DSFA_STATUS_TEXT = {
     "freigegeben": "freigegeben",
     "abgeloest": "abgelöst",
 }
+DECISION_TEXT = {
+    "nur_schwellwert": "keine Folgenabschätzung erforderlich",
+    "freigabe": "Freigabe",
+    "freigabe_mit_auflagen": "Freigabe mit Auflagen",
+    "konsultation_aufsichtsbehoerde": "Konsultation der Aufsichtsbehörde",
+    "verworfen": "verworfen",
+}
 COVER_TITLES = {
     "verantwortlicher": "Verantwortlicher",
     "dsb": "Datenschutzbeauftragte/r",
@@ -357,7 +364,8 @@ def _dsfa_state(state: Mapping[str, Any] | None) -> str:
         _text(DSFA_STATUS_TEXT.get(str(state.get("status")), state.get("status"))),
     ]
     if state.get("entscheidung"):
-        parts.append(f"Entscheidung: {_text(state['entscheidung'])}")
+        decision = str(state["entscheidung"])
+        parts.append(f"Entscheidung: {_text(DECISION_TEXT.get(decision, decision))}")
     if state.get("freigegeben_am"):
         parts.append(f"freigegeben am {_text(str(state['freigegeben_am'])[:10])}")
     if state.get("pruefung_erforderlich"):
