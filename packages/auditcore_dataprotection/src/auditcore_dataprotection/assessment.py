@@ -142,6 +142,10 @@ def _without_review(assessment: Assessment) -> Assessment:
         leadership_presented_at=None,
         consultation=None,
         conditions=(),
+        dpo_requested_from=None,
+        dpo_requested_on=None,
+        dpo_requested_by=None,
+        dpo_requested_at=None,
     )
 
 
@@ -164,6 +168,19 @@ def _refuse_downgrade(stored: RuleProfile, target: RuleProfile) -> None:
 
 
 def _conditions(conditions: Sequence[str], decision: str, rules: RuleProfile) -> tuple[str, ...]:
+    """Conditions of a conditional approval; required only in blocking mode."""
+    items = _condition_items(conditions, decision, rules)
+    if decision in rules.conditions_required_for and not items and not rules.documentation_mode:
+        raise ValidationError(
+            "Eine Freigabe mit Auflagen braucht mindestens eine Bedingung, die vor Beginn "
+            "der Verarbeitung zu erfüllen ist (EDSA-Vorlage 2026, Abschnitt 6)."
+        )
+    return items
+
+
+def _condition_items(
+    conditions: Sequence[str], decision: str, rules: RuleProfile
+) -> tuple[str, ...]:
     """Conditions of a conditional approval (EDPB template, section 6)."""
     if isinstance(conditions, str) or not isinstance(conditions, Sequence):
         raise ValidationError("Bedingungen sind als Liste von Texten anzugeben.")
@@ -175,11 +192,6 @@ def _conditions(conditions: Sequence[str], decision: str, rules: RuleProfile) ->
             items.append(item.strip())
     if items and not rules.edpb:
         raise ValidationError("Bedingungen kennt nur ein Profil nach der EDSA-Vorlage.")
-    if decision in rules.conditions_required_for and not items:
-        raise ValidationError(
-            "Eine Freigabe mit Auflagen braucht mindestens eine Bedingung, die vor Beginn "
-            "der Verarbeitung zu erfüllen ist (EDSA-Vorlage 2026, Abschnitt 6)."
-        )
     if items and decision not in rules.conditions_required_for:
         raise ValidationError(f"Zur Entscheidung '{decision}' werden keine Bedingungen erfasst.")
     return tuple(items)
@@ -503,7 +515,11 @@ class AssessmentService:
         )
         if reset:
             updated = _without_review(updated)
-        elif updated.decision is not None and rules.consultation_notice is not None:
+        elif (
+            updated.decision is not None
+            and rules.consultation_notice is not None
+            and proposal.get("recommendation") != RECOMMENDATION_INCOMPLETE
+        ):
             # DP-C21: unchanged content keeps the final notice of the decision.
             updated = replace(
                 updated, proposal=finalize_consultation(rules, proposal, updated.decision)
@@ -533,7 +549,9 @@ class AssessmentService:
         current = self._open(tenant_id, assessment_id, expected_revision)
         rules = self._profile(current)
         recommendation = current.proposal.get("recommendation")
-        if recommendation in (None, RECOMMENDATION_INCOMPLETE):
+        documenting = rules.documentation_mode
+        complete = recommendation not in (None, RECOMMENDATION_INCOMPLETE)
+        if not complete and not documenting:
             raise ConflictError(
                 "Die Erhebung ist unvollständig; über den Vorschlag kann erst nach vollständiger "
                 "Schwellwertanalyse und Risikobetrachtung entschieden werden."
@@ -544,7 +562,7 @@ class AssessmentService:
                 f"{', '.join(rules.decisions)}."
             )
         condition_list = _conditions(conditions, decision, rules)
-        if rules.consultation_notice is not None:
+        if rules.consultation_notice is not None and not documenting:
             open_issues = [
                 str(i.get("message"))
                 for i in current.proposal.get("issues") or ()
@@ -560,7 +578,11 @@ class AssessmentService:
         if not isinstance(justification, str):
             raise ValidationError("Die Begründung muss Text sein.")
         deviation = decision != recommendation
-        if deviation and len(justification.strip()) < rules.min_justification_length:
+        if (
+            deviation
+            and len(justification.strip()) < rules.min_justification_length
+            and not documenting
+        ):
             raise ValidationError(
                 "Wer vom Vorschlag abweicht, muss das begründen. Die Begründung muss "
                 f"mindestens {rules.min_justification_length} Zeichen umfassen und "
@@ -569,7 +591,7 @@ class AssessmentService:
             )
         proposal = (
             current.proposal
-            if rules.consultation_notice is None
+            if rules.consultation_notice is None or not complete
             else finalize_consultation(rules, current.proposal, decision)
         )
         updated = replace(
@@ -662,7 +684,11 @@ class AssessmentService:
         text = (conclusion or "").strip() if isinstance(conclusion, str) else ""
         if not text:
             raise ValidationError("Die Folgerung aus der Stellungnahme ist anzugeben.")
-        if current.dpo_vote == "abgelehnt" and len(text) < rules.min_justification_length:
+        if (
+            current.dpo_vote == "abgelehnt"
+            and len(text) < rules.min_justification_length
+            and not rules.documentation_mode
+        ):
             raise ValidationError(
                 "Wird von einer ablehnenden Stellungnahme abgewichen, ist das mit "
                 f"mindestens {rules.min_justification_length} Zeichen zu begründen."
@@ -688,6 +714,51 @@ class AssessmentService:
         self._store(current, updated)
         self._event(
             actor, "assessment.dpo_conclusion", updated, leadership=presented_to is not None
+        )
+        return updated
+
+    def record_dpo_request(
+        self,
+        tenant_id: str,
+        actor: Actor,
+        assessment_id: str,
+        *,
+        expected_revision: int,
+        requested_from: str,
+        requested_on: date,
+    ) -> Assessment:
+        """Document that the advice of the DPO was sought (Art. 35 Abs. 2 DSGVO).
+
+        Only for profiles in documentation mode. The statement itself can
+        follow later with :meth:`record_dpo_statement`; the release does not
+        wait for it.
+        """
+        self._allow(actor, Permission.ASSESSMENT_EDIT, tenant_id)
+        current = self._open(tenant_id, assessment_id, expected_revision)
+        rules = self._profile(current)
+        if not rules.documentation_mode:
+            raise ValidationError(
+                "Die Einholung der Stellungnahme wird nur im Dokumentationsmodus gesondert "
+                "erfasst; hier ist die Stellungnahme selbst zu dokumentieren."
+            )
+        if not isinstance(requested_from, str) or not requested_from.strip():
+            raise ValidationError("Anzugeben ist, bei wem die Stellungnahme eingeholt wurde.")
+        if not isinstance(requested_on, date):
+            raise ValidationError("Das Datum der Anfrage ist als Datum anzugeben.")
+        now = self.clock.now()
+        updated = replace(
+            current,
+            dpo_requested_from=requested_from.strip(),
+            dpo_requested_on=requested_on.isoformat(),
+            dpo_requested_by=actor.id,
+            dpo_requested_at=now,
+            editors=self._with_editor(current, actor),
+            updated_at=now,
+            revision=current.revision + 1,
+        )
+        self._store(current, updated)
+        self._event(
+            actor, "assessment.dpo_requested", updated, requested_on=updated.dpo_requested_on
         )
         return updated
 
@@ -720,6 +791,7 @@ class AssessmentService:
             rules.edpb
             and ground == HIGH_RESIDUAL_RISK
             and not current.proposal.get("consultation_required")
+            and not rules.documentation_mode
         ):
             raise ValidationError(
                 "Nach der Bewertung verbleibt kein hohes Restrisiko. Eine Konsultation aus "
@@ -759,17 +831,73 @@ class AssessmentService:
     # ------------------------------------------------------------- release
 
     def release_blockers(self, assessment: Assessment) -> tuple[str, ...]:
-        """All reasons that currently prevent a release, in checking order."""
+        """All reasons that currently prevent a release, in checking order.
+
+        Profiles in documentation mode never block: see :meth:`open_points`.
+        """
         rules = self._profile(assessment)
+        if rules.documentation_mode:
+            return ()
+        return self._checks(assessment, rules)
+
+    def open_points(self, assessment: Assessment) -> tuple[str, ...]:
+        """Everything still open: failed checks and, for schema 2, template hints.
+
+        In documentation mode these points are recorded with the release
+        instead of preventing it.
+        """
+        rules = self._profile(assessment)
+        points = list(self._checks(assessment, rules))
+        if rules.edpb:
+            points.extend(edpb_hints(assessment, rules))
+        return tuple(points)
+
+    def _checks(self, assessment: Assessment, rules: RuleProfile) -> tuple[str, ...]:
+        """Checks of the release in checking order (blocking or documented)."""
         reasons: list[str] = []
         proposal = assessment.proposal
         screening = proposal.get("screening") or {}
+        documenting = rules.documentation_mode
         if not assessment.decision:
             reasons.append("Vor der Freigabe ist über den Vorschlag zu entscheiden.")
-        if assessment.dpo_at is None:
+        if assessment.dpo_at is None and not documenting:
             reasons.append(
                 "Vor der Freigabe ist die oder der Datenschutzbeauftragte zu "
                 f"beteiligen ({rules.norm('dsb')})."
+            )
+        if assessment.dpo_at is None and documenting:
+            if assessment.dpo_requested_on is None:
+                reasons.append(
+                    "Es ist nicht dokumentiert, dass der Rat der oder des "
+                    f"Datenschutzbeauftragten eingeholt wurde ({rules.norm('dsb')})."
+                )
+            else:
+                reasons.append(
+                    "Die Stellungnahme der oder des Datenschutzbeauftragten liegt noch nicht "
+                    f"vor; eingeholt am {assessment.dpo_requested_on} bei "
+                    f"{assessment.dpo_requested_from}."
+                )
+        if (
+            documenting
+            and assessment.deviation
+            and (
+                len((assessment.deviation_justification or "").strip())
+                < rules.min_justification_length
+            )
+        ):
+            reasons.append(
+                "Die Entscheidung weicht vom Vorschlag ab; eine Begründung von mindestens "
+                f"{rules.min_justification_length} Zeichen fehlt (Art. 5 Abs. 2 DSGVO)."
+            )
+        if (
+            documenting
+            and assessment.consultation is not None
+            and assessment.consultation.ground == HIGH_RESIDUAL_RISK
+            and not proposal.get("consultation_required")
+        ):
+            reasons.append(
+                "Als Grund der Konsultation ist ein hohes Restrisiko angegeben, die Bewertung "
+                "ergibt aber kein hohes Restrisiko."
             )
         if not screening.get("complete"):
             reasons.append(
@@ -838,9 +966,11 @@ class AssessmentService:
         """Four-eyes release; the version is locked and older releases are superseded."""
         self._allow(actor, Permission.ASSESSMENT_RELEASE, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
+        rules = self._profile(current)
         blockers = self.release_blockers(current)
         if blockers:
             raise ConflictError(blockers[0])
+        open_points = self.open_points(current) if rules.documentation_mode else ()
         if actor.id in current.editors or actor.id == current.decided_by:
             raise FourEyesViolation(
                 "Vier-Augen-Prinzip verletzt: Die Kennung "
@@ -867,12 +997,17 @@ class AssessmentService:
             released_at=now,
             updated_at=now,
             revision=current.revision + 1,
+            release_open_points=open_points,
         )
         self._store(current, released)
         for older in superseded:
             self.assessments.mark_superseded(tenant_id, older.assessment_id, older.revision)
         self._event(
-            actor, "assessment.released", released, superseded=[a.assessment_id for a in superseded]
+            actor,
+            "assessment.released",
+            released,
+            superseded=[a.assessment_id for a in superseded],
+            **({"open_points": len(open_points)} if rules.documentation_mode else {}),
         )
         return released
 

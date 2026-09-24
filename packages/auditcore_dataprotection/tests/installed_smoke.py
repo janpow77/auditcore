@@ -35,8 +35,10 @@ def main() -> None:
     assert available_profiles() == (
         ("auditcore.dsgvo", "2026.10.1"),
         ("auditcore.dsgvo", "2026.10.2"),
+        ("auditcore.dsgvo", "2026.10.3"),
         ("auditcore.hdsig_ji", "2026.10.1"),
         ("auditcore.hdsig_ji", "2026.10.2"),
+        ("auditcore.hdsig_ji", "2026.10.3"),
         ("regulierung.dsgvo", "2026.09.1"),
         ("regulierung.hdsig_ji", "2026.09.1"),
     )

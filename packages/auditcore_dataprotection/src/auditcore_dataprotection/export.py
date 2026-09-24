@@ -196,6 +196,12 @@ def assessment_report(
         assessment.decision or "", None
     )
     report["decision"]["conditions"] = list(assessment.conditions)
+    if profile.documentation_mode:
+        report["dpo"]["requested_from"] = assessment.dpo_requested_from
+        report["dpo"]["requested_on"] = assessment.dpo_requested_on
+        report["dpo"]["requested_by"] = assessment.dpo_requested_by
+        report["release_mode"] = profile.release_mode
+        report["release_open_points"] = list(assessment.release_open_points)
     report["edpb"] = _edpb_section(assessment, profile)
     if consultation and consultation.ground:
         title, reference = profile.consultation_grounds[consultation.ground]
@@ -562,6 +568,14 @@ def _html_decision(report: Mapping[str, Any]) -> list[str]:
             f"<tr><th>Abweichung vom Vorschlag</th>"
             f"<td>{_text(decision['deviation_justification'])}</td></tr>"
         )
+    if report.get("release_mode"):
+        requested = (
+            f"am {_text(dpo.get('requested_on'))} bei {_text(dpo.get('requested_from'))}"
+            f" (erfasst von {_text(dpo.get('requested_by'))})"
+            if dpo.get("requested_on")
+            else "nicht dokumentiert"
+        )
+        parts.append(f"<tr><th>Stellungnahme eingeholt</th><td>{requested}</td></tr>")
     parts += [
         f"<tr><th>Datenschutzbeauftragte/r</th><td>{_text(dpo['vote_text'])}"
         f" ({_text(dpo['by'])}, {_text(dpo['at'])})</td></tr>",
@@ -644,6 +658,22 @@ def _html_issues_and_changes(report: Mapping[str, Any]) -> list[str]:
     return parts
 
 
+def _html_open_at_release(report: Mapping[str, Any]) -> list[str]:
+    """Checks that were open when the version was released (documentation mode)."""
+    points = report.get("release_open_points") or []
+    if not report.get("release_mode") or not report["lifecycle"].get("released_by"):
+        return []
+    if not points:
+        return ["<h2>Bei der Freigabe offen</h2><p>Keine offenen Punkte.</p>"]
+    parts = [
+        "<h2>Bei der Freigabe offen</h2><p class='klein'>Die Freigabe war trotz dieser Punkte "
+        "möglich; sie sind hier dokumentiert.</p><ul>"
+    ]
+    parts.extend(f"<li>{_text(p)}</li>" for p in points)
+    parts.append("</ul>")
+    return parts
+
+
 def _html_sources(report: Mapping[str, Any]) -> list[str]:
     """Guidelines and templates the profile relies on (EDPB template 0.5)."""
     edpb = report.get("edpb")
@@ -673,6 +703,7 @@ def render_assessment_html(report: Mapping[str, Any]) -> str:
         *_html_risk(report),
         *_html_decision(report),
         *_html_issues_and_changes(report),
+        *_html_open_at_release(report),
         *_html_sources(report),
     ]
     parts.append(

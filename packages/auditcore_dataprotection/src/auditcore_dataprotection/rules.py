@@ -47,6 +47,13 @@ LEGACY_CRITERIA_LABEL = "Kriterien des Europäischen Datenschutzausschusses"
 
 DOSSIER_KINDS = frozenset({"text", "date", "choice"})
 
+#: Release modes of schema 2 profiles. ``sperrend``: open checks prevent the
+#: release. ``dokumentation``: the library documents; open checks never prevent
+#: the release and are recorded with it (user decision of 24.09.2026).
+RELEASE_BLOCKING = "sperrend"
+RELEASE_DOCUMENTATION = "dokumentation"
+RELEASE_MODES = frozenset({RELEASE_BLOCKING, RELEASE_DOCUMENTATION})
+
 #: DP-C21 (user decision A5 of 2026-09-23): the consultation notice under
 #: Art. 36 Abs. 1 DSGVO is only given once the assessment is final and only if
 #: the net risk after measures is still high. Profiles without a
@@ -208,7 +215,13 @@ class RuleProfile:
     risk_matrix: Mapping[tuple[int, int], str] = field(default_factory=dict)
     risk_method: str = ""
     band_recommendations: Mapping[str, str] = field(default_factory=dict)
+    release_mode: str = RELEASE_BLOCKING
     consultation_notice: ConsultationNotice | None = None
+
+    @property
+    def documentation_mode(self) -> bool:
+        """True if open checks are documented instead of preventing a release."""
+        return self.release_mode == RELEASE_DOCUMENTATION
 
     @property
     def edpb(self) -> bool:
@@ -442,7 +455,15 @@ def _edpb_fields(data: Mapping[str, Any], measures: tuple[Measure, ...]) -> dict
         "risk_matrix": MappingProxyType(matrix),
         "risk_method": method,
         "band_recommendations": _frozen(by_band),
+        "release_mode": _release_mode(workflow),
     }
+
+
+def _release_mode(workflow: Mapping[str, Any]) -> str:
+    """Release mode of a schema 2 profile; profiles before 2026.10.3 block."""
+    mode = str(workflow.get("release_mode", RELEASE_BLOCKING))
+    _require(mode in RELEASE_MODES, f"Unbekannter Freigabemodus '{mode}'.")
+    return mode
 
 
 def _consultation_notice(recommendation: Mapping[str, Any]) -> ConsultationNotice | None:

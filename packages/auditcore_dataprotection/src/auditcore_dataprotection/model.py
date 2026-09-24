@@ -154,6 +154,13 @@ class Assessment:
     measure_status: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
     action_plan: tuple[Mapping[str, str], ...] = ()
     conditions: tuple[str, ...] = ()
+    # Documentation mode (release_mode "dokumentation"): request for the DPO's
+    # advice and the checks that were still open at release.
+    dpo_requested_from: str | None = None
+    dpo_requested_on: str | None = None
+    dpo_requested_by: str | None = None
+    dpo_requested_at: datetime | None = None
+    release_open_points: tuple[str, ...] = ()
 
     @property
     def locked(self) -> bool:

@@ -149,3 +149,18 @@ Einzelheiten:
   Vorschläge enthalten keinen Schlüssel `consultation_notice`). Das Profil
   2026.10.2 unterscheidet sich von 2026.10.1 nur durch diesen Abschnitt und die
   Kennung (Test `test_profile_differs_from_2026_10_1_only_by_notice_and_identity`).
+
+## Profilfassung 2026.10.3: Dokumentationsmodus
+
+Fachliche Festlegung vom 24.09.2026: Die Bibliothek dient der Dokumentation.
+In `auditcore.dsgvo` und `auditcore.hdsig_ji` 2026.10.3
+(`workflow.release_mode: dokumentation`) verhindert keine inhaltliche Prüfung
+mehr die Freigabe. Die Fassungen bis 2026.10.2 und `regulierung.*` sperren
+unverändert.
+
+| ID | Änderung |
+|---|---|
+| DP-E15 | `release_blockers` ist im Dokumentationsmodus leer. `open_points` liefert alle offenen Prüfungen und Hinweise; `release` speichert sie als `release_open_points`, der Bericht zeigt sie unter „Bei der Freigabe offen“. |
+| DP-E16 | Für die DSB genügt die dokumentierte Einholung: `record_dpo_request` (bei wem, Datum, erfasst von). Fehlt sie oder fehlt die Stellungnahme, steht das als offener Punkt im Bericht. Eine inhaltliche Änderung setzt die Einholung wie die Stellungnahme zurück. |
+| DP-E17 | `decide` ist auch bei unvollständiger Erhebung möglich; fehlende Abweichungsbegründung und fehlende Bedingungen werden offene Punkte. Die Konsultationshinweise werden erst bei vollständiger Bewertung endgültig. |
+| DP-E18 | Unverändert sperren Rechteprüfung, Mandantenbindung, Revision, Vier-Augen-Prinzip und dass die DSB nicht selbst freigibt; Eingaben werden weiterhin auf Form und Typ geprüft. |

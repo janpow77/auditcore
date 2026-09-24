@@ -100,6 +100,11 @@ DSK-Kurzpapiers Nr. 18 (S. 5) statt aus Produktgrenzen. Die Fassungen
 | Quellenliste im Profil und im Bericht | Abschnitt 0.5 |
 | Alle 17 Nummern der DSK-Muss-Liste als eigene harte Fragen (bisher 8 Nummern in 5 Fragen) | Art. 35 Abs. 4 DSGVO |
 
+Ab Fassung `2026.10.3` arbeiten die Profile im Dokumentationsmodus: Keine inhaltliche
+Prüfung verhindert die Freigabe; offene Punkte (`open_points()`) werden mit der Freigabe
+gespeichert und im Bericht ausgewiesen. Für die DSB genügt die dokumentierte Einholung
+(`record_dpo_request`). Rechte und Vier-Augen-Prinzip bleiben.
+
 `AssessmentService.hints()` liefert nicht blockierende Hinweise, wo die
 Dokumentation hinter der Vorlage zurückbleibt. Der Bericht behält seine
 Gliederung und ergänzt die neuen Angaben in den bestehenden Abschnitten. Die
