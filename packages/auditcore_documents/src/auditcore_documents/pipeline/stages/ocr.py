@@ -25,9 +25,10 @@ from pathlib import Path
 from typing import Any, Literal, Protocol
 
 from auditcore_documents.pipeline.context import OcrMetrics, PipelineContext, RunStatus
+from auditcore_documents.pipeline.donut import DonutPort, DonutResult
 from auditcore_documents.pipeline.stages.base import PipelineStage, StageError
 
-OcrBackendName = Literal["auto", "chandra", "tesseract", "none"]
+OcrBackendName = Literal["auto", "chandra", "tesseract", "none", "donut"]
 MAX_OCR_PAGES = 50
 OCR_RENDER_DPI = 200
 
@@ -254,6 +255,91 @@ def tesseract_result(parsed: ParsedDocument, languages: str) -> dict[str, Any]:
     }
 
 
+DONUT_LABELS = (
+    ("invoice_number", "Rechnungsnummer"),
+    ("invoice_date", "Rechnungsdatum"),
+    ("supply_date", "Leistungsdatum"),
+    ("due_date", "Fällig am"),
+    ("net_amount", "Nettobetrag"),
+    ("total", "Gesamtbetrag"),
+    ("iban", "IBAN"),
+    ("bic", "BIC"),
+)
+#: Pflichtfelder für die OCR-Konfidenz eines Donut-Laufs.
+DONUT_REQUIRED_CONFIDENCE = ("total", "invoice_date", "invoice_number", "supplier.vat_id", "iban")
+
+
+def donut_text(fields: dict[str, Any]) -> str:
+    """Zeilenweise Darstellung der Donut-Felder mit deutschen Beschriftungen."""
+    lines = []
+    supplier = fields.get("supplier") if isinstance(fields.get("supplier"), dict) else {}
+    if supplier and supplier.get("name"):
+        lines.append(str(supplier["name"]))
+    for key, label in DONUT_LABELS[:4]:
+        if fields.get(key):
+            lines.append(f"{label}: {fields[key]}")
+    if supplier and supplier.get("vat_id"):
+        lines.append(f"USt-IdNr.: {supplier['vat_id']}")
+    if fields.get("net_amount"):
+        lines.append(f"Nettobetrag: {fields['net_amount']}")
+    for line in fields.get("vat_lines") or []:
+        if isinstance(line, dict) and line.get("amount"):
+            lines.append(f"USt {line.get('rate', '')}: {line['amount']}")
+    for key, label in DONUT_LABELS[5:]:
+        if fields.get(key):
+            lines.append(f"{label}: {fields[key]}")
+    return "\n".join(lines)
+
+
+def donut_result(
+    results: list[tuple[int, DonutResult]], tesseract: dict[str, Any] | None
+) -> dict[str, Any]:
+    """Seitenergebnisse → OCR-Ergebnis; ``ocr_text`` ist der Tesseract-Text, sonst Donut-Text.
+
+    Konfidenz: Minimum/Mittel der Feldkonfidenzen der Pflichtfelder; liefert der
+    Motor keine Feldkonfidenzen, gilt 0,80 (Prüfbereich, nie automatisch OK).
+    """
+    first = results[0][1]
+    pages = [
+        {"page": number, **result.to_dict()} for number, result in results
+    ]
+    confidences = [
+        value
+        for _, result in results
+        for key, value in result.field_confidence.items()
+        if key in DONUT_REQUIRED_CONFIDENCE
+    ]
+    avg = sum(confidences) / len(confidences) if confidences else 0.80
+    low = min(confidences) if confidences else 0.80
+    high = max(confidences) if confidences else 0.80
+    donut_lines = "\n\n".join(donut_text(result.fields) for _, result in results)
+    text = str((tesseract or {}).get("text") or "") or donut_lines
+    return {
+        "text": text,
+        "raw_json": {
+            "engine": "donut",
+            "model_id": first.model_id,
+            "model_sha256": first.model_sha256,
+            "device": first.device,
+            "pages": pages,
+            "donut_text": donut_lines,
+            "tesseract": (
+                {"text": tesseract.get("text", ""), "engine_version": tesseract.get(
+                    "engine_version"), "error": tesseract.get("error")}
+                if tesseract is not None
+                else None
+            ),
+        },
+        "pages": [{"page": number, "text": donut_text(r.fields)} for number, r in results],
+        "avg_confidence": avg,
+        "min_confidence": low,
+        "max_confidence": high,
+        "pages_processed": len(results),
+        "pages_failed": 0,
+        "engine_version": f"{first.model_id}@{first.model_sha256[:12]}",
+    }
+
+
 class OcrStage(PipelineStage):
     name = "ocr"
     description = "Text extraction using OCR"
@@ -275,6 +361,8 @@ class OcrStage(PipelineStage):
         tesseract: TesseractPort | None = None,
         timer: Callable[[], float] = time.time,
         gateway_outage_is_error: bool = False,
+        donut: DonutPort | None = None,
+        donut_cross_check: bool = True,
         **kwargs: object,
     ) -> None:
         super().__init__(*args, **kwargs)  # type: ignore[arg-type]
@@ -293,6 +381,9 @@ class OcrStage(PipelineStage):
         self.timer = timer
         #: Entscheidung D6: Gateway-Ausfall ist ein wiederholbarer Fehler, keine Ablehnung.
         self.gateway_outage_is_error = gateway_outage_is_error
+        #: Donut-Port (nur Backend ``donut``); Tesseract läuft zum Zwei-Motoren-Abgleich mit.
+        self.donut = donut
+        self.donut_cross_check = donut_cross_check
 
     def _chandra_available(self) -> bool:
         try:
@@ -302,7 +393,11 @@ class OcrStage(PipelineStage):
 
     async def execute(self, context: PipelineContext) -> PipelineContext:
         self.validate_context(context)
-        if should_use_router(self.routing, self._chandra_available):
+        if self.backend == "donut":
+            # Ausdrücklich gewählt (Profil DONUT_PIPELINE); kein Gateway-/Chandra-Routing.
+            result = await self._run_local(context, "donut")
+            engine = "donut"
+        elif should_use_router(self.routing, self._chandra_available):
             result = await self._run_router_ocr(context)
             engine = "router"
         else:
@@ -420,6 +515,8 @@ class OcrStage(PipelineStage):
                 result = self._run_chandra(context)
             elif backend == "tesseract":
                 result = self._run_tesseract(context)
+            elif backend == "donut":
+                result = self._run_donut(context)
             else:
                 raise StageError(
                     stage=self.name,
@@ -487,6 +584,37 @@ class OcrStage(PipelineStage):
                 recoverable=True,
                 retry_after_sec=5,
             ) from exc
+
+    def _run_donut(self, context: PipelineContext) -> dict[str, Any]:
+        """Seitenweise Donut-Inferenz; Tesseract-Text für Abgleich und Regex-Rückfall."""
+        path = self._input(context)
+        if self.donut is None:
+            raise StageError(
+                stage=self.name,
+                error_code="DONUT_NOT_CONFIGURED",
+                message="No Donut port configured",
+                recoverable=False,
+            )
+        data = path.read_bytes()
+        if looks_like_pdf(data):
+            pages = self.rasterizer(data) if self.rasterizer is not None else None
+            if not pages:
+                raise StageError(
+                    stage=self.name,
+                    error_code="DONUT_RASTER_FAILED",
+                    message="PDF could not be rasterized for Donut",
+                    recoverable=False,
+                )
+        else:
+            pages = [(1, data)]
+        results = [(number, self.donut.parse(png)) for number, png in pages]
+        tesseract: dict[str, Any] | None = None
+        if self.donut_cross_check and self.tesseract is not None:
+            try:
+                tesseract = tesseract_result(self.tesseract.parse(path), self.tesseract_languages)
+            except Exception as exc:  # noqa: BLE001 - Abgleich fehlt → Prüfung statt Abbruch
+                tesseract = {"text": "", "error": str(exc)}
+        return donut_result(results, tesseract)
 
     async def evaluate_quality(self, context: PipelineContext) -> None:
         if not context.ocr_metrics:

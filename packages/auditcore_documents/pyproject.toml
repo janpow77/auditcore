@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_documents"
-version = "0.1.0"
+version = "0.2.0"
 description = "Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -20,6 +20,8 @@ docx-render = ["python-docx>=1.1,<2", "lxml>=6.1.0,<7"]
 pdf-render = ["reportlab>=4.0.8,<6"]
 mime = ["python-magic>=0.4.27"]
 ocr-raster = ["pypdfium2>=4.30,<6", "pillow>=10"]
+# Offline-Inferenz (LocalDonut); CPU- oder CUDA-Build wählt die Anwendung über ihren Index.
+donut = ["transformers>=4.46,<6", "torch>=2.7", "sentencepiece>=0.2", "pillow>=10"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
@@ -59,7 +61,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["rapidfuzz.*", "docx.*", "pypdf.*", "reportlab.*", "lxml.*", "pypdfium2.*", "magic.*"]
+module = ["rapidfuzz.*", "docx.*", "pypdf.*", "reportlab.*", "lxml.*", "pypdfium2.*", "magic.*", "torch.*", "transformers.*", "PIL.*"]
 ignore_missing_imports = true
 
 [tool.auditcore-bibquality]
