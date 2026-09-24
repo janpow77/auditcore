@@ -68,7 +68,7 @@ def main() -> None:
     check("build", [sys.executable, "-m", "build"])
     if results["build"]["status"] == "PASS":
         result = wheel_sbom(
-            root / "dist/auditcore-0.1.0-py3-none-any.whl", root / "dist/auditcore-0.1.0-sbom.json"
+            root / "dist/auditcore-0.2.0-py3-none-any.whl", root / "dist/auditcore-0.2.0-sbom.json"
         )
         write_json(root / "dist/supply-chain.json", result)
     for component in ("core", "quality", "consolidator", "apprefactor", "deployer"):

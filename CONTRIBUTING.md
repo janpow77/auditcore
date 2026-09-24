@@ -24,3 +24,12 @@ the changed semantics is not acceptable. Offline snapshots remain STALE.
 
 Small logical commits; no force push, history rewrite or automatic production
 migration. A green CI is not a policy, privacy or operating authorization.
+
+## Pflicht: fachlicher Rauchtest nach Produktions-Deploys
+
+Nach jedem Deploy außerhalb von `internal_test` ist ein fachlicher Rauchtest
+über die echte API Pflicht; ein Health-Check reicht nicht. Durchgesetzt durch
+`auditcore-deploy plan` (Blocker ohne `functional_smoke`-Fälle) und
+`auditcore-deploy smoke` (Exitcode 1 bei Fehlschlag). Details:
+[docs/deployment/functional-smoke.md](docs/deployment/functional-smoke.md).
+

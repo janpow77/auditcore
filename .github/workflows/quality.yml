@@ -38,10 +38,10 @@ jobs:
           print(DockerPackageTester().prepare())"
       - name: Verify installed platform and technical package lifecycle
         if: matrix.python == '3.12'
-        run: python scripts/verify_installed_framework.py dist/auditcore-0.1.0-py3-none-any.whl
+        run: python scripts/verify_installed_framework.py dist/auditcore-0.2.0-py3-none-any.whl
       - name: Verify installed platform CLI and package inventory
         if: matrix.python != '3.12'
-        run: python scripts/verify_installed_framework.py dist/auditcore-0.1.0-py3-none-any.whl --smoke-only
+        run: python scripts/verify_installed_framework.py dist/auditcore-0.2.0-py3-none-any.whl --smoke-only
       - run: bandit -q -ll -r src
       - run: pip-audit --timeout 60 --format json --output dependency-audit.json
         if: always()
