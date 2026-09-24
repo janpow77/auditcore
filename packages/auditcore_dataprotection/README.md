@@ -9,9 +9,76 @@ Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
-pip install auditcore_dataprotection==0.2.0            # Kern
-pip install 'auditcore_dataprotection[excel]==0.2.0'    # zusätzlich XLSX
+pip install auditcore_dataprotection==0.3.0            # Kern
+pip install 'auditcore_dataprotection[excel]==0.3.0'    # zusätzlich XLSX
 ```
+
+## Schnellstart in Python
+
+Eine Anwendung wählt ein Regelprofil ausdrücklich, übergibt ihre Speicher,
+Rollenprüfung, Protokoll, Uhr und Kennungsvergabe als Schnittstellen und ruft
+dann die Dienste auf. Das Beispiel nutzt die mitgelieferten Referenzadapter
+aus `memory`; eine echte Anwendung setzt dort ihre Datenbank und ihre
+Benutzerverwaltung ein. Der Test `tests/test_readme.py` führt dieses Beispiel aus.
+
+```python
+from datetime import date
+
+from auditcore_dataprotection import (Actor, AssessmentService, Permission,
+                                      RegisterService, load_profile)
+from auditcore_dataprotection.export import assessment_report, render_assessment_html
+from auditcore_dataprotection.memory import (FixedClock, InMemoryAssessmentRepository,
+                                             InMemoryRegisterRepository, ListAuditSink,
+                                             RoleAuthorizer, SequentialIds)
+
+# 1. Profil ausdrücklich wählen (es gibt kein Standardprofil)
+profil = load_profile("auditcore.dsgvo", "2026.10.3")
+
+# 2. Schnittstellen der Anwendung (hier: Referenzadapter) und Dienste
+rollen = RoleAuthorizer({"alle": frozenset(Permission)})
+anna, bert = (Actor(n, frozenset({"behoerde"}), frozenset({"alle"})) for n in ("anna", "bert"))
+vvt_db, dsfa_db = InMemoryRegisterRepository(), InMemoryAssessmentRepository()
+log, uhr, ids = ListAuditSink(), FixedClock(), SequentialIds()
+vvt = RegisterService(vvt_db, rollen, log, uhr, ids, profil)
+dsfa_dienst = AssessmentService(dsfa_db, vvt_db, rollen, log, uhr, ids)
+
+# 3. Verzeichnis anlegen und im Vier-Augen-Prinzip freigeben
+taetigkeit = {"id": "t1", "name": "Fördermittelverwaltung", "referat": "Referat I",
+              "zweck": "Bewilligung", "ermaechtigungsgrundlage": "LHO",
+              "kategorien_betroffene": "Antragsteller", "kategorien_daten": "Stammdaten",
+              "kategorien_empfaenger": "keine", "speicherdauer": "10 Jahre",
+              "tom": "Rollenkonzept", "drittlandtransfer": False,
+              "besondere_kategorien": False, "daten_art10": False, "anzahl_betroffene": 500}
+entwurf = vvt.save_draft("behoerde", anna, {
+    "deckblatt": {"verantwortlicher": {"name": "Behörde"}, "dsb": {"name": "DSB"}},
+    "referate": ["Referat I"], "taetigkeiten": [taetigkeit]})
+vvt.release("behoerde", bert, expected_revision=entwurf.revision)
+
+# 4. DSFA: erheben, entscheiden, Einholung des DSB-Rats dokumentieren, freigeben
+d = dsfa_dienst.start("behoerde", anna, "t1", profil)
+d = dsfa_dienst.update("behoerde", anna, d.assessment_id, expected_revision=d.revision,
+    answers={k: False for k in profil.question_keys} | {"art35_3_a": True},
+    scenarios=[{"dimension": "vertraulichkeit", "description": "Unbefugter Zugriff",
+                "severity": 3, "likelihood": 4, "measures": ["zugriffskontrolle"]}],
+    necessity="Erforderlich für die Bewilligung.", proportionality="Nur Pflichtangaben.",
+    dossier={"team": "Referat I, IT", "umfang": "Bewilligungsverfahren"})
+assert d.proposal["recommendation"] == "freigabe_mit_auflagen"
+d = dsfa_dienst.decide("behoerde", anna, d.assessment_id, expected_revision=d.revision,
+    decision="freigabe_mit_auflagen", conditions=["Mehrfaktor-Anmeldung vor Start"])
+d = dsfa_dienst.record_dpo_request("behoerde", anna, d.assessment_id,
+    expected_revision=d.revision, requested_from="DSB", requested_on=date(2026, 9, 24))
+d = dsfa_dienst.release("behoerde", bert, d.assessment_id, expected_revision=d.revision)
+
+# 5. Ergebnis: gesperrte Fassung mit offenen Punkten und Bericht
+assert d.status.value == "freigegeben" and d.profile_version == "2026.10.3"
+print(d.release_open_points)          # z. B. „Stellungnahme liegt noch nicht vor …“
+html = render_assessment_html(assessment_report(d, profil))
+```
+
+Die wichtigsten Aufrufe: `load_profile`, `RegisterService.save_draft/release`,
+`AssessmentService.start/update/decide/record_dpo_request/record_dpo_statement/release`,
+`open_points` und `review_required` (Überprüfung nach Änderung des Verzeichnisses),
+dazu `assessment_report` und `render_assessment_html` für den Bericht.
 
 ## Bausteine
 
@@ -99,6 +166,11 @@ DSK-Kurzpapiers Nr. 18 (S. 5) statt aus Produktgrenzen. Die Fassungen
 | Stammdaten der Abschätzung (Team und Umfang Pflicht, Billigung mit Datum) | Abschnitte 0.4, 0.5, 1.1.c, 1.4, 2.2.b |
 | Quellenliste im Profil und im Bericht | Abschnitt 0.5 |
 | Alle 17 Nummern der DSK-Muss-Liste als eigene harte Fragen (bisher 8 Nummern in 5 Fragen) | Art. 35 Abs. 4 DSGVO |
+
+Seit 0.3.0 (Fassung `2026.10.3`) arbeiten die Profile im Dokumentationsmodus: Keine inhaltliche
+Prüfung verhindert die Freigabe; offene Punkte (`open_points()`) werden mit der Freigabe
+gespeichert und im Bericht ausgewiesen. Für die DSB genügt die dokumentierte Einholung
+(`record_dpo_request`). Rechte und Vier-Augen-Prinzip bleiben.
 
 `AssessmentService.hints()` liefert nicht blockierende Hinweise, wo die
 Dokumentation hinter der Vorlage zurückbleibt. Der Bericht behält seine
