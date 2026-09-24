@@ -202,10 +202,33 @@ def _kv(
     bold: bool = False,
 ) -> float:
     """Beschriftung + Wert; mit ``key`` wird der Wert als Feld erfasst."""
-    canvas.text(x, y, label + ":", size=size, bold=bold)
     shown = canvas.field(key, value) if key else value
-    canvas.text(value_x, y, shown, size=size, bold=bold, align=align)
+    _pair(canvas, x, y, label + ":", shown, value_x=value_x, align=align, size=size, bold=bold)
     return y + canvas.line_height(size)
+
+
+def _pair(
+    canvas: Canvas,
+    x: float,
+    y: float,
+    label: str,
+    value: str,
+    *,
+    value_x: float,
+    align: str = "left",
+    size: float = 1.0,
+    bold: bool = False,
+) -> None:
+    """Beschriftung und Wert ohne Überlappung (Sichtprüfung des Piloten, 24.09.2026)."""
+    gap = 2.0
+    label_width = canvas.text_width(label, size=size, bold=bold)
+    if align == "left":
+        value_x = max(value_x, x + label_width + gap)
+    else:
+        value_width = canvas.text_width(value, size=size, bold=bold)
+        x = min(x, value_x - value_width - gap - label_width)
+    canvas.text(x, y, label, size=size, bold=bold)
+    canvas.text(value_x, y, value, size=size, bold=bold, align=align)
 
 
 def _sender(
@@ -422,8 +445,8 @@ def _totals(
         for index, line in vat_rows:
             label = _vat_label(variant, spec, canvas, index, line)
             amount = canvas.field(f"vat_lines.{index}.amount", variant.money(line.amount))
-            canvas.text(x_label, y, label + ":", size=size)
-            canvas.text(x_value, y, amount, size=size, align="right")
+            _pair(canvas, x_label, y, label + ":", amount, value_x=x_value, align="right",
+                  size=size)
             y += canvas.line_height(size)
         canvas.line(x_label, y, x_value, y, width=0.3)
         y += 1
