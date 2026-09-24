@@ -85,6 +85,10 @@ Herkunft, Rechte und Charakterisierung: [`provenance.json`](provenance.json),
 [`NOTICE`](NOTICE). Unterschiede zum Original und offene fachliche
 Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 Consumer-Umstellung: [docs/consumer-integration.md](docs/consumer-integration.md).
+Eingabefelder je Profil (Feld, Regeln, Bedeutung mit Beleg, Pflicht/optional,
+Verhalten bei fehlender Spalte oder leerem Wert):
+[docs/eingabefelder.md](docs/eingabefelder.md), erzeugt aus den Profilen mit
+`python tools/document_fields.py`; `tests/test_eingabefelder.py` hält die Datei aktuell.
 Debian-Paket: `python3-auditcore-risk`.
 
 ## Fehlender Betrag: „unbestimmt“ statt Ersatzwert (ab 0.3.0)

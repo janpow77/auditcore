@@ -99,6 +99,13 @@ das Extra `procurement`), `flowinvoice.rbvk_wibank 2026.09.2` (Eingaben
 2026.09.2` und `auditcore_statistics.recommended_flowinvoice_benford`. Die
 Legacyprofile dienen der Nachweisführung (bitgenaue Reproduktion).
 
+Welche Spalten ein Profil liest, ob sie Pflicht oder optional sind und was bei
+fehlender Spalte oder leerem Wert geschieht, steht je Profil in
+[eingabefelder.md](eingabefelder.md) (aus den Profilen erzeugt, per Test aktuell
+gehalten). Für `riskanalysis.year_bound 2026.09.5` sind nur `bruttobetrag`,
+`Name` und `zahlungsempfaenger` Pflichtspalten; `nettobetrag` ist optional
+(fehlt er, sind RF02/RF08 unbestimmt).
+
 ## flowinvoice / audit-portal RiskChecker (kein Laufzeit-Consumer, K7: nicht aktivieren)
 
 `services/risk_checker.py` wird in beiden Anwendungen nirgends aufgerufen; die
