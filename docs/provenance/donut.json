@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "subject": "Donut-basierte Belegerkennung (Plan docs/architecture/DONUT_OCR_PLAN.md)",
+  "checked_at": "2026-09-24",
+  "decisions": {
+    "status": "DECIDED",
+    "date": "2026-09-24",
+    "confirmation": "Donut alle Empfehlungen",
+    "ids": ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E8", "E9"]
+  },
+  "components": [
+    {
+      "name": "Donut-Code",
+      "source": "github:clovaai/donut",
+      "license": "MIT",
+      "copyright": "2022-present NAVER Corp.",
+      "in_repository": false,
+      "note": "Modell und Prozessor über transformers (Apache-2.0); übernommene Teile nur mit LICENSES/donut-MIT.txt und NOTICE"
+    },
+    {
+      "name": "naver-clova-ix/donut-base",
+      "source": "huggingface",
+      "revision": "a959cf33c20e09215873e338299c900f57047c61",
+      "license": "MIT",
+      "in_repository": false,
+      "use": "Startmodell für das Nachtraining",
+      "residual_risk": "REVIEW_REQUIRED (niedrig): Rechte an Vortrainingsdaten IIT-CDIP/SynthDoG nicht geklärt, MIT-Freigabe der Gewichte übernommen"
+    },
+    {
+      "name": "naver-clova-ix/donut-base-finetuned-cord-v2",
+      "source": "huggingface",
+      "revision": "8003d433113256b4ce3a0f5bf604b29ff78a7451",
+      "license": "MIT",
+      "in_repository": false,
+      "use": "nur Vergleichskandidat (vision-service), kein Startpunkt"
+    },
+    {
+      "name": "CORD v2",
+      "source": "huggingface:naver-clova-ix/cord-v2",
+      "revision": "7f0115a4b758a71d6473b8d085751692da2fef98",
+      "license": "CC-BY-4.0",
+      "in_repository": false,
+      "use": "nicht verwendet (Entscheidung E3)"
+    },
+    {
+      "name": "Synthetische Trainingsdaten",
+      "source": "auditcore_invoicesynth (MIT) auf Basis auditcore_invoicegenerator/auditcore_dummygenerator",
+      "license": "eigene Daten",
+      "in_repository": "nur Generator, Manifest und Testfixtures",
+      "use": "einzige Trainingsquelle (E2, E4)"
+    },
+    {
+      "name": "Schriften",
+      "source": "Systempakete fonts-dejavu (Bitstream Vera), fonts-liberation/fonts-liberation2 (OFL-1.1), fonts-noto-core (OFL-1.1)",
+      "license": "frei",
+      "in_repository": false,
+      "note": "nicht eingebettet; Name und SHA-256 je Schriftdatei im Datensatz-Manifest"
+    },
+    {
+      "name": "Echte Belege",
+      "license": "personenbezogen / Geschäftsgeheimnis",
+      "in_repository": false,
+      "use": "nicht verwendet (Entscheidung E4)"
+    },
+    {
+      "name": "Nachtrainiertes Modell auditcore-donut-invoice-de",
+      "license": "MIT (Entscheidung E2)",
+      "in_repository": false,
+      "distribution": "öffentliches GitHub-Release-Asset mit SHA-256, Modellkarte mit MIT-Hinweis auf NAVER"
+    },
+    {
+      "name": "Laufzeitbibliotheken",
+      "packages": {"torch": "BSD-3-Clause", "transformers": "Apache-2.0", "sentencepiece": "Apache-2.0", "Pillow": "MIT-CMU"},
+      "in_repository": false,
+      "note": "nur optionale Extras"
+    }
+  ]
+}
