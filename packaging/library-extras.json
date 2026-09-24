@@ -34,5 +34,8 @@
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
     "auditcore_procurement==0.2.0; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.0)"
+  },
+  "auditcore_invoicesynth": {
+    "pillow>=9.4; extra == \"render\"": "python3-pil (>= 9.4)"
   }
 }
