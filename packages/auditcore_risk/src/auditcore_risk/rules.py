@@ -70,6 +70,12 @@ def _near_threshold(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome
     out = Outcome.constant(len(table), False)
     out.matches = [0] * len(table)
     for i, a in enumerate(amounts):
+        if a is None:
+            # Nur mit missing_amount_reason (missing_value null): ohne Betrag nicht entscheidbar.
+            out.flags[i] = None
+            out.reasons[i] = str(p["missing_amount_reason"])
+            out.evidence[i] = {"amount": None, "field": p["field"]}
+            continue
         candidates: list[tuple[float, dict[str, Any]]] = [(t, {"source": "static"}) for t in static]
         undetermined: dict[str, Any] | None = None
         if eu_spec is not None:
@@ -130,6 +136,19 @@ def _missing_procurement(p: Mapping[str, Any], table: Table, ctx: Context) -> Ou
     for i, a in enumerate(amounts):
         raw = text(table.value(i, id_field)) if has_ids else None
         why = identifier_state(p, raw) if has_ids else "Spalte fehlt"
+        if a is None:
+            # Nur mit missing_amount_reason: unbestimmt nur, wo der Betrag entscheiden würde
+            # (Vergabekennung fehlt und Kostenart vergaberelevant); sonst kein Merkmal.
+            if why and relevant[i]:
+                out.flags[i] = None
+                out.reasons[i] = str(p["missing_amount_reason"])
+                out.evidence[i] = {
+                    "amount": None,
+                    "field": p["amount_field"],
+                    "id": raw,
+                    "id_state": why,
+                }
+            continue
         flag = a > float(p["amount_gt"]) and bool(why) and relevant[i]
         out.flags[i] = flag
         if flag:
@@ -565,6 +584,8 @@ def _top_share(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
 # --------------------------------------------------------------------------- registry
 
 _AMOUNT = frozenset({"parse", "missing_value"})
+# Fehlender Betrag → unbestimmt mit dieser Begründung (verlangt missing_value null).
+_MISSING_AMOUNT = frozenset({"missing_amount_reason"})
 _RELEVANCE_KEYS = {"field", "exclude_pattern", "ignore_case", "column_missing"}
 
 KINDS: dict[str, Kind] = {
@@ -577,7 +598,7 @@ KINDS: dict[str, Kind] = {
     "near_threshold": Kind(
         "record",
         frozenset({"field", "thresholds", "lower", "count"}) | _AMOUNT,
-        frozenset(),
+        _MISSING_AMOUNT,
         _near_threshold,
     ),
     "missing_procurement": Kind(
@@ -595,7 +616,7 @@ KINDS: dict[str, Kind] = {
             }
         )
         | _AMOUNT,
-        frozenset(),
+        _MISSING_AMOUNT,
         _missing_procurement,
     ),
     "name_similarity": Kind(
@@ -716,7 +737,20 @@ def validate_params(kind: str, params: Mapping[str, Any], where: str) -> None:
     _need(not unknown, where, f"unbekannte Parameter {sorted(unknown)}")
     if "parse" in params:
         _need(params["parse"] in ("strict", "coerce"), where, "parse muss strict/coerce sein")
-        _need(_number(params["missing_value"]), where, "missing_value muss eine Zahl sein")
+        reason = params.get("missing_amount_reason")
+        if reason is None:
+            _need(_number(params["missing_value"]), where, "missing_value muss eine Zahl sein")
+        else:
+            _need(
+                isinstance(reason, str) and bool(reason.strip()),
+                where,
+                "missing_amount_reason muss ein nichtleerer Text sein",
+            )
+            _need(
+                params["missing_value"] is None,
+                where,
+                "missing_amount_reason verlangt missing_value null (kein Ersatzbetrag)",
+            )
     for key in (
         "multiple",
         "amount_gt",

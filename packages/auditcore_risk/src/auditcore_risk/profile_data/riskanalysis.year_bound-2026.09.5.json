@@ -1,0 +1,359 @@
+{
+ "id": "riskanalysis.year_bound",
+ "kind": "record_red_flags",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten zur Stichprobenpriorisierung; keine rechtliche Bewertung, keine Fehlerquote und keine fachliche Freigabe der Schwellen oder Muster. Freigegeben durch Nutzerentscheidung vom 23.09.2026 ('alle empfehlungen'): Schwellen netto (K2), jahresbezogene EU-Schwellen (K3), RF12 nur innerhalb der Gruppe (K5), RF09 mit Umschrift 'mueller' (K4). EU-Schwellen 2014–2027 nach Nutzerentscheidung vom 23.09.2026 ('c2. ja'). Ohne Nettobetrag sind RF02/RF08 unbestimmt (Nutzerentscheidung vom 24.09.2026).",
+ "open_decisions": [
+  "Stichtag der EU-Schwelle ist das Rechnungsdatum (rechnungsdatum_dt); Auftraggebertyp subzentral und Kategorie Liefer-/Dienstleistungen je Beleg sind Profilvorgaben."
+ ],
+ "output": {
+  "codes_column": "red_flag_codes",
+  "value_columns": [
+   "name_match"
+  ]
+ },
+ "rules": [
+  {
+   "code": "RF01",
+   "column": "rf01",
+   "kind": "round_multiple",
+   "label": "Auffällig runde Beträge (glatte Tausender)",
+   "origin": {
+    "lines": "251-254",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "compute_red_flags"
+   },
+   "params": {
+    "field": "bruttobetrag",
+    "missing_value": 0.0,
+    "multiple": 1000,
+    "parse": "strict",
+    "positive_only": true
+   },
+   "requires": [
+    "bruttobetrag"
+   ],
+   "when_missing_columns": "error"
+  },
+  {
+   "code": "RF02",
+   "column": "rf02",
+   "kind": "near_threshold",
+   "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+   "note": "Nettobetrag (K2) gegen nationale Wertgrenzen und die EU-Schwelle des Rechnungsjahres aus auditcore_procurement procurement.hvtg 2026.09.3 (K3, C2; 2014–2027, z. B. 2019: 221.000 €, 2026: 216.000 €). Ohne belegten Zeitraum (vor 2014, ab 2028) bleibt der Beleg unbestimmt. Ohne Nettobetrag (Spalte fehlt oder Wert leer) unbestimmt: „Nettobetrag fehlt in der Quelle“; kein Rückfall auf brutto.",
+   "origin": {
+    "lines": "36-38, 69-75, 255-256",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "_near_threshold, VERGABE_SCHWELLEN, _PROXIMITY"
+   },
+   "params": {
+    "count": "first",
+    "field": "nettobetrag",
+    "lower": {
+     "proximity": 0.1
+    },
+    "missing_amount_reason": "Nettobetrag fehlt in der Quelle",
+    "missing_value": null,
+    "parse": "strict",
+    "thresholds": {
+     "procurement_eu": {
+      "authority_type": "sub_central",
+      "category": "supply_service",
+      "date_field": "rechnungsdatum_dt",
+      "date_source": "record",
+      "profile": "procurement.hvtg",
+      "version": "2026.09.3"
+     },
+     "static": [
+      1000.0,
+      5000.0,
+      10000.0,
+      15000.0,
+      25000.0,
+      50000.0,
+      100000.0
+     ]
+    }
+   },
+   "requires": [
+    "nettobetrag"
+   ],
+   "when_missing_columns": "undetermined"
+  },
+  {
+   "code": "RF08",
+   "column": "rf08",
+   "kind": "missing_procurement",
+   "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+   "note": "Bagatellgrenze gegen den Nettobetrag (K2). Ohne Nettobetrag unbestimmt („Nettobetrag fehlt in der Quelle“), außer bei echter Vergabekennung oder nicht vergaberelevanter Kostenart (dann kein Merkmal); kein Rückfall auf brutto.",
+   "origin": {
+    "lines": "40-47, 78-89, 258-268",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "_hat_echte_vergabe, RF08_BAGATELLGRENZE, _PLATZHALTER_VERGABE, _NICHT_VERGABERELEVANT"
+   },
+   "params": {
+    "amount_field": "nettobetrag",
+    "amount_gt": 25000.0,
+    "blank_casefold": true,
+    "blank_values": [
+     "",
+     "nan"
+    ],
+    "id_column_missing": "counts_as_missing",
+    "id_field": "vergabenummer",
+    "missing_amount_reason": "Nettobetrag fehlt in der Quelle",
+    "missing_value": null,
+    "parse": "strict",
+    "placeholder_pattern": "^\\s*0([=\\s.\\-].*)?$",
+    "relevance": {
+     "column_missing": "relevant",
+     "exclude_pattern": "personal|gemeinkost|pauschal|abschreibung",
+     "field": "kostenart_auswertung_bezeichnung",
+     "ignore_case": true
+    }
+   },
+   "requires": [
+    "nettobetrag"
+   ],
+   "when_missing_columns": "undetermined"
+  },
+  {
+   "code": "RF09",
+   "column": "rf09",
+   "kind": "name_similarity",
+   "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+   "note": "Rechnungssteller-Normalisierung riskanalysis.payee 2026.09.2 (auditcore_entity_matching, Umschrift ä → ae, K4); rapidfuzz Pflicht.",
+   "origin": {
+    "lines": "92-102, 270-277",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "_name_match, compute_red_flags"
+   },
+   "params": {
+    "containment_score": 1.0,
+    "left_field": "Name",
+    "min_length": 4,
+    "normalization": {
+     "profile": "riskanalysis.payee",
+     "version": "2026.09.2"
+    },
+    "override_field": "_pseudonym_rf09",
+    "right_field": "zahlungsempfaenger",
+    "scale": 100.0,
+    "scorer": "token_set_ratio",
+    "threshold": 0.85,
+    "value_name": "name_match"
+   },
+   "requires": [
+    "Name",
+    "zahlungsempfaenger"
+   ],
+   "when_missing_columns": "error"
+  },
+  {
+   "code": "RF10",
+   "column": "rf10",
+   "interpretation": "descriptive_prior",
+   "kind": "counterparty_concentration",
+   "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+   "note": "[deskriptiv] Auffälligkeitshinweis zur Stichprobenpriorisierung; keine Fehlerquote, nie neben der 2-%-Wesentlichkeit interpretieren.",
+   "origin": {
+    "lines": "105-161",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "_compute_rf10"
+   },
+   "params": {
+    "amount_field": "bruttobetrag",
+    "case_field": "antrag",
+    "group": {
+     "cases_gt": 3,
+     "sum_gt": 50000
+    },
+    "group_field": "Gruppennummer",
+    "missing_value": 0.0,
+    "pair": {
+     "count_gt": 20,
+     "sum_gt": 50000
+    },
+    "parse": "strict",
+    "payee_field": "payee_canonical",
+    "relevance": {
+     "column_missing": "relevant",
+     "exclude_pattern": "personal|gemeinkost|pauschal|abschreibung",
+     "field": "kostenart_auswertung_bezeichnung",
+     "ignore_case": true
+    }
+   },
+   "requires": [
+    "bruttobetrag"
+   ],
+   "when_missing_columns": "error"
+  },
+  {
+   "code": "RF11",
+   "column": "rf11",
+   "interpretation": "descriptive_prior",
+   "kind": "ratio_history",
+   "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+   "note": "[deskriptiv] Auffälligkeitshinweis zur Stichprobenpriorisierung; keine Fehlerquote, nie neben der 2-%-Wesentlichkeit interpretieren.",
+   "origin": {
+    "lines": "164-181",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "_compute_rf11"
+   },
+   "params": {
+    "part_field": "Anzahl_ungueltige_Versionen",
+    "ratio_gt": 0.5,
+    "total_field": "Anzahl_Versionen",
+    "total_min": 4
+   },
+   "requires": [
+    "Anzahl_Versionen",
+    "Anzahl_ungueltige_Versionen"
+   ],
+   "when_missing_columns": "all_false"
+  },
+  {
+   "code": "RF12",
+   "column": "rf12",
+   "interpretation": "descriptive_prior",
+   "kind": "leave_one_out_rate",
+   "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+   "note": "[deskriptiv] Auffälligkeitshinweis zur Stichprobenpriorisierung; keine Fehlerquote, nie neben der 2-%-Wesentlichkeit interpretieren. Schwelle 10 % aus rbvk-Kriterium 19, nicht datenkalibriert. Merkmal nur innerhalb derselben Gruppe übertragen (K5).",
+   "origin": {
+    "lines": "184-240",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "_compute_rf12"
+   },
+   "params": {
+    "amount_field": "bruttobetrag",
+    "case_field": "antrag",
+    "deduction_field": "abweichungen_betrag",
+    "deduction_missing_value": 0.0,
+    "group_field": "Gruppennummer",
+    "min_cases_gt": 1,
+    "missing_value": 0.0,
+    "parse": "strict",
+    "percent_factor": 100.0,
+    "propagation": "same_group",
+    "rate_gt": 10.0
+   },
+   "requires": [
+    "bruttobetrag",
+    "Gruppennummer",
+    "antrag"
+   ],
+   "when_missing_columns": "all_false"
+  },
+  {
+   "code": "RF13",
+   "column": "rf13",
+   "kind": "numeric_compare",
+   "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+   "origin": {
+    "lines": "285-286",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "compute_red_flags"
+   },
+   "params": {
+    "column_missing_value": 0,
+    "field": "auszahlungsdauer_tage",
+    "missing_value": 0,
+    "op": "gt",
+    "value": 80
+   }
+  },
+  {
+   "code": "RF14",
+   "column": "rf14",
+   "kind": "numeric_compare",
+   "label": "Indikator-Erreichungsquote unter 80 %",
+   "origin": {
+    "lines": "287-288",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "compute_red_flags"
+   },
+   "params": {
+    "column_missing_value": 1.0,
+    "field": "indikator_erreichungsquote",
+    "missing_value": 1.0,
+    "op": "lt",
+    "value": 0.8
+   }
+  },
+  {
+   "code": "RF15",
+   "column": "rf15",
+   "kind": "text_equals",
+   "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+   "origin": {
+    "lines": "289",
+    "path": "backend/app/pipeline/red_flags.py",
+    "repository": "janpow77/riskanalysis",
+    "symbol": "compute_red_flags"
+   },
+   "params": {
+    "column_missing_value": "kein Treffer",
+    "field": "sanktionslisten_status",
+    "value": "möglicher Treffer"
+   }
+  }
+ ],
+ "schema": "auditcore_risk.profile/1",
+ "source": {
+  "characterization": "tests/fixtures/riskanalysis_observed.json",
+  "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+  "decision": {
+   "decided_on": "2026-09-24",
+   "decisions": [
+    "K2a"
+   ],
+   "effect": "RF02 und RF08 ohne Nettobetrag (Spalte fehlt oder Wert leer) je Beleg unbestimmt statt Abbruch bzw. Ersatzbetrag 0; kein Rückfall auf brutto (K2 bleibt); übrige Regeln unverändert.",
+   "quote": "nur im Code vorgesehen sein"
+  },
+  "derived_from": {
+   "profile": "riskanalysis.year_bound",
+   "version": "2026.09.4"
+  },
+  "git_blob": "b6196a7dbd3838bd4dd361c71e3cc44c904f4980",
+  "path": "backend/app/pipeline/red_flags.py",
+  "repository": "janpow77/riskanalysis",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "compute_red_flags",
+   "_near_threshold",
+   "red_flag_summary",
+   "_hat_echte_vergabe",
+   "_name_match",
+   "_compute_rf10",
+   "_compute_rf11",
+   "_compute_rf12",
+   "VERGABE_SCHWELLEN",
+   "_PROXIMITY",
+   "RF08_BAGATELLGRENZE",
+   "_PLATZHALTER_VERGABE",
+   "_NICHT_VERGABERELEVANT",
+   "RED_FLAG_LABELS",
+   "RED_FLAG_CODES"
+  ]
+ },
+ "status": "APPROVED",
+ "summary": {
+  "amount_field": "bruttobetrag",
+  "format": "riskanalysis.red_flag_summary",
+  "origin": {
+   "lines": "298-319",
+   "path": "backend/app/pipeline/red_flags.py",
+   "repository": "janpow77/riskanalysis",
+   "symbol": "red_flag_summary"
+  }
+ },
+ "version": "2026.09.5"
+}
