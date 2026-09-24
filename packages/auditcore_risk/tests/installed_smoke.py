@@ -18,11 +18,11 @@ from auditcore_risk import (
 def main() -> None:
     """Exercise both legacy profiles and the optional-extra boundaries."""
     package = distribution("auditcore_risk")
-    assert package.version == "0.2.0"
+    assert package.version == "0.3.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_entity_matching==0.2.0"], runtime
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 13
+    assert len(available_profiles()) == 14
     assert len(available_fraud_profiles()) == 5
     flowstat = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
     result = evaluate([{"projektbetrag": 24_500.0}, {"projektbetrag": 5_000.0}], flowstat)
@@ -87,6 +87,11 @@ def main() -> None:
         if find_spec("rapidfuzz") is not None:
             flags = [r.flags["RF02"] for r in evaluate(c2, historic).records]
             assert flags == [False, True, None], flags
+            net_missing = load_profile("riskanalysis.year_bound", "2026.09.5")
+            without = [{k: v for k, v in r.items() if k != "nettobetrag"} for r in c2]
+            result = evaluate(without, net_missing, columns=list(without[0])).records
+            assert [r.flags["RF02"] for r in result] == [None, None, None]
+            assert result[0].undetermined["RF02"] == "Nettobetrag fehlt in der Quelle"
     print("PASS: installed auditcore_risk profiles, evaluation and extra boundaries")
 
 
