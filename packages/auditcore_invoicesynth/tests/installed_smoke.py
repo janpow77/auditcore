@@ -46,7 +46,36 @@ def main() -> None:
     assert {s.layout for s in holdout} == {"holdout_kompakt", "holdout_briefkopf"}
     report = evaluate([(ground_truth, ground_truth)])
     assert report.fields["invoice_number"].accuracy == 1.0
+    train_smoke()
     print("auditcore_invoicesynth installed smoke PASS", summary["plan_sha256"])
+
+
+def train_smoke() -> None:
+    """Trainingssteuerung ohne Torch: Rechenort offline, Wiederaufnahme mit Ersatzmodell."""
+    import tempfile
+    from dataclasses import replace
+    from pathlib import Path
+
+    from auditcore_invoicesynth.train import (
+        PROFILES,
+        MockBackend,
+        choose_topology,
+        flowagent_job,
+        run_training,
+    )
+
+    config = PROFILES["donut_train_janpow_ai"]
+    offline = choose_topology(config, [])
+    assert offline.mode == "unavailable"
+    job = flowagent_job(config, offline, dataset_hash="0" * 64, dataset_uri="-", run_id="r")
+    assert job["status"] == "WAITING_FOR_COMPUTE" and job["fallback"] is None
+    smoke = replace(PROFILES["cpu_smoke"], max_steps=8, checkpoint_every_steps=4)
+    with tempfile.TemporaryDirectory() as tmp:
+        run = Path(tmp)
+        kwargs = {"samples": 5, "run_dir": run, "run_id": "r", "dataset_hash": "d"}
+        run_training(MockBackend(), smoke, stop_after_step=6, **kwargs)  # type: ignore[arg-type]
+        resumed = run_training(MockBackend(), smoke, **kwargs)  # type: ignore[arg-type]
+        assert resumed.resumed_from == 4 and resumed.final_step == 8
 
 
 if __name__ == "__main__":

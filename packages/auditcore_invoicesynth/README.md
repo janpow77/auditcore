@@ -41,7 +41,18 @@ entstünde. Prüfziffer-gültige Kennungen können zufällig realen Nummern
 entsprechen (Entscheidung E5).
 
 Kern ohne Zusatzpakete (Plan, Anreicherung, Ziel-JSON, Manifestprüfung,
-Bewertung). Extra `render`: Pillow ≥ 9.4 (Debian: `python3-pil`).
+Bewertung, Trainingssteuerung). Extra `render`: Pillow ≥ 9.4 (Debian:
+`python3-pil`). Extra `train`: torch ≥ 2.7, transformers, tokenizers,
+sentencepiece, safetensors, Pillow (CPU- oder cu128-Build über den Paketindex).
+
+## Nachtraining (Etappe E3, vorbereitet)
+
+`auditcore_invoicesynth.train` / `auditcore-invoicesynth-train`: Profile
+`donut_train_janpow_ai` und `donut_train_8gb`, Rechenortwahl aus GPU-Telemetrie
+(DDP, zwei parallele Läufe oder „nicht verfügbar“ – kein stiller NUC-Rückfall),
+atomare Checkpoints mit Prüfsummen, deterministische Wiederaufnahme,
+systemd-Vorlage und FlowAgent-Jobbeschreibung. Kein echtes Training in 0.1.0;
+Details und offene Schritte auf janpow-ai: [docs/training.md](docs/training.md).
 
 Herkunft und Lizenz: `NOTICE`, `provenance.json` (MIT, Freigabe des
 Rechteinhabers vom 22.09.2026; Neuimplementierung ohne Quellrepository).
