@@ -62,3 +62,12 @@ Status vorher: HUMAN_DECISION_REQUIRED, jetzt **DECIDED**.
 `LEGACY` und `LEGACY_DIFFLIB` bleiben bitgenau, einschließlich ihrer
 Fingerabdrücke (`test_legacy_fingerprints_are_stable`). Die Pipeline-Entscheidungen
 D4 bis D8 stehen in `docs/pipeline.md`.
+
+## 0.2.0: Donut (additiv)
+
+| ID | Änderung | Wirkung auf bestehende Profile |
+|---|---|---|
+| DN-01 | `OcrBackend.DONUT`, `OcrStage(donut=…)`, `DonutPort`/`HttpDonut`/`FakeDonut`/`LocalDonut` | keine: nur bei `backend="donut"` aktiv |
+| DN-02 | `DonutFieldMergeStage`, Regeln `VAL_DONUT_PLAUSIBILITY`/`VAL_DONUT_DISAGREEMENT` | nur in `DONUT_PIPELINE` |
+| DN-03 | `PipelineProfile.ocr_backend`, `donut_min_field_confidence` (Vorgabe `None`) | Fingerabdrücke von `LEGACY_PIPELINE` und `CORRECTED_PIPELINE` unverändert (Vorgabewerte fließen nicht ein) |
+| DN-04 | `PIPELINE_PROFILES` enthält zusätzlich `auditcore.pipeline.donut` | Registry erweitert |

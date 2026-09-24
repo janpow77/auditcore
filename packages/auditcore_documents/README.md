@@ -1,4 +1,4 @@
-# auditcore_documents 0.1.0
+# auditcore_documents 0.2.0
 
 Dokumentvergleich und Gesetzessynopse ohne Web-, Datenbank-, Celery- oder
 KI-Abhängigkeit. Extrahiert und charakterisiert aus
@@ -7,7 +7,7 @@ Ein Vergleich ist eine Arbeitshilfe: Er stellt Unterschiede fest und
 bereitet sie auf, er trifft keine Prüfungsentscheidung.
 
 ```bash
-python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.1.0'
+python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.2.0'
 # Debian: python3-auditcore-documents (Kern); Extras über pip, pdftotext über
 # poppler-utils (optional, sonst pypdf). python3-lxml 4.9.2 (bookworm) ist
 # technisch lauffähig (gehärteter Parser), erfüllt aber nicht die Extra-Untergrenze.
@@ -23,6 +23,7 @@ python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.1
 | `pdf-render` | reportlab ≥ 4.0.8 | Synopse als PDF (wie ECOHESION `comparison.pdf`) |
 | `mime` | python-magic ≥ 0.4.27 | MIME-Erkennung der Pipeline wie im Original (libmagic) |
 | `ocr-raster` | pypdfium2, Pillow | Seitenrasterung vor Gateway-OCR |
+| `donut` | transformers, torch ≥ 2.7, sentencepiece, Pillow | `LocalDonut`: Offline-Inferenz eines eigenen Donut-Modells (nur lokales Verzeichnis, SHA-256-Prüfung); CPU/CUDA-Build über den Paketindex der Anwendung |
 
 ## Nutzung
 
@@ -121,3 +122,40 @@ Details, Korrekturen PL-C01…PL-C08 und Befunde: `docs/pipeline.md`.
 
 Nachweise, Abweichungen und Entscheidungen: `docs/behavior-changes.md`,
 `docs/consumer-integration.md`, `provenance.json`, `NOTICE`.
+
+## Donut-Belegerkennung (0.2.0, experimentell)
+
+Plan: `docs/architecture/DONUT_OCR_PLAN.md` (Entscheidungen E1–E9 vom
+24.09.2026). Nur über das ausdrücklich gewählte Profil `DONUT_PIPELINE`
+(`auditcore.pipeline.donut` 2026.09.24, Status `EXPERIMENTAL`) erreichbar;
+`LEGACY_PIPELINE` und `CORRECTED_PIPELINE` sind unverändert (Fingerabdrücke
+geprüft).
+
+```python
+from auditcore_documents import pipeline as pl
+
+donut = pl.HttpDonut(post, "http://100.102.132.11:8015")          # vision-service
+# oder pl.flowagent_donut(post, "https://agent.flowaudit.de")      # FlowAgent (E7)
+# oder pl.LocalDonut(Path("/opt/models/donut-invoice-de-1.0.0"), expected_sha256)
+ocr = pl.OcrStage(donut=donut, tesseract=my_tesseract_port)
+orchestrator = pl.build_pipeline(profile=pl.DONUT_PIPELINE, ocr=ocr)
+```
+
+- `DonutPort` (`available`, `parse(page_png) → DonutResult`), `HttpDonut`
+  (Transport als Port, ohne Port `DONUT_NOT_CONFIGURED`), `FakeDonut`,
+  `LocalDonut` (Extra `donut`; `DONUT_MODEL_HASH_MISMATCH` vor dem Laden).
+- `OcrBackend.DONUT`: PDF seitenweise über den `Rasterizer`, Bilder direkt;
+  Tesseract läuft zum Zwei-Motoren-Abgleich mit (`ocr_text` = Tesseract-Text,
+  sonst Donut-Darstellung); `ocr_raw_json.engine = "donut"` mit Modellkennung,
+  SHA-256 und Seitenergebnissen.
+- `DonutFieldMergeStage` nach `PostprocessStage`: Übernahme nur nach
+  Pflicht-Plausibilität (netto + USt = brutto, Steuerzeile = Basis × Satz,
+  IBAN mod 97, USt-IdNr.-/UID-Prüfziffer, zulässige Sätze DE 19/7/0 und
+  AT 20/13/10/0, Rechnungsnummer, Datum, Fälligkeit) **und** Feldkonfidenz ≥
+  0,90 oder Bestätigung im Tesseract-Text; Beträge ohne rechenbare Summe nur
+  mit Textbestätigung. Sonst bleibt der Regex-Wert, und `VAL_DONUT_PLAUSIBILITY`
+  bzw. `VAL_DONUT_DISAGREEMENT` setzen `REVIEW_NEEDED`. Bericht:
+  `normalized_json["donut_merge"]`.
+- Ohne Feldkonfidenzen (z. B. heutiger vision-service) gilt OCR-Konfidenz 0,80:
+  ein Donut-Lauf endet dann nie automatisch mit `OK`.
+- Das Modell ist nicht Teil des Pakets (Entscheidung E2: Release-Asset).

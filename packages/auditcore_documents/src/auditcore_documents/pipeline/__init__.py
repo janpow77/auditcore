@@ -35,10 +35,21 @@ from auditcore_documents.pipeline.context import (
     StageMetrics,
     ValidationResult,
 )
+from auditcore_documents.pipeline.donut import (
+    DonutPort,
+    DonutResult,
+    FakeDonut,
+    HttpDonut,
+    LocalDonut,
+    flowagent_donut,
+    parse_donut_sequence,
+    verify_model_dir,
+)
 from auditcore_documents.pipeline.hashing import HashingService
 from auditcore_documents.pipeline.orchestrator import ComputeProfileEnforcer, PipelineOrchestrator
 from auditcore_documents.pipeline.profiles import (
     CORRECTED_PIPELINE,
+    DONUT_PIPELINE,
     LEGACY_PIPELINE,
     PIPELINE_PROFILES,
     RECOMMENDED_PIPELINE,
@@ -53,6 +64,12 @@ from auditcore_documents.pipeline.retention import (
     RetentionSweeper,
 )
 from auditcore_documents.pipeline.stages.base import PipelineStage, StageError
+from auditcore_documents.pipeline.stages.donut_merge import (
+    DonutDisagreementRule,
+    DonutFieldMergeStage,
+    DonutPlausibilityRule,
+    donut_rules,
+)
 from auditcore_documents.pipeline.stages.export import ExportStage, FileExport, WebhookExport
 from auditcore_documents.pipeline.stages.ingestion import (
     IngestionStage,
@@ -88,8 +105,14 @@ def build_pipeline(
     compute_enforcer: ComputeProfileEnforcer | None = None,
     hashing: HashingService | None = None,
     sleep: Callable[[float], Awaitable[None]] | None = None,
+    donut_merge: DonutFieldMergeStage | None = None,
 ) -> PipelineOrchestrator:
-    """Standardablauf des flowinvoice-Workers (Einlesen … Persistenz) mit Ports."""
+    """Standardablauf des flowinvoice-Workers (Einlesen … Persistenz) mit Ports.
+
+    Profile mit ``ocr_backend="donut"`` (``DONUT_PIPELINE``) setzen das OCR-Backend,
+    fügen ``DonutFieldMergeStage`` nach der Nachverarbeitung ein und ergänzen die
+    Regeln ``VAL_DONUT_PLAUSIBILITY``/``VAL_DONUT_DISAGREEMENT``.
+    """
     hashing = hashing or HashingService()
     postprocess = PostprocessStage(audit_service=audit, hashing_service=hashing)
     postprocess.patterns = {k: list(v) for k, v in profile.field_patterns.items()}
@@ -101,11 +124,28 @@ def build_pipeline(
         isinstance(rule, AmountFormatRule) for rule in validation_stage.rules
     ):
         validation_stage.rules = [*validation_stage.rules, AmountFormatRule()]
+    merge_stages: list[PipelineStage] = []
+    if profile.ocr_backend == "donut":
+        ocr_stage.backend = "donut"
+        merge_stages.append(
+            donut_merge
+            or DonutFieldMergeStage(
+                audit_service=audit,
+                hashing_service=hashing,
+                min_field_confidence=profile.donut_min_field_confidence or 0.90,
+            )
+        )
+        known = {rule.rule_id for rule in validation_stage.rules}
+        validation_stage.rules = [
+            *validation_stage.rules,
+            *(rule for rule in donut_rules() if rule.rule_id not in known),
+        ]
     stages: list[PipelineStage] = [
         ingestion or IngestionStage(audit_service=audit, hashing_service=hashing),
         PreprocessStage(audit_service=audit, hashing_service=hashing),
         ocr_stage,
         postprocess,
+        *merge_stages,
         validation_stage,
         persist or PersistStage(audit_service=audit, hashing_service=hashing),
         *(extra_stages or []),
@@ -136,6 +176,19 @@ def build_retention_sweeper(
 __all__ = [
     "ALL_CATEGORIES",
     "CORRECTED_PIPELINE",
+    "DONUT_PIPELINE",
+    "DonutDisagreementRule",
+    "DonutFieldMergeStage",
+    "DonutPlausibilityRule",
+    "DonutPort",
+    "DonutResult",
+    "FakeDonut",
+    "HttpDonut",
+    "LocalDonut",
+    "donut_rules",
+    "flowagent_donut",
+    "parse_donut_sequence",
+    "verify_model_dir",
     "LEGACY_CATEGORIES",
     "RECOMMENDED_PIPELINE",
     "AmountFormatRule",
