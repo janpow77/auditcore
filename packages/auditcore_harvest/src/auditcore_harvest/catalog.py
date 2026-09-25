@@ -14,9 +14,9 @@ import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from importlib import resources
-from typing import Any
 
 from .errors import ConfigError
+from .model import JSON
 
 CATALOG_SCHEMA = "auditcore_harvest.catalog/1"
 
@@ -32,7 +32,7 @@ _SECRET_WORDS = ("password", "secret", "token", "apikey", "api_key")
 class CatalogEntry:
     """One validated catalogue entry (read-only view of the JSON)."""
 
-    data: Mapping[str, Any]
+    data: Mapping[str, JSON]
 
     @property
     def source_id(self) -> str:
@@ -50,7 +50,7 @@ class CatalogEntry:
         return str(self.data["live_test"]["status"])
 
 
-def _check_config_schema(schema: Any, where: str) -> None:
+def _check_config_schema(schema: object, where: str) -> None:
     if not isinstance(schema, Mapping) or schema.get("type") != "object":
         raise ConfigError(f"{where}: config_schema muss ein JSON-Schema-Objekt sein.")
     for name, spec in (schema.get("properties") or {}).items():
@@ -62,7 +62,7 @@ def _check_config_schema(schema: Any, where: str) -> None:
             raise ConfigError(f"{where}: Geheimnisfeld '{name}' darf keinen Wert enthalten.")
 
 
-def _validate_origins(origins: Any, where: str) -> None:
+def _validate_origins(origins: object, where: str) -> None:
     if not isinstance(origins, list):
         raise ConfigError(f"{where}: origins muss eine Liste sein.")
     for origin in origins:
@@ -73,7 +73,7 @@ def _validate_origins(origins: Any, where: str) -> None:
                 raise ConfigError(f"{where}: origin.{key} fehlt.")
 
 
-def _validate_status(entry: Mapping[str, Any], where: str) -> None:
+def _validate_status(entry: Mapping[str, JSON], where: str) -> None:
     checks = (
         (entry["auth"], AUTH, "auth"),
         (entry["implementation"]["status"], IMPLEMENTATION, "implementation.status"),
@@ -89,7 +89,7 @@ def _validate_status(entry: Mapping[str, Any], where: str) -> None:
         raise ConfigError(f"{where}: Live-Test ohne Datum.")
 
 
-def _validate_entry(entry: Mapping[str, Any], index: int, seen: set[str]) -> CatalogEntry:
+def _validate_entry(entry: Mapping[str, JSON], index: int, seen: set[str]) -> CatalogEntry:
     where = f"Quelle {index}"
     try:
         source_id = entry["source_id"]
@@ -112,7 +112,7 @@ def _validate_entry(entry: Mapping[str, Any], index: int, seen: set[str]) -> Cat
     return CatalogEntry(entry)
 
 
-def validate_catalog(data: Mapping[str, Any]) -> tuple[CatalogEntry, ...]:
+def validate_catalog(data: Mapping[str, JSON]) -> tuple[CatalogEntry, ...]:
     """Validate the catalogue document; raise ``ConfigError`` with the first problem."""
     if data.get("schema") != CATALOG_SCHEMA:
         raise ConfigError("Unbekanntes Katalogschema.")
