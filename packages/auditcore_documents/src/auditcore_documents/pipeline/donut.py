@@ -17,7 +17,6 @@ Donut-Ausgaben sind **Vorschlagswerte**: Übernommen werden sie erst durch
 
 from __future__ import annotations
 
-import hashlib
 import json
 import re
 import time
@@ -25,6 +24,8 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
+
+from auditcore_common.hashing import sha256_file
 
 from auditcore_documents.pipeline.stages.base import StageError
 
@@ -254,14 +255,6 @@ def flowagent_donut(
 
 
 # --------------------------------------------------------------------------- Lokal
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1 << 20), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def verify_model_dir(model_dir: Path, expected_sha256: str) -> str:
     """SHA-256 der Gewichtsdatei prüfen, bevor irgendetwas geladen wird."""
     weights = model_dir / WEIGHTS_FILE

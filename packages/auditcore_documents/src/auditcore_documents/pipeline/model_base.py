@@ -2,23 +2,21 @@
 
 from __future__ import annotations
 
-import uuid
 from collections.abc import Callable
 from dataclasses import fields
-from datetime import UTC, datetime
+from datetime import datetime
 from typing import Any
+
+from auditcore_common.clock import utc_now
+from auditcore_common.ids import new_uuid
 
 from auditcore_documents.pipeline.jsonfmt import dumps_compact
 
+#: Pipeline names of the shared helpers (same objects as in ``auditcore_common``).
+new_id = new_uuid
+__all__ = ["Clock", "PipelineValueError", "new_id", "utc_now"]
+
 Clock = Callable[[], datetime]
-
-
-def utc_now() -> datetime:
-    return datetime.now(UTC)
-
-
-def new_id() -> str:
-    return str(uuid.uuid4())
 
 
 class PipelineValueError(ValueError):
