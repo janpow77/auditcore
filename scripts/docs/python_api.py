@@ -92,7 +92,7 @@ class _Resolver:
         if path is None or depth > MAX_DEPTH:
             return Definition(dotted, None, None)
         source_lines = path.read_text(encoding="utf-8").splitlines()
-        body = _parse(path).body
+        body = _flatten(_parse(path).body)
         for index, node in enumerate(body):
             if _defines(node, name):
                 doc = _attribute_doc(node, body, index) or _comment_doc(node, source_lines)
@@ -101,6 +101,19 @@ class _Resolver:
             if source is not None:
                 return self.resolve(source[0], source[1], depth + 1)
         return Definition(dotted, None, None)
+
+
+def _flatten(body: list[ast.stmt]) -> list[ast.stmt]:
+    """Top-level statements including those inside ``try``/``if`` blocks."""
+    flat: list[ast.stmt] = []
+    for node in body:
+        flat.append(node)
+        if isinstance(node, ast.Try):
+            inner = [*node.body, *(s for h in node.handlers for s in h.body), *node.orelse]
+            flat.extend(_flatten(inner))
+        elif isinstance(node, ast.If):
+            flat.extend(_flatten([*node.body, *node.orelse]))
+    return flat
 
 
 def _defines(node: ast.stmt, name: str) -> bool:
