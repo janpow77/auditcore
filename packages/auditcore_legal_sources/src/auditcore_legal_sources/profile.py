@@ -87,7 +87,7 @@ class SourceProfile:
         return {"id": self.id, "version": self.version, "fingerprint": self.fingerprint}
 
 
-def fingerprint(data: Mapping[str, Any]) -> str:
+def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
     canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()

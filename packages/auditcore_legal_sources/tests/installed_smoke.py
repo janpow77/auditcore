@@ -20,7 +20,7 @@ from auditcore_legal_sources.adapters import DipDrucksachenAdapter
 def main() -> None:
     """Parse, normalize and harvest DIP pages through the installed engine."""
     package = distribution("auditcore_legal_sources")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_harvest==0.1.0"], runtime
     assert find_spec("auditcore") is None
