@@ -81,23 +81,22 @@ if TYPE_CHECKING:
     from auditcore_llm_client.async_client import AsyncLlmClient
     from auditcore_llm_client.sync_client import LlmClient
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "AUDIT_DESIGNER", "AUDIT_PORTAL", "COCKPIT", "FLOWINVOICE", "GENERIC", "PROFILES",
-    "AiRouterError", "AsyncLlmClient", "BreakerPolicy", "BreakerState", "CircuitBreaker",
-    "CircuitOpenError", "ClientConfig", "ConfigurationError", "EgressDeniedError",
-    "EmbedResult", "EmbedRoute", "SecretRefResolver", "SensitivityRejectedError",
-    "is_secret_reference", "resolve_secret",
-    "EnvNames", "ErrorKind", "GenerateRoute", "HealthAuth", "InvalidResponseError",
-    "LlmClient", "LlmClientError", "LlmResult", "Mode", "ModelCatalog", "ModelDefaults",
-    "ModelInfo", "ModelSnapshot", "NotAssignedError", "OcrResult", "Profile", "Quality",
-    "RerankResult", "RerankRoute", "RerankScore", "ResponseTelemetry", "RetryPolicy",
+    "AiRouterError", "async_safe_call", "AsyncLlmClient", "BreakerPolicy", "BreakerState",
+    "CircuitBreaker", "CircuitOpenError", "ClientConfig", "config_from_env",
+    "ConfigurationError", "EgressDeniedError", "EmbedResult", "EmbedRoute", "EnvNames",
+    "ErrorKind", "GenerateRoute", "get_profile", "HealthAuth", "InvalidResponseError",
+    "is_secret_reference", "LlmClient", "LlmClientError", "LlmResult", "Mode",
+    "model_defaults_from_env", "ModelCatalog", "ModelDefaults", "ModelInfo", "ModelSnapshot",
+    "NotAssignedError", "OcrResult", "Profile", "Quality", "redact", "RerankResult",
+    "RerankRoute", "RerankScore", "resolve_secret", "ResponseTelemetry", "RetryPolicy",
     "RouterHealth", "RouterHttpError", "RouterTimeoutError", "RouterUnavailableError",
-    "SecretValue", "Sensitivity", "StreamEvent", "StreamEventKind", "Timeouts",
-    "UnsupportedOperationError", "UsageRecord", "async_safe_call", "config_from_env",
-    "get_profile", "model_defaults_from_env", "redact", "safe_call", "strip_think_tags",
-    "unwrap_secret", "validate_base_url",
+    "safe_call", "SecretRefResolver", "SecretValue", "Sensitivity", "SensitivityRejectedError",
+    "StreamEvent", "StreamEventKind", "strip_think_tags", "Timeouts",
+    "UnsupportedOperationError", "unwrap_secret", "UsageRecord", "validate_base_url",
 ]
 
 

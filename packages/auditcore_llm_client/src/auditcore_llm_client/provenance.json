@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_llm_client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "contract": "auditcore_llm_client.gateway/1",
   "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
   "sources": [
@@ -101,14 +101,14 @@
     },
     {
       "repository": "janpow77/flow-agent",
-      "commit": "149e14be8952fddacb7601753dd2bf133fca51cb",
+      "commit": "873636a4868f554b8e603e4b7c4c897909762b9a",
       "files": [
         {
-          "git_blob": "9728490a2854e22f7f2d914b6a407830486bc2c4",
+          "git_blob": "b5dfb1a50c9e55d5670ded9fc959b798a75b6341",
           "path": "apps/control-plane-api/src/flow_agent_control_plane/main.py"
         },
         {
-          "git_blob": "6b32ddd1a28bf02831577568facb030d1ae8c128",
+          "git_blob": "7419154068c5283c45d8ef3bc60254d8ec7e5c63",
           "path": "apps/control-plane-api/src/flow_agent_control_plane/ai_gateway.py"
         },
         {

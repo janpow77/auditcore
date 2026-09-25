@@ -42,7 +42,7 @@ erzeugt; jede Paket-README folgt der
 | [`auditcore_common`](packages/auditcore_common) | 0.1.0 | Shared, behaviour-proven helpers of the auditcore domain packages (JSON, hashing, profiles, safe XML, HTML, numerics) | keine; Extras: `xml` | konsolidiert (Gleichheitsnachweis) |
 | [`auditcore_harvest`](packages/auditcore_harvest) | 0.1.1 | Shared harvest core: source contracts, paging/retry engine, checkpoints and adapter contract tests | keine | neu, gegen charakterisierte Verträge |
 | [`auditcore_identifiers`](packages/auditcore_identifiers) | 0.1.0 | Prüfen und Normalisieren von Kennungen – IBAN, BIC, USt-IdNr. (alle EU-Staaten), Steuer-ID, Steuernummer, LEI und Handelsregisternummer – mit einheitlichem Ergebnisobjekt und benannten Profilen. | keine | neu, gegen charakterisierte Verträge |
-| [`auditcore_llm_client`](packages/auditcore_llm_client) | 0.1.0 | Client für den ai-router und das Flow-Agent-Inferenz-Gateway: Chat, Streaming, Embeddings, Rerank, OCR und Health, mit Schwärzung, Wiederholungen und Circuit-Breaker. | keine; Extras: `http` | neu, gegen charakterisierte Verträge |
+| [`auditcore_llm_client`](packages/auditcore_llm_client) | 0.1.1 | Client für den ai-router und das Flow-Agent-Inferenz-Gateway: Chat, Streaming, Embeddings, Rerank, OCR und Health, mit Schwärzung, Wiederholungen und Circuit-Breaker. | keine; Extras: `http` | neu, gegen charakterisierte Verträge |
 
 **Fachbibliotheken**
 

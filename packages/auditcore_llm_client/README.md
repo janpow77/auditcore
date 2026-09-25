@@ -119,7 +119,9 @@ gilt der App-Default (`internal`, bisheriges Verhalten). Das Gateway antwortet
 bei ungültigem Wert mit HTTP 400 → `SensitivityRejectedError`; lässt die
 wirksame Sensitivität kein verfügbares Modell zu (z. B. `restricted` ohne lokales
 Modell), mit HTTP 403 → `EgressDeniedError` (Audit `ai.egress-denied`, kein
-Upstream-Aufruf). Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
+Upstream-Aufruf). Erkannt werden beide am Response-Header `X-Flow-Agent-Error`
+(`invalid-sensitivity`, `egress-denied`), bei älteren Gateways am `detail`-Text.
+Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
 nicht im Circuit-Breaker und nicht im Health-Zähler.
 
 #### Denken/Reasoning
@@ -188,29 +190,30 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `GENERIC` | Konstante | Neutral profile for new consumers: OpenAI-compatible routes, no fixed options. | `profiles` |
 | `PROFILES` | Konstante | – | `profiles` |
 | `AiRouterError` | Wert | Migration alias for the name used in audit_designer, flowinvoice and audit-portal. | `errors` |
+| `async_safe_call` | Funktion | Async variant of :func:`safe_call`. | `health` |
 | `AsyncLlmClient` | Klasse | ai-router/Flow-Agent client with async API. | `async_client` |
 | `BreakerPolicy` | Datenklasse | Circuit breaker thresholds (legacy flowinvoice: 3 failures, 180 s). | `resilience` |
 | `BreakerState` | Aufzählung | Circuit breaker state. | `resilience` |
 | `CircuitBreaker` | Klasse | Closed → open after ``failure_threshold`` outages; one trial after ``reset_timeout``. | `resilience` |
 | `CircuitOpenError` | Ausnahme | The circuit breaker is open; the call was not sent. | `errors` |
 | `ClientConfig` | Datenklasse | Everything a client needs; build it directly or via ``config_from_env``. | `config` |
+| `config_from_env` | Funktion | Read URL, app id, key, quality and model names for ``profile``. | `environment` |
 | `ConfigurationError` | Ausnahme | Missing or unsafe configuration (no URL, missing key, direct GPU host). | `errors` |
 | `EgressDeniedError` | Ausnahme | Flow-Agent HTTP 403: the effective sensitivity allows no available model. | `errors` |
 | `EmbedResult` | Datenklasse | Answer of ``embed``; vectors follow the order of the input texts. | `results` |
 | `EmbedRoute` | Aufzählung | Embedding route of the ai-router. | `profiles` |
-| `SecretRefResolver` | Typalias | Resolves a ``secret://`` reference to the plain value (injected, e.g. flow-agent client). | `environment` |
-| `SensitivityRejectedError` | Ausnahme | Flow-Agent HTTP 400: invalid ``X-Flow-Sensitivity`` value (policy, not an outage). | `errors` |
-| `is_secret_reference` | Funktion | True for Flow-Agent secret references (``secret://<anbieter>/<name>``). | `environment` |
-| `resolve_secret` | Funktion | Plain value or resolved ``secret://`` reference; the value never enters messages. | `environment` |
 | `EnvNames` | Datenklasse | Environment variable names read by ``config_from_env``. | `profiles` |
 | `ErrorKind` | Aufzählung | Why a call failed. | `errors` |
 | `GenerateRoute` | Aufzählung | How a single prompt (plus optional system prompt) is sent to the ai-router. | `profiles` |
+| `get_profile` | Funktion | Look up a profile by name (``audit_designer``, ``flowinvoice``, …). | `profiles` |
 | `HealthAuth` | Aufzählung | Headers of the ai-router ``GET /health`` call. | `profiles` |
 | `InvalidResponseError` | Ausnahme | The response did not match the expected schema. | `errors` |
+| `is_secret_reference` | Funktion | True for Flow-Agent secret references (``secret://<anbieter>/<name>``). | `environment` |
 | `LlmClient` | Klasse | ai-router/Flow-Agent client with sync API. | `sync_client` |
 | `LlmClientError` | Ausnahme | Base error of all client calls (legacy name: ``AiRouterError``). | `errors` |
 | `LlmResult` | Datenklasse | Answer of ``generate``/``chat``. | `results` |
 | `Mode` | Aufzählung | Which gateway dialect the client speaks. | `config` |
+| `model_defaults_from_env` | Funktion | Model names from the profile's environment chain, else the profile defaults. | `environment` |
 | `ModelCatalog` | Klasse | Cache logic only; the client supplies the fetch and the lock. | `catalog` |
 | `ModelDefaults` | Datenklasse | Model names used when a call names none (ai-router mode only). | `profiles` |
 | `ModelInfo` | Datenklasse | One entry of the ai-router model list (``/api/tags``). | `results` |
@@ -219,30 +222,29 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `OcrResult` | Datenklasse | Answer of ``ocr`` (mapped from the ai-router ``OcrResponse``). | `results` |
 | `Profile` | Datenklasse | Dialect of one application. | `profiles` |
 | `Quality` | Aufzählung | Flow-Agent quality selector; the gateway picks the model. | `config` |
+| `redact` | Funktion | Return ``text`` without secrets, URLs, DSNs and tokens, truncated to ``max_len``. | `redaction` |
 | `RerankResult` | Datenklasse | Answer of ``rerank``; ``scores`` follow the order of the input documents. | `results` |
 | `RerankRoute` | Aufzählung | Reranker route of the ai-router. | `profiles` |
 | `RerankScore` | Datenklasse | One scored document. | `results` |
+| `resolve_secret` | Funktion | Plain value or resolved ``secret://`` reference; the value never enters messages. | `environment` |
 | `ResponseTelemetry` | Datenklasse | Routing information the gateway returns in response headers. | `results` |
 | `RetryPolicy` | Datenklasse | How often and how long to retry. ``max_attempts=1`` disables retries. | `resilience` |
 | `RouterHealth` | Klasse | Last success, last error and consecutive failures of the gateway. | `health` |
 | `RouterHttpError` | Ausnahme | The router answered with an HTTP error status. | `errors` |
 | `RouterTimeoutError` | Ausnahme | The call exceeded its timeout. | `errors` |
 | `RouterUnavailableError` | Ausnahme | Router/gateway not reachable (connection error). | `errors` |
+| `safe_call` | Funktion | Run ``func``; return ``(result, None)`` or ``(None, redacted message)``. | `health` |
+| `SecretRefResolver` | Typalias | Resolves a ``secret://`` reference to the plain value (injected, e.g. flow-agent client). | `environment` |
 | `SecretValue` | Klasse | A credential that does not reveal itself in ``repr``/``str``. | `config` |
 | `Sensitivity` | Aufzählung | Value of ``X-Flow-Sensitivity`` (Flow-Agent egress policy). | `config` |
+| `SensitivityRejectedError` | Ausnahme | Flow-Agent HTTP 400: invalid ``X-Flow-Sensitivity`` value (policy, not an outage). | `errors` |
 | `StreamEvent` | Datenklasse | One event of ``stream_chat``. | `results` |
 | `StreamEventKind` | Aufzählung | Kind of a streamed chat event. | `results` |
+| `strip_think_tags` | Funktion | Remove ``<think>…</think>`` reasoning blocks (Qwen3/DeepSeek). | `parsing` |
 | `Timeouts` | Datenklasse | Per-operation timeouts in seconds (defaults of all legacy clients). | `config` |
 | `UnsupportedOperationError` | Ausnahme | The operation is not offered in the configured mode. | `errors` |
-| `UsageRecord` | Datenklasse | Passed to ``ClientConfig.usage_hook`` after every LLM answer (audit-portal F3). | `results` |
-| `async_safe_call` | Funktion | Async variant of :func:`safe_call`. | `health` |
-| `config_from_env` | Funktion | Read URL, app id, key, quality and model names for ``profile``. | `environment` |
-| `get_profile` | Funktion | Look up a profile by name (``audit_designer``, ``flowinvoice``, …). | `profiles` |
-| `model_defaults_from_env` | Funktion | Model names from the profile's environment chain, else the profile defaults. | `environment` |
-| `redact` | Funktion | Return ``text`` without secrets, URLs, DSNs and tokens, truncated to ``max_len``. | `redaction` |
-| `safe_call` | Funktion | Run ``func``; return ``(result, None)`` or ``(None, redacted message)``. | `health` |
-| `strip_think_tags` | Funktion | Remove ``<think>…</think>`` reasoning blocks (Qwen3/DeepSeek). | `parsing` |
 | `unwrap_secret` | Funktion | Accept ``str``, pydantic ``SecretStr`` or ``None`` (legacy ``_unwrap_secret``). | `config` |
+| `UsageRecord` | Datenklasse | Passed to ``ClientConfig.usage_hook`` after every LLM answer (audit-portal F3). | `results` |
 | `validate_base_url` | Funktion | Normalise and check the gateway URL; raise :class:`ConfigurationError`. | `config` |
 
 Öffentliche Module:
