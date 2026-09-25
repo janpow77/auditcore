@@ -57,14 +57,13 @@
    }
   },
   "auditcore_reference": {
-   "main": "packages-js/bpmn-editor (origin/main)",
-   "branches": [
+   "main": "packages-js/bpmn-editor, ui, ui-react, kanban-core (origin/main ccb73cb, #84)",
+   "branches_read": [
     "feat/ui-base 11ca7f1",
     "feat/ui-risk-js d31a3d6",
-    "feat/ui-sampling-benford-js c8ce702",
+    "feat/ui-sampling-benford-js c8ce702 (tabular.parseNumber)",
     "feat/ui-screening-js 44380c9"
-   ],
-   "local": "kanban-core (Worktree kanban-ui, noch nicht gepusht)"
+   ]
   }
  },
  "method": {
@@ -2187,7 +2186,7 @@
    "app_count": 5,
    "definitions": 30,
    "variants": 28,
-   "auditcore_existing": "@flowaudit/ui saveFile(DownloadFile), requestFile(...) (Branch feat/ui-base)",
+   "auditcore_existing": "@flowaudit/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)",
    "target": "@flowaudit/ui rest/download.ts saveFile → nach @flowaudit/common/browser verschieben (framework-frei) und aus ui re-exportieren",
    "differences": [
     "revokeObjectURL sofort nach click() (audit-portal, regulierung, audit_designer) gegenüber setTimeout 0 (@flowaudit/ui) – sofortiges Freigeben kann in Safari/Firefox den Download abbrechen",

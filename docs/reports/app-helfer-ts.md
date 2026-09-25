@@ -7,7 +7,7 @@ Stand: 25.09.2026 · Gegenstück zur Python-Inventur (`app-helfer-python.*`) · 
 - **18 970 Funktionen in 2 634 Dateien** aus 12 App-Frontends (6 × Vue, 6 × React) wurden per TypeScript-Compiler-API extrahiert, typbereinigt normalisiert und über Rumpf-Hashes sowie 29 Hilfskategorien gruppiert. `e-invoice-preparer` ist dasselbe Repository wie `rechnung` (gleiches Remote, gleicher Commit) und wurde nur einmal gezählt.
 - **Formatierung ist der größte generische Block:** 140 Datums-, 64 Betrags-, 48 Zahl-/Prozent-, 45 Dateigrößen- und 31 Dauer-Formatierer, fast alle als lokale Einzeiler in Komponenten. Allein `audit_designer` hat 92 Datumsformatierer und 37 Dateigrößen-Funktionen.
 - **Fachlich riskant ist die Zahleneingabe:** `1.234,56` wird in `BeleglisteGrid.parseDecimal` (flowinvoice, audit-portal) zu `1.234`, also um den Faktor 1000 zu klein. `1.5` ergibt je nach App `1.5` oder `15`. Die Python-Seite ist genauso uneinheitlich (Ausführungsmatrix in Abschnitt 4). Das ist der wichtigste Grund für gemeinsame Testfälle von Frontend und Backend.
-- **Vieles liegt in `@flowaudit/ui` schon vor, aber am falschen Ort:** `formatDate/formatNumber/formatPercent`, `sortRows/nextSort`, `requestJson/requestFile/saveFile` und `tabular.parseNumber` sind framework-frei, stecken aber im Vue-Paket (Branches `feat/ui-*`, noch nicht in `main`). React-Apps können sie so nicht ohne Vue nutzen. Vorschlag: diese Module nach **`@flowaudit/common`** verschieben und aus `@flowaudit/ui` weiter exportieren.
+- **Vieles liegt in `@flowaudit/ui` schon vor, aber am falschen Ort:** `formatDate/formatNumber/formatPercent`, `sortRows/nextSort`, `requestJson/requestFile/saveFile` und `tabular.parseNumber` sind framework-frei, stecken aber im Vue-Paket (`packages-js/ui`, seit #84 in `main`; `tabular.parseNumber` bisher nur in `feat/ui-sampling-benford-js`). React-Apps können sie so nicht ohne Vue nutzen. Vorschlag: diese Module nach **`@flowaudit/common`** verschieben und aus `@flowaudit/ui` weiter exportieren.
 - **Drei fachliche Cluster statt Hilfsfunktionen:** (1) `audit-portal` ist in den Modulen fraud-report/company-report/risk-wheel/belegliste ein Fork von `flowinvoice` (576 wortgleiche Funktionen = 59 % der flowinvoice-Funktionen); (2) der FlowStat-Custom-Node-Kern (1 354 Zeilen, framework-frei) steht wortgleich in `audit_designer` und `audit-portal`; (3) `usePdfTools` mit 18 identischen PDF-Operationen in `pdf-editor` und `audit_designer`. Dazu kommt das eGPU-Monitor-Widget in drei React-Apps.
 
 ## 1. Umfang und Methode
@@ -27,7 +27,7 @@ Stand: 25.09.2026 · Gegenstück zur Python-Inventur (`app-helfer-python.*`) · 
 | versteigerung | React (Next.js) | `origin/main 729f9a1` | 36 / 142 |
 | rechnung | React | `origin/main b3d6445` | 15 / 73 |
 
-Vergleichsbasis in auditcore: `packages-js/bpmn-editor` (origin/main), `packages-js/ui` und `ui-react` aus `feat/ui-base`, `feat/ui-risk-js`, `feat/ui-sampling-benford-js`, `feat/ui-screening-js` sowie `kanban-core` aus dem lokalen Worktree `kanban-ui` (noch nicht gepusht).
+Vergleichsbasis in auditcore: `packages-js/bpmn-editor`, `packages-js/ui`, `ui-react` und `kanban-core` (origin/main, seit #84 `ccb73cb`; bei der Analyse aus den Branches `feat/ui-base`, `feat/ui-risk-js`, `feat/ui-sampling-benford-js`, `feat/ui-screening-js` und dem Worktree `kanban-ui` gelesen, inhaltlich gleich für die hier genutzten Module) sowie die Fachmodule risk/sampling/screening aus ihren Branches.
 
 **Vorgehen**
 
@@ -375,7 +375,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Ziel:* @flowaudit/ui rest/download.ts saveFile → nach @flowaudit/common/browser verschieben (framework-frei) und aus ui re-exportieren
 
-*In auditcore vorhanden:* @flowaudit/ui saveFile(DownloadFile), requestFile(...) (Branch feat/ui-base)
+*In auditcore vorhanden:* @flowaudit/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)
 
 *Unterschiede:*
 
@@ -843,5 +843,5 @@ Zählung: Definitionen in Gruppen der Klassen (a) und (b), die durch `@flowaudit
 
 - Namens- und Rumpfmuster finden nicht jede Hilfsfunktion. Inline-Ausdrücke in Templates (etwa `{{ new Date(x).toLocaleDateString() }}`) sind nicht als Funktionen erfasst, der tatsächliche Duplikatumfang ist also größer.
 - Die Aufruferzahlen aus graphify sind Untergrenzen (Vue-Templates fehlen, nur ~45 % Knotenzuordnung). Die Textzahlen sind Obergrenzen.
-- `kanban-core` und `@flowaudit/ui` wurden aus Branches bzw. einem lokalen Worktree gelesen. Ihr Stand kann sich bis zum Merge noch ändern.
+- `@flowaudit/ui`-Fachmodule (risk, sampling/tabular, screening) wurden aus Branches gelesen und können sich bis zu ihrem Merge noch ändern; Basis, i18n, rest, table, theme und `kanban-core` sind seit #84 in `main`.
 - In den App-Repos wurde nichts geändert (nur `git fetch` und `git archive`).
