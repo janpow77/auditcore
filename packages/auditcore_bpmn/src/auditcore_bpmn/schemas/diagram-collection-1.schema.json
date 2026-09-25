@@ -334,7 +334,7 @@
           "description": "XML: vertraulich"
         }
       },
-      "description": "``flowaudit:pruefbezug``: Kernanforderung (KA) und Bewertungskriterium (BK)."
+      "description": "XML-Element `flowaudit:pruefbezug`: Kernanforderung (KA) und Bewertungskriterium (BK)."
     },
     "Actor": {
       "type": "object",
@@ -524,7 +524,7 @@
           "description": "XML: vertraulich"
         }
       },
-      "description": "``flowaudit:pruefschritt``: Durchlauf- oder Kontrolltest an einem Element."
+      "description": "XML-Element `flowaudit:pruefschritt`: Durchlauf- oder Kontrolltest an einem Element."
     },
     "AuditFinding": {
       "type": "object",

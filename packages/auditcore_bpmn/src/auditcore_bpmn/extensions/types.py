@@ -33,7 +33,7 @@ class Marker:
 
 @dataclass(frozen=True)
 class AuditReference:
-    """``flowaudit:pruefbezug``: Kernanforderung (KA) und Bewertungskriterium (BK)."""
+    """XML-Element `flowaudit:pruefbezug`: Kernanforderung (KA) und Bewertungskriterium (BK)."""
 
     key_requirement: str | None = xml_field("ka")
     assessment_criterion: str | None = xml_field("bk")
@@ -129,7 +129,7 @@ class Evidence:
 
 @dataclass(frozen=True)
 class AuditStep:
-    """``flowaudit:pruefschritt``: Durchlauf- oder Kontrolltest an einem Element."""
+    """XML-Element `flowaudit:pruefschritt`: Durchlauf- oder Kontrolltest an einem Element."""
 
     id: str | None = xml_field("id")
     case: str | None = xml_field("fall")
