@@ -20,11 +20,14 @@ Sichtbare Änderung ist nur die Versionskennung `library` in
 Literal „0.1.0“; er vergleicht jetzt mit `__version__` (wie der entsprechende
 Test in auditcore_statistics). Die Replay-/Paritätstests sind unverändert.
 
+Messung mit `auditcore-codegate check --package auditcore_sampling`:
+
 | Messung | 0.1.0 | 0.1.1 |
 |---|---|---|
 | Funktionen mit McCabe > 10 | 0 | 0 |
+| Funktionen > 60 Zeilen | 0 | 0 |
 | Module > 400 Zeilen | 0 | 0 |
-| `Any`-Vorkommen | 13 | 10 |
+| `Any`-Verwendungen | 11 | 8 |
 | mypy --strict | sauber | sauber |
 
 Keine Umbenennungen öffentlicher Namen. Die verbleibenden `Any` stehen an
