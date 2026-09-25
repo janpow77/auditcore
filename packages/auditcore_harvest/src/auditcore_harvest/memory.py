@@ -5,10 +5,9 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
-from typing import Any
 
 from .errors import CheckpointConflict
-from .model import Checkpoint, HarvestRecord, SinkReceipt
+from .model import JSON, Checkpoint, HarvestRecord, SinkReceipt
 
 
 @dataclass
@@ -101,8 +100,8 @@ class StaticCredentials:
 class ListEvents:
     """Collects events; asserts in tests that no secret leaks."""
 
-    events: list[Mapping[str, Any]] = field(default_factory=list)
+    events: list[Mapping[str, JSON]] = field(default_factory=list)
 
-    def emit(self, event: Mapping[str, Any]) -> None:
+    def emit(self, event: Mapping[str, JSON]) -> None:
         """Store the event."""
         self.events.append(dict(event))
