@@ -7,10 +7,10 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 from typing import Generic, TypeVar
 
-from auditcore_llm_client.config import ClientConfig
-from auditcore_llm_client.errors import ErrorKind, LlmClientError
+from auditcore_llm_client.config import ClientConfig, Mode
+from auditcore_llm_client.errors import POLICY_KINDS, ErrorKind, LlmClientError
 from auditcore_llm_client.health import RouterHealth
-from auditcore_llm_client.received import ReceivedResponse
+from auditcore_llm_client.received import ReceivedResponse, error_for_status
 from auditcore_llm_client.resilience import CircuitBreaker
 from auditcore_llm_client.results import LlmResult, UsageRecord
 from auditcore_llm_client.wire import PreparedRequest
@@ -75,12 +75,25 @@ class Resilience:
             self.health.record_success()
 
     def failed(self, error: LlmClientError) -> None:
-        """Record a failed call (an open breaker is not counted as another outage)."""
+        """Record a failed call (an open breaker is not counted as another outage).
+
+        Flow-Agent policy rejections are no outage: neither breaker nor health count them.
+        """
+        if error.kind in POLICY_KINDS:
+            log.warning("LLM-Aufruf %s abgelehnt: %s", error.endpoint, error.kind.value)
+            return
         if self.breaker is not None and error.kind is not ErrorKind.CIRCUIT_OPEN:
             self.breaker.record_failure(error)
         if self.health is not None:
             self.health.record_failure(error.message)
         log.warning("LLM-Aufruf %s fehlgeschlagen: %s", error.endpoint, error.kind.value)
+
+
+def status_error(config: ClientConfig, received: ReceivedResponse) -> LlmClientError:
+    """Error for an HTTP status >= 400 in the dialect of the configured mode."""
+    return error_for_status(
+        received, config.secrets, flow_agent=config.mode is Mode.FLOW_AGENT
+    )
 
 
 def notify_usage(config: ClientConfig, operation: str, result: object) -> None:

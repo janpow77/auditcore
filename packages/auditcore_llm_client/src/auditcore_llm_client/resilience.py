@@ -16,6 +16,7 @@ from enum import StrEnum
 
 from auditcore_llm_client.errors import (
     AVAILABILITY_KINDS,
+    POLICY_KINDS,
     CircuitOpenError,
     ErrorKind,
     LlmClientError,
@@ -133,7 +134,12 @@ class CircuitBreaker:
             self._state = BreakerState.CLOSED
 
     def record_failure(self, error: LlmClientError) -> None:
-        """Count an outage; a client error (4xx) proves the gateway answers and closes it."""
+        """Count an outage; a client error (4xx) proves the gateway answers and closes it.
+
+        Policy rejections (sensitivity, egress) change nothing.
+        """
+        if error.kind in POLICY_KINDS:
+            return
         if not counts_as_outage(error):
             self.record_success()
             return

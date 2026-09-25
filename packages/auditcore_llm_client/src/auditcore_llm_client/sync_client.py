@@ -12,11 +12,17 @@ import httpx
 from auditcore_llm_client import operations as ops
 from auditcore_llm_client.catalog import ModelCatalog, ModelSnapshot
 from auditcore_llm_client.config import ClientConfig
-from auditcore_llm_client.engine import NO_RESPONSE, Operation, Resilience, notify_usage
+from auditcore_llm_client.engine import (
+    NO_RESPONSE,
+    Operation,
+    Resilience,
+    notify_usage,
+    status_error,
+)
 from auditcore_llm_client.errors import LlmClientError
 from auditcore_llm_client.health import RouterHealth
 from auditcore_llm_client.jsontypes import JsonObject, JsonValue
-from auditcore_llm_client.received import ReceivedResponse, error_for_status
+from auditcore_llm_client.received import ReceivedResponse
 from auditcore_llm_client.results import (
     EmbedResult,
     LlmResult,
@@ -80,7 +86,7 @@ class LlmClient:
         if received.status == 404 and request.fallback_on_404 is not None:
             return self._exchange(request.fallback_on_404)
         if received.status >= 400:
-            raise error_for_status(received, self.config.secrets)
+            raise status_error(self.config, received)
         return received
 
     def _send(self, request: PreparedRequest) -> ReceivedResponse:
@@ -114,19 +120,22 @@ class LlmClient:
                  temperature: float | None = None, max_tokens: int | None = None,
                  json_mode: bool = False, seed: int | None = None,
                  options: Mapping[str, JsonValue] | None = None,
+                 reasoning_effort: str | None = None,
                  timeout: float | None = None) -> LlmResult:
         """Single prompt with optional system prompt."""
         params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              json_mode=json_mode, seed=seed, options=options)
+                              json_mode=json_mode, seed=seed, options=options,
+                              reasoning_effort=reasoning_effort)
         return self._run(ops.generate_op(self.config, prompt, system, params, timeout))
 
     def chat(self, messages: Messages, *, model: str | None = None,
              temperature: float | None = None, max_tokens: int | None = None,
              json_mode: bool = False, seed: int | None = None,
-             timeout: float | None = None) -> LlmResult:
+             reasoning_effort: str | None = None, timeout: float | None = None) -> LlmResult:
         """OpenAI-compatible chat completion."""
         params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              json_mode=json_mode, seed=seed)
+                              json_mode=json_mode, seed=seed,
+                              reasoning_effort=reasoning_effort)
         return self._run(ops.chat_op(self.config, messages, params, timeout))
 
     def embed(self, texts: Sequence[str], *, model: str | None = None,
@@ -168,10 +177,11 @@ class LlmClient:
     def stream_chat(self, messages: Messages, *, model: str | None = None,
                     options: Mapping[str, JsonValue] | None = None, think: bool | None = None,
                     temperature: float | None = None,
-                    max_tokens: int | None = None) -> Iterator[StreamEvent]:
+                    max_tokens: int | None = None,
+                    reasoning_effort: str | None = None) -> Iterator[StreamEvent]:
         """Streamed chat; HTTP and transport errors raise, in-stream errors are events."""
         params = ops.sampling(model=model, temperature=temperature, max_tokens=max_tokens,
-                              options=options)
+                              options=options, reasoning_effort=reasoning_effort)
         request = build_stream_chat(self.config, messages, params, think)
         try:
             yield from self._stream(request)
@@ -195,7 +205,7 @@ class LlmClient:
     def _events(self, response: httpx.Response, path: str) -> Iterator[StreamEvent]:
         if response.status_code >= 400:
             response.read()
-            raise error_for_status(received_from(response, path), self.config.secrets)
+            raise status_error(self.config, received_from(response, path))
         decoder = decoder_for(path)
         try:
             for line in response.iter_lines():

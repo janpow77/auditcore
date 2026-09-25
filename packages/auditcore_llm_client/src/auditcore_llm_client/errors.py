@@ -25,10 +25,14 @@ class ErrorKind(StrEnum):
     CIRCUIT_OPEN = "circuit_open"
     NOT_ASSIGNED = "not_assigned"
     UNSUPPORTED = "unsupported"
+    SENSITIVITY_REJECTED = "sensitivity_rejected"
+    EGRESS_DENIED = "egress_denied"
 
 
 #: Kinds that indicate the router/gateway itself is unavailable.
 AVAILABILITY_KINDS = frozenset({ErrorKind.UNREACHABLE, ErrorKind.TIMEOUT})
+#: Policy decisions of the Flow-Agent: never retried, not counted by breaker or health.
+POLICY_KINDS = frozenset({ErrorKind.SENSITIVITY_REJECTED, ErrorKind.EGRESS_DENIED})
 
 
 class LlmClientError(RuntimeError):
@@ -108,6 +112,21 @@ class NotAssignedError(LlmClientError):
     """Flow-Agent readiness: the capability is not assigned to a healthy worker."""
 
     kind = ErrorKind.NOT_ASSIGNED
+
+
+class SensitivityRejectedError(LlmClientError):
+    """Flow-Agent HTTP 400: invalid ``X-Flow-Sensitivity`` value (policy, not an outage)."""
+
+    kind = ErrorKind.SENSITIVITY_REJECTED
+
+
+class EgressDeniedError(LlmClientError):
+    """Flow-Agent HTTP 403: the effective sensitivity allows no available model.
+
+    No upstream call was made; the gateway audits ``ai.egress-denied``. Not retried.
+    """
+
+    kind = ErrorKind.EGRESS_DENIED
 
 
 class UnsupportedOperationError(LlmClientError):

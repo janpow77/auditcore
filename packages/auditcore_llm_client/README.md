@@ -54,8 +54,29 @@ Score-Anzahl), `OcrResult`, `ModelInfo`, `StreamEvent`.
 
 Header wie in den Apps: ai-router `X-App-Id` und optional `X-Api-Key`; Flow-Agent
 `Authorization: Bearer <App-Schlüssel>`; optional `X-Flow-Sensitivity`
-(`public|internal|confidential|restricted`) und weitere, nicht
-authentisierende Header (`extra_headers`).
+(`ClientConfig.sensitivity`) und weitere, nicht authentisierende Header
+(`extra_headers`).
+
+### Sensitivität (Flow-Agent)
+
+`X-Flow-Sensitivity` (`public|internal|confidential|restricted`): wirksam ist das
+Maximum aus App-Default und Header – der Header kann nur hochstufen. Ohne Header
+gilt der App-Default (`internal`, bisheriges Verhalten). Das Gateway antwortet
+bei ungültigem Wert mit HTTP 400 → `SensitivityRejectedError`; lässt die
+wirksame Sensitivität kein verfügbares Modell zu (z. B. `restricted` ohne lokales
+Modell), mit HTTP 403 → `EgressDeniedError` (Audit `ai.egress-denied`, kein
+Upstream-Aufruf). Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
+nicht im Circuit-Breaker und nicht im Health-Zähler.
+
+### Denken/Reasoning
+
+`generate`, `chat` und `stream_chat` nehmen `reasoning_effort`
+(`none|low|medium|high`). OpenAI-Routen bekommen das Feld unverändert, Ollama-
+Routen (`/api/chat`, `/api/generate`) `think` (`none` → `false`). Ohne Angabe
+setzt der ai-router für Modelle mit Präfix `qwen3.5` selbst
+`reasoning_effort=none` bzw. `think=false` (`LLM_NO_THINK_MODEL_PREFIXES`). Der
+Flow-Agent-Vertrag `/generate` kennt das Feld nicht; dort sendet das Gateway
+immer `think=false`.
 
 ## Fehler
 
@@ -72,6 +93,18 @@ der konfigurierte Schlüssel wird im Klartext ersetzt, dazu URLs, DSNs, Bearer-,
 (`from None`), damit Tracebacks keine URL enthalten. Schlüssel kommen nur aus
 Konfiguration oder Umgebung; es gibt keine Standardschlüssel und keine
 Standard-URL.
+
+**Bevorzugt als Secret-Referenz:** Schlüssel stehen in der Umgebung als
+`secret://<anbieter>/<name>` und werden beim Start über die Flow-Agent-Control-
+Plane (`POST /api/v1/secrets/use`, auditiert) aufgelöst:
+
+```python
+from flow_agent_client.secret_refs import SecretResolver   # nicht Teil dieser Bibliothek
+config = config_from_env(FLOWINVOICE, secret_resolver=SecretResolver.from_env().resolve)
+```
+
+Ohne Resolver ist eine `secret://`-Referenz ein `ConfigurationError`; sie wird
+nie als Schlüssel gesendet. Fehler des Resolvers werden ohne dessen Text gemeldet.
 
 ## Wiederholungen und Circuit-Breaker
 
@@ -96,7 +129,7 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `AUDIT_DESIGNER` | `LLM_ROUTER_URL/APP_ID/API_KEY`, Modell `VP_AI_EGPU_MODEL` → `OLLAMA_MODEL`, `VP_AI_LLM_KEEP_ALIVE` | `generate` über `/api/chat` mit festen Optionen (`num_ctx` 16384, `top_p` 0,8, `top_k` 20, `repeat_penalty` 1,05, `think=false`, `keep_alive`), Standard 0,2/4000 Tokens, `<think>` entfernen, Rerank/Embed mit 404-Rückfall, `/health` mit Auth-Headern |
 | `FLOWINVOICE` | wie oben + `FLOW_AGENT_URL/APP_ID/APP_KEY/QUALITY`, `OLLAMA_DEFAULT_MODEL`, `EMBEDDING_MODEL`, `RERANKER_MODEL` | `/api/generate`, OpenAI-Rerank/Embed, `/health` ohne Header; gesetzte `FLOW_AGENT_URL` schaltet in den Flow-Agent-Modus |
 | `AUDIT_PORTAL` | wie flowinvoice ohne Flow-Agent, App-ID `audit-portal` | Metering über `ClientConfig.usage_hook` (ersetzt `record_llm_usage`) |
-| `COCKPIT` | `AI_ROUTER_URL/APP_ID/API_KEY` | Modellliste und NDJSON-Streaming |
+| `COCKPIT` (**abgekündigt**) | `AI_ROUTER_URL/APP_ID/API_KEY` | Modellliste und NDJSON-Streaming; cockpit wird abgeschaltet (Funktionen in flow-agent #50), Profil bleibt nur für bestehende Tests |
 | `GENERIC` | `AI_ROUTER_*`, `FLOW_AGENT_*` | neutrale Voreinstellung für neue Consumer |
 
 Abweichungen vom Altverhalten: [docs/behavior-changes.md](docs/behavior-changes.md).

@@ -6,7 +6,13 @@ import json
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field
 
-from auditcore_llm_client.errors import InvalidResponseError, RouterHttpError
+from auditcore_llm_client.errors import (
+    EgressDeniedError,
+    InvalidResponseError,
+    LlmClientError,
+    RouterHttpError,
+    SensitivityRejectedError,
+)
 from auditcore_llm_client.results import ResponseTelemetry
 
 #: Characters of an error body that are kept in the message (legacy: 200).
@@ -65,10 +71,27 @@ def retry_after_seconds(value: str) -> float | None:
     return max(0.0, seconds)
 
 
-def error_for_status(received: ReceivedResponse, secrets: Iterable[str]) -> RouterHttpError:
-    """``RouterHttpError`` with the first 200 body characters, redacted."""
+def _policy_error_type(received: ReceivedResponse) -> type[LlmClientError] | None:
+    """Flow-Agent policy answers (flow-agent ``ai_gateway``: 400 sensitivity, 403 egress)."""
+    detail = received.text
+    if received.status == 400 and "Sensitivit" in detail:
+        return SensitivityRejectedError
+    if received.status == 403 and "Egress" in detail:
+        return EgressDeniedError
+    return None
+
+
+def error_for_status(
+    received: ReceivedResponse, secrets: Iterable[str], *, flow_agent: bool = False
+) -> LlmClientError:
+    """HTTP error with the first 200 body characters, redacted.
+
+    In Flow-Agent mode sensitivity (400) and egress (403) rejections get their
+    own, non-retryable error types.
+    """
     body = received.text[:ERROR_BODY_CHARS]
-    return RouterHttpError(
+    error_type = (_policy_error_type(received) if flow_agent else None) or RouterHttpError
+    return error_type(
         f"{received.path} HTTP {received.status}: {body}",
         status_code=received.status,
         endpoint=received.path,

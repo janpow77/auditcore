@@ -22,11 +22,18 @@ from auditcore_llm_client.config import (
     unwrap_secret,
     validate_base_url,
 )
-from auditcore_llm_client.environment import config_from_env, model_defaults_from_env
+from auditcore_llm_client.environment import (
+    SecretRefResolver,
+    config_from_env,
+    is_secret_reference,
+    model_defaults_from_env,
+    resolve_secret,
+)
 from auditcore_llm_client.errors import (
     AiRouterError,
     CircuitOpenError,
     ConfigurationError,
+    EgressDeniedError,
     ErrorKind,
     InvalidResponseError,
     LlmClientError,
@@ -34,6 +41,7 @@ from auditcore_llm_client.errors import (
     RouterHttpError,
     RouterTimeoutError,
     RouterUnavailableError,
+    SensitivityRejectedError,
     UnsupportedOperationError,
 )
 from auditcore_llm_client.health import RouterHealth, async_safe_call, safe_call
@@ -78,7 +86,9 @@ __version__ = "0.1.0"
 __all__ = [
     "AUDIT_DESIGNER", "AUDIT_PORTAL", "COCKPIT", "FLOWINVOICE", "GENERIC", "PROFILES",
     "AiRouterError", "AsyncLlmClient", "BreakerPolicy", "BreakerState", "CircuitBreaker",
-    "CircuitOpenError", "ClientConfig", "ConfigurationError", "EmbedResult", "EmbedRoute",
+    "CircuitOpenError", "ClientConfig", "ConfigurationError", "EgressDeniedError",
+    "EmbedResult", "EmbedRoute", "SecretRefResolver", "SensitivityRejectedError",
+    "is_secret_reference", "resolve_secret",
     "EnvNames", "ErrorKind", "GenerateRoute", "HealthAuth", "InvalidResponseError",
     "LlmClient", "LlmClientError", "LlmResult", "Mode", "ModelCatalog", "ModelDefaults",
     "ModelInfo", "ModelSnapshot", "NotAssignedError", "OcrResult", "Profile", "Quality",

@@ -9,7 +9,7 @@ nur ai-router-/Flow-Agent-Routen, keine direkten Ollama-/vLLM-/GPU-Aufrufe.
 
 | Prüfung | Ergebnis |
 |---|---|
-| Paket-Tests (`pytest tests`) | 190 passed (davon 120 Paritätsfälle: 60 Altfälle × sync/async) |
+| Paket-Tests (`pytest tests`) | 199 passed (davon 120 Paritätsfälle: 60 Altfälle × sync/async) |
 | `ruff check .`, `mypy --strict src`, `bandit -ll -r src` | PASS |
 | Code-Qualitätsgate (`--package auditcore_llm_client`) | alle Metriken 0, Baseline-Eintrag 0 |
 | pip (`verify_domain_packages.py`) | PASS: Hash-gebundene Installation, isolierte Herkunft, Smoke, selektive Installation ohne Extra, Entfernen |
@@ -83,6 +83,17 @@ Transport-Exceptions, keine Standard-URL/-Schlüssel, Port 11434 abgelehnt,
 Flow-Agent fail-closed ohne Schlüssel (Tests `test_errors_and_logs_never_contain_the_key`,
 `test_traceback_of_client_error_contains_no_secret`, Parität prüft je Fall
 „Schlüssel nicht in Fehler/Health“).
+
+## Nachbesserung nach Abstimmung mit flow-agent (main `1d49ec3c`)
+
+- `X-Flow-Sensitivity`: Maximum aus App-Default und Header (nur Hochstufen), ohne
+  Header `internal`; HTTP 400 → `SensitivityRejectedError`, HTTP 403 Egress →
+  `EgressDeniedError` – nicht retrybar, nicht in Breaker/Health gezählt.
+- `reasoning_effort` durchreichbar; ai-router setzt für `qwen3.5*` ohne Vorgabe
+  `reasoning_effort=none`/`think=false`.
+- Schlüssel bevorzugt als `secret://`-Referenz über `POST /api/v1/secrets/use`;
+  Hook `secret_resolver` (z. B. `flow_agent_client.secret_refs.SecretResolver`).
+- Profil `COCKPIT` abgekündigt (cockpit wird abgeschaltet, flow-agent #50).
 
 ## Offen
 

@@ -21,6 +21,7 @@ Statuscodes ebenfalls, soweit unten nicht anders vermerkt.
 | B10 | Nicht-numerische Scores/Vektoren führen zu `TypeError`/`ValueError` außerhalb des Fehlervertrags; `content: null` wird bei flowinvoice zu `"None"`. | `InvalidResponseError`; `null` wird zu `""`. | Strukturierte Fehler. |
 | B11 | Leere Eingabe bei `call_embed`/`call_rerank`: flowinvoice liefert `model=""`, audit_designer den Standardmodellnamen. | Immer der wirksame Modellname. | Vereinheitlicht, ohne Request. |
 | B12 | Keine Wiederholungen, kein Circuit-Breaker im Client (flowinvoice: Breaker nur im Ollama-Provider, 3 Fehler/180 s). | `RetryPolicy` (Standard: 1 Versuch = Altverhalten) und `BreakerPolicy` (Standard 3/180 s) als Opt-in. | Funktionen aus dem Auftrag, ohne das Standardverhalten zu ändern. |
+| B13 | Flow-Agent-Ablehnungen (400 Sensitivität, 403 Egress) sind gewöhnliche `AiRouterError`s. | `SensitivityRejectedError`/`EgressDeniedError`; nie wiederholt, nicht im Breaker/Health gezählt. | Richtlinienentscheidung, keine Störung (flow-agent `1d49ec3c`). |
 
 Nicht übernommen: `Redis ollama:mode=fallback` (flowinvoice), statische
 Modellliste `get_available_models` (flowinvoice), Adressraterei (cockpit).

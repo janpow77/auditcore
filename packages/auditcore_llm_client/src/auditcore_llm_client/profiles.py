@@ -103,6 +103,8 @@ class Profile:
     think: bool | None = None
     #: Remove ``<think>…</think>`` blocks from answers.
     strip_think_tags: bool = False
+    #: Set for profiles of apps that are being shut down (no further work).
+    deprecated: str | None = None
 
     def model_defaults(self) -> ModelDefaults:
         """The profile's built-in model names."""
@@ -175,6 +177,7 @@ AUDIT_PORTAL = Profile(
 COCKPIT = Profile(
     name="cockpit",
     default_app_id="cockpit",
+    deprecated="abgekündigt: cockpit wird abgeschaltet, Funktionen gehen in flow-agent #50",
     env=EnvNames(url="AI_ROUTER_URL", app_id="AI_ROUTER_APP_ID", api_key="AI_ROUTER_API_KEY"),
 )
 

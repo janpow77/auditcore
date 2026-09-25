@@ -31,6 +31,17 @@ class Sampling:
     json_mode: bool = False
     seed: int | None = None
     options: Mapping[str, JsonValue] = field(default_factory=dict)
+    #: OpenAI ``reasoning_effort`` (``none|low|medium|high``); on Ollama routes it
+    #: becomes ``think`` (``none`` = false). ``None`` leaves the router default:
+    #: the ai-router disables thinking for ``qwen3.5*`` models unless the client asks.
+    reasoning_effort: str | None = None
+
+
+def ollama_think(sampling: Sampling, fixed: bool | None) -> bool | None:
+    """``think`` flag for Ollama routes: explicit reasoning effort wins over the profile."""
+    if sampling.reasoning_effort is not None:
+        return sampling.reasoning_effort != "none"
+    return fixed
 
 
 def flow_agent_model(config: ClientConfig, model: str | None) -> str:
@@ -58,6 +69,7 @@ def _openai_chat_body(config: ClientConfig, messages: list[JsonValue], sampling:
     put_optional(body, "temperature", _temperature(config, sampling))
     put_optional(body, "max_tokens", _max_tokens(config, sampling))
     put_optional(body, "seed", sampling.seed)
+    put_optional(body, "reasoning_effort", sampling.reasoning_effort)
     if sampling.json_mode:
         body["response_format"] = {"type": "json_object"}
     return body
@@ -100,7 +112,7 @@ def _ollama_chat(config: ClientConfig, prompt: str, system: str | None,
     options.update(sampling.options)
     put_optional(options, "seed", sampling.seed)
     body: JsonObject = {"model": model, "messages": messages, "stream": False}
-    put_optional(body, "think", profile.think)
+    put_optional(body, "think", ollama_think(sampling, profile.think))
     put_optional(body, "keep_alive", config.keep_alive or profile.default_keep_alive)
     body["options"] = options
     if sampling.json_mode:
@@ -137,6 +149,7 @@ def _ollama_generate(config: ClientConfig, prompt: str, system: str | None,
     }
     if system:
         body["system"] = system
+    put_optional(body, "think", ollama_think(sampling, None))
     if options:
         body["options"] = options
     if sampling.json_mode:
@@ -154,7 +167,10 @@ def _context_window(options: Mapping[str, JsonValue]) -> int | None:
 
 def _flow_agent_generate(config: ClientConfig, prompt: str, system: str | None,
                          sampling: Sampling) -> PreparedRequest:
-    """Provider-neutral ``/generate`` (``AiGenerateRequest``, extra fields forbidden)."""
+    """Provider-neutral ``/generate`` (``AiGenerateRequest``, extra fields forbidden).
+
+    ``reasoning_effort`` is not part of the contract; the gateway sends ``think=false``.
+    """
     temperature = sampling.temperature
     body: JsonObject = {
         "prompt": prompt,
@@ -198,7 +214,7 @@ def build_stream_chat(config: ClientConfig, messages: Messages, sampling: Sampli
                 "messages": message_list(messages), "stream": True}
         if sampling.options:
             body["options"] = dict(sampling.options)
-        put_optional(body, "think", think)
+        put_optional(body, "think", think if think is not None else ollama_think(sampling, None))
         path = "/api/chat"
     return PreparedRequest(
         operation="stream_chat", method="POST", path=path, timeout=timeouts.llm,

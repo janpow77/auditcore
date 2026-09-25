@@ -37,9 +37,11 @@ def sampling(
     json_mode: bool = False,
     seed: int | None = None,
     options: Mapping[str, JsonValue] | None = None,
+    reasoning_effort: str | None = None,
 ) -> Sampling:
     """Collect sampling arguments of a public call."""
-    return Sampling(model, temperature, max_tokens, json_mode, seed, dict(options or {}))
+    return Sampling(model, temperature, max_tokens, json_mode, seed, dict(options or {}),
+                    reasoning_effort)
 
 
 def generate_op(config: ClientConfig, prompt: str, system: str | None, params: Sampling,
