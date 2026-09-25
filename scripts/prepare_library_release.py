@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 #: sein, die anderen repos nicht"). The provenance of each wheel must list exactly
 #: these repository/commit pairs; any other or missing binding fails the release.
 EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
+    # Zusammenführung doppelter Hilfsfunktionen der auditcore-Pakete: keine Fremdquelle.
+    "auditcore_common": frozenset(),
     "auditcore_dataprotection": frozenset(
         {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
     ),

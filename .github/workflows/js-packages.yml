@@ -1,6 +1,7 @@
 name: js-packages
 on:
   push:
+    branches: [main]
     paths:
       - 'packages-js/**'
       - 'package.json'
