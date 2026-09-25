@@ -1,0 +1,1796 @@
+{
+  "source": {
+    "repository": "janpow77/audit_designer",
+    "commit": "2c726f3c1481775cd34aeaa83f87137d6ab12ffe",
+    "files": [
+      {
+        "path": "backend/app/api/vpai_notebook/workspace.py",
+        "git_blob": "ccdb57dd3677b36fb4212c5347c2cfcd0096cabe"
+      },
+      {
+        "path": "backend/app/modules/vp_ai/utils/user_scoped.py",
+        "git_blob": "b2ecd79398c77c13b450331642074840d535ca6c"
+      }
+    ]
+  },
+  "tool": "tools/capture_legacy_kanban.py",
+  "cases": 77,
+  "observations": [
+    {
+      "name": "payload title empty",
+      "kind": "task_payload",
+      "input": {
+        "title": ""
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Titel darf nicht leer sein"
+      }
+    },
+    {
+      "name": "payload title spaces",
+      "kind": "task_payload",
+      "input": {
+        "title": "   "
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Titel darf nicht leer sein"
+      }
+    },
+    {
+      "name": "payload title 300",
+      "kind": "task_payload",
+      "input": {
+        "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "payload title 301",
+      "kind": "task_payload",
+      "input": {
+        "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Titel ist zu lang"
+      }
+    },
+    {
+      "name": "payload title 300 padded",
+      "kind": "task_payload",
+      "input": {
+        "title": "  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  "
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "payload description 10000",
+      "kind": "task_payload",
+      "input": {
+        "description": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "payload description 10001",
+      "kind": "task_payload",
+      "input": {
+        "description": "ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Beschreibung ist zu lang"
+      }
+    },
+    {
+      "name": "payload tags 20",
+      "kind": "task_payload",
+      "input": {
+        "tags": [
+          "t0",
+          "t1",
+          "t2",
+          "t3",
+          "t4",
+          "t5",
+          "t6",
+          "t7",
+          "t8",
+          "t9",
+          "t10",
+          "t11",
+          "t12",
+          "t13",
+          "t14",
+          "t15",
+          "t16",
+          "t17",
+          "t18",
+          "t19"
+        ]
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "payload tags 21",
+      "kind": "task_payload",
+      "input": {
+        "tags": [
+          "t0",
+          "t1",
+          "t2",
+          "t3",
+          "t4",
+          "t5",
+          "t6",
+          "t7",
+          "t8",
+          "t9",
+          "t10",
+          "t11",
+          "t12",
+          "t13",
+          "t14",
+          "t15",
+          "t16",
+          "t17",
+          "t18",
+          "t19",
+          "t20"
+        ]
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Zu viele Tags"
+      }
+    },
+    {
+      "name": "payload tag 80",
+      "kind": "task_payload",
+      "input": {
+        "tags": [
+          "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        ]
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "payload tag 81",
+      "kind": "task_payload",
+      "input": {
+        "tags": [
+          "ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        ]
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Tag ist zu lang"
+      }
+    },
+    {
+      "name": "columns columns 0",
+      "kind": "columns",
+      "input": [],
+      "observed": {
+        "status": 400,
+        "detail": "Mindestens eine Spalte erforderlich"
+      }
+    },
+    {
+      "name": "columns columns 1",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 200,
+        "result": [
+          {
+            "id": "a",
+            "label": "L",
+            "color": "#7c3aed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "columns columns 10",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "c0",
+          "label": "L"
+        },
+        {
+          "id": "c1",
+          "label": "L"
+        },
+        {
+          "id": "c2",
+          "label": "L"
+        },
+        {
+          "id": "c3",
+          "label": "L"
+        },
+        {
+          "id": "c4",
+          "label": "L"
+        },
+        {
+          "id": "c5",
+          "label": "L"
+        },
+        {
+          "id": "c6",
+          "label": "L"
+        },
+        {
+          "id": "c7",
+          "label": "L"
+        },
+        {
+          "id": "c8",
+          "label": "L"
+        },
+        {
+          "id": "c9",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 200,
+        "result": [
+          {
+            "id": "c0",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c1",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c2",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c3",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c4",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c5",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c6",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c7",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c8",
+            "label": "L",
+            "color": "#7c3aed"
+          },
+          {
+            "id": "c9",
+            "label": "L",
+            "color": "#7c3aed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "columns columns 11",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "c0",
+          "label": "L"
+        },
+        {
+          "id": "c1",
+          "label": "L"
+        },
+        {
+          "id": "c2",
+          "label": "L"
+        },
+        {
+          "id": "c3",
+          "label": "L"
+        },
+        {
+          "id": "c4",
+          "label": "L"
+        },
+        {
+          "id": "c5",
+          "label": "L"
+        },
+        {
+          "id": "c6",
+          "label": "L"
+        },
+        {
+          "id": "c7",
+          "label": "L"
+        },
+        {
+          "id": "c8",
+          "label": "L"
+        },
+        {
+          "id": "c9",
+          "label": "L"
+        },
+        {
+          "id": "c10",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Maximal 10 Spalten erlaubt"
+      }
+    },
+    {
+      "name": "columns duplicate",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a",
+          "label": "L"
+        },
+        {
+          "id": "a",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-IDs müssen eindeutig sein"
+      }
+    },
+    {
+      "name": "columns duplicate after strip",
+      "kind": "columns",
+      "input": [
+        {
+          "id": " a",
+          "label": "L"
+        },
+        {
+          "id": "a",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-IDs müssen eindeutig sein"
+      }
+    },
+    {
+      "name": "columns upper id",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "A",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-ID darf nur Kleinbuchstaben, Zahlen, _ und - enthalten"
+      }
+    },
+    {
+      "name": "columns leading dash",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "-a",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-ID darf nur Kleinbuchstaben, Zahlen, _ und - enthalten"
+      }
+    },
+    {
+      "name": "columns space",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a b",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-ID darf nur Kleinbuchstaben, Zahlen, _ und - enthalten"
+      }
+    },
+    {
+      "name": "columns underscore start",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "_a",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-ID darf nur Kleinbuchstaben, Zahlen, _ und - enthalten"
+      }
+    },
+    {
+      "name": "columns 50 chars",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 200,
+        "result": [
+          {
+            "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "label": "L",
+            "color": "#7c3aed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "columns 51 chars",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spalten-ID darf nur Kleinbuchstaben, Zahlen, _ und - enthalten"
+      }
+    },
+    {
+      "name": "columns mixed ok",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a_-9",
+          "label": "L"
+        }
+      ],
+      "observed": {
+        "status": 200,
+        "result": [
+          {
+            "id": "a_-9",
+            "label": "L",
+            "color": "#7c3aed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "columns empty label",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a",
+          "label": "  "
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spaltenlabel ist ungültig"
+      }
+    },
+    {
+      "name": "columns label 80",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a",
+          "label": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
+        }
+      ],
+      "observed": {
+        "status": 200,
+        "result": [
+          {
+            "id": "a",
+            "label": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
+            "color": "#7c3aed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "columns label 81",
+      "kind": "columns",
+      "input": [
+        {
+          "id": "a",
+          "label": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
+        }
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Spaltenlabel ist ungültig"
+      }
+    },
+    {
+      "name": "columns label stripped",
+      "kind": "columns",
+      "input": [
+        {
+          "id": " a ",
+          "label": " Offen "
+        }
+      ],
+      "observed": {
+        "status": 200,
+        "result": [
+          {
+            "id": "a",
+            "label": "Offen",
+            "color": "#7c3aed"
+          }
+        ]
+      }
+    },
+    {
+      "name": "deadline '2026-09-30' clear=False",
+      "kind": "deadline",
+      "input": {
+        "value": "2026-09-30",
+        "clear_empty": false
+      },
+      "observed": {
+        "status": 200,
+        "result": "2026-09-30T00:00:00"
+      }
+    },
+    {
+      "name": "deadline '2026-09-30T10:00:00' clear=False",
+      "kind": "deadline",
+      "input": {
+        "value": "2026-09-30T10:00:00",
+        "clear_empty": false
+      },
+      "observed": {
+        "status": 200,
+        "result": "2026-09-30T10:00:00"
+      }
+    },
+    {
+      "name": "deadline '2026-09-30T10:00:00Z' clear=False",
+      "kind": "deadline",
+      "input": {
+        "value": "2026-09-30T10:00:00Z",
+        "clear_empty": false
+      },
+      "observed": {
+        "status": 200,
+        "result": "2026-09-30T10:00:00+00:00"
+      }
+    },
+    {
+      "name": "deadline '30.09.2026' clear=False",
+      "kind": "deadline",
+      "input": {
+        "value": "30.09.2026",
+        "clear_empty": false
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Ungültiges Deadline-Format"
+      }
+    },
+    {
+      "name": "deadline '' clear=False",
+      "kind": "deadline",
+      "input": {
+        "value": "",
+        "clear_empty": false
+      },
+      "observed": {
+        "status": 400,
+        "detail": "Ungültiges Deadline-Format"
+      }
+    },
+    {
+      "name": "deadline '' clear=True",
+      "kind": "deadline",
+      "input": {
+        "value": "",
+        "clear_empty": true
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "deadline None clear=False",
+      "kind": "deadline",
+      "input": {
+        "value": null,
+        "clear_empty": false
+      },
+      "observed": {
+        "status": 200,
+        "result": null
+      }
+    },
+    {
+      "name": "create three",
+      "kind": "ordering",
+      "observed": {
+        "response": null,
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move C to position 1",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "offen",
+            "position": 1,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "C",
+              1
+            ],
+            [
+              "A",
+              2
+            ],
+            [
+              "B",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move A to position 0",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "A",
+            "status": "offen",
+            "position": 1,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move A to position -5",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "A",
+            "status": "offen",
+            "position": 1,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move A to position 99",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "A",
+            "status": "offen",
+            "position": 3,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "B",
+              1
+            ],
+            [
+              "C",
+              2
+            ],
+            [
+              "A",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move B to in_arbeit 1",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "B",
+            "status": "in_arbeit",
+            "position": 1,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "B",
+              1
+            ],
+            [
+              "X",
+              2
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "C",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move B to in_arbeit 2",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "B",
+            "status": "in_arbeit",
+            "position": 2,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ],
+            [
+              "B",
+              2
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "C",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "move A to unknown status",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 400,
+          "result": null,
+          "detail": "Invalid status 'gibt_es_nicht'. Must be one of ['erledigt', 'in_arbeit', 'offen']"
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update status without position",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "in_arbeit",
+            "position": 2,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ],
+            [
+              "C",
+              2
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update position 1 same column",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "offen",
+            "position": 2,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "C",
+              2
+            ],
+            [
+              "B",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update position 0",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "offen",
+            "position": 2,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "C",
+              2
+            ],
+            [
+              "B",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update status and position",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "in_arbeit",
+            "position": 1,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "C",
+              1
+            ],
+            [
+              "X",
+              2
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update invalid priority",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 400,
+          "result": null,
+          "detail": "Invalid priority 'dringend'. Must be one of ['hoch', 'mittel', 'niedrig']"
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update clear deadline",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "offen",
+            "position": 3,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "update badge empty",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "C",
+            "status": "offen",
+            "position": 3,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "delete middle",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "ok": true
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "C",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "create ignores position",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 200,
+          "result": {
+            "title": "D",
+            "status": "offen",
+            "position": 4,
+            "deadline": null,
+            "badge": null,
+            "priority": "mittel"
+          },
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ],
+            [
+              "D",
+              4
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "create invalid status",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 400,
+          "result": null,
+          "detail": "Invalid status 'nope'. Must be one of ['erledigt', 'in_arbeit', 'offen']"
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "create empty deadline",
+      "kind": "ordering",
+      "observed": {
+        "response": {
+          "status": 400,
+          "result": null,
+          "detail": "Ungültiges Deadline-Format"
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "C",
+              3
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "settings remove in_arbeit",
+      "kind": "settings",
+      "input": {
+        "user": 1,
+        "columns": [
+          [
+            "offen",
+            "Offen"
+          ],
+          [
+            "erledigt",
+            "Erledigt"
+          ]
+        ]
+      },
+      "observed": {
+        "response": {
+          "status": 200,
+          "detail": null
+        },
+        "columns": {
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "X",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "Y",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "settings remove offen",
+      "kind": "settings",
+      "input": {
+        "user": 1,
+        "columns": [
+          [
+            "in_arbeit",
+            "In Arbeit"
+          ],
+          [
+            "erledigt",
+            "Erledigt"
+          ]
+        ]
+      },
+      "observed": {
+        "response": {
+          "status": 200,
+          "detail": null
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "A",
+              1
+            ],
+            [
+              "X",
+              1
+            ],
+            [
+              "B",
+              2
+            ],
+            [
+              "Y",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "settings editor configures",
+      "kind": "settings",
+      "input": {
+        "user": 2,
+        "columns": [
+          [
+            "offen",
+            "Offen"
+          ]
+        ]
+      },
+      "observed": {
+        "response": {
+          "status": 404,
+          "detail": "Nicht gefunden"
+        },
+        "columns": {
+          "in_arbeit": [
+            [
+              "X",
+              1
+            ],
+            [
+              "Y",
+              2
+            ]
+          ],
+          "offen": [
+            [
+              "A",
+              1
+            ],
+            [
+              "B",
+              2
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "settings default columns",
+      "kind": "settings",
+      "observed": {
+        "status": 200,
+        "result": {
+          "columns": [
+            {
+              "id": "offen",
+              "label": "Offen",
+              "color": "#7c3aed"
+            },
+            {
+              "id": "in_arbeit",
+              "label": "In Arbeit",
+              "color": "#f59e0b"
+            },
+            {
+              "id": "erledigt",
+              "label": "Erledigt",
+              "color": "#10b981"
+            }
+          ],
+          "title": "Board",
+          "icon": "📋"
+        }
+      }
+    },
+    {
+      "name": "access user 1",
+      "kind": "access",
+      "input": {
+        "user": 1
+      },
+      "observed": {
+        "read": 200,
+        "write": 200,
+        "write_detail": null,
+        "owner_only": 200
+      }
+    },
+    {
+      "name": "access user 2",
+      "kind": "access",
+      "input": {
+        "user": 2
+      },
+      "observed": {
+        "read": 200,
+        "write": 200,
+        "write_detail": null,
+        "owner_only": 404
+      }
+    },
+    {
+      "name": "access user 3",
+      "kind": "access",
+      "input": {
+        "user": 3
+      },
+      "observed": {
+        "read": 200,
+        "write": 403,
+        "write_detail": "Nur Lesezugriff auf diese Seite",
+        "owner_only": 404
+      }
+    },
+    {
+      "name": "access user 4",
+      "kind": "access",
+      "input": {
+        "user": 4
+      },
+      "observed": {
+        "read": 200,
+        "write": 200,
+        "write_detail": null,
+        "owner_only": 404
+      }
+    },
+    {
+      "name": "access user 5",
+      "kind": "access",
+      "input": {
+        "user": 5
+      },
+      "observed": {
+        "read": 200,
+        "write": 403,
+        "write_detail": "Nur Lesezugriff auf dieses Notizbuch",
+        "owner_only": 404
+      }
+    },
+    {
+      "name": "access user 6",
+      "kind": "access",
+      "input": {
+        "user": 6
+      },
+      "observed": {
+        "read": 404,
+        "write": 404,
+        "write_detail": "Seite nicht gefunden",
+        "owner_only": 404
+      }
+    },
+    {
+      "name": "share owner shares read",
+      "kind": "share",
+      "input": [
+        1,
+        5,
+        "read"
+      ],
+      "observed": {
+        "status": 200,
+        "result": {
+          "page_id": "11111111-1111-4111-8111-111111111111",
+          "shared_with_user_id": 5,
+          "permission": "read",
+          "created": true
+        }
+      }
+    },
+    {
+      "name": "share owner shares write",
+      "kind": "share",
+      "input": [
+        1,
+        5,
+        "write"
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Ungültige Berechtigung. Erlaubt: ['edit', 'read']"
+      }
+    },
+    {
+      "name": "share owner shares self",
+      "kind": "share",
+      "input": [
+        1,
+        1,
+        "edit"
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Kann nicht mit sich selbst geteilt werden"
+      }
+    },
+    {
+      "name": "share unknown user",
+      "kind": "share",
+      "input": [
+        1,
+        99,
+        "read"
+      ],
+      "observed": {
+        "status": 404,
+        "detail": "Benutzer nicht gefunden"
+      }
+    },
+    {
+      "name": "share inactive user",
+      "kind": "share",
+      "input": [
+        1,
+        7,
+        "read"
+      ],
+      "observed": {
+        "status": 404,
+        "detail": "Benutzer nicht gefunden"
+      }
+    },
+    {
+      "name": "share editor shares",
+      "kind": "share",
+      "input": [
+        2,
+        5,
+        "read"
+      ],
+      "observed": {
+        "status": 404,
+        "detail": "Nicht gefunden"
+      }
+    },
+    {
+      "name": "share upsert existing",
+      "kind": "share",
+      "input": [
+        1,
+        2,
+        "read"
+      ],
+      "observed": {
+        "status": 200,
+        "result": {
+          "page_id": "11111111-1111-4111-8111-111111111111",
+          "shared_with_user_id": 2,
+          "permission": "read",
+          "updated": true
+        }
+      }
+    },
+    {
+      "name": "revoke owner revokes",
+      "kind": "revoke",
+      "input": [
+        1,
+        2
+      ],
+      "observed": {
+        "status": 200,
+        "result": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "name": "revoke recipient revokes self",
+      "kind": "revoke",
+      "input": [
+        3,
+        3
+      ],
+      "observed": {
+        "status": 200,
+        "result": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "name": "revoke other revokes",
+      "kind": "revoke",
+      "input": [
+        2,
+        3
+      ],
+      "observed": {
+        "status": 403,
+        "detail": "Keine Berechtigung"
+      }
+    },
+    {
+      "name": "revoke stranger revokes",
+      "kind": "revoke",
+      "input": [
+        6,
+        3
+      ],
+      "observed": {
+        "status": 403,
+        "detail": "Keine Berechtigung"
+      }
+    },
+    {
+      "name": "revoke missing",
+      "kind": "revoke",
+      "input": [
+        1,
+        null
+      ],
+      "observed": {
+        "status": 404,
+        "detail": "Freigabe nicht gefunden"
+      }
+    },
+    {
+      "name": "update share write",
+      "kind": "share",
+      "input": [
+        1,
+        "write"
+      ],
+      "observed": {
+        "status": 400,
+        "detail": "Ungültige Berechtigung"
+      }
+    }
+  ]
+}

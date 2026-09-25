@@ -1,5 +1,6 @@
 """Run with python -I against an installed wheel or Debian package; no pytest needed."""
 
+import warnings
 from datetime import date
 from importlib.metadata import distribution
 from importlib.util import find_spec
@@ -8,9 +9,9 @@ from importlib.util import find_spec
 def main() -> None:
     """Parse a transparency row, compute its identity, cumulate, run a harvest adapter."""
     package = distribution("auditcore_funding_sources")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.2"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_harvest==0.1.0"], runtime
+    assert runtime == ["auditcore_harvest==0.1.1"], runtime
     assert find_spec("auditcore") is None
     from auditcore_funding_sources import cumulation, snapshot, workshop
 
@@ -29,6 +30,13 @@ def main() -> None:
         reference_date=date(2026, 9, 1),
     )
     assert str(result.arithmetic_difference_eur) == "299000" and result.decision is None
+    from auditcore_funding_sources import designer
+
+    assert str(designer.parse_amount("1.234.567")) == "1234567"
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        assert designer.parse_betrag is designer.parse_amount
+    assert [w.category for w in caught] == [DeprecationWarning]
     from auditcore_harvest import AdapterRegistry
 
     from auditcore_funding_sources import adapters

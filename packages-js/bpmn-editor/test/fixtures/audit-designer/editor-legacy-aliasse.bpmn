@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<model:definitions xmlns:model="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <model:process id="Process_1">
+    <model:userTask id="Task_1" name="Prüfen" duration="15" cost="4.5"
+      resource="Sachbearbeitung" frequencyPerYear="12" personnel_count="2" />
+  </model:process>
+</model:definitions>

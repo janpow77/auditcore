@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_documents",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "sources": [
     {
       "repository": "janpow77/audit_designer",
@@ -479,5 +479,16 @@
     "profile": "auditcore.pipeline.donut 2026.09.24 (EXPERIMENTAL)",
     "model": "nicht enthalten; LocalDonut lädt nur lokale Verzeichnisse mit geprüfter SHA-256 (E2: Modell als Release-Asset)",
     "legacy_pipeline": "unverändert (Fingerabdruck aaec1633…, alle 30 Replays)"
+  },
+  "web": {
+    "version_added": "0.3.0",
+    "origin": "Neuimplementierung: REST-Anbindung für die Oberfläche <flowaudit-synopsis> (@flowaudit/ui). Endpunkte, Grenzen und Meldungen nach dem Vorbild von janpow77/audit_designer backend/app/api/document_comparisons.py und backend/app/modules/ecohesion/comparisons/api.py (janpow77/audit_designer@2c726f3c1481775cd34aeaa83f87137d6ab12ffe); kein Code übernommen, keine Datenbank, kein Celery.",
+    "contract": "docs/ui/synopsis-rest.md",
+    "parity": "docs/ui/synopsis-paritaet.md",
+    "extras": {
+      "web": "starlette, python-multipart",
+      "fastapi": "fastapi, starlette, python-multipart"
+    },
+    "existing_modules": "unverändert; der Dienst nutzt compare_files, ComparisonResult, render_docx_bytes und render_synopsis_pdf"
   }
 }

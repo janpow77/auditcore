@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "package": "auditcore_registry_sources",
- "version": "0.1.0",
+ "version": "0.2.0",
  "contract": "auditcore_registry_sources.screening/1",
  "classification": "EXTRACTED_FROM_CHARACTERIZED_SOURCES",
  "sources": [
@@ -213,7 +213,7 @@
   "official.sanctions_lists 2026.09.1"
  ],
  "runtime_dependencies": [
-  "auditcore_harvest==0.1.0",
+  "auditcore_harvest==0.1.1",
   "auditcore_entity_matching==0.2.0"
  ],
  "optional_dependencies": {

@@ -16,33 +16,31 @@ import re
 from collections.abc import Mapping
 from datetime import date, timedelta
 from decimal import Decimal
-from typing import Any
 
-from .base import (
-    Context,
-    Kind,
-    Outcome,
-    Table,
-    is_number,
-    need,
-    procurement_threshold,
-    seq_sum,
+from .amount_rules import unavailable_threshold_reason
+from .base import Context, JsonObject, Kind, Outcome, Table, procurement_threshold, seq_sum
+from .errors import InputError
+from .invoice_checks import (
+    check_numbers,
+    check_patterns,
+    check_round,
+    check_split,
+    no_extra_checks,
 )
-from .errors import InputError, ProfileError
 from .values import as_date, is_missing
 
 
-def _truthy(value: Any) -> bool:
+def _truthy(value: object) -> bool:
     return not is_missing(value) and bool(value)
 
 
-def _number(value: Any, field: str) -> float:
+def _number(value: object, field: str) -> float:
     if isinstance(value, bool) or not isinstance(value, numbers.Real | Decimal):
         raise InputError(f"Feld {field!r} erwartet eine Zahl, erhalten: {value!r}.")
     return float(value)
 
 
-def _amount_or_statistic(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _amount_or_statistic(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     out.variants = [None] * len(table)
     for i in range(len(table)):
@@ -55,14 +53,13 @@ def _amount_or_statistic(p: Mapping[str, Any], table: Table, ctx: Context) -> Ou
             continue
         median, std = table.value(i, p["median_field"]), table.value(i, p["std_field"])
         if _truthy(median) and _truthy(std):
-            threshold = _number(median, p["median_field"]) + (
-                float(p["sigma"]) * _number(std, p["std_field"])
-            )
+            median_value = _number(median, p["median_field"])
+            threshold = median_value + (float(p["sigma"]) * _number(std, p["std_field"]))
             if amount > threshold:
                 out.flags[i], out.variants[i] = True, "relative"
                 out.evidence[i] = {
                     "amount": amount,
-                    "median": float(median),
+                    "median": median_value,
                     "threshold": threshold,
                 }
                 out.reasons[i] = (
@@ -71,7 +68,7 @@ def _amount_or_statistic(p: Mapping[str, Any], table: Table, ctx: Context) -> Ou
     return out
 
 
-def _share_above(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _share_above(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     for i in range(len(table)):
         num, den = table.value(i, p["numerator_field"]), table.value(i, p["denominator_field"])
@@ -85,7 +82,7 @@ def _share_above(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _all_missing(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _all_missing(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     for i in range(len(table)):
         if not any(_truthy(table.value(i, f)) for f in p["fields"]):
@@ -95,7 +92,7 @@ def _all_missing(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _round_amount_terms(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _round_amount_terms(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     out.variants = [None] * len(table)
     out.severities = [None] * len(table)
@@ -118,7 +115,7 @@ def _round_amount_terms(p: Mapping[str, Any], table: Table, ctx: Context) -> Out
     return out
 
 
-def _date_outside_range(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _date_outside_range(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     out.variants = [None] * len(table)
     for i in range(len(table)):
@@ -135,7 +132,7 @@ def _date_outside_range(p: Mapping[str, Any], table: Table, ctx: Context) -> Out
         check_end = as_date(end_raw if _truthy(end_raw) else fallback, p["end_field"])
         if check_start is None or check_end is None or range_start is None or range_end is None:
             raise InputError("Datumsvergleich ohne Rechnungsdatum nicht möglich.")
-        values = {
+        values: dict[str, object] = {
             "check_start": check_start,
             "check_end": check_end,
             "range_start": range_start,
@@ -153,7 +150,7 @@ def _date_outside_range(p: Mapping[str, Any], table: Table, ctx: Context) -> Out
     return out
 
 
-def _text_patterns(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _text_patterns(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     compiled = [re.compile(pattern) for pattern in p["patterns"]]
     for i in range(len(table)):
@@ -171,7 +168,7 @@ def _text_patterns(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _names_differ(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _names_differ(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     for i in range(len(table)):
         left, right = table.value(i, p["left_field"]), table.value(i, p["right_field"])
@@ -185,10 +182,10 @@ def _names_differ(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _identifier_equal(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _identifier_equal(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
 
-    def norm(value: Any) -> str:
+    def norm(value: object) -> str:
         """Identifier comparison form: upper case, stripped, separators removed."""
         text = str(value).upper().strip() if p["upper"] else str(value).strip()
         for char in p["remove_chars"]:
@@ -206,155 +203,97 @@ def _identifier_equal(p: Mapping[str, Any], table: Table, ctx: Context) -> Outco
     return out
 
 
-def _split_window(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
-    out = Outcome.constant(len(table), False)
+Item = tuple[float, date]
+
+
+def _split_items(raw: object, p: JsonObject) -> list[Item]:
+    """Amount and date of every listed invoice of the same vendor."""
+    if not isinstance(raw, list | tuple):
+        raise InputError(f"Feld {p['items_field']!r} erwartet eine Liste.")
+    items = []
+    for item in raw:
+        if not isinstance(item, Mapping):
+            raise InputError(f"Feld {p['items_field']!r}: Einträge müssen Zuordnungen sein.")
+        amount = _number(item.get(p["amount_key"]), p["amount_key"])
+        day = as_date(item.get(p["date_key"]), p["date_key"])
+        if day is None:
+            raise InputError(f"Feld {p['items_field']!r}: Datum fehlt.")
+        items.append((amount, day))
+    return items
+
+
+def _split_thresholds(
+    p: JsonObject, table: Table, index: int, ctx: Context
+) -> tuple[list[float], dict[str, object] | None]:
+    """Profile thresholds plus the year-bound EU threshold, if the profile names one."""
+    thresholds = [float(t) for t in p["thresholds"]]
+    eu_spec = p.get("procurement_eu")
+    if eu_spec is None:
+        return thresholds, None
+    value, eu_info = procurement_threshold(eu_spec, table, index, ctx)
+    if value is not None:
+        thresholds = sorted({*thresholds, value})
+    return thresholds, eu_info
+
+
+def _split_hit(
+    items: list[Item], thresholds: list[float], p: JsonObject
+) -> tuple[float, float, list[Item]] | None:
+    """First threshold with ``min_items`` invoices near it inside the window."""
     minimum = int(p["min_items"])
+    for threshold in thresholds:
+        lower = float(threshold) * float(p["proximity"])
+        near = [it for it in items if lower <= it[0] <= float(threshold)]
+        if len(near) < minimum:
+            continue
+        ordered = sorted(near, key=lambda it: it[1])
+        hit = _first_window(ordered, minimum, int(p["window_days"]))
+        if hit is not None:
+            return lower, float(threshold), hit
+    return None
+
+
+def _split_window(p: JsonObject, table: Table, ctx: Context) -> Outcome:
+    out = Outcome.constant(len(table), False)
     window = int(p["window_days"])
     for i in range(len(table)):
         raw = table.value(i, p["items_field"])
         if is_missing(raw) or not raw:
             continue
-        if not isinstance(raw, list | tuple):
-            raise InputError(f"Feld {p['items_field']!r} erwartet eine Liste.")
-        items = []
-        for item in raw:
-            if not isinstance(item, Mapping):
-                raise InputError(f"Feld {p['items_field']!r}: Einträge müssen Zuordnungen sein.")
-            amount = _number(item.get(p["amount_key"]), p["amount_key"])
-            day = as_date(item.get(p["date_key"]), p["date_key"])
-            if day is None:
-                raise InputError(f"Feld {p['items_field']!r}: Datum fehlt.")
-            items.append((amount, day))
-        if len(items) < minimum:
+        items = _split_items(raw, p)
+        if len(items) < int(p["min_items"]):
             continue
-        thresholds = [float(t) for t in p["thresholds"]]
-        eu_info: dict[str, Any] | None = None
-        eu_spec = p.get("procurement_eu")
-        if eu_spec is not None:
-            value, eu_info = procurement_threshold(eu_spec, table, i, ctx)
-            if value is not None:
-                thresholds = sorted({*thresholds, value})
-        found = False
-        for threshold in thresholds:
-            lower = float(threshold) * float(p["proximity"])
-            near = [it for it in items if lower <= it[0] <= float(threshold)]
-            if len(near) < minimum:
-                continue
-            ordered = sorted(near, key=lambda it: it[1])
-            hit = _first_window(ordered, minimum, window)
-            if hit is not None:
-                total = seq_sum(it[0] for it in hit)
-                out.flags[i] = True
-                out.evidence[i] = {
-                    "count": len(hit),
-                    "lower": lower,
-                    "threshold": float(threshold),
-                    "total": total,
-                    "window_days": window,
-                    "dates": [it[1].isoformat() for it in hit],
-                    "eu_threshold": eu_info,
-                }
-                out.reasons[i] = (
-                    f"{len(hit)} Rechnungen in [{lower:.2f}; {float(threshold):.2f}] "
-                    f"innerhalb von {window} Tagen."
-                )
-                found = True
-                break
-        if not found and eu_info is not None and "unavailable" in eu_info:
+        thresholds, eu_info = _split_thresholds(p, table, i, ctx)
+        found = _split_hit(items, thresholds, p)
+        if found is not None:
+            lower, threshold, hit = found
+            out.flags[i] = True
+            out.evidence[i] = {
+                "count": len(hit),
+                "lower": lower,
+                "threshold": threshold,
+                "total": seq_sum(it[0] for it in hit),
+                "window_days": window,
+                "dates": [it[1].isoformat() for it in hit],
+                "eu_threshold": eu_info,
+            }
+            out.reasons[i] = (
+                f"{len(hit)} Rechnungen in [{lower:.2f}; {threshold:.2f}] "
+                f"innerhalb von {window} Tagen."
+            )
+        elif eu_info is not None and "unavailable" in eu_info:
             out.flags[i] = None
             out.evidence[i] = {"eu_threshold": eu_info}
-            out.reasons[i] = (
-                "Nicht entscheidbar: keine belegte jahresbezogene EU-Schwelle "
-                f"({eu_info['unavailable']})."
-            )
+            out.reasons[i] = unavailable_threshold_reason(eu_info)
     return out
 
 
-def _first_window(
-    ordered: list[tuple[float, date]], minimum: int, window: int
-) -> list[tuple[float, date]] | None:
+def _first_window(ordered: list[Item], minimum: int, window: int) -> list[Item] | None:
     for start in range(len(ordered) - minimum + 1):
         end = ordered[start][1] + timedelta(days=window)
         inside = [it for it in ordered[start:] if it[1] <= end]
         if len(inside) >= minimum:
             return inside
-    return None
-
-
-# --------------------------------------------------------------------------- validation
-
-
-def _check_numbers(*keys: str) -> Any:
-    def check(params: Mapping[str, Any], where: str) -> None:
-        """Each named parameter must be a finite number."""
-        for key in keys:
-            need(is_number(params[key]), where, f"{key} muss eine endliche Zahl sein")
-
-    return check
-
-
-def _check_patterns(params: Mapping[str, Any], where: str) -> None:
-    need(
-        isinstance(params["patterns"], list) and bool(params["patterns"]),
-        where,
-        "patterns muss eine nicht leere Liste sein",
-    )
-    for pattern in params["patterns"]:
-        try:
-            re.compile(pattern)
-        except (re.error, TypeError) as exc:
-            raise ProfileError(f"{where}: ungültiges Muster {pattern!r}: {exc}") from exc
-
-
-def _check_split(params: Mapping[str, Any], where: str) -> None:
-    need(
-        all(is_number(t) and t > 0 for t in params["thresholds"]),
-        where,
-        "thresholds müssen positive Zahlen sein",
-    )
-    need(
-        is_number(params["proximity"]) and 0 < params["proximity"] < 1,
-        where,
-        "proximity muss zwischen 0 und 1 liegen",
-    )
-    need(
-        isinstance(params["min_items"], int) and params["min_items"] >= 1,
-        where,
-        "min_items muss eine positive ganze Zahl sein",
-    )
-    need(
-        isinstance(params["window_days"], int) and params["window_days"] >= 0,
-        where,
-        "window_days muss eine ganze Zahl ≥ 0 sein",
-    )
-    eu = params.get("procurement_eu")
-    if eu is not None:
-        needed = {"profile", "version", "category", "authority_type", "date_source", "date_field"}
-        need(
-            isinstance(eu, dict) and set(eu) == needed and eu["date_source"] == "record",
-            where,
-            f"procurement_eu braucht {sorted(needed)} mit date_source record",
-        )
-
-
-def _check_round(params: Mapping[str, Any], where: str) -> None:
-    _check_numbers("min_amount")(params, where)
-    severities = ("INFO", "LOW", "MEDIUM", "HIGH", "CRITICAL")
-    need(
-        params["severity_with_terms"] in severities
-        and params["severity_without_terms"] in severities,
-        where,
-        "unbekannte Schwere",
-    )
-    need(
-        isinstance(params["multiple"], int) and params["multiple"] > 0,
-        where,
-        "multiple muss eine positive ganze Zahl sein",
-    )
-    need(isinstance(params["terms"], list), where, "terms muss eine Liste sein")
-
-
-def _no_extra_checks(params: Mapping[str, Any], where: str) -> None:
     return None
 
 
@@ -364,17 +303,17 @@ INVOICE_KINDS: dict[str, Kind] = {
         frozenset({"amount_field", "absolute_gt", "median_field", "std_field", "sigma"}),
         frozenset(),
         _amount_or_statistic,
-        _check_numbers("absolute_gt", "sigma"),
+        check_numbers("absolute_gt", "sigma"),
     ),
     "share_above": Kind(
         "record",
         frozenset({"numerator_field", "denominator_field", "ratio_gt"}),
         frozenset(),
         _share_above,
-        _check_numbers("ratio_gt"),
+        check_numbers("ratio_gt"),
     ),
     "all_missing": Kind(
-        "record", frozenset({"fields"}), frozenset(), _all_missing, _no_extra_checks
+        "record", frozenset({"fields"}), frozenset(), _all_missing, no_extra_checks
     ),
     "round_amount_terms": Kind(
         "record",
@@ -391,7 +330,7 @@ INVOICE_KINDS: dict[str, Kind] = {
         ),
         frozenset(),
         _round_amount_terms,
-        _check_round,
+        check_round,
         derives_severity=True,
     ),
     "date_outside_range": Kind(
@@ -401,28 +340,28 @@ INVOICE_KINDS: dict[str, Kind] = {
         ),
         frozenset(),
         _date_outside_range,
-        _no_extra_checks,
+        no_extra_checks,
     ),
     "text_patterns": Kind(
         "record",
         frozenset({"field", "patterns", "lower"}),
         frozenset(),
         _text_patterns,
-        _check_patterns,
+        check_patterns,
     ),
     "names_differ": Kind(
         "record",
         frozenset({"left_field", "right_field"}),
         frozenset(),
         _names_differ,
-        _no_extra_checks,
+        no_extra_checks,
     ),
     "identifier_equal": Kind(
         "record",
         frozenset({"left_field", "right_field", "upper", "remove_chars"}),
         frozenset(),
         _identifier_equal,
-        _no_extra_checks,
+        no_extra_checks,
     ),
     "split_window": Kind(
         "record",
@@ -439,6 +378,6 @@ INVOICE_KINDS: dict[str, Kind] = {
         ),
         frozenset({"procurement_eu"}),
         _split_window,
-        _check_split,
+        check_split,
     ),
 }

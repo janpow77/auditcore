@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
@@ -16,6 +16,9 @@ from typing import Any
 
 CONTRACT_VERSION = "auditcore_harvest.contract/1"
 
+#: JSON payload at the source boundary. This is the one deliberate ``Any`` of the
+#: contract: raw source documents are only known to be JSON-compatible, and
+#: adapters narrow them with ``isinstance`` before use.
 JSON = Any
 Cursor = Mapping[str, JSON]
 
@@ -77,7 +80,7 @@ class Source:
     snapshot_semantics: SnapshotSemantics = SnapshotSemantics.UNKNOWN
     filters: tuple[str, ...] = ()
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, JSON]:
         """JSON view."""
         return {
             "source_id": self.source_id,
@@ -212,6 +215,27 @@ class PageResult:
     status: PageStatus = PageStatus.OK
     issues: tuple[RecordIssue, ...] = ()
     total_hint: int | None = None
+
+
+def page_result(
+    records: Sequence[HarvestRecord],
+    issues: Sequence[RecordIssue] = (),
+    next_cursor: Cursor | None = None,
+    *,
+    total_hint: int | None = None,
+) -> PageResult:
+    """The usual page of an adapter: complete exactly when there is no next cursor.
+
+    The status is ``PARTIAL`` as soon as one item was reported as an issue.
+    """
+    return PageResult(
+        records=tuple(records),
+        next_cursor=None if next_cursor is None else dict(next_cursor),
+        complete=next_cursor is None,
+        status=PageStatus.PARTIAL if issues else PageStatus.OK,
+        issues=tuple(issues),
+        total_hint=total_hint,
+    )
 
 
 @dataclass(frozen=True)

@@ -7,8 +7,8 @@ Die Abrufsteuerung (Seitenfolge, Wiederholungen, Rate-Limits, Checkpoints)
 übernimmt `auditcore_harvest`; diese Bibliothek liefert die Quellenadapter.
 
 ```bash
-pip install auditcore_funding_sources==0.1.0          # zieht auditcore_harvest==0.1.0
-pip install 'auditcore_funding_sources[xlsx]==0.1.0'  # zusätzlich XLSX (openpyxl, defusedxml)
+pip install auditcore_funding_sources==0.1.2          # zieht auditcore_harvest==0.1.0
+pip install 'auditcore_funding_sources[xlsx]==0.1.2'  # zusätzlich XLSX (openpyxl, defusedxml)
 ```
 
 ## Bausteine
@@ -17,7 +17,7 @@ pip install 'auditcore_funding_sources[xlsx]==0.1.0'  # zusätzlich XLSX (openpy
 |---|---|
 | `workshop` | Profil `flowworkshop.beneficiaries`: `parse_amount`, `parse_date`, `normalize_company_name`, `detect_sa_reference`, `compute_record_hash`, Spaltenerkennung, `parse_file`, Fondsfilter, Snapshot-Validierung. |
 | `flowsearch` | Getrennte Variante `flowsearch.beneficiaries`: Float-Beträge, MD5-`project_id`, Mapping je Quelle, ZIP mit Größengrenze. |
-| `designer` | Getrennte Designer-Varianten: `parse_betrag`, `parse_satz`, `parse_datum`, eigener Hash und State-Aid-Parser. |
+| `designer` | Getrennte Designer-Varianten: `parse_amount`, `parse_rate`, `parse_date` (bis 0.1.1 `parse_betrag`, `parse_satz`, `parse_datum`; die alten Namen bleiben als Aliase mit `DeprecationWarning`), eigener Hash und State-Aid-Parser. |
 | `tables` | CSV (Standardbibliothek) und XLSX (optional) mit der Kopfzeilenerkennung des Originals, `typing="legacy"`/`"text"`, `header_detection="legacy"`/`"strict"`, Ressourcengrenzen. |
 | `snapshot` | Datenbankfreier Plan der Modi `smart`, `full-refresh`, `force`, `snapshot` – geprüft gegen echte Läufe des Originals. |
 | `deminimis` | eAidRegister: Suchkriterien, Anfragen, Antwortprüfung, Feldabbildung, Behördenebene, Satz-/Bestandshash, Vollständigkeitsregel. |

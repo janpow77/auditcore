@@ -14,9 +14,9 @@ import urllib.parse
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
-from .errors import ConfigError, RateLimitError, TransportError
+from .errors import ConfigError, ParserError, RateLimitError, TransportError
+from .model import JSON
 from .ports import Response
 
 MAX_BODY_BYTES = 50 * 1024 * 1024
@@ -37,6 +37,17 @@ def raise_for_status(response: Response) -> Response:
     if not 200 <= response.status < 300:
         raise TransportError(f"Unerwarteter Status HTTP {response.status}.", retryable=False)
     return response
+
+
+def decode_json(body: bytes, message: str = "Antwort ist kein JSON.") -> JSON:
+    """Parse a JSON response body; undecodable bodies are a :class:`ParserError`.
+
+    ``message`` is the source-specific error text; the decoding error is chained.
+    """
+    try:
+        return json.loads(body)
+    except ValueError as exc:
+        raise ParserError(message) from exc
 
 
 class FileTransport:
@@ -79,10 +90,10 @@ class ReplayTransport:
     Exchanges are consumed in order when ``ordered``.
     """
 
-    exchanges: Sequence[Mapping[str, Any]]
+    exchanges: Sequence[Mapping[str, JSON]]
     ordered: bool = False
     ignore_params: frozenset[str] = frozenset({"apikey", "api_key", "key", "token", "password"})
-    calls: list[dict[str, Any]] = field(default_factory=list)
+    calls: list[dict[str, JSON]] = field(default_factory=list)
     _used: set[int] = field(default_factory=set)
 
     @classmethod

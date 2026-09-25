@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
 from functools import cache
 from importlib import resources
 from typing import Any
@@ -13,7 +14,7 @@ from .errors import ProfileError
 PROFILE_VERSION = "2026.09.1"
 
 
-def fingerprint(data: Any) -> str:
+def fingerprint(data: object) -> str:
     """SHA-256 of the canonical JSON representation."""
     canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -48,7 +49,7 @@ def load_profile(profile_id: str, version: str = PROFILE_VERSION) -> dict[str, A
     return {**data, "fingerprint": fingerprint(data)}
 
 
-def reference(profile: dict[str, Any]) -> dict[str, str]:
+def reference(profile: Mapping[str, Any]) -> dict[str, str]:
     """Identity recorded with every result."""
     return {
         "id": profile["id"],

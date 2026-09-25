@@ -64,6 +64,12 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     ),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
+    "auditcore_kanban": frozenset(
+        {
+            ("janpow77/audit_designer", "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"),
+            ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
+        }
+    ),
     "auditcore_legal_sources": frozenset(
         {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
@@ -135,6 +141,24 @@ PACKAGES = {
 }
 
 
+#: Checks every release evidence must contain as executed PASS (plus per-package checks).
+REQUIRED_CHECKS = frozenset(
+    {
+        "installed-platform",
+        # Release blocker: the code-quality ratchet must have passed for these packages.
+        "code-quality-gate",
+        "requirements-install",
+        "pip-check",
+        "isolated-origins",
+        "pip-remove",
+        "pip-removed-imports",
+        "apt-lifecycle",
+        "sign-apt-1",
+        "sign-apt-2",
+    }
+)
+
+
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -194,17 +218,7 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
     if {p["name"] for p in packages} != PACKAGES or len(packages) != len(PACKAGES):
         raise ValueError("Exactly the reviewed release distributions are required")
     checks = report["checks"]
-    required = {
-        "installed-platform",
-        "requirements-install",
-        "pip-check",
-        "isolated-origins",
-        "pip-remove",
-        "pip-removed-imports",
-        "apt-lifecycle",
-        "sign-apt-1",
-        "sign-apt-2",
-    }
+    required = set(REQUIRED_CHECKS)
     for package in packages:
         name = package["name"]
         distribution = name.replace("_", "-")
