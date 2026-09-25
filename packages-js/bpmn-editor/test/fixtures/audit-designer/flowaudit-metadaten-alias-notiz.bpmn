@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions
+    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    xmlns:flowaudit="https://flowaudit.de/bpmn/schema/1.0"
+    targetNamespace="urn:test">
+  <bpmn:process id="Process_1">
+    <bpmn:userTask id="Task_1" name="Vergabe prüfen">
+      <bpmn:documentation>Fachliche Beschreibung des Schritts.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage>§ 55 BHO; Art. 74 VO (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:notiz>Nur bei Auftragswerten über dem Schwellenwert.</flowaudit:notiz>
+      </bpmn:extensionElements>
+    </bpmn:userTask>
+    <bpmn:task id="Task_2" name="Ablegen" />
+  </bpmn:process>
+</bpmn:definitions>

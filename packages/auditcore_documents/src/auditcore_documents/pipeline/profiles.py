@@ -121,6 +121,4 @@ DONUT_PIPELINE = PipelineProfile(
     donut_min_field_confidence=0.90,
 )
 
-PIPELINE_PROFILES = {
-    p.profile_id: p for p in (LEGACY_PIPELINE, CORRECTED_PIPELINE, DONUT_PIPELINE)
-}
+PIPELINE_PROFILES = {p.profile_id: p for p in (LEGACY_PIPELINE, CORRECTED_PIPELINE, DONUT_PIPELINE)}
