@@ -65,7 +65,7 @@ from .projektion import (
 )
 from .vereinfachung import douglas_peucker, ring_vereinfachen
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 __all__ = [
     "BEREICH_DEUTSCHLAND_OSINT",
