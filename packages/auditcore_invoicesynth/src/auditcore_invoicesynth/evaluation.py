@@ -171,37 +171,60 @@ def evaluate(
     report = EvaluationReport(fields={name: FieldScore() for name in fields})
     for truth, prediction in pairs:
         report.documents += 1
-        expected = {k: canonical(k, v) for k, v in flatten(truth).items() if k in fields}
-        predicted_raw = {k: v for k, v in flatten(prediction).items() if k in fields}
-        predicted = {k: canonical(k, v) for k, v in predicted_raw.items()}
-        accepted = accept(predicted_raw) if accept is not None else set()
-        truth_values = {v for v in expected.values() if v is not None}
-        all_required = True
-        for name in fields:
-            score = report.fields[name]
-            want, got = expected.get(name), predicted.get(name)
-            if name in predicted_raw and got not in truth_values:
-                score.hallucinated += 1
-            if want is None:
-                if name in predicted_raw:
-                    score.spurious += 1
-                    all_required = all_required and name not in REQUIRED_FIELDS
-                continue
-            score.expected += 1
-            if name not in predicted_raw:
-                score.missing += 1
-            elif got == want:
-                score.correct += 1
-            else:
-                score.wrong += 1
-            if name in accepted and name in predicted_raw:
-                score.accepted += 1
-                score.accepted_wrong += int(got != want)
-            if name in REQUIRED_FIELDS and got != want:
-                all_required = False
-        if all_required:
+        if _score_document(report, fields, truth, prediction, accept):
             report.documents_all_required_correct += 1
     return report
+
+
+def _score_document(
+    report: EvaluationReport,
+    fields: tuple[str, ...],
+    truth: Mapping[str, Any],
+    prediction: Mapping[str, Any],
+    accept: Acceptor | None,
+) -> bool:
+    """Felder eines Belegs zählen; ``True``, wenn alle Pflichtfelder stimmen."""
+    expected = {k: canonical(k, v) for k, v in flatten(truth).items() if k in fields}
+    predicted_raw = {k: v for k, v in flatten(prediction).items() if k in fields}
+    predicted = {k: canonical(k, v) for k, v in predicted_raw.items()}
+    accepted = accept(predicted_raw) if accept is not None else set()
+    truth_values = {v for v in expected.values() if v is not None}
+    all_required = True
+    for name in fields:
+        present = name in predicted_raw
+        want, got = expected.get(name), predicted.get(name)
+        if present and got not in truth_values:
+            report.fields[name].hallucinated += 1
+        if not _score_field(report.fields[name], name, want, got, present, name in accepted):
+            all_required = False
+    return all_required
+
+
+def _score_field(
+    score: FieldScore,
+    name: str,
+    want: str | None,
+    got: str | None,
+    present: bool,
+    accepted: bool,
+) -> bool:
+    """Ein Feld zählen; ``False``, wenn es den Beleg als nicht vollständig richtig markiert."""
+    if want is None:
+        if present:
+            score.spurious += 1
+            return name not in REQUIRED_FIELDS
+        return True
+    score.expected += 1
+    if not present:
+        score.missing += 1
+    elif got == want:
+        score.correct += 1
+    else:
+        score.wrong += 1
+    if accepted and present:
+        score.accepted += 1
+        score.accepted_wrong += int(got != want)
+    return not (name in REQUIRED_FIELDS and got != want)
 
 
 @dataclass(frozen=True)

@@ -10,15 +10,19 @@ from __future__ import annotations
 
 import io
 from random import Random
-from typing import Any
+from types import ModuleType
+from typing import TYPE_CHECKING, Any
 
 from auditcore_invoicesynth.plan import AugmentSpec
 from auditcore_invoicesynth.render import _pil
 
+if TYPE_CHECKING:  # pragma: no cover
+    from PIL.Image import Image
+
 STAMP_TEXTS = ("EINGEGANGEN", "GEBUCHT", "GEPRÜFT", "BEZAHLT", "KOPIE")
 
 
-def _stamp(image: Any, rng: Random, image_draw: Any, font: Any) -> None:
+def _stamp(image: Image, rng: Random, image_draw: ModuleType, font: Any) -> None:
     width, height = image.size
     draw = image_draw.Draw(image)
     cx = rng.randint(int(width * 0.55), int(width * 0.85))
@@ -29,7 +33,7 @@ def _stamp(image: Any, rng: Random, image_draw: Any, font: Any) -> None:
     draw.text((cx, cy), rng.choice(STAMP_TEXTS), fill=color, font=font, anchor="mm")
 
 
-def _strokes(image: Any, rng: Random, count: int, image_draw: Any) -> None:
+def _strokes(image: Image, rng: Random, count: int, image_draw: ModuleType) -> None:
     width, height = image.size
     draw = image_draw.Draw(image)
     for _ in range(count):
@@ -42,7 +46,7 @@ def _strokes(image: Any, rng: Random, count: int, image_draw: Any) -> None:
         draw.line(points, fill=(20, 40, 150), width=max(1, width // 500), joint="curve")
 
 
-def _holes(image: Any, rng: Random, image_draw: Any) -> None:
+def _holes(image: Image, rng: Random, image_draw: ModuleType) -> None:
     width, height = image.size
     draw = image_draw.Draw(image)
     radius = max(3, width // 80)
@@ -51,7 +55,7 @@ def _holes(image: Any, rng: Random, image_draw: Any) -> None:
         draw.ellipse([x - radius, y - radius, x + radius, y + radius], fill=(70, 70, 70))
 
 
-def _fold(image: Any, rng: Random, image_draw: Any) -> None:
+def _fold(image: Image, rng: Random, image_draw: ModuleType) -> None:
     width, height = image.size
     draw = image_draw.Draw(image)
     y = int(height * rng.choice((0.333, 0.5, 0.667)))
@@ -69,32 +73,16 @@ def _salt_pepper(image: Any, rng: Random, share: float) -> None:
         pixels[x, y] = value if len(value) > 1 else value[0]
 
 
-def augment_page(image: Any, spec: AugmentSpec, seed: int, *, stamp_font: Any = None) -> Any:
+def augment_page(image: Image, spec: AugmentSpec, seed: int, *, stamp_font: Any = None) -> Image:
     """Seitenbild verrauschen; gleiche Eingabe + Seed → gleiches Bild."""
     image_mod, image_draw, _ = _pil()
     from PIL import ImageFilter
 
     rng = Random(seed)
     result = image.convert("RGB")
-    if spec.stamp and stamp_font is not None:
-        _stamp(result, rng, image_draw, stamp_font)
-    if spec.pen_strokes:
-        _strokes(result, rng, spec.pen_strokes, image_draw)
-    if spec.punch_holes:
-        _holes(result, rng, image_draw)
-    if spec.fold:
-        _fold(result, rng, image_draw)
+    _paper_marks(result, rng, spec, image_draw, stamp_font)
     if spec.perspective:
-        width, height = result.size
-        g = spec.perspective / width * rng.choice((1, -1))
-        h = spec.perspective / height * rng.choice((1, -1))
-        result = result.transform(
-            result.size,
-            image_mod.Transform.PERSPECTIVE,
-            (1, 0, 0, 0, 1, 0, g, h),
-            resample=image_mod.Resampling.BILINEAR,
-            fillcolor=(255, 255, 255),
-        )
+        result = _perspective(result, rng, spec.perspective, image_mod)
     if spec.rotation_deg:
         result = result.rotate(
             spec.rotation_deg,
@@ -105,16 +93,53 @@ def augment_page(image: Any, spec: AugmentSpec, seed: int, *, stamp_font: Any = 
     if spec.blur_radius:
         result = result.filter(ImageFilter.GaussianBlur(spec.blur_radius))
     if spec.mode in {"gray", "binary"}:
-        result = result.convert("L")
-        if spec.mode == "binary":
-            threshold = rng.randint(150, 200)
-            result = result.point(lambda v: 255 if v > threshold else 0)
+        result = _gray(result, rng, binary=spec.mode == "binary")
     if spec.salt_pepper:
         _salt_pepper(result, rng, spec.salt_pepper)
     if spec.jpeg_quality is not None:
-        buffer = io.BytesIO()
-        result.save(buffer, format="JPEG", quality=spec.jpeg_quality)
-        buffer.seek(0)
-        result = image_mod.open(buffer)
-        result.load()
+        result = _jpeg(result, spec.jpeg_quality, image_mod)
+    return result
+
+
+def _paper_marks(
+    image: Image, rng: Random, spec: AugmentSpec, image_draw: ModuleType, stamp_font: Any
+) -> None:
+    """Stempel, Striche, Lochung und Faltkante in fester Reihenfolge (Zufallsfolge!)."""
+    if spec.stamp and stamp_font is not None:
+        _stamp(image, rng, image_draw, stamp_font)
+    if spec.pen_strokes:
+        _strokes(image, rng, spec.pen_strokes, image_draw)
+    if spec.punch_holes:
+        _holes(image, rng, image_draw)
+    if spec.fold:
+        _fold(image, rng, image_draw)
+
+
+def _perspective(image: Image, rng: Random, strength: float, image_mod: ModuleType) -> Image:
+    width, height = image.size
+    g = strength / width * rng.choice((1, -1))
+    h = strength / height * rng.choice((1, -1))
+    return image.transform(
+        image.size,
+        image_mod.Transform.PERSPECTIVE,
+        (1, 0, 0, 0, 1, 0, g, h),
+        resample=image_mod.Resampling.BILINEAR,
+        fillcolor=(255, 255, 255),
+    )
+
+
+def _gray(image: Image, rng: Random, *, binary: bool) -> Image:
+    result = image.convert("L")
+    if binary:
+        threshold = rng.randint(150, 200)
+        result = result.point(lambda v: 255 if v > threshold else 0)
+    return result
+
+
+def _jpeg(image: Image, quality: int, image_mod: ModuleType) -> Image:
+    buffer = io.BytesIO()
+    image.save(buffer, format="JPEG", quality=quality)
+    buffer.seek(0)
+    result: Image = image_mod.open(buffer)
+    result.load()
     return result

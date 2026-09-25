@@ -7,7 +7,7 @@ E1–E9 vom 24.09.2026). Grundlage sind die Datensätze aus
 `auditcore_invoicegenerator` 0.2.0, der unverändert bleibt.
 
 ```bash
-pip install 'auditcore_invoicesynth[render]==0.1.0'
+pip install 'auditcore_invoicesynth[render]==0.1.1'
 auditcore-invoicesynth fonts                       # freie Systemschriften + SHA-256
 auditcore-invoicesynth plan  --seed 42             # Plan ohne Bilder
 auditcore-invoicesynth build --seed 42 --out ds/   # Pilot: 2 000 Belege
