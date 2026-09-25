@@ -44,7 +44,7 @@ NUTS1 = {
 MAX_ARCHIVE_MEMBER_BYTES = 64 * 1024 * 1024
 
 
-def parse_amount(value: Any) -> float:
+def parse_amount(value: object) -> float:
     """Float amount; missing or unparsable values become ``0.0`` (source behavior)."""
     if value is None or value == "":
         return 0.0
@@ -65,7 +65,7 @@ def parse_amount(value: Any) -> float:
         return 0.0
 
 
-def parse_date(value: Any) -> date | None:
+def parse_date(value: object) -> date | None:
     """Excel dates, ``DD.MM.YYYY``, ``YYYY-MM-DD``, ``DD/MM/YYYY``."""
     if value is None or value == "":
         return None
@@ -82,7 +82,7 @@ def parse_date(value: Any) -> date | None:
     return None
 
 
-def parse_location(value: Any) -> tuple[str | None, str | None]:
+def parse_location(value: object) -> tuple[str | None, str | None]:
     """``(city, postal code)`` from ``"12345 City"``, ``"City, 12345"`` or either alone."""
     if not value:
         return None, None
@@ -194,6 +194,20 @@ def parse_excel(content: bytes, mapping: Mapping[str, Any] | None) -> list[dict[
         if any(record.values()):
             records.append(record)
     return records
+
+
+def read_items(
+    content: bytes, url: str, source: Mapping[str, Any], mapping: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Records of one downloaded file: unzip, then CSV or the active XLSX sheet.
+
+    CSV is chosen by the URL or the source note ``"csv statt xlsx"``.
+    """
+    if url.lower().endswith(".zip"):
+        content = extract_from_zip(content)
+    if url.lower().endswith(".csv") or str(source.get("notes", "")).lower() == "csv statt xlsx":
+        return [dict(r) for r in parse_csv(content, mapping)]
+    return parse_excel(content, mapping)
 
 
 def project_id(
