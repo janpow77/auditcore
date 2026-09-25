@@ -227,7 +227,7 @@
     },
     "auditcore_sampling": {
       "metrics": {
-        "any_usages": 11,
+        "any_usages": 8,
         "complexity_over_10": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
