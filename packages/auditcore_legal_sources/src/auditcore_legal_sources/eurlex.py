@@ -10,7 +10,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from datetime import date
-from typing import Any
 
 from .errors import ConfigurationError, ParseError
 from .model import LegalDocument
@@ -42,7 +41,7 @@ def update_query(profile: SourceProfile, since: date) -> str:
     return profile.eurlex_update_query_template.replace("{since}", since.isoformat())
 
 
-def parse_results(payload: Any) -> list[dict[str, str]]:
+def parse_results(payload: object) -> list[dict[str, str]]:
     """Flatten ``results.bindings`` to ``{variable: value}`` rows.
 
     Raises:
