@@ -13,13 +13,14 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
+from types import ModuleType
 
 from .errors import DependencyError, ProfileError
 from .profiles import Profile
 
 
-def _rapidfuzz() -> tuple[Any, Any]:
+def _rapidfuzz() -> tuple[ModuleType, ModuleType]:
+    """``rapidfuzz.fuzz`` and ``rapidfuzz.process``, imported only when a score is needed."""
     try:
         from rapidfuzz import fuzz, process
     except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
