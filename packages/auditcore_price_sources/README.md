@@ -18,12 +18,12 @@ python -m pip install auditcore_price_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.0; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-price-sources/`):
 
 ```text
-auditcore_price_sources @ https://github.com/janpow77/auditcore/releases/download/v0.3.0/auditcore_price_sources-0.1.0-py3-none-any.whl#sha256=62340c0f77e5f162abbcc3bace2161fd157b516078b48acfceee833bea47670f
+auditcore_price_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_price_sources-0.1.1-py3-none-any.whl#sha256=a21eba39ad14f7a847b256bf44a12345e859b8e09df910e9be64cedb32edc5c7
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

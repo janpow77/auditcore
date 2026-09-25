@@ -19,12 +19,12 @@ python -m pip install 'auditcore_invoicesynth[render]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-invoicesynth/`):
 
 ```text
-auditcore_invoicesynth @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_invoicesynth-0.1.0-py3-none-any.whl#sha256=2dad24f786bb048e00350ca9688d0f3d01ed5cf2e65af06ce960672ba5b5011e
+auditcore_invoicesynth @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_invoicesynth-0.1.1-py3-none-any.whl#sha256=3d91e3d97e8bca8de7f909b731cbac72d989be835267805cabef81732a70709b
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

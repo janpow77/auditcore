@@ -19,12 +19,12 @@ python -m pip install auditcore_legal_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.0; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.3 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-legal-sources/`):
 
 ```text
-auditcore_legal_sources @ https://github.com/janpow77/auditcore/releases/download/v0.3.0/auditcore_legal_sources-0.1.0-py3-none-any.whl#sha256=b7d82250553b41b445f7d3b137937ecb34929d6b0a1384b7bd3a92e40a408747
+auditcore_legal_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_legal_sources-0.1.3-py3-none-any.whl#sha256=87419f5ddc0a4b93b3865f1db851ccf6680043ea5b54674a4f380c4a6b861e0d
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
