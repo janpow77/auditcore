@@ -42,7 +42,7 @@ def main() -> None:
     package = distribution("auditcore_registry_sources")
     assert package.version == "0.2.0"
     required = sorted(r for r in package.requires or [] if "extra ==" not in r)
-    assert required == ["auditcore_entity_matching==0.2.1", "auditcore_harvest==0.1.0"], required
+    assert required == ["auditcore_entity_matching==0.2.1", "auditcore_harvest==0.1.1"], required
     assert find_spec("auditcore") is None
     assert len(available_profiles()) == 20
     parsed = parse_targets_simple_csv(CSV, list_key="eu_fsf")

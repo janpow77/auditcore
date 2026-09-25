@@ -8,9 +8,9 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
-from .model import Checkpoint, HarvestRecord, SinkReceipt
+from .model import JSON, Checkpoint, HarvestRecord, SinkReceipt
 
 
 @dataclass(frozen=True)
@@ -110,6 +110,6 @@ class Sleeper(Protocol):
 class EventSink(Protocol):
     """Receives bounded, secret-free run events."""
 
-    def emit(self, event: Mapping[str, Any]) -> None:
+    def emit(self, event: Mapping[str, JSON]) -> None:
         """Handle one event."""
         ...
