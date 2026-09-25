@@ -74,3 +74,14 @@ def test_policies_stay_importable_from_engine() -> None:
     assert RetryPolicy().max_attempts == 3
     assert RateLimit().min_interval_seconds == 0.0
     assert CancelToken().cancelled is False
+
+
+def test_deprecated_aliases_warn_and_return_new_object() -> None:
+    from auditcore_harvest import deprecated_aliases
+
+    marker = object()
+    getattr_ = deprecated_aliases("pkg.mod", {"AlterName": ("NewName", marker)})
+    with pytest.warns(DeprecationWarning, match="AlterName heißt jetzt NewName"):
+        assert getattr_("AlterName") is marker
+    with pytest.raises(AttributeError, match="pkg.mod"):
+        getattr_("Unknown")

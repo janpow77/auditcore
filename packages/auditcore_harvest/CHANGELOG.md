@@ -14,6 +14,9 @@ unverändert, alle bisherigen Namen bleiben importierbar.
   übliche Seite (abgeschlossen genau ohne Folgecursor, `PARTIAL` bei Issues).
   Die drei Hilfen fassen die in den Quellenpaketen mehrfach kopierten
   Schritte zusammen.
+- `deprecated_aliases(module, {alt: (neu, objekt)})`: Modul-`__getattr__` für
+  umbenannte öffentliche Namen mit `DeprecationWarning` (für Quellenpakete, deren
+  Architekturtests nur `auditcore_harvest` und ausgewählte Standardmodule zulassen).
 - `JSON` und `Cursor` (Typaliase des Vertrags) sind aus `auditcore_harvest`
   importierbar.
 
