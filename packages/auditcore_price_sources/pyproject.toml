@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_price_sources"
-version = "0.1.0"
+version = "0.1.1"
 description = "Price and market data adapters (Bundesbank, Destatis GENESIS, EIA, Tankerkoenig, Overpass, EU Oil Bulletin) on auditcore_harvest"
 readme = "README.md"
 requires-python = ">=3.11"

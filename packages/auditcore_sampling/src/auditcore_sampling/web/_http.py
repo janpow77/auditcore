@@ -59,8 +59,9 @@ def handle(name: str, raw: bytes, limit: int = MAX_BODY_BYTES) -> Reply:
         if name == "export":
             exported: ExportFile = export_selection(payload)
             disposition = f'attachment; filename="{exported.filename}"'
-            return Reply(200, exported.content, exported.media_type,
-                         {"Content-Disposition": disposition})
+            return Reply(
+                200, exported.content, exported.media_type, {"Content-Disposition": disposition}
+            )
         return _json(200, JSON_HANDLERS[name](payload))
     except ContractError as exc:
         return _json(exc.status, exc.to_dict())

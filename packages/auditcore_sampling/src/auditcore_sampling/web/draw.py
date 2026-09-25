@@ -150,7 +150,10 @@ def _mus_stratum(rng: random.Random, members: list[Item], size: int, variant: st
     interval = base / size if size > 0 and base > 0 else 0.0
     start = draw_start(rng, interval)
     drawn = systematic_mus(
-        [i.value for i in members], sample_size=size, interval=interval, start=start,
+        [i.value for i in members],
+        sample_size=size,
+        interval=interval,
+        start=start,
         variant=variant,
     )
     unique = list(dict.fromkeys(drawn.positions))
@@ -183,9 +186,11 @@ def select(payload: object) -> dict[str, object]:
     """``POST /selection``: reproducible MUS or random selection, optionally stratified."""
     body = as_object(payload)
     method = choice(require(body, "method"), "method", ("mus", "srs"))
-    variant = choice(require(body, "variant"), "variant", ("portal", "flowstat")) if (
-        method == "mus"
-    ) else None
+    variant = (
+        choice(require(body, "variant"), "variant", ("portal", "flowstat"))
+        if (method == "mus")
+        else None
+    )
     items = parse_items(require(body, "items"))
     supplied = optional_seed(body.get("seed"))
     seed = secrets.randbelow(GENERATED_SEED_LIMIT) if supplied is None else supplied
@@ -199,8 +204,14 @@ def select(payload: object) -> dict[str, object]:
         drawn = _draw_stratum(method, rng, members, sizes[stratum], variant)
         for item, hits in zip(drawn.members, drawn.hits, strict=True):
             rows.append(_row(item, hits, len(rows) + 1))
-        strata.append({"stratum": stratum, "population": len(members),
-                       "sample_size": sizes[stratum], **drawn.details})
+        strata.append(
+            {
+                "stratum": stratum,
+                "population": len(members),
+                "sample_size": sizes[stratum],
+                **drawn.details,
+            }
+        )
     return {
         "library": LIBRARY,
         "method": method,
