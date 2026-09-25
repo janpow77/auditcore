@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:definitions
+    xmlns:model="http://www.omg.org/spec/BPMN/20100524/MODEL"
+    targetNamespace="urn:test">
+  <model:process id="Process_1">
+    <model:startEvent id="Start_1" />
+    <model:userTask id="Task_User" name="Prüfen"
+                    duration="45" cost="12.50" resource="Sachbearbeitung"
+                    frequencyPerYear="24" personnel_count="3" />
+    <model:endEvent id="End_1" />
+  </model:process>
+</model:definitions>
