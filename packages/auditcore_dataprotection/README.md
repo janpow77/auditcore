@@ -5,12 +5,14 @@ Anwendungen **eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und
 Datenschutz-Folgenabschätzungen (DSFA) anlegen, bearbeiten, berechnen,
 versionieren, freigeben und ausgeben** können. Laufzeit: nur die
 Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel]==0.2.1`),
-`[pdf]` (WeasyPrint).
+`[pdf]` (WeasyPrint), `[web]` (Starlette) und `[fastapi]` (FastAPI) für die
+REST-Schnittstelle der Oberflächen `<flowaudit-vvt>`/`<flowaudit-dsfa>`.
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
-pip install auditcore_dataprotection==0.4.2            # Kern
-pip install 'auditcore_dataprotection[excel]==0.4.2'    # zusätzlich XLSX
+pip install auditcore_dataprotection==0.5.0            # Kern
+pip install 'auditcore_dataprotection[excel]==0.5.0'    # zusätzlich XLSX
+pip install 'auditcore_dataprotection[web]==0.5.0'      # REST für die Oberfläche
 ```
 
 ## Schnellstart in Python
@@ -153,6 +155,7 @@ ansicht = render_register_html(
 | `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
 | `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
 | `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.0; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
+| `web` | REST-Schnittstelle `dataprotection_ui/1` für `<flowaudit-vvt>` und `<flowaudit-dsfa>` (`@flowaudit/ui`): `DataProtectionApi` ohne Framework, `routes`/`create_app` (Extra `web`), `create_router` (Extra `fastapi`), Speicher als Protocol `Storage`. |
 | `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
 
 Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie
@@ -192,10 +195,35 @@ Fehlt eine Antwort, lautet der Vorschlag `unvollstaendig`; eine fehlende Angabe
 wird nie zu „Nein“ oder zu einer Freigabe. Der Vorschlag ist eine Empfehlung;
 Entscheidung und Freigabe bleiben menschliche, zurechenbare Schritte.
 
+## REST-Schnittstelle für die Oberfläche (0.5.0)
+
+`auditcore_dataprotection.web` stellt Verzeichnis und Folgenabschätzung für
+die Web Components `<flowaudit-vvt>` und `<flowaudit-dsfa>` bereit. Die
+Handler rufen nur die Dienste der Bibliothek; Persistenz kommt über das
+Protocol `Storage` (Register- und Abschätzungs-Repository plus Audit-Senke),
+Mandant und Person über `identify`. Vertrag, Fehlercodes und Endpunkte:
+`docs/ui/dataprotection-rest.md` im Monorepo.
+
+```python
+from starlette.routing import Mount
+
+from auditcore_dataprotection import load_profile
+from auditcore_dataprotection.web import DataProtectionApi, create_backend
+from auditcore_dataprotection.web.http import routes
+
+profil = load_profile("auditcore.dsgvo", "2026.10.3")
+api = DataProtectionApi(create_backend(profil, speicher, rechte))  # eigene Ports
+anwendung_routes = [Mount("/api/dataprotection", routes=routes(api, identify))]
+```
+
+`identify(request)` liefert `Principal(tenant_id, Actor(...))` aus der Sitzung
+der Anwendung oder `None` (401). Exporte: Druckansicht (HTML der Bibliothek),
+Markdown und CSV mit Formelschutz.
+
 ## Verantwortung der Anwendung
 
-Die Bibliothek enthält keine Datenbank, keine Sitzung, kein HTTP und keine
-Benutzerverwaltung. Die Anwendung implementiert `RegisterRepository`,
+Die Bibliothek enthält keine Datenbank, keine Sitzung und keine
+Benutzerverwaltung; HTTP nur im optionalen Modul `web`. Die Anwendung implementiert `RegisterRepository`,
 `AssessmentRepository`, `Authorizer`, `AuditSink`, `Clock` und `IdFactory`
 (`ports`), ruft jede Operation innerhalb ihrer eigenen Transaktion auf und
 erzwingt die Unveränderlichkeit freigegebener Fassungen zusätzlich in der

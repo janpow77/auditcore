@@ -76,7 +76,7 @@ export const FlowauditTableLite = createElementComponent<{ rows: readonly object
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (23):
+Exporte der Einstiegspunkte aus `package.json#exports` (28):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -85,6 +85,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (23):
 | `@flowaudit/ui-react` | `EventHandlers` | Typ | Ereignis-Handler einer Hülle erhalten das erste Argument des Vue-emit (CustomEvent.detail[0]). | `createElementComponent` |
 | `@flowaudit/ui-react` | `FlowauditBenford` | Konstante | `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditBenfordProps` | Schnittstelle | – | `elements` |
+| `@flowaudit/ui-react` | `FlowauditDataProtectionError` | Typ | – | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditDsfa` | Konstante | `<flowaudit-dsfa>` als React-Komponente: Schwellwertanalyse, Risiko, Entscheidung, Freigabe (Art. 35 DSGVO). | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `kanban` |
@@ -100,6 +103,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (23):
 | `@flowaudit/ui-react` | `FlowauditSynopsisProps` | Schnittstelle | – | `synopsis` |
 | `@flowaudit/ui-react` | `FlowauditTable` | Konstante | `<flowaudit-table>` als React-Komponente. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditTableProps` | Schnittstelle | – | `elements` |
+| `@flowaudit/ui-react` | `FlowauditVvt` | Konstante | `<flowaudit-vvt>` als React-Komponente: Verzeichnis von Verarbeitungstätigkeiten (Art. 30 DSGVO). | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditVvtProps` | Schnittstelle | – | `dataprotection` |
 | `@flowaudit/ui-react` | `createElementComponent` | Funktion | Erzeugt eine React-18-Komponente für ein Custom Element. | `createElementComponent` |
 | `@flowaudit/ui-react` | `defineFlowauditElements` | Re-Export | – | `@flowaudit/ui/elements` |
 | `@flowaudit/ui-react` | `eventPayload` | Funktion | Liest das erste emit-Argument aus Vue-CustomEvents (detail ist ein Argument-Array). | `createElementComponent` |
@@ -124,6 +129,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (23):
   `onError`), `FlowauditRiskFlags` (z. B. `evaluation`, `profile`;
   `onRecordSelect`, `onFilterChange`; Antworten von `auditcore_risk.web`,
   siehe [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md)).
+- `FlowauditVvt` (`port`, `actor`, `editable`, `locale`; `onDraftSaved`,
+  `onReleased`, `onExported`, `onError`) und `FlowauditDsfa` (`port`,
+  `activityId`, `actor`, `editable`, `locale`; `onAssessmentChange`,
+  `onError`), siehe [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md).
 - Sprache und Theming wie in `@flowaudit/ui` (`locale`-Prop,
   `defineFlowauditElements({ locale })`, CSS-Variablen `--fa-*`).
 

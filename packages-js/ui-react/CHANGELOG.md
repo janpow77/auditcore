@@ -1,5 +1,9 @@
 # Changelog @flowaudit/ui-react
 
+## Unveröffentlicht
+
+- `FlowauditVvt` und `FlowauditDsfa` für `<flowaudit-vvt>` und `<flowaudit-dsfa>`.
+
 ## 0.1.0 – 2026-09-25
 
 Erste Fassung.
