@@ -1,4 +1,4 @@
-import type { Comparison, ComparisonResult, Locale, SortState, SynopsisLayout, SynopsisPort, TableColumn, TableRow } from '@flowaudit/ui'
+import type { BenfordPort, Locale, PopulationItem, SamplingPort, SortState, TableColumn, TableRow } from '@flowaudit/ui'
 import { createElementComponent } from './createElementComponent'
 
 export interface FlowauditTableProps {
@@ -21,24 +21,29 @@ export const FlowauditTable = createElementComponent<FlowauditTableProps, { onRo
   },
 )
 
-export interface FlowauditSynopsisProps {
-  comparison?: Comparison | null
-  result?: ComparisonResult | null
-  comparisonId?: string
-  port?: SynopsisPort | null
-  title?: string
-  oldLabel?: string
-  newLabel?: string
-  editable?: boolean
-  layout?: SynopsisLayout
+export interface FlowauditSamplingProps {
+  port: SamplingPort | null
+  items?: readonly PopulationItem[]
   locale?: Locale
 }
 
-/** `<flowaudit-synopsis>` als React-Komponente (Synopse / Versionsvergleich). */
-export const FlowauditSynopsis = createElementComponent<
-  FlowauditSynopsisProps,
-  { onRowUpdate: string; onExport: string; onNavigate: string; onLayoutChange: string }
->('flowaudit-synopsis', {
-  properties: ['comparison', 'result', 'comparisonId', 'port', 'title', 'oldLabel', 'newLabel', 'editable', 'layout', 'locale'],
-  events: { onRowUpdate: 'row-update', onExport: 'export', onNavigate: 'navigate', onLayoutChange: 'update:layout' },
+/** `<flowaudit-sampling>` als React-Komponente: Stichprobenumfang, Auswahl mit Seed, Export. */
+export const FlowauditSampling = createElementComponent<
+  FlowauditSamplingProps,
+  { onSizeCalculated: string; onSelectionDrawn: string; onError: string }
+>('flowaudit-sampling', {
+  properties: ['port', 'items', 'locale'],
+  events: { onSizeCalculated: 'size-calculated', onSelectionDrawn: 'selection-drawn', onError: 'error' },
 })
+
+export interface FlowauditBenfordProps {
+  port: BenfordPort | null
+  values?: readonly (number | null)[]
+  locale?: Locale
+}
+
+/** `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. */
+export const FlowauditBenford = createElementComponent<FlowauditBenfordProps, { onAnalysisCompleted: string; onError: string }>(
+  'flowaudit-benford',
+  { properties: ['port', 'values', 'locale'], events: { onAnalysisCompleted: 'analysis-completed', onError: 'error' } },
+)
