@@ -25,7 +25,10 @@ jobs:
       - run: python -m pip install -e '.[dev]'
       - name: Ratchet (steigt eine Metrik, sinkt sie ohne Baseline-Absenkung oder wird die Baseline unbegründet angehoben, schlägt der Job fehl)
         env:
-          COMPARE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+          COMPARE_REF: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
+        # PR: Vergleich mit dem ersten Elternteil des Merge-Commits, also genau dem
+        # main-Stand, gegen den GitHub den PR geprüft hat (nicht dem inzwischen
+        # weitergelaufenen origin/main).
         run: |
           ref="$COMPARE_REF"
           if [ -z "$ref" ] || ! git rev-parse --verify --quiet "$ref^{commit}" >/dev/null; then
