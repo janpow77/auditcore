@@ -24,7 +24,9 @@ assert jsonable({"am": date(2026, 9, 25)}) == {"am": "2026-09-25"}
 | `frozen` | `freeze`, `thaw` | – |
 | `safe_xml` | `parse_xml`, `defused_fromstring` (Extra `xml`) | `forbid_dtd` |
 | `html_text` | `LinkCollector`, `anchor_links`, `has_html_marker` | `markers`, `window` |
-| `numeric` | `numpy_pairwise_sum`, `numpy_round`, `require_finite`, `parse_percent_rate` | Fehlermeldungen als Fabriken |
+| `numeric` | `numpy_pairwise_sum`, `numpy_round`, `require_finite`, `parse_percent_rate`, `share_percent`, `as_float`, `as_float_comma` | Fehlermeldungen als Fabriken; `digits`, `multiply_first`; `blank_as_none`, `bool_as_none`, `catch_type_error` |
+| `filenames` | `path_component`, `unicode_filename`, `replace_reserved`, `underscore_slug`, `dashed_slug`, `export_filename` | je Funktion eine charakterisierte App-Variante; Fallback und Länge als Parameter |
+| `aio` | `ThreadLoopRunner`, `run_sync`, `run_on_current_loop` | ein Loop je Thread und Runner (fork-sicher) bzw. Legacy-Variante |
 | `clock`, `ids` | `utc_now`, `require_aware`, `new_uuid` | – |
 | `text` | `group_thousands_de`, `compact_upper` | – |
 | `optional` | `require_module` – verzögerter Import eines Extras mit paketeigenem Fehler | – |
@@ -41,6 +43,11 @@ Randfällen: Ergebnis einschließlich Typen, Float-Bitmuster und
 Schlüsselreihenfolge oder Fehler einschließlich Typ, Meldung und Ursache.
 `numpy_pairwise_sum`/`numpy_round` werden zusätzlich gegen NumPy selbst
 geprüft, wenn NumPy installiert ist.
+
+Die App-Hilfen (`share_percent`, `as_float`, `filenames`, `aio`) stammen aus der
+Inventur `docs/reports/app-helfer-python.md` (Klasse b) und sind gegen die
+wörtlichen App-Kopien in `tests/legacy_apps.py` differenziell geprüft
+(Quellcommits in `provenance.json`, `sources`).
 
 Neue Module kommen nur nach Thema hinzu (keine Sammeldatei `utils`); die
 Auswahl steht in [docs/quality/duplikate.md](../../docs/quality/duplikate.md).

@@ -265,7 +265,7 @@ und Excel ohne pandas bei gleicher Ausgabe. Vollständig in
 
 Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Extras:
 `defusedxml>=0.7.1` (`xml`), `openpyxl>=3.0.9,<4` (`excel`),
-`reportlab>=3.6.12,<6` (`pdf`), `auditcore_legal_sources==0.1.1` (`legal`).
+`reportlab>=3.6.12,<6` (`pdf`), `auditcore_legal_sources==0.1.2` (`legal`).
 Bewusst keine Abhängigkeit: pandas, lxml, Pydantic, FastAPI.
 
 ## Sicherheit und Datenschutz

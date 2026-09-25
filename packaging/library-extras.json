@@ -45,7 +45,7 @@
     "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)",
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
     "reportlab<6,>=3.6.12; extra == \"pdf\"": "python3-reportlab (>= 3.6.12)",
-    "auditcore_legal_sources==0.1.1; extra == \"legal\"": "python3-auditcore-legal-sources (>= 0.1.1)"
+    "auditcore_legal_sources==0.1.2; extra == \"legal\"": "python3-auditcore-legal-sources (>= 0.1.2)"
   },
   "auditcore_documents": {
     "starlette<2,>=0.47.2; extra == \"web\"": "python3-starlette (>= 0.47.2)",

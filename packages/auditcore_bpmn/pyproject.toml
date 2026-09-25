@@ -16,7 +16,7 @@ dependencies = []
 xml = ["defusedxml>=0.7.1"]
 excel = ["openpyxl>=3.0.9,<4"]
 pdf = ["reportlab>=3.6.12,<6"]
-legal = ["auditcore_legal_sources==0.1.1"]
+legal = ["auditcore_legal_sources==0.1.2"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
@@ -29,7 +29,7 @@ dev = [
     "pypdf>=4,<7",
     "lxml>=6.1.0,<7",
     "jsonschema>=4.10",
-    "auditcore_legal_sources==0.1.1",
+    "auditcore_legal_sources==0.1.2",
 ]
 
 [tool.setuptools.packages.find]

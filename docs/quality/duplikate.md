@@ -97,6 +97,34 @@ Listen-Comprehensions über Profilfelder (`_checks`, `actions`,
 `require_parameters`, `_blank`/`is_missing`, `_strings`/`as_object`,
 `_apply_fold_map`/`register` und ähnliche (vollständige Liste im JSON).
 
+## E. App-Hilfen (Inventur `docs/reports/app-helfer-python.md`)
+
+Übernommen in `auditcore_common` (Nachtrag zu 0.1.0, Differenztests gegen die
+wörtlichen App-Kopien in `packages/auditcore_common/tests/legacy_apps.py`):
+
+| Gruppe | App-Fundstellen | Ziel | Varianten |
+|---|---|---|---|
+| Anteil in Prozent (Top 19) | audit_designer `_anteil`, flowinvoice `_anteil`, riskanalysis `_anteil`, regulierung `_quote_pct` | `numeric.share_percent` | audit_designer: 1 Nachkommastelle und `teil*100/ganzes` (`digits=1, multiply_first=True`); übrige 2 Stellen, `teil/ganzes*100` – die Reihenfolge ändert Ergebnisse (z. B. 1953/240) |
+| Tolerante Zahl-Koerzierung (Top 10) | audit_designer `_als_float`, `_als_zahl`, `_float`, beneficiaries `_als_float`; audit-portal `_to_float`; flowinvoice `_zahl`; regulierung `_safe_float`; versteigerung `_money_float`, `_to_float` | `numeric.as_float`, `numeric.as_float_comma` | `""` → `None` (`blank_as_none`), nur `ValueError` abfangen (regulierung, `catch_type_error=False`); beneficiaries: Zahlen mit NaN → `None`, Text mit Komma → eigene Funktion |
+| Dateinamen (Top 13) | audit_designer document_comparisons/jupyter/presentation, audit-portal vvt_templates/help_export, regulierung vollzug | `filenames.*` (sechs benannte Varianten) | Zeichensatz, Länge und Fallback je Variante |
+| Coroutine synchron (Top 15) | flowinvoice `run_async` (tasks, pipeline_tasks), audit_designer `_run_async_in_thread`, flowaudit `run_async` | `aio.ThreadLoopRunner`/`run_sync`, `aio.run_on_current_loop` | flowinvoice: Loop je Thread und Modul, fork-sicher – je Modul ein eigener Runner hält die Trennung |
+
+Nicht übernommen (Begründung):
+
+- `numbers_de`/`format_de` (Top 4/5, Klasse c): viele fachlich abweichende
+  Varianten (Mehrdeutigkeit „11.047“, US-Format, Fehlwertdarstellung) –
+  eigener Folge-PR mit Profilen, nicht nebenbei.
+- `web` (`client_ip`, `get_or_404`, begrenztes Upload-Lesen): an
+  FastAPI/Starlette und die App-Datenbank gebunden; gehört nicht in das
+  stdlib-only-Paket, ggf. später als Extra.
+- audit_designer `sanitize_filename` (vp_ai): nur eine App, mit eigener
+  Mojibake-Reparatur.
+- Übrige Klasse-b-Gruppen (Sitzungen, Admin-Abhängigkeiten, Demo-Nutzer,
+  RouterHealth …): App-/Framework-Infrastruktur, keine Bibliotheksfunktion.
+
+Die App-Migrationen selbst (App-Code auf `auditcore_common` umstellen) macht
+der Hauptagent je App mit Deploy und Pflicht-Rauchtest.
+
 ## Migration
 
 Reihenfolge und Stand stehen im PR-Verlauf; Grundsätze:
