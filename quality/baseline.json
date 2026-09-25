@@ -9,14 +9,11 @@
       "metrics": {
         "any_usages": 123,
         "complexity_over_10": 23,
-        "duplicate_functions": 1,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 33,
         "modules_over_400_lines": 3,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      },
-      "ausnahme_begruendung": {
-        "duplicate_functions": "as_dict (Helfer-Verträge) gleicht as_object in auditcore_llm_client; die Plattform darf keine Fachbibliothek importieren und llm_client bleibt ohne Abhängigkeiten – bewusste Doppelung, Zusammenführung in auditcore_common geplant (v0.4.1)."
       }
     },
     "auditcore_common": {
@@ -166,14 +163,11 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
-        "duplicate_functions": 1,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      },
-      "ausnahme_begruendung": {
-        "duplicate_functions": "as_object gleicht as_dict der Plattform (auditcore.tools.helpers); llm_client bleibt ohne Abhängigkeiten – bewusste Doppelung, Zusammenführung in auditcore_common geplant (v0.4.1)."
       }
     },
     "auditcore_market_indicators": {
