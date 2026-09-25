@@ -76,6 +76,7 @@ Ergebnis nennt Profil, Version, Fingerabdruck und Status.
 | `score_rules` | Kriterien für Punkte-Scores (`truthy_all`, `text_in_set`, `number_range`, `set_overlap`) mit Bewertung `points_stages` | – |
 | `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `annotate` | Extra `pandas` |
 | Namensabgleich (RF09) | Normalisierung über `auditcore_entity_matching` (Profil `riskanalysis.payee`) | Extra `fuzzy` (rapidfuzz) |
+| `web` | REST-Schnittstelle: `create_app` (Starlette), `routes`, `build_fastapi_router`; framework-freie Handler und Profilbeschreibung mit Eingabefeldern (`field_catalog.json`) | Extra `web` (starlette), für den Router Extra `fastapi` |
 | Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` 0.2.0 (`procurement.hvtg 2026.09.3`: 2014–2027; abgelöste Profilfassungen: 2026.09.2), nicht dupliziert | Extra `procurement` |
 
 Ein Beleg, dessen Jahr keinen belegten Schwellenzeitraum hat (mit 2026.09.3:
@@ -90,6 +91,21 @@ Verhalten bei fehlender Spalte oder leerem Wert):
 [docs/eingabefelder.md](docs/eingabefelder.md), erzeugt aus den Profilen mit
 `python tools/document_fields.py`; `tests/test_eingabefelder.py` hält die Datei aktuell.
 Debian-Paket: `python3-auditcore-risk`.
+
+## Web-Schnittstelle (Extras `web`, `fastapi`)
+
+```python
+from auditcore_risk.web import create_app          # Starlette, Pfade unter /risk
+from auditcore_risk.web import build_fastapi_router  # app.include_router(...)
+```
+
+`GET /profiles`, `GET /profiles/{id}/{version}` (Regeln, Schwellen, Eingabefelder),
+`POST /profiles/{id}/{version}/check-columns`, `POST /evaluate` (Merkmale je
+Datensatz mit Begründung, verwendeten Eingabewerten, unbestimmten und
+übersprungenen Regeln). Vertrag: `docs/ui/risk-rest.md` im auditcore-Repository.
+Die Eingabefelder je Profil liefert `src/auditcore_risk/web/field_catalog.json`,
+erzeugt mit `python tools/export_field_catalog.py` aus derselben Ableitung wie
+`docs/eingabefelder.md`; `tests/test_web_field_catalog.py` hält die Datei aktuell.
 
 ## Fehlender Betrag: „unbestimmt“ statt Ersatzwert (ab 0.3.0)
 
