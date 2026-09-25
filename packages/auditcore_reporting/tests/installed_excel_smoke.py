@@ -16,7 +16,7 @@ from auditcore_reporting import ExcelOptions, ReportTable, render_workbook
 
 def main() -> None:
     """Verify actual installed bytes, formats, typed values and inert formula-like text."""
-    assert version("auditcore_reporting") == "0.2.0"
+    assert version("auditcore_reporting") == "0.2.1"
     location = Path(auditcore_reporting.__file__).resolve()
     assert "site-packages" in location.parts or "dist-packages" in location.parts, location
     output = render_workbook(

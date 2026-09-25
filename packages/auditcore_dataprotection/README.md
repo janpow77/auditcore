@@ -4,13 +4,13 @@ Eigenständig installierbare, frameworkunabhängige Bibliothek, mit der
 Anwendungen **eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und
 Datenschutz-Folgenabschätzungen (DSFA) anlegen, bearbeiten, berechnen,
 versionieren, freigeben und ausgeben** können. Laufzeit: nur die
-Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel]==0.2.0`),
+Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel]==0.2.1`),
 `[pdf]` (WeasyPrint).
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
-pip install auditcore_dataprotection==0.4.1            # Kern
-pip install 'auditcore_dataprotection[excel]==0.4.1'    # zusätzlich XLSX
+pip install auditcore_dataprotection==0.4.2            # Kern
+pip install 'auditcore_dataprotection[excel]==0.4.2'    # zusätzlich XLSX
 ```
 
 ## Schnellstart in Python
