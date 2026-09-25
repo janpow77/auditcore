@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_procurement"
-version = "0.2.0"
+version = "0.2.1"
 description = "Procurement notice records (TED, HAD), import normalisation and versioned prechecks"
 readme = "README.md"
 requires-python = ">=3.11"
