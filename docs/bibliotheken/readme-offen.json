@@ -4,20 +4,12 @@
     "auditcore_dataprotection",
     "auditcore_documents",
     "auditcore_entity_matching",
-    "auditcore_geo",
-    "auditcore_invoicesynth",
     "auditcore_llm_client",
-    "auditcore_market_indicators",
-    "auditcore_reporting",
     "auditcore_risk",
     "auditcore_sampling",
     "auditcore_statistics",
-    "bpmn-editor",
     "bpmn-flowaudit",
     "bpmn-react",
-    "bpmn-vue",
-    "kanban-core",
-    "ui",
-    "ui-react"
+    "bpmn-vue"
   ]
 }
