@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "note": "Deklarative Regeln für bekannte Fehlmuster in App-Hilfsfunktionen. kind: regex (Muster je Zeile), call (Aufruf mit Argumentprüfung), file (Datei-Bedingungen), function (Funktionsrumpf), probe (Ausführung gegen einen Vertrag). Unterdrückung einer Fundstelle: Kommentar 'auditcore-helpers: ignore <ID> <Begründung>' in derselben oder der Zeile davor.",
+  "rules": [
+    {
+      "id": "HC-NUM-01",
+      "title": "Zahlparser ersetzt nur das Komma",
+      "kind": "function",
+      "severity": "fehler",
+      "contract": "parse-number",
+      "message": "Zahlparser ersetzt nur das Komma durch einen Punkt; Tausenderpunkte bleiben stehen („1.234,56“ → 1,234, Faktor 1000 zu klein).",
+      "remedy": "Gemeinsamen Parser verwenden (@flowaudit/common parse/number bzw. auditcore_common) und Vertrag parse-number im Manifest binden.",
+      "spec": {
+        "ts": {
+          "body_all": [
+            "\\.replace(?:All)?\\(\\s*(?:(['\"`]),\\1|/,/g?)\\s*,\\s*(['\"`])\\.\\2\\s*\\)",
+            "parseFloat\\(|Number\\(|\\bfloat\\(|Decimal\\("
+          ],
+          "body_none": [
+            "\\\\\\.|replace(?:All)?\\(\\s*(['\"`])\\.\\1|split\\(\\s*(['\"`])\\.\\2|lastIndexOf\\(|rfind\\(|rindex\\(|Intl\\.NumberFormat"
+          ]
+        },
+        "python": {
+          "body_all": [
+            "\\.replace\\(\\s*(['\"]),\\1\\s*,\\s*(['\"])\\.\\2\\s*\\)",
+            "parseFloat\\(|Number\\(|\\bfloat\\(|Decimal\\("
+          ],
+          "body_none": [
+            "\\\\\\.|replace(?:All)?\\(\\s*(['\"`])\\.\\1|split\\(\\s*(['\"`])\\.\\2|lastIndexOf\\(|rfind\\(|rindex\\(|Intl\\.NumberFormat",
+            ":,?\\.\\d*f\\}"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "const parseDecimal = (value: unknown): number => {\n  if (value === null || value === undefined) return 0\n  const strVal = String(value).replace(',', '.')\n  const num = parseFloat(strVal)\n  return isNaN(num) ? 0 : num\n}\n"
+          },
+          {
+            "language": "python",
+            "code": "def to_amount(text):\n    return float(text.replace(\",\", \".\"))\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "export function parseDe(text: string): number {\n  return Number(text.replace(/\\./g, '').replace(',', '.'))\n}\n"
+          },
+          {
+            "language": "python",
+            "code": "def parse_de(text):\n    return float(text.replace(\".\", \"\").replace(\",\", \".\"))\n"
+          },
+          {
+            "language": "python",
+            "code": "def eur(x):\n    return f\"{float(x):,.0f} €\".replace(\",\", \".\")\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-NUM-02",
+      "title": "Zahlparser entfernt alle Punkte ohne Mehrdeutigkeitsprüfung",
+      "kind": "function",
+      "severity": "fehler",
+      "contract": "parse-number",
+      "message": "Zahlparser entfernt jeden Punkt: „1.5“ wird stillschweigend zu 15. Mehrdeutige Eingaben sind nach der (vorläufigen) Festlegung ungültig und brauchen einen Hinweis.",
+      "remedy": "Tausenderpunkte nur in Dreiergruppen akzeptieren, sonst ablehnen (Vertrag parse-number, Fall de-mehrdeutig-punkt).",
+      "spec": {
+        "ts": {
+          "body_all": [
+            "\\.replace(?:All)?\\(\\s*(?:/\\\\\\./g|(['\"`])\\.\\1)\\s*,\\s*(['\"`])\\2\\s*\\)",
+            "\\.replace(?:All)?\\(\\s*(?:(['\"`]),\\1|/,/g?)\\s*,\\s*(['\"`])\\.\\2\\s*\\)"
+          ],
+          "body_none": [
+            "\\{3\\}|mehrdeutig|ambiguous|ambig"
+          ]
+        },
+        "python": {
+          "body_all": [
+            "\\.replace\\(\\s*(['\"])\\.\\1\\s*,\\s*(['\"])\\2\\s*\\)",
+            "\\.replace\\(\\s*(['\"]),\\1\\s*,\\s*(['\"])\\.\\2\\s*\\)"
+          ],
+          "body_none": [
+            "\\{3\\}|mehrdeutig|ambiguous|ambig"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "export function parseNumberDe(text: string): number | null {\n  const n = Number(text.replace(/\\./g, '').replace(',', '.'))\n  return Number.isFinite(n) ? n : null\n}\n"
+          },
+          {
+            "language": "python",
+            "code": "def parse_de_number(text):\n    return float(text.replace(\".\", \"\").replace(\",\", \".\"))\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "export function parseStrict(text: string): number | null {\n  if (!/^\\d{1,3}(\\.\\d{3})*(,\\d+)?$/.test(text)) return null\n  return Number(text.replace(/\\./g, '').replace(',', '.'))\n}\n"
+          },
+          {
+            "language": "python",
+            "code": "def parse_plain(text):\n    return float(text.replace(\",\", \".\"))\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-NUM-10",
+      "title": "Zahlparser weicht vom Vertrag parse-number ab (ausgeführt)",
+      "kind": "probe",
+      "severity": "fehler",
+      "contract": "parse-number",
+      "message": "Zahlparser liefert andere Ergebnisse als der Vertrag parse-number (Modus de)",
+      "remedy": "Gemeinsamen Parser verwenden oder die Abweichung per Manifest-Bindung sichtbar machen und beheben.",
+      "spec": {
+        "ts": {
+          "name": "^(parse|to|zu|als)?(de|german)?(decimal|number|num|zahl|betrag|amount|float|money|preis|price)(de|input|german|value)?$",
+          "body_all": [
+            "\\.replace(?:All)?\\(\\s*(?:(['\"`]),\\1|/,/g?)\\s*,\\s*(['\"`])\\.\\2\\s*\\)",
+            "parseFloat\\(|Number\\(|\\bfloat\\(|Decimal\\("
+          ],
+          "select": {
+            "mode": "de"
+          },
+          "tags": [
+            "probe"
+          ],
+          "args": [
+            "text"
+          ]
+        },
+        "python": {
+          "name": "^(parse|to|zu|als)?(de|german)?(decimal|number|num|zahl|betrag|amount|float|money|preis|price)(de|input|german|value)?$",
+          "body_all": [
+            "\\.replace\\(\\s*(['\"]),\\1\\s*,\\s*(['\"])\\.\\2\\s*\\)",
+            "parseFloat\\(|Number\\(|\\bfloat\\(|Decimal\\("
+          ],
+          "select": {
+            "mode": "de"
+          },
+          "tags": [
+            "probe"
+          ],
+          "args": [
+            "text"
+          ],
+          "body_none": [
+            ":,?\\.\\d*f\\}"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [],
+        "negative": []
+      }
+    },
+    {
+      "id": "HC-DATE-01",
+      "title": "Datumsformatierung ohne feste Zeitzone",
+      "kind": "call",
+      "severity": "fehler",
+      "contract": "format-date",
+      "message": "Datum wird ohne timeZone formatiert; die Anzeige hängt von der Zeitzone des Browsers bzw. Servers ab (Festlegung: Europe/Berlin).",
+      "remedy": "timeZone: 'Europe/Berlin' setzen oder formatDate aus @flowaudit/ui bzw. @flowaudit/common verwenden (Vertrag format-date).",
+      "spec": {
+        "ts": {
+          "calls": [
+            {
+              "callee": "\\.toLocale(?:Date|Time)String\\s*\\("
+            },
+            {
+              "callee": "\\bnew\\s+Intl\\.DateTimeFormat\\s*\\("
+            },
+            {
+              "callee": "\\bIntl\\.DateTimeFormat\\s*\\(\\s*"
+            },
+            {
+              "callee": "\\.toLocaleString\\s*\\(",
+              "when_args": "\\b(day|month|year|hour|minute|dateStyle|timeStyle)\\b"
+            },
+            {
+              "callee": "\\.toLocaleString\\s*\\(",
+              "receiver": "(new\\s+Date\\([^()]*\\)|\\b[\\w$]*(?:[dD]ate|[dD]atum|[zZ]eit|[tT]ime|At|_at|_am)\\)?)$"
+            }
+          ],
+          "require_args": "\\btimeZone\\b"
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "export const fmt = (iso: string) => new Date(iso).toLocaleDateString('de-DE')\n"
+          },
+          {
+            "language": "ts",
+            "code": "const f = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' })\n"
+          },
+          {
+            "language": "ts",
+            "code": "const s = createdAt.toLocaleString('de-DE')\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "export const fmt = (iso: string) => new Date(iso).toLocaleDateString('de-DE', { timeZone: 'Europe/Berlin' })\n"
+          },
+          {
+            "language": "ts",
+            "code": "const s = total.toLocaleString('de-DE', { minimumFractionDigits: 2 })\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-DATE-02",
+      "title": "Reiner Datumswert wird als UTC-Mitternacht gelesen",
+      "kind": "regex",
+      "severity": "fehler",
+      "contract": "format-date",
+      "message": "new Date('JJJJ-MM-TT') liest einen Kalendertag als UTC-Mitternacht; westlich von UTC erscheint der Vortag.",
+      "remedy": "Reine Datumswerte lokal zerlegen (Jahr, Monat, Tag) oder parseDateInput aus @flowaudit/common verwenden (Vertrag format-date, Fall reines-datum).",
+      "spec": {
+        "ts": {
+          "patterns": [
+            "new\\s+Date\\(\\s*(['\"`])\\d{4}-\\d{2}-\\d{2}\\1\\s*\\)",
+            "new\\s+Date\\([^()]*\\.split\\(\\s*(['\"`])T\\1\\s*\\)\\s*\\[\\s*0\\s*\\]\\s*\\)",
+            "new\\s+Date\\(\\s*`\\$\\{[^}]+\\}-\\$\\{[^}]+\\}-\\$\\{[^}]+\\}`\\s*\\)",
+            "Date\\.parse\\(\\s*(['\"`])\\d{4}-\\d{2}-\\d{2}\\1\\s*\\)"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "const start = new Date('2026-01-31')\n"
+          },
+          {
+            "language": "ts",
+            "code": "const day = new Date(value.split('T')[0])\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "const start = new Date(2026, 0, 31)\n"
+          },
+          {
+            "language": "ts",
+            "code": "const stamp = new Date('2026-01-31T10:00:00Z')\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-DATE-10",
+      "title": "Datumsformatierer hängt von der Zeitzone des Rechners ab (ausgeführt)",
+      "kind": "probe",
+      "severity": "fehler",
+      "contract": "format-date",
+      "message": "Datumsformatierer liefert je nach Zeitzone des Rechners ein anderes Datum",
+      "remedy": "Reine Datumswerte lokal zerlegen und Zeitstempel mit timeZone: 'Europe/Berlin' formatieren (Vertrag format-date).",
+      "spec": {
+        "ts": {
+          "name": "^(format|fmt|to|display|show)(date|datum|datetime|datumzeit|datumuhrzeit|timestamp|day|tag)(de|only|short|long|str|string|display|local|german|time|zeit|value)?$",
+          "body_all": [
+            "\\bDate\\b|toLocale|DateTimeFormat"
+          ],
+          "tags": [
+            "probe"
+          ],
+          "args": [
+            "value"
+          ],
+          "timezones": [
+            "Europe/Berlin",
+            "America/New_York"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [],
+        "negative": []
+      }
+    },
+    {
+      "id": "HC-MONEY-01",
+      "title": "Handgebaute Euro-Formatierung",
+      "kind": "regex",
+      "severity": "fehler",
+      "contract": "format-money",
+      "message": "Betrag wird von Hand mit „€“/„EUR“ zusammengesetzt (Dezimalpunkt statt Komma, fehlende Tausendertrenner oder normales statt geschütztes Leerzeichen).",
+      "remedy": "Intl.NumberFormat('de-DE', {style: 'currency', currency: 'EUR'}) bzw. formatEur aus @flowaudit/common verwenden (Vertrag format-money).",
+      "spec": {
+        "ts": {
+          "patterns": [
+            "toFixed\\(\\s*\\d\\s*\\)[^\\n;]{0,60}?(?:€|\\bEUR\\b)",
+            "replace\\(\\s*(['\"`])\\.\\1\\s*,\\s*(['\"`]),\\2\\s*\\)[^\\n;]{0,40}?(?:€|\\bEUR\\b)"
+          ]
+        },
+        "python": {
+          "patterns": [
+            ":[,_]?\\.\\d+f\\}\\s?(?:€|EUR)",
+            "\\.replace\\(\\s*(['\"]),\\1\\s*,\\s*(['\"])(?:X|§|#|_|\\\\x00|\\|)\\2\\s*\\)"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "const label = `${amount.toFixed(2)} €`\n"
+          },
+          {
+            "language": "python",
+            "code": "def eur(v):\n    return f\"{v:,.2f} €\".replace(\",\", \"X\").replace(\".\", \",\").replace(\"X\", \".\")\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "const label = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(amount)\n"
+          },
+          {
+            "language": "python",
+            "code": "def pct(v):\n    return f\"{v:.1f} %\"\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-CSV-01",
+      "title": "CSV-Export ohne Schutz gegen Formel-Injektion",
+      "kind": "file",
+      "severity": "fehler",
+      "contract": "csv-cell",
+      "message": "CSV wird erzeugt, ohne Zellen mit = + - @ am Anfang zu entschärfen (Formel-Injektion beim Öffnen in Excel).",
+      "remedy": "Zellen mit „'“ präfixieren bzw. toCsv/escapeCsvCell aus @flowaudit/common verwenden (Verträge csv-cell, csv-document).",
+      "spec": {
+        "ts": {
+          "when_all": [
+            "\\.join\\(\\s*(['\"`])(?:;|,|\\\\t)\\1\\s*\\)",
+            "(?i)text/csv|\\.csv\\b|\\bcsv"
+          ],
+          "unless_any": [
+            "\\[\\s*\\\\?[=+\\-@]\\s*\\\\?[=+\\-@]",
+            "(?i)formula|formel|injection"
+          ]
+        },
+        "python": {
+          "when_all": [
+            "\\bcsv\\.(?:writer|DictWriter)\\(|\\.to_csv\\(",
+            "(?i)text/csv|attachment|StreamingResponse|FileResponse|Content-Disposition|download|export"
+          ],
+          "unless_any": [
+            "\\[\\s*\\\\?[=+\\-@]\\s*\\\\?[=+\\-@]",
+            "startswith\\(\\s*\\(\\s*['\"][=+\\-@]",
+            "(?i)formula|formel|injection"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "export function exportCsv(rows: string[][]) {\n  const text = rows.map((r) => r.join(';')).join('\\n')\n  return new Blob([text], { type: 'text/csv' })\n}\n"
+          },
+          {
+            "language": "python",
+            "code": "import csv\n\ndef export_rows(rows, handle):\n    csv.writer(handle, delimiter=';').writerows(rows)\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "const guard = (v: string) => (/^[=+\\-@\\t\\r]/.test(v) ? `'${v}` : v)\nexport function exportCsv(rows: string[][]) {\n  const text = rows.map((r) => r.map(guard).join(';')).join('\\n')\n  return new Blob(['\\uFEFF' + text], { type: 'text/csv' })\n}\n"
+          },
+          {
+            "language": "python",
+            "code": "import csv\n\ndef guard(v):\n    return \"'\" + v if v.startswith((\"=\", \"+\", \"-\", \"@\")) else v\n\ndef export_rows(rows, handle):\n    csv.writer(handle, delimiter=';').writerows([[guard(c) for c in r] for r in rows])\n"
+          },
+          {
+            "language": "python",
+            "code": "import csv\n\ndef write_cache(rows, handle):\n    csv.writer(handle).writerows(rows)\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-CSV-02",
+      "title": "CSV-Download ohne UTF-8-BOM",
+      "kind": "file",
+      "severity": "warnung",
+      "contract": "csv-document",
+      "message": "CSV-Datei ohne BOM: Excel zeigt Umlaute falsch an.",
+      "remedy": "'\\uFEFF' voranstellen bzw. csvBlob/toCsv aus @flowaudit/common verwenden (Vertrag csv-document).",
+      "spec": {
+        "ts": {
+          "when_all": [
+            "text/csv"
+          ],
+          "unless_any": [
+            "(?i)\\\\uFEFF|\\ufeff|\\bbom\\b"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "export const blob = (text: string) => new Blob([text], { type: 'text/csv;charset=utf-8' })\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "export const blob = (text: string) => new Blob(['\\uFEFF' + text], { type: 'text/csv;charset=utf-8' })\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-ERR-01",
+      "title": "Fehlertext wertet die 422-Liste nicht aus",
+      "kind": "function",
+      "severity": "fehler",
+      "contract": "api-error-message",
+      "message": "Fehlertext-Funktion liest detail, behandelt aber die FastAPI-422-Liste ({loc, msg}) nicht; die Oberfläche zeigt „[object Object]“ oder Roh-JSON.",
+      "remedy": "errorMessage aus @flowaudit/common (geplant) verwenden oder Array.isArray(detail) auswerten (Vertrag api-error-message).",
+      "spec": {
+        "ts": {
+          "name": "(err|fehler|message|meldung|msg)",
+          "body_all": [
+            "\\bdetail\\b"
+          ],
+          "body_none": [
+            "Array\\.isArray|\\.msg\\b|instanceof\\s+Array|\\.map\\("
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "export function extractError(err: any): string {\n  return err?.response?.data?.detail || err?.message || 'Fehler'\n}\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "export function extractError(err: any): string {\n  const detail = err?.response?.data?.detail\n  if (Array.isArray(detail)) return detail.map((d) => d.msg).join('; ')\n  return detail || err?.message || 'Fehler'\n}\n"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HC-ERR-02",
+      "title": "detail wird direkt als Meldung angezeigt",
+      "kind": "regex",
+      "severity": "warnung",
+      "contract": "api-error-message",
+      "message": "detail aus der API-Antwort wird direkt als Meldung verwendet; bei 422 ist es eine Liste.",
+      "remedy": "Über eine gemeinsame errorMessage-Funktion gehen (Vertrag api-error-message).",
+      "spec": {
+        "ts": {
+          "patterns": [
+            "\\.detail\\s*(?:\\|\\||\\?\\?)\\s*(?:['\"`]|[A-Za-z_$])",
+            "\\.(?:error|warning|warn)\\(\\s*[\\w$?.\\[\\]]*\\.detail\\s*[,)]"
+          ],
+          "unless_line": [
+            "Array\\.isArray"
+          ]
+        }
+      },
+      "examples": {
+        "positive": [
+          {
+            "language": "ts",
+            "code": "toast.error(err.response?.data?.detail || 'Speichern fehlgeschlagen')\n"
+          }
+        ],
+        "negative": [
+          {
+            "language": "ts",
+            "code": "toast.error(errorMessage(err, 'Speichern fehlgeschlagen'))\n"
+          }
+        ]
+      }
+    }
+  ]
+}

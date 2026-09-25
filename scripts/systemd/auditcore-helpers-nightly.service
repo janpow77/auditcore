@@ -1,0 +1,11 @@
+[Unit]
+Description=auditcore-helpers: nächtlicher Lauf über alle App-Repositorys (nur lesend)
+Documentation=https://github.com/janpow77/auditcore/blob/main/docs/quality/helper-contracts.md
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/env bash %h/.local/share/auditcore/helpers_nightly.sh
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=4h

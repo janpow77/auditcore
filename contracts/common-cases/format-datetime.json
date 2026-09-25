@@ -1,0 +1,91 @@
+{
+  "$schema": "./schema.json",
+  "contract": "format-datetime",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "Datum mit Uhrzeit formatieren (TT.MM.JJJJ, HH:MM)",
+  "description": "Wie format-date, zusätzlich Uhrzeit in Europe/Berlin ohne Sekunden, getrennt durch „, “ (Intl-Standard für de-DE).",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "value"
+  ],
+  "result": "text",
+  "cases": [
+    {
+      "id": "utc-winter",
+      "input": {
+        "value": "2026-01-31T23:30:00Z"
+      },
+      "expect": {
+        "value": "01.02.2026, 00:30"
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "utc-sommer",
+      "input": {
+        "value": "2026-07-15T10:05:00Z"
+      },
+      "expect": {
+        "value": "15.07.2026, 12:05"
+      }
+    },
+    {
+      "id": "offset-berlin",
+      "input": {
+        "value": "2026-07-15T10:05:00+02:00"
+      },
+      "expect": {
+        "value": "15.07.2026, 10:05"
+      }
+    },
+    {
+      "id": "zeitumstellung",
+      "input": {
+        "value": "2026-03-29T01:30:00Z"
+      },
+      "expect": {
+        "value": "29.03.2026, 03:30"
+      },
+      "note": "erster Sommerzeit-Zeitpunkt"
+    },
+    {
+      "id": "date-objekt",
+      "input": {
+        "value": {
+          "$date": "2026-07-15T10:05:00Z"
+        }
+      },
+      "expect": {
+        "value": "15.07.2026, 12:05"
+      }
+    },
+    {
+      "id": "leer-null",
+      "input": {
+        "value": null
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "ungueltig",
+      "input": {
+        "value": "kein Datum"
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,23 @@
 # Changelog – auditcore_documents
 
+## 0.3.2 – Mehrdeutige Beträge als Befund statt still verworfen
+
+Im Modus `locale-aware` (`CORRECTED_PIPELINE`) setzte `normalize_fields`
+mehrdeutige (`1.234`) oder ungültige Beträge auf `None`, ohne das irgendwo
+festzuhalten; nur wer zusätzlich die Regel `VAL_AMOUNT_FORMAT` ausführte, sah
+den Grund.
+
+- Neu: `normalize_fields_checked(fields, amount_mode)` → `(werte, befund)` mit
+  `befund[feld] = {"raw": …, "state": "ambiguous"|"invalid"}`;
+  `amount_findings(fields)` liefert den Befund allein (auch von
+  `VAL_AMOUNT_FORMAT` genutzt, Evidenz unverändert).
+- `PostprocessStage` setzt im Modus `locale-aware` je Befund das Flag
+  `AMOUNT_AMBIGUOUS_<FELD>` bzw. `AMOUNT_INVALID_<FELD>` (zusätzlich zum
+  REVIEW der Regel). `LEGACY_PIPELINE` (`legacy-de`) ist unverändert und setzt
+  keine solchen Flags.
+- `normalize_fields` behält Signatur und Werte; die Doku nennt die Grenze
+  (`None` = fehlt oder mehrdeutig).
+
 ## 0.3.1 – Hilfsfunktionen aus auditcore_common
 
 Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`

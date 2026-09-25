@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "app": "buggy",
+  "bindings": [
+    {"id": "ts-parse", "contract": "parse-number", "language": "ts", "module": "frontend/src/lib/format.ts",
+     "export": "parseNumberDe", "args": ["text"], "select": {"mode": "de"}},
+    {"id": "ts-date", "contract": "format-date", "language": "ts", "module": "frontend/src/lib/format.ts",
+     "export": "formatDate", "skip": {"date-objekt": "Funktion nimmt nur Strings entgegen"}},
+    {"id": "ts-error", "contract": "api-error-message", "language": "ts", "module": "frontend/src/lib/format.ts",
+     "export": "extractError"},
+    {"id": "py-parse", "contract": "parse-number", "language": "python", "module": "app.numbers",
+     "python_path": ["backend"], "export": "parse_de_number", "args": ["text"], "select": {"mode": "de"}}
+  ]
+}
