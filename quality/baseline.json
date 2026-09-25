@@ -207,9 +207,9 @@
     },
     "auditcore_statistics": {
       "metrics": {
-        "any_usages": 10,
-        "complexity_over_10": 1,
-        "functions_over_60_lines": 3,
+        "any_usages": 6,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
