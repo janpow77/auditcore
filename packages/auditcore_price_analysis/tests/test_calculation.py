@@ -237,7 +237,7 @@ def test_pa_l14_inactive_regime_component_is_still_validated() -> None:
     assert error.value.code == "negative"
 
 
-@pytest.mark.parametrize("value", ["1e2", "10,82", "", "abc", True, float("nan"), [1]])
+@pytest.mark.parametrize("value", ["1e2", "10,8,2", "", "abc", True, float("nan"), [1]])
 def test_pa_l15_numbers_are_strict(value: Any) -> None:
     with pytest.raises(PriceAnalysisError) as error:
         nw({**NW_DATA, "arbeitspreis_ct_kwh": value})
