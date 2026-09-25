@@ -1,21 +1,11 @@
-"""Shared helpers of the harvest adapters: profile selection, JSON bodies, records and pages."""
+"""Shared helpers of the harvest adapters: profile selection, records, issues and ``since``."""
 
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping, Sequence
 from datetime import date
 
-from auditcore_harvest import (
-    ConfigError,
-    FetchContext,
-    HarvestRecord,
-    PageResult,
-    PageStatus,
-    ParserError,
-    RecordIssue,
-    Source,
-)
+from auditcore_harvest import JSON, ConfigError, FetchContext, HarvestRecord, RecordIssue, Source
 
 from .errors import ParseError, ProfileError
 from .model import LegalDocument
@@ -34,40 +24,10 @@ def _profile(config: Mapping[str, object]) -> SourceProfile:
         raise ConfigError(str(exc)) from exc
 
 
-def _json(response_body: bytes, what: str) -> object:
-    try:
-        return json.loads(response_body)
-    except ValueError as exc:
-        raise ParserError(f"{what}: Antwort ist kein JSON.") from exc
-
-
 def _record(
-    source: Source, context: FetchContext, document: LegalDocument, raw: object, locator: str
+    source: Source, context: FetchContext, document: LegalDocument, raw: JSON, locator: str
 ) -> HarvestRecord:
-    normalized = document.to_dict()
-    return HarvestRecord(
-        source_id=source.source_id,
-        record_id=document.external_id,
-        raw=raw,
-        normalized=normalized,
-        provenance=context.provenance(source, locator, raw),
-    )
-
-
-def _page(
-    records: Sequence[HarvestRecord],
-    issues: Sequence[RecordIssue],
-    next_cursor: Mapping[str, object] | None,
-    total: int | None = None,
-) -> PageResult:
-    return PageResult(
-        records=tuple(records),
-        next_cursor=dict(next_cursor) if next_cursor is not None else None,
-        complete=next_cursor is None,
-        status=PageStatus.PARTIAL if issues else PageStatus.OK,
-        issues=tuple(issues),
-        total_hint=total,
-    )
+    return context.record(source, document.external_id, raw, document.to_dict(), locator)
 
 
 def _issues(errors: Sequence[ParseError]) -> list[RecordIssue]:
