@@ -49,16 +49,8 @@ class Tier:
         return {"limit": None if self.limit is None else str(self.limit), "price": str(self.price)}
 
 
-def parse_tiers(raw: Any, rule: TierRule) -> tuple[Tier, ...] | None:
-    """Validate tiers; ``None`` or an empty list means "no tiers".
-
-    Accepted: a list of objects, or an object with exactly the wrapper key.
-    Unknown shapes, a missing tier price, a non-positive or duplicate limit and
-    an open limit before the last tier are errors, never silently ignored.
-    Additional keys inside a tier are reported by :func:`ignored_tier_keys`.
-    """
-    if raw is None:
-        return None
+def _tier_items(raw: object, rule: TierRule) -> Sequence[object]:
+    """The tier list, unwrapped from the optional wrapper object."""
     if isinstance(raw, Mapping):
         if rule.wrapper_key is None or set(raw) != {rule.wrapper_key}:
             raise PriceAnalysisError(
@@ -71,20 +63,24 @@ def parse_tiers(raw: Any, rule: TierRule) -> tuple[Tier, ...] | None:
         raise PriceAnalysisError(
             "invalid_tiers", f"{rule.field} muss eine Liste von Stufen sein.", field=rule.field
         )
-    if not raw:
-        return None
-    tiers: list[Tier] = []
-    for index, item in enumerate(raw, start=1):
-        where = f"{rule.field}[{index}]"
-        if not isinstance(item, Mapping):
-            raise PriceAnalysisError("invalid_tiers", f"{where} muss ein Objekt sein.", field=where)
-        price = non_negative(item.get(rule.price_key), field=f"{where}.{rule.price_key}")
-        limit = optional_non_negative(item.get(rule.limit_key), field=f"{where}.{rule.limit_key}")
-        if limit is not None and limit <= 0:
-            raise PriceAnalysisError(
-                "invalid_tiers", f"{where}.{rule.limit_key} muss größer als 0 sein.", field=where
-            )
-        tiers.append(Tier(limit, price))
+    return raw
+
+
+def _tier(index: int, item: object, rule: TierRule) -> Tier:
+    where = f"{rule.field}[{index}]"
+    if not isinstance(item, Mapping):
+        raise PriceAnalysisError("invalid_tiers", f"{where} muss ein Objekt sein.", field=where)
+    price = non_negative(item.get(rule.price_key), field=f"{where}.{rule.price_key}")
+    limit = optional_non_negative(item.get(rule.limit_key), field=f"{where}.{rule.limit_key}")
+    if limit is not None and limit <= 0:
+        raise PriceAnalysisError(
+            "invalid_tiers", f"{where}.{rule.limit_key} muss größer als 0 sein.", field=where
+        )
+    return Tier(limit, price)
+
+
+def _ordered_tiers(tiers: list[Tier], rule: TierRule) -> tuple[Tier, ...]:
+    """Bounded tiers by limit, then the open last tier; open/duplicate limits are errors."""
     open_tiers = [t for t in tiers if t.limit is None]
     if len(open_tiers) > 1 or (open_tiers and not rule.open_last):
         raise PriceAnalysisError(
@@ -100,7 +96,23 @@ def parse_tiers(raw: Any, rule: TierRule) -> tuple[Tier, ...] | None:
     return tuple(bounded + open_tiers)
 
 
-def ignored_tier_keys(raw: Any, rule: TierRule) -> list[str]:
+def parse_tiers(raw: object, rule: TierRule) -> tuple[Tier, ...] | None:
+    """Validate tiers; ``None`` or an empty list means "no tiers".
+
+    Accepted: a list of objects, or an object with exactly the wrapper key.
+    Unknown shapes, a missing tier price, a non-positive or duplicate limit and
+    an open limit before the last tier are errors, never silently ignored.
+    Additional keys inside a tier are reported by :func:`ignored_tier_keys`.
+    """
+    if raw is None:
+        return None
+    items = _tier_items(raw, rule)
+    if not items:
+        return None
+    return _ordered_tiers([_tier(i, item, rule) for i, item in enumerate(items, start=1)], rule)
+
+
+def ignored_tier_keys(raw: object, rule: TierRule) -> list[str]:
     """Keys inside tiers that the calculation does not use (reported, not dropped silently)."""
     if isinstance(raw, Mapping) and rule.wrapper_key is not None:
         raw = raw.get(rule.wrapper_key)
@@ -133,13 +145,13 @@ class Tariff:
     @classmethod
     def from_mapping(
         cls,
-        data: Mapping[str, Any],
+        data: Mapping[str, object],
         profile: CalculationProfile,
         *,
-        valid_from: Any = None,
-        valid_to: Any = None,
+        valid_from: object = None,
+        valid_to: object = None,
         release: ReleaseStatus | str = ReleaseStatus.UNBEKANNT,
-        q3: Any = None,
+        q3: object = None,
         **identity: Any,
     ) -> Tariff:
         """Build from the legacy ``preisdaten`` mapping; unknown keys are rejected.
@@ -164,7 +176,7 @@ class Tariff:
             for c in profile.components
         }
         tiers = None
-        extra: dict[str, Any] = {}
+        extra: dict[str, object] = {}
         if profile.tiers is not None:
             tiers = parse_tiers(data.get(profile.tiers.field), profile.tiers)
             ignored = ignored_tier_keys(data.get(profile.tiers.field), profile.tiers)
