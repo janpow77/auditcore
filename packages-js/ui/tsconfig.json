@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": ".",
+    "rootDir": "..",
     "types": [
       "node"
     ],
@@ -12,6 +12,9 @@
       ],
       "@flowaudit/ui/elements": [
         "./src/elements.ts"
+      ],
+      "@flowaudit/kanban-core": [
+        "../kanban-core/src/index.ts"
       ]
     }
   },
