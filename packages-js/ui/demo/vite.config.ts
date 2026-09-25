@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 
+const api = process.env.FA_DEMO_API ?? 'http://127.0.0.1:18765'
 const source = (path: string): string => fileURLToPath(new URL(`../src/${path}`, import.meta.url))
 
 // Demo-App: nutzt die Quellen direkt, damit Änderungen sofort sichtbar sind.
@@ -17,6 +18,7 @@ export default defineConfig({
     ],
   },
   build: { outDir: 'dist', emptyOutDir: true },
-  server: { port: 5190, strictPort: false },
-  preview: { port: 5191 },
+  // Fachkomponenten mit REST-Port (Stichprobe, Benford): Demo-Backend demo/api_server.py.
+  server: { port: 5190, strictPort: false, proxy: { '/api': api } },
+  preview: { port: 5191, proxy: { '/api': api } },
 })

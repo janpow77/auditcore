@@ -1,0 +1,538 @@
+[
+ {
+  "comparison": "Pipeline IbanChecksumRule",
+  "legacy": "EXCEPTION:AttributeError",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "Pipeline IbanChecksumRule",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 2,
+  "example": {
+   "value": ""
+  }
+ },
+ {
+  "comparison": "Pipeline IbanChecksumRule",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 639,
+  "example": {
+   "value": "DE89-3704-0044-0532-0130-00"
+  }
+ },
+ {
+  "comparison": "Pipeline IbanChecksumRule",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 4,
+  "example": {
+   "value": "CZ650800000019200014539@"
+  }
+ },
+ {
+  "comparison": "Pipeline IbanChecksumRule",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_length",
+  "count": 7,
+  "example": {
+   "value": "FI211234560000078"
+  }
+ },
+ {
+  "comparison": "Pipeline VatIdFormatRule",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": " "
+  }
+ },
+ {
+  "comparison": "Pipeline VatIdFormatRule",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 46,
+  "example": {
+   "value": "de136695976"
+  }
+ },
+ {
+  "comparison": "Pipeline VatIdFormatRule",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "value": "DE١٣٦٦٩٥٩٧٦"
+  }
+ },
+ {
+  "comparison": "Pipeline VatIdFormatRule",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_checksum",
+  "count": 27,
+  "example": {
+   "value": "DE940317595"
+  }
+ },
+ {
+  "comparison": "Pipeline VatIdFormatRule",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_format",
+  "count": 4,
+  "example": {
+   "value": "BE903955048"
+  }
+ },
+ {
+  "comparison": "documents validate_iban (Donut)",
+  "legacy": "EXCEPTION:AttributeError",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "documents validate_iban (Donut)",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 2,
+  "example": {
+   "value": ""
+  }
+ },
+ {
+  "comparison": "documents validate_iban (Donut)",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 425,
+  "example": {
+   "value": "DE89-3704-0044-0532-0130-00"
+  }
+ },
+ {
+  "comparison": "documents validate_iban (Donut)",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 4,
+  "example": {
+   "value": "CZ650800000019200014539@"
+  }
+ },
+ {
+  "comparison": "documents validate_iban (Donut)",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_length",
+  "count": 7,
+  "example": {
+   "value": "FI211234560000078"
+  }
+ },
+ {
+  "comparison": "documents vat_id_check (Donut)",
+  "legacy": "EXCEPTION:AttributeError",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "documents vat_id_check (Donut)",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 2,
+  "example": {
+   "value": ""
+  }
+ },
+ {
+  "comparison": "documents vat_id_check (Donut)",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 44,
+  "example": {
+   "value": "DE136.695.976"
+  }
+ },
+ {
+  "comparison": "documents vat_id_check (Donut)",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "value": "DE١٣٦٦٩٥٩٧٦"
+  }
+ },
+ {
+  "comparison": "documents vat_id_check (Donut)",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_format",
+  "count": 4,
+  "example": {
+   "value": "BE903955048"
+  }
+ },
+ {
+  "comparison": "entity_matching check_lei",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 3,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "entity_matching check_lei",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 44,
+  "example": {
+   "value": "7LTW FZYI CNSX 8D62 1K86"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_bic",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": " "
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_bic",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 11,
+  "example": {
+   "value": "1234DEFF"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_bic",
+  "legacy": "VALID",
+  "strict": "INVALID:unknown_country",
+  "count": 4,
+  "example": {
+   "value": "DEUTXXFF"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_eu_vat_id",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "country_code": null,
+   "value": " "
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_eu_vat_id",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 17,
+  "example": {
+   "country_code": null,
+   "value": "DE136.695.976"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_eu_vat_id",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "country_code": null,
+   "value": "DE١٣٦٦٩٥٩٧٦"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_eu_vat_id",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_checksum",
+  "count": 40,
+  "example": {
+   "country_code": null,
+   "value": "DE940317595"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_eu_vat_id",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_format",
+  "count": 7,
+  "example": {
+   "country_code": null,
+   "value": "BE903955048"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_tax_id",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": " "
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_tax_id",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 13,
+  "example": {
+   "value": "2893081508152"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_tax_id",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "value": "١٢/٣٤٥/٦٧٨٩٠"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_vat_id",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": " "
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_vat_id",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 3,
+  "example": {
+   "value": "DE136.695.976"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_vat_id",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "value": "DE١٣٦٦٩٥٩٧٦"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_german_vat_id",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_checksum",
+  "count": 14,
+  "example": {
+   "value": "DE940317595"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": " "
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 428,
+  "example": {
+   "value": "DE89-3704-0044-0532-0130-00"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 14,
+  "example": {
+   "value": "CY170020012800000012005276ß0"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_checksum",
+  "count": 599,
+  "example": {
+   "value": "DE90370400440532013000"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_format",
+  "count": 20,
+  "example": {
+   "value": "GB29N7BK60161331926819"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_length",
+  "count": 369,
+  "example": {
+   "value": "LU28001940064475000"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_iban",
+  "legacy": "VALID",
+  "strict": "INVALID:unknown_country",
+  "count": 7,
+  "example": {
+   "value": "XX89370400440532013000"
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_uk_vat_id",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": " "
+  }
+ },
+ {
+  "comparison": "flowinvoice validate_uk_vat_id",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 4,
+  "example": {
+   "value": "GBGD001"
+  }
+ },
+ {
+  "comparison": "flowworkshop is_valid_lei",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 3,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "flowworkshop is_valid_lei",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 44,
+  "example": {
+   "value": "7LTW FZYI CNSX 8D62 1K86"
+  }
+ },
+ {
+  "comparison": "flowworkshop is_valid_lei",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_checksum",
+  "count": 128,
+  "example": {
+   "value": "7LTWFZYICNSX8D621K87"
+  }
+ },
+ {
+  "comparison": "invoicesynth iban_valid",
+  "legacy": "EXCEPTION:AttributeError",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "invoicesynth iban_valid",
+  "legacy": "EXCEPTION:ValueError",
+  "strict": "INVALID:invalid_characters",
+  "count": 50,
+  "example": {
+   "value": "AT61190430023457320²"
+  }
+ },
+ {
+  "comparison": "invoicesynth iban_valid",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 2,
+  "example": {
+   "value": ""
+  }
+ },
+ {
+  "comparison": "invoicesynth iban_valid",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 642,
+  "example": {
+   "value": "DE89-3704-0044-0532-0130-00"
+  }
+ },
+ {
+  "comparison": "invoicesynth iban_valid",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "value": "BE20409٣14200164"
+  }
+ },
+ {
+  "comparison": "invoicesynth iban_valid",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_length",
+  "count": 7,
+  "example": {
+   "value": "FI211234560000078"
+  }
+ },
+ {
+  "comparison": "invoicesynth vat_id_valid",
+  "legacy": "EXCEPTION:AttributeError",
+  "strict": "MISSING:missing",
+  "count": 1,
+  "example": {
+   "value": null
+  }
+ },
+ {
+  "comparison": "invoicesynth vat_id_valid",
+  "legacy": "INVALID",
+  "strict": "MISSING:missing",
+  "count": 2,
+  "example": {
+   "value": ""
+  }
+ },
+ {
+  "comparison": "invoicesynth vat_id_valid",
+  "legacy": "INVALID",
+  "strict": "VALID",
+  "count": 65,
+  "example": {
+   "value": "DE136.695.976"
+  }
+ },
+ {
+  "comparison": "invoicesynth vat_id_valid",
+  "legacy": "VALID",
+  "strict": "INVALID:invalid_characters",
+  "count": 1,
+  "example": {
+   "value": "DE١٣٦٦٩٥٩٧٦"
+  }
+ }
+]
