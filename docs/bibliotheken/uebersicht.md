@@ -78,7 +78,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
 | [`auditcore_funding_sources`](../../packages/auditcore_funding_sources) | 0.1.3 | Beneficiary, state aid and de-minimis source parsers, identities and cumulation | `auditcore_common==0.1.0`, `auditcore_harvest==0.1.1`; Extras: `xlsx` | charakterisiert |
-| [`auditcore_legal_sources`](../../packages/auditcore_legal_sources) | 0.1.2 | Framework-independent legal and audit publication source adapters (DIP, EUR-Lex) | `auditcore_harvest==0.1.1`; Extras: `feeds` | charakterisiert |
+| [`auditcore_legal_sources`](../../packages/auditcore_legal_sources) | 0.1.3 | Framework-independent legal and audit publication source adapters (DIP, EUR-Lex) | `auditcore_common==0.1.0`, `auditcore_harvest==0.1.1`; Extras: `feeds` | charakterisiert |
 | [`auditcore_price_sources`](../../packages/auditcore_price_sources) | 0.1.1 | Price and market data adapters (Bundesbank, Destatis GENESIS, EIA, Tankerkoenig, Overpass, EU Oil Bulletin) on auditcore_harvest | `auditcore_harvest==0.1.1` | neu, gegen charakterisierte Verträge |
 | [`auditcore_property_sources`](../../packages/auditcore_property_sources) | 0.1.0 | Property source profiles (Berlin/French rental portals, ZVG forced-auction notices) with harvest adapters, lifecycle and access catalog | keine; Extras: `sources` | charakterisiert |
 | [`auditcore_registry_sources`](../../packages/auditcore_registry_sources) | 0.2.0 | Register, sanctions and PEP source adapters, list parsers, screening profiles and a screening review API | `auditcore_harvest==0.1.1`, `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `xml`, `html`, `web`, `fastapi` | charakterisiert |
