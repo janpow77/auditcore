@@ -37,7 +37,7 @@ jobs:
       changed: ${{ steps.patch.outputs.changed }}
       summary: ${{ steps.patch.outputs.summary }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -144,7 +144,7 @@ jobs:
             echo "::warning::AUTOMATION_DEPLOY_KEY fehlt – Korrekturen liegen nur als Artefakt autofix-patch vor."
             echo "Autofix-Patch als Artefakt \`autofix-patch\` (Secret AUTOMATION_DEPLOY_KEY fehlt, kein Push)." >> "$GITHUB_STEP_SUMMARY"
           fi
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         if: steps.key.outputs.present == 'true'
         with:
           ref: ${{ github.event.pull_request.head.ref }}
