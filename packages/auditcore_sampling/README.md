@@ -26,3 +26,9 @@ Zufall kommt nur aus einem übergebenen `random.Random`.
 `auditcore_sampling.legacy` reproduziert die charakterisierten Ergebnisse
 beider Quellanwendungen exakt. Details: [docs/behavior-changes.md](docs/behavior-changes.md).
 Herkunft und MIT-Freigabe: `NOTICE`, `provenance.json`. Debian: `python3-auditcore-sampling`.
+
+**Oberflächen (ab 0.2.0):** `auditcore_sampling.web` stellt den REST-Vertrag
+für `<flowaudit-sampling>` bereit (Methodenprofile, Umfang mit Herleitung,
+Allokation, reproduzierbare Auswahl mit Seed, CSV/JSON-Export). Starlette-Routen
+mit `pip install auditcore_sampling[web]`, FastAPI-Router zusätzlich mit
+FastAPI. Vertrag: `docs/ui/sampling-rest.md` im Repository.
