@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/janpow77/auditcore/contracts/common-cases/schema.json",
+  "title": "Gemeinsame Vertragsfälle für App-Hilfsfunktionen",
+  "type": "object",
+  "required": ["contract", "version", "status", "title", "languages", "params", "result", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "contract": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "status": {"enum": ["vorläufig", "verbindlich"]},
+    "title": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "languages": {"type": "array", "items": {"enum": ["ts", "python"]}, "minItems": 1, "uniqueItems": true},
+    "params": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "result": {"enum": ["decimal", "text", "boolean", "text-contains", "csv"]},
+    "cases": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": ["id", "input", "expect"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+        "input": {"type": "object"},
+        "expect": {"$ref": "#/$defs/expect"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "languages": {"type": "array", "items": {"enum": ["ts", "python"]}},
+        "note": {"type": "string"}
+      }
+    },
+    "expect": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "value": {},
+        "invalid": {"const": true},
+        "hint": {"type": "string"},
+        "contains": {"type": "array", "items": {}},
+        "not_contains": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}
