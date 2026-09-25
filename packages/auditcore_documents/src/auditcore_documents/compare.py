@@ -7,12 +7,14 @@ Dateien; Uhr, PDF-Seitenquelle und OCR sind injizierbar.
 
 from __future__ import annotations
 
-import hashlib
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+from auditcore_common.clock import utc_now
+from auditcore_common.hashing import sha256_file
 
 from auditcore_documents.article_law import (
     apply_commands,
@@ -39,18 +41,6 @@ PDF_NOTICE = (
     "Nachverfolgte Änderungen, ausgeblendete Texte und Tabellenstrukturen "
     "können aus PDF nicht rekonstruiert werden."
 )
-
-
-def utc_now() -> datetime:
-    return datetime.now(UTC)
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
 
 
 @dataclass(frozen=True)

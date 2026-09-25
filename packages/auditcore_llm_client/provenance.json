@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_llm_client",
+  "version": "0.1.0",
+  "contract": "auditcore_llm_client.gateway/1",
+  "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "ccd65245182982af3ef885a7a6d43583f4f72cbb",
+      "files": [
+        {
+          "git_blob": "3f748dfa52d143ff3098a45ca977d0259959835f",
+          "path": "backend/app/utils/ai_router_client.py"
+        },
+        {
+          "git_blob": "97e525c3426d5e8f3eb62fc434cbb31d856b698c",
+          "path": "backend/app/core/config.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "files": [
+        {
+          "git_blob": "1795b397478e7b5c3442e710a8db95ebc526fc85",
+          "path": "backend/app/clients/ai_router_client.py"
+        },
+        {
+          "git_blob": "f69d5afa7c747454f5f532c5108ab04c7251c381",
+          "path": "backend/app/llm/ollama.py"
+        },
+        {
+          "git_blob": "3363ac28b5ea38689426dd99f1b65b0b1f48b142",
+          "path": "backend/app/config.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "files": [
+        {
+          "git_blob": "7e7fd0e381bde1cca4ebbfb0dd3ff9b554ff9991",
+          "path": "backend/app/clients/ai_router_client.py"
+        },
+        {
+          "git_blob": "d0e22d8a497231eea31a9029cde8f7a27b8dc9ef",
+          "path": "backend/app/config.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/cockpit",
+      "commit": "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+      "files": [
+        {
+          "git_blob": "593b0bc0e162186c8731f1b23a391eced293bab7",
+          "path": "src/cockpit/services/ai_router_client.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/ai-router",
+      "commit": "426cd78e86df9f822452af035b8d58a19f7aa820",
+      "files": [
+        {
+          "git_blob": "d300e3054c8d474df772073dda067693c3221fbf",
+          "path": "src/llm_router/deps.py"
+        },
+        {
+          "git_blob": "8e379f5ad9c7a88d3720a60eb92c39c5b7464cc6",
+          "path": "src/llm_router/main.py"
+        },
+        {
+          "git_blob": "01b34ea0649992360a46bb2ce4af74da59ed6b8f",
+          "path": "src/llm_router/proxy.py"
+        },
+        {
+          "git_blob": "188af46a58f4ee810a7aba14a0d7cd4f2efbf07b",
+          "path": "src/llm_router/routes_ollama.py"
+        },
+        {
+          "git_blob": "f6384f693e7440664e48e77cfcfd32b42b498e35",
+          "path": "src/llm_router/routes_openai.py"
+        },
+        {
+          "git_blob": "8412136a036f2d3f6b7469da7afbe3a3beef73ec",
+          "path": "src/llm_router/routes_ocr.py"
+        },
+        {
+          "git_blob": "81de44301892d5232e4ccdcfd9b2aad6a8f064d2",
+          "path": "src/llm_router/routes_reranker.py"
+        },
+        {
+          "git_blob": "70338cbbbf1f2e51eed5ee9755410679787c7ebc",
+          "path": "src/llm_router/routes_embed.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flow-agent",
+      "commit": "149e14be8952fddacb7601753dd2bf133fca51cb",
+      "files": [
+        {
+          "git_blob": "9728490a2854e22f7f2d914b6a407830486bc2c4",
+          "path": "apps/control-plane-api/src/flow_agent_control_plane/main.py"
+        },
+        {
+          "git_blob": "6b32ddd1a28bf02831577568facb030d1ae8c128",
+          "path": "apps/control-plane-api/src/flow_agent_control_plane/ai_gateway.py"
+        },
+        {
+          "git_blob": "067e9e7d4889626010292c7b1243915fb485588d",
+          "path": "packages/contracts/src/flow_agent_contracts/ai_control.py"
+        }
+      ]
+    }
+  ],
+  "origin": "Neu geschrieben nach dem ausgeführten Verhalten der ai-router-Clients von audit_designer, flowinvoice (ai-router- und Flow-Agent-Modus), audit-portal und cockpit; Routen und Verträge aus ai-router und flow-agent gelesen. Anfragen, Antwortabbildung, Zeitgrenzen und Health-Schwellen übernommen, Unterschiede als Profile abgebildet; Schwärzung auf alle Fehler, Logs und Health-Einträge ausgedehnt.",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung von audit_designer, flowinvoice, audit-portal, cockpit, ai-router oder flow-agent. Nutzerauftrag vom 25.09.2026: Bibliothek auditcore_llm_client aus den AI-Router-Clients der Apps bauen."
+    }
+  },
+  "characterization": {
+    "legacy_clients": {
+      "fixture": "tests/fixtures/legacy_clients_observed.json",
+      "tool": "tools/capture_legacy_clients.py",
+      "cases": 60,
+      "groups": 5
+    }
+  }
+}

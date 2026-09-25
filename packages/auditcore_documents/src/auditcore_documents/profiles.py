@@ -6,10 +6,10 @@ Originalverhalten und bewusst korrigiertes Verhalten unterscheiden.
 
 from __future__ import annotations
 
-import hashlib
-import json
 from dataclasses import asdict, dataclass
 from typing import Literal
+
+from auditcore_common.hashing import canonical_sha256
 
 from auditcore_documents.scoring import ScorerName
 
@@ -41,8 +41,7 @@ class CompareProfile:
         # abweichen: so bleiben die Fingerabdrücke der Originalprofile stabil.
         if not data.get("renumber_after_insert"):
             data.pop("renumber_after_insert", None)
-        payload = json.dumps(data, sort_keys=True, ensure_ascii=False)
-        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+        return canonical_sha256(data, compact=False)
 
     def identity(self) -> dict[str, str]:
         return {"id": self.profile_id, "version": self.version, "fingerprint": self.fingerprint}

@@ -11,7 +11,8 @@ import hashlib
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import date, datetime
-from typing import Any
+
+from auditcore_harvest import JSON
 
 ADAPTER_VERSION = "0.1.0"
 
@@ -32,8 +33,8 @@ class LegalDocument:
     language: str = "de"
     content: str | None = None
     abstract: str | None = None
-    classification: Mapping[str, Any] = field(default_factory=dict)
-    metadata: Mapping[str, Any] = field(default_factory=dict)
+    classification: Mapping[str, JSON] = field(default_factory=dict)
+    metadata: Mapping[str, JSON] = field(default_factory=dict)
     profile: Mapping[str, str] = field(default_factory=dict)
     adapter: str = ""
     adapter_version: str = ADAPTER_VERSION
@@ -49,7 +50,7 @@ class LegalDocument:
         text = self.content or self.abstract or self.title
         return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, JSON]:
         """JSON-compatible representation including hash and identity."""
         return {
             "source_id": self.source_id,

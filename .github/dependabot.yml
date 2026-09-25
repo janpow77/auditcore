@@ -1,0 +1,90 @@
+# Abhängigkeits-Updates, wöchentlich und gruppiert.
+# Gruppen „*-dev-tools“ enthalten nur Entwicklungswerkzeuge; ihre Patch- und
+# Minor-Updates mergt .github/workflows/dependabot-automerge.yml nach grüner CI
+# automatisch. Laufzeitabhängigkeiten und Major-Updates bleiben für Menschen.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directories:
+      - /
+      - /packages/*
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    labels: [dependencies, python]
+    commit-message:
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(deps-dev)'
+    groups:
+      python-dev-tools:
+        patterns:
+          - ruff
+          - mypy
+          - pytest*
+          - bandit
+          - pip-audit
+          - build
+          - twine
+          - setuptools
+          - wheel
+          - coverage
+          - types-*
+          - cyclonedx-*
+        update-types: [minor, patch]
+      python-runtime:
+        patterns: ['*']
+        exclude-patterns:
+          - ruff
+          - mypy
+          - pytest*
+          - bandit
+          - pip-audit
+          - build
+          - twine
+          - setuptools
+          - wheel
+          - coverage
+          - types-*
+          - cyclonedx-*
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    labels: [dependencies, javascript]
+    commit-message:
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(deps-dev)'
+    groups:
+      npm-dev-tools:
+        dependency-type: development
+        update-types: [minor, patch]
+      npm-runtime:
+        dependency-type: production
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directories:
+      - /
+      - /.github/actions/*
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    labels: [dependencies, github-actions]
+    commit-message:
+      prefix: 'ci(deps)'
+    groups:
+      github-actions:
+        patterns: ['*']
+        update-types: [minor, patch]

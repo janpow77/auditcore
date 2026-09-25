@@ -9,7 +9,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from decimal import Decimal, InvalidOperation
-from typing import Any
+
+from auditcore_harvest import JSON
 
 OBSERVATION_SCHEMA = "auditcore_price_sources.observation/1"
 STATION_SCHEMA = "auditcore_price_sources.station/1"
@@ -24,7 +25,7 @@ PRESENT = "vorhanden"
 MISSING = "fehlwert"
 
 
-def exact(value: Any) -> Decimal | None:
+def exact(value: object) -> Decimal | None:
     """Exact decimal from a JSON number or plain text; ``None``/``""``/``False`` → ``None``.
 
     Raises ``ValueError`` for text that is not a number, so callers can report it.
@@ -56,7 +57,7 @@ def unit(
     numerator: str | None = None,
     denominator: str | None = None,
     multiplier: int | None = None,
-) -> dict[str, Any]:
+) -> dict[str, JSON]:
     """Unit block; ``origin`` says whether the source or the profile stated it."""
     return {
         "text": text,
@@ -74,10 +75,10 @@ def observation(
     time_kind: str,
     period: str | None,
     value: Decimal | None,
-    unit_block: Mapping[str, Any],
+    unit_block: Mapping[str, JSON],
     source_status: str | None = None,
-    extra: Mapping[str, Any] | None = None,
-) -> dict[str, Any]:
+    extra: Mapping[str, JSON] | None = None,
+) -> dict[str, JSON]:
     """One observation of a time series in the common shape."""
     if time_kind not in TIME_KINDS:
         raise ValueError(f"Unbekannte Zeitbezugsart {time_kind}")

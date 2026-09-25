@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_funding_sources",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "sources": [
     {
       "repository": "janpow77/flowworkshop",
