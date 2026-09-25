@@ -23,6 +23,8 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     "auditcore_bpmn": frozenset(
         {("janpow77/audit_designer", "eff41a4ccedab12b9a73bafff41468712459cb2b")}
     ),
+    # Zusammenführung doppelter Hilfsfunktionen der auditcore-Pakete: keine Fremdquelle.
+    "auditcore_common": frozenset(),
     "auditcore_dataprotection": frozenset(
         {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
     ),
