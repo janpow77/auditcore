@@ -30,6 +30,7 @@ jobs:
       - run: auditcore-consolidate --help
       - run: auditcore-refactor --help
       - run: auditcore-deploy --help
+      - run: auditcore-codegate --help
       - run: python -m build
       - name: Prepare isolated Debian lifecycle image
         if: matrix.python == '3.12'
