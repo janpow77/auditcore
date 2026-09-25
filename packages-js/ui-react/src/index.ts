@@ -2,9 +2,12 @@ export { createElementComponent, eventPayload, type BaseElementProps, type Eleme
 export {
   FlowauditBenford,
   FlowauditSampling,
+  FlowauditScreeningReview,
   FlowauditTable,
   type FlowauditBenfordProps,
   type FlowauditSamplingProps,
+  type FlowauditScreeningError,
+  type FlowauditScreeningReviewProps,
   type FlowauditTableProps,
 } from './elements'
 export { FlowauditKanbanBoard, FlowauditKanbanBoards, type FlowauditKanbanBoardProps, type FlowauditKanbanBoardsProps } from './kanban'
