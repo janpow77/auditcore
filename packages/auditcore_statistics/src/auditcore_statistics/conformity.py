@@ -15,7 +15,7 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Literal
 
 from .benford import BenfordResult, StatisticsInputError
 from .numeric import chi2_survival, numpy_pairwise_sum
@@ -39,7 +39,7 @@ class ConformityProfile:
     significance_level: float
     note: str
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-compatible profile description."""
         return {
             "id": self.id,
@@ -129,7 +129,7 @@ class Conformity:
         """Digits whose |z| is above the profile's critical value."""
         return tuple(r.digit for r in self.rows if r.exceeds)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-compatible result."""
         return {
             "profile": self.profile,

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
+
 from fastapi import APIRouter, Request
 from fastapi.responses import Response
 
@@ -13,18 +15,23 @@ def _response(reply: Reply) -> Response:
     return Response(reply.body, reply.status, reply.headers, reply.media_type)
 
 
+def _endpoint(name: str, max_body_bytes: int) -> Callable[[Request], Awaitable[Response]]:
+    async def run(request: Request) -> Response:
+        return _response(handle(name, await request.body(), max_body_bytes))
+
+    return run
+
+
+async def _profiles() -> Response:
+    return _response(profiles())
+
+
 def create_router(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> APIRouter:
     """APIRouter with the same contract; include it with ``app.include_router``."""
     router = APIRouter(prefix=prefix, tags=["Stichprobe"])
-
-    @router.get("/profiles", summary="Methodenprofile")
-    async def get_profiles() -> Response:
-        return _response(profiles())
-
+    router.add_api_route("/profiles", _profiles, methods=["GET"], summary="Methodenprofile")
     for path, name in ENDPOINTS:
-
-        async def run(request: Request, _name: str = name) -> Response:
-            return _response(handle(_name, await request.body(), max_body_bytes))
-
-        router.add_api_route(path, run, methods=["POST"], name=f"sampling_{name}")
+        router.add_api_route(
+            path, _endpoint(name, max_body_bytes), methods=["POST"], name=f"sampling_{name}"
+        )
     return router

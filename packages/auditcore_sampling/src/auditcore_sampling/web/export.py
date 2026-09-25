@@ -11,7 +11,7 @@ import csv
 import io
 import json
 from dataclasses import dataclass
-from typing import Any
+from typing import cast
 
 from ._validate import ContractError, as_object, choice, require
 from .draw import select
@@ -39,11 +39,11 @@ def _cell(value: object) -> str:
     return "'" + text if text.startswith(_FORMULA_START) else text
 
 
-def _csv(result: dict[str, Any]) -> bytes:
+def _csv(result: dict[str, object]) -> bytes:
     buffer = io.StringIO()
     writer = csv.writer(buffer, delimiter=";", lineterminator="\r\n")
     writer.writerow(CSV_COLUMNS)
-    for row in result["rows"]:
+    for row in cast(list[dict[str, object]], result["rows"]):
         writer.writerow(
             [_cell(row[k]) for k in ("order", "position", "id", "value", "stratum", "hits")]
         )

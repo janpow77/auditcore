@@ -9,8 +9,9 @@ needs FastAPI. Contract: ``docs/ui/sampling-rest.md``.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
+from ._http import MAX_BODY_BYTES
 from ._validate import ContractError
 from .derivation import calculate_size
 from .draw import allocate, select
@@ -36,22 +37,22 @@ __all__ = [
 ]
 
 
-def create_app(prefix: str = "", **options: Any) -> Starlette:
+def create_app(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> Starlette:
     """Standalone Starlette application (extra ``web``)."""
     from .starlette_app import create_app as build
 
-    return build(prefix, **options)
+    return build(prefix, max_body_bytes=max_body_bytes)
 
 
-def routes(prefix: str = "", **options: Any) -> list[Route]:
+def routes(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> list[Route]:
     """Starlette routes for mounting (extra ``web``)."""
     from .starlette_app import routes as build
 
-    return build(prefix, **options)
+    return build(prefix, max_body_bytes=max_body_bytes)
 
 
-def create_router(prefix: str = "", **options: Any) -> APIRouter:
+def create_router(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> APIRouter:
     """FastAPI router (extra ``web`` plus ``fastapi``)."""
     from .fastapi_router import create_router as build
 
-    return build(prefix, **options)
+    return build(prefix, max_body_bytes=max_body_bytes)

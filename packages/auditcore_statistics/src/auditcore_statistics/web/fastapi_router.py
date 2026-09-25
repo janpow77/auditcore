@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
+
 from fastapi import APIRouter, Request
 from fastapi.responses import Response
 
@@ -12,16 +14,24 @@ def _response(reply: Reply) -> Response:
     return Response(reply.body, reply.status, media_type=reply.media_type)
 
 
+def _analyse(max_body_bytes: int) -> Callable[[Request], Awaitable[Response]]:
+    async def run(request: Request) -> Response:
+        return _response(handle_analyse(await request.body(), max_body_bytes))
+
+    return run
+
+
+async def _profiles() -> Response:
+    return _response(profiles())
+
+
 def create_router(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> APIRouter:
     """APIRouter with the same contract; include it with ``app.include_router``."""
     router = APIRouter(prefix=prefix, tags=["Benford"])
-
-    @router.get("/profiles", summary="Tests und Bewertungsprofile")
-    async def get_profiles() -> Response:
-        return _response(profiles())
-
-    @router.post("/analyze", summary="Benford-Analyse")
-    async def post_analyse(request: Request) -> Response:
-        return _response(handle_analyse(await request.body(), max_body_bytes))
-
+    router.add_api_route(
+        "/profiles", _profiles, methods=["GET"], summary="Tests und Bewertungsprofile"
+    )
+    router.add_api_route(
+        "/analyze", _analyse(max_body_bytes), methods=["POST"], summary="Benford-Analyse"
+    )
     return router

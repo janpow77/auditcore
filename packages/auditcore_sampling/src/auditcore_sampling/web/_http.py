@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any
 
 from ._validate import ContractError
 from .derivation import calculate_size
@@ -26,7 +25,7 @@ class Reply:
     headers: dict[str, str]
 
 
-JSON_HANDLERS: dict[str, Callable[[object], dict[str, Any]]] = {
+JSON_HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
     "size": calculate_size,
     "allocation": allocate,
     "selection": select,

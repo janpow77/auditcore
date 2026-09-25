@@ -9,7 +9,7 @@ from __future__ import annotations
 import math
 from collections.abc import Mapping
 from decimal import Decimal
-from typing import Any, cast
+from typing import cast
 
 from .. import __version__
 from ..benford import METHOD, ShortValues, StatisticsInputError, benford_test
@@ -42,7 +42,7 @@ class ContractError(ValueError):
         return {"error": {"code": self.code, "message": str(self)}}
 
 
-def catalogue() -> dict[str, Any]:
+def catalogue() -> dict[str, object]:
     """``GET /profiles``: tests, options for short values and assessment profiles."""
     return {
         "library": LIBRARY,
@@ -79,7 +79,7 @@ def _field(body: Mapping[str, object], key: str, allowed: tuple[str, ...]) -> st
     return str(value)
 
 
-def analyse(payload: object) -> dict[str, Any]:
+def analyse(payload: object) -> dict[str, object]:
     """``POST /analyze``: distribution, exclusions and conformity under a named profile."""
     if not isinstance(payload, Mapping):
         raise ContractError("Die Anfrage muss ein JSON-Objekt sein.")

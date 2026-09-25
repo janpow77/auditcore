@@ -6,8 +6,6 @@ labels, formulas and parameter descriptions but never a method of its own.
 
 from __future__ import annotations
 
-from typing import Any
-
 from .. import __version__
 from ..sizes import METHODS, MUS_DECISION, RECOMMENDED_MUS_METHOD, Method
 
@@ -27,7 +25,7 @@ _FORMULAS = {
 }
 _DEFAULT_VARIANT = {"portal.mus_poisson": "portal", "flowstat.mus_z_attribute": "flowstat"}
 
-MUS_PARAMETERS: tuple[dict[str, Any], ...] = (
+MUS_PARAMETERS: tuple[dict[str, object], ...] = (
     {"key": "population_value", "label": "Wert der Grundgesamtheit (V)", "unit": "EUR",
      "type": "number", "minimum": 0},
     {"key": "materiality", "label": "Wesentlichkeit (M)", "unit": "EUR",
@@ -36,7 +34,7 @@ MUS_PARAMETERS: tuple[dict[str, Any], ...] = (
      "type": "number", "minimum": 0, "exclusive_maximum": 1},
     {"key": "confidence_level", "label": "Konfidenzniveau", "unit": "Anteil", "type": "choice"},
 )
-SRS_PARAMETERS: tuple[dict[str, Any], ...] = (
+SRS_PARAMETERS: tuple[dict[str, object], ...] = (
     {"key": "population_size", "label": "Umfang der Grundgesamtheit (N)", "unit": "Stück",
      "type": "integer", "minimum": 1},
     {"key": "margin_of_error", "label": "Fehlertoleranz (e)", "unit": "Anteil",
@@ -71,7 +69,7 @@ def _levels(chosen: Method) -> list[dict[str, float]]:
     return [{"level": level, "factor": factor} for level, factor in sorted(chosen.factors.items())]
 
 
-def method_profile(chosen: Method) -> dict[str, Any]:
+def method_profile(chosen: Method) -> dict[str, object]:
     """UI description of one library method."""
     parameters = MUS_PARAMETERS if chosen.kind == "mus" else SRS_PARAMETERS
     return {
@@ -90,7 +88,7 @@ def method_profile(chosen: Method) -> dict[str, Any]:
     }
 
 
-def catalogue() -> dict[str, Any]:
+def catalogue() -> dict[str, object]:
     """All method profiles, selection variants and allocation methods."""
     ordered = sorted(METHODS.values(), key=lambda m: (m.kind, m.id != RECOMMENDED_MUS_METHOD, m.id))
     return {

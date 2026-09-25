@@ -11,18 +11,17 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping
-from typing import Any
 
 from ..sizes import METHODS, MUS_Z_ATTRIBUTE, SamplingInputError, SizePlan, mus_size, srs_size
 from ._validate import ContractError, as_object, integer, number, require, text
 from .profiles import LIBRARY
 
 
-def _step(label: str, formula: str, value: float) -> dict[str, Any]:
+def _step(label: str, formula: str, value: float) -> dict[str, object]:
     return {"label": label, "formula": formula, "value": value}
 
 
-def _mus_steps(plan: SizePlan) -> list[dict[str, Any]]:
+def _mus_steps(plan: SizePlan) -> list[dict[str, object]]:
     inputs = plan.inputs
     value, mat = inputs["population_value"], inputs["materiality"]
     rate, factor = inputs["expected_error_rate"], inputs["factor"]
@@ -49,7 +48,7 @@ def _mus_steps(plan: SizePlan) -> list[dict[str, Any]]:
     return steps
 
 
-def _srs_steps(plan: SizePlan) -> list[dict[str, Any]]:
+def _srs_steps(plan: SizePlan) -> list[dict[str, object]]:
     inputs = plan.inputs
     z, p, e = inputs["factor"], inputs["expected_proportion"], inputs["margin_of_error"]
     population = inputs["population_size"]
@@ -88,7 +87,7 @@ def _plan(method_id: str, body: Mapping[str, object]) -> SizePlan:
     )
 
 
-def calculate_size(payload: object) -> dict[str, Any]:
+def calculate_size(payload: object) -> dict[str, object]:
     """``POST /size``: sample size, interval, warnings and derivation."""
     body = as_object(payload)
     method_id = text(require(body, "method"), "method")
