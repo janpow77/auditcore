@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_risk"
-version = "0.3.0"
+version = "0.3.1"
 description = "Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags)"
 readme = "README.md"
 requires-python = ">=3.11"
