@@ -35,7 +35,9 @@ sind bytegleich.
 |---|---|---|
 | Funktionen mit McCabe > 10 | 7 | 0 |
 | Module > 400 Zeilen | 7 | 0 |
-| `Any`-Vorkommen | 180 | 168 |
+| `Any`-Vorkommen (grep) | 180 | 172 |
+| `Any` in Annotationen (Code-Gate `any_usages`) | 170 | 146 |
+| Funktionen > 60 Zeilen (Code-Gate) | 20 | 0 |
 | mypy `--strict` | sauber | sauber |
 | Tests | 488 + 1 übersprungen | 500 + 1 übersprungen |
 | Zeilenabdeckung | 96 % | 97 % |

@@ -8,14 +8,15 @@ an explicitly given empty value still counts as a change.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from typing import Any
 
 from .answers import Answer, Scenario, parse_answers, parse_scenarios
+from .calculation import finalize_consultation
 from .edpb import parse_action_plan, parse_dossier, parse_measure_status, reject_edpb_fields
 from .errors import ConflictError, ValidationError
 from .model import Assessment, AssessmentStatus
-from .rules import RuleProfile
+from .rules import RECOMMENDATION_INCOMPLETE, RuleProfile
 
 #: Sentinel for omitted keyword arguments. Typed ``Any`` so it can be the default
 #: of parameters of any type (``answers: Mapping[str, Any] = UNSET``).
@@ -230,3 +231,94 @@ def checked_justification(justification: object, deviation: bool, rules: RulePro
             "nicht trägt (Art. 5 Abs. 2 DSGVO)."
         )
     return justification.strip()
+
+
+@dataclass(frozen=True)
+class SurveyEdit:
+    """New survey content of an update: answers, scenarios, texts and documentation."""
+
+    answers: Mapping[str, Answer]
+    scenarios: tuple[Scenario, ...]
+    texts: Mapping[str, str]
+    documentation: Mapping[str, Any]
+
+    def substantive(
+        self, current: Assessment, rules: RuleProfile, activity: Mapping[str, object]
+    ) -> bool:
+        """True if the edit changes the assessment itself.
+
+        Implementation status and action plan document how the assessment is
+        carried out; they do not change the assessment and keep the decision
+        and the DPO statement (decision of 23.09.2026).
+        """
+        return changed(
+            current,
+            self.answers,
+            self.scenarios,
+            self.texts,
+            rules,
+            activity,
+            {"dossier": self.documentation["dossier"]},
+        )
+
+    def fields(self) -> dict[str, Any]:
+        """Assessment fields of the edit."""
+        return {
+            "answers": dict(self.answers),
+            "scenarios": self.scenarios,
+            "necessity": self.texts["necessity"],
+            "proportionality": self.texts["proportionality"],
+            "data_subject_view": self.texts["data_subject_view"],
+            "dossier": self.documentation["dossier"],
+            "measure_status": self.documentation["measure_status"],
+            "action_plan": self.documentation["action_plan"],
+        }
+
+
+def keep_final_notice(
+    updated: Assessment, rules: RuleProfile, proposal: Mapping[str, Any]
+) -> Assessment:
+    """DP-C21: unchanged content keeps the final consultation notice of the decision."""
+    if (
+        updated.decision is not None
+        and rules.consultation_notice is not None
+        and proposal.get("recommendation") != RECOMMENDATION_INCOMPLETE
+    ):
+        return replace(updated, proposal=finalize_consultation(rules, proposal, updated.decision))
+    return updated
+
+
+@dataclass(frozen=True)
+class CheckedDecision:
+    """Validated parts of a decision."""
+
+    conditions: tuple[str, ...]
+    deviation: bool
+    justification: str
+    complete: bool
+
+
+def check_decision(
+    current: Assessment,
+    rules: RuleProfile,
+    decision: str,
+    conditions: Sequence[str],
+    justification: object,
+) -> CheckedDecision:
+    """Validate a decision on the proposal in the order of the checks."""
+    recommendation = current.proposal.get("recommendation")
+    complete = recommendation not in (None, RECOMMENDATION_INCOMPLETE)
+    if not complete and not rules.documentation_mode:
+        raise ConflictError(
+            "Die Erhebung ist unvollständig; über den Vorschlag kann erst nach vollständiger "
+            "Schwellwertanalyse und Risikobetrachtung entschieden werden."
+        )
+    if decision not in rules.decisions:
+        raise ValidationError(
+            f"Unbekannte Entscheidung '{decision}'. Zulässig sind: {', '.join(rules.decisions)}."
+        )
+    condition_list = validated_conditions(conditions, decision, rules)
+    refuse_open_issues(current, rules)
+    deviation = decision != recommendation
+    reason = checked_justification(justification, deviation, rules)
+    return CheckedDecision(condition_list, deviation, reason, complete)

@@ -22,24 +22,23 @@ from .assessment_checks import HIGH_RESIDUAL_RISK, check_release_actor, release_
 from .assessment_core import ProfileResolver, refuse_second_open_version
 from .assessment_input import (
     UNSET,
-    changed,
-    checked_justification,
+    SurveyEdit,
+    check_decision,
+    keep_final_notice,
     refuse_downgrade,
-    refuse_open_issues,
     survey,
     texts,
     updated_documentation,
-    validated_conditions,
     without_review,
 )
 from .assessment_involvement import AssessmentInvolvement
 from .assessment_review import AssessmentReview
 from .calculation import finalize_consultation, propose
 from .edpb import edpb_hints
-from .errors import ConflictError, ValidationError
+from .errors import ConflictError
 from .model import DEFAULT_REGISTER, Actor, Assessment, AssessmentStatus, Permission
 from .register_content import find_activity
-from .rules import RECOMMENDATION_INCOMPLETE, RuleProfile
+from .rules import RuleProfile
 
 __all__ = ["HIGH_RESIDUAL_RISK", "UNSET", "AssessmentService", "ProfileResolver"]
 
@@ -132,72 +131,58 @@ class AssessmentService(AssessmentInvolvement, AssessmentReview):
         current = self._open(tenant_id, assessment_id, expected_revision)
         rules = self._profile(current) if profile is UNSET else profile
         refuse_downgrade(self._profile(current), rules)
-        new_answers, new_scenarios = survey(
-            current, rules, answers, scenarios, profile is not UNSET
-        )
-        new_texts = texts(
-            current,
-            necessity=necessity,
-            proportionality=proportionality,
-            data_subject_view=data_subject_view,
-        )
-        documentation = updated_documentation(
-            current,
-            rules,
-            {"dossier": dossier, "measure_status": measure_status, "action_plan": action_plan},
+        edit = SurveyEdit(
+            *survey(current, rules, answers, scenarios, profile is not UNSET),
+            texts(
+                current,
+                necessity=necessity,
+                proportionality=proportionality,
+                data_subject_view=data_subject_view,
+            ),
+            updated_documentation(
+                current,
+                rules,
+                {"dossier": dossier, "measure_status": measure_status, "action_plan": action_plan},
+            ),
         )
         activity, register = find_activity(
             self._effective(tenant_id, current.register_id), current.activity_id
         )
-        proposal = propose(rules, new_answers, new_scenarios).to_dict()
-        # Implementation status and action plan document how the assessment is
-        # carried out; they do not change the assessment itself and keep the
-        # decision and the DPO statement (decision of 23.09.2026).
-        substantive = changed(
-            current,
-            new_answers,
-            new_scenarios,
-            new_texts,
-            rules,
-            activity,
-            {"dossier": documentation["dossier"]},
+        proposal = propose(rules, edit.answers, edit.scenarios).to_dict()
+        reset = edit.substantive(current, rules, activity) and (
+            current.decision is not None or current.dpo_vote is not None
         )
-        reset = substantive and (current.decision is not None or current.dpo_vote is not None)
-        updated = replace(
+        updated = self._revised(current, actor, rules, edit, activity, register.version, proposal)
+        updated = without_review(updated) if reset else keep_final_notice(updated, rules, proposal)
+        self._store(current, updated)
+        self._event(actor, "assessment.updated", updated, review_reset=reset)
+        return updated
+
+    def _revised(
+        self,
+        current: Assessment,
+        actor: Actor,
+        rules: RuleProfile,
+        edit: SurveyEdit,
+        activity: Mapping[str, object],
+        register_version: int,
+        proposal: Mapping[str, object],
+    ) -> Assessment:
+        """Next revision with the edit, the profile and the current activity snapshot."""
+        return replace(
             current,
-            answers=dict(new_answers),
-            scenarios=new_scenarios,
             proposal=proposal,
             profile_id=rules.id,
             profile_version=rules.version,
             profile_fingerprint=rules.fingerprint,
             activity_snapshot=dict(activity),
             activity_name=str(activity.get("name") or "")[:255],
-            register_version=register.version,
+            register_version=register_version,
             updated_at=self.clock.now(),
             editors=self._with_editor(current, actor),
             revision=current.revision + 1,
-            necessity=new_texts["necessity"],
-            proportionality=new_texts["proportionality"],
-            data_subject_view=new_texts["data_subject_view"],
-            dossier=documentation["dossier"],
-            measure_status=documentation["measure_status"],
-            action_plan=documentation["action_plan"],
+            **edit.fields(),
         )
-        if reset:
-            updated = without_review(updated)
-        elif (
-            updated.decision is not None
-            and rules.consultation_notice is not None
-            and proposal.get("recommendation") != RECOMMENDATION_INCOMPLETE
-        ):
-            # DP-C21: unchanged content keeps the final notice of the decision.
-            updated = replace(
-                updated, proposal=finalize_consultation(rules, proposal, updated.decision)
-            )
-        self._store(current, updated)
-        self._event(actor, "assessment.updated", updated, review_reset=reset)
-        return updated
 
     def decide(
         self,
@@ -219,36 +204,21 @@ class AssessmentService(AssessmentInvolvement, AssessmentReview):
         self._allow(actor, Permission.ASSESSMENT_DECIDE, tenant_id)
         current = self._open(tenant_id, assessment_id, expected_revision)
         rules = self._profile(current)
-        recommendation = current.proposal.get("recommendation")
-        complete = recommendation not in (None, RECOMMENDATION_INCOMPLETE)
-        if not complete and not rules.documentation_mode:
-            raise ConflictError(
-                "Die Erhebung ist unvollständig; über den Vorschlag kann erst nach vollständiger "
-                "Schwellwertanalyse und Risikobetrachtung entschieden werden."
-            )
-        if decision not in rules.decisions:
-            raise ValidationError(
-                f"Unbekannte Entscheidung '{decision}'. Zulässig sind: "
-                f"{', '.join(rules.decisions)}."
-            )
-        condition_list = validated_conditions(conditions, decision, rules)
-        refuse_open_issues(current, rules)
-        deviation = decision != recommendation
-        reason = checked_justification(justification, deviation, rules)
+        checked = check_decision(current, rules, decision, conditions, justification)
         proposal = (
             current.proposal
-            if rules.consultation_notice is None or not complete
+            if rules.consultation_notice is None or not checked.complete
             else finalize_consultation(rules, current.proposal, decision)
         )
         updated = replace(
             current,
             proposal=proposal,
             decision=decision,
-            deviation=deviation,
-            deviation_justification=reason if deviation else None,
+            deviation=checked.deviation,
+            deviation_justification=checked.justification if checked.deviation else None,
             decided_by=actor.id,
             decided_at=self.clock.now(),
-            conditions=condition_list,
+            conditions=checked.conditions,
             editors=self._with_editor(current, actor),
             updated_at=self.clock.now(),
             revision=current.revision + 1,
@@ -260,9 +230,9 @@ class AssessmentService(AssessmentInvolvement, AssessmentReview):
             "assessment.decided",
             updated,
             decision=decision,
-            deviation=deviation,
+            deviation=checked.deviation,
             **({"consultation_notice": notice["status"]} if notice else {}),
-            **({"conditions": list(condition_list)} if condition_list else {}),
+            **({"conditions": list(checked.conditions)} if checked.conditions else {}),
         )
         return updated
 

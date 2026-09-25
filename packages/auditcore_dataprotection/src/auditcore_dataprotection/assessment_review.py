@@ -125,17 +125,40 @@ class AssessmentReview(AssessmentServiceCore):
         activity, register = find_activity(
             self._effective(tenant_id, previous.register_id), previous.activity_id
         )
+        created = self._successor(
+            previous, actor, rules, activity, register, existing[0].version + 1
+        )
+        self.assessments.add(created)
+        self._event(
+            actor,
+            "assessment.reassessment_started",
+            created,
+            predecessor=previous.assessment_id,
+            changes=len(created.changes_to_predecessor),
+        )
+        return created
+
+    def _successor(
+        self,
+        previous: Assessment,
+        actor: Actor,
+        rules: RuleProfile,
+        activity: Mapping[str, Any],
+        register: RegisterVersion,
+        version: int,
+    ) -> Assessment:
+        """Draft version after a released one: survey carried over, review removed."""
         answers = parse_answers(dict(previous.answers), rules)
         scenarios = parse_scenarios([s.to_dict() for s in previous.scenarios], rules)
         changes = activity_changes(previous.activity_snapshot, activity, rules)
         now = self.clock.now()
-        created = Assessment(
-            tenant_id=tenant_id,
+        return Assessment(
+            tenant_id=previous.tenant_id,
             assessment_id=self.ids.new_id("assessment"),
             register_id=previous.register_id,
             activity_id=previous.activity_id,
             activity_name=str(activity.get("name") or "")[:255],
-            version=existing[0].version + 1,
+            version=version,
             status=AssessmentStatus.DRAFT,
             profile_id=rules.id,
             profile_version=rules.version,
@@ -156,15 +179,6 @@ class AssessmentReview(AssessmentServiceCore):
             changes_to_predecessor=changes,
             **_carried_documentation(previous, rules),
         )
-        self.assessments.add(created)
-        self._event(
-            actor,
-            "assessment.reassessment_started",
-            created,
-            predecessor=previous.assessment_id,
-            changes=len(changes),
-        )
-        return created
 
     def overview(
         self,
