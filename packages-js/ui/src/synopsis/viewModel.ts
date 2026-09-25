@@ -198,15 +198,15 @@ export function buildSynopsisView(result: ComparisonResult, t: SynopsisTranslate
   }
 }
 
-export interface RowFilter {
+export interface SynopsisRowFilter {
   statuses: readonly string[]
   query: string
   onlySelected: boolean
 }
 
-export const DEFAULT_FILTER: RowFilter = { statuses: CHANGE_STATUSES, query: '', onlySelected: false }
+export const DEFAULT_SYNOPSIS_FILTER: SynopsisRowFilter = { statuses: CHANGE_STATUSES, query: '', onlySelected: false }
 
-export function filterRows(rows: readonly RowView[], filter: RowFilter): RowView[] {
+export function filterRows(rows: readonly RowView[], filter: SynopsisRowFilter): RowView[] {
   const query = filter.query.trim().toLocaleLowerCase('de')
   return rows.filter(
     (row) =>

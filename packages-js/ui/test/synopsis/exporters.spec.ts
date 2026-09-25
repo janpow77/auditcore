@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { escapeHtml, exportFilename, toHtml, toMarkdown } from '../../src/synopsis/exporters'
-import { buildSynopsisView, filterRows, DEFAULT_FILTER } from '../../src/synopsis/viewModel'
+import { buildSynopsisView, filterRows, DEFAULT_SYNOPSIS_FILTER } from '../../src/synopsis/viewModel'
 import { article, standard, t } from './fixtures'
 
 function input(comparison = standard, rowsOverride?: typeof standard.result.rows) {
   const result = rowsOverride ? { ...comparison.result, rows: rowsOverride } : comparison.result
   const view = buildSynopsisView(result, t, { title: comparison.title })
-  return { view, rows: filterRows(view.rows, DEFAULT_FILTER), t, generatedAt: '2026-09-25T10:00:00Z' }
+  return { view, rows: filterRows(view.rows, DEFAULT_SYNOPSIS_FILTER), t, generatedAt: '2026-09-25T10:00:00Z' }
 }
 
 describe('Exporte', () => {

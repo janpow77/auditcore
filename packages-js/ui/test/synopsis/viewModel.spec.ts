@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  DEFAULT_FILTER,
+  DEFAULT_SYNOPSIS_FILTER,
   applyRowOverrides,
   buildSynopsisView,
   changeIds,
@@ -55,13 +55,13 @@ describe('View-Model der Synopse', () => {
 
   it('filtert nach Art, Suchbegriff und Auswahl', () => {
     const rows = buildSynopsisView(standard.result, t).rows
-    expect(filterRows(rows, DEFAULT_FILTER).every((row) => row.status !== 'unchanged')).toBe(true)
-    expect(filterRows(rows, { ...DEFAULT_FILTER, statuses: ['unchanged'] })).toHaveLength(3)
-    expect(filterRows(rows, { ...DEFAULT_FILTER, query: 'PAUSCHALSATZ' }).map((row) => row.location)).toEqual([
+    expect(filterRows(rows, DEFAULT_SYNOPSIS_FILTER).every((row) => row.status !== 'unchanged')).toBe(true)
+    expect(filterRows(rows, { ...DEFAULT_SYNOPSIS_FILTER, statuses: ['unchanged'] })).toHaveLength(3)
+    expect(filterRows(rows, { ...DEFAULT_SYNOPSIS_FILTER, query: 'PAUSCHALSATZ' }).map((row) => row.location)).toEqual([
       '§ 2 Förderfähige Ausgaben, Absatz 2',
     ])
     const overridden = applyRowOverrides(standard.result.rows, new Map([[rows[0]?.id ?? '', { selected: false }]]))
-    const selectedOnly = filterRows(buildSynopsisView({ ...standard.result, rows: overridden }, t).rows, { ...DEFAULT_FILTER, onlySelected: true })
+    const selectedOnly = filterRows(buildSynopsisView({ ...standard.result, rows: overridden }, t).rows, { ...DEFAULT_SYNOPSIS_FILTER, onlySelected: true })
     expect(selectedOnly.some((row) => row.id === rows[0]?.id)).toBe(false)
   })
 
@@ -76,7 +76,7 @@ describe('View-Model der Synopse', () => {
     expect(positionText(ids, 'b', t)).toBe('Änderung 2 von 3')
     expect(positionText(ids, null, t)).toBe('3 Änderungen in dieser Ansicht')
     const rows = buildSynopsisView(standard.result, t).rows
-    expect(changeIds(filterRows(rows, { ...DEFAULT_FILTER, statuses: ['changed', 'unchanged'] }))).toHaveLength(3)
+    expect(changeIds(filterRows(rows, { ...DEFAULT_SYNOPSIS_FILTER, statuses: ['changed', 'unchanged'] }))).toHaveLength(3)
     expect(segmentsText(rows[0]?.old ?? [])).toBe(standard.result.rows[0]?.old_text)
   })
 })
