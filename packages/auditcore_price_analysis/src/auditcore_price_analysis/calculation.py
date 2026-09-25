@@ -194,7 +194,9 @@ def tiered_amount(
     return total, tuple(uses), beyond
 
 
-def _consumption(profile: CalculationProfile, consumption: Mapping[str, Any]) -> dict[str, Decimal]:
+def _consumption(
+    profile: CalculationProfile, consumption: Mapping[str, object]
+) -> dict[str, Decimal]:
     names = [c.name for c in profile.consumption]
     unknown = set(consumption) - set(names)
     if unknown:
@@ -305,7 +307,7 @@ def calculate(
     tariff: Tariff,
     profile: CalculationProfile,
     *,
-    consumption: Mapping[str, Any],
+    consumption: Mapping[str, object],
     stichtag: date | str,
 ) -> CalculationResult:
     """Annual costs of ``tariff`` on ``stichtag`` under ``profile``.
