@@ -55,10 +55,10 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
-| [`auditcore_dataprotection`](../../packages/auditcore_dataprotection) | 0.4.1 | Framework-independent records of processing activities and DPIA calculation | keine; Extras: `excel`, `pdf` | charakterisiert |
-| [`auditcore_documents`](../../packages/auditcore_documents) | 0.3.0 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | keine; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
+| [`auditcore_dataprotection`](../../packages/auditcore_dataprotection) | 0.4.1 | Frameworkunabhängige Bibliothek, mit der Anwendungen eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und Datenschutz-Folgenabschätzungen (DSFA) anlegen, berechnen, versionieren, freigeben und ausgeben. | keine; Extras: `excel`, `pdf` | charakterisiert |
+| [`auditcore_documents`](../../packages/auditcore_documents) | 0.3.0 | Dokumentvergleich (Checklisten und Fließtext aus DOCX/PDF), Gesetzessynopse für Artikelgesetze und ein frameworkunabhängiger Kern der Dokumentpipeline mit OCR-Ports. | keine; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](../../packages/auditcore_dummygenerator) | 0.1.1 | Framework-independent synthetic field and row generation | keine; Extras: `parallel` | charakterisiert |
-| [`auditcore_entity_matching`](../../packages/auditcore_entity_matching) | 0.2.1 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | keine; Extras: `fuzzy` | charakterisiert |
+| [`auditcore_entity_matching`](../../packages/auditcore_entity_matching) | 0.2.1 | Nachvollziehbare Normalisierung von Firmen- und Personennamen nach benannten, versionierten Profilen, LEI-Prüfung nach ISO 17442 und transparente unscharfe Abgleiche. | keine; Extras: `fuzzy` | charakterisiert |
 | [`auditcore_geo`](../../packages/auditcore_geo) | 0.2.0 | Characterized geo core: great-circle distances with explicit earth profiles, radius search, point in polygon with boundary, UTM, GeoPackage polygons, Douglas-Peucker and a Nominatim harvest adapter | keine; Extras: `geocoder` | charakterisiert |
 | [`auditcore_invoicegenerator`](../../packages/auditcore_invoicegenerator) | 0.2.1 | Characterized synthetic invoice profiles and explicit test scenarios | `auditcore_dummygenerator==0.1.1`; Extras: `pdf` | charakterisiert |
 | [`auditcore_invoicesynth`](../../packages/auditcore_invoicesynth) | 0.1.0 | Synthetic German/Austrian invoice images with Donut ground truth, manifests and evaluation | `auditcore_invoicegenerator==0.2.1`; Extras: `render`, `train` | neu |
@@ -67,9 +67,9 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | [`auditcore_price_analysis`](../../packages/auditcore_price_analysis) | 0.1.1 | Exact tariff calculation (district heating, water, tiers), tariff selection and comparison rules with versioned profiles | keine | charakterisiert |
 | [`auditcore_procurement`](../../packages/auditcore_procurement) | 0.2.2 | Procurement notice records (TED, HAD), import normalisation and versioned prechecks | `auditcore_common==0.1.0`; Extras: `html`, `sources` | charakterisiert |
 | [`auditcore_reporting`](../../packages/auditcore_reporting) | 0.2.0 | Characterized reporting format rules preserving Flowlib behavior | keine; Extras: `excel` | charakterisiert |
-| [`auditcore_risk`](../../packages/auditcore_risk) | 0.3.1 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement` | charakterisiert |
-| [`auditcore_sampling`](../../packages/auditcore_sampling) | 0.2.0 | Audit sampling sizes, selection and allocation with named method profiles | keine; Extras: `web` | charakterisiert |
-| [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.1 | Descriptive audit statistics (Benford) with named method profiles | keine; Extras: `web` | charakterisiert |
+| [`auditcore_risk`](../../packages/auditcore_risk) | 0.3.1 | Risiko-Merkmale (Red Flags) aus ausdrücklich gewählten, versionierten und quellengebundenen Regelprofilen, jedes Merkmal mit Code, Begründung, Belegwerten und Quellfundstelle. | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement` | charakterisiert |
+| [`auditcore_sampling`](../../packages/auditcore_sampling) | 0.2.0 | Stichprobenumfänge (MUS, einfache Zufallsstichprobe), systematische MUS-Auswahl, Zufallsauswahl und Schichtung mit ausdrücklich benannten, quellengebundenen Methoden. | keine; Extras: `web` | charakterisiert |
+| [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.1 | Beschreibende Prüfstatistik (Benford-Test erster und erster zwei Ziffern, Konformitätsmaße nach MAD und z-Test) mit benannten, quellengebundenen Methodenprofilen. | keine; Extras: `web` | charakterisiert |
 
 ### Quellen-Adapter
 
