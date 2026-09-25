@@ -14,7 +14,8 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
-from typing import Any
+
+from auditcore_harvest import JSON
 
 from .errors import ConfigurationError, ParseError
 from .model import LegalDocument
@@ -60,7 +61,7 @@ def drucksache_url(profile: SourceProfile) -> str:
 class DipPage:
     """One parsed response page."""
 
-    items: tuple[Mapping[str, Any], ...]
+    items: tuple[Mapping[str, JSON], ...]
     cursor: str | None
     num_found: int | None
 
@@ -91,7 +92,7 @@ def parse_page(payload: object) -> DipPage:
     )
 
 
-def _pdf_url(item: Mapping[str, Any], number: str) -> str | None:
+def _pdf_url(item: Mapping[str, JSON], number: str) -> str | None:
     fundstelle = item.get("fundstelle")
     if isinstance(fundstelle, Mapping) and isinstance(fundstelle.get("pdf_url"), str):
         return str(fundstelle["pdf_url"])
@@ -120,7 +121,7 @@ def _classification(profile: SourceProfile, title: str, raw_date: str) -> dict[s
     return {"funding_period": period, "fund": fund, "rule": "auditdatabase.dip", "heuristic": True}
 
 
-def normalize_drucksache(item: Mapping[str, Any], profile: SourceProfile) -> LegalDocument:
+def normalize_drucksache(item: Mapping[str, JSON], profile: SourceProfile) -> LegalDocument:
     """Normalize one ``drucksache`` item.
 
     Raises:
