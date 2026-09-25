@@ -2,13 +2,14 @@
 
 ## Zweck
 
-Client für den ai-router und das Flow-Agent-Inferenz-Gateway – Chat, Streaming, Embeddings, Reranking, OCR und Health – mit App-Profilen, Schwärzung, Wiederholungen und Circuit-Breaker.
+Client für den ai-router und das Flow-Agent-Inferenz-Gateway: Chat, Streaming, Embeddings, Rerank, OCR und Health, mit Schwärzung, Wiederholungen und Circuit-Breaker.
 
-Ersetzt die fast gleichen AI-Router-Clients in audit_designer, flowinvoice und
-audit-portal und den schlanken Client in cockpit. Grundsatz: **FlowAgent ist
-der einzige GPU-Weg** – die Bibliothek spricht nur mit einer konfigurierten
-Gateway-URL; direkte Aufrufe an Ollama, vLLM oder GPU-Hosts, eine Standard-URL
-und ein lokaler Fallback gehören ausdrücklich nicht dazu.
+Er ersetzt die fast gleichen AI-Router-Clients in audit_designer, flowinvoice
+und audit-portal (zusammen rund 3.100 Zeilen) und den schlanken Client in
+cockpit. Grundsatz: **FlowAgent ist der einzige GPU-Weg.** Die Bibliothek
+spricht nur mit einer konfigurierten Gateway-URL (Flow-Agent oder ai-router);
+direkte Aufrufe an Ollama, vLLM oder GPU-Hosts gibt es nicht, URLs mit dem
+Ollama-Port 11434 werden abgelehnt, einen lokalen Fallback gibt es nicht.
 
 ## Installation
 
@@ -19,67 +20,163 @@ python -m pip install 'auditcore_llm_client[http]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Version 0.1.1 ist noch in keinem Release veröffentlicht. Nach der
+Version 0.1.0 ist noch in keinem Release veröffentlicht. Nach der
 Veröffentlichung steht die Direkt-URL mit Hash im Index unter
-`https://janpow77.github.io/auditcore/simple/auditcore-llm-client/`; Muster für
-eine hashgebundene `requirements.txt`:
+`https://janpow77.github.io/auditcore/simple/auditcore-llm-client/`; Muster
+für eine hashgebundene `requirements.txt`:
 
 ```text
-auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_llm_client-0.1.1-py3-none-any.whl#sha256=<sha256>
+auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_llm_client-0.1.0-py3-none-any.whl#sha256=<sha256>
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
-([Einrichtung](../../docs/deployment/package-feed.md)); das Paket schlägt
-`python3-httpx` vor:
+([Einrichtung](../../docs/deployment/package-feed.md)):
 
 ```bash
-sudo apt-get install python3-auditcore-llm-client python3-httpx
+sudo apt-get install python3-auditcore-llm-client
 ```
 
-Extras: `[http]` – synchroner und asynchroner HTTP-Client über httpx;
-`[dev]` – Test- und Prüfwerkzeuge.
+Extras: `[http]` – httpx ≥ 0.23 (Debian: `python3-httpx`) für `LlmClient` und
+`AsyncLlmClient`; ohne Extra nur der Kern (Konfiguration, Requests, Parser,
+Schwärzung, Health, Retry, Breaker). `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
 
-Ohne Extra: Konfiguration aus der Umgebung, Request-Aufbau und Schwärzung.
+Der Kern läuft ohne httpx und ohne Netzwerk:
 
 ```python
-from auditcore_llm_client import AUDIT_DESIGNER, config_from_env, redact
-from auditcore_llm_client.wire import request_headers
-from auditcore_llm_client.wire_llm import Sampling, build_generate
+from auditcore_llm_client import (
+    FLOWINVOICE, ConfigurationError, Mode, config_from_env, redact, strip_think_tags,
+    validate_base_url,
+)
 
-config = config_from_env(AUDIT_DESIGNER, {"LLM_ROUTER_URL": "http://router.test:7842",
-                                          "LLM_ROUTER_API_KEY": "k3y-4711"})
-request = build_generate(config, "Prüfe den Beleg.", "Du bist Prüfer.", Sampling())
-assert request.path == "/api/chat" and request.fallback_on_404 is not None
-assert request_headers(config, request.headers)["X-App-Id"] == "audit_designer"
-assert "k3y-4711" not in repr(config)
-assert redact("Fehler: k3y-4711", secrets=config.secrets) == "Fehler: <redacted>"
+env = {
+    "FLOW_AGENT_URL": "https://gateway.example.invalid",
+    "FLOW_AGENT_APP_ID": "flowinvoice",
+    "FLOW_AGENT_APP_KEY": "geheim-123",
+}
+config = config_from_env(FLOWINVOICE, env)   # gesetzte FLOW_AGENT_URL → Flow-Agent-Modus
+assert config.mode is Mode.FLOW_AGENT
+assert "geheim-123" not in repr(config)      # Schlüssel erscheint nie im repr
+
+try:
+    validate_base_url("http://gpu-host:11434")
+except ConfigurationError as error:
+    assert "Ollama" in str(error)            # direkter GPU-Weg wird abgelehnt
+
+assert strip_think_tags("<think>abwägen</think>Beleg ist vollständig.") == "Beleg ist vollständig."
 ```
 
 ```pycon
->>> request.json_body["options"]["num_ctx"]
-16384
+>>> redact("Fehler bei https://gateway.example.invalid/api mit Bearer abc.def")
+'Fehler bei <url> mit Bearer <token>'
 ```
 
-Mit Extra `[http]` (Transport für Tests injizierbar):
+Mit dem Extra `[http]` und einem erreichbaren Gateway (nicht im Test ausgeführt):
 
 ```python no-run
-import httpx
-from auditcore_llm_client import LlmClient, RouterHealth
+from auditcore_llm_client import FLOWINVOICE, LlmClient, RouterHealth, config_from_env
 
-def gateway(req: httpx.Request) -> httpx.Response:
-    return httpx.Response(200, json={"message": {"content": "<think>…</think>Antwort"}})
-
-with LlmClient(config, transport=httpx.MockTransport(gateway),
-               health=RouterHealth.shared()) as client:
-    assert client.generate("Prüfe den Beleg.", system="Du bist Prüfer.").content == "Antwort"
+config = config_from_env(FLOWINVOICE)          # liest FLOW_AGENT_URL bzw. LLM_ROUTER_URL …
+health = RouterHealth.shared()                 # optional: /api/health-Status der App
+with LlmClient(config, health=health) as client:
+    antwort = client.generate("Prüfe den Beleg.", system="Du bist Prüfer.")
+    vektoren = client.embed(["Text 1", "Text 2"]).embeddings
 ```
 
-`AsyncLlmClient` bietet dieselben Methoden asynchron (`await client.chat(...)`,
-`async for event in client.stream_chat(...)`).
+Asynchron identisch mit `AsyncLlmClient` (`await client.generate(...)`,
+`async for event in client.stream_chat(...)`). Für Tests wird der Transport
+injiziert: `LlmClient(config, transport=httpx.MockTransport(handler))`.
 
 ## API-Überblick
+
+
+| Methode | ai-router | Flow-Agent (`/api/v1/ai/apps/{app_id}…`) |
+|---|---|---|
+| `generate(prompt, system=…)` | `/api/chat` (audit_designer, 404 → `/v1/chat/completions`) bzw. `/api/generate` | `/generate` (Qualitätsstufe statt Modell) |
+| `chat(messages)` | `/v1/chat/completions` | `/v1/chat/completions`, Modell `flow-agent-<quality>` oder `flow-agent-model:<id>` |
+| `stream_chat(messages)` | `/api/chat` NDJSON | `/v1/chat/completions` SSE |
+| `embed(texts)` | `/v1/embeddings` bzw. `/api/embed` (404 → `/v1/embeddings`) | `/v1/embeddings` (Gateway wählt Modell) |
+| `rerank(query, documents)` | `/v1/rerank` bzw. `/api/reranker` (404 → `/v1/rerank`) | `/v1/rerank` |
+| `ocr(content)` | `/api/ocr` (`file`/`model`/`language`) | `/v1/ocr` (vision-service-Dialekt `image`/`backend`/`lang`) |
+| `health(capability=…)` | `GET /health` | `GET /ready?capability=…`, sonst `NotAssignedError` |
+| `list_models()`, `model_snapshot()` | `GET /api/tags` (cockpit-Cache: 60 s, Fehler 5–60 s, veraltet ≤ 300 s) | nicht angeboten |
+
+Ergebnisse: `LlmResult` (mit `telemetry`: `X-Flow-Agent-Request-Id/-Model/-Workers`,
+`X-Llm-Spoke/-Failover`), `EmbedResult`, `RerankResult` (`degraded` bei falscher
+Score-Anzahl), `OcrResult`, `ModelInfo`, `StreamEvent`.
+
+Header wie in den Apps: ai-router `X-App-Id` und optional `X-Api-Key`; Flow-Agent
+`Authorization: Bearer <App-Schlüssel>`; optional `X-Flow-Sensitivity`
+(`ClientConfig.sensitivity`) und weitere, nicht authentisierende Header
+(`extra_headers`).
+
+#### Sensitivität (Flow-Agent)
+
+`X-Flow-Sensitivity` (`public|internal|confidential|restricted`): wirksam ist das
+Maximum aus App-Default und Header – der Header kann nur hochstufen. Ohne Header
+gilt der App-Default (`internal`, bisheriges Verhalten). Das Gateway antwortet
+bei ungültigem Wert mit HTTP 400 → `SensitivityRejectedError`; lässt die
+wirksame Sensitivität kein verfügbares Modell zu (z. B. `restricted` ohne lokales
+Modell), mit HTTP 403 → `EgressDeniedError` (Audit `ai.egress-denied`, kein
+Upstream-Aufruf). Erkannt werden beide am Response-Header `X-Flow-Agent-Error`
+(`invalid-sensitivity`, `egress-denied`), bei älteren Gateways am `detail`-Text.
+Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
+nicht im Circuit-Breaker und nicht im Health-Zähler.
+
+#### Denken/Reasoning
+
+`generate`, `chat` und `stream_chat` nehmen `reasoning_effort`
+(`none|low|medium|high`). OpenAI-Routen bekommen das Feld unverändert, Ollama-
+Routen (`/api/chat`, `/api/generate`) `think` (`none` → `false`). Ohne Angabe
+setzt der ai-router für Modelle mit Präfix `qwen3.5` selbst
+`reasoning_effort=none` bzw. `think=false` (`LLM_NO_THINK_MODEL_PREFIXES`). Der
+Flow-Agent-Vertrag `/generate` kennt das Feld nicht; dort sendet das Gateway
+immer `think=false`.
+
+### Fehler
+
+Alle Fehler sind `LlmClientError` (Alias `AiRouterError`) mit `kind`,
+`status_code`, `endpoint`, `retry_after`: `ConfigurationError`,
+`RouterUnavailableError`, `RouterTimeoutError`, `RouterHttpError`,
+`InvalidResponseError`, `CircuitOpenError`, `NotAssignedError`,
+`UnsupportedOperationError`. `safe_call`/`async_safe_call` liefern
+`(ergebnis, None)` oder `(None, geschwärzte Meldung)`.
+
+**Schlüssel erscheinen nie** in Meldungen, Logs, Health-Einträgen oder `repr`:
+der konfigurierte Schlüssel wird im Klartext ersetzt, dazu URLs, DSNs, Bearer-,
+`X-Api-Key`-, `sk-`- und GitHub-Token. Transportfehler werden nicht verkettet
+(`from None`), damit Tracebacks keine URL enthalten. Schlüssel kommen nur aus
+Konfiguration oder Umgebung; es gibt keine Standardschlüssel und keine
+Standard-URL.
+
+**Bevorzugt als Secret-Referenz:** Schlüssel stehen in der Umgebung als
+`secret://<anbieter>/<name>` und werden beim Start über die Flow-Agent-Control-
+Plane (`POST /api/v1/secrets/use`, auditiert) aufgelöst:
+
+```python
+from flow_agent_client.secret_refs import SecretResolver   # nicht Teil dieser Bibliothek
+config = config_from_env(FLOWINVOICE, secret_resolver=SecretResolver.from_env().resolve)
+```
+
+Ohne Resolver ist eine `secret://`-Referenz ein `ConfigurationError`; sie wird
+nie als Schlüssel gesendet. Fehler des Resolvers werden ohne dessen Text gemeldet.
+
+### Wiederholungen und Circuit-Breaker
+
+Standard wie bisher: ein Versuch, kein Breaker. Opt-in:
+
+```python
+import dataclasses
+from auditcore_llm_client import BreakerPolicy, RetryPolicy
+config = dataclasses.replace(config, retry=RetryPolicy(max_attempts=3),
+                             breaker=BreakerPolicy(failure_threshold=3, reset_timeout=180))
+```
+
+Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
+8 s, `Retry-After` wird beachtet), Zeitüberschreitungen nur mit
+`retry_timeout=True`. Der Breaker öffnet nach Ausfällen (Verbindung, Timeout,
+5xx, 429) und lässt nach `reset_timeout` genau einen Probeaufruf durch.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
 Öffentliche Namen aus `auditcore_llm_client.__all__` (63):
@@ -180,87 +277,70 @@ with LlmClient(config, transport=httpx.MockTransport(gateway),
 
 ## Profile und Konfiguration
 
-`config_from_env(profile, environ, secret_resolver=None)` liest die
-Umgebungsnamen der jeweiligen App. Es gibt **keine** Standard-URL und keinen
-Standardschlüssel; eine fehlende URL ist ein `ConfigurationError`.
 
 | Profil | Umgebung | Unterschiede |
 |---|---|---|
-| `AUDIT_DESIGNER` | `LLM_ROUTER_URL/APP_ID/API_KEY`, Modell `VP_AI_EGPU_MODEL` → `OLLAMA_MODEL`, `VP_AI_LLM_KEEP_ALIVE` | `generate` über `/api/chat` mit festen Optionen (`num_ctx` 16384, `top_p` 0,8, `top_k` 20, `repeat_penalty` 1,05, `think=false`, `keep_alive` 10m), Standard 0,2/4000 Tokens, `<think>` entfernen, Rerank/Embed mit 404-Rückfall, `/health` mit Auth-Headern |
-| `FLOWINVOICE` | wie oben + `FLOW_AGENT_URL/APP_ID/APP_KEY/QUALITY`, `OLLAMA_DEFAULT_MODEL`, `EMBEDDING_MODEL`, `RERANKER_MODEL` | `/api/generate`, OpenAI-Rerank/Embed, `/health` ohne Header; gesetzte `FLOW_AGENT_URL` schaltet auf die app-gebundenen Flow-Agent-Routen (Bearer, Qualitätsstufe statt Modell, `/ready?capability`) |
-| `AUDIT_PORTAL` | wie flowinvoice ohne Flow-Agent, App-ID `audit-portal` | Metering über `ClientConfig.usage_hook` |
-| `COCKPIT` (**abgekündigt**) | `AI_ROUTER_URL/APP_ID/API_KEY` | Modellliste mit Cache, NDJSON-Streaming; cockpit wird abgeschaltet (flow-agent #50) |
-| `GENERIC` | `AI_ROUTER_*`, `FLOW_AGENT_*` | neutrale Voreinstellung für neue Anwendungen |
+| `AUDIT_DESIGNER` | `LLM_ROUTER_URL/APP_ID/API_KEY`, Modell `VP_AI_EGPU_MODEL` → `OLLAMA_MODEL`, `VP_AI_LLM_KEEP_ALIVE` | `generate` über `/api/chat` mit festen Optionen (`num_ctx` 16384, `top_p` 0,8, `top_k` 20, `repeat_penalty` 1,05, `think=false`, `keep_alive`), Standard 0,2/4000 Tokens, `<think>` entfernen, Rerank/Embed mit 404-Rückfall, `/health` mit Auth-Headern |
+| `FLOWINVOICE` | wie oben + `FLOW_AGENT_URL/APP_ID/APP_KEY/QUALITY`, `OLLAMA_DEFAULT_MODEL`, `EMBEDDING_MODEL`, `RERANKER_MODEL` | `/api/generate`, OpenAI-Rerank/Embed, `/health` ohne Header; gesetzte `FLOW_AGENT_URL` schaltet in den Flow-Agent-Modus |
+| `AUDIT_PORTAL` | wie flowinvoice ohne Flow-Agent, App-ID `audit-portal` | Metering über `ClientConfig.usage_hook` (ersetzt `record_llm_usage`) |
+| `COCKPIT` (**abgekündigt**) | `AI_ROUTER_URL/APP_ID/API_KEY` | Modellliste und NDJSON-Streaming; cockpit wird abgeschaltet (Funktionen in flow-agent #50), Profil bleibt nur für bestehende Tests |
+| `GENERIC` | `AI_ROUTER_*`, `FLOW_AGENT_*` | neutrale Voreinstellung für neue Consumer |
 
-Laufparameter in `ClientConfig`: `timeouts` (LLM 600 s, OCR 180 s, Rerank 30 s,
-Embed 60 s, Health 10 s, Modelle 6 s), `retry` (`RetryPolicy`, Standard ein
-Versuch), `breaker` (`BreakerPolicy`, Standard aus; 3 Ausfälle/180 s),
-`quality` (`fast|balanced|high`), `sensitivity`, `extra_headers`, `usage_hook`.
-
-**Sensitivität (Flow-Agent):** `X-Flow-Sensitivity`
-(`public|internal|confidential|restricted`); wirksam ist das Maximum aus
-App-Default und Header, der Header kann nur hochstufen, ohne Header gilt
-`internal`. Ungültiger Wert → HTTP 400 → `SensitivityRejectedError`; lässt die
-wirksame Sensitivität kein Modell zu → HTTP 403 → `EgressDeniedError` (Audit
-`ai.egress-denied`, kein Upstream-Aufruf). Erkannt am Header
-`X-Flow-Agent-Error` (`invalid-sensitivity`, `egress-denied`), bei älteren
-Gateways am `detail`-Text. Beide werden nicht wiederholt und weder vom Breaker
-noch von `RouterHealth` gezählt.
-
-**Denken:** `reasoning_effort` (`none|low|medium|high`) für `generate`, `chat`,
-`stream_chat`; Ollama-Routen erhalten `think`. Ohne Angabe setzt der ai-router
-für `qwen3.5*` selbst `reasoning_effort=none` bzw. `think=false`.
+`config_from_env(profile, environ=None, *, secret_resolver=None)` liest die
+Umgebungsnamen des Profils; es gibt weder Standard-URL noch Standardschlüssel.
+Zeitgrenzen stehen in `Timeouts`, Sensitivität in `ClientConfig.sensitivity`,
+zusätzliche nicht authentisierende Header in `extra_headers`, Metering über
+`usage_hook`.
 
 ## Herkunft und Charakterisierung
 
-Neuimplementierung nach dem ausgeführten Verhalten der Altclients
-(`provenance.json`, Blob-SHAs je Datei): audit_designer `ccd6524`
-(`backend/app/utils/ai_router_client.py`), flowinvoice `fb2d185`
-(`backend/app/clients/ai_router_client.py`, `backend/app/llm/ollama.py`),
-audit-portal `d8eefa4`, cockpit `df203d4`
-(`src/cockpit/services/ai_router_client.py`); Routen und Verträge gelesen aus
-ai-router `426cd78` und flow-agent `873636a`.
-`tools/capture_legacy_clients.py` lässt die vier Altclients gegen
-`httpx.MockTransport` laufen: 60 Fälle in
-`tests/fixtures/legacy_clients_observed.json`. Die Bibliothek erzeugt in allen
-60 Fällen dieselben Anfragen (Methode, URL, Header, Body) und Ergebnisse,
-synchron wie asynchron.
+Neuimplementierung gegen charakterisierte Verträge: Verhalten der ausgeführten
+ai-router-Clients von audit_designer, flowinvoice (ai-router- und
+Flow-Agent-Modus), audit-portal und cockpit; Routen und Verträge aus ai-router
+und flow-agent gelesen. Zeitgrenzen, Health-Schwellen, Routen-Rückfälle,
+Feldabbildungen und Schwärzungsmuster wurden übernommen, der Code neu
+geschrieben; Commits und Blob-SHAs stehen in `provenance.json`.
+Charakterisierung: 60 ausgeführte Altfälle in
+`tests/fixtures/legacy_clients_observed.json`, Parität für Anfragen und
+Antwortverarbeitung (sync und async).
 
 ## Bewusste Verhaltensabweichungen
 
-Schwärzung aller Meldungen, Logs und Health-Einträge inkl. des konfigurierten
-Schlüssels, keine verketteten Transport-Exceptions, keine Standard-URL,
-Flow-Agent ohne Schlüssel fail-closed, kein Ollama-Fallback, Stream-Fehler als
-Exception, eigene Fehlerarten für Sensitivität/Egress – vollständig mit
-Begründung in [docs/behavior-changes.md](docs/behavior-changes.md) (B1–B13).
+Vollständig in [docs/behavior-changes.md](docs/behavior-changes.md) (B1–B13).
+Kurz: jede Meldung wird geschwärzt, Transportfehler ohne verkettete Ursache
+(`from None`); keine Standard-URLs und kein lokaler Ollama-Fallback;
+Flow-Agent ohne Schlüssel scheitert schon bei der Konfiguration; Health-Zählung
+zentral, sobald eine `RouterHealth` übergeben wird; `stream_chat` wirft
+HTTP-/Transportfehler statt Fehlerereignisse; Rerank mit falscher Score-Anzahl
+setzt `degraded=True`; Retry und Breaker nur als Opt-in; Flow-Agent-Ablehnungen
+als eigene Fehlerarten.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Keine Pflichtabhängigkeiten; der Kern nutzt nur die
-Standardbibliothek. Extra `http`: httpx ≥ 0.23 (Debian `python3-httpx`).
-Bewusst keine Abhängigkeit auf `flow_agent_client` – ein Secret-Resolver wird
-injiziert.
+Python ≥ 3.11, Kern nur Standardbibliothek. Extra `[http]`: `httpx>=0.23`
+(BSD-3-Clause). `flow_agent_client` (Secret-Referenzen) ist keine
+Abhängigkeit, der Resolver wird injiziert.
 
 ## Sicherheit und Datenschutz
 
-- Netzwerk nur zur konfigurierten Gateway-URL; URLs mit Zugangsdaten, Query
-  oder dem Ollama-Port 11434 werden abgelehnt.
-- Prompts, Dokumente (OCR) und Texte können personenbezogene Daten enthalten;
-  die Bibliothek speichert nichts und loggt keine Inhalte, Header oder Bodies.
-- Schlüssel nur aus Konfiguration/Umgebung, gehalten als `SecretValue` (nie im
-  `repr`); bevorzugt als `secret://<anbieter>/<name>`-Referenz, aufgelöst über
-  Flow-Agent `POST /api/v1/secrets/use` mit einem injizierten Resolver, z. B.
-  `flow_agent_client.secret_refs.SecretResolver.from_env().resolve`. Ohne
-  Resolver ist eine Referenz ein `ConfigurationError`.
-- Jede Fehlermeldung, jeder Log- und Health-Eintrag wird geschwärzt
-  (konfigurierter Schlüssel, URLs, DSNs, Bearer-, `X-Api-Key`-, `sk-`-,
-  GitHub-Token).
+- **Datenabfluss:** Prompts, Dokumente (OCR) und Texte (Embeddings, Rerank)
+  gehen an das konfigurierte Gateway. Welche Modelle sie sehen dürfen, steuert
+  die Sensitivität `X-Flow-Sensitivity` (nur hochstufbar); `restricted` ohne
+  lokales Modell endet in `EgressDeniedError`, nicht in einem externen Aufruf.
+- **Schlüssel:** nur aus Konfiguration oder Umgebung, bevorzugt als
+  `secret://`-Referenz; nie in Meldungen, Logs, Health-Einträgen oder `repr`.
+  Zugangsdaten, Query und Fragment in der Gateway-URL werden abgelehnt.
+- **Zeitgrenzen:** je Operation über `Timeouts`; Zeitüberschreitungen werden
+  nur mit `retry_timeout=True` wiederholt.
+- Die Bibliothek speichert keine Prompts oder Antworten; `usage_hook` erhält
+  nur Nutzungsdaten (`UsageRecord`).
 
 ## Lizenz und Herkunftsnachweis
 
-MIT ([LICENSE](LICENSE)); Freigabe des Rechteinhabers vom 22.09.2026 nur für
-diese Bibliothek, die Quellrepositories behalten ihre Lizenz. Herkunft und
-Freigabe: [NOTICE](NOTICE), [provenance.json](provenance.json).
+MIT (`LICENSE`). Der Rechteinhaber hat am 22.09.2026 entschieden, dass die
+Bibliotheken unter MIT stehen, die Anwendungen nicht (`USER_AUTHORIZED_MIT`
+nur für diese Bibliothek); Auftrag zum Bau vom 25.09.2026. Kein Code Dritter
+enthalten. Quellen und Erklärung: `NOTICE` und `provenance.json`.
 
 ## Änderungen
 

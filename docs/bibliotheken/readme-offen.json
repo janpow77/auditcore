@@ -13,9 +13,6 @@
     "auditcore_procurement",
     "auditcore_risk",
     "auditcore_sampling",
-    "auditcore_statistics",
-    "bpmn-flowaudit",
-    "bpmn-react",
-    "bpmn-vue"
+    "auditcore_statistics"
   ]
 }

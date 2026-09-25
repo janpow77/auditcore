@@ -1,5 +1,22 @@
 # Changelog auditcore_registry_sources
 
+## 0.2.1 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`); `auditcore_entity_matching==0.2.2`.
+
+- Profile: `fingerprint` → `hashing.canonical_sha256`, `_freeze` →
+  `frozen.freeze`, `available_profiles`/`load_profile`
+  (`require_text=True, invalid_name="invalid"`)/`recommended_profile` →
+  `auditcore_common.profiles`.
+- `_types.JsonValue`/`JsonObject` kommen aus `auditcore_common.json_values`.
+- XML nur über `auditcore_common.safe_xml` (`parse_xml` für die Listen,
+  `defused_fromstring` für VIES, damit ein fehlendes Extra weiter von
+  Parserfehlern getrennt bleibt); `chambers._json` → `decode_json`;
+  rapidfuzz über `optional.require_module`; Tausendertrennung der
+  osint-Konsolenausgabe → `text.group_thousands_de`.
+- Meldungen, Fehlerklassen und Ergebnisse unverändert; alle Tests grün.
+
 ## 0.2.0 – REST-Schnittstelle Screening-Trefferprüfung
 
 - Neues Unterpaket `auditcore_registry_sources.web` (Vertrag

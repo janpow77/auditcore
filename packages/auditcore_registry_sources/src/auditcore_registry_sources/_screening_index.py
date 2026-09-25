@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from types import ModuleType
 from typing import Protocol
 
+from auditcore_common.optional import require_module
 from auditcore_entity_matching import classify
 
 from ._screening_rules import (
@@ -19,15 +20,14 @@ from ._screening_rules import (
 from ._types import JsonObject
 from .errors import DependencyError
 
+_FUZZY = "Für den Namensabgleich ist 'auditcore_registry_sources[fuzzy]' zu installieren."
+
 
 def _rapidfuzz() -> tuple[ModuleType, ModuleType]:
-    try:
-        from rapidfuzz import fuzz, process
-    except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
-        raise DependencyError(
-            "Für den Namensabgleich ist 'auditcore_registry_sources[fuzzy]' zu installieren."
-        ) from exc
-    return fuzz, process
+    return (
+        require_module("rapidfuzz.fuzz", DependencyError, _FUZZY),
+        require_module("rapidfuzz.process", DependencyError, _FUZZY),
+    )
 
 
 class EntryLike(Protocol):

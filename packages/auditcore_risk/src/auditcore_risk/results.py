@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+import warnings
 from collections.abc import Mapping
 from dataclasses import dataclass
-from datetime import date
 from typing import Any
+
+from auditcore_common.json_values import jsonable
 
 from .base import JsonObject
 
 #: Library identity recorded in every evaluation (T-31).
-LIBRARY = "auditcore_risk 0.3.1"
+LIBRARY = "auditcore_risk 0.3.2"
 
 
 @dataclass(frozen=True)
@@ -81,7 +83,7 @@ class Evaluation:
                     "codes": list(r.codes),
                     "undetermined": dict(r.undetermined),
                     "values": dict(r.values),
-                    "assessment": None if r.assessment is None else plain(r.assessment),
+                    "assessment": None if r.assessment is None else jsonable(r.assessment),
                     "hits": [
                         {
                             "code": h.code,
@@ -91,8 +93,8 @@ class Evaluation:
                             "note": h.note,
                             "severity": h.severity,
                             "messages": None if h.messages is None else dict(h.messages),
-                            "evidence": plain(h.evidence),
-                            "origin": plain(h.origin),
+                            "evidence": jsonable(h.evidence),
+                            "origin": jsonable(h.origin),
                         }
                         for h in r.hits
                     ],
@@ -106,7 +108,7 @@ class Evaluation:
                     "triggered": d.triggered,
                     "value": d.value,
                     "reason": d.reason,
-                    "evidence": plain(d.evidence),
+                    "evidence": jsonable(d.evidence),
                 }
                 for d in self.dataset
             ],
@@ -116,11 +118,11 @@ class Evaluation:
 
 
 def plain(value: object) -> object:
-    """JSON-compatible copy: mappings → dicts, sequences → lists, dates → ISO text."""
-    if isinstance(value, Mapping):
-        return {str(k): plain(v) for k, v in value.items()}
-    if isinstance(value, list | tuple):
-        return [plain(v) for v in value]
-    if isinstance(value, date):
-        return value.isoformat()
-    return value
+    """Veraltet: :func:`auditcore_common.json_values.jsonable` (gleiches Ergebnis)."""
+    warnings.warn(
+        "auditcore_risk.results.plain ist veraltet; "
+        "auditcore_common.json_values.jsonable verwenden.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return jsonable(value)
