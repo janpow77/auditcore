@@ -6,25 +6,17 @@
     "auditcore_documents",
     "auditcore_dummygenerator",
     "auditcore_entity_matching",
-    "auditcore_geo",
     "auditcore_harvest",
     "auditcore_invoicegenerator",
-    "auditcore_invoicesynth",
     "auditcore_kanban",
     "auditcore_llm_client",
-    "auditcore_market_indicators",
     "auditcore_price_analysis",
     "auditcore_procurement",
-    "auditcore_reporting",
     "auditcore_risk",
     "auditcore_sampling",
     "auditcore_statistics",
-    "bpmn-editor",
     "bpmn-flowaudit",
     "bpmn-react",
-    "bpmn-vue",
-    "kanban-core",
-    "ui",
-    "ui-react"
+    "bpmn-vue"
   ]
 }
