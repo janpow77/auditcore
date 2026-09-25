@@ -1,5 +1,19 @@
 # Changelog auditcore_entity_matching
 
+## 0.2.2 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- `fingerprint` → `auditcore_common.hashing.canonical_sha256`,
+  `available_profiles` → `profiles.packaged_profile_ids`,
+  `load_profile` → `profiles.load_packaged_profile(require_text=True,
+  invalid_name="missing")`, `recommended_profile` →
+  `profiles.recommended_profile_id`, `_rapidfuzz` →
+  `optional.require_module`. Öffentliche Namen, Meldungen und Fehlerklassen
+  bleiben; die Gleichheit ist in `auditcore_common` differenziell belegt und
+  hier durch die unveränderten Replay-/Vertragstests.
+
 ## 0.2.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle 989 bestehenden Tests (Replays gegen die
@@ -29,4 +43,4 @@ bytegleich.
 | mypy --strict | sauber | sauber |
 
 Keine Umbenennungen öffentlicher Namen. `auditcore_risk` pinnt die neue
-Version (`auditcore_entity_matching==0.2.1`).
+Version (`auditcore_entity_matching==0.2.2`).
