@@ -13,5 +13,8 @@ defineFlowauditElements()
 <FlowauditTable columns={columns} rows={rows} clickable onRowClick={(row) => open(row)} />
 ```
 
+Risiko-Merkmale: `<FlowauditRiskFlags evaluation={antwort} profile={profil} onRecordSelect={(index) => …} />`
+(Antworten von `auditcore_risk.web`, siehe `docs/ui/risk-rest.md`).
+
 Eigene Hüllen: `createElementComponent<Props, Events>('flowaudit-…', { properties, events })`.
 Lizenz: MIT.
