@@ -113,6 +113,18 @@ def main() -> int:
                 "print(p)",
             ],
         )
+        # Release blocker: no package is built while the code-quality ratchet is red.
+        run(
+            "code-quality-gate",
+            [
+                str(platform_python),
+                "-I",
+                str(Path(__file__).resolve().parent / "verify_code_quality.py"),
+                *(f"--package={package.resolve().name}" for package in args.packages),
+                "--output",
+                str(output / "code-quality.json"),
+            ],
+        )
         wheels = []
         for package in args.packages:
             source = package.resolve()
