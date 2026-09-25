@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_statistics",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "source": {
     "repository": "janpow77/flowstat",
     "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",
@@ -72,6 +72,20 @@
         "cases": 65
       },
       "also_identical_in": "janpow77/audit-portal backend/app/services/fraud_detection/benfords_law.py (gleicher Blob)"
+    }
+  ],
+  "own_additions": [
+    {
+      "module": "auditcore_statistics.conformity",
+      "added_in": "0.3.0",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "MAD-Bänder, z-Test je Ziffer und Zweitziffertest aus BenfordResult; Profil nigrini.2012 (Literatur: Nigrini 2012; MAD-Grenzen gleich FlowStat _interpret_benford_mad, nicht extrahiert)."
+    },
+    {
+      "module": "auditcore_statistics.web",
+      "added_in": "0.3.0",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "REST-Vertrag (docs/ui/benford-rest.md); Starlette-Routen und optionaler FastAPI-Router (Extra web)."
     }
   ]
 }

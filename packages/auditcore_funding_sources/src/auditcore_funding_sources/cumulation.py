@@ -41,13 +41,13 @@ def window_start(reference_date: date, years: int) -> date:
 
 
 def legacy_cumulation_values(
-    records: Iterable[Mapping[str, Any]], *, reference_date: date
+    records: Iterable[Mapping[str, object]], *, reference_date: date
 ) -> dict[str, Any]:
     """Field values of the source dataclass ``Kumulierung`` (Decimal amounts)."""
     profile = load_profile(PROFILE_ID)
     start = window_start(reference_date, 3)
     records = list(records)
-    inside: list[Mapping[str, Any]] = []
+    inside: list[Mapping[str, object]] = []
     without_date = 0
     for record in records:
         granted = as_date(record.get("grantingDate"))
@@ -88,7 +88,7 @@ def legacy_cumulation_values(
 
 
 def legacy_cumulation(
-    records: Iterable[Mapping[str, Any]], *, reference_date: date
+    records: Iterable[Mapping[str, object]], *, reference_date: date
 ) -> dict[str, Any]:
     """``berechne_kumulierung(...).to_dict()`` of the source, exactly (floats included)."""
     profile = load_profile(PROFILE_ID)
@@ -188,7 +188,7 @@ class CumulationResult:
 
 
 def calculate(
-    awards: Iterable[Mapping[str, Any]],
+    awards: Iterable[Mapping[str, object]],
     *,
     reference_date: date,
     undertaking_references: Iterable[str] | None = None,
@@ -208,81 +208,20 @@ def calculate(
     if not isinstance(reference_date, date):
         raise TypeError("reference_date muss ein Datum sein.")
     profile = load_profile(profile_id, version)
-    years = int(profile["window"]["years"])
-    start = window_start(reference_date, years)
-    general = profile["ceiling_applies_to_type"]
+    start = window_start(reference_date, int(profile["window"]["years"]))
     group = None if undertaking_references is None else tuple(sorted(set(undertaking_references)))
-    classified: list[ClassifiedAward] = []
-    per_type: dict[str, Decimal] = {}
-    unclear: list[str] = []
-    for record in awards:
-        kind = str(record.get("deMinimisType") or "UNBEKANNT")
-        granted = as_date(record.get("grantingDate"))
-        amount = as_amount(record.get("amountEur"))
-        beneficiary = record.get("beneficiaryReferenceNumber")
-        if group is not None and beneficiary not in group:
-            status, reason = (
-                "excluded",
-                "Begünstigtenreferenz gehört nicht zum angegebenen Unternehmen.",
-            )
-        elif granted is None:
-            status, reason = "unclear", "Gewährungsdatum fehlt oder ist nicht lesbar."
-            unclear.append("no_date")
-        elif not start <= granted <= reference_date:
-            status, reason = "excluded", "Gewährung außerhalb des Betrachtungszeitraums."
-        elif amount is None:
-            status, reason = "unclear", "Betrag fehlt oder ist nicht lesbar."
-            unclear.append("no_amount")
-            per_type.setdefault(kind, Decimal("0"))
-        elif amount < 0:
-            status, reason = "unclear", "Negativer Betrag; fachlich zu klären (Rückforderung?)."
-            unclear.append("negative_amount")
-            per_type.setdefault(kind, Decimal("0"))
-        else:
-            status, reason = "considered", "Im Zeitraum gewährt und berücksichtigt."
-            per_type[kind] = per_type.get(kind, Decimal("0")) + amount
-        classified.append(
-            ClassifiedAward(
-                reference_number=record.get("referenceNumber"),
-                beneficiary_reference=beneficiary,
-                granting_date=granted,
-                amount_eur=amount,
-                de_minimis_type=kind,
-                status=status,
-                reason=reason,
-            )
-        )
+    window = (start, reference_date)
+    classified = [_classify(record, group, window) for record in awards]
+    per_type = _sum_per_type(classified)
     total = sum(per_type.values(), Decimal("0"))
-    reasons: list[str] = []
-    if not per_type:
-        reasons.append("Keine Meldung im Betrachtungszeitraum.")
-    if set(per_type) - {general}:
-        reasons.append(
-            "Nicht ausschließlich Meldungen der allgemeinen Regelung; "
-            "kein gemeinsamer Höchstbetrag."
-        )
-    if unclear:
-        reasons.append(f"{len(unclear)} Meldung(en) mit ungeklärtem Datum oder Betrag.")
+    unclear = sum(1 for award in classified if award.status == "unclear")
+    reasons = _reasons_without_comparison(per_type, profile["ceiling_applies_to_type"], unclear)
     ceiling = difference = None
     exceeds: bool | None = None
     if not reasons:
         ceiling = Decimal(profile["ceiling_eur"])
         difference = ceiling - total
         exceeds = total > ceiling
-    notices = [
-        profile["notices"]["company"],
-        profile["notices"]["period"],
-        profile["notices"]["deadline"],
-    ]
-    if group is None:
-        notices.append(
-            "Die Zugehörigkeit aller übergebenen Meldungen zu einem einzigen Unternehmen wurde "
-            "vom Aufrufer vorausgesetzt und nicht geprüft."
-        )
-    notices.append(
-        "Rechenfenster: drei Kalenderjahre bis zum Stichtag, beide Randtage eingeschlossen. Die "
-        "Differenz zur Vergleichsgrenze ist keine verfügbare Förderreserve."
-    )
     return CumulationResult(
         profile=reference(profile),
         profile_status=profile["status"],
@@ -299,5 +238,96 @@ def calculate(
         exceeds_ceiling=exceeds,
         complete=not unclear,
         reasons_without_comparison=tuple(reasons),
-        notices=tuple(notices),
+        notices=_notices(profile, group),
     )
+
+
+#: Status and reason of each award class, checked in this order by :func:`_classify`.
+_EXCLUDED_OTHER = ("excluded", "Begünstigtenreferenz gehört nicht zum angegebenen Unternehmen.")
+_NO_DATE = ("unclear", "Gewährungsdatum fehlt oder ist nicht lesbar.")
+_OUTSIDE = ("excluded", "Gewährung außerhalb des Betrachtungszeitraums.")
+_NO_AMOUNT = ("unclear", "Betrag fehlt oder ist nicht lesbar.")
+_NEGATIVE = ("unclear", "Negativer Betrag; fachlich zu klären (Rückforderung?).")
+_CONSIDERED = ("considered", "Im Zeitraum gewährt und berücksichtigt.")
+
+
+def _classify(
+    record: Mapping[str, Any], group: tuple[str, ...] | None, window: tuple[date, date]
+) -> ClassifiedAward:
+    """One register record with its status; the first matching class wins."""
+    kind = str(record.get("deMinimisType") or "UNBEKANNT")
+    granted = as_date(record.get("grantingDate"))
+    amount = as_amount(record.get("amountEur"))
+    beneficiary = record.get("beneficiaryReferenceNumber")
+    if group is not None and beneficiary not in group:
+        status, reason = _EXCLUDED_OTHER
+    elif granted is None:
+        status, reason = _NO_DATE
+    elif not window[0] <= granted <= window[1]:
+        status, reason = _OUTSIDE
+    elif amount is None:
+        status, reason = _NO_AMOUNT
+    elif amount < 0:
+        status, reason = _NEGATIVE
+    else:
+        status, reason = _CONSIDERED
+    return ClassifiedAward(
+        reference_number=record.get("referenceNumber"),
+        beneficiary_reference=beneficiary,
+        granting_date=granted,
+        amount_eur=amount,
+        de_minimis_type=kind,
+        status=status,
+        reason=reason,
+    )
+
+
+def _sum_per_type(awards: Iterable[ClassifiedAward]) -> dict[str, Decimal]:
+    """Sum of considered amounts per aid type.
+
+    In-window awards with an unclear amount still open their type (with ``0``),
+    like the source.
+    """
+    per_type: dict[str, Decimal] = {}
+    for award in awards:
+        if award.status == "considered" and award.amount_eur is not None:
+            per_type[award.de_minimis_type] = (
+                per_type.get(award.de_minimis_type, Decimal("0")) + award.amount_eur
+            )
+        elif award.status == "unclear" and award.granting_date is not None:
+            per_type.setdefault(award.de_minimis_type, Decimal("0"))
+    return per_type
+
+
+def _reasons_without_comparison(
+    per_type: Mapping[str, Decimal], general: str, unclear: int
+) -> list[str]:
+    reasons: list[str] = []
+    if not per_type:
+        reasons.append("Keine Meldung im Betrachtungszeitraum.")
+    if set(per_type) - {general}:
+        reasons.append(
+            "Nicht ausschließlich Meldungen der allgemeinen Regelung; "
+            "kein gemeinsamer Höchstbetrag."
+        )
+    if unclear:
+        reasons.append(f"{unclear} Meldung(en) mit ungeklärtem Datum oder Betrag.")
+    return reasons
+
+
+def _notices(profile: Mapping[str, Any], group: tuple[str, ...] | None) -> tuple[str, ...]:
+    notices = [
+        profile["notices"]["company"],
+        profile["notices"]["period"],
+        profile["notices"]["deadline"],
+    ]
+    if group is None:
+        notices.append(
+            "Die Zugehörigkeit aller übergebenen Meldungen zu einem einzigen Unternehmen wurde "
+            "vom Aufrufer vorausgesetzt und nicht geprüft."
+        )
+    notices.append(
+        "Rechenfenster: drei Kalenderjahre bis zum Stichtag, beide Randtage eingeschlossen. Die "
+        "Differenz zur Vergleichsgrenze ist keine verfügbare Förderreserve."
+    )
+    return tuple(notices)

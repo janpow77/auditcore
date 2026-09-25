@@ -69,7 +69,7 @@ class AuditEventType:
         return tuple(v for k, v in vars(cls).items() if k.isupper() and isinstance(v, str))
 
 
-def _freeze(value: Any) -> Any:
+def _freeze(value: object) -> object:
     if isinstance(value, dict):
         return MappingProxyType({k: _freeze(v) for k, v in value.items()})
     if isinstance(value, list):
@@ -98,7 +98,7 @@ class AuditEvent:
     def details_dict(self) -> Any:
         """Tiefe, veränderbare Kopie der Details (für JSON/Persistenz)."""
 
-        def thaw(value: Any) -> Any:
+        def thaw(value: object) -> object:
             if isinstance(value, MappingProxyType):
                 return {k: thaw(v) for k, v in value.items()}
             if isinstance(value, tuple):
@@ -124,7 +124,7 @@ class AuditSink(Protocol):
         pipeline_version: str | None = None,
         ocr_engine_version: str | None = None,
         ruleset_version: str | None = None,
-    ) -> Any: ...
+    ) -> object: ...
 
 
 @dataclass

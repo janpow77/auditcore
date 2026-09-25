@@ -5,6 +5,9 @@ Feldregeln, Abweichungsszenarien und DE-/AT-Grunddatenkataloge ab. Jede Regel
 hat eine stabile ID, Typ/Titel, Version, Status, echte Zeitstempel der
 Metadatenerstellung, Herkunft/Vorgänger, Änderungsgrund und Inhaltshash.
 Der Hash bindet den Vertrag an die konkreten Bytes von `generator.py`.
+Dort stehen alle Feld-, Abweichungs- und Katalogregeln. Seit 0.1.1 liegen
+die Zeilenzusammenstellung und die Worker-Batches in `rows.py`; sie sind keine
+Profile und gehen nicht in den Fingerabdruck ein.
 Die ursprüngliche Quellrevision bleibt über Commit/Blob, SHA256 und die
 beobachteten Legacy-Fixtures referenziert; sie wird nicht als bereits
 veröffentlichte Version dieser neuen Bibliothek ausgegeben.

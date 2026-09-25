@@ -56,39 +56,57 @@ def funding_period_auditdatabase(text: str | None) -> str | None:
     return None
 
 
+#: Period names searched in the text, in the order of the source rule.
+_DESIGNER_PERIOD_NAMES = ("2021-2027", "2014-2020", "2007-2013", "2000-2006", "1994-1999")
+#: Regulation numbers per period, in the order of the source rule.
+_DESIGNER_PERIOD_REGULATIONS = (
+    ("2000-2006", ("1260/1999", "1783/1999", "2081/93")),
+    ("2007-2013", ("1083/2006", "1080/2006", "1081/2006")),
+    ("2014-2020", ("1303/2013", "1301/2013", "1304/2013")),
+    ("2021-2027", ("2021/1060", "2021/1057", "2021/1058")),
+)
+#: First year of each period, newest first.
+_DESIGNER_PERIOD_STARTS = (
+    (2021, "2021-2027"),
+    (2014, "2014-2020"),
+    (2007, "2007-2013"),
+    (2000, "2000-2006"),
+    (1994, "1994-1999"),
+)
+
+
+def _designer_period_from_text(text: str) -> str | None:
+    lower = text.lower()
+    for period in _DESIGNER_PERIOD_NAMES:
+        if period in lower:
+            return period
+    for period, numbers in _DESIGNER_PERIOD_REGULATIONS:
+        if any(n in text for n in numbers):
+            return period
+    if "dachverordnung" in lower:
+        return "2021-2027"
+    return None
+
+
+def _designer_period_from_year(publication_date: str) -> str | None:
+    try:
+        year = int(str(publication_date)[:4])
+    except (ValueError, TypeError):
+        return None
+    for start, period in _DESIGNER_PERIOD_STARTS:
+        if year >= start:
+            return period
+    return None
+
+
 def funding_period_designer(text: str | None, publication_date: str | None = None) -> str | None:
     """Funding period rule of audit_designer ``_funding_period.detect_funding_period``."""
-    if not text and not publication_date:
-        return None
     if text:
-        lower = text.lower()
-        for period in ("2021-2027", "2014-2020", "2007-2013", "2000-2006", "1994-1999"):
-            if period in lower:
-                return period
-        for period, numbers in (
-            ("2000-2006", ("1260/1999", "1783/1999", "2081/93")),
-            ("2007-2013", ("1083/2006", "1080/2006", "1081/2006")),
-            ("2014-2020", ("1303/2013", "1301/2013", "1304/2013")),
-            ("2021-2027", ("2021/1060", "2021/1057", "2021/1058")),
-        ):
-            if any(n in text for n in numbers):
-                return period
-        if "dachverordnung" in lower:
-            return "2021-2027"
+        period = _designer_period_from_text(text)
+        if period is not None:
+            return period
     if publication_date:
-        try:
-            year = int(str(publication_date)[:4])
-        except (ValueError, TypeError):
-            return None
-        for start, period in (
-            (2021, "2021-2027"),
-            (2014, "2014-2020"),
-            (2007, "2007-2013"),
-            (2000, "2000-2006"),
-            (1994, "1994-1999"),
-        ):
-            if year >= start:
-                return period
+        return _designer_period_from_year(publication_date)
     return None
 
 
