@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Mapping
 from datetime import datetime
-from typing import Any
+
+from auditcore_harvest import JSON
 
 from ..eurlex import celex_document_type
 from ..profile import SourceProfile
@@ -22,7 +23,7 @@ def legacy_celex_type(celex: str) -> str:
     return celex_document_type(celex)
 
 
-def legacy_eurlex_normalize(raw: Mapping[str, Any], *, designer: bool = False) -> dict[str, Any]:
+def legacy_eurlex_normalize(raw: Mapping[str, JSON], *, designer: bool = False) -> dict[str, JSON]:
     """``_normalize_eurlex_doc`` as ``vars(HarvestedDocument)`` of the respective application."""
     celex = raw.get("celex", "")
     title = raw.get("title", "")
@@ -56,7 +57,7 @@ def legacy_eurlex_normalize(raw: Mapping[str, Any], *, designer: bool = False) -
     return document
 
 
-def legacy_sparql_rows(results: Mapping[str, Any]) -> list[dict[str, str]]:
+def legacy_sparql_rows(results: Mapping[str, JSON]) -> list[dict[str, str]]:
     """``_execute_sparql`` result flattening (missing structures become empty)."""
     rows = []
     for binding in results.get("results", {}).get("bindings", []):
@@ -69,9 +70,9 @@ async def legacy_eurlex_harvest(
     execute: Callable[[str], Awaitable[list[dict[str, str]]]],
     *,
     designer: bool = False,
-) -> dict[str, Any]:
+) -> dict[str, JSON]:
     """``EURLexHarvester.harvest``: core documents, queries, failed queries skipped silently."""
-    documents: list[dict[str, Any]] = []
+    documents: list[dict[str, JSON]] = []
     seen: set[str] = set()
     for core in profile.eurlex_core_documents:
         if core.celex not in seen:

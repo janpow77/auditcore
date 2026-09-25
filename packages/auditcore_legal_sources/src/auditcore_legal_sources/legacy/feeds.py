@@ -5,10 +5,11 @@ from __future__ import annotations
 import re
 from collections.abc import Mapping
 from datetime import datetime
-from typing import Any
+
+from auditcore_harvest import JSON
 
 
-def _legacy_entry_parts(entry: Mapping[str, Any]) -> tuple[str, str, str, Any]:
+def _legacy_entry_parts(entry: Mapping[str, JSON]) -> tuple[str, str, str, JSON]:
     title = entry.get("title", "Ohne Titel")
     link = entry.get("link", "")
     summary = entry.get("summary", entry.get("description", ""))
@@ -16,12 +17,12 @@ def _legacy_entry_parts(entry: Mapping[str, Any]) -> tuple[str, str, str, Any]:
     return title, link, summary, published
 
 
-def legacy_bafin_entry(entry: Mapping[str, Any], feed_name: str) -> dict[str, Any] | None:
+def legacy_bafin_entry(entry: Mapping[str, JSON], feed_name: str) -> dict[str, JSON] | None:
     """``BaFinHarvester._normalize_entry``; ``hash()`` identities depend on PYTHONHASHSEED."""
     try:
         title, link, summary, published = _legacy_entry_parts(entry)
         entry_id = link.split("/")[-1] if link else str(hash(title))
-        pub_date: Any = ""
+        pub_date: JSON = ""
         if published:
             try:
                 parsed = entry.get("published_parsed")
@@ -48,7 +49,7 @@ def legacy_bafin_entry(entry: Mapping[str, Any], feed_name: str) -> dict[str, An
         return None
 
 
-def legacy_curia_entry(entry: Mapping[str, Any], feed_name: str) -> dict[str, Any] | None:
+def legacy_curia_entry(entry: Mapping[str, JSON], feed_name: str) -> dict[str, JSON] | None:
     """``CURIAHarvester._normalize_entry`` (only ``C-`` cases; type ``Urteil`` never reached)."""
 
     try:
@@ -96,7 +97,7 @@ LEGACY_ECA_PLACEHOLDERS = (
 )
 
 
-def legacy_eca_core_reports() -> list[dict[str, Any]]:
+def legacy_eca_core_reports() -> list[dict[str, JSON]]:
     """``ECAHarvester._get_core_reports`` placeholders, marked as such only in this adapter."""
     return [
         {

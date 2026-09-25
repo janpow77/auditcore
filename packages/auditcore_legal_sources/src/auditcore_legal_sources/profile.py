@@ -12,7 +12,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from importlib import resources
 from types import MappingProxyType
-from typing import Any
+
+from auditcore_harvest import JSON
 
 from .errors import ProfileError
 
@@ -43,7 +44,7 @@ class FeedSource:
     min_title_length: int
 
 
-def _feed_source(key: str, data: Mapping[str, Any]) -> FeedSource:
+def _feed_source(key: str, data: Mapping[str, JSON]) -> FeedSource:
     return FeedSource(
         key=key,
         feeds=MappingProxyType(dict(data.get("feeds", {}))),
@@ -64,7 +65,7 @@ class SourceProfile:
     id: str
     version: str
     status: str
-    source: Mapping[str, Any]
+    source: Mapping[str, JSON]
     keywords_de: tuple[str, ...]
     keywords_en: tuple[str, ...]
     dip_api_url: str
@@ -93,7 +94,7 @@ def fingerprint(data: Mapping[str, object]) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def profile_from_dict(data: Mapping[str, Any]) -> SourceProfile:
+def profile_from_dict(data: Mapping[str, JSON]) -> SourceProfile:
     """Validate a profile document.
 
     Raises:

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "paths": {
+      "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "test/**/*.tsx", "*.ts", "../bpmn-flowaudit/src/types/*.d.ts"]
+}

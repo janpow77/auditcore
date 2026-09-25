@@ -8,9 +8,10 @@ PL-L02). ``linked_chain`` bietet ergänzend eine verkettete Variante.
 from __future__ import annotations
 
 import hashlib
-import json
 from pathlib import Path
 from typing import Any
+
+from auditcore_common.hashing import canonical_sha256, sha256_file, sha256_text
 
 
 class HashingService:
@@ -22,20 +23,15 @@ class HashingService:
 
     @staticmethod
     def hash_string(text: str, encoding: str = "utf-8") -> str:
-        return hashlib.sha256(text.encode(encoding)).hexdigest()
+        return sha256_text(text, encoding)
 
     @staticmethod
     def hash_json(obj: dict[str, Any] | list[Any]) -> str:
-        canonical = json.dumps(obj, sort_keys=True, separators=(",", ":"), default=str)
-        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+        return canonical_sha256(obj, ensure_ascii=True, default=str)
 
     @staticmethod
     def hash_file(file_path: str | Path) -> str:
-        digest = hashlib.sha256()
-        with Path(file_path).open("rb") as handle:
-            for chunk in iter(lambda: handle.read(8192), b""):
-                digest.update(chunk)
-        return digest.hexdigest()
+        return sha256_file(file_path, chunk_size=8192)
 
     @staticmethod
     def extend_chain(chain: list[str], new_hash: str) -> list[str]:

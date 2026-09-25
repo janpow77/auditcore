@@ -27,6 +27,7 @@ ALLOWED = {
     "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "zipfile",
     "auditcore_funding_sources",
+    "auditcore_common",
 }
 OPTIONAL = {"openpyxl"}
 FORBIDDEN_CALLS = {"open", "eval", "exec", "__import__", "compile"}
