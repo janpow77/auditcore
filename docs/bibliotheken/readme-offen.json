@@ -19,12 +19,8 @@
     "auditcore_risk",
     "auditcore_sampling",
     "auditcore_statistics",
-    "bpmn-editor",
     "bpmn-flowaudit",
     "bpmn-react",
-    "bpmn-vue",
-    "kanban-core",
-    "ui",
-    "ui-react"
+    "bpmn-vue"
   ]
 }
