@@ -11,7 +11,7 @@ import {
   recordRules,
   totals,
   triggeredDataset,
-  type DistributionRow,
+  type RiskDistributionRow,
   type FlagEntry,
   type RiskFilter,
   type Totals,
@@ -21,7 +21,7 @@ export interface UseRiskFlags {
   filter: Ref<RiskFilter>
   selectedIndex: Ref<number | null>
   rules: ComputedRef<RuleView[]>
-  rows: ComputedRef<DistributionRow[]>
+  rows: ComputedRef<RiskDistributionRow[]>
   totals: ComputedRef<Totals>
   dataset: ComputedRef<Evaluation['dataset']>
   records: ComputedRef<RecordView[]>

@@ -7,10 +7,10 @@ import RiskFlagState from './RiskFlagState.vue'
 import { riskMessages } from './messages'
 import type { DatasetFinding } from './types'
 import { formatAmount, formatShare, formatValue } from './view/format'
-import type { DistributionRow, Totals } from './view/state'
+import type { RiskDistributionRow, Totals } from './view/state'
 
 const props = withDefaults(defineProps<{
-  rows?: readonly DistributionRow[]
+  rows?: readonly RiskDistributionRow[]
   totals?: Totals | null
   dataset?: readonly DatasetFinding[]
   missingColumns?: Readonly<Record<string, readonly string[]>>
@@ -34,8 +34,8 @@ const columns = computed<TableColumn[]>(() => [
 ])
 const tableRows = computed<TableRow[]>(() => props.rows.map((row) => ({ ...row, id: row.code })))
 
-function row(value: TableRow): DistributionRow {
-  return value as unknown as DistributionRow
+function row(value: TableRow): RiskDistributionRow {
+  return value as unknown as RiskDistributionRow
 }
 </script>
 

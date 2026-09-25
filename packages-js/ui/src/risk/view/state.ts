@@ -33,7 +33,7 @@ export function recordRules(evaluation: Evaluation): RuleView[] {
   return evaluationRules(evaluation).filter((rule) => rule.scope !== 'dataset')
 }
 
-export interface DistributionRow {
+export interface RiskDistributionRow {
   code: string
   label: string
   hit: number
@@ -55,7 +55,7 @@ function summaryVolume(summary: readonly JsonObject[], code: string): number | n
   return typeof volume === 'number' ? volume : null
 }
 
-function countStates(evaluation: Evaluation, code: string): Pick<DistributionRow, 'hit' | 'clear' | 'undetermined' | 'reasons'> {
+function countStates(evaluation: Evaluation, code: string): Pick<RiskDistributionRow, 'hit' | 'clear' | 'undetermined' | 'reasons'> {
   const counts = { hit: 0, clear: 0, undetermined: 0, reasons: {} as Record<string, number> }
   for (const record of evaluation.records) {
     const state = flagState(record, code, evaluation.skipped)
@@ -71,7 +71,7 @@ function countStates(evaluation: Evaluation, code: string): Pick<DistributionRow
 }
 
 /** Verteilung je Regel in Profilreihenfolge (nur Datensatzregeln). */
-export function distribution(evaluation: Evaluation): DistributionRow[] {
+export function distribution(evaluation: Evaluation): RiskDistributionRow[] {
   const total = evaluation.records.length
   return recordRules(evaluation).map((rule) => {
     const counts = countStates(evaluation, rule.code)
