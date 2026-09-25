@@ -18,12 +18,12 @@ python -m pip install 'auditcore_reporting[excel]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.1 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-reporting/`):
 
 ```text
-auditcore_reporting @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_reporting-0.2.0-py3-none-any.whl#sha256=acc433853b972dd5bc7f79a1aa56ed04ad59c8d38f583a21488ed6f9d6be22c8
+auditcore_reporting @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_reporting-0.2.1-py3-none-any.whl#sha256=d9d982be1b21bacc4bd6596b1dc95208987ece5cdfb278c61fa2a6fc48a24ad7
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

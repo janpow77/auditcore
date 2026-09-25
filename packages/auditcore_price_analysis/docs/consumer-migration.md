@@ -33,7 +33,7 @@ geändert. Der vollständige Änderungssatz liegt als Patch unter
 1. `backend/requirements.txt` ergänzen (Hash aus dem Release übernehmen):
 
    ```text
-   auditcore_price_analysis @ https://github.com/janpow77/auditcore/releases/download/v0.3.0/auditcore_price_analysis-0.1.0-py3-none-any.whl#sha256=<aus Release>
+   auditcore_price_analysis @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_price_analysis-0.1.1-py3-none-any.whl#sha256=<aus Release>
    ```
 2. Patch `docs/migrations/regulierung-price.patch` anwenden (Teil `calculator.py`,
    `preisauswahl.py`).
