@@ -9,11 +9,22 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Protocol, runtime_checkable
+from typing import Protocol, TypeVar, runtime_checkable
 
 from .errors import AuthError, ConfigError
-from .model import HarvestRequest, Provenance, Source, canonical_hash
+from .model import (
+    JSON,
+    Cursor,
+    HarvestRecord,
+    HarvestRequest,
+    PageResult,
+    Provenance,
+    Source,
+    canonical_hash,
+)
 from .ports import Clock, CredentialProvider, Transport
+
+T = TypeVar("T")
 
 
 @dataclass(frozen=True)
@@ -21,7 +32,7 @@ class FetchContext:
     """Everything an adapter may use for one page."""
 
     request: HarvestRequest
-    config: Mapping[str, Any]
+    config: Mapping[str, JSON]
     transport: Transport
     credentials: CredentialProvider
     clock: Clock
@@ -35,7 +46,7 @@ class FetchContext:
             raise AuthError(f"Zugangsdaten '{name}' für {source_id} sind nicht konfiguriert.")
         return value
 
-    def provenance(self, source: Source, locator: str, raw: Any) -> Provenance:
+    def provenance(self, source: Source, locator: str, raw: JSON) -> Provenance:
         """Provenance of a record from this page."""
         return Provenance(
             source_id=source.source_id,
@@ -44,6 +55,26 @@ class FetchContext:
             retrieved_at=self.clock.now().isoformat(),
             locator=locator,
             raw_sha256=canonical_hash(raw),
+        )
+
+    def record(
+        self,
+        source: Source,
+        record_id: str,
+        raw: JSON,
+        normalized: Mapping[str, JSON],
+        locator: str,
+        *,
+        deleted: bool = False,
+    ) -> HarvestRecord:
+        """Record of ``source`` from this page with provenance over ``raw``."""
+        return HarvestRecord(
+            source_id=source.source_id,
+            record_id=record_id,
+            raw=raw,
+            normalized=normalized,
+            provenance=self.provenance(source, locator, raw),
+            deleted=deleted,
         )
 
 
@@ -56,11 +87,11 @@ class SourceAdapter(Protocol):
         """Declared source identity and capabilities."""
         ...
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """Raise :class:`ConfigError` for invalid configuration; never contact the source."""
         ...
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> Any:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch exactly one page and return a :class:`~auditcore_harvest.model.PageResult`."""
         ...
 
@@ -92,7 +123,7 @@ class AdapterRegistry:
         return tuple(sorted(self._factories))
 
 
-def require(config: Mapping[str, Any], name: str, kind: type) -> Any:
+def require(config: Mapping[str, JSON], name: str, kind: type[T]) -> T:
     """Small helper for ``validate_config``: required key of a given type."""
     value = config.get(name)
     if not isinstance(value, kind) or isinstance(value, bool) and kind is not bool:
