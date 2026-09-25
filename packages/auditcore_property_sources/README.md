@@ -6,7 +6,7 @@ Harvest-Adaptern auf `auditcore_harvest`, einem reinen ZVG-Lebenszyklus und
 einem Zugangskatalog (robots.txt, Nutzungsbedingungen, Live-Status).
 
 Die Parser nutzen nur die Standardbibliothek. Die Adapter liegen im Extra
-`sources` (`auditcore_harvest==0.1.0`). Debian: `python3-auditcore-property-sources`.
+`sources` (`auditcore_harvest==0.1.1`). Debian: `python3-auditcore-property-sources`.
 
 ## Quellprofile (keine Vereinheitlichung)
 

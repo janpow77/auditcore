@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 from .. import immobilien_de, inberlinwohnen, kleinanzeigen
+from .._types import JSON
 from ._base import (
     Cursor,
     _Portal,
@@ -28,7 +28,7 @@ class ImmobilienDeAdapter(_Portal):
         self.source = _source(immobilien_de.SOURCE_ID, "immobilien.de (Berlin, Miete)", "text/html")
         self.plz_bezirke = dict(plz_bezirke)
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         _positive(config, "max_price", 700)
         _positive(config, "pages", 3)
@@ -68,7 +68,7 @@ class InBerlinWohnenAdapter(_Portal):
             inberlinwohnen.SOURCE_ID, "inberlinwohnen (landeseigene Gesellschaften)", "text/html"
         )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         _template(config, "first_url", inberlinwohnen.BASE)
         _template(config, "page_url_template", inberlinwohnen.BASE + "?page={seite}", "seite")
@@ -128,7 +128,7 @@ class KleinanzeigenAdapter(_Portal):
         )
         self.districts = kleinanzeigen.district_index(ortsteile_bezirke)
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         _positive(config, "max_price", 700)
         _positive(config, "pages", 5)

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from typing import Any
 
 from .. import bienici, citya, paruvendu
+from .._types import JSON
 from ._base import (
     Cursor,
     _Portal,
@@ -36,7 +36,7 @@ class BieniciAdapter(_Portal):
     def __init__(self) -> None:
         self.source = _source(bienici.SOURCE_ID, "bien'ici (Frankreich, Miete)", "application/json")
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         zones = require(config, "zones", list)
         if not zones or not all(isinstance(z, str) and z for z in zones):
@@ -115,13 +115,13 @@ class CityaAdapter(_Portal):
     def __init__(self) -> None:
         self.source = _source(citya.SOURCE_ID, "Citya (Frankreich, Miete)", "text/html")
 
-    def _departements(self, config: Mapping[str, Any]) -> list[str]:
+    def _departements(self, config: Mapping[str, JSON]) -> list[str]:
         value = config.get("departements", [p for p, _ in citya.DEPARTEMENTS.values()])
         if not isinstance(value, list) or not value or not all(isinstance(v, str) for v in value):
             raise ConfigError("'departements' muss eine nicht leere Liste sein.")
         return value
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         self._departements(config)
         _positive(config, "max_pages", 8)
@@ -194,7 +194,7 @@ class ParuvenduAdapter(_Portal):
     def __init__(self) -> None:
         self.source = _source(paruvendu.SOURCE_ID, "ParuVendu (Frankreich, Miete)", "text/html")
 
-    def _lists(self, config: Mapping[str, Any]) -> tuple[list[str], list[str]]:
+    def _lists(self, config: Mapping[str, JSON]) -> tuple[list[str], list[str]]:
         deps = config.get("departements", [p for p, _ in paruvendu.DEPARTEMENTS.values()])
         kinds = config.get("kinds", ["appartement", "maison"])
         for name, value in (("departements", deps), ("kinds", kinds)):
@@ -206,7 +206,7 @@ class ParuvenduAdapter(_Portal):
                 raise ConfigError(f"'{name}' muss eine nicht leere Liste sein.")
         return deps, kinds
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         self._lists(config)
         _positive(config, "max_price", 1100)

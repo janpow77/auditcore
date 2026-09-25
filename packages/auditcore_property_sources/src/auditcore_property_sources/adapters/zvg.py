@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import urllib.parse
 from collections.abc import Mapping
-from typing import Any
 
 from .. import zvg
+from .._types import JSON
 from ._base import (
     Cursor,
     _Portal,
@@ -42,7 +42,7 @@ class ZvgListingAdapter(_Portal):
             zvg.SOURCE_ID, "ZVG-Portal (Zwangsversteigerungen)", "text/html", filters=("courts",)
         )
 
-    def _courts(self, config: Mapping[str, Any]) -> list[str]:
+    def _courts(self, config: Mapping[str, JSON]) -> list[str]:
         value = config.get("courts", "kern")
         courts = zvg.resolve_courts(value) if isinstance(value, str) else value
         if not isinstance(courts, list) or not courts:
@@ -52,20 +52,19 @@ class ZvgListingAdapter(_Portal):
             raise ConfigError(f"Unbekannte Gerichte: {', '.join(map(str, unknown))}.")
         return list(courts)
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         self._courts(config)
 
-    def fetch_page(self, context: FetchContext, cursor: Cursor) -> PageResult:
-        courts = self._courts(context.config)
-        index = int((cursor or {}).get("court", 0))
-        court = courts[index]
-        land = zvg.LAND_BY_COURT[court]
-        session = {"button": "Termine suchen"}
-        search = {"button": "Suchen"}
-        rules = self._rules(context, cursor, zvg.BASE)
-        for params in (session, search):
-            self._check(rules, _zvg_url(params))
+    @staticmethod
+    def _search(
+        context: FetchContext,
+        session: dict[str, str],
+        search: dict[str, str],
+        land: object,
+        court: object,
+    ) -> bytes:
+        """Open the portal session, then post the court search; returns the result body."""
         raise_for_status(
             context.transport.request(
                 "GET",
@@ -96,7 +95,20 @@ class ZvgListingAdapter(_Portal):
                 timeout=context.timeout,
             )
         )
-        doc = zvg.decode_portal_bytes(response.body)
+        return response.body
+
+    def fetch_page(self, context: FetchContext, cursor: Cursor) -> PageResult:
+        courts = self._courts(context.config)
+        index = int((cursor or {}).get("court", 0))
+        court = courts[index]
+        land = zvg.LAND_BY_COURT[court]
+        session = {"button": "Termine suchen"}
+        search = {"button": "Suchen"}
+        rules = self._rules(context, cursor, zvg.BASE)
+        for params in (session, search):
+            self._check(rules, _zvg_url(params))
+        body = self._search(context, session, search, land, court)
+        doc = zvg.decode_portal_bytes(body)
         if "<html" not in doc[:4096].lower() and "<!doctype" not in doc[:4096].lower():
             raise ParserError("ZVG-Trefferliste ist kein HTML-Dokument.")
         files = zvg.parse_listing_akten(doc, land)
@@ -140,7 +152,7 @@ class ZvgDetailAdapter(_Portal):
     def __init__(self) -> None:
         self.source = _source("property.zvg_detail", "ZVG-Portal (Detailseiten)", "text/html")
 
-    def _notices(self, config: Mapping[str, Any]) -> list[Mapping[str, str]]:
+    def _notices(self, config: Mapping[str, JSON]) -> list[Mapping[str, str]]:
         notices: list[Mapping[str, str]] = require(config, "notices", list)
         for n in notices:
             if not (
@@ -153,7 +165,7 @@ class ZvgDetailAdapter(_Portal):
             raise ConfigError("'notices' ist leer.")
         return notices
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         _robots_policy(config)
         self._notices(config)
         _template(

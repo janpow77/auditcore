@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any
 
+from .._types import JSON
 from ..robots import RobotsRules, is_allowed, parse_robots, robots_url
 from ._harvest import (
     AuthKind,
@@ -25,7 +25,7 @@ from ._harvest import (
 ADAPTER_VERSION = "1.1.0"
 ROBOTS_POLICIES = ("ignore", "respect")
 DEFAULT_ROBOTS_POLICY = "ignore"
-Cursor = Mapping[str, Any] | None
+Cursor = Mapping[str, JSON] | None
 
 
 class AccessNotPermittedError(HarvestError):
@@ -51,21 +51,21 @@ def _source(source_id: str, title: str, data_format: str, filters: tuple[str, ..
     )
 
 
-def _robots_policy(config: Mapping[str, Any]) -> str:
+def _robots_policy(config: Mapping[str, JSON]) -> str:
     value = config.get("robots_policy", DEFAULT_ROBOTS_POLICY)
     if value not in ROBOTS_POLICIES:
         raise ConfigError("'robots_policy' ist 'ignore' oder 'respect'.")
     return str(value)
 
 
-def _positive(config: Mapping[str, Any], name: str, default: int) -> int:
+def _positive(config: Mapping[str, JSON], name: str, default: int) -> int:
     value = config.get(name, default)
     if isinstance(value, bool) or not isinstance(value, int) or value < 1:
         raise ConfigError(f"'{name}' muss eine positive ganze Zahl sein.")
     return value
 
 
-def _template(config: Mapping[str, Any], name: str, default: str, *fields: str) -> str:
+def _template(config: Mapping[str, JSON], name: str, default: str, *fields: str) -> str:
     value = config.get(name, default)
     if not isinstance(value, str) or not value.startswith(("https://", "http://", "file:")):
         raise ConfigError(f"'{name}' muss eine http(s)- oder file:-Adresse sein.")
@@ -115,8 +115,8 @@ class _Portal:
         self,
         context: FetchContext,
         record_id: str,
-        raw: Any,
-        normalized: Mapping[str, Any],
+        raw: JSON,
+        normalized: Mapping[str, JSON],
         locator: str,
     ) -> HarvestRecord:
         return HarvestRecord(
@@ -128,7 +128,7 @@ class _Portal:
         )
 
     @staticmethod
-    def _cursor(rules: RobotsRules | None, **state: Any) -> dict[str, Any]:
+    def _cursor(rules: RobotsRules | None, **state: JSON) -> dict[str, JSON]:
         return {**state, "robots": None if rules is None else rules.to_list()}
 
     @staticmethod
