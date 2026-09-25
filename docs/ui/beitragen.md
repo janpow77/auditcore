@@ -59,6 +59,10 @@ Umlauten und stehen ausschließlich in `messages.ts`.
   (`rows: () => []`), weil das Element vor dem Setzen der Eigenschaften
   eingehängt wird. Ereignisse in kebab-case (`emit('card-move', …)`); die
   React-Hülle reicht das erste Argument weiter.
+  Keine Namen nativer DOM-Ereignisse (`change`, `select`, `input`, `click`,
+  `submit` …): im Light DOM steigen diese aus inneren Eingabefeldern bis zum
+  Element auf und wären von den eigenen Ereignissen nicht zu unterscheiden
+  (daher z. B. `board-change`, `board-select`).
 - **Light DOM:** Elemente laufen ohne Shadow DOM; Stile stehen in `<style>`
   (nicht `scoped`), Klassen mit Präfix `fa-<komponente>__…`, Farben nur aus
   `--fa-*`-Variablen. Neue Token nur in `tokens.css` (hell und dunkel).

@@ -1,10 +1,12 @@
 import './theme/tokens.css'
+import './kanban/kanban.css'
 
 export * from './base'
 export * from './i18n'
 export * from './table'
 export * from './synopsis'
 export * from './rest'
+export * from './kanban'
 export { applyTheme, readTheme, resolvedTheme, useTheme, type ThemeMode, type UseTheme } from './theme/theme'
 export { useFocusTrap, focusableWithin } from './composables/useFocusTrap'
 export { useId } from './composables/useId'

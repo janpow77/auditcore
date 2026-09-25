@@ -12,6 +12,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'basis', title: 'Basiskomponenten', group: 'Grundlagen', load: () => import('./pages/base/BasePage.vue') },
   { id: 'tabelle', title: 'Tabelle', group: 'Grundlagen', load: () => import('./pages/base/TablePage.vue') },
   { id: 'web-components', title: 'Web Components', group: 'Grundlagen', load: () => import('./pages/base/ElementsPage.vue') },
+  { id: 'kanban', title: 'Kanban', group: 'Komponenten', load: () => import('./pages/kanban/KanbanPage.vue') },
   { id: 'synopse', title: 'Synopse / Versionsvergleich', group: 'Komponenten', load: () => import('./pages/synopsis/SynopsisPage.vue') },
 ]
 
