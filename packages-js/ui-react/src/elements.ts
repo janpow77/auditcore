@@ -1,4 +1,4 @@
-import type { SortState, TableColumn, TableRow, Locale } from '@flowaudit/ui'
+import type { Locale, ScreeningError, ScreeningPort, SortState, TableColumn, TableRow } from '@flowaudit/ui'
 import { createElementComponent } from './createElementComponent'
 
 export interface FlowauditTableProps {
@@ -20,3 +20,21 @@ export const FlowauditTable = createElementComponent<FlowauditTableProps, { onRo
     events: { onRowClick: 'row-click', onSortChange: 'sort-change' },
   },
 )
+
+export interface FlowauditScreeningReviewProps {
+  port: ScreeningPort | null
+  runId?: string
+  locale?: Locale
+}
+
+/** `<flowaudit-screening-review>` als React-Komponente: Sanktionslisten-/PEP-Treffer prüfen und entscheiden. */
+export const FlowauditScreeningReview = createElementComponent<
+  FlowauditScreeningReviewProps,
+  { onRunCreated: string; onDecided: string; onError: string }
+>('flowaudit-screening-review', {
+  properties: ['port', 'runId', 'locale'],
+  events: { onRunCreated: 'run-created', onDecided: 'decided', onError: 'error' },
+})
+
+/** Nutzdaten des Ereignisses `error` der Screening-Trefferprüfung. */
+export type FlowauditScreeningError = ScreeningError

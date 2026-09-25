@@ -1,8 +1,9 @@
 import type { ElementDefinition } from './elements/define'
+import { screeningReviewElement } from './screening/element'
 import { tableElement } from './table/element'
 
 /**
  * Alle Web Components von @flowaudit/ui. Neue Komponenten tragen hier ihre
  * `ElementDefinition` ein (siehe docs/ui/beitragen.md).
  */
-export const ELEMENTS: readonly ElementDefinition[] = [tableElement]
+export const ELEMENTS: readonly ElementDefinition[] = [tableElement, screeningReviewElement]
