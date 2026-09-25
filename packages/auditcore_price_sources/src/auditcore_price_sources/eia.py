@@ -20,17 +20,19 @@ from datetime import date, timedelta
 from typing import Any
 
 from auditcore_harvest import (
+    JSON,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
     HarvestRecord,
     PageResult,
-    PageStatus,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    page_result,
     raise_for_status,
 )
 
@@ -73,7 +75,7 @@ class EiaSpotPriceAdapter:
         filters=("start", "end", "product"),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` (API v2 base), optional ``product``, ``window_days`` 1..366, ``page_size``."""
         if not isinstance(config.get("url"), str) or not config["url"].startswith("http"):
             raise ConfigError("url (API-v2-Basisadresse) fehlt.")
@@ -86,7 +88,7 @@ class EiaSpotPriceAdapter:
         if not isinstance(config.get("product", DEFAULT_PRODUCT), str):
             raise ConfigError("product muss ein EIA-Produktcode sein.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """One page of rows; the cursor carries offset and the fixed window."""
         filters = dict(context.request.filters or {})
         if cursor:
@@ -112,70 +114,68 @@ class EiaSpotPriceAdapter:
         response = raise_for_status(
             context.transport.request("GET", url, params=params, timeout=context.timeout)
         )
-        try:
-            payload = json.loads(response.body)
-            body = payload["response"]
-            rows = body["data"]
-            total = int(body.get("total", len(rows)))
-        except (ValueError, KeyError, TypeError) as exc:
-            raise ParserError("EIA-Antwort ohne response.data/total.") from exc
-        if not isinstance(rows, list):
-            raise ParserError("response.data ist keine Liste.")
+        rows, total = _rows(response.body)
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []
         for position, row in enumerate(rows):
-            locator = f"{url}?offset={offset}#{position}"
-            if not isinstance(row, Mapping):
-                issues.append(RecordIssue(locator, "Zeile ist kein Objekt"))
-                continue
-            period = row.get("period")
-            try:
-                date.fromisoformat(str(period))
-                value = exact(row.get("value"))
-            except ValueError as exc:
-                issues.append(RecordIssue(locator, f"Zeile nicht lesbar: {exc}"))
-                continue
-            source_unit = row.get("units")
-            unit_block = unit(
-                UNITS.get(str(source_unit), str(source_unit)) if source_unit else PROFILE_UNIT,
-                source_text=None if source_unit is None else str(source_unit),
-                origin="quelle" if source_unit else "profil",
-                numerator="USD",
-            )
-            series = str(row.get("series") or row.get("product") or product)
-            normalized = observation(
-                series=series,
-                time_kind="handelstag",
-                period=str(period),
-                value=value,
-                unit_block=unit_block,
-                extra={
-                    "produkt": row.get("product"),
-                    "beschreibung": row.get("series-description"),
-                },
-            )
-            records.append(
-                HarvestRecord(
-                    source_id=self.source.source_id,
-                    record_id=f"{series}@{period}",
-                    raw=dict(row),
-                    normalized=normalized,
-                    provenance=context.provenance(self.source, locator, dict(row)),
-                )
-            )
+            item = self._row(context, f"{url}?offset={offset}#{position}", row, product)
+            if isinstance(item, RecordIssue):
+                issues.append(item)
+            else:
+                records.append(item)
         read = offset + len(rows)
         more = read < total
         if more and not rows:
             raise ParserError("EIA meldet weitere Zeilen, liefert aber keine.")
         next_cursor = {"offset": read, "start": start, "end": end} if more else None
-        return PageResult(
-            tuple(records),
-            next_cursor,
-            complete=not more,
-            status=PageStatus.PARTIAL if issues else PageStatus.OK,
-            issues=tuple(issues),
-            total_hint=total,
+        return page_result(records, issues, next_cursor, total_hint=total)
+
+    def _row(
+        self, context: FetchContext, locator: str, row: JSON, product: str
+    ) -> HarvestRecord | RecordIssue:
+        """Record of one data row, or the issue why the row is unreadable."""
+        if not isinstance(row, Mapping):
+            return RecordIssue(locator, "Zeile ist kein Objekt")
+        period = row.get("period")
+        try:
+            date.fromisoformat(str(period))
+            value = exact(row.get("value"))
+        except ValueError as exc:
+            return RecordIssue(locator, f"Zeile nicht lesbar: {exc}")
+        source_unit = row.get("units")
+        unit_block = unit(
+            UNITS.get(str(source_unit), str(source_unit)) if source_unit else PROFILE_UNIT,
+            source_text=None if source_unit is None else str(source_unit),
+            origin="quelle" if source_unit else "profil",
+            numerator="USD",
         )
+        series = str(row.get("series") or row.get("product") or product)
+        normalized = observation(
+            series=series,
+            time_kind="handelstag",
+            period=str(period),
+            value=value,
+            unit_block=unit_block,
+            extra={
+                "produkt": row.get("product"),
+                "beschreibung": row.get("series-description"),
+            },
+        )
+        return context.record(self.source, f"{series}@{period}", dict(row), normalized, locator)
+
+
+def _rows(body: bytes) -> tuple[list[JSON], int]:
+    """``response.data`` and ``response.total`` of an EIA answer, else a parser error."""
+    try:
+        payload = json.loads(body)
+        response = payload["response"]
+        rows = response["data"]
+        total = int(response.get("total", len(rows)))
+    except (ValueError, KeyError, TypeError) as exc:
+        raise ParserError("EIA-Antwort ohne response.data/total.") from exc
+    if not isinstance(rows, list):
+        raise ParserError("response.data ist keine Liste.")
+    return rows, total
 
 
 def legacy_commodity_rows(
