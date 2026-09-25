@@ -4,7 +4,6 @@
     "auditcore_common",
     "auditcore_dataprotection",
     "auditcore_documents",
-    "auditcore_dummygenerator",
     "auditcore_entity_matching",
     "auditcore_funding_sources",
     "auditcore_geo",
