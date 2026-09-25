@@ -20,7 +20,7 @@ YELLOW = "gelb"
 RED = "rot"
 
 
-def delta_pct(value: Any, reference: Any, profile: ComparisonProfile) -> Decimal | None:
+def delta_pct(value: object, reference: object, profile: ComparisonProfile) -> Decimal | None:
     """Percentage deviation ``(value - reference) / reference × 100``, rounded by profile.
 
     ``None`` if the reference is missing, zero or negative.
@@ -34,7 +34,7 @@ def delta_pct(value: Any, reference: Any, profile: ComparisonProfile) -> Decimal
     return profile.delta_rounding.apply((current - ref) / ref * 100)
 
 
-def traffic_light(value: Any, median: Any, profile: ComparisonProfile) -> str | None:
+def traffic_light(value: object, median: object, profile: ComparisonProfile) -> str | None:
     """``gruen`` up to threshold × fraction, ``gelb`` up to the threshold, else ``rot``.
 
     Decided on the exact deviation (no float artifacts at the limits). ``None``
@@ -80,7 +80,7 @@ class GroupStatistics:
         }
 
 
-def group_statistics(values: Iterable[Any], profile: ComparisonProfile) -> GroupStatistics:
+def group_statistics(values: Iterable[object], profile: ComparisonProfile) -> GroupStatistics:
     """Median, mean, standard deviation (population or sample per profile), min and max.
 
     ``None`` values are rejected instead of being skipped or counted as zero;
