@@ -1,0 +1,775 @@
+{
+  "schema": "auditcore_bpmn.profile/1",
+  "id": "foerderperiode-2021-2027",
+  "version": "2026.09.1",
+  "title": {
+    "de": "Förderperiode 2021-2027 (geteilte Mittelverwaltung)",
+    "en": "Programming period 2021-2027 (shared management)"
+  },
+  "programming_period": "2021-2027",
+  "roles": [
+    "vb",
+    "zgs",
+    "rfs",
+    "pb",
+    "pbs",
+    "kom",
+    "beg",
+    "bga",
+    "gs",
+    "gdp",
+    "fb",
+    "ftd",
+    "gut",
+    "gre",
+    "fr",
+    "ds",
+    "it",
+    "sonstige"
+  ],
+  "funds": [
+    "efre",
+    "esf_plus",
+    "kf",
+    "jtf",
+    "emfaf",
+    "amif",
+    "isf",
+    "bmvi",
+    "interreg"
+  ],
+  "key_requirements": {
+    "source": {
+      "celex": "32021R1060",
+      "eli": "http://data.europa.eu/eli/reg/2021/1060/oj",
+      "title": "Verordnung (EU) 2021/1060 (Dachverordnung, CPR)",
+      "publication": "ABl. L 231 vom 30.6.2021, S. 159",
+      "part": "Anhang XI Tabelle 1",
+      "retrieved": "2026-09-25",
+      "retrieval": "https://publications.europa.eu/resource/celex/32021R1060 (application/xhtml+xml)",
+      "sha256": {
+        "deu": "d0031a9d7fd4d2e28ebc45e806331f7b2be3e4b34b76293cefbeae8242724ceb",
+        "eng": "6bf81cf3ccfc5326a2095c2d40b0aef28d80a78098b2f9927ed26c692be5b8e2"
+      }
+    },
+    "entries": [
+      {
+        "number": 1,
+        "title": {
+          "de": "Angemessene Aufgabentrennung und angemessene schriftliche Vereinbarungen für Berichterstattung, Aufsicht und Überwachung der an eine zwischengeschaltete Stelle delegierten Aufgaben",
+          "en": "Appropriate separation of functions and written arrangements for reporting, supervising and monitoring of delegated tasks to an intermediate body"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 2,
+        "title": {
+          "de": "Angemessene Kriterien und Verfahren für die Auswahl von Vorhaben",
+          "en": "Appropriate criteria and procedures for the selection of operations"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "footnote": {
+          "de": "Territoriale Behörden oder Stellen gemäß Artikel 29 Absatz 3 der vorliegenden Verordnung und, falls zutreffend, Lenkungsausschuss gemäß Artikel 22 Absatz 2 der Interreg-Verordnung.",
+          "en": "Territorial authorities or bodies pursuant to Article 29(3) of this Regulation and steering committee pursuant to Article 22(2) of Interreg Regulation, where applicable."
+        }
+      },
+      {
+        "number": 3,
+        "title": {
+          "de": "Angemessene Information der Begünstigten zu den anwendbaren Bedingungen für die Unterstützung der ausgewählten Vorhaben",
+          "en": "Appropriate information to beneficiaries on applicable conditions for support for the selected operations"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 4,
+        "title": {
+          "de": "Angemessene Verwaltungsüberprüfungen, einschließlich angemessener Verfahren für die Überprüfungen, ob die Bedingungen für nicht mit Kosten verknüpfte Finanzierungen und für vereinfachte Kostenoptionen erfüllt sind",
+          "en": "Appropriate management verifications, including appropriate procedures for checking fulfilment of conditions for financing not linked to costs and for simplified cost options"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 5,
+        "title": {
+          "de": "Wirksame Systeme zur Gewährleistung, dass alle für den Prüfpfad notwendigen Unterlagen aufbewahrt werden",
+          "en": "Effective system to ensure that all documents necessary for the audit trail are held"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 6,
+        "title": {
+          "de": "Zuverlässiges elektronisches System (mit Verbindungen zu elektronischen Datenaustauschsystemen mit Begünstigten) für die Aufzeichnung und Speicherung der Daten für Überwachung, Evaluierung, Finanzmanagement, Überprüfungen und Prüfungen, u. a. angemessene Abläufe zur Sicherstellung der Sicherheit, Integrität und Vertraulichkeit von Daten und der Authentifizierung von Nutzern",
+          "en": "Reliable electronic system (including links with electronic data exchange systems with beneficiaries) for recording and storing data for monitoring, evaluation, financial management, verifications and audits, including appropriate processes to ensure the security, integrity and confidentiality of the data and the authentication of users"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 7,
+        "title": {
+          "de": "Wirksame Umsetzung angemessener Betrugsbekämpfungsmaßnahmen",
+          "en": "Effective implementation of proportionate anti-fraud measures"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 8,
+        "title": {
+          "de": "Angemessene Verfahren zur Erstellung der Verwaltungserklärung",
+          "en": "Appropriate procedures for drawing up the management declaration"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 9,
+        "title": {
+          "de": "Angemessene Verfahren zur Bestätigung, dass die verbuchten Ausgaben rechtmäßig und ordnungsmäßig sind",
+          "en": "Appropriate procedures for confirming that the expenditure entered into the accounts is legal and regular"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 10,
+        "title": {
+          "de": "Angemessene Verfahren zur Erstellung und Einreichung von Zahlungsanträgen und der Rechnungslegung und zur Bestätigung der Vollständigkeit, Genauigkeit und sachlichen Richtigkeit der Rechnungslegung",
+          "en": "Appropriate procedures for drawing up and submission of payment applications and of accounts and confirming completeness, accuracy and veracity of the accounts"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde/für den Aufgabenbereich „Rechnungsführung“ zuständige Stelle",
+          "en": "Managing authority/ Body carrying out the accounting function"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 11,
+        "title": {
+          "de": "Angemessene Aufgabentrennung und funktionelle Unabhängigkeit zwischen der Prüfbehörde (und gegebenenfalls allen Stellen, die unter der Verantwortung der Prüfbehörde Prüfungstätigkeiten durchführen, auf die sich die Prüfbehörde verlässt und die sie beaufsichtigt) und den anderen Programmbehörden sowie den Prüfungstätigkeiten, die im Einklang mit international anerkannten Prüfungsstandards durchgeführt werden",
+          "en": "Appropriate separation of functions and functional independence between the audit authority (and any body carrying out audit work under the responsibility of the audit authority on which the audit authority relies and supervises, if applicable) and the other programme authorities and audit work carried out in accordance with internationally accepted audit standards"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 12,
+        "title": {
+          "de": "Angemessene Systemprüfungen",
+          "en": "Appropriate system audits"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 13,
+        "title": {
+          "de": "Angemessene Vorhabenprüfungen",
+          "en": "Appropriate audits of operations"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 14,
+        "title": {
+          "de": "Angemessene Prüfungen der Rechnungslegung",
+          "en": "Appropriate audits of accounts"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": []
+      },
+      {
+        "number": 15,
+        "title": {
+          "de": "Angemessene Verfahren für die Erteilung eines zuverlässigen Bestätigungsvermerks und die Erstellung des jährlichen Kontrollberichts",
+          "en": "Appropriate procedures for providing a reliable audit opinion and for preparing the annual control report"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": []
+      }
+    ],
+    "assessment_criteria_note": {
+      "de": "Der Rechtstext enthält keine Bewertungskriterien; sie stammen aus Leitlinien der Kommission und werden von der Anwendung eingespeist.",
+      "en": "The legal text contains no assessment criteria; they stem from Commission guidance and are supplied by the application."
+    }
+  },
+  "role_aliases": [
+    {
+      "pattern": "Rechnungsführung",
+      "role": "rfs"
+    },
+    {
+      "pattern": "Verwaltungsbehörde",
+      "role": "vb"
+    },
+    {
+      "pattern": "zwischengeschaltete Stelle",
+      "role": "zgs"
+    },
+    {
+      "pattern": "ZGS",
+      "role": "zgs"
+    },
+    {
+      "pattern": "Prüfbehörde",
+      "role": "pb"
+    },
+    {
+      "pattern": "Gruppe von Prüfern",
+      "role": "gdp"
+    },
+    {
+      "pattern": "Gemeinsames Sekretariat",
+      "role": "gs"
+    },
+    {
+      "pattern": "Kommission",
+      "role": "kom"
+    },
+    {
+      "pattern": "Begleitausschuss",
+      "role": "bga"
+    },
+    {
+      "pattern": "Begünstigte",
+      "role": "beg"
+    },
+    {
+      "pattern": "Antragstell",
+      "role": "beg"
+    },
+    {
+      "pattern": "fachtechnische",
+      "role": "ftd"
+    },
+    {
+      "pattern": "Gutachter",
+      "role": "gut"
+    },
+    {
+      "pattern": "Sachverständig",
+      "role": "gut"
+    },
+    {
+      "pattern": "Expertinnen",
+      "role": "gut"
+    },
+    {
+      "pattern": "Gremium",
+      "role": "gre"
+    },
+    {
+      "pattern": "Ausschuss",
+      "role": "gre"
+    },
+    {
+      "pattern": "Fachreferat",
+      "role": "fr"
+    },
+    {
+      "pattern": "Bewilligungsstelle",
+      "role": "fb"
+    },
+    {
+      "pattern": "Fachbehörde",
+      "role": "fb"
+    },
+    {
+      "pattern": "Datenschutz",
+      "role": "ds"
+    },
+    {
+      "pattern": "IT-System",
+      "role": "it"
+    },
+    {
+      "pattern": "Fachanwendung",
+      "role": "it"
+    }
+  ],
+  "segregation_rules": [
+    {
+      "id": "FT01",
+      "kind": "separate_bodies",
+      "severity": "warnung",
+      "a": {
+        "markers": [
+          "bewilligung"
+        ]
+      },
+      "b": {
+        "markers": [
+          "zahlung"
+        ]
+      },
+      "title": {
+        "de": "Bewilligung und Auszahlung in derselben Stelle",
+        "en": "Approval and payment in the same body"
+      }
+    },
+    {
+      "id": "FT02",
+      "kind": "separate_bodies",
+      "severity": "fehler",
+      "a": {
+        "audit_types": [
+          "verwk"
+        ]
+      },
+      "b": {
+        "audit_types": [
+          "systempruefung",
+          "vorhabenpruefung",
+          "rechnungslegungspruefung"
+        ]
+      },
+      "title": {
+        "de": "Verwaltungskontrolle und Prüfung in derselben Stelle",
+        "en": "Management verification and audit in the same body"
+      }
+    },
+    {
+      "id": "FT03",
+      "kind": "excluded_role",
+      "severity": "fehler",
+      "selection": {
+        "audit_types": [
+          "verwk"
+        ]
+      },
+      "roles": [
+        "pb",
+        "gdp"
+      ],
+      "title": {
+        "de": "Verwaltungskontrolle durch die Prüfbehörde",
+        "en": "Management verification by the audit authority"
+      }
+    },
+    {
+      "id": "FT04",
+      "kind": "excluded_role",
+      "severity": "fehler",
+      "selection": {
+        "audit_types": [
+          "systempruefung",
+          "vorhabenpruefung",
+          "rechnungslegungspruefung"
+        ]
+      },
+      "roles": [
+        "vb",
+        "zgs",
+        "fb",
+        "rfs",
+        "bb",
+        "beg"
+      ],
+      "title": {
+        "de": "Prüfung durch eine Stelle der Programmverwaltung",
+        "en": "Audit by a programme management body"
+      }
+    },
+    {
+      "id": "FT05",
+      "kind": "four_eyes",
+      "severity": "warnung",
+      "title": {
+        "de": "Vier-Augen-Prinzip ohne zweite Stelle oder Rolle",
+        "en": "Four-eyes principle without a second body or role"
+      }
+    }
+  ],
+  "templates": [
+    {
+      "id": "antragsverfahren",
+      "title": {
+        "de": "Antragsverfahren und Auswahl der Vorhaben",
+        "en": "Application procedure and selection of operations"
+      },
+      "file": "antragsverfahren.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    },
+    {
+      "id": "verwaltungskontrolle",
+      "title": {
+        "de": "Verwaltungsüberprüfung (VerwK) eines Auszahlungsantrags",
+        "en": "Management verification of a payment claim"
+      },
+      "file": "verwaltungskontrolle.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    },
+    {
+      "id": "zahlungsantrag",
+      "title": {
+        "de": "Zahlungsantrag an die Kommission",
+        "en": "Payment application to the Commission"
+      },
+      "file": "zahlungsantrag.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    },
+    {
+      "id": "rechnungslegung",
+      "title": {
+        "de": "Rechnungslegung und Gewährpaket",
+        "en": "Accounts and assurance package"
+      },
+      "file": "rechnungslegung.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    },
+    {
+      "id": "unregelmaessigkeiten",
+      "title": {
+        "de": "Unregelmäßigkeiten: Behandlung und Meldung",
+        "en": "Irregularities: treatment and reporting"
+      },
+      "file": "unregelmaessigkeiten.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    },
+    {
+      "id": "vorhabenpruefung",
+      "title": {
+        "de": "Vorhabenprüfung",
+        "en": "Audit of operations"
+      },
+      "file": "vorhabenpruefung.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    },
+    {
+      "id": "systempruefung",
+      "title": {
+        "de": "Systemprüfung",
+        "en": "System audit"
+      },
+      "file": "systempruefung.bpmn",
+      "origin": "synthetisch aus VO (EU) 2021/1060 (tools/build_templates.py), ohne Nutzerdiagramme"
+    }
+  ],
+  "legal_bases": {
+    "source": {
+      "celex": "32021R1060",
+      "eli": "http://data.europa.eu/eli/reg/2021/1060/oj",
+      "title": "Verordnung (EU) 2021/1060 (Dachverordnung, CPR)",
+      "publication": "ABl. L 231 vom 30.6.2021, S. 159",
+      "part": "Artikelüberschriften",
+      "retrieved": "2026-09-25",
+      "retrieval": "https://publications.europa.eu/resource/celex/32021R1060 (application/xhtml+xml)",
+      "sha256": {
+        "deu": "d0031a9d7fd4d2e28ebc45e806331f7b2be3e4b34b76293cefbeae8242724ceb",
+        "eng": "6bf81cf3ccfc5326a2095c2d40b0aef28d80a78098b2f9927ed26c692be5b8e2"
+      }
+    },
+    "entries": [
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "38",
+        "short_title": {
+          "de": "Begleitausschuss",
+          "en": "Monitoring committee"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "40",
+        "short_title": {
+          "de": "Aufgaben des Begleitausschusses",
+          "en": "Functions of the monitoring committee"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "49",
+        "short_title": {
+          "de": "Zuständigkeiten der Verwaltungsbehörde",
+          "en": "Responsibilities of the managing authority"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "50",
+        "short_title": {
+          "de": "Zuständigkeiten der Begünstigten",
+          "en": "Responsibilities of beneficiaries"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "53",
+        "short_title": {
+          "de": "Formen der Zuschüsse",
+          "en": "Forms of grants"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "63",
+        "short_title": {
+          "de": "Förderfähigkeit",
+          "en": "Eligibility"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "65",
+        "short_title": {
+          "de": "Dauerhaftigkeit der Vorhaben",
+          "en": "Durability of operations"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "69",
+        "short_title": {
+          "de": "Zuständigkeiten der Mitgliedstaaten",
+          "en": "Responsibilities of Member States"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "71",
+        "short_title": {
+          "de": "Programmbehörden",
+          "en": "Programme authorities"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "72",
+        "short_title": {
+          "de": "Aufgaben der Verwaltungsbehörde",
+          "en": "Functions of the managing authority"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "73",
+        "short_title": {
+          "de": "Auswahl der Vorhaben durch die Verwaltungsbehörde",
+          "en": "Selection of operations by the managing authority"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "74",
+        "short_title": {
+          "de": "Programmverwaltung durch die Verwaltungsbehörde",
+          "en": "Programme management by the managing authority"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "75",
+        "short_title": {
+          "de": "Unterstützung der Arbeit des Begleitausschusses durch die Verwaltungsbehörde",
+          "en": "Support of the work of the monitoring committee by the managing authority"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "76",
+        "short_title": {
+          "de": "Der Aufgabenbereich „Rechnungsführung“",
+          "en": "The accounting function"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "77",
+        "short_title": {
+          "de": "Aufgaben der Prüfbehörde",
+          "en": "Functions of the audit authority"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "78",
+        "short_title": {
+          "de": "Prüfstrategie",
+          "en": "Audit strategy"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "79",
+        "short_title": {
+          "de": "Vorhabenprüfungen",
+          "en": "Audits of operations"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "80",
+        "short_title": {
+          "de": "Vorkehrungen für die Einzige Prüfung",
+          "en": "Single audit arrangements"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "82",
+        "short_title": {
+          "de": "Verfügbarkeit von Unterlagen",
+          "en": "Availability of documents"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "94",
+        "short_title": {
+          "de": "Unionsbeitrag basierend auf Kosten je Einheit, Pauschalbeträgen und Pauschalfinanzierungen",
+          "en": "Union contribution based on unit costs, lump sums and flat rates"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "95",
+        "short_title": {
+          "de": "Unionsbeitrag basierend auf nicht mit Kosten verknüpften Finanzierungen",
+          "en": "Union contribution based on financing not linked to costs"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "98",
+        "short_title": {
+          "de": "Inhalt und Einreichung der Rechnungslegung",
+          "en": "Content and submission of accounts"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "103",
+        "short_title": {
+          "de": "Finanzkorrekturen durch die Mitgliedstaaten",
+          "en": "Financial corrections by Member States"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "article": "104",
+        "short_title": {
+          "de": "Finanzkorrekturen durch die Kommission",
+          "en": "Financial corrections by the Commission"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "annex": "XI",
+        "short_title": {
+          "de": "Kernanforderungen an Verwaltungs- und Kontrollsysteme und deren Klassifizierung",
+          "en": "Key requirements of management and control systems and their classification"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      },
+      {
+        "act": "Verordnung (EU) 2021/1060",
+        "annex": "XIII",
+        "short_title": {
+          "de": "Elemente des Prüfpfads",
+          "en": "Elements for the audit trail"
+        },
+        "celex": "32021R1060",
+        "eli": "http://data.europa.eu/eli/reg/2021/1060/oj"
+      }
+    ]
+  }
+}

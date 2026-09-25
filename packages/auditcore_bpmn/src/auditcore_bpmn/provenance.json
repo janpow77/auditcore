@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_bpmn",
+  "version": "0.1.0",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/services/bpmn_analyzer.py",
+      "git_blob": "0cfaf87afca87a379ee8a68edbca6fceea3ab944",
+      "symbols": [
+        "TaskProperties",
+        "ProcessAnalysis",
+        "BpmnAnalyzer",
+        "analyze_bpmn",
+        "FLOWAUDIT_NAMESPACE"
+      ],
+      "target": "auditcore_bpmn.legacy.analyzer (legacy-treu, charakterisiert)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/services/bpmn_export.py",
+      "git_blob": "ebc5b0ab2f6df964a44727e5b585c827c6ab891c",
+      "symbols": [
+        "BpmnExcelExporter",
+        "export_bpmn_to_excel",
+        "export_bpmn_to_pdf",
+        "_pdf_table_style"
+      ],
+      "target": "auditcore_bpmn.legacy.export, auditcore_bpmn.legacy.pdf (pandas entfällt, Ausgabe gleich)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/api/bpmn.py",
+      "git_blob": "e7853d7b0356d54fd796071062ea640d506e14a8",
+      "symbols": [
+        "validate_bpmn_bva",
+        "_assert_well_formed_xml"
+      ],
+      "target": "auditcore_bpmn.legacy.validation (ohne FastAPI)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/api/bpmn_export.py",
+      "git_blob": "c0612f0caed103c8098838e980be93cdf37283e1",
+      "symbols": [
+        "get_bpmn_analysis",
+        "export_bpmn_excel",
+        "export_bpmn_pdf"
+      ],
+      "target": "nur Aufrufvertrag gelesen (Dateiname, Parameter); keine Übernahme von Routen"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/schemas/bpmn.py",
+      "git_blob": "95aad5ca3adccd87c20539c2e433336929ee58ec",
+      "symbols": [
+        "BpmnDiagramResponse.header_*",
+        "ColorPalette",
+        "BpmnHeaderUpdate"
+      ],
+      "target": "auditcore_bpmn.legacy.diagram_model (Standardfarben, Kopfzeilenfelder)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/models/bpmn_diagram.py",
+      "git_blob": "b5c31a11f5a29c242575f769ec57a2418f71b66c",
+      "symbols": [
+        "BpmnDiagram"
+      ],
+      "target": "auditcore_bpmn.legacy.diagram_model (Spaltenabbildung auf flowaudit:diagrammInfo)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/core/safe_xml.py",
+      "git_blob": "1e3ef65342a6fc3c5392e3519ce1fc6d441c634b",
+      "symbols": [
+        "safe_stdlib_fromstring"
+      ],
+      "target": "auditcore_bpmn.safe_xml (gleiche Härtung: DTD, Entitäten, externe Verweise verboten)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "frontend/src/modules/flowstat/bpmn/flowauditModdle.ts",
+      "git_blob": "526f408cb87dd970c4a218003de306249d492348",
+      "symbols": [
+        "FLOWAUDIT_NAMESPACE",
+        "flowauditModdleDescriptor",
+        "Rechtsgrundlage",
+        "InterneNotiz",
+        "METADATEN_TYPEN"
+      ],
+      "target": "Schema 1.0 (Namensraum, tagAlias lowerCase) → docs/bpmn/flowaudit-schema-1.1.md"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "frontend/src/modules/flowstat/bpmn/diagrammBaum.ts",
+      "git_blob": "4c4eedb87bfc520f3c0e16dac2e2e5514c1e5b07",
+      "symbols": [
+        "baueGruppen"
+      ],
+      "target": "Anforderung an die Diagrammsammlung (Gruppierung, Filter); neu umgesetzt in auditcore_bpmn.collection"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/tests/test_bpmn_services.py",
+      "git_blob": "5be5a320190f3e9e08b25db8f908ac490989b9ed",
+      "symbols": [
+        "FLOWSTAT_XML"
+      ],
+      "target": "tests/test_legacy_originals.py (Eingaben und Erwartungen übernommen)"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/tests/test_bpmn_flowaudit_extensions.py",
+      "git_blob": "44e97da51b3b6a6b39c8b7ccd9c77d47f57c8a79",
+      "symbols": [
+        "XML_MIT_METADATEN"
+      ],
+      "target": "tests/test_legacy_originals.py"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "eff41a4ccedab12b9a73bafff41468712459cb2b",
+      "path": "backend/app/modules/flowstat/tests/test_bpmn_api.py",
+      "git_blob": "ff5d6ed19d7f2bc326598a9abb7ab26ff2a2f613",
+      "symbols": [
+        "MINIMAL_BPMN_XML"
+      ],
+      "target": "tests/test_legacy_originals.py (Validierung, PDF-Export; Routen/Rechte bleiben Anwendung)"
+    }
+  ],
+  "legal_texts": [
+    {
+      "celex": "32021R1060",
+      "eli": "http://data.europa.eu/eli/reg/2021/1060/oj",
+      "parts": [
+        "Anhang XI Tabelle 1 (KA 1–15, Titel, betroffene Stellen)",
+        "Überschriften Art. 38–104 (Auswahl)",
+        "Anhang XIII"
+      ],
+      "retrieval": "https://publications.europa.eu/resource/celex/32021R1060 (application/xhtml+xml, deu/eng) am 2026-09-25",
+      "sha256": {
+        "deu": "d0031a9d7fd4d2e28ebc45e806331f7b2be3e4b34b76293cefbeae8242724ceb",
+        "eng": "6bf81cf3ccfc5326a2095c2d40b0aef28d80a78098b2f9927ed26c692be5b8e2"
+      },
+      "license": "Wiederverwendung von EU-Rechtstexten nach Beschluss 2011/833/EU (amtliche Texte)",
+      "tool": "tools/build_profiles.py"
+    },
+    {
+      "celex": "32014R0480",
+      "eli": "http://data.europa.eu/eli/reg_del/2014/480/oj",
+      "parts": [
+        "Anhang IV Tabelle 1 (KA 1–18, Titel, Stellen, Geltungsbereich)"
+      ],
+      "retrieval": "https://publications.europa.eu/resource/celex/32014R0480 (application/xhtml+xml, deu/eng) am 2026-09-25",
+      "sha256": {
+        "deu": "35c39c302dbb80fcf3b87fb1005c543486031c5f9cecb71cfffee782321f1412",
+        "eng": "8235630d44b96223be2ff16537f3557209a72a59c8d5eb4df6f2d81b4dd2393c"
+      },
+      "license": "Wiederverwendung von EU-Rechtstexten nach Beschluss 2011/833/EU (amtliche Texte)",
+      "tool": "tools/build_profiles.py"
+    },
+    {
+      "celex": "32013R1303",
+      "eli": "http://data.europa.eu/eli/reg/2013/1303/oj",
+      "parts": [
+        "Überschriften Art. 65–144 (Auswahl)",
+        "Anhang XIII"
+      ],
+      "retrieval": "https://publications.europa.eu/resource/celex/32013R1303 (application/xhtml+xml, deu/eng) am 2026-09-25",
+      "sha256": {
+        "deu": "89a2a7304dc47b804cda1f1f7cb22a815b0be2b3673c4a39043ec696c7b304ea",
+        "eng": "2ecb388c66abf149901a1e953c47c4a0bf9c83f635ec43a2f05f27af97ff7123"
+      },
+      "license": "Wiederverwendung von EU-Rechtstexten nach Beschluss 2011/833/EU (amtliche Texte)",
+      "tool": "tools/build_profiles.py"
+    }
+  ],
+  "dependencies": {
+    "defusedxml": "Extra xml; ohne Extra gleichwertig gehärteter Expat-Parser der Standardbibliothek",
+    "openpyxl": "Extra excel (Legacy-Excelbericht, RCM/Berichte als xlsx)",
+    "reportlab": "Extra pdf (Legacy-PDF-Bericht)",
+    "auditcore_legal_sources": "0.1.0, Extra legal (Kerndokumente des Profils auditdatabase.esi 2026.09.1)"
+  },
+  "rights": {
+    "license_status": "MIT",
+    "historical_source_license_status": "UNKNOWN",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "github": {
+      "janpow77/audit_designer": {
+        "private": true,
+        "license": null
+      }
+    },
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "scope": "Extrahierter Bibliothekscode aus audit_designer (FlowStat-BPMN) in auditcore_bpmn",
+      "limitation": "Keine Umlizenzierung von audit_designer; Nutzerdiagramme (Google Drive) sind nicht Teil des Pakets und nicht freigegeben; Fixtures sind synthetisch."
+    }
+  },
+  "excluded": [
+    "FastAPI-Routen, Rechteprüfung, SQLAlchemy-Modell und Kommentare aus api/bpmn.py (bleiben Anwendung)",
+    "PersonnelCostRate-Datenbankabfrage (ersetzt durch den Port personnel_rate)",
+    "ESIAnalysisService des Standalone-Repos (im audit_designer nicht vorhanden; keine Erfüllungsanalyse)",
+    "bpmn-js und bpmn-js-properties-panel (andere Lizenz; nicht verwendet)",
+    "Nutzerdiagramme aus Google Drive (_neutral-Fassungen nicht anonymisiert; nur lokal über AUDITCORE_BPMN_LOCAL_FIXTURES)"
+  ],
+  "characterization": {
+    "legacy": {
+      "fixture": "tests/fixtures/legacy_observed.json",
+      "tool": "tools/capture_legacy.py",
+      "cases": 95,
+      "environment": {
+        "python": "3.12.3",
+        "pandas": "2.1.4",
+        "openpyxl": "3.1.2",
+        "reportlab": "4.0.8 (invariant)",
+        "defusedxml": "0.7.1"
+      },
+      "method": "Blob-geprüfte Originalmodule unverändert in ein temporäres Paket app geladen und ausgeführt; validate_bpmn_bva per AST; Personalkosten mit Stellvertreter-Modell und Scheinsitzung; synthetische Eingaben (35 gezielt, 60 zufällig, Seed 20260925)",
+      "deviations": "docs/behavior-changes.md"
+    }
+  },
+  "behavior_changes": "docs/behavior-changes.md"
+}
