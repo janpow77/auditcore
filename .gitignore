@@ -13,3 +13,8 @@ dist/
 .env
 *.deb
 graphify-out/
+
+# JavaScript-Pakete (packages-js)
+node_modules/
+coverage/
+*.tsbuildinfo

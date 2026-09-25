@@ -237,3 +237,19 @@ Fremdcode; keine neue Quellbindung (`EXPECTED_SOURCES` unverändert).
 | pip/APT lokal | `verify_domain_packages.py packages/auditcore_documents --apt`: PASS (Build, Hash-Install, Rauchtest inkl. `donut_smoke`, Selektivinstallation, zwei Debian-Revisionen, signierte APT-Quelle, Lifecycle) |
 | LocalDonut | manuell gegen ein winziges, im CPU-Rauchtest trainiertes Modell (torch 2.14.0+cpu, transformers 5.17.0): Laden mit Prüfsumme, Inferenz, Hash-Abweichung → `DONUT_MODEL_HASH_MISMATCH` |
 | Offen | echtes Modell (E3/E4 auf janpow-ai), vision-service-Anbindung des neuen Modells und flowinvoice-Schattenbetrieb (E6), Release |
+
+## 0.3.0: REST-Anbindung der Synopse-Oberfläche (25.09.2026, nicht veröffentlicht)
+
+Neues Unterpaket `auditcore_documents.web` für `<flowaudit-synopsis>`
+(`@flowaudit/ui`). Bestehende Module unverändert; keine neue Quellbindung.
+Vertrag `docs/ui/synopsis-rest.md`, Paritätsinventur `docs/ui/synopsis-paritaet.md`.
+
+| Punkt | Stand |
+|---|---|
+| Neu | `SynopsisService` (Hochladen prüfen, vergleichen, Zeilenauswahl/Grund, Ausgabe), Port `ComparisonStore` mit `InMemoryComparisonStore`, Ausgaben JSON/Markdown (Standardbibliothek) sowie DOCX/PDF über die vorhandenen Renderer, `create_app` (Starlette, Extra `web`), `create_router` (FastAPI, Extra `fastapi`) |
+| Sicherheit | Eigentümer je Anfrage über `identify` (401 ohne, 404 für fremde Vergleiche), Endungsprüfung, Größengrenze je Datei (Vorgabe 20 MiB) und je Anfrage, Dateinamen auf den letzten Namensteil gekürzt, Uploads nur im privaten Temporärverzeichnis, strenge Feldprüfung (unbekannte Felder 422), `Cache-Control: no-store` bei Ausgaben |
+| Untergrenzen | Starlette 0.47.2 (Formulargrenzen `max_part_size`, Sicherheitskorrekturen), python-multipart 0.0.20, FastAPI 0.116.1; Web-Tests gegen genau diese Versionen und gegen Starlette 1.7.0/FastAPI 0.141.1 grün |
+| Tests | 623 passed, 4 skipped (davon 43 neue Web-Tests); `installed_smoke.py` prüft den Dienst ohne Web-Extras und die `DependencyError`-Grenze |
+| Gates lokal | ruff, mypy --strict, bandit (-ll), `auditcore-codegate` (Baseline unverändert, `Any` im neuen Code vermieden) PASS; `test_architecture` erlaubt Starlette/FastAPI nur in `web/asgi.py` bzw. `web/fastapi_router.py` |
+| pip/APT lokal | `verify_domain_packages.py packages/auditcore_documents --apt`: 22/22 PASS, Wheel-SHA256 `9a2777a18584bbcec16683e37c1844542110d527f1f4dcc8cab879968ae83bca`; Debian-Paket nennt `python3-starlette`, `python3-multipart`, `python3-fastapi` als *Suggests* (`packaging/library-extras.json`) |
+| Offen | Oberfläche `<flowaudit-synopsis>` (eigener PR nach `packages-js/ui`), Anbindung in audit_designer/ecohesion, Release |

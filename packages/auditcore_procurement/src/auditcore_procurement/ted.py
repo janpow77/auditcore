@@ -17,10 +17,16 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Mapping, Sequence
-from datetime import datetime
 from typing import Any
 
 from .records import COVERAGE_ALL_NOTICES, COVERAGE_AWARDS_WITH_WINNER, Issue
+from .ted_values import (
+    extract_amount,
+    extract_list,
+    extract_text,
+    first_present,
+    to_iso_date,
+)
 
 #: Target field → candidate keys in a TED notice (priority order). The key order
 #: is the column order of :func:`parse_ted_file` and must stay stable.
@@ -97,7 +103,6 @@ DATE_FIELDS = frozenset(
     {"publication_date", "contract_award_date", "contract_start_date", "contract_end_date"}
 )
 NUMBER_FIELDS = frozenset({"contract_value", "estimated_value"})
-LANGUAGE_PREFERENCE = ("deu", "ger", "de", "eng", "en")
 
 #: Field set requested from the TED search API v3 (validated against live TED
 #: by the source application; unknown field codes are rejected with HTTP 400).
@@ -120,125 +125,7 @@ DEFAULT_FIELDS: tuple[str, ...] = (
 AWARD_FILTER = ("notice-type=can-standard", "winner-name=*")
 
 
-def _first_present(notice: Mapping[str, Any], aliases: Sequence[str]) -> Any:
-    for key in aliases:
-        if key in notice:
-            value = notice[key]
-            if value is not None and value != "" and value != [] and value != {}:
-                return value
-    return None
-
-
-def extract_text(value: Any) -> str | None:
-    """Single text from a scalar, list (first filled) or language dict (preference order)."""
-    if value is None:
-        return None
-    if isinstance(value, str):
-        return value.strip() or None
-    if isinstance(value, (int, float)):
-        return str(value)
-    if isinstance(value, dict):
-        for language in LANGUAGE_PREFERENCE:
-            if language in value:
-                text = extract_text(value[language])
-                if text:
-                    return text
-        for candidate in value.values():
-            text = extract_text(candidate)
-            if text:
-                return text
-        return None
-    if isinstance(value, list):
-        for item in value:
-            text = extract_text(item)
-            if text:
-                return text
-    return None
-
-
-def extract_list(value: Any) -> list[str]:
-    """Flat, de-duplicated list of strings; objects contribute ``code``/``value``/``id``."""
-    result: list[str] = []
-
-    def add(item: Any) -> None:
-        """Append the item's text once."""
-        text = extract_text(item)
-        if text and text not in result:
-            result.append(text)
-
-    if value is None:
-        return result
-    if isinstance(value, list):
-        for item in value:
-            if isinstance(item, dict):
-                code = item.get("code") or item.get("value") or item.get("id")
-                add(code if code is not None else item)
-            else:
-                add(item)
-    elif isinstance(value, dict):
-        code = value.get("code") or value.get("value") or value.get("id")
-        if code is not None:
-            add(code)
-        else:
-            for item in value.values():
-                add(item)
-    else:
-        add(value)
-    return result
-
-
-def extract_amount(value: Any) -> tuple[float | None, str | None]:
-    """(amount, currency) from scalar, amount object or list (largest amount).
-
-    Legacy semantics: text amounts drop every comma (``"1,234.56"`` → 1234.56),
-    so a German ``"1.234,56"`` becomes 1.23456. :func:`inspect_notice` reports
-    such ambiguous inputs; the value itself is kept for compatibility.
-    """
-    if value is None:
-        return None, None
-    if isinstance(value, bool):
-        return float(value), None
-    if isinstance(value, (int, float)):
-        return float(value), None
-    if isinstance(value, str):
-        try:
-            return float(value.strip().replace(",", "")), None
-        except ValueError:
-            return None, None
-    if isinstance(value, dict):
-        raw = value.get("amount") if value.get("amount") is not None else value.get("value")
-        currency = value.get("currency") or value.get("currencyCode")
-        amount, _ = extract_amount(raw)
-        return amount, (str(currency) if currency else None)
-    if isinstance(value, list):
-        best: float | None = None
-        best_currency: str | None = None
-        for item in value:
-            amount, currency = extract_amount(item)
-            if amount is not None and (best is None or amount > best):
-                best, best_currency = amount, currency
-        return best, best_currency
-    return None, None
-
-
-def to_iso_date(value: Any) -> str | None:
-    """``YYYY-MM-DD`` from TED dates with offsets/time suffix or common layouts, else None."""
-    text = extract_text(value)
-    if not text:
-        return None
-    candidate = text.strip()
-    match = re.match(r"(\d{4})-(\d{2})-(\d{2})", candidate)
-    if match:
-        return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
-    for layout in ("%Y%m%d", "%d/%m/%Y", "%d.%m.%Y", "%d-%m-%Y", "%Y/%m/%d"):
-        try:
-            return datetime.strptime(candidate, layout).date().isoformat()
-        except ValueError:
-            continue
-    return None
-
-
-def normalize_notice(notice: Any, *, require_contractor: bool = True) -> dict[str, Any] | None:
+def normalize_notice(notice: object, *, require_contractor: bool = True) -> dict[str, Any] | None:
     """Flat canonical record of one TED notice.
 
     With ``require_contractor=True`` (source behavior) notices without a
@@ -248,34 +135,20 @@ def normalize_notice(notice: Any, *, require_contractor: bool = True) -> dict[st
     if not isinstance(notice, dict):
         return None
     record: dict[str, Any] = {}
-    amount, amount_currency = extract_amount(
-        _first_present(notice, FIELD_ALIASES["contract_value"])
-    )
-    estimated, _ = extract_amount(_first_present(notice, FIELD_ALIASES["estimated_value"]))
+    amount, amount_currency = extract_amount(first_present(notice, FIELD_ALIASES["contract_value"]))
+    estimated, _ = extract_amount(first_present(notice, FIELD_ALIASES["estimated_value"]))
     for field, aliases in FIELD_ALIASES.items():
-        if field in ("contract_value", "estimated_value", "contract_value_currency"):
+        if field in _AMOUNT_FIELDS:
             continue
-        raw = _first_present(notice, aliases)
-        if raw is None:
-            continue
-        if field in LIST_FIELDS:
-            items = extract_list(raw)
-            if items:
-                record[field] = ", ".join(items)
-        elif field in DATE_FIELDS:
-            iso = to_iso_date(raw)
-            if iso:
-                record[field] = iso
-        else:
-            text = extract_text(raw)
-            if text:
-                record[field] = text
+        value = _field_value(field, first_present(notice, aliases))
+        if value:
+            record[field] = value
     if amount is not None:
         record["contract_value"] = amount
     if estimated is not None:
         record["estimated_value"] = estimated
     currency = amount_currency or extract_text(
-        _first_present(notice, FIELD_ALIASES["contract_value_currency"])
+        first_present(notice, FIELD_ALIASES["contract_value_currency"])
     )
     if currency:
         record["contract_value_currency"] = currency
@@ -284,8 +157,23 @@ def normalize_notice(notice: Any, *, require_contractor: bool = True) -> dict[st
     return record
 
 
+#: Fields that :func:`normalize_notice` fills after the text/list/date fields.
+_AMOUNT_FIELDS = frozenset({"contract_value", "estimated_value", "contract_value_currency"})
+
+
+def _field_value(field: str, raw: object) -> str | None:
+    """Comma-joined list, ISO date or text of one non-amount field (``None`` if empty)."""
+    if raw is None:
+        return None
+    if field in LIST_FIELDS:
+        return ", ".join(extract_list(raw)) or None
+    if field in DATE_FIELDS:
+        return to_iso_date(raw)
+    return extract_text(raw)
+
+
 def normalize_notices(
-    raw_notices: Sequence[Any], *, require_contractor: bool = True
+    raw_notices: Sequence[object], *, require_contractor: bool = True
 ) -> list[dict[str, Any]]:
     """Normalise a list of notices; ``None`` results are skipped."""
     records: list[dict[str, Any]] = []
@@ -349,7 +237,7 @@ def dump_records(records: Sequence[Mapping[str, Any]]) -> bytes:
     return json.dumps(list(records), ensure_ascii=False).encode("utf-8")
 
 
-def to_ted_date(value: Any) -> str:
+def to_ted_date(value: object) -> str:
     """``YYYYMMDD`` for date/datetime/ISO text; unparseable input is passed through as text."""
     if hasattr(value, "strftime"):
         return str(value.strftime("%Y%m%d"))
@@ -365,8 +253,8 @@ def build_ted_query(
     cpv_codes: Sequence[str] | None = None,
     country: str | None = None,
     contractor_name: str | None = None,
-    date_from: Any = None,
-    date_to: Any = None,
+    date_from: object = None,
+    date_to: object = None,
 ) -> str:
     """TED expert query. An explicit ``query`` wins; otherwise filters are AND-combined
     and always restricted to award notices with a winner (:data:`AWARD_FILTER`)."""
@@ -404,7 +292,7 @@ def query_coverage(query: str | None) -> str:
 _GERMAN_AMOUNT = re.compile(r"^\s*-?\d{1,3}(\.\d{3})+(,\d+)?\s*$|^\s*-?\d+,\d{1,2}\s*$")
 
 
-def _amount_texts(raw: Any) -> list[Any]:
+def _amount_texts(raw: object) -> list[object]:
     if isinstance(raw, str):
         return [raw]
     if isinstance(raw, dict):
@@ -414,7 +302,7 @@ def _amount_texts(raw: Any) -> list[Any]:
     return []
 
 
-def inspect_notice(notice: Any) -> list[Issue]:
+def inspect_notice(notice: object) -> list[Issue]:
     """Visible warnings the legacy normalisation does not report (never alters records).
 
     ``ambiguous_amount``: German decimal comma text; ``unparsed_amount``: text
@@ -424,32 +312,12 @@ def inspect_notice(notice: Any) -> list[Issue]:
     """
     if not isinstance(notice, dict):
         return [Issue("not_a_notice", "Eintrag ist kein TED-Notice-Objekt.", True)]
-    issues: list[Issue] = []
-    for field in ("contract_value", "estimated_value"):
-        raw = _first_present(notice, FIELD_ALIASES[field])
-        texts = _amount_texts(raw)
-        for text in texts:
-            if not isinstance(text, str):
-                continue
-            if _GERMAN_AMOUNT.match(text):
-                issues.append(
-                    Issue(
-                        "ambiguous_amount",
-                        f"{field}: '{text}' ist mehrdeutig "
-                        "(Dezimalkomma); der Altvertrag entfernt Kommas.",
-                        True,
-                        field,
-                    )
-                )
-            elif extract_amount(text)[0] is None:
-                issues.append(
-                    Issue("unparsed_amount", f"{field}: '{text}' ist keine Zahl.", False, field)
-                )
+    issues = _amount_issues(notice)
     for field in DATE_FIELDS:
-        raw = _first_present(notice, FIELD_ALIASES[field])
+        raw = first_present(notice, FIELD_ALIASES[field])
         if raw is not None and to_iso_date(raw) is None:
             issues.append(Issue("unparsed_date", f"{field}: Datum nicht lesbar.", False, field))
-    if not extract_text(_first_present(notice, FIELD_ALIASES["contractor_name"])):
+    if not extract_text(first_present(notice, FIELD_ALIASES["contractor_name"])):
         issues.append(
             Issue(
                 "no_contractor",
@@ -469,4 +337,28 @@ def inspect_notice(notice: Any) -> list[Issue]:
                 False,
             )
         )
+    return issues
+
+
+def _amount_issues(notice: Mapping[str, Any]) -> list[Issue]:
+    """``ambiguous_amount``/``unparsed_amount`` for the text amounts of both value fields."""
+    issues: list[Issue] = []
+    for field in ("contract_value", "estimated_value"):
+        for text in _amount_texts(first_present(notice, FIELD_ALIASES[field])):
+            if not isinstance(text, str):
+                continue
+            if _GERMAN_AMOUNT.match(text):
+                issues.append(
+                    Issue(
+                        "ambiguous_amount",
+                        f"{field}: '{text}' ist mehrdeutig "
+                        "(Dezimalkomma); der Altvertrag entfernt Kommas.",
+                        True,
+                        field,
+                    )
+                )
+            elif extract_amount(text)[0] is None:
+                issues.append(
+                    Issue("unparsed_amount", f"{field}: '{text}' ist keine Zahl.", False, field)
+                )
     return issues

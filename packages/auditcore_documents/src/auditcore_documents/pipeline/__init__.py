@@ -93,6 +93,33 @@ from auditcore_documents.pipeline.stages.validation import (
 )
 
 
+def _donut_stages(
+    profile: PipelineProfile,
+    ocr_stage: OcrStage,
+    validation_stage: ValidationStage,
+    donut_merge: DonutFieldMergeStage | None,
+    audit: AuditSink | None,
+    hashing: HashingService,
+) -> list[PipelineStage]:
+    """Donut-Profil: OCR-Backend setzen, Zusammenführung und Donut-Regeln ergänzen."""
+    if profile.ocr_backend != "donut":
+        return []
+    ocr_stage.backend = "donut"
+    known = {rule.rule_id for rule in validation_stage.rules}
+    validation_stage.rules = [
+        *validation_stage.rules,
+        *(rule for rule in donut_rules() if rule.rule_id not in known),
+    ]
+    return [
+        donut_merge
+        or DonutFieldMergeStage(
+            audit_service=audit,
+            hashing_service=hashing,
+            min_field_confidence=profile.donut_min_field_confidence or 0.90,
+        )
+    ]
+
+
 def build_pipeline(
     *,
     profile: PipelineProfile,
@@ -124,22 +151,7 @@ def build_pipeline(
         isinstance(rule, AmountFormatRule) for rule in validation_stage.rules
     ):
         validation_stage.rules = [*validation_stage.rules, AmountFormatRule()]
-    merge_stages: list[PipelineStage] = []
-    if profile.ocr_backend == "donut":
-        ocr_stage.backend = "donut"
-        merge_stages.append(
-            donut_merge
-            or DonutFieldMergeStage(
-                audit_service=audit,
-                hashing_service=hashing,
-                min_field_confidence=profile.donut_min_field_confidence or 0.90,
-            )
-        )
-        known = {rule.rule_id for rule in validation_stage.rules}
-        validation_stage.rules = [
-            *validation_stage.rules,
-            *(rule for rule in donut_rules() if rule.rule_id not in known),
-        ]
+    merge_stages = _donut_stages(profile, ocr_stage, validation_stage, donut_merge, audit, hashing)
     stages: list[PipelineStage] = [
         ingestion or IngestionStage(audit_service=audit, hashing_service=hashing),
         PreprocessStage(audit_service=audit, hashing_service=hashing),

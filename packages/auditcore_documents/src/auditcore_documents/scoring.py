@@ -33,7 +33,8 @@ def _token_set_ratio() -> Callable[[str, str], float]:
             "Das Ähnlichkeitsmaß rapidfuzz-token-set benötigt das Extra "
             "'fuzzy' (rapidfuzz); ein stiller Wechsel auf difflib erfolgt nicht."
         ) from exc
-    return fuzz.token_set_ratio
+    ratio: Callable[[str, str], float] = fuzz.token_set_ratio
+    return ratio
 
 
 def rapidfuzz_token_set() -> Scorer:

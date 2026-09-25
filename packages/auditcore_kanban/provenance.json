@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_kanban",
+  "version": "0.1.0",
+  "contract": "auditcore_kanban.board/1",
+  "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "2c726f3c1481775cd34aeaa83f87137d6ab12ffe",
+      "files": [
+        {
+          "git_blob": "ccdb57dd3677b36fb4212c5347c2cfcd0096cabe",
+          "path": "backend/app/api/vpai_notebook/workspace.py"
+        },
+        {
+          "git_blob": "b2ecd79398c77c13b450331642074840d535ca6c",
+          "path": "backend/app/modules/vp_ai/utils/user_scoped.py"
+        },
+        {
+          "git_blob": "079b0c014d6e2669438e3c69b67b6ae06d8a50d1",
+          "path": "backend/app/models/vpai_notebook.py"
+        },
+        {
+          "git_blob": "3c208f8ab6fda2923023e9ab6661ffc5080e6741",
+          "path": "backend/alembic/versions/049_add_board_columns.py"
+        },
+        {
+          "git_blob": "7f30c55d918f136f58b0d4a8383c46f0a7d3efd5",
+          "path": "frontend/src/components/workspace/WorkspaceBoard.vue"
+        },
+        {
+          "git_blob": "7955e41c8fb4673b49111e546e226ed9065f9105",
+          "path": "frontend/src/components/workspace/WorkspaceTaskCard.vue"
+        },
+        {
+          "git_blob": "346e2758f8cee1fe203dd4c29d2342a90b494771",
+          "path": "frontend/src/components/workspace/WorkspaceTaskDetail.vue"
+        },
+        {
+          "git_blob": "efca51d3293c55bba28fbad657d0e4a928806916",
+          "path": "frontend/src/components/workspace/BoardSettingsDialog.vue"
+        },
+        {
+          "git_blob": "f1473a5b79cf60a787e25bc5d4fce7fa3c02709e",
+          "path": "frontend/src/components/workspace/BoardShareDialog.vue"
+        },
+        {
+          "git_blob": "bb0771652d04a68eeb522052ee00f7286a35f485",
+          "path": "frontend/src/components/workspace/WorkspaceSidebar.vue"
+        },
+        {
+          "git_blob": "bdf2c1b0ad0a15c94872ae1546b3681e05a34304",
+          "path": "frontend/src/composables/useWorkspace.ts"
+        },
+        {
+          "git_blob": "0fac8e0e1bbdbcfbff50f5b99648511c355fe3e6",
+          "path": "frontend/src/types/workspace.ts"
+        },
+        {
+          "git_blob": "8234c54220ace6ce87404f833ce6770d81c2511e",
+          "path": "frontend/src/composables/notebook/useDbKanban.ts"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/cockpit",
+      "commit": "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+      "files": [
+        {
+          "git_blob": "7e86a8d4b7f437dcdfb3bbf55335a5cd13b38df8",
+          "path": "frontend/src/views/KanbanView.vue"
+        },
+        {
+          "git_blob": "c98320f5940692d78d37f1041634c6ecb8e4f960",
+          "path": "frontend/src/components/kanban/labels.ts"
+        },
+        {
+          "git_blob": "81b5097ec13db7816d7fc7d4d49d9a16f4f5ec2e",
+          "path": "frontend/src/components/kanban/AuftragSpalte.vue"
+        },
+        {
+          "git_blob": "ad5c2927639155a146c04cc9795cd4eb4b75ba03",
+          "path": "frontend/src/components/kanban/AuftragKarte.vue"
+        },
+        {
+          "git_blob": "666cb4f184d4259de7a2cd733b217766a3db8b5d",
+          "path": "src/cockpit/routes/auftraege.py"
+        },
+        {
+          "git_blob": "14ad907a101413df73ea9bd06fcc7e301761cd7b",
+          "path": "src/cockpit/services/auftraege.py"
+        }
+      ]
+    }
+  ],
+  "origin": "Neu geschrieben nach dem ausgeführten Verhalten des Workspace-Boards (audit_designer) und des Auftrags-Kanbans (cockpit); Grenzwerte, Meldungen, Standardspalten und Vorlagen übernommen, Positionen durch Rang-Schlüssel ersetzt.",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung von audit_designer oder cockpit. Nutzerauftrag vom 25.09.2026: Workspace-Board aus audit_designer als Vorbild übernehmen."
+    }
+  },
+  "characterization": {
+    "legacy_backend": {
+      "fixture": "tests/fixtures/legacy_kanban_observed.json",
+      "tool": "tools/capture_legacy_kanban.py",
+      "cases": 77
+    },
+    "cockpit_rules": {
+      "fixture": "tests/fixtures/cockpit_rules_observed.json",
+      "tool": "tools/capture_cockpit_rules.py"
+    },
+    "parity": {
+      "directory": "tests/fixtures/parity",
+      "tool": "tools/build_parity_fixtures.py"
+    }
+  }
+}

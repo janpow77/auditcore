@@ -1,4 +1,4 @@
-# auditcore_documents 0.2.0
+# auditcore_documents 0.3.0
 
 Dokumentvergleich und Gesetzessynopse ohne Web-, Datenbank-, Celery- oder
 KI-Abhängigkeit. Extrahiert und charakterisiert aus
@@ -7,7 +7,7 @@ Ein Vergleich ist eine Arbeitshilfe: Er stellt Unterschiede fest und
 bereitet sie auf, er trifft keine Prüfungsentscheidung.
 
 ```bash
-python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.2.0'
+python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.3.0'
 # Debian: python3-auditcore-documents (Kern); Extras über pip, pdftotext über
 # poppler-utils (optional, sonst pypdf). python3-lxml 4.9.2 (bookworm) ist
 # technisch lauffähig (gehärteter Parser), erfüllt aber nicht die Extra-Untergrenze.
@@ -23,6 +23,8 @@ python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.2
 | `pdf-render` | reportlab ≥ 4.0.8 | Synopse als PDF (wie ECOHESION `comparison.pdf`) |
 | `mime` | python-magic ≥ 0.4.27 | MIME-Erkennung der Pipeline wie im Original (libmagic) |
 | `ocr-raster` | pypdfium2, Pillow | Seitenrasterung vor Gateway-OCR |
+| `web` | Starlette ≥ 0.47.2, python-multipart ≥ 0.0.20 | REST-Anbindung der Synopse-Oberfläche als ASGI-Anwendung (`auditcore_documents.web.create_app`) |
+| `fastapi` | FastAPI ≥ 0.116.1 (+ `web`) | dieselben Endpunkte als `APIRouter` (`create_router`) |
 | `donut` | transformers, torch ≥ 2.7, sentencepiece, Pillow | `LocalDonut`: Offline-Inferenz eines eigenen Donut-Modells (nur lokales Verzeichnis, SHA-256-Prüfung); CPU/CUDA-Build über den Paketindex der Anwendung |
 
 ## Nutzung
@@ -159,3 +161,24 @@ orchestrator = pl.build_pipeline(profile=pl.DONUT_PIPELINE, ocr=ocr)
 - Ohne Feldkonfidenzen (z. B. heutiger vision-service) gilt OCR-Konfidenz 0,80:
   ein Donut-Lauf endet dann nie automatisch mit `OK`.
 - Das Modell ist nicht Teil des Pakets (Entscheidung E2: Release-Asset).
+
+## REST-Anbindung der Synopse-Oberfläche (0.3.0)
+
+`auditcore_documents.web` verbindet die Oberfläche `<flowaudit-synopsis>` aus
+`@flowaudit/ui` mit dem Vergleichskern. Dienst, Ablage-Port und Ausgaben
+(JSON, Markdown, DOCX, PDF) brauchen nur die Standardbibliothek; Starlette
+bzw. FastAPI kommen über die Extras `web` und `fastapi`. Die bestehenden
+Module sind unverändert.
+
+```python
+from auditcore_documents.web import SynopsisService, create_app
+
+app.mount("/api/synopsis", create_app(SynopsisService(), identify=aktueller_benutzer))
+```
+
+Endpunkte, JSON-Formen, Grenzen und Statuscodes: `docs/ui/synopsis-rest.md`
+im Repository; Abgleich mit audit_designer, ecohesion und regulierung:
+`docs/ui/synopsis-paritaet.md`. Die Bibliothek authentifiziert nicht:
+`identify` liefert den Eigentümer je Anfrage, fremde Vergleiche ergeben 404.
+Debian: `python3-starlette`/`python3-fastapi` stehen als *Suggests*; die
+Mindestversionen erfüllt erst ein neueres Debian als trixie, sonst pip.

@@ -5,7 +5,6 @@ in their family packages and depend on this core, not the other way round.
 """
 
 from .adapter import AdapterRegistry, FetchContext, SourceAdapter, require
-from .compat import deprecated_aliases
 from .engine import CancelToken, HarvestEngine, RateLimit, RetryPolicy
 from .errors import (
     AuthError,
@@ -102,7 +101,6 @@ __all__ = [
     "__version__",
     "canonical_hash",
     "decode_json",
-    "deprecated_aliases",
     "page_result",
     "raise_for_status",
     "require",
