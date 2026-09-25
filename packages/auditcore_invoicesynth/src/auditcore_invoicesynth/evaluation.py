@@ -50,7 +50,7 @@ ACCEPTANCE_THRESHOLDS: dict[str, float] = {
 MAX_WRONG_RATE_AFTER_PLAUSIBILITY = 0.005
 
 
-def flatten(parse: Mapping[str, Any]) -> dict[str, str]:
+def flatten(parse: Mapping[str, object]) -> dict[str, str]:
     """Ziel-JSON → flache Felder; ``vat_amount`` = Summe der Steuerzeilen (wie gedruckt)."""
     flat: dict[str, str] = {}
     for key, value in parse.items():
@@ -156,7 +156,7 @@ Acceptor = Callable[[dict[str, str]], set[str]]
 
 
 def evaluate(
-    pairs: Iterable[tuple[Mapping[str, Any], Mapping[str, Any]]],
+    pairs: Iterable[tuple[Mapping[str, object], Mapping[str, object]]],
     *,
     accept: Acceptor | None = None,
     fields: tuple[str, ...] = EVALUATED_FIELDS,
@@ -179,8 +179,8 @@ def evaluate(
 def _score_document(
     report: EvaluationReport,
     fields: tuple[str, ...],
-    truth: Mapping[str, Any],
-    prediction: Mapping[str, Any],
+    truth: Mapping[str, object],
+    prediction: Mapping[str, object],
     accept: Acceptor | None,
 ) -> bool:
     """Felder eines Belegs zählen; ``True``, wenn alle Pflichtfelder stimmen."""
