@@ -139,7 +139,7 @@ def _choice(value: object, allowed: tuple[str, ...], label: str) -> str:
     return str(value)
 
 
-def _section(data: Mapping[str, Any], key: str) -> Mapping[str, Any] | None:
+def _section(data: Mapping[str, object], key: str) -> Mapping[str, object] | None:
     if key not in data:
         raise ProfileError(f"Abschnitt {key!r} fehlt (null angeben, wenn nicht festgelegt).")
     value = data[key]
@@ -150,7 +150,7 @@ def _section(data: Mapping[str, Any], key: str) -> Mapping[str, Any] | None:
     return value
 
 
-def _check_header(data: Mapping[str, Any]) -> None:
+def _check_header(data: Mapping[str, object]) -> None:
     if data["schema"] != SCHEMA:
         raise ProfileError("Unbekanntes Profilschema.")
     for key in ("id", "version", "status", "legal_status"):
@@ -160,7 +160,7 @@ def _check_header(data: Mapping[str, Any]) -> None:
         raise ProfileError("source muss ein Objekt sein.")
 
 
-def _ema_rule(section: Mapping[str, Any] | None) -> EmaRule | None:
+def _ema_rule(section: Mapping[str, object] | None) -> EmaRule | None:
     if section is None:
         return None
     return EmaRule(
@@ -169,7 +169,7 @@ def _ema_rule(section: Mapping[str, Any] | None) -> EmaRule | None:
     )
 
 
-def _rsi_rule(section: Mapping[str, Any] | None) -> RsiRule | None:
+def _rsi_rule(section: Mapping[str, object] | None) -> RsiRule | None:
     if section is None:
         return None
     flat = section["flat_value"]
@@ -186,7 +186,7 @@ def _rsi_rule(section: Mapping[str, Any] | None) -> RsiRule | None:
     )
 
 
-def _atr_rule(section: Mapping[str, Any] | None) -> AtrRule | None:
+def _atr_rule(section: Mapping[str, object] | None) -> AtrRule | None:
     if section is None:
         return None
     return AtrRule(
@@ -194,13 +194,13 @@ def _atr_rule(section: Mapping[str, Any] | None) -> AtrRule | None:
     )
 
 
-def _adx_rule(section: Mapping[str, Any] | None) -> AdxRule | None:
+def _adx_rule(section: Mapping[str, object] | None) -> AdxRule | None:
     if section is None:
         return None
     return AdxRule(gaps=cast(MoveGaps, _choice(section["gaps"], _MOVE_GAPS, "adx.gaps")))
 
 
-def _min_lookback(data: Mapping[str, Any]) -> int | None:
+def _min_lookback(data: Mapping[str, object]) -> int | None:
     """Optional ``warmup.min_lookback``; characterized legacy profiles do not define it."""
     if "warmup" not in data:
         return None
@@ -213,7 +213,7 @@ def _min_lookback(data: Mapping[str, Any]) -> int | None:
     return value
 
 
-def _profile(data: Mapping[str, Any]) -> IndicatorProfile:
+def _profile(data: Mapping[str, object]) -> IndicatorProfile:
     _check_header(data)
     ema = _ema_rule(_section(data, "ema"))
     rsi = _rsi_rule(_section(data, "rsi"))
@@ -226,11 +226,12 @@ def _profile(data: Mapping[str, Any]) -> IndicatorProfile:
         raise ProfileError("Profil legt keinen Indikator fest.")
     min_lookback = _min_lookback(data)
     return IndicatorProfile(
-        id=data["id"],
-        version=data["version"],
-        status=data["status"],
-        legal_status=data["legal_status"],
-        source=MappingProxyType(dict(data["source"])),
+        # _check_header guarantees non-empty texts and a source mapping.
+        id=cast(str, data["id"]),
+        version=cast(str, data["version"]),
+        status=cast(str, data["status"]),
+        legal_status=cast(str, data["legal_status"]),
+        source=MappingProxyType(dict(cast(Mapping[str, object], data["source"]))),
         fingerprint=fingerprint(data),
         summation=cast(Summation, _choice(data["summation"], _SUMMATION, "summation")),
         ema=ema,
