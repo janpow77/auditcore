@@ -1,27 +1,80 @@
 # auditcore_llm_client
 
-Client für den **ai-router** und das **Flow-Agent-Inferenz-Gateway**. Er ersetzt die
-fast gleichen AI-Router-Clients in audit_designer, flowinvoice und audit-portal
-(zusammen rund 3.100 Zeilen) und den schlanken Client in cockpit.
+## Zweck
 
-Grundsatz: **FlowAgent ist der einzige GPU-Weg.** Die Bibliothek spricht nur mit
-einer konfigurierten Gateway-URL (Flow-Agent oder ai-router). Direkte Aufrufe an
-Ollama, vLLM oder GPU-Hosts gibt es nicht; URLs mit dem Ollama-Port 11434 werden
-abgelehnt, einen lokalen Fallback gibt es nicht.
+Client für den ai-router und das Flow-Agent-Inferenz-Gateway: Chat, Streaming, Embeddings, Rerank, OCR und Health, mit Schwärzung, Wiederholungen und Circuit-Breaker.
+
+Er ersetzt die fast gleichen AI-Router-Clients in audit_designer, flowinvoice
+und audit-portal (zusammen rund 3.100 Zeilen) und den schlanken Client in
+cockpit. Grundsatz: **FlowAgent ist der einzige GPU-Weg.** Die Bibliothek
+spricht nur mit einer konfigurierten Gateway-URL (Flow-Agent oder ai-router);
+direkte Aufrufe an Ollama, vLLM oder GPU-Hosts gibt es nicht, URLs mit dem
+Ollama-Port 11434 werden abgelehnt, einen lokalen Fallback gibt es nicht.
 
 ## Installation
 
+Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt):
+
 ```bash
-pip install 'auditcore_llm_client[http]'   # mit httpx (sync + async Client)
-pip install auditcore_llm_client           # nur Kern: Konfiguration, Requests, Parser, Schwärzung
+python -m pip install 'auditcore_llm_client[http]' \
+  --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Der Kern braucht nur die Standardbibliothek. `LlmClient` und `AsyncLlmClient`
-benötigen das Extra `http` (httpx ≥ 0.23, Debian: `python3-httpx`).
+Version 0.1.0 ist noch in keinem Release veröffentlicht. Nach der
+Veröffentlichung steht die Direkt-URL mit Hash im Index unter
+`https://janpow77.github.io/auditcore/simple/auditcore-llm-client/`; Muster
+für eine hashgebundene `requirements.txt`:
+
+```text
+auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_llm_client-0.1.0-py3-none-any.whl#sha256=<sha256>
+```
+
+Debian/Ubuntu über die signierte APT-Quelle eines Releases
+([Einrichtung](../../docs/deployment/package-feed.md)):
+
+```bash
+sudo apt-get install python3-auditcore-llm-client
+```
+
+Extras: `[http]` – httpx ≥ 0.23 (Debian: `python3-httpx`) für `LlmClient` und
+`AsyncLlmClient`; ohne Extra nur der Kern (Konfiguration, Requests, Parser,
+Schwärzung, Health, Retry, Breaker). `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
 
+Der Kern läuft ohne httpx und ohne Netzwerk:
+
 ```python
+from auditcore_llm_client import (
+    FLOWINVOICE, ConfigurationError, Mode, config_from_env, redact, strip_think_tags,
+    validate_base_url,
+)
+
+env = {
+    "FLOW_AGENT_URL": "https://gateway.example.invalid",
+    "FLOW_AGENT_APP_ID": "flowinvoice",
+    "FLOW_AGENT_APP_KEY": "geheim-123",
+}
+config = config_from_env(FLOWINVOICE, env)   # gesetzte FLOW_AGENT_URL → Flow-Agent-Modus
+assert config.mode is Mode.FLOW_AGENT
+assert "geheim-123" not in repr(config)      # Schlüssel erscheint nie im repr
+
+try:
+    validate_base_url("http://gpu-host:11434")
+except ConfigurationError as error:
+    assert "Ollama" in str(error)            # direkter GPU-Weg wird abgelehnt
+
+assert strip_think_tags("<think>abwägen</think>Beleg ist vollständig.") == "Beleg ist vollständig."
+```
+
+```pycon
+>>> redact("Fehler bei https://gateway.example.invalid/api mit Bearer abc.def")
+'Fehler bei <url> mit Bearer <token>'
+```
+
+Mit dem Extra `[http]` und einem erreichbaren Gateway (nicht im Test ausgeführt):
+
+```python no-run
 from auditcore_llm_client import FLOWINVOICE, LlmClient, RouterHealth, config_from_env
 
 config = config_from_env(FLOWINVOICE)          # liest FLOW_AGENT_URL bzw. LLM_ROUTER_URL …
@@ -35,7 +88,8 @@ Asynchron identisch mit `AsyncLlmClient` (`await client.generate(...)`,
 `async for event in client.stream_chat(...)`). Für Tests wird der Transport
 injiziert: `LlmClient(config, transport=httpx.MockTransport(handler))`.
 
-## API
+## API-Überblick
+
 
 | Methode | ai-router | Flow-Agent (`/api/v1/ai/apps/{app_id}…`) |
 |---|---|---|
@@ -57,7 +111,7 @@ Header wie in den Apps: ai-router `X-App-Id` und optional `X-Api-Key`; Flow-Agen
 (`ClientConfig.sensitivity`) und weitere, nicht authentisierende Header
 (`extra_headers`).
 
-### Sensitivität (Flow-Agent)
+#### Sensitivität (Flow-Agent)
 
 `X-Flow-Sensitivity` (`public|internal|confidential|restricted`): wirksam ist das
 Maximum aus App-Default und Header – der Header kann nur hochstufen. Ohne Header
@@ -68,7 +122,7 @@ Modell), mit HTTP 403 → `EgressDeniedError` (Audit `ai.egress-denied`, kein
 Upstream-Aufruf). Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
 nicht im Circuit-Breaker und nicht im Health-Zähler.
 
-### Denken/Reasoning
+#### Denken/Reasoning
 
 `generate`, `chat` und `stream_chat` nehmen `reasoning_effort`
 (`none|low|medium|high`). OpenAI-Routen bekommen das Feld unverändert, Ollama-
@@ -78,7 +132,7 @@ setzt der ai-router für Modelle mit Präfix `qwen3.5` selbst
 Flow-Agent-Vertrag `/generate` kennt das Feld nicht; dort sendet das Gateway
 immer `think=false`.
 
-## Fehler
+### Fehler
 
 Alle Fehler sind `LlmClientError` (Alias `AiRouterError`) mit `kind`,
 `status_code`, `endpoint`, `retry_after`: `ConfigurationError`,
@@ -106,7 +160,7 @@ config = config_from_env(FLOWINVOICE, secret_resolver=SecretResolver.from_env().
 Ohne Resolver ist eine `secret://`-Referenz ein `ConfigurationError`; sie wird
 nie als Schlüssel gesendet. Fehler des Resolvers werden ohne dessen Text gemeldet.
 
-## Wiederholungen und Circuit-Breaker
+### Wiederholungen und Circuit-Breaker
 
 Standard wie bisher: ein Versuch, kein Breaker. Opt-in:
 
@@ -122,7 +176,105 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 `retry_timeout=True`. Der Breaker öffnet nach Ausfällen (Verbindung, Timeout,
 5xx, 429) und lässt nach `reset_timeout` genau einen Probeaufruf durch.
 
-## Profile je App
+<!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
+Öffentliche Namen aus `auditcore_llm_client.__all__` (63):
+
+| Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
+|---|---|---|---|
+| `AUDIT_DESIGNER` | Konstante | – | `profiles` |
+| `AUDIT_PORTAL` | Konstante | – | `profiles` |
+| `COCKPIT` | Konstante | – | `profiles` |
+| `FLOWINVOICE` | Konstante | – | `profiles` |
+| `GENERIC` | Konstante | Neutral profile for new consumers: OpenAI-compatible routes, no fixed options. | `profiles` |
+| `PROFILES` | Konstante | – | `profiles` |
+| `AiRouterError` | Wert | Migration alias for the name used in audit_designer, flowinvoice and audit-portal. | `errors` |
+| `AsyncLlmClient` | Klasse | ai-router/Flow-Agent client with async API. | `async_client` |
+| `BreakerPolicy` | Datenklasse | Circuit breaker thresholds (legacy flowinvoice: 3 failures, 180 s). | `resilience` |
+| `BreakerState` | Aufzählung | Circuit breaker state. | `resilience` |
+| `CircuitBreaker` | Klasse | Closed → open after ``failure_threshold`` outages; one trial after ``reset_timeout``. | `resilience` |
+| `CircuitOpenError` | Ausnahme | The circuit breaker is open; the call was not sent. | `errors` |
+| `ClientConfig` | Datenklasse | Everything a client needs; build it directly or via ``config_from_env``. | `config` |
+| `ConfigurationError` | Ausnahme | Missing or unsafe configuration (no URL, missing key, direct GPU host). | `errors` |
+| `EgressDeniedError` | Ausnahme | Flow-Agent HTTP 403: the effective sensitivity allows no available model. | `errors` |
+| `EmbedResult` | Datenklasse | Answer of ``embed``; vectors follow the order of the input texts. | `results` |
+| `EmbedRoute` | Aufzählung | Embedding route of the ai-router. | `profiles` |
+| `SecretRefResolver` | Typalias | Resolves a ``secret://`` reference to the plain value (injected, e.g. flow-agent client). | `environment` |
+| `SensitivityRejectedError` | Ausnahme | Flow-Agent HTTP 400: invalid ``X-Flow-Sensitivity`` value (policy, not an outage). | `errors` |
+| `is_secret_reference` | Funktion | True for Flow-Agent secret references (``secret://<anbieter>/<name>``). | `environment` |
+| `resolve_secret` | Funktion | Plain value or resolved ``secret://`` reference; the value never enters messages. | `environment` |
+| `EnvNames` | Datenklasse | Environment variable names read by ``config_from_env``. | `profiles` |
+| `ErrorKind` | Aufzählung | Why a call failed. | `errors` |
+| `GenerateRoute` | Aufzählung | How a single prompt (plus optional system prompt) is sent to the ai-router. | `profiles` |
+| `HealthAuth` | Aufzählung | Headers of the ai-router ``GET /health`` call. | `profiles` |
+| `InvalidResponseError` | Ausnahme | The response did not match the expected schema. | `errors` |
+| `LlmClient` | Klasse | ai-router/Flow-Agent client with sync API. | `sync_client` |
+| `LlmClientError` | Ausnahme | Base error of all client calls (legacy name: ``AiRouterError``). | `errors` |
+| `LlmResult` | Datenklasse | Answer of ``generate``/``chat``. | `results` |
+| `Mode` | Aufzählung | Which gateway dialect the client speaks. | `config` |
+| `ModelCatalog` | Klasse | Cache logic only; the client supplies the fetch and the lock. | `catalog` |
+| `ModelDefaults` | Datenklasse | Model names used when a call names none (ai-router mode only). | `profiles` |
+| `ModelInfo` | Datenklasse | One entry of the ai-router model list (``/api/tags``). | `results` |
+| `ModelSnapshot` | Datenklasse | Model list plus the state of the last fetch. | `catalog` |
+| `NotAssignedError` | Ausnahme | Flow-Agent readiness: the capability is not assigned to a healthy worker. | `errors` |
+| `OcrResult` | Datenklasse | Answer of ``ocr`` (mapped from the ai-router ``OcrResponse``). | `results` |
+| `Profile` | Datenklasse | Dialect of one application. | `profiles` |
+| `Quality` | Aufzählung | Flow-Agent quality selector; the gateway picks the model. | `config` |
+| `RerankResult` | Datenklasse | Answer of ``rerank``; ``scores`` follow the order of the input documents. | `results` |
+| `RerankRoute` | Aufzählung | Reranker route of the ai-router. | `profiles` |
+| `RerankScore` | Datenklasse | One scored document. | `results` |
+| `ResponseTelemetry` | Datenklasse | Routing information the gateway returns in response headers. | `results` |
+| `RetryPolicy` | Datenklasse | How often and how long to retry. ``max_attempts=1`` disables retries. | `resilience` |
+| `RouterHealth` | Klasse | Last success, last error and consecutive failures of the gateway. | `health` |
+| `RouterHttpError` | Ausnahme | The router answered with an HTTP error status. | `errors` |
+| `RouterTimeoutError` | Ausnahme | The call exceeded its timeout. | `errors` |
+| `RouterUnavailableError` | Ausnahme | Router/gateway not reachable (connection error). | `errors` |
+| `SecretValue` | Klasse | A credential that does not reveal itself in ``repr``/``str``. | `config` |
+| `Sensitivity` | Aufzählung | Value of ``X-Flow-Sensitivity`` (Flow-Agent egress policy). | `config` |
+| `StreamEvent` | Datenklasse | One event of ``stream_chat``. | `results` |
+| `StreamEventKind` | Aufzählung | Kind of a streamed chat event. | `results` |
+| `Timeouts` | Datenklasse | Per-operation timeouts in seconds (defaults of all legacy clients). | `config` |
+| `UnsupportedOperationError` | Ausnahme | The operation is not offered in the configured mode. | `errors` |
+| `UsageRecord` | Datenklasse | Passed to ``ClientConfig.usage_hook`` after every LLM answer (audit-portal F3). | `results` |
+| `async_safe_call` | Funktion | Async variant of :func:`safe_call`. | `health` |
+| `config_from_env` | Funktion | Read URL, app id, key, quality and model names for ``profile``. | `environment` |
+| `get_profile` | Funktion | Look up a profile by name (``audit_designer``, ``flowinvoice``, …). | `profiles` |
+| `model_defaults_from_env` | Funktion | Model names from the profile's environment chain, else the profile defaults. | `environment` |
+| `redact` | Funktion | Return ``text`` without secrets, URLs, DSNs and tokens, truncated to ``max_len``. | `redaction` |
+| `safe_call` | Funktion | Run ``func``; return ``(result, None)`` or ``(None, redacted message)``. | `health` |
+| `strip_think_tags` | Funktion | Remove ``<think>…</think>`` reasoning blocks (Qwen3/DeepSeek). | `parsing` |
+| `unwrap_secret` | Funktion | Accept ``str``, pydantic ``SecretStr`` or ``None`` (legacy ``_unwrap_secret``). | `config` |
+| `validate_base_url` | Funktion | Normalise and check the gateway URL; raise :class:`ConfigurationError`. | `config` |
+
+Öffentliche Module:
+
+| Modul | Kurzbeschreibung |
+|---|---|
+| `auditcore_llm_client.async_client` | Asynchronous client (httpx ``AsyncClient``); transport injectable for tests. |
+| `auditcore_llm_client.catalog` | Cached model list with explicit fetch state (cockpit ``model_snapshot``). |
+| `auditcore_llm_client.config` | Client configuration: target, credentials, timeouts, resilience, profile. |
+| `auditcore_llm_client.engine` | Transport-independent call bookkeeping shared by the sync and async clients. |
+| `auditcore_llm_client.environment` | Build a :class:`ClientConfig` from environment variables of a profile. |
+| `auditcore_llm_client.errors` | Structured errors. Every message is redacted; no exception carries a secret. |
+| `auditcore_llm_client.health` | Router reachability tracking and graceful-degradation wrappers. |
+| `auditcore_llm_client.jsontypes` | JSON value types and tolerant readers for router responses (stdlib only). |
+| `auditcore_llm_client.operations` | Public operations as (request, parser) pairs – identical for sync and async. |
+| `auditcore_llm_client.parsing` | Turn gateway responses into result objects (legacy field mapping). |
+| `auditcore_llm_client.parsing_rerank` | Reranker answers: ``{"scores": [...]}`` (``/v1/rerank``) or ``{"results": [...]}``. |
+| `auditcore_llm_client.profiles` | App profiles: the characterised differences of the legacy clients as data. |
+| `auditcore_llm_client.received` | Transport-neutral view of a gateway response and the HTTP error mapping. |
+| `auditcore_llm_client.redaction` | Remove secrets from any text that leaves the client (messages, logs, health). |
+| `auditcore_llm_client.resilience` | Retries with exponential backoff and a thread-safe circuit breaker. |
+| `auditcore_llm_client.results` | Result types of all operations (field names follow the legacy dataclasses). |
+| `auditcore_llm_client.streaming` | Line decoders for streamed chat answers. |
+| `auditcore_llm_client.sync_client` | Synchronous client (httpx ``Client``); transport injectable for tests. |
+| `auditcore_llm_client.transport` | httpx binding: build requests, convert responses, map transport errors. |
+| `auditcore_llm_client.wire` | Transport-neutral request description and header construction (stdlib only). |
+| `auditcore_llm_client.wire_llm` | Request builders for text generation, chat and streaming. |
+| `auditcore_llm_client.wire_services` | Request builders for embeddings, reranking, OCR, health and the model list. |
+<!-- api-overview:end -->
+
+## Profile und Konfiguration
+
 
 | Profil | Umgebung | Unterschiede |
 |---|---|---|
@@ -132,5 +284,62 @@ Wiederholt werden 429/502/503/504 und Verbindungsfehler (exponentiell 0,5 s …
 | `COCKPIT` (**abgekündigt**) | `AI_ROUTER_URL/APP_ID/API_KEY` | Modellliste und NDJSON-Streaming; cockpit wird abgeschaltet (Funktionen in flow-agent #50), Profil bleibt nur für bestehende Tests |
 | `GENERIC` | `AI_ROUTER_*`, `FLOW_AGENT_*` | neutrale Voreinstellung für neue Consumer |
 
-Abweichungen vom Altverhalten: [docs/behavior-changes.md](docs/behavior-changes.md).
-Charakterisierung: 60 ausgeführte Altfälle in `tests/fixtures/legacy_clients_observed.json`.
+`config_from_env(profile, environ=None, *, secret_resolver=None)` liest die
+Umgebungsnamen des Profils; es gibt weder Standard-URL noch Standardschlüssel.
+Zeitgrenzen stehen in `Timeouts`, Sensitivität in `ClientConfig.sensitivity`,
+zusätzliche nicht authentisierende Header in `extra_headers`, Metering über
+`usage_hook`.
+
+## Herkunft und Charakterisierung
+
+Neuimplementierung gegen charakterisierte Verträge: Verhalten der ausgeführten
+ai-router-Clients von audit_designer, flowinvoice (ai-router- und
+Flow-Agent-Modus), audit-portal und cockpit; Routen und Verträge aus ai-router
+und flow-agent gelesen. Zeitgrenzen, Health-Schwellen, Routen-Rückfälle,
+Feldabbildungen und Schwärzungsmuster wurden übernommen, der Code neu
+geschrieben; Commits und Blob-SHAs stehen in `provenance.json`.
+Charakterisierung: 60 ausgeführte Altfälle in
+`tests/fixtures/legacy_clients_observed.json`, Parität für Anfragen und
+Antwortverarbeitung (sync und async).
+
+## Bewusste Verhaltensabweichungen
+
+Vollständig in [docs/behavior-changes.md](docs/behavior-changes.md) (B1–B13).
+Kurz: jede Meldung wird geschwärzt, Transportfehler ohne verkettete Ursache
+(`from None`); keine Standard-URLs und kein lokaler Ollama-Fallback;
+Flow-Agent ohne Schlüssel scheitert schon bei der Konfiguration; Health-Zählung
+zentral, sobald eine `RouterHealth` übergeben wird; `stream_chat` wirft
+HTTP-/Transportfehler statt Fehlerereignisse; Rerank mit falscher Score-Anzahl
+setzt `degraded=True`; Retry und Breaker nur als Opt-in; Flow-Agent-Ablehnungen
+als eigene Fehlerarten.
+
+## Abhängigkeiten
+
+Python ≥ 3.11, Kern nur Standardbibliothek. Extra `[http]`: `httpx>=0.23`
+(BSD-3-Clause). `flow_agent_client` (Secret-Referenzen) ist keine
+Abhängigkeit, der Resolver wird injiziert.
+
+## Sicherheit und Datenschutz
+
+- **Datenabfluss:** Prompts, Dokumente (OCR) und Texte (Embeddings, Rerank)
+  gehen an das konfigurierte Gateway. Welche Modelle sie sehen dürfen, steuert
+  die Sensitivität `X-Flow-Sensitivity` (nur hochstufbar); `restricted` ohne
+  lokales Modell endet in `EgressDeniedError`, nicht in einem externen Aufruf.
+- **Schlüssel:** nur aus Konfiguration oder Umgebung, bevorzugt als
+  `secret://`-Referenz; nie in Meldungen, Logs, Health-Einträgen oder `repr`.
+  Zugangsdaten, Query und Fragment in der Gateway-URL werden abgelehnt.
+- **Zeitgrenzen:** je Operation über `Timeouts`; Zeitüberschreitungen werden
+  nur mit `retry_timeout=True` wiederholt.
+- Die Bibliothek speichert keine Prompts oder Antworten; `usage_hook` erhält
+  nur Nutzungsdaten (`UsageRecord`).
+
+## Lizenz und Herkunftsnachweis
+
+MIT (`LICENSE`). Der Rechteinhaber hat am 22.09.2026 entschieden, dass die
+Bibliotheken unter MIT stehen, die Anwendungen nicht (`USER_AUTHORIZED_MIT`
+nur für diese Bibliothek); Auftrag zum Bau vom 25.09.2026. Kein Code Dritter
+enthalten. Quellen und Erklärung: `NOTICE` und `provenance.json`.
+
+## Änderungen
+
+Siehe [CHANGELOG.md](CHANGELOG.md).

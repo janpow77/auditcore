@@ -9,14 +9,10 @@
     "auditcore_harvest",
     "auditcore_invoicegenerator",
     "auditcore_kanban",
-    "auditcore_llm_client",
     "auditcore_price_analysis",
     "auditcore_procurement",
     "auditcore_risk",
     "auditcore_sampling",
-    "auditcore_statistics",
-    "bpmn-flowaudit",
-    "bpmn-react",
-    "bpmn-vue"
+    "auditcore_statistics"
   ]
 }
