@@ -28,7 +28,7 @@ const props = withDefaults(
     ports?: EditorPorts & { validation?: ValidationPort }
     comments?: Comment[]
   }>(),
-  { name: '', locale: 'de', theme: 'auto', readonly: false, author: '', profileData: undefined, comments: () => [] },
+  { xml: undefined, src: undefined, apiBase: undefined, diagramId: undefined, profile: undefined, storage: undefined, ports: undefined, name: '', locale: 'de', theme: 'auto', readonly: false, author: '', profileData: undefined, comments: () => [] },
 )
 
 const host = useHost()

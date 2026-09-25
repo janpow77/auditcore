@@ -44,55 +44,10 @@ export interface ActionOptions {
 const THEMES = ['auto', 'light', 'dark'] as const
 export type Theme = (typeof THEMES)[number]
 
-export function useEditorActions(setup: Setup, handlers: ActionHandlers, options: ActionOptions) {
-  const { editor, validation, ui } = setup
+/** Enrichment: collect suggestions for the dialog and apply the accepted ones. */
+function enrichmentActions(setup: Setup, handlers: ActionHandlers, options: ActionOptions) {
+  const { editor, ui } = setup
   const suggestions = shallowRef<Suggestion[]>([])
-  const theme = shallowRef<Theme>('auto')
-
-  const toggleSide = (view: typeof ui.side) => {
-    ui.side = ui.side === view && ui.rightOpen ? 'properties' : view
-    ui.rightOpen = true
-  }
-
-  const ACTIONS: Record<ToolbarAction, () => void> = {
-    save: handlers.save,
-    new: handlers.newDiagram,
-    import: () => undefined,
-    export: () => (ui.dialogs.export = true),
-    undo: () => editor.undo(),
-    redo: () => editor.redo(),
-    'zoom-in': () => editor.zoom(1.2),
-    'zoom-out': () => editor.zoom(1 / 1.2),
-    fit: () => editor.zoom('fit'),
-    info: () => (ui.dialogs.info = true),
-    search: () => (ui.dialogs.search = true),
-    minimap: () => toggleMinimap(),
-    xml: () => (ui.dialogs.xml = true),
-    shortcuts: () => (ui.dialogs.shortcuts = true),
-    validate: () => (validation.runLocal(), toggleSide('issues')),
-    'validate-server': () => (void validation.runServer(), toggleSide('issues')),
-    enrich: () => openEnrichment(),
-    esi: () => (ui.dialogs.esi = true),
-    analysis: handlers.analysis,
-    share: handlers.share,
-    walkthrough: () => toggleSide('walkthrough'),
-    compare: () => toggleSide('compare'),
-    'key-filter': () => (ui.filterOpen = !ui.filterOpen),
-    decorations: () => (ui.decorations = !ui.decorations),
-    theme: () => (theme.value = THEMES[(THEMES.indexOf(theme.value) + 1) % THEMES.length]),
-    'left-panel': () => (ui.leftOpen = !ui.leftOpen),
-    'right-panel': () => (ui.rightOpen = !ui.rightOpen),
-  }
-
-  function toggleMinimap(): void {
-    const minimap = editor.editor.value?.get<{ toggle(open?: boolean): void; isOpen(): boolean }>('minimap', false)
-    if (!minimap) {
-      handlers.message(options.t('minimap.unavailable'))
-      return
-    }
-    minimap.toggle()
-    ui.minimap = minimap.isOpen()
-  }
 
   function openEnrichment(): void {
     suggestions.value = collectSuggestions(editor.model(), { profile: options.profile(), roleAliases: options.roleAliases() })
@@ -104,10 +59,12 @@ export function useEditorActions(setup: Setup, handlers: ActionHandlers, options
     handlers.message(options.t('enrich.applied', { count }))
   }
 
-  function color(choice: PaletteColor | null): void {
-    const selected = editor.services().selection?.get().filter((element) => !element.labelTarget) ?? []
-    setColor(editor.services().modeling, selected, choice)
-  }
+  return { suggestions, openEnrichment, applyEnrichment }
+}
+
+/** Diagram info (apply, approve, new version) and export. */
+function infoActions(setup: Setup, handlers: ActionHandlers, options: ActionOptions) {
+  const { editor } = setup
 
   function applyInfo(info: DiagramInfo): void {
     editor.setInfo(info)
@@ -133,6 +90,13 @@ export function useEditorActions(setup: Setup, handlers: ActionHandlers, options
     handlers.message(result.neutralization ? `${done} ${options.t('export.report', { count: result.neutralization.replacements.length })}` : done)
   }
 
+  return { applyInfo, approve, newVersion, runExport }
+}
+
+/** Highlights the elements matching the key filter whenever filter or model change. */
+function watchKeyFilter(setup: Setup): void {
+  const { editor, ui } = setup
+
   function highlightKey(): void {
     const layer = editor.editor.value?.get<FlowauditHighlight>('flowauditHighlight', false)
     if (!layer || !editor.state.ready) return
@@ -146,15 +110,74 @@ export function useEditorActions(setup: Setup, handlers: ActionHandlers, options
 
   watch(() => [ui.filterOpen, ui.filterKind, ui.filterValue, editor.state.changes], highlightKey)
 
+}
+
+/** Shows or hides the core minimap (message if the editor has none). */
+function toggleMinimap(setup: Setup, handlers: ActionHandlers, options: ActionOptions): void {
+  const { editor, ui } = setup
+  const minimap = editor.editor.value?.get<{ toggle(open?: boolean): void; isOpen(): boolean }>('minimap', false)
+  if (!minimap) {
+    handlers.message(options.t('minimap.unavailable'))
+    return
+  }
+  minimap.toggle()
+  ui.minimap = minimap.isOpen()
+}
+
+export function useEditorActions(setup: Setup, handlers: ActionHandlers, options: ActionOptions) {
+  const { editor, validation, ui } = setup
+  const theme = shallowRef<Theme>('auto')
+
+  const enrichment = enrichmentActions(setup, handlers, options)
+  const info = infoActions(setup, handlers, options)
+  watchKeyFilter(setup)
+
+  const toggleSide = (view: typeof ui.side) => {
+    ui.side = ui.side === view && ui.rightOpen ? 'properties' : view
+    ui.rightOpen = true
+  }
+
+  const ACTIONS: Record<ToolbarAction, () => void> = {
+    save: handlers.save,
+    new: handlers.newDiagram,
+    import: () => undefined,
+    export: () => (ui.dialogs.export = true),
+    undo: () => editor.undo(),
+    redo: () => editor.redo(),
+    'zoom-in': () => editor.zoom(1.2),
+    'zoom-out': () => editor.zoom(1 / 1.2),
+    fit: () => editor.zoom('fit'),
+    info: () => (ui.dialogs.info = true),
+    search: () => (ui.dialogs.search = true),
+    minimap: () => toggleMinimap(setup, handlers, options),
+    xml: () => (ui.dialogs.xml = true),
+    shortcuts: () => (ui.dialogs.shortcuts = true),
+    validate: () => (validation.runLocal(), toggleSide('issues')),
+    'validate-server': () => (void validation.runServer(), toggleSide('issues')),
+    enrich: () => enrichment.openEnrichment(),
+    esi: () => (ui.dialogs.esi = true),
+    analysis: handlers.analysis,
+    share: handlers.share,
+    walkthrough: () => toggleSide('walkthrough'),
+    compare: () => toggleSide('compare'),
+    'key-filter': () => (ui.filterOpen = !ui.filterOpen),
+    decorations: () => (ui.decorations = !ui.decorations),
+    theme: () => (theme.value = THEMES[(THEMES.indexOf(theme.value) + 1) % THEMES.length] ?? 'auto'),
+    'left-panel': () => (ui.leftOpen = !ui.leftOpen),
+    'right-panel': () => (ui.rightOpen = !ui.rightOpen),
+  }
+
+  function color(choice: PaletteColor | null): void {
+    const selected = editor.services().selection?.get().filter((element) => !element.labelTarget) ?? []
+    setColor(editor.services().modeling, selected, choice)
+  }
+
   return {
     run: (action: ToolbarAction) => ACTIONS[action](),
     color,
-    suggestions,
-    applyEnrichment,
-    applyInfo,
-    approve,
-    newVersion,
-    runExport,
+    suggestions: enrichment.suggestions,
+    applyEnrichment: enrichment.applyEnrichment,
+    ...info,
     theme,
     emptyDiagram: EMPTY_DIAGRAM,
   }

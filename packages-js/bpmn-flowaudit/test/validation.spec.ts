@@ -10,8 +10,8 @@ const ids = (report: ReturnType<typeof validateModel>) => report.issues.map((i) 
 
 describe('rule catalogue', () => {
   it('fills placeholders and prefers localized parameters', () => {
-    expect(ruleText(RULES['BPMN-F020'], 'de', { art: 'Lane', name: 'X' })).toBe('Lane „X“ hat keine Akteur-Rolle.')
-    expect(ruleText(RULES['BPMN-F022'], 'en', { rolle: 'bb', bezeichnung: 'Bescheinigungsbehörde', bezeichnung_en: 'Certifying authority', name: 'L', periode: '2021-2027' })).toContain('Certifying authority')
+    expect(ruleText(RULES['BPMN-F020']!, 'de', { art: 'Lane', name: 'X' })).toBe('Lane „X“ hat keine Akteur-Rolle.')
+    expect(ruleText(RULES['BPMN-F022']!, 'en', { rolle: 'bb', bezeichnung: 'Bescheinigungsbehörde', bezeichnung_en: 'Certifying authority', name: 'L', periode: '2021-2027' })).toContain('Certifying authority')
   })
 
   it('is identical to the catalogue of auditcore_bpmn when present', () => {
@@ -94,10 +94,10 @@ describe('issues', () => {
       { ruleId: 'BPMN-F001', severity: 'hinweis' as const, params: { name: 'A' } },
       { ruleId: 'BPMN-S010', severity: 'fehler' as const, params: { name: 'P' } },
     ]
-    expect(sortIssues(list)[0].ruleId).toBe('BPMN-S010')
+    expect(sortIssues(list)[0]!.ruleId).toBe('BPMN-S010')
     expect(countIssues(list)).toEqual({ fehler: 1, warnung: 0, hinweis: 1 })
     expect(severityLabel('warnung', 'en')).toBe('Warning')
-    expect(issueMessage(list[0])).toBe('Aufgabe „A“ hat keine Rechtsgrundlage.')
+    expect(issueMessage(list[0]!)).toBe('Aufgabe „A“ hat keine Rechtsgrundlage.')
     const wire = issueFromWire({ rule_id: 'BPMN-S010', severity: 'fehler', message: 'Vom Server', element_id: 'P', params: {} })
     expect(wire).toMatchObject({ ruleId: 'BPMN-S010', elementId: 'P' })
     expect(issueMessage(wire)).toBe('Vom Server')

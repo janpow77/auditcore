@@ -87,7 +87,8 @@ class ModelBuilder {
   assignActors(): void {
     for (const element of this.elements) {
       const chain = this.laneChains.get(element.id) ?? []
-      if (chain.length) element.laneId = String(chain[chain.length - 1].id)
+      const innermost = chain[chain.length - 1]
+      if (innermost) element.laneId = String(innermost.id)
       const candidates = [...chain].reverse()
       const pool = element.poolId ? this.pools.get(element.poolId) : undefined
       if (pool) candidates.push(pool)

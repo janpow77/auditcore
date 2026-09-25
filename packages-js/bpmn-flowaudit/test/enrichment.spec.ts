@@ -12,7 +12,7 @@ describe('text patterns (notations of AUSWERTUNG.md)', () => {
       { keyRequirement: '2', assessmentCriterion: '2.4' },
       { keyRequirement: '2', assessmentCriterion: '2.6' },
     ])
-    expect(auditReferencesIn('siehe BK 2.3')[0].value).toEqual({ keyRequirement: '2', assessmentCriterion: '2.3' })
+    expect(auditReferencesIn('siehe BK 2.3')[0]!.value).toEqual({ keyRequirement: '2', assessmentCriterion: '2.3' })
   })
 
   it('finding references, checklist items and registers', () => {
@@ -29,7 +29,7 @@ describe('text patterns (notations of AUSWERTUNG.md)', () => {
 
   it('manual references with page range', () => {
     const [hit] = sourcesIn('Förderhandbuch 21+ V 1.1, Kapitel 11.2.1 (PDF-Seiten 77 bis 82)')
-    expect(hit.value).toEqual({ sourceType: 'verfahrenshandbuch', location: 'Förderhandbuch 21+ V 1.1, Kapitel 11.2.1 (PDF-Seiten 77 bis 82)' })
+    expect(hit!.value).toEqual({ sourceType: 'verfahrenshandbuch', location: 'Förderhandbuch 21+ V 1.1, Kapitel 11.2.1 (PDF-Seiten 77 bis 82)' })
   })
 
   it('removes the role prefix of a label', () => {
@@ -42,7 +42,7 @@ describe('collectSuggestions', () => {
   it('derives legal bases, references, sources, roles and markers', async () => {
     const suggestions = collectSuggestions(await modelOf(fixture('enrichment.bpmn')), { profile: TEST_PROFILE })
     const of = (elementId: string, kind: Suggestion['kind']) => suggestions.filter((s) => s.elementId === elementId && s.kind === kind)
-    expect(of('Task_Pruefen', 'legalBasis')[0].value).toMatchObject({ article: '73', point: 'b' })
+    expect(of('Task_Pruefen', 'legalBasis')[0]!.value).toMatchObject({ article: '73', point: 'b' })
     expect(of('Task_Pruefen', 'source')).toHaveLength(1)
     expect(of('Task_Pruefen', 'crossReference').map((s) => (s.value as { key: string }).key)).toEqual(['T15 F1', 'T15 F6', '3.21', 'A1', 'A3', 'B1'])
     expect(of('Task_Nachfordern', 'legalBasis').map((s) => (s.value as { text?: string }).text)).toEqual([
@@ -53,13 +53,13 @@ describe('collectSuggestions', () => {
       '§ 37 Absatz 2 Satz 2 HVwVfG',
     ])
     expect(of('Pool_A', 'auditReference')).toHaveLength(2)
-    expect(of('Lane_Bank', 'actor')[0].value).toEqual({ role: 'zgs', displayName: 'Musterbank (zwischengeschaltete Stelle)' })
-    expect(of('Lane_VB', 'actor')[0].value).toMatchObject({ role: 'vb' })
-    expect(of('Lane_Antrag', 'actor')[0].value).toMatchObject({ role: 'beg' })
-    expect(of('Task_Nachreichen', 'rolePrefix')[0].value).toBe('beg')
-    expect(of('Task_Pruefen', 'marker')[0].value).toEqual({ type: 'feststellung' })
+    expect(of('Lane_Bank', 'actor')[0]!.value).toEqual({ role: 'zgs', displayName: 'Musterbank (zwischengeschaltete Stelle)' })
+    expect(of('Lane_VB', 'actor')[0]!.value).toMatchObject({ role: 'vb' })
+    expect(of('Lane_Antrag', 'actor')[0]!.value).toMatchObject({ role: 'beg' })
+    expect(of('Task_Nachreichen', 'rolePrefix')[0]!.value).toBe('beg')
+    expect(of('Task_Pruefen', 'marker')[0]!.value).toEqual({ type: 'feststellung' })
     expect(of('Task_Nachfordern', 'marker').map((s) => s.value)).toEqual([{ type: 'soll_ohne_regelung' }])
-    expect(of('Task_Auswahl', 'marker')[0].value).toEqual({ type: 'ohne_befund' })
+    expect(of('Task_Auswahl', 'marker')[0]!.value).toEqual({ type: 'ohne_befund' })
   })
 
   it('supports application aliases for names of bodies', async () => {

@@ -57,7 +57,7 @@ describe('palette', () => {
   it('triggers entries by click', async () => {
     const wrapper = mount(ToolPalette, { props: { items: readPaletteEntries({ 'create.task': { group: 'activity', title: 'Aufgabe' } }) } })
     await wrapper.find('button').trigger('click')
-    expect(wrapper.emitted<[string, Event]>('trigger')![0][0]).toBe('create.task')
+    expect(wrapper.emitted<[string, Event]>('trigger')![0]![0]).toBe('create.task')
   })
 })
 
@@ -65,7 +65,7 @@ describe('ColorSwatches', () => {
   it('emits the chosen colour or null for reset', async () => {
     const wrapper = mount(ColorSwatches, { props: { colors: [{ id: 'w', fill: '#fff', stroke: '#000', label: 'Weiß', meaning: 'neutral' }] } })
     const buttons = wrapper.findAll('button')
-    await buttons[0].trigger('click')
+    await buttons[0]!.trigger('click')
     await buttons.at(-1)!.trigger('click')
     const emitted = wrapper.emitted<[unknown]>('choose')!.map((entry) => entry[0])
     expect(emitted).toContainEqual({ id: 'w', fill: '#fff', stroke: '#000', label: 'Weiß', meaning: 'neutral' })

@@ -12,7 +12,7 @@ const { t } = useI18n()
 
 const grid = computed(() => {
   if (props.view === 'aus') return { vertical: [], horizontal: [], pages: [] }
-  const [format, orientation] = props.view.split('-')
+  const [format = 'a4', orientation = 'hoch'] = props.view.split('-')
   return computePageGrid(props.viewbox, pageSize(format, orientation as Orientation), props.width, props.height, t('canvas.page'))
 })
 </script>

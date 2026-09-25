@@ -50,7 +50,7 @@ describe('round trip', () => {
     expect(model.info?.title).toBe('Bewilligung und Auszahlung (Muster)')
     expect(model.info?.funds).toEqual(['efre', 'esf_plus'])
     expect(model.info?.keywords).toEqual(['Bewilligung', 'Auszahlung'])
-    expect(model.info?.risks?.[0].controls).toEqual(['K1'])
+    expect(model.info?.risks?.[0]?.controls).toEqual(['K1'])
     const loaded = await loadDefinitions(xml)
     const out = await saveDefinitions(loaded)
     expect(snapshot(await modelOf(out))).toBe(snapshot(model))
@@ -64,7 +64,7 @@ describe('round trip', () => {
     expect(task?.extensions.auditSteps[0]).toMatchObject({ id: 'PS1', result: 'erfuellt', remark: 'Gegenzeichnung vorhanden.' })
     expect(task?.extensions.crossReferences[0]).toEqual({ kind: 'prueffeld', key: '3.21', document: 'Antragsprüfcheckliste Muster V 1.0' })
     expect(model.byId.get('Task_Bewilligen')?.extensions.findings[0]).toMatchObject({ reference: 'T15 F1', findingType: 'formell', recommendation: 'Begründung im Vermerk festhalten.' })
-    expect(model.byId.get('Timer_Frist')?.extensions.deadlines[0].legalBases?.[0].article).toBe('74')
+    expect(model.byId.get('Timer_Frist')?.extensions.deadlines[0]!.legalBases?.[0]?.article).toBe('74')
     expect(model.byId.get('DataRef_Vermerk')?.extensions.evidence[0]).toMatchObject({ storageLocation: 'eAkte', itSystem: 'Fördersystem' })
     expect(model.byId.get('Task_Pruefen')?.actor).toMatchObject({ role: 'zgs', displayName: 'Musterförderbank' })
   })
@@ -88,7 +88,7 @@ describe('writing extensions', () => {
     const loaded = await loadDefinitions(fixture('legacy-1.0.bpmn'))
     const model = modelFromDefinitions(loaded.definitions)
     expect(model).toBeTruthy()
-    const task = (loaded.definitions.get('rootElements') as { get(n: string): unknown }[])[0].get('flowElements') as never[]
+    const task = (loaded.definitions.get('rootElements') as { get(n: string): unknown }[])[0]!.get('flowElements') as never[]
     const bo = (task as { id: string }[]).find((el) => el.id === 'Task_Pruefen') as never
     setExtensionsDirect(bo, { markers: [{ type: 'pruefpunkt' }], actor: undefined, auditReferences: [{ keyRequirement: '4', assessmentCriterion: '4.1' }] }, createModdle())
     const out = await saveDefinitions(loaded)
@@ -100,7 +100,7 @@ describe('writing extensions', () => {
   it('removes extensionElements when the last entry disappears', async () => {
     const loaded = await loadDefinitions(fixture('legacy-1.0.bpmn'))
     const process = (loaded.definitions.get('rootElements') as { get(n: string): unknown }[])[0]
-    const bo = (process.get('flowElements') as { id: string }[]).find((el) => el.id === 'Task_Bescheid') as never
+    const bo = (process!.get('flowElements') as { id: string }[]).find((el) => el.id === 'Task_Bescheid') as never
     setExtensionsDirect(bo, { legalBases: [], internalNote: '' }, createModdle())
     const out = await saveDefinitions(loaded)
     const bescheid = /<bpmn:task id="Task_Bescheid"[\s\S]*?<\/bpmn:task>/.exec(out)?.[0] ?? ''
@@ -111,7 +111,7 @@ describe('writing extensions', () => {
     const moddle = createModdle()
     const loaded = await loadDefinitions(fixture('legacy-1.0.bpmn'), moddle)
     const process = (loaded.definitions.get('rootElements') as { get(n: string): unknown }[])[0]
-    const bo = (process.get('flowElements') as { id: string }[]).find((el) => el.id === 'Task_Bescheid') as never
+    const bo = (process!.get('flowElements') as { id: string }[]).find((el) => el.id === 'Task_Bescheid') as never
     setExtensionsDirect(bo, { controls: [{ id: 'K9', keyControl: false }], risks: [{ id: 'R9', controls: ['K9', 'K10'] }] }, moddle)
     const out = await saveDefinitions(loaded)
     expect(out).toContain('schluesselkontrolle="false"')

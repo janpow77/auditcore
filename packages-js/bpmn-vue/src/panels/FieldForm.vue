@@ -46,7 +46,7 @@ function onText(field: FieldDescriptor, event: Event): void {
         </span>
       </template>
       <template v-else>
-        <span class="fa-label" :id="`${uid}-${field.key}`">{{ t(field.label) }}</span>
+        <span :id="`${uid}-${field.key}`" class="fa-label">{{ t(field.label) }}</span>
         <select
           v-if="field.kind === 'select'"
           class="fa-select"

@@ -63,7 +63,8 @@ function add(value: LegalBasis): void {
 function update(index: number, value: Record<string, unknown>): void {
   // Structured edits regenerate the text; free text of the legacy form stays.
   const next = value as LegalBasis
-  const regenerated = isStructured(next) && props.items[index]?.text === citation(props.items[index]) ? { ...next, text: undefined } : next
+  const previous = props.items[index]
+  const regenerated = isStructured(next) && previous && previous.text === citation(previous) ? { ...next, text: undefined } : next
   emitItems(props.items.map((item, i) => (i === index ? regenerated : item)))
 }
 
@@ -74,6 +75,7 @@ function remove(index: number): void {
 /** Splits a legacy free text into structured entries (unrecognised parts stay text). */
 function structure(index: number): void {
   const legacy = props.items[index]
+  if (!legacy) return
   const parts = splitFreeText(legacy.text ?? '').flatMap((part) => {
     const hits = findCitations(part)
     return hits.length ? hits.map((hit) => hit.legalBasis) : [{ text: part }]

@@ -30,8 +30,9 @@ function trapFocus(event: KeyboardEvent): void {
   }
   if (event.key !== 'Tab' || !panel.value) return
   const items = Array.from(panel.value.querySelectorAll<HTMLElement>(FOCUSABLE))
-  if (!items.length) return
-  const [first, last] = [items[0], items[items.length - 1]]
+  const first = items[0]
+  const last = items[items.length - 1]
+  if (!first || !last) return
   if (event.shiftKey && document.activeElement === first) {
     event.preventDefault()
     last.focus()

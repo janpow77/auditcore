@@ -51,7 +51,7 @@ const props = withDefaults(
     editorFactory?: EditorFactory
     theme?: 'auto' | 'light' | 'dark'
   }>(),
-  { name: '', profile: null, profiles: () => [], ports: () => ({}), locale: 'de', lockApproved: true, comments: () => [], approvals: () => [], author: '', compareSources: () => [], roleAliases: () => [], replacements: () => ({}), hiddenActions: () => [] },
+  { name: '', diagramId: undefined, palette: undefined, editorFactory: undefined, theme: undefined, profile: null, profiles: () => [], ports: () => ({}), locale: 'de', lockApproved: true, comments: () => [], approvals: () => [], author: '', compareSources: () => [], roleAliases: () => [], replacements: () => ({}), hiddenActions: () => [] },
 )
 const emit = defineEmits<{
   (e: 'update:xml', xml: string): void

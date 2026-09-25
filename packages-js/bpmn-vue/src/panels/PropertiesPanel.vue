@@ -34,10 +34,12 @@ watch(tabs, (list) => {
 
 function onKey(event: KeyboardEvent, index: number): void {
   const moves: Record<string, number> = { ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: tabs.value.length - 1 }
-  if (!(event.key in moves)) return
+  const move = moves[event.key]
+  if (move === undefined) return
   event.preventDefault()
-  const next = (moves[event.key] + tabs.value.length) % tabs.value.length
-  active.value = tabs.value[next].id
+  const next = (move + tabs.value.length) % tabs.value.length
+  const tab = tabs.value[next]
+  if (tab) active.value = tab.id
   tabRefs.value[next]?.focus()
 }
 </script>
@@ -49,12 +51,12 @@ function onKey(event: KeyboardEvent, index: number): void {
       <div class="fa-props__tabs" role="tablist" aria-orientation="vertical" :aria-label="t('props.label')">
         <button
           v-for="(tab, index) in tabs"
+          :id="`fa-tab-${tab.id}`"
           :key="tab.id"
           :ref="(el) => (tabRefs[index] = el as HTMLElement)"
           type="button"
           role="tab"
           class="fa-props__tab"
-          :id="`fa-tab-${tab.id}`"
           :aria-selected="current?.id === tab.id"
           :aria-controls="`fa-tabpanel-${tab.id}`"
           :tabindex="current?.id === tab.id ? 0 : -1"

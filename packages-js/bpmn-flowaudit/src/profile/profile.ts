@@ -10,7 +10,7 @@
  * (`bundled.ts`) or delivered by the application through the profile port.
  */
 
-import { ROLES, roleAppliesTo, type Role } from '../schema/roles'
+import { OTHER_ROLE, ROLES, roleAppliesTo, type Role } from '../schema/roles'
 import { label, type Label, type Locale } from '../schema/vocabulary'
 
 export const PROFILE_SCHEMA = 'auditcore_bpmn.profile/1'
@@ -132,7 +132,7 @@ export function roleOf(profile: ProfileData | null | undefined, code: string | u
   if (!code) return undefined
   const own = profile?.custom_roles?.[code]
   if (!own) return ROLES[code]
-  const base = ROLES[code] ?? ROLES.sonstige
+  const base = ROLES[code] ?? OTHER_ROLE
   return {
     code,
     label: toLabel(own.labels, code),

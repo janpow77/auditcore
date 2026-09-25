@@ -16,7 +16,7 @@ function matches(element: ModelElement, selection: SelectionData | undefined): b
 }
 
 function reportRule(ctx: RuleContext, rule: SegregationRuleData, template: string, element: ModelElement, params: Record<string, unknown>): void {
-  const severity = (rule.severity in SEVERITY_LABELS ? rule.severity : RULES[template].severity) as Severity
+  const severity = (rule.severity in SEVERITY_LABELS ? rule.severity : RULES[template]?.severity ?? 'warnung') as Severity
   ctx.add({
     ruleId: `BPMN-${rule.id}`,
     severity,

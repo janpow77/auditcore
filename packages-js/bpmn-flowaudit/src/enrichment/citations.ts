@@ -99,7 +99,8 @@ export function findCitations(text: string | null | undefined): CitationHit[] {
 /** Reads a single citation; without a hit it stays free text. */
 export function parseCitation(text: string): LegalBasis {
   const hits = findCitations(text)
-  if (hits.length === 1 && hits[0].text.trim() === text.trim()) return hits[0].legalBasis
+  const [only] = hits
+  if (hits.length === 1 && only && only.text.trim() === text.trim()) return only.legalBasis
   return text.trim() ? { text: text.trim() } : {}
 }
 
@@ -127,7 +128,8 @@ export function euAct(act: string): [string, number, number] | null {
   const text = actLong(act)
   const match = EU_ACT_PARTS.exec(text)
   if (match?.groups) {
-    const kind = ELI_KIND[match.groups.typ]
+    const kind = ELI_KIND[match.groups.typ ?? '']
+    if (!kind) return null
     const first = Number(match.groups.a)
     const second = Number(match.groups.b)
     const numberFirst = kind !== 'dir' && (Boolean(match.groups.nr) || (isYear(second) && !isYear(first)))

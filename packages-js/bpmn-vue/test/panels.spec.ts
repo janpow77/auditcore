@@ -61,7 +61,7 @@ describe('FieldForm', () => {
     expect(last()).toEqual({ label: 'neu', frequency: 'monatlich' })
     await wrapper.find('input[type="checkbox"]').setValue(true)
     expect(last()).toMatchObject({ keyControl: true })
-    await wrapper.findAll('input.fa-input')[1].setValue('K1, K2 K3')
+    await wrapper.findAll('input.fa-input')[1]!.setValue('K1, K2 K3')
     expect(last()).toMatchObject({ controls: ['K1', 'K2', 'K3'] })
     await wrapper.find('select').setValue('')
     expect(last()).not.toHaveProperty('frequency')
@@ -79,11 +79,11 @@ describe('ListEditor', () => {
     const wrapper = mount(ListEditor, { props: { descriptor: LISTS.controls, items: [{ id: 'K1', label: 'Sichtprüfung' }], optionsFor: noOptions } })
     expect(wrapper.text()).toContain('Sichtprüfung')
     await wrapper.find('.fa-btn').trigger('click')
-    expect(wrapper.emitted<[unknown[]]>('update')![0][0]).toHaveLength(2)
+    expect(wrapper.emitted<[unknown[]]>('update')![0]![0]).toHaveLength(2)
     await wrapper.find('.fa-list-editor__toggle').trigger('click')
     expect(wrapper.find('.fa-field-form').exists()).toBe(true)
     await wrapper.find('.fa-list-editor__row .fa-icon-btn').trigger('click')
-    expect(wrapper.emitted<[unknown[]]>('update')![1][0]).toEqual([])
+    expect(wrapper.emitted<[unknown[]]>('update')![1]![0]).toEqual([])
   })
 })
 
@@ -92,7 +92,7 @@ describe('legal bases', () => {
     const wrapper = mount(LegalSearch)
     await wrapper.find('input').setValue('Art. 74 Abs. 1 VO (EU) 2021/1060')
     await wrapper.find('[role="option"]').trigger('click')
-    const [chosen] = wrapper.emitted<[LegalBasis]>('choose')![0]
+    const [chosen] = wrapper.emitted<[LegalBasis]>('choose')![0]!
     expect(chosen).toMatchObject({ article: '74', paragraph: '1' })
     expect(chosen.act).toContain('2021/1060')
   })
@@ -105,7 +105,7 @@ describe('legal bases', () => {
     expect(port.search).toHaveBeenCalledWith('Verantwort', expect.objectContaining({ profile: 'p' }))
     const option = wrapper.findAll('[role="option"]').find((item) => item.text().includes('Verantwortlichkeiten'))!
     await option.trigger('click')
-    expect(wrapper.emitted<[LegalBasis]>('choose')![0][0]).toEqual({ act: 'Verordnung (EU) 2021/1060', article: '69' })
+    expect(wrapper.emitted<[LegalBasis]>('choose')![0]![0]).toEqual({ act: 'Verordnung (EU) 2021/1060', article: '69' })
   })
 
   it('keeps legacy free text and splits it into structured entries on request', async () => {
@@ -114,7 +114,7 @@ describe('legal bases', () => {
     expect(wrapper.text()).toContain('Altbestand')
     await wrapper.find('.fa-list-editor__toggle').trigger('click')
     await wrapper.find('.fa-list-editor__form .fa-btn').trigger('click')
-    const [updated] = wrapper.emitted<[LegalBasis[]]>('update')![0]
+    const [updated] = wrapper.emitted<[LegalBasis[]]>('update')![0]!
     expect(updated[0]).toMatchObject({ article: '74' })
     expect(updated.at(-1)).toEqual({ text: 'interne Weisung' })
   })
@@ -126,6 +126,6 @@ describe('legal bases', () => {
     await wrapper.find('[role="option"]').trigger('click')
     expect(wrapper.emitted('update')).toBeUndefined()
     await wrapper.find('.fa-list-editor__row .fa-icon-btn').trigger('click')
-    expect(wrapper.emitted<[LegalBasis[]]>('update')![0][0]).toEqual([])
+    expect(wrapper.emitted<[LegalBasis[]]>('update')![0]![0]).toEqual([])
   })
 })

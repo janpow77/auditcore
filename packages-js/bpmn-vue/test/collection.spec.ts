@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { InMemoryStorage } from '@flowaudit/bpmn-flowaudit'
 import CollectionTree from '../src/components/collection/CollectionTree.vue'
@@ -33,7 +33,7 @@ describe('collection store', () => {
     expect(store.tree.value.subfolders).toEqual([])
     store.filter.search = ''
     store.filter.status = 'freigegeben'
-    expect(store.tree.value.subfolders[0].diagrams.map((d) => d.id)).toEqual(['bewilligung'])
+    expect(store.tree.value.subfolders[0]!.diagrams.map((d) => d.id)).toEqual(['bewilligung'])
   })
 
   it('moves, renames, tags and removes diagrams', async () => {
@@ -95,7 +95,7 @@ describe('CollectionTree', () => {
     await label.trigger('click')
     await label.trigger('dblclick')
     expect(wrapper.emitted<[string]>('select-diagram')!.at(-1)![0]).toBe('anreicherung')
-    expect(wrapper.emitted<[string]>('open-diagram')![0][0]).toBe('anreicherung')
+    expect(wrapper.emitted<[string]>('open-diagram')![0]![0]).toBe('anreicherung')
   })
 })
 
@@ -108,9 +108,11 @@ describe('FlowauditWorkbench', () => {
     const label = wrapper.findAll('.fa-tree__label').find((item) => item.text().includes('Anreicherung'))!
     await label.trigger('dblclick')
     await until(() => wrapper!.find('.fa-editor .djs-container').exists())
-    expect(wrapper.emitted<[string]>('open')![0][0]).toBe('anreicherung')
+    expect(wrapper.emitted<[string]>('open')![0]![0]).toBe('anreicherung')
+    const saveDiagram = vi.spyOn(storage, 'saveDiagram')
     await wrapper.find('.fa-editor').trigger('keydown', { key: 's', ctrlKey: true })
-    await until(async () => (await storage.loadDiagram('anreicherung')) !== fixture('enrichment.bpmn'))
+    await until(() => saveDiagram.mock.calls.length > 0)
+    expect(saveDiagram.mock.calls[0]![0]).toBe('anreicherung')
     expect(await storage.loadDiagram('anreicherung')).toContain('bpmn:definitions')
   })
 })

@@ -108,11 +108,11 @@ describe('collectColors (sammleFarben)', () => {
     const colors = collectColors([element('#ffcdd2'), element('#FFCDD2'), element('#123456'), element()])
     expect(colors).toHaveLength(2)
     expect(colors[0]).toMatchObject({ label: 'Kritisch / neu', count: 2 })
-    expect(colors[1].label).toBe('Nicht zugeordnet')
+    expect(colors[1]!.label).toBe('Nicht zugeordnet')
   })
 
   it('recognises palette colours case-insensitively', () => {
-    expect(collectColors([element('#C8E6C9')])[0].label).toBe('Validiert')
+    expect(collectColors([element('#C8E6C9')])[0]!.label).toBe('Validiert')
   })
 })
 
@@ -127,7 +127,7 @@ describe('page grid (Seitenraster)', () => {
     const grid = computePageGrid({ x: 0, y: 0, width: 1600, height: 1200, scale: 1 }, { widthPx: 800, heightPx: 600 }, 1600, 1200)
     expect(grid.vertical).toEqual([0, 800, 1600])
     expect(grid.horizontal).toEqual([0, 600, 1200])
-    expect(grid.pages[0].label).toBe('Seite 1/1')
+    expect(grid.pages[0]!.label).toBe('Seite 1/1')
   })
 
   it('draws nothing at absurd zoom levels instead of thousands of lines', () => {
@@ -150,13 +150,13 @@ describe('buildGroups (baueGruppen)', () => {
 
   it('searches name and description', () => {
     const groups = buildGroups(items, { search: 'vp-', filter: 'alle', grouping: 'keine', isOwn: () => true })
-    expect(groups[0].entries).toHaveLength(1)
-    expect(groups[0].entries[0].name).toBe('VP-Ablauf')
+    expect(groups[0]!.entries).toHaveLength(1)
+    expect(groups[0]!.entries[0]!.name).toBe('VP-Ablauf')
   })
 
   it('filters own diagrams', () => {
     const groups = buildGroups(items, { search: '', filter: 'eigene', grouping: 'keine', isOwn: (d) => d.id === 3 })
-    expect(groups[0].entries.map((d) => d.id)).toEqual([3])
+    expect(groups[0]!.entries.map((d) => d.id)).toEqual([3])
   })
 
   it('groups by responsibility with owner fallback', () => {
@@ -211,7 +211,7 @@ describe('legacy metadata (extensionElements)', () => {
     const modeling = { updateModdleProperties: vi.fn() }
     writeMetadata(build([], false), 'flowaudit:Rechtsgrundlage', '§ 44 LHO', { modeling, bpmnFactory })
     expect(modeling.updateModdleProperties).toHaveBeenCalledTimes(1)
-    expect(modeling.updateModdleProperties.mock.calls[0][2].extensionElements.$type).toBe('bpmn:ExtensionElements')
+    expect(modeling.updateModdleProperties.mock.calls[0]![2]!.extensionElements.$type).toBe('bpmn:ExtensionElements')
   })
 
   it('removes the entry on empty text instead of leaving an empty element', () => {
@@ -219,7 +219,7 @@ describe('legacy metadata (extensionElements)', () => {
     const other = { $type: 'flowaudit:InterneNotiz', get: () => 'bleibt' }
     const modeling = { updateModdleProperties: vi.fn() }
     writeMetadata(build([entry, other]), 'flowaudit:Rechtsgrundlage', '   ', { modeling, bpmnFactory })
-    expect(modeling.updateModdleProperties.mock.calls[0][2].values).toEqual([other])
+    expect(modeling.updateModdleProperties.mock.calls[0]![2]!.values).toEqual([other])
   })
 
   it('does nothing if an empty field stays empty', () => {

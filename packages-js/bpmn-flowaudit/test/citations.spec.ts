@@ -36,15 +36,15 @@ describe('citation forms', () => {
 describe('findCitations', () => {
   it('recognises the long form (177 hits in the analysed diagrams)', () => {
     const [hit] = findCitations('Prüfung nach Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060.')
-    expect(hit.form).toBe('long')
-    expect(hit.legalBasis).toMatchObject({ act: 'Verordnung (EU) 2021/1060', article: '73', paragraph: '2', point: 'b' })
-    expect(hit.legalBasis.text).toBe('Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060')
+    expect(hit!.form).toBe('long')
+    expect(hit!.legalBasis).toMatchObject({ act: 'Verordnung (EU) 2021/1060', article: '73', paragraph: '2', point: 'b' })
+    expect(hit!.legalBasis.text).toBe('Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060')
   })
 
   it('recognises the short form with subparagraph', () => {
     const [hit] = findCitations('Art. 74 Abs. 2 UAbs. 2 VO (EU) 2021/1060')
-    expect(hit.form).toBe('short')
-    expect(hit.legalBasis).toMatchObject({ article: '74', paragraph: '2', subparagraph: '2', act: 'Verordnung (EU) 2021/1060' })
+    expect(hit!.form).toBe('short')
+    expect(hit!.legalBasis).toMatchObject({ article: '74', paragraph: '2', subparagraph: '2', act: 'Verordnung (EU) 2021/1060' })
   })
 
   it('splits „§§ 23 und 44 LHO“ into two sections', () => {
@@ -55,14 +55,14 @@ describe('findCitations', () => {
 
   it('recognises administrative rules and sections with sentence', () => {
     const hits = findCitations('VV Nummer 4.2 zu § 44 LHO; § 37 Absatz 2 Satz 2 HVwVfG')
-    expect(hits[0].legalBasis).toMatchObject({ act: 'VV zu § 44 LHO', number: '4.2' })
-    expect(hits[1].legalBasis).toMatchObject({ act: 'HVwVfG', section: '37', paragraph: '2', sentence: '2' })
+    expect(hits[0]!.legalBasis).toMatchObject({ act: 'VV zu § 44 LHO', number: '4.2' })
+    expect(hits[1]!.legalBasis).toMatchObject({ act: 'HVwVfG', section: '37', paragraph: '2', sentence: '2' })
   })
 
   it('recognises annexes and does not overlap', () => {
     const hits = findCitations('Anhang XIII der Verordnung (EU) 2021/1060')
     expect(hits).toHaveLength(1)
-    expect(hits[0].legalBasis.annex).toBe('XIII')
+    expect(hits[0]!.legalBasis.annex).toBe('XIII')
   })
 
   it('parses a single citation or keeps free text', () => {

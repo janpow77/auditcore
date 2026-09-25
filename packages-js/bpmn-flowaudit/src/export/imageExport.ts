@@ -29,7 +29,8 @@ function positive(width: number, height: number): { width: number; height: numbe
 
 function viewBoxSize(svg: string): { width: number; height: number } | null {
   const parts = /viewBox="([-\d.\s]+)"/.exec(svg)?.[1]?.trim().split(/\s+/).map(Number) ?? []
-  return parts.length === 4 ? positive(parts[2], parts[3]) : null
+  const [, , width, height] = parts
+  return parts.length === 4 && width !== undefined && height !== undefined ? positive(width, height) : null
 }
 
 export function readSvgSize(svg: string): { width: number; height: number } {

@@ -34,7 +34,7 @@ describe('DiagramInfoDialog', () => {
     await wrapper.find('.fa-chip[aria-pressed="true"]').trigger('click')
     await button(wrapper, 'Übernehmen').trigger('click')
     const dialog = wrapper.findComponent(DiagramInfoDialog)
-    const [applied] = dialog.emitted<[DiagramInfo]>('apply')![0]
+    const [applied] = dialog.emitted<[DiagramInfo]>('apply')![0]!
     expect(applied).toMatchObject({ title: 'Bewilligung und Auszahlung', funds: [] })
     expect(INFO.title).toBe('Bewilligung')
     wrapper.unmount()
@@ -65,14 +65,14 @@ describe('ExportDialog', () => {
   it('preselects attachments from the data and emits the choice', async () => {
     const wrapper = mount(ExportDialog, { props: { open: true, defaultTitle: 'Bewilligung', data } })
     await wrapper.findAll('button').find((item) => item.text().includes('PDF'))!.trigger('click')
-    const [choice] = wrapper.emitted<[ExportChoice]>('export')![0]
+    const [choice] = wrapper.emitted<[ExportChoice]>('export')![0]!
     expect(choice).toMatchObject({ format: 'pdf', title: 'Bewilligung', showLegend: true, showMarkerLegend: false, neutral: false })
   })
 
   it('suggests the neutral export for confidential diagrams', async () => {
     const wrapper = mount(ExportDialog, { props: { open: true, defaultTitle: 'X', data, confidentiality: 'vs_nfd' } })
     await wrapper.findAll('button').find((item) => item.text().includes('SVG'))!.trigger('click')
-    expect(wrapper.emitted<[ExportChoice]>('export')![0][0].neutral).toBe(true)
+    expect(wrapper.emitted<[ExportChoice]>('export')![0]![0]!.neutral).toBe(true)
   })
 })
 
@@ -87,7 +87,7 @@ describe('EnrichmentDialog', () => {
     expect(wrapper.text()).toContain('Antrag prüfen')
     await wrapper.find('.fa-enrich__item input').setValue(false)
     await wrapper.find('.fa-btn--primary').trigger('click')
-    const [accepted, removePrefixes] = wrapper.emitted<[Suggestion[], boolean]>('apply')![0]
+    const [accepted, removePrefixes] = wrapper.emitted<[Suggestion[], boolean]>('apply')![0]!
     expect(accepted.map((s) => s.id)).toEqual(['s2'])
     expect(removePrefixes).toBe(true)
   })
@@ -98,7 +98,7 @@ describe('XmlDialog', () => {
     const wrapper = mount(XmlDialog, { props: { open: true, xml: '<a/>' } })
     await wrapper.find('textarea').setValue('<b/>')
     await wrapper.find('.fa-btn--primary').trigger('click')
-    expect(wrapper.emitted<[string]>('apply')![0][0]).toBe('<b/>')
+    expect(wrapper.emitted<[string]>('apply')![0]![0]).toBe('<b/>')
     const readonly = mount(XmlDialog, { props: { open: true, xml: '<a/>', readonly: true } })
     expect(readonly.find('textarea').attributes('readonly')).toBeDefined()
   })
@@ -110,10 +110,10 @@ describe('views', () => {
   it('IssueList filters by severity and jumps to elements', async () => {
     const wrapper = mount(IssueList, { props: { issues } })
     expect(wrapper.findAll('.fa-issue')).toHaveLength(2)
-    await wrapper.findAll('.fa-chip')[1].trigger('click')
+    await wrapper.findAll('.fa-chip')[1]!.trigger('click')
     expect(wrapper.findAll('.fa-issue')).toHaveLength(1)
     await wrapper.find('.fa-issue .fa-btn').trigger('click')
-    expect(wrapper.emitted<[string]>('jump')![0][0]).toBe('Process_1')
+    expect(wrapper.emitted<[string]>('jump')![0]![0]).toBe('Process_1')
   })
 
   it('KeyFilterBar emits kind, value and clear', async () => {

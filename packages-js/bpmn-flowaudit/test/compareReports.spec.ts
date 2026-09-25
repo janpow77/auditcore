@@ -110,6 +110,6 @@ describe('reports', () => {
     expect(suggestions.find((s) => s.keyRequirement === 2)).toMatchObject({ category: 2, findings: ['T15 F1'] })
     expect(suggestions.find((s) => s.keyRequirement === 4)).toMatchObject({ category: 1 })
     expect(suggestions.find((s) => s.keyRequirement === 7)?.category).toBeNull()
-    expect(suggestions[0].note).toContain('Vorschlag')
+    expect(suggestions[0]!.note).toContain('Vorschlag')
   })
 })

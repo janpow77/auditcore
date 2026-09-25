@@ -3,7 +3,7 @@
  * write function that goes through `modeling` (undoable).
  */
 
-import { computed, markRaw, shallowRef, watch } from 'vue'
+import { computed, markRaw, shallowRef, watch, type ShallowRef } from 'vue'
 import {
   emptyExtensions,
   readExtensions,
@@ -18,41 +18,8 @@ import type { EditorStore } from './editorStore'
 
 export type SelectionStore = ReturnType<typeof createSelectionStore>
 
-export function createSelectionStore(editorStore: EditorStore) {
-  const element = shallowRef<DiagramElement | null>(null)
-  const extensions = shallowRef<Extensions>(emptyExtensions())
-  const version = shallowRef(0)
-
-  function refresh(): void {
-    const current = element.value
-    extensions.value = current ? readExtensions(current.businessObject) : emptyExtensions()
-    version.value += 1
-  }
-
-  function onSelection(event: unknown): void {
-    const selection = (event as { newSelection?: DiagramElement[] }).newSelection ?? []
-    const [first] = selection.filter((item) => !item.labelTarget)
-    element.value = first ? markRaw(first) : null
-    refresh()
-  }
-
-  watch(
-    () => editorStore.editor.value,
-    (editor, previous) => {
-      previous?.off('selection.changed', onSelection)
-      editor?.on('selection.changed', onSelection)
-      element.value = null
-      refresh()
-    },
-    { immediate: true },
-  )
-  editorStore.onChange(refresh)
-
-  const type = computed(() => {
-    void version.value
-    return element.value?.businessObject?.$type ?? null
-  })
-
+/** Reading and undoable writing of the selected element's properties. */
+function selectionEditing(element: ShallowRef<DiagramElement | null>, version: ShallowRef<number>, editorStore: EditorStore) {
   function write(patch: Partial<Extensions>): void {
     if (!element.value) return
     writeExtensions(element.value, patch, editorStore.services())
@@ -91,5 +58,45 @@ export function createSelectionStore(editorStore: EditorStore) {
     return docs.map((doc) => doc.text ?? '').join('\n')
   }
 
-  return { element, extensions, type, version, write, rename, setDocumentation, flowstat, setFlowstat, property, documentation, refresh }
+  return { write, rename, setDocumentation, flowstat, setFlowstat, property, documentation }
+}
+
+export function createSelectionStore(editorStore: EditorStore) {
+  const element = shallowRef<DiagramElement | null>(null)
+  const extensions = shallowRef<Extensions>(emptyExtensions())
+  const version = shallowRef(0)
+
+  function refresh(): void {
+    const current = element.value
+    extensions.value = current ? readExtensions(current.businessObject) : emptyExtensions()
+    version.value += 1
+  }
+
+  function onSelection(event: unknown): void {
+    const selection = (event as { newSelection?: DiagramElement[] }).newSelection ?? []
+    const [first] = selection.filter((item) => !item.labelTarget)
+    element.value = first ? markRaw(first) : null
+    refresh()
+  }
+
+  watch(
+    () => editorStore.editor.value,
+    (editor, previous) => {
+      previous?.off('selection.changed', onSelection)
+      editor?.on('selection.changed', onSelection)
+      element.value = null
+      refresh()
+    },
+    { immediate: true },
+  )
+  editorStore.onChange(refresh)
+
+  const type = computed(() => {
+    void version.value
+    return element.value?.businessObject?.$type ?? null
+  })
+
+  const editing = selectionEditing(element, version, editorStore)
+
+  return { element, extensions, type, version, ...editing, refresh }
 }

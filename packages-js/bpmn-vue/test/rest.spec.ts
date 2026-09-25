@@ -25,7 +25,7 @@ describe('REST ports', () => {
     const data = await ports.storage.loadCollection()
     expect(data?.folders[0]).toEqual({ id: 'f', name: 'F', parentId: 'p', position: 0 })
     await ports.storage.saveCollection(data!)
-    const put = calls[1]
+    const put = calls[1]!
     expect((put.init.headers as Record<string, string>)['If-Match']).toBe('"v1"')
     expect((put.init.headers as Record<string, string>).Authorization).toBe('Bearer t')
     expect(JSON.parse(String(put.init.body)).folders[0]).toEqual({ id: 'f', name: 'F', parent_id: 'p', position: 0 })
@@ -48,7 +48,7 @@ describe('REST ports', () => {
     await ports.storage.saveDiagram('a b', '<y/>')
     await ports.storage.saveApproval('a b', '1.0', '<y/>')
     await ports.storage.deleteDiagram('a b')
-    expect((calls[1].init.headers as Record<string, string>)['Content-Type']).toContain('application/xml')
+    expect((calls[1]!.init.headers as Record<string, string>)['Content-Type']).toContain('application/xml')
     expect(calls.map((call) => call.init.method)).toEqual(['GET', 'PUT', 'PUT', 'DELETE'])
   })
 
@@ -59,11 +59,11 @@ describe('REST ports', () => {
       'GET /profiles': () => json([{ id: 'p', version: '1', title: 'Profil', programming_period: '2021-2027' }]),
       'GET /profiles/p/key-requirements': () => json([{ number: 1, title: 'KA 1', criteria: [] }]),
     })
-    expect((await ports.storage.loadComments('d'))[0].elementId).toBe('T1')
-    expect((await ports.legalSearch.search('Art. 74', { limit: 5, locale: 'de' }))[0].shortTitle).toBe('Verwaltungsprüfungen')
-    expect(calls[1].url).toContain('q=Art.+74')
-    expect((await ports.profiles.profiles())[0].programmingPeriod).toBe('2021-2027')
-    expect((await ports.catalogue.keyRequirements('p', 'en'))[0].number).toBe(1)
+    expect((await ports.storage.loadComments('d'))[0]!.elementId).toBe('T1')
+    expect((await ports.legalSearch.search('Art. 74', { limit: 5, locale: 'de' }))[0]!.shortTitle).toBe('Verwaltungsprüfungen')
+    expect(calls[1]!.url).toContain('q=Art.+74')
+    expect((await ports.profiles.profiles())[0]!.programmingPeriod).toBe('2021-2027')
+    expect((await ports.catalogue.keyRequirements('p', 'en'))[0]!.number).toBe(1)
   })
 
   it('validates on the server and returns ValidationIssues', async () => {
@@ -72,7 +72,7 @@ describe('REST ports', () => {
     })
     const issues = await ports.validation.validate('<x/>', { profile: 'p', referenceDate: '2026-09-25' })
     expect(issues).toEqual([{ ruleId: 'BPMN-S010', severity: 'fehler', params: { name: 'P' }, elementId: 'P', message: 'Kein Start' }])
-    expect(JSON.parse(String(calls[0].init.body))).toEqual({ xml: '<x/>', profile: 'p', reference_date: '2026-09-25' })
+    expect(JSON.parse(String(calls[0]!.init.body))).toEqual({ xml: '<x/>', profile: 'p', reference_date: '2026-09-25' })
   })
 
   it('turns FastAPI error details into messages', async () => {

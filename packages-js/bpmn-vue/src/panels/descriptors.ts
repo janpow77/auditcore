@@ -165,9 +165,16 @@ export const SOURCE_LIST: ListDescriptor<Source> = {
   create: () => ({ sourceType: 'verfahrenshandbuch' }),
 }
 
-export const LISTS: Record<string, ListDescriptor> = Object.fromEntries(
+/** Lists edited with the generic list editor (legal bases and markers have own editors). */
+export type DescribedListKey = Exclude<ListExtensionKey, 'legalBases' | 'markers'>
+
+export const LISTS = Object.fromEntries(
   [AUDIT_REFERENCE_LIST, CROSS_REFERENCE_LIST, CONTROL_LIST, RISK_LIST, EVIDENCE_LIST, DEADLINE_LIST, FINDING_LIST, AUDIT_STEP_LIST, SOURCE_LIST].map((list) => [
     list.key,
     list as unknown as ListDescriptor,
   ]),
-)
+) as Record<DescribedListKey, ListDescriptor>
+
+export function isDescribedList(key: ListExtensionKey): key is DescribedListKey {
+  return key in LISTS
+}

@@ -56,6 +56,9 @@ export const ROLES: Record<string, Role> = Object.fromEntries(
   ]),
 )
 
+/** Role „other body“ – fallback for unknown codes and own roles. */
+export const OTHER_ROLE: Role = ROLES.sonstige ?? { code: 'sonstige', label: { de: 'Sonstige Stelle', en: 'Other body' }, short: '…', color: { fill: '#f1f3f5', stroke: '#4a5563' }, icon: 'role-sonstige' }
+
 /** Start year from `YYYY-YYYY`, otherwise `null`. */
 export function periodStart(programmingPeriod: string | undefined | null): number | null {
   if (!programmingPeriod || !/^\d{4}-\d{4}$/.test(programmingPeriod)) return null

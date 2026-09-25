@@ -21,7 +21,7 @@ describe('i18n', () => {
 
   it('has the same keys and placeholders in German and English', () => {
     expect(Object.keys(MESSAGES_EN).sort()).toEqual(Object.keys(MESSAGES_DE).sort())
-    for (const [key, text] of Object.entries(MESSAGES_DE)) expect(placeholders(MESSAGES_EN[key]), key).toEqual(placeholders(text))
+    for (const [key, text] of Object.entries(MESSAGES_DE)) expect(placeholders(MESSAGES_EN[key] ?? ''), key).toEqual(placeholders(text))
   })
 
   it('uses real umlauts and no ASCII substitutes in German texts', () => {

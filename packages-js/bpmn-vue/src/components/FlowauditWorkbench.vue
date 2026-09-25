@@ -27,7 +27,7 @@ const props = withDefaults(
     roleAliases?: RoleAlias[]
     editorFactory?: EditorFactory
   }>(),
-  { profile: null, profiles: () => [], ports: () => ({}), locale: 'de', author: '', roleAliases: () => [] },
+  { profile: null, editorFactory: undefined, profiles: () => [], ports: () => ({}), locale: 'de', author: '', roleAliases: () => [] },
 )
 const emit = defineEmits<{ (e: 'open', id: string): void; (e: 'error', message: string): void }>()
 const { t } = provideI18n(createI18n(props.locale))

@@ -65,7 +65,7 @@ describe('FlowauditEditor', () => {
     const w = await mountEditor()
     await w.find('.fa-editor').trigger('keydown', { key: 's', ctrlKey: true })
     await until(() => w.emitted('save') !== undefined)
-    const [payload] = w.emitted<[{ xml: string; info: { title?: string } | null }]>('save')![0]
+    const [payload] = w.emitted<[{ xml: string; info: { title?: string } | null }]>('save')![0]!
     expect(payload.xml).toContain('bpmn:definitions')
     expect(payload.info).not.toBeNull()
   })
@@ -100,6 +100,6 @@ describe('FlowauditEditor', () => {
   it('reports import errors instead of throwing', async () => {
     wrapper = mount(FlowauditEditor, { props: { xml: '<kein-bpmn/>', name: 'X' }, attachTo: document.body })
     await until(() => wrapper!.emitted('error') !== undefined)
-    expect(wrapper.emitted<[string]>('error')![0][0]).toBeTruthy()
+    expect(wrapper.emitted<[string]>('error')![0]![0]).toBeTruthy()
   })
 })

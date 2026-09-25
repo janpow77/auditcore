@@ -22,7 +22,7 @@ describe('DiagramCollection', () => {
     const collection = await sample()
     const tree = collection.tree()
     expect(tree.subfolders.map((f) => f.folder?.id)).toEqual(['antrag', 'pruefung'])
-    expect(tree.subfolders[0].subfolders[0].diagrams.map((d) => d.id)).toEqual(['alt'])
+    expect(tree.subfolders[0]!.subfolders[0]!.diagrams.map((d) => d.id)).toEqual(['alt'])
     expect(collection.entry('muster').name).toBe('Bewilligung und Auszahlung (Muster)')
     expect(collection.diagramsIn('antrag').map((d) => d.id)).toEqual(['muster', 'alt'])
   })
@@ -36,7 +36,7 @@ describe('DiagramCollection', () => {
     expect(collection.subfolders(null).map((f) => f.id)).toContain('antrag-sub')
     expect(() => collection.removeFolder('antrag')).toThrow('nicht leer')
     collection.setOrder('antrag', ['muster', 'anreicherung'])
-    expect(collection.inFolder('antrag')[0].id).toBe('muster')
+    expect(collection.inFolder('antrag')[0]!.id).toBe('muster')
     expect(() => collection.setTags('muster', ['unbekannt'])).toThrow('Unbekannte Tags')
   })
 

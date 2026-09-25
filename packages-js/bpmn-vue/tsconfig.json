@@ -7,8 +7,8 @@
     "paths": {
       "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"],
       "@flowaudit/bpmn-flowaudit/profiles": ["../bpmn-flowaudit/src/profile/bundled.ts"],
-      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts", "./src/types/bpmn-editor.d.ts"]
+      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts", "demo/**/*.ts", "demo/**/*.vue", "standalone/**/*.ts", "*.ts", "../bpmn-flowaudit/src/types/*.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts", "demo/**/*.ts", "demo/**/*.vue", "standalone/**/*.ts", "*.ts", "../bpmn-flowaudit/src/types/css.d.ts", "../bpmn-editor/src/types/shims.d.ts"]
 }

@@ -20,10 +20,9 @@ export interface PageFormat {
   heightMm: number
 }
 
-export const PAGE_FORMATS: readonly PageFormat[] = [
-  { id: 'a4', label: 'DIN A4', widthMm: 210, heightMm: 297 },
-  { id: 'a3', label: 'DIN A3', widthMm: 297, heightMm: 420 },
-] as const
+export const DEFAULT_PAGE_FORMAT: PageFormat = { id: 'a4', label: 'DIN A4', widthMm: 210, heightMm: 297 }
+
+export const PAGE_FORMATS: readonly PageFormat[] = [DEFAULT_PAGE_FORMAT, { id: 'a3', label: 'DIN A3', widthMm: 297, heightMm: 420 }]
 
 export interface PageSize {
   widthPx: number
@@ -32,7 +31,7 @@ export interface PageSize {
 
 /** Page size in diagram pixels, including orientation. */
 export function pageSize(formatId: string, orientation: Orientation, marginMm = 0): PageSize {
-  const format = PAGE_FORMATS.find((entry) => entry.id === formatId) ?? PAGE_FORMATS[0]
+  const format = PAGE_FORMATS.find((entry) => entry.id === formatId) ?? DEFAULT_PAGE_FORMAT
   const width = Math.max(format.widthMm - 2 * marginMm, 10)
   const height = Math.max(format.heightMm - 2 * marginMm, 10)
   const [w, h] = orientation === 'quer' ? [height, width] : [width, height]

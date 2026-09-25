@@ -3,7 +3,7 @@
  * persisted through the storage port (no database in the library).
  */
 
-import { computed, reactive, ref, shallowRef, triggerRef } from 'vue'
+import { computed, reactive, ref, shallowRef, triggerRef, type Ref, type ShallowRef } from 'vue'
 import {
   approve,
   checkCollection,
@@ -30,39 +30,10 @@ async function modelOf(xml: string) {
   return modelFromDefinitions((await loadDefinitions(xml)).definitions)
 }
 
-export function createCollectionStore(storage: StoragePort) {
-  const collection = shallowRef(new DiagramCollection())
-  const filter = reactive<CollectionFilter>({ search: '', status: '', tag: '' })
-  const selectedFolder = ref<string | null>(null)
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+type Guard = <T>(action: () => Promise<T>) => Promise<T | undefined>
 
-  const touch = () => triggerRef(collection)
-
-  async function persist(): Promise<void> {
-    await storage.saveCollection(collection.value.toData())
-    touch()
-  }
-
-  async function guarded<T>(action: () => Promise<T>): Promise<T | undefined> {
-    error.value = null
-    try {
-      return await action()
-    } catch (caught) {
-      error.value = (caught as Error).message
-      return undefined
-    }
-  }
-
-  async function load(): Promise<void> {
-    loading.value = true
-    await guarded(async () => {
-      const data = await storage.loadCollection()
-      collection.value = data ? DiagramCollection.fromData(data) : new DiagramCollection()
-    })
-    loading.value = false
-  }
-
+/** Persisting changes to folders, diagrams, tags and approvals. */
+function collectionActions(collection: ShallowRef<DiagramCollection>, storage: StoragePort, persist: () => Promise<void>, guarded: Guard) {
   const takenIds = () => new Set([...collection.value.diagrams.keys(), ...collection.value.folders.keys(), ...collection.value.tags.keys()])
 
   const createFolder = (name: string, parentId: string | null = null) =>
@@ -110,6 +81,11 @@ export function createCollectionStore(storage: StoragePort) {
       return approval
     })
 
+  return { takenIds, createFolder, createDiagram, saveDiagram, mutate, removeDiagram, approveDiagram }
+}
+
+/** Filtered folder tree, group overview and collection issues. */
+function collectionView(collection: ShallowRef<DiagramCollection>, filter: CollectionFilter, selectedFolder: Ref<string | null>) {
   const visibleIds = computed(() => {
     void collection.value
     const hits = collection.value.search(filter.search, { status: filter.status || undefined, tag: filter.tag || undefined })
@@ -126,6 +102,47 @@ export function createCollectionStore(storage: StoragePort) {
   const overview = computed(() => groupOverview(collection.value, { folderId: selectedFolder.value }))
   const issues = computed(() => checkCollection(collection.value))
 
+  return { tree, overview, issues, isFiltering }
+}
+
+export function createCollectionStore(storage: StoragePort) {
+  const collection = shallowRef(new DiagramCollection())
+  const filter = reactive<CollectionFilter>({ search: '', status: '', tag: '' })
+  const selectedFolder = ref<string | null>(null)
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+
+  const touch = () => triggerRef(collection)
+
+  async function persist(): Promise<void> {
+    await storage.saveCollection(collection.value.toData())
+    touch()
+  }
+
+  async function guarded<T>(action: () => Promise<T>): Promise<T | undefined> {
+    error.value = null
+    try {
+      return await action()
+    } catch (caught) {
+      error.value = (caught as Error).message
+      return undefined
+    }
+  }
+
+  async function load(): Promise<void> {
+    loading.value = true
+    await guarded(async () => {
+      const data = await storage.loadCollection()
+      collection.value = data ? DiagramCollection.fromData(data) : new DiagramCollection()
+    })
+    loading.value = false
+  }
+
+  const actions = collectionActions(collection, storage, persist, guarded)
+  const { takenIds, mutate } = actions
+
+  const { tree, overview, issues, isFiltering } = collectionView(collection, filter, selectedFolder)
+
   return {
     collection,
     filter,
@@ -137,12 +154,14 @@ export function createCollectionStore(storage: StoragePort) {
     issues,
     isFiltering,
     load,
-    createFolder,
-    createDiagram,
-    saveDiagram,
-    removeDiagram,
-    approveDiagram,
+    createFolder: actions.createFolder,
+    createDiagram: actions.createDiagram,
+    saveDiagram: actions.saveDiagram,
+    removeDiagram: actions.removeDiagram,
+    approveDiagram: actions.approveDiagram,
     openDiagram: (id: string) => storage.loadDiagram(id),
+    setFilter: (patch: Partial<CollectionFilter>) => Object.assign(filter, patch),
+    selectFolder: (id: string | null) => (selectedFolder.value = id),
     entry: (id: string): DiagramEntry | undefined => collection.value.diagrams.get(id),
     renameFolder: (id: string, name: string) => mutate((c) => c.renameFolder(id, name)),
     removeFolder: (id: string) => mutate((c) => c.removeFolder(id)),

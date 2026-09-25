@@ -155,7 +155,7 @@ const GATEWAY_TYPES = new Set(['exclusiveGateway', 'inclusiveGateway', 'parallel
 
 /** `bpmn:UserTask` → `userTask`. */
 export function localType(type: string): string {
-  const name = type.includes(':') ? type.split(':')[1] : type
+  const name = type.includes(':') ? type.split(':')[1] ?? type : type
   return name.charAt(0).toLowerCase() + name.slice(1)
 }
 

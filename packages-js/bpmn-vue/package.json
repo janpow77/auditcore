@@ -39,10 +39,10 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@flowaudit/bpmn-editor": "0.1.0",
     "@flowaudit/bpmn-flowaudit": "0.1.0"
   },
   "peerDependencies": {
-    "@flowaudit/bpmn-editor": "^0.1.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
@@ -51,10 +51,5 @@
     "@vue/test-utils": "^2.4.6",
     "vue": "^3.5.22",
     "vue-tsc": "^3.1.1"
-  },
-  "peerDependenciesMeta": {
-    "@flowaudit/bpmn-editor": {
-      "optional": true
-    }
   }
 }

@@ -12,7 +12,7 @@ import FaIcon from '../base/FaIcon.vue'
 import FieldForm from '../../panels/FieldForm.vue'
 import ListEditor from '../../panels/ListEditor.vue'
 import LegalBasisEditor from '../../panels/legal/LegalBasisEditor.vue'
-import { LISTS } from '../../panels/descriptors'
+import { LISTS, type DescribedListKey } from '../../panels/descriptors'
 import { useOptions } from '../../panels/useOptions'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
@@ -35,7 +35,7 @@ watch(
 
 const header = computed(() => headerOf(draft.value, props.fallbackTitle))
 const lastApproval = computed(() => props.approvals?.[props.approvals.length - 1])
-const DIAGRAM_LISTS: ListExtensionKey[] = ['auditReferences', 'risks', 'findings', 'sources', 'crossReferences']
+const DIAGRAM_LISTS: DescribedListKey[] = ['auditReferences', 'risks', 'findings', 'sources', 'crossReferences']
 
 function merge(value: Record<string, unknown>): void {
   draft.value = { ...(value as DiagramInfo) }

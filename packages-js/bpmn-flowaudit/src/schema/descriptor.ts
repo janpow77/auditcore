@@ -31,14 +31,21 @@ interface ModdleType {
   properties: ModdleProperty[]
 }
 
+/** Entry of a spec table; a missing entry is a programming error in the table. */
+function specOf<T>(table: Record<string, T>, key: string): T {
+  const entry = table[key]
+  if (entry === undefined) throw new Error(`flowaudit schema table has no entry „${key}“`)
+  return entry
+}
+
 const PROPERTY_BUILDERS: Record<FieldSpec['kind'], (field: FieldSpec) => ModdleProperty> = {
   attr: (field) => ({ name: field.xml, type: 'String', isAttr: true }),
   list: (field) => ({ name: field.xml, type: 'String', isAttr: true }),
   // `value` as in the audit_designer descriptor (1.0).
   body: () => ({ name: 'value', type: 'String', isBody: true }),
-  text: (field) => ({ name: field.xml, type: TEXT_TYPES[field.xml] }),
-  texts: (field) => ({ name: field.key, type: TEXT_TYPES[field.xml], isMany: true }),
-  elements: (field) => ({ name: field.key, type: TYPES[field.type as string].moddle, isMany: true }),
+  text: (field) => ({ name: field.xml, type: specOf(TEXT_TYPES, field.xml) }),
+  texts: (field) => ({ name: field.key, type: specOf(TEXT_TYPES, field.xml), isMany: true }),
+  elements: (field) => ({ name: field.key, type: specOf(TYPES, field.type ?? '').moddle, isMany: true }),
 }
 
 function buildTypes(): ModdleType[] {

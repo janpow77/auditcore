@@ -172,7 +172,7 @@ function attributesOf(shape: IconShape): [string, Record<string, string>] {
 
 /** Primitive shapes of an icon as `[tag, attributes]` (for Vue render functions). */
 export function iconPrimitives(name: string): [string, Record<string, string>][] {
-  return (ICONS[name] ?? ICONS.info).map(attributesOf)
+  return (ICONS[name] ?? ICONS.info ?? []).map(attributesOf)
 }
 
 const ROOT_ATTRIBUTES = {

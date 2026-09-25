@@ -8,7 +8,7 @@ import type { Extensions, ListExtensionKey } from '@flowaudit/bpmn-flowaudit'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import ListEditor from '../ListEditor.vue'
-import { LISTS } from '../descriptors'
+import { isDescribedList, LISTS } from '../descriptors'
 import { useOptions } from '../useOptions'
 
 const props = defineProps<{ lists: ListExtensionKey[] }>()
@@ -16,7 +16,7 @@ const { selection, profile, ports, readonly } = useEditorContext()
 const { locale } = useI18n()
 const { optionsFor } = useOptions({ profile, catalogue: ports.catalogue, locale })
 
-const descriptors = computed(() => props.lists.map((key) => LISTS[key]).filter(Boolean))
+const descriptors = computed(() => props.lists.filter(isDescribedList).map((key) => LISTS[key]))
 
 function items(key: ListExtensionKey): Record<string, unknown>[] {
   return selection.extensions.value[key] as unknown as Record<string, unknown>[]

@@ -49,7 +49,9 @@ export function matchElements(before: ProcessModel, after: ProcessModel): Map<st
   const restNew = groupByTypeAndName([...newElements.values()], new Set(mapping.values()))
   for (const [key, ids] of restOld) {
     const partners = restNew.get(key) ?? []
-    if (ids.length === 1 && partners.length === 1) mapping.set(ids[0], partners[0])
+    const [id] = ids
+    const [partner] = partners
+    if (ids.length === 1 && partners.length === 1 && id && partner) mapping.set(id, partner)
   }
   return mapping
 }

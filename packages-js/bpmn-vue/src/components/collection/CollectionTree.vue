@@ -43,7 +43,7 @@ function dropOnRoot(event: DragEvent): void {
 }
 
 function selectFolder(id: string | null): void {
-  props.store.selectedFolder.value = id
+  props.store.selectFolder(id)
   emit('select-diagram', null)
 }
 </script>
@@ -56,13 +56,13 @@ function selectFolder(id: string | null): void {
       <button type="button" class="fa-icon-btn" :title="t('collection.newDiagram')" :aria-label="t('collection.newDiagram')" @click="prompt = { kind: 'diagram', open: true }"><FaIcon name="new" /></button>
     </header>
     <div class="fa-collection__filters">
-      <input v-model="store.filter.search" class="fa-input" type="search" :placeholder="t('common.search')" :aria-label="t('common.search')" />
+      <input :value="store.filter.search" class="fa-input" type="search" :placeholder="t('common.search')" :aria-label="t('common.search')" @input="store.setFilter({ search: ($event.target as HTMLInputElement).value })" />
       <div class="fa-grid-2">
-        <select v-model="store.filter.status" class="fa-select" :aria-label="t('collection.filter.status')">
+        <select :value="store.filter.status" class="fa-select" :aria-label="t('collection.filter.status')" @change="store.setFilter({ status: ($event.target as HTMLSelectElement).value })">
           <option value="">{{ t('collection.filter.status') }}: {{ t('common.all') }}</option>
           <option v-for="(text, code) in DIAGRAM_STATUS" :key="code" :value="code">{{ label(text, locale) }}</option>
         </select>
-        <select v-model="store.filter.tag" class="fa-select" :aria-label="t('collection.filter.tag')">
+        <select :value="store.filter.tag" class="fa-select" :aria-label="t('collection.filter.tag')" @change="store.setFilter({ tag: ($event.target as HTMLSelectElement).value })">
           <option value="">{{ t('collection.filter.tag') }}: {{ t('common.all') }}</option>
           <option v-for="tag in tags" :key="tag.id" :value="tag.id">{{ tag.name }}</option>
         </select>

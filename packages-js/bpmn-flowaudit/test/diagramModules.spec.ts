@@ -57,7 +57,7 @@ describe('decorations', () => {
     const gfx = instance.get<{ getGraphics(e: unknown): SVGElement }>('elementRegistry').getGraphics(shape)
     const band = gfx.querySelector('.fa-role-band')
     expect(band?.getAttribute('data-role')).toBe('zgs')
-    expect(band?.querySelector('rect')?.getAttribute('fill')).toBe(ROLES.zgs.color.fill)
+    expect(band?.querySelector('rect')?.getAttribute('fill')).toBe(ROLES.zgs!.color.fill)
     expect(band?.querySelector('title')?.textContent).toBe('Zwischengeschaltete Stelle')
   })
 
@@ -117,7 +117,7 @@ describe('role palette and context pads', () => {
     const entries = instance.get<{ getEntries(): Record<string, { title: string; group: string }> }>('palette').getEntries()
     const roleEntries = Object.keys(entries).filter((id) => id.startsWith('flowaudit-pool-'))
     expect(roleEntries).toHaveLength(TEST_PROFILE.roles.length)
-    expect(entries['flowaudit-pool-vb'].title).toBe('Create pool: Verwaltungsbehörde')
+    expect(entries['flowaudit-pool-vb']!.title).toBe('Create pool: Verwaltungsbehörde')
     const provider = instance.get<RolePaletteProvider>('flowauditRolePalette')
     expect(provider.roles().map((r) => r.code)).toContain('rfs')
   })
@@ -133,8 +133,8 @@ describe('role palette and context pads', () => {
     const contextPad = instance.get<{ getEntries(e: unknown): Record<string, { action: { click: (event: Event) => unknown } }> }>('contextPad')
     const laneEntries = contextPad.getEntries(lane)
     expect(Object.keys(laneEntries)).toEqual(expect.arrayContaining(['flowaudit-assign-role', 'flowaudit-add-lane-role', 'flowaudit-farbe']))
-    laneEntries['flowaudit-assign-role'].action.click(new MouseEvent('click'))
-    contextPad.getEntries(task)['flowaudit-farbe'].action.click(new MouseEvent('click'))
+    laneEntries['flowaudit-assign-role']!.action.click(new MouseEvent('click'))
+    contextPad.getEntries(task)['flowaudit-farbe']!.action.click(new MouseEvent('click'))
     expect(listener).toHaveBeenCalledTimes(2)
     expect(contextPad.getEntries(task)['flowaudit-assign-role']).toBeUndefined()
   })
@@ -145,7 +145,7 @@ describe('role palette and context pads', () => {
     const updateModdleProperties = vi.fn()
     const provider = instance.get<RolePaletteProvider>('flowauditRolePalette')
     Object.assign(provider as unknown as Record<string, unknown>, { modeling: { updateModdleProperties } })
-    provider.assignRole(lane, ROLES.pb)
+    provider.assignRole(lane, ROLES.pb!)
     expect(updateModdleProperties).toHaveBeenCalledTimes(1)
   })
 })
@@ -156,10 +156,10 @@ describe('unknown elements guard', () => {
     const listeners: Record<string, (e: Record<string, unknown>) => unknown> = {}
     new UnknownElementsGuard({ on: (name: string, _p: number, cb: (e: Record<string, unknown>) => unknown) => (listeners[name] = cb) } as never)
     const xml = '<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:flowaudit="https://flowaudit.de/bpmn/schema/1.0"><flowaudit:neu/></bpmn:definitions>'
-    const protectedXml = listeners['import.parse.start']({ xml }) as string
+    const protectedXml = listeners['import.parse.start']!({ xml }) as string
     expect(protectedXml).toContain('flowauditUnbekannt:neu')
-    expect(listeners['saveXML.serialized']({ xml: protectedXml })).toContain('<flowaudit:neu')
-    expect(listeners['import.parse.start']({})).toBeUndefined()
+    expect(listeners['saveXML.serialized']!({ xml: protectedXml })).toContain('<flowaudit:neu')
+    expect(listeners['import.parse.start']!({})).toBeUndefined()
   })
 })
 

@@ -59,7 +59,7 @@ describe('model access', () => {
   it('delegates to modeling in the editor', async () => {
     const loaded = await loadDefinitions(fixture('legacy-1.0.bpmn'))
     const process = (loaded.definitions.get('rootElements') as ModdleElement[])[0]
-    const bo = (process.get('flowElements') as ModdleElement[]).find((el) => el.id === 'Task_Pruefen') as ModdleElement
+    const bo = (process!.get('flowElements') as ModdleElement[]).find((el) => el.id === 'Task_Pruefen') as ModdleElement
     const element = { id: 'Task_Pruefen', type: 'bpmn:Task', businessObject: bo } as DiagramElement
     const modeling = { updateProperties: vi.fn(), updateModdleProperties: vi.fn(), setColor: vi.fn() } as unknown as Modeling
     const registry = { get: (id: string) => (id === 'Task_Pruefen' ? element : undefined) } as unknown as ElementRegistry
@@ -132,7 +132,7 @@ describe('flow direction', () => {
   it('keeps new pools on the chosen direction', () => {
     const { editor: e, modeling, listeners } = editor([])
     const stop = keepDirection(e, () => 'senkrecht')
-    listeners[0]({ context: { shape: pool(true) } })
+    listeners[0]!({ context: { shape: pool(true) } })
     expect(modeling.updateModdleProperties).toHaveBeenCalledTimes(1)
     stop()
   })

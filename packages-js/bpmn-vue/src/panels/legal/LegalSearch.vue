@@ -46,9 +46,14 @@ watch(query, (text) => {
   timer = setTimeout(() => search(text), 250)
 })
 
+/** Search hits carry display helpers (title, excerpt, origin) that are not stored. */
+function withoutDisplayFields(value: LegalBasis | LegalSearchHit): LegalBasis {
+  const DISPLAY = new Set(['title', 'excerpt', 'origin'])
+  return Object.fromEntries(Object.entries(value).filter(([key]) => !DISPLAY.has(key))) as LegalBasis
+}
+
 function choose(value: LegalBasis): void {
-  const { title: _title, excerpt: _excerpt, origin: _origin, ...basis } = value as LegalSearchHit
-  emit('choose', basis)
+  emit('choose', withoutDisplayFields(value))
   query.value = ''
   hits.value = []
 }

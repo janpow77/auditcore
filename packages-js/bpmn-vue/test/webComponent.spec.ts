@@ -42,8 +42,8 @@ describe('<flowaudit-bpmn-editor>', () => {
     await until(() => element.querySelector('.djs-container') !== null && element.textContent!.includes('Antrag'))
     element.querySelector('.fa-editor')!.dispatchEvent(new KeyboardEvent('keydown', { key: 's', ctrlKey: true, bubbles: true }))
     await until(() => saved.length > 0)
-    expect(saved[0].xml).toContain('bpmn:definitions')
-    expect(await storage.loadDiagram('d1')).toBe(saved[0].xml)
+    expect(saved[0]!.xml).toContain('bpmn:definitions')
+    expect(await storage.loadDiagram('d1')).toBe(saved[0]!.xml)
   })
 
   it('loads from src and reports load errors as error events', async () => {

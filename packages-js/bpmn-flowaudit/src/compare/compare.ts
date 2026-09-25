@@ -180,7 +180,8 @@ export function colorsFromMarkers(model: ProcessModel): Map<string, { fill: stri
   for (const element of model.elements) {
     const types = new Set(element.extensions.markers.map((marker) => marker.type))
     const winner = MARKER_COLOR_PRECEDENCE.find((type) => types.has(type))
-    if (winner) result.set(element.id, MARKER_COLORS[winner])
+    const color = winner ? MARKER_COLORS[winner] : undefined
+    if (color) result.set(element.id, color)
   }
   return result
 }

@@ -41,9 +41,8 @@ const sections = computed(() => [
           @click="emit('trigger', item.id, $event)"
           @dragstart="emit('trigger', item.id, $event)"
         >
-          <FaIcon v-if="item.icon" :name="item.icon" :size="20" />
-          <!-- Role entries carry their own icon markup (FlowAudit icon set). -->
-          <span v-else-if="item.html" class="fa-palette__html" v-html="item.html" />
+          <span v-if="item.icon && item.color" class="fa-palette__role" :style="{ color: item.color.stroke, background: item.color.fill }"><FaIcon :name="item.icon" :size="20" /></span>
+          <FaIcon v-else-if="item.icon" :name="item.icon" :size="20" />
           <span v-else class="fa-palette__fallback">{{ item.title.slice(0, 2) }}</span>
         </button>
       </div>
@@ -98,9 +97,13 @@ const sections = computed(() => [
   color: var(--fa-primary);
 }
 
-.fa-palette__html .fa-role-entry {
+.fa-palette__role {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 30px;
   height: 30px;
+  border-radius: 6px;
 }
 
 .fa-palette__fallback {

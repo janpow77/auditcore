@@ -6,7 +6,7 @@
  * shapes break read-only fields (seen in the audit_designer editor).
  */
 
-import { computed, markRaw, reactive, readonly, shallowRef } from 'vue'
+import { computed, markRaw, reactive, readonly, shallowRef, type ShallowRef } from 'vue'
 import {
   editorServices,
   modelFromEditor,
@@ -43,78 +43,21 @@ export interface EditorStoreOptions {
 
 export type EditorStore = ReturnType<typeof createEditorStore>
 
-export function createEditorStore(options: EditorStoreOptions = {}) {
-  const factory = options.factory ?? defaultEditorFactory
-  const editor = shallowRef<EditorLike | null>(null)
-  const state = reactive<EditorState>({ ready: false, dirty: false, canUndo: false, canRedo: false, scale: 1, changes: 0, info: null, warnings: [], error: null })
-  const listeners = new Set<() => void>()
+function ready(editor: ShallowRef<EditorLike | null>): EditorLike {
+  if (!editor.value) throw new Error('Editor ist nicht bereit.')
+  return editor.value
+}
 
-  function services(): EditorServices {
-    if (!editor.value) throw new Error('Editor ist nicht bereit.')
-    return editorServices(editor.value)
+/** XML and SVG output of the editor. */
+function editorOutput(editor: ShallowRef<EditorLike | null>) {
+  return {
+    exportXml: async (): Promise<string> => (await ready(editor).saveXML({ format: true })).xml,
+    exportSvg: async (): Promise<string> => (await ready(editor).saveSVG()).svg,
   }
+}
 
-  function refreshCommandState(): void {
-    const stack = editor.value?.get<CommandStack>('commandStack')
-    state.canUndo = Boolean(stack?.canUndo())
-    state.canRedo = Boolean(stack?.canRedo())
-  }
-
-  function onCommand(): void {
-    state.dirty = true
-    state.changes += 1
-    state.info = readDiagramInfoFromEditor(services())
-    refreshCommandState()
-    for (const listener of listeners) listener()
-  }
-
-  function onViewbox(event: unknown): void {
-    const viewbox = (event as { viewbox?: Viewbox }).viewbox
-    if (viewbox) state.scale = viewbox.scale
-  }
-
-  function mount(container: HTMLElement, keyboardTarget?: EventTarget): EditorLike {
-    destroy()
-    const instance = markRaw(factory({ container, locale: options.locale ?? 'de', flowaudit: options.flowaudit ?? {}, keyboardTarget }))
-    instance.on('commandStack.changed', onCommand)
-    instance.on('canvas.viewbox.changed', onViewbox)
-    editor.value = instance
-    return instance
-  }
-
-  async function importXml(xml: string): Promise<void> {
-    if (!editor.value) return
-    state.error = null
-    try {
-      const result = await editor.value.importXML(xml)
-      state.warnings = result.warnings ?? []
-      state.ready = true
-      state.dirty = false
-      state.changes += 1
-      state.info = readDiagramInfoFromEditor(services())
-      refreshCommandState()
-    } catch (error) {
-      state.error = (error as Error).message
-      throw error
-    }
-  }
-
-  async function exportXml(): Promise<string> {
-    if (!editor.value) throw new Error('Editor ist nicht bereit.')
-    return (await editor.value.saveXML({ format: true })).xml
-  }
-
-  async function exportSvg(): Promise<string> {
-    if (!editor.value) throw new Error('Editor ist nicht bereit.')
-    return (await editor.value.saveSVG()).svg
-  }
-
-  function markSaved(): void {
-    state.dirty = false
-  }
-
-  const commandStack = () => editor.value?.get<CommandStack>('commandStack')
-
+/** Viewport, selection and model access of the editor. */
+function editorView(editor: ShallowRef<EditorLike | null>, state: EditorState, services: () => EditorServices) {
   function zoom(factor: number | 'fit'): void {
     const canvas = editor.value ? services().canvas : null
     if (!canvas) return
@@ -145,6 +88,82 @@ export function createEditorStore(options: EditorStoreOptions = {}) {
     writeDiagramInfo(services(), info)
   }
 
+  return { zoom, select, model, access, setInfo }
+}
+
+/** Keeps the reactive state in line with the editor (commands, viewbox, import). */
+function editorStateSync(editor: ShallowRef<EditorLike | null>, state: EditorState, services: () => EditorServices, listeners: Set<() => void>) {
+  function refreshCommandState(): void {
+    const stack = editor.value?.get<CommandStack>('commandStack')
+    state.canUndo = Boolean(stack?.canUndo())
+    state.canRedo = Boolean(stack?.canRedo())
+  }
+
+  function onCommand(): void {
+    state.dirty = true
+    state.changes += 1
+    state.info = readDiagramInfoFromEditor(services())
+    refreshCommandState()
+    for (const listener of listeners) listener()
+  }
+
+  function onViewbox(event: unknown): void {
+    const viewbox = (event as { viewbox?: Viewbox }).viewbox
+    if (viewbox) state.scale = viewbox.scale
+  }
+
+  async function importXml(xml: string): Promise<void> {
+    if (!editor.value) return
+    state.error = null
+    try {
+      const result = await editor.value.importXML(xml)
+      state.warnings = result.warnings ?? []
+      state.ready = true
+      state.dirty = false
+      state.changes += 1
+      state.info = readDiagramInfoFromEditor(services())
+      refreshCommandState()
+    } catch (error) {
+      state.error = (error as Error).message
+      throw error
+    }
+  }
+
+  return { onCommand, onViewbox, importXml }
+}
+
+export function createEditorStore(options: EditorStoreOptions = {}) {
+  const factory = options.factory ?? defaultEditorFactory
+  const editor = shallowRef<EditorLike | null>(null)
+  const state = reactive<EditorState>({ ready: false, dirty: false, canUndo: false, canRedo: false, scale: 1, changes: 0, info: null, warnings: [], error: null })
+  const listeners = new Set<() => void>()
+
+  function services(): EditorServices {
+    if (!editor.value) throw new Error('Editor ist nicht bereit.')
+    return editorServices(editor.value)
+  }
+
+  const sync = editorStateSync(editor, state, services, listeners)
+
+  function mount(container: HTMLElement, keyboardTarget?: EventTarget): EditorLike {
+    destroy()
+    const instance = markRaw(factory({ container, locale: options.locale ?? 'de', flowaudit: options.flowaudit ?? {}, keyboardTarget }))
+    instance.on('commandStack.changed', sync.onCommand)
+    instance.on('canvas.viewbox.changed', sync.onViewbox)
+    editor.value = instance
+    return instance
+  }
+
+  const { exportXml, exportSvg } = editorOutput(editor)
+
+  function markSaved(): void {
+    state.dirty = false
+  }
+
+  const commandStack = () => editor.value?.get<CommandStack>('commandStack')
+
+  const view = editorView(editor, state, services)
+
   /** Subscribe to model changes (commands); returns an unsubscribe function. */
   function onChange(listener: () => void): () => void {
     listeners.add(listener)
@@ -161,18 +180,14 @@ export function createEditorStore(options: EditorStoreOptions = {}) {
     state: readonly(state),
     editor: computed(() => editor.value),
     mount,
-    importXml,
+    importXml: sync.importXml,
     exportXml,
     exportSvg,
     markSaved,
     undo: () => commandStack()?.undo(),
     redo: () => commandStack()?.redo(),
-    zoom,
-    select,
+    ...view,
     services,
-    model,
-    access,
-    setInfo,
     onChange,
     destroy,
   }

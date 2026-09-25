@@ -37,34 +37,41 @@ export interface TextHit<T> {
   excerpt: string
 }
 
-function hits<T>(text: string, pattern: RegExp, build: (groups: Record<string, string>) => T[]): TextHit<T>[] {
+/** Named group of a match; groups that did not participate are empty strings. */
+type Groups = (name: string) => string
+
+function groupsOf(match: RegExpMatchArray): Groups {
+  return (name) => match.groups?.[name] ?? ''
+}
+
+function hits<T>(text: string, pattern: RegExp, build: (groups: Groups) => T[]): TextHit<T>[] {
   return [...text.matchAll(pattern)].flatMap((match) =>
-    build((match.groups ?? {}) as Record<string, string>).map((value) => ({ value, excerpt: match[0] })),
+    build(groupsOf(match)).map((value) => ({ value, excerpt: match[0] })),
   )
 }
 
 export function auditReferencesIn(text: string): TextHit<AuditReference>[] {
-  const toReference = (bk: string): AuditReference => ({ keyRequirement: bk.split('.')[0], assessmentCriterion: bk })
+  const toReference = (bk: string): AuditReference => ({ keyRequirement: bk.split('.')[0] ?? bk, assessmentCriterion: bk })
   return [
-    ...hits(text, CRITERIA, (g) => splitList(g.liste).map(toReference)),
-    ...hits(text, CRITERION_SHORT, (g) => [toReference(g.bk)]),
+    ...hits(text, CRITERIA, (g) => splitList(g('liste')).map(toReference)),
+    ...hits(text, CRITERION_SHORT, (g) => [toReference(g('bk'))]),
   ]
 }
 
 export function crossReferencesIn(text: string): TextHit<CrossReference>[] {
   return [
-    ...hits(text, FINDINGS, (g) => splitList(g.liste).map((ref) => ({ kind: 'feststellung_ref', key: ref.split(/\s+/).join(' ') }))),
+    ...hits(text, FINDINGS, (g) => splitList(g('liste')).map((ref) => ({ kind: 'feststellung_ref', key: ref.split(/\s+/).join(' ') }))),
     ...hits(text, CHECKLIST_ITEM, (g) => [
-      { kind: 'prueffeld', key: g.nr, ...(g.dok ? { document: g.dok.split(/\s+/).join(' ') } : {}) },
+      { kind: 'prueffeld', key: g('nr'), ...(g('dok') ? { document: g('dok').split(/\s+/).join(' ') } : {}) },
     ]),
-    ...hits(text, REGISTER, (g) => splitList(g.liste).map((key) => ({ kind: 'register', key }))),
+    ...hits(text, REGISTER, (g) => splitList(g('liste')).map((key) => ({ kind: 'register', key }))),
   ]
 }
 
 export function sourcesIn(text: string): TextHit<Source>[] {
   return hits(text, MANUAL_REFERENCE, (g) => {
-    const place = g.stelle + (g.seiten ? ` (${g.seiten})` : '')
-    return [{ sourceType: 'verfahrenshandbuch', location: `${g.dok}, ${place}` }]
+    const place = g('stelle') + (g('seiten') ? ` (${g('seiten')})` : '')
+    return [{ sourceType: 'verfahrenshandbuch', location: `${g('dok')}, ${place}` }]
   })
 }
 
@@ -72,5 +79,6 @@ export function sourcesIn(text: string): TextHit<Source>[] {
 export function removeRolePrefix(name: string): string {
   const trimmed = name.trim()
   const match = ROLE_PREFIX.exec(trimmed)
-  return match?.groups ? trimmed.slice(match.groups.praefix.length + 1).trim() : name
+  const prefix = match?.groups?.praefix
+  return prefix !== undefined ? trimmed.slice(prefix.length + 1).trim() : name
 }

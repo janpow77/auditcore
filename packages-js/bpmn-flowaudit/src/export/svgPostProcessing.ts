@@ -143,10 +143,12 @@ function drawHeader(doc: Document, svg: Element, options: PrepareSvgOptions, box
   if (options.subtitle?.trim()) svg.appendChild(svgText(doc, box.minX, top + 48, options.subtitle.trim(), { size: 13, color }))
 }
 
-function readViewBox(svg: Element | null): number[] | null {
+function readViewBox(svg: Element | null): [number, number, number, number] | null {
   if (!svg || svg.nodeName.toLowerCase() !== 'svg') return null
-  const viewBox = (svg.getAttribute('viewBox') ?? '').split(/\s+/).map(Number)
-  return viewBox.length === 4 && viewBox.every((value) => Number.isFinite(value)) ? viewBox : null
+  const [minX, minY, width, height, ...rest] = (svg.getAttribute('viewBox') ?? '').split(/\s+/).map(Number)
+  const values = [minX, minY, width, height]
+  if (rest.length || !values.every((value): value is number => value !== undefined && Number.isFinite(value))) return null
+  return values as [number, number, number, number]
 }
 
 /** Wraps the content in a group; <defs> stays on top so arrow markers keep working. */
