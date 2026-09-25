@@ -190,3 +190,8 @@ def test_same_named_extra_of_another_package_is_not_a_published_renderer():
         "pdf": "auditcore_invoicegenerator",
         "excel": "auditcore_reporting",
     }
+
+
+def test_release_requires_passing_code_quality_gate():
+    """No release assets without the executed code-quality ratchet (release blocker)."""
+    assert "code-quality-gate" in release.REQUIRED_CHECKS

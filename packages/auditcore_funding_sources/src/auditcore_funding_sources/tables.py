@@ -89,7 +89,7 @@ def _check_size(content: bytes, limits: Limits) -> None:
         raise SourceFormatError("Die Datei überschreitet die zulässige Größe.")
 
 
-def _unique_headers(raw: Sequence[Any]) -> tuple[str, ...]:
+def _unique_headers(raw: Sequence[object]) -> tuple[str, ...]:
     """pandas header mangling: empty → ``Unnamed: i``, duplicates → ``name.1``."""
     names: list[str] = []
     seen: dict[str, int] = {}
@@ -254,7 +254,7 @@ def _openpyxl() -> Any:
     return openpyxl
 
 
-def _excel_value(value: Any, typing: Typing) -> Any:
+def _excel_value(value: object, typing: Typing) -> object:
     if typing == "text":
         if value is None:
             return None
@@ -267,7 +267,7 @@ def _excel_value(value: Any, typing: Typing) -> Any:
     return value
 
 
-def _numeric_text(value: Any) -> bool:
+def _numeric_text(value: object) -> bool:
     return isinstance(value, str) and bool(
         _INT_RE.fullmatch(value.strip()) or _FLOAT_RE.fullmatch(value.strip())
     )
@@ -357,7 +357,7 @@ def _xlsx_rows(content: bytes, sheet: str | int | None, limits: Limits) -> list[
     return rows
 
 
-def _used_width(rows: Sequence[Sequence[Any]], header: int) -> int:
+def _used_width(rows: Sequence[Sequence[object]], header: int) -> int:
     """Header width without trailing columns that are empty in header and data."""
     raw = rows[header]
     width = len(raw)

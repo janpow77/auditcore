@@ -7,8 +7,8 @@ Die Abrufsteuerung (Seitenfolge, Wiederholungen, Rate-Limits, Checkpoints)
 übernimmt `auditcore_harvest`; diese Bibliothek liefert die Quellenadapter.
 
 ```bash
-pip install auditcore_funding_sources==0.1.0          # zieht auditcore_harvest==0.1.0
-pip install 'auditcore_funding_sources[xlsx]==0.1.0'  # zusätzlich XLSX (openpyxl, defusedxml)
+pip install auditcore_funding_sources==0.1.1          # zieht auditcore_harvest==0.1.0
+pip install 'auditcore_funding_sources[xlsx]==0.1.1'  # zusätzlich XLSX (openpyxl, defusedxml)
 ```
 
 ## Bausteine

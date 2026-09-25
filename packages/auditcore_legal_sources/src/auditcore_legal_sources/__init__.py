@@ -8,7 +8,7 @@ from .errors import ConfigurationError, LegalSourceError, ParseError, ProfileErr
 from .model import LegalDocument
 from .profile import SourceProfile, available_profiles, load_profile
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "ConfigurationError",
