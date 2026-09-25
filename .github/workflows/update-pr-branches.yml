@@ -1,0 +1,112 @@
+name: update-pr-branches
+# Hält offene PR-Branches nach jedem Push auf main aktuell (Merge von main in
+# den PR-Branch, kein Rebase, kein Force-Push). Nur PRs aus diesem Repository,
+# keine Entwürfe, keine Dependabot-PRs (Dependabot rebased selbst).
+#
+# Gemergt wird per git und per SSH mit dem Secret AUTOMATION_DEPLOY_KEY gepusht:
+# Nur dann startet GitHub die CI für den neuen Merge-Commit. Die REST-Schnittstelle
+# update-branch mit GITHUB_TOKEN löst keine Workflows aus; der PR stünde danach
+# ohne Required Checks da. Fehlt das Secret, werden deshalb nur Konflikte markiert.
+#
+# PRs mit Merge-Konflikt bekommen das Label „konflikt“; das Label verschwindet,
+# sobald der Branch wieder konfliktfrei aktualisiert ist.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: update-pr-branches
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read         # Push läuft über den Deploy-Key, nicht über GITHUB_TOKEN
+      pull-requests: read
+      issues: write          # Labels
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          fetch-depth: 0
+          ssh-key: ${{ secrets.AUTOMATION_DEPLOY_KEY }}
+          persist-credentials: true
+      - name: Offene PR-Branches aktualisieren
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HAS_DEPLOY_KEY: ${{ secrets.AUTOMATION_DEPLOY_KEY != '' }}
+          PAUSE_SECONDS: '15'
+          MAX_UPDATES: '25'
+          LABEL: konflikt
+        run: |
+          set -uo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config core.hooksPath /dev/null
+          gh api "repos/$REPO/labels/$LABEL" >/dev/null 2>&1 \
+            || gh api -X POST "repos/$REPO/labels" -f name="$LABEL" -f color=d93f0b \
+                 -f description='Merge-Konflikt mit main – bitte von Hand auflösen' >/dev/null || true
+
+          label() {  # label <add|remove> <pr>
+            if [ "$1" = add ]; then
+              gh api -X POST "repos/$REPO/issues/$2/labels" -f "labels[]=$LABEL" >/dev/null || true
+            else
+              gh api -X DELETE "repos/$REPO/issues/$2/labels/$LABEL" >/dev/null 2>&1 || true
+            fi
+          }
+
+          gh api --paginate "repos/$REPO/pulls?state=open&base=main&per_page=100" \
+            --jq ".[] | select(.draft | not) | select(.head.repo.full_name == \"$REPO\")
+                      | select(.user.login != \"dependabot[bot]\")
+                      | [.number, .head.ref, .head.sha] | @tsv" > "$RUNNER_TEMP/prs.tsv"
+          updates=0; conflicts=0; current=0
+          while IFS=$'\t' read -r number ref sha <&3; do
+            [ -n "$number" ] || continue
+            if [ "$updates" -ge "$MAX_UPDATES" ]; then
+              echo "Obergrenze $MAX_UPDATES erreicht – Rest beim nächsten Push auf main."; break
+            fi
+            if ! git fetch --quiet origin "$sha" 2>/dev/null; then
+              echo "#$number: Commit nicht abrufbar – übersprungen"; continue
+            fi
+            if git merge-base --is-ancestor origin/main "$sha"; then
+              current=$((current + 1)); label remove "$number"; continue
+            fi
+            if [ "$HAS_DEPLOY_KEY" = true ]; then
+              git checkout --quiet --detach "$sha"
+              if git merge --quiet --no-edit -m "Merge branch 'main' into $ref" origin/main; then
+                if git push --quiet origin "HEAD:refs/heads/$ref"; then
+                  echo "#$number ($ref): aktualisiert"; updates=$((updates + 1)); label remove "$number"
+                else
+                  echo "#$number ($ref): Push abgelehnt (Branch inzwischen bewegt) – nächster Lauf"
+                fi
+              else
+                git merge --abort || true
+                echo "#$number ($ref): Konflikt"; conflicts=$((conflicts + 1)); label add "$number"
+              fi
+            else
+              # Ohne Deploy-Key nicht aktualisieren: ein Update mit GITHUB_TOKEN liefe ohne CI
+              # und nähme dem PR seine grünen Required Checks. Nur Konflikte markieren.
+              for _ in 1 2 3; do  # GitHub berechnet mergeable_state nach einem Push neu
+                state=$(gh api "repos/$REPO/pulls/$number" --jq .mergeable_state)
+                [ "$state" != unknown ] && break; sleep 5
+              done
+              if [ "$state" = dirty ]; then
+                echo "#$number ($ref): Konflikt"; conflicts=$((conflicts + 1)); label add "$number"
+              else
+                echo "#$number ($ref): hinter main ($state) – ohne Deploy-Key nicht aktualisiert"
+                label remove "$number"
+              fi
+              continue
+            fi
+            sleep "$PAUSE_SECONDS"
+          done 3< "$RUNNER_TEMP/prs.tsv"
+          {
+            echo "## PR-Branches"
+            echo "- aktualisiert: $updates"
+            echo "- bereits aktuell: $current"
+            echo "- Konflikte (Label $LABEL): $conflicts"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
