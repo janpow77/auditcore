@@ -1,4 +1,4 @@
-# auditcore_reporting 0.2.0
+# auditcore_reporting 0.2.1
 
 Frameworkunabhängige Berichtsformatierung und optionaler echter XLSX-Export.
 Der Kern benötigt ausschließlich die Standardbibliothek. Version 0.1.0 bleibt
@@ -6,7 +6,7 @@ unverändert; `get_number_format(col_name, value=None)` behält seinen bisherige
 Vertrag und alle 34 beobachteten Flowlib-Fälle.
 
 ```bash
-python -m pip install 'auditcore_reporting[excel]==0.2.0'
+python -m pip install 'auditcore_reporting[excel]==0.2.1'
 # Debian: Kernpaket python3-auditcore-reporting, Excel-Extra über python3-openpyxl python3-defusedxml
 ```
 
