@@ -62,7 +62,7 @@
         "functions_over_60_lines": 2,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
-        "non_english_identifiers": 1
+        "non_english_identifiers": 0
       }
     },
     "auditcore_geo": {
@@ -101,6 +101,16 @@
         "complexity_over_10": 6,
         "functions_over_60_lines": 7,
         "modules_over_400_lines": 1,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_kanban": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
