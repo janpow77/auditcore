@@ -3,6 +3,7 @@ name: code-quality-gate
 # Keine Pfadfilter, damit der Status für jeden PR entsteht (als Required Check nutzbar).
 on:
   push:
+    branches: [main]
   pull_request:
 permissions:
   contents: read
