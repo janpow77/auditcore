@@ -85,8 +85,8 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
-| [`@flowaudit/bpmn-editor`](../../packages-js/bpmn-editor) | 0.1.0 | Eigener BPMN-2.0-Zeicheneditor auf Basis von diagram-js und bpmn-moddle (Clean-Room, MIT) | `bpmn-moddle@^10.3.1`, `diagram-js@^15.27.1`, `didi@^11.0.0`, `min-dash@^5.1.0`, `min-dom@^5.3.0`, `tiny-svg@^4.1.4` | neu |
-| [`@flowaudit/kanban-core`](../../packages-js/kanban-core) | 0.1.0 | Framework-freie Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte) – gleiche Regeln wie auditcore_kanban | keine | neu |
-| [`@flowaudit/ui`](../../packages-js/ui) | 0.1.0 | Gemeinsame FlowAudit-Oberflächenkomponenten: Vue 3, Web Components, Theming und i18n | `@flowaudit/kanban-core@0.1.0`, `vue@^3.5.0` (peer) | neu |
-| [`@flowaudit/ui-react`](../../packages-js/ui-react) | 0.1.0 | React-18-Hüllen für die Web Components von @flowaudit/ui | `@flowaudit/kanban-core@^0.1.0` (peer), `@flowaudit/ui@^0.1.0` (peer), `react@^18.3.0` (peer), `react-dom@^18.3.0` (peer), `vue@^3.5.0` (peer) | neu |
+| [`@flowaudit/bpmn-editor`](../../packages-js/bpmn-editor) | 0.1.0 | Eigener, vollständiger BPMN-2.0-Zeicheneditor in TypeScript auf Basis von diagram-js und bpmn-moddle, framework-frei und unter MIT-Lizenz. | `bpmn-moddle@^10.3.1`, `diagram-js@^15.27.1`, `didi@^11.0.0`, `min-dash@^5.1.0`, `min-dom@^5.3.0`, `tiny-svg@^4.1.4` | neu |
+| [`@flowaudit/kanban-core`](../../packages-js/kanban-core) | 0.1.0 | Framework-freie Kanban-Logik in TypeScript mit denselben Regeln wie das Python-Paket `auditcore_kanban`: Rang-Schlüssel, Übergänge, WIP-Limits, Filter, Fristen, Rechte, Validierung und reine Befehle. | keine | neu |
+| [`@flowaudit/ui`](../../packages-js/ui) | 0.1.0 | Gemeinsame Oberflächenkomponenten der FlowAudit-Anwendungen als Vue-3-Komponenten und Web Components, mit Designtoken, Hell-/Dunkelmodus und Sprachunterstützung. | `@flowaudit/kanban-core@0.1.0`, `vue@^3.5.0` (peer) | neu |
+| [`@flowaudit/ui-react`](../../packages-js/ui-react) | 0.1.0 | React-18-Hüllen für die Web Components aus `@flowaudit/ui`: Objekte werden als Eigenschaften gesetzt und Ereignisse als `onXxx`-Handler verdrahtet. | `@flowaudit/kanban-core@^0.1.0` (peer), `@flowaudit/ui@^0.1.0` (peer), `react@^18.3.0` (peer), `react-dom@^18.3.0` (peer), `vue@^3.5.0` (peer) | neu |
 <!-- paketkatalog:end -->

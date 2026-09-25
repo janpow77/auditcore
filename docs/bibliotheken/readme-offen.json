@@ -22,10 +22,6 @@
     "auditcore_reporting",
     "auditcore_risk",
     "auditcore_sampling",
-    "auditcore_statistics",
-    "bpmn-editor",
-    "kanban-core",
-    "ui",
-    "ui-react"
+    "auditcore_statistics"
   ]
 }
