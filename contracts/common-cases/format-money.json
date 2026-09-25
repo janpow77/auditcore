@@ -1,0 +1,119 @@
+{
+  "$schema": "./schema.json",
+  "contract": "format-money",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "Betrag in Euro formatieren",
+  "description": "Deutsche Betragsanzeige mit zwei Nachkommastellen, Tausenderpunkt, geschütztem Leerzeichen (U+00A0) vor „€“ wie Intl.NumberFormat('de-DE', {style: 'currency', currency: 'EUR'}); kaufmännische Rundung (half-up); leere/ungültige Werte ergeben den Ersatzwert.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "value"
+  ],
+  "result": "text",
+  "cases": [
+    {
+      "id": "ganzzahl",
+      "input": {
+        "value": 1234
+      },
+      "expect": {
+        "value": "1.234,00 €"
+      }
+    },
+    {
+      "id": "nachkomma",
+      "input": {
+        "value": 1234.5
+      },
+      "expect": {
+        "value": "1.234,50 €"
+      }
+    },
+    {
+      "id": "null-betrag",
+      "input": {
+        "value": 0
+      },
+      "expect": {
+        "value": "0,00 €"
+      }
+    },
+    {
+      "id": "negativ",
+      "input": {
+        "value": -1234.5
+      },
+      "expect": {
+        "value": "-1.234,50 €"
+      }
+    },
+    {
+      "id": "millionen",
+      "input": {
+        "value": 1234567.891
+      },
+      "expect": {
+        "value": "1.234.567,89 €"
+      }
+    },
+    {
+      "id": "rundung-halb-auf",
+      "input": {
+        "value": 0.125
+      },
+      "expect": {
+        "value": "0,13 €"
+      },
+      "note": "Python round()/format rundet hier auf 0,12 (Banker's Rounding)"
+    },
+    {
+      "id": "klein",
+      "input": {
+        "value": 0.5
+      },
+      "expect": {
+        "value": "0,50 €"
+      }
+    },
+    {
+      "id": "string-eingabe",
+      "input": {
+        "value": "1234.5"
+      },
+      "expect": {
+        "value": "1.234,50 €"
+      },
+      "tags": [
+        "string-eingabe"
+      ],
+      "note": "Decimal-String aus dem Backend"
+    },
+    {
+      "id": "leer-null",
+      "input": {
+        "value": null
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "leer-nan",
+      "input": {
+        "value": {
+          "$nan": true
+        }
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    }
+  ]
+}

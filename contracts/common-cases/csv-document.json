@@ -1,0 +1,76 @@
+{
+  "$schema": "./schema.json",
+  "contract": "csv-document",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "CSV-Datei erzeugen (BOM, Trenner, Formelschutz)",
+  "description": "Ganze Datei aus Zeilen (erste Zeile Kopf): UTF-8-BOM am Anfang (Excel erkennt sonst keine Umlaute), Zellen nach csv-cell, Zeilenende CRLF; beim Vergleich werden Zeilenenden vereinheitlicht und ein abschließender Zeilenumbruch ignoriert.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "rows"
+  ],
+  "result": "csv",
+  "cases": [
+    {
+      "id": "bom-und-umlaute",
+      "input": {
+        "rows": [
+          [
+            "Name",
+            "Betrag"
+          ],
+          [
+            "Müller",
+            1234.5
+          ]
+        ]
+      },
+      "expect": {
+        "value": "﻿Name;Betrag\r\nMüller;1234,5\r\n"
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "formelschutz",
+      "input": {
+        "rows": [
+          [
+            "Bemerkung"
+          ],
+          [
+            "=HYPERLINK(\"http://x\")"
+          ],
+          [
+            "+1"
+          ]
+        ]
+      },
+      "expect": {
+        "value": "﻿Bemerkung\r\n\"'=HYPERLINK(\"\"http://x\"\")\"\r\n'+1\r\n"
+      }
+    },
+    {
+      "id": "quoting",
+      "input": {
+        "rows": [
+          [
+            "A",
+            "B"
+          ],
+          [
+            "x;y",
+            "z"
+          ]
+        ]
+      },
+      "expect": {
+        "value": "﻿A;B\r\n\"x;y\";z\r\n"
+      }
+    }
+  ]
+}
