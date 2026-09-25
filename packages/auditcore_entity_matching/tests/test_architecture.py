@@ -17,6 +17,7 @@ ALLOWED = {
     "types",
     "typing",
     "unicodedata",
+    "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "auditcore_entity_matching",
 }
 

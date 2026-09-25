@@ -37,6 +37,7 @@ STDLIB = {
     "types",
     "typing",
     "uuid",
+    "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "xml",
     "zipfile",
     "zoneinfo",
