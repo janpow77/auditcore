@@ -58,6 +58,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
+| [`auditcore_bpmn`](../../packages/auditcore_bpmn) | 0.1.0 | BPMN 2.0 mit der FlowAudit-Erweiterung (Schema 1.1) sicher lesen, prüfen, vergleichen, neutralisieren und berichten – für Prozessdiagramme von Verwaltungs- und Kontrollsystemen aller Fonds mit geteilter Mittelverwaltung. | keine; Extras: `xml`, `excel`, `pdf`, `legal` | charakterisiert |
 | [`auditcore_dataprotection`](../../packages/auditcore_dataprotection) | 0.4.3 | Framework-independent records of processing activities and DPIA calculation | `auditcore_common==0.1.0`; Extras: `excel`, `pdf` | charakterisiert |
 | [`auditcore_documents`](../../packages/auditcore_documents) | 0.3.2 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | `auditcore_common==0.1.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](../../packages/auditcore_dummygenerator) | 0.1.1 | Framework-independent synthetic field and row generation | keine; Extras: `parallel` | charakterisiert |

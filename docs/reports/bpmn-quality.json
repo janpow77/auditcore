@@ -1,0 +1,2462 @@
+{
+  "api": {
+    "__init__": {
+      "kind": "module"
+    },
+    "citations": {
+      "kind": "module"
+    },
+    "citations.CitationMatch": {
+      "bases": "",
+      "fields": "legal_basis: LegalBasis\nstart: int\nend: int\ntext: str\nform: str",
+      "kind": "class"
+    },
+    "citations.EuActResolver": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "citations.EuActResolver.resolve": {
+      "kind": "function",
+      "raises": "",
+      "returns": "NormResolution | None",
+      "signature": "self, act: str"
+    },
+    "citations.NormResolution": {
+      "bases": "",
+      "fields": "act: str\ncelex: str | None = None\neli: str | None = None\nurl: str | None = None\nshort_title: str | None = None\ndocument_type: str | None = None\nprogramming_period: str | None = None\nsource: str = 'syntaktisch'\ncatalogued: bool = False",
+      "kind": "class"
+    },
+    "citations.NormResolver": {
+      "bases": "Protocol",
+      "fields": "",
+      "kind": "class"
+    },
+    "citations.NormResolver.resolve": {
+      "kind": "function",
+      "raises": "",
+      "returns": "NormResolution | None",
+      "signature": "self, act: str"
+    },
+    "citations.enrich": {
+      "kind": "function",
+      "raises": "",
+      "returns": "LegalBasis",
+      "signature": "legal_basis: LegalBasis, resolver: NormResolver | None=None"
+    },
+    "citations.eu_act": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[str, int, int] | None",
+      "signature": "act: str"
+    },
+    "citations.find_citations": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[CitationMatch]",
+      "signature": "text: str | None"
+    },
+    "citations.parse_citation": {
+      "kind": "function",
+      "raises": "",
+      "returns": "LegalBasis",
+      "signature": "text: str"
+    },
+    "collection": {
+      "kind": "module"
+    },
+    "collection.approvals": {
+      "kind": "module"
+    },
+    "collection.approvals.approve": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "Approval",
+      "signature": "collection: DiagramCollection, diagram_id: str, xml: str | bytes, version: str, *, cutoff_date: str | None=None, approved_on: str | None=None, approved_by: str | None=None"
+    },
+    "collection.approvals.check_approval": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "ValidationIssue | None",
+      "signature": "collection: DiagramCollection, diagram_id: str, xml: str | bytes, version: str | None=None"
+    },
+    "collection.checks": {
+      "kind": "module"
+    },
+    "collection.checks.validate_collection": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[ValidationIssue]",
+      "signature": "collection: DiagramCollection"
+    },
+    "collection.collection": {
+      "kind": "module"
+    },
+    "collection.collection.DiagramCollection": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "collection.collection.DiagramCollection.add_diagram": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "DiagramEntry",
+      "signature": "self, id: str, xml: str | bytes | BpmnDocument | None=None, *, name: str | None=None, folder_id: str | None=None, tags: Iterable[str]=(), position: int | None=None"
+    },
+    "collection.collection.DiagramCollection.add_folder": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "Folder",
+      "signature": "self, id: str, name: str, parent_id: str | None=None, *, position: int | None=None, description: str | None=None"
+    },
+    "collection.collection.DiagramCollection.add_tag": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Tag",
+      "signature": "self, id: str, name: str, color: str | None=None"
+    },
+    "collection.collection.DiagramCollection.ancestors": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "list[str]",
+      "signature": "self, folder_id: str | None"
+    },
+    "collection.collection.DiagramCollection.approve": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Approval",
+      "signature": "self, diagram_id: str, xml: str | bytes, version: str, **details: str | None"
+    },
+    "collection.collection.DiagramCollection.check_approval": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ValidationIssue | None",
+      "signature": "self, diagram_id: str, xml: str | bytes, version: str | None=None"
+    },
+    "collection.collection.DiagramCollection.diagrams_in": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramEntry]",
+      "signature": "self, folder_id: str | None, *, recursive: bool=True"
+    },
+    "collection.collection.DiagramCollection.elements_by_key": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[tuple[str, str]]",
+      "signature": "self, kind: str, value: str"
+    },
+    "collection.collection.DiagramCollection.entry": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "DiagramEntry",
+      "signature": "self, diagram_id: str"
+    },
+    "collection.collection.DiagramCollection.from_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramCollection",
+      "signature": "cls, data: dict[str, object]"
+    },
+    "collection.collection.DiagramCollection.from_json": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramCollection",
+      "signature": "cls, text: str"
+    },
+    "collection.collection.DiagramCollection.in_folder": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramEntry]",
+      "signature": "self, folder_id: str | None"
+    },
+    "collection.collection.DiagramCollection.move_diagram": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "None",
+      "signature": "self, diagram_id: str, folder_id: str | None, *, position: int | None=None"
+    },
+    "collection.collection.DiagramCollection.move_folder": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "None",
+      "signature": "self, folder_id: str, parent_id: str | None"
+    },
+    "collection.collection.DiagramCollection.overview": {
+      "kind": "function",
+      "raises": "",
+      "returns": "GroupOverview",
+      "signature": "self, folder_id: str | None=None, *, recursive: bool=True, tag_id: str | None=None, reference_date: date | None=None"
+    },
+    "collection.collection.DiagramCollection.references": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramReference]",
+      "signature": "self"
+    },
+    "collection.collection.DiagramCollection.refresh": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramEntry",
+      "signature": "self, diagram_id: str, xml: str | bytes | BpmnDocument"
+    },
+    "collection.collection.DiagramCollection.remove_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str"
+    },
+    "collection.collection.DiagramCollection.remove_folder": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "None",
+      "signature": "self, folder_id: str"
+    },
+    "collection.collection.DiagramCollection.search": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramEntry]",
+      "signature": "self, term: str='', *, status: str | None=None, tag: str | None=None"
+    },
+    "collection.collection.DiagramCollection.set_order": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "None",
+      "signature": "self, folder_id: str | None, diagram_ids: list[str]"
+    },
+    "collection.collection.DiagramCollection.set_tags": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str, tags: Iterable[str]"
+    },
+    "collection.collection.DiagramCollection.subfolders": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Folder]",
+      "signature": "self, folder_id: str | None"
+    },
+    "collection.collection.DiagramCollection.target_actual_pairs": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[tuple[str, str]]",
+      "signature": "self"
+    },
+    "collection.collection.DiagramCollection.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, object]",
+      "signature": "self"
+    },
+    "collection.collection.DiagramCollection.to_json": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "collection.collection.DiagramCollection.tree": {
+      "kind": "function",
+      "raises": "",
+      "returns": "FolderNode",
+      "signature": "self, folder_id: str | None=None"
+    },
+    "collection.collection.DiagramCollection.validate": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[ValidationIssue]",
+      "signature": "self"
+    },
+    "collection.collection.DiagramCollection.with_tag": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramEntry]",
+      "signature": "self, tag_id: str"
+    },
+    "collection.excerpt": {
+      "kind": "module"
+    },
+    "collection.excerpt.excerpt_from_document": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramExcerpt",
+      "signature": "document: BpmnDocument"
+    },
+    "collection.model": {
+      "kind": "module"
+    },
+    "collection.model.Approval": {
+      "bases": "",
+      "fields": "version: str\nsha256: str\ncutoff_date: str | None = None\napproved_on: str | None = None\napproved_by: str | None = None",
+      "kind": "class"
+    },
+    "collection.model.DiagramEntry": {
+      "bases": "",
+      "fields": "id: str\nname: str\nfolder_id: str | None = None\ntags: list[str] = field(default_factory=list)\nposition: int = 0\ninfo: DiagramInfo | None = None\nexcerpt: DiagramExcerpt = field(default_factory=DiagramExcerpt)\napprovals: list[Approval] = field(default_factory=list)",
+      "kind": "class"
+    },
+    "collection.model.DiagramEntry.status": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "self"
+    },
+    "collection.model.DiagramEntry.title": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "collection.model.DiagramExcerpt": {
+      "bases": "",
+      "fields": "process_ids: list[str] = field(default_factory=list)\ncalls: list[tuple[str, str]] = field(default_factory=list)\nlink_throws: list[tuple[str, str]] = field(default_factory=list)\nlink_catches: list[tuple[str, str]] = field(default_factory=list)\nactivities: int = 0\nactivities_with_legal_basis: int = 0\nkeys: dict[str, dict[str, list[str]]] = field(default_factory=dict)",
+      "kind": "class"
+    },
+    "collection.model.DiagramReference": {
+      "bases": "",
+      "fields": "source_diagram: str\nsource_element: str\nkind: str\nkey: str\ntarget_diagram: str | None\ntarget_element: str | None = None",
+      "kind": "class"
+    },
+    "collection.model.DiagramReference.resolved": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "collection.model.Folder": {
+      "bases": "",
+      "fields": "id: str\nname: str\nparent_id: str | None = None\nposition: int = 0\ndescription: str | None = None",
+      "kind": "class"
+    },
+    "collection.model.FolderNode": {
+      "bases": "",
+      "fields": "folder: Folder | None\nchildren: tuple[FolderNode, ...]\ndiagrams: tuple[DiagramEntry, ...]",
+      "kind": "class"
+    },
+    "collection.model.GroupOverview": {
+      "bases": "",
+      "fields": "count: int\nstatus_distribution: dict[str, int]\nactivities: int\nactivities_with_legal_basis: int\nexpired: tuple[str, ...]\nkey_requirement_coverage: dict[int, tuple[str, ...]]\ndiagrams: tuple[str, ...]",
+      "kind": "class"
+    },
+    "collection.model.GroupOverview.legal_basis_coverage": {
+      "kind": "function",
+      "raises": "",
+      "returns": "float | None",
+      "signature": "self"
+    },
+    "collection.model.GroupOverview.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "collection.model.Tag": {
+      "bases": "",
+      "fields": "id: str\nname: str\ncolor: str | None = None",
+      "kind": "class"
+    },
+    "collection.model.check_id": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "str",
+      "signature": "value: str, what: str"
+    },
+    "collection.model.sha256_xml": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "xml: str | bytes"
+    },
+    "collection.queries": {
+      "kind": "module"
+    },
+    "collection.queries.elements_by_key": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "list[tuple[str, str]]",
+      "signature": "collection: DiagramCollection, kind: str, value: str"
+    },
+    "collection.queries.overview": {
+      "kind": "function",
+      "raises": "",
+      "returns": "GroupOverview",
+      "signature": "collection: DiagramCollection, folder_id: str | None=None, *, recursive: bool=True, tag_id: str | None=None, reference_date: date | None=None"
+    },
+    "collection.queries.process_owners": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, list[str]]",
+      "signature": "collection: DiagramCollection"
+    },
+    "collection.queries.references": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramReference]",
+      "signature": "collection: DiagramCollection"
+    },
+    "collection.queries.search": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[DiagramEntry]",
+      "signature": "collection: DiagramCollection, term: str='', *, status: str | None=None, tag: str | None=None"
+    },
+    "collection.queries.target_actual_pairs": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[tuple[str, str]]",
+      "signature": "collection: DiagramCollection"
+    },
+    "collection.serialization": {
+      "kind": "module"
+    },
+    "collection.serialization.collection_from_dict": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "DiagramCollection",
+      "signature": "data: Mapping[str, Any]"
+    },
+    "collection.serialization.collection_from_json": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramCollection",
+      "signature": "text: str"
+    },
+    "collection.serialization.collection_to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "collection: DiagramCollection"
+    },
+    "collection.serialization.collection_to_json": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "collection: DiagramCollection"
+    },
+    "collection.storage": {
+      "kind": "module"
+    },
+    "collection.storage.FileStorage": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "collection.storage.FileStorage.delete_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str"
+    },
+    "collection.storage.FileStorage.diagram_ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[str]",
+      "signature": "self"
+    },
+    "collection.storage.FileStorage.load_approved": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "str",
+      "signature": "self, diagram_id: str, version: str"
+    },
+    "collection.storage.FileStorage.load_collection": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramCollection | None",
+      "signature": "self"
+    },
+    "collection.storage.FileStorage.load_diagram": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "str",
+      "signature": "self, diagram_id: str"
+    },
+    "collection.storage.FileStorage.save_approved": {
+      "kind": "function",
+      "raises": "CollectionError",
+      "returns": "None",
+      "signature": "self, diagram_id: str, version: str, xml: str"
+    },
+    "collection.storage.FileStorage.save_collection": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, collection: DiagramCollection"
+    },
+    "collection.storage.FileStorage.save_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str, xml: str"
+    },
+    "collection.storage.Storage": {
+      "bases": "Protocol",
+      "fields": "",
+      "kind": "class"
+    },
+    "collection.storage.Storage.delete_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str"
+    },
+    "collection.storage.Storage.diagram_ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[str]",
+      "signature": "self"
+    },
+    "collection.storage.Storage.load_approved": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self, diagram_id: str, version: str"
+    },
+    "collection.storage.Storage.load_collection": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramCollection | None",
+      "signature": "self"
+    },
+    "collection.storage.Storage.load_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self, diagram_id: str"
+    },
+    "collection.storage.Storage.save_approved": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str, version: str, xml: str"
+    },
+    "collection.storage.Storage.save_collection": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, collection: DiagramCollection"
+    },
+    "collection.storage.Storage.save_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, diagram_id: str, xml: str"
+    },
+    "comparison": {
+      "kind": "module"
+    },
+    "comparison.coloring": {
+      "kind": "module"
+    },
+    "comparison.coloring.apply_colors": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "source: str | bytes | BpmnDocument, colors: Mapping[str, tuple[str, str]]"
+    },
+    "comparison.coloring.colors_from_markers": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, tuple[str, str]]",
+      "signature": "source: str | bytes | BpmnDocument"
+    },
+    "comparison.diff": {
+      "kind": "module"
+    },
+    "comparison.diff.Change": {
+      "bases": "",
+      "fields": "kind: str\nelement_type: str\nname: str\nold_id: str | None = None\nnew_id: str | None = None\nfields: tuple[tuple[str, Any, Any], ...] = ()",
+      "kind": "class"
+    },
+    "comparison.diff.Change.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "comparison.diff.Comparison": {
+      "bases": "",
+      "fields": "changes: tuple[Change, ...]",
+      "kind": "class"
+    },
+    "comparison.diff.Comparison.colors": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[dict[str, tuple[str, str]], dict[str, tuple[str, str]]]",
+      "signature": "self"
+    },
+    "comparison.diff.Comparison.of_kind": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Change]",
+      "signature": "self, kind: str"
+    },
+    "comparison.diff.Comparison.synopsis": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[dict[str, str]]",
+      "signature": "self"
+    },
+    "comparison.diff.Comparison.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "comparison.diff.Comparison.unchanged": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "comparison.diff.compare": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Comparison",
+      "signature": "old: str | bytes | BpmnDocument, new: str | bytes | BpmnDocument"
+    },
+    "comparison.matching": {
+      "kind": "module"
+    },
+    "comparison.matching.body": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "document: BpmnDocument, element: BpmnElement"
+    },
+    "comparison.matching.comparable": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "document: BpmnDocument"
+    },
+    "comparison.matching.features": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "document: BpmnDocument, element: BpmnElement"
+    },
+    "comparison.matching.match_elements": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, str]",
+      "signature": "old: BpmnDocument, new: BpmnDocument"
+    },
+    "comparison.matching.neighbours": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[str]",
+      "signature": "document: BpmnDocument, element: BpmnElement, direction: str"
+    },
+    "comparison.matching.normal": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "name: str | None"
+    },
+    "comparison.target_actual": {
+      "kind": "module"
+    },
+    "comparison.target_actual.TargetActualComparison": {
+      "bases": "",
+      "fields": "results: tuple[TargetActualResult, ...]\nadditional_in_actual: tuple[str, ...] = ()",
+      "kind": "class"
+    },
+    "comparison.target_actual.TargetActualComparison.met": {
+      "kind": "function",
+      "raises": "",
+      "returns": "int",
+      "signature": "self"
+    },
+    "comparison.target_actual.TargetActualComparison.not_met": {
+      "kind": "function",
+      "raises": "",
+      "returns": "int",
+      "signature": "self"
+    },
+    "comparison.target_actual.TargetActualComparison.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "comparison.target_actual.TargetActualResult": {
+      "bases": "",
+      "fields": "target_id: str\nname: str\nmet: bool\nactual_id: str | None = None\nreasons: tuple[str, ...] = ()",
+      "kind": "class"
+    },
+    "comparison.target_actual.TargetActualResult.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "comparison.target_actual.compare_target_actual": {
+      "kind": "function",
+      "raises": "",
+      "returns": "TargetActualComparison",
+      "signature": "target: str | bytes | BpmnDocument, actual: str | bytes | BpmnDocument"
+    },
+    "enrichment": {
+      "kind": "module"
+    },
+    "enrichment.Suggestion": {
+      "bases": "",
+      "fields": "element_id: str\nkind: str\nvalue: Any\nevidence: str\norigin: str",
+      "kind": "class"
+    },
+    "enrichment.Suggestion.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "enrichment.apply_suggestions": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "source: str | bytes | BpmnDocument, selection: Iterable[Suggestion]"
+    },
+    "enrichment.strip_role_prefix": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "name: str"
+    },
+    "enrichment.suggest": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Suggestion]",
+      "signature": "source: str | bytes | BpmnDocument, *, profile: Profile | None=None"
+    },
+    "enrichment.suggestions_from_text": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Iterator[Suggestion]",
+      "signature": "element_id: str, text: str, origin: str"
+    },
+    "errors": {
+      "kind": "module"
+    },
+    "errors.BpmnError": {
+      "bases": "Exception",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.BpmnXmlError": {
+      "bases": "BpmnError,ParseError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.CatalogError": {
+      "bases": "BpmnError,ValueError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.CollectionError": {
+      "bases": "BpmnError,ValueError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.OptionalDependencyError": {
+      "bases": "BpmnError,ImportError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.UnsafeXmlError": {
+      "bases": "BpmnXmlError",
+      "fields": "",
+      "kind": "class"
+    },
+    "errors.XmlTooLargeError": {
+      "bases": "BpmnXmlError",
+      "fields": "",
+      "kind": "class"
+    },
+    "extensions": {
+      "kind": "module"
+    },
+    "extensions.element": {
+      "kind": "module"
+    },
+    "extensions.element.Extensions": {
+      "bases": "",
+      "fields": "legal_bases: tuple[LegalBasis, ...] = ()\ninternal_note: str | None = None\nmarkers: tuple[Marker, ...] = ()\naudit_references: tuple[AuditReference, ...] = ()\nactor: Actor | None = None\ncontrols: tuple[Control, ...] = ()\nrisks: tuple[Risk, ...] = ()\nevidence: tuple[Evidence, ...] = ()\naudit_steps: tuple[AuditStep, ...] = ()\nfindings: tuple[AuditFinding, ...] = ()\nsources: tuple[Source, ...] = ()\ndeadlines: tuple[Deadline, ...] = ()\ncross_references: tuple[CrossReference, ...] = ()\nesi: EsiRequirements | None = None\ndiagram_info: DiagramInfo | None = None",
+      "kind": "class"
+    },
+    "extensions.element.Extensions.is_empty": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "extensions.element.Extensions.marker_types": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[str, ...]",
+      "signature": "self"
+    },
+    "extensions.element.Extensions.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "extensions.element.extension_elements": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ET.Element | None",
+      "signature": "element: ET.Element"
+    },
+    "extensions.element.legacy_esi": {
+      "kind": "function",
+      "raises": "",
+      "returns": "EsiRequirements | None",
+      "signature": "element: ET.Element"
+    },
+    "extensions.element.read_extensions": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Extensions",
+      "signature": "element: ET.Element"
+    },
+    "extensions.element.write_extensions": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "element: ET.Element, extensions: Extensions, *, replace: Iterable[str] | None=None"
+    },
+    "extensions.legal_basis": {
+      "kind": "module"
+    },
+    "extensions.legal_basis.LegalBasis": {
+      "bases": "",
+      "fields": "text: str | None = xml_field('', 'body')\nid: str | None = xml_field('id')\nact: str | None = xml_field('norm')\narticle: str | None = xml_field('artikel')\nsection: str | None = xml_field('paragraph')\nannex: str | None = xml_field('anhang')\nparagraph: str | None = xml_field('absatz')\nsubparagraph: str | None = xml_field('unterabsatz')\nsentence: str | None = xml_field('satz')\npoint: str | None = xml_field('buchstabe')\nnumber: str | None = xml_field('nummer')\nversion: str | None = xml_field('fassung')\neli: str | None = xml_field('eli')\ncelex: str | None = xml_field('celex')\nurl: str | None = xml_field('url')\nshort_title: str | None = xml_field('kurzbezeichnung')\nnote: str | None = xml_field('anmerkung')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.legal_basis.LegalBasis.citation": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "extensions.legal_basis.LegalBasis.display": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "extensions.legal_basis.LegalBasis.is_structured": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "extensions.legal_basis.LegalBasis.normalized": {
+      "kind": "function",
+      "raises": "",
+      "returns": "LegalBasis",
+      "signature": "self"
+    },
+    "extensions.legal_basis.LegalBasis.short_citation": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "extensions.legal_basis.act_long": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "act: str"
+    },
+    "extensions.legal_basis.act_short": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "act: str"
+    },
+    "extensions.mapping": {
+      "kind": "module"
+    },
+    "extensions.mapping.fa": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "local: str"
+    },
+    "extensions.mapping.from_dict": {
+      "kind": "function",
+      "raises": "ValueError",
+      "returns": "T",
+      "signature": "cls: type[T], data: Mapping[str, Any]"
+    },
+    "extensions.mapping.read_element": {
+      "kind": "function",
+      "raises": "",
+      "returns": "T",
+      "signature": "cls: type[T], element: ET.Element"
+    },
+    "extensions.mapping.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "obj: Any"
+    },
+    "extensions.mapping.write_element": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ET.Element",
+      "signature": "obj: Any, tag: str"
+    },
+    "extensions.mapping.xml_field": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Any",
+      "signature": "name: str, kind: str='attr', *, item_type: type | None=None, bool_value: bool=False, default: Any=None"
+    },
+    "extensions.types": {
+      "kind": "module"
+    },
+    "extensions.types.Actor": {
+      "bases": "",
+      "fields": "role: str | None = xml_field('rolle')\ndisplay_name: str | None = xml_field('anzeigename')",
+      "kind": "class"
+    },
+    "extensions.types.AuditFinding": {
+      "bases": "",
+      "fields": "id: str | None = xml_field('id')\nreference: str | None = xml_field('kennung')\nfinding_type: str | None = xml_field('art')\nseverity: str | None = xml_field('einstufung')\nkey_requirement: str | None = xml_field('ka')\nassessment_criterion: str | None = xml_field('bk')\ndeadline: str | None = xml_field('frist')\nstatus: str | None = xml_field('status')\ndescription: str | None = xml_field('beschreibung', 'text')\nrecommendation: str | None = xml_field('empfehlung', 'text')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.AuditReference": {
+      "bases": "",
+      "fields": "key_requirement: str | None = xml_field('ka')\nassessment_criterion: str | None = xml_field('bk')\naudit_type: str | None = xml_field('art')\nnote: str | None = xml_field('anmerkung')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.AuditReference.display": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "extensions.types.AuditReference.key_requirement_number": {
+      "kind": "function",
+      "raises": "",
+      "returns": "int | None",
+      "signature": "self"
+    },
+    "extensions.types.AuditStep": {
+      "bases": "",
+      "fields": "id: str | None = xml_field('id')\ncase: str | None = xml_field('fall')\ndocument: str | None = xml_field('beleg')\nresult: str | None = xml_field('ergebnis')\ndate: str | None = xml_field('datum')\ntester: str | None = xml_field('pruefer')\ncontrol: str | None = xml_field('kontrolle')\nsample_size: str | None = xml_field('stichprobe')\npopulation: str | None = xml_field('grundgesamtheit')\nremark: str | None = xml_field('bemerkung', 'text')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.Control": {
+      "bases": "",
+      "fields": "id: str | None = xml_field('id')\nlabel: str | None = xml_field('bezeichnung')\nkey_control: bool | None = xml_field('schluesselkontrolle', bool_value=True)\ncontrol_type: str | None = xml_field('art')\nexecution: str | None = xml_field('durchfuehrung')\nfrequency: str | None = xml_field('haeufigkeit')\nevidence: str | None = xml_field('nachweis')\nresponsible: str | None = xml_field('verantwortlich')\ndescription: str | None = xml_field('beschreibung', 'text')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.CrossReference": {
+      "bases": "",
+      "fields": "kind: str | None = xml_field('art')\nkey: str | None = xml_field('schluessel')\ndocument: str | None = xml_field('dokument')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.Deadline": {
+      "bases": "",
+      "fields": "value: str | None = xml_field('wert')\nunit: str | None = xml_field('einheit')\nbasis: str | None = xml_field('bezug')\nnote: str | None = xml_field('anmerkung')\nlegal_bases: tuple[LegalBasis, ...] = xml_field('rechtsgrundlage', 'elements', item_type=LegalBasis)",
+      "kind": "class"
+    },
+    "extensions.types.Deadline.display": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "extensions.types.DiagramInfo": {
+      "bases": "",
+      "fields": "schema_version: str | None = xml_field('schemaVersion', default=FLOWAUDIT_SCHEMA_VERSION)\nprofile: str | None = xml_field('profil')\ntitle: str | None = xml_field('titel')\nsubtitle: str | None = xml_field('untertitel')\nprocess_owner: str | None = xml_field('prozessverantwortlich')\nprocess_type: str | None = xml_field('prozesstyp')\nversion: str | None = xml_field('version')\nstatus: str | None = xml_field('status')\nvalid_from: str | None = xml_field('gueltigAb')\nvalid_until: str | None = xml_field('gueltigBis')\nauthor: str | None = xml_field('autor')\napproved_by: str | None = xml_field('freigegebenDurch')\napproved_on: str | None = xml_field('freigegebenAm')\nheader_color: str | None = xml_field('kopfzeilenfarbe')\nheader_text_color: str | None = xml_field('kopfzeilenTextfarbe')\nprogramming_period: str | None = xml_field('foerderperiode')\nprogramme: str | None = xml_field('programm')\ncci: str | None = xml_field('cci')\nconfidentiality: str | None = xml_field('vertraulichkeit')\nvariant: str | None = xml_field('variante')\nreference_diagram: str | None = xml_field('bezugDiagramm')\nsystem_cutoff_date: str | None = xml_field('vksStichtag')\ndescription: str | None = xml_field('beschreibung', 'text')\nkeywords: tuple[str, ...] = xml_field('schlagwort', 'texts')\nfunds: tuple[str, ...] = xml_field('fonds', 'texts')\nlegal_bases: tuple[LegalBasis, ...] = xml_field('rechtsgrundlage', 'elements', item_type=LegalBasis)\naudit_references: tuple[AuditReference, ...] = xml_field('pruefbezug', 'elements', item_type=AuditReference)\nrisks: tuple[Risk, ...] = xml_field('risiko', 'elements', item_type=Risk)\nfindings: tuple[AuditFinding, ...] = xml_field('feststellung', 'elements', item_type=AuditFinding)\nsources: tuple[Source, ...] = xml_field('quelle', 'elements', item_type=Source)\ncross_references: tuple[CrossReference, ...] = xml_field('verweis', 'elements', item_type=CrossReference)",
+      "kind": "class"
+    },
+    "extensions.types.EsiRequirement": {
+      "bases": "",
+      "fields": "code: str = xml_field('code', default='')\ncriteria: tuple[str, ...] = xml_field('kriterium', 'texts')",
+      "kind": "class"
+    },
+    "extensions.types.EsiRequirements": {
+      "bases": "",
+      "fields": "profile: str | None = xml_field('profil')\nrequirements: tuple[EsiRequirement, ...] = xml_field('esiAnforderung', 'elements', item_type=EsiRequirement)\norigin: str = field(default='flowaudit-1.1', metadata={'kind': 'internal'})",
+      "kind": "class"
+    },
+    "extensions.types.Evidence": {
+      "bases": "",
+      "fields": "document_type: str | None = xml_field('dokumentart')\nstorage_location: str | None = xml_field('aufbewahrungsort')\nit_system: str | None = xml_field('itSystem')\nretention_period: str | None = xml_field('aufbewahrungsfrist')\nnote: str | None = xml_field('anmerkung')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.InternalNote": {
+      "bases": "",
+      "fields": "text: str | None = xml_field('', 'body')",
+      "kind": "class"
+    },
+    "extensions.types.Marker": {
+      "bases": "",
+      "fields": "type: str = xml_field('typ', default='')\ntext: str | None = xml_field('text')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.Risk": {
+      "bases": "",
+      "fields": "id: str | None = xml_field('id')\nlabel: str | None = xml_field('bezeichnung')\ncategory: str | None = xml_field('kategorie')\ninherent: str | None = xml_field('inhaerent')\ncontrol_risk: str | None = xml_field('kontrollrisiko')\nresidual: str | None = xml_field('restrisiko')\ncontrols: tuple[str, ...] = xml_field('kontrollen', 'tokens')\ndescription: str | None = xml_field('beschreibung', 'text')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "extensions.types.Source": {
+      "bases": "",
+      "fields": "source_type: str | None = xml_field('art')\nlocation: str | None = xml_field('fundstelle')\ndate: str | None = xml_field('datum')\nreference: str | None = xml_field('referenz')\ntext: str | None = xml_field('', 'body')\nconfidential: bool | None = xml_field('vertraulich', bool_value=True)",
+      "kind": "class"
+    },
+    "legacy": {
+      "kind": "module"
+    },
+    "legacy.analyzer": {
+      "kind": "module"
+    },
+    "legacy.analyzer.BpmnAnalyzer": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "legacy.analyzer.BpmnAnalyzer.analyze_process": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ProcessAnalysis",
+      "signature": "self, diagram_name: str='BPMN-Prozess'"
+    },
+    "legacy.analyzer.BpmnAnalyzer.export_to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "legacy.analyzer.BpmnAnalyzer.extract_all_tasks": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[TaskProperties]",
+      "signature": "self"
+    },
+    "legacy.analyzer.BpmnAnalyzer.extract_esi_requirements": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "legacy.analyzer.ProcessAnalysis": {
+      "bases": "",
+      "fields": "diagram_name: str\ntotal_tasks: int\ntotal_cost: float\ntotal_cost_with_personnel: float\ntotal_duration_minutes: float\ntotal_person_days: float\nannual_frequency: int\nannual_cost: float\nannual_cost_with_personnel: float\nannual_person_days: float\nunique_owners: list[str]\nunique_departments: list[str]\nunique_systems: list[str]\ntasks: list[dict[str, Any]]\ntasks_with_cost: int\ntasks_with_duration: int\ntasks_with_owner: int\ntasks_with_personnel: int\navg_task_cost: float\navg_task_duration_minutes: float\ntotal_personnel_cost: float",
+      "kind": "class"
+    },
+    "legacy.analyzer.TaskProperties": {
+      "bases": "",
+      "fields": "task_id: str\ntask_name: str\ntask_type: str\nprocess_owner: str | None = None\nprocess_department: str | None = None\nprocess_type: str | None = None\nresources_personnel: str | None = None\nresources_systems: str | None = None\nresources_documents: str | None = None\nduration_estimated: str | None = None\nduration_unit: str | None = None\npersonnel_grade: str | None = None\npersonnel_count: int | None = None\ncost_estimate: float | None = None\neffort_person_days: float | None = None\nfrequency: int | None = None\ndocumentation: str | None = None\nlegal_basis: str | None = None\ninternal_note: str | None = None\ncalculated_personnel_cost: float | None = None",
+      "kind": "class"
+    },
+    "legacy.analyzer.analyze_bpmn": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "xml_content: str | bytes, diagram_name: str='BPMN-Prozess', personnel_rate: PersonnelRateLookup | None=None"
+    },
+    "legacy.analyzer.convert_duration_to_minutes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "float",
+      "signature": "duration: str | None, unit: str | None"
+    },
+    "legacy.diagram_model": {
+      "kind": "module"
+    },
+    "legacy.diagram_model.diagram_info_from_legacy": {
+      "kind": "function",
+      "raises": "",
+      "returns": "DiagramInfo",
+      "signature": "row: Mapping[str, Any], *, profile: str | None=None"
+    },
+    "legacy.export": {
+      "kind": "module"
+    },
+    "legacy.export.BpmnExcelExporter": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "legacy.export.BpmnExcelExporter.create_excel_report": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BytesIO",
+      "signature": "self"
+    },
+    "legacy.export.BpmnExcelExporter.sheets": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Sheet]",
+      "signature": "self"
+    },
+    "legacy.export.Sheet": {
+      "bases": "",
+      "fields": "name: str\nheader: list[str]\nrows: list[list[Any]]\nheader_styled: bool = True\nauto_width: bool = False",
+      "kind": "class"
+    },
+    "legacy.export.analysis_sheets": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Sheet]",
+      "signature": "analysis: ProcessAnalysis, esi: dict[str, Any]"
+    },
+    "legacy.export.export_bpmn_to_excel": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BytesIO",
+      "signature": "xml_content: str | bytes, diagram_name: str, personnel_rate: PersonnelRateLookup | None=None"
+    },
+    "legacy.export.export_bpmn_to_pdf": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BytesIO",
+      "signature": "xml_content: str | bytes, diagram_name: str, personnel_rate: PersonnelRateLookup | None=None"
+    },
+    "legacy.export.write_workbook": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BytesIO",
+      "signature": "sheets: list[Sheet]"
+    },
+    "legacy.pdf": {
+      "kind": "module"
+    },
+    "legacy.pdf.build_pdf": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BytesIO",
+      "signature": "analysis: ProcessAnalysis, diagram_name: str"
+    },
+    "legacy.validation": {
+      "kind": "module"
+    },
+    "legacy.validation.BvaValidationResult": {
+      "bases": "",
+      "fields": "valid: bool\nerrors: list[str] = field(default_factory=list)\nwarnings: list[str] = field(default_factory=list)",
+      "kind": "class"
+    },
+    "legacy.validation.BvaValidationResult.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "legacy.validation.assert_well_formed_xml": {
+      "kind": "function",
+      "raises": "BpmnXmlError",
+      "returns": "None",
+      "signature": "xml_content: str | bytes"
+    },
+    "legacy.validation.validate_bpmn_bva": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BvaValidationResult",
+      "signature": "xml_content: str | bytes"
+    },
+    "legal": {
+      "kind": "module"
+    },
+    "legal.LegalSourcesNormResolver": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "legal.LegalSourcesNormResolver.article_title": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "self, act: str, article: str, language: str='de'"
+    },
+    "legal.LegalSourcesNormResolver.resolve": {
+      "kind": "function",
+      "raises": "",
+      "returns": "NormResolution | None",
+      "signature": "self, act: str"
+    },
+    "model": {
+      "kind": "module"
+    },
+    "model.elements": {
+      "kind": "module"
+    },
+    "model.elements.BpmnDocument": {
+      "bases": "",
+      "fields": "parsed: ParsedXml\nelements: dict[str, BpmnElement]\nduplicate_ids: list[str]\ndiagram_info: DiagramInfo | None\ndiagram_info_owner: str | None\nesi: EsiRequirements | None\ndefinitions_id: str | None\ntarget_namespace: str | None\nis_bpmn: bool\nxml_nodes: dict[str, ET.Element] = field(default_factory=dict, repr=False)",
+      "kind": "class"
+    },
+    "model.elements.BpmnDocument.activities": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.actor_of": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[BpmnElement | None, Actor | None]",
+      "signature": "self, element: BpmnElement"
+    },
+    "model.elements.BpmnDocument.by_type": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self, *types: str"
+    },
+    "model.elements.BpmnDocument.flow_nodes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.incoming": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self, element_id: str, flow_type: str='sequenceFlow'"
+    },
+    "model.elements.BpmnDocument.lane_of": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BpmnElement | None",
+      "signature": "self, element: BpmnElement"
+    },
+    "model.elements.BpmnDocument.lanes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.message_flows": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.outgoing": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self, element_id: str, flow_type: str='sequenceFlow'"
+    },
+    "model.elements.BpmnDocument.participant_of": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BpmnElement | None",
+      "signature": "self, element: BpmnElement"
+    },
+    "model.elements.BpmnDocument.participants": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.processes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.root": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ET.Element",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.sequence_flows": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "model.elements.BpmnDocument.xml_element": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ET.Element",
+      "signature": "self, element_id: str"
+    },
+    "model.elements.BpmnElement": {
+      "bases": "",
+      "fields": "id: str\ntype: str\nname: str | None\ncategory: str\nprocess_id: str | None = None\nparent_id: str | None = None\nparticipant_id: str | None = None\nlane_ids: tuple[str, ...] = ()\nattributes: dict[str, str] = field(default_factory=dict)\ndocumentation: str | None = None\nevent_definitions: tuple[str, ...] = ()\nlink_name: str | None = None\nattached_to: str | None = None\ninterrupting: bool | None = None\ndefault: str | None = None\nsource: str | None = None\ntarget: str | None = None\ncondition: str | None = None\ncalled_element: str | None = None\nis_compensation: bool = False\nis_event_subprocess: bool = False\nprocess_ref: str | None = None\nextensions: Extensions = field(default_factory=Extensions)",
+      "kind": "class"
+    },
+    "model.elements.BpmnElement.is_activity": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "model.elements.BpmnElement.is_flow_node": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "model.elements.BpmnElement.is_task": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "model.elements.BpmnElement.label": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "model.elements.BpmnElement.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "model.elements.category": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "element_type: str"
+    },
+    "model.parse": {
+      "kind": "module"
+    },
+    "model.parse.as_document": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BpmnDocument",
+      "signature": "source: str | bytes | BpmnDocument"
+    },
+    "model.parse.document_from_xml": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BpmnDocument",
+      "signature": "parsed: ParsedXml"
+    },
+    "model.parse.parse_bpmn": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BpmnDocument",
+      "signature": "xml: str | bytes, *, max_size: int=MAX_XML_SIZE, backend: Backend='auto'"
+    },
+    "namespaces": {
+      "kind": "module"
+    },
+    "namespaces.is_bpmn": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "tag: object, *locals_: str"
+    },
+    "namespaces.is_flowaudit": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "tag: object, *locals_: str"
+    },
+    "namespaces.local_name": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "tag: object"
+    },
+    "namespaces.namespace_of": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "tag: object"
+    },
+    "namespaces.q": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "namespace: str, local: str"
+    },
+    "neutralize": {
+      "kind": "module"
+    },
+    "neutralize.NeutralizationResult": {
+      "bases": "",
+      "fields": "xml: str\nreplacements: list[Replacement] = field(default_factory=list)",
+      "kind": "class"
+    },
+    "neutralize.NeutralizationResult.summary": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, int]",
+      "signature": "self"
+    },
+    "neutralize.NeutralizationResult.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "neutralize.Replacement": {
+      "bases": "",
+      "fields": "element_id: str | None\nlocation: str\nkind: str\nnew: str\nold: str | None = None",
+      "kind": "class"
+    },
+    "neutralize.neutralize": {
+      "kind": "function",
+      "raises": "",
+      "returns": "NeutralizationResult",
+      "signature": "source: str | bytes | BpmnDocument, *, profile: Profile | None=None, replacements: Mapping[str, str] | None=None, keep_originals: bool=False"
+    },
+    "optional": {
+      "kind": "module"
+    },
+    "optional.require_module": {
+      "kind": "function",
+      "raises": "OptionalDependencyError",
+      "returns": "ModuleType",
+      "signature": "module: str, extra: str"
+    },
+    "profiles": {
+      "kind": "module"
+    },
+    "profiles.data": {
+      "kind": "module"
+    },
+    "profiles.loader": {
+      "kind": "module"
+    },
+    "profiles.loader.ProfileRegistry": {
+      "bases": "",
+      "fields": "",
+      "kind": "class"
+    },
+    "profiles.loader.ProfileRegistry.for_diagram": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[Profile, str]",
+      "signature": "self, info: DiagramInfo | None"
+    },
+    "profiles.loader.ProfileRegistry.get": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Profile | None",
+      "signature": "self, profile_id: str"
+    },
+    "profiles.loader.ProfileRegistry.ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[str, ...]",
+      "signature": "self"
+    },
+    "profiles.loader.ProfileRegistry.register": {
+      "kind": "function",
+      "raises": "",
+      "returns": "None",
+      "signature": "self, profile: Profile"
+    },
+    "profiles.loader.available_profiles": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[tuple[str, str], ...]",
+      "signature": ""
+    },
+    "profiles.loader.load_profile": {
+      "kind": "function",
+      "raises": "CatalogError",
+      "returns": "Profile",
+      "signature": "profile_id: str=STANDARD_PROFILE, version: str | None=None"
+    },
+    "profiles.loader.load_template": {
+      "kind": "function",
+      "raises": "CatalogError",
+      "returns": "str",
+      "signature": "profile: Profile, template_id: str"
+    },
+    "profiles.loader.profile_from_dict": {
+      "kind": "function",
+      "raises": "CatalogError",
+      "returns": "Profile",
+      "signature": "data: Mapping[str, Any]"
+    },
+    "profiles.model": {
+      "kind": "module"
+    },
+    "profiles.model.AssessmentCriterion": {
+      "bases": "",
+      "fields": "code: str\ntitle: Labels = field(default_factory=_empty)",
+      "kind": "class"
+    },
+    "profiles.model.KeyRequirement": {
+      "bases": "",
+      "fields": "number: int\ntitle: Labels\nbodies: Labels = field(default_factory=_empty)\nscope: Labels | None = None\nfootnote: Labels | None = None\nassessment_criteria: tuple[AssessmentCriterion, ...] = ()",
+      "kind": "class"
+    },
+    "profiles.model.LegalBasisTemplate": {
+      "bases": "",
+      "fields": "act: str\nshort_title: Labels\narticle: str | None = None\nannex: str | None = None\ncelex: str | None = None\neli: str | None = None",
+      "kind": "class"
+    },
+    "profiles.model.Profile": {
+      "bases": "",
+      "fields": "id: str\nversion: str\ntitle: Labels\nprogramming_period: str | None\nroles: tuple[str, ...]\nfunds: tuple[str, ...]\nkey_requirements: tuple[KeyRequirement, ...]\nkey_requirement_source: Mapping[str, Any] = field(default_factory=lambda: MappingProxyType({}))\nassessment_criteria_note: Labels | None = None\nlegal_bases: tuple[LegalBasisTemplate, ...] = ()\nlegal_bases_source: Mapping[str, Any] = field(default_factory=lambda: MappingProxyType({}))\nsegregation_rules: tuple[SegregationRule, ...] = ()\nrole_aliases: tuple[tuple[str, str], ...] = ()\ntemplates: tuple[Template, ...] = ()\ncustom_roles: Mapping[str, Role] = field(default_factory=lambda: MappingProxyType({}))",
+      "kind": "class"
+    },
+    "profiles.model.Profile.criterion_known": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool | None",
+      "signature": "self, key_requirement: int | str | None, criterion: str"
+    },
+    "profiles.model.Profile.key_requirement": {
+      "kind": "function",
+      "raises": "",
+      "returns": "KeyRequirement | None",
+      "signature": "self, number: int | str | None"
+    },
+    "profiles.model.Profile.key_requirement_numbers": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[int, ...]",
+      "signature": "self"
+    },
+    "profiles.model.Profile.reference": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "profiles.model.Profile.role": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Role | None",
+      "signature": "self, code: str | None"
+    },
+    "profiles.model.Profile.role_from_text": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "self, text: str | None"
+    },
+    "profiles.model.Profile.role_provided": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self, code: str | None"
+    },
+    "profiles.model.Profile.with_assessment_criteria": {
+      "kind": "function",
+      "raises": "CatalogError",
+      "returns": "Profile",
+      "signature": "self, criteria: Mapping[int, Iterable[tuple[str, Labels | str]]]"
+    },
+    "profiles.model.SegregationRule": {
+      "bases": "",
+      "fields": "id: str\nkind: str\nseverity: str\ntitle: Labels\na: Selection = Selection()\nb: Selection = Selection()\nselection: Selection = Selection()\nroles: tuple[str, ...] = ()",
+      "kind": "class"
+    },
+    "profiles.model.Selection": {
+      "bases": "",
+      "fields": "markers: tuple[str, ...] = ()\naudit_types: tuple[str, ...] = ()",
+      "kind": "class"
+    },
+    "profiles.model.Template": {
+      "bases": "",
+      "fields": "id: str\ntitle: Labels\nfile: str\norigin: str = ''",
+      "kind": "class"
+    },
+    "profiles.model.check_criteria": {
+      "kind": "function",
+      "raises": "CatalogError",
+      "returns": "None",
+      "signature": "entry: KeyRequirement"
+    },
+    "profiles.model.labels": {
+      "kind": "function",
+      "raises": "CatalogError",
+      "returns": "Labels",
+      "signature": "value: Any"
+    },
+    "reports": {
+      "kind": "module"
+    },
+    "reports.findings": {
+      "kind": "module"
+    },
+    "reports.findings.CategoryProposal": {
+      "bases": "",
+      "fields": "key_requirement: int\ntitle: str\nproposal: int | None\nreason: str\nfindings: tuple[str, ...]\nnote: str = 'Vorschlag – die Einstufung entscheidet der Prüfer.'",
+      "kind": "class"
+    },
+    "reports.findings.CategoryProposal.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self"
+    },
+    "reports.findings.category_proposals": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[CategoryProposal]",
+      "signature": "documents: Iterable[str | bytes | BpmnDocument], *, profile: Profile | None=None"
+    },
+    "reports.findings.finding_list": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Row]",
+      "signature": "source: str | bytes | BpmnDocument"
+    },
+    "reports.formats": {
+      "kind": "module"
+    },
+    "reports.formats.to_csv": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "rows: Sequence[Mapping[str, Any]], columns: Mapping[str, str] | None=None, *, delimiter: str=';'"
+    },
+    "reports.formats.to_myst": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "rows: Sequence[Mapping[str, Any]], columns: Mapping[str, str] | None=None, *, title: str | None=None, target: str | None=None"
+    },
+    "reports.formats.to_xlsx": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bytes",
+      "signature": "tables: Mapping[str, Sequence[Mapping[str, Any]]]"
+    },
+    "reports.process_table": {
+      "kind": "module"
+    },
+    "reports.process_table.actor_label": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "document: BpmnDocument, element: BpmnElement"
+    },
+    "reports.process_table.data_objects": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "document: BpmnDocument, element: BpmnElement"
+    },
+    "reports.process_table.flow_order": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "document: BpmnDocument"
+    },
+    "reports.process_table.process_table": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Row]",
+      "signature": "source: str | bytes | BpmnDocument, *, activities_only: bool=True"
+    },
+    "reports.risk_control_matrix": {
+      "kind": "module"
+    },
+    "reports.risk_control_matrix.risk_control_matrix": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[Row]",
+      "signature": "source: str | bytes | BpmnDocument"
+    },
+    "reports.walkthrough": {
+      "kind": "module"
+    },
+    "reports.walkthrough.walkthrough_status": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "source: str | bytes | BpmnDocument"
+    },
+    "safe_xml": {
+      "kind": "module"
+    },
+    "safe_xml.ParsedXml": {
+      "bases": "",
+      "fields": "root: ET.Element\nnamespaces: list[tuple[str, str]] = field(default_factory=list)\nbackend: str = 'expat'\nprolog: list[ET.Element[Any]] = field(default_factory=list)",
+      "kind": "class"
+    },
+    "safe_xml.defusedxml_available": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": ""
+    },
+    "safe_xml.parse_xml": {
+      "kind": "function",
+      "raises": "BpmnXmlError,TypeError",
+      "returns": "ParsedXml",
+      "signature": "data: str | bytes, *, max_size: int=MAX_XML_SIZE, backend: Backend='auto'"
+    },
+    "safe_xml.safe_fromstring": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ET.Element",
+      "signature": "data: str | bytes, *, max_size: int=MAX_XML_SIZE"
+    },
+    "serialize": {
+      "kind": "module"
+    },
+    "serialize.serialize": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "parsed: ParsedXml, *, xml_declaration: bool=True"
+    },
+    "serialize.serialize_element": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "element: ET.Element, namespaces: Iterable[tuple[str, str]]=(), *, xml_declaration: bool=True, prolog: Iterable[ET.Element]=()"
+    },
+    "templates": {
+      "kind": "module"
+    },
+    "validation": {
+      "kind": "module"
+    },
+    "validation.audit_authority": {
+      "kind": "module"
+    },
+    "validation.audit_authority.check_audit_steps": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_controls": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_data_storage": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_deadlines": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_findings": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_key_control_marker": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_key_controls_tested": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_risks": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_sources": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.check_unique_ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.audit_authority.control_ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "set[str]",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content": {
+      "kind": "module"
+    },
+    "validation.content.check_actors": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_approval": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_audit_references": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_confidentiality_and_variant": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_cross_references": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_date_formats": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_diagram_info_present": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_funds_and_period": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_header_colors": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_legal_basis_present": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_legal_basis_structure": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_markers": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_status": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.check_validity": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.content.parse_date": {
+      "kind": "function",
+      "raises": "",
+      "returns": "date | None",
+      "signature": "value: str | None"
+    },
+    "validation.context": {
+      "kind": "module"
+    },
+    "validation.context.ValidationConfig": {
+      "bases": "",
+      "fields": "reference_date: date | None = None\nprofile: Profile | None = None\nregistry: ProfileRegistry | None = None\ndisabled: frozenset[str] = frozenset()\nlegal_basis_types: frozenset[str] = ACTIVITIES\ngroups: tuple[str, ...] = ('structure', 'content', 'audit_authority', 'segregation')",
+      "kind": "class"
+    },
+    "validation.context.ValidationContext": {
+      "bases": "",
+      "fields": "document: BpmnDocument\nprofile: Profile\nprofile_origin: str\nreference_date: date\nconfig: ValidationConfig\n_outgoing: dict[str, list[BpmnElement]] = field(default_factory=dict, repr=False)\n_incoming: dict[str, list[BpmnElement]] = field(default_factory=dict, repr=False)",
+      "kind": "class"
+    },
+    "validation.context.ValidationContext.body_of": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[str, str] | None",
+      "signature": "self, element: BpmnElement"
+    },
+    "validation.context.ValidationContext.create": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ValidationContext",
+      "signature": "cls, document: BpmnDocument, config: ValidationConfig"
+    },
+    "validation.context.ValidationContext.incoming": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self, element_id: str"
+    },
+    "validation.context.ValidationContext.info_owner": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "self"
+    },
+    "validation.context.ValidationContext.info_title": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "validation.context.ValidationContext.outgoing": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[BpmnElement]",
+      "signature": "self, element_id: str"
+    },
+    "validation.context.ValidationContext.period": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str | None",
+      "signature": "self"
+    },
+    "validation.context.ValidationContext.successors": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Iterable[BpmnElement]",
+      "signature": "self, element: BpmnElement, through_gateways: bool=True"
+    },
+    "validation.engine": {
+      "kind": "module"
+    },
+    "validation.engine.validate": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ValidationReport",
+      "signature": "source: str | bytes | BpmnDocument, config: ValidationConfig | None=None, *, reference_date: date | None=None, profile: Profile | None=None"
+    },
+    "validation.issues": {
+      "kind": "module"
+    },
+    "validation.issues.ValidationIssue": {
+      "bases": "",
+      "fields": "rule_id: str\nseverity: str\nparams: Mapping[str, Any] = field(default_factory=dict)\nelement_id: str | None = None\ndiagram_id: str | None = None\nmessage_id: str | None = None",
+      "kind": "class"
+    },
+    "validation.issues.ValidationIssue.message": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self, language: str='de'"
+    },
+    "validation.issues.ValidationIssue.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self, language: str='de'"
+    },
+    "validation.issues.ValidationReport": {
+      "bases": "",
+      "fields": "issues: tuple[ValidationIssue, ...]\nprofile: str\nprofile_origin: str\nreference_date: str | None\nruleset_version: str = RULESET_VERSION",
+      "kind": "class"
+    },
+    "validation.issues.ValidationReport.errors": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[ValidationIssue, ...]",
+      "signature": "self"
+    },
+    "validation.issues.ValidationReport.is_valid": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self"
+    },
+    "validation.issues.ValidationReport.notes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[ValidationIssue, ...]",
+      "signature": "self"
+    },
+    "validation.issues.ValidationReport.rule_ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[str]",
+      "signature": "self"
+    },
+    "validation.issues.ValidationReport.to_dict": {
+      "kind": "function",
+      "raises": "",
+      "returns": "dict[str, Any]",
+      "signature": "self, language: str='de'"
+    },
+    "validation.issues.ValidationReport.warnings": {
+      "kind": "function",
+      "raises": "",
+      "returns": "tuple[ValidationIssue, ...]",
+      "signature": "self"
+    },
+    "validation.issues.issue": {
+      "kind": "function",
+      "raises": "",
+      "returns": "ValidationIssue",
+      "signature": "rule_id: str, element_id: str | None=None, **params: Any"
+    },
+    "validation.messages": {
+      "kind": "module"
+    },
+    "validation.messages.RuleMessage": {
+      "bases": "",
+      "fields": "id: str\nseverity: str\ngroup: str\nde: str\nen: str",
+      "kind": "class"
+    },
+    "validation.messages.RuleMessage.render": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self, language: str, params: Mapping[str, object]"
+    },
+    "validation.registry": {
+      "kind": "module"
+    },
+    "validation.registry.RegisteredRule": {
+      "bases": "",
+      "fields": "group: str\nrule_ids: tuple[str, ...]\nfunction: RuleFunction",
+      "kind": "class"
+    },
+    "validation.registry.RegisteredRule.name": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "self"
+    },
+    "validation.registry.rule": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Callable[[RuleFunction], RuleFunction]",
+      "signature": "group: str, *rule_ids: str"
+    },
+    "validation.registry.rules_for": {
+      "kind": "function",
+      "raises": "",
+      "returns": "list[RegisteredRule]",
+      "signature": "group: str"
+    },
+    "validation.registry.run": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Iterator[ValidationIssue]",
+      "signature": "context: ValidationContext"
+    },
+    "validation.segregation": {
+      "kind": "module"
+    },
+    "validation.segregation.check_segregation": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.segregation.excluded_role": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext, spec: SegregationRule"
+    },
+    "validation.segregation.four_eyes": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext, spec: SegregationRule"
+    },
+    "validation.segregation.matches": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "element: BpmnElement, selection: Selection"
+    },
+    "validation.segregation.separate_bodies": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext, spec: SegregationRule"
+    },
+    "validation.structure": {
+      "kind": "module"
+    },
+    "validation.structure.check_associations": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_boundary_events": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_branching_gateways": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_call_activities": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_default_flows": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_duplicate_ids": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_event_based_targets": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_has_process": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_links": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_message_flows": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_node_connections": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_parallel_conditions": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_redundant_gateways": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_root": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_sequence_flow_ends": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_start_and_end_events": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_start_end_flows": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "validation.structure.check_task_names": {
+      "kind": "function",
+      "raises": "",
+      "returns": "Issues",
+      "signature": "ctx: ValidationContext"
+    },
+    "vocabulary": {
+      "kind": "module"
+    },
+    "vocabulary.Role": {
+      "bases": "",
+      "fields": "code: str\nlabels: Labels\nfrom_year: int | None = None\nuntil_year: int | None = None",
+      "kind": "class"
+    },
+    "vocabulary.Role.applies_to": {
+      "kind": "function",
+      "raises": "",
+      "returns": "bool",
+      "signature": "self, period: str | None"
+    },
+    "vocabulary.label": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "labels: Labels | None, language: str='de'"
+    },
+    "vocabulary.period_start": {
+      "kind": "function",
+      "raises": "",
+      "returns": "int | None",
+      "signature": "period: str | None"
+    },
+    "writer": {
+      "kind": "module"
+    },
+    "writer.copy_document": {
+      "kind": "function",
+      "raises": "",
+      "returns": "BpmnDocument",
+      "signature": "source: str | bytes | BpmnDocument"
+    },
+    "writer.main_element_id": {
+      "kind": "function",
+      "raises": "BpmnError",
+      "returns": "str",
+      "signature": "document: BpmnDocument"
+    },
+    "writer.new_definitions": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "process_id: str='Process_1', name: str | None=None"
+    },
+    "writer.remove_extensions": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "source: str | bytes | BpmnDocument, element_id: str, *kinds: str"
+    },
+    "writer.set_diagram_info": {
+      "kind": "function",
+      "raises": "",
+      "returns": "str",
+      "signature": "source: str | bytes | BpmnDocument, info: DiagramInfo"
+    },
+    "writer.set_extensions": {
+      "kind": "function",
+      "raises": "BpmnError",
+      "returns": "str",
+      "signature": "source: str | bytes | BpmnDocument, element_id: str, extensions: Extensions, *, replace_kinds: Iterable[str] | None=None"
+    }
+  },
+  "findings": [
+    {
+      "code": "AC-POL-001",
+      "evidence": [
+        "UNKNOWN"
+      ],
+      "line": 0,
+      "message": "Framework applicability evaluated before security gates",
+      "path": "",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "code": "AC-DOC-001",
+      "evidence": [],
+      "line": 106,
+      "message": "Public API lacks a docstring",
+      "path": "safe_xml.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-DOC-001",
+      "evidence": [],
+      "line": 118,
+      "message": "Public API lacks a docstring",
+      "path": "safe_xml.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-DOC-001",
+      "evidence": [],
+      "line": 121,
+      "message": "Public API lacks a docstring",
+      "path": "safe_xml.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-DOC-001",
+      "evidence": [],
+      "line": 34,
+      "message": "Public API lacks a docstring",
+      "path": "validation/registry.py",
+      "status": "WARNING"
+    },
+    {
+      "code": "AC-OSS-001",
+      "evidence": [],
+      "line": 25,
+      "message": "Potential internal or personal identifier; review required",
+      "path": "schemas/profile-1.schema.json",
+      "status": "REVIEW_REQUIRED"
+    },
+    {
+      "code": "AC-SYN-001",
+      "evidence": [],
+      "line": 0,
+      "message": "Parsed 61 files",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-API-001",
+      "evidence": [],
+      "line": 0,
+      "message": "No API comparison baseline supplied",
+      "path": "",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "code": "AC-LINT-001",
+      "evidence": [
+        "ruff check /home/janpow/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
+      ],
+      "line": 0,
+      "message": "ruff exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-TYPE-001",
+      "evidence": [
+        "mypy /home/janpow/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
+      ],
+      "line": 0,
+      "message": "mypy exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-SEC-002",
+      "evidence": [
+        "bandit -q -ll -r /home/janpow/Projekte/auditcore/worktrees/bpmn-py/packages/auditcore_bpmn/src/auditcore_bpmn"
+      ],
+      "line": 0,
+      "message": "bandit exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-DEP-001",
+      "evidence": [],
+      "line": 0,
+      "message": "Not installed: pip-audit",
+      "path": "",
+      "status": "NOT_EXECUTED"
+    },
+    {
+      "code": "AC-TEST-001",
+      "evidence": [
+        "python -m pytest tests -q"
+      ],
+      "line": 0,
+      "message": "python exit=0",
+      "path": "",
+      "status": "PASS"
+    },
+    {
+      "code": "AC-SUPPLY-001",
+      "evidence": [],
+      "line": 0,
+      "message": "Release artifact/SBOM validation evidence required",
+      "path": "",
+      "status": "REVIEW_REQUIRED"
+    }
+  ],
+  "generated_at": "2026-09-25T12:06:49.686772+00:00",
+  "ignored": [],
+  "path": "packages/auditcore_bpmn/src/auditcore_bpmn",
+  "policy": {
+    "applicability_context": {
+      "ai_usage": "none",
+      "analytical_runs": true,
+      "artifact_type": "library",
+      "authentication": "none",
+      "binding_decisions": "none",
+      "data_space": "single_project",
+      "delegation": false,
+      "deployment_target": "internal_test",
+      "document_storage": false,
+      "documents": false,
+      "dsfa_required": "UNKNOWN",
+      "export_formats": [
+        "json",
+        "pdf",
+        "xlsx",
+        "xml"
+      ],
+      "exports": true,
+      "external_interfaces": false,
+      "graphical_ui": false,
+      "interactive_workspace": false,
+      "international_users": false,
+      "modular_capabilities": false,
+      "personal_data": "possible",
+      "protection_need": "UNKNOWN",
+      "protection_need_source": "UNKNOWN",
+      "real_data_for_test_generation": false,
+      "structured_imports": true,
+      "uploads": false,
+      "user_model": "no_users",
+      "versioned_artifact_types": [],
+      "versioned_artifacts": false,
+      "workflow": "calculation_only"
+    },
+    "approved_deviations": [],
+    "artifact": "src/auditcore_bpmn",
+    "blocking_requirements": [],
+    "framework_commit": "UNKNOWN",
+    "framework_repository": "janpow77/verwaltung-app-framework",
+    "overall_status": "REVIEW_REQUIRED",
+    "profiles": [
+      "LIBRARY"
+    ],
+    "requirements": [],
+    "review_required": [
+      "POLICY_SOURCE_UNAVAILABLE"
+    ],
+    "source_status": "POLICY_SOURCE_UNAVAILABLE",
+    "tests": {}
+  },
+  "source_digest": "fa1448053da87efbfda5d058738a654696d28ea3612dab66c26d9305f644e483",
+  "status": "REVIEW_REQUIRED"
+}

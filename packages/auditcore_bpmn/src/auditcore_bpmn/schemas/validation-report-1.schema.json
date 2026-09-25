@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowaudit.de/schemas/auditcore-bpmn/validation-report-1.schema.json",
+  "title": "Prüfbericht der Regeln",
+  "type": "object",
+  "required": [
+    "schema",
+    "ruleset_version",
+    "profile",
+    "valid",
+    "counts",
+    "issues"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "auditcore_bpmn.validation-report/1"
+    },
+    "ruleset_version": {
+      "type": "string"
+    },
+    "profile": {
+      "type": "string"
+    },
+    "profile_origin": {
+      "type": "string"
+    },
+    "reference_date": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "valid": {
+      "type": "boolean"
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "integer"
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rule_id",
+          "severity",
+          "message",
+          "params"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "pattern": "^BPMN-[A-Z]+[0-9A-Z-]*$"
+          },
+          "severity": {
+            "enum": [
+              "fehler",
+              "warnung",
+              "hinweis"
+            ]
+          },
+          "severity_label": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object"
+          },
+          "element_id": {
+            "type": "string"
+          },
+          "diagram_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

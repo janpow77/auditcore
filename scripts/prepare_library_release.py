@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 #: sein, die anderen repos nicht"). The provenance of each wheel must list exactly
 #: these repository/commit pairs; any other or missing binding fails the release.
 EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
+    "auditcore_bpmn": frozenset(
+        {("janpow77/audit_designer", "eff41a4ccedab12b9a73bafff41468712459cb2b")}
+    ),
     "auditcore_auth": frozenset(
         {
             ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
