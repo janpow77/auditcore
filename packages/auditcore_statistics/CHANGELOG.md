@@ -24,12 +24,14 @@ Einzige sichtbare Änderung ist die Versionskennung `library` in
 `BenfordResult.to_dict()` („auditcore_statistics 0.2.1“); sie folgt vertraglich
 `__version__` (siehe `tests/test_reproducibility.py`).
 
+Messung mit `auditcore-codegate check --package auditcore_statistics`:
+
 | Messung | 0.2.0 | 0.2.1 |
 |---|---|---|
 | Funktionen mit McCabe > 10 | 1 | 0 |
 | Funktionen > 60 Zeilen | 3 | 0 |
 | Module > 400 Zeilen | 0 | 0 |
-| `Any`-Vorkommen | 11 | 8 |
+| `Any`-Verwendungen | 10 | 6 |
 | mypy --strict | sauber | sauber |
 
 Keine Umbenennungen öffentlicher Namen. Die verbleibenden `Any` stehen an
