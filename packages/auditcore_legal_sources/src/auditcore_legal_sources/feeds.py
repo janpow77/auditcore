@@ -19,8 +19,9 @@ from collections.abc import Iterable, Mapping, Sequence
 from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
-from typing import Any
 from urllib.parse import urljoin
+
+from auditcore_harvest import JSON
 
 from .errors import ConfigurationError, ParseError
 from .model import LegalDocument
@@ -36,7 +37,7 @@ def feed_source(profile: SourceProfile, key: str) -> FeedSource:
         raise ConfigurationError(f"Profil {profile.id} enthält keine Quelle '{key}'.") from exc
 
 
-def parse_feed(text: str) -> list[Mapping[str, Any]]:
+def parse_feed(text: str) -> list[Mapping[str, JSON]]:
     """Parse RSS/Atom with feedparser (extra ``feeds``); malformed feeds raise ``ParseError``."""
     try:
         import feedparser
@@ -52,7 +53,7 @@ def _stable_id(prefix: str, value: str) -> str:
     return f"{prefix}_{hashlib.sha256(value.encode('utf-8')).hexdigest()[:16]}"
 
 
-def _published(entry: Mapping[str, Any]) -> tuple[date | None, str | None, str | None]:
+def _published(entry: Mapping[str, JSON]) -> tuple[date | None, str | None, str | None]:
     """Date from the parsed UTC tuple, else the RFC 822/ISO text; returns (date, precision, iso)."""
     for key in ("published_parsed", "updated_parsed"):
         value = entry.get(key)
@@ -72,7 +73,7 @@ def _published(entry: Mapping[str, Any]) -> tuple[date | None, str | None, str |
 
 
 def normalize_entry(
-    entry: Mapping[str, Any], profile: SourceProfile, key: str, feed: str
+    entry: Mapping[str, JSON], profile: SourceProfile, key: str, feed: str
 ) -> LegalDocument:
     """Normalize one feed entry of feed ``feed`` of source ``key``.
 
@@ -95,7 +96,7 @@ def normalize_entry(
     published, precision, iso = _published(entry)
     raw_date = entry.get("published", entry.get("updated"))
     cases = sorted({m for p in source.case_patterns for m in re.findall(p, title + " " + summary)})
-    metadata: dict[str, Any] = {
+    metadata: dict[str, JSON] = {
         "feed": feed,
         "guid": guid or None,
         "published_at": iso,
@@ -121,7 +122,7 @@ def normalize_entry(
 
 
 def normalize_entries(
-    entries: Iterable[Mapping[str, Any]], profile: SourceProfile, key: str, feed: str
+    entries: Iterable[Mapping[str, JSON]], profile: SourceProfile, key: str, feed: str
 ) -> tuple[list[LegalDocument], list[ParseError]]:
     """Normalize a feed; defective entries are reported with their index."""
     documents: list[LegalDocument] = []

@@ -24,9 +24,9 @@ Entschieden am 2026-09-23 (Nutzerzitat „alle empfehlungen“):
 
 from __future__ import annotations
 
-import hashlib
-import json
 from dataclasses import asdict, dataclass, field
+
+from auditcore_common.hashing import canonical_sha256
 
 from auditcore_documents.pipeline.retention import ALL_CATEGORIES, LEGACY_CATEGORIES
 from auditcore_documents.pipeline.stages.postprocess import FIELD_PATTERNS, corrected_patterns
@@ -70,8 +70,7 @@ class PipelineProfile:
         for key, legacy_value in _LEGACY_DEFAULTS.items():
             if data.get(key) == legacy_value:
                 data.pop(key, None)
-        payload = json.dumps(data, sort_keys=True, ensure_ascii=False)
-        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+        return canonical_sha256(data, compact=False)
 
     def identity(self) -> dict[str, str]:
         return {"id": self.profile_id, "version": self.version, "fingerprint": self.fingerprint}

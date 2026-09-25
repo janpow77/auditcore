@@ -101,7 +101,7 @@ ort = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
 |---|---|---|---|
 | `BEREICH_DEUTSCHLAND_OSINT` | Konstante | Bereich, an dem ``osint`` (``werkzeuge/betroffenheit.py:_achsen_drehen``) die Achsenfolge deutscher GML-Antworten erkennt: Breite 47–56, Länge 5–16 Grad. | `koordinaten` |
 | `EMPFOHLENES_ERDMODELL` | Konstante | Empfohlenes Profil für neue gemeinsame Bestände (Entscheidung vom 23.09.2026, vom Nutzer delegiert). Keine Funktion verwendet es still; es wird ausdrücklich übergeben. | `distanz` |
-| `EMPFOHLEN_RAND_GILT_ALS_INNEN` | Konstante | Empfohlene Randregel (Entscheidung vom 23.09.2026, vom Nutzer delegiert): Randpunkte zählen als innen – ein möglicher Schutzgebietsbezug wird eher gemeldet als übersehen. | `flaeche` |
+| `EMPFOHLEN_RAND_GILT_ALS_INNEN` | Konstante | Empfohlene Randregel (Entscheidung vom 23.09.2026, vom Nutzer delegiert): Randpunkte zählen als innen – ein möglicher Schutzgebietsbezug wird eher gemeldet als übersehen. | `_flaechenmodell` |
 | `EPSG_25832` | Konstante | ETRS89 / UTM Zone 32N (Rechtswert, Hochwert in Metern), z. B. BKG VG2500. | `koordinaten` |
 | `EPSG_4258` | Konstante | ETRS89 geographisch (Bezugssystem der amtlichen deutschen Geobasisdaten). | `koordinaten` |
 | `EPSG_4326` | Konstante | WGS 84 geographisch; Achsenfolge der EPSG-Registrierung ist Breite, Länge. | `koordinaten` |
@@ -111,26 +111,26 @@ ort = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
 | `KUGEL_6371_KM` | Konstante | Gerundeter Radius 6 371 000 m. | `distanz` |
 | `KUGEL_MITTLERER_RADIUS` | Konstante | Mittlerer Erdradius R1 = (2a + b) / 3 des GRS80/WGS 84 (6 371 008,8 m). | `distanz` |
 | `OGC_CRS84` | Konstante | OGC CRS84 = WGS 84 in der Reihenfolge Länge, Breite (GeoJSON, RFC 7946). | `koordinaten` |
-| `VERTRAG_ENTARTETE_RINGE` | Konstante | Vertragsnummer der Behandlung zusammengefallener Ringe. | `flaeche` |
+| `VERTRAG_ENTARTETE_RINGE` | Konstante | Vertragsnummer der Behandlung zusammengefallener Ringe. | `_flaechenmodell` |
 | `WGS84` | Konstante | WGS 84. | `projektion` |
 | `Achsenfolge` | Aufzählung | Reihenfolge eines Zahlenpaares. | `koordinaten` |
 | `Bereich` | Datenklasse | Achsparalleles Rechteck in Grad; dient nur Plausibilitäts- und Vorfilterzwecken. | `koordinaten` |
 | `Ellipsoid` | Datenklasse | Rotationsellipsoid mit großer Halbachse ``a`` (m) und Abplattung ``f``. | `projektion` |
-| `EntarteterRing` | Datenklasse | Ein auf Punkt oder Linie zusammengefallener Ring (GEO-C16). | `flaeche` |
-| `Entartung` | Aufzählung | Worauf ein Ring zusammengefallen ist. | `flaeche` |
-| `Flaeche` | Datenklasse | Echte Teilflächen und zusammengefallene Ringe (GeoJSON ``Polygon``/``MultiPolygon``). | `flaeche` |
+| `EntarteterRing` | Datenklasse | Ein auf Punkt oder Linie zusammengefallener Ring (GEO-C16). | `_flaechenmodell` |
+| `Entartung` | Aufzählung | Worauf ein Ring zusammengefallen ist. | `_flaechenmodell` |
+| `Flaeche` | Datenklasse | Echte Teilflächen und zusammengefallene Ringe (GeoJSON ``Polygon``/``MultiPolygon``). | `_flaechenmodell` |
 | `GeoError` | Ausnahme | Basisklasse; ``code`` ist stabil und maschinenlesbar. | `errors` |
 | `GeometrieFehler` | Ausnahme | Geometrie unlesbar, unvollständig oder von einem nicht unterstützten Typ. | `errors` |
 | `GpkgGeometrie` | Datenklasse | Polygone (je Liste von Ringen mit Punkten in Quellkoordinaten) und ``srs_id``. | `gpkg` |
 | `KoordinatenFehler` | Ausnahme | Koordinate nicht endlich, außerhalb des Wertebereichs oder Achsenfolge unbekannt. | `errors` |
 | `Koordinatenreferenzsystem` | Datenklasse | Beschreibung eines Bezugssystems; die Bibliothek transformiert keine Datumsangaben. | `koordinaten` |
 | `Kugelprofil` | Datenklasse | Kugelförmiges Erdmodell mit Radius in Metern und Herkunft der Variante. | `distanz` |
-| `Lage` | Aufzählung | Lage eines Punktes zu einer Fläche. | `flaeche` |
-| `Polygon` | Datenklasse | Außenring und Löcher; Ringe ohne wiederholten Schlusspunkt. | `flaeche` |
+| `Lage` | Aufzählung | Lage eines Punktes zu einer Fläche. | `_flaechenmodell` |
+| `Polygon` | Datenklasse | Außenring und Löcher; Ringe ohne wiederholten Schlusspunkt. | `_flaechenmodell` |
 | `ProfilFehler` | Ausnahme | Unbekanntes oder ungültiges Profil (Erdmodell, Projektion). | `errors` |
 | `Punkt` | Datenklasse | Geographische Koordinate in Grad (Breite ``lat``, Länge ``lon``). | `koordinaten` |
 | `Randbefund` | Datenklasse | Lage und Randabstand samt Hinweisen der Fläche. | `flaeche` |
-| `RingRolle` | Aufzählung | Außenring oder Loch. | `flaeche` |
+| `RingRolle` | Aufzählung | Außenring oder Loch. | `_flaechenmodell` |
 | `Treffer` | Datenklasse | Ein Punkt im Umkreis: Index in der Eingabefolge und Entfernung in Metern. | `distanz` |
 | `UtmZone` | Datenklasse | UTM-Zone (1–60), Halbkugel und Ellipsoid; Maßstab 0,9996, Rechtswert-Offset 500 km. | `projektion` |
 | `__version__` | Wert | – | `(Paketstamm)` |
@@ -138,9 +138,9 @@ ort = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
 | `achsenfolge_erkennen` | Funktion | Achsenfolge von Zahlenpaaren anhand eines bekannten Gebiets bestimmen. | `koordinaten` |
 | `douglas_peucker` | Funktion | Vereinfachte Punktfolge; Anfangs- und Endpunkt bleiben stets erhalten. | `vereinfachung` |
 | `enthaelt` | Funktion | Punkt in Fläche; wie der Rand zählt, muss der Aufrufer ausdrücklich sagen. | `flaeche` |
-| `flaeche_aus_geojson` | Funktion | ``Polygon``/``MultiPolygon`` in GeoJSON-Achsenfolge; alles andere ist ein Fehler. | `flaeche` |
-| `flaeche_aus_gpkg` | Funktion | Fläche aus :func:`lies_gpkg_polygone`; zusammengefallene Ringe nach GEO-C16. | `flaeche` |
-| `flaeche_aus_ringen` | Funktion | Fläche aus Polygonen (je Ringe aus ``(lon, lat)``-Paaren, Ring 0 außen). | `flaeche` |
+| `flaeche_aus_geojson` | Funktion | ``Polygon``/``MultiPolygon`` in GeoJSON-Achsenfolge; alles andere ist ein Fehler. | `_flaechenmodell` |
+| `flaeche_aus_gpkg` | Funktion | Fläche aus :func:`lies_gpkg_polygone`; zusammengefallene Ringe nach GEO-C16. | `_flaechenmodell` |
+| `flaeche_aus_ringen` | Funktion | Fläche aus Polygonen (je Ringe aus ``(lon, lat)``-Paaren, Ring 0 außen). | `_flaechenmodell` |
 | `flaechen_im_umkreis` | Funktion | Alle Flächen mit :func:`randabstand_m` bis einschließlich ``radius_m``. | `flaeche` |
 | `flaechenschwerpunkt` | Funktion | Flächengewichteter Schwerpunkt, eben in Grad gerechnet (Löcher abgezogen). | `flaeche` |
 | `geographisch_nach_utm` | Funktion | ``(ost, nord)`` in Metern; Hinrechnung nach Krüger (n³). | `projektion` |

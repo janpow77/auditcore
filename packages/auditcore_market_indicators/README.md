@@ -99,33 +99,33 @@ else:
 |---|---|---|---|
 | `METHOD` | Konstante | – | `indicators` |
 | `RECOMMENDED_PROFILE` | Konstante | Nutzerentscheidung vom 23.09.2026 („6 ja wilder, rsi“; „5. 250 kerzen“): empfohlenes Profil für den krypto-Consumer. | `profiles` |
-| `AdxResult` | Datenklasse | +DI, -DI and ADX (unpacks like the original ``(plus_di, minus_di, adx)`` tuple). | `indicators` |
+| `AdxResult` | Datenklasse | +DI, -DI and ADX (unpacks like the original ``(plus_di, minus_di, adx)`` tuple). | `_smoothers` |
 | `BreakoutResult` | Datenklasse | Breakout flag and strength; flag ``None`` where it cannot be evaluated. | `indicators` |
 | `DependencyError` | Ausnahme | The optional polars extra (``auditcore_market_indicators[polars]``) is not installed. | `errors` |
 | `IndicatorInputError` | Ausnahme | Input series or parameters violate the documented contract. | `errors` |
 | `IndicatorProfile` | Datenklasse | Immutable profile with identity, source and fingerprint. | `profiles` |
-| `MacdResult` | Datenklasse | MACD line, signal line and histogram. | `indicators` |
+| `MacdResult` | Datenklasse | MACD line, signal line and histogram. | `_smoothers` |
 | `MarketIndicatorError` | Ausnahme | Base class; ``code`` is stable and machine readable. | `errors` |
 | `ProfileError` | Ausnahme | A profile is missing, malformed or does not define the requested indicator. | `errors` |
 | `__version__` | Wert | – | `(Paketstamm)` |
-| `adx` | Funktion | +DI, -DI and ADX after Wilder (1978). | `indicators` |
-| `atr` | Funktion | Average True Range; smoothing from ``profile.atr.smoothing``. | `indicators` |
+| `adx` | Funktion | +DI, -DI and ADX after Wilder (1978). | `_smoothers` |
+| `atr` | Funktion | Average True Range; smoothing from ``profile.atr.smoothing``. | `_smoothers` |
 | `available_profiles` | Funktion | Packaged ``(id, version)`` pairs; no profile is an implicit default. | `profiles` |
 | `breakout` | Funktion | Breakout: ``P_t`` above the maximum of the ``n`` previous closes and ``VF_t > threshold``. | `indicators` |
-| `ema` | Funktion | Exponential moving average with ``α = 2/(n+1)``. | `indicators` |
+| `ema` | Funktion | Exponential moving average with ``α = 2/(n+1)``. | `_smoothers` |
 | `historical_volatility` | Funktion | Annualised volatility: rolling sample std of log returns · √factor. | `indicators` |
 | `load_profile` | Funktion | Load an explicitly named packaged profile version. | `profiles` |
 | `log_returns` | Funktion | Log return ``ln(P_t / P_{t-1})``; ``None`` if the ratio is undefined or ≤ 0. | `indicators` |
-| `macd` | Funktion | MACD after Appel: ``EMA_fast - EMA_slow``, signal = EMA of the MACD line. | `indicators` |
+| `macd` | Funktion | MACD after Appel: ``EMA_fast - EMA_slow``, signal = EMA of the MACD line. | `_smoothers` |
 | `method_reference` | Funktion | Self-description of one indicator run: library, method, parameters, profile. | `indicators` |
 | `normalized_range` | Funktion | ``NR_t = (max - min) / mean`` over ``n`` values; ``None`` where the mean is 0. | `indicators` |
 | `profile_document` | Funktion | Canonical dictionary of a profile's rules (for result metadata). | `profiles` |
 | `profile_from_dict` | Funktion | Validate a profile document; nothing is defaulted silently. | `profiles` |
 | `returns` | Funktion | Discrete return ``(P_t - P_{t-k}) / P_{t-k}``; ``None`` for the first ``periods``. | `indicators` |
 | `rolling_std` | Funktion | Rolling sample standard deviation (ddof = 1) over ``n`` values. | `indicators` |
-| `rsi` | Funktion | Relative Strength Index ``100 - 100 / (1 + AG/AL)``. | `indicators` |
+| `rsi` | Funktion | Relative Strength Index ``100 - 100 / (1 + AG/AL)``. | `_smoothers` |
 | `sma` | Funktion | Simple moving average over ``n`` values; windows with a gap are ``None``. | `indicators` |
-| `true_range` | Funktion | ``TR_t = max(H-L, \|H-C_{t-1}\|, \|L-C_{t-1}\|)``; ``H-L`` without a previous close. | `indicators` |
+| `true_range` | Funktion | ``TR_t = max(H-L, \|H-C_{t-1}\|, \|L-C_{t-1}\|)``; ``H-L`` without a previous close. | `_smoothers` |
 | `volume_factor` | Funktion | ``VF_t = V_t / VMA_n(t)``; ``None`` where the moving average is 0. | `indicators` |
 | `zscore` | Funktion | Rolling z-score ``(X_t - μ_n) / σ_n``; ``None`` where ``σ_n = 0``. | `indicators` |
 

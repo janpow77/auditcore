@@ -114,8 +114,9 @@ def web_smoke(rows: list[ad.CompareRow]) -> None:
 def main() -> None:
     """Pure comparison, article-law commands, reasons port and extra boundaries."""
     package = distribution("auditcore_documents")
-    assert package.version == "0.3.0"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    assert package.version == "0.3.1"
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.0"], runtime
     assert find_spec("auditcore") is None
     assert DocumentCompareService.VERSION == "1.1.0"
     old = [

@@ -12,18 +12,19 @@ from __future__ import annotations
 import base64
 import hashlib
 from collections.abc import Mapping
-from typing import Any
 
 from auditcore_harvest import (
+    JSON,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
-    HarvestRecord,
     PageResult,
     ParserError,
     SnapshotSemantics,
     Source,
+    page_result,
     raise_for_status,
 )
 
@@ -52,7 +53,7 @@ class PageSnapshotAdapter:
         snapshot_semantics=SnapshotSemantics.APPEND_ONLY,
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` of the page and optional ``max_bytes``."""
         if not isinstance(config.get("url"), str) or not config["url"].startswith("http"):
             raise ConfigError("url der Veröffentlichungsseite fehlt.")
@@ -60,7 +61,7 @@ class PageSnapshotAdapter:
         if not isinstance(limit, int) or isinstance(limit, bool) or limit <= 0:
             raise ConfigError("max_bytes muss positiv sein.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch the page; binary answers, NUL bytes and oversized bodies are parser errors."""
         url = str(context.config["url"])
         response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
@@ -81,11 +82,5 @@ class PageSnapshotAdapter:
             "zeitbezug": dict(RETRIEVAL_TIME),
             "preise_extrahiert": False,
         }
-        record = HarvestRecord(
-            source_id=self.source.source_id,
-            record_id=f"{url}#{digest}",
-            raw=raw,
-            normalized=normalized,
-            provenance=context.provenance(self.source, url, raw),
-        )
-        return PageResult((record,), None, complete=True)
+        record = context.record(self.source, f"{url}#{digest}", raw, normalized, url)
+        return page_result([record])

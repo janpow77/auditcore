@@ -1,5 +1,7 @@
 name: domain-packages
 on:
+  # workflow_call: Aufruf aus nightly.yml (voller Lauf, alle Pakete)
+  workflow_call:
   push:
     branches: [main]
     paths:
@@ -30,12 +32,13 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Fester Name: bei workflow_call wäre github.workflow der Name des Aufrufers.
+  group: domain-packages-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   packages:
-    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || matrix.python == '3.12') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
+    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || matrix.python == '3.12' || matrix.python == '3.11') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
     strategy:
       fail-fast: false
       matrix:
