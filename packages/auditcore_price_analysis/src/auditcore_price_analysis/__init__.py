@@ -46,7 +46,7 @@ from .profiles import (
 from .selection import STATUS_NONE, STATUS_OK, STATUS_Q3_FALLBACK, Selection, select_tariff
 from .tariff import ReleaseStatus, Tariff, Tier, ignored_tier_keys, parse_tiers
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 CONTRACT_VERSION = "auditcore_price_analysis.contract/1"
 
 __all__ = [

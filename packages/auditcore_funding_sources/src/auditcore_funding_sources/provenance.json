@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_funding_sources",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "sources": [
     {
       "repository": "janpow77/flowworkshop",
@@ -110,7 +110,7 @@
     "designer.deminimis.cumulation 2026.09.1 (REVIEW_REQUIRED)"
   ],
   "runtime_dependencies": [
-    "auditcore_harvest==0.1.0"
+    "auditcore_harvest==0.1.1"
   ],
   "behavior_changes": "docs/behavior-changes.md"
 }
