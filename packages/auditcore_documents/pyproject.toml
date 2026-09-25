@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_documents"
-version = "0.3.1"
+version = "0.3.2"
 description = "Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies"
 readme = "README.md"
 requires-python = ">=3.11"

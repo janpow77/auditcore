@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import contextlib
 import re
+from collections.abc import Mapping
 from datetime import datetime
 from typing import Any, Literal
 
@@ -137,10 +138,47 @@ def normalize_date(date_str: str) -> str | None:
     return date_str
 
 
+#: Befund je Betragsfeld, das ``locale-aware`` nicht lesen konnte:
+#: ``{"total": {"raw": "1.234", "state": "ambiguous"}}`` (``state``: ``ambiguous``/``invalid``).
+AmountFindings = dict[str, dict[str, str]]
+
+
+def amount_findings(fields: Mapping[str, object]) -> AmountFindings:
+    """Betragsfelder, deren Text ``parse_amount`` nicht eindeutig lesen kann."""
+    findings: AmountFindings = {}
+    for name in AMOUNT_FIELDS:
+        raw = fields.get(name)
+        if isinstance(raw, str):
+            state = parse_amount(raw)[1]
+            if state != "ok":
+                findings[name] = {"raw": raw, "state": state}
+    return findings
+
+
+def normalize_fields_checked(
+    fields: dict[str, object], amount_mode: AmountMode = "legacy-de"
+) -> tuple[dict[str, object], AmountFindings]:
+    """:func:`normalize_fields` plus Befund für jeden auf ``None`` gesetzten Betrag.
+
+    ``legacy-de`` rät wie das Original und liefert nie einen Befund;
+    ``locale-aware`` setzt mehrdeutige oder ungültige Beträge auf ``None`` und
+    nennt sie im Befund (Rohtext und Zustand), statt sie still zu verwerfen.
+    """
+    normalized = normalize_fields(fields, amount_mode)
+    if amount_mode != "locale-aware":
+        return normalized, {}
+    return normalized, amount_findings(fields)
+
+
 def normalize_fields(
     fields: dict[str, Any], amount_mode: AmountMode = "legacy-de"
 ) -> dict[str, Any]:
-    """Normalisierung; ``locale-aware`` setzt mehrdeutige/ungültige Beträge auf ``None``."""
+    """Normalisierung; ``locale-aware`` setzt mehrdeutige/ungültige Beträge auf ``None``.
+
+    Der Wert ``None`` allein unterscheidet „fehlt“ nicht von „mehrdeutig“: den
+    Befund liefert :func:`normalize_fields_checked` (die Pipeline setzt dafür
+    ``AMOUNT_AMBIGUOUS_<feld>``/``AMOUNT_INVALID_<feld>``).
+    """
     normalized = fields.copy()
     if normalized.get("iban"):
         normalized["iban"] = re.sub(r"\s+", "", normalized["iban"]).upper()
@@ -178,5 +216,8 @@ class PostprocessStage(PipelineStage):
         cleaned = cleanup_text(ocr_text)
         extracted = extract_fields(cleaned, self.patterns)
         context.artifacts.extracted_fields = extracted
-        context.artifacts.normalized_json = normalize_fields(extracted, self.amount_mode)
+        normalized, findings = normalize_fields_checked(extracted, self.amount_mode)
+        context.artifacts.normalized_json = normalized
+        for name, finding in sorted(findings.items()):
+            context.add_validation_flag(f"AMOUNT_{finding['state'].upper()}_{name.upper()}")
         return context

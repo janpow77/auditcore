@@ -223,3 +223,46 @@ def test_d7_missing_store_port_is_reported_and_legacy_default_unchanged() -> Non
     assert [q[0] for q in legacy_store.queries] == ["processing_logs"]
     with pytest.raises(ValueError, match="Aufbewahrungskategorie"):
         RetentionSweeper(legacy_store, categories=("unbekannt",))
+
+
+def test_locale_aware_amounts_report_ambiguity_instead_of_dropping_it() -> None:
+    from auditcore_documents.pipeline.stages.postprocess import (
+        amount_findings,
+        normalize_fields_checked,
+    )
+
+    fields = {"total": "1.234", "net_amount": "12,5,0", "vat_amount": "19,00", "iban": None}
+    values, findings = normalize_fields_checked(fields, "locale-aware")
+    assert values["total"] is None and values["net_amount"] is None
+    assert values["vat_amount"] == 19.0
+    assert findings == {
+        "total": {"raw": "1.234", "state": "ambiguous"},
+        "net_amount": {"raw": "12,5,0", "state": "invalid"},
+    }
+    assert values == normalize_fields(fields, "locale-aware"), "values unchanged"
+    legacy_values, legacy_findings = normalize_fields_checked(fields)
+    assert legacy_findings == {} and legacy_values["total"] == 1234.0
+    assert amount_findings({"total": 5}) == {}, "non-text values are not re-parsed"
+
+
+def test_postprocess_stage_flags_ambiguous_amounts() -> None:
+    import asyncio
+
+    from auditcore_documents.pipeline.context import PipelineContext
+    from auditcore_documents.pipeline.stages.postprocess import PostprocessStage
+
+    stage = PostprocessStage()
+    stage.amount_mode = "locale-aware"
+    context = PipelineContext(document_id="d1")
+    context.artifacts.ocr_text = "Gesamtbetrag: 1.234 EUR"
+    asyncio.run(stage.execute(context))
+    assert context.artifacts.extracted_fields is not None
+    assert context.artifacts.extracted_fields.get("total") == "1.234"
+    assert context.artifacts.normalized_json is not None
+    assert context.artifacts.normalized_json["total"] is None
+    assert "AMOUNT_AMBIGUOUS_TOTAL" in context.validation_flags
+    legacy = PostprocessStage()
+    legacy_context = PipelineContext(document_id="d2")
+    legacy_context.artifacts.ocr_text = "Gesamtbetrag: 1.234 EUR"
+    asyncio.run(legacy.execute(legacy_context))
+    assert not [f for f in legacy_context.validation_flags if f.startswith("AMOUNT_")]
