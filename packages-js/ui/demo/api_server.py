@@ -12,11 +12,10 @@ from __future__ import annotations
 import os
 
 import uvicorn
-from starlette.applications import Starlette
-from starlette.routing import Mount
-
 from auditcore_sampling.web import routes as sampling_routes
 from auditcore_statistics.web import routes as benford_routes
+from starlette.applications import Starlette
+from starlette.routing import Mount
 
 app = Starlette(
     routes=[
