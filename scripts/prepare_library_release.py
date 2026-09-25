@@ -64,6 +64,14 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743"),
         }
     ),
+    "auditcore_identifiers": frozenset(
+        {
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/auditcore", "99788a18c28bf683ada62bb3ab9d4aeb36f2c5b2"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+        }
+    ),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
     "auditcore_kanban": frozenset(
