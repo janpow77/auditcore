@@ -34,7 +34,11 @@
     "test": "vitest run",
     "demo": "vite --config demo/vite.config.ts",
     "demo:build": "vite build --config demo/vite.config.ts",
-    "e2e": "playwright test -c e2e/playwright.config.ts"
+    "e2e": "playwright test -c e2e/playwright.config.ts",
+    "e2e:api": "playwright test -c e2e/playwright.api.config.ts"
+  },
+  "dependencies": {
+    "@flowaudit/kanban-core": "0.1.0"
   },
   "peerDependencies": {
     "vue": "^3.5.0"

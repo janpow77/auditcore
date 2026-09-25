@@ -10,9 +10,6 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
-from starlette.requests import Request
-from starlette.routing import BaseRoute
-
 from auditcore_registry_sources import ListEntry, ListSnapshot, SanctionsList, load_lists
 from auditcore_registry_sources.lists import find_list
 from auditcore_registry_sources.web import (
@@ -22,6 +19,8 @@ from auditcore_registry_sources.web import (
     StaticSnapshotProvider,
 )
 from auditcore_registry_sources.web.http import create_routes
+from starlette.requests import Request
+from starlette.routing import BaseRoute
 
 PEOPLE = {"pruefer-a": "Prüferin A. Beispiel", "pruefer-b": "Prüfer B. Muster"}
 LISTS = load_lists("audit_designer.sanctions_lists", "2026.09.1")
@@ -46,29 +45,84 @@ def snapshots(now: datetime) -> list[tuple[str, ListSnapshot]]:
     fresh = (now - timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
     old = (now - timedelta(days=45)).strftime("%Y-%m-%d")
     eu = (
-        _e("eu_fsf", "EU-DEMO-0001", "Maximilian Beispielmann", schema="Person",
-           aliases=("Max Beispielmann", "Maksim Bejspilman"), birth_date="1970-03-14",
-           countries="de", addresses="Musterstraße 1, 12345 Musterstadt",
-           sanctions="Beispielverordnung (EU) 0000/00, Anhang I", program_ids="EU-DEMO-A"),
-        _e("eu_fsf", "EU-DEMO-0002", "Erika Probe-Muster", schema="Person",
-           birth_date="1965-07-02", countries="at", addresses="Beispielgasse 7, 1000 Musterwien"),
-        _e("eu_fsf", "EU-DEMO-0003", "Beispiel Handels GmbH", schema="Organization",
-           countries="de", identifiers="HRB 00000 (Demo)"),
-        _e("eu_fsf", "EU-DEMO-0004", "Maximiliane Beispiel", schema="Person",
-           birth_date="1988", countries="ch"),
+        _e(
+            "eu_fsf",
+            "EU-DEMO-0001",
+            "Maximilian Beispielmann",
+            schema="Person",
+            aliases=("Max Beispielmann", "Maksim Bejspilman"),
+            birth_date="1970-03-14",
+            countries="de",
+            addresses="Musterstraße 1, 12345 Musterstadt",
+            sanctions="Beispielverordnung (EU) 0000/00, Anhang I",
+            program_ids="EU-DEMO-A",
+        ),
+        _e(
+            "eu_fsf",
+            "EU-DEMO-0002",
+            "Erika Probe-Muster",
+            schema="Person",
+            birth_date="1965-07-02",
+            countries="at",
+            addresses="Beispielgasse 7, 1000 Musterwien",
+        ),
+        _e(
+            "eu_fsf",
+            "EU-DEMO-0003",
+            "Beispiel Handels GmbH",
+            schema="Organization",
+            countries="de",
+            identifiers="HRB 00000 (Demo)",
+        ),
+        _e(
+            "eu_fsf",
+            "EU-DEMO-0004",
+            "Maximiliane Beispiel",
+            schema="Person",
+            birth_date="1988",
+            countries="ch",
+        ),
     )
     un = (
-        _e("un_sc", "UN-DEMO-001", "Maximilian Beispielman", schema="Person",
-           birth_date="1971", countries="ru", sanctions="Resolution 0000 (Demo)"),
+        _e(
+            "un_sc",
+            "UN-DEMO-001",
+            "Maximilian Beispielman",
+            schema="Person",
+            birth_date="1971",
+            countries="ru",
+            sanctions="Resolution 0000 (Demo)",
+        ),
     )
-    gb = (_e("gb_fcdo_sanctions", "GB-DEMO-01", "Erika Mustermann-Probe", schema="Person",
-             birth_date="1965", countries="gb"),)
+    gb = (
+        _e(
+            "gb_fcdo_sanctions",
+            "GB-DEMO-01",
+            "Erika Mustermann-Probe",
+            schema="Person",
+            birth_date="1965",
+            countries="gb",
+        ),
+    )
     peps = (
-        _e("peps", "PEP-DEMO-1", "Petra Musterfrau", schema="Person",
-           aliases=("Petra Muster-Frau",), countries="de",
-           sanctions="Mitglied eines Landesparlaments (erfunden)", first_seen="2021-04-01"),
-        _e("peps", "PEP-DEMO-2", "Paul Beispiel", schema="Person", countries="at",
-           sanctions="Bürgermeister (erfunden)"),
+        _e(
+            "peps",
+            "PEP-DEMO-1",
+            "Petra Musterfrau",
+            schema="Person",
+            aliases=("Petra Muster-Frau",),
+            countries="de",
+            sanctions="Mitglied eines Landesparlaments (erfunden)",
+            first_seen="2021-04-01",
+        ),
+        _e(
+            "peps",
+            "PEP-DEMO-2",
+            "Paul Beispiel",
+            schema="Person",
+            countries="at",
+            sanctions="Bürgermeister (erfunden)",
+        ),
     )
     return [
         ("sanctions", ListSnapshot(find_list(LISTS, "eu_fsf"), eu, as_of=fresh)),
@@ -99,10 +153,18 @@ def build_service() -> ScreeningReviewService:
             "profile": {"id": "audit_designer.sanctions_screening", "version": "2026.09.2"},
             "case_reference": "Vorgang 2026/0815 – Auftragnehmer Los 2 (Demo)",
             "subjects": [
-                {"name": "Maximilian Beispielmann", "birth_date": "1970-03-14", "country": "de",
-                 "reference": "Geschäftsführer"},
-                {"name": "Erika Probe Muster", "birth_date": "1965", "country": "at",
-                 "reference": "Prokuristin"},
+                {
+                    "name": "Maximilian Beispielmann",
+                    "birth_date": "1970-03-14",
+                    "country": "de",
+                    "reference": "Geschäftsführer",
+                },
+                {
+                    "name": "Erika Probe Muster",
+                    "birth_date": "1965",
+                    "country": "at",
+                    "reference": "Prokuristin",
+                },
                 {"name": "Beispiel Handels GmbH", "schema": "Organization"},
             ],
         },

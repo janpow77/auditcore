@@ -1,0 +1,82 @@
+[
+ {
+  "name": "due None",
+  "input": {
+   "due": null,
+   "today": "2026-09-25"
+  },
+  "expected": "none"
+ },
+ {
+  "name": "due ''",
+  "input": {
+   "due": "",
+   "today": "2026-09-25"
+  },
+  "expected": "none"
+ },
+ {
+  "name": "due '2026-09-24'",
+  "input": {
+   "due": "2026-09-24",
+   "today": "2026-09-25"
+  },
+  "expected": "overdue"
+ },
+ {
+  "name": "due '2026-09-25'",
+  "input": {
+   "due": "2026-09-25",
+   "today": "2026-09-25"
+  },
+  "expected": "due_soon"
+ },
+ {
+  "name": "due '2026-09-28'",
+  "input": {
+   "due": "2026-09-28",
+   "today": "2026-09-25"
+  },
+  "expected": "due_soon"
+ },
+ {
+  "name": "due '2026-09-29'",
+  "input": {
+   "due": "2026-09-29",
+   "today": "2026-09-25"
+  },
+  "expected": "later"
+ },
+ {
+  "name": "due '2026-09-25T23:59:00'",
+  "input": {
+   "due": "2026-09-25T23:59:00",
+   "today": "2026-09-25"
+  },
+  "expected": "due_soon"
+ },
+ {
+  "name": "due '2026-09-25T00:00:00Z'",
+  "input": {
+   "due": "2026-09-25T00:00:00Z",
+   "today": "2026-09-25"
+  },
+  "expected": "due_soon"
+ },
+ {
+  "name": "due 'kaputt'",
+  "input": {
+   "due": "kaputt",
+   "today": "2026-09-25"
+  },
+  "expected": "none"
+ },
+ {
+  "name": "due '2026-02-30'",
+  "input": {
+   "due": "2026-02-30",
+   "today": "2026-09-25"
+  },
+  "expected": "none"
+ }
+]

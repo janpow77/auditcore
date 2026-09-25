@@ -25,6 +25,7 @@ ALLOWED = {
     "re",
     "types",
     "typing",
+    "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "xml",
     "auditcore_registry_sources",
     "auditcore_entity_matching",
