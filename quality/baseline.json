@@ -2,7 +2,7 @@
   "schema_version": 1,
   "tool_versions": {
     "mypy": "2.3.1",
-    "ruff": "0.16.8"
+    "ruff": "0.16.9"
   },
   "packages": {
     "auditcore": {
@@ -187,10 +187,10 @@
     },
     "auditcore_risk": {
       "metrics": {
-        "any_usages": 183,
-        "complexity_over_10": 11,
-        "functions_over_60_lines": 9,
-        "modules_over_400_lines": 5,
+        "any_usages": 27,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
