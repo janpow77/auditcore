@@ -127,13 +127,13 @@ class IndicatorProfile:
         return self.require_ema()
 
 
-def fingerprint(data: Mapping[str, Any]) -> str:
+def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
     canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def _choice(value: Any, allowed: tuple[str, ...], label: str) -> str:
+def _choice(value: object, allowed: tuple[str, ...], label: str) -> str:
     if value not in allowed:
         raise ProfileError(f"{label}: {value!r} ist keine zulässige Variante {allowed}.")
     return str(value)
@@ -150,72 +150,102 @@ def _section(data: Mapping[str, Any], key: str) -> Mapping[str, Any] | None:
     return value
 
 
+def _check_header(data: Mapping[str, Any]) -> None:
+    if data["schema"] != SCHEMA:
+        raise ProfileError("Unbekanntes Profilschema.")
+    for key in ("id", "version", "status", "legal_status"):
+        if not isinstance(data[key], str) or not data[key]:
+            raise ProfileError(f"{key} muss ein nicht leerer Text sein.")
+    if not isinstance(data["source"], Mapping):
+        raise ProfileError("source muss ein Objekt sein.")
+
+
+def _ema_rule(section: Mapping[str, Any] | None) -> EmaRule | None:
+    if section is None:
+        return None
+    return EmaRule(
+        seed=cast(EmaSeed, _choice(section["seed"], _EMA_SEED, "ema.seed")),
+        gaps=cast(EmaGaps, _choice(section["gaps"], _EMA_GAPS, "ema.gaps")),
+    )
+
+
+def _rsi_rule(section: Mapping[str, Any] | None) -> RsiRule | None:
+    if section is None:
+        return None
+    flat = section["flat_value"]
+    if isinstance(flat, bool) or not isinstance(flat, (int, float)):
+        raise ProfileError("rsi.flat_value muss eine Zahl sein.")
+    if not 0.0 <= float(flat) <= 100.0:
+        raise ProfileError("rsi.flat_value muss zwischen 0 und 100 liegen.")
+    return RsiRule(
+        smoothing=cast(
+            RsiSmoothing, _choice(section["smoothing"], _RSI_SMOOTHING, "rsi.smoothing")
+        ),
+        flat_value=float(flat),
+        gaps=cast(MoveGaps, _choice(section["gaps"], _MOVE_GAPS, "rsi.gaps")),
+    )
+
+
+def _atr_rule(section: Mapping[str, Any] | None) -> AtrRule | None:
+    if section is None:
+        return None
+    return AtrRule(
+        smoothing=cast(AtrSmoothing, _choice(section["smoothing"], _ATR_SMOOTHING, "atr.smoothing"))
+    )
+
+
+def _adx_rule(section: Mapping[str, Any] | None) -> AdxRule | None:
+    if section is None:
+        return None
+    return AdxRule(gaps=cast(MoveGaps, _choice(section["gaps"], _MOVE_GAPS, "adx.gaps")))
+
+
+def _min_lookback(data: Mapping[str, Any]) -> int | None:
+    """Optional ``warmup.min_lookback``; characterized legacy profiles do not define it."""
+    if "warmup" not in data:
+        return None
+    warmup = data["warmup"]
+    if not isinstance(warmup, Mapping):
+        raise ProfileError("warmup muss ein Objekt sein.")
+    value = warmup["min_lookback"]
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise ProfileError("warmup.min_lookback muss eine positive ganze Zahl sein.")
+    return value
+
+
+def _profile(data: Mapping[str, Any]) -> IndicatorProfile:
+    _check_header(data)
+    ema = _ema_rule(_section(data, "ema"))
+    rsi = _rsi_rule(_section(data, "rsi"))
+    atr = _atr_rule(_section(data, "atr"))
+    adx = _adx_rule(_section(data, "adx"))
+    macd_section = _section(data, "macd")
+    if macd_section is not None and ema is None:
+        raise ProfileError("macd setzt einen ema-Abschnitt voraus.")
+    if ema is None and rsi is None and atr is None and adx is None:
+        raise ProfileError("Profil legt keinen Indikator fest.")
+    min_lookback = _min_lookback(data)
+    return IndicatorProfile(
+        id=data["id"],
+        version=data["version"],
+        status=data["status"],
+        legal_status=data["legal_status"],
+        source=MappingProxyType(dict(data["source"])),
+        fingerprint=fingerprint(data),
+        summation=cast(Summation, _choice(data["summation"], _SUMMATION, "summation")),
+        ema=ema,
+        rsi=rsi,
+        atr=atr,
+        adx=adx,
+        macd=macd_section is not None,
+        min_lookback=min_lookback,
+    )
+
+
 def profile_from_dict(data: Mapping[str, Any]) -> IndicatorProfile:
     """Validate a profile document; nothing is defaulted silently."""
     try:
-        if data["schema"] != SCHEMA:
-            raise ProfileError("Unbekanntes Profilschema.")
-        for key in ("id", "version", "status", "legal_status"):
-            if not isinstance(data[key], str) or not data[key]:
-                raise ProfileError(f"{key} muss ein nicht leerer Text sein.")
-        if not isinstance(data["source"], Mapping):
-            raise ProfileError("source muss ein Objekt sein.")
-        ema = rsi = atr = adx = None
-        if (section := _section(data, "ema")) is not None:
-            ema = EmaRule(
-                seed=cast(EmaSeed, _choice(section["seed"], _EMA_SEED, "ema.seed")),
-                gaps=cast(EmaGaps, _choice(section["gaps"], _EMA_GAPS, "ema.gaps")),
-            )
-        if (section := _section(data, "rsi")) is not None:
-            flat = section["flat_value"]
-            if isinstance(flat, bool) or not isinstance(flat, (int, float)):
-                raise ProfileError("rsi.flat_value muss eine Zahl sein.")
-            if not 0.0 <= float(flat) <= 100.0:
-                raise ProfileError("rsi.flat_value muss zwischen 0 und 100 liegen.")
-            rsi = RsiRule(
-                smoothing=cast(
-                    RsiSmoothing, _choice(section["smoothing"], _RSI_SMOOTHING, "rsi.smoothing")
-                ),
-                flat_value=float(flat),
-                gaps=cast(MoveGaps, _choice(section["gaps"], _MOVE_GAPS, "rsi.gaps")),
-            )
-        if (section := _section(data, "atr")) is not None:
-            atr = AtrRule(
-                smoothing=cast(
-                    AtrSmoothing, _choice(section["smoothing"], _ATR_SMOOTHING, "atr.smoothing")
-                )
-            )
-        if (section := _section(data, "adx")) is not None:
-            adx = AdxRule(gaps=cast(MoveGaps, _choice(section["gaps"], _MOVE_GAPS, "adx.gaps")))
-        macd_section = _section(data, "macd")
-        if macd_section is not None and ema is None:
-            raise ProfileError("macd setzt einen ema-Abschnitt voraus.")
-        if ema is None and rsi is None and atr is None and adx is None:
-            raise ProfileError("Profil legt keinen Indikator fest.")
-        min_lookback = None
-        if "warmup" in data:  # optional; characterized legacy profiles do not define it
-            warmup = data["warmup"]
-            if not isinstance(warmup, Mapping):
-                raise ProfileError("warmup muss ein Objekt sein.")
-            value = warmup["min_lookback"]
-            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-                raise ProfileError("warmup.min_lookback muss eine positive ganze Zahl sein.")
-            min_lookback = value
-        return IndicatorProfile(
-            id=data["id"],
-            version=data["version"],
-            status=data["status"],
-            legal_status=data["legal_status"],
-            source=MappingProxyType(dict(data["source"])),
-            fingerprint=fingerprint(data),
-            summation=cast(Summation, _choice(data["summation"], _SUMMATION, "summation")),
-            ema=ema,
-            rsi=rsi,
-            atr=atr,
-            adx=adx,
-            macd=macd_section is not None,
-            min_lookback=min_lookback,
-        )
+        return _profile(data)
     except (KeyError, TypeError) as exc:
         raise ProfileError(f"Profil ist unvollständig oder fehlerhaft: {exc!r}") from exc
 
