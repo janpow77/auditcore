@@ -3,10 +3,12 @@
 Behavior of ``janpow77/audit_designer@030a71e``
 (``core/shared/research/register/beneficiaries.py`` and ``state_aid.py``).
 These parsers resemble the flowworkshop ones but are **not** identical:
-``parse_betrag`` understands dot-only thousands (``1.234.567``), ``bis`` ranges
-and German range words, numbers and ``Decimal`` directly; ``parse_datum``
-accepts two-digit years and ISO with time. They remain separately named and
-keep the source symbol names.
+``parse_amount`` understands dot-only thousands (``1.234.567``), ``bis`` ranges
+and German range words, numbers and ``Decimal`` directly; ``parse_date``
+accepts two-digit years and ISO with time. They remain separately named.
+
+The source symbol names ``parse_betrag``, ``parse_satz`` and ``parse_datum``
+stay available as deprecated aliases (``DeprecationWarning``) since 0.1.2.
 """
 
 from __future__ import annotations
@@ -15,6 +17,7 @@ import hashlib
 import math
 import re
 import unicodedata
+import warnings
 from collections.abc import Mapping
 from datetime import date, datetime
 from decimal import Decimal
@@ -56,7 +59,7 @@ _STATE_AID_AMOUNT = AmountGrammar(
 )
 
 
-def parse_betrag(value: object) -> Decimal | None:
+def parse_amount(value: object) -> Decimal | None:
     """Amount; ``None`` when not interpretable (a ``0`` would be a claim).
 
     ``True`` raises like the source (FS-G01).
@@ -72,7 +75,7 @@ def parse_betrag(value: object) -> Decimal | None:
     return _DESIGNER_AMOUNT.parse(value)
 
 
-def parse_satz(value: object) -> Decimal | None:
+def parse_rate(value: object) -> Decimal | None:
     """Co-financing rate in percent; values ≤ 1 without ``%`` are read as fractions."""
     if value is None:
         return None
@@ -82,7 +85,7 @@ def parse_satz(value: object) -> Decimal | None:
     explicit = "%" in text or "prozent" in text.lower()
     text = text.replace("%", "").replace("\xa0", " ")
     text = re.sub(r"prozent|percent", "", text, flags=re.IGNORECASE)
-    number = parse_betrag(text)
+    number = parse_amount(text)
     if number is None:
         return None
     if not explicit and number <= 1:
@@ -92,7 +95,7 @@ def parse_satz(value: object) -> Decimal | None:
     return number
 
 
-def parse_datum(value: object) -> date | None:
+def parse_date(value: object) -> date | None:
     """Date from original text; ISO with time uses the date part."""
     if value is None:
         return None
@@ -170,3 +173,24 @@ def normalize_company_name(text: object, *, drop_filler: bool = False) -> str:
     s = re.sub(r"[^\w\s]", " ", s, flags=re.UNICODE)
     s = re.sub(r"\s+", " ", s).strip()
     return drop_legal_tokens(s, suffixes, fillers, drop_filler=drop_filler)
+
+
+_DEPRECATED_ALIASES = {
+    "parse_betrag": "parse_amount",
+    "parse_satz": "parse_rate",
+    "parse_datum": "parse_date",
+}
+
+
+def __getattr__(name: str) -> object:
+    """Deprecated source names (0.1.1); they return the renamed function and warn."""
+    replacement = _DEPRECATED_ALIASES.get(name)
+    if replacement is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    warnings.warn(
+        f"auditcore_funding_sources.designer.{name} ist veraltet; "
+        f"stattdessen {replacement} verwenden.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return globals()[replacement]

@@ -9,7 +9,7 @@
   "uuid": "NOT_APPLICABLE: selected source contains no UUID generation",
   "rng": "Python random.seed(case.seed), full post-call RNG state SHA256 recorded",
   "package": "auditcore_invoicegenerator",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "source_git_blob": "8f1596a711b228194b58ffc5db6a6e7d0ed049a3",
   "github_blob_verification": "PASS",
   "characterization_cases": 180,
@@ -19,13 +19,14 @@
   "release_authorization": "USER_AUTHORIZED_MIT",
   "publication": "NOT_EXECUTED",
   "consumer": "janpow77/flowinvoice:docs/demo_data/generate_demo_invoices.py:generate_all_invoices/main",
-  "shared_dependency": "auditcore_dummygenerator==0.1.0",
+  "shared_dependency": "auditcore_dummygenerator==0.1.1",
   "modifications": [
     "Explicit Random injection without draw-order changes",
     "Independent-instance public profile instead of import-time global seed",
     "Separate new scenario API using dummy-data package",
     "JSON renderer and typed record facade",
-    "New optional plain-text deterministic PDF renderer; no upstream PDF implementation copied"
+    "New optional plain-text deterministic PDF renderer; no upstream PDF implementation copied",
+    "0.2.1: behavior-preserving refactoring; synthetic catalogs moved unchanged to _legacy_catalog.py, generate_invoice split into helpers with identical RNG draw order"
   ],
   "not_extracted": [
     "generate_sanctions_csv",
@@ -47,7 +48,7 @@
       "status": "DRAFT",
       "created_at": "2026-09-22T16:37:45.821903+00:00",
       "created_at_basis": "Initial package characterization/extraction observation; not original upstream creation date",
-      "modified_at": "2026-09-22T17:06:33.478454+00:00",
+      "modified_at": "2026-09-25T12:30:02.065772+00:00",
       "predecessor_version": null,
       "fork_parent": {
         "repository": "janpow77/flowinvoice",
@@ -56,10 +57,11 @@
         "sha256": "c5ee1e208b6dfb3fa830536ae82763f3dc279c5e90129789c644249750cce379"
       },
       "fork_created_at": "2026-09-22T16:37:45.821903+00:00",
-      "change_reason": "Extract characterized historical demo rules into an installable library; new scenario profile deliberately has a separate contract",
+      "change_reason": "Extract characterized historical demo rules into an installable library; new scenario profile deliberately has a separate contract; package 0.2.1: technical refactoring without rule change (catalog data moved to _legacy_catalog.py, helpers for amounts/supplier block/problem base amounts; 180 characterization cases unchanged; previous _legacy.py sha256 23354c51ec32917208030adad5e034f689cbd32fda81c04e6edb05d4f8d67769)",
       "content_hash_algorithm": "SHA256 per UTF-8 source file; no provenance-file self-reference",
       "content_hashes": {
-        "_legacy.py": "23354c51ec32917208030adad5e034f689cbd32fda81c04e6edb05d4f8d67769",
+        "_legacy.py": "10b9762167df26bf0768f4c1db27d542852b2b7ca249f809110cd95255f4c973",
+        "_legacy_catalog.py": "df68731257dc8c61ed0a7e15faf03390a343134f0609be16a1743a6daf9ff6b9",
         "profiles.py": "d3aded424cee69c32faf5a81417b7e4c2f08a4ffc30ba85668bd04ae0fcd531d"
       },
       "review": {
