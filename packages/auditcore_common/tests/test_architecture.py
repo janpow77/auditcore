@@ -39,7 +39,9 @@ def test_imports_are_standard_library_or_lazy() -> None:
 def test_topic_modules_and_no_catch_all() -> None:
     modules = {path.stem for path in PACKAGE.glob("*.py")} - {"__init__"}
     assert modules == {
+        "aio",
         "clock",
+        "filenames",
         "frozen",
         "hashing",
         "html_text",
@@ -57,8 +59,8 @@ def test_topic_modules_and_no_catch_all() -> None:
 def test_import_loads_no_optional_dependency() -> None:
     code = (
         "import sys, auditcore_common; "
-        "from auditcore_common import clock, frozen, hashing, html_text, ids, json_values, "
-        "numeric, optional, profiles, safe_xml, text; "
+        "from auditcore_common import aio, clock, filenames, frozen, hashing, html_text, ids, "
+        "json_values, numeric, optional, profiles, safe_xml, text; "
         "assert 'defusedxml' not in sys.modules and 'numpy' not in sys.modules"
     )
     subprocess.run([sys.executable, "-c", code], check=True)
@@ -71,3 +73,12 @@ def test_provenance_copies_match() -> None:
         assert json.loads(top.read_text(encoding="utf-8")) == packaged
     assert packaged["version"] == auditcore_common.__version__
     assert packaged["rights"]["authorization"]["status"] == "USER_AUTHORIZED_MIT"
+    assert {s["repository"] for s in packaged["sources"]} == {
+        "janpow77/audit-portal",
+        "janpow77/audit_designer",
+        "janpow77/flowaudit",
+        "janpow77/flowinvoice",
+        "janpow77/regulierung",
+        "janpow77/riskanalysis",
+        "janpow77/versteigerung",
+    }

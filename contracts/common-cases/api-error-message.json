@@ -1,0 +1,142 @@
+{
+  "$schema": "./schema.json",
+  "contract": "api-error-message",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "Fehlertext aus API-Fehler bilden",
+  "description": "Liest Axios-artige Fehler: FastAPI detail als String und als 422-Liste ({loc, msg}), die auditcore-Hülle {error: {code, message}}, Error-Objekte und Strings; sonst Ersatztext. Eine 422-Liste darf nie als „[object Object]“ oder Roh-JSON erscheinen. Bindungen für fetch-basierte Helfer übergeben per Pfad nur error.response.data.",
+  "languages": [
+    "ts"
+  ],
+  "params": [
+    "error",
+    "fallback"
+  ],
+  "result": "text-contains",
+  "cases": [
+    {
+      "id": "detail-string",
+      "input": {
+        "error": {
+          "response": {
+            "status": 404,
+            "data": {
+              "detail": "Vorhaben nicht gefunden"
+            }
+          },
+          "message": "Request failed with status code 404"
+        },
+        "fallback": "Unbekannter Fehler"
+      },
+      "expect": {
+        "contains": [
+          "Vorhaben nicht gefunden"
+        ]
+      }
+    },
+    {
+      "id": "detail-422-liste",
+      "input": {
+        "error": {
+          "response": {
+            "status": 422,
+            "data": {
+              "detail": [
+                {
+                  "loc": [
+                    "body",
+                    "betrag"
+                  ],
+                  "msg": "Input should be a valid number",
+                  "type": "float_parsing"
+                },
+                {
+                  "loc": [
+                    "body",
+                    "datum"
+                  ],
+                  "msg": "Field required",
+                  "type": "missing"
+                }
+              ]
+            }
+          },
+          "message": "Request failed with status code 422"
+        },
+        "fallback": "Unbekannter Fehler"
+      },
+      "expect": {
+        "contains": [
+          "Input should be a valid number",
+          "Field required"
+        ],
+        "not_contains": [
+          "[object Object]",
+          "\"loc\""
+        ]
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "auditcore-huelle",
+      "input": {
+        "error": {
+          "response": {
+            "status": 400,
+            "data": {
+              "error": {
+                "code": "invalid_amount",
+                "message": "Betrag fehlt"
+              }
+            }
+          },
+          "message": "Request failed with status code 400"
+        },
+        "fallback": "Unbekannter Fehler"
+      },
+      "expect": {
+        "contains": [
+          "Betrag fehlt"
+        ]
+      }
+    },
+    {
+      "id": "error-objekt",
+      "input": {
+        "error": {
+          "$error": "Netzwerkfehler"
+        },
+        "fallback": "Unbekannter Fehler"
+      },
+      "expect": {
+        "contains": [
+          "Netzwerkfehler"
+        ]
+      }
+    },
+    {
+      "id": "string",
+      "input": {
+        "error": "Zeitüberschreitung",
+        "fallback": "Unbekannter Fehler"
+      },
+      "expect": {
+        "contains": [
+          "Zeitüberschreitung"
+        ]
+      }
+    },
+    {
+      "id": "unbekannt",
+      "input": {
+        "error": null,
+        "fallback": "Unbekannter Fehler"
+      },
+      "expect": {
+        "value": "Unbekannter Fehler"
+      }
+    }
+  ]
+}

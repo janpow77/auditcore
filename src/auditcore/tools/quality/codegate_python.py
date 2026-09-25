@@ -30,6 +30,7 @@ PYTHON_METRICS = (
     "any_usages",
     "mypy_strict_errors",
     "non_english_identifiers",
+    "duplicate_functions",
 )
 
 

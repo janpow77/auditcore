@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "app": "regulierung",
+  "python": "backend/.venv/bin/python",
+  "scan": {
+    "exclude": ["docs/**", "tools/**", "backend/scripts/**"]
+  },
+  "lint": {
+    "disable": {}
+  },
+  "bindings": [
+    {
+      "id": "ts-zahl-de",
+      "contract": "parse-number",
+      "language": "ts",
+      "module": "frontend/src/lib/numberFormat.ts",
+      "export": "parseNumberDe",
+      "args": ["text"],
+      "select": {"mode": "de"}
+    },
+    {
+      "id": "ts-datum",
+      "contract": "format-date",
+      "language": "ts",
+      "module": "frontend/src/lib/dateFormat.ts",
+      "export": "formatDatumDe"
+    },
+    {
+      "id": "ts-datum-zeit",
+      "contract": "format-datetime",
+      "language": "ts",
+      "module": "frontend/src/lib/dateFormat.ts",
+      "export": "formatDatumZeitDe"
+    },
+    {
+      "id": "ts-datum-nur",
+      "contract": "format-date",
+      "language": "ts",
+      "module": "frontend/src/lib/numberFormat.ts",
+      "export": "formatDateOnly",
+      "args": ["value", {"literal": "—"}]
+    },
+    {
+      "id": "ts-fehlertext",
+      "contract": "api-error-message",
+      "language": "ts",
+      "module": "frontend/src/lib/fehler.ts",
+      "export": "fehlerText",
+      "args": ["error"],
+      "skip": {"unbekannt": "fehlerText hat einen eigenen Standardtext statt eines Ersatzwert-Parameters"}
+    },
+    {
+      "id": "py-zahl-import",
+      "contract": "parse-number",
+      "language": "python",
+      "module": "app.services.harvesting.pipeline",
+      "python_path": ["backend"],
+      "export": "_parse_german_number",
+      "args": ["text"],
+      "select": {"mode": "auto"}
+    }
+  ]
+}
