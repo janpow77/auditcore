@@ -95,8 +95,18 @@ def main() -> int:
         wheels[name] = wheel
     base = f"https://github.com/janpow77/auditcore/releases/download/v{args.release_version}"
     hashes_cache: dict[tuple[str, str], list[str]] = {}
+    executed: list[str] = []
     for package_name, extra in FEATURES.items():
         distribution = package_name.replace("_", "-")
+        if distribution not in packages:
+            # Selective pull-request runs build only the affected packages.
+            result["features"][extra] = {
+                "package": package_name,
+                "status": "NOT_EXECUTED",
+                "reason": "Renderer-Paket in diesem Lauf nicht gebaut (selektive Prüfung)",
+            }
+            save()
+            continue
         selected = {distribution}
         pending = [distribution]
         while pending:
@@ -220,7 +230,8 @@ def main() -> int:
             "status": "PASS",
         }
         save()
-    if args.apt:
+        executed.append(extra)
+    if args.apt and executed:
         if builds["checks"].get("apt-lifecycle", {}).get("status") != "PASS":
             raise ValueError("Signed core APT lifecycle required before renderer APT verification")
         commands = [
@@ -241,8 +252,7 @@ def main() -> int:
             + shlex.join(
                 [f"python3-{p['distribution']}={p['version']}-1" for p in builds["packages"]]
             ),
-            "/usr/bin/python3 -I /proof/smoke-pdf.py",
-            "/usr/bin/python3 -I /proof/smoke-excel.py",
+            *(f"/usr/bin/python3 -I /proof/smoke-{extra}.py" for extra in executed),
             "apt-get remove -y "
             + shlex.join([f"python3-{p['distribution']}" for p in builds["packages"]]),
             "/usr/bin/python3 -I -c "

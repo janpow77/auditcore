@@ -20,6 +20,21 @@
   `update-pr-branches`, `dependabot-automerge` und `nightly` (Vollprüfung mit
   Issue „Nightly rot“), dazu `.github/dependabot.yml` und Auto-Merge im
   Repository. Siehe `docs/deployment/ci-automatisierung.md`.
+
+## 0.3.0
+
+- Helfer-Verträge für App-Repositorys (Nutzerauftrag 25.09.2026, „Frontend-
+  inventur im Code einbauen, damit die Fehler immer identifiziert werden“):
+  neues Modul `auditcore.tools.helpers`, Befehl `auditcore-helpers`
+  (`scan`, `lint`, `contracts`, `check`, `toolchain`, `rules`), gemeinsame
+  Vertragsfälle `contracts/common-cases/*.json` (11 Verträge, 165 Fälle,
+  JSON-Schema, Festlegungen vorläufig in `DECISIONS.md`), 11 deklarative
+  Regeln (u. a. Zahlparser wie `BeleglisteGrid.parseDecimal`, Datum ohne
+  Zeitzone, handgebaute €-Formatierung, CSV ohne Formelschutz, 422-Fehlertexte;
+  zwei Regeln führen erkannte Helfer isoliert aus), Ratchet gegen
+  `.auditcore/helpers-baseline.json`, Action `.github/actions/helper-contracts`,
+  Nachtlauf `scripts/helpers_nightly.sh` mit systemd-User-Timer (nicht
+  aktiviert). Siehe `docs/quality/helper-contracts.md`.
 - Verbindliche Code-Qualitätsmaßstäbe als Ratchet (Rechteinhaber, 25.09.2026):
   neue Module `auditcore.tools.quality.codegate*`, Befehl
   `auditcore-codegate check` bzw. `scripts/verify_code_quality.py`, Baseline
