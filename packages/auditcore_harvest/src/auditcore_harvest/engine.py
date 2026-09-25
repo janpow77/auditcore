@@ -24,7 +24,6 @@ from __future__ import annotations
 import random
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import Any
 
 from .adapter import FetchContext, SourceAdapter
 from .errors import (
@@ -33,12 +32,13 @@ from .errors import (
     HarvestError,
     LimitReached,
     ParserError,
-    RateLimitError,
     SinkError,
 )
 from .model import (
     CONTRACT_VERSION,
+    JSON,
     Checkpoint,
+    Cursor,
     HarvestRecord,
     HarvestRequest,
     HarvestResult,
@@ -49,63 +49,16 @@ from .model import (
     SnapshotSemantics,
     Source,
 )
+from .policies import CancelToken, RateLimit, RetryPolicy
 from .ports import Clock, CredentialProvider, EventSink, Sink, Sleeper, StateStore, Transport
 
-
-@dataclass(frozen=True)
-class RetryPolicy:
-    """Bounded exponential backoff with jitter; honours ``Retry-After`` up to a cap."""
-
-    max_attempts: int = 3
-    base_delay: float = 1.0
-    max_delay: float = 60.0
-    jitter: float = 0.1
-    max_retry_after: float = 300.0
-
-    def delay(self, attempt: int, error: HarvestError, rng: random.Random) -> float | None:
-        """Seconds to wait before the next attempt, or ``None`` to give up."""
-        if attempt >= self.max_attempts or not error.retryable:
-            return None
-        if isinstance(error, RateLimitError) and error.retry_after is not None:
-            if error.retry_after > self.max_retry_after:
-                return None
-            return max(0.0, float(error.retry_after))
-        backoff = min(self.max_delay, self.base_delay * (2.0 ** (attempt - 1)))
-        return backoff * (1.0 + self.jitter * rng.random())
-
-
-@dataclass
-class RateLimit:
-    """Minimum interval between two requests of a run."""
-
-    min_interval_seconds: float = 0.0
-    _last: float | None = field(default=None, init=False, repr=False)
-
-    def wait(self, clock: Clock, sleeper: Sleeper) -> None:
-        """Sleep until the interval has passed."""
-        now = clock.monotonic()
-        if self._last is not None:
-            remaining = self.min_interval_seconds - (now - self._last)
-            if remaining > 0:
-                sleeper.sleep(remaining)
-        self._last = clock.monotonic()
-
-
-@dataclass
-class CancelToken:
-    """Cooperative cancellation checked between pages and attempts."""
-
-    cancelled: bool = False
-
-    def cancel(self) -> None:
-        """Request cancellation."""
-        self.cancelled = True
+__all__ = ["CancelToken", "HarvestEngine", "RateLimit", "RetryPolicy"]
 
 
 class _NullEvents:
     """Default event sink that discards events."""
 
-    def emit(self, event: Mapping[str, Any]) -> None:
+    def emit(self, event: Mapping[str, JSON]) -> None:
         """Discard the event."""
         return None
 
@@ -125,7 +78,7 @@ class HarvestEngine:
     events: EventSink = field(default_factory=_NullEvents)
     rng: random.Random = field(default_factory=lambda: random.Random(0))
 
-    def _emit(self, kind: str, request: HarvestRequest, **fields: Any) -> None:
+    def _emit(self, kind: str, request: HarvestRequest, **fields: object) -> None:
         self.events.emit(
             {
                 "event": kind,
@@ -140,7 +93,7 @@ class HarvestEngine:
         self,
         adapter: SourceAdapter,
         context: FetchContext,
-        cursor: Mapping[str, Any] | None,
+        cursor: Cursor | None,
         cancel: CancelToken,
         deadline: float,
         counter: list[int],
@@ -177,9 +130,7 @@ class HarvestEngine:
             return page
 
     @staticmethod
-    def _check_page(
-        adapter: SourceAdapter, page: PageResult, cursor: Mapping[str, Any] | None
-    ) -> None:
+    def _check_page(adapter: SourceAdapter, page: PageResult, cursor: Cursor | None) -> None:
         source_id = adapter.source.source_id
         if any(r.source_id != source_id for r in page.records):
             raise ParserError("Seite enthält Datensätze einer anderen Quelle.")
@@ -197,7 +148,7 @@ class HarvestEngine:
 
     def _start_cursor(
         self, adapter: SourceAdapter, request: HarvestRequest, before: Checkpoint | None
-    ) -> Mapping[str, Any] | None:
+    ) -> Cursor | None:
         """Cursor to resume from; a checkpoint of another profile version is refused."""
         source = adapter.source
         if before is None or not request.resume:
@@ -273,13 +224,49 @@ class HarvestEngine:
         self.state.save(checkpoint, run.current)
         run.current = checkpoint
 
+    def _pages(
+        self,
+        run: _Run,
+        adapter: SourceAdapter,
+        request: HarvestRequest,
+        sink: Sink,
+        settings: Mapping[str, JSON],
+        cursor: Cursor | None,
+        cancel: CancelToken,
+    ) -> None:
+        """Fetch, check, deliver and confirm pages until the source reports completion."""
+        while True:
+            self._limits(run, request, cancel)
+            context = FetchContext(
+                request,
+                settings,
+                self.transport,
+                self.credentials,
+                self.clock,
+                self.request_timeout,
+                run.pages + 1,
+            )
+            page = self._fetch(adapter, context, cursor, cancel, run.deadline, run.attempts)
+            run.pages += 1
+            run.received += len(page.records)
+            self._check_page(adapter, page, cursor)
+            fresh = self._deliver(run, page, sink, request)
+            self._confirm(run, adapter, request, page, fresh)
+            cursor = page.next_cursor
+            self._emit(
+                "page_confirmed", request, page=run.pages, records=fresh, complete=page.complete
+            )
+            if page.complete:
+                run.exhausted = True
+                return
+
     def run(
         self,
         adapter: SourceAdapter,
         request: HarvestRequest,
         sink: Sink,
         *,
-        config: Mapping[str, Any] | None = None,
+        config: Mapping[str, JSON] | None = None,
         cancel: CancelToken | None = None,
     ) -> HarvestResult:
         """Execute one bounded run and return a structured result.
@@ -303,30 +290,7 @@ class HarvestEngine:
             cursor = self._start_cursor(adapter, request, run.before)
             run.from_beginning = cursor is None
             self._emit("run_started", request, resume=cursor is not None)
-            while True:
-                self._limits(run, request, cancel)
-                context = FetchContext(
-                    request,
-                    settings,
-                    self.transport,
-                    self.credentials,
-                    self.clock,
-                    self.request_timeout,
-                    run.pages + 1,
-                )
-                page = self._fetch(adapter, context, cursor, cancel, run.deadline, run.attempts)
-                run.pages += 1
-                run.received += len(page.records)
-                self._check_page(adapter, page, cursor)
-                fresh = self._deliver(run, page, sink, request)
-                self._confirm(run, adapter, request, page, fresh)
-                cursor = page.next_cursor
-                self._emit(
-                    "page_confirmed", request, page=run.pages, records=fresh, complete=page.complete
-                )
-                if page.complete:
-                    run.exhausted = True
-                    break
+            self._pages(run, adapter, request, sink, settings, cursor, cancel)
             status = RunStatus.PARTIAL if run.partial else RunStatus.COMPLETE
         except Cancelled as error:
             run.errors.append(error.to_dict())
@@ -361,7 +325,7 @@ class _Run:
     dup_sink: int = 0
     attempts: list[int] = field(default_factory=lambda: [0])
     issues: list[RecordIssue] = field(default_factory=list)
-    errors: list[dict[str, Any]] = field(default_factory=list)
+    errors: list[dict[str, JSON]] = field(default_factory=list)
     seen: set[tuple[tuple[str, str], str]] = field(default_factory=set)
     before: Checkpoint | None = None
     current: Checkpoint | None = None
