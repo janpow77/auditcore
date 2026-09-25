@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from typing import TypedDict
 
+from auditcore_common.text import group_thousands_de
+
 from . import chambers
 from .chambers import ChamberRecord
 
@@ -14,10 +16,6 @@ ScriptRun = TypedDict(
 )
 
 
-def _count(n: int) -> str:
-    return f"{n:,}".replace(",", ".")
-
-
 def osint_zer(status: bytes, register: bytes) -> ScriptRun:
     """``zer_holen``: returned count, written file and console output."""
     total = json.loads(status).get("total", 0)
@@ -25,7 +23,7 @@ def osint_zer(status: bytes, register: bytes) -> ScriptRun:
     return {
         "return": len(delivery.records),
         "file": list(delivery.records),
-        "stdout": f"  Register meldet {_count(total)} Einträge, lade …\n",
+        "stdout": f"  Register meldet {group_thousands_de(total)} Einträge, lade …\n",
         "stderr": "",
     }
 

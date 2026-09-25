@@ -9,18 +9,23 @@ implicit default and nothing here harmonises them.
 
 from __future__ import annotations
 
-import hashlib
-import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from importlib import resources
-from types import MappingProxyType
 from typing import Any
+
+from auditcore_common.frozen import freeze
+from auditcore_common.hashing import canonical_sha256
+from auditcore_common.profiles import (
+    load_packaged_profile,
+    packaged_profile_ids,
+    recommended_profile_id,
+)
 
 from ._types import JsonValue
 from .errors import ProfileError
 
 SCHEMA = "auditcore_registry_sources.profile/1"
+_RESOURCES = "auditcore_registry_sources.profile_data"
 KINDS = frozenset(
     {
         "list_catalog",
@@ -38,16 +43,12 @@ STATUSES = frozenset(
 
 def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
-    canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return canonical_sha256(data)
 
 
 def _freeze(value: Any) -> Any:
-    if isinstance(value, dict):
-        return MappingProxyType({k: _freeze(v) for k, v in value.items()})
-    if isinstance(value, list):
-        return tuple(_freeze(v) for v in value)
-    return value
+    """:func:`auditcore_common.frozen.freeze`, typed ``Any`` for the dataclass fields."""
+    return freeze(value)
 
 
 @dataclass(frozen=True)
@@ -125,38 +126,23 @@ def recommended_profile(purpose: str) -> RegistryProfile:
     ``sme``, ``company_verification``. Named profiles keep their results; the
     recommendation only says which one to choose.
     """
-    found = []
-    for entry in resources.files("auditcore_registry_sources.profile_data").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            if purpose in data.get("recommended_for", []):
-                found.append((str(data["id"]), str(data["version"])))
-    if len(found) != 1:
-        raise ProfileError(f"Für '{purpose}' ist kein eindeutiges empfohlenes Profil hinterlegt.")
-    return load_profile(*found[0])
+    return load_profile(*recommended_profile_id(_RESOURCES, purpose, ProfileError))
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
     """Packaged ``(id, version)`` pairs; no profile is an implicit default."""
-    found = []
-    for entry in resources.files("auditcore_registry_sources.profile_data").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            found.append((str(data["id"]), str(data["version"])))
-    return tuple(sorted(found))
+    return packaged_profile_ids(_RESOURCES)
 
 
 def load_profile(profile_id: str, version: str) -> RegistryProfile:
     """Load an explicitly named packaged profile version."""
-    if not isinstance(profile_id, str) or not isinstance(version, str):
-        raise ProfileError("Profilkennung und Version sind als Text anzugeben.")
-    name = f"{profile_id}-{version}.json"
-    if "/" in name or "\\" in name:
-        raise ProfileError("Ungültige Profilkennung.")
-    entry = resources.files("auditcore_registry_sources.profile_data").joinpath(name)
-    if not entry.is_file():
-        raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
-    profile = profile_from_dict(json.loads(entry.read_text(encoding="utf-8")))
-    if (profile.id, profile.version) != (profile_id, version):
-        raise ProfileError("Profildatei und Profilkennung stimmen nicht überein.")
-    return profile
+    return load_packaged_profile(
+        _RESOURCES,
+        profile_id,
+        version,
+        parse=profile_from_dict,
+        identity=lambda profile: (profile.id, profile.version),
+        error=ProfileError,
+        require_text=True,
+        invalid_name="invalid",
+    )

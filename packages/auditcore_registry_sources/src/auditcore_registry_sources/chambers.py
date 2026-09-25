@@ -14,10 +14,11 @@ a delivery incomplete instead of a silent success.
 
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass
 from typing import Any, TypedDict
+
+from auditcore_common.json_values import decode_json
 
 from .errors import DependencyError, FormatError
 
@@ -66,10 +67,9 @@ class AddressDelivery:
 
 
 def _json(data: bytes, what: str) -> Any:
-    try:
-        return json.loads(data)
-    except ValueError as exc:
-        raise FormatError(f"{what}: keine gültige JSON-Antwort ({exc}).") from exc
+    return decode_json(
+        data, lambda exc: FormatError(f"{what}: keine gültige JSON-Antwort ({exc}).")
+    )
 
 
 def parse_zer_status(data: bytes) -> int:
