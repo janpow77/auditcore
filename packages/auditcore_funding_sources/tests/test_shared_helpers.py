@@ -27,14 +27,14 @@ def test_separators_follow_the_variant() -> None:
 
 
 def test_grammars_keep_their_differences() -> None:
-    assert designer.parse_betrag("1.234.567") == Decimal("1234567")
+    assert designer.parse_amount("1.234.567") == Decimal("1234567")
     assert workshop.parse_amount("1.234.567") is None
-    assert designer.parse_betrag("weniger als 5.000 EUR") == Decimal("5000")
+    assert designer.parse_amount("weniger als 5.000 EUR") == Decimal("5000")
     assert designer.state_aid_parse_amount("weniger als 5.000") is None
     assert designer.state_aid_parse_amount("1 bis 2,5") == Decimal("2.5")
     assert workshop.parse_amount("1 bis 2,5") is None
     assert workshop.parse_amount("1 to 2,5") == Decimal("2.5")
-    assert designer.parse_betrag("–") is None
+    assert designer.parse_amount("–") is None
     assert workshop.parse_amount("–") is None
 
 
