@@ -142,11 +142,11 @@
     },
     "auditcore_invoicesynth": {
       "metrics": {
-        "any_usages": 54,
-        "complexity_over_10": 6,
+        "any_usages": 41,
+        "complexity_over_10": 0,
         "duplicate_functions": 0,
-        "functions_over_60_lines": 7,
-        "modules_over_400_lines": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
