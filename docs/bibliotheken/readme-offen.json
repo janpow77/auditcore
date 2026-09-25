@@ -8,7 +8,6 @@
     "auditcore_harvest",
     "auditcore_invoicegenerator",
     "auditcore_kanban",
-    "auditcore_price_analysis",
     "auditcore_procurement",
     "auditcore_risk",
     "auditcore_sampling",

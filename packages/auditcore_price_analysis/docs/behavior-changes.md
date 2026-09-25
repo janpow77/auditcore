@@ -32,9 +32,15 @@ bzw. Fehler in `tests/fixtures/regulierung_calculator_observed.json`.
 | PA-L12 | `determine_compliance`: Median ≤ 0 → „gruen“; Gleitkommaartefakte an den Grenzen (1,1 zu 1,0 → „gelb“ statt „gruen“; 3,6 zu 3,0 → „rot“ statt „gelb“); negative Schwelle wird verarbeitet | Exakte Abweichung; ohne positiven Median `None`; negative Schwelle ist ein ungültiges Profil |
 | PA-L13 | Gruppenstatistik: leere Gruppe → alle Kennzahlen 0; `round` auf Binärwerten (2,675 → 2,67) | Leere Gruppe → `None`; exakte ROUND_HALF_UP-Rundung; Populations-Standardabweichung als benannte Profilvariante (`sample` möglich) |
 | PA-L14 | Komponente des nicht aktiven Umlagenregimes wird nicht geprüft (negativer Wert akzeptiert, nw-umlage-005) | Alle Bestandteile werden validiert; nicht anwendbare Zeile mit Status `nicht_anwendbar` |
-| PA-L15 | Zahlentext mit Exponent („1e2“) wird als 100 akzeptiert (nw-ungueltig-010) | Nur einfache Dezimalschreibweise; Dezimalkomma wird nie umgedeutet |
+| PA-L15 | Zahlentext mit Exponent („1e2“) wird als 100 akzeptiert (nw-ungueltig-010) | Nur einfache Dezimalschreibweise, kein Exponent; bis 0.1.1 wurde jedes Dezimalkomma abgelehnt, ab 0.1.2 wird deutsche Schreibweise gelesen → **PA-C01** |
 | PA-L16 | Unbekannte Preisschlüssel werden ignoriert (Tippfehler bleiben unbemerkt, nw-ungueltig-015) | Fehler `unknown_component`; zusätzliche Angaben in Staffelstufen werden in `issues` genannt |
 | PA-L17 | Q3-Toleranz im Gleitkomma: \|4,01 − 4,0\| gilt als Treffer (wasser-auswahl-005) | Exakter Vergleich `< 0,01`; 4,01 ist Rückfall mit `nicht_verfuegbar_fuer_q3` |
+
+## Korrekturen nach Veröffentlichung (PA-C)
+
+| Nr. | Bis 0.1.1 (jetzt `legacy_parse_decimal`) | Ab 0.1.2 (`parse_decimal`) | Grundlage |
+|---|---|---|---|
+| PA-C01 | Zahlentext nur mit Dezimalpunkt; jedes Komma → `invalid_number` („Dezimalkomma wird nicht umgedeutet“). Deutsche Beträge wie „1.234,56“, „1234,56“ oder „10,82“ waren nicht lesbar (Original regulierung ebenso: nw-verbrauch-013, nw-ungueltig-001, wa-verbrauch-011, wa-ungueltig-001, wa-staffelform-025/026). | Einfacher Punkttext (`"2.5"`, `"1.234"`, `".5"`) bleibt das eigene Textformat des Pakets und behält seinen Wert. Jeder andere Text wird nach dem gemeinsamen Vertrag `contracts/common-cases/parse-number.json`, Modus `de`, über `auditcore_common.numbers_de` gelesen: Dezimalkomma, Punkte nur als Tausendertrenner in Dreiergruppen, höchstens zwei Nachkommastellen, `€`/`EUR`/Leerraum erlaubt („1.234,56 €“ → 1234.56, „1.000.000“ → 1000000). Mehrdeutiges („1,234“, „0,125“, „1.234 €“) → neuer Code `ambiguous_number` mit Hinweis statt einer geratenen Zahl; sonst `invalid_number`. `Decimal`, `int` und `float` unverändert. | Nutzerauftrag 25.09.2026 („deutsche Beträge korrekt lesen“), Festlegungen in `contracts/common-cases/DECISIONS.md`. Drei oder mehr Nachkommastellen (Arbeitspreise in ct/kWh) weiter in Punktschreibweise oder als `Decimal`. Tests: `tests/test_parse_decimal_de.py` (alle `de`-Fälle des Vertrags mit Komma bzw. Währung; die vier Punkttexte „1.5“, „1.23“, „1.234“, „-1.234“ sind hier bewusst Dezimalzahlen), Rechnung mit Kommatext gleich Rechnung mit Punkttext. |
 
 ## Beobachtungen am Consumer (nicht Teil der Bibliothek)
 

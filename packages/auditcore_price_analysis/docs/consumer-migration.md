@@ -80,3 +80,13 @@ ergebnis = calculate(tarif, profil, consumption=verbrauch, stichtag=stichtag)
   schließt abgelaufene Preiszeilen (`valid_to`) aus.
 - `None` durchreichen statt `float(x or 0)`, sonst bleibt ein fehlender Preis
   unsichtbar.
+
+## Ab 0.1.2: deutsche Zahlentexte (PA-C01)
+
+`parse_decimal` liest Texte wie „1.234,56 €“ oder „10,82“ jetzt selbst
+(bisher `invalid_number`); mehrdeutige Texte („1,234“) ergeben
+`ambiguous_number`. Punkttext, `Decimal` und `float` rechnen unverändert.
+regulierung übergibt Preise aus der Datenbank als Zahl und ist deshalb nicht
+betroffen; wer Eingaben aus Formularen oder CSV durchreicht, sollte
+`ambiguous_number` wie `invalid_number` als Eingabefehler anzeigen (Meldung
+enthält den Hinweis). Pflichtabhängigkeit `auditcore_common==0.1.1`.
