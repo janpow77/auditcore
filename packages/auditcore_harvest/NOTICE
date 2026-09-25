@@ -1,4 +1,4 @@
-auditcore_harvest 0.1.0 — attribution and authorization
+auditcore_harvest 0.1.1 — attribution and authorization
 
 The shared harvest contract is a new implementation. Its design was derived
 from the characterized behavior (not copied code) of these existing bases:
