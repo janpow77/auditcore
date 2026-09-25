@@ -320,7 +320,7 @@ def _render(tables: Sequence[Table]) -> bytes:
 def render_register_xlsx(report: Mapping[str, Any]) -> bytes:
     """Register report (see :func:`~auditcore_dataprotection.export.register_report`) as XLSX.
 
-    Uses the generic workbook renderer of ``auditcore_reporting`` 0.2.0.
+    Uses the generic workbook renderer of ``auditcore_reporting`` 0.2.1.
     """
     return _render(register_tables(report))
 

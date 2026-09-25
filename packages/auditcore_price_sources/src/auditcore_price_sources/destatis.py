@@ -19,20 +19,20 @@ import base64
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from typing import Any
 
 from auditcore_harvest import (
+    JSON,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
-    HarvestRecord,
     PageResult,
-    PageStatus,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    page_result,
 )
 
 KRAFTSTOFF_TABELLEN = ("61243-0001", "61241-0004")
@@ -74,7 +74,7 @@ class FfcsvTable:
     rows: tuple[FfcsvRow, ...]
     unreadable: int
 
-    def summary(self) -> dict[str, Any]:
+    def summary(self) -> dict[str, JSON]:
         """Explicit time reference and units of the table."""
         return {
             "struktur": self.structure,
@@ -148,55 +148,42 @@ class DestatisTabellenAdapter:
             raise ConfigError("Mindestens eine Tabelle angeben.")
         self.tables = tuple(tables)
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` (``…/data/tablefile``) and ``username`` are required."""
         if not isinstance(config.get("url"), str) or not isinstance(config.get("username"), str):
             raise ConfigError("url und username sind anzugeben.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch one table; the secret ``token`` goes into the ``password`` parameter."""
         index = int((cursor or {}).get("tabelle", 0))
-        tabelle = self.tables[index]
+        table = self.tables[index]
         params = {
             "username": str(context.config["username"]),
             "password": context.secret(QUELLE.source_id, "token"),
-            "name": tabelle,
+            "name": table,
             "area": "all",
             "compress": "false",
             "transpose": "false",
             "format": "ffcsv",
             "language": "de",
         }
-        antwort = context.transport.request(
+        response = context.transport.request(
             "GET", str(context.config["url"]), params=params, timeout=context.timeout
         )
-        weiter = index + 1 < len(self.tables)
-        folge = {"tabelle": index + 1} if weiter else None
-        if antwort.status != 200:
-            return PageResult(
-                (),
-                folge,
-                complete=not weiter,
-                status=PageStatus.PARTIAL,
-                issues=(RecordIssue(tabelle, f"HTTP {antwort.status}"),),
-            )
+        next_cursor = {"tabelle": index + 1} if index + 1 < len(self.tables) else None
+        if response.status != 200:
+            return page_result((), (RecordIssue(table, f"HTTP {response.status}"),), next_cursor)
         try:
-            text = antwort.body.decode("utf-8")
+            text = response.body.decode("utf-8")
         except UnicodeDecodeError as exc:
-            raise ParserError(f"Tabelle {tabelle}: Antwort ist kein UTF-8-Text.") from exc
+            raise ParserError(f"Tabelle {table}: Antwort ist kein UTF-8-Text.") from exc
         if "\x00" in text:
-            raise ParserError(f"Tabelle {tabelle}: Antwort enthält Binärdaten statt ffcsv.")
-        zeilen = text.splitlines()
-        roh = {"tabelle": tabelle, "inhalt_b64": base64.b64encode(antwort.body).decode()}
-        datensatz = HarvestRecord(
-            source_id=QUELLE.source_id,
-            record_id=tabelle,
-            raw=roh,
-            normalized={
-                "tabelle": tabelle,
-                "datensaetze": max(0, len(zeilen) - 1),
-                "inhalt": parse_ffcsv(text).summary(),
-            },
-            provenance=context.provenance(QUELLE, tabelle, roh),
-        )
-        return PageResult((datensatz,), folge, complete=not weiter)
+            raise ParserError(f"Tabelle {table}: Antwort enthält Binärdaten statt ffcsv.")
+        lines = text.splitlines()
+        raw = {"tabelle": table, "inhalt_b64": base64.b64encode(response.body).decode()}
+        normalized = {
+            "tabelle": table,
+            "datensaetze": max(0, len(lines) - 1),
+            "inhalt": parse_ffcsv(text).summary(),
+        }
+        return page_result([context.record(QUELLE, table, raw, normalized, table)], (), next_cursor)
