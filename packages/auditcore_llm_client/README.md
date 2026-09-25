@@ -65,7 +65,9 @@ gilt der App-Default (`internal`, bisheriges Verhalten). Das Gateway antwortet
 bei ungültigem Wert mit HTTP 400 → `SensitivityRejectedError`; lässt die
 wirksame Sensitivität kein verfügbares Modell zu (z. B. `restricted` ohne lokales
 Modell), mit HTTP 403 → `EgressDeniedError` (Audit `ai.egress-denied`, kein
-Upstream-Aufruf). Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
+Upstream-Aufruf). Erkannt werden beide am Response-Header `X-Flow-Agent-Error`
+(`invalid-sensitivity` bzw. `egress-denied`, flow-agent #56); fehlt er (ältere
+Gateways), am `detail`-Text. Beide sind Richtlinienentscheidungen: **nicht** wiederholt,
 nicht im Circuit-Breaker und nicht im Health-Zähler.
 
 ### Denken/Reasoning
