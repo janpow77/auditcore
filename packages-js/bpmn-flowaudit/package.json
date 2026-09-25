@@ -1,0 +1,49 @@
+{
+  "name": "@flowaudit/bpmn-flowaudit",
+  "version": "0.1.0",
+  "description": "FlowAudit-Fachschicht für den BPMN-Editor: Schema flowaudit 1.0/1.1, Akteure, Kennzeichen, Prüfbezüge, Prüfpfad, Durchlauftest, Soll/Ist, Neutralisieren, Berichte (framework-frei, MIT)",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./profile": {
+      "types": "./dist/profile/mitgeliefert.d.ts",
+      "import": "./dist/profile.js"
+    },
+    "./style.css": "./dist/bpmn-flowaudit.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "bpmn-moddle": "^10.3.1"
+  },
+  "peerDependencies": {
+    "@flowaudit/bpmn-editor": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@flowaudit/bpmn-editor": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "diagram-js": "^15.27.1"
+  }
+}
