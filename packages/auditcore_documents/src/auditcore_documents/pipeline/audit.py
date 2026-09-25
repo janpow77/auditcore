@@ -13,8 +13,9 @@ import uuid
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from datetime import datetime
-from types import MappingProxyType
 from typing import Any, Literal, Protocol
+
+from auditcore_common.frozen import freeze, thaw
 
 from auditcore_documents.pipeline.context import utc_now
 
@@ -69,14 +70,6 @@ class AuditEventType:
         return tuple(v for k, v in vars(cls).items() if k.isupper() and isinstance(v, str))
 
 
-def _freeze(value: object) -> object:
-    if isinstance(value, dict):
-        return MappingProxyType({k: _freeze(v) for k, v in value.items()})
-    if isinstance(value, list):
-        return tuple(_freeze(v) for v in value)
-    return value
-
-
 @dataclass(frozen=True)
 class AuditEvent:
     """Unveränderliches Ereignis; ``details`` ist schreibgeschützt."""
@@ -97,14 +90,6 @@ class AuditEvent:
 
     def details_dict(self) -> Any:
         """Tiefe, veränderbare Kopie der Details (für JSON/Persistenz)."""
-
-        def thaw(value: object) -> object:
-            if isinstance(value, MappingProxyType):
-                return {k: thaw(v) for k, v in value.items()}
-            if isinstance(value, tuple):
-                return [thaw(v) for v in value]
-            return value
-
         return thaw(self.details)
 
 
@@ -159,7 +144,7 @@ class InMemoryAuditLog:
             actor_type=actor_type,
             actor_id=actor_id,
             hash_original=hash_original,
-            details=_freeze(copy.deepcopy(details)),
+            details=freeze(copy.deepcopy(details)),
             pipeline_version=pipeline_version,
             ocr_engine_version=ocr_engine_version,
             ruleset_version=ruleset_version,
