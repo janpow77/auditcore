@@ -25,6 +25,7 @@ auditcore-bibquality = "auditcore.tools.quality.cli:main"
 auditcore-consolidate = "auditcore.tools.consolidator.cli:main"
 auditcore-refactor = "auditcore.tools.apprefactor.cli:main"
 auditcore-deploy = "auditcore.tools.deployer.cli:main"
+auditcore-codegate = "auditcore.tools.quality.codegate_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
