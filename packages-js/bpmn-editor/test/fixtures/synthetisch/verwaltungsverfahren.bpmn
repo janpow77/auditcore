@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Defs_Synth" targetNamespace="http://flowaudit.de/efre/synthetisch/verwaltungsverfahren" exporter="Synthetischer Erzeuger" exporterVersion="1.0">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_1" name="Musterverfahren (synthetisch) — Antrag bis Bescheid" processRef="Process_1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_1" name="Antragstellende Einrichtung (fiktiv)">
+        <bpmn:flowNodeRef>Start_Antrag</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_24</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_24</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_2" name="Eingangsstelle">
+        <bpmn:flowNodeRef>Task_01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachforderung_08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_09</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachforderung_16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachforderung_24</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_3" name="Sachbearbeitung Förderreferat">
+        <bpmn:flowNodeRef>Task_02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_18</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_4" name="Fachliche Prüfung">
+        <bpmn:flowNodeRef>Task_03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_19</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_5" name="Referatsleitung">
+        <bpmn:flowNodeRef>Task_04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_20</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_6" name="Haushaltsstelle">
+        <bpmn:flowNodeRef>Task_Nachforderung_04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachforderung_12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachforderung_20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_21</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_7" name="Innenrevision (Musterbehörde)">
+        <bpmn:flowNodeRef>Task_06</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_14</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_22</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_8" name="Archiv und Registratur">
+        <bpmn:flowNodeRef>Task_07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_23</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Bescheid</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Antrag" name="Antrag liegt vor">
+      <bpmn:documentation>Der Antrag wird über ein Portal eingereicht (fiktives Beispiel).</bpmn:documentation>
+      <bpmn:outgoing>Flow_001</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_01" name="Eingang: Schritt 1 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 1 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_001</bpmn:incoming>
+      <bpmn:outgoing>Flow_002</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_02" name="Sachbearbeitung: Schritt 2 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 2 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_002</bpmn:incoming>
+      <bpmn:outgoing>Flow_003</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="Task_03" name="Fachprüfung: Schritt 3 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 3 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_003</bpmn:incoming>
+      <bpmn:outgoing>Flow_004</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="Task_04" name="Leitung: Schritt 4 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 4 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_004</bpmn:incoming>
+      <bpmn:incoming>Flow_007</bpmn:incoming>
+      <bpmn:outgoing>Flow_005</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_04" name="Unterlagen vollständig?">
+      <bpmn:documentation>Entscheidung nach Aktenlage.</bpmn:documentation>
+      <bpmn:incoming>Flow_005</bpmn:incoming>
+      <bpmn:outgoing>Flow_006</bpmn:outgoing>
+      <bpmn:outgoing>Flow_009</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachforderung_04" name="Haushalt: Unterlagen nachfordern">
+      <bpmn:documentation>Nachforderung mit Fristsetzung.</bpmn:documentation>
+      <bpmn:incoming>Flow_006</bpmn:incoming>
+      <bpmn:outgoing>Flow_007</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:serviceTask id="Task_05" name="Haushalt: Schritt 5 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 5 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_009</bpmn:incoming>
+      <bpmn:outgoing>Flow_010</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:task id="Task_06" name="Revision: Schritt 6 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 6 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_010</bpmn:incoming>
+      <bpmn:outgoing>Flow_011</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_07" name="Registratur: Schritt 7 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 7 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_011</bpmn:incoming>
+      <bpmn:outgoing>Flow_012</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_08" name="Antragsteller: Schritt 8 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 8 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_012</bpmn:incoming>
+      <bpmn:incoming>Flow_015</bpmn:incoming>
+      <bpmn:outgoing>Flow_013</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_08" name="Unterlagen vollständig?">
+      <bpmn:documentation>Entscheidung nach Aktenlage.</bpmn:documentation>
+      <bpmn:incoming>Flow_013</bpmn:incoming>
+      <bpmn:outgoing>Flow_014</bpmn:outgoing>
+      <bpmn:outgoing>Flow_017</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachforderung_08" name="Eingang: Unterlagen nachfordern">
+      <bpmn:documentation>Nachforderung mit Fristsetzung.</bpmn:documentation>
+      <bpmn:incoming>Flow_014</bpmn:incoming>
+      <bpmn:outgoing>Flow_015</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_09" name="Eingang: Schritt 9 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 9 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_017</bpmn:incoming>
+      <bpmn:outgoing>Flow_018</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="Task_10" name="Sachbearbeitung: Schritt 10 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 10 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_018</bpmn:incoming>
+      <bpmn:outgoing>Flow_019</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="Task_11" name="Fachprüfung: Schritt 11 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 11 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_019</bpmn:incoming>
+      <bpmn:outgoing>Flow_020</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_12" name="Leitung: Schritt 12 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 12 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_020</bpmn:incoming>
+      <bpmn:incoming>Flow_023</bpmn:incoming>
+      <bpmn:outgoing>Flow_021</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_12" name="Unterlagen vollständig?">
+      <bpmn:documentation>Entscheidung nach Aktenlage.</bpmn:documentation>
+      <bpmn:incoming>Flow_021</bpmn:incoming>
+      <bpmn:outgoing>Flow_022</bpmn:outgoing>
+      <bpmn:outgoing>Flow_025</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachforderung_12" name="Haushalt: Unterlagen nachfordern">
+      <bpmn:documentation>Nachforderung mit Fristsetzung.</bpmn:documentation>
+      <bpmn:incoming>Flow_022</bpmn:incoming>
+      <bpmn:outgoing>Flow_023</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_13" name="Haushalt: Schritt 13 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 13 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_025</bpmn:incoming>
+      <bpmn:outgoing>Flow_026</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_14" name="Revision: Schritt 14 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 14 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_026</bpmn:incoming>
+      <bpmn:outgoing>Flow_027</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_15" name="Registratur: Schritt 15 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 15 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_027</bpmn:incoming>
+      <bpmn:outgoing>Flow_028</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:serviceTask id="Task_16" name="Antragsteller: Schritt 16 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 16 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_028</bpmn:incoming>
+      <bpmn:incoming>Flow_031</bpmn:incoming>
+      <bpmn:outgoing>Flow_029</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_16" name="Unterlagen vollständig?">
+      <bpmn:documentation>Entscheidung nach Aktenlage.</bpmn:documentation>
+      <bpmn:incoming>Flow_029</bpmn:incoming>
+      <bpmn:outgoing>Flow_030</bpmn:outgoing>
+      <bpmn:outgoing>Flow_033</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachforderung_16" name="Eingang: Unterlagen nachfordern">
+      <bpmn:documentation>Nachforderung mit Fristsetzung.</bpmn:documentation>
+      <bpmn:incoming>Flow_030</bpmn:incoming>
+      <bpmn:outgoing>Flow_031</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="Task_17" name="Eingang: Schritt 17 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 17 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_033</bpmn:incoming>
+      <bpmn:outgoing>Flow_034</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:task id="Task_18" name="Sachbearbeitung: Schritt 18 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 18 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_034</bpmn:incoming>
+      <bpmn:outgoing>Flow_035</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_19" name="Fachprüfung: Schritt 19 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 19 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_035</bpmn:incoming>
+      <bpmn:outgoing>Flow_036</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_20" name="Leitung: Schritt 20 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 20 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_036</bpmn:incoming>
+      <bpmn:incoming>Flow_039</bpmn:incoming>
+      <bpmn:outgoing>Flow_037</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_20" name="Unterlagen vollständig?">
+      <bpmn:documentation>Entscheidung nach Aktenlage.</bpmn:documentation>
+      <bpmn:incoming>Flow_037</bpmn:incoming>
+      <bpmn:outgoing>Flow_038</bpmn:outgoing>
+      <bpmn:outgoing>Flow_041</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachforderung_20" name="Haushalt: Unterlagen nachfordern">
+      <bpmn:documentation>Nachforderung mit Fristsetzung.</bpmn:documentation>
+      <bpmn:incoming>Flow_038</bpmn:incoming>
+      <bpmn:outgoing>Flow_039</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_21" name="Haushalt: Schritt 21 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 21 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_041</bpmn:incoming>
+      <bpmn:outgoing>Flow_042</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_22" name="Revision: Schritt 22 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 22 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_042</bpmn:incoming>
+      <bpmn:outgoing>Flow_043</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_23" name="Registratur: Schritt 23 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 23 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_043</bpmn:incoming>
+      <bpmn:outgoing>Flow_044</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:userTask id="Task_24" name="Antragsteller: Schritt 24 bearbeiten">
+      <bpmn:documentation>Beschreibung des Schritts 24 mit Prüfhinweisen, Fristen und Zuständigkeiten (synthetisch). Umlaute: Prüfung, Übergabe, Größe.</bpmn:documentation>
+      <bpmn:incoming>Flow_044</bpmn:incoming>
+      <bpmn:incoming>Flow_047</bpmn:incoming>
+      <bpmn:outgoing>Flow_045</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_24" name="Unterlagen vollständig?">
+      <bpmn:documentation>Entscheidung nach Aktenlage.</bpmn:documentation>
+      <bpmn:incoming>Flow_045</bpmn:incoming>
+      <bpmn:outgoing>Flow_046</bpmn:outgoing>
+      <bpmn:outgoing>Flow_049</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachforderung_24" name="Eingang: Unterlagen nachfordern">
+      <bpmn:documentation>Nachforderung mit Fristsetzung.</bpmn:documentation>
+      <bpmn:incoming>Flow_046</bpmn:incoming>
+      <bpmn:outgoing>Flow_047</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Bescheid" name="Bescheid erteilt">
+      <bpmn:documentation>Abschluss des Verfahrens.</bpmn:documentation>
+      <bpmn:incoming>Flow_049</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_001" sourceRef="Start_Antrag" targetRef="Task_01" />
+    <bpmn:sequenceFlow id="Flow_002" sourceRef="Task_01" targetRef="Task_02" />
+    <bpmn:sequenceFlow id="Flow_003" sourceRef="Task_02" targetRef="Task_03" />
+    <bpmn:sequenceFlow id="Flow_004" sourceRef="Task_03" targetRef="Task_04" />
+    <bpmn:sequenceFlow id="Flow_005" sourceRef="Task_04" targetRef="Gateway_04" />
+    <bpmn:sequenceFlow id="Flow_006" name="nein" sourceRef="Gateway_04" targetRef="Task_Nachforderung_04" />
+    <bpmn:sequenceFlow id="Flow_007" sourceRef="Task_Nachforderung_04" targetRef="Task_04" />
+    <bpmn:sequenceFlow id="Flow_009" name="ja" sourceRef="Gateway_04" targetRef="Task_05" />
+    <bpmn:sequenceFlow id="Flow_010" sourceRef="Task_05" targetRef="Task_06" />
+    <bpmn:sequenceFlow id="Flow_011" sourceRef="Task_06" targetRef="Task_07" />
+    <bpmn:sequenceFlow id="Flow_012" sourceRef="Task_07" targetRef="Task_08" />
+    <bpmn:sequenceFlow id="Flow_013" sourceRef="Task_08" targetRef="Gateway_08" />
+    <bpmn:sequenceFlow id="Flow_014" name="nein" sourceRef="Gateway_08" targetRef="Task_Nachforderung_08" />
+    <bpmn:sequenceFlow id="Flow_015" sourceRef="Task_Nachforderung_08" targetRef="Task_08" />
+    <bpmn:sequenceFlow id="Flow_017" name="ja" sourceRef="Gateway_08" targetRef="Task_09" />
+    <bpmn:sequenceFlow id="Flow_018" sourceRef="Task_09" targetRef="Task_10" />
+    <bpmn:sequenceFlow id="Flow_019" sourceRef="Task_10" targetRef="Task_11" />
+    <bpmn:sequenceFlow id="Flow_020" sourceRef="Task_11" targetRef="Task_12" />
+    <bpmn:sequenceFlow id="Flow_021" sourceRef="Task_12" targetRef="Gateway_12" />
+    <bpmn:sequenceFlow id="Flow_022" name="nein" sourceRef="Gateway_12" targetRef="Task_Nachforderung_12" />
+    <bpmn:sequenceFlow id="Flow_023" sourceRef="Task_Nachforderung_12" targetRef="Task_12" />
+    <bpmn:sequenceFlow id="Flow_025" name="ja" sourceRef="Gateway_12" targetRef="Task_13" />
+    <bpmn:sequenceFlow id="Flow_026" sourceRef="Task_13" targetRef="Task_14" />
+    <bpmn:sequenceFlow id="Flow_027" sourceRef="Task_14" targetRef="Task_15" />
+    <bpmn:sequenceFlow id="Flow_028" sourceRef="Task_15" targetRef="Task_16" />
+    <bpmn:sequenceFlow id="Flow_029" sourceRef="Task_16" targetRef="Gateway_16" />
+    <bpmn:sequenceFlow id="Flow_030" name="nein" sourceRef="Gateway_16" targetRef="Task_Nachforderung_16" />
+    <bpmn:sequenceFlow id="Flow_031" sourceRef="Task_Nachforderung_16" targetRef="Task_16" />
+    <bpmn:sequenceFlow id="Flow_033" name="ja" sourceRef="Gateway_16" targetRef="Task_17" />
+    <bpmn:sequenceFlow id="Flow_034" sourceRef="Task_17" targetRef="Task_18" />
+    <bpmn:sequenceFlow id="Flow_035" sourceRef="Task_18" targetRef="Task_19" />
+    <bpmn:sequenceFlow id="Flow_036" sourceRef="Task_19" targetRef="Task_20" />
+    <bpmn:sequenceFlow id="Flow_037" sourceRef="Task_20" targetRef="Gateway_20" />
+    <bpmn:sequenceFlow id="Flow_038" name="nein" sourceRef="Gateway_20" targetRef="Task_Nachforderung_20" />
+    <bpmn:sequenceFlow id="Flow_039" sourceRef="Task_Nachforderung_20" targetRef="Task_20" />
+    <bpmn:sequenceFlow id="Flow_041" name="ja" sourceRef="Gateway_20" targetRef="Task_21" />
+    <bpmn:sequenceFlow id="Flow_042" sourceRef="Task_21" targetRef="Task_22" />
+    <bpmn:sequenceFlow id="Flow_043" sourceRef="Task_22" targetRef="Task_23" />
+    <bpmn:sequenceFlow id="Flow_044" sourceRef="Task_23" targetRef="Task_24" />
+    <bpmn:sequenceFlow id="Flow_045" sourceRef="Task_24" targetRef="Gateway_24" />
+    <bpmn:sequenceFlow id="Flow_046" name="nein" sourceRef="Gateway_24" targetRef="Task_Nachforderung_24" />
+    <bpmn:sequenceFlow id="Flow_047" sourceRef="Task_Nachforderung_24" targetRef="Task_24" />
+    <bpmn:sequenceFlow id="Flow_049" sourceRef="Gateway_24" targetRef="End_Bescheid" />
+    <bpmn:textAnnotation id="Note_06">
+      <bpmn:text>Hinweis zu Schritt 6: Vier-Augen-Prinzip beachten.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_06" sourceRef="Note_06" targetRef="Task_06" />
+    <bpmn:textAnnotation id="Note_12">
+      <bpmn:text>Hinweis zu Schritt 12: Vier-Augen-Prinzip beachten.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_12" sourceRef="Note_12" targetRef="Task_12" />
+    <bpmn:textAnnotation id="Note_18">
+      <bpmn:text>Hinweis zu Schritt 18: Vier-Augen-Prinzip beachten.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_18" sourceRef="Note_18" targetRef="Task_18" />
+    <bpmn:textAnnotation id="Note_24">
+      <bpmn:text>Hinweis zu Schritt 24: Vier-Augen-Prinzip beachten.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Note_24" sourceRef="Note_24" targetRef="Task_24" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="6720" height="1440" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Antrag_di" bpmnElement="Start_Antrag">
+        <dc:Bounds x="240" y="152" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="220" y="193" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_01_di" bpmnElement="Task_01">
+        <dc:Bounds x="410" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_001_di" bpmnElement="Flow_001">
+        <di:waypoint x="276" y="170" />
+        <di:waypoint x="343" y="170" />
+        <di:waypoint x="343" y="350" />
+        <di:waypoint x="410" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_02_di" bpmnElement="Task_02">
+        <dc:Bounds x="580" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_002_di" bpmnElement="Flow_002">
+        <di:waypoint x="510" y="350" />
+        <di:waypoint x="545" y="350" />
+        <di:waypoint x="545" y="530" />
+        <di:waypoint x="580" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_03_di" bpmnElement="Task_03" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="750" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_003_di" bpmnElement="Flow_003">
+        <di:waypoint x="680" y="530" />
+        <di:waypoint x="715" y="530" />
+        <di:waypoint x="715" y="710" />
+        <di:waypoint x="750" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_04_di" bpmnElement="Task_04">
+        <dc:Bounds x="920" y="850" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_004_di" bpmnElement="Flow_004">
+        <di:waypoint x="850" y="710" />
+        <di:waypoint x="885" y="710" />
+        <di:waypoint x="885" y="890" />
+        <di:waypoint x="920" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_04_di" bpmnElement="Gateway_04">
+        <dc:Bounds x="1090" y="865" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1070" y="920" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_005_di" bpmnElement="Flow_005">
+        <di:waypoint x="1020" y="890" />
+        <di:waypoint x="1090" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Nachforderung_04_di" bpmnElement="Task_Nachforderung_04">
+        <dc:Bounds x="1260" y="1030" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_006_di" bpmnElement="Flow_006">
+        <di:waypoint x="1140" y="890" />
+        <di:waypoint x="1200" y="890" />
+        <di:waypoint x="1200" y="1070" />
+        <di:waypoint x="1260" y="1070" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1188" y="872" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_007_di" bpmnElement="Flow_007">
+        <di:waypoint x="1310" y="1110" />
+        <di:waypoint x="1310" y="1130" />
+        <di:waypoint x="970" y="1130" />
+        <di:waypoint x="970" y="930" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_05_di" bpmnElement="Task_05">
+        <dc:Bounds x="1430" y="1030" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_009_di" bpmnElement="Flow_009">
+        <di:waypoint x="1140" y="890" />
+        <di:waypoint x="1285" y="890" />
+        <di:waypoint x="1285" y="1070" />
+        <di:waypoint x="1430" y="1070" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_06_di" bpmnElement="Task_06" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="1600" y="1210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_010_di" bpmnElement="Flow_010">
+        <di:waypoint x="1530" y="1070" />
+        <di:waypoint x="1565" y="1070" />
+        <di:waypoint x="1565" y="1250" />
+        <di:waypoint x="1600" y="1250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_07_di" bpmnElement="Task_07">
+        <dc:Bounds x="1770" y="1390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_011_di" bpmnElement="Flow_011">
+        <di:waypoint x="1700" y="1250" />
+        <di:waypoint x="1735" y="1250" />
+        <di:waypoint x="1735" y="1430" />
+        <di:waypoint x="1770" y="1430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_08_di" bpmnElement="Task_08">
+        <dc:Bounds x="1940" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_012_di" bpmnElement="Flow_012">
+        <di:waypoint x="1870" y="1430" />
+        <di:waypoint x="1905" y="1430" />
+        <di:waypoint x="1905" y="170" />
+        <di:waypoint x="1940" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_08_di" bpmnElement="Gateway_08">
+        <dc:Bounds x="2110" y="145" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2090" y="200" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_013_di" bpmnElement="Flow_013">
+        <di:waypoint x="2040" y="170" />
+        <di:waypoint x="2110" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Nachforderung_08_di" bpmnElement="Task_Nachforderung_08">
+        <dc:Bounds x="2280" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_014_di" bpmnElement="Flow_014">
+        <di:waypoint x="2160" y="170" />
+        <di:waypoint x="2220" y="170" />
+        <di:waypoint x="2220" y="350" />
+        <di:waypoint x="2280" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2208" y="152" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_015_di" bpmnElement="Flow_015">
+        <di:waypoint x="2330" y="390" />
+        <di:waypoint x="2330" y="410" />
+        <di:waypoint x="1990" y="410" />
+        <di:waypoint x="1990" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_09_di" bpmnElement="Task_09" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
+        <dc:Bounds x="2450" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_017_di" bpmnElement="Flow_017">
+        <di:waypoint x="2160" y="170" />
+        <di:waypoint x="2305" y="170" />
+        <di:waypoint x="2305" y="350" />
+        <di:waypoint x="2450" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_10_di" bpmnElement="Task_10">
+        <dc:Bounds x="2620" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_018_di" bpmnElement="Flow_018">
+        <di:waypoint x="2550" y="350" />
+        <di:waypoint x="2585" y="350" />
+        <di:waypoint x="2585" y="530" />
+        <di:waypoint x="2620" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_11_di" bpmnElement="Task_11">
+        <dc:Bounds x="2790" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_019_di" bpmnElement="Flow_019">
+        <di:waypoint x="2720" y="530" />
+        <di:waypoint x="2755" y="530" />
+        <di:waypoint x="2755" y="710" />
+        <di:waypoint x="2790" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_12_di" bpmnElement="Task_12" bioc:stroke="#6b3c00" bioc:fill="#ffe0b2" color:background-color="#ffe0b2" color:border-color="#6b3c00">
+        <dc:Bounds x="2960" y="850" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_020_di" bpmnElement="Flow_020">
+        <di:waypoint x="2890" y="710" />
+        <di:waypoint x="2925" y="710" />
+        <di:waypoint x="2925" y="890" />
+        <di:waypoint x="2960" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_12_di" bpmnElement="Gateway_12">
+        <dc:Bounds x="3130" y="865" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3110" y="920" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_021_di" bpmnElement="Flow_021">
+        <di:waypoint x="3060" y="890" />
+        <di:waypoint x="3130" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Nachforderung_12_di" bpmnElement="Task_Nachforderung_12">
+        <dc:Bounds x="3300" y="1030" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_022_di" bpmnElement="Flow_022">
+        <di:waypoint x="3180" y="890" />
+        <di:waypoint x="3240" y="890" />
+        <di:waypoint x="3240" y="1070" />
+        <di:waypoint x="3300" y="1070" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3228" y="872" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_023_di" bpmnElement="Flow_023">
+        <di:waypoint x="3350" y="1110" />
+        <di:waypoint x="3350" y="1130" />
+        <di:waypoint x="3010" y="1130" />
+        <di:waypoint x="3010" y="930" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_13_di" bpmnElement="Task_13">
+        <dc:Bounds x="3470" y="1030" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_025_di" bpmnElement="Flow_025">
+        <di:waypoint x="3180" y="890" />
+        <di:waypoint x="3325" y="890" />
+        <di:waypoint x="3325" y="1070" />
+        <di:waypoint x="3470" y="1070" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_14_di" bpmnElement="Task_14">
+        <dc:Bounds x="3640" y="1210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_026_di" bpmnElement="Flow_026">
+        <di:waypoint x="3570" y="1070" />
+        <di:waypoint x="3605" y="1070" />
+        <di:waypoint x="3605" y="1250" />
+        <di:waypoint x="3640" y="1250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_15_di" bpmnElement="Task_15" bioc:stroke="#0d4372" bioc:fill="#bbdefb" color:background-color="#bbdefb" color:border-color="#0d4372">
+        <dc:Bounds x="3810" y="1390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_027_di" bpmnElement="Flow_027">
+        <di:waypoint x="3740" y="1250" />
+        <di:waypoint x="3775" y="1250" />
+        <di:waypoint x="3775" y="1430" />
+        <di:waypoint x="3810" y="1430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_16_di" bpmnElement="Task_16">
+        <dc:Bounds x="3980" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_028_di" bpmnElement="Flow_028">
+        <di:waypoint x="3910" y="1430" />
+        <di:waypoint x="3945" y="1430" />
+        <di:waypoint x="3945" y="170" />
+        <di:waypoint x="3980" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_16_di" bpmnElement="Gateway_16">
+        <dc:Bounds x="4150" y="145" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4130" y="200" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_029_di" bpmnElement="Flow_029">
+        <di:waypoint x="4080" y="170" />
+        <di:waypoint x="4150" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Nachforderung_16_di" bpmnElement="Task_Nachforderung_16">
+        <dc:Bounds x="4320" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_030_di" bpmnElement="Flow_030">
+        <di:waypoint x="4200" y="170" />
+        <di:waypoint x="4260" y="170" />
+        <di:waypoint x="4260" y="350" />
+        <di:waypoint x="4320" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4248" y="152" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_031_di" bpmnElement="Flow_031">
+        <di:waypoint x="4370" y="390" />
+        <di:waypoint x="4370" y="410" />
+        <di:waypoint x="4030" y="410" />
+        <di:waypoint x="4030" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_17_di" bpmnElement="Task_17">
+        <dc:Bounds x="4490" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_033_di" bpmnElement="Flow_033">
+        <di:waypoint x="4200" y="170" />
+        <di:waypoint x="4345" y="170" />
+        <di:waypoint x="4345" y="350" />
+        <di:waypoint x="4490" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_18_di" bpmnElement="Task_18" bioc:stroke="#831311" bioc:fill="#ffcdd2" color:background-color="#ffcdd2" color:border-color="#831311">
+        <dc:Bounds x="4660" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_034_di" bpmnElement="Flow_034">
+        <di:waypoint x="4590" y="350" />
+        <di:waypoint x="4625" y="350" />
+        <di:waypoint x="4625" y="530" />
+        <di:waypoint x="4660" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_19_di" bpmnElement="Task_19">
+        <dc:Bounds x="4830" y="670" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_035_di" bpmnElement="Flow_035">
+        <di:waypoint x="4760" y="530" />
+        <di:waypoint x="4795" y="530" />
+        <di:waypoint x="4795" y="710" />
+        <di:waypoint x="4830" y="710" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_20_di" bpmnElement="Task_20">
+        <dc:Bounds x="5000" y="850" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_036_di" bpmnElement="Flow_036">
+        <di:waypoint x="4930" y="710" />
+        <di:waypoint x="4965" y="710" />
+        <di:waypoint x="4965" y="890" />
+        <di:waypoint x="5000" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_20_di" bpmnElement="Gateway_20">
+        <dc:Bounds x="5170" y="865" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5150" y="920" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_037_di" bpmnElement="Flow_037">
+        <di:waypoint x="5100" y="890" />
+        <di:waypoint x="5170" y="890" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Nachforderung_20_di" bpmnElement="Task_Nachforderung_20">
+        <dc:Bounds x="5340" y="1030" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_038_di" bpmnElement="Flow_038">
+        <di:waypoint x="5220" y="890" />
+        <di:waypoint x="5280" y="890" />
+        <di:waypoint x="5280" y="1070" />
+        <di:waypoint x="5340" y="1070" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5268" y="872" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_039_di" bpmnElement="Flow_039">
+        <di:waypoint x="5390" y="1110" />
+        <di:waypoint x="5390" y="1130" />
+        <di:waypoint x="5050" y="1130" />
+        <di:waypoint x="5050" y="930" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_21_di" bpmnElement="Task_21" bioc:stroke="#205022" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#205022">
+        <dc:Bounds x="5510" y="1030" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_041_di" bpmnElement="Flow_041">
+        <di:waypoint x="5220" y="890" />
+        <di:waypoint x="5365" y="890" />
+        <di:waypoint x="5365" y="1070" />
+        <di:waypoint x="5510" y="1070" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_22_di" bpmnElement="Task_22">
+        <dc:Bounds x="5680" y="1210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_042_di" bpmnElement="Flow_042">
+        <di:waypoint x="5610" y="1070" />
+        <di:waypoint x="5645" y="1070" />
+        <di:waypoint x="5645" y="1250" />
+        <di:waypoint x="5680" y="1250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_23_di" bpmnElement="Task_23">
+        <dc:Bounds x="5850" y="1390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_043_di" bpmnElement="Flow_043">
+        <di:waypoint x="5780" y="1250" />
+        <di:waypoint x="5815" y="1250" />
+        <di:waypoint x="5815" y="1430" />
+        <di:waypoint x="5850" y="1430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_24_di" bpmnElement="Task_24" bioc:stroke="#5b176d" bioc:fill="#e1bee7" color:background-color="#e1bee7" color:border-color="#5b176d">
+        <dc:Bounds x="6020" y="130" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_044_di" bpmnElement="Flow_044">
+        <di:waypoint x="5950" y="1430" />
+        <di:waypoint x="5985" y="1430" />
+        <di:waypoint x="5985" y="170" />
+        <di:waypoint x="6020" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_24_di" bpmnElement="Gateway_24">
+        <dc:Bounds x="6190" y="145" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6170" y="200" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_045_di" bpmnElement="Flow_045">
+        <di:waypoint x="6120" y="170" />
+        <di:waypoint x="6190" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_Nachforderung_24_di" bpmnElement="Task_Nachforderung_24">
+        <dc:Bounds x="6360" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_046_di" bpmnElement="Flow_046">
+        <di:waypoint x="6240" y="170" />
+        <di:waypoint x="6300" y="170" />
+        <di:waypoint x="6300" y="350" />
+        <di:waypoint x="6360" y="350" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6288" y="152" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_047_di" bpmnElement="Flow_047">
+        <di:waypoint x="6410" y="390" />
+        <di:waypoint x="6410" y="410" />
+        <di:waypoint x="6070" y="410" />
+        <di:waypoint x="6070" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="End_Bescheid_di" bpmnElement="End_Bescheid">
+        <dc:Bounds x="6530" y="1412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="6510" y="1453" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_049_di" bpmnElement="Flow_049">
+        <di:waypoint x="6240" y="170" />
+        <di:waypoint x="6385" y="170" />
+        <di:waypoint x="6385" y="1430" />
+        <di:waypoint x="6530" y="1430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Lane_1_di" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_2_di" bpmnElement="Lane_2" isHorizontal="true">
+        <dc:Bounds x="190" y="260" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_3_di" bpmnElement="Lane_3" isHorizontal="true">
+        <dc:Bounds x="190" y="440" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_4_di" bpmnElement="Lane_4" isHorizontal="true">
+        <dc:Bounds x="190" y="620" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_5_di" bpmnElement="Lane_5" isHorizontal="true">
+        <dc:Bounds x="190" y="800" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_6_di" bpmnElement="Lane_6" isHorizontal="true">
+        <dc:Bounds x="190" y="980" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_7_di" bpmnElement="Lane_7" isHorizontal="true">
+        <dc:Bounds x="190" y="1160" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_8_di" bpmnElement="Lane_8" isHorizontal="true">
+        <dc:Bounds x="190" y="1340" width="6690" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Note_06_di" bpmnElement="Note_06">
+        <dc:Bounds x="1620" y="1150" width="160" height="45" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Note_06_di" bpmnElement="Assoc_Note_06">
+        <di:waypoint x="1660" y="1195" />
+        <di:waypoint x="1650" y="1210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Note_12_di" bpmnElement="Note_12">
+        <dc:Bounds x="2980" y="790" width="160" height="45" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Note_12_di" bpmnElement="Assoc_Note_12">
+        <di:waypoint x="3020" y="835" />
+        <di:waypoint x="3010" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Note_18_di" bpmnElement="Note_18">
+        <dc:Bounds x="4680" y="430" width="160" height="45" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Note_18_di" bpmnElement="Assoc_Note_18">
+        <di:waypoint x="4720" y="475" />
+        <di:waypoint x="4710" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Note_24_di" bpmnElement="Note_24">
+        <dc:Bounds x="6040" y="70" width="160" height="45" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Assoc_Note_24_di" bpmnElement="Assoc_Note_24">
+        <di:waypoint x="6080" y="115" />
+        <di:waypoint x="6070" y="130" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

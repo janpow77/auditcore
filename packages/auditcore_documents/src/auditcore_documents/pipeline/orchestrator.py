@@ -103,93 +103,108 @@ class PipelineOrchestrator:
         start_from_stage: str | None = None,
         stop_after_stage: str | None = None,
     ) -> PipelineContext:
-        if self.audit is not None:
-            await self.audit.log_event(
-                event_type="PIPELINE_STARTED",
-                document_id=context.document_id,
-                run_id=context.run_id,
-                project_id=context.project_id,
-                details={
-                    "stages": [s.name for s in self.stages],
-                    "start_from": start_from_stage,
-                    "stop_after": stop_after_stage,
-                    "compute_profile_requested": context.compute_profile_requested.value,
-                    "analysis_modules": context.analysis_modules.to_dict(),
-                },
-                pipeline_version=context.pipeline_version,
-            )
-        if self.compute_enforcer:
-            accepted, reason = await self.compute_enforcer.enforce(
-                user_id=context.user_id, requested_profile=context.compute_profile_requested
-            )
-            context.compute_profile_accepted = accepted
-            context.compute_downgrade_reason = reason
-            if reason and self.audit:
-                await self.audit.log_event(
-                    event_type="COMPUTE_PROFILE_DOWNGRADED",
-                    document_id=context.document_id,
-                    run_id=context.run_id,
-                    details={
-                        "requested": context.compute_profile_requested.value,
-                        "accepted": accepted.value,
-                        "reason": reason,
-                    },
-                )
-        else:
-            context.compute_profile_accepted = context.compute_profile_requested
-
+        await self._log_started(context, start_from_stage, stop_after_stage)
+        await self._apply_compute_profile(context)
         stages_to_run = self.filter_stages(start_from_stage, stop_after_stage)
         if not stages_to_run:
             return context
-
         context.status = RunStatus.RUNNING
         context.updated_at = context.clock()
         review_seen = False
         for stage in stages_to_run:
-            try:
-                context = await stage.run(context)
-                if context.status == RunStatus.REVIEW_NEEDED:
-                    review_seen = True
-                if context.status in (RunStatus.REJECTED, RunStatus.FAILED):
-                    break
-            except StageError as exc:
-                if not exc.recoverable:
-                    context.fail(exc, error_code=exc.error_code, retryable=False)
-                    break
-                recovered = await self._try_recovery(context, stage, exc)
-                if context.status == RunStatus.REVIEW_NEEDED:
-                    review_seen = True
-                if not recovered:
-                    context.fail(exc, error_code=exc.error_code, retryable=True)
-                    break
-            except Exception as exc:  # noqa: BLE001 - Originalvertrag
-                context.fail(exc, error_code="UNEXPECTED_ERROR", retryable=False)
+            context, stop, review = await self._run_stage(context, stage)
+            review_seen = review_seen or review
+            if stop:
                 break
+        self._settle_status(context, review_seen)
+        await self._log_finished(context)
+        return context
 
-        if context.status == RunStatus.RUNNING:
-            context.complete(
-                RunStatus.REVIEW_NEEDED if self.preserve_review and review_seen else RunStatus.OK
-            )
-        elif self.preserve_review and review_seen and context.status == RunStatus.OK:
-            context.status = RunStatus.REVIEW_NEEDED
+    async def _log_started(
+        self, context: PipelineContext, start_from: str | None, stop_after: str | None
+    ) -> None:
+        if self.audit is None:
+            return
+        await self.audit.log_event(
+            event_type="PIPELINE_STARTED",
+            document_id=context.document_id,
+            run_id=context.run_id,
+            project_id=context.project_id,
+            details={
+                "stages": [s.name for s in self.stages],
+                "start_from": start_from,
+                "stop_after": stop_after,
+                "compute_profile_requested": context.compute_profile_requested.value,
+                "analysis_modules": context.analysis_modules.to_dict(),
+            },
+            pipeline_version=context.pipeline_version,
+        )
 
-        if self.audit is not None:
+    async def _apply_compute_profile(self, context: PipelineContext) -> None:
+        if not self.compute_enforcer:
+            context.compute_profile_accepted = context.compute_profile_requested
+            return
+        accepted, reason = await self.compute_enforcer.enforce(
+            user_id=context.user_id, requested_profile=context.compute_profile_requested
+        )
+        context.compute_profile_accepted = accepted
+        context.compute_downgrade_reason = reason
+        if reason and self.audit:
             await self.audit.log_event(
-                event_type=(
-                    "PIPELINE_COMPLETED"
-                    if context.status != RunStatus.FAILED
-                    else "PIPELINE_FAILED"
-                ),
+                event_type="COMPUTE_PROFILE_DOWNGRADED",
                 document_id=context.document_id,
                 run_id=context.run_id,
-                project_id=context.project_id,
-                hash_original=context.hash_original,
-                details=context.to_audit_details(),
-                pipeline_version=context.pipeline_version,
-                ocr_engine_version=context.ocr_engine_version,
-                ruleset_version=context.ruleset_version,
+                details={
+                    "requested": context.compute_profile_requested.value,
+                    "accepted": accepted.value,
+                    "reason": reason,
+                },
             )
-        return context
+
+    async def _run_stage(
+        self, context: PipelineContext, stage: PipelineStage
+    ) -> tuple[PipelineContext, bool, bool]:
+        """Eine Stufe mit Wiederherstellung: (Kontext, abbrechen, REVIEW_NEEDED gesehen)."""
+        try:
+            context = await stage.run(context)
+        except StageError as exc:
+            if not exc.recoverable:
+                context.fail(exc, error_code=exc.error_code, retryable=False)
+                return context, True, False
+            recovered = await self._try_recovery(context, stage, exc)
+            review = context.status == RunStatus.REVIEW_NEEDED
+            if not recovered:
+                context.fail(exc, error_code=exc.error_code, retryable=True)
+            return context, not recovered, review
+        except Exception as exc:  # noqa: BLE001 - Originalvertrag
+            context.fail(exc, error_code="UNEXPECTED_ERROR", retryable=False)
+            return context, True, False
+        review = context.status == RunStatus.REVIEW_NEEDED
+        return context, context.status in (RunStatus.REJECTED, RunStatus.FAILED), review
+
+    def _settle_status(self, context: PipelineContext, review_seen: bool) -> None:
+        keep_review = self.preserve_review and review_seen
+        if context.status == RunStatus.RUNNING:
+            context.complete(RunStatus.REVIEW_NEEDED if keep_review else RunStatus.OK)
+        elif keep_review and context.status == RunStatus.OK:
+            context.status = RunStatus.REVIEW_NEEDED
+
+    async def _log_finished(self, context: PipelineContext) -> None:
+        if self.audit is None:
+            return
+        await self.audit.log_event(
+            event_type=(
+                "PIPELINE_COMPLETED" if context.status != RunStatus.FAILED else "PIPELINE_FAILED"
+            ),
+            document_id=context.document_id,
+            run_id=context.run_id,
+            project_id=context.project_id,
+            hash_original=context.hash_original,
+            details=context.to_audit_details(),
+            pipeline_version=context.pipeline_version,
+            ocr_engine_version=context.ocr_engine_version,
+            ruleset_version=context.ruleset_version,
+        )
 
     def filter_stages(self, start_from: str | None, stop_after: str | None) -> list[PipelineStage]:
         """Unbekannte Start-/Stoppnamen werden (wie im Original) ignoriert."""

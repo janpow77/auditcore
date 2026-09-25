@@ -23,7 +23,8 @@
   },
   "auditcore_registry_sources": {
     "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)",
-    "beautifulsoup4<5,>=4.11.2; extra == \"html\"": "python3-bs4 (>= 4.11.2)"
+    "beautifulsoup4<5,>=4.11.2; extra == \"html\"": "python3-bs4 (>= 4.11.2)",
+    "starlette<2,>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)"
   },
   "auditcore_property_sources": {
     "auditcore_harvest==0.1.0; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.0)"
@@ -43,5 +44,11 @@
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
     "reportlab<6,>=3.6.12; extra == \"pdf\"": "python3-reportlab (>= 3.6.12)",
     "auditcore_legal_sources==0.1.1; extra == \"legal\"": "python3-auditcore-legal-sources (>= 0.1.1)"
+  },
+  "auditcore_sampling": {
+    "starlette>=0.26; extra == \"web\"": "python3-starlette (>= 0.26)"
+  },
+  "auditcore_statistics": {
+    "starlette>=0.26; extra == \"web\"": "python3-starlette (>= 0.26)"
   }
 }

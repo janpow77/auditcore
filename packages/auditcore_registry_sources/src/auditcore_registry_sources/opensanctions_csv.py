@@ -71,55 +71,10 @@ def parse_targets_simple_csv(data: bytes, *, list_key: str) -> ParsedList:
     """Parse one delivery of one list; see the module contract."""
     if not isinstance(data, bytes):
         raise TypeError("Die Lieferung ist als Bytes zu übergeben.")
-    try:
-        text = data.decode("utf-8-sig")
-    except UnicodeDecodeError as exc:
-        raise FormatError(
-            f"Die Lieferung für '{list_key}' ist nicht UTF-8-kodiert (Byte {exc.start})."
-        ) from exc
-    reader = csv.DictReader(io.StringIO(text, newline=""))
-    try:
-        header = reader.fieldnames
-    except csv.Error as exc:
-        raise FormatError(f"CSV-Kopfzeile nicht lesbar: {exc}") from exc
-    if not header:
-        raise FormatError(f"Die Lieferung für '{list_key}' ist leer.")
-    columns = tuple(c.strip() for c in header)
-    missing = [c for c in REQUIRED_COLUMNS if c not in columns]
-    if missing:
-        raise FormatError(
-            f"Pflichtspalten fehlen: {', '.join(missing)} — erwartet wird das "
-            "OpenSanctions-Format targets.simple.csv."
-        )
+    reader = csv.DictReader(io.StringIO(_decode(data, list_key), newline=""))
+    columns = _checked_columns(reader, list_key)
     reader.fieldnames = list(columns)
-    entries: list[ListEntry] = []
-    issues: list[RowIssue] = []
-    rows = 0
-    try:
-        for row in reader:
-            rows += 1
-            entry_id = (row.get("id") or "").strip()
-            name = (row.get("name") or "").strip()
-            if not entry_id or not name:
-                reason = (
-                    "Kennung und Name fehlen"
-                    if not entry_id and not name
-                    else ("Kennung fehlt" if not entry_id else "Name fehlt")
-                )
-                issues.append(RowIssue(rows, reason, entry_id or None))
-                continue
-            entries.append(
-                ListEntry(
-                    list_key=list_key,
-                    entry_id=entry_id,
-                    schema=(row.get("schema") or "").strip(),
-                    name=name,
-                    aliases=split_multi(row.get("aliases")),
-                    **{f: (row.get(f) or "").strip() for f in LIST_FIELDS},
-                )
-            )
-    except csv.Error as exc:
-        raise FormatError(f"CSV-Zeile {rows + 1} nicht lesbar: {exc}") from exc
+    entries, issues, rows = _read_rows(reader, list_key)
     if not entries:
         raise FormatError(
             f"Die Lieferung für '{list_key}' enthält keine verwertbaren Einträge "
@@ -134,6 +89,69 @@ def parse_targets_simple_csv(data: bytes, *, list_key: str) -> ParsedList:
         columns=columns,
         content_sha256=hashlib.sha256(data).hexdigest(),
     )
+
+
+def _decode(data: bytes, list_key: str) -> str:
+    try:
+        return data.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise FormatError(
+            f"Die Lieferung für '{list_key}' ist nicht UTF-8-kodiert (Byte {exc.start})."
+        ) from exc
+
+
+def _checked_columns(reader: csv.DictReader[str], list_key: str) -> tuple[str, ...]:
+    """Stripped header; the required columns must be present."""
+    try:
+        header = reader.fieldnames
+    except csv.Error as exc:
+        raise FormatError(f"CSV-Kopfzeile nicht lesbar: {exc}") from exc
+    if not header:
+        raise FormatError(f"Die Lieferung für '{list_key}' ist leer.")
+    columns = tuple(c.strip() for c in header)
+    missing = [c for c in REQUIRED_COLUMNS if c not in columns]
+    if missing:
+        raise FormatError(
+            f"Pflichtspalten fehlen: {', '.join(missing)} — erwartet wird das "
+            "OpenSanctions-Format targets.simple.csv."
+        )
+    return columns
+
+
+def _read_rows(
+    reader: csv.DictReader[str], list_key: str
+) -> tuple[list[ListEntry], list[RowIssue], int]:
+    """Entries, row issues and the number of data rows read."""
+    entries: list[ListEntry] = []
+    issues: list[RowIssue] = []
+    rows = 0
+    try:
+        for row in reader:
+            rows += 1
+            entry_id = (row.get("id") or "").strip()
+            name = (row.get("name") or "").strip()
+            if not entry_id or not name:
+                issues.append(RowIssue(rows, _missing_reason(entry_id, name), entry_id or None))
+                continue
+            entries.append(
+                ListEntry(
+                    list_key=list_key,
+                    entry_id=entry_id,
+                    schema=(row.get("schema") or "").strip(),
+                    name=name,
+                    aliases=split_multi(row.get("aliases")),
+                    **{f: (row.get(f) or "").strip() for f in LIST_FIELDS},
+                )
+            )
+    except csv.Error as exc:
+        raise FormatError(f"CSV-Zeile {rows + 1} nicht lesbar: {exc}") from exc
+    return entries, issues, rows
+
+
+def _missing_reason(entry_id: str, name: str) -> str:
+    if not entry_id and not name:
+        return "Kennung und Name fehlen"
+    return "Kennung fehlt" if not entry_id else "Name fehlt"
 
 
 def serialize_targets_simple_csv(
