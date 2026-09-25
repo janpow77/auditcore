@@ -26,5 +26,5 @@
   "user_model": "multi_user",
   "versioned_artifact_types": [],
   "versioned_artifacts": false,
-  "workflow": "none"
+  "workflow": "calculation_only"
 }
