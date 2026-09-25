@@ -1,0 +1,4432 @@
+{
+ "generated_by": "tools/export_field_catalog.py",
+ "profiles": {
+  "audit_designer.flowstat_belegliste@1254591156d3": {
+   "fields": [
+    {
+     "meaning": "Anerkannter Betrag; Quellspalten „anerkannter Betrag“, „anerkannt“, „accepted amount“ (Rolle `AMOUNT_ACCEPTED`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "anerkannter_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF07_ACCEPTED_MISMATCH",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+       "role": "Subtrahend"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kennzeichen Direktvergabe; Quellspalten „Direktvergabe“, „Freihändige Vergabe“, „direct award“ (Rolle `DIRECT_AWARD_FLAG`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "direktvergabe",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF09_DIRECT_AWARD_HIGH_AMOUNT",
+       "empty": "kein Treffer (kein Merkmal)",
+       "label": "Direktvergabe über 25.000",
+       "role": "Kennzeichen (Muster „ja|true|1“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsbetrag; Quellspalten „Kuerzungsbetrag“, „Kürzungsbetrag“, „Abweichung“, „Korrektur“ (Rolle `AMOUNT_DEVIATION`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "kuerzungsbetrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF06_CUT_WITHOUT_REASON",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Kürzung ohne Kürzungsgrund",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF07_ACCEPTED_MISMATCH",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+       "role": "Subtrahend"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsgrund; Quellspalten „Kuerzungsgrund“, „Kürzungsgrund“, „Korrekturgrund“, „Feststellungsgrund“ (Rolle `CUT_REASON`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "kuerzungsgrund",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF06_CUT_WITHOUT_REASON",
+       "empty": "gilt als fehlend (Merkmal bei Betrag ≠ 0)",
+       "label": "Kürzung ohne Kürzungsgrund",
+       "role": "Begründungstext"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbezogener Betrag des Belegs; Quellspalten „projektbez. Betrag“, „projektbezogener Betrag“, „Projektbetrag“ (Rolle `AMOUNT_PROJECT`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "projektbetrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF01_ROUND_AMOUNT",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Runder Tausenderbetrag",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF02_NEAR_THRESHOLD",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Betrag knapp unter Vergabeschwelle",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF05_DUPLICATE_INVOICE",
+       "empty": "leere Werte gelten untereinander als gleich",
+       "label": "Doppelte Rechnung",
+       "role": "Schlüsselteil"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF07_ACCEPTED_MISMATCH",
+       "empty": "Ersatzwert `0.0`; nicht numerischer Text gilt als leer",
+       "label": "Anerkannter Betrag ≠ Projektbetrag − Kürzung",
+       "role": "Minuend"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF08_PROCUREMENT_MISSING",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Betrag > 25.000 ohne Vergabeangabe",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF09_DIRECT_AWARD_HIGH_AMOUNT",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Direktvergabe über 25.000",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF10_VENDOR_CONCENTRATION",
+       "empty": "nicht gezählt (auch nicht numerischer Text)",
+       "label": "Konzentration auf einen Rechnungssteller (≥ 50 % der Summe)",
+       "role": "Betrag (Anteil)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum; Quellspalten „Rechnungsdatum“, „Belegdatum“, „Invoice Date“ (Rolle `DATE_INVOICE`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "rechnungsdatum",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF04_PAYMENT_BEFORE_INVOICE",
+       "empty": "kein Merkmal; Text, der kein ISO-Datum ist → Abbruch (`InputError`)",
+       "label": "Zahlung vor Rechnungsdatum",
+       "role": "Vergleichsdatum"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsnummer bzw. externe Referenz; Quellspalten „Rechnungsnummer / ext. Referenz“, „Rechnungsnummer“, „ext. Referenz“, „Externe Referenz“, „Rechnung Nr“ (Rolle `INVOICE_REFERENCE`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "rechnungsnummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF05_DUPLICATE_INVOICE",
+       "empty": "leere Werte gelten untereinander als gleich",
+       "label": "Doppelte Rechnung",
+       "role": "Schlüsselteil"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller; Quellspalten „Rechnungssteller“, „Auftragnehmer“, „Kreditor“, „Lieferant“, „Vendor“ (Rolle `VENDOR_NAME`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "rechnungssteller",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF05_DUPLICATE_INVOICE",
+       "empty": "leere Werte gelten untereinander als gleich",
+       "label": "Doppelte Rechnung",
+       "role": "Schlüsselteil"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF10_VENDOR_CONCENTRATION",
+       "empty": "eigene Gruppe „fehlend“",
+       "label": "Konzentration auf einen Rechnungssteller (≥ 50 % der Summe)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeangabe; Quellspalten „Vergabe“, „Vergabenummer“, „Vergabe-ID“ (Rolle `PROCUREMENT_REFERENCE`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "vergabe",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF08_PROCUREMENT_MISSING",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, `\"None\"`)",
+       "label": "Betrag > 25.000 ohne Vergabeangabe",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Datum der Bezahlung; Quellspalten „Datum der Bezahlung“, „Zahlungsdatum“, „Wertstellung“, „Valuta“ (Rolle `DATE_PAYMENT`).",
+     "meaning_source": "audit_designer@1254591 `backend/app/modules/flowstat/services/belegliste_analysis_service.py` (`ROLE_ALIASES`, `ROLE_CANONICAL_COLUMNS`, `normalize_belegliste`)",
+     "name": "zahlungsdatum",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF03_MISSING_PAYMENT_DATE",
+       "empty": "Merkmal",
+       "label": "Zahlungsdatum fehlt",
+       "role": "Pflichtangabe"
+      },
+      {
+       "absent": "Regel wird übersprungen (`Evaluation.skipped`)",
+       "code": "BL_RF04_PAYMENT_BEFORE_INVOICE",
+       "empty": "kein Merkmal; Text, der kein ISO-Datum ist → Abbruch (`InputError`)",
+       "label": "Zahlung vor Rechnungsdatum",
+       "role": "Datum (Merkmal, wenn vor dem Vergleichsdatum)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "7dfc1311e7db21b3af199b6727bc9ec182062285423ee6e2b9ec73426dde313e",
+   "input_contract": "Spalten wie nach normalize_belegliste (Beträge als Zahl, Datumsfelder als Datum)."
+  },
+  "flowinvoice.exante_basis@fb2d18568d2e": {
+   "fields": [
+    {
+     "meaning": "Anteil des Vorhaben-Bruttos an historisch auffällige Auftragnehmer (leave-one-out).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`an_risiko_loo`)",
+     "name": "an_risiko",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "E7",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Auftragnehmer-Risiko (> 30 %)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Bruttobetrag je Vorhaben (Spalte `brutto` der Vorhabentabelle); Grundlage der Budget-Kriterien.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`_features`); flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "brutto",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "E1",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Budget > 1 Mio €",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "E2",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Budget 500 T€–1 Mio €",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erwartete Anzahl Mittelabrufe ex ante = OLS(realisierte MA ~ Laufzeit + log Budget).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`erwartete_ma`)",
+     "name": "erw_ma",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "E4",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Erwartete Mittelabrufe hoch (> 4)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Historische Kürzungsquote der Förderprogrammgruppe (`kuerzungsquote` der FPG-Tabelle), fehlend 0.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`_features`)",
+     "name": "fpgq",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "E5",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "FPG-Fehlerquote historisch hoch (> 15 %)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl Vorhaben der Gruppe des Begünstigten (`vorhaben` der Gruppentabelle), fehlend 1.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`_features`)",
+     "name": "grp_v",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "E6",
+       "empty": "Ersatzwert `1`, Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Erstantragsteller",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geplante Laufzeit des Vorhabens in Monaten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`erwartete_ma`)",
+     "name": "laufzeit_monate",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "E3",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Geplante Laufzeit > 24 M",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "4e90c8f778602b488ba4989984a702941d1c0a72b25851ef70fbab2ddf8eea53",
+   "input_contract": null
+  },
+  "flowinvoice.exante_heuristik@fb2d18568d2e": {
+   "fields": [
+    {
+     "meaning": "Anzahl Belege des Vorhabens (Spalte `belege` der Vorhabentabelle).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "belege",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H8",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Belege > 200",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "H9",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Belege 100–200",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Bruttobetrag je Vorhaben (Spalte `brutto` der Vorhabentabelle); Grundlage der Budget-Kriterien.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`_features`); flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "brutto",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H1",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Budget > 1 Mio",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "H2",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Budget 500 T – 1 Mio",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsquote der Förderprogrammgruppe (`fpg_quote.get(fpg, 0)`).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "fpg_quote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H12",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "FPG-Quote > 15",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "H13",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "FPG-Quote 2–15",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rückgabequote der Förderprogrammgruppe (`fpg_ret.get(fpg, 0)`).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "fpg_rueckgabequote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H14",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "FPG-Rückgabequote > 40",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl Vorhaben der Gruppe des Begünstigten (`grp_vorhaben.get(gruppe, 1)`).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "gruppe_vorhaben",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H10",
+       "empty": "Ersatzwert `1`, Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Gruppe mit höchstens einem Vorhaben",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "H11",
+       "empty": "Ersatzwert `1`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Gruppe mit mehr als drei Vorhaben",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsquote des Vorhabens (Spalte `kuerzungsquote` der Vorhabentabelle).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`heuristik_score`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "kuerzungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H3",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Kürzungsquote > 20",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "H4",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Kürzungsquote 10–20",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geplante Laufzeit des Vorhabens in Monaten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`erwartete_ma`)",
+     "name": "laufzeit_monate",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H5",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Laufzeit > 36 Monate",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "H6",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Laufzeit 24–36 Monate",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Realisierte Anzahl Mittelabrufe des Vorhabens.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`erwartete_ma`)",
+     "name": "ma",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "H7",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Mittelabrufe > 5",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "5985e36487b147b09ef372ad963ce2f150afe1aff9be49ebfb359ee474cfc64a",
+   "input_contract": null
+  },
+  "flowinvoice.rbvk_wibank@2026.09.2": {
+   "fields": [
+    {
+     "meaning": "Abrufanteil: Bruttobetrag des Mittelabrufs / `bewilligungsrahmen`; ohne Bewilligungsrahmen der übergebene Wert.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "abruf_anteil",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K28",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Abrufanteil > 0,5",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Beihilfefrei; Aliase `beihilfefrei`, `STAATLBEIH`, `beihilfefreiheit`, ergänzt aus `beihilferegelung` („keine beihilfe|beihilfefrei“).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "beihilfefrei",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K7",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Beihilfefrei und Trennungsrechnung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Der Begünstigte hatte kein früheres Vorhaben (`len(vh) == 0` im Bewertungsschritt).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "erstes_vorhaben",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K11",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Kein früheres Vorhaben des Begünstigten",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "EU-vergaberelevant; Aliase `eu_vergaberelevant`, `eu_vergabeverfahren`, `EU_VERGABE`, oder `vergabeverfahren` enthält „eu|europa|oberschwelle“, oder FPG aus `eu_vergaberelevante_fpg` bei Hochschule/Forschung.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "eu_vergaberelevant",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K24",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "EU-weite Vergabe",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzung aufgrund von Prüfungsfeststellungen der KOM, der Rechnungshöfe oder der Prüfbehörde; Aufbereitung beim Consumer.",
+     "meaning_source": "Profil `open_decisions`; `docs/behavior-changes.md` (K11)",
+     "name": "externe_kuerzung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K12",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Kürzung aufgrund von Feststellungen der KOM, Rechnungshöfe oder Prüfbehörde",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Förderprogrammgruppe (Maßnahme, z. B. 956/960/973).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`)",
+     "name": "fpg",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K2",
+       "empty": "Schlüssel fehlt im Datensatz: Ersatztext `\"\"` (kein Treffer); Wert `None`: Text „None“ (kein Treffer)",
+       "label": "FPG 1008/1009/1010",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg, dessen Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) „abschreib|afa|wertminderung“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_absch",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K4",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Abschreibung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg, dessen Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) „bau|gebäude|anlage|infrastruktur“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_bau",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K3",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Bau",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen direkten Beleg (siehe `n_direct`), dessen Kostenart nicht „personal|gemeinkost|pauschal|einnahm“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_sach",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K26",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Sachkosten",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg, dessen Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) „sachleist“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_sachleist",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K5",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Sachleistung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg mit nicht leerer `vergabenummer`, oder er ist EU-vergaberelevant.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_vergabe",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K23",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Vergabe vorhanden",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl direkter Belege des Mittelabrufs: Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) ohne „gemeinkost|pauschal|sek|standardeinheits|personal“.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "n_direct",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K25",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Direkte Belege > 80",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Öffentlich-rechtlicher Träger; Aliase `oeffentlich_rechtlich`, `RECHTSTRAEGER`, `rechtsform_oeffentlich`, oder Hochschule.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "oeffentlich_rechtlich",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K13",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Öffentlich-rechtlich",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Öffentlicher Auftraggeber; Aliase `oeffentlicher_auftraggeber`, `oeff_auftraggeber`.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "oeffentlicher_auftraggeber",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K14",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Öffentlicher Auftraggeber",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl offener Auflagen (Zahl); Aufbereitung beim Consumer.",
+     "meaning_source": "Profil `open_decisions`; `docs/behavior-changes.md` (K11)",
+     "name": "offene_auflagen_anzahl",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K10",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Bewilligte offene Auflagen (1. Auflage)",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K10b",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Bewilligte offene Auflagen (2. Auflage, score_max 2)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbudget: Maximum von `bewilligungsrahmen` (sonst `bruttobetrag`) je Vorhaben, ersatzweise die Bruttosumme des Mittelabrufs.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "projekt_budget",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K8",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Projektbudget 1,5 Mio – 5 Mio",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K9",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Projektbudget > 5 Mio",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Trennungsrechnung erforderlich; Aliase `trennungsrechnung_erforderlich`, `trennungsrechnung`, `TRENNRECH`.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "trennungsrechnung_erforderlich",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K7",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Beihilfefrei und Trennungsrechnung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Verbundvorhaben; Aliase `verbundvorhaben`, `verbund`, `AKTZEIEXT2`, auch auf Belegebene.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "verbundvorhaben",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K1",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Verbundvorhaben",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Kürzungsgrund-Codes früherer Kürzungen (z. B. „1.3“, „13.1“), auch aus eigenen früheren Mittelabrufen; Aufbereitung beim Consumer.",
+     "meaning_source": "Profil `open_decisions`; `docs/behavior-changes.md` (K11)",
+     "name": "vorherige_kuerzungsgruende",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K20",
+       "empty": "leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)",
+       "label": "Vorherige Kürzungsgründe 1.1 bis 1.24",
+       "role": "Codeliste"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K21",
+       "empty": "leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)",
+       "label": "Vorherige Kürzungsgründe 5.1 oder 5.2",
+       "role": "Codeliste"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K22",
+       "empty": "leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)",
+       "label": "Vorherige Kürzungsgründe 8.1–8.3, 8.8 oder 13.1",
+       "role": "Codeliste"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Quote aus eigenen früheren Verwaltungskontrollen (VerwK); Aufbereitung beim Consumer.",
+     "meaning_source": "Profil `open_decisions`; `docs/behavior-changes.md` (K11)",
+     "name": "vorherige_verwk_quote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K16",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Schlechte Ergebnisse vorheriger Verwaltungskontrollen",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K17",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Historische Differenz über 25 Prozent",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K18",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Historische Differenz über 50 Prozent",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K19",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Historische Differenz unter 5 Prozent",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "9f800f4e59b1c50641c4ca8074d1d24f3b10ce1916cc382c934390339535492b",
+   "input_contract": null
+  },
+  "flowinvoice.rbvk_wibank@fb2d18568d2e": {
+   "fields": [
+    {
+     "meaning": "Abrufanteil: Bruttobetrag des Mittelabrufs / `bewilligungsrahmen`; ohne Bewilligungsrahmen der übergebene Wert.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "abruf_anteil",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K28",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Abrufanteil > 0,5",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Beihilfefrei; Aliase `beihilfefrei`, `STAATLBEIH`, `beihilfefreiheit`, ergänzt aus `beihilferegelung` („keine beihilfe|beihilfefrei“).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "beihilfefrei",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K7",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Beihilfefrei und Trennungsrechnung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Der Begünstigte hatte kein früheres Vorhaben (`len(vh) == 0` im Bewertungsschritt).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`); `tools/capture_flowinvoice_verwk_scores.py`",
+     "name": "erstes_vorhaben",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K11",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Kein früheres Vorhaben des Begünstigten",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "EU-vergaberelevant; Aliase `eu_vergaberelevant`, `eu_vergabeverfahren`, `EU_VERGABE`, oder `vergabeverfahren` enthält „eu|europa|oberschwelle“, oder FPG aus `eu_vergaberelevante_fpg` bei Hochschule/Forschung.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "eu_vergaberelevant",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K24",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "EU-weite Vergabe",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Förderprogrammgruppe (Maßnahme, z. B. 956/960/973).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`)",
+     "name": "fpg",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K2",
+       "empty": "Schlüssel fehlt im Datensatz: Ersatztext `\"\"` (kein Treffer); Wert `None`: Text „None“ (kein Treffer)",
+       "label": "FPG 1008/1009/1010",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg, dessen Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) „abschreib|afa|wertminderung“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_absch",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K4",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Abschreibung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg, dessen Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) „bau|gebäude|anlage|infrastruktur“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_bau",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K3",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Bau",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen direkten Beleg (siehe `n_direct`), dessen Kostenart nicht „personal|gemeinkost|pauschal|einnahm“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_sach",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K26",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Sachkosten",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg, dessen Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) „sachleist“ enthält.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_sachleist",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K5",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Sachleistung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Mittelabruf enthält einen Beleg mit nicht leerer `vergabenummer`, oder er ist EU-vergaberelevant.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "hat_vergabe",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K23",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Vergabe vorhanden",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl direkter Belege des Mittelabrufs: Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`) ohne „gemeinkost|pauschal|sek|standardeinheits|personal“.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "n_direct",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K25",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Direkte Belege > 80",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Öffentlich-rechtlicher Träger; Aliase `oeffentlich_rechtlich`, `RECHTSTRAEGER`, `rechtsform_oeffentlich`, oder Hochschule.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "oeffentlich_rechtlich",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K13",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Öffentlich-rechtlich",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Öffentlicher Auftraggeber; Aliase `oeffentlicher_auftraggeber`, `oeff_auftraggeber`.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "oeffentlicher_auftraggeber",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K14",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Öffentlicher Auftraggeber",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Offene Auflagen; Aliase `offene_auflagen`, `OFFAUF`, `offene_auflage`.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "offene_auflagen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K10",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Offene Auflagen",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Menge der Feststellungsfamilien früherer Kürzungen (z. B. „Vergaberecht“, „Beihilferecht“).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`)",
+     "name": "prior_families",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K20",
+       "empty": "leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)",
+       "label": "Frühere Familie Vergabe",
+       "role": "Codeliste"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K21",
+       "empty": "leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)",
+       "label": "Frühere Familie Beihilfe",
+       "role": "Codeliste"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K22",
+       "empty": "leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)",
+       "label": "Sonstige frühere Familie",
+       "role": "Codeliste"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Summe der Kürzungen früherer Mittelabrufe bzw. Vorjahre des Begünstigten und Vorhabens.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`)",
+     "name": "prior_k",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K12",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Frühere Kürzung > 0",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Frühere Kürzungsquote in Prozent: `prior_k / (prior_b + prior_k) · 100`.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`score_mittelabrufe`)",
+     "name": "prior_q",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K16",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Frühere Quote > 0",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K17",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Frühere Quote 25–50",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K18",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Frühere Quote > 50",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K19",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Frühere Quote unter 5",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbudget: Maximum von `bewilligungsrahmen` (sonst `bruttobetrag`) je Vorhaben, ersatzweise die Bruttosumme des Mittelabrufs.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "projekt_budget",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K8",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Projektbudget 1,5 Mio – 5 Mio",
+       "role": "Zahl"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "K9",
+       "empty": "Ersatzwert `0`, kein Treffer (ebenso bei `\"\"` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)",
+       "label": "Projektbudget > 5 Mio",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Trennungsrechnung erforderlich; Aliase `trennungsrechnung_erforderlich`, `trennungsrechnung`, `TRENNRECH`.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "trennungsrechnung_erforderlich",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K7",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Beihilfefrei und Trennungsrechnung",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Verbundvorhaben; Aliase `verbundvorhaben`, `verbund`, `AKTZEIEXT2`, auch auf Belegebene.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py` (`_normalise_sources`)",
+     "name": "verbundvorhaben",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "K1",
+       "empty": "nicht zutreffend (keine Punkte)",
+       "label": "Verbundvorhaben",
+       "role": "Wahrheitswert"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "72b8cce180b2d94eac9d528815e900028b8c67621e567a4373286576f66ec482",
+   "input_contract": null
+  },
+  "flowinvoice.risk_checker@2026.09.2": {
+   "fields": [
+    {
+     "meaning": "Name des Begünstigten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "beneficiary_name",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RECIPIENT_MISMATCH",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+       "role": "Vergleichswert rechts"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "USt-IdNr. des Begünstigten (für Selbstrechnungs-Prüfung).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "beneficiary_vat_id",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SELF_INVOICE",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Selbstrechnung (gleiche USt-IdNr.)",
+       "role": "Vergleichswert rechts"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Median-Betrag vergleichbarer Rechnungen.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.median_amount",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "HIGH_AMOUNT",
+       "empty": "nur der absolute Schwellenwert wird geprüft (ebenso bei 0)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Median"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektende.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.project_end",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "keine Prüfung (kein Merkmal)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Ende des Vergleichszeitraums"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbeginn.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.project_start",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "keine Prüfung (kein Merkmal)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Beginn des Vergleichszeitraums"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Standardabweichung der Beträge.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.std_deviation",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "HIGH_AMOUNT",
+       "empty": "nur der absolute Schwellenwert wird geprüft (ebenso bei 0)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Standardabweichung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Gesamtanzahl verschiedener Lieferanten (zur Deutung siehe Hinweis der Regel VENDOR_CLUSTERING).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.total_vendor_count",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "kein Merkmal (ebenso bei 0)",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Nenner"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl Rechnungen dieses Lieferanten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.vendor_frequency",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "kein Merkmal (ebenso bei 0)",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Zähler"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Alle Rechnungen desselben Lieferanten im Projekt; je Eintrag (`VendorInvoiceSummary`) `net_amount` „Nettobetrag“ und `invoice_date` „Rechnungsdatum“.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.vendor_invoices",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "kein Merkmal (ebenso bei leerer Liste); Eintrag ohne `net_amount` oder `invoice_date` → Abbruch (`InputError`)",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Rechnungsliste (Einträge mit `net_amount`, `invoice_date`)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Leistungsbeschreibung (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "description",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "ROUND_AMOUNT",
+       "empty": "keine Begriffe gefunden (Schwere LOW)",
+       "label": "Runder Pauschalbetrag",
+       "role": "Beschreibung (Pauschal-Begriffe)"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "NO_PROJECT_REFERENCE",
+       "empty": "kein Merkmal",
+       "label": "Leistungsbeschreibung ohne Projektbezug",
+       "role": "Text (Muster)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "invoice_date",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "fehlt auch das Leistungsdatum und ist der Vergleichszeitraum angegeben → Abbruch (`InputError`)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Ersatzdatum"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "EU-Schwelle nicht bestimmbar; ohne Treffer → unbestimmt",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.2)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsempfänger.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "invoice_recipient",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RECIPIENT_MISMATCH",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+       "role": "Vergleichswert links"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "net_amount",
+     "required_by": [
+      "HIGH_AMOUNT",
+      "ROUND_AMOUNT"
+     ],
+     "requirement": "value_required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "HIGH_AMOUNT",
+       "empty": "Abbruch (`InputError`, Zahl erwartet)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "ROUND_AMOUNT",
+       "empty": "Abbruch (`InputError`, Zahl erwartet)",
+       "label": "Runder Pauschalbetrag",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": [
+      "HIGH_AMOUNT",
+      "ROUND_AMOUNT"
+     ]
+    },
+    {
+     "meaning": "Ende Leistungszeitraum.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "service_period_end",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "MISSING_PERIOD",
+       "empty": "zählt als fehlend (auch `\"\"` oder 0); fehlen alle Felder → Merkmal",
+       "label": "Fehlender Leistungszeitraum",
+       "role": "Angabe"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "`invoice_date` wird verwendet",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Leistungsende"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Beginn Leistungszeitraum.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "service_period_start",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "MISSING_PERIOD",
+       "empty": "zählt als fehlend (auch `\"\"` oder 0); fehlen alle Felder → Merkmal",
+       "label": "Fehlender Leistungszeitraum",
+       "role": "Angabe"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "`invoice_date` wird verwendet",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Leistungsbeginn"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "USt-IdNr. des Lieferanten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "supplier_vat_id",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SELF_INVOICE",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Selbstrechnung (gleiche USt-IdNr.)",
+       "role": "Vergleichswert links"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Lieferantenname (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "vendor_name",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "erscheint als „None“ im Text",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Textbaustein `vendor_name`"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "erscheint als „None“ im Text",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Textbaustein `vendor_name`"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "49123fb9b23b27b0e4881ffa502b2951429873b6c46046eae178ceff39e52860",
+   "input_contract": "Ein Datensatz je Rechnung wie RiskAssessmentRequest, Kontext flach als context.<feld> (flatten_record)."
+  },
+  "flowinvoice.risk_checker@2026.09.3": {
+   "fields": [
+    {
+     "meaning": "Name des Begünstigten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "beneficiary_name",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RECIPIENT_MISMATCH",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+       "role": "Vergleichswert rechts"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "USt-IdNr. des Begünstigten (für Selbstrechnungs-Prüfung).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "beneficiary_vat_id",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SELF_INVOICE",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Selbstrechnung (gleiche USt-IdNr.)",
+       "role": "Vergleichswert rechts"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Median-Betrag vergleichbarer Rechnungen.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.median_amount",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "HIGH_AMOUNT",
+       "empty": "nur der absolute Schwellenwert wird geprüft (ebenso bei 0)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Median"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektende.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.project_end",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "keine Prüfung (kein Merkmal)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Ende des Vergleichszeitraums"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbeginn.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.project_start",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "keine Prüfung (kein Merkmal)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Beginn des Vergleichszeitraums"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Standardabweichung der Beträge.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.std_deviation",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "HIGH_AMOUNT",
+       "empty": "nur der absolute Schwellenwert wird geprüft (ebenso bei 0)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Standardabweichung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Gesamtanzahl verschiedener Lieferanten (zur Deutung siehe Hinweis der Regel VENDOR_CLUSTERING).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.total_vendor_count",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "kein Merkmal (ebenso bei 0)",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Nenner"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl Rechnungen dieses Lieferanten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.vendor_frequency",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "kein Merkmal (ebenso bei 0)",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Zähler"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Alle Rechnungen desselben Lieferanten im Projekt; je Eintrag (`VendorInvoiceSummary`) `net_amount` „Nettobetrag“ und `invoice_date` „Rechnungsdatum“.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.vendor_invoices",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "kein Merkmal (ebenso bei leerer Liste); Eintrag ohne `net_amount` oder `invoice_date` → Abbruch (`InputError`)",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Rechnungsliste (Einträge mit `net_amount`, `invoice_date`)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Leistungsbeschreibung (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "description",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "ROUND_AMOUNT",
+       "empty": "keine Begriffe gefunden (Schwere LOW)",
+       "label": "Runder Pauschalbetrag",
+       "role": "Beschreibung (Pauschal-Begriffe)"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "NO_PROJECT_REFERENCE",
+       "empty": "kein Merkmal",
+       "label": "Leistungsbeschreibung ohne Projektbezug",
+       "role": "Text (Muster)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "invoice_date",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "fehlt auch das Leistungsdatum und ist der Vergleichszeitraum angegeben → Abbruch (`InputError`)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Ersatzdatum"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "EU-Schwelle nicht bestimmbar; ohne Treffer → unbestimmt",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.3)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsempfänger.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "invoice_recipient",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RECIPIENT_MISMATCH",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+       "role": "Vergleichswert links"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "net_amount",
+     "required_by": [
+      "HIGH_AMOUNT",
+      "ROUND_AMOUNT"
+     ],
+     "requirement": "value_required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "HIGH_AMOUNT",
+       "empty": "Abbruch (`InputError`, Zahl erwartet)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "ROUND_AMOUNT",
+       "empty": "Abbruch (`InputError`, Zahl erwartet)",
+       "label": "Runder Pauschalbetrag",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": [
+      "HIGH_AMOUNT",
+      "ROUND_AMOUNT"
+     ]
+    },
+    {
+     "meaning": "Ende Leistungszeitraum.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "service_period_end",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "MISSING_PERIOD",
+       "empty": "zählt als fehlend (auch `\"\"` oder 0); fehlen alle Felder → Merkmal",
+       "label": "Fehlender Leistungszeitraum",
+       "role": "Angabe"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "`invoice_date` wird verwendet",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Leistungsende"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Beginn Leistungszeitraum.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "service_period_start",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "MISSING_PERIOD",
+       "empty": "zählt als fehlend (auch `\"\"` oder 0); fehlen alle Felder → Merkmal",
+       "label": "Fehlender Leistungszeitraum",
+       "role": "Angabe"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "`invoice_date` wird verwendet",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Leistungsbeginn"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "USt-IdNr. des Lieferanten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "supplier_vat_id",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SELF_INVOICE",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Selbstrechnung (gleiche USt-IdNr.)",
+       "role": "Vergleichswert links"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Lieferantenname (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "vendor_name",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "erscheint als „None“ im Text",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Textbaustein `vendor_name`"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "erscheint als „None“ im Text",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Textbaustein `vendor_name`"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "495e37d3e1a7b16c176535905ccb060f6bd091b25639ab37fb29e22e43ad29e5",
+   "input_contract": "Ein Datensatz je Rechnung wie RiskAssessmentRequest, Kontext flach als context.<feld> (flatten_record)."
+  },
+  "flowinvoice.risk_checker@fb2d18568d2e": {
+   "fields": [
+    {
+     "meaning": "Name des Begünstigten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "beneficiary_name",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RECIPIENT_MISMATCH",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+       "role": "Vergleichswert rechts"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "USt-IdNr. des Begünstigten (für Selbstrechnungs-Prüfung).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "beneficiary_vat_id",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SELF_INVOICE",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Selbstrechnung (gleiche USt-IdNr.)",
+       "role": "Vergleichswert rechts"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Median-Betrag vergleichbarer Rechnungen.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.median_amount",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "HIGH_AMOUNT",
+       "empty": "nur der absolute Schwellenwert wird geprüft (ebenso bei 0)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Median"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektende.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.project_end",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "keine Prüfung (kein Merkmal)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Ende des Vergleichszeitraums"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Projektbeginn.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.project_start",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "keine Prüfung (kein Merkmal)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Beginn des Vergleichszeitraums"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Standardabweichung der Beträge.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.std_deviation",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "HIGH_AMOUNT",
+       "empty": "nur der absolute Schwellenwert wird geprüft (ebenso bei 0)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Standardabweichung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Gesamtanzahl verschiedener Lieferanten (zur Deutung siehe Hinweis der Regel VENDOR_CLUSTERING).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.total_vendor_count",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "kein Merkmal (ebenso bei 0)",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Nenner"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl Rechnungen dieses Lieferanten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.vendor_frequency",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "kein Merkmal (ebenso bei 0)",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Zähler"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Alle Rechnungen desselben Lieferanten im Projekt; je Eintrag (`VendorInvoiceSummary`) `net_amount` „Nettobetrag“ und `invoice_date` „Rechnungsdatum“.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskContext`, flach als `context.<feld>`)",
+     "name": "context.vendor_invoices",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "kein Merkmal (ebenso bei leerer Liste); Eintrag ohne `net_amount` oder `invoice_date` → Abbruch (`InputError`)",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Rechnungsliste (Einträge mit `net_amount`, `invoice_date`)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Leistungsbeschreibung (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "description",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "ROUND_AMOUNT",
+       "empty": "keine Begriffe gefunden (Schwere LOW)",
+       "label": "Runder Pauschalbetrag",
+       "role": "Beschreibung (Pauschal-Begriffe)"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "NO_PROJECT_REFERENCE",
+       "empty": "kein Merkmal",
+       "label": "Leistungsbeschreibung ohne Projektbezug",
+       "role": "Text (Muster)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "invoice_date",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "fehlt auch das Leistungsdatum und ist der Vergleichszeitraum angegeben → Abbruch (`InputError`)",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Ersatzdatum"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsempfänger.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "invoice_recipient",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RECIPIENT_MISMATCH",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+       "role": "Vergleichswert links"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "net_amount",
+     "required_by": [
+      "HIGH_AMOUNT",
+      "ROUND_AMOUNT"
+     ],
+     "requirement": "value_required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "HIGH_AMOUNT",
+       "empty": "Abbruch (`InputError`, Zahl erwartet)",
+       "label": "Ungewöhnlich hoher Einzelbetrag",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "ROUND_AMOUNT",
+       "empty": "Abbruch (`InputError`, Zahl erwartet)",
+       "label": "Runder Pauschalbetrag",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": [
+      "HIGH_AMOUNT",
+      "ROUND_AMOUNT"
+     ]
+    },
+    {
+     "meaning": "Ende Leistungszeitraum.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "service_period_end",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "MISSING_PERIOD",
+       "empty": "zählt als fehlend (auch `\"\"` oder 0); fehlen alle Felder → Merkmal",
+       "label": "Fehlender Leistungszeitraum",
+       "role": "Angabe"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "`invoice_date` wird verwendet",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Leistungsende"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Beginn Leistungszeitraum.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "service_period_start",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "MISSING_PERIOD",
+       "empty": "zählt als fehlend (auch `\"\"` oder 0); fehlen alle Felder → Merkmal",
+       "label": "Fehlender Leistungszeitraum",
+       "role": "Angabe"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "OUTSIDE_PROJECT_PERIOD",
+       "empty": "`invoice_date` wird verwendet",
+       "label": "Leistung außerhalb des Projektzeitraums",
+       "role": "Leistungsbeginn"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "USt-IdNr. des Lieferanten.",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "supplier_vat_id",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "SELF_INVOICE",
+       "empty": "kein Merkmal (ebenso, wenn der andere Wert fehlt)",
+       "label": "Selbstrechnung (gleiche USt-IdNr.)",
+       "role": "Vergleichswert links"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Lieferantenname (Pflichtfeld im Schema).",
+     "meaning_source": "flowinvoice@fb2d185 `backend/app/schemas/risk.py` (`RiskAssessmentRequest`)",
+     "name": "vendor_name",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "VENDOR_CLUSTERING",
+       "empty": "erscheint als „None“ im Text",
+       "label": "Auffällige Lieferantenhäufung",
+       "role": "Textbaustein `vendor_name`"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "SPLIT_INVOICE",
+       "empty": "erscheint als „None“ im Text",
+       "label": "Verdacht auf Rechnungssplitting",
+       "role": "Textbaustein `vendor_name`"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "063eebd38a04e685028eaa1ef47c1a1b0970ba9ff50b93f8544ddd2e9f0ac169",
+   "input_contract": "Ein Datensatz je Rechnung wie RiskAssessmentRequest, Kontext flach als context.<feld> (flatten_record)."
+  },
+  "riskanalysis.legacy@b5c523bf7eaa": {
+   "fields": [
+    {
+     "meaning": "Kürzung = Bruttobetrag − anerkannter Betrag (finanzielle Feststellung).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "abweichungen_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0.0`",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0` (auch nicht numerischer Text)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Kürzungsbetrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vorhaben-ID: `t_Auswertung_Antragsnummer` als Ganzzahl (eindeutige, 8-stellige Vorhaben-ID).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "antrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg nur im Gruppenkriterium (Betrag zählt, Vorhaben nicht)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Vorhaben"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg zählt nur zur Gruppe, kein Merkmal",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Vorhaben"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_ungueltige_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl Teilmenge"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl gesamt"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Auszahlungsdauer des Mittelabrufs in Tagen. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `0.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "auszahlungsdauer_tage",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0` (kein Merkmal)",
+       "code": "RF13",
+       "empty": "Ersatzwert `0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geltend gemachter Betrag eines Belegs (vor Prüfung). Quellspalte `bruttobetrag` in `t_Auswertung_Gesamt`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "bruttobetrag",
+     "required_by": [
+      "RF01",
+      "RF02",
+      "RF08",
+      "RF10"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF01",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Auffällig runde Beträge (glatte Tausender)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF02",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg knapp unter Vergabe-/Schwellenwert",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF08",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF10",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Betrag (Summen)"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Betrag (Quote)"
+      },
+      {
+       "absent": "Volumen 0",
+       "code": "Zusammenfassung",
+       "empty": "nicht gezählt; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Volumen je Merkmal (`red_flag_summary`)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Konzern-/Verflechtungsgruppe des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "Gruppennummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "nur das Kriterium je Vorhaben und Auftragnehmer",
+       "code": "RF10",
+       "empty": "Beleg nur im Kriterium je Vorhaben und Auftragnehmer",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Gruppe"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg bleibt unberücksichtigt",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erreichungsquote des Indikators als Anteil. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `1.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "indikator_erreichungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `1.0` (kein Merkmal)",
+       "code": "RF14",
+       "empty": "Ersatzwert `1.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Indikator-Erreichungsquote unter 80 %",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Aggregierte Kostenart (z. B. „Bauliche Investitionen“, „Personalausgaben“).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "kostenart_auswertung_bezeichnung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF08",
+       "empty": "gilt als vergaberelevant",
+       "label": "Beleg > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      },
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF10",
+       "empty": "gilt als vergaberelevant",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Name des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`compute_red_flags`)",
+     "name": "Name",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name links (Begünstigter)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Normalisierter Name des Zahlungsempfängers (`normalize_name` auf `zahlungsempfaenger`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)",
+     "name": "payee_canonical",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg zählt nicht",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Auftragnehmer (kanonisch)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "In pseudonymisierten Beständen vor dem Ersetzen der Namen berechnetes RF09-Ergebnis (`_name_match(Name, zahlungsempfaenger) >= 0.85`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/pseudonymization.py`",
+     "name": "_pseudonym_rf09",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ähnlichkeitsschwelle entscheidet",
+       "code": "RF09",
+       "empty": "kein Merkmal; sonst wird der Wahrheitswert übernommen (Text „False“ gilt als wahr, RK-L03)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "übernommene Vorberechnung des Merkmals"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Ergebnis der Sanktionslistenprüfung des Rechnungsstellers. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann „nicht geprüft“.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "sanktionslisten_status",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `\"kein Treffer\"` (kein Merkmal)",
+       "code": "RF15",
+       "empty": "kein Merkmal",
+       "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeverfahren-Referenz des Belegs.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "vergabenummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "gilt als fehlende Vergabekennung",
+       "code": "RF08",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, ohne Groß-/Kleinschreibung); Platzhalter nach Muster `^\\s*0([=\\s.\\-].*)?$` ebenso",
+       "label": "Beleg > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller / Auftragnehmer eines Belegs (≠ Begünstigter).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "zahlungsempfaenger",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name rechts (Auftragnehmer)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "a9736bbd2450e6dc4fa7f1ce91e1596799485a88c57b2221c65768b74b22560e",
+   "input_contract": null
+  },
+  "riskanalysis.year_bound@2026.09.1": {
+   "fields": [
+    {
+     "meaning": "Kürzung = Bruttobetrag − anerkannter Betrag (finanzielle Feststellung).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "abweichungen_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0.0`",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0` (auch nicht numerischer Text)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Kürzungsbetrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vorhaben-ID: `t_Auswertung_Antragsnummer` als Ganzzahl (eindeutige, 8-stellige Vorhaben-ID).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "antrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg nur im Gruppenkriterium (Betrag zählt, Vorhaben nicht)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Vorhaben"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg zählt nur zur Gruppe, kein Merkmal",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Vorhaben"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_ungueltige_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl Teilmenge"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl gesamt"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Auszahlungsdauer des Mittelabrufs in Tagen. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `0.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "auszahlungsdauer_tage",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0` (kein Merkmal)",
+       "code": "RF13",
+       "empty": "Ersatzwert `0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geltend gemachter Betrag eines Belegs (vor Prüfung). Quellspalte `bruttobetrag` in `t_Auswertung_Gesamt`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "bruttobetrag",
+     "required_by": [
+      "RF01",
+      "RF02",
+      "RF08",
+      "RF10"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF01",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Auffällig runde Beträge (glatte Tausender)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF02",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF08",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF10",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Betrag (Summen)"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Betrag (Quote)"
+      },
+      {
+       "absent": "Volumen 0",
+       "code": "Zusammenfassung",
+       "empty": "nicht gezählt; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Volumen je Merkmal (`red_flag_summary`)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Konzern-/Verflechtungsgruppe des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "Gruppennummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "nur das Kriterium je Vorhaben und Auftragnehmer",
+       "code": "RF10",
+       "empty": "Beleg nur im Kriterium je Vorhaben und Auftragnehmer",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Gruppe"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg bleibt unberücksichtigt",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erreichungsquote des Indikators als Anteil. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `1.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "indikator_erreichungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `1.0` (kein Merkmal)",
+       "code": "RF14",
+       "empty": "Ersatzwert `1.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Indikator-Erreichungsquote unter 80 %",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Aggregierte Kostenart (z. B. „Bauliche Investitionen“, „Personalausgaben“).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "kostenart_auswertung_bezeichnung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF08",
+       "empty": "gilt als vergaberelevant",
+       "label": "Beleg > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      },
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF10",
+       "empty": "gilt als vergaberelevant",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Name des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`compute_red_flags`)",
+     "name": "Name",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name links (Begünstigter)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Normalisierter Name des Zahlungsempfängers (`normalize_name` auf `zahlungsempfaenger`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)",
+     "name": "payee_canonical",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg zählt nicht",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Auftragnehmer (kanonisch)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "In pseudonymisierten Beständen vor dem Ersetzen der Namen berechnetes RF09-Ergebnis (`_name_match(Name, zahlungsempfaenger) >= 0.85`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/pseudonymization.py`",
+     "name": "_pseudonym_rf09",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ähnlichkeitsschwelle entscheidet",
+       "code": "RF09",
+       "empty": "kein Merkmal; sonst wird der Wahrheitswert übernommen (Text „False“ gilt als wahr, RK-L03)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "übernommene Vorberechnung des Merkmals"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum als Datum (`pd.to_datetime` der Quellspalte `rechnungsdatum`); Stichtag der jahresbezogenen EU-Schwelle.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "rechnungsdatum_dt",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF02",
+       "empty": "EU-Schwelle nicht bestimmbar; trifft keine Profilschwelle → unbestimmt",
+       "label": "Beleg knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.2)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Ergebnis der Sanktionslistenprüfung des Rechnungsstellers. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann „nicht geprüft“.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "sanktionslisten_status",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `\"kein Treffer\"` (kein Merkmal)",
+       "code": "RF15",
+       "empty": "kein Merkmal",
+       "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeverfahren-Referenz des Belegs.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "vergabenummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "gilt als fehlende Vergabekennung",
+       "code": "RF08",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, ohne Groß-/Kleinschreibung); Platzhalter nach Muster `^\\s*0([=\\s.\\-].*)?$` ebenso",
+       "label": "Beleg > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller / Auftragnehmer eines Belegs (≠ Begünstigter).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "zahlungsempfaenger",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name rechts (Auftragnehmer)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "f9b4a01323bd0350c8c77117172565c857b34a1b400544f3696290f15ab395b1",
+   "input_contract": null
+  },
+  "riskanalysis.year_bound@2026.09.2": {
+   "fields": [
+    {
+     "meaning": "Kürzung = Bruttobetrag − anerkannter Betrag (finanzielle Feststellung).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "abweichungen_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0.0`",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0` (auch nicht numerischer Text)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Kürzungsbetrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vorhaben-ID: `t_Auswertung_Antragsnummer` als Ganzzahl (eindeutige, 8-stellige Vorhaben-ID).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "antrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg nur im Gruppenkriterium (Betrag zählt, Vorhaben nicht)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Vorhaben"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg zählt nur zur Gruppe, kein Merkmal",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Vorhaben"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_ungueltige_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl Teilmenge"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl gesamt"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Auszahlungsdauer des Mittelabrufs in Tagen. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `0.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "auszahlungsdauer_tage",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0` (kein Merkmal)",
+       "code": "RF13",
+       "empty": "Ersatzwert `0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geltend gemachter Betrag eines Belegs (vor Prüfung). Quellspalte `bruttobetrag` in `t_Auswertung_Gesamt`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "bruttobetrag",
+     "required_by": [
+      "RF01",
+      "RF10"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF01",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Auffällig runde Beträge (glatte Tausender)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF10",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Betrag (Summen)"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Betrag (Quote)"
+      },
+      {
+       "absent": "Volumen 0",
+       "code": "Zusammenfassung",
+       "empty": "nicht gezählt; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Volumen je Merkmal (`red_flag_summary`)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Konzern-/Verflechtungsgruppe des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "Gruppennummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "nur das Kriterium je Vorhaben und Auftragnehmer",
+       "code": "RF10",
+       "empty": "Beleg nur im Kriterium je Vorhaben und Auftragnehmer",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Gruppe"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg bleibt unberücksichtigt",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erreichungsquote des Indikators als Anteil. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `1.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "indikator_erreichungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `1.0` (kein Merkmal)",
+       "code": "RF14",
+       "empty": "Ersatzwert `1.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Indikator-Erreichungsquote unter 80 %",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Aggregierte Kostenart (z. B. „Bauliche Investitionen“, „Personalausgaben“).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "kostenart_auswertung_bezeichnung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF08",
+       "empty": "gilt als vergaberelevant",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      },
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF10",
+       "empty": "gilt als vergaberelevant",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Name des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`compute_red_flags`)",
+     "name": "Name",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name links (Begünstigter)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag des Belegs. `t_Auswertung_Gesamt` hat keine Nettospalte; riskanalysis übernimmt die Spalte „Gesamt Netto“ der hessischen Belegliste als `nettobetrag` und leitet nichts aus dem Bruttobetrag ab.",
+     "meaning_source": "riskanalysis@9a5b624 `backend/app/pipeline/mdb_loader.py` (`load_raw`); `docs/behavior-changes.md` (K2, K2a)",
+     "name": "nettobetrag",
+     "required_by": [
+      "RF02",
+      "RF08"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF02",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF08",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Normalisierter Name des Zahlungsempfängers (`normalize_name` auf `zahlungsempfaenger`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)",
+     "name": "payee_canonical",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg zählt nicht",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Auftragnehmer (kanonisch)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "In pseudonymisierten Beständen vor dem Ersetzen der Namen berechnetes RF09-Ergebnis (`_name_match(Name, zahlungsempfaenger) >= 0.85`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/pseudonymization.py`",
+     "name": "_pseudonym_rf09",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ähnlichkeitsschwelle entscheidet",
+       "code": "RF09",
+       "empty": "kein Merkmal; sonst wird der Wahrheitswert übernommen (Text „False“ gilt als wahr, RK-L03)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "übernommene Vorberechnung des Merkmals"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum als Datum (`pd.to_datetime` der Quellspalte `rechnungsdatum`); Stichtag der jahresbezogenen EU-Schwelle.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "rechnungsdatum_dt",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF02",
+       "empty": "EU-Schwelle nicht bestimmbar; trifft keine Profilschwelle → unbestimmt",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.2)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Ergebnis der Sanktionslistenprüfung des Rechnungsstellers. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann „nicht geprüft“.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "sanktionslisten_status",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `\"kein Treffer\"` (kein Merkmal)",
+       "code": "RF15",
+       "empty": "kein Merkmal",
+       "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeverfahren-Referenz des Belegs.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "vergabenummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "gilt als fehlende Vergabekennung",
+       "code": "RF08",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, ohne Groß-/Kleinschreibung); Platzhalter nach Muster `^\\s*0([=\\s.\\-].*)?$` ebenso",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller / Auftragnehmer eines Belegs (≠ Begünstigter).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "zahlungsempfaenger",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name rechts (Auftragnehmer)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "72696f5609d6c29388f0d42d76fb66bd11780fbadee69c4a646ace918102d41b",
+   "input_contract": null
+  },
+  "riskanalysis.year_bound@2026.09.3": {
+   "fields": [
+    {
+     "meaning": "Kürzung = Bruttobetrag − anerkannter Betrag (finanzielle Feststellung).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "abweichungen_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0.0`",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0` (auch nicht numerischer Text)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Kürzungsbetrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vorhaben-ID: `t_Auswertung_Antragsnummer` als Ganzzahl (eindeutige, 8-stellige Vorhaben-ID).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "antrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg nur im Gruppenkriterium (Betrag zählt, Vorhaben nicht)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Vorhaben"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg zählt nur zur Gruppe, kein Merkmal",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Vorhaben"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_ungueltige_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl Teilmenge"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl gesamt"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Auszahlungsdauer des Mittelabrufs in Tagen. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `0.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "auszahlungsdauer_tage",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0` (kein Merkmal)",
+       "code": "RF13",
+       "empty": "Ersatzwert `0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geltend gemachter Betrag eines Belegs (vor Prüfung). Quellspalte `bruttobetrag` in `t_Auswertung_Gesamt`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "bruttobetrag",
+     "required_by": [
+      "RF01",
+      "RF10"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF01",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Auffällig runde Beträge (glatte Tausender)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF10",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Betrag (Summen)"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Betrag (Quote)"
+      },
+      {
+       "absent": "Volumen 0",
+       "code": "Zusammenfassung",
+       "empty": "nicht gezählt; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Volumen je Merkmal (`red_flag_summary`)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Konzern-/Verflechtungsgruppe des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "Gruppennummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "nur das Kriterium je Vorhaben und Auftragnehmer",
+       "code": "RF10",
+       "empty": "Beleg nur im Kriterium je Vorhaben und Auftragnehmer",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Gruppe"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg bleibt unberücksichtigt",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erreichungsquote des Indikators als Anteil. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `1.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "indikator_erreichungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `1.0` (kein Merkmal)",
+       "code": "RF14",
+       "empty": "Ersatzwert `1.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Indikator-Erreichungsquote unter 80 %",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Aggregierte Kostenart (z. B. „Bauliche Investitionen“, „Personalausgaben“).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "kostenart_auswertung_bezeichnung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF08",
+       "empty": "gilt als vergaberelevant",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      },
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF10",
+       "empty": "gilt als vergaberelevant",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Name des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`compute_red_flags`)",
+     "name": "Name",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name links (Begünstigter)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag des Belegs. `t_Auswertung_Gesamt` hat keine Nettospalte; riskanalysis übernimmt die Spalte „Gesamt Netto“ der hessischen Belegliste als `nettobetrag` und leitet nichts aus dem Bruttobetrag ab.",
+     "meaning_source": "riskanalysis@9a5b624 `backend/app/pipeline/mdb_loader.py` (`load_raw`); `docs/behavior-changes.md` (K2, K2a)",
+     "name": "nettobetrag",
+     "required_by": [
+      "RF02",
+      "RF08"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF02",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF08",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Normalisierter Name des Zahlungsempfängers (`normalize_name` auf `zahlungsempfaenger`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)",
+     "name": "payee_canonical",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg zählt nicht",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Auftragnehmer (kanonisch)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "In pseudonymisierten Beständen vor dem Ersetzen der Namen berechnetes RF09-Ergebnis (`_name_match(Name, zahlungsempfaenger) >= 0.85`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/pseudonymization.py`",
+     "name": "_pseudonym_rf09",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ähnlichkeitsschwelle entscheidet",
+       "code": "RF09",
+       "empty": "kein Merkmal; sonst wird der Wahrheitswert übernommen (Text „False“ gilt als wahr, RK-L03)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "übernommene Vorberechnung des Merkmals"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum als Datum (`pd.to_datetime` der Quellspalte `rechnungsdatum`); Stichtag der jahresbezogenen EU-Schwelle.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "rechnungsdatum_dt",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF02",
+       "empty": "EU-Schwelle nicht bestimmbar; trifft keine Profilschwelle → unbestimmt",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.2)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Ergebnis der Sanktionslistenprüfung des Rechnungsstellers. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann „nicht geprüft“.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "sanktionslisten_status",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `\"kein Treffer\"` (kein Merkmal)",
+       "code": "RF15",
+       "empty": "kein Merkmal",
+       "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeverfahren-Referenz des Belegs.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "vergabenummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "gilt als fehlende Vergabekennung",
+       "code": "RF08",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, ohne Groß-/Kleinschreibung); Platzhalter nach Muster `^\\s*0([=\\s.\\-].*)?$` ebenso",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller / Auftragnehmer eines Belegs (≠ Begünstigter).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "zahlungsempfaenger",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name rechts (Auftragnehmer)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "57079051f6ad1550aef7aed53bf7c12661c5ee5ecd07a2d23025a8219a8164a0",
+   "input_contract": null
+  },
+  "riskanalysis.year_bound@2026.09.4": {
+   "fields": [
+    {
+     "meaning": "Kürzung = Bruttobetrag − anerkannter Betrag (finanzielle Feststellung).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "abweichungen_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0.0`",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0` (auch nicht numerischer Text)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Kürzungsbetrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vorhaben-ID: `t_Auswertung_Antragsnummer` als Ganzzahl (eindeutige, 8-stellige Vorhaben-ID).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "antrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg nur im Gruppenkriterium (Betrag zählt, Vorhaben nicht)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Vorhaben"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg zählt nur zur Gruppe, kein Merkmal",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Vorhaben"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_ungueltige_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl Teilmenge"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl gesamt"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Auszahlungsdauer des Mittelabrufs in Tagen. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `0.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "auszahlungsdauer_tage",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0` (kein Merkmal)",
+       "code": "RF13",
+       "empty": "Ersatzwert `0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geltend gemachter Betrag eines Belegs (vor Prüfung). Quellspalte `bruttobetrag` in `t_Auswertung_Gesamt`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "bruttobetrag",
+     "required_by": [
+      "RF01",
+      "RF10"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF01",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Auffällig runde Beträge (glatte Tausender)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF10",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Betrag (Summen)"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Betrag (Quote)"
+      },
+      {
+       "absent": "Volumen 0",
+       "code": "Zusammenfassung",
+       "empty": "nicht gezählt; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Volumen je Merkmal (`red_flag_summary`)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Konzern-/Verflechtungsgruppe des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "Gruppennummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "nur das Kriterium je Vorhaben und Auftragnehmer",
+       "code": "RF10",
+       "empty": "Beleg nur im Kriterium je Vorhaben und Auftragnehmer",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Gruppe"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg bleibt unberücksichtigt",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erreichungsquote des Indikators als Anteil. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `1.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "indikator_erreichungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `1.0` (kein Merkmal)",
+       "code": "RF14",
+       "empty": "Ersatzwert `1.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Indikator-Erreichungsquote unter 80 %",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Aggregierte Kostenart (z. B. „Bauliche Investitionen“, „Personalausgaben“).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "kostenart_auswertung_bezeichnung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF08",
+       "empty": "gilt als vergaberelevant",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      },
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF10",
+       "empty": "gilt als vergaberelevant",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Name des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`compute_red_flags`)",
+     "name": "Name",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name links (Begünstigter)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag des Belegs. `t_Auswertung_Gesamt` hat keine Nettospalte; riskanalysis übernimmt die Spalte „Gesamt Netto“ der hessischen Belegliste als `nettobetrag` und leitet nichts aus dem Bruttobetrag ab.",
+     "meaning_source": "riskanalysis@9a5b624 `backend/app/pipeline/mdb_loader.py` (`load_raw`); `docs/behavior-changes.md` (K2, K2a)",
+     "name": "nettobetrag",
+     "required_by": [
+      "RF02",
+      "RF08"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF02",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF08",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Normalisierter Name des Zahlungsempfängers (`normalize_name` auf `zahlungsempfaenger`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)",
+     "name": "payee_canonical",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg zählt nicht",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Auftragnehmer (kanonisch)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "In pseudonymisierten Beständen vor dem Ersetzen der Namen berechnetes RF09-Ergebnis (`_name_match(Name, zahlungsempfaenger) >= 0.85`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/pseudonymization.py`",
+     "name": "_pseudonym_rf09",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ähnlichkeitsschwelle entscheidet",
+       "code": "RF09",
+       "empty": "kein Merkmal; sonst wird der Wahrheitswert übernommen (Text „False“ gilt als wahr, RK-L03)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "übernommene Vorberechnung des Merkmals"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum als Datum (`pd.to_datetime` der Quellspalte `rechnungsdatum`); Stichtag der jahresbezogenen EU-Schwelle.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "rechnungsdatum_dt",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF02",
+       "empty": "EU-Schwelle nicht bestimmbar; trifft keine Profilschwelle → unbestimmt",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.3)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Ergebnis der Sanktionslistenprüfung des Rechnungsstellers. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann „nicht geprüft“.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "sanktionslisten_status",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `\"kein Treffer\"` (kein Merkmal)",
+       "code": "RF15",
+       "empty": "kein Merkmal",
+       "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeverfahren-Referenz des Belegs.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "vergabenummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "gilt als fehlende Vergabekennung",
+       "code": "RF08",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, ohne Groß-/Kleinschreibung); Platzhalter nach Muster `^\\s*0([=\\s.\\-].*)?$` ebenso",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller / Auftragnehmer eines Belegs (≠ Begünstigter).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "zahlungsempfaenger",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name rechts (Auftragnehmer)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "266e8c9e02eadb7514aed8b0121f07d9140a2044c43df28b00197ea3109fb3e2",
+   "input_contract": null
+  },
+  "riskanalysis.year_bound@2026.09.5": {
+   "fields": [
+    {
+     "meaning": "Kürzung = Bruttobetrag − anerkannter Betrag (finanzielle Feststellung).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "abweichungen_betrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0.0`",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0` (auch nicht numerischer Text)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Kürzungsbetrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vorhaben-ID: `t_Auswertung_Antragsnummer` als Ganzzahl (eindeutige, 8-stellige Vorhaben-ID).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "antrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg nur im Gruppenkriterium (Betrag zählt, Vorhaben nicht)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Vorhaben"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg zählt nur zur Gruppe, kein Merkmal",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Vorhaben"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der ungültigen Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_ungueltige_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl Teilmenge"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Anzahl der Versionen in der Mittelabruf-Historie (RF11). Spalte der Tabelle `t_Auswertung_Gesamt`, von `load_raw` unverändert übernommen.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`_compute_rf11`); Tabellenschema `t_Auswertung_Gesamt` der riskanalysis-Datenbank (nur Spaltennamen)",
+     "name": "Anzahl_Versionen",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF11",
+       "empty": "gilt als 0 (auch nicht numerischer Text)",
+       "label": "Mittelabruf-Historie mit überwiegend ungültigen Versionen",
+       "role": "Anzahl gesamt"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Auszahlungsdauer des Mittelabrufs in Tagen. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `0.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "auszahlungsdauer_tage",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `0` (kein Merkmal)",
+       "code": "RF13",
+       "empty": "Ersatzwert `0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Auszahlung eines Mittelabrufs nach mehr als 80 Tagen (Problemursache zu verifizieren)",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Geltend gemachter Betrag eines Belegs (vor Prüfung). Quellspalte `bruttobetrag` in `t_Auswertung_Gesamt`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "bruttobetrag",
+     "required_by": [
+      "RF01",
+      "RF10"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF01",
+       "empty": "Ersatzwert `0.0` (kein Merkmal); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Auffällig runde Beträge (glatte Tausender)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF10",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Betrag (Summen)"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Ersatzwert `0.0`; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Betrag (Quote)"
+      },
+      {
+       "absent": "Volumen 0",
+       "code": "Zusammenfassung",
+       "empty": "nicht gezählt; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Volumen je Merkmal (`red_flag_summary`)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Konzern-/Verflechtungsgruppe des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`); riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "Gruppennummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "nur das Kriterium je Vorhaben und Auftragnehmer",
+       "code": "RF10",
+       "empty": "Beleg nur im Kriterium je Vorhaben und Auftragnehmer",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Gruppe"
+      },
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF12",
+       "empty": "Beleg bleibt unberücksichtigt",
+       "label": "Hohe historische Kürzungsquote des Begünstigten (> 10 %, leave-one-out; Schwelle aus rbvk-Kriterium 19 übernommen, nicht datenkalibriert)",
+       "role": "Gruppe"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Erreichungsquote des Indikators als Anteil. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann `1.0`.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "indikator_erreichungsquote",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `1.0` (kein Merkmal)",
+       "code": "RF14",
+       "empty": "Ersatzwert `1.0` (kein Merkmal); nicht numerischer Text gilt als leer",
+       "label": "Indikator-Erreichungsquote unter 80 %",
+       "role": "Zahl"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Aggregierte Kostenart (z. B. „Bauliche Investitionen“, „Personalausgaben“).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "kostenart_auswertung_bezeichnung",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF08",
+       "empty": "gilt als vergaberelevant",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      },
+      {
+       "absent": "alle Datensätze gelten als vergaberelevant",
+       "code": "RF10",
+       "empty": "gilt als vergaberelevant",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Kostenart (nicht vergaberelevant bei Muster „personal|gemeinkost|pauschal|abschreibung“)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Name des Begünstigten; aus Tabelle `t_Namen` über die Antragsnummer zugeordnet.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`); riskanalysis@b5c523b `backend/app/pipeline/red_flags.py` (`compute_red_flags`)",
+     "name": "Name",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name links (Begünstigter)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Nettobetrag des Belegs. `t_Auswertung_Gesamt` hat keine Nettospalte; riskanalysis übernimmt die Spalte „Gesamt Netto“ der hessischen Belegliste als `nettobetrag` und leitet nichts aus dem Bruttobetrag ab.",
+     "meaning_source": "riskanalysis@9a5b624 `backend/app/pipeline/mdb_loader.py` (`load_raw`); `docs/behavior-changes.md` (K2, K2a)",
+     "name": "nettobetrag",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF02",
+       "empty": "unbestimmt („Nettobetrag fehlt in der Quelle“); Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Betrag"
+      },
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF08",
+       "empty": "unbestimmt („Nettobetrag fehlt in der Quelle“) nur ohne echte Vergabekennung bei vergaberelevanter Kostenart, sonst kein Merkmal; Text statt Zahl → Abbruch (`InputError`)",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Betrag"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Normalisierter Name des Zahlungsempfängers (`normalize_name` auf `zahlungsempfaenger`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/payee_normalizer.py` (`add_payee_columns`)",
+     "name": "payee_canonical",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "kein Merkmal für alle Datensätze",
+       "code": "RF10",
+       "empty": "Beleg zählt nicht",
+       "label": "Wiederholte Beauftragung desselben Auftragnehmers (Konzentration)",
+       "role": "Auftragnehmer (kanonisch)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "In pseudonymisierten Beständen vor dem Ersetzen der Namen berechnetes RF09-Ergebnis (`_name_match(Name, zahlungsempfaenger) >= 0.85`).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/pseudonymization.py`",
+     "name": "_pseudonym_rf09",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ähnlichkeitsschwelle entscheidet",
+       "code": "RF09",
+       "empty": "kein Merkmal; sonst wird der Wahrheitswert übernommen (Text „False“ gilt als wahr, RK-L03)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "übernommene Vorberechnung des Merkmals"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungsdatum als Datum (`pd.to_datetime` der Quellspalte `rechnungsdatum`); Stichtag der jahresbezogenen EU-Schwelle.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "rechnungsdatum_dt",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "wie leerer Wert",
+       "code": "RF02",
+       "empty": "EU-Schwelle nicht bestimmbar; trifft keine Profilschwelle → unbestimmt",
+       "label": "Beleg (netto) knapp unter Vergabe-/Schwellenwert (EU-Schwelle jahresbezogen)",
+       "role": "Stichtag der EU-Schwelle (procurement.hvtg 2026.09.3)"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Ergebnis der Sanktionslistenprüfung des Rechnungsstellers. Im originalen MDB-Bestand nicht vorhanden; `load_raw` setzt dann „nicht geprüft“.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/pipeline/mdb_loader.py` (`load_raw`)",
+     "name": "sanktionslisten_status",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "Ersatzwert `\"kein Treffer\"` (kein Merkmal)",
+       "code": "RF15",
+       "empty": "kein Merkmal",
+       "label": "Möglicher Sanktionslisten-Treffer des Rechnungsstellers",
+       "role": "Text"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Vergabeverfahren-Referenz des Belegs.",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "vergabenummer",
+     "required_by": [],
+     "requirement": "optional",
+     "uses": [
+      {
+       "absent": "gilt als fehlende Vergabekennung",
+       "code": "RF08",
+       "empty": "gilt als fehlende Vergabekennung (auch `\"\"`, `\"nan\"`, ohne Groß-/Kleinschreibung); Platzhalter nach Muster `^\\s*0([=\\s.\\-].*)?$` ebenso",
+       "label": "Beleg netto > 25 T€ ohne echte Vergabe-Kennung (vergaberelevante Kostenart)",
+       "role": "Vergabekennung"
+      }
+     ],
+     "value_required_by": []
+    },
+    {
+     "meaning": "Rechnungssteller / Auftragnehmer eines Belegs (≠ Begünstigter).",
+     "meaning_source": "riskanalysis@b5c523b `backend/app/services/report.py` (`FELD_ERKLAERUNG`)",
+     "name": "zahlungsempfaenger",
+     "required_by": [
+      "RF09"
+     ],
+     "requirement": "required",
+     "uses": [
+      {
+       "absent": "Abbruch (`InputError`)",
+       "code": "RF09",
+       "empty": "Ähnlichkeit 0 (kein Merkmal aus dem Namensvergleich)",
+       "label": "Begünstigter = Auftragnehmer (Selbstbeauftragung)",
+       "role": "Name rechts (Auftragnehmer)"
+      }
+     ],
+     "value_required_by": []
+    }
+   ],
+   "fingerprint": "dd32ede2494116ad3fc4cf5a01a479c2abb6ed6b479fbc3e8a1c04d656610571",
+   "input_contract": null
+  }
+ },
+ "schema": "auditcore_risk.field-catalog/1",
+ "undocumented": "Bedeutung laut Quelle nicht dokumentiert"
+}
