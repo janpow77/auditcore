@@ -1,6 +1,6 @@
 {
   "schema": "auditcore_price_sources.catalog/1",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "sources": [
     {
       "source_id": "price.bundesbank",
@@ -52,7 +52,7 @@
     },
     {
       "source_id": "price.destatis_genesis",
-      "adapter": "DestatisTabellenAdapter",
+      "adapter": "DestatisTableAdapter",
       "harvest_catalog_id": "price.destatis_genesis",
       "origins": [
         {
