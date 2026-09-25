@@ -9,6 +9,7 @@
       "metrics": {
         "any_usages": 123,
         "complexity_over_10": 23,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 33,
         "modules_over_400_lines": 3,
         "mypy_strict_errors": 0,
@@ -19,6 +20,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -29,6 +31,7 @@
       "metrics": {
         "any_usages": 146,
         "complexity_over_10": 0,
+        "duplicate_functions": 2,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -39,6 +42,7 @@
       "metrics": {
         "any_usages": 182,
         "complexity_over_10": 0,
+        "duplicate_functions": 2,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -49,6 +53,7 @@
       "metrics": {
         "any_usages": 7,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -59,6 +64,7 @@
       "metrics": {
         "any_usages": 2,
         "complexity_over_10": 0,
+        "duplicate_functions": 3,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -69,6 +75,7 @@
       "metrics": {
         "any_usages": 66,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 2,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -79,6 +86,7 @@
       "metrics": {
         "any_usages": 12,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -89,6 +97,7 @@
       "metrics": {
         "any_usages": 3,
         "complexity_over_10": 0,
+        "duplicate_functions": 1,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -99,6 +108,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
+        "duplicate_functions": 2,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -109,6 +119,7 @@
       "metrics": {
         "any_usages": 14,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -119,6 +130,7 @@
       "metrics": {
         "any_usages": 54,
         "complexity_over_10": 6,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 7,
         "modules_over_400_lines": 1,
         "mypy_strict_errors": 0,
@@ -129,6 +141,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -139,6 +152,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
+        "duplicate_functions": 5,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -149,6 +163,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -159,6 +174,7 @@
       "metrics": {
         "any_usages": 4,
         "complexity_over_10": 0,
+        "duplicate_functions": 4,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -169,6 +185,7 @@
       "metrics": {
         "any_usages": 42,
         "complexity_over_10": 0,
+        "duplicate_functions": 1,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -179,6 +196,7 @@
       "metrics": {
         "any_usages": 2,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -189,6 +207,7 @@
       "metrics": {
         "any_usages": 34,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -199,6 +218,7 @@
       "metrics": {
         "any_usages": 1,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -209,6 +229,7 @@
       "metrics": {
         "any_usages": 45,
         "complexity_over_10": 0,
+        "duplicate_functions": 5,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -219,6 +240,7 @@
       "metrics": {
         "any_usages": 4,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -229,6 +251,7 @@
       "metrics": {
         "any_usages": 27,
         "complexity_over_10": 0,
+        "duplicate_functions": 2,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -239,6 +262,7 @@
       "metrics": {
         "any_usages": 8,
         "complexity_over_10": 0,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -249,6 +273,7 @@
       "metrics": {
         "any_usages": 6,
         "complexity_over_10": 0,
+        "duplicate_functions": 1,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
