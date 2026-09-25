@@ -23,5 +23,14 @@ defineFlowauditElements({ locale: 'de' })
 - **Basiskomponenten:** `FaButton`, `FaIcon` (eigene Symbole), `FaDialog`
   (modal, Fokusfalle, Escape), `FaTable` (deklarative Spalten, Sortierung mit
   `aria-sort`), `FaBadge`, `FaTextField`.
+- **Risiko-Merkmale** (`src/risk/`): `RiskFlags` bzw. `<flowaudit-risk-flags>`
+  für Auswertungen von `auditcore_risk.web` (Vertrag
+  [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md)) – Verteilung je Merkmal
+  (`RiskFlagSummary`), Filter (`RiskFlagFilter`), Zustand je Datensatz
+  (`RiskFlagTable`), Karten mit Begründung, Profil und Version, Eingabewerten
+  und Schwellen (`RiskFlagCard`, `RiskRecordDetail`), Profil mit Eingabefeldern
+  (`RiskProfileInfo`). „Unbestimmt“ (z. B. fehlender Nettobetrag) und
+  „übersprungen“ (fehlende Spalten) sind eigene Zustände. Die View-Logik
+  (`src/risk/view/`) ist framework-frei.
 
 Beitragen: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md). Lizenz: MIT.
