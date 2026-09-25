@@ -33,3 +33,12 @@ Nach jedem Deploy außerhalb von `internal_test` ist ein fachlicher Rauchtest
 `auditcore-deploy smoke` (Exitcode 1 bei Fehlschlag). Details:
 [docs/deployment/functional-smoke.md](docs/deployment/functional-smoke.md).
 
+## Helfer-Verträge in den Apps
+
+App-Repositorys prüfen ihre Hilfsfunktionen (Zahl, Datum, Betrag, CSV,
+Fehlertext) mit `auditcore-helpers check` bzw. der Action
+`.github/actions/helper-contracts` gegen die gemeinsamen Vertragsfälle in
+`contracts/common-cases` und eine Ratchet-Baseline. Neue Regeln brauchen
+Positiv- und Negativbeispiele, neue Fälle eine Referenzumsetzung in beiden
+Sprachen. Details: [docs/quality/helper-contracts.md](docs/quality/helper-contracts.md).
+

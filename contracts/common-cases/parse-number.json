@@ -1,0 +1,413 @@
+{
+  "$schema": "./schema.json",
+  "contract": "parse-number",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "Zahl bzw. Betrag aus Texteingabe parsen",
+  "description": "Parser für Benutzereingaben und Importwerte. Ergebnis als Dezimalwert (Zahl, Decimal oder Dezimal-String); ungültig heißt null/None/undefined/NaN oder Ausnahme. Modus 'de' = Betragsfelder (Komma dezimal, Punkt nur als Tausendertrenner in Dreiergruppen), 'en' = englische Schreibweise, 'auto' = Import aus Fremddateien (letzter Trenner entscheidet, mehrdeutige Einzeltrenner werden abgelehnt). Währungszeichen (€, EUR) und Leerraum (auch U+00A0) werden entfernt.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "text",
+    "mode"
+  ],
+  "result": "decimal",
+  "cases": [
+    {
+      "id": "de-tausender-dezimal",
+      "input": {
+        "text": "1.234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "probe"
+      ],
+      "note": "BeleglisteGrid.parseDecimal liefert 1.234"
+    },
+    {
+      "id": "de-ohne-tausender",
+      "input": {
+        "text": "1234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "de-dezimalkomma",
+      "input": {
+        "text": "1,5",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1.5"
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "de-tausenderpunkt",
+      "input": {
+        "text": "1.234",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234"
+      }
+    },
+    {
+      "id": "de-millionen",
+      "input": {
+        "text": "1.234.567,89",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234567.89"
+      }
+    },
+    {
+      "id": "de-millionen-ohne-dezimal",
+      "input": {
+        "text": "1.000.000",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1000000"
+      }
+    },
+    {
+      "id": "de-null",
+      "input": {
+        "text": "0,00",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "0"
+      }
+    },
+    {
+      "id": "de-mehrdeutig-punkt",
+      "input": {
+        "text": "1.5",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "mehrdeutig"
+      ],
+      "note": "vorläufige Festlegung: in Betragsfeldern ungültig, Oberfläche zeigt Hinweis (weder 1,5 noch 15 raten)"
+    },
+    {
+      "id": "de-englisches-format",
+      "input": {
+        "text": "1,234.56",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      }
+    },
+    {
+      "id": "de-falsche-gruppe",
+      "input": {
+        "text": "12.34,5",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      }
+    },
+    {
+      "id": "de-mehrere-kommas",
+      "input": {
+        "text": "1,2,3",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      }
+    },
+    {
+      "id": "de-negativ",
+      "input": {
+        "text": "-3,2",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "-3.2"
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "de-negativ-euro",
+      "input": {
+        "text": "-1.234,56 €",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "-1234.56"
+      }
+    },
+    {
+      "id": "de-leerzeichen-tausender-euro",
+      "input": {
+        "text": "12 345,67 €",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "12345.67"
+      }
+    },
+    {
+      "id": "de-nbsp-euro",
+      "input": {
+        "text": "12 345,67 €",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "12345.67"
+      }
+    },
+    {
+      "id": "de-euro-vorn",
+      "input": {
+        "text": "€ 1.234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "de-eur-kuerzel",
+      "input": {
+        "text": "1.234,56 EUR",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "de-leerraum",
+      "input": {
+        "text": "  1,5  ",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1.5"
+      }
+    },
+    {
+      "id": "de-leer",
+      "input": {
+        "text": "",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "de-nur-leerraum",
+      "input": {
+        "text": "   ",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      }
+    },
+    {
+      "id": "de-text",
+      "input": {
+        "text": "abc",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "probe"
+      ],
+      "note": "0 statt Ablehnung ist ein Fehler"
+    },
+    {
+      "id": "de-zahl-mit-text",
+      "input": {
+        "text": "12abc",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "note": "parseFloat('12abc') = 12 ist ein Fehler"
+    },
+    {
+      "id": "en-tausender-dezimal",
+      "input": {
+        "text": "1,234.56",
+        "mode": "en"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "en-dezimalpunkt",
+      "input": {
+        "text": "1.5",
+        "mode": "en"
+      },
+      "expect": {
+        "value": "1.5"
+      }
+    },
+    {
+      "id": "en-tausenderkomma",
+      "input": {
+        "text": "1,234",
+        "mode": "en"
+      },
+      "expect": {
+        "value": "1234"
+      }
+    },
+    {
+      "id": "en-deutsches-format",
+      "input": {
+        "text": "1.234,56",
+        "mode": "en"
+      },
+      "expect": {
+        "invalid": true
+      }
+    },
+    {
+      "id": "en-negativ",
+      "input": {
+        "text": "-3.2",
+        "mode": "en"
+      },
+      "expect": {
+        "value": "-3.2"
+      }
+    },
+    {
+      "id": "en-euro",
+      "input": {
+        "text": "€1,234.56",
+        "mode": "en"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "auto-deutsch",
+      "input": {
+        "text": "1.234,56",
+        "mode": "auto"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "auto-englisch",
+      "input": {
+        "text": "1,234.56",
+        "mode": "auto"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "auto-komma",
+      "input": {
+        "text": "1234,56",
+        "mode": "auto"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "auto-punkt",
+      "input": {
+        "text": "1234.56",
+        "mode": "auto"
+      },
+      "expect": {
+        "value": "1234.56"
+      }
+    },
+    {
+      "id": "auto-einzelpunkt-kurz",
+      "input": {
+        "text": "1.5",
+        "mode": "auto"
+      },
+      "expect": {
+        "value": "1.5"
+      }
+    },
+    {
+      "id": "auto-mehrdeutig-punkt",
+      "input": {
+        "text": "1.234",
+        "mode": "auto"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "mehrdeutig"
+      ]
+    },
+    {
+      "id": "auto-mehrdeutig-komma",
+      "input": {
+        "text": "1,234",
+        "mode": "auto"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "mehrdeutig"
+      ]
+    },
+    {
+      "id": "auto-leer",
+      "input": {
+        "text": "",
+        "mode": "auto"
+      },
+      "expect": {
+        "invalid": true
+      }
+    }
+  ]
+}

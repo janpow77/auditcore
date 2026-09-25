@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "status": "vorläufig",
+  "stand": "2026-09-25",
+  "decisions": {
+    "empty_value": "—",
+    "display_timezone": "Europe/Berlin",
+    "probe_timezone": "America/New_York",
+    "ambiguous_single_dot_de": "invalid",
+    "filesize_base": 1024,
+    "filesize_units": ["B", "KB", "MB", "GB", "TB"],
+    "money_rounding": "half-up",
+    "datetime_separator": ", ",
+    "csv_delimiter": ";",
+    "csv_bom": true,
+    "csv_formula_prefix": "'"
+  }
+}
