@@ -74,10 +74,47 @@ def donut_smoke() -> None:
     assert bad.artifacts.normalized_json["total"] == 119.0  # Regex-Wert aus Tesseract bleibt
 
 
+def web_smoke(rows: list[ad.CompareRow]) -> None:
+    """Synopse-Dienst ohne Web-Extras: Ergebnis übernehmen, Zeile abwählen, Markdown."""
+    from auditcore_documents import web
+
+    service = web.SynopsisService()
+    result = ad.ComparisonResult(
+        version="1.1.0",
+        mode="text",
+        old_filename="alt.docx",
+        new_filename="neu.docx",
+        old_sha256="0" * 64,
+        new_sha256="1" * 64,
+        old_count=1,
+        new_count=2,
+        matched_count=1,
+        changed_count=0,
+        removed_count=0,
+        added_count=1,
+        rows=rows,
+        created_at="2026-09-25T00:00:00+00:00",
+    )
+    item = service.import_result("prüfer", {"title": "Synopse", "result": result.to_dict()})
+    added = next(r.row_id for r in rows if r.status == "added")
+    service.update_rows(
+        "prüfer", item.comparison_id, {"rows": [{"row_id": added, "reason": "neu"}]}
+    )
+    text = service.export("prüfer", item.comparison_id, "markdown").content.decode()
+    assert "## Festgestellte Änderungen" in text and "**Grund:** neu" in text, text
+    if find_spec("starlette") is None:
+        try:
+            web.create_app  # noqa: B018
+        except ad.DependencyError:
+            pass
+        else:
+            raise AssertionError("create_app must require the optional extra 'web'")
+
+
 def main() -> None:
     """Pure comparison, article-law commands, reasons port and extra boundaries."""
     package = distribution("auditcore_documents")
-    assert package.version == "0.2.1"
+    assert package.version == "0.3.0"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert DocumentCompareService.VERSION == "1.1.0"
@@ -90,6 +127,7 @@ def main() -> None:
     ]
     rows, counts = ad.compare_items(old, new, mode="text", profile=ad.LEGACY_DIFFLIB)
     assert counts["matched_count"] == 1 and counts["added_count"] == 1, counts
+    web_smoke(rows)
     base = [ad.LawParagraph("§ 11", 1, "gelten § 9 des BSI-Gesetzes sowie")]
     paragraphs, open_commands, recognised = ad.apply_commands(
         base,

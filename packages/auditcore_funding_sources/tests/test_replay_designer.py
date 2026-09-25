@@ -21,11 +21,11 @@ CASES = [c for c in DATA["cases"] if c["operation"] not in CLIENT_OPS]
 def run(case: dict[str, Any]) -> Any:
     op, i = case["operation"], revive(case["inputs"])
     simple = {
-        "designer.parse_betrag": de.parse_betrag,
+        "designer.parse_betrag": de.parse_amount,
         "designer.state_aid_parse_amount": de.state_aid_parse_amount,
         "designer.amount_is_range": de.amount_is_range,
-        "designer.parse_satz": de.parse_satz,
-        "designer.parse_datum": de.parse_datum,
+        "designer.parse_satz": de.parse_rate,
+        "designer.parse_datum": de.parse_date,
         "designer.state_aid_parse_date": de.state_aid_parse_date,
         "designer.detect_sa_reference": de.detect_sa_reference,
         "deminimis.country_code": dm.country_code,
@@ -64,7 +64,7 @@ def run(case: dict[str, Any]) -> Any:
 @pytest.mark.parametrize("case", CASES, ids=[c["name"] for c in CASES])
 def test_recorded_output(case: dict[str, Any]) -> None:
     if case["exception"]:
-        # Source defect kept in the variant: ``parse_betrag(True)`` raises (FS-G01).
+        # Source defect kept in the variant: ``parse_amount(True)`` raises (FS-G01).
         with pytest.raises(Exception) as caught:
             run(case)
         assert type(caught.value).__name__ == case["exception"]["type"]
