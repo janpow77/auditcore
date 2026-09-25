@@ -3,9 +3,9 @@ requires = ["setuptools>=83", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "auditcore_price_analysis"
-version = "0.1.1"
-description = "Exact tariff calculation (district heating, water, tiers), tariff selection and comparison rules with versioned profiles"
+name = "auditcore_common"
+version = "0.1.0"
+description = "Shared, behaviour-proven helpers of the auditcore domain packages (JSON, hashing, profiles, safe XML, HTML, numerics)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -13,13 +13,14 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2"]
+xml = ["defusedxml>=0.7.1"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "defusedxml>=0.7.1"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-auditcore_price_analysis = ["py.typed", "provenance.json", "profiles/*.json"]
+auditcore_common = ["py.typed", "provenance.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -32,9 +33,17 @@ target-version = "py311"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
+[tool.ruff.lint.per-file-ignores]
+# Differential tests call each lambda immediately inside the loop.
+"tests/*" = ["B023"]
+
 [tool.mypy]
-python_version = "3.11"
+# Keine feste python_version: jeder CI-Job (3.11, 3.12, 3.13) prüft gegen seine Laufzeit.
 strict = true
+
+[[tool.mypy.overrides]]
+module = ["defusedxml.*"]
+ignore_missing_imports = true
 
 [tool.auditcore-bibquality]
 strict = true
