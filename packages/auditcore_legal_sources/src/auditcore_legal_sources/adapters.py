@@ -10,24 +10,26 @@ consumer's credential provider under the name ``api_key``.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 from auditcore_harvest import (
     AdapterRegistry,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
     PageResult,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    decode_json,
+    page_result,
     raise_for_status,
 )
 
 from . import dip, eurlex, feeds
-from ._adapter_support import _issues, _json, _page, _profile, _record, _since
+from ._adapter_support import _issues, _profile, _record, _since
 from .errors import ConfigurationError, LegalSourceError, ParseError
 from .model import ADAPTER_VERSION, LegalDocument
 from .profile import SourceProfile
@@ -74,7 +76,7 @@ class DipDrucksachenAdapter:
         except ConfigurationError as exc:
             raise ConfigError(str(exc)) from exc
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """One DIP result page of the current search term."""
         profile = _profile(context.config)
         terms = self._keywords(profile, context.config)
@@ -99,7 +101,7 @@ class DipDrucksachenAdapter:
             )
         )
         try:
-            page = dip.parse_page(_json(response.body, "DIP"))
+            page = dip.parse_page(decode_json(response.body, "DIP: Antwort ist kein JSON."))
         except ParseError as exc:
             raise ParserError(str(exc)) from exc
         documents, errors = dip.normalize_page(page, profile)
@@ -116,7 +118,7 @@ class DipDrucksachenAdapter:
             next_cursor = {"keyword": index + 1, "dip": None}
         else:
             next_cursor = None
-        return _page(records, _issues(errors), next_cursor, page.num_found)
+        return page_result(records, _issues(errors), next_cursor, total_hint=page.num_found)
 
 
 class EurLexAdapter:
@@ -146,7 +148,7 @@ class EurLexAdapter:
         """Profile must exist."""
         _profile(config)
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Core documents (step 0) or one SPARQL query result."""
         profile = _profile(context.config)
         names = list(profile.eurlex_queries)
@@ -157,7 +159,7 @@ class EurLexAdapter:
             query = eurlex.update_query(profile, since)
             rows = self._query(context, profile, query)
             documents, issues = self._normalize(rows, profile, "update", seen)
-            return _page(
+            return page_result(
                 [
                     _record(self.source, context, d, r, f"update/{d.external_id}")
                     for d, r in documents
@@ -184,7 +186,7 @@ class EurLexAdapter:
             if step + 1 < len(names)
             else None
         )
-        return _page(records, issues, next_cursor)
+        return page_result(records, issues, next_cursor)
 
     @staticmethod
     def _query(context: FetchContext, profile: SourceProfile, query: str) -> list[dict[str, str]]:
@@ -198,7 +200,9 @@ class EurLexAdapter:
             )
         )
         try:
-            return eurlex.parse_results(_json(response.body, "EUR-Lex"))
+            return eurlex.parse_results(
+                decode_json(response.body, "EUR-Lex: Antwort ist kein JSON.")
+            )
         except ParseError as exc:
             raise ParserError(str(exc)) from exc
 
@@ -260,7 +264,7 @@ class FeedAdapter:
         if not isinstance(config.get("relevant_only", False), bool):
             raise ConfigError("'relevant_only' muss ein Wahrheitswert sein.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """One feed of the source."""
         profile = _profile(context.config)
         source = feeds.feed_source(profile, self.key)
@@ -290,7 +294,7 @@ class FeedAdapter:
             for d in documents
         ]
         next_cursor = {"feed": index + 1} if index + 1 < len(names) else None
-        return _page(records, _issues(errors), next_cursor)
+        return page_result(records, _issues(errors), next_cursor)
 
 
 class BaFinFeedAdapter(FeedAdapter):
@@ -330,7 +334,7 @@ class EcaPublicationsAdapter:
         except ConfigurationError as exc:
             raise ConfigError(str(exc)) from exc
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """The first profile publication URL (source order)."""
         profile = _profile(context.config)
         source = feeds.feed_source(profile, "eca")
@@ -350,7 +354,7 @@ class EcaPublicationsAdapter:
             )
             for d in documents
         ]
-        return _page(records, [], None)
+        return page_result(records, [], None)
 
 
 def register(registry: AdapterRegistry) -> AdapterRegistry:
