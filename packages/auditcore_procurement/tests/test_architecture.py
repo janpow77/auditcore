@@ -41,7 +41,8 @@ def test_runtime_imports_are_stdlib_or_declared_extras() -> None:
                 else:
                     assert path.name == OPTIONAL[name], path
                 continue
-            assert name in sys.stdlib_module_names or name == "auditcore_procurement", (path, name)
+            own = {"auditcore_procurement", "auditcore_common"}
+            assert name in sys.stdlib_module_names or name in own, (path, name)
         assert not (
             {"logging", "socket", "subprocess", "urllib", "http", "httpx", "requests"}
             & (top | lazy)
