@@ -100,6 +100,10 @@ Umlauten und stehen ausschließlich in `messages.ts`.
 - **Browser:** `npm run demo:build -w packages-js/ui && npm run e2e -w packages-js/ui`
   (Playwright gegen die gebaute Demo; `FA_SCREENSHOTS=<ordner>` legt
   Bildschirmfotos ab). Jede Komponente ergänzt `e2e/<komponente>.e2e.ts`.
+  Komponenten, deren Demo ein Python-Backend braucht (Stichprobe, Benford),
+  legen `e2e/<komponente>.api-e2e.ts` an; `npm run e2e:api -w packages-js/ui`
+  startet dafür `demo/api_server.py` (Python über `FA_DEMO_PYTHON`, mit den
+  Extras `web` der Pakete und `uvicorn`) und die gebaute Demo mit Proxy `/api`.
 - **Typen:** `npm run typecheck -w packages-js/ui` (vue-tsc).
 - **Lint:** `npm run lint` prüft auch `.vue` (eslint-plugin-vue, höchstens
   250 Zeilen je SFC, complexity ≤ 12, kein `any`); das Code-Qualitäts-Gate
