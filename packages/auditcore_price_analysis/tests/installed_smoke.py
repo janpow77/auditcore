@@ -9,7 +9,7 @@ from importlib.util import find_spec
 def main() -> None:
     """Calculate, select and compare with shipped profiles; replay one legacy case."""
     package = distribution("auditcore_price_analysis")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
     from auditcore_price_analysis import (
