@@ -1,4 +1,4 @@
-# auditcore_documents 0.2.0
+# auditcore_documents 0.2.1
 
 Dokumentvergleich und Gesetzessynopse ohne Web-, Datenbank-, Celery- oder
 KI-Abhängigkeit. Extrahiert und charakterisiert aus
@@ -7,7 +7,7 @@ Ein Vergleich ist eine Arbeitshilfe: Er stellt Unterschiede fest und
 bereitet sie auf, er trifft keine Prüfungsentscheidung.
 
 ```bash
-python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.2.0'
+python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]==0.2.1'
 # Debian: python3-auditcore-documents (Kern); Extras über pip, pdftotext über
 # poppler-utils (optional, sonst pypdf). python3-lxml 4.9.2 (bookworm) ist
 # technisch lauffähig (gehärteter Parser), erfüllt aber nicht die Extra-Untergrenze.

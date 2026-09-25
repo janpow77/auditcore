@@ -209,6 +209,88 @@ def _field_changed(old: str, new: str, include_editorial: bool) -> bool:
     return normaliser(old) != normaliser(new)
 
 
+def _pair_row(
+    old: CompareItem,
+    new: CompareItem,
+    *,
+    include_answers: bool,
+    include_notes: bool,
+    include_editorial: bool,
+) -> CompareRow:
+    changes = {
+        "text": _field_changed(old.text, new.text, include_editorial),
+        "answer": include_answers and old.answer != new.answer,
+        "comment": include_answers and old.comment != new.comment,
+        "note": include_notes and old.note != new.note,
+    }
+    diff = {
+        "text": word_diff(old.text, new.text) if changes["text"] else [],
+        "answer": word_diff(old.answer, new.answer) if changes["answer"] else [],
+        "comment": word_diff(old.comment, new.comment) if changes["comment"] else [],
+        "note": word_diff(old.note, new.note) if changes["note"] else [],
+    }
+    status = "changed" if any(changes.values()) else "unchanged"
+    return CompareRow(
+        row_id=f"match-{old.source_id}-{new.source_id}",
+        status=status,
+        location=new.location or old.location or new.section or old.section,
+        old_text=old.text,
+        new_text=new.text,
+        old_answer=old.answer,
+        new_answer=new.answer,
+        old_comment=old.comment,
+        new_comment=new.comment,
+        old_note=old.note,
+        new_note=new.note,
+        selected=status != "unchanged",
+        diff=diff,
+    )
+
+
+def _moved_row(old_item: CompareItem, new_item: CompareItem) -> CompareRow:
+    source = old_item.location or old_item.section
+    target = new_item.location or new_item.section
+    return CompareRow(
+        row_id=f"moved-{old_item.source_id}-{new_item.source_id}",
+        status="moved",
+        location=(
+            f"{source} → {target}" if source and target and source != target else (target or source)
+        ),
+        old_text=old_item.text,
+        new_text=new_item.text,
+        old_answer=old_item.answer,
+        new_answer=new_item.answer,
+        old_comment=old_item.comment,
+        new_comment=new_item.comment,
+        old_note=old_item.note,
+        new_note=new_item.note,
+    )
+
+
+def _removed_row(item: CompareItem) -> CompareRow:
+    return CompareRow(
+        row_id=f"removed-{item.source_id}",
+        status="removed",
+        location=item.location or item.section,
+        old_text=item.text,
+        old_answer=item.answer,
+        old_comment=item.comment,
+        old_note=item.note,
+    )
+
+
+def _added_row(item: CompareItem) -> CompareRow:
+    return CompareRow(
+        row_id=f"added-{item.source_id}",
+        status="added",
+        location=item.location or item.section,
+        new_text=item.text,
+        new_answer=item.answer,
+        new_comment=item.comment,
+        new_note=item.note,
+    )
+
+
 def build_rows(
     mode: str,
     pairs: Pairs,
@@ -222,83 +304,18 @@ def build_rows(
 ) -> list[CompareRow]:
     """Ergebniszeilen; ``mode`` wird wie im Original nicht ausgewertet."""
     del mode
-    rows: list[CompareRow] = []
-    for old, new in pairs:
-        changes = {
-            "text": _field_changed(old.text, new.text, include_editorial),
-            "answer": include_answers and old.answer != new.answer,
-            "comment": include_answers and old.comment != new.comment,
-            "note": include_notes and old.note != new.note,
-        }
-        diff = {
-            "text": word_diff(old.text, new.text) if changes["text"] else [],
-            "answer": word_diff(old.answer, new.answer) if changes["answer"] else [],
-            "comment": word_diff(old.comment, new.comment) if changes["comment"] else [],
-            "note": word_diff(old.note, new.note) if changes["note"] else [],
-        }
-        status = "changed" if any(changes.values()) else "unchanged"
-        rows.append(
-            CompareRow(
-                row_id=f"match-{old.source_id}-{new.source_id}",
-                status=status,
-                location=new.location or old.location or new.section or old.section,
-                old_text=old.text,
-                new_text=new.text,
-                old_answer=old.answer,
-                new_answer=new.answer,
-                old_comment=old.comment,
-                new_comment=new.comment,
-                old_note=old.note,
-                new_note=new.note,
-                selected=status != "unchanged",
-                diff=diff,
-            )
+    rows = [
+        _pair_row(
+            old,
+            new,
+            include_answers=include_answers,
+            include_notes=include_notes,
+            include_editorial=include_editorial,
         )
-    for old_item, new_item in moved or []:
-        source = old_item.location or old_item.section
-        target = new_item.location or new_item.section
-        rows.append(
-            CompareRow(
-                row_id=f"moved-{old_item.source_id}-{new_item.source_id}",
-                status="moved",
-                location=(
-                    f"{source} → {target}"
-                    if source and target and source != target
-                    else (target or source)
-                ),
-                old_text=old_item.text,
-                new_text=new_item.text,
-                old_answer=old_item.answer,
-                new_answer=new_item.answer,
-                old_comment=old_item.comment,
-                new_comment=new_item.comment,
-                old_note=old_item.note,
-                new_note=new_item.note,
-            )
-        )
-    for item in removed:
-        rows.append(
-            CompareRow(
-                row_id=f"removed-{item.source_id}",
-                status="removed",
-                location=item.location or item.section,
-                old_text=item.text,
-                old_answer=item.answer,
-                old_comment=item.comment,
-                old_note=item.note,
-            )
-        )
-    for item in added:
-        rows.append(
-            CompareRow(
-                row_id=f"added-{item.source_id}",
-                status="added",
-                location=item.location or item.section,
-                new_text=item.text,
-                new_answer=item.answer,
-                new_comment=item.comment,
-                new_note=item.note,
-            )
-        )
+        for old, new in pairs
+    ]
+    rows.extend(_moved_row(old_item, new_item) for old_item, new_item in moved or [])
+    rows.extend(_removed_row(item) for item in removed)
+    rows.extend(_added_row(item) for item in added)
     rows.sort(key=lambda row: (ROW_ORDER.get(row.status, 9), row.row_id))
     return rows

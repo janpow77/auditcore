@@ -17,6 +17,7 @@ from importlib import resources
 from types import MappingProxyType
 from typing import Any
 
+from ._types import JsonValue
 from .errors import ProfileError
 
 SCHEMA = "auditcore_registry_sources.profile/1"
@@ -35,7 +36,7 @@ STATUSES = frozenset(
 )
 
 
-def fingerprint(data: Mapping[str, Any]) -> str:
+def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
     canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -61,7 +62,7 @@ class RegistryProfile:
     source: Mapping[str, Any]
     settings: Mapping[str, Any]
     fingerprint: str
-    decisions: tuple[Mapping[str, Any], ...] = ()
+    decisions: tuple[Mapping[str, JsonValue], ...] = ()
 
     @property
     def reference(self) -> dict[str, str]:

@@ -77,7 +77,7 @@ def generate_reason(
     """Vorschlag erzeugen und Fundstellen prüfen (Vertrag des Originals)."""
     raw = provider(old_text, new_text, model)
     if isinstance(raw, Mapping):
-        payload: Any = dict(raw)
+        payload: object = dict(raw)
     else:
         try:
             payload = json.loads(raw)

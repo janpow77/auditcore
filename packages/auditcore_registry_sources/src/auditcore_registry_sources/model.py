@@ -11,6 +11,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
+from ._types import JsonObject, JsonValue
+
 LIST_FIELDS = (
     "birth_date",
     "countries",
@@ -36,9 +38,9 @@ class SanctionsList:
     format: str
     provider: str
     licence_claimed_in_source: str | None
-    data_licence: Mapping[str, Any]
+    data_licence: Mapping[str, JsonValue]
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view."""
         return {
             "key": self.key,
@@ -76,7 +78,7 @@ class ListEntry:
         if not self.entry_id or not self.name:
             raise ValueError("Ein Listeneintrag braucht Kennung und Namen.")
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view."""
         return {
             "list_key": self.list_key,
@@ -96,7 +98,7 @@ class RowIssue:
     reason: str
     entry_id: str | None = None
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view."""
         return {"row": self.row, "reason": self.reason, "entry_id": self.entry_id}
 
@@ -120,7 +122,7 @@ class ParsedList:
         """True if every row became an entry (a precondition for snapshot replacement)."""
         return not self.issues
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view (without the entries)."""
         return {
             "list_key": self.list_key,
