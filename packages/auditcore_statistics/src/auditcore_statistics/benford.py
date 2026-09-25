@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import math
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from decimal import Decimal
 from typing import Any, Literal
 
@@ -71,7 +71,7 @@ class BenfordResult:
     def to_dict(self) -> dict[str, Any]:
         """JSON-compatible result including exclusion counts."""
         return {
-            "library": "auditcore_statistics 0.2.0",
+            "library": "auditcore_statistics 0.2.1",
             "method": self.method,
             "digits": self.digits,
             "short_values": self.short_values,
@@ -174,37 +174,16 @@ def benford_test(
             non-numeric or infinite values, or no analysable value.
     """
     _check_options(digits, short_values, significance_level)
-    missing = zero = negative = short = 0
-    groups: list[int] = []
-    for value in values:
-        number = _checked_number(value)
-        if number is None:
-            missing += 1
-            continue
-        if number == 0:
-            zero += 1
-            continue
-        if number < 0:
-            negative += 1
-            number = -number
-        group = _leading_group(_significant_digits(number), digits, short_values)
-        if group is None:
-            short += 1
-        else:
-            groups.append(group)
-    if not groups:
+    tally = _classify(values, digits, short_values)
+    if not tally.groups:
         raise StatisticsInputError("Keine auswertbaren Werte vorhanden.")
-    total = len(groups)
+    total = len(tally.groups)
     domain = range(1, 10) if digits == 1 else range(10, 100)
     counts = {d: 0 for d in domain}
-    for group in groups:
+    for group in tally.groups:
         counts[group] += 1
     rows = tuple(DigitRow(d, counts[d], counts[d] / total, expected_share(d)) for d in domain)
-    terms = [
-        (row.observed_count - row.expected_share * total) ** 2 / (row.expected_share * total)
-        for row in rows
-    ]
-    statistic = numpy_pairwise_sum(terms)
+    statistic = _chi2_statistic(rows, total)
     dof = len(rows) - 1
     return BenfordResult(
         method=METHOD,
@@ -212,15 +191,61 @@ def benford_test(
         short_values=short_values,
         rows=rows,
         analysed=total,
-        missing=missing,
-        zero=zero,
-        negative_absolute=negative,
-        short_excluded=short,
+        missing=tally.missing,
+        zero=tally.zero,
+        negative_absolute=tally.negative,
+        short_excluded=tally.short,
         chi2_statistic=statistic,
         degrees_of_freedom=dof,
         p_value=chi2_survival(statistic, dof),
         significance_level=significance_level,
     )
+
+
+@dataclass
+class _Tally:
+    """Leading digit groups plus the counts of every exclusion reason."""
+
+    groups: list[int] = field(default_factory=list)
+    missing: int = 0
+    zero: int = 0
+    negative: int = 0
+    short: int = 0
+
+
+def _classify(
+    values: Sequence[int | float | Decimal | None],
+    digits: int,
+    short_values: ShortValues | None,
+) -> _Tally:
+    """Validate every value in input order and sort it into a group or an exclusion."""
+    tally = _Tally()
+    for value in values:
+        number = _checked_number(value)
+        if number is None:
+            tally.missing += 1
+            continue
+        if number == 0:
+            tally.zero += 1
+            continue
+        if number < 0:
+            tally.negative += 1
+            number = -number
+        group = _leading_group(_significant_digits(number), digits, short_values)
+        if group is None:
+            tally.short += 1
+        else:
+            tally.groups.append(group)
+    return tally
+
+
+def _chi2_statistic(rows: tuple[DigitRow, ...], total: int) -> float:
+    """Pearson chi-square over all digit rows, summed in NumPy's pairwise order."""
+    terms = [
+        (row.observed_count - row.expected_share * total) ** 2 / (row.expected_share * total)
+        for row in rows
+    ]
+    return numpy_pairwise_sum(terms)
 
 
 # ---------------------------------------------------------------------------
@@ -231,7 +256,7 @@ LegacyDtype = Literal["int", "float", "bool"]
 _TOLERANCE = 1e-8
 
 
-def _legacy_text(value: Any, dtype: LegacyDtype) -> str:
+def _legacy_text(value: int | float | bool, dtype: LegacyDtype) -> str:
     if dtype == "bool":
         return str(bool(value))
     if dtype == "int":
@@ -239,11 +264,72 @@ def _legacy_text(value: Any, dtype: LegacyDtype) -> str:
     return repr(float(value))
 
 
+def _legacy_positive(values: Sequence[int | float | bool | None]) -> list[int | float]:
+    """Absolute values above zero; ``None`` and NaN are dropped like ``dropna``."""
+    positive = []
+    for value in values:
+        if value is None or (isinstance(value, float) and math.isnan(value)):
+            continue
+        absolute = abs(value)
+        if absolute > 0:
+            positive.append(absolute)
+    if not positive:
+        raise ValueError("Keine positiven Werte in der Spalte gefunden.")
+    return positive
+
+
+def _legacy_leading(positive: list[int | float], dtype: LegacyDtype, digit: object) -> list[int]:
+    """Leading digit (group) from the source's string form; 0 for a short value."""
+    leading: list[int] = []
+    for value in positive:
+        text = _legacy_text(value, dtype).replace(".", "").lstrip("0")
+        if digit == 1:
+            leading.append(int(text[0]))
+        else:
+            leading.append(int(text[:2]) if len(text) >= 2 else 0)
+    return leading
+
+
+def _legacy_row(d: int, count: int, total: int) -> tuple[dict[str, object], float]:
+    """Table row of one digit and its expected count (pandas/NumPy rounding paths)."""
+    expected_percent = math.log10(1 + 1 / d) * 100
+    if count:
+        observed_percent = count / total * 100
+        observed_rounded = numpy_round(observed_percent, 2)
+        deviation = numpy_round(observed_percent - expected_percent, 2)
+    else:
+        observed_percent = 0 / total * 100
+        observed_rounded = round(observed_percent, 2)
+        deviation = round(observed_percent - expected_percent, 2)
+    row = {
+        "digit": str(d),
+        "observed_count": count,
+        "observed_percent": observed_rounded,
+        "expected_percent": round(expected_percent, 2),
+        "deviation": deviation,
+    }
+    return row, (expected_percent / 100) * total
+
+
+def _legacy_check_sums(observed: list[float], expected: list[float]) -> None:
+    """SciPy 1.11 ``chisquare`` frequency-sum check with its original message."""
+    observed_sum = numpy_pairwise_sum(observed)
+    expected_sum = numpy_pairwise_sum(expected)
+    relative = abs(observed_sum - expected_sum) / min(observed_sum, expected_sum)
+    if relative > _TOLERANCE:
+        raise ValueError(
+            "For each axis slice, the sum of the observed frequencies must agree with the "
+            f"sum of the expected frequencies to a relative tolerance of {_TOLERANCE}, but the "
+            "percent differences are:"
+            f"\n{relative!r}"
+        )
+
+
 def legacy_run_benford(
     values: Sequence[int | float | bool | None],
     *,
     dtype: LegacyDtype,
-    digit: Any,
+    digit: object,
     column: str,
 ) -> dict[str, Any]:
     """Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``.
@@ -258,62 +344,22 @@ def legacy_run_benford(
     """
     if digit not in [1, 2]:
         raise ValueError("Parameter 'digit' muss 1 oder 2 sein.")
-    positive = []
-    for value in values:
-        if value is None or (isinstance(value, float) and math.isnan(value)):
-            continue
-        absolute = abs(value)
-        if absolute > 0:
-            positive.append(absolute)
-    if not positive:
-        raise ValueError("Keine positiven Werte in der Spalte gefunden.")
-    leading: list[int] = []
-    for value in positive:
-        text = _legacy_text(value, dtype).replace(".", "").lstrip("0")
-        if digit == 1:
-            leading.append(int(text[0]))
-        else:
-            leading.append(int(text[:2]) if len(text) >= 2 else 0)
+    leading = _legacy_leading(_legacy_positive(values), dtype, digit)
     domain = range(1, 10) if digit == 1 else range(10, 100)
     total = len(leading)
     counts: dict[int, int] = {}
     for d in leading:
         counts[d] = counts.get(d, 0) + 1
-    rows: list[dict[str, Any]] = []
+    rows: list[dict[str, object]] = []
     observed: list[float] = []
     expected: list[float] = []
     for d in domain:
         count = counts.get(d, 0)
-        expected_percent = math.log10(1 + 1 / d) * 100
-        if count:
-            observed_percent = count / total * 100
-            observed_rounded = numpy_round(observed_percent, 2)
-            deviation = numpy_round(observed_percent - expected_percent, 2)
-        else:
-            observed_percent = 0 / total * 100
-            observed_rounded = round(observed_percent, 2)
-            deviation = round(observed_percent - expected_percent, 2)
-        rows.append(
-            {
-                "digit": str(d),
-                "observed_count": count,
-                "observed_percent": observed_rounded,
-                "expected_percent": round(expected_percent, 2),
-                "deviation": deviation,
-            }
-        )
+        row, expected_count = _legacy_row(d, count, total)
+        rows.append(row)
         observed.append(float(count))
-        expected.append((expected_percent / 100) * total)
-    observed_sum = numpy_pairwise_sum(observed)
-    expected_sum = numpy_pairwise_sum(expected)
-    relative = abs(observed_sum - expected_sum) / min(observed_sum, expected_sum)
-    if relative > _TOLERANCE:
-        raise ValueError(
-            "For each axis slice, the sum of the observed frequencies must agree with the "
-            f"sum of the expected frequencies to a relative tolerance of {_TOLERANCE}, but the "
-            "percent differences are:"
-            f"\n{relative!r}"
-        )
+        expected.append(expected_count)
+    _legacy_check_sums(observed, expected)
     statistic = numpy_pairwise_sum(
         [(o - e) ** 2 / e for o, e in zip(observed, expected, strict=True)]
     )

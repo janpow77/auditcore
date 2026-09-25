@@ -17,7 +17,7 @@ from .benford import (
 from .legacy_flowinvoice import legacy_flowinvoice_benford, recommended_flowinvoice_benford
 from .numeric import chi2_survival
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 __all__ = [
     "LEGACY_METHOD",
