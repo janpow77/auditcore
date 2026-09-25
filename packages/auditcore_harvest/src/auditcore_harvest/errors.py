@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from .model import JSON
 
 
 class HarvestError(Exception):
@@ -17,7 +17,7 @@ class HarvestError(Exception):
         *,
         retry_after: float | None = None,
         retryable: bool | None = None,
-        detail: dict[str, Any] | None = None,
+        detail: dict[str, JSON] | None = None,
     ) -> None:
         super().__init__(message)
         self.retry_after = retry_after
@@ -25,7 +25,7 @@ class HarvestError(Exception):
             self.retryable = retryable
         self.detail = dict(detail or {})
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, JSON]:
         """Secret-free representation for results and events."""
         return {
             "code": self.code,
