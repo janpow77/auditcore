@@ -60,7 +60,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | [`auditcore_dataprotection`](../../packages/auditcore_dataprotection) | 0.4.2 | Framework-independent records of processing activities and DPIA calculation | keine; Extras: `excel`, `pdf` | charakterisiert |
 | [`auditcore_documents`](../../packages/auditcore_documents) | 0.3.1 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | `auditcore_common==0.1.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](../../packages/auditcore_dummygenerator) | 0.1.1 | Framework-independent synthetic field and row generation | keine; Extras: `parallel` | charakterisiert |
-| [`auditcore_entity_matching`](../../packages/auditcore_entity_matching) | 0.2.1 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | keine; Extras: `fuzzy` | charakterisiert |
+| [`auditcore_entity_matching`](../../packages/auditcore_entity_matching) | 0.2.2 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | `auditcore_common==0.1.0`; Extras: `fuzzy` | charakterisiert |
 | [`auditcore_geo`](../../packages/auditcore_geo) | 0.2.1 | Characterized geo core: great-circle distances with explicit earth profiles, radius search, point in polygon with boundary, UTM, GeoPackage polygons, Douglas-Peucker and a Nominatim harvest adapter | keine; Extras: `geocoder` | charakterisiert |
 | [`auditcore_invoicegenerator`](../../packages/auditcore_invoicegenerator) | 0.2.1 | Characterized synthetic invoice profiles and explicit test scenarios | `auditcore_dummygenerator==0.1.1`; Extras: `pdf` | charakterisiert |
 | [`auditcore_invoicesynth`](../../packages/auditcore_invoicesynth) | 0.1.0 | Synthetic German/Austrian invoice images with Donut ground truth, manifests and evaluation | `auditcore_invoicegenerator==0.2.1`; Extras: `render`, `train` | neu |
@@ -69,7 +69,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | [`auditcore_price_analysis`](../../packages/auditcore_price_analysis) | 0.1.1 | Exact tariff calculation (district heating, water, tiers), tariff selection and comparison rules with versioned profiles | keine | charakterisiert |
 | [`auditcore_procurement`](../../packages/auditcore_procurement) | 0.2.2 | Procurement notice records (TED, HAD), import normalisation and versioned prechecks | `auditcore_common==0.1.0`; Extras: `html`, `sources` | charakterisiert |
 | [`auditcore_reporting`](../../packages/auditcore_reporting) | 0.2.1 | Characterized reporting format rules preserving Flowlib behavior | keine; Extras: `excel` | charakterisiert |
-| [`auditcore_risk`](../../packages/auditcore_risk) | 0.3.1 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | charakterisiert |
+| [`auditcore_risk`](../../packages/auditcore_risk) | 0.3.1 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_entity_matching==0.2.2`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_sampling`](../../packages/auditcore_sampling) | 0.2.1 | Audit sampling sizes, selection and allocation with named method profiles | keine; Extras: `web` | charakterisiert |
 | [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.1 | Descriptive audit statistics (Benford) with named method profiles | keine; Extras: `web` | charakterisiert |
 
@@ -81,7 +81,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | [`auditcore_legal_sources`](../../packages/auditcore_legal_sources) | 0.1.2 | Framework-independent legal and audit publication source adapters (DIP, EUR-Lex) | `auditcore_harvest==0.1.1`; Extras: `feeds` | charakterisiert |
 | [`auditcore_price_sources`](../../packages/auditcore_price_sources) | 0.1.1 | Price and market data adapters (Bundesbank, Destatis GENESIS, EIA, Tankerkoenig, Overpass, EU Oil Bulletin) on auditcore_harvest | `auditcore_harvest==0.1.1` | neu, gegen charakterisierte Verträge |
 | [`auditcore_property_sources`](../../packages/auditcore_property_sources) | 0.1.0 | Property source profiles (Berlin/French rental portals, ZVG forced-auction notices) with harvest adapters, lifecycle and access catalog | keine; Extras: `sources` | charakterisiert |
-| [`auditcore_registry_sources`](../../packages/auditcore_registry_sources) | 0.2.0 | Register, sanctions and PEP source adapters, list parsers, screening profiles and a screening review API | `auditcore_harvest==0.1.1`, `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `xml`, `html`, `web`, `fastapi` | charakterisiert |
+| [`auditcore_registry_sources`](../../packages/auditcore_registry_sources) | 0.2.0 | Register, sanctions and PEP source adapters, list parsers, screening profiles and a screening review API | `auditcore_harvest==0.1.1`, `auditcore_entity_matching==0.2.2`; Extras: `fuzzy`, `xml`, `html`, `web`, `fastapi` | charakterisiert |
 
 ### Oberfläche und Frontend-Logik (npm)
 
