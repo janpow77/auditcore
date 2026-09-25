@@ -28,7 +28,7 @@ stehen unter `docs/provenance` und `LICENSES`.
 | Distribution / Import | Funktion | Pflichtabhängigkeiten |
 |---|---|---|
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | Synthetische Felder und Zeilen, feste Seeds/Bezugsdaten, explizite Fehlerszenarien | Keine |
-| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | Vollständige synthetische Rechnungen, Positions-/Betragsdaten, historische Profile und JSON-Ausgabe | `auditcore_dummygenerator==0.1.0` |
+| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | Vollständige synthetische Rechnungen, Positions-/Betragsdaten, historische Profile und JSON-Ausgabe | `auditcore_dummygenerator==0.1.1` |
 | [`auditcore_reporting`](packages/auditcore_reporting) | Charakterisierte Flowlib-Zahlenformate für Berichte | Keine |
 
 Die Installation des Rechnungsgenerators benötigt weder Reporting noch die
