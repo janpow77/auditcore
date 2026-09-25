@@ -19,7 +19,7 @@
   "release_authorization": "USER_AUTHORIZED_MIT",
   "publication": "NOT_EXECUTED",
   "consumer": "janpow77/flowinvoice:docs/demo_data/generate_demo_invoices.py:generate_all_invoices/main",
-  "shared_dependency": "auditcore_dummygenerator==0.1.0",
+  "shared_dependency": "auditcore_dummygenerator==0.1.1",
   "modifications": [
     "Explicit Random injection without draw-order changes",
     "Independent-instance public profile instead of import-time global seed",
