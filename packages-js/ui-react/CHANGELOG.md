@@ -8,3 +8,4 @@ Erste Fassung.
   Ereignisse als `onXxx`), `eventPayload`, Hülle `FlowauditTable`,
   Weiterreichung von `defineFlowauditElements`.
 - Kanban (PR #84): `FlowauditKanbanBoard` und `FlowauditKanbanBoards`.
+- Geo-Karte: `FlowauditGeoMap` (`<flowaudit-geo-map>`).

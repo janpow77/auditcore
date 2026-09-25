@@ -76,7 +76,7 @@ export const FlowauditTableLite = createElementComponent<{ rows: readonly object
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (23):
+Exporte der Einstiegspunkte aus `package.json#exports` (25):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -85,6 +85,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (23):
 | `@flowaudit/ui-react` | `EventHandlers` | Typ | Ereignis-Handler einer Hülle erhalten das erste Argument des Vue-emit (CustomEvent.detail[0]). | `createElementComponent` |
 | `@flowaudit/ui-react` | `FlowauditBenford` | Konstante | `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditBenfordProps` | Schnittstelle | – | `elements` |
+| `@flowaudit/ui-react` | `FlowauditGeoMap` | Konstante | `<flowaudit-geo-map>` als React-Komponente: Karte, Umkreis, Punkt in Fläche, UTM, Vereinfachung, GeoPackage. | `geo` |
+| `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `kanban` |
@@ -123,14 +125,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (23):
   `onError`), `FlowauditScreeningReview` (`onRunCreated`, `onDecided`,
   `onError`), `FlowauditRiskFlags` (z. B. `evaluation`, `profile`;
   `onRecordSelect`, `onFilterChange`; Antworten von `auditcore_risk.web`,
-  siehe [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md)).
+  siehe [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md)),
+  `FlowauditGeoMap` (`port`, `points`, `areas`, `tiles`, `center`, `zoom`,
+  `locale`; `onRadiusCompleted`, `onLocationChecked`, `onAreasLoaded`,
+  `onReferenceChange`, `onError`; siehe
+  [`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md)).
 - Sprache und Theming wie in `@flowaudit/ui` (`locale`-Prop,
   `defineFlowauditElements({ locale })`, CSS-Variablen `--fa-*`).
 
 ## Herkunft und Charakterisierung
 
 Neu in auditcore entwickelt (PR #80 Gerüst mit `FlowauditTable`, #84
-Kanban, #83 Stichprobe und Benford, #111 Screening, #88 Risiko-Merkmale). Keine Übernahme aus Anwendungen; das Verhalten der Elemente
+Kanban, #83 Stichprobe und Benford, #111 Screening, #88 Risiko-Merkmale, Geo-Karte). Keine Übernahme aus Anwendungen; das Verhalten der Elemente
 selbst dokumentiert `@flowaudit/ui`.
 
 ## Abhängigkeiten

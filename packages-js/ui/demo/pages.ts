@@ -17,6 +17,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'benford', title: 'Benford-Analyse', group: 'Komponenten', load: () => import('./pages/benford/BenfordPage.vue') },
   { id: 'screening', title: 'Screening-Trefferprüfung', group: 'Komponenten', load: () => import('./pages/screening/ScreeningPage.vue') },
   { id: 'kanban', title: 'Kanban', group: 'Komponenten', load: () => import('./pages/kanban/KanbanPage.vue') },
+  { id: 'geo-karte', title: 'Geo-Karte', group: 'Komponenten', load: () => import('./pages/geo/GeoPage.vue') },
   { id: 'synopse', title: 'Synopse / Versionsvergleich', group: 'Komponenten', load: () => import('./pages/synopsis/SynopsisPage.vue') },
 ]
 

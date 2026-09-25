@@ -16,3 +16,13 @@ Erste Fassung.
   `<flowaudit-kanban-board>` und `<flowaudit-kanban-boards>`; Ziehen per
   Pointer Events, Tastaturbedienung mit Ansagen, optimistische Änderungen mit
   Rücknahme.
+- Geo-Karte: `FaGeoMap` (`<flowaudit-geo-map>`) mit REST-Port
+  `createGeoRestPort` auf `auditcore_geo.web` (docs/ui/geo-rest.md):
+  Punkte und Flächen auf Leaflet 1.9 (BSD-2-Clause, dynamisch geladen),
+  Kachelquelle nur über `tiles` samt Namensnennung (kein fester
+  Kachelserver), Bezugspunkt per Klick, Koordinateneingabe oder Punktliste,
+  UTM-Anzeige, Umkreissuche mit ausdrücklichem Erdmodell und
+  Entfernungsliste, Punkt in Fläche mit Randregel (D2), Randtoleranz und
+  Randfall-Anzeige, Douglas-Peucker mit Toleranzregler (Meter/Grad),
+  GeoPackage per Datei-Upload oder Serverquelle, Adresssuche nur mit
+  `geocoding: true` und aktivem Server-Geocoder. REST-Hilfe `requestUpload`.

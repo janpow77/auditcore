@@ -34,8 +34,14 @@ function url(options: RestOptions, path: string): string {
   return `${options.baseUrl.replace(/\/$/, '')}${path}`
 }
 
-async function send(options: RestOptions, path: string, body?: unknown): Promise<Response> {
-  const fetchImpl = options.fetch ?? ((input, init) => globalThis.fetch(input, init))
+async function dispatch(options: RestOptions, path: string, init: RequestInit): Promise<Response> {
+  const fetchImpl = options.fetch ?? ((input, request) => globalThis.fetch(input, request))
+  const response = await fetchImpl(url(options, path), init)
+  if (response.ok) return response
+  throw await toError(response)
+}
+
+function send(options: RestOptions, path: string, body?: unknown): Promise<Response> {
   const init: RequestInit = body === undefined
     ? { method: 'GET', headers: { Accept: 'application/json', ...options.headers } }
     : {
@@ -43,9 +49,7 @@ async function send(options: RestOptions, path: string, body?: unknown): Promise
         headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...options.headers },
         body: JSON.stringify(body),
       }
-  const response = await fetchImpl(url(options, path), init)
-  if (response.ok) return response
-  throw await toError(response)
+  return dispatch(options, path, init)
 }
 
 async function toError(response: Response): Promise<RestError> {
@@ -61,6 +65,16 @@ async function toError(response: Response): Promise<RestError> {
 /** GET/POST mit JSON-Antwort. Der Antworttyp ist der dokumentierte REST-Vertrag. */
 export async function requestJson<T>(options: RestOptions, path: string, body?: unknown): Promise<T> {
   const response = await send(options, path, body)
+  return (await response.json()) as T
+}
+
+/** POST mit Rohdaten (z. B. eine hochgeladene Datei) und JSON-Antwort. */
+export async function requestUpload<T>(options: RestOptions, path: string, body: Blob, contentType: string): Promise<T> {
+  const response = await dispatch(options, path, {
+    method: 'POST',
+    headers: { 'Content-Type': contentType, Accept: 'application/json', ...options.headers },
+    body,
+  })
   return (await response.json()) as T
 }
 

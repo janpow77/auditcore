@@ -83,14 +83,16 @@ document.body.append(table)
   `@flowaudit/ui/elements` registriert `<flowaudit-table>`,
   `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>`,
   `<flowaudit-sampling>`, `<flowaudit-benford>`,
-  `<flowaudit-screening-review>` und `<flowaudit-risk-flags>` im Light DOM
+  `<flowaudit-screening-review>`, `<flowaudit-risk-flags>` und
+  `<flowaudit-geo-map>` im Light DOM
   (kein Shadow DOM, Designtoken der Seite gelten). Objekte und Listen werden
   als JS-Eigenschaften gesetzt, Ereignisse sind `CustomEvent`s in kebab-case
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
 - **React:** über die Hüllen in `@flowaudit/ui-react` (`FlowauditTable`,
   `FlowauditKanbanBoard`, `FlowauditKanbanBoards`, `FlowauditSampling`,
-  `FlowauditBenford`, `FlowauditScreeningReview`, `FlowauditRiskFlags`).
+  `FlowauditBenford`, `FlowauditScreeningReview`, `FlowauditRiskFlags`,
+  `FlowauditGeoMap`).
 
 Fachkomponenten und ihre REST-Verträge:
 
@@ -101,6 +103,7 @@ Fachkomponenten und ihre REST-Verträge:
 | `BenfordPanel` | `<flowaudit-benford>` | Benford-Analyse über `auditcore_statistics.web` | [`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md) |
 | `ScreeningReview` | `<flowaudit-screening-review>` | Trefferprüfung beim Sanktions-/PEP-Screening | [`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md) |
 | `RiskFlags` | `<flowaudit-risk-flags>` | Risiko-Merkmale aus `auditcore_risk.web`: Verteilung, Filter, Zustand je Datensatz, Begründung; „unbestimmt“ und „übersprungen“ als eigene Zustände | [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md) |
+| `FaGeoMap` | `<flowaudit-geo-map>` | Karte (Leaflet, BSD-2-Clause) mit Punkten und Flächen, Umkreissuche mit Erdmodell, Punkt in Fläche mit Randregel, UTM, Douglas-Peucker, GeoPackage über `auditcore_geo.web`; Kacheln nur über die Eigenschaft `tiles`, Adresssuche nur auf ausdrücklichen Wunsch | [`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md) |
 
 Kanban-Oberfläche mit Ports, Tastaturbedienung und Barrierefreiheit:
 [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md). Neue
@@ -109,7 +112,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (394):
+Exporte der Einstiegspunkte aus `package.json#exports` (443):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -123,6 +126,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `AnalyseRequest` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `AnalyseValidation` | Typ | – | `benford/model` |
 | `@flowaudit/ui` | `ApiErrorBody` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `AreaGeometry` | Typ | GeoJSON-Fläche in Achsenfolge Länge, Breite (RFC 7946). | `geo/types` |
 | `@flowaudit/ui` | `BADGE_COLORS` | Konstante | Badge-Farben je Präfix (WorkspaceTaskCard: VP, SYS/SP, JKB, PRJ), sonst grau. | `kanban/cardView` |
 | `@flowaudit/ui` | `BadgeTone` | Typ | – | `base/types` |
 | `@flowaudit/ui` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
@@ -162,6 +166,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `ConformityProfile` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `ConformityRow` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `ConsolidatedParagraph` | Schnittstelle | – | `synopsis/types` |
+| `@flowaudit/ui` | `CoordinateError` | Typ | – | `geo/model` |
 | `@flowaudit/ui` | `DEFAULT_BOX` | Konstante | – | `benford/chart` |
 | `@flowaudit/ui` | `DEFAULT_FILTER` | Konstante | – | `risk/view/state` |
 | `@flowaudit/ui` | `DEFAULT_LOCALE` | Konstante | – | `i18n/i18n` |
@@ -170,6 +175,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `DecimalSeparator` | Typ | – | `tabular/parse` |
 | `@flowaudit/ui` | `DecisionRequest` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `DecisionView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `DegenerateRing` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `Delimiter` | Typ | Einlesen einfacher Tabellendateien (CSV/TSV/Text) ohne Bibliothek. | `tabular/parse` |
 | `@flowaudit/ui` | `DerivationStep` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `DiffField` | Typ | – | `synopsis/types` |
@@ -177,6 +183,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `DiffSide` | Typ | – | `synopsis/wordDiff` |
 | `@flowaudit/ui` | `DistributionRow` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `DownloadFile` | Schnittstelle | Heruntergeladene Datei (Export). | `rest/client` |
+| `@flowaudit/ui` | `EarthModel` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `ElementDefinition` | Schnittstelle | Eine Komponente, die als Web Component `flowaudit-<name>` bereitgestellt wird. | `elements/define` |
 | `@flowaudit/ui` | `ElementTag` | Typ | – | `elements/define` |
 | `@flowaudit/ui` | `EntryView` | Schnittstelle | – | `screening/types` |
@@ -189,6 +196,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
+| `@flowaudit/ui` | `FaGeoMap` | Vue-Komponente | – | `geo/FaGeoMap.vue` |
 | `@flowaudit/ui` | `FaIcon` | Vue-Komponente | – | `base/FaIcon.vue` |
 | `@flowaudit/ui` | `FaSynopsis` | Vue-Komponente | – | `synopsis/FaSynopsis.vue` |
 | `@flowaudit/ui` | `FaTable` | Vue-Komponente | – | `table/FaTable.vue` |
@@ -207,6 +215,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `FlowauditUiOptions` | Schnittstelle | – | `plugin` |
 | `@flowaudit/ui` | `FreshnessStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui` | `FreshnessView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `GeoArea` | Schnittstelle | Fläche auf der Karte (z. B. Schutzgebiet); `notes` sind Hinweise zur Geometrie. | `geo/types` |
+| `@flowaudit/ui` | `GeoBusy` | Typ | – | `geo/useGeoAreas` |
+| `@flowaudit/ui` | `GeoCatalogue` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `GeoHint` | Typ | – | `geo/useGeoAreas` |
+| `@flowaudit/ui` | `GeoMapCallbacks` | Schnittstelle | – | `geo/useGeoMap` |
+| `@flowaudit/ui` | `GeoPackageArea` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `GeoPackageResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `GeoPoint` | Schnittstelle | Punkt auf der Karte (z. B. Vorhabenstandort); `id` ist die Kennung in Ergebnissen. | `geo/types` |
+| `@flowaudit/ui` | `GeoPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createGeoRestPort`. | `geo/types` |
+| `@flowaudit/ui` | `GeoRestOptions` | Schnittstelle | – | `geo/rest-port` |
+| `@flowaudit/ui` | `GeocodeHit` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `GeocodeResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `HitFilter` | Schnittstelle | – | `screening/view` |
 | `@flowaudit/ui` | `HitView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
@@ -224,9 +244,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `KanbanShareDialog` | Vue-Komponente | – | `kanban/KanbanShareDialog.vue` |
 | `@flowaudit/ui` | `LOCALES` | Konstante | – | `i18n/i18n` |
 | `@flowaudit/ui` | `LOCALE_KEY` | Konstante | – | `i18n/i18n` |
+| `@flowaudit/ui` | `LatLon` | Schnittstelle | Typen des REST-Vertrags `docs/ui/geo-rest.md` (auditcore_geo.web). | `geo/types` |
 | `@flowaudit/ui` | `LevelTone` | Typ | – | `benford/model` |
 | `@flowaudit/ui` | `ListInfo` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `Locale` | Typ | – | `i18n/i18n` |
+| `@flowaudit/ui` | `LocateRequest` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `LocateResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `LogEntry` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `LogView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `MessageParams` | Typ | – | `i18n/i18n` |
@@ -241,12 +264,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `ParameterSpec` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `ParsedTable` | Schnittstelle | – | `tabular/parse` |
 | `@flowaudit/ui` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `Position` | Typ | – | `geo/types` |
 | `@flowaudit/ui` | `ProfileDetail` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileReference` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileStatus` | Typ | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileSummary` | Schnittstelle | – | `risk/port` |
 | `@flowaudit/ui` | `ProfileView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `ROW_STATUSES` | Konstante | – | `synopsis/types` |
+| `@flowaudit/ui` | `RadiusHit` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `RadiusRequest` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `RadiusResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `RecordView` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `RelativeKey` | Typ | – | `kanban/cardView` |
 | `@flowaudit/ui` | `RestClientOptions` | Typ | Optionen wie bei `src/rest`: `baseUrl` (z. B. `/api/synopsis`), injizierbares `fetch`, Kopfzeilen. | `synopsis/port` |
@@ -307,6 +334,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `SettingsView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `Severity` | Typ | – | `risk/types` |
 | `@flowaudit/ui` | `ShortValues` | Typ | – | `benford/types` |
+| `@flowaudit/ui` | `SimplifyRequest` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `SimplifyResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `SimplifyUnit` | Typ | – | `geo/types` |
 | `@flowaudit/ui` | `SizeRequest` | Typ | – | `sampling/types` |
 | `@flowaudit/ui` | `SizeResult` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `SizeValidation` | Typ | – | `sampling/model` |
@@ -330,14 +360,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `SynopsisSource` | Schnittstelle | Eingaben der Komponente, als Getter übergeben (Props bleiben reaktiv). | `synopsis/useSynopsis` |
 | `@flowaudit/ui` | `SynopsisTranslate` | Typ | – | `synopsis/viewModel` |
 | `@flowaudit/ui` | `SynopsisView` | Schnittstelle | – | `synopsis/viewModel` |
+| `@flowaudit/ui` | `TOLERANCE_STEPS` | Konstante | Stufen des Toleranzreglers der Vereinfachung (Meter bzw. Grad). | `geo/model` |
 | `@flowaudit/ui` | `TableColumn` | Schnittstelle | – | `table/sort` |
 | `@flowaudit/ui` | `TableImport` | Vue-Komponente | – | `tabular/TableImport.vue` |
 | `@flowaudit/ui` | `TableRow` | Typ | – | `table/sort` |
 | `@flowaudit/ui` | `ThemeMode` | Typ | – | `theme/theme` |
+| `@flowaudit/ui` | `TileSource` | Schnittstelle | Kachelquelle der Anwendung; ohne Quelle zeigt die Karte keinen Hintergrund. | `geo/types` |
 | `@flowaudit/ui` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/view/format` |
 | `@flowaudit/ui` | `Totals` | Schnittstelle | – | `risk/view/state` |
 | `@flowaudit/ui` | `Translate` | Typ | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
+| `@flowaudit/ui` | `UseGeoAreas` | Schnittstelle | – | `geo/useGeoAreas` |
+| `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
+| `@flowaudit/ui` | `UseGeoReference` | Schnittstelle | – | `geo/useGeoReference` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
@@ -346,6 +381,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `UseSynopsisNavigation` | Schnittstelle | – | `synopsis/useSynopsisNavigation` |
 | `@flowaudit/ui` | `UseTableImport` | Schnittstelle | – | `tabular/useTableImport` |
 | `@flowaudit/ui` | `UseTheme` | Schnittstelle | – | `theme/theme` |
+| `@flowaudit/ui` | `UtmRequest` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `UtmResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `ViewMessage` | Schnittstelle | Meldung als Katalogschlüssel mit Platzhaltern; die Komponente übersetzt sie. | `screening/view` |
 | `@flowaudit/ui` | `ViewOptions` | Schnittstelle | – | `synopsis/viewModel` |
 | `@flowaudit/ui` | `WORD_LIMIT` | Konstante | Oberhalb dieser Wortzahl je Seite wird nicht wortweise verglichen. | `synopsis/wordDiff` |
@@ -354,6 +391,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `applyPreview` | Funktion | Spaltenansicht mit der bewegten Karte an der Vorschauposition. | `kanban/movePreview` |
 | `@flowaudit/ui` | `applyRowOverrides` | Funktion | Zeilen mit lokalen Änderungen (Auswahl, Grund) zusammenführen. | `synopsis/viewModel` |
 | `@flowaudit/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
+| `@flowaudit/ui` | `areasFromGeoPackage` | Funktion | Flächen aus einer GeoPackage-Antwort; Kennungen erhalten die Herkunft als Präfix. | `geo/model` |
 | `@flowaudit/ui` | `ariaSort` | Funktion | – | `table/sort` |
 | `@flowaudit/ui` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
 | `@flowaudit/ui` | `badgePrefix` | Funktion | – | `kanban/cardView` |
@@ -376,6 +414,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `comparisonRows` | Funktion | – | `screening/view` |
 | `@flowaudit/ui` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
+| `@flowaudit/ui` | `createGeoRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_geo.web` (Starlette oder FastAPI). | `geo/rest-port` |
 | `@flowaudit/ui` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@flowaudit/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
 | `@flowaudit/ui` | `createSamplingRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_sampling.web` (Starlette oder FastAPI). | `sampling/rest-port` |
@@ -386,6 +425,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `detectDelimiter` | Funktion | Häufigstes Trennzeichen der ersten Zeile; eine Spalte ohne Trenner ergibt ';'. | `tabular/parse` |
 | `@flowaudit/ui` | `diffSegments` | Funktion | Segmente einer Seite. `ndiff` hat Vorrang; ohne sie wird nachgerechnet. Ist keine Wortdifferenz möglich, bleibt der Text unmarkiert (seitenweise) bzw. | `synopsis/wordDiff` |
 | `@flowaudit/ui` | `digitLabel` | Funktion | Anzeige einer Ziffer: zweite Ziffer 0–9, sonst Zahl. | `benford/model` |
+| `@flowaudit/ui` | `displayName` | Funktion | Bezeichnung für Listen: Name, sonst Kennung. | `geo/model` |
 | `@flowaudit/ui` | `distribution` | Funktion | Verteilung je Regel in Profilreihenfolge (nur Datensatzregeln). | `risk/view/state` |
 | `@flowaudit/ui` | `downloadText` | Funktion | Text als Datei anbieten (Blob-URL); ohne Blob-Unterstützung geschieht nichts. | `synopsis/useSynopsisExport` |
 | `@flowaudit/ui` | `emptyFilter` | Funktion | – | `screening/view` |
@@ -403,10 +443,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `focusableWithin` | Funktion | – | `composables/useFocusTrap` |
 | `@flowaudit/ui` | `formatAmount` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatDate` | Funktion | Datum (ISO-Zeichenkette oder Date) kurz und sprachabhängig; ungültige Werte bleiben leer. | `i18n/format` |
+| `@flowaudit/ui` | `formatDegrees` | Funktion | Grad mit sechs Nachkommastellen (≈ 0,1 m). | `geo/model` |
+| `@flowaudit/ui` | `formatDistance` | Funktion | Entfernung sprachabhängig: unter 1 km in Metern, sonst in Kilometern mit zwei Stellen. | `geo/model` |
+| `@flowaudit/ui` | `formatMetres` | Funktion | Rechts-/Hochwert in Metern mit zwei Nachkommastellen, ohne Tausendertrennung. | `geo/model` |
 | `@flowaudit/ui` | `formatNumber` | Funktion | – | `i18n/format` |
 | `@flowaudit/ui` | `formatPercent` | Funktion | – | `i18n/format` |
 | `@flowaudit/ui` | `formatShare` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatValue` | Funktion | Wert eines Eingabefelds: leer ausdrücklich, Zahlen im Sprachformat. | `risk/view/format` |
+| `@flowaudit/ui` | `geoMapElement` | Konstante | `<flowaudit-geo-map>`: Eigenschaften `port` (GeoPort), `points`, `areas`, `tiles` (TileSource), `center`, `zoom`, `locale`; Ereignisse `radius-completed`, `location-checked`, `area … | `geo/element` |
+| `@flowaudit/ui` | `geoMessages` | Konstante | Texte der Geo-Karte. | `geo/messages` |
 | `@flowaudit/ui` | `guessNumberColumn` | Funktion | Index der ersten Spalte, deren nicht leere Zellen überwiegend (≥ 60 %) Zahlen sind; sonst 0. | `tabular/parse` |
 | `@flowaudit/ui` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
 | `@flowaudit/ui` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
@@ -430,7 +475,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `numberColumn` | Funktion | Eine Spalte als Zahlen; unlesbare Zellen werden verworfen und gemeldet. | `tabular/parse` |
 | `@flowaudit/ui` | `pairs` | Funktion | Objekt als Liste `[Schlüssel, Wert]` in Einfügereihenfolge (für deklarative Tabellen). | `risk/view/state` |
 | `@flowaudit/ui` | `parameterLabel` | Funktion | – | `risk/view/format` |
+| `@flowaudit/ui` | `parseDegrees` | Funktion | Dezimalgrad aus Texteingabe; Komma und Punkt sind als Dezimaltrenner erlaubt, Tausendertrennzeichen nicht. Ungültiges ergibt `null`. | `geo/model` |
 | `@flowaudit/ui` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
+| `@flowaudit/ui` | `parseLatLon` | Funktion | Punkt aus zwei Texteingaben mit Wertebereichsprüfung. | `geo/model` |
 | `@flowaudit/ui` | `parseNumber` | Funktion | Zelle → Zahl mit ausdrücklichem Dezimaltrenner; der jeweils andere Trenner gilt als Tausenderpunkt. Leer ergibt `null` (fehlend), Unlesbares `undefined`. | `tabular/parse` |
 | `@flowaudit/ui` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
 | `@flowaudit/ui` | `parseTable` | Funktion | Text → Tabelle. `hasHeader` legt fest, ob die erste Zeile Spaltennamen enthält; sonst heißen die Spalten „Spalte 1“, „Spalte 2“ … | `tabular/parse` |
@@ -449,6 +496,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `relativeTime` | Funktion | Relative Zeit für die Boardliste (WorkspaceSidebar.relativeTime). | `kanban/cardView` |
 | `@flowaudit/ui` | `requestFile` | Funktion | POST mit Dateiantwort; der Dateiname kommt aus `Content-Disposition`. | `rest/client` |
 | `@flowaudit/ui` | `requestJson` | Funktion | GET/POST mit JSON-Antwort. Der Antworttyp ist der dokumentierte REST-Vertrag. | `rest/client` |
+| `@flowaudit/ui` | `requestUpload` | Funktion | POST mit Rohdaten (z. B. eine hochgeladene Datei) und JSON-Antwort. | `rest/client` |
 | `@flowaudit/ui` | `requirementKey` | Funktion | – | `risk/view/labels` |
 | `@flowaudit/ui` | `resolvedTheme` | Funktion | Tatsächlich wirksames Schema, auch wenn 'system' gewählt ist. | `theme/theme` |
 | `@flowaudit/ui` | `riskFlagsElement` | Konstante | `<flowaudit-risk-flags>`: Eigenschaften `evaluation` (Antwort von `POST /evaluate`) und `profile` (Antwort von `GET /profiles/{id}/{version}`) als JS-Objekte; Ereignisse `record-se … | `risk/element` |
@@ -481,6 +529,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `triggeredDataset` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `useBenford` | Funktion | Zustand und Ablauf der Benford-Analyse; Berechnung ausschließlich über den Port. | `benford/useBenford` |
 | `@flowaudit/ui` | `useFocusTrap` | Funktion | Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn danach an das zuvor fokussierte Element zurück. | `composables/useFocusTrap` |
+| `@flowaudit/ui` | `useGeoAreas` | Funktion | Flächen (übergeben und aus GeoPackage geladen), Auswahl und Vereinfachung. | `geo/useGeoAreas` |
+| `@flowaudit/ui` | `useGeoMap` | Funktion | Zustand und Abläufe der Geo-Karte; jede Berechnung läuft über den Port. | `geo/useGeoMap` |
+| `@flowaudit/ui` | `useGeoReference` | Funktion | Bezugspunkt mit Texteingabe, UTM-Anzeige und (nur freigegeben) Adresssuche. | `geo/useGeoReference` |
 | `@flowaudit/ui` | `useI18n` | Funktion | Composable für Komponenten. `override` (z. B. eine Prop `locale`) hat Vorrang vor der bereitgestellten Sprache. | `i18n/i18n` |
 | `@flowaudit/ui` | `useId` | Funktion | Eindeutige, stabile ID je Komponenteninstanz für aria-Verknüpfungen. | `composables/useId` |
 | `@flowaudit/ui` | `useKanbanActions` | Funktion | – | `kanban/useKanbanActions` |
@@ -498,6 +549,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (394):
 | `@flowaudit/ui` | `useTableImport` | Funktion | Datei lesen, Spalten zuordnen und eine Vorschau der übernommenen Werte bilden. | `tabular/useTableImport` |
 | `@flowaudit/ui` | `useTheme` | Funktion | Composable: reaktives Farbschema, synchron mit dem Attribut am Element. | `theme/theme` |
 | `@flowaudit/ui` | `validateDecision` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `vertexCount` | Funktion | Anzahl der Stützpunkte einer Fläche (Schlusspunkte mitgezählt). | `geo/model` |
 | `@flowaudit/ui` | `whenMissingKey` | Funktion | – | `risk/view/labels` |
 | `@flowaudit/ui` | `wholeSegments` | Funktion | Ganze Texte als Streichung und Einfügung (neue/entfallene Stellen, Rückfall). | `synopsis/wordDiff` |
 | `@flowaudit/ui/elements` | `DefineOptions` | Schnittstelle | – | `elements` |
@@ -513,6 +565,7 @@ Web Components:
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
+| `<flowaudit-geo-map>` | `FaGeoMap` | `geo/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
@@ -577,6 +630,26 @@ Web Components:
 |---|---|---|
 | `update:open` | `[open: boolean]` | – |
 | `close` | `[]` | – |
+
+#### `FaGeoMap`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `GeoPort \| null` | nein | `null` | Fachlogik, z. B. `createGeoRestPort({ baseUrl: '/api/geo' })`. |
+| `points` | `readonly GeoPoint[]` | nein | `() => []` | Punkte (Dezimalgrad, WGS 84/ETRS89). |
+| `areas` | `readonly GeoArea[]` | nein | `() => []` | Flächen als GeoJSON-Polygon/-MultiPolygon. |
+| `tiles` | `TileSource \| null` | nein | `null` | Kachelquelle der Anwendung; ohne Angabe kein Hintergrund und kein fremder Server. |
+| `center` | `LatLon` | nein | `() => ({ lat: 51.163, lon: 10.448 })` | Anfangsausschnitt; ohne Punkte und Flächen gilt er dauerhaft. |
+| `zoom` | `number` | nein | `6` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `radius-completed` | `[result: RadiusResult]` | – |
+| `location-checked` | `[result: LocateResult]` | – |
+| `areas-loaded` | `[areas: readonly GeoArea[], result: GeoPackageResult]` | – |
+| `reference-change` | `[point: LatLon \| null]` | – |
+| `error` | `[message: string]` | – |
 
 #### `FaIcon`
 
@@ -927,6 +1000,8 @@ Geprüft mit Vitest (happy-dom) und Playwright gegen die Demo-Seite
 ## Abhängigkeiten
 
 - `@flowaudit/kanban-core` 0.1.0 (Laufzeit, Kanban-Regeln und Ports)
+- `leaflet` ^1.9.4 (Laufzeit, BSD-2-Clause; Karte von `FaGeoMap`, erst beim
+  Anzeigen einer Karte dynamisch geladen, Stile in `ui.css`)
 - `vue` ^3.5.0 (Peer-Abhängigkeit; auch für den Web-Component-Einstieg)
 
 Node ≥ 20.19 für Bau und Tests. Typprüfung mit `vue-tsc`.
@@ -941,6 +1016,13 @@ Kopfzeilen; Authentifizierung und Rechteentscheidung liegen beim Server.
 Das Paket speichert weder in `localStorage` noch in anderen Browser-Speichern;
 angezeigte Daten (etwa Namen in Kanban-Freigaben) stammen ausschließlich aus
 Props und Ports der Anwendung.
+
+`FaGeoMap` lädt Kartenkacheln nur von der über `tiles` übergebenen Adresse;
+ohne Angabe gibt es keinen Hintergrund und keine Anfrage an fremde Server.
+Namensnennung und Beschriftungen gehen als Text (nicht als HTML) an Leaflet.
+Adressen werden nie ohne ausdrückliche Freigabe versendet:
+`createGeoRestPort({ geocoding: true })` und ein serverseitig angeschlossener
+Geocoder sind beide nötig.
 
 ## Lizenz und Herkunftsnachweis
 
