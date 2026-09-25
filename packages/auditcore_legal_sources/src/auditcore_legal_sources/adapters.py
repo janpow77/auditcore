@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
+from auditcore_common.html_text import has_html_marker
 from auditcore_harvest import (
     AdapterRegistry,
     AuthKind,
@@ -341,7 +342,7 @@ class EcaPublicationsAdapter:
         url = source.publication_urls[0]
         response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
         text = response.text()
-        if "<a" not in text.lower() and "<html" not in text.lower():
+        if not has_html_marker(text, ("<a", "<html"), window=None):
             raise ParserError("ECA-Seite enthält kein HTML.")
         documents = feeds.publication_links(text, profile)
         records = [
