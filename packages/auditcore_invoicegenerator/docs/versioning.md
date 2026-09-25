@@ -53,6 +53,14 @@ Template-Profil. Die bestehenden Berechnungsprofile bleiben unverändert bei
 Version 0.1.0. Paket-, Profil- und technische Releaseversion müssen deshalb
 nicht identisch sein. Der neue PDF-Renderer ändert keine Rechnungssummen.
 
+Paketversion 0.2.1 ist eine technische Refaktorierung ohne Regeländerung: Die
+Kataloge liegen unverändert in `_legacy_catalog.py`, `generate_invoice` ist in
+Hilfen zerlegt. Weil sich die Quelldateien geändert haben, sind die
+Inhaltshashes des Legacyprofils (jetzt `_legacy.py`, `_legacy_catalog.py`,
+`profiles.py`), `modified_at` und die Änderungsbegründung erneuert; die
+Profilversion bleibt 0.1.0, alle 180 beobachteten Legacyfälle sind unverändert.
+Der PDF-Renderer ist bytegleich und bleibt Template-Version 0.2.0.
+
 Die Tests prüfen installierte Profil-Inhalte gegen ihre Hashreferenzen, die
 unveränderten beobachteten Legacyausgaben und den dokumentierten Fork-Ursprung.
 Die Profile enthalten keine Prompts oder Agenten: Die speziellen Prompt-/Agent-

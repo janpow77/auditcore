@@ -1,0 +1,20 @@
+auditcore_kanban 0.1.0 — attribution and authorization
+
+New implementation in auditcore. The behaviour was taken from the executed
+workspace board of janpow77/audit_designer (commit
+2c726f3c1481775cd34aeaa83f87137d6ab12ffe: backend/app/api/vpai_notebook/
+workspace.py, backend/app/modules/vp_ai/utils/user_scoped.py and the
+frontend/src/components/workspace components) and from the job board of
+janpow77/cockpit (commit df203d4c33e786eb8a8ad3fe53b3b7eb9241d406). Limits,
+German messages, default columns and board templates were adopted; the
+code was rewritten. Blob SHAs of every source file are listed in
+provenance.json.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore". On
+2026-09-25 the rights holder asked to take the audit_designer board as the
+model for this library. Status: USER_AUTHORIZED_MIT for this library only;
+audit_designer and cockpit keep their own licensing.
+
+No third-party code is included. Optional extras use Starlette (BSD-3-Clause)
+and FastAPI (MIT) as ordinary dependencies.

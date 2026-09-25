@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "paths": {
+      "@flowaudit/ui": [
+        "../ui/src/index.ts"
+      ],
+      "@flowaudit/ui/elements": [
+        "../ui/src/elements.ts"
+      ],
+      "@flowaudit/kanban-core": [
+        "../kanban-core/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "../ui/env.d.ts"
+  ]
+}

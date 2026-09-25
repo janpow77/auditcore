@@ -182,6 +182,64 @@ def compare_article_law_files(
     return result
 
 
+def _compare_article_law(
+    old: Path, new: Path, profile: CompareProfile, options: CompareOptions, context: ReadContext
+) -> ComparisonResult:
+    result = compare_article_law_files(old, new, profile=profile, context=context)
+    result.metadata.update(
+        {
+            "old_modified_at": old.stat().st_mtime,
+            "new_modified_at": new.stat().st_mtime,
+            "output_sections": options.sections(),
+            "highlight_words": options.highlight_words,
+            "include_answers": False,
+            "include_notes": False,
+        }
+    )
+    return result
+
+
+def _read_pair(
+    old: Path, new: Path, mode: str, context: ReadContext
+) -> tuple[str, list[CompareItem], list[CompareItem]]:
+    """Beide Fassungen im selben Modus lesen; abweichende Dokumentarten sind ein Fehler."""
+
+    def read(path: Path) -> tuple[str, list[CompareItem]]:
+        return read_document(
+            path,
+            mode,
+            ocr_callback=context.ocr_callback,
+            page_source=context.page_source,
+            limits=context.limits,
+        )
+
+    old_mode, old_items = read(old)
+    new_mode, new_items = read(new)
+    if old_mode != new_mode:
+        raise CompareError(
+            "Die Dokumentarten unterscheiden sich; bitte den Modus ausdrücklich wählen."
+        )
+    return old_mode, old_items, new_items
+
+
+def _standard_metadata(
+    old: Path, new: Path, detected_mode: str, has_pdf: bool, options: CompareOptions
+) -> dict[str, Any]:
+    return {
+        "comparison_type": "standard",
+        "detected_mode": detected_mode,
+        "threshold": options.threshold,
+        "include_answers": options.include_answers,
+        "include_notes": options.include_notes,
+        "include_editorial": options.include_editorial,
+        "highlight_words": options.highlight_words,
+        "output_sections": options.sections(),
+        "old_modified_at": old.stat().st_mtime,
+        "new_modified_at": new.stat().st_mtime,
+        "pdf_notice": PDF_NOTICE if has_pdf else "",
+    }
+
+
 def compare_files(
     old: Path,
     new: Path,
@@ -195,69 +253,28 @@ def compare_files(
     context = context or ReadContext()
     _validate(options)
     if options.comparison_type == "article_law":
-        result = compare_article_law_files(old, new, profile=profile, context=context)
-        result.metadata.update(
-            {
-                "old_modified_at": old.stat().st_mtime,
-                "new_modified_at": new.stat().st_mtime,
-                "output_sections": options.sections(),
-                "highlight_words": options.highlight_words,
-                "include_answers": False,
-                "include_notes": False,
-            }
-        )
-        return result
+        return _compare_article_law(old, new, profile, options, context)
     if options.comparison_type != "standard":
         raise CompareError("Unbekannter Vergleichstyp.")
-
-    effective_mode = options.mode
     has_pdf = old.suffix.casefold() == ".pdf" or new.suffix.casefold() == ".pdf"
-    if options.mode == "auto" and has_pdf:
-        effective_mode = "text"
-
-    def read(path: Path) -> tuple[str, list[CompareItem]]:
-        return read_document(
-            path,
-            effective_mode,
-            ocr_callback=context.ocr_callback,
-            page_source=context.page_source,
-            limits=context.limits,
-        )
-
-    old_mode, old_items = read(old)
-    new_mode, new_items = read(new)
-    if old_mode != new_mode:
-        raise CompareError(
-            "Die Dokumentarten unterscheiden sich; bitte den Modus ausdrücklich wählen."
-        )
+    effective_mode = "text" if options.mode == "auto" and has_pdf else options.mode
+    mode, old_items, new_items = _read_pair(old, new, effective_mode, context)
     rows, counts = compare_items(
         old_items,
         new_items,
-        mode=old_mode,
+        mode=mode,
         profile=profile,
         threshold=options.threshold,
         include_answers=options.include_answers,
         include_notes=options.include_notes,
         include_editorial=options.include_editorial,
     )
-    metadata: dict[str, Any] = {
-        "comparison_type": "standard",
-        "detected_mode": old_mode,
-        "threshold": options.threshold,
-        "include_answers": options.include_answers,
-        "include_notes": options.include_notes,
-        "include_editorial": options.include_editorial,
-        "highlight_words": options.highlight_words,
-        "output_sections": options.sections(),
-        "old_modified_at": old.stat().st_mtime,
-        "new_modified_at": new.stat().st_mtime,
-        "pdf_notice": PDF_NOTICE if has_pdf else "",
-    }
+    metadata = _standard_metadata(old, new, mode, has_pdf, options)
     if profile.record_profile:
         metadata["profile"] = profile.identity()
     return ComparisonResult(
         version=profile.result_version,
-        mode=old_mode,
+        mode=mode,
         old_filename=old.name,
         new_filename=new.name,
         old_sha256=sha256_file(old),

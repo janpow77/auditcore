@@ -9,14 +9,13 @@ unverändert, alle bisherigen Namen bleiben importierbar.
 - `FetchContext.record(source, record_id, raw, normalized, locator, *, deleted=False)`:
   Datensatz mit Provenienz über den Rohwert in einem Schritt.
 - `decode_json(body, message="Antwort ist kein JSON.")`: JSON-Antwortkörper
-  lesen, unlesbare Körper als `ParserError` mit quellenspezifischem Text.
+  lesen, unlesbare Körper als `ParserError` mit quellenspezifischem Text
+  (Gegenstück zu `raise_for_status` im Fehlervertrag des Abrufs).
 - `page_result(records, issues=(), next_cursor=None, *, total_hint=None)`:
   übliche Seite (abgeschlossen genau ohne Folgecursor, `PARTIAL` bei Issues).
   Die drei Hilfen fassen die in den Quellenpaketen mehrfach kopierten
-  Schritte zusammen.
-- `deprecated_aliases(module, {alt: (neu, objekt)})`: Modul-`__getattr__` für
-  umbenannte öffentliche Namen mit `DeprecationWarning` (für Quellenpakete, deren
-  Architekturtests nur `auditcore_harvest` und ausgewählte Standardmodule zulassen).
+  Abrufschritte zusammen. Allgemeine Hilfen (JSON-Sicherung, Hashing, XML,
+  HTML-Links, Profile) gehören nicht hierher, sondern nach `auditcore_common`.
 - `JSON` und `Cursor` (Typaliase des Vertrags) sind aus `auditcore_harvest`
   importierbar.
 

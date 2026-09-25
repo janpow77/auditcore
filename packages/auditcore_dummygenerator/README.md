@@ -1,13 +1,13 @@
 # auditcore_dummygenerator
 
 Installierbarer, frameworkunabhängiger Generator für synthetische Testdaten.
-Version 0.1.0 wird im gemeinsamen auditcore-Repository gepflegt. Das Paket
+Version 0.1.1 wird im gemeinsamen auditcore-Repository gepflegt. Das Paket
 benötigt zur Laufzeit keine auditcore-Plattform, FastAPI, Datenbank oder UI.
 
 ```bash
-python -m pip install auditcore_dummygenerator==0.1.0
+python -m pip install auditcore_dummygenerator==0.1.1
 # Optionaler paralleler Backend:
-python -m pip install 'auditcore_dummygenerator[parallel]==0.1.0'
+python -m pip install 'auditcore_dummygenerator[parallel]==0.1.1'
 ```
 
 Der Rechteberechtigte hat den hier übernommenen Generator am 22.09.2026

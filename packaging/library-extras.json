@@ -23,7 +23,8 @@
   },
   "auditcore_registry_sources": {
     "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)",
-    "beautifulsoup4<5,>=4.11.2; extra == \"html\"": "python3-bs4 (>= 4.11.2)"
+    "beautifulsoup4<5,>=4.11.2; extra == \"html\"": "python3-bs4 (>= 4.11.2)",
+    "starlette<2,>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)"
   },
   "auditcore_property_sources": {
     "auditcore_harvest==0.1.1; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.1)"
@@ -33,9 +34,26 @@
   },
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
-    "auditcore_procurement==0.2.0; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.0)"
+    "auditcore_procurement==0.2.1; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.1)"
   },
   "auditcore_invoicesynth": {
     "pillow>=9.4; extra == \"render\"": "python3-pil (>= 9.4)"
+  },
+  "auditcore_documents": {
+    "starlette<2,>=0.47.2; extra == \"web\"": "python3-starlette (>= 0.47.2)",
+    "python-multipart>=0.0.20; extra == \"web\"": "python3-multipart (>= 0.0.20)",
+    "fastapi>=0.116.1; extra == \"fastapi\"": "python3-fastapi (>= 0.116.1)",
+    "starlette<2,>=0.47.2; extra == \"fastapi\"": "python3-starlette (>= 0.47.2)",
+    "python-multipart>=0.0.20; extra == \"fastapi\"": "python3-multipart (>= 0.0.20)"
+  },
+  "auditcore_sampling": {
+    "starlette>=0.26; extra == \"web\"": "python3-starlette (>= 0.26)"
+  },
+  "auditcore_statistics": {
+    "starlette>=0.26; extra == \"web\"": "python3-starlette (>= 0.26)"
+  },
+  "auditcore_kanban": {
+    "starlette>=0.26; extra == \"ui\"": "python3-starlette (>= 0.26)",
+    "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)"
   }
 }
