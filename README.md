@@ -28,7 +28,7 @@ stehen unter `docs/provenance` und `LICENSES`.
 | Distribution / Import | Funktion | Pflichtabhängigkeiten |
 |---|---|---|
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | Synthetische Felder und Zeilen, feste Seeds/Bezugsdaten, explizite Fehlerszenarien | Keine |
-| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | Vollständige synthetische Rechnungen, Positions-/Betragsdaten, historische Profile und JSON-Ausgabe | `auditcore_dummygenerator==0.1.0` |
+| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | Vollständige synthetische Rechnungen, Positions-/Betragsdaten, historische Profile und JSON-Ausgabe | `auditcore_dummygenerator==0.1.1` |
 | [`auditcore_reporting`](packages/auditcore_reporting) | Charakterisierte Flowlib-Zahlenformate für Berichte | Keine |
 
 Die Installation des Rechnungsgenerators benötigt weder Reporting noch die
@@ -82,6 +82,14 @@ Mypy, Bandit und pip-audit als NOT_EXECUTED. Konfiguration steht unter
 `[tool.auditcore-bibquality]` in `pyproject.toml`; Ignore-Kommentare werden
 sichtbar protokolliert. Core und Tool-Komponenten haben getrennte Prüfumfänge.
 [Status- und Exitcode-Semantik](docs/quality-semantics.md).
+
+**Pflicht-Gate Code-Qualität:** `auditcore-codegate check` misst je Paket
+Komplexität (McCabe ≤ 10), Modul- und Funktionslängen, `Any`, `mypy --strict`
+und englische Bezeichner (bei `packages-js/` auch Dateigrößen und
+`eslint-disable`) und vergleicht per Ratchet mit `quality/baseline.json`.
+Kein Wert darf steigen, Verbesserungen werden im selben PR mit
+`--update-baseline` festgeschrieben. CI-Job, pre-commit-Hook und
+Release-Blocker: [Code-Qualitätsmaßstäbe](docs/quality/code-quality.md).
 
 ## Framework und Anwendbarkeit
 

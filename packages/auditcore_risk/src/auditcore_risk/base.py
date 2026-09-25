@@ -8,23 +8,29 @@ from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import date
 from importlib.util import find_spec
-from typing import Any
+from typing import Any, TypedDict, cast
 
 from .errors import DependencyError, InputError, ProfileError
 from .values import as_date, coerce_number, strict_amount, text
+
+#: A JSON object of a profile (rule parameters, assessment, summary) or a consumer's
+#: result mapping. Its values stay ``Any`` on purpose: their type depends on the key,
+#: and the profile checks (``validate_params`` and friends) fix it when loading.
+JsonObject = Mapping[str, Any]
 
 WHEN_MISSING = ("error", "skip", "all_false", "undetermined")
 # Betragsregeln, die einen fehlenden Betrag als „unbestimmt“ ausweisen können
 # (Parameter ``missing_amount_reason``), mit dem Schlüssel ihres Betragsfelds.
 MISSING_AMOUNT_FIELD = {"near_threshold": "field", "missing_procurement": "amount_field"}
-_MISSING_KEY = object()
+#: Grouping key of a missing value (distinct from every real value).
+MISSING_KEY = object()
 
 
 @dataclass
 class Table:
     """Records with an explicit column set (a key absent in one record is missing)."""
 
-    rows: Sequence[Mapping[str, Any]]
+    rows: Sequence[Mapping[str, object]]
     columns: tuple[str, ...]
 
     def __len__(self) -> int:
@@ -34,7 +40,7 @@ class Table:
         """Whether every named column is part of the column set."""
         return all(n in self.columns for n in names)
 
-    def value(self, index: int, name: str) -> Any:
+    def value(self, index: int, name: str) -> object:
         """Cell value; a key absent in the record reads as ``None`` (missing)."""
         return self.rows[index].get(name)
 
@@ -44,7 +50,18 @@ class Context:
     """Per-evaluation settings and caches (loaded dependent profiles)."""
 
     reference_date: date | None = None
-    cache: dict[Any, Any] = field(default_factory=dict)
+    #: Loaded profiles of optional dependencies by ``(library, profile, version)``;
+    #: their types belong to lazily imported extras, hence ``Any``.
+    cache: dict[tuple[str, str, str], Any] = field(default_factory=dict)
+
+
+class DatasetOutcome(TypedDict, total=False):
+    """Result of a dataset-wide rule kind (``evidence`` only when triggered or evaluated)."""
+
+    triggered: bool
+    value: float | None
+    reason: str
+    evidence: dict[str, object]
 
 
 @dataclass
@@ -53,10 +70,10 @@ class Outcome:
 
     flags: list[bool | None]
     reasons: list[str | None]
-    evidence: list[dict[str, Any] | None]
+    evidence: list[dict[str, object] | None]
     matches: list[int] | None = None
-    values: dict[str, list[Any]] = field(default_factory=dict)
-    dataset: dict[str, Any] | None = None
+    values: dict[str, Sequence[object]] = field(default_factory=dict)
+    dataset: DatasetOutcome | None = None
     #: Message variant per record (key into the rule's ``messages``), if the kind has several.
     variants: list[str | None] | None = None
     #: Severity per record, if the kind derives it (otherwise the rule's fixed severity).
@@ -68,6 +85,10 @@ class Outcome:
         return cls([flag] * n, [None] * n, [None] * n)
 
 
+#: Implementation of a rule kind: validated profile parameters, records, evaluation context.
+KindRun = Callable[[JsonObject, Table, Context], Outcome]
+
+
 @dataclass(frozen=True)
 class Kind:
     """Parameter contract and implementation of one rule kind."""
@@ -75,9 +96,9 @@ class Kind:
     scope: str
     required: frozenset[str]
     optional: frozenset[str]
-    run: Callable[[Mapping[str, Any], Table, Context], Outcome]
+    run: KindRun
     #: Kind-specific parameter checks beyond the key set.
-    validate: Callable[[Mapping[str, Any], str], None] | None = None
+    validate: Callable[[JsonObject, str], None] | None = None
     #: The kind sets the severity per record (e.g. from terms in the description).
     derives_severity: bool = False
 
@@ -85,7 +106,7 @@ class Kind:
 # --------------------------------------------------------------------------- helpers
 
 
-def _amounts(table: Table, params: Mapping[str, Any], name_key: str = "field") -> list[Any]:
+def amount_values(table: Table, params: JsonObject, name_key: str = "field") -> list[float | None]:
     """Amount per record by ``parse`` (``strict``/``coerce``) and ``missing_value``.
 
     ``missing_value`` ``None`` (only with ``missing_amount_reason``) keeps a
@@ -95,7 +116,7 @@ def _amounts(table: Table, params: Mapping[str, Any], name_key: str = "field") -
     missing = params["missing_value"]
     if not table.has(name):
         return [missing] * len(table)
-    out: list[Any] = []
+    out: list[float | None] = []
     for i in range(len(table)):
         raw = table.value(i, name)
         if params["parse"] == "strict":
@@ -106,7 +127,17 @@ def _amounts(table: Table, params: Mapping[str, Any], name_key: str = "field") -
     return out
 
 
-def seq_sum(values: Iterable[Any], start: Any = 0) -> Any:
+def present_amounts(table: Table, params: JsonObject, name_key: str = "field") -> list[float]:
+    """:func:`amount_values` of a kind whose profile check demands a numeric ``missing_value``.
+
+    Only ``near_threshold`` and ``missing_procurement`` accept
+    ``missing_amount_reason`` (``missing_value`` null); every other amount kind
+    therefore always receives a number.
+    """
+    return cast(list[float], amount_values(table, params, name_key))
+
+
+def seq_sum(values: Iterable[float], start: float = 0) -> float:
     """Plain left-to-right addition, i.e. Python ≤ 3.11 ``sum``.
 
     Python 3.12 compensates float sums in ``sum``; the source applications run
@@ -119,14 +150,14 @@ def seq_sum(values: Iterable[Any], start: Any = 0) -> Any:
     return total
 
 
-def _sum(values: Sequence[float]) -> float:
+def correct_sum(values: Sequence[float]) -> float:
     """Correctly rounded sum; non-finite values follow IEEE arithmetic."""
     if all(math.isfinite(v) for v in values):
         return math.fsum(values)
     return float(seq_sum(values))
 
 
-def _relevance(table: Table, spec: Mapping[str, Any] | None) -> list[bool]:
+def relevance(table: Table, spec: JsonObject | None) -> list[bool]:
     """``True`` unless the cost type matches the exclusion pattern (missing = relevant)."""
     if spec is None:
         return [True] * len(table)
@@ -143,7 +174,8 @@ def _relevance(table: Table, spec: Mapping[str, Any] | None) -> list[bool]:
     return out
 
 
-def _compare(left: float, op: str, right: float) -> bool:
+def compare(left: float, op: str, right: float) -> bool:
+    """``left <op> right`` for the profile operators ``gt``/``ge``/``lt``/``le``."""
     return {
         "gt": left > right,
         "ge": left >= right,
@@ -152,7 +184,8 @@ def _compare(left: float, op: str, right: float) -> bool:
     }[op]
 
 
-_OPS = {"gt": ">", "ge": "≥", "lt": "<", "le": "≤"}
+#: Display symbol of each comparison operator.
+OPERATOR_SYMBOLS = {"gt": ">", "ge": "≥", "lt": "<", "le": "≤"}
 
 
 def need(condition: bool, where: str, message: str) -> None:
@@ -161,14 +194,14 @@ def need(condition: bool, where: str, message: str) -> None:
         raise ProfileError(f"{where}: {message}")
 
 
-def is_number(value: Any) -> bool:
+def is_number(value: object) -> bool:
     """Finite ``int``/``float`` (booleans excluded)."""
     return isinstance(value, int | float) and not isinstance(value, bool) and math.isfinite(value)
 
 
 def procurement_threshold(
-    spec: Mapping[str, Any], table: Table, index: int, ctx: Context
-) -> tuple[float | None, dict[str, Any]]:
+    spec: JsonObject, table: Table, index: int, ctx: Context
+) -> tuple[float | None, dict[str, object]]:
     """Year-bound EU threshold from ``auditcore_procurement``; never a neighbouring year."""
     if find_spec("auditcore_procurement") is None:
         raise DependencyError(
