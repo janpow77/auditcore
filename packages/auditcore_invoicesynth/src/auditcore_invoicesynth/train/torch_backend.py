@@ -21,6 +21,7 @@ import io
 import os
 import random
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 from auditcore_invoicesynth.dataset import load_split
@@ -38,7 +39,7 @@ class TrainDependencyError(ImportError):
     """Das Extra ``train`` (torch, transformers, sentencepiece, pillow) fehlt."""
 
 
-def _modules() -> tuple[Any, Any]:
+def _modules() -> tuple[ModuleType, ModuleType]:
     try:
         import torch
         import transformers
@@ -136,15 +137,37 @@ class TorchDonutBackend:
         torch, transformers = _modules()
         self.torch = torch
         self.config = config
-        if self.base_model_sha256 is not None:
-            actual = sha256_file(self.base_model_dir / WEIGHTS)
-            if actual != self.base_model_sha256:
-                raise ValueError("SHA-256 des Startmodells weicht ab")
+        self._verify_base_model()
         if self.world_size > 1 and not torch.distributed.is_initialized():
             torch.distributed.init_process_group(
                 backend="nccl" if torch.cuda.is_available() else "gloo"
             )
         local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+        self._select_device(torch, local_rank)
+        torch.manual_seed(config.seed + self.rank)
+        random.seed(config.seed + self.rank)
+        model = self._load_model(transformers, config)
+        model.to(self.device)
+        self.model = model
+        self.module = model
+        if self.world_size > 1:
+            self.model = torch.nn.parallel.DistributedDataParallel(
+                model, device_ids=[local_rank] if self.device.startswith("cuda") else None
+            )
+        self.optimizer = _optimizer(torch, config, self.model.parameters())
+        self.scheduler = transformers.get_cosine_schedule_with_warmup(
+            self.optimizer,
+            num_warmup_steps=config.warmup_steps,
+            num_training_steps=total_steps(config, samples, self.world_size),
+        )
+
+    def _verify_base_model(self) -> None:
+        if self.base_model_sha256 is not None:
+            actual = sha256_file(self.base_model_dir / WEIGHTS)
+            if actual != self.base_model_sha256:
+                raise ValueError("SHA-256 des Startmodells weicht ab")
+
+    def _select_device(self, torch: ModuleType, local_rank: int) -> None:
         if self.requested_device == "auto":
             self.device = f"cuda:{local_rank}" if torch.cuda.is_available() else "cpu"
         else:
@@ -152,8 +175,9 @@ class TorchDonutBackend:
         if self.device.startswith("cuda"):
             torch.cuda.set_device(self.device)
             torch.cuda.reset_peak_memory_stats()
-        torch.manual_seed(config.seed + self.rank)
-        random.seed(config.seed + self.rank)
+
+    def _load_model(self, transformers: ModuleType, config: TrainConfig) -> Any:
+        """Tokenizer, Bildprozessor und Modell nur aus dem lokalen Startmodell."""
         local = str(self.base_model_dir)
         # B615 trifft nicht zu: nur lokales Verzeichnis, local_files_only=True.
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(  # nosec B615
@@ -180,28 +204,7 @@ class TorchDonutBackend:
                 model.gradient_checkpointing_enable()
             except (ValueError, NotImplementedError, AttributeError):
                 model.encoder.gradient_checkpointing_enable()
-        model.to(self.device)
-        self.model = model
-        self.module = model
-        if self.world_size > 1:
-            self.model = torch.nn.parallel.DistributedDataParallel(
-                model, device_ids=[local_rank] if self.device.startswith("cuda") else None
-            )
-        if config.optimizer == "adamw8bit":
-            try:
-                import bitsandbytes
-            except ImportError as exc:
-                raise TrainDependencyError("8-bit-AdamW benötigt bitsandbytes") from exc
-            self.optimizer = bitsandbytes.optim.AdamW8bit(
-                self.model.parameters(), lr=config.learning_rate
-            )
-        else:
-            self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=config.learning_rate)
-        self.scheduler = transformers.get_cosine_schedule_with_warmup(
-            self.optimizer,
-            num_warmup_steps=config.warmup_steps,
-            num_training_steps=total_steps(config, samples, self.world_size),
-        )
+        return model
 
     # -- Schritt -------------------------------------------------------------
     def _batch(self, indices: list[int]) -> tuple[Any, Any, Any]:
@@ -305,3 +308,14 @@ class _nullcontext:
 
     def __exit__(self, *args: object) -> None:
         return None
+
+
+def _optimizer(torch: ModuleType, config: TrainConfig, parameters: Any) -> Any:
+    """AdamW, auf Wunsch 8-bit über bitsandbytes (nur verzögert importiert)."""
+    if config.optimizer == "adamw8bit":
+        try:
+            import bitsandbytes
+        except ImportError as exc:
+            raise TrainDependencyError("8-bit-AdamW benötigt bitsandbytes") from exc
+        return bitsandbytes.optim.AdamW8bit(parameters, lr=config.learning_rate)
+    return torch.optim.AdamW(parameters, lr=config.learning_rate)

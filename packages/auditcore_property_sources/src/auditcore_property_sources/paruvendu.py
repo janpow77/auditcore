@@ -14,7 +14,8 @@ from __future__ import annotations
 
 import html
 import re
-from typing import Any
+
+from ._types import JSON
 
 SOURCE_ID = "property.paruvendu"
 PROFILE_VERSION = "2026.09.1"
@@ -50,7 +51,7 @@ def search_url(kind: str, department_path: str, max_price: int, page: int) -> st
     return SEARCH.format(art=kind, dep=department_path, hoechstpreis=max_price, seite=page)
 
 
-def number(value: Any) -> float | None:
+def number(value: JSON) -> float | None:
     if value is None:
         return None
     t = str(value).replace("\xa0", "").replace("\u202f", "").replace(" ", "").replace(",", ".")
@@ -74,18 +75,15 @@ def _text(block: str) -> str:
     return t.strip()
 
 
-def normalise(block: str, dep_name: str, default_kind: str) -> dict[str, Any] | None:
-    """Card in the stock format; ``None`` for cards without id or link."""
-    ident = _ID.search(block)
-    link = _LINK.search(block)
-    if not ident or not link:
-        return None
-    title = ""
+def _title(block: str) -> str:
     for m in _TITLE.finditer(block):
         if _KIND_T.match(m.group(1)):
-            title = html.unescape(m.group(1)).strip()
-            break
-    txt = _text(block)
+            return html.unescape(m.group(1)).strip()
+    return ""
+
+
+def _price(block: str) -> tuple[float | None, str]:
+    """Amount and kind (``warm`` for CC, ``kalt`` for HC, else ``unklar``)."""
     price, price_kind = None, "unklar"
     mp = _PRICE.search(block)
     if mp:
@@ -95,21 +93,36 @@ def normalise(block: str, dep_name: str, default_kind: str) -> dict[str, Any] | 
             price_kind = "warm"
         elif mark == "HC":
             price_kind = "kalt"
-    place, dep_no = None, None
+    return price, price_kind
+
+
+def _place(txt: str) -> tuple[str | None, str | None]:
     mo = _PLACE.search(txt)
-    if mo:
-        place = mo.group(1).strip(" |")
-        dep_no = mo.group(2)
+    return (mo.group(1).strip(" |"), mo.group(2)) if mo else (None, None)
+
+
+def _day(txt: str) -> str | None:
+    md = _DATE.search(txt)
+    return f"{md.group(1)}.{md.group(2)}.{md.group(3)}" if md else None
+
+
+def normalise(block: str, dep_name: str, default_kind: str) -> dict[str, JSON] | None:
+    """Card in the stock format; ``None`` for cards without id or link."""
+    ident = _ID.search(block)
+    link = _LINK.search(block)
+    if not ident or not link:
+        return None
+    title = _title(block)
+    txt = _text(block)
+    price, price_kind = _price(block)
+    place, dep_no = _place(txt)
     rooms_match = _ROOMS_T.search(title) or _ROOMS.search(txt)
     rooms = number(rooms_match.group(1)) if rooms_match else None
     area_match = _AREA_T.search(title)
     area = number(area_match.group(1)) if area_match else None
     kind_match = _KIND_T.match(title)
     kind = KINDS.get(kind_match.group(1).lower() if kind_match else default_kind, "unbekannt")
-    day = None
-    md = _DATE.search(txt)
-    if md:
-        day = f"{md.group(1)}.{md.group(2)}.{md.group(3)}"
+    day = _day(txt)
     cold = price if price_kind in ("kalt", "unklar") else None
     warm = price if price_kind == "warm" else None
     return {

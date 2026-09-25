@@ -15,19 +15,20 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from types import ModuleType
 
+from auditcore_common.optional import require_module
+
 from .errors import DependencyError, ProfileError
 from .profiles import Profile
+
+_FUZZY = "Für unscharfe Vergleiche ist 'auditcore_entity_matching[fuzzy]' zu installieren."
 
 
 def _rapidfuzz() -> tuple[ModuleType, ModuleType]:
     """``rapidfuzz.fuzz`` and ``rapidfuzz.process``, imported only when a score is needed."""
-    try:
-        from rapidfuzz import fuzz, process
-    except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
-        raise DependencyError(
-            "Für unscharfe Vergleiche ist 'auditcore_entity_matching[fuzzy]' zu installieren."
-        ) from exc
-    return fuzz, process
+    return (
+        require_module("rapidfuzz.fuzz", DependencyError, _FUZZY),
+        require_module("rapidfuzz.process", DependencyError, _FUZZY),
+    )
 
 
 @dataclass(frozen=True)

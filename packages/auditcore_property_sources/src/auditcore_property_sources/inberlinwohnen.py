@@ -19,7 +19,8 @@ import html
 import json
 import re
 from collections.abc import Iterator, Mapping
-from typing import Any
+
+from ._types import JSON
 
 SOURCE_ID = "property.inberlinwohnen"
 PROFILE_VERSION = "2026.09.1"
@@ -39,7 +40,7 @@ def page_url(page: int) -> str:
     return BASE if page == 1 else f"{BASE}?page={page}"
 
 
-def _unwrap(v: Any) -> Any:
+def _unwrap(v: JSON) -> JSON:
     if isinstance(v, list) and len(v) == 2 and isinstance(v[1], dict) and set(v[1]) == {"s"}:
         return _unwrap(v[0])
     if isinstance(v, list):
@@ -49,7 +50,7 @@ def _unwrap(v: Any) -> Any:
     return v
 
 
-def snapshots(doc: str) -> Iterator[tuple[int, int, str, Any]]:
+def snapshots(doc: str) -> Iterator[tuple[int, int, str, JSON]]:
     """``(start, end, component name, data)`` of every readable snapshot."""
     for m in _SNAPSHOT.finditer(doc):
         try:
@@ -70,7 +71,7 @@ def total_count(doc: str) -> int:
     return int(m.group(1).replace(".", "")) if m else 0
 
 
-def text(v: Any) -> str:
+def text(v: JSON) -> str:
     """Remove markup and resolve entities."""
     if v is None:
         return ""
@@ -93,9 +94,9 @@ def learn_attributes(doc: str, known: Mapping[int, str] | None = None) -> dict[i
     return learned
 
 
-def parse_page(doc: str) -> dict[int, dict[str, Any]]:
+def parse_page(doc: str) -> dict[int, dict[str, JSON]]:
     """All offers of a result page by portal id."""
-    offers: dict[int, dict[str, Any]] = {}
+    offers: dict[int, dict[str, JSON]] = {}
     for _, _, name, data in snapshots(doc):
         if name != ITEM:
             continue
@@ -105,7 +106,7 @@ def parse_page(doc: str) -> dict[int, dict[str, Any]]:
     return offers
 
 
-def number(v: Any) -> float | None:
+def number(v: JSON) -> float | None:
     """German decimal notation to float; the dot is a thousands separator only with a comma."""
     if v is None:
         return None
@@ -120,8 +121,8 @@ def number(v: Any) -> float | None:
     return float(m.group(0)) if m else None
 
 
-def _details(item: Mapping[str, Any]) -> dict[str, Any]:
-    flat: dict[str, Any] = {}
+def _details(item: Mapping[str, JSON]) -> dict[str, JSON]:
+    flat: dict[str, JSON] = {}
     for column in item.get("details") or []:
         entries = column if isinstance(column, list) else [column]
         for e in entries:
@@ -130,7 +131,7 @@ def _details(item: Mapping[str, Any]) -> dict[str, Any]:
     return flat
 
 
-def utc(stamp: Any) -> str | None:
+def utc(stamp: JSON) -> str | None:
     """``2026-09-04T17:59:02.000000Z`` → ``2026-09-04T17:59:02Z``."""
     if not stamp:
         return None
@@ -144,7 +145,23 @@ def _per_sqm(amount: float | None, area: float | None) -> float | None:
     return round(amount / area, 2)
 
 
-def normalise(item: Mapping[str, Any], attributes: Mapping[int, str]) -> dict[str, Any]:
+def _total_and_further(
+    d: Mapping[str, JSON], item: Mapping[str, JSON], cold: float | None, extra: float | None
+) -> tuple[float | None, float | None]:
+    """Total rent (detail, gross or cold + extra) and any remaining further costs."""
+    total = number(d.get("Gesamtmiete"))
+    if total is None:
+        total = number(item.get("rentGross"))
+    if total is None and cold is not None and extra is not None:
+        total = round(cold + extra, 2)
+    further = None
+    if total is not None and cold is not None and extra is not None:
+        rest = round(total - cold - extra, 2)
+        further = rest if abs(rest) >= 0.01 else None
+    return total, further
+
+
+def normalise(item: Mapping[str, JSON], attributes: Mapping[int, str]) -> dict[str, JSON]:
     """Offer in the stock format (original ``normalise`` with explicit attribute names)."""
     d = _details(item)
     address = item.get("address") or {}
@@ -155,15 +172,7 @@ def normalise(item: Mapping[str, Any], attributes: Mapping[int, str]) -> dict[st
     area = number(item.get("area"))
     cold = number(item.get("rentNet"))
     extra = number(item.get("extraCosts"))
-    total = number(d.get("Gesamtmiete"))
-    if total is None:
-        total = number(item.get("rentGross"))
-    if total is None and cold is not None and extra is not None:
-        total = round(cold + extra, 2)
-    further = None
-    if total is not None and cold is not None and extra is not None:
-        rest = round(total - cold - extra, 2)
-        further = rest if abs(rest) >= 0.01 else None
+    total, further = _total_and_further(d, item, cold, extra)
     street = " ".join(x for x in (address.get("street"), address.get("number")) if x).strip()
     names = [
         attributes.get(int(a["flat_attribute_id"]))
