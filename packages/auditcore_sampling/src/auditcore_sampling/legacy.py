@@ -222,41 +222,62 @@ def flowstat_mus_stratified(
     )
     if len(starts) != len(keys):
         raise ValueError("Für jede Schicht ist genau ein Startwert anzugeben.")
-    rows: list[dict[str, Any]] = []
+    rows: list[dict[str, object]] = []
     selected: list[int] = []
     for key, start in zip(keys, starts, strict=True):
         members = [i for i, k in enumerate(strata) if k == key]
-        group = [values[i] for i in members]
-        stratum_value = pandas_sum(group)
-        share = _divide(stratum_value, total, True)
-        stratum_materiality = materiality * share
-        size, interval = flowstat_mus_size(
-            stratum_value,
-            stratum_materiality,
-            expected_error_rate,
-            confidence_level,
-            numpy_scalars=True,
+        row, local = _flowstat_stratum(
+            key,
+            [values[i] for i in members],
+            total,
+            start,
+            materiality=materiality,
+            confidence_level=confidence_level,
+            expected_error_rate=expected_error_rate,
         )
-        begin = start if (interval > 0 and start is not None) else 0.0
-        local = systematic_mus(
-            group,
-            sample_size=max(size, 0),
-            interval=float(interval),
-            start=begin,
-            variant="flowstat",
-        ).positions
         selected.extend(members[i] for i in local)
-        rows.append(
-            {
-                "Stratum": str(key),
-                "Anzahl": len(members),
-                "Wert": _round2(stratum_value, True),
-                "Anteil_Prozent": _round2(share * 100, True),
-                "Stichprobenumfang": size,
-                "Ausgewählte": len(local),
-            }
-        )
+        rows.append(row)
     return rows, selected, total
+
+
+def _flowstat_stratum(
+    key: object,
+    group: list[float | int | None],
+    total: float | int,
+    start: float | None,
+    *,
+    materiality: float,
+    confidence_level: float,
+    expected_error_rate: float,
+) -> tuple[dict[str, object], tuple[int, ...]]:
+    """One stratum of ``run_mus_stratified``: summary row and group-local positions."""
+    stratum_value = pandas_sum(group)
+    share = _divide(stratum_value, total, True)
+    stratum_materiality = materiality * share
+    size, interval = flowstat_mus_size(
+        stratum_value,
+        stratum_materiality,
+        expected_error_rate,
+        confidence_level,
+        numpy_scalars=True,
+    )
+    begin = start if (interval > 0 and start is not None) else 0.0
+    local = systematic_mus(
+        group,
+        sample_size=max(size, 0),
+        interval=float(interval),
+        start=begin,
+        variant="flowstat",
+    ).positions
+    row: dict[str, object] = {
+        "Stratum": str(key),
+        "Anzahl": len(group),
+        "Wert": _round2(stratum_value, True),
+        "Anteil_Prozent": _round2(share * 100, True),
+        "Stichprobenumfang": size,
+        "Ausgewählte": len(local),
+    }
+    return row, local
 
 
 def flowstat_srs_stratified_sizes(

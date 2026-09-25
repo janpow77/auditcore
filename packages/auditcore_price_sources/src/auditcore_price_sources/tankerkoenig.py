@@ -18,21 +18,23 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from typing import Any
 
 from auditcore_harvest import (
+    JSON,
     AuthError,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
     HarvestRecord,
     PageResult,
-    PageStatus,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    decode_json,
+    page_result,
     raise_for_status,
 )
 
@@ -59,7 +61,7 @@ def check_list_response(status: int, body: bytes) -> tuple[bool, str | None]:
     return True, None
 
 
-def _postcode(value: Any) -> tuple[str | None, bool]:
+def _postcode(value: object) -> tuple[str | None, bool]:
     """Postcode as five-digit text; numbers lose leading zeros at the source and are padded."""
     if value is None or value == "":
         return None, False
@@ -87,7 +89,7 @@ class TankerkoenigListAdapter:
         filters=("lat", "lng", "rad"),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url``, ``lat``, ``lng`` and ``rad`` (km, 1..25; the service limit)."""
         if not isinstance(config.get("url"), str) or not config["url"].startswith("http"):
             raise ConfigError("url (JSON-Basisadresse) fehlt.")
@@ -98,7 +100,7 @@ class TankerkoenigListAdapter:
             if not low <= value <= high or (key == "rad" and value <= 0):
                 raise ConfigError(f"{key} liegt außerhalb von {low}..{high}.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Request the list once; ``ok: false`` with an API-key message is an auth error."""
         url = f"{str(context.config['url']).rstrip('/')}/list.php"
         params = {
@@ -111,64 +113,64 @@ class TankerkoenigListAdapter:
         response = raise_for_status(
             context.transport.request("GET", url, params=params, timeout=context.timeout)
         )
-        try:
-            payload = json.loads(response.body)
-        except ValueError as exc:
-            raise ParserError("Antwort ist kein JSON.") from exc
-        if not isinstance(payload, Mapping):
-            raise ParserError("Antwort ist kein Objekt.")
-        if not payload.get("ok"):
-            message = str(payload.get("message", "API meldet Fehler"))
-            if "apikey" in message.lower():
-                raise AuthError(f"Tankerkönig: {message}")
-            raise ParserError(f"Tankerkönig: {message}")
+        payload = _checked_payload(decode_json(response.body))
         stations = payload.get("stations")
         if not isinstance(stations, list):
             raise ParserError("Antwort ohne stations-Liste.")
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []
         for position, station in enumerate(stations):
-            locator = f"{url}#stations[{position}]"
-            if not isinstance(station, Mapping) or not station.get("id"):
-                issues.append(RecordIssue(locator, "Station ohne Kennung"))
-                continue
-            prices: dict[str, str | None] = {}
-            try:
-                for fuel in FUELS:
-                    value = exact(station.get(fuel))
-                    prices[fuel] = None if value is None else str(value)
-            except ValueError as exc:
-                issues.append(RecordIssue(locator, f"Preis nicht lesbar: {exc}"))
-                continue
-            postcode, padded = _postcode(station.get("postCode"))
-            normalized = {
-                "schema": STATION_SCHEMA,
-                "station_id": str(station["id"]),
-                "name": station.get("name") or None,
-                "marke": station.get("brand") or None,
-                "strasse": station.get("street") or None,
-                "hausnummer": station.get("houseNumber") or None,
-                "plz": postcode,
-                "plz_aufgefuellt": padded,
-                "ort": station.get("place") or None,
-                "lat": station.get("lat"),
-                "lng": station.get("lng"),
-                "geoeffnet": station.get("isOpen"),
-                "preise": prices,
-                "einheit": unit("EUR/Liter", origin="profil", numerator="EUR", denominator="l"),
-                "zeitbezug": dict(RETRIEVAL_TIME),
-                "zweck": "vorpruefung",
-                "beweismittel": False,
-                "lizenz_quelle": payload.get("license"),
-            }
-            records.append(
-                HarvestRecord(
-                    source_id=self.source.source_id,
-                    record_id=str(station["id"]),
-                    raw=dict(station),
-                    normalized=normalized,
-                    provenance=context.provenance(self.source, locator, dict(station)),
-                )
-            )
-        status = PageStatus.PARTIAL if issues else PageStatus.OK
-        return PageResult(tuple(records), None, complete=True, status=status, issues=tuple(issues))
+            item = self._station(context, f"{url}#stations[{position}]", station, payload)
+            if isinstance(item, RecordIssue):
+                issues.append(item)
+            else:
+                records.append(item)
+        return page_result(records, issues)
+
+    def _station(
+        self, context: FetchContext, locator: str, station: JSON, payload: Mapping[str, JSON]
+    ) -> HarvestRecord | RecordIssue:
+        """Record of one station, or the issue why it cannot be used."""
+        if not isinstance(station, Mapping) or not station.get("id"):
+            return RecordIssue(locator, "Station ohne Kennung")
+        prices: dict[str, str | None] = {}
+        try:
+            for fuel in FUELS:
+                value = exact(station.get(fuel))
+                prices[fuel] = None if value is None else str(value)
+        except ValueError as exc:
+            return RecordIssue(locator, f"Preis nicht lesbar: {exc}")
+        postcode, padded = _postcode(station.get("postCode"))
+        normalized = {
+            "schema": STATION_SCHEMA,
+            "station_id": str(station["id"]),
+            "name": station.get("name") or None,
+            "marke": station.get("brand") or None,
+            "strasse": station.get("street") or None,
+            "hausnummer": station.get("houseNumber") or None,
+            "plz": postcode,
+            "plz_aufgefuellt": padded,
+            "ort": station.get("place") or None,
+            "lat": station.get("lat"),
+            "lng": station.get("lng"),
+            "geoeffnet": station.get("isOpen"),
+            "preise": prices,
+            "einheit": unit("EUR/Liter", origin="profil", numerator="EUR", denominator="l"),
+            "zeitbezug": dict(RETRIEVAL_TIME),
+            "zweck": "vorpruefung",
+            "beweismittel": False,
+            "lizenz_quelle": payload.get("license"),
+        }
+        return context.record(self.source, str(station["id"]), dict(station), normalized, locator)
+
+
+def _checked_payload(payload: JSON) -> Mapping[str, JSON]:
+    """The answer object; ``ok: false`` is an auth error (API key) or a parser error."""
+    if not isinstance(payload, Mapping):
+        raise ParserError("Antwort ist kein Objekt.")
+    if not payload.get("ok"):
+        message = str(payload.get("message", "API meldet Fehler"))
+        if "apikey" in message.lower():
+            raise AuthError(f"Tankerkönig: {message}")
+        raise ParserError(f"Tankerkönig: {message}")
+    return payload
