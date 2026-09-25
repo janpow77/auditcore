@@ -31,8 +31,8 @@ JoblibBackend = Callable[[], JoblibApi]
 #: Minimum rows per worker before a request is split.
 MIN_BATCH_SIZE = 100
 
-#: Belegliste criteria in the legacy precedence order: field-name fragment, criteria key.
-BELEGLISTE_CRITERIA = (
+#: Belegliste (receipt list) criteria in legacy precedence: field-name fragment, criteria key.
+RECEIPT_LIST_CRITERIA = (
     ("vorhabennummer", "vorhabennummern"),
     ("aktenzeichen", "aktenzeichen"),
     ("kostenstelle", "kostenstellen"),
@@ -143,16 +143,18 @@ def _field_value(
         counters[field_name] = current + step
 
     if belegliste_options and field_type in ["number", "weighted_list"]:
-        distribution = _belegliste_distribution(field_name, belegliste_options.get("criteria", {}))
+        distribution = _receipt_list_distribution(
+            field_name, belegliste_options.get("criteria", {})
+        )
         if distribution is not None:
             return generator.generate_weighted_choice(distribution.get("items", []))
 
     return generator.generate_field(field_type, params, country, row)
 
 
-def _belegliste_distribution(field_name: str, criteria: JsonObject) -> JsonObject | None:
+def _receipt_list_distribution(field_name: str, criteria: JsonObject) -> JsonObject | None:
     """Return the first configured distribution whose fragment occurs in the field name."""
-    for fragment, key in BELEGLISTE_CRITERIA:
+    for fragment, key in RECEIPT_LIST_CRITERIA:
         if fragment in field_name.lower() and criteria.get(key):
             distribution: JsonObject = criteria[key]
             return distribution

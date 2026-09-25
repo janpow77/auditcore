@@ -17,7 +17,8 @@ RNG-Endzustand sind identisch.
 - `apply_deviation` ruft je Szenario einen eigenen Schritt auf
   (`_raise_eligible_above_paid`, `_pay_before_invoice`, `_negate_amounts`).
 - Neues Modul `rows.py`: Zeilenzusammenstellung (Auto-Increment,
-  Belegliste-Kriterien als Tabelle in der bisherigen Vorrangfolge),
+  Belegliste-Kriterien als Tabelle `RECEIPT_LIST_CRITERIA` in der bisherigen
+  Vorrangfolge),
   Batch-Aufteilung und die beiden Worker-Backends.
   `BatchGenerationError`, `get_optimal_workers` und `_generate_batch` bleiben
   über `auditcore_dummygenerator.generator` erreichbar; das Objekt ist
@@ -41,7 +42,11 @@ Installationstest).
 |---|---|---|
 | Funktionen mit McCabe > 10 | 4 | 0 |
 | Module > 400 Zeilen | 1 (`generator.py`, 654) | 0 (`generator.py` 399, `rows.py` 257) |
-| `Any`-Vorkommen | 21 | 10 |
+| Funktionen > 60 Zeilen (Code-Gate) | 4 | 0 |
+| `Any` (Textvorkommen / Code-Gate `any_usages`) | 21 / 19 | 10 / 7 |
 | mypy --strict | sauber | sauber |
+
+Code-Gate-Baseline (`quality/baseline.json`) für das Paket entsprechend
+abgesenkt.
 
 Keine Umbenennungen öffentlicher Namen.
