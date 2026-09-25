@@ -9,6 +9,7 @@ import pytest
 from auditcore_sampling import (
     METHODS,
     SamplingInputError,
+    __version__,
     legacy,
     mus_size,
     srs_size,
@@ -150,7 +151,7 @@ def test_plans_carry_method_inputs_and_library() -> None:
         expected_error_rate=0.0,
         confidence_level=0.9,
     ).to_dict()
-    assert data["library"] == "auditcore_sampling 0.1.0"
+    assert data["library"] == f"auditcore_sampling {__version__}"
     assert data["method"] == "portal.mus_poisson" and data["inputs"]["factor"] == 2.31
 
 

@@ -117,7 +117,7 @@ class SizePlan:
     def to_dict(self) -> dict[str, Any]:
         """JSON-compatible plan."""
         return {
-            "library": "auditcore_sampling 0.1.0",
+            "library": "auditcore_sampling 0.1.1",
             "method": self.method,
             "sample_size": self.sample_size,
             "interval": self.interval,
@@ -137,13 +137,13 @@ def method(method_id: str, kind: str) -> Method:
     return found
 
 
-def _number(value: Any, name: str) -> float:
+def _number(value: object, name: str) -> float:
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
         raise SamplingInputError(f"'{name}' muss eine endliche Zahl sein.")
     return float(value)
 
 
-def _factor(chosen: Method, confidence_level: Any) -> float:
+def _factor(chosen: Method, confidence_level: object) -> float:
     level = _number(confidence_level, "confidence_level")
     try:
         return chosen.factors[level]

@@ -11,7 +11,7 @@ from auditcore_sampling.legacy import flowstat_mus_size
 def main() -> None:
     """Sample sizes of both named methods, a seeded MUS draw and the legacy formula."""
     package = distribution("auditcore_sampling")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     values = [random.Random(3).uniform(100, 10000) for _ in range(300)]
