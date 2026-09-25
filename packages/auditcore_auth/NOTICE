@@ -1,0 +1,19 @@
+auditcore_auth 0.1.0 — attribution and authorization
+
+New implementation in auditcore. The behaviour was characterised by executing
+the password and JWT helpers of nine applications at pinned commits (listed
+with the blob SHAs of every read file in provenance.json):
+janpow77/audit_designer, flownavigator, flowsearch, qaaudit, versteigerung,
+regulierung, flowinvoice, audit-portal and flowlib. Hash formats, claim
+layouts, algorithms and lifetimes were adopted as compatibility profiles; the
+code was rewritten. janpow77/cockpit and janpow77/riskanalysis were inspected
+and contain no JWT or password hashing to adopt.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore". On
+2026-09-25 the rights holder asked to build auditcore_auth from group 1 of the
+Python helper inventory. Status: USER_AUTHORIZED_MIT for this library only;
+the applications keep their own licensing.
+
+No third-party code is included. Optional extras use bcrypt (Apache-2.0),
+argon2-cffi (MIT), PyJWT (MIT) and FastAPI (MIT) as ordinary dependencies.

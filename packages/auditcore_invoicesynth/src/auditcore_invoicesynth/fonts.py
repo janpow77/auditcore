@@ -144,33 +144,52 @@ def discover_fonts(
     unknown = [name for name in wanted if name not in FONT_CATALOG]
     if unknown:
         raise FontError(f"Nicht im Katalog freier Schriften: {unknown}")
-    found: dict[str, Path] = {}
     names = {
         file_name
         for name in wanted
         for file_name in (*FONT_CATALOG[name].regular, *FONT_CATALOG[name].bold)
     }
+    found = _find_files(search_dirs, names)
+    resolved: list[ResolvedFont] = []
+    for name in wanted:
+        spec = FONT_CATALOG[name]
+        for style, candidates in (("regular", spec.regular), ("bold", spec.bold)):
+            font = _resolve(name, style, candidates, found, pins or {})
+            if font is not None:
+                resolved.append(font)
+    return FontSet(tuple(resolved))
+
+
+def _find_files(search_dirs: Iterable[Path], names: set[str]) -> dict[str, Path]:
+    """Erste Fundstelle je gesuchtem Dateinamen, Verzeichnisse in Pfadordnung."""
+    found: dict[str, Path] = {}
     for directory in search_dirs:
         if not directory.is_dir():
             continue
         for path in sorted(directory.rglob("*.ttf")):
             if path.name in names and path.name not in found and path.is_file():
                 found[path.name] = path
-    resolved: list[ResolvedFont] = []
-    for name in wanted:
-        spec = FONT_CATALOG[name]
-        for style, candidates in (("regular", spec.regular), ("bold", spec.bold)):
-            for candidate in candidates:
-                if candidate in found:
-                    digest = sha256_file(found[candidate])
-                    expected = (pins or {}).get(candidate)
-                    if expected is not None and expected != digest:
-                        raise FontError(f"Prüfsumme weicht ab: {candidate}")
-                    resolved.append(
-                        ResolvedFont(name, style, found[candidate], digest, spec.license)
-                    )
-                    break
-    return FontSet(tuple(resolved))
+    return found
+
+
+def _resolve(
+    family: str,
+    style: str,
+    candidates: Iterable[str],
+    found: Mapping[str, Path],
+    pins: Mapping[str, str],
+) -> ResolvedFont | None:
+    """Erster gefundener Kandidat eines Schnitts, Prüfsumme gegen ``pins`` geprüft."""
+    for candidate in candidates:
+        if candidate in found:
+            digest = sha256_file(found[candidate])
+            expected = pins.get(candidate)
+            if expected is not None and expected != digest:
+                raise FontError(f"Prüfsumme weicht ab: {candidate}")
+            return ResolvedFont(
+                family, style, found[candidate], digest, FONT_CATALOG[family].license
+            )
+    return None
 
 
 def fetch_font(

@@ -119,12 +119,12 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `ACCEPTANCE_THRESHOLDS` | Konstante | Abnahmeschwellen (Entscheidung E6 vom 24.09.2026) für T2 und T3. | `evaluation` |
 | `ALLOWED_VAT_RATES` | Konstante | Zulässige Steuersätze je Land (Plausibilitätsprüfung, Bewertung). | `enrich` |
 | `FONT_CATALOG` | Konstante | – | `fonts` |
-| `HOLDOUT_LAYOUTS` | Konstante | – | `layouts` |
-| `LAYOUTS` | Konstante | – | `layouts` |
+| `HOLDOUT_LAYOUTS` | Konstante | – | `layout_model` |
+| `LAYOUTS` | Konstante | – | `layout_model` |
 | `SCHEMA_VERSION` | Konstante | – | `schema` |
 | `SPLITS` | Konstante | – | `plan` |
 | `TASK_TOKEN` | Konstante | – | `schema` |
-| `TRAINING_LAYOUTS` | Konstante | – | `layouts` |
+| `TRAINING_LAYOUTS` | Konstante | – | `layout_model` |
 | `DatasetError` | Ausnahme | Ausgabeverzeichnis belegt oder Datensatz beschädigt. | `dataset` |
 | `EvaluationReport` | Datenklasse | – | `evaluation` |
 | `FontError` | Ausnahme | Schrift fehlt, ist nicht frei lizenziert oder weicht von der Prüfsumme ab. | `fonts` |
@@ -168,6 +168,9 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.formats` | Deutsche und englische Zahlen-, Währungs- und Datumsformate samt Rücklesung. |
 | `auditcore_invoicesynth.identifiers` | Prüfziffer-gültige, aber fiktive Kennungen (Entscheidung E5 vom 24.09.2026). |
 | `auditcore_invoicesynth.labels` | Beschriftungs-Synonyme je Feld (deutsch überwiegend, englischer Anteil über den Plan). |
+| `auditcore_invoicesynth.layout_body` | Positionstabelle, Summenblock, Zahlungshinweis, Bankverbindung und Fußzeile. |
+| `auditcore_invoicesynth.layout_head` | Kopfbereich eines Belegs: Kennzeichnung, Absender, Empfänger, Titel, Kopfdaten. |
+| `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
 | `auditcore_invoicesynth.layouts` | Zehn Belegvorlagen (acht fürs Training, zwei nur für den Layout-Holdout). |
 | `auditcore_invoicesynth.plan` | Deterministischer Variantenplan und Aufteilung in Trainings-/Testsätze. |
 | `auditcore_invoicesynth.render` | Pillow-Zeichenfläche für die Vorlagen (Extra ``render``). |

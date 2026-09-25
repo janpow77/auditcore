@@ -129,14 +129,11 @@ def run_training(
     )
     backend.setup(config, samples)
     main = backend.rank == 0
-    checkpoint = manager.latest()
-    start = 0
-    if checkpoint is not None:
-        backend.load(checkpoint.path)
-        start = checkpoint.step
+    resumed_from = _resume(manager, backend)
+    start = resumed_from or 0
     if main:
         _truncate_log(run_dir, start)
-    result = TrainResult(run_id, start, start, resumed_from=checkpoint.step if checkpoint else None)
+    result = TrainResult(run_id, start, start, resumed_from=resumed_from)
     policy = CheckpointPolicy(
         config.checkpoint_every_steps, config.checkpoint_every_minutes * 60, clock
     )
@@ -148,16 +145,7 @@ def run_training(
         result.losses[step] = loss
         result.final_step = step
         if main:
-            record = {
-                "step": step,
-                "epoch": (step - 1) // per_epoch,
-                "loss": round(loss, 8),
-                "vram_peak_gib": backend.vram_peak_gib(),
-                "temperature_c": temperature(),
-                "time": round(wall(), 3),
-            }
-            with (run_dir / LOG).open("a", encoding="utf-8") as handle:
-                handle.write(json.dumps(record, sort_keys=True) + "\n")
+            _log_step(run_dir, step, (step - 1) // per_epoch, loss, backend, temperature, wall)
         if stop_after_step is not None and step >= stop_after_step:
             return result
         if policy.due(step) or step == last:
@@ -169,6 +157,37 @@ def run_training(
         if step_delay:
             time.sleep(step_delay)
     return result
+
+
+def _resume(manager: CheckpointManager, backend: TrainBackend) -> int | None:
+    """Neuesten gültigen Checkpoint laden; dessen Schritt oder ``None``."""
+    checkpoint = manager.latest()
+    if checkpoint is None:
+        return None
+    backend.load(checkpoint.path)
+    return checkpoint.step
+
+
+def _log_step(
+    run_dir: Path,
+    step: int,
+    epoch: int,
+    loss: float,
+    backend: TrainBackend,
+    temperature: Callable[[], float | None],
+    wall: Callable[[], float],
+) -> None:
+    """Eine Zeile ``train-log.jsonl`` (nur Rang 0)."""
+    record = {
+        "step": step,
+        "epoch": epoch,
+        "loss": round(loss, 8),
+        "vram_peak_gib": backend.vram_peak_gib(),
+        "temperature_c": temperature(),
+        "time": round(wall(), 3),
+    }
+    with (run_dir / LOG).open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, sort_keys=True) + "\n")
 
 
 class MockBackend:
