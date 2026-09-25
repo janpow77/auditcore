@@ -16,12 +16,22 @@
   `group_statistics`, `Tariff.from_mapping`, `select_tariff`, `calculate`).
   `Any` bleibt an Roh-JSON-Profilen, JSON-Ansichten (`to_dict`) und den
   Legacy-Nachbildungen.
+- `legacy.calculate_nahwaerme` (70 Zeilen): Umlagenwahl (`_levy`) und
+  Anteilsrechnung (`_heat_shares`) als eigene Schritte; Prüfreihenfolge,
+  Decimal-Rechnung und Rundung unverändert (Differenzlauf gegen 0.1.0 mit
+  30 000 Zufallseingaben inkl. Fehlerpfaden bitgleich).
+- Interne Hilfen englisch benannt: `_nicht_negativ` → `_non_negative`,
+  `_sortier_schluessel` → `_sort_key` (privat, daher ohne Alias).
 - Keine Umbenennung öffentlicher Namen, keine Aliase nötig.
+
+Messung mit `auditcore-codegate check --package auditcore_price_analysis`:
 
 | Messung | 0.1.0 | 0.1.1 |
 |---|---|---|
 | Funktionen mit McCabe > 10 | 2 | 0 |
+| Funktionen > 60 Zeilen | 2 | 0 |
 | Module > 400 Zeilen | 1 | 0 |
-| `Any`-Vorkommen | 69 | 49 |
+| `Any`-Verwendungen | 61 | 42 |
+| nicht-englische Bezeichner | 2 | 0 |
 | mypy --strict | sauber | sauber |
 | Tests / Abdeckung | 622 / 98,0 % | 633 / 98,0 % |
