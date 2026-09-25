@@ -15,7 +15,7 @@ dependencies = ["auditcore_entity_matching==0.2.1"]
 [project.optional-dependencies]
 fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.1"]
 pandas = ["pandas>=2.1"]
-procurement = ["auditcore_procurement==0.2.0"]
+procurement = ["auditcore_procurement==0.2.1"]
 web = ["starlette>=0.26.1"]
 fastapi = ["fastapi>=0.92"]
 dev = [
@@ -25,7 +25,7 @@ dev = [
     "build>=1.2",
     "pandas>=2.1",
     "auditcore_entity_matching[fuzzy]==0.2.1",
-    "auditcore_procurement==0.2.0",
+    "auditcore_procurement==0.2.1",
     "starlette>=0.26.1",
     "fastapi>=0.92",
     "httpx>=0.23.3",
