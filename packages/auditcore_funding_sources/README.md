@@ -29,7 +29,7 @@ auditcore_funding_sources @ https://github.com/janpow77/auditcore/releases/downl
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
 ([Einrichtung](../../docs/deployment/package-feed.md)); hängt von
-`python3-auditcore-harvest` ab:
+`python3-auditcore-harvest` und `python3-auditcore-common` ab:
 
 ```bash
 sudo apt-get install python3-auditcore-funding-sources
@@ -165,7 +165,9 @@ führende Variante, Kumulierungsprofil, Datenlizenzen) sind als
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.1` (Adaptervertrag). Extra
+Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.1` (Adaptervertrag) und
+`auditcore_common==0.1.0` (Hashing, Profilladen, JSON-Sicherung, optionale
+Module; seit 0.1.3). Extra
 `xlsx`: openpyxl und defusedxml. Keine Abhängigkeit von pandas, der Plattform
 `auditcore`, Datenbanken oder HTTP-Clients.
 

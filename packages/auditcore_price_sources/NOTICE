@@ -1,4 +1,4 @@
-auditcore_price_sources 0.1.0 — source attribution and authorization
+auditcore_price_sources 0.1.1 — source attribution and authorization
 
 The adapters derive from the executed and characterized connectors of this
 private repository (pinned revision, Git blobs in provenance.json, GitHub

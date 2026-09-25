@@ -2,7 +2,9 @@
 
 On main and for manual runs every package is verified. On a pull request only
 the changed packages and every package that depends on them (transitively)
-are verified. A change to shared build tooling selects every package.
+are verified, together with the internal packages they require (transitively):
+an exact pin such as ``auditcore_harvest==0.1.1`` can only be installed if that
+version is built in the same run. A change to shared build tooling selects every package.
 """
 
 from __future__ import annotations
@@ -76,6 +78,11 @@ def select(root: Path, files: list[str]) -> list[Path]:
     grew = True
     while grew:
         additions = {name for name, deps in dependents.items() if deps & selected} - selected
+        selected |= additions
+        grew = bool(additions)
+    grew = True
+    while grew:
+        additions = set().union(*(dependents[name] for name in selected)) - selected
         selected |= additions
         grew = bool(additions)
     return [packages[name] for name in sorted(selected)]
