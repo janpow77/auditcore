@@ -12,6 +12,7 @@ Verträge, ohne dass Falldateien angepasst werden müssen.
 | `empty_value` | „—“ (Geviertstrich, U+2014) | Ersatzwert jedes Anzeigeformatierers für leer/ungültig (`empty-value`, `format-*`) | Einheitlich „—“? (heute „-“, „–“, „“, „N/A“, „k.A.“) |
 | `filesize_base`, `filesize_units` | 1024 mit B/KB/MB/GB/TB, Dezimalkomma, höchstens eine Nachkommastelle | `format-filesize` | „KB/MB“ (Status quo) oder „KiB/MiB“? |
 | `ambiguous_single_dot_de` | `invalid` | `parse-number`, Modus `de`: „1.5“ ist ungültig, die Oberfläche zeigt einen Hinweis („mehrdeutig“) | „1.5“ in Betragsfeldern als 15, als 1,5 oder ablehnen? |
+| `amount_max_fraction_digits_de` | 2 | `parse-number`, Modus `de`: höchstens zwei Nachkommastellen; „1.234“ (eine Dreiergruppe ohne Komma) ist mehrdeutig, „.“/„€“/„-“ allein gelten als leer – übernommen aus der strikten Betragsauslegung von flowinvoice (`german-decimal.ts`, `amount_parsing.py`, `german-amount-cases.json`) | Gilt die Grenze auch für Mengen/Sätze, oder nur für Beträge? |
 | `display_timezone` | Europe/Berlin | `format-date`, `format-datetime`: Anzeige immer in Berliner Zeit, reine Datumswerte ohne Umrechnung | Feste Zeitzone oder Browserzeit? |
 | `probe_timezone` | America/New_York | Der Vertragsläufer startet die Hilfsfunktionen mit dieser Prozess-Zeitzone, damit fehlendes `timeZone` und `new Date('JJJJ-MM-TT')` sichtbar werden | – (technisch) |
 | `money_rounding` | kaufmännisch (half-up) | `format-money`: 0,125 → 0,13 € | Python `round()`/`format()` runden heute 0,125 → 0,12 |

@@ -124,3 +124,14 @@ def test_redaction_of_echoed_values() -> None:
     text = "ValidationError: x input_value='abc' and input=\"def\"\nzweite Zeile"
     assert redact(text) == "ValidationError: x input_value=*** and input=***"
     assert redact("a\nb\n", last=True) == "b"
+
+
+def test_python_module_by_file_path_with_dataclass(tmp_path: Path) -> None:
+    (tmp_path / "amounts.py").write_text(
+        "from dataclasses import dataclass\nfrom decimal import Decimal\n\n\n@dataclass\n"
+        "class Result:\n    value: Decimal | None\n\n\n"
+        "def parse(text):\n    return Result(Decimal('1')).value if text == 'x' else None\n"
+    )
+    binding = Binding("f", "iban-valid", "python", "amounts.py", "parse")
+    [run] = run_contracts(Manifest(bindings=(binding,)), LIBRARY, tmp_path)
+    assert not run.load_error

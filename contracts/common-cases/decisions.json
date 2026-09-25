@@ -8,11 +8,18 @@
     "probe_timezone": "America/New_York",
     "ambiguous_single_dot_de": "invalid",
     "filesize_base": 1024,
-    "filesize_units": ["B", "KB", "MB", "GB", "TB"],
+    "filesize_units": [
+      "B",
+      "KB",
+      "MB",
+      "GB",
+      "TB"
+    ],
     "money_rounding": "half-up",
     "datetime_separator": ", ",
     "csv_delimiter": ";",
     "csv_bom": true,
-    "csv_formula_prefix": "'"
+    "csv_formula_prefix": "'",
+    "amount_max_fraction_digits_de": 2
   }
 }

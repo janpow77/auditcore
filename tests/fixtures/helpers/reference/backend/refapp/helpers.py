@@ -46,11 +46,25 @@ def _auto_mode(text: str) -> str | None:
     return "en" if sep == "." else "de"
 
 
+STRICT_DE = re.compile(r"^-?(\d{1,3}(\.\d{3})+|\d+)(,\d{1,2})?$")
+SINGLE_GROUP = re.compile(r"^-?\d{1,3}\.\d{3}$")
+SPACES = re.compile("[\u00a0\u202f]")
+
+
+def _clean(text: str) -> str:
+    cleaned = SPACES.sub(" ", CURRENCY.sub("", text)).replace("\u2212", "-").strip()
+    cleaned = re.sub(r"^-\s+", "-", cleaned)
+    return re.sub(r"(?<=\d) (?=\d{3}\b)", "", cleaned)
+
+
 def parse_number(text: object, mode: str = "de") -> Decimal | None:
     if not isinstance(text, str):
         return None
-    cleaned = CURRENCY.sub("", text).replace(" ", " ").strip()
-    cleaned = re.sub(r"(?<=\d) (?=\d{3}\b)", "", cleaned)
+    cleaned = _clean(text)
+    if mode == "de":
+        if SINGLE_GROUP.match(cleaned) or not STRICT_DE.match(cleaned):
+            return None
+        return Decimal(cleaned.replace(".", "").replace(",", "."))
     chosen = _auto_mode(cleaned) if mode == "auto" else mode
     if chosen not in SEPARATORS:
         return None

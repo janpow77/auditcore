@@ -15,7 +15,7 @@
   inventur im Code einbauen, damit die Fehler immer identifiziert werden“):
   neues Modul `auditcore.tools.helpers`, Befehl `auditcore-helpers`
   (`scan`, `lint`, `contracts`, `check`, `toolchain`, `rules`), gemeinsame
-  Vertragsfälle `contracts/common-cases/*.json` (11 Verträge, 117 Fälle,
+  Vertragsfälle `contracts/common-cases/*.json` (11 Verträge, 165 Fälle,
   JSON-Schema, Festlegungen vorläufig in `DECISIONS.md`), 11 deklarative
   Regeln (u. a. Zahlparser wie `BeleglisteGrid.parseDecimal`, Datum ohne
   Zeitzone, handgebaute €-Formatierung, CSV ohne Formelschutz, 422-Fehlertexte;

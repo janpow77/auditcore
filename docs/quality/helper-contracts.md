@@ -25,11 +25,11 @@ und das Code-Gate (Ratchet gegen eine Baseline).
 | Action | [`.github/actions/helper-contracts`](../../.github/actions/helper-contracts/action.yml) | Einbindung in die App-Workflows (per SHA) |
 | Nachtlauf | [`scripts/helpers_nightly.sh`](../../scripts/helpers_nightly.sh) + `scripts/systemd/` | Lauf über alle App-Repositorys unter `~/Projekte` auf der NUC |
 
-### Vertragsfälle (Version 1.0.0, Status vorläufig)
+### Vertragsfälle (Status vorläufig; `parse-number` 1.1.0, übrige 1.0.0)
 
 | Vertrag | Fälle | Inhalt |
 |---|---:|---|
-| `parse-number` | 36 | Modi `de`, `en`, `auto`; Tausenderpunkt, Dezimalkomma, „1.5“ in `de` ungültig (mehrdeutig), negativ, €/EUR, Leerraum und U+00A0 |
+| `parse-number` | 84 | Modi `de`, `en`, `auto`; Tausenderpunkt, Dezimalkomma, „1.5“ und „1.234“ in `de` ungültig (mehrdeutig), höchstens zwei Nachkommastellen, nur Trennzeichen = leer, negativ (auch U+2212), €/EUR, Leerraum und U+00A0; enthält alle Fälle aus flowinvoice `german-amount-cases.json` |
 | `format-money` | 10 | „1.234,50 €“ mit U+00A0, kaufmännische Rundung, String-Eingabe, Ersatzwert |
 | `format-date` | 9 | TT.MM.JJJJ in Europe/Berlin, reine Datumswerte ohne Verschiebung, Date-Objekte, ungültig |
 | `format-datetime` | 7 | „15.07.2026, 12:05“, Sommer-/Winterzeit, Zeitumstellung |

@@ -96,6 +96,8 @@ def load_module(target: str) -> ModuleType:
     if spec is None or spec.loader is None:
         raise ImportError(target)
     module = importlib.util.module_from_spec(spec)
+    # Dataclasses and typing look the module up while it is being executed.
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 

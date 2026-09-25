@@ -18,10 +18,21 @@ function autoMode(text: string): string | null {
   return sep === '.' ? 'en' : 'de'
 }
 
+function clean(text: string): string {
+  const cleaned = text.replace(/€|\bEUR\b/gi, '').replace(/[\u00a0\u202f]/g, ' ').replace(/\u2212/g, '-').trim()
+  return cleaned.replace(/^-\s+/, '-').replace(/(?<=\d) (?=\d{3}\b)/g, '')
+}
+
+const STRICT_DE = /^-?(\d{1,3}(\.\d{3})+|\d+)(,\d{1,2})?$/
+const SINGLE_GROUP = /^-?\d{1,3}\.\d{3}$/
+
 export function parseNumber(text: unknown, mode = 'de'): number | null {
   if (typeof text !== 'string') return null
-  let cleaned = text.replace(/€|\bEUR\b/gi, '').replace(/ /g, ' ').trim()
-  cleaned = cleaned.replace(/(?<=\d) (?=\d{3}\b)/g, '')
+  const cleaned = clean(text)
+  if (mode === 'de') {
+    if (SINGLE_GROUP.test(cleaned) || !STRICT_DE.test(cleaned)) return null
+    return Number(cleaned.split('.').join('').replace(',', '.')) + 0
+  }
   const chosen = mode === 'auto' ? autoMode(cleaned) : mode
   const separators = chosen ? SEPARATORS[chosen] : undefined
   if (!separators) return null

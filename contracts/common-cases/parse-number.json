@@ -1,10 +1,10 @@
 {
   "$schema": "./schema.json",
   "contract": "parse-number",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "status": "vorläufig",
   "title": "Zahl bzw. Betrag aus Texteingabe parsen",
-  "description": "Parser für Benutzereingaben und Importwerte. Ergebnis als Dezimalwert (Zahl, Decimal oder Dezimal-String); ungültig heißt null/None/undefined/NaN oder Ausnahme. Modus 'de' = Betragsfelder (Komma dezimal, Punkt nur als Tausendertrenner in Dreiergruppen), 'en' = englische Schreibweise, 'auto' = Import aus Fremddateien (letzter Trenner entscheidet, mehrdeutige Einzeltrenner werden abgelehnt). Währungszeichen (€, EUR) und Leerraum (auch U+00A0) werden entfernt.",
+  "description": "Parser für Benutzereingaben und Importwerte. Ergebnis als Dezimalwert (Zahl, Decimal oder Dezimal-String); ungültig heißt null/None/undefined/NaN oder Ausnahme. Modus 'de' = Betragsfelder (Komma dezimal, Punkt nur als Tausendertrenner in Dreiergruppen), 'en' = englische Schreibweise, 'auto' = Import aus Fremddateien (letzter Trenner entscheidet, mehrdeutige Einzeltrenner werden abgelehnt). Währungszeichen (€, EUR) und Leerraum (auch U+00A0) werden entfernt. Modus 'de' folgt der strikten Betragsauslegung von flowinvoice (frontend/src/lib/german-decimal.ts, backend/app/services/amount_parsing.py, Fälle german-amount-cases.json): höchstens zwei Nachkommastellen, eine einzelne Dreiergruppe ohne Komma ist mehrdeutig, Eingaben nur aus Trennzeichen/Währung gelten als leer.",
   "languages": [
     "ts",
     "python"
@@ -62,8 +62,13 @@
         "mode": "de"
       },
       "expect": {
-        "value": "1234"
-      }
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "mehrdeutig"
+      ],
+      "note": "Einzelne Dreiergruppe ohne Komma: 1234 oder 1,234 – nicht raten (wie flowinvoice german-decimal)"
     },
     {
       "id": "de-millionen",
@@ -408,6 +413,710 @@
       "expect": {
         "invalid": true
       }
+    },
+    {
+      "id": "de-flowinvoice-01",
+      "input": {
+        "text": "12.345.678,90",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "12345678.90"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-02",
+      "input": {
+        "text": "1234,5",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.5"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-03",
+      "input": {
+        "text": "0,5",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "0.5"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-04",
+      "input": {
+        "text": "1,50",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1.50"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-05",
+      "input": {
+        "text": "1234",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-06",
+      "input": {
+        "text": "1.234.567",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234567"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-07",
+      "input": {
+        "text": "1 234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-08",
+      "input": {
+        "text": "1 234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-09",
+      "input": {
+        "text": "1 234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-10",
+      "input": {
+        "text": "  1.234,56  ",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-11",
+      "input": {
+        "text": "1.234,56 €",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-12",
+      "input": {
+        "text": "€1.234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-13",
+      "input": {
+        "text": "-1.234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "-1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-14",
+      "input": {
+        "text": "−1.234,56",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "-1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-15",
+      "input": {
+        "text": "- 1.234,56 €",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "-1234.56"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-16",
+      "input": {
+        "text": "0",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "0"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-17",
+      "input": {
+        "text": "-0,00",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "0.00"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-18",
+      "input": {
+        "text": "000,50",
+        "mode": "de"
+      },
+      "expect": {
+        "value": "0.50"
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-19",
+      "input": {
+        "text": "-1.234",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "flowinvoice",
+        "mehrdeutig"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-20",
+      "input": {
+        "text": "1.234 €",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "flowinvoice",
+        "mehrdeutig"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-21",
+      "input": {
+        "text": "1,234",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "flowinvoice",
+        "mehrdeutig"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-22",
+      "input": {
+        "text": "12,345",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "flowinvoice",
+        "mehrdeutig"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-23",
+      "input": {
+        "text": "999,000",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "mehrdeutig"
+      },
+      "tags": [
+        "flowinvoice",
+        "mehrdeutig"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-24",
+      "input": {
+        "text": "1.23",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-25",
+      "input": {
+        "text": "12.34.56",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-26",
+      "input": {
+        "text": "1.234.56",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-27",
+      "input": {
+        "text": "1.23,45",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-28",
+      "input": {
+        "text": "1234,",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-29",
+      "input": {
+        "text": ",5",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-30",
+      "input": {
+        "text": "1,234567",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-31",
+      "input": {
+        "text": "12.345,678",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-32",
+      "input": {
+        "text": "12a",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-33",
+      "input": {
+        "text": "--5",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-34",
+      "input": {
+        "text": "1 23,45",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-35",
+      "input": {
+        "text": "1e3",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-36",
+      "input": {
+        "text": "NaN",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-37",
+      "input": {
+        "text": "Infinity",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true
+      },
+      "tags": [
+        "flowinvoice"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-38",
+      "input": {
+        "text": ".",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-39",
+      "input": {
+        "text": ",",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-40",
+      "input": {
+        "text": "-",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-41",
+      "input": {
+        "text": "−",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-42",
+      "input": {
+        "text": "€",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-43",
+      "input": {
+        "text": "EUR",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-44",
+      "input": {
+        "text": " . ",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-45",
+      "input": {
+        "text": "-€",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-46",
+      "input": {
+        "text": ". €",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-47",
+      "input": {
+        "text": ",.",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
+    },
+    {
+      "id": "de-flowinvoice-48",
+      "input": {
+        "text": "- ,",
+        "mode": "de"
+      },
+      "expect": {
+        "invalid": true,
+        "hint": "leer"
+      },
+      "tags": [
+        "flowinvoice",
+        "leer"
+      ],
+      "note": "aus flowinvoice german-amount-cases.json"
     }
   ]
 }
