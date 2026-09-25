@@ -48,7 +48,7 @@ erzeugt; jede Paket-README folgt der
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
-| [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.4.2 | Framework-independent records of processing activities and DPIA calculation | keine; Extras: `excel`, `pdf` | charakterisiert |
+| [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.4.3 | Framework-independent records of processing activities and DPIA calculation | `auditcore_common==0.1.0`; Extras: `excel`, `pdf` | charakterisiert |
 | [`auditcore_documents`](packages/auditcore_documents) | 0.3.2 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | `auditcore_common==0.1.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | 0.1.1 | Framework-independent synthetic field and row generation | keine; Extras: `parallel` | charakterisiert |
 | [`auditcore_entity_matching`](packages/auditcore_entity_matching) | 0.2.2 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | `auditcore_common==0.1.0`; Extras: `fuzzy` | charakterisiert |

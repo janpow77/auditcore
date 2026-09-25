@@ -13,6 +13,8 @@ from collections.abc import Mapping, Sequence
 from datetime import datetime
 from typing import Any
 
+from auditcore_common.optional import require_module
+
 from .legacy_report import format_datetime_de
 from .legacy_scoring import REGIME_DSGVO, legacy_profile
 from .register_content import group_by_department
@@ -27,13 +29,11 @@ class ExportDependencyError(ImportError):
 
 
 def _openpyxl() -> Any:
-    try:
-        import openpyxl
-    except ImportError as exc:  # pragma: no cover - exercised without the extra
-        raise ExportDependencyError(
-            "Excel-Ausgabe benötigt openpyxl: pip install 'auditcore_dataprotection[excel]'"
-        ) from exc
-    return openpyxl
+    return require_module(
+        "openpyxl",
+        ExportDependencyError,
+        "Excel-Ausgabe benötigt openpyxl: pip install 'auditcore_dataprotection[excel]'",
+    )
 
 
 def _put(ws: Any, row: int, column: int, value: Any) -> Any:
