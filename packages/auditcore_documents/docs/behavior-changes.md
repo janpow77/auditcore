@@ -71,3 +71,12 @@ D4 bis D8 stehen in `docs/pipeline.md`.
 | DN-02 | `DonutFieldMergeStage`, Regeln `VAL_DONUT_PLAUSIBILITY`/`VAL_DONUT_DISAGREEMENT` | nur in `DONUT_PIPELINE` |
 | DN-03 | `PipelineProfile.ocr_backend`, `donut_min_field_confidence` (Vorgabe `None`) | Fingerabdrücke von `LEGACY_PIPELINE` und `CORRECTED_PIPELINE` unverändert (Vorgabewerte fließen nicht ein) |
 | DN-04 | `PIPELINE_PROFILES` enthält zusätzlich `auditcore.pipeline.donut` | Registry erweitert |
+
+## 0.3.2 – Befund für mehrdeutige Beträge
+
+| Fall | bis 0.3.1 | ab 0.3.2 |
+|---|---|---|
+| `locale-aware`, Betrag `1.234` | Wert `None`, kein Befund in der Nachverarbeitung | Wert `None`, Befund `ambiguous` aus `normalize_fields_checked`, Flag `AMOUNT_AMBIGUOUS_TOTAL` |
+| `locale-aware`, Betrag `12,5,0` | Wert `None`, kein Befund | Wert `None`, Befund `invalid`, Flag `AMOUNT_INVALID_<FELD>` |
+| `legacy-de` | Wert geraten wie im Original | unverändert, keine Flags |
+
