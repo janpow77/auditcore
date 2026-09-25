@@ -97,6 +97,16 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
         }
     ),
+    "auditcore_llm_client": frozenset(
+        {
+            ("janpow77/ai-router", "426cd78e86df9f822452af035b8d58a19f7aa820"),
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/audit_designer", "ccd65245182982af3ef885a7a6d43583f4f72cbb"),
+            ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
+            ("janpow77/flow-agent", "149e14be8952fddacb7601753dd2bf133fca51cb"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+        }
+    ),
     "auditcore_market_indicators": frozenset(
         {("janpow77/krypto", "34d601726227f913548a118e144de5519eee0f3f")}
     ),
