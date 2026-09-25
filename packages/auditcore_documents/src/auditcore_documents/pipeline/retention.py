@@ -21,7 +21,7 @@ Die Voreinstellung ``LEGACY_CATEGORIES`` bleibt originalgetreu.
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -69,7 +69,7 @@ class RetentionStore(Protocol):
 
     async def find_expired_runs(
         self, cutoff: datetime, statuses: tuple[str, ...], limit: int
-    ) -> list[Any]: ...
+    ) -> Sequence[object]: ...
 
     async def delete_record(self, item: Any) -> None: ...
 
@@ -81,7 +81,7 @@ class ArtifactRetentionStore(RetentionStore, Protocol):
 
     async def find_expired_artifacts(
         self, category: str, cutoff: datetime, limit: int
-    ) -> list[Any]: ...
+    ) -> Sequence[object]: ...
 
 
 FileRemover = Callable[[str], int]
@@ -111,7 +111,7 @@ def is_expired_run(
     return created_at < cutoff_for(policy.processing_logs_days, now) and status in FINISHED_STATUSES
 
 
-def anonymize_record(item: Any) -> None:
+def anonymize_record(item: object) -> None:
     if hasattr(item, "user_id"):
         item.user_id = None
     if hasattr(item, "error"):
@@ -122,7 +122,7 @@ def anonymize_record(item: Any) -> None:
         item.validation_results = None
 
 
-def soft_delete_record(item: Any, grace_days: int, now: datetime) -> None:
+def soft_delete_record(item: object, grace_days: int, now: datetime) -> None:
     if hasattr(item, "deleted_at"):
         item.deleted_at = now + timedelta(days=grace_days)
     elif hasattr(item, "status"):
@@ -185,7 +185,7 @@ class RetentionSweeper:
         self,
         artifact_type: str,
         days: int,
-        items: list[Any],
+        items: Sequence[object],
         policy: RetentionPolicyConfig,
         dry_run: bool,
         outcome: SweepOutcome,

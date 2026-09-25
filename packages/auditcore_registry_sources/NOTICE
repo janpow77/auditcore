@@ -1,4 +1,4 @@
-auditcore_registry_sources 0.1.0 — source attribution and authorization
+auditcore_registry_sources 0.2.0 — source attribution and authorization
 
 Parsers, screening, match-API interpretation, ownership/SME rules, company
 verification and the chamber/register parsers derive from these private

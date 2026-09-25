@@ -9,8 +9,8 @@ Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel
 Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
 
 ```bash
-pip install auditcore_dataprotection==0.4.0            # Kern
-pip install 'auditcore_dataprotection[excel]==0.4.0'    # zusätzlich XLSX
+pip install auditcore_dataprotection==0.4.1            # Kern
+pip install 'auditcore_dataprotection[excel]==0.4.1'    # zusätzlich XLSX
 ```
 
 ## Schnellstart in Python
@@ -24,12 +24,22 @@ Benutzerverwaltung ein. Der Test `tests/test_readme.py` führt dieses Beispiel a
 ```python
 from datetime import date
 
-from auditcore_dataprotection import (Actor, AssessmentService, Permission,
-                                      RegisterService, load_profile)
+from auditcore_dataprotection import (
+    Actor,
+    AssessmentService,
+    Permission,
+    RegisterService,
+    load_profile,
+)
 from auditcore_dataprotection.export import assessment_report, render_assessment_html
-from auditcore_dataprotection.memory import (FixedClock, InMemoryAssessmentRepository,
-                                             InMemoryRegisterRepository, ListAuditSink,
-                                             RoleAuthorizer, SequentialIds)
+from auditcore_dataprotection.memory import (
+    FixedClock,
+    InMemoryAssessmentRepository,
+    InMemoryRegisterRepository,
+    ListAuditSink,
+    RoleAuthorizer,
+    SequentialIds,
+)
 
 # 1. Profil ausdrücklich wählen (es gibt kein Standardprofil)
 profil = load_profile("auditcore.dsgvo", "2026.10.3")
@@ -43,35 +53,76 @@ vvt = RegisterService(vvt_db, rollen, log, uhr, ids, profil)
 dsfa_dienst = AssessmentService(dsfa_db, vvt_db, rollen, log, uhr, ids)
 
 # 3. Verzeichnis anlegen und im Vier-Augen-Prinzip freigeben
-taetigkeit = {"id": "t1", "name": "Fördermittelverwaltung", "referat": "Referat I",
-              "zweck": "Bewilligung", "ermaechtigungsgrundlage": "LHO",
-              "kategorien_betroffene": "Antragsteller", "kategorien_daten": "Stammdaten",
-              "kategorien_empfaenger": "keine", "speicherdauer": "10 Jahre",
-              "tom": "Rollenkonzept", "drittlandtransfer": False,
-              "besondere_kategorien": False, "daten_art10": False, "anzahl_betroffene": 500}
-entwurf = vvt.save_draft("behoerde", anna, {
-    "deckblatt": {"verantwortlicher": {"name": "Behörde"}, "dsb": {"name": "DSB"}},
-    "referate": ["Referat I"], "taetigkeiten": [taetigkeit]})
+taetigkeit = {
+    "id": "t1",
+    "name": "Fördermittelverwaltung",
+    "referat": "Referat I",
+    "zweck": "Bewilligung",
+    "ermaechtigungsgrundlage": "LHO",
+    "kategorien_betroffene": "Antragsteller",
+    "kategorien_daten": "Stammdaten",
+    "kategorien_empfaenger": "keine",
+    "speicherdauer": "10 Jahre",
+    "tom": "Rollenkonzept",
+    "drittlandtransfer": False,
+    "besondere_kategorien": False,
+    "daten_art10": False,
+    "anzahl_betroffene": 500,
+}
+entwurf = vvt.save_draft(
+    "behoerde",
+    anna,
+    {
+        "deckblatt": {"verantwortlicher": {"name": "Behörde"}, "dsb": {"name": "DSB"}},
+        "referate": ["Referat I"],
+        "taetigkeiten": [taetigkeit],
+    },
+)
 vvt.release("behoerde", bert, expected_revision=entwurf.revision)
 
 # 4. DSFA: erheben, entscheiden, Einholung des DSB-Rats dokumentieren, freigeben
 d = dsfa_dienst.start("behoerde", anna, "t1", profil)
-d = dsfa_dienst.update("behoerde", anna, d.assessment_id, expected_revision=d.revision,
+d = dsfa_dienst.update(
+    "behoerde",
+    anna,
+    d.assessment_id,
+    expected_revision=d.revision,
     answers={k: False for k in profil.question_keys} | {"art35_3_a": True},
-    scenarios=[{"dimension": "vertraulichkeit", "description": "Unbefugter Zugriff",
-                "severity": 3, "likelihood": 4, "measures": ["zugriffskontrolle"]}],
-    necessity="Erforderlich für die Bewilligung.", proportionality="Nur Pflichtangaben.",
-    dossier={"team": "Referat I, IT", "umfang": "Bewilligungsverfahren"})
+    scenarios=[
+        {
+            "dimension": "vertraulichkeit",
+            "description": "Unbefugter Zugriff",
+            "severity": 3,
+            "likelihood": 4,
+            "measures": ["zugriffskontrolle"],
+        }
+    ],
+    necessity="Erforderlich für die Bewilligung.",
+    proportionality="Nur Pflichtangaben.",
+    dossier={"team": "Referat I, IT", "umfang": "Bewilligungsverfahren"},
+)
 assert d.proposal["recommendation"] == "freigabe_mit_auflagen"
-d = dsfa_dienst.decide("behoerde", anna, d.assessment_id, expected_revision=d.revision,
-    decision="freigabe_mit_auflagen", conditions=["Mehrfaktor-Anmeldung vor Start"])
-d = dsfa_dienst.record_dpo_request("behoerde", anna, d.assessment_id,
-    expected_revision=d.revision, requested_from="DSB", requested_on=date(2026, 9, 24))
+d = dsfa_dienst.decide(
+    "behoerde",
+    anna,
+    d.assessment_id,
+    expected_revision=d.revision,
+    decision="freigabe_mit_auflagen",
+    conditions=["Mehrfaktor-Anmeldung vor Start"],
+)
+d = dsfa_dienst.record_dpo_request(
+    "behoerde",
+    anna,
+    d.assessment_id,
+    expected_revision=d.revision,
+    requested_from="DSB",
+    requested_on=date(2026, 9, 24),
+)
 d = dsfa_dienst.release("behoerde", bert, d.assessment_id, expected_revision=d.revision)
 
 # 5. Ergebnis: gesperrte Fassung mit offenen Punkten und Bericht
 assert d.status.value == "freigegeben" and d.profile_version == "2026.10.3"
-print(d.release_open_points)          # z. B. „Stellungnahme liegt noch nicht vor …“
+print(d.release_open_points)  # z. B. „Stellungnahme liegt noch nicht vor …“
 html = render_assessment_html(assessment_report(d, profil))
 ```
 
@@ -88,7 +139,8 @@ from auditcore_dataprotection.export import register_report, render_register_htm
 
 fassung = vvt.released("behoerde", anna)
 ansicht = render_register_html(
-    register_report(fassung, profil, overview=dsfa_dienst.overview("behoerde", anna)))
+    register_report(fassung, profil, overview=dsfa_dienst.overview("behoerde", anna))
+)
 ```
 
 ## Bausteine
@@ -103,17 +155,36 @@ ansicht = render_register_html(
 | `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.0; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
 | `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
 
+Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie
+nach Verantwortung in kleinere Module geschnitten (etwa `answers`, `screening`,
+`risk`, `results`, `prefill` hinter `calculation`; `profile_model`,
+`profile_loader`, `profile_sections` hinter `rules`; `register_content` hinter
+`register`; `assessment_core`, `assessment_input`, `assessment_checks`,
+`assessment_involvement`, `assessment_review` hinter `assessment`;
+`report_data`, `assessment_html`, `assessment_html_outcome`, `register_html` hinter `export`;
+`legacy_scoring`, `legacy_admin`, `legacy_report` hinter `legacy`). Alle bisher
+importierbaren Namen bleiben unter ihrem alten Modulpfad erreichbar.
+
 ```python
 from auditcore_dataprotection.rules import load_profile
 from auditcore_dataprotection.calculation import propose
 
 profil = load_profile("regulierung.dsgvo", "2026.09.1")
 antworten = {k: False for k in profil.question_keys} | {"art35_3_a": True}
-vorschlag = propose(profil, antworten, [
-    {"dimension": "vertraulichkeit", "description": "Unbefugter Zugriff",
-     "severity": 3, "likelihood": 4, "measures": ["zugriffskontrolle"]},
-])
-assert vorschlag.recommendation == "freigabe_mit_auflagen"   # netto 3 × 2 = 6
+vorschlag = propose(
+    profil,
+    antworten,
+    [
+        {
+            "dimension": "vertraulichkeit",
+            "description": "Unbefugter Zugriff",
+            "severity": 3,
+            "likelihood": 4,
+            "measures": ["zugriffskontrolle"],
+        },
+    ],
+)
+assert vorschlag.recommendation == "freigabe_mit_auflagen"  # netto 3 × 2 = 6
 assert vorschlag.profile["version"] == "2026.09.1"
 ```
 
