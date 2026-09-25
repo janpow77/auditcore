@@ -43,7 +43,7 @@ def main() -> None:
     assert package.version == "0.2.1"
     required = sorted(r for r in package.requires or [] if "extra ==" not in r)
     assert required == [
-        "auditcore_common==0.1.0",
+        "auditcore_common==0.1.1",
         "auditcore_entity_matching==0.2.2",
         "auditcore_harvest==0.1.1",
     ], required

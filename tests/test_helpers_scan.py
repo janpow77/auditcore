@@ -121,4 +121,4 @@ def test_ts_and_vue_scan_with_line_numbers() -> None:
     assert by_name["parseNumberDe"].exported
     scan = run_scan(inventory, None)
     available = {m.function.name for m in scan.ratcheted}
-    assert available == {"sha256_file", "formatDate", "formatDatum"}
+    assert available == {"sha256_file", "formatDate", "formatDatum", "parse_de_number"}
