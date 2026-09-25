@@ -77,7 +77,7 @@ def donut_smoke() -> None:
 def main() -> None:
     """Pure comparison, article-law commands, reasons port and extra boundaries."""
     package = distribution("auditcore_documents")
-    assert package.version == "0.2.0"
+    assert package.version == "0.2.1"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert DocumentCompareService.VERSION == "1.1.0"
