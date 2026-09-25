@@ -13,7 +13,6 @@ from decimal import (
     Decimal,
     InvalidOperation,
 )
-from typing import Any
 
 from .errors import PriceAnalysisError, ProfileError
 
@@ -26,7 +25,41 @@ ROUNDING_MODES = {
 }
 
 
-def parse_decimal(value: Any, *, field: str) -> Decimal:
+def _decimal_from_text(value: str, field: str) -> Decimal:
+    """Plain decimal text with a point; commas and exponents are rejected."""
+    text = value.strip()
+    if "," in text:
+        raise PriceAnalysisError(
+            "invalid_number",
+            f"{field}: Dezimalkomma wird nicht umgedeutet; Punkt verwenden.",
+            field=field,
+        )
+    if not _PLAIN.fullmatch(text):
+        raise PriceAnalysisError(
+            "invalid_number", f"{field} ist keine einfache Dezimalzahl.", field=field
+        )
+    try:
+        return Decimal(text)
+    except InvalidOperation as exc:  # pragma: no cover - regex guards this
+        raise PriceAnalysisError("invalid_number", f"{field} ist ungültig.", field=field) from exc
+
+
+def _exact_decimal(value: object, field: str) -> Decimal:
+    """Exact decimal of a supported type (booleans and ``None`` are handled by the caller)."""
+    if isinstance(value, Decimal):
+        return value
+    if isinstance(value, int):
+        return Decimal(value)
+    if isinstance(value, float):
+        return Decimal(repr(value))
+    if isinstance(value, str):
+        return _decimal_from_text(value, field)
+    raise PriceAnalysisError(
+        "invalid_number", f"{field} hat den Typ {type(value).__name__}.", field=field
+    )
+
+
+def parse_decimal(value: object, *, field: str) -> Decimal:
     """Exact decimal from ``int``, ``Decimal``, finite ``float`` or plain decimal text.
 
     ``None`` is *missing*, never zero; callers decide whether a value may be
@@ -39,40 +72,13 @@ def parse_decimal(value: Any, *, field: str) -> Decimal:
         raise PriceAnalysisError(
             "invalid_number", f"{field} ist ein Wahrheitswert, keine Zahl.", field=field
         )
-    if isinstance(value, Decimal):
-        result = value
-    elif isinstance(value, int):
-        result = Decimal(value)
-    elif isinstance(value, float):
-        result = Decimal(repr(value))
-    elif isinstance(value, str):
-        text = value.strip()
-        if "," in text:
-            raise PriceAnalysisError(
-                "invalid_number",
-                f"{field}: Dezimalkomma wird nicht umgedeutet; Punkt verwenden.",
-                field=field,
-            )
-        if not _PLAIN.fullmatch(text):
-            raise PriceAnalysisError(
-                "invalid_number", f"{field} ist keine einfache Dezimalzahl.", field=field
-            )
-        try:
-            result = Decimal(text)
-        except InvalidOperation as exc:  # pragma: no cover - regex guards this
-            raise PriceAnalysisError(
-                "invalid_number", f"{field} ist ungültig.", field=field
-            ) from exc
-    else:
-        raise PriceAnalysisError(
-            "invalid_number", f"{field} hat den Typ {type(value).__name__}.", field=field
-        )
+    result = _exact_decimal(value, field)
     if not result.is_finite():
         raise PriceAnalysisError("invalid_number", f"{field} muss endlich sein.", field=field)
     return result
 
 
-def non_negative(value: Any, *, field: str) -> Decimal:
+def non_negative(value: object, *, field: str) -> Decimal:
     """Like :func:`parse_decimal` but rejects negative values."""
     result = parse_decimal(value, field=field)
     if result < 0:
@@ -80,12 +86,12 @@ def non_negative(value: Any, *, field: str) -> Decimal:
     return result
 
 
-def optional_non_negative(value: Any, *, field: str) -> Decimal | None:
+def optional_non_negative(value: object, *, field: str) -> Decimal | None:
     """``None`` stays ``None`` (missing); anything else must be a valid non-negative number."""
     return None if value is None else non_negative(value, field=field)
 
 
-def parse_day(value: Any, *, field: str = "stichtag") -> date:
+def parse_day(value: object, *, field: str = "stichtag") -> date:
     """A calendar day from ``date`` or ISO text ``YYYY-MM-DD``; datetimes are rejected."""
     if isinstance(value, datetime):
         raise PriceAnalysisError(
