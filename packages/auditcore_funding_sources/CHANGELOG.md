@@ -1,5 +1,21 @@
 # Changelog auditcore_funding_sources
 
+## 0.1.2 – Englische Namen der designer-Parser
+
+Keine fachliche Änderung: Die Replays gegen die aufgezeichneten Originalausgaben
+von audit_designer laufen unverändert grün.
+
+- `designer.parse_betrag` → `designer.parse_amount`,
+  `designer.parse_satz` → `designer.parse_rate`,
+  `designer.parse_datum` → `designer.parse_date`.
+  Die Namen kollidieren nicht mit `workshop.parse_amount`/`workshop.parse_date`,
+  weil beide Varianten in getrennten Modulen liegen.
+- Die alten Namen bleiben als Aliase erreichbar (Attributzugriff und
+  `from … import`); sie liefern dieselbe Funktion und geben eine
+  `DeprecationWarning` aus. Möglich, seit die Architekturtests das Modul
+  `warnings` ausschließlich für solche Aliase zulassen.
+- Code-Gate: `non_english_identifiers` 1 → 0.
+
 ## 0.1.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle 865 bestehenden Tests (Replays gegen die
