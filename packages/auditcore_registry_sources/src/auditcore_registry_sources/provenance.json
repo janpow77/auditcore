@@ -213,7 +213,7 @@
   "official.sanctions_lists 2026.09.1"
  ],
  "runtime_dependencies": [
-  "auditcore_harvest==0.1.0",
+  "auditcore_harvest==0.1.1",
   "auditcore_entity_matching==0.2.0"
  ],
  "optional_dependencies": {
