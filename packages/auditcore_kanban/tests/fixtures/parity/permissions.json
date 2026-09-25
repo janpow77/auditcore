@@ -1,0 +1,8808 @@
+[
+ {
+  "name": "u1 read inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "read",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 create_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "create_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 edit_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "edit_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 move_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "move_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 delete_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "delete_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 rename inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "rename",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 configure inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "configure",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 share inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "share",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 delete_board inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "delete_board",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 pin inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "pin",
+   "inherited": null
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 read inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "read",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 create_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "create_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 edit_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "edit_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 move_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "move_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 delete_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "delete_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 rename inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "rename",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 configure inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "configure",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 share inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "share",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 delete_board inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "delete_board",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 pin inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "pin",
+   "inherited": null
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 read inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "read",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 create_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "create_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 edit_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "edit_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 move_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "move_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 delete_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "delete_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 rename inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "rename",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 configure inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "configure",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 share inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "share",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 delete_board inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "delete_board",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 pin inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "pin",
+   "inherited": null
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 read inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "read",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 create_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "create_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 edit_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "edit_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 move_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "move_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 delete_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "delete_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 rename inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "rename",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 configure inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "configure",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 share inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "share",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 delete_board inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "delete_board",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 pin inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "pin",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 read inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "read",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 create_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "create_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 edit_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "edit_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 move_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "move_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 delete_card inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "delete_card",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 rename inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "rename",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 configure inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "configure",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 share inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "share",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 delete_board inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "delete_board",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 pin inherited=False",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "pin",
+   "inherited": null
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 read inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "read",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 create_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "create_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 edit_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "edit_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 move_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "move_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 delete_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "delete_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 rename inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "rename",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 configure inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "configure",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 share inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "share",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 delete_board inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "delete_board",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u1 pin inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u1",
+   "action": "pin",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "owner",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 read inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "read",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 create_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "create_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 edit_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "edit_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 move_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "move_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 delete_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "delete_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 rename inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "rename",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 configure inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "configure",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 share inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "share",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 delete_board inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "delete_board",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u2 pin inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u2",
+   "action": "pin",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 read inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "read",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 create_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "create_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 edit_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "edit_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 move_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "move_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 delete_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "delete_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 rename inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "rename",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 configure inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "configure",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 share inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "share",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 delete_board inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "delete_board",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u3 pin inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u3",
+   "action": "pin",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "read",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 read inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "read",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 create_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "create_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 edit_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "edit_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 move_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "move_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 delete_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "delete_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 rename inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "rename",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": true,
+    "code": null,
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 configure inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "configure",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 share inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "share",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 delete_board inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "delete_board",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u4 pin inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u4",
+   "action": "pin",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": "edit",
+   "decision": {
+    "allowed": false,
+    "code": "FORBIDDEN",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 read inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "read",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 create_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "create_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 edit_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "edit_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 move_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "move_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 delete_card inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "delete_card",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 rename inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "rename",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 configure inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "configure",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 share inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "share",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 delete_board inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "delete_board",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "u9 pin inherited=True",
+  "input": {
+   "op": "authorize",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "user_id": "u9",
+   "action": "pin",
+   "inherited": {
+    "u4": "edit",
+    "u3": "edit"
+   }
+  },
+  "expected": {
+   "role": null,
+   "decision": {
+    "allowed": false,
+    "code": "NOT_VISIBLE",
+    "warnings": []
+   }
+  }
+ },
+ {
+  "name": "share u1->u5 read",
+  "input": {
+   "op": "share",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "target_user": "u5",
+   "permission": "read"
+  },
+  "expected": {
+   "allowed": true,
+   "code": null,
+   "warnings": []
+  }
+ },
+ {
+  "name": "share u1->u5 write",
+  "input": {
+   "op": "share",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "target_user": "u5",
+   "permission": "write"
+  },
+  "expected": {
+   "allowed": false,
+   "code": "INVALID_PERMISSION",
+   "warnings": []
+  }
+ },
+ {
+  "name": "share u1->u1 edit",
+  "input": {
+   "op": "share",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "target_user": "u1",
+   "permission": "edit"
+  },
+  "expected": {
+   "allowed": false,
+   "code": "SELF_SHARE",
+   "warnings": []
+  }
+ },
+ {
+  "name": "share u2->u5 read",
+  "input": {
+   "op": "share",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u2",
+   "target_user": "u5",
+   "permission": "read"
+  },
+  "expected": {
+   "allowed": false,
+   "code": "FORBIDDEN",
+   "warnings": []
+  }
+ },
+ {
+  "name": "share u9->u5 read",
+  "input": {
+   "op": "share",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u9",
+   "target_user": "u5",
+   "permission": "read"
+  },
+  "expected": {
+   "allowed": false,
+   "code": "NOT_VISIBLE",
+   "warnings": []
+  }
+ },
+ {
+  "name": "share u1->u2 read",
+  "input": {
+   "op": "share",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "target_user": "u2",
+   "permission": "read"
+  },
+  "expected": {
+   "allowed": true,
+   "code": null,
+   "warnings": []
+  }
+ },
+ {
+  "name": "revoke u1->u2",
+  "input": {
+   "op": "revoke",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "target_user": "u2"
+  },
+  "expected": {
+   "allowed": true,
+   "code": null,
+   "warnings": []
+  }
+ },
+ {
+  "name": "revoke u3->u3",
+  "input": {
+   "op": "revoke",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u3",
+   "target_user": "u3"
+  },
+  "expected": {
+   "allowed": true,
+   "code": null,
+   "warnings": []
+  }
+ },
+ {
+  "name": "revoke u2->u3",
+  "input": {
+   "op": "revoke",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u2",
+   "target_user": "u3"
+  },
+  "expected": {
+   "allowed": false,
+   "code": "FORBIDDEN",
+   "warnings": []
+  }
+ },
+ {
+  "name": "revoke u1->u7",
+  "input": {
+   "op": "revoke",
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [],
+    "labels": [],
+    "shares": [
+     {
+      "user_id": "u2",
+      "permission": "edit",
+      "shared_by": "u1",
+      "created_at": null
+     },
+     {
+      "user_id": "u3",
+      "permission": "read",
+      "shared_by": "u1",
+      "created_at": null
+     }
+    ],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "target_user": "u7"
+  },
+  "expected": {
+   "allowed": false,
+   "code": "SHARE_NOT_FOUND",
+   "warnings": []
+  }
+ }
+]
