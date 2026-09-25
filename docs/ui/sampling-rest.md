@@ -24,7 +24,8 @@ fastapi_app.include_router(create_router("/api/sampling"))
   dokumentierte Formel mit eingesetzten Werten; weicht sie vom Bibliotheksergebnis ab, ist das
   ein Programmfehler (500).
 - Zufall kommt nur aus `random.Random(seed)`. Ohne `seed` erzeugt der Server einen mit
-  `secrets` und gibt ihn zurück (`seed_generated: true`). Gleiche Anfrage + gleicher Seed =
+  `secrets` (kleiner als 2⁵³, damit JavaScript ihn exakt zurücksenden kann) und gibt ihn
+  zurück (`seed_generated: true`). Übergebene Seeds dürfen bis 2⁶³ − 1 reichen. Gleiche Anfrage + gleicher Seed =
   gleiche Auswahl, gebunden an `items_sha256`.
 - Beträge sind JSON-Zahlen, Anteile Werte zwischen 0 und 1 (0,95 statt 95 %).
 - Fehler: `{"error": {"code": "invalid_input" | "invalid_json" | "too_large", "message": "…"}}`

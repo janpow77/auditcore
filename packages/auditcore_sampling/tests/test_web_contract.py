@@ -125,7 +125,7 @@ def test_mus_selection_is_reproducible_and_matches_library() -> None:
 def test_generated_seed_is_returned_and_reproduces_the_draw() -> None:
     request = {"method": "srs", "items": _items(), "sample_size": 5}
     drawn = select(request)
-    assert drawn["seed_generated"] and 0 <= drawn["seed"] < 2**63
+    assert drawn["seed_generated"] and 0 <= drawn["seed"] < 2**53
     again = select({**request, "seed": drawn["seed"]})
     assert again["rows"] == drawn["rows"] and again["items_sha256"] == drawn["items_sha256"]
 

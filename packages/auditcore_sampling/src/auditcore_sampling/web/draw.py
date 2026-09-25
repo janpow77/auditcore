@@ -20,7 +20,6 @@ from ..selection import draw_start, simple_random, stratified_allocation, system
 from ..sizes import SamplingInputError
 from ._validate import (
     MAX_ITEMS,
-    MAX_SEED,
     ContractError,
     as_object,
     choice,
@@ -32,6 +31,9 @@ from ._validate import (
 from .profiles import LIBRARY
 
 ALLOCATIONS = ("proportional", "equal")
+#: Generated seeds stay below 2⁵³ so that JSON consumers (JavaScript numbers)
+#: can send them back exactly; supplied seeds may use the full range.
+GENERATED_SEED_LIMIT = 2**53
 
 
 @dataclass(frozen=True)
@@ -186,7 +188,7 @@ def select(payload: object) -> dict[str, object]:
     ) else None
     items = parse_items(require(body, "items"))
     supplied = optional_seed(body.get("seed"))
-    seed = secrets.randbelow(MAX_SEED + 1) if supplied is None else supplied
+    seed = secrets.randbelow(GENERATED_SEED_LIMIT) if supplied is None else supplied
     # Reproducible audit draw from a documented seed, not cryptography.
     rng = random.Random(seed)  # nosec B311
     groups = _groups(items)
