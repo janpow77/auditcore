@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
 from datetime import date, datetime
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
@@ -189,7 +190,9 @@ def text_dates(text: str) -> set[str]:
     return found
 
 
-def confirmed_in_text(name: str, value: Any, text: str, parts: list[Any] | None = None) -> bool:
+def confirmed_in_text(
+    name: str, value: Any, text: str, parts: Sequence[Decimal | None] | None = None
+) -> bool:
     """Kommt der Wert (bzw. jede Steuerzeile) im unabhängig gelesenen Text vor?"""
     if not text:
         return False

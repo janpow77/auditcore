@@ -58,6 +58,7 @@ __all__ = [
     "utc_now",
 ]
 
+
 class RunStatus(StrEnum):
     QUEUED = "queued"
     RUNNING = "running"

@@ -18,11 +18,17 @@ from __future__ import annotations
 from collections.abc import Callable
 from datetime import date
 from decimal import Decimal, InvalidOperation
-from typing import Any
+from typing import Any, cast
 
-from auditcore_documents.pipeline.context import PipelineContext
+from auditcore_documents.pipeline.context import PipelineContext, ValidationResult
 from auditcore_documents.pipeline.stages.base import PipelineStage
-from auditcore_documents.pipeline.stages.donut_checks import plausibility_failures
+from auditcore_documents.pipeline.stages.donut_checks import (
+    Candidates,
+    Parsed,
+    donut_candidates,
+    plausibility_failures,
+    vat_lines,
+)
 from auditcore_documents.pipeline.stages.donut_values import (
     ALLOWED_VAT_RATES,
     AMOUNTS,
@@ -118,63 +124,12 @@ class DonutFieldMergeStage(PipelineStage):
 
     # -- Kandidaten ----------------------------------------------------------
     @staticmethod
-    def candidates(donut: dict[str, Any]) -> dict[str, tuple[str, Any]]:
+    def candidates(donut: dict[str, Any]) -> Candidates:
         """Pipeline-Feld → (gedruckter Rohwert, normalisierter Wert oder ``None``)."""
-        result: dict[str, tuple[str, Any]] = {}
-        supplier = donut.get("supplier") if isinstance(donut.get("supplier"), dict) else {}
-        simple = {
-            "invoice_number": donut.get("invoice_number"),
-            "date": donut.get("invoice_date"),
-            "net_amount": donut.get("net_amount"),
-            "total": donut.get("total"),
-            "iban": donut.get("iban"),
-            "vat_id": supplier.get("vat_id") if supplier else None,
-            "supplier_name": supplier.get("name") if supplier else None,
-            "supply_date": donut.get("supply_date"),
-            "due_date": donut.get("due_date"),
-            "bic": donut.get("bic"),
-        }
-        for name, value in simple.items():
-            if not isinstance(value, str) or not value.strip():
-                continue
-            if name in AMOUNTS:
-                parsed: Any = amount(value)
-            elif name in {"date", "supply_date", "due_date"}:
-                parsed = iso_date(value)
-            elif name in {"iban", "vat_id", "bic"}:
-                parsed = compact(value)
-            else:
-                parsed = " ".join(value.split())
-            result[name] = (value, parsed)
-        lines = donut.get("vat_lines")
-        if isinstance(lines, list) and lines:
-            amounts = [amount(str(line.get("amount", ""))) for line in lines]
-            raw_text = " + ".join(str(line.get("amount", "")) for line in lines)
-            total = (
-                sum((a for a in amounts if a is not None), Decimal(0))
-                if all(a is not None for a in amounts)
-                else None
-            )
-            result["vat_amount"] = (raw_text, total)
-            result["vat_rates"] = (
-                " + ".join(str(line.get("rate", "")) for line in lines),
-                [rate(str(line.get("rate", ""))) for line in lines],
-            )
-            result["_vat_lines"] = (
-                "",
-                [
-                    (
-                        rate(str(line.get("rate", ""))),
-                        amount(str(line.get("base", ""))) if line.get("base") else None,
-                        amount(str(line.get("amount", ""))),
-                    )
-                    for line in lines
-                ],
-            )
-        return result
+        return donut_candidates(donut)
 
     # -- Plausibilität -------------------------------------------------------
-    def plausibility(self, values: dict[str, tuple[str, Any]]) -> dict[str, list[str]]:
+    def plausibility(self, values: Candidates) -> dict[str, list[str]]:
         """Fehlgeschlagene Pflichtprüfungen je Feld (leere Liste = plausibel)."""
         return plausibility_failures(values, self.today())
 
@@ -190,7 +145,7 @@ class DonutFieldMergeStage(PipelineStage):
         values = self.candidates(donut)
         failed = self.plausibility(values)
         sum_checked = all(values.get(n, ("", None))[1] is not None for n in AMOUNTS)
-        line_amounts = [a for _, _, a in values.get("_vat_lines", ("", []))[1]]
+        line_amounts = [a for _, _, a in vat_lines(values)]
         fields: dict[str, Any] = {}
         for name, (raw, parsed) in values.items():
             if name.startswith("_"):
@@ -243,11 +198,11 @@ class DonutFieldMergeStage(PipelineStage):
         return "unconfirmed" if name in CORE_FIELDS else "not_taken"
 
     @staticmethod
-    def _value(name: str, parsed: Any) -> Any:
-        if name in AMOUNTS and parsed is not None:
+    def _value(name: str, parsed: Parsed) -> object:
+        if name in AMOUNTS and isinstance(parsed, Decimal):
             return float(parsed)
-        if name == "vat_rates" and parsed is not None:
-            return [float(r) for r in parsed if r is not None]
+        if name == "vat_rates" and isinstance(parsed, list):
+            return [float(r) for r in cast(list[Decimal | None], parsed) if r is not None]
         return parsed
 
 
@@ -271,7 +226,7 @@ def _field_confidence(name: str, confidence: dict[str, float]) -> float | None:
 def _take(
     name: str,
     raw: str,
-    parsed: Any,
+    parsed: Parsed,
     final: object,
     normalized: dict[str, Any],
     extracted: dict[str, Any],
@@ -284,7 +239,7 @@ def _take(
         extracted[name] = raw.strip()
 
 
-def _same(name: str, left: Any, right: Any) -> bool:
+def _same(name: str, left: object, right: object) -> bool:
     if name in AMOUNTS:
         try:
             return Decimal(str(left)).quantize(CENT) == Decimal(str(right)).quantize(CENT)
@@ -309,7 +264,7 @@ class DonutPlausibilityRule(ValidationRule):
             description="Donut-Werte bestehen die Pflicht-Plausibilitätsprüfung",
         )
 
-    async def evaluate(self, context: PipelineContext) -> Any:
+    async def evaluate(self, context: PipelineContext) -> ValidationResult:
         report = _report(context)
         if report is None:
             if (context.artifacts.ocr_raw_json or {}).get("engine") == "donut":
@@ -340,7 +295,7 @@ class DonutDisagreementRule(ValidationRule):
             ),
         )
 
-    async def evaluate(self, context: PipelineContext) -> Any:
+    async def evaluate(self, context: PipelineContext) -> ValidationResult:
         report = _report(context)
         if report is None:
             return self.result("INFO", "PASS", "No Donut result")

@@ -85,9 +85,7 @@ class ChandraService(Protocol):
 class ChandraPort(Protocol):
     def available(self) -> bool: ...
 
-    def service(
-        self, *, max_output_tokens: int, max_image_size: int
-    ) -> ChandraService | None: ...
+    def service(self, *, max_output_tokens: int, max_image_size: int) -> ChandraService | None: ...
 
 
 @dataclass
@@ -151,9 +149,7 @@ def pdfium_rasterizer(data: bytes) -> list[tuple[int, bytes]] | None:
     return pages or None
 
 
-def degraded_result(
-    raw_json: dict[str, Any], pages_failed: int, duration_ms: int
-) -> OcrOutput:
+def degraded_result(raw_json: dict[str, Any], pages_failed: int, duration_ms: int) -> OcrOutput:
     return {
         "text": "",
         "raw_json": raw_json,
@@ -313,9 +309,7 @@ def donut_result(
     Motor keine Feldkonfidenzen, gilt 0,80 (Prüfbereich, nie automatisch OK).
     """
     first = results[0][1]
-    pages = [
-        {"page": number, **result.to_dict()} for number, result in results
-    ]
+    pages = [{"page": number, **result.to_dict()} for number, result in results]
     confidences = [
         value
         for _, result in results
@@ -337,8 +331,11 @@ def donut_result(
             "pages": pages,
             "donut_text": donut_lines,
             "tesseract": (
-                {"text": tesseract.get("text", ""), "engine_version": tesseract.get(
-                    "engine_version"), "error": tesseract.get("error")}
+                {
+                    "text": tesseract.get("text", ""),
+                    "engine_version": tesseract.get("engine_version"),
+                    "error": tesseract.get("error"),
+                }
                 if tesseract is not None
                 else None
             ),

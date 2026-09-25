@@ -84,8 +84,7 @@ def _missing_fields_finding(idx: int, missing: list[str]) -> WatchdogFinding:
             f"Beleg {idx + 1}: {len(missing)} Pflichtfeld(er) fehlen: {', '.join(missing)}"
         ),
         message_en=(
-            f"Document {idx + 1}: {len(missing)} mandatory "
-            f"field(s) missing: {', '.join(missing)}"
+            f"Document {idx + 1}: {len(missing)} mandatory field(s) missing: {', '.join(missing)}"
         ),
         evidence={"missing_fields": missing},
         rule_reference="§ 14 UStG",

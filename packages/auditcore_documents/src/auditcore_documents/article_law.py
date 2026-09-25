@@ -126,6 +126,124 @@ def _append_command(target: LawParagraph, command: str) -> None:
     target.command = "\n".join(filter(None, [target.command, command]))
 
 
+#: Benannte Gruppen eines erkannten Befehls (``None`` = nicht angegeben).
+CommandData = dict[str, str | None]
+#: Handler: (Absätze, Befehl, Gruppen, Folgezeile, Umnummerierung) → (Problem, verbrauchte Zeilen).
+CommandHandler = Callable[
+    [list[LawParagraph], str, CommandData, str | None, bool], tuple[str | None, int]
+]
+
+
+def _apply_replace(
+    paragraphs: list[LawParagraph],
+    command: str,
+    data: CommandData,
+    next_line: str | None,
+    renumber: bool,
+) -> tuple[str | None, int]:
+    target = _find(paragraphs, data["section"] or "", data.get("paragraph") or 0)
+    if target is None:
+        return "Zielstelle nicht gefunden", 0
+    basis = target.new_text if target.new_text is not None else target.text
+    old_value = data.get("old") or ""
+    if old_value not in basis:
+        return "zu ersetzender Wortlaut nicht gefunden", 0
+    # Jedes Vorkommen im Absatz wird ersetzt (DC-L02, entschieden D2).
+    target.new_text = basis.replace(old_value, data.get("new") or "")
+    _append_command(target, command)
+    return None, 0
+
+
+def _apply_repeal(
+    paragraphs: list[LawParagraph],
+    command: str,
+    data: CommandData,
+    next_line: str | None,
+    renumber: bool,
+) -> tuple[str | None, int]:
+    section = data["section"] or ""
+    paragraph = data.get("paragraph")
+    if paragraph:
+        found = _find(paragraphs, section, paragraph)
+        targets = [found] if found else []
+    else:
+        wanted = _normalise_section(section)
+        targets = [item for item in paragraphs if _normalise_section(item.section) == wanted]
+    if not targets:
+        return "Zielstelle nicht gefunden", 0
+    for target in targets:
+        target.repealed = True
+        target.new_text = ""
+        _append_command(target, command)
+    return None, 0
+
+
+def _apply_recast(
+    paragraphs: list[LawParagraph],
+    command: str,
+    data: CommandData,
+    next_line: str | None,
+    renumber: bool,
+) -> tuple[str | None, int]:
+    target = _find(paragraphs, data["section"] or "", data.get("paragraph") or 0)
+    if target is None or next_line is None:
+        return "Neufassung nicht eindeutig gefunden", 0
+    target.new_text = _quoted_text(next_line)
+    _append_command(target, command)
+    return None, 1
+
+
+def _apply_insert(
+    paragraphs: list[LawParagraph],
+    command: str,
+    data: CommandData,
+    next_line: str | None,
+    renumber: bool,
+) -> tuple[str | None, int]:
+    target = _find(paragraphs, data["section"] or "", data.get("paragraph") or 0)
+    if target is None or next_line is None:
+        return "Einfügung nicht eindeutig gefunden", 0
+    new_number = int(data.get("new_number") or target.paragraph + 1)
+    inserted = LawParagraph(
+        section=target.section,
+        paragraph=new_number,
+        text="",
+        new_text=_quoted_text(next_line),
+        command=command,
+        inserted=True,
+    )
+    position = paragraphs.index(target) + 1
+    if renumber:
+        section_key = _normalise_section(target.section)
+        for item in paragraphs[position:]:
+            if _normalise_section(item.section) == section_key and item.paragraph >= new_number:
+                item.paragraph += 1
+    # Legacy: nachfolgende Absätze werden nicht umnummeriert (DC-L01).
+    paragraphs.insert(position, inserted)
+    return None, 1
+
+
+COMMAND_HANDLERS: dict[str, CommandHandler] = {
+    "replace": _apply_replace,
+    "repeal": _apply_repeal,
+    "recast": _apply_recast,
+    "insert": _apply_insert,
+}
+
+
+def _match_command(command: str) -> tuple[str, CommandData] | None:
+    """Erstes passendes Befehlsmuster (Reihenfolge von ``COMMAND_PATTERNS``)."""
+    for command_type, pattern in COMMAND_PATTERNS:
+        match = pattern.match(command)
+        if match is not None:
+            return command_type, match.groupdict()
+    return None
+
+
+def _looks_like_unsupported_command(command: str) -> bool:
+    return bool(_UNSUPPORTED_START.match(command) and _UNSUPPORTED_VERB.search(command))
+
+
 def apply_commands(
     paragraphs: list[LawParagraph], commands: list[str], *, renumber_after_insert: bool = False
 ) -> tuple[list[LawParagraph], list[str], int]:
@@ -140,91 +258,20 @@ def apply_commands(
     index = 0
     while index < len(commands):
         command = commands[index]
-        recognised_here = False
-        for command_type, pattern in COMMAND_PATTERNS:
-            match = pattern.match(command)
-            if match is None:
-                continue
-            recognised_here = True
-            data = match.groupdict()
-            section = data["section"]
-            paragraph = data.get("paragraph")
-            if command_type == "replace":
-                target = _find(paragraphs, section, paragraph or 0)
-                if target is None:
-                    open_commands.append(f"{command} [Zielstelle nicht gefunden]")
-                    break
-                basis = target.new_text if target.new_text is not None else target.text
-                old_value = data.get("old") or ""
-                if old_value not in basis:
-                    open_commands.append(f"{command} [zu ersetzender Wortlaut nicht gefunden]")
-                    break
-                # Jedes Vorkommen im Absatz wird ersetzt (DC-L02, entschieden D2).
-                target.new_text = basis.replace(old_value, data.get("new") or "")
-                _append_command(target, command)
+        next_line = commands[index + 1] if index + 1 < len(commands) else None
+        matched = _match_command(command)
+        consumed = 0
+        if matched is not None:
+            command_type, data = matched
+            handler = COMMAND_HANDLERS[command_type]
+            problem, consumed = handler(paragraphs, command, data, next_line, renumber_after_insert)
+            if problem is None:
                 recognised += 1
-            elif command_type == "repeal":
-                if paragraph:
-                    found = _find(paragraphs, section, paragraph)
-                    targets = [found] if found else []
-                else:
-                    targets = [
-                        item
-                        for item in paragraphs
-                        if _normalise_section(item.section) == _normalise_section(section)
-                    ]
-                if not targets:
-                    open_commands.append(f"{command} [Zielstelle nicht gefunden]")
-                    break
-                for target in targets:
-                    target.repealed = True
-                    target.new_text = ""
-                    _append_command(target, command)
-                recognised += 1
-            elif command_type == "recast":
-                target = _find(paragraphs, section, paragraph or 0)
-                if target is None or index + 1 >= len(commands):
-                    open_commands.append(f"{command} [Neufassung nicht eindeutig gefunden]")
-                    break
-                target.new_text = _quoted_text(commands[index + 1])
-                _append_command(target, command)
-                index += 1
-                recognised += 1
-            elif command_type == "insert":
-                target = _find(paragraphs, section, paragraph or 0)
-                if target is None or index + 1 >= len(commands):
-                    open_commands.append(f"{command} [Einfügung nicht eindeutig gefunden]")
-                    break
-                new_number = int(data.get("new_number") or target.paragraph + 1)
-                inserted = LawParagraph(
-                    section=target.section,
-                    paragraph=new_number,
-                    text="",
-                    new_text=_quoted_text(commands[index + 1]),
-                    command=command,
-                    inserted=True,
-                )
-                position = paragraphs.index(target) + 1
-                if renumber_after_insert:
-                    section_key = _normalise_section(target.section)
-                    for item in paragraphs[position:]:
-                        if (
-                            _normalise_section(item.section) == section_key
-                            and item.paragraph >= new_number
-                        ):
-                            item.paragraph += 1
-                # Legacy: nachfolgende Absätze werden nicht umnummeriert (DC-L01).
-                paragraphs.insert(position, inserted)
-                index += 1
-                recognised += 1
-            break
-        if (
-            not recognised_here
-            and _UNSUPPORTED_START.match(command)
-            and _UNSUPPORTED_VERB.search(command)
-        ):
+            else:
+                open_commands.append(f"{command} [{problem}]")
+        elif _looks_like_unsupported_command(command):
             open_commands.append(f"{command} [Befehlsart nicht unterstützt]")
-        index += 1
+        index += 1 + consumed
     return paragraphs, open_commands, recognised
 
 
