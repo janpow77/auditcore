@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowaudit="https://flowaudit.de/bpmn/schema/1.0" id="Definitions_Muster" targetNamespace="https://example.org/bpmn/muster">
+  <bpmn:collaboration id="Collaboration_Muster">
+    <bpmn:extensionElements>
+      <flowaudit:diagrammInfo schemaVersion="1.1" profil="foerderperiode-2021-2027" titel="Bewilligung und Auszahlung (Muster)" untertitel="Synthetisches Beispiel" prozessverantwortlich="Referat Programmsteuerung" prozesstyp="Kernprozess" version="1.2" status="freigegeben" gueltigAb="2026-01-01" gueltigBis="2027-12-31" autor="Erika Musterfrau" freigegebenDurch="Max Mustermann" freigegebenAm="2025-12-15" kopfzeilenfarbe="#1976d2" kopfzeilenTextfarbe="#ffffff" foerderperiode="2021-2027" programm="Musterprogramm" cci="2021DE00MUSTER" vertraulichkeit="intern" variante="soll" vksStichtag="2025-12-01">
+        <flowaudit:beschreibung>Ablauf von der Antragsprüfung bis zur Auszahlung.</flowaudit:beschreibung>
+        <flowaudit:schlagwort>Bewilligung</flowaudit:schlagwort>
+        <flowaudit:schlagwort>Auszahlung</flowaudit:schlagwort>
+        <flowaudit:fonds>efre</flowaudit:fonds>
+        <flowaudit:fonds>esf_plus</flowaudit:fonds>
+        <flowaudit:rechtsgrundlage norm="VO (EU) 2021/1060" artikel="74">Artikel 74 der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:pruefbezug ka="4" bk="4.1" art="systempruefung" />
+        <flowaudit:risiko id="R_Gesamt" bezeichnung="Doppelfinanzierung" kategorie="doppelfinanzierung" inhaerent="mittel" kontrollen="K1" />
+        <flowaudit:verweis art="register" schluessel="A1" />
+      </flowaudit:diagrammInfo>
+    </bpmn:extensionElements>
+    <bpmn:participant id="Pool_Verwaltung" name="Programmverwaltung" processRef="Process_Verwaltung" />
+    <bpmn:participant id="Pool_Beg" name="Musterfirma GmbH" processRef="Process_Beg">
+      <bpmn:extensionElements>
+        <flowaudit:akteur rolle="beg" anzeigename="Musterfirma GmbH" />
+      </bpmn:extensionElements>
+    </bpmn:participant>
+    <bpmn:messageFlow id="Message_Antrag" name="Antrag" sourceRef="Task_Antrag" targetRef="Start_A" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Verwaltung" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_VB" name="Beispielministerium">
+        <bpmn:extensionElements>
+          <flowaudit:akteur rolle="vb" anzeigename="Beispielministerium" />
+        </bpmn:extensionElements>
+        <bpmn:flowNodeRef>Task_VerwK</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ZGS" name="Musterförderbank (zwischengeschaltete Stelle)">
+        <bpmn:extensionElements>
+          <flowaudit:akteur rolle="zgs" anzeigename="Musterförderbank" />
+        </bpmn:extensionElements>
+        <bpmn:flowNodeRef>Start_A</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Pruefen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Vollst</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Bewilligen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachfordern</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Abbruch</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Timer_Frist</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Auszahlen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_A</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:dataObject id="DataObject_Vermerk" />
+    <bpmn:startEvent id="Start_A" name="Antrag eingegangen">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Pruefen" name="Antrag prüfen">
+      <bpmn:documentation>Prüfung nach Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage id="RG_1" norm="Verordnung (EU) 2021/1060" artikel="73" absatz="2" buchstabe="b" celex="32021R1060">Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:interneNotiz>Rückfrage bei Frau Beispiel, Tel. intern.</flowaudit:interneNotiz>
+        <flowaudit:kennzeichen typ="vier_augen" />
+        <flowaudit:kennzeichen typ="pruefpunkt" text="Checkliste Teil A" />
+        <flowaudit:pruefbezug ka="2" bk="2.3" art="verwk" anmerkung="Auswahlkriterien" />
+        <flowaudit:kontrolle id="K1" bezeichnung="Vier-Augen-Prüfung der Checkliste" schluesselkontrolle="true" art="praeventiv" durchfuehrung="manuell" haeufigkeit="je Antrag" nachweis="Prüfvermerk" verantwortlich="zgs">
+          <flowaudit:beschreibung>Zweite Person zeichnet die Checkliste gegen.</flowaudit:beschreibung>
+        </flowaudit:kontrolle>
+        <flowaudit:risiko id="R1" bezeichnung="Unvollständige Prüfung" kategorie="allgemein" inhaerent="hoch" kontrollrisiko="mittel" restrisiko="niedrig" kontrollen="K1" />
+        <flowaudit:verweis art="prueffeld" schluessel="3.21" dokument="Antragsprüfcheckliste Muster V 1.0" />
+        <flowaudit:pruefschritt id="PS1" fall="Vorhaben 0001" beleg="Checkliste vom 02.02.2026" ergebnis="erfuellt" datum="2026-02-10" pruefer="Prüferin A" kontrolle="K1" stichprobe="5" grundgesamtheit="40">
+          <flowaudit:bemerkung>Gegenzeichnung vorhanden.</flowaudit:bemerkung>
+        </flowaudit:pruefschritt>
+        <flowaudit:quelle art="verfahrenshandbuch" fundstelle="Verfahrenshandbuch V 2.0, Kapitel 4.1">Beschreibung der Antragsprüfung</flowaudit:quelle>
+        <flowaudit:zukunft wert="bleibt"><flowaudit:teil>unbekannt</flowaudit:teil></flowaudit:zukunft>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+      <bpmn:dataOutputAssociation id="DOA_Vermerk">
+        <bpmn:targetRef>DataRef_Vermerk</bpmn:targetRef>
+      </bpmn:dataOutputAssociation>
+    </bpmn:task>
+    <bpmn:dataObjectReference id="DataRef_Vermerk" name="Prüfvermerk" dataObjectRef="DataObject_Vermerk">
+      <bpmn:extensionElements>
+        <flowaudit:nachweis dokumentart="Vermerk" aufbewahrungsort="eAkte" itSystem="Fördersystem" aufbewahrungsfrist="10 Jahre" />
+      </bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:exclusiveGateway id="Gateway_Vollst" name="Antrag vollständig?" default="Flow_Nein">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Ja</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Nein</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Nachfordern" name="Unterlagen nachfordern">
+      <bpmn:incoming>Flow_Nein</bpmn:incoming>
+      <bpmn:outgoing>Flow_Abbruch</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Abbruch" name="Nachforderung versandt">
+      <bpmn:incoming>Flow_Abbruch</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Task_Bewilligen" name="Zuwendung bewilligen">
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage norm="LHO" paragraph="44">§ 44 LHO</flowaudit:rechtsgrundlage>
+        <flowaudit:kennzeichen typ="bewilligung" />
+        <flowaudit:kennzeichen typ="feststellung_formell" />
+        <flowaudit:feststellung id="F1" kennung="T15 F1" art="formell" einstufung="gering" ka="2" bk="2.3" frist="2026-06-30" status="offen">
+          <flowaudit:beschreibung>Begründung der Auswahl nicht dokumentiert.</flowaudit:beschreibung>
+          <flowaudit:empfehlung>Begründung im Vermerk festhalten.</flowaudit:empfehlung>
+        </flowaudit:feststellung>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Ja</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_VerwK" name="Verwaltungsprüfung durchführen">
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage norm="VO (EU) 2021/1060" artikel="74" absatz="1" buchstabe="a">Art. 74 Abs. 1 Buchst. a VO (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:pruefbezug ka="4" bk="4.1" art="verwk" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="Timer_Frist" name="80 Tage">
+      <bpmn:extensionElements>
+        <flowaudit:frist wert="80" einheit="tage" bezug="ab Zahlungsantrag">
+          <flowaudit:rechtsgrundlage norm="VO (EU) 2021/1060" artikel="74" absatz="1" buchstabe="b">Artikel 74 Absatz 1 Buchstabe b der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        </flowaudit:frist>
+        <flowaudit:kennzeichen typ="frist" text="80 Tage" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerDef_1" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_Auszahlen" name="Mittel auszahlen">
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage>§ 70 LHO</flowaudit:rechtsgrundlage>
+        <flowaudit:kennzeichen typ="zahlung" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_A" name="Auszahlung erfolgt">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_A" targetRef="Task_Pruefen" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Pruefen" targetRef="Gateway_Vollst" />
+    <bpmn:sequenceFlow id="Flow_Ja" name="ja" sourceRef="Gateway_Vollst" targetRef="Task_Bewilligen">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">vollständig</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Nein" name="nein" sourceRef="Gateway_Vollst" targetRef="Task_Nachfordern" />
+    <bpmn:sequenceFlow id="Flow_Abbruch" sourceRef="Task_Nachfordern" targetRef="End_Abbruch" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Bewilligen" targetRef="Task_VerwK" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_VerwK" targetRef="Timer_Frist" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Timer_Frist" targetRef="Task_Auszahlen" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_Auszahlen" targetRef="End_A" />
+  </bpmn:process>
+  <bpmn:process id="Process_Beg" isExecutable="false">
+    <bpmn:startEvent id="Start_B" name="Förderbedarf">
+      <bpmn:outgoing>Flow_B1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Antrag" name="Antrag stellen">
+      <bpmn:documentation>Antrag über 125.000,00 EUR, Rückfragen an kontakt@musterfirma.example.</bpmn:documentation>
+      <bpmn:incoming>Flow_B1</bpmn:incoming>
+      <bpmn:outgoing>Flow_B2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_B" name="Antrag gestellt">
+      <bpmn:incoming>Flow_B2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_B1" sourceRef="Start_B" targetRef="Task_Antrag" />
+    <bpmn:sequenceFlow id="Flow_B2" sourceRef="Task_Antrag" targetRef="End_B" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_Muster">
+    <bpmndi:BPMNPlane id="Plane_Muster" bpmnElement="Collaboration_Muster">
+      <bpmndi:BPMNShape id="Pool_Verwaltung_di" bpmnElement="Pool_Verwaltung" isHorizontal="true">
+        <dc:Bounds x="100" y="60" width="1000" height="440" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_VB_di" bpmnElement="Lane_VB" isHorizontal="true">
+        <dc:Bounds x="130" y="60" width="970" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ZGS_di" bpmnElement="Lane_ZGS" isHorizontal="true">
+        <dc:Bounds x="130" y="240" width="970" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_A_di" bpmnElement="Start_A">
+        <dc:Bounds x="180" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Pruefen_di" bpmnElement="Task_Pruefen">
+        <dc:Bounds x="260" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="DataRef_Vermerk_di" bpmnElement="DataRef_Vermerk">
+        <dc:Bounds x="292" y="420" width="36" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Vollst_di" bpmnElement="Gateway_Vollst" isMarkerVisible="true">
+        <dc:Bounds x="410" y="325" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Bewilligen_di" bpmnElement="Task_Bewilligen">
+        <dc:Bounds x="520" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Nachfordern_di" bpmnElement="Task_Nachfordern">
+        <dc:Bounds x="520" y="405" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Abbruch_di" bpmnElement="End_Abbruch">
+        <dc:Bounds x="680" y="427" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_VerwK_di" bpmnElement="Task_VerwK">
+        <dc:Bounds x="620" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Timer_Frist_di" bpmnElement="Timer_Frist">
+        <dc:Bounds x="772" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Auszahlen_di" bpmnElement="Task_Auszahlen">
+        <dc:Bounds x="860" y="310" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_A_di" bpmnElement="End_A">
+        <dc:Bounds x="1012" y="332" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Pool_Beg_di" bpmnElement="Pool_Beg" isHorizontal="true">
+        <dc:Bounds x="100" y="540" width="1000" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_B_di" bpmnElement="Start_B">
+        <dc:Bounds x="180" y="592" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Antrag_di" bpmnElement="Task_Antrag">
+        <dc:Bounds x="260" y="570" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_B_di" bpmnElement="End_B">
+        <dc:Bounds x="420" y="592" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="216" y="350" />
+        <di:waypoint x="260" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="360" y="350" />
+        <di:waypoint x="410" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Ja_di" bpmnElement="Flow_Ja">
+        <di:waypoint x="460" y="350" />
+        <di:waypoint x="520" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Nein_di" bpmnElement="Flow_Nein">
+        <di:waypoint x="435" y="375" />
+        <di:waypoint x="435" y="445" />
+        <di:waypoint x="520" y="445" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Abbruch_di" bpmnElement="Flow_Abbruch">
+        <di:waypoint x="620" y="445" />
+        <di:waypoint x="680" y="445" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="570" y="310" />
+        <di:waypoint x="570" y="150" />
+        <di:waypoint x="620" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="720" y="150" />
+        <di:waypoint x="790" y="150" />
+        <di:waypoint x="790" y="332" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="808" y="350" />
+        <di:waypoint x="860" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="960" y="350" />
+        <di:waypoint x="1012" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="DOA_Vermerk_di" bpmnElement="DOA_Vermerk">
+        <di:waypoint x="310" y="390" />
+        <di:waypoint x="310" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_B1_di" bpmnElement="Flow_B1">
+        <di:waypoint x="216" y="610" />
+        <di:waypoint x="260" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_B2_di" bpmnElement="Flow_B2">
+        <di:waypoint x="360" y="610" />
+        <di:waypoint x="420" y="610" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Message_Antrag_di" bpmnElement="Message_Antrag">
+        <di:waypoint x="310" y="570" />
+        <di:waypoint x="310" y="520" />
+        <di:waypoint x="198" y="520" />
+        <di:waypoint x="198" y="368" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

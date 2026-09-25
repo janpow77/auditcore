@@ -26,6 +26,8 @@ from dataclasses import dataclass
 from datetime import date, datetime, time
 from typing import Any, Literal
 
+from auditcore_common.optional import require_module
+
 from .errors import OptionalDependencyError, SourceFormatError
 
 Typing = Literal["legacy", "text"]
@@ -245,13 +247,11 @@ def _check_csv_rows(data: Sequence[Sequence[str]], width: int, limits: Limits) -
 
 
 def _openpyxl() -> Any:
-    try:
-        import openpyxl
-    except ImportError as exc:  # pragma: no cover - exercised without the extra
-        raise OptionalDependencyError(
-            "XLSX-Dateien benötigen das Extra auditcore_funding_sources[xlsx] (openpyxl)."
-        ) from exc
-    return openpyxl
+    return require_module(
+        "openpyxl",
+        OptionalDependencyError,
+        "XLSX-Dateien benötigen das Extra auditcore_funding_sources[xlsx] (openpyxl).",
+    )
 
 
 def _excel_value(value: object, typing: Typing) -> object:
