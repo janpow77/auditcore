@@ -20,9 +20,11 @@ from .errors import (
 )
 from .model import (
     CONTRACT_VERSION,
+    JSON,
     AuthKind,
     Capabilities,
     Checkpoint,
+    Cursor,
     HarvestRecord,
     HarvestRequest,
     HarvestResult,
@@ -53,6 +55,7 @@ __version__ = "0.1.1"
 
 __all__ = [
     "CONTRACT_VERSION",
+    "JSON",
     "AdapterRegistry",
     "AuthError",
     "AuthKind",
@@ -64,6 +67,7 @@ __all__ = [
     "Clock",
     "ConfigError",
     "CredentialProvider",
+    "Cursor",
     "EventSink",
     "FetchContext",
     "FileTransport",

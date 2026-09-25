@@ -14,6 +14,8 @@ unverändert, alle bisherigen Namen bleiben importierbar.
   übliche Seite (abgeschlossen genau ohne Folgecursor, `PARTIAL` bei Issues).
   Die drei Hilfen fassen die in den Quellenpaketen mehrfach kopierten
   Schritte zusammen.
+- `JSON` und `Cursor` (Typaliase des Vertrags) sind aus `auditcore_harvest`
+  importierbar.
 
 ### Geändert (nur intern bzw. Typen)
 - `check_adapter`: die zehn Vertragsfälle sind Methoden einer internen
