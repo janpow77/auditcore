@@ -16,12 +16,12 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import Any
 
 from auditcore_entity_matching import Profile as NormalizationProfile
 from auditcore_entity_matching import load_profile as load_normalization
 from auditcore_entity_matching import normalize
 
+from ._types import JsonObject
 from .errors import ProfileError, QueryError
 from .model import ListEntry
 from .profiles import RegistryProfile
@@ -38,7 +38,7 @@ class BulkHit:
     score: float
     method: str
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view."""
         return {
             "list_key": self.list_key,
@@ -63,7 +63,7 @@ class BulkResult:
     profile: Mapping[str, str]
     note: str | None = None
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view."""
         return {
             "status": self.status,

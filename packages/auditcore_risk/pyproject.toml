@@ -10,10 +10,10 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_entity_matching==0.2.0"]
+dependencies = ["auditcore_entity_matching==0.2.1"]
 
 [project.optional-dependencies]
-fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.0"]
+fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.1"]
 pandas = ["pandas>=2.1"]
 procurement = ["auditcore_procurement==0.2.0"]
 web = ["starlette>=0.26.1"]
@@ -24,7 +24,7 @@ dev = [
     "mypy>=1.15",
     "build>=1.2",
     "pandas>=2.1",
-    "auditcore_entity_matching[fuzzy]==0.2.0",
+    "auditcore_entity_matching[fuzzy]==0.2.1",
     "auditcore_procurement==0.2.0",
     "starlette>=0.26.1",
     "fastapi>=0.92",

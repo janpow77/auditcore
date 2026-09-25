@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_entity_matching",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "sources": [
     {
       "repository": "janpow77/flowworkshop",
@@ -239,6 +239,11 @@
       "version": "0.2.0",
       "profiles": 15,
       "change": "Neue Profilversionen 2026.09.2 und Algorithmus casefold_nfc_fold_nfkd; bestehende Profile und Legacy-Funktionen unverändert; neues Profil flowinvoice.pep 2026.09.1 mit Algorithmus lower_nfkd_ascii (HUMAN_DECISION_REQUIRED: widerspricht der Umschrift-Entscheidung); Profile audit_portal.name und audit_portal.name_folded 2026.09.1 (bestehender Algorithmus, nur Profildaten); Profil riskanalysis.payee 2026.09.1 (Algorithmus nfkd_lower_regex, auditcore_risk); empfohlene Profile nach den Nutzerentscheidungen vom 23.09.2026 (Profilfeld compose, recommended_profile)"
+    },
+    {
+      "version": "0.2.1",
+      "profiles": 15,
+      "change": "Refaktorierung ohne Verhaltensänderung: normalize je Algorithmus zerlegt, profile_from_dict je Abschnitt; Profile, Fingerprints und Ergebnisse unverändert"
     }
   ],
   "characterization_flowinvoice": {
