@@ -17,39 +17,39 @@
     },
     "auditcore_dataprotection": {
       "metrics": {
-        "any_usages": 170,
-        "complexity_over_10": 7,
-        "functions_over_60_lines": 20,
-        "modules_over_400_lines": 7,
+        "any_usages": 146,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 1
       }
     },
     "auditcore_documents": {
       "metrics": {
-        "any_usages": 196,
-        "complexity_over_10": 11,
-        "functions_over_60_lines": 16,
-        "modules_over_400_lines": 6,
-        "mypy_strict_errors": 1,
-        "non_english_identifiers": 1
+        "any_usages": 182,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
       }
     },
     "auditcore_dummygenerator": {
       "metrics": {
-        "any_usages": 19,
-        "complexity_over_10": 4,
-        "functions_over_60_lines": 4,
-        "modules_over_400_lines": 1,
+        "any_usages": 7,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
     },
     "auditcore_entity_matching": {
       "metrics": {
-        "any_usages": 7,
-        "complexity_over_10": 2,
-        "functions_over_60_lines": 2,
+        "any_usages": 2,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
@@ -167,10 +167,10 @@
     },
     "auditcore_registry_sources": {
       "metrics": {
-        "any_usages": 132,
-        "complexity_over_10": 4,
-        "functions_over_60_lines": 8,
-        "modules_over_400_lines": 4,
+        "any_usages": 45,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }

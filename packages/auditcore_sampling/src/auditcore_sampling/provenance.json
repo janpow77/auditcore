@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_sampling",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "sources": [
     {
       "repository": "janpow77/flowstat",
@@ -84,5 +84,13 @@
       "result": "portal.mus_poisson maßgeblich; flowstat.mus_z_attribute SUPERSEDED (bleibt für Replay)"
     }
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "own_additions": [
+    {
+      "module": "auditcore_sampling.web",
+      "added_in": "0.2.0",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "REST-Vertrag (docs/ui/sampling-rest.md), Herleitung, reproduzierbare Auswahl mit Seed, Export; Starlette-Routen und optionaler FastAPI-Router (Extra web). Keine neue Stichprobenmethode."
+    }
+  ]
 }
