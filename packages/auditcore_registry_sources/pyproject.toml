@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_registry_sources"
-version = "0.1.0"
+version = "0.1.1"
 description = "Register, sanctions and PEP source adapters, list parsers and screening profiles"
 readme = "README.md"
 requires-python = ">=3.11"

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, NoReturn
 
 from .excel import ExportDependencyError
 from .legacy import legacy_report_html
@@ -18,7 +18,7 @@ def render_pdf(html: str) -> bytes:
             "PDF-Ausgabe benötigt WeasyPrint: pip install 'auditcore_dataprotection[pdf]'"
         ) from exc
 
-    def refuse(url: str) -> dict[str, Any]:
+    def refuse(url: str) -> NoReturn:
         """Refuse every external resource."""
         raise ValueError(f"Externe Ressource im Bericht nicht zulässig: {url}")
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_dataprotection"
-version = "0.4.0"
+version = "0.4.1"
 description = "Framework-independent records of processing activities and DPIA calculation"
 readme = "README.md"
 requires-python = ">=3.11"
