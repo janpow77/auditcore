@@ -47,7 +47,7 @@ def _csv(result: dict[str, object]) -> bytes:
         writer.writerow(
             [_cell(row[k]) for k in ("order", "position", "id", "value", "stratum", "hits")]
         )
-    return ("﻿" + buffer.getvalue()).encode("utf-8")
+    return ("\ufeff" + buffer.getvalue()).encode("utf-8")
 
 
 def export_selection(payload: object) -> ExportFile:

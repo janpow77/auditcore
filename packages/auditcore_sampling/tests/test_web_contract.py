@@ -189,8 +189,8 @@ def test_csv_export_is_spreadsheet_safe_and_reproduced() -> None:
     exported = export_selection({**request, "format": "csv"})
     assert exported.filename == "stichprobe-srs-seed-3.csv"
     text = exported.content.decode("utf-8")
-    assert text.startswith("﻿Lfd. Nr.;Position;Kennung;Wert;Schicht;Treffer\r\n")
-    rows = list(csv.reader(io.StringIO(text.lstrip("﻿")), delimiter=";"))
+    assert text.startswith("\ufeffLfd. Nr.;Position;Kennung;Wert;Schicht;Treffer\r\n")
+    rows = list(csv.reader(io.StringIO(text.lstrip("\ufeff")), delimiter=";"))
     by_id = {r[2]: r for r in rows[1:]}
     assert by_id["'=HYPERLINK(1)"][3] == "1234,5" and by_id["B-2"][3] == "20,25"
     assert [r[1] for r in rows[1:]] == [str(r["position"]) for r in select(request)["rows"]]
