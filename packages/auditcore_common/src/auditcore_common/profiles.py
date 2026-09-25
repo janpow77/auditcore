@@ -12,9 +12,11 @@ import json
 from collections.abc import Callable
 from importlib import resources
 from importlib.resources.abc import Traversable
-from typing import Literal, TypeVar
+from typing import Literal, TypeVar, cast
 
 P = TypeVar("P")
+#: The raw JSON document as the caller's parser expects it (not validated here).
+R = TypeVar("R")
 
 #: How a file name containing ``/`` or ``\\`` (and ``.`` at the start) is reported.
 InvalidName = Literal["missing", "invalid", "invalid_or_hidden"]
@@ -79,7 +81,7 @@ def load_packaged_profile(
     profile_id: str,
     version: str,
     *,
-    parse: Callable[[object], P],
+    parse: Callable[[R], P],
     identity: Callable[[P], tuple[object, object]],
     error: Callable[[str], Exception],
     require_text: bool = False,
@@ -97,7 +99,7 @@ def load_packaged_profile(
     entry = resources.files(resource_package).joinpath(name)
     if unusable or not entry.is_file():
         raise error(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
-    profile = parse(_read(entry))
+    profile = parse(cast(R, _read(entry)))
     if tuple(identity(profile)) != (profile_id, version):
         raise error(MISMATCH)
     return profile
