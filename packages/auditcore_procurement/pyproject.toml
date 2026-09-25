@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_procurement"
-version = "0.2.1"
+version = "0.2.2"
 description = "Procurement notice records (TED, HAD), import normalisation and versioned prechecks"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = []
+dependencies = ["auditcore_common==0.1.0"]
 
 [project.optional-dependencies]
 html = ["lxml>=4.9.2"]

@@ -1,5 +1,16 @@
 # Changelog auditcore_procurement
 
+## 0.2.2 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- Profil-Fingerprint → `hashing.canonical_sha256`, `load_profile` →
+  `profiles.load_packaged_profile(invalid_name="missing")` (ohne Typprüfung
+  wie bisher). Das Laden der EU-Jahrestabelle (`_packaged_eu_block`) bleibt
+  wegen eigener Meldung und Schemaprüfung im Paket.
+- Meldungen und Ergebnisse unverändert; 241 Tests grün.
+
 ## 0.2.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: Alle 241 Tests (Replays der beobachteten

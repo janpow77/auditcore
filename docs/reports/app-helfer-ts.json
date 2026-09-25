@@ -1,0 +1,4666 @@
+{
+ "schema": "auditcore/app-helpers-ts@1",
+ "generated": "2026-09-25",
+ "scope": {
+  "apps": {
+   "audit_designer": {
+    "commit": "origin/main 4b629dd9",
+    "framework": "Vue"
+   },
+   "riskanalysis": {
+    "commit": "origin/main dace0f6",
+    "framework": "Vue"
+   },
+   "flowsearch": {
+    "commit": "origin/master 9ac5e0d",
+    "framework": "Vue"
+   },
+   "cockpit": {
+    "commit": "origin/master df203d4",
+    "framework": "Vue"
+   },
+   "ai-router": {
+    "commit": "origin/main 426cd78",
+    "framework": "Vue"
+   },
+   "pdf-editor": {
+    "commit": "origin/main ce34413",
+    "framework": "Vue"
+   },
+   "flowinvoice": {
+    "commit": "origin/main 5d5d8c5",
+    "framework": "React"
+   },
+   "regulierung": {
+    "commit": "origin/main ce76e48",
+    "framework": "React"
+   },
+   "audit-portal": {
+    "commit": "origin/main 72cc4b1",
+    "framework": "React"
+   },
+   "qaaudit": {
+    "commit": "origin/main c78be5c",
+    "framework": "React"
+   },
+   "versteigerung": {
+    "commit": "origin/main 729f9a1",
+    "framework": "React (Next.js)"
+   },
+   "rechnung": {
+    "commit": "origin/main b3d6445",
+    "framework": "React"
+   },
+   "e-invoice-preparer": {
+    "commit": "origin/main b3d6445 (gleiches Remote wie rechnung, nicht doppelt gezählt)",
+    "framework": "React"
+   }
+  },
+  "auditcore_reference": {
+   "main": "packages-js/bpmn-editor, ui, ui-react, kanban-core (origin/main ccb73cb, #84)",
+   "branches_read": [
+    "feat/ui-base 11ca7f1",
+    "feat/ui-risk-js d31a3d6",
+    "feat/ui-sampling-benford-js c8ce702 (tabular.parseNumber)",
+    "feat/ui-screening-js 44380c9"
+   ]
+  }
+ },
+ "method": {
+  "extraction": "TypeScript-Compiler-API über alle .ts/.tsx/.js/.jsx/.vue (Script-Blöcke) ohne Tests/Demo; Funktionsdeklarationen, Pfeil-/Funktionsausdrücke, Methoden",
+  "normalisation": "Typen per transpileModule entfernt; Token-Strom mit alpha-umbenannten Bezeichnern (Eigenschaftsnamen und Globals bleiben), Stringliterale → S; SHA-1",
+  "grouping": "Rumpf-Hash (≥ 30 Token) über Apps + Namens-/Rumpfmuster je Hilfskategorie (spec.py) + Merkmalsextraktion je Variante (features.py)",
+  "callers": "graph_callers = eingehende calls/references/uses-Kanten im graphify-Graph (<repo>/graphify-out/graph.json, direkt gelesen, MCP-Server nicht erreichbar); text_references = Bezeichner-Vorkommen im Repo außerhalb der Definition (obere Schranke, bei generischen Namen überhöht)",
+  "totals": {
+   "functions": 18970,
+   "files": 2634
+  }
+ },
+ "groups": [
+  {
+   "id": "G01",
+   "title": "Datum/Uhrzeit formatieren (de-DE)",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "flowsearch",
+    "rechnung",
+    "regulierung",
+    "versteigerung"
+   ],
+   "app_count": 9,
+   "definitions": 140,
+   "variants": 98,
+   "auditcore_existing": "@flowaudit/ui i18n/format.ts formatDate(value, locale, withTime) – dateStyle „medium“, Ersatzwert „“, Locale de|en; liegt aber im Vue-Paket",
+   "target": "@flowaudit/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate)",
+   "differences": [
+    "Engine: toLocaleDateString (59), toLocaleString (36), manuell/Template (34), Intl.DateTimeFormat (14), date-fns (1)",
+    "Ausgabe: mit Optionen 2-digit „31.01.2026“ (90) gegenüber toLocaleDateString ohne Optionen „31.1.2026“ (u. a. audit_designer utils/format.ts formatDateDe)",
+    "Reine Datumswerte „YYYY-MM-DD“: new Date(iso) liest UTC-Mitternacht → in Zeitzonen westlich von UTC ein Tag früher (nachgestellt: TZ=America/New_York ergibt 30.1.2026); nur regulierung (formatDatumDe) und versteigerung (parseDateValue) zerlegen lokal",
+    "Keine Variante setzt timeZone (alle 144 lokal); Zeitstempel mit Z werden in Browserzeit gezeigt",
+    "Ersatzwert bei leer/ungültig: kein (59), „-“ (29), „—“ (28), „“ (16), „N/A“ (6), „–“ (6); nur 25 von 144 prüfen Invalid Date",
+    "Mit Sekunden (ai-router, cockpit, regulierung formatDateTime) gegenüber ohne Sekunden (audit-portal vpFormat, regulierung formatDatumZeitDe)"
+   ],
+   "python_parity": "Python: auditcore_dataprotection.legacy_report.format_datetime_de, auditcore_invoicesynth.formats.format_date → gemeinsame Fälle (Datum-only, Mitternacht UTC, ungültig)",
+   "per_app": {
+    "ai-router": {
+     "definitions": 2,
+     "text_references": 11,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 18,
+     "text_references": 422,
+     "graph_callers": 33,
+     "files": [
+      "frontend/src/components/flowstat/RunHistoryPanel.tsx",
+      "frontend/src/components/flowstat/customnode/CustomNodeVersionList.tsx",
+      "frontend/src/components/flowstat/customnode/CustomNodesGallery.tsx",
+      "frontend/src/components/fraud-report/DocumentListSection.tsx",
+      "frontend/src/components/fraud-report/ReportHeader.tsx",
+      "frontend/src/components/fraud-report/format.ts",
+      "frontend/src/components/fraud/SanctionsStatus.tsx",
+      "frontend/src/components/project-detail/ProjectOverviewTab.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 92,
+     "text_references": 13655,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/dashboard/ListView.vue",
+      "frontend/src/components/dashboard/MinimalView.vue",
+      "frontend/src/components/dashboard/TilesView.vue",
+      "frontend/src/components/dashboard/TreeView.vue",
+      "frontend/src/components/editor/NodeHistoryPanel.vue",
+      "frontend/src/components/editor/NodePanel.vue",
+      "frontend/src/components/editor/TreeVersionDiffModal.vue",
+      "frontend/src/components/editor/UnreadNotesPanel.vue"
+     ]
+    },
+    "auditcore:kanban-core(local)": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "kanban-core/src/validation.ts"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 3,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/i18n/format.ts",
+      "ui/src/screening/view.ts"
+     ]
+    },
+    "cockpit": {
+     "definitions": 4,
+     "text_references": 18,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/kanban/labels.ts",
+      "frontend/src/utils/format.ts",
+      "frontend/src/views/ChatView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 10,
+     "text_references": 119,
+     "graph_callers": 8,
+     "files": [
+      "frontend/src/components/dashboard/HessenPortalFrontpage.tsx",
+      "frontend/src/components/fraud-report/DocumentListSection.tsx",
+      "frontend/src/components/fraud-report/ReportHeader.tsx",
+      "frontend/src/components/fraud-report/usePdfExport.ts",
+      "frontend/src/components/fraud-report/useWordExport.ts",
+      "frontend/src/components/fraud/SanctionsStatus.tsx",
+      "frontend/src/components/settings/SettingsExternalData.tsx",
+      "frontend/src/pages/ProjectDetail.tsx"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 2,
+     "text_references": 10,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/EUBeneficiaryList.vue",
+      "frontend/src/views/AdminView.vue"
+     ]
+    },
+    "rechnung": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "src/components/InvoiceManager.tsx"
+     ]
+    },
+    "regulierung": {
+     "definitions": 9,
+     "text_references": 543,
+     "graph_callers": 16,
+     "files": [
+      "frontend/src/lib/dateFormat.ts",
+      "frontend/src/lib/numberFormat.ts",
+      "frontend/src/pages/AnbieterView.tsx",
+      "frontend/src/pages/Dashboard.tsx",
+      "frontend/src/pages/kraftstoff/AuswertungVerstoesse.tsx",
+      "frontend/src/pages/kraftstoff/KartePreisentwicklungView.tsx",
+      "frontend/src/pages/kraftstoff/TankstelleDetailView.tsx",
+      "frontend/src/pages/kraftstoff/TankstellenListe.tsx"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 2,
+     "text_references": 16,
+     "graph_callers": 4,
+     "files": [
+      "frontend/lib/format.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 8,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDate"
+     ],
+     "example": "audit_designer:frontend/src/components/dashboard/ListView.vue:29"
+    },
+    {
+     "n": 7,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDate",
+      "formatDateTime"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/pipeline/inspector/NodeDocumentationTab.vue:63"
+    },
+    {
+     "n": 5,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDate"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/diagrams/VersionHistory.vue:57"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDate"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/TreeVersionDiffModal.vue:121"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDate"
+     ],
+     "example": "audit_designer:frontend/src/components/dashboard/MinimalView.vue:9"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDate"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/NodeHistoryPanel.vue:114"
+    }
+   ],
+   "rank": 1
+  },
+  {
+   "id": "X2",
+   "title": "Betrugs-/Firmenbericht-Export (Word/PDF/Text/HTML, Abschnitts-Builder, Kennzahlen)",
+   "cls": "c",
+   "apps": [
+    "flowinvoice",
+    "audit-portal"
+   ],
+   "app_count": 2,
+   "definitions": 576,
+   "variants": null,
+   "auditcore_existing": "nein",
+   "target": "kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @flowaudit/fraud-report (React) oder eine App als Quelle",
+   "differences": [
+    "fraud-report/useWordExport.ts, usePdfExport.ts, useTextExport, useHtmlExport, company-report/*, risk-wheel/*, belegliste/* doppelt; bereits erste Abweichungen (Zeilenversatz, formatCurrency-Varianten)"
+   ],
+   "python_parity": "—",
+   "evidence": "Rumpf-Hash-Abgleich: 576 identische Funktionen",
+   "per_app": {},
+   "variant_examples": [],
+   "rank": 2
+  },
+  {
+   "id": "G02",
+   "title": "Währungsbetrag formatieren (EUR)",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "flowsearch",
+    "rechnung",
+    "regulierung",
+    "riskanalysis",
+    "versteigerung"
+   ],
+   "app_count": 8,
+   "definitions": 64,
+   "variants": 40,
+   "auditcore_existing": "@flowaudit/ui formatNumber(value, locale, options) – kein EUR-Helfer",
+   "target": "@flowaudit/common: format/money (formatEur, formatEurCompact)",
+   "differences": [
+    "Form: Intl style currency (37), Suffix „ €“ per Hand (11), Suffix „ EUR“ (5), nur Zahl ohne Symbol (12)",
+    "Intl setzt ein geschütztes Leerzeichen (U+00A0) vor €, die Handvarianten ein normales – Textvergleiche/Tests/PDF-Umbruch unterscheiden sich",
+    "Nachkommastellen: Standard 2 (28), fest 2/2 (12), min 2 (12), max 0 (5: riskanalysis, versteigerung), 0/0 (4: flowsearch, TED-Abschnitt)",
+    "Kompaktformen „T€“/„Mio. €“ (flowinvoice/audit-portal KPIStrip, riskanalysis eurMio) mit toFixed → Dezimalpunkt statt Komma bzw. replace(\".\", \",\")",
+    "Cent-Eingaben (/100) in regulierung (3) und audit_designer FindingsView; String-Eingaben (parseFloat) in 9 Varianten",
+    "Ersatzwert: keiner (41), „-“ (13), „–“ (8), „0,00 EUR“ (1), „—“ (1)"
+   ],
+   "python_parity": "Python-Berichte (auditcore_reporting, _invoicesynth) formatieren Beträge ebenfalls deutsch → gemeinsame Tabelle Betrag→Text inkl. NBSP-Regel",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 15,
+     "text_references": 714,
+     "graph_callers": 32,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/company-report/BalanceSheet.tsx",
+      "frontend/src/components/company-report/FinancialCharts.tsx",
+      "frontend/src/components/company-report/KPIStrip.tsx",
+      "frontend/src/components/company-report/TedSection.tsx",
+      "frontend/src/components/fraud-report/DuplicateSection.tsx",
+      "frontend/src/components/fraud-report/ExpenseCategorySection.tsx",
+      "frontend/src/components/fraud-report/PrecheckDetailsSection.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 15,
+     "text_references": 212,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/gis/AnalysisWizard.vue",
+      "frontend/src/components/gis/GisStatsPanel.vue",
+      "frontend/src/components/vpai/AusgabenbilanzForm.vue",
+      "frontend/src/components/vpai/BeleglisteGrid.vue",
+      "frontend/src/components/vpai/CalculatorWidget.vue",
+      "frontend/src/components/vpai/FeststellungBadge.vue",
+      "frontend/src/components/vpai/FeststellungenPanel.vue",
+      "frontend/src/components/vpai/PdbImportModal.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/risk/view/format.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 17,
+     "text_references": 732,
+     "graph_callers": 20,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/company-report/BalanceSheet.tsx",
+      "frontend/src/components/company-report/FinancialCharts.tsx",
+      "frontend/src/components/company-report/KPIStrip.tsx",
+      "frontend/src/components/company-report/TedSection.tsx",
+      "frontend/src/components/fraud-report/DocumentListSection.tsx",
+      "frontend/src/components/fraud-report/DuplicateSection.tsx",
+      "frontend/src/components/fraud-report/ExpenseCategorySection.tsx"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 2,
+     "text_references": 3,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/EUBeneficiaryList.vue",
+      "frontend/src/views/SearchDetailView.vue"
+     ]
+    },
+    "rechnung": {
+     "definitions": 1,
+     "text_references": 6,
+     "graph_callers": 1,
+     "files": [
+      "src/utils/calc.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 8,
+     "text_references": 39,
+     "graph_callers": 8,
+     "files": [
+      "frontend/src/lib/marktauffaelligkeit.ts",
+      "frontend/src/pages/Dashboard.tsx",
+      "frontend/src/pages/kraftstoff/AuswertungVerstoesse.tsx",
+      "frontend/src/pages/kraftstoff/KartePreisentwicklungView.tsx",
+      "frontend/src/pages/kraftstoff/TankstelleDetailView.tsx",
+      "frontend/src/pages/kraftstoff/TankstellenListe.tsx",
+      "frontend/src/pages/kraftstoff/VerstosspruefungView.tsx",
+      "frontend/src/pages/kraftstoff/VollzugDashboard.tsx"
+     ]
+    },
+    "riskanalysis": {
+     "definitions": 5,
+     "text_references": 256,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/verwk/format.ts",
+      "frontend/src/verwk/views/Finanzbericht.vue",
+      "frontend/src/verwk/views/Jahreswirkung.vue",
+      "frontend/src/views/DashboardView.vue",
+      "frontend/src/views/VorhabenView.vue"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 1,
+     "text_references": 13,
+     "graph_callers": 3,
+     "files": [
+      "frontend/lib/format.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 9,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "fmtCurrency",
+      "formatCurrency"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/DuplicateSection.tsx:27"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatEuro"
+     ],
+     "example": "audit-portal:frontend/src/components/company-report/BalanceSheet.tsx:9"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatBetrag"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/AusgabenbilanzForm.vue:52"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatCurrency"
+     ],
+     "example": "audit-portal:frontend/src/components/belegliste/BeleglisteGrid.tsx:513"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatCurrency"
+     ],
+     "example": "audit-portal:frontend/src/components/company-report/KPIStrip.tsx:9"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatEuro"
+     ],
+     "example": "audit-portal:frontend/src/components/company-report/TedSection.tsx:13"
+    }
+   ],
+   "rank": 3
+  },
+  {
+   "id": "G10",
+   "title": "Auth-Token/Sitzung (Speicher, Header, Login/Logout)",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "flowsearch",
+    "pdf-editor",
+    "qaaudit",
+    "regulierung",
+    "versteigerung"
+   ],
+   "app_count": 10,
+   "definitions": 41,
+   "variants": 37,
+   "auditcore_existing": "@flowaudit/ui RestOptions.headers/fetch injizierbar (kein Token-Speicher)",
+   "target": "@flowaudit/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch",
+   "differences": [
+    "Speicherschlüssel: „token“ (audit_designer 26×, flowsearch), „flowaudit_token“ (flowinvoice, audit-portal), „hpp_token“ (regulierung), „ecohesion.token“; ai-router/cockpit/pdf-editor Pinia-Store bzw. Konstante",
+    "Cookie-Sitzung (withCredentials) in audit_designer (2 Dateien) und qaaudit statt Bearer",
+    "401-Behandlung in Interceptors je App unterschiedlich (Weiterleitung, Store-Reset, nichts)",
+    "ai-router und cockpit teilen wortgleiche auth.ts/Store-Logout-Logik (7 identische Funktionen)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 8,
+     "text_references": 53,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/api/auth.ts",
+      "frontend/src/api/client.ts",
+      "frontend/src/api/mock.ts",
+      "frontend/src/stores/auth.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 4,
+     "text_references": 49,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/api/domains/users.ts",
+      "frontend/src/components/flowstat/customnode/customNodeApi.ts",
+      "frontend/src/hooks/useMe.ts",
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 8,
+     "text_references": 108,
+     "graph_callers": 8,
+     "files": [
+      "frontend/src/components/layout/AppHeader.vue",
+      "frontend/src/composables/useAuthFetch.ts",
+      "frontend/src/ecohesion/services/api.ts",
+      "frontend/src/modules/flowstat/customnode/vue/useCustomNodeApi.ts",
+      "frontend/src/stores/auth.ts"
+     ]
+    },
+    "cockpit": {
+     "definitions": 8,
+     "text_references": 57,
+     "graph_callers": 3,
+     "files": [
+      "frontend/src/api/auth.ts",
+      "frontend/src/api/client.ts",
+      "frontend/src/api/mock.ts",
+      "frontend/src/stores/auth.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 39,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 2,
+     "text_references": 10,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/stores/auth.ts"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 4,
+     "text_references": 29,
+     "graph_callers": 13,
+     "files": [
+      "frontend/src/lib/auth.ts"
+     ]
+    },
+    "qaaudit": {
+     "definitions": 2,
+     "text_references": 28,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/api/auth.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 1,
+     "text_references": 12,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 2,
+     "text_references": 4,
+     "graph_callers": 0,
+     "files": [
+      "frontend/app/[locale]/admin/page.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "ai-router",
+      "cockpit"
+     ],
+     "names": [
+      "logout"
+     ],
+     "example": "ai-router:frontend/src/api/auth.ts:13"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "ai-router",
+      "cockpit"
+     ],
+     "names": [
+      "logout"
+     ],
+     "example": "ai-router:frontend/src/stores/auth.ts:35"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "login"
+     ],
+     "example": "audit-portal:frontend/src/api/domains/users.ts:20"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "logout"
+     ],
+     "example": "audit-portal:frontend/src/lib/api.ts:915"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "ai-router"
+     ],
+     "names": [
+      "login"
+     ],
+     "example": "ai-router:frontend/src/api/auth.ts:7"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "ai-router"
+     ],
+     "names": [
+      "setToken"
+     ],
+     "example": "ai-router:frontend/src/api/client.ts:38"
+    }
+   ],
+   "rank": 4
+  },
+  {
+   "id": "G09",
+   "title": "API-Fehlertext extrahieren",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "regulierung",
+    "riskanalysis"
+   ],
+   "app_count": 7,
+   "definitions": 51,
+   "variants": 31,
+   "auditcore_existing": "@flowaudit/ui RestError/toError (nur Envelope {error:{…}})",
+   "target": "@flowaudit/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown)",
+   "differences": [
+    "37 Definitionen allein in audit_designer (extractError, extractErrorMessage, fehlertext …) mit 6+ Varianten",
+    "FastAPI-422 (detail als Liste von {loc,msg}) wird nur in 5 von 53 Varianten ausgewertet; die übrigen reichen die Rohliste an die Oberfläche weiter oder zeigen nur den Ersatztext",
+    "Sonderfälle nur vereinzelt: 503-Text (MyDataSourcesPanel), data.message zusätzlich zu detail",
+    "@flowaudit/ui RestError erwartet {error:{code,message}} – anderes Fehlerformat als die App-Backends (FastAPI detail)"
+   ],
+   "python_parity": "Backend-Fehlerform ist Python-Seite (FastAPI HTTPException/RequestValidationError); auditcore-Router liefern {error:{code,message}} → errorMessage muss beide Formen können",
+   "per_app": {
+    "ai-router": {
+     "definitions": 1,
+     "text_references": 34,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/api/client.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 3,
+     "text_references": 405,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/api/foundation.ts",
+      "frontend/src/components/external-data/EncryptedBundleImportPanel.tsx",
+      "frontend/src/components/flowstat/customnode/CustomNodeEditor.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 37,
+     "text_references": 3015,
+     "graph_callers": 43,
+     "files": [
+      "frontend/src/composables/useApiError.ts",
+      "frontend/src/composables/useVbaDaten.ts",
+      "frontend/src/composables/useVbaModules.ts",
+      "frontend/src/composables/useVbaProjects.ts",
+      "frontend/src/composables/useVbaTemplates.ts",
+      "frontend/src/ecohesion/views/LabsView.vue",
+      "frontend/src/modules/flowstat/components/intake/FlowStatIntakeWorkspace.vue",
+      "frontend/src/modules/flowstat/components/reports/FlowStatReportEditor.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 2,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/rest/client.ts",
+      "ui/src/sampling/SamplingParameters.vue"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 84,
+     "graph_callers": 47,
+     "files": [
+      "frontend/src/api/client.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 66,
+     "graph_callers": 16,
+     "files": [
+      "frontend/src/components/settings/SettingsFindingCategories.tsx",
+      "frontend/src/lib/verwk-api.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 6,
+     "text_references": 1176,
+     "graph_callers": 39,
+     "files": [
+      "frontend/src/components/kraftstoff/vorgang/AnhoerungAktionen.tsx",
+      "frontend/src/components/kraftstoff/vorgang/vorgangUi.tsx",
+      "frontend/src/lib/fehler.ts",
+      "frontend/src/pages/kraftstoff/DemoView.tsx",
+      "frontend/src/pages/kraftstoff/PostfachView.tsx",
+      "frontend/src/pages/kraftstoff/VollzugDashboard.tsx"
+     ]
+    },
+    "riskanalysis": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/verwk/composables/useAsync.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 6,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "extractError"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/composables/useFlowStatPipelines.ts:80"
+    },
+    {
+     "n": 5,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "extractError"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/workspace/MyDataSourcesPanel.vue:67"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "extractErrorMessage"
+     ],
+     "example": "audit_designer:frontend/src/composables/useVbaDaten.ts:6"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "extractError",
+      "extractErrorMessage"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/composables/useCustomDashboards.ts:92"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "extractError"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/composables/useAuditTests.ts:138"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "ai-router",
+      "cockpit"
+     ],
+     "names": [
+      "extractError"
+     ],
+     "example": "ai-router:frontend/src/api/client.ts:50"
+    }
+   ],
+   "rank": 5
+  },
+  {
+   "id": "G03",
+   "title": "Zahl/Prozent formatieren",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "regulierung",
+    "versteigerung"
+   ],
+   "app_count": 7,
+   "definitions": 48,
+   "variants": 36,
+   "auditcore_existing": "@flowaudit/ui formatNumber/formatPercent (Anteil 0–1)",
+   "target": "@flowaudit/common: format/number (formatNumber, formatInt, formatFixed, formatPercent)",
+   "differences": [
+    "Prozent: Intl style percent mit Anteil 0–1 (audit-portal vpFormat, @flowaudit/ui) gegenüber Zahl 0–100 plus „ %“ per toFixed().replace(\".\", \",\") (ai-router, riskanalysis pct) – Faktor 100 Unterschied bei gleichem Namen formatPercent",
+    "toFixed-Varianten ohne Tausendertrennzeichen (ai-router formatTokens/formatPercent, riskanalysis) gegenüber Intl mit Punkt-Gruppierung",
+    "regulierung formatFixed und formatNumberDe sind wortgleich (Dublette in derselben Datei)"
+   ],
+   "python_parity": "auditcore_common.text.group_thousands_de (Python) – gleiche Gruppierungsregel testen",
+   "per_app": {
+    "ai-router": {
+     "definitions": 2,
+     "text_references": 24,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 12,
+     "text_references": 459,
+     "graph_callers": 60,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/fraud-report/DocumentListReconciliationSection.tsx",
+      "frontend/src/components/fraud-report/ExpenseCategorySection.tsx",
+      "frontend/src/components/fraud-report/TEDAnalysisSection.tsx",
+      "frontend/src/components/fraud-report/format.ts",
+      "frontend/src/components/risk-wheel/utils.ts",
+      "frontend/src/lib/vpFormat.ts",
+      "frontend/src/pages/AutoFeedbackStats.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 18,
+     "text_references": 1992,
+     "graph_callers": 8,
+     "files": [
+      "frontend/src/components/vpai/AusgabenbilanzForm.vue",
+      "frontend/src/components/vpai/PdbImportModal.vue",
+      "frontend/src/components/vpai/kb-admin/JobProgressSidebar.vue",
+      "frontend/src/components/vpai/kb-admin/QueueProgress.vue",
+      "frontend/src/ecohesion/i18n/index.ts",
+      "frontend/src/modules/flowstat/components/ResultsVisualization.vue",
+      "frontend/src/modules/flowstat/components/audit_tests/BenfordCard.vue",
+      "frontend/src/modules/flowstat/components/audit_tests/CutoffCard.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 5,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/i18n/format.ts",
+      "ui/src/risk/view/format.ts"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 4,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 12,
+     "text_references": 393,
+     "graph_callers": 41,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/fraud-report/DocumentListReconciliationSection.tsx",
+      "frontend/src/components/fraud-report/ExpenseCategorySection.tsx",
+      "frontend/src/components/fraud-report/TEDAnalysisSection.tsx",
+      "frontend/src/components/fraud-report/usePdfExport.ts",
+      "frontend/src/components/fraud-report/useWordExport.ts",
+      "frontend/src/components/risk-wheel/utils.ts",
+      "frontend/src/pages/AutoFeedbackStats.tsx"
+     ]
+    },
+    "regulierung": {
+     "definitions": 2,
+     "text_references": 545,
+     "graph_callers": 26,
+     "files": [
+      "frontend/src/lib/numberFormat.ts"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 2,
+     "files": [
+      "frontend/lib/format.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 6,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "fmtPct",
+      "formatPercent"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/DocumentListReconciliationSection.tsx:32"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatNumber"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/kb-admin/JobProgressSidebar.vue:139"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer",
+      "flowinvoice"
+     ],
+     "names": [
+      "fmtNumber",
+      "formatNumber"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/testdata/TestdataValidationReport.vue:70"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatPercent"
+     ],
+     "example": "audit-portal:frontend/src/components/belegliste/BeleglisteGrid.tsx:516"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatPercent"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/TEDAnalysisSection.tsx:45"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatNumber"
+     ],
+     "example": "audit-portal:frontend/src/components/risk-wheel/utils.ts:315"
+    }
+   ],
+   "rank": 6
+  },
+  {
+   "id": "G05",
+   "title": "Dateigröße formatieren",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "pdf-editor",
+    "qaaudit",
+    "regulierung"
+   ],
+   "app_count": 7,
+   "definitions": 45,
+   "variants": 24,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: format/bytes (formatBytes)",
+   "differences": [
+    "Alle 45 rechnen mit 1024, beschriften aber KB/MB statt KiB/MiB",
+    "41 von 45 nutzen toFixed → „1.5 MB“ mit Dezimalpunkt in deutscher Oberfläche; nur audit-portal (1) nutzt Locale-Komma, ai-router ersetzt per replace",
+    "ai-router formatBytes erwartet Megabyte statt Byte als Eingabe (gleicher Name, andere Einheit)",
+    "Ersatzwert: „—“ (audit-portal, cockpit), „“ bei 0 (audit_designer ReferenceDocsPanel), kein Schutz (Mehrheit)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 1,
+     "text_references": 3,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 2,
+     "text_references": 12,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/reports/RunDetail.tsx",
+      "frontend/src/pages/admin/RetentionAdmin.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 37,
+     "text_references": 1237,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/canvas/CanvasExportDialog.vue",
+      "frontend/src/components/editor/ReferenceDocsPanel.vue",
+      "frontend/src/components/gis/FilePreview.vue",
+      "frontend/src/components/gis/GisFileExplorer.vue",
+      "frontend/src/components/jupyter/FileViewerPanel.vue",
+      "frontend/src/components/jupyter/JupyterFileBrowser.vue",
+      "frontend/src/components/jupyter/VariablesExplorer.vue",
+      "frontend/src/components/jupyter/outputs/OutputRenderer.vue"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 3,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 2,
+     "text_references": 38,
+     "graph_callers": 4,
+     "files": [
+      "frontend/src/lib/fileValidation.ts",
+      "frontend/src/lib/results.ts"
+     ]
+    },
+    "qaaudit": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/api/evidence.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 1,
+     "text_references": 4,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/pages/fachadministration/datenquellen/DatenimportSeite.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 11,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatFileSize",
+      "formatSize"
+     ],
+     "example": "audit_designer:frontend/src/components/lernmodule/editor/FileUpload.vue:70"
+    },
+    {
+     "n": 6,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatBytes",
+      "formatFileSize",
+      "formatSize"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/VariablesExplorer.vue:92"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "audit_designer"
+     ],
+     "names": [
+      "formatFileSize",
+      "formatSize"
+     ],
+     "example": "audit-portal:frontend/src/components/reports/RunDetail.tsx:52"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatBytes",
+      "formatFileSize"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/ReferenceDocsPanel.vue:195"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatSize"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/outputs/OutputRenderer.vue:113"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatFileSize"
+     ],
+     "example": "audit_designer:frontend/src/components/schulung/admin/ChapterList.vue:218"
+    }
+   ],
+   "rank": 7
+  },
+  {
+   "id": "G11",
+   "title": "HTML-Escaping/Markdown-Rendering",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "rechnung",
+    "regulierung",
+    "versteigerung"
+   ],
+   "app_count": 7,
+   "definitions": 27,
+   "variants": 21,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul",
+   "differences": [
+    "escapeHtml mit 5 Zeichen (&<>\"') gegenüber nur 3 (&<>, jupyter/ansi.ts) – letzteres unsicher in Attributen",
+    "renderMarkdown mit DOMPurify (audit_designer) gegenüber eigenem Mini-Renderer (audit-portal help/renderMarkdown.ts)"
+   ],
+   "python_parity": "auditcore_common.html_text (Python, Branch feat/auditcore-common) – gleiche Escape-Tabelle",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 4,
+     "text_references": 32,
+     "graph_callers": 4,
+     "files": [
+      "frontend/src/components/generator/BeleganalyseTrackTab.tsx",
+      "frontend/src/components/help/renderMarkdown.ts",
+      "frontend/src/components/reports/ReportDocumentEditor.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 16,
+     "text_references": 203,
+     "graph_callers": 6,
+     "files": [
+      "frontend/src/components/editor/RemarkSnippetsEditor.vue",
+      "frontend/src/components/jupyter/utils/ansi.ts",
+      "frontend/src/components/notebook/NbAiPanel.vue",
+      "frontend/src/components/notebook/NbPageHistory.vue",
+      "frontend/src/components/vpai/BeleglisteGrid.vue",
+      "frontend/src/modules/flowstat/components/dashboards/widgets/TextWidget.vue",
+      "frontend/src/modules/flowstat/components/geo/ChoroplethMap.vue",
+      "frontend/src/modules/flowstat/components/geo/MarkerMap.vue"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 3,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/views/ChatView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 3,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/company-report/useCompanyReportExport.ts",
+      "frontend/src/components/help/HelpViewer.tsx"
+     ]
+    },
+    "rechnung": {
+     "definitions": 1,
+     "text_references": 34,
+     "graph_callers": 2,
+     "files": [
+      "src/services/xmlGenerator.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 2,
+     "text_references": 66,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/pages/kraftstoff/KartePreisentwicklungView.tsx",
+      "frontend/src/pages/kraftstoff/TankstellenListe.tsx"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 1,
+     "text_references": 10,
+     "graph_callers": 1,
+     "files": [
+      "frontend/components/MapView.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "audit_designer"
+     ],
+     "names": [
+      "escapeHtml"
+     ],
+     "example": "audit-portal:frontend/src/components/help/renderMarkdown.ts:10"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "escapeHtml"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/utils/ansi.ts:50"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "renderMarkdown"
+     ],
+     "example": "audit_designer:frontend/src/components/notebook/NbAiPanel.vue:396"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "escapeHtml"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/geo/ChoroplethMap.vue:345"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "rechnung"
+     ],
+     "names": [
+      "esc",
+      "escapeXml"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/composables/useNodeOutputExport.ts:87"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "regulierung"
+     ],
+     "names": [
+      "escapeHtml"
+     ],
+     "example": "regulierung:frontend/src/pages/kraftstoff/KartePreisentwicklungView.tsx:596"
+    }
+   ],
+   "rank": 8
+  },
+  {
+   "id": "G14",
+   "title": "Tabellen-Sortierung (Umschalten/Vergleich)",
+   "cls": "a",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "flowsearch",
+    "regulierung",
+    "riskanalysis"
+   ],
+   "app_count": 7,
+   "definitions": 25,
+   "variants": 20,
+   "auditcore_existing": "@flowaudit/ui table/sort.ts",
+   "target": "@flowaudit/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @flowaudit/common/table, Vue-Composable useSort in ui, React-Hook in ui-react",
+   "differences": [
+    "Zyklus asc→desc (Apps) gegenüber asc→desc→unsortiert (@flowaudit/ui nextSort)",
+    "Startrichtung beim Spaltenwechsel: asc (Mehrheit) oder desc (fraud-report DocumentListSection)",
+    "Vergleich: localeCompare ohne numeric/sensitivity in Apps, leere Werte nicht einheitlich am Ende"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/tables/SortableTable.vue"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 5,
+     "text_references": 29,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/documents/DocumentListWithFeatures.tsx",
+      "frontend/src/components/fraud-report/DocumentListSection.tsx",
+      "frontend/src/components/ui/DataTable.tsx",
+      "frontend/src/pages/Projects.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 9,
+     "text_references": 85,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/gis/GisAttributeTable.vue",
+      "frontend/src/composables/notebook/useDbSortFilter.ts",
+      "frontend/src/composables/vpai/useQuestionManagement.ts",
+      "frontend/src/modules/flowstat/components/DataFramePreview.vue",
+      "frontend/src/modules/flowstat/components/interactivity/DrillDownTable.vue",
+      "frontend/src/modules/flowstat/components/workspace/NodeOutputModal.vue",
+      "frontend/src/views/PresentationsView.vue",
+      "frontend/src/views/schulung/admin/ReportsView.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 6,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/table/FaTable.vue",
+      "ui/src/table/sort.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 3,
+     "text_references": 21,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/documents/DocumentListWithFeatures.tsx",
+      "frontend/src/components/fraud-report/DocumentListSection.tsx",
+      "frontend/src/pages/Projects.tsx"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/EUBeneficiaryList.vue"
+     ]
+    },
+    "regulierung": {
+     "definitions": 5,
+     "text_references": 48,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/kraftstoff/markt/PreisindexChart.tsx",
+      "frontend/src/pages/NahwaermeView.tsx",
+      "frontend/src/pages/RankingView.tsx",
+      "frontend/src/pages/WasserView.tsx",
+      "frontend/src/pages/kraftstoff/AuswertungVerstoesse.tsx"
+     ]
+    },
+    "riskanalysis": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/verwk/components/DataGrid.vue"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 4,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "handleSort",
+      "toggleSort"
+     ],
+     "example": "audit-portal:frontend/src/components/documents/DocumentListWithFeatures.tsx:193"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "setSorting",
+      "sortBy",
+      "toggleSort"
+     ],
+     "example": "audit_designer:frontend/src/components/gis/GisAttributeTable.vue:200"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "handleSort"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/DocumentListSection.tsx:329"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "regulierung"
+     ],
+     "names": [
+      "toggleSort"
+     ],
+     "example": "regulierung:frontend/src/pages/NahwaermeView.tsx:120"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "auditcore:ui"
+     ],
+     "names": [
+      "toggleSort"
+     ],
+     "example": "auditcore:ui:ui/src/table/FaTable.vue:30"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "auditcore:ui"
+     ],
+     "names": [
+      "compareValues"
+     ],
+     "example": "auditcore:ui:ui/src/table/sort.ts:24"
+    }
+   ],
+   "rank": 9
+  },
+  {
+   "id": "G06",
+   "title": "Dauer/relative Zeit formatieren",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "regulierung"
+   ],
+   "app_count": 6,
+   "definitions": 31,
+   "variants": 26,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: format/duration (formatDuration, formatUptime, formatRelativeTime)",
+   "differences": [
+    "relativeTime: ai-router Intl.RelativeTimeFormat („vor 5 Minuten“) gegenüber cockpit Handtext („vor 5 min“, „gerade eben“)",
+    "formatDuration: ai-router „1,50 s“ (2 Stellen, Komma) gegenüber cockpit „1.5 s“ (1 Stelle, Punkt) und „m s“ ab 60 s",
+    "formatUptime „1d 2h 3m“ englische Kürzel (ai-router, eGPU-Widget)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 3,
+     "text_references": 16,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 4,
+     "text_references": 11,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/flowstat/RunHistoryPanel.tsx",
+      "frontend/src/components/pipeline/PipelineFlowVisualization.tsx",
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 17,
+     "text_references": 155,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/editor/NodeHistoryPanel.vue",
+      "frontend/src/components/notebook/NbPageHistory.vue",
+      "frontend/src/components/vba/VbaOverview.vue",
+      "frontend/src/components/vpai/kb-admin/AdminJobs.vue",
+      "frontend/src/components/workspace/WorkspaceSidebar.vue",
+      "frontend/src/modules/flowstat/components/datasource/DataSourceCard.vue",
+      "frontend/src/modules/flowstat/components/datasource/DataSourcePicker.vue",
+      "frontend/src/modules/flowstat/components/pipeline/inspector/NodeDocumentationTab.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/screening/view.ts"
+     ]
+    },
+    "cockpit": {
+     "definitions": 3,
+     "text_references": 29,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts",
+      "frontend/src/views/ChatView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 4,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/pipeline/PipelineFlowVisualization.tsx",
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx"
+     ]
+    },
+    "regulierung": {
+     "definitions": 2,
+     "text_references": 3,
+     "graph_callers": 3,
+     "files": [
+      "frontend/src/components/egpu/EgpuPipelineWidget.tsx",
+      "frontend/src/pages/kraftstoff/VerstosspruefungView.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "formatUptime"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:177"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatRelativeTime"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/NodeHistoryPanel.vue:125"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "formatDuration"
+     ],
+     "example": "audit-portal:frontend/src/components/pipeline/PipelineFlowVisualization.tsx:311"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "formatDuration"
+     ],
+     "example": "audit_designer:frontend/src/views/schulung/LearnerDashboard.vue:64"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "ai-router"
+     ],
+     "names": [
+      "formatDuration"
+     ],
+     "example": "ai-router:frontend/src/utils/format.ts:23"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "ai-router"
+     ],
+     "names": [
+      "relativeTime"
+     ],
+     "example": "ai-router:frontend/src/utils/format.ts:36"
+    }
+   ],
+   "rank": 10
+  },
+  {
+   "id": "G15",
+   "title": "Theme/Dark-Mode anwenden",
+   "cls": "a",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "pdf-editor",
+    "regulierung",
+    "riskanalysis",
+    "versteigerung"
+   ],
+   "app_count": 7,
+   "definitions": 21,
+   "variants": 19,
+   "auditcore_existing": "@flowaudit/ui theme",
+   "target": "@flowaudit/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @flowaudit/ui-react",
+   "differences": [
+    "data-theme-Attribut (@flowaudit/ui) gegenüber class „dark“ (audit_designer, riskanalysis) gegenüber ThemeContext mit Tokens (flowinvoice/audit-portal)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 3,
+     "text_references": 25,
+     "graph_callers": 5,
+     "files": [
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx",
+      "frontend/src/theme/ThemeContext.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 6,
+     "text_references": 33,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/ecohesion/stores/session.ts",
+      "frontend/src/stores/smartart.ts",
+      "frontend/src/stores/theme.ts"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 4,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/theme/theme.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 3,
+     "text_references": 45,
+     "graph_callers": 11,
+     "files": [
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx",
+      "frontend/src/theme/ThemeContext.tsx"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 3,
+     "text_references": 10,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/composables/useTheme.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 4,
+     "text_references": 54,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/egpu/EgpuPipelineWidget.tsx",
+      "frontend/src/context/ThemeContext.tsx"
+     ]
+    },
+    "riskanalysis": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/stores/ui.ts"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/components/ThemeToggle.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "useTheme"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:166"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "useTheme"
+     ],
+     "example": "audit-portal:frontend/src/theme/ThemeContext.tsx:227"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "riskanalysis"
+     ],
+     "names": [
+      "toggleDarkMode",
+      "toggleTheme"
+     ],
+     "example": "audit_designer:frontend/src/stores/theme.ts:27"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "auditcore:ui"
+     ],
+     "names": [
+      "applyTheme"
+     ],
+     "example": "auditcore:ui:ui/src/theme/theme.ts:8"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "auditcore:ui"
+     ],
+     "names": [
+      "useTheme"
+     ],
+     "example": "auditcore:ui:ui/src/theme/theme.ts:34"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit-portal"
+     ],
+     "names": [
+      "applyTheme"
+     ],
+     "example": "audit-portal:frontend/src/theme/ThemeContext.tsx:71"
+    }
+   ],
+   "rank": 11
+  },
+  {
+   "id": "G26",
+   "title": "eGPU-/Systemmonitor-Widgets",
+   "cls": "c",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "regulierung"
+   ],
+   "app_count": 5,
+   "definitions": 39,
+   "variants": 17,
+   "auditcore_existing": "nein",
+   "target": "eGPU-/Systemmonitor-Widget als React-Komponente in @flowaudit/ui-react (oder eigenes Paket @flowaudit/ops-widgets)",
+   "differences": [
+    "EgpuPipelineWidget.tsx in flowinvoice, audit-portal, regulierung wortgleich (12–13 Funktionen je App: StatBar, VramBar, SystemPanel, useEgpuData, tempColor, formatUptime …)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 12,
+     "text_references": 22,
+     "graph_callers": 4,
+     "files": [
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/egpu/EgpuPipelineWidget.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 12,
+     "text_references": 22,
+     "graph_callers": 6,
+     "files": [
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx"
+     ]
+    },
+    "regulierung": {
+     "definitions": 13,
+     "text_references": 29,
+     "graph_callers": 4,
+     "files": [
+      "frontend/src/components/charts/PipelineWidget.tsx",
+      "frontend/src/components/egpu/EgpuPipelineWidget.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "tempColor"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:171"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "formatUptime"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:177"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "warningFromString"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:184"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "injectKeyframes"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:209"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "useEgpuData"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:242"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "Fan"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:411"
+    }
+   ],
+   "rank": 12
+  },
+  {
+   "id": "G19",
+   "title": "Benachrichtigung/Toast (success/error/info/warning)",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "pdf-editor"
+   ],
+   "app_count": 6,
+   "definitions": 25,
+   "variants": 10,
+   "auditcore_existing": "nein",
+   "target": "Toast-Store: Vue-Composable useToast in @flowaudit/ui, React-Hook in @flowaudit/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @flowaudit/common",
+   "differences": [
+    "success/error/info/warning als Store-Fassade in 6 Apps; Fehlerdauer 6 s (ai-router/cockpit) sonst Standard; pdf-editor mit title+message"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 4,
+     "text_references": 42,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/stores/toast.ts"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 4,
+     "text_references": 2482,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/stores/toastStore.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 4,
+     "text_references": 3027,
+     "graph_callers": 10,
+     "files": [
+      "frontend/src/components/notebook/NbCodeCell.vue",
+      "frontend/src/components/vpai/EnergieCo2Panel.vue",
+      "frontend/src/modules/flowstat/views/DbConnections.vue"
+     ]
+    },
+    "cockpit": {
+     "definitions": 4,
+     "text_references": 111,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/stores/toast.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 4,
+     "text_references": 1333,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/stores/toastStore.ts"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 5,
+     "text_references": 515,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/composables/useNotifications.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 8,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "error",
+      "info",
+      "success",
+      "warning"
+     ],
+     "example": "audit-portal:frontend/src/stores/toastStore.ts:55"
+    },
+    {
+     "n": 6,
+     "repos": [
+      "ai-router",
+      "cockpit"
+     ],
+     "names": [
+      "info",
+      "success",
+      "warning"
+     ],
+     "example": "ai-router:frontend/src/stores/toast.ts:30"
+    },
+    {
+     "n": 3,
+     "repos": [
+      "pdf-editor"
+     ],
+     "names": [
+      "error",
+      "info",
+      "success"
+     ],
+     "example": "pdf-editor:frontend/src/composables/useNotifications.ts:92"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "ai-router",
+      "cockpit"
+     ],
+     "names": [
+      "error"
+     ],
+     "example": "ai-router:frontend/src/stores/toast.ts:31"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "error"
+     ],
+     "example": "audit_designer:frontend/src/components/notebook/NbCodeCell.vue:162"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "info"
+     ],
+     "example": "audit_designer:frontend/src/components/notebook/NbCodeCell.vue:164"
+    }
+   ],
+   "rank": 13
+  },
+  {
+   "id": "G07",
+   "title": "Blob-/Datei-Download im Browser",
+   "cls": "a",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "pdf-editor",
+    "regulierung"
+   ],
+   "app_count": 5,
+   "definitions": 30,
+   "variants": 28,
+   "auditcore_existing": "@flowaudit/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)",
+   "target": "@flowaudit/ui rest/download.ts saveFile → nach @flowaudit/common/browser verschieben (framework-frei) und aus ui re-exportieren",
+   "differences": [
+    "revokeObjectURL sofort nach click() (audit-portal, regulierung, audit_designer) gegenüber setTimeout 0 (@flowaudit/ui) – sofortiges Freigeben kann in Safari/Firefox den Download abbrechen",
+    "regulierung setzt automatisch Datumspräfix YYYY-MM-DD_ (mitDatumspraefix, UTC-Datum über toISOString)",
+    "Dateiname aus Content-Disposition: nur @flowaudit/ui requestFile; Apps setzen ihn fest oder parsen einzeln (filename*=UTF-8 fehlt überall)",
+    "flowinvoice/audit-portal zusätzlich file-saver (Abhängigkeit)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 56,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/lib/download.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 21,
+     "text_references": 1782,
+     "graph_callers": 7,
+     "files": [
+      "frontend/src/components/editor/FloatingDocViewer.vue",
+      "frontend/src/components/jupyter/JupyterFileBrowser.vue",
+      "frontend/src/components/vpai/diagrams/ExportMenu.vue",
+      "frontend/src/composables/notebook/useUnifiedFiles.ts",
+      "frontend/src/composables/useAuthFetch.ts",
+      "frontend/src/composables/useFileDownload.ts",
+      "frontend/src/composables/useGisExport.ts",
+      "frontend/src/composables/useQchessTemplateLoader.ts"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/rest/download.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 22,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/verwk/ChartExportActions.tsx",
+      "frontend/src/pages/MittelabrufReport.tsx"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 4,
+     "text_references": 49,
+     "graph_callers": 10,
+     "files": [
+      "frontend/src/components/WorkSessionBar.vue",
+      "frontend/src/components/tools/PdfAnnotate.vue",
+      "frontend/src/components/tools/PdfTextEditor.vue",
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 2,
+     "text_references": 105,
+     "graph_callers": 10,
+     "files": [
+      "frontend/src/lib/download.ts",
+      "frontend/src/pages/fachadministration/verfahren/VerfahrenSeite.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 4,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "downloadBlob"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/reports/FlowStatReportEditor.vue:1093"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit-portal"
+     ],
+     "names": [
+      "downloadBlob"
+     ],
+     "example": "audit-portal:frontend/src/lib/download.ts:9"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "download"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/FloatingDocViewer.vue:89"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "downloadFile"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/JupyterFileBrowser.vue:671"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "downloadBlob"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/diagrams/ExportMenu.vue:10"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "downloadFile"
+     ],
+     "example": "audit_designer:frontend/src/composables/notebook/useUnifiedFiles.ts:203"
+    }
+   ],
+   "rank": 14
+  },
+  {
+   "id": "G08",
+   "title": "CSV-Export/-Escaping",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "pdf-editor",
+    "regulierung"
+   ],
+   "app_count": 5,
+   "definitions": 24,
+   "variants": 20,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM)",
+   "differences": [
+    "Export überwiegend mit „;“ (Excel-DE), DrillDownTable (audit_designer) mit „,“; BOM \\uFEFF nur in GisAttributeTable – übrige Exporte öffnen sich in Excel mit falschen Umlauten",
+    "Neben Export auch vier eigene CSV-Parser (parseCsv, parseCsvPreview, csvToArray, parseReportCsv) ohne gemeinsame Quoting-Regeln",
+    "Kein Schutz gegen Formel-Injektion (=, +, -, @ am Zellanfang) gefunden"
+   ],
+   "python_parity": "Python-Exporte (auditcore_reporting) schreiben CSV/XLSX – gleiche Zellregeln (Trenner, BOM, Injektionsschutz) festlegen",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 5,
+     "text_references": 3,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/generator/BeleganalyseTrackTab.tsx",
+      "frontend/src/lib/api.ts",
+      "frontend/src/pages/Sampling.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 9,
+     "text_references": 53,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/gis/FilePreview.vue",
+      "frontend/src/components/gis/GisAttributeTable.vue",
+      "frontend/src/composables/gis/useGisAnalysis.ts",
+      "frontend/src/ecohesion/services/selfAssessment.ts",
+      "frontend/src/ecohesion/views/SelfAssessmentView.vue",
+      "frontend/src/modules/flowstat/components/interactivity/DrillDownTable.vue",
+      "frontend/src/modules/flowstat/components/reports/FlowStatReportEditor.vue",
+      "frontend/src/modules/flowstat/utils/reportCsv.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 3,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 2,
+     "text_references": 3,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/tools/PdfFormFill.vue"
+     ]
+    },
+    "regulierung": {
+     "definitions": 5,
+     "text_references": 58,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/ExportButton.tsx",
+      "frontend/src/lib/api.ts",
+      "frontend/src/pages/NahwaermeView.tsx",
+      "frontend/src/pages/WasserView.tsx",
+      "frontend/src/pages/fachadministration/datenquellen/ImportprofileSeite.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 4,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "getDemoSanctionsCsv",
+      "getDemoTedContractsCsv"
+     ],
+     "example": "audit-portal:frontend/src/lib/api.ts:1313"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "exportCSV"
+     ],
+     "example": "audit-portal:frontend/src/components/belegliste/BeleglisteGrid.tsx:253"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit-portal"
+     ],
+     "names": [
+      "checksToCsv"
+     ],
+     "example": "audit-portal:frontend/src/components/generator/BeleganalyseTrackTab.tsx:114"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit-portal"
+     ],
+     "names": [
+      "parseCsv"
+     ],
+     "example": "audit-portal:frontend/src/pages/Sampling.tsx:54"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "parseCsvPreview"
+     ],
+     "example": "audit_designer:frontend/src/components/gis/FilePreview.vue:326"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "exportCsv"
+     ],
+     "example": "audit_designer:frontend/src/components/gis/GisAttributeTable.vue:217"
+    }
+   ],
+   "rank": 15
+  },
+  {
+   "id": "X1",
+   "title": "FlowStat-Custom-Node-Kern (Parameterschema, Validierung, Export/Import, REST-Client, CodeMirror-Setup, Graphanalyse)",
+   "cls": "c",
+   "apps": [
+    "audit_designer",
+    "audit-portal"
+   ],
+   "app_count": 2,
+   "definitions": 49,
+   "variants": null,
+   "auditcore_existing": "nein",
+   "target": "neue Bibliothek @flowaudit/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal)",
+   "differences": [
+    "customnode/core/*.ts (1354 Zeilen) liegt in beiden Apps; 49 wortgleiche Funktionen (validateParamSpec, schemaBuilder.*, createCustomNodeApi.*, computeTopologicalDepth, findStartNodes …)",
+    "Tests nur in audit_designer (customnode/core/__tests__)"
+   ],
+   "python_parity": "—",
+   "evidence": "Rumpf-Hash-Abgleich audit-portal↔audit_designer: 49 Treffer, davon 42 unter components/flowstat",
+   "per_app": {},
+   "variant_examples": [],
+   "rank": 16
+  },
+  {
+   "id": "G04",
+   "title": "Deutsche Zahleneingabe parsen",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "regulierung"
+   ],
+   "app_count": 4,
+   "definitions": 17,
+   "variants": 13,
+   "auditcore_existing": "@flowaudit/ui tabular/parse.ts parseNumber(cell, decimal) (Branch feat/ui-sampling-benford-js) – verhält sich mit decimal=\",\" wie regulierung parseNumberDe",
+   "target": "@flowaudit/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String)",
+   "differences": [
+    "Siehe Ausführungsmatrix: „1.5“ ergibt 15 (regulierung parseNumberDe/zuZahl, audit_designer parseRaw) oder 1,5 (parseGermanNumber, parseAmountInput)",
+    "„1.234,56“ ergibt 1,234 in flowinvoice/audit-portal BeleglisteGrid.parseDecimal (ersetzt nur das Komma) – Betragsfehler um Faktor 1000",
+    "„12 345,67 €“: nur parseGermanNumber, parseAmountInput, parseNumberDe und @flowaudit/ui tabular.parseNumber entfernen Leerzeichen/Währung",
+    "Rückgabe: number (meist), Decimal-String (audit-portal parseAmountInput, audit_designer betragFuerDienst – verlustfrei für das Backend), 0 statt null bei Fehler (parseDecimal, parseGermanNumber)",
+    "regulierung zuZahl lehnt negative Werte ab (null für „-3,2“)"
+   ],
+   "python_parity": "Python: auditcore_funding_sources.flowsearch.parse_amount (Heuristik letzter Trenner = parseGermanNumber), auditcore_documents.parse_amount, auditcore_funding_sources._parsing.to_decimal (nur Punkt), auditcore_property_sources.zvg.parse_de_number (Textsuche, „1234,56“ → 123.0). Gemeinsame Testfälle Pflicht",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 6,
+     "text_references": 101,
+     "graph_callers": 5,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/flowstat/customnode/ParamRowEditor.tsx",
+      "frontend/src/components/flowstat/fields/NumberInput.tsx",
+      "frontend/src/components/fraud-report/useFraudAnalysisData.ts",
+      "frontend/src/lib/vpFormat.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 6,
+     "text_references": 24,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/gis/GisStatsPanel.vue",
+      "frontend/src/ecohesion/views/GrantCaseView.vue",
+      "frontend/src/modules/flowstat/components/bpmn/BpmnPropertiesPanel.vue",
+      "frontend/src/modules/flowstat/components/pipeline/inspector/fields/NumberInput.vue",
+      "frontend/src/modules/flowstat/composables/useBpmnEditor.ts",
+      "frontend/src/modules/flowstat/customnode/vue/ParamRowEditor.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/tabular/parse.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 13,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+      "frontend/src/components/fraud-report/useFraudAnalysisData.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 3,
+     "text_references": 10,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/kraftstoff/vorgang/SchriftstueckEditor.tsx",
+      "frontend/src/components/kraftstoff/vorgang/ZumessungTabelle.tsx",
+      "frontend/src/lib/numberFormat.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "parseDecimal"
+     ],
+     "example": "audit-portal:frontend/src/components/belegliste/BeleglisteGrid.tsx:96"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "audit_designer"
+     ],
+     "names": [
+      "toNumberOrNull"
+     ],
+     "example": "audit-portal:frontend/src/components/flowstat/customnode/ParamRowEditor.tsx:42"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "parseGermanNumber"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/useFraudAnalysisData.ts:176"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "parseNumber",
+      "toNumber"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/bpmn/BpmnPropertiesPanel.vue:277"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "regulierung"
+     ],
+     "names": [
+      "zuZahl"
+     ],
+     "example": "regulierung:frontend/src/components/kraftstoff/vorgang/SchriftstueckEditor.tsx:160"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit-portal"
+     ],
+     "names": [
+      "parseRaw"
+     ],
+     "example": "audit-portal:frontend/src/components/flowstat/fields/NumberInput.tsx:66"
+    }
+   ],
+   "rank": 17
+  },
+  {
+   "id": "G13",
+   "title": "Zwischenablage kopieren",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice"
+   ],
+   "app_count": 4,
+   "definitions": 14,
+   "variants": 12,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common/browser: copyText (Clipboard-API mit textarea-Rückfall)",
+   "differences": [
+    "Nur JupyterFileBrowser hat den execCommand-Rückfall (HTTP ohne sicheren Kontext, Intranet!)",
+    "Rest: await ohne try/catch oder ohne await"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 4,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/pages/Rulesets.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 11,
+     "text_references": 201,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/common/CopyButton.vue",
+      "frontend/src/components/jupyter/JupyterFileBrowser.vue",
+      "frontend/src/components/notebook/NbAiPanel.vue",
+      "frontend/src/components/vpai/QuestionSuggestionsTab.vue",
+      "frontend/src/components/vpai/SmartArtEditor.vue",
+      "frontend/src/composables/vpai/kb/useTextGenerator.ts",
+      "frontend/src/modules/flowstat/components/charts/aesthetic/ChartCodePreview.vue",
+      "frontend/src/modules/flowstat/components/pipeline/inspector/NodeTextPanel.vue"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/views/ChatView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 1,
+     "text_references": 4,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/pages/Rulesets.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "copyToClipboard"
+     ],
+     "example": "audit-portal:frontend/src/pages/Rulesets.tsx:415"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "copyToClipboard"
+     ],
+     "example": "audit_designer:frontend/src/composables/vpai/kb/useTextGenerator.ts:50"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "copyToClipboard"
+     ],
+     "example": "audit_designer:frontend/src/components/common/CopyButton.vue:34"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "copyText"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/JupyterFileBrowser.vue:689"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "copyToClipboard"
+     ],
+     "example": "audit_designer:frontend/src/components/notebook/NbAiPanel.vue:406"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "copyToClipboard"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/QuestionSuggestionsTab.vue:284"
+    }
+   ],
+   "rank": 18
+  },
+  {
+   "id": "G16",
+   "title": "DOM-Hooks: Klick außerhalb, Media-Query, Tastatur",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "regulierung"
+   ],
+   "app_count": 4,
+   "definitions": 14,
+   "variants": 9,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/ui (Vue: useClickOutside, useMediaQuery) und @flowaudit/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei",
+   "differences": [
+    "useMediaQuery wortgleich in flowinvoice, audit-portal, regulierung (eGPU-Widget)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 3,
+     "text_references": 11,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/fraud-report/ReportHeader.tsx",
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx",
+      "frontend/src/pages/Users.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 6,
+     "text_references": 76,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/jupyter/SnippetsDropdown.vue",
+      "frontend/src/components/tree/TreeNode.vue",
+      "frontend/src/components/ui/ViewSwitcher.vue",
+      "frontend/src/components/vpai/smartart/SmartArtContextMenu.vue",
+      "frontend/src/views/schulung/CourseViewer.vue",
+      "frontend/src/views/vpai/diagrams/DiagramListView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 3,
+     "text_references": 11,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/fraud-report/ReportHeader.tsx",
+      "frontend/src/components/settings/EgpuPipelineWidget.tsx",
+      "frontend/src/pages/Users.tsx"
+     ]
+    },
+    "regulierung": {
+     "definitions": 2,
+     "text_references": 3,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/ExportButton.tsx",
+      "frontend/src/components/egpu/EgpuPipelineWidget.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 3,
+     "repos": [
+      "audit-portal",
+      "flowinvoice",
+      "regulierung"
+     ],
+     "names": [
+      "useMediaQuery"
+     ],
+     "example": "audit-portal:frontend/src/components/settings/EgpuPipelineWidget.tsx:152"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "handleClickOutside"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/ReportHeader.tsx:60"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "handleClickOutside"
+     ],
+     "example": "audit-portal:frontend/src/pages/Users.tsx:163"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "handleClickOutside"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/SnippetsDropdown.vue:91"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "handleClickOutside"
+     ],
+     "example": "audit_designer:frontend/src/components/tree/TreeNode.vue:357"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "handleClickOutside"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/smartart/SmartArtContextMenu.vue:57"
+    }
+   ],
+   "rank": 19
+  },
+  {
+   "id": "G28",
+   "title": "PDF-Operationen (Metadaten, Wasserzeichen, Seiten)",
+   "cls": "c",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "pdf-editor"
+   ],
+   "app_count": 4,
+   "definitions": 13,
+   "variants": 7,
+   "auditcore_existing": "nein",
+   "target": "neue Bibliothek @flowaudit/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable)",
+   "differences": [
+    "usePdfTools.ts in pdf-editor und audit_designer (vpai/pdf-tools) mit 18 wortgleichen Funktionen (mergePdfs, splitPdf, compressPdf, addWatermark, setMetadata, wordToPdf …); Komponenten PdfRotate/PdfCompare/PageThumbnailGrid doppelt"
+   ],
+   "python_parity": "auditcore_documents (Python) für serverseitige PDF-Verarbeitung – Abgrenzung festlegen",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/fraud-report/usePdfExport.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 6,
+     "text_references": 16,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/composables/usePdfEditor.ts",
+      "frontend/src/composables/usePdfTools.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/fraud-report/usePdfExport.ts"
+     ]
+    },
+    "pdf-editor": {
+     "definitions": 5,
+     "text_references": 15,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/composables/usePdfTools.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "addPageNumbers"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/usePdfExport.ts:1120"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "pdf-editor"
+     ],
+     "names": [
+      "mergePdfs"
+     ],
+     "example": "audit_designer:frontend/src/composables/usePdfTools.ts:57"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "pdf-editor"
+     ],
+     "names": [
+      "splitPdf"
+     ],
+     "example": "audit_designer:frontend/src/composables/usePdfTools.ts:66"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "pdf-editor"
+     ],
+     "names": [
+      "compressPdf"
+     ],
+     "example": "audit_designer:frontend/src/composables/usePdfTools.ts:99"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "pdf-editor"
+     ],
+     "names": [
+      "addWatermark"
+     ],
+     "example": "audit_designer:frontend/src/composables/usePdfTools.ts:115"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer",
+      "pdf-editor"
+     ],
+     "names": [
+      "setMetadata"
+     ],
+     "example": "audit_designer:frontend/src/composables/usePdfTools.ts:170"
+    }
+   ],
+   "rank": 20
+  },
+  {
+   "id": "G22",
+   "title": "localStorage-JSON-Wrapper",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice"
+   ],
+   "app_count": 3,
+   "definitions": 12,
+   "variants": 9,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common/browser: safeStorage (JSON lesen/schreiben mit try/catch, Präfix)",
+   "differences": [
+    "loadFromStorage/saveToStorage je Präferenz-Store einzeln (audit_designer 7×, flowinvoice/audit-portal useRiskWheelSettings); pdf-editor hat lib/safeStorage.ts als zentrale Lösung",
+    "Schlüsselpräfixe und Versionierung der gespeicherten Struktur uneinheitlich"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 2,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/risk-wheel/useRiskWheelSettings.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 8,
+     "text_references": 79,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/composables/useIconSettings.ts",
+      "frontend/src/modules/flowstat/stores/currentDataSource.ts",
+      "frontend/src/modules/flowstat/stores/landingPrefs.ts",
+      "frontend/src/modules/flowstat/stores/menuPrefs.ts",
+      "frontend/src/modules/flowstat/stores/pipelineUiPrefs.ts",
+      "frontend/src/modules/flowstat/stores/plotPreferences.ts",
+      "frontend/src/stores/accessibility.ts"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 2,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/risk-wheel/useRiskWheelSettings.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "loadSettings"
+     ],
+     "example": "audit-portal:frontend/src/components/risk-wheel/useRiskWheelSettings.ts:23"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "saveSettings"
+     ],
+     "example": "audit-portal:frontend/src/components/risk-wheel/useRiskWheelSettings.ts:47"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "loadFromStorage"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/stores/landingPrefs.ts:102"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "loadFromStorage"
+     ],
+     "example": "audit_designer:frontend/src/composables/useIconSettings.ts:66"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "saveToStorage"
+     ],
+     "example": "audit_designer:frontend/src/composables/useIconSettings.ts:78"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "loadFromStorage"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/stores/currentDataSource.ts:20"
+    }
+   ],
+   "rank": 21
+  },
+  {
+   "id": "G23",
+   "title": "Polling/SSE/Stream-Leser",
+   "cls": "b",
+   "apps": [
+    "ai-router",
+    "audit_designer",
+    "cockpit"
+   ],
+   "app_count": 3,
+   "definitions": 11,
+   "variants": 11,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: timing/poll (poll mit Abbruchsignal, Backoff); SSE-Leser als eigenes Modul",
+   "differences": [
+    "setInterval ohne Abbruch bei Seitenwechsel in einzelnen Views; SSE per EventSource gegenüber fetch-Reader"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "ai-router": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/api/logs.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 9,
+     "text_references": 84,
+     "graph_callers": 6,
+     "files": [
+      "frontend/src/components/dashboard/HarvestProgressCard.vue",
+      "frontend/src/components/egpu/EgpuPipelineWidget.vue",
+      "frontend/src/components/vpai/KbSyncPanel.vue",
+      "frontend/src/ecohesion/views/DocumentComparisonView.vue",
+      "frontend/src/modules/flowstat/views/TestdataGenerator.vue",
+      "frontend/src/stores/belegliste.ts",
+      "frontend/src/stores/system.ts",
+      "frontend/src/views/DocumentComparisonView.vue"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/api/chat.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 1,
+     "repos": [
+      "ai-router"
+     ],
+     "names": [
+      "streamLogs"
+     ],
+     "example": "ai-router:frontend/src/api/logs.ts:24"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "startPolling"
+     ],
+     "example": "audit_designer:frontend/src/components/dashboard/HarvestProgressCard.vue:94"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "startPolling"
+     ],
+     "example": "audit_designer:frontend/src/components/egpu/EgpuPipelineWidget.vue:310"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "startPolling"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/KbSyncPanel.vue:171"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "poll"
+     ],
+     "example": "audit_designer:frontend/src/ecohesion/views/DocumentComparisonView.vue:31"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "pollRun"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/views/TestdataGenerator.vue:753"
+    }
+   ],
+   "rank": 22
+  },
+  {
+   "id": "G12",
+   "title": "Debounce/Throttle",
+   "cls": "b",
+   "apps": [
+    "audit_designer",
+    "flowsearch",
+    "riskanalysis"
+   ],
+   "app_count": 3,
+   "definitions": 7,
+   "variants": 7,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: timing (debounce, throttle, keyedDebounce) + Vue useDebounce in @flowaudit/ui",
+   "differences": [
+    "Nur Hand-Timer (clearTimeout/setTimeout) mit 400 ms, 600 ms, 1,2 s; keine Abbruch-/flush-Funktion beim Verlassen der Seite (Datenverlust-Risiko bei debouncedSave)",
+    "audit_designer/flowsearch haben @vueuse/core (useDebounceFn) bereits als Abhängigkeit, nutzen es aber hier nicht"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit_designer": {
+     "definitions": 5,
+     "text_references": 25,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/jupyter/JupyterNotebook.vue",
+      "frontend/src/components/qchess/ActionBlockEditor.vue",
+      "frontend/src/components/schulung/admin/NuggetEditor.vue",
+      "frontend/src/components/vba/DatenTable.vue",
+      "frontend/src/components/vpai-notebook/QuickSearch.vue"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/EUBeneficiaryList.vue"
+     ]
+    },
+    "riskanalysis": {
+     "definitions": 1,
+     "text_references": 14,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/verwk/views/Simulation.vue"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "debouncedSave"
+     ],
+     "example": "audit_designer:frontend/src/components/jupyter/JupyterNotebook.vue:660"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "debouncedSave"
+     ],
+     "example": "audit_designer:frontend/src/components/qchess/ActionBlockEditor.vue:359"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "debouncedRenderPreview"
+     ],
+     "example": "audit_designer:frontend/src/components/schulung/admin/NuggetEditor.vue:963"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "debouncedFetch"
+     ],
+     "example": "audit_designer:frontend/src/components/vba/DatenTable.vue:103"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "debouncedSearch"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai-notebook/QuickSearch.vue:269"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "flowsearch"
+     ],
+     "names": [
+      "debouncedSearch"
+     ],
+     "example": "flowsearch:frontend/src/components/EUBeneficiaryList.vue:258"
+    }
+   ],
+   "rank": 23
+  },
+  {
+   "id": "G17",
+   "title": "Initialen aus Namen",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice"
+   ],
+   "app_count": 3,
+   "definitions": 7,
+   "variants": 3,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: text (initials)",
+   "differences": [
+    "3 Varianten (5× audit_designer, je 1× flowinvoice/audit-portal DirectorsSection)"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/company-report/DirectorsSection.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 5,
+     "text_references": 55,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/dashboard/RadialView.vue",
+      "frontend/src/components/layout/AppHeader.vue",
+      "frontend/src/components/notebook/NbComments.vue",
+      "frontend/src/components/vpai/CommentThreadPanel.vue",
+      "frontend/src/views/schulung/admin/GroupsManager.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/company-report/DirectorsSection.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 3,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "getInitials"
+     ],
+     "example": "audit_designer:frontend/src/components/dashboard/RadialView.vue:131"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "getInitials"
+     ],
+     "example": "audit-portal:frontend/src/components/company-report/DirectorsSection.tsx:9"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "getInitials"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/CommentThreadPanel.vue:262"
+    }
+   ],
+   "rank": 24
+  },
+  {
+   "id": "G21",
+   "title": "Text kürzen",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice"
+   ],
+   "app_count": 3,
+   "definitions": 4,
+   "variants": 3,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: text (truncate mit „…“)",
+   "differences": [
+    "„…“ gegenüber „...“; Kürzung nach Zeichen, nicht nach Graphemen"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 4,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/risk-wheel/utils.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 2,
+     "text_references": 560,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/vpai/ResultMatrixView.vue",
+      "frontend/src/modules/flowstat/components/dashboards/widgets/BarChartWidget.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 1,
+     "text_references": 4,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/risk-wheel/utils.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "truncateText"
+     ],
+     "example": "audit-portal:frontend/src/components/risk-wheel/utils.ts:385"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "truncate"
+     ],
+     "example": "audit_designer:frontend/src/components/vpai/ResultMatrixView.vue:185"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "truncate"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/components/dashboards/widgets/BarChartWidget.vue:114"
+    }
+   ],
+   "rank": 25
+  },
+  {
+   "id": "G29",
+   "title": "Formular-Validatoren (E-Mail, Pflichtfeld, Passwort)",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice"
+   ],
+   "app_count": 3,
+   "definitions": 4,
+   "variants": 2,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: validate (email, required, passwordPolicy)",
+   "differences": [
+    "kaum vorhanden (4 Funktionen); Passwortregeln in audit_designer ActivateView eigen"
+   ],
+   "python_parity": "Passwort-/E-Mail-Regeln serverseitig (Python) spiegeln",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 2,
+     "text_references": 10,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/views/ActivateView.vue",
+      "frontend/src/views/ResetPasswordView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/lib/api.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "validateVatId"
+     ],
+     "example": "audit-portal:frontend/src/lib/api.ts:639"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "validatePassword"
+     ],
+     "example": "audit_designer:frontend/src/views/ActivateView.vue:33"
+    }
+   ],
+   "rank": 26
+  },
+  {
+   "id": "G25",
+   "title": "ID/UUID erzeugen",
+   "cls": "b",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "cockpit"
+   ],
+   "app_count": 3,
+   "definitions": 3,
+   "variants": 4,
+   "auditcore_existing": "kanban-core (lokal) eigene ID-Erzeugung",
+   "target": "@flowaudit/common: ids (newId via crypto.randomUUID mit Rückfall)",
+   "differences": [
+    "Math.random().toString(36) gegenüber crypto.randomUUID (ohne sicheren Kontext nicht verfügbar)"
+   ],
+   "python_parity": "auditcore_common.ids (Python)",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 1,
+     "text_references": 7,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/reports/ReportDocumentEditor.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/components/workspace/BoardSettingsDialog.vue"
+     ]
+    },
+    "auditcore:kanban-core(local)": {
+     "definitions": 1,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "kanban-core/src/commands.ts"
+     ]
+    },
+    "cockpit": {
+     "definitions": 1,
+     "text_references": 2,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/views/ChatView.vue"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 1,
+     "repos": [
+      "audit-portal"
+     ],
+     "names": [
+      "uid"
+     ],
+     "example": "audit-portal:frontend/src/components/reports/ReportDocumentEditor.tsx:135"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "generateId"
+     ],
+     "example": "audit_designer:frontend/src/components/workspace/BoardSettingsDialog.vue:95"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "cockpit"
+     ],
+     "names": [
+      "makeId"
+     ],
+     "example": "cockpit:frontend/src/views/ChatView.vue:105"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "auditcore:kanban-core(local)"
+     ],
+     "names": [
+      "randomId"
+     ],
+     "example": "auditcore:kanban-core(local):kanban-core/src/commands.ts:41"
+    }
+   ],
+   "rank": 27
+  },
+  {
+   "id": "X3",
+   "title": "Login-Vorlage (packages/login-template)",
+   "cls": "c",
+   "apps": [
+    "flowinvoice",
+    "audit-portal"
+   ],
+   "app_count": 2,
+   "definitions": 8,
+   "variants": null,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/ui-react (Login-Formular) – liegt als „Paket“ bereits unter src/packages/login-template mit README",
+   "differences": [
+    "wortgleich in beiden Apps; regulierung hat LoginError identisch in vorgangUi.tsx"
+   ],
+   "python_parity": "—",
+   "evidence": "Verzeichnisvergleich",
+   "per_app": {},
+   "variant_examples": [],
+   "rank": 28
+  },
+  {
+   "id": "G20",
+   "title": "Prüfziffer mod 97 (IBAN/Leitweg-ID)",
+   "cls": "b",
+   "apps": [
+    "rechnung"
+   ],
+   "app_count": 1,
+   "definitions": 4,
+   "variants": 5,
+   "auditcore_existing": "nein",
+   "target": "@flowaudit/common: checks/mod97 (mod97, ibanIsValid, leitwegCheckDigits)",
+   "differences": [
+    "Im Frontend nur rechnung (leitweg.ts: mod97, computeLeitwegCheckDigits); keine IBAN-Prüfung im Browser – obwohl flowinvoice/regulierung IBAN erfassen",
+    "Backend-Seite prüft IBAN (auditcore_documents validate_iban, auditcore_invoicesynth iban_valid)"
+   ],
+   "python_parity": "Python validate_iban/iban_valid und TS-Pendant auf dieselben Testfälle (gültig/ungültig/Leerzeichen/Kleinbuchstaben)",
+   "per_app": {
+    "rechnung": {
+     "definitions": 4,
+     "text_references": 5,
+     "graph_callers": 3,
+     "files": [
+      "src/hooks/useInvoiceForm.ts",
+      "src/utils/leitweg.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 1,
+     "repos": [
+      "rechnung"
+     ],
+     "names": [
+      "validateLeitwegId"
+     ],
+     "example": "rechnung:src/hooks/useInvoiceForm.ts:75"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "rechnung"
+     ],
+     "names": [
+      "mod97"
+     ],
+     "example": "rechnung:src/utils/leitweg.ts:28"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "rechnung"
+     ],
+     "names": [
+      "computeLeitwegCheckDigits"
+     ],
+     "example": "rechnung:src/utils/leitweg.ts:40"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "rechnung"
+     ],
+     "names": [
+      "isValidLeitwegChecksum"
+     ],
+     "example": "rechnung:src/utils/leitweg.ts:53"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "riskanalysis"
+     ],
+     "names": [
+      "wibankBacktest"
+     ],
+     "example": "riskanalysis:frontend/src/verwk/api.ts:71"
+    }
+   ],
+   "rank": 29
+  },
+  {
+   "id": "G18",
+   "title": "Status-/Risiko-Label und -Farbe",
+   "cls": "d",
+   "apps": [
+    "ai-router",
+    "audit-portal",
+    "audit_designer",
+    "cockpit",
+    "flowinvoice",
+    "flowsearch",
+    "qaaudit",
+    "regulierung",
+    "riskanalysis",
+    "versteigerung"
+   ],
+   "app_count": 10,
+   "definitions": 99,
+   "variants": 58,
+   "auditcore_existing": "@flowaudit/ui risk/view/labels.ts (nur Risiko-Flags)",
+   "target": "bleibt in den Apps; nur Risiko-Stufen (hoch/mittel/niedrig) an @flowaudit/ui risk/view/labels.ts angleichen",
+   "differences": [
+    "Fachliche Status-Enums je App; Farben hart kodiert (#ef4444 …) statt Theme-Token"
+   ],
+   "python_parity": "Risikostufen-Schlüssel mit auditcore_risk",
+   "per_app": {
+    "ai-router": {
+     "definitions": 4,
+     "text_references": 28,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/views/DashboardView.vue",
+      "frontend/src/views/apps/AppDetailDrawer.vue",
+      "frontend/src/views/logs/LogsView.vue",
+      "frontend/src/views/spokes/SpokesView.vue"
+     ]
+    },
+    "audit-portal": {
+     "definitions": 19,
+     "text_references": 204,
+     "graph_callers": 17,
+     "files": [
+      "frontend/src/components/flowstat/RunHistoryPanel.tsx",
+      "frontend/src/components/fraud-report/format.ts",
+      "frontend/src/components/fraud-report/usePdfExport.ts",
+      "frontend/src/components/fraud-report/useWordExport.ts",
+      "frontend/src/components/fraud/TedChecker.tsx",
+      "frontend/src/components/generator/BeleganalyseTrackTab.tsx",
+      "frontend/src/components/generator/ProcurementGeneratorTab.tsx",
+      "frontend/src/components/notifications/NotificationCenter.tsx"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 47,
+     "text_references": 796,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/dashboard/ListView.vue",
+      "frontend/src/components/dashboard/RadialView.vue",
+      "frontend/src/components/dashboard/TilesView.vue",
+      "frontend/src/components/editor/NodePanel.vue",
+      "frontend/src/components/editor/UnreadNotesPanel.vue",
+      "frontend/src/components/schulung/spaced-repetition/RepetitionDashboard.vue",
+      "frontend/src/components/vpai/CombinedTocView.vue",
+      "frontend/src/components/vpai/ExamItemList.vue"
+     ]
+    },
+    "auditcore:ui": {
+     "definitions": 3,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "ui/src/benford/model.ts",
+      "ui/src/risk/view/format.ts"
+     ]
+    },
+    "cockpit": {
+     "definitions": 3,
+     "text_references": 39,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/utils/format.ts",
+      "frontend/src/views/WallView.vue",
+      "frontend/src/views/deployments/DeploymentsView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 15,
+     "text_references": 63,
+     "graph_callers": 9,
+     "files": [
+      "frontend/src/components/dashboard/HessenPortalFrontpage.tsx",
+      "frontend/src/components/fraud-report/usePdfExport.ts",
+      "frontend/src/components/fraud-report/useWordExport.ts",
+      "frontend/src/components/fraud/TedChecker.tsx",
+      "frontend/src/components/reconciliation/DocumentReconciliationTab.tsx",
+      "frontend/src/components/risk-wheel/RiskDetailCard.tsx",
+      "frontend/src/components/risk-wheel/utils.ts",
+      "frontend/src/components/settings/SettingsSystem.tsx"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 2,
+     "text_references": 2,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/views/SearchDetailView.vue"
+     ]
+    },
+    "qaaudit": {
+     "definitions": 2,
+     "text_references": 6,
+     "graph_callers": 1,
+     "files": [
+      "frontend/src/components/SubmissionBanner.tsx",
+      "frontend/src/views/ReportsView.tsx"
+     ]
+    },
+    "regulierung": {
+     "definitions": 3,
+     "text_references": 15,
+     "graph_callers": 2,
+     "files": [
+      "frontend/src/components/fachadministration/vorlagen/statusAnzeige.ts",
+      "frontend/src/pages/RankingView.tsx",
+      "frontend/src/pages/admin/BetriebTab.tsx"
+     ]
+    },
+    "riskanalysis": {
+     "definitions": 2,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/types/api.ts",
+      "frontend/src/verwk/format.ts"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 2,
+     "text_references": 5,
+     "graph_callers": 2,
+     "files": [
+      "frontend/components/DocumentCenter.tsx"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 8,
+     "repos": [
+      "audit-portal",
+      "audit_designer",
+      "flowinvoice"
+     ],
+     "names": [
+      "getStatusLabel",
+      "riskLabel"
+     ],
+     "example": "audit-portal:frontend/src/components/fraud-report/usePdfExport.ts:73"
+    },
+    {
+     "n": 6,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "getSeverityClass",
+      "getStatusClass",
+      "getStatusColor",
+      "getStatusIcon"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/UnreadNotesPanel.vue:98"
+    },
+    {
+     "n": 5,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "getStatusColor"
+     ],
+     "example": "audit_designer:frontend/src/components/dashboard/ListView.vue:9"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "ai-router"
+     ],
+     "names": [
+      "statusVariant"
+     ],
+     "example": "ai-router:frontend/src/views/DashboardView.vue:91"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit-portal",
+      "audit_designer"
+     ],
+     "names": [
+      "levelVariant",
+      "severityLabel",
+      "statusLabel"
+     ],
+     "example": "audit-portal:frontend/src/components/notifications/NotificationCenter.tsx:55"
+    },
+    {
+     "n": 4,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "getSeverityLabel",
+      "getStatusLabel"
+     ],
+     "example": "audit_designer:frontend/src/components/editor/NodePanel.vue:374"
+    }
+   ],
+   "rank": 30
+  },
+  {
+   "id": "G27",
+   "title": "Benutzerverwaltungs-API-Client",
+   "cls": "d",
+   "apps": [
+    "audit-portal",
+    "audit_designer",
+    "flowinvoice",
+    "flowsearch",
+    "regulierung"
+   ],
+   "app_count": 5,
+   "definitions": 20,
+   "variants": 15,
+   "auditcore_existing": "nein",
+   "target": "bleibt (App-Backends mit eigenen Nutzer-Endpunkten)",
+   "differences": [
+    "createUser/updateUser/deleteUser je App gegen eigene REST-Pfade"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit-portal": {
+     "definitions": 5,
+     "text_references": 9,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/api/domains/users.ts"
+     ]
+    },
+    "audit_designer": {
+     "definitions": 3,
+     "text_references": 3,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/views/AdminView.vue"
+     ]
+    },
+    "flowinvoice": {
+     "definitions": 5,
+     "text_references": 4,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/lib/api.ts"
+     ]
+    },
+    "flowsearch": {
+     "definitions": 2,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/services/adminService.ts"
+     ]
+    },
+    "regulierung": {
+     "definitions": 5,
+     "text_references": 0,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/lib/api.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "getUsers"
+     ],
+     "example": "audit-portal:frontend/src/api/domains/users.ts:71"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "getUser"
+     ],
+     "example": "audit-portal:frontend/src/api/domains/users.ts:89"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "createUser"
+     ],
+     "example": "audit-portal:frontend/src/api/domains/users.ts:95"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "updateUser"
+     ],
+     "example": "audit-portal:frontend/src/api/domains/users.ts:113"
+    },
+    {
+     "n": 2,
+     "repos": [
+      "audit-portal",
+      "flowinvoice"
+     ],
+     "names": [
+      "deleteUser"
+     ],
+     "example": "audit-portal:frontend/src/api/domains/users.ts:129"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "createUser"
+     ],
+     "example": "audit_designer:frontend/src/views/AdminView.vue:131"
+    }
+   ],
+   "rank": 31
+  },
+  {
+   "id": "G24",
+   "title": "Query-String/URL bauen",
+   "cls": "d",
+   "apps": [
+    "audit_designer",
+    "versteigerung"
+   ],
+   "app_count": 2,
+   "definitions": 2,
+   "variants": 2,
+   "auditcore_existing": "nein",
+   "target": "bleibt",
+   "differences": [
+    "nur 2 Fundstellen"
+   ],
+   "python_parity": "—",
+   "per_app": {
+    "audit_designer": {
+     "definitions": 1,
+     "text_references": 1,
+     "graph_callers": 0,
+     "files": [
+      "frontend/src/modules/flowstat/composables/useProjectHistory.ts"
+     ]
+    },
+    "versteigerung": {
+     "definitions": 1,
+     "text_references": 6,
+     "graph_callers": 6,
+     "files": [
+      "frontend/lib/api.ts"
+     ]
+    }
+   },
+   "variant_examples": [
+    {
+     "n": 1,
+     "repos": [
+      "audit_designer"
+     ],
+     "names": [
+      "buildUrl"
+     ],
+     "example": "audit_designer:frontend/src/modules/flowstat/composables/useProjectHistory.ts:61"
+    },
+    {
+     "n": 1,
+     "repos": [
+      "versteigerung"
+     ],
+     "names": [
+      "toQueryString"
+     ],
+     "example": "versteigerung:frontend/lib/api.ts:88"
+    }
+   ],
+   "rank": 32
+  }
+ ],
+ "parse_number_matrix": {
+  "inputs": [
+   "1.234,56",
+   "1234,56",
+   "1,5",
+   "1.5",
+   "1.234",
+   "1,234.56",
+   "12 345,67 €",
+   "-3,2",
+   "",
+   "abc"
+  ],
+  "results": [
+   {
+    "repo": "audit-portal",
+    "name": "parseDecimal",
+    "file": "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+    "line": 96,
+    "out": {
+     "1.234,56": 1.234,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": 1.234,
+     "12 345,67 €": 12,
+     "-3,2": -3.2,
+     "": 0,
+     "abc": 0
+    }
+   },
+   {
+    "repo": "audit-portal",
+    "name": "toNumberOrNull",
+    "file": "frontend/src/components/flowstat/customnode/ParamRowEditor.tsx",
+    "line": 42,
+    "out": {
+     "1.234,56": null,
+     "1234,56": null,
+     "1,5": null,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": null,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit-portal",
+    "name": "parseRaw",
+    "file": "frontend/src/components/flowstat/fields/NumberInput.tsx",
+    "line": 66,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": null,
+     "-3,2": -3.2,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit-portal",
+    "name": "parseGermanNumber",
+    "file": "frontend/src/components/fraud-report/useFraudAnalysisData.ts",
+    "line": 176,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": 1234.56,
+     "12 345,67 €": 12345.67,
+     "-3,2": -3.2,
+     "": 0,
+     "abc": 0
+    }
+   },
+   {
+    "repo": "audit-portal",
+    "name": "toNumber",
+    "file": "frontend/src/lib/vpFormat.ts",
+    "line": 24,
+    "out": {
+     "1.234,56": null,
+     "1234,56": null,
+     "1,5": null,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": null,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit-portal",
+    "name": "parseAmountInput",
+    "file": "frontend/src/lib/vpFormat.ts",
+    "line": 47,
+    "out": {
+     "1.234,56": "1234.56",
+     "1234,56": "1234.56",
+     "1,5": "1.5",
+     "1.5": "1.5",
+     "1.234": "1.234",
+     "1,234.56": "1.23456",
+     "12 345,67 €": "12345.67",
+     "-3,2": "-3.2",
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit_designer",
+    "name": "toNumber",
+    "file": "frontend/src/components/gis/GisStatsPanel.vue",
+    "line": 184,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": 12,
+     "-3,2": -3.2,
+     "": 0,
+     "abc": 0
+    }
+   },
+   {
+    "repo": "audit_designer",
+    "name": "betragFuerDienst",
+    "file": "frontend/src/ecohesion/views/GrantCaseView.vue",
+    "line": 589,
+    "out": {
+     "1.234,56": "1234.56",
+     "1234,56": "1234.56",
+     "1,5": "1.5",
+     "1.5": "1.5",
+     "1.234": "1.234",
+     "1,234.56": "1.23456",
+     "12 345,67 €": null,
+     "-3,2": "-3.2",
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit_designer",
+    "name": "toNumber",
+    "file": "frontend/src/modules/flowstat/components/bpmn/BpmnPropertiesPanel.vue",
+    "line": 277,
+    "out": {
+     "1.234,56": null,
+     "1234,56": null,
+     "1,5": null,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": null,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit_designer",
+    "name": "parseRaw",
+    "file": "frontend/src/modules/flowstat/components/pipeline/inspector/fields/NumberInput.vue",
+    "line": 71,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": null,
+     "-3,2": -3.2,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit_designer",
+    "name": "parseNumber",
+    "file": "frontend/src/modules/flowstat/composables/useBpmnEditor.ts",
+    "line": 427,
+    "out": {
+     "1.234,56": null,
+     "1234,56": null,
+     "1,5": null,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": null,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "audit_designer",
+    "name": "toNumberOrNull",
+    "file": "frontend/src/modules/flowstat/customnode/vue/ParamRowEditor.vue",
+    "line": 58,
+    "out": {
+     "1.234,56": null,
+     "1234,56": null,
+     "1,5": null,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": null,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "flowinvoice",
+    "name": "parseDecimal",
+    "file": "frontend/src/components/belegliste/BeleglisteGrid.tsx",
+    "line": 97,
+    "out": {
+     "1.234,56": 1.234,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": 1.234,
+     "12 345,67 €": 12,
+     "-3,2": -3.2,
+     "": 0,
+     "abc": 0
+    }
+   },
+   {
+    "repo": "flowinvoice",
+    "name": "parseGermanNumber",
+    "file": "frontend/src/components/fraud-report/useFraudAnalysisData.ts",
+    "line": 176,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 1.5,
+     "1.234": 1.234,
+     "1,234.56": 1234.56,
+     "12 345,67 €": 12345.67,
+     "-3,2": -3.2,
+     "": 0,
+     "abc": 0
+    }
+   },
+   {
+    "repo": "regulierung",
+    "name": "zuZahl",
+    "file": "frontend/src/components/kraftstoff/vorgang/SchriftstueckEditor.tsx",
+    "line": 160,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "regulierung",
+    "name": "zuZahl",
+    "file": "frontend/src/components/kraftstoff/vorgang/ZumessungTabelle.tsx",
+    "line": 35,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": null,
+     "-3,2": null,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "regulierung",
+    "name": "parseNumberDe",
+    "file": "frontend/src/lib/numberFormat.ts",
+    "line": 70,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": 12345.67,
+     "-3,2": -3.2,
+     "": null,
+     "abc": null
+    }
+   },
+   {
+    "repo": "auditcore:ui",
+    "name": "parseNumber",
+    "file": "ui/src/tabular/parse.ts",
+    "line": 77,
+    "out": {
+     "1.234,56": 1234.56,
+     "1234,56": 1234.56,
+     "1,5": 1.5,
+     "1.5": 15,
+     "1.234": 1234,
+     "1,234.56": 1.23456,
+     "12 345,67 €": 12345.67,
+     "-3,2": -3.2,
+     "": null
+    }
+   }
+  ],
+  "python": [
+   {
+    "name": "auditcore_property_sources.zvg.parse_de_number",
+    "out": [
+     "1234.56",
+     "123.0",
+     "1.5",
+     "1.0",
+     "1234.0",
+     "1.23",
+     "12.0",
+     "3.2",
+     "None",
+     "None"
+    ]
+   },
+   {
+    "name": "auditcore_funding_sources._parsing.to_decimal",
+    "out": [
+     "None",
+     "None",
+     "None",
+     "1.5",
+     "1.234",
+     "None",
+     "None",
+     "None",
+     "None",
+     "None"
+    ]
+   },
+   {
+    "name": "auditcore_funding_sources.flowsearch.parse_amount",
+    "out": [
+     "1234.56",
+     "1234.56",
+     "1.5",
+     "1.5",
+     "1.234",
+     "1234.56",
+     "0.0",
+     "-3.2",
+     "0.0",
+     "0.0"
+    ]
+   },
+   {
+    "name": "auditcore_documents.pipeline.stages.postprocess.parse_amount",
+    "out": [
+     "1234.56",
+     "1234.56",
+     "1.5",
+     "1.5",
+     "None",
+     "1234.56",
+     "None",
+     "None",
+     "None",
+     "None"
+    ]
+   },
+   {
+    "name": "auditcore_price_analysis.numbers.parse_decimal",
+    "out": [
+     "raise",
+     "raise",
+     "raise",
+     "1.5",
+     "1.234",
+     "raise",
+     "raise",
+     "raise",
+     "raise",
+     "raise"
+    ]
+   }
+  ]
+ },
+ "app_overlap": [
+  {
+   "shared_functions": 7,
+   "a": "ai-router",
+   "b": "cockpit"
+  },
+  {
+   "shared_functions": 49,
+   "a": "audit-portal",
+   "b": "audit_designer"
+  },
+  {
+   "shared_functions": 576,
+   "a": "audit-portal",
+   "b": "flowinvoice"
+  },
+  {
+   "shared_functions": 19,
+   "a": "audit-portal",
+   "b": "regulierung"
+  },
+  {
+   "shared_functions": 4,
+   "a": "audit_designer",
+   "b": "flowinvoice"
+  },
+  {
+   "shared_functions": 23,
+   "a": "audit_designer",
+   "b": "pdf-editor"
+  },
+  {
+   "shared_functions": 3,
+   "a": "audit_designer",
+   "b": "regulierung"
+  },
+  {
+   "shared_functions": 17,
+   "a": "flowinvoice",
+   "b": "regulierung"
+  }
+ ]
+}
