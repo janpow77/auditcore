@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowaudit.de/schemas/auditcore-bpmn/profile-1.schema.json",
+  "title": "Förderperioden-Profil",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "version",
+    "title",
+    "roles",
+    "funds",
+    "key_requirements"
+  ],
+  "properties": {
+    "schema": {
+      "const": "auditcore_bpmn.profile/1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d{4}\\.\\d{2}\\.\\d+$"
+    },
+    "title": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "required": [
+        "de"
+      ]
+    },
+    "programming_period": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{4}$"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "custom_roles": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "labels"
+        ],
+        "properties": {
+          "labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "required": [
+              "de"
+            ]
+          },
+          "from_year": {
+            "type": "integer"
+          },
+          "until_year": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "role_aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "pattern",
+          "role"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "funds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "key_requirements": {
+      "type": "object",
+      "required": [
+        "entries"
+      ],
+      "properties": {
+        "source": {
+          "type": "object"
+        },
+        "assessment_criteria_note": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "required": [
+            "de"
+          ]
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "number",
+              "title"
+            ],
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "title": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "required": [
+                  "de"
+                ]
+              },
+              "bodies": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "required": [
+                  "de"
+                ]
+              },
+              "scope": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "required": [
+                  "de"
+                ]
+              },
+              "footnote": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "required": [
+                  "de"
+                ]
+              },
+              "assessment_criteria": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "code"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "required": [
+                        "de"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "legal_bases": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "object"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "act",
+              "short_title"
+            ],
+            "properties": {
+              "act": {
+                "type": "string"
+              },
+              "article": {
+                "type": "string"
+              },
+              "annex": {
+                "type": "string"
+              },
+              "short_title": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "required": [
+                  "de"
+                ]
+              },
+              "celex": {
+                "type": "string"
+              },
+              "eli": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "segregation_rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "separate_bodies",
+              "excluded_role",
+              "four_eyes"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "fehler",
+              "warnung",
+              "hinweis"
+            ]
+          },
+          "title": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "required": [
+              "de"
+            ]
+          },
+          "a": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "markers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "audit_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "b": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "markers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "audit_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "selection": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "markers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "audit_types": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "file"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "required": [
+              "de"
+            ]
+          },
+          "file": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
