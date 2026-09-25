@@ -109,6 +109,13 @@ def _label_column(connection: sqlite3.Connection, layer: _Layer) -> str | None:
     return text_columns[0] if text_columns else None
 
 
+def _select_sql(layer: _Layer, label: str | None) -> str:
+    """Abfrage der Flächen; Namen stammen aus dem GeoPackage-Schema und sind quotiert."""
+    label_sql = _quote(label) if label else "NULL"
+    columns = f"rowid, {label_sql}, {_quote(layer.column)}"
+    return f"SELECT {columns} FROM {_quote(layer.table)} ORDER BY rowid LIMIT ?"  # nosec B608 - nur quotierte Schemanamen, Grenzwert als Parameter
+
+
 def _geojson(polygons: Sequence[Sequence[Sequence[tuple[float, float]]]]) -> dict[str, object]:
     coordinates = []
     for polygon in polygons:
@@ -170,10 +177,8 @@ def read_geopackage(
         layer = _choose(layers, tabelle)
         transform = _transform(layer.srs_id)
         label = _label_column(connection, layer)
-        label_sql = _quote(label) if label else "NULL"
         rows = connection.execute(
-            f"SELECT rowid, {label_sql}, {_quote(layer.column)} FROM {_quote(layer.table)} "
-            "ORDER BY rowid LIMIT ?",
+            _select_sql(layer, label),
             (settings.max_gpkg_areas + 1,),
         ).fetchall()
     except sqlite3.OperationalError as exc:
