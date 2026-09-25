@@ -42,6 +42,7 @@ result.hits[0].indicators  # z. B. token_subset, alias_match, date_of_birth_not_
 | `chambers` | Zuwendungsempfängerregister, IHK, Handwerkskammern (Extra `html`) |
 | `adapters` | `auditcore_harvest`-Adapter: OpenSanctions-Listen, amtliche XML-Listen, ZER, IHK, HWK |
 | `legacy` | verhaltensgleiche Wiedergabe der Originale (456 Fälle) |
+| `web` | Screening-Trefferprüfung: Prüfläufe, Score-Aufschlüsselung, Entscheidungen mit Pflichtbegründung und Vier-Augen-Option, Protokoll; REST-Adapter für Starlette (Extra `web`) und FastAPI (Extra `fastapi`) |
 
 Profile (`available_profiles()`): Listenkataloge `audit_designer`, `flowworkshop`,
 `official`; Screening `audit_designer`, `flowworkshop`, `flowinvoice.sanctions_local`,
@@ -64,3 +65,21 @@ Datenlizenzen je Quelle (≠ MIT des Codes) und Live-Prüfstatus:
 [docs/behavior-changes.md](docs/behavior-changes.md). Consumer:
 [docs/consumer-migration.md](docs/consumer-migration.md). Debian-Paket:
 `python3-auditcore-registry-sources`.
+
+### Screening-Trefferprüfung (`auditcore_registry_sources.web`, ab 0.2.0)
+
+Framework-freier Dienst `ScreeningReviewService` für die Oberfläche
+`<flowaudit-screening-review>` aus `@flowaudit/ui`. Der Consumer übergibt
+einen `SnapshotProvider` (Listenbestand und Quellenstand), einen `ReviewStore`
+(Protokoll; mitgeliefert nur `InMemoryReviewStore`) und in den HTTP-Adaptern
+einen Identitäts-Resolver. Vertrag und Pflichten des Consumers:
+[docs/ui/screening-rest.md](../../docs/ui/screening-rest.md).
+
+```python
+from auditcore_registry_sources.web import InMemoryReviewStore, ScreeningReviewService
+from auditcore_registry_sources.web.http import create_routes  # Extra "web"
+
+service = ScreeningReviewService(provider, store, four_eyes_outcomes=["confirmed"],
+                                 stale_after_days=7)
+app.router.routes.append(Mount("/api/screening", routes=create_routes(service, identify)))
+```
