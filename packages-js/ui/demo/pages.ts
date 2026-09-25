@@ -12,6 +12,8 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'basis', title: 'Basiskomponenten', group: 'Grundlagen', load: () => import('./pages/base/BasePage.vue') },
   { id: 'tabelle', title: 'Tabelle', group: 'Grundlagen', load: () => import('./pages/base/TablePage.vue') },
   { id: 'web-components', title: 'Web Components', group: 'Grundlagen', load: () => import('./pages/base/ElementsPage.vue') },
+  { id: 'stichprobe', title: 'Stichprobe', group: 'Komponenten', load: () => import('./pages/sampling/SamplingPage.vue') },
+  { id: 'benford', title: 'Benford-Analyse', group: 'Komponenten', load: () => import('./pages/benford/BenfordPage.vue') },
 ]
 
 export function findPage(id: string): DemoPage {

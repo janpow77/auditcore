@@ -1,0 +1,80 @@
+{
+ "library": "auditcore_sampling 0.2.0",
+ "method": "mus",
+ "variant": "portal",
+ "seed": 42,
+ "seed_generated": false,
+ "items_sha256": "b276199b46ff62c4cf346e46632f8a769a7744e3ce6da1977a54b73f5b32254a",
+ "population": 30,
+ "selected": 6,
+ "strata": [
+  {
+   "stratum": "Los 2",
+   "population": 10,
+   "sample_size": 2,
+   "interval": 2097.5,
+   "start": 1341.1977097654112,
+   "excluded_negative": [],
+   "excluded_zero_or_missing": []
+  },
+  {
+   "stratum": "Los 1",
+   "population": 20,
+   "sample_size": 4,
+   "interval": 1925.0,
+   "start": 48.14570380363385,
+   "excluded_negative": [],
+   "excluded_zero_or_missing": []
+  }
+ ],
+ "rows": [
+  {
+   "order": 1,
+   "position": 15,
+   "id": "B-16",
+   "value": 565.0,
+   "stratum": "Los 2",
+   "hits": 1
+  },
+  {
+   "order": 2,
+   "position": 24,
+   "id": "B-25",
+   "value": 898.0,
+   "stratum": "Los 2",
+   "hits": 1
+  },
+  {
+   "order": 3,
+   "position": 2,
+   "id": "B-3",
+   "value": 84.0,
+   "stratum": "Los 1",
+   "hits": 1
+  },
+  {
+   "order": 4,
+   "position": 13,
+   "id": "B-14",
+   "value": 491.0,
+   "stratum": "Los 1",
+   "hits": 1
+  },
+  {
+   "order": 5,
+   "position": 17,
+   "id": "B-18",
+   "value": 639.0,
+   "stratum": "Los 1",
+   "hits": 1
+  },
+  {
+   "order": 6,
+   "position": 22,
+   "id": "B-23",
+   "value": 824.0,
+   "stratum": "Los 1",
+   "hits": 1
+  }
+ ]
+}
