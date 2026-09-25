@@ -17,140 +17,77 @@ import {
   getAxis,
   getDescendantLanes,
   getParticipant,
-  getSiblingLanes,
   moveEdge,
+  toBounds,
   type Bounds,
 } from '../LaneUtil'
+import type { BpmnElement, CommandEvent, EventBus } from '../../types'
+import type Modeling from '../Modeling'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+type Context = {
+  shape?: BpmnElement
+  shapes?: BpmnElement[]
+  elements?: BpmnElement[]
+  newShape?: BpmnElement
+  parent?: BpmnElement
+  newParent?: BpmnElement
+  oldParent?: BpmnElement
+  movingShapes?: BpmnElement[]
+  resizingShapes?: BpmnElement[]
+  oldBounds?: Bounds
+  hints?: { skipLaneLayout?: boolean; laneChild?: boolean }
+  laneParticipant?: BpmnElement
+  laneBounds?: Bounds
+}
 
-function laneContainer(target: any): any {
+const REF_COMMANDS = ['elements.create', 'elements.move', 'shape.create', 'shape.resize', 'spaceTool', 'shape.replace', 'elements.delete']
+
+function laneContainer(target: BpmnElement | undefined): BpmnElement | undefined {
   let current = target
-  while (current && is(current, 'bpmn:Lane')) current = current.parent
+  while (current && is(current, 'bpmn:Lane')) current = current.parent as BpmnElement | undefined
   return current
 }
 
-export default class LaneBehavior extends (CommandInterceptor as any) {
-  static $inject = ['eventBus', 'modeling', 'elementRegistry']
+function affectedParticipants(context: Context): Set<BpmnElement> {
+  const shapes = [
+    ...(context.elements || []),
+    ...(context.shapes || []),
+    ...(context.movingShapes || []),
+    ...(context.resizingShapes || []),
+    ...[context.shape, context.newShape, context.newParent, context.oldParent].filter((shape): shape is BpmnElement => !!shape),
+  ]
+  const participants = new Set<BpmnElement>()
+  for (const shape of shapes) {
+    const participant = getParticipant(shape)
+    if (participant && participant.parent) participants.add(participant)
+  }
+  return participants
+}
 
-  constructor(eventBus: any, modeling: any, elementRegistry: any) {
+export default class LaneBehavior extends CommandInterceptor {
+  static $inject = ['eventBus', 'modeling']
+
+  private spaceToolDepth = 0
+
+  constructor(
+    eventBus: EventBus,
+    private readonly modeling: Modeling,
+  ) {
     super(eventBus)
-
-
-    // (1) Ziel „Bahn“ → Pool
-    this.preExecute(['shape.create', 'elements.create'], 1500, (event: any) => {
-      const context = event.context
-      const shape = context.shape
-      if (shape && is(shape, 'bpmn:Lane')) return
-      if (context.parent && is(context.parent, 'bpmn:Lane')) context.parent = laneContainer(context.parent)
+    this.registerRetargeting()
+    this.preExecute('spaceTool', () => void this.spaceToolDepth++)
+    this.postExecute('spaceTool', () => void this.spaceToolDepth--)
+    this.postExecute('shape.resize', (event: CommandEvent<Context>) => this.layoutAfterResize(event.context))
+    this.preExecute('shape.delete', (event: CommandEvent<Context>) => this.removeChildLanes(event.context))
+    this.postExecute('shape.delete', (event: CommandEvent<Context>) => this.closeGap(event.context))
+    this.postExecuted(REF_COMMANDS, 500, (event: CommandEvent<Context>) => {
+      for (const participant of affectedParticipants(event.context)) this.modeling.updateLaneRefs(participant as never)
     })
-    this.preExecute(['elements.move'], 1500, (event: any) => {
-      const context = event.context
-      const shapes: any[] = context.shapes || []
-      if (shapes.some((shape) => is(shape, 'bpmn:Lane'))) return
-      if (context.newParent && is(context.newParent, 'bpmn:Lane')) context.newParent = laneContainer(context.newParent)
-    })
-    this.preExecute(['shape.move'], 1500, (event: any) => {
-      const context = event.context
-      if (is(context.shape, 'bpmn:Lane')) return
-      if (context.newParent && is(context.newParent, 'bpmn:Lane')) context.newParent = laneContainer(context.newParent)
-    })
-
-    // (2) Pool-Größe → Bahnen anordnen (nicht beim Raumwerkzeug: dort
-    // werden Bahnen, die die Linie kreuzen, bereits mit angepasst).
-    let spaceToolDepth = 0
-    this.preExecute('spaceTool', () => {
-      spaceToolDepth++
-    })
-    this.postExecute('spaceTool', () => {
-      spaceToolDepth--
-    })
-    this.postExecute('shape.resize', (event: any) => {
-      const context = event.context
-      const shape = context.shape
-      const hints = context.hints || {}
-      if (!is(shape, 'bpmn:Participant') || hints.skipLaneLayout || spaceToolDepth > 0) return
-      if (getAllLanes(shape).length === 0) return
-      const axis = getAxis(shape)
-      const oldBounds: Bounds = context.oldBounds
-      const absorbAtStart = oldBounds[axis.main] !== shape[axis.main]
-      const layout = computeLanesLayout(shape, { x: shape.x, y: shape.y, width: shape.width, height: shape.height }, absorbAtStart)
-      for (const [lane, bounds] of layout) {
-        if (!boundsEqual(bounds, lane)) modeling.resizeShape(lane, bounds, null, { skipLaneLayout: true, attachSupport: false })
-      }
-      modeling.updateLaneRefs(shape)
-    })
-
-    // (3) Löschen einer Bahn
-    this.preExecute('shape.delete', (event: any) => {
-      const context = event.context
-      const shape = context.shape
-      if (!is(shape, 'bpmn:Lane') || (context.hints && context.hints.laneChild)) return
-      const participant = getParticipant(shape)
-      if (!participant) return
-      context.laneParticipant = participant
-      context.laneBounds = { x: shape.x, y: shape.y, width: shape.width, height: shape.height }
-      for (const child of getDescendantLanes(shape).reverse()) {
-        if (child.parent) modeling.removeShape(child, { laneChild: true })
-      }
-    })
-    this.postExecute('shape.delete', (event: any) => {
-      const context = event.context
-      const shape = context.shape
-      if (!is(shape, 'bpmn:Lane') || !context.laneParticipant || (context.hints && context.hints.laneChild)) return
-      const participant = context.laneParticipant
-      if (!participant.parent) return
-      const removed: Bounds = context.laneBounds
-      const axis = getAxis(participant)
-      const lanes = getAllLanes(participant)
-      if (lanes.length === 0) return
-      const planned = new Map<any, Bounds>()
-      const start = removed[axis.main]
-      const end = removed[axis.main] + removed[axis.mainSize]
-      const size = removed[axis.mainSize]
-      // Vorgängerbahnen wachsen nach hinten; gibt es keine, wachsen die Nachfolger nach vorn.
-      const before = lanes.some((lane: any) => Math.abs(lane[axis.main] + lane[axis.mainSize] - start) < 1)
-      if (before) moveEdge(lanes, axis.main, start, size, planned)
-      else moveEdge(lanes, axis.main, end, -size, planned)
-      for (const [lane, bounds] of planned) {
-        if (!boundsEqual(bounds, lane)) modeling.resizeShape(lane, bounds, null, { skipLaneLayout: true, attachSupport: false })
-      }
-      modeling.updateLaneRefs(participant)
-    })
-
-    // (4) Bahnzugehörigkeit nachführen
-    this.postExecuted(
-      ['elements.create', 'elements.move', 'shape.create', 'shape.resize', 'spaceTool', 'shape.replace', 'elements.delete'],
-      500,
-      (event: any) => {
-        const context = event.context
-        const shapes: any[] = [
-          ...(context.elements || []),
-          ...(context.shapes || []),
-          ...(context.shape ? [context.shape] : []),
-          ...(context.newShape ? [context.newShape] : []),
-          ...(context.movingShapes || []),
-          ...(context.resizingShapes || []),
-        ]
-        const participants = new Set<any>()
-        for (const shape of shapes) {
-          const participant = is(shape, 'bpmn:Participant') ? shape : getParticipant(shape)
-          if (participant && participant.parent) participants.add(participant)
-        }
-        if (context.newParent && getParticipant(context.newParent)) participants.add(getParticipant(context.newParent))
-        if (context.oldParent && getParticipant(context.oldParent)) participants.add(getParticipant(context.oldParent))
-        for (const participant of participants) modeling.updateLaneRefs(participant)
-      },
-    )
-
-    // (5) Interaktive Größenänderung einer Bahn über lane.resize
-    eventBus.on('resize.end', 2000, (event: any) => {
-      const context = event.context
-      const shape = context.shape
-      if (!is(shape, 'bpmn:Lane')) return
-      const newBounds = context.newBounds
-      if (!newBounds || !context.canExecute) return
-      modeling.resizeLane(shape, {
+    // Interaktive Größenänderung einer Bahn über lane.resize
+    eventBus.on('resize.end', 2000, (event: { context: { shape: BpmnElement; newBounds?: Bounds; canExecute?: unknown } }) => {
+      const { shape, newBounds, canExecute } = event.context
+      if (!is(shape, 'bpmn:Lane') || !newBounds || !canExecute) return
+      this.modeling.resizeLane(shape as never, {
         x: Math.round(newBounds.x),
         y: Math.round(newBounds.y),
         width: Math.round(newBounds.width),
@@ -158,8 +95,69 @@ export default class LaneBehavior extends (CommandInterceptor as any) {
       })
       return false
     })
+  }
 
-    void elementRegistry
-    void getSiblingLanes
+  /** Ziel „Bahn“ → Pool. */
+  private registerRetargeting(): void {
+    this.preExecute(['shape.create', 'elements.create'], 1500, (event: CommandEvent<Context>) => {
+      const context = event.context
+      if (context.shape && is(context.shape, 'bpmn:Lane')) return
+      if (context.parent && is(context.parent, 'bpmn:Lane')) context.parent = laneContainer(context.parent)
+    })
+    this.preExecute(['elements.move', 'shape.move'], 1500, (event: CommandEvent<Context>) => {
+      const context = event.context
+      const moved = context.shapes || (context.shape ? [context.shape] : [])
+      if (moved.some((shape) => is(shape, 'bpmn:Lane'))) return
+      if (context.newParent && is(context.newParent, 'bpmn:Lane')) context.newParent = laneContainer(context.newParent)
+    })
+  }
+
+  /** Pool-Größe → Bahnen anordnen (nicht beim Raumwerkzeug: dort passen sich Bahnen selbst an). */
+  private layoutAfterResize(context: Context): void {
+    const shape = context.shape
+    if (!shape || !is(shape, 'bpmn:Participant') || context.hints?.skipLaneLayout || this.spaceToolDepth > 0) return
+    if (getAllLanes(shape).length === 0 || !context.oldBounds) return
+    const axis = getAxis(shape)
+    const absorbAtStart = context.oldBounds[axis.main] !== toBounds(shape)[axis.main]
+    for (const [lane, bounds] of computeLanesLayout(shape, toBounds(shape), absorbAtStart)) {
+      if (!boundsEqual(bounds, toBounds(lane))) this.resizeLane(lane, bounds)
+    }
+    this.modeling.updateLaneRefs(shape as never)
+  }
+
+  private resizeLane(lane: BpmnElement, bounds: Bounds): void {
+    this.modeling.resizeShape(lane as never, bounds, undefined, { skipLaneLayout: true, attachSupport: false } as never)
+  }
+
+  private removeChildLanes(context: Context): void {
+    const shape = context.shape
+    if (!shape || !is(shape, 'bpmn:Lane') || context.hints?.laneChild) return
+    const participant = getParticipant(shape)
+    if (!participant) return
+    context.laneParticipant = participant
+    context.laneBounds = toBounds(shape)
+    for (const child of getDescendantLanes(shape).reverse()) {
+      if (child.parent) this.modeling.removeShape(child as never, { laneChild: true } as never)
+    }
+  }
+
+  /** Vorgängerbahnen wachsen nach hinten; gibt es keine, wachsen die Nachfolger nach vorn. */
+  private closeGap(context: Context): void {
+    const participant = context.laneParticipant
+    const removed = context.laneBounds
+    if (!participant || !removed || !participant.parent || context.hints?.laneChild) return
+    const lanes = getAllLanes(participant)
+    if (lanes.length === 0) return
+    const axis = getAxis(participant)
+    const start = removed[axis.main]
+    const size = removed[axis.mainSize]
+    const planned = new Map<BpmnElement, Bounds>()
+    const hasBefore = lanes.some((lane) => Math.abs(lane[axis.main] + lane[axis.mainSize] - start) < 1)
+    if (hasBefore) moveEdge(lanes, axis.main, start, size, planned)
+    else moveEdge(lanes, axis.main, start + size, -size, planned)
+    for (const [lane, bounds] of planned) {
+      if (!boundsEqual(bounds, toBounds(lane))) this.resizeLane(lane, bounds)
+    }
+    this.modeling.updateLaneRefs(participant as never)
   }
 }

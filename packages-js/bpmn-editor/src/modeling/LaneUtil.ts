@@ -8,71 +8,61 @@
  * (`flowNodeRef`).
  */
 
-import { getBusinessObject, is, isHorizontal, type DiagramElement } from '../util/ModelUtil'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { getBusinessObject, is, isHorizontal } from '../util/ModelUtil'
+import type { BpmnElement, Bounds, ModdleElement } from '../types'
 
 export const LANE_BAND = 30
 export const DEFAULT_LANE_SIZE = 120
 export const MIN_LANE_SIZE = 60
 
-export type Bounds = { x: number; y: number; width: number; height: number }
+export type { Bounds }
 
-export function getParticipant(element: DiagramElement): DiagramElement | null {
-  let current = element
-  while (current && !is(current, 'bpmn:Participant')) current = current.parent
+type Shape = BpmnElement & Bounds
+
+export function getParticipant(element: BpmnElement | undefined | null): BpmnElement | null {
+  let current: BpmnElement | undefined | null = element
+  while (current && !is(current, 'bpmn:Participant')) current = current.parent as BpmnElement | undefined
   return current || null
 }
 
+function childrenOf(element: BpmnElement | null | undefined): BpmnElement[] {
+  return ((element?.children || []) as BpmnElement[]).slice()
+}
+
 /** Alle Bahnformen eines Pools (jeder Tiefe). */
-export function getAllLanes(participant: DiagramElement): DiagramElement[] {
-  return (participant?.children || []).filter((child: any) => is(child, 'bpmn:Lane') && !child.labelTarget)
+export function getAllLanes(participant: BpmnElement | null | undefined): Shape[] {
+  return childrenOf(participant).filter((child) => is(child, 'bpmn:Lane') && !child.labelTarget) as Shape[]
+}
+
+function semanticChildLanes(container: BpmnElement): ModdleElement[] {
+  const bo = getBusinessObject(container)
+  if (is(bo, 'bpmn:Participant')) {
+    const laneSets = bo.processRef?.laneSets || []
+    return laneSets.flatMap((set) => set.lanes || [])
+  }
+  return bo.childLaneSet?.lanes || []
 }
 
 /** Unmittelbare Unterbahnen einer Bahn bzw. die obersten Bahnen eines Pools. */
-export function getChildLanes(container: DiagramElement): DiagramElement[] {
+export function getChildLanes(container: BpmnElement): Shape[] {
   const participant = is(container, 'bpmn:Participant') ? container : getParticipant(container)
-  const lanes = getAllLanes(participant)
-  const bo = getBusinessObject(container)
-  let semanticChildren: any[] = []
-  if (is(bo, 'bpmn:Participant')) {
-    const process = bo.processRef
-    semanticChildren = process ? (process.laneSets || []).flatMap((set: any) => set.lanes || []) : []
-  } else if (bo.childLaneSet) {
-    semanticChildren = bo.childLaneSet.lanes || []
-  }
-  return lanes.filter((lane: any) => semanticChildren.includes(getBusinessObject(lane)))
-}
-
-/** Geschwisterbahnen (einschließlich der Bahn selbst). */
-export function getSiblingLanes(lane: DiagramElement): DiagramElement[] {
-  const participant = getParticipant(lane)
-  const laneSet = getBusinessObject(lane).$parent
-  return getAllLanes(participant).filter((other: any) => getBusinessObject(other).$parent === laneSet)
+  const children = semanticChildLanes(container)
+  return getAllLanes(participant).filter((lane) => children.includes(getBusinessObject(lane)))
 }
 
 /** Elternform im Sinne der Verschachtelung: übergeordnete Bahn oder Pool. */
-export function getLaneParent(lane: DiagramElement): DiagramElement | null {
+export function getLaneParent(lane: BpmnElement): BpmnElement | null {
   const participant = getParticipant(lane)
-  const laneSet = getBusinessObject(lane).$parent
-  const parentLaneBo = laneSet && laneSet.$parent
-  if (parentLaneBo && is(parentLaneBo, 'bpmn:Lane')) {
-    return getAllLanes(participant).find((other: any) => getBusinessObject(other) === parentLaneBo) || participant
+  const parentLane = getBusinessObject(lane).$parent?.$parent
+  if (parentLane && is(parentLane, 'bpmn:Lane')) {
+    return getAllLanes(participant).find((other) => getBusinessObject(other) === parentLane) || participant
   }
   return participant
 }
 
 /** Alle Unterbahnen (rekursiv). */
-export function getDescendantLanes(lane: DiagramElement): DiagramElement[] {
-  const result: DiagramElement[] = []
-  const walk = (current: DiagramElement) => {
-    for (const child of getChildLanes(current)) {
-      result.push(child)
-      walk(child)
-    }
-  }
-  walk(lane)
-  return result
+export function getDescendantLanes(lane: BpmnElement): Shape[] {
+  return getChildLanes(lane).flatMap((child) => [child, ...getDescendantLanes(child)])
 }
 
 export interface Axis {
@@ -82,74 +72,69 @@ export interface Axis {
   crossSize: 'width' | 'height'
 }
 
-export function getAxis(element: DiagramElement): Axis {
+export function getAxis(element: BpmnElement): Axis {
   return isHorizontal(element)
     ? { main: 'y', mainSize: 'height', cross: 'x', crossSize: 'width' }
     : { main: 'x', mainSize: 'width', cross: 'y', crossSize: 'height' }
 }
 
+export function toBounds(element: BpmnElement): Bounds {
+  const shape = element as unknown as Bounds
+  return { x: shape.x, y: shape.y, width: shape.width, height: shape.height }
+}
+
 /** Innenbereich (ohne Kopfband) eines Pools bzw. einer Bahn. */
-export function getContentBounds(element: DiagramElement): Bounds {
-  const axis = getAxis(element)
-  const bounds: Bounds = { x: element.x, y: element.y, width: element.width, height: element.height }
+export function getContentBounds(element: BpmnElement, axis: Axis = getAxis(element)): Bounds {
+  const bounds = toBounds(element)
   bounds[axis.cross] += LANE_BAND
   bounds[axis.crossSize] -= LANE_BAND
   return bounds
 }
 
-/**
- * Ordnet die Bahnen eines Pools innerhalb seiner (neuen) Grenzen an.
- * `absorbAtStart`: Größenänderung wird von der ersten statt der letzten Bahn aufgenommen.
- */
-export function computeLanesLayout(
-  participant: DiagramElement,
-  participantBounds: Bounds,
-  absorbAtStart = false,
-): Map<DiagramElement, Bounds> {
-  const result = new Map<DiagramElement, Bounds>()
-  const axis = getAxis(participant)
+/** Verteilt eine Größenänderung auf Bahnen (von hinten bzw. vorne), ohne Mindestgröße zu unterschreiten. */
+function distribute(sizes: number[], total: number, absorbAtStart: boolean): number[] {
+  const result = sizes.slice()
+  let delta = total - result.reduce((sum, size) => sum + size, 0)
+  const order = result.map((_, index) => (absorbAtStart ? index : result.length - 1 - index))
+  for (const index of order) {
+    if (delta === 0) break
+    const current = result[index] ?? 0
+    const next = Math.max(MIN_LANE_SIZE, current + delta)
+    delta -= next - current
+    result[index] = next
+  }
+  return result
+}
 
-  const layoutLevel = (container: DiagramElement, containerBounds: Bounds) => {
-    const lanes = getChildLanes(container).sort((a: any, b: any) => a[axis.main] - b[axis.main])
+/**
+ * Ordnet die Bahnen eines Pools innerhalb der gegebenen Grenzen an.
+ * `absorbAtStart`: Größenänderung übernimmt die erste statt der letzten Bahn.
+ */
+export function computeLanesLayout(participant: BpmnElement, participantBounds: Bounds, absorbAtStart = false): Map<BpmnElement, Bounds> {
+  const result = new Map<BpmnElement, Bounds>()
+  const axis = getAxis(participant)
+  const layoutLevel = (container: BpmnElement, containerBounds: Bounds) => {
+    const lanes = getChildLanes(container).sort((a, b) => a[axis.main] - b[axis.main])
     if (lanes.length === 0) return
     const content = { ...containerBounds }
     content[axis.cross] += LANE_BAND
     content[axis.crossSize] -= LANE_BAND
-
-    const sizes = lanes.map((lane: any) => lane[axis.mainSize])
-    const total = sizes.reduce((sum: number, size: number) => sum + size, 0)
-    let delta = content[axis.mainSize] - total
-    const order = absorbAtStart ? sizes.map((_: number, i: number) => i) : sizes.map((_: number, i: number) => sizes.length - 1 - i)
-    for (const index of order) {
-      if (delta === 0) break
-      const next = Math.max(MIN_LANE_SIZE, sizes[index] + delta)
-      delta -= next - sizes[index]
-      sizes[index] = next
-    }
-
+    const sizes = distribute(
+      lanes.map((lane) => lane[axis.mainSize]),
+      content[axis.mainSize],
+      absorbAtStart,
+    )
     let position = content[axis.main]
-    lanes.forEach((lane: any, index: number) => {
-      const bounds: Bounds = { x: 0, y: 0, width: 0, height: 0 }
-      bounds[axis.main] = position
-      bounds[axis.mainSize] = sizes[index]
-      bounds[axis.cross] = content[axis.cross]
-      bounds[axis.crossSize] = content[axis.crossSize]
-      position += sizes[index]
+    lanes.forEach((lane, index) => {
+      const size = sizes[index] ?? 0
+      const bounds = { ...content, [axis.main]: position, [axis.mainSize]: size }
+      position += size
       result.set(lane, bounds)
       layoutLevel(lane, bounds)
     })
   }
-
   layoutLevel(participant, participantBounds)
   return result
-}
-
-/** Bahn, in deren Innerem der Punkt liegt (tiefste zuerst). */
-export function getLanesAt(participant: DiagramElement, point: { x: number; y: number }): DiagramElement[] {
-  return getAllLanes(participant).filter(
-    (lane: any) =>
-      point.x >= lane.x && point.x <= lane.x + lane.width && point.y >= lane.y && point.y <= lane.y + lane.height,
-  )
 }
 
 export function boundsEqual(a: Bounds, b: Bounds): boolean {
@@ -164,27 +149,18 @@ export function boundsEqual(a: Bounds, b: Bounds): boolean {
 /**
  * Verschiebt eine Kante (Koordinate `edge` auf Achse `axisKey`) um `delta`:
  * Alle Formen, deren Anfang bzw. Ende auf dieser Kante liegt, wachsen oder
- * schrumpfen entsprechend.
+ * schrumpfen entsprechend. Ergebnisse landen in `planned`.
  */
-export function moveEdge(
-  shapes: DiagramElement[],
-  axisKey: 'x' | 'y',
-  edge: number,
-  delta: number,
-  current: Map<DiagramElement, Bounds>,
-): void {
+export function moveEdge(shapes: BpmnElement[], axisKey: 'x' | 'y', edge: number, delta: number, planned: Map<BpmnElement, Bounds>): void {
   const sizeKey = axisKey === 'x' ? 'width' : 'height'
   for (const shape of shapes) {
-    const bounds = current.get(shape) || { x: shape.x, y: shape.y, width: shape.width, height: shape.height }
+    const bounds = planned.get(shape) || toBounds(shape)
     const start = bounds[axisKey]
-    const end = bounds[axisKey] + bounds[sizeKey]
+    const end = start + bounds[sizeKey]
     if (Math.abs(start - edge) < 1) {
-      bounds[axisKey] = start + delta
-      bounds[sizeKey] = bounds[sizeKey] - delta
-      current.set(shape, { ...bounds })
+      planned.set(shape, { ...bounds, [axisKey]: start + delta, [sizeKey]: bounds[sizeKey] - delta })
     } else if (Math.abs(end - edge) < 1) {
-      bounds[sizeKey] = bounds[sizeKey] + delta
-      current.set(shape, { ...bounds })
+      planned.set(shape, { ...bounds, [sizeKey]: bounds[sizeKey] + delta })
     }
   }
 }

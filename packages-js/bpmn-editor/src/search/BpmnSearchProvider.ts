@@ -6,6 +6,7 @@ import type SearchPad from 'diagram-js/lib/features/search-pad/SearchPad'
 import type { SearchResult as PadResult } from 'diagram-js/lib/features/search-pad/SearchPadProvider'
 import type { Element } from 'diagram-js/lib/model/Types'
 
+import { getTypeLabel } from '../i18n/typeLabels'
 import { getLabel } from '../util/LabelUtil'
 import { getBusinessObject } from '../util/ModelUtil'
 import type { Canvas, ElementRegistry, Translate } from '../types'
@@ -65,7 +66,7 @@ export default class BpmnSearchProvider {
       const labelTokens = tokenize(label, trimmed)
       const idTokens = tokenize(id, trimmed)
       if (!hasMatch(labelTokens) && !hasMatch(idTokens)) continue
-      const typeName = this.translate(String(getBusinessObject(element).$type).replace('bpmn:', ''))
+      const typeName = getTypeLabel(element, this.translate)
       results.push({
         primaryTokens: label ? labelTokens : idTokens,
         secondaryTokens: [...(label ? idTokens : []), { match: false, value: label ? ` · ${typeName}` : typeName }],

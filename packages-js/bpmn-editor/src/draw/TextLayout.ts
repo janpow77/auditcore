@@ -122,51 +122,34 @@ function splitLongWord(word: string, maxWidth: number, style: TextStyle): string
   return parts
 }
 
-/** Zerlegt Text in Zeilen, die in die angegebene Breite passen. */
-export function wrapText(text: string, maxWidth: number, style: TextStyle = DEFAULT_TEXT_STYLE): LaidOutLine[] {
+/** Setzt einen Absatz Wort für Wort in Zeilen. */
+function wrapParagraph(paragraph: string, maxWidth: number, style: TextStyle): LaidOutLine[] {
+  // Bindestriche bleiben am Wortende, damit dort umgebrochen werden kann.
+  const words = paragraph.split(/(?<=-)|\s+/).filter((word) => word.length > 0)
+  if (words.length === 0) return [{ text: '', width: 0 }]
   const lines: LaidOutLine[] = []
-  const paragraphs = (text || '').split(/\r?\n/)
-  for (const paragraph of paragraphs) {
-    // Bindestriche bleiben am Wortende, damit dort umgebrochen werden kann.
-    const words = paragraph.split(/(?<=-)|\s+/).filter((word) => word.length > 0)
-    if (words.length === 0) {
-      lines.push({ text: '', width: 0 })
+  const line = (text: string) => lines.push({ text, width: measureText(text, style) })
+  let current = ''
+  for (const word of words) {
+    const joiner = current && !current.endsWith('-') ? ' ' : ''
+    const candidate = current + joiner + word
+    if (current && measureText(candidate, style) <= maxWidth) {
+      current = candidate
       continue
     }
-    let current = ''
-    const flush = () => {
-      if (current) lines.push({ text: current, width: measureText(current, style) })
-      current = ''
-    }
-    for (const word of words) {
-      const joiner = current && !current.endsWith('-') ? ' ' : ''
-      const candidate = current + joiner + word
-      if (measureText(candidate, style) <= maxWidth || !current) {
-        if (!current && measureText(word, style) > maxWidth) {
-          const pieces = splitLongWord(word, maxWidth, style)
-          for (let i = 0; i < pieces.length - 1; i++) {
-            lines.push({ text: pieces[i], width: measureText(pieces[i], style) })
-          }
-          current = pieces[pieces.length - 1] || ''
-        } else {
-          current = candidate
-        }
-      } else {
-        flush()
-        if (measureText(word, style) > maxWidth) {
-          const pieces = splitLongWord(word, maxWidth, style)
-          for (let i = 0; i < pieces.length - 1; i++) {
-            lines.push({ text: pieces[i], width: measureText(pieces[i], style) })
-          }
-          current = pieces[pieces.length - 1] || ''
-        } else {
-          current = word
-        }
-      }
-    }
-    flush()
+    if (current) line(current)
+    // Zu lange Wörter werden hart umbrochen; der Rest beginnt die nächste Zeile.
+    const pieces = measureText(word, style) > maxWidth ? splitLongWord(word, maxWidth, style) : [word]
+    pieces.slice(0, -1).forEach(line)
+    current = pieces[pieces.length - 1] || ''
   }
+  if (current) line(current)
   return lines
+}
+
+/** Zerlegt Text in Zeilen, die in die angegebene Breite passen. */
+export function wrapText(text: string, maxWidth: number, style: TextStyle = DEFAULT_TEXT_STYLE): LaidOutLine[] {
+  return (text || '').split(/\r?\n/).flatMap((paragraph) => wrapParagraph(paragraph, maxWidth, style))
 }
 
 export function resolveStyle(style?: Partial<TextStyle>): TextStyle {

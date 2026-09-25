@@ -1,272 +1,219 @@
 /**
- * Befehle zum Ändern von Eigenschaften, Farben, Beschriftungen, Kennungen
- * und der Diagrammwurzel. Alle Befehle sind rückgängig machbar.
+ * Befehle zum Ändern von Eigenschaften, Farben, Kennungen und der
+ * Diagrammwurzel. Alle Befehle sind rückgängig machbar.
  */
 
 import { getIds } from '../../util/Ids'
-import {
-  addToList,
-  getBusinessObject,
-  getDefinitions,
-  getDi,
-  is,
-  removeFromList,
-} from '../../util/ModelUtil'
-import {
-  getExternalLabelMid,
-  getExternalLabelSize,
-  getLabel,
-  isLabelExternal,
-  setLabel,
-} from '../../util/LabelUtil'
+import { addToList, getBusinessObject, getDefinitions, getDi, is, removeFromList } from '../../util/ModelUtil'
+import type { BpmnElement, ElementRegistry, Moddle, ModdleElement } from '../../types'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+type Properties = Record<string, unknown>
 
-function getProperties(target: any, keys: string[]): Record<string, any> {
-  const result: Record<string, any> = {}
-  for (const key of keys) result[key] = target.get ? target.get(key) : target[key]
+function getProperties(target: ModdleElement, keys: string[]): Properties {
+  const result: Properties = {}
+  for (const key of keys) result[key] = target.get(key)
   return result
 }
 
-function setProperties(target: any, properties: Record<string, any>): void {
-  for (const [key, value] of Object.entries(properties)) {
-    if (target.set) target.set(key, value)
-    else target[key] = value
+function setProperties(target: ModdleElement, properties: Properties): void {
+  for (const [key, value] of Object.entries(properties)) target.set(key, value)
+}
+
+interface IdChange {
+  oldId: string
+  newId: string
+  oldDiId?: string
+}
+
+/** Wechselt die Kennung samt DI-Kennung, Registry-Eintrag und Beschriftung. */
+class IdSwitch {
+  constructor(
+    private readonly moddle: Moddle,
+    private readonly elementRegistry: ElementRegistry,
+  ) {}
+
+  apply(element: BpmnElement, bo: ModdleElement, from: string, to: string, diFrom?: string, diTo?: string): void {
+    const ids = getIds(this.moddle)
+    ids.unclaim(from)
+    ids.claim(to, bo)
+    bo.id = to
+    if (this.elementRegistry.get(from) === element) this.elementRegistry.updateId(element, to)
+    const label = element.label as BpmnElement | undefined
+    if (label && this.elementRegistry.get(`${from}_label`) === label) this.elementRegistry.updateId(label, `${to}_label`)
+    const di = element.di
+    if (di && diFrom && diTo && di.id === diFrom) {
+      ids.unclaim(diFrom)
+      di.id = diTo
+      ids.claim(diTo, di)
+    }
+  }
+
+  change(element: BpmnElement, bo: ModdleElement, newId: string): IdChange {
+    const oldId = bo.id as string
+    const oldDiId = element.di?.id === `${oldId}_di` ? `${oldId}_di` : undefined
+    this.apply(element, bo, oldId, newId, oldDiId, oldDiId ? `${newId}_di` : undefined)
+    return { oldId, newId, oldDiId }
+  }
+
+  revert(element: BpmnElement, bo: ModdleElement, change: IdChange): void {
+    const diNow = change.oldDiId ? `${change.newId}_di` : undefined
+    this.apply(element, bo, change.newId, change.oldId, diNow, change.oldDiId)
   }
 }
 
-/** Kennungswechsel am semantischen Objekt samt DI und Registry. */
-function changeId(element: any, bo: any, newId: string, moddle: any, elementRegistry: any): { oldId: string; oldDiId?: string } {
-  const ids = getIds(moddle)
-  const oldId = bo.id
-  ids.unclaim(oldId)
-  ids.claim(newId, bo)
-  bo.id = newId
-  if (element && elementRegistry.get(oldId) === element) elementRegistry.updateId(element, newId)
-  const di = element && element.di
-  let oldDiId: string | undefined
-  if (di && di.id === `${oldId}_di`) {
-    oldDiId = di.id
-    ids.unclaim(di.id)
-    di.id = `${newId}_di`
-    ids.claim(di.id, di)
-  }
-  if (element && element.label && elementRegistry.get(`${oldId}_label`) === element.label) {
-    elementRegistry.updateId(element.label, `${newId}_label`)
-  }
-  return { oldId, oldDiId }
+interface UpdatePropertiesContext {
+  element: BpmnElement
+  properties: Properties & { di?: Properties; id?: string; default?: ModdleElement }
+  oldProperties?: Properties
+  oldDiProperties?: Properties
+  idChange?: IdChange
+  changed?: BpmnElement[]
 }
-
-function revertId(element: any, bo: any, oldId: string, oldDiId: string | undefined, moddle: any, elementRegistry: any): void {
-  const ids = getIds(moddle)
-  const currentId = bo.id
-  ids.unclaim(currentId)
-  ids.claim(oldId, bo)
-  bo.id = oldId
-  if (element && elementRegistry.get(currentId) === element) elementRegistry.updateId(element, oldId)
-  const di = element && element.di
-  if (di && oldDiId) {
-    ids.unclaim(di.id)
-    di.id = oldDiId
-    ids.claim(oldDiId, di)
-  }
-  if (element && element.label && elementRegistry.get(`${currentId}_label`) === element.label) {
-    elementRegistry.updateId(element.label, `${oldId}_label`)
-  }
-}
-
-// ---------------------------------------------------------------------------
 
 export class UpdatePropertiesHandler {
   static $inject = ['elementRegistry', 'moddle']
 
-  constructor(private _elementRegistry: any, private _moddle: any) {}
+  private readonly ids: IdSwitch
 
-  execute(context: any): any[] {
-    const element = context.element
+  constructor(
+    private readonly elementRegistry: ElementRegistry,
+    moddle: Moddle,
+  ) {
+    this.ids = new IdSwitch(moddle, elementRegistry)
+  }
+
+  execute(context: UpdatePropertiesContext): BpmnElement[] {
+    const { element } = context
     const bo = getBusinessObject(element)
-    const properties = { ...context.properties }
-    const changed = [element]
-
-    if (properties.di) {
-      const di = getDi(element)
-      context.oldDiProperties = getProperties(di, Object.keys(properties.di))
-      setProperties(di, properties.di)
-      delete properties.di
+    const { di: diProperties, id, ...properties } = context.properties
+    const changed = [element, ...this.defaultFlowChanges(bo, properties)]
+    const di = getDi(element)
+    if (diProperties && di) {
+      context.oldDiProperties = getProperties(di, Object.keys(diProperties))
+      setProperties(di, diProperties)
     }
-
-    if ('id' in properties && properties.id && properties.id !== bo.id) {
-      context.idChange = changeId(element, bo, properties.id, this._moddle, this._elementRegistry)
-      delete properties.id
-    }
-
-    if ('default' in properties) {
-      const oldDefault = bo.default && this._elementRegistry.get(bo.default.id)
-      const newDefault = properties.default && this._elementRegistry.get(properties.default.id)
-      if (oldDefault) changed.push(oldDefault)
-      if (newDefault) changed.push(newDefault)
-    }
-
+    if (id && id !== bo.id) context.idChange = this.ids.change(element, bo, id)
     context.oldProperties = getProperties(bo, Object.keys(properties))
     setProperties(bo, properties)
-    if (element.label) changed.push(element.label)
+    if (element.label) changed.push(element.label as BpmnElement)
     context.changed = changed
     return changed
   }
 
-  revert(context: any): any[] {
-    const element = context.element
-    const bo = getBusinessObject(element)
-    setProperties(bo, context.oldProperties)
-    if (context.oldDiProperties) setProperties(getDi(element), context.oldDiProperties)
-    if (context.idChange) {
-      revertId(element, bo, context.idChange.oldId, context.idChange.oldDiId, this._moddle, this._elementRegistry)
-    }
-    return context.changed
+  /** Beim Wechsel des Standardflusses beide Kanten neu zeichnen. */
+  private defaultFlowChanges(bo: ModdleElement, properties: Properties): BpmnElement[] {
+    if (!('default' in properties)) return []
+    const next = properties.default as ModdleElement | undefined
+    return [bo.default?.id, next?.id]
+      .map((flowId) => (flowId ? this.elementRegistry.get(flowId) : undefined))
+      .filter((flow): flow is BpmnElement => !!flow)
   }
+
+  revert(context: UpdatePropertiesContext): BpmnElement[] {
+    const { element } = context
+    const bo = getBusinessObject(element)
+    setProperties(bo, context.oldProperties || {})
+    const di = getDi(element)
+    if (context.oldDiProperties && di) setProperties(di, context.oldDiProperties)
+    if (context.idChange) this.ids.revert(element, bo, context.idChange)
+    return context.changed || [element]
+  }
+}
+
+interface UpdateModdlePropertiesContext {
+  element: BpmnElement
+  moddleElement: ModdleElement
+  properties: Properties & { id?: string }
+  oldProperties?: Properties
+  idChange?: IdChange
+  changed?: BpmnElement[]
 }
 
 export class UpdateModdlePropertiesHandler {
   static $inject = ['elementRegistry', 'moddle']
 
-  constructor(private _elementRegistry: any, private _moddle: any) {}
+  private readonly ids: IdSwitch
 
-  execute(context: any): any[] {
-    const { element, moddleElement } = context
-    const properties = { ...context.properties }
-    if (!moddleElement) throw new Error('moddleElement fehlt')
-    const bo = getBusinessObject(element)
-    if ('id' in properties && moddleElement === bo && properties.id && properties.id !== bo.id) {
-      context.idChange = changeId(element, bo, properties.id, this._moddle, this._elementRegistry)
-      delete properties.id
-    }
-    context.oldProperties = getProperties(moddleElement, Object.keys(properties))
-    setProperties(moddleElement, properties)
-    const changed = [element]
-    if (element.label) changed.push(element.label)
-    context.changed = changed
-    return changed
+  constructor(elementRegistry: ElementRegistry, moddle: Moddle) {
+    this.ids = new IdSwitch(moddle, elementRegistry)
   }
 
-  revert(context: any): any[] {
-    setProperties(context.moddleElement, context.oldProperties)
-    if (context.idChange) {
-      revertId(context.element, getBusinessObject(context.element), context.idChange.oldId, context.idChange.oldDiId, this._moddle, this._elementRegistry)
-    }
+  execute(context: UpdateModdlePropertiesContext): BpmnElement[] {
+    const { element, moddleElement } = context
+    if (!moddleElement) throw new Error('moddleElement fehlt')
+    const { id, ...properties } = context.properties
+    const bo = getBusinessObject(element)
+    if (id && moddleElement === bo && id !== bo.id) context.idChange = this.ids.change(element, bo, id)
+    else if (id !== undefined) properties.id = id
+    context.oldProperties = getProperties(moddleElement, Object.keys(properties))
+    setProperties(moddleElement, properties)
+    context.changed = element.label ? [element, element.label as BpmnElement] : [element]
     return context.changed
+  }
+
+  revert(context: UpdateModdlePropertiesContext): BpmnElement[] {
+    setProperties(context.moddleElement, context.oldProperties || {})
+    if (context.idChange) this.ids.revert(context.element, getBusinessObject(context.element), context.idChange)
+    return context.changed || [context.element]
   }
 }
 
 const COLOR_KEYS = ['bioc:fill', 'bioc:stroke', 'color:background-color', 'color:border-color']
 
-export class SetColorHandler {
-  static $inject = ['commandStack']
+interface SetColorContext {
+  elements: BpmnElement[]
+  colors: { fill?: string | null; stroke?: string | null }
+  oldColors?: Map<BpmnElement, Properties>
+  changed?: BpmnElement[]
+}
 
-  execute(context: any): any[] {
-    const colors = context.colors || {}
-    const changed: any[] = []
+function applyColor(di: ModdleElement, colors: SetColorContext['colors']): void {
+  if ('fill' in colors) {
+    di.set('bioc:fill', colors.fill || undefined)
+    di.set('color:background-color', colors.fill || undefined)
+  }
+  if ('stroke' in colors) {
+    di.set('bioc:stroke', colors.stroke || undefined)
+    di.set('color:border-color', colors.stroke || undefined)
+    if (di.label) di.label.set('color:color', colors.stroke || undefined)
+  }
+}
+
+export class SetColorHandler {
+  execute(context: SetColorContext): BpmnElement[] {
+    const changed: BpmnElement[] = []
     context.oldColors = new Map()
     for (const raw of context.elements) {
-      const element = raw.labelTarget || raw
+      const element = (raw.labelTarget as BpmnElement | undefined) || raw
       const di = getDi(element)
       if (!di) continue
-      const old = getProperties(di, COLOR_KEYS)
-      old.label = di.label ? di.label.get('color:color') : undefined
-      context.oldColors.set(element, old)
-
-      if ('fill' in colors) {
-        di.set('bioc:fill', colors.fill || undefined)
-        di.set('color:background-color', colors.fill || undefined)
-      }
-      if ('stroke' in colors) {
-        di.set('bioc:stroke', colors.stroke || undefined)
-        di.set('color:border-color', colors.stroke || undefined)
-        if (di.label) di.label.set('color:color', colors.stroke || undefined)
-      }
+      context.oldColors.set(element, { ...getProperties(di, COLOR_KEYS), label: di.label?.get('color:color') })
+      applyColor(di, context.colors || {})
       changed.push(element)
-      if (element.label) changed.push(element.label)
+      if (element.label) changed.push(element.label as BpmnElement)
     }
     context.changed = changed
     return changed
   }
 
-  revert(context: any): any[] {
-    for (const [element, old] of context.oldColors as Map<any, any>) {
+  revert(context: SetColorContext): BpmnElement[] {
+    for (const [element, old] of context.oldColors || []) {
       const di = getDi(element)
+      if (!di) continue
       for (const key of COLOR_KEYS) di.set(key, old[key])
       if (di.label) di.label.set('color:color', old.label)
     }
-    return context.changed
+    return context.changed || []
   }
 }
 
-export class UpdateLabelHandler {
-  static $inject = ['modeling']
-
-  constructor(private _modeling: any) {}
-
-  execute(context: any): any[] {
-    const element = context.element
-    const target = element.labelTarget || element
-    context.labelTarget = target
-    context.oldLabel = getLabel(target)
-    setLabel(target, normalizeText(context.newLabel))
-    const changed = [target]
-    if (target.label) changed.push(target.label)
-    return changed
-  }
-
-  postExecute(context: any): void {
-    const target = context.labelTarget
-    const text = normalizeText(context.newLabel)
-    const label = target.label
-
-    if (isLabelExternal(target)) {
-      if (text && !label) {
-        const mid = getExternalLabelMid(target)
-        const size = getExternalLabelSize(text)
-        this._modeling.createLabel(target, { x: mid.x, y: mid.y - 10 + size.height / 2 }, {
-          id: `${target.id}_label`,
-          businessObject: target.businessObject,
-          di: target.di,
-          width: size.width,
-          height: size.height,
-        })
-      } else if (label && !text) {
-        this._modeling.removeShape(label, { removeLabelOnly: true })
-      } else if (label && text) {
-        const size = getExternalLabelSize(text)
-        const centerX = label.x + label.width / 2
-        const bounds = {
-          x: Math.round(centerX - size.width / 2),
-          y: label.y,
-          width: size.width,
-          height: size.height,
-        }
-        if (bounds.x !== label.x || bounds.width !== label.width || bounds.height !== label.height) {
-          this._modeling.resizeShape(label, bounds, { width: 0, height: 0 })
-        }
-      }
-    }
-
-    if (context.newBounds && !target.waypoints) {
-      this._modeling.resizeShape(target, context.newBounds)
-    }
-  }
-
-  revert(context: any): any[] {
-    const target = context.labelTarget
-    setLabel(target, context.oldLabel)
-    const changed = [target]
-    if (target.label) changed.push(target.label)
-    return changed
-  }
-}
-
-function normalizeText(text: unknown): string | undefined {
-  if (text === null || text === undefined) return undefined
-  const value = String(text)
-  return value.trim().length === 0 ? undefined : value
+interface UpdateRootContext {
+  newBusinessObject: ModdleElement
+  keepOld?: boolean
+  rootElement?: BpmnElement
+  definitions?: ModdleElement
+  oldBusinessObject?: ModdleElement
+  oldIndex?: number
 }
 
 /**
@@ -276,60 +223,68 @@ function normalizeText(text: unknown): string | undefined {
 export class UpdateCanvasRootHandler {
   static $inject = ['canvas', 'elementRegistry', 'moddle']
 
-  constructor(private _canvas: any, private _elementRegistry: any, private _moddle: any) {}
+  constructor(
+    private readonly canvas: { getRootElement(): unknown },
+    private readonly elementRegistry: ElementRegistry,
+    private readonly moddle: Moddle,
+  ) {}
 
-  execute(context: any): any[] {
-    const root = context.rootElement || this._canvas.getRootElement()
-    context.rootElement = root
+  execute(context: UpdateRootContext): BpmnElement[] {
+    const root = context.rootElement || (this.canvas.getRootElement() as BpmnElement)
     const oldBo = root.businessObject
     const newBo = context.newBusinessObject
     const definitions = getDefinitions(oldBo) || context.definitions
-    context.definitions = definitions
-    context.oldBusinessObject = oldBo
-
-    const rootElements = definitions.get('rootElements')
+    if (!definitions) throw new Error('Definitionen fehlen')
+    Object.assign(context, { rootElement: root, oldBusinessObject: oldBo, definitions })
+    const rootElements = definitions.get<ModdleElement[]>('rootElements')
     context.oldIndex = rootElements.indexOf(oldBo)
     if (!context.keepOld) removeFromList(rootElements, oldBo)
-    const index = is(newBo, 'bpmn:Collaboration') ? 0 : Math.max(0, context.oldIndex)
-    addToList(rootElements, newBo, Math.min(index, rootElements.length))
+    addToList(rootElements, newBo, is(newBo, 'bpmn:Collaboration') ? 0 : Math.max(0, context.oldIndex))
     newBo.$parent = definitions
-
-    const plane = root.di
-    if (plane) plane.bpmnElement = newBo
-    root.businessObject = newBo
-    this._elementRegistry.updateId(root, newBo.id)
-    getIds(this._moddle).claim(newBo.id, newBo)
+    this.switchRoot(root, newBo)
+    getIds(this.moddle).claim(newBo.id as string, newBo)
     return [root]
   }
 
-  revert(context: any): any[] {
-    const root = context.rootElement
-    const oldBo = context.oldBusinessObject
-    const newBo = context.newBusinessObject
-    const rootElements = context.definitions.get('rootElements')
-    removeFromList(rootElements, newBo)
-    if (!context.keepOld) addToList(rootElements, oldBo, Math.max(0, context.oldIndex))
-    if (root.di) root.di.bpmnElement = oldBo
-    root.businessObject = oldBo
-    this._elementRegistry.updateId(root, oldBo.id)
+  revert(context: UpdateRootContext): BpmnElement[] {
+    const root = context.rootElement as BpmnElement
+    const oldBo = context.oldBusinessObject as ModdleElement
+    const rootElements = (context.definitions as ModdleElement).get<ModdleElement[]>('rootElements')
+    removeFromList(rootElements, context.newBusinessObject)
+    if (!context.keepOld) addToList(rootElements, oldBo, Math.max(0, context.oldIndex ?? 0))
+    this.switchRoot(root, oldBo)
     return [root]
   }
+
+  private switchRoot(root: BpmnElement, bo: ModdleElement): void {
+    if (root.di) root.di.bpmnElement = bo
+    root.businessObject = bo
+    this.elementRegistry.updateId(root, bo.id as string)
+  }
+}
+
+interface IdClaimContext {
+  id: string
+  element: ModdleElement
+  claiming: boolean
 }
 
 export class IdClaimHandler {
   static $inject = ['moddle']
 
-  constructor(private _moddle: any) {}
+  constructor(private readonly moddle: Moddle) {}
 
-  execute(context: any): void {
-    const ids = getIds(this._moddle)
+  execute(context: IdClaimContext): BpmnElement[] {
+    const ids = getIds(this.moddle)
     if (context.claiming) ids.claim(context.id, context.element)
     else ids.unclaim(context.id)
+    return []
   }
 
-  revert(context: any): void {
-    const ids = getIds(this._moddle)
+  revert(context: IdClaimContext): BpmnElement[] {
+    const ids = getIds(this.moddle)
     if (context.claiming) ids.unclaim(context.id)
     else ids.claim(context.id, context.element)
+    return []
   }
 }

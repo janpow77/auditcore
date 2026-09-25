@@ -1,7 +1,5 @@
 import { BpmnEditor, type EditorOptions } from '../../src'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export function createContainer(): HTMLElement {
   const container = document.createElement('div')
   Object.defineProperty(container, 'clientWidth', { value: 1200, configurable: true })
@@ -16,12 +14,8 @@ export function createEditor(options: Partial<EditorOptions> = {}): BpmnEditor {
   return new BpmnEditor({ container: createContainer(), ...options })
 }
 
-export async function importXml(xml: string, options: Partial<EditorOptions> = {}) {
+export async function importXml(xml: string, options: Partial<EditorOptions> = {}): Promise<{ editor: BpmnEditor; warnings: string[] }> {
   const editor = createEditor(options)
   const result = await editor.importXML(xml)
   return { editor, warnings: result.warnings }
-}
-
-export function svc<T = any>(editor: BpmnEditor, name: string): T {
-  return editor.get<T>(name)
 }

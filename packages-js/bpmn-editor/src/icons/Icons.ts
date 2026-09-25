@@ -39,42 +39,34 @@ export type EventDefinitionKind =
   | 'parallel-multiple'
   | 'terminate'
 
+const C = 12
+const S = 0.5
+
+/** Symbol je Ereignisdefinition (Parameter: Füllstil für werfende bzw. fangende Ereignisse). */
+const EVENT_GLYPHS: Record<EventDefinitionKind, (style: string, isThrow: boolean) => string> = {
+  none: () => '',
+  message: (style, isThrow) => {
+    const e = G.envelopePaths(C, C, S)
+    return `<path d="${e.body}" ${style}/><path d="${e.flap}" fill="none" stroke="${isThrow ? '#fff' : 'currentColor'}" stroke-width="0.8"/>`
+  },
+  timer: () => `<circle cx="12" cy="12" r="5" ${hollow}/><path d="${G.timerHands(C, C, S)}" stroke-width="0.9"/>`,
+  escalation: (style) => `<path d="${G.escalationPath(C, C, S)}" ${style}/>`,
+  conditional: () => {
+    const p = G.conditionalPaths(C, C, S)
+    return `<path d="${p.sheet}" ${hollow}/><path d="${p.lines}" stroke-width="0.7"/>`
+  },
+  link: (style) => `<path d="${G.linkPath(C, C, S)}" ${style}/>`,
+  error: (style) => `<path d="${G.errorPath(C, C, S)}" ${style}/>`,
+  cancel: (style) => `<path d="${G.cancelPath(C, C, S)}" ${style}/>`,
+  compensation: (style) => `<path d="${G.compensationPath(C, C, S)}" ${style}/>`,
+  signal: (style) => `<path d="${G.signalPath(C, C, S)}" ${style}/>`,
+  multiple: (style) => `<path d="${G.multiplePath(C, C, S)}" ${style}/>`,
+  'parallel-multiple': () => `<path d="${G.parallelMultiplePath(C, C, S)}" ${hollow}/>`,
+  terminate: () => `<circle cx="12" cy="12" r="5.5" ${filled}/>`,
+}
+
 function eventGlyph(definition: EventDefinitionKind, isThrow: boolean): string {
-  const s = 0.5
-  const c = 12
-  const style = isThrow ? filled : hollow
-  switch (definition) {
-    case 'message': {
-      const e = G.envelopePaths(c, c, s)
-      return `<path d="${e.body}" ${style}/><path d="${e.flap}" fill="none" stroke="${isThrow ? '#fff' : 'currentColor'}" stroke-width="0.8"/>`
-    }
-    case 'timer':
-      return `<circle cx="12" cy="12" r="5" ${hollow}/><path d="${G.timerHands(c, c, s)}" stroke-width="0.9"/>`
-    case 'escalation':
-      return `<path d="${G.escalationPath(c, c, s)}" ${style}/>`
-    case 'conditional': {
-      const p = G.conditionalPaths(c, c, s)
-      return `<path d="${p.sheet}" ${hollow}/><path d="${p.lines}" stroke-width="0.7"/>`
-    }
-    case 'link':
-      return `<path d="${G.linkPath(c, c, s)}" ${style}/>`
-    case 'error':
-      return `<path d="${G.errorPath(c, c, s)}" ${style}/>`
-    case 'cancel':
-      return `<path d="${G.cancelPath(c, c, s)}" ${style}/>`
-    case 'compensation':
-      return `<path d="${G.compensationPath(c, c, s)}" ${style}/>`
-    case 'signal':
-      return `<path d="${G.signalPath(c, c, s)}" ${style}/>`
-    case 'multiple':
-      return `<path d="${G.multiplePath(c, c, s)}" ${style}/>`
-    case 'parallel-multiple':
-      return `<path d="${G.parallelMultiplePath(c, c, s)}" ${hollow}/>`
-    case 'terminate':
-      return `<circle cx="12" cy="12" r="5.5" ${filled}/>`
-    default:
-      return ''
-  }
+  return EVENT_GLYPHS[definition](isThrow ? filled : hollow, isThrow)
 }
 
 export function eventIcon(kind: EventKind, definition: EventDefinitionKind = 'none', nonInterrupting = false): string {

@@ -5,38 +5,41 @@
  */
 
 import OrderingProvider from 'diagram-js/lib/features/ordering/OrderingProvider'
+import type { Element, ShapeLike } from 'diagram-js/lib/model/Types'
 
-import { is, isAny } from '../util/ModelUtil'
+import { isAny } from '../util/ModelUtil'
+import type { EventBus } from '../types'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** Ebene je Typ (erste passende gewinnt; höher = weiter vorn). */
+const LEVELS: [string[], number][] = [
+  [['bpmn:Participant'], -2],
+  [['bpmn:Lane'], -1],
+  [['bpmn:MessageFlow'], 16],
+  [['bpmn:Association', 'bpmn:DataInputAssociation', 'bpmn:DataOutputAssociation'], 15],
+  [['bpmn:SequenceFlow'], 14],
+  [['bpmn:Group'], 12],
+  [['bpmn:BoundaryEvent'], 8],
+  [['bpmn:SubProcess'], 2],
+]
 
-function level(element: any): number {
+export function level(element: Element): number {
   if (element.labelTarget) return 20
-  if (is(element, 'bpmn:Participant')) return -2
-  if (is(element, 'bpmn:Lane')) return -1
-  if (is(element, 'bpmn:MessageFlow')) return 16
-  if (isAny(element, ['bpmn:Association', 'bpmn:DataInputAssociation', 'bpmn:DataOutputAssociation'])) return 15
-  if (is(element, 'bpmn:SequenceFlow')) return 14
-  if (is(element, 'bpmn:Group')) return 12
-  if (is(element, 'bpmn:BoundaryEvent')) return 8
-  if (is(element, 'bpmn:SubProcess')) return 2
-  return 5
+  return LEVELS.find(([types]) => isAny(element, types))?.[1] ?? 5
 }
 
-export default class BpmnOrderingProvider extends (OrderingProvider as any) {
+export default class BpmnOrderingProvider extends OrderingProvider {
   static $inject = ['eventBus']
 
-  constructor(eventBus: any) {
+  constructor(eventBus: EventBus) {
     super(eventBus)
   }
 
-  getOrdering(element: any, newParent: any): { index: number; parent?: any } | null {
-    if (!newParent) return null
+  /** Index bezogen auf die Kinderliste ohne das Element selbst. */
+  getOrdering(element: Element, newParent: ShapeLike): { index: number } {
     const own = level(element)
-    const siblings: any[] = (newParent.children || []).filter((child: any) => child !== element)
-    let index: number = siblings.findIndex((child: any) => level(child) > own)
-    if (index === -1) index = siblings.length
-    // Der Index bezieht sich auf die Kinderliste ohne das Element selbst.
-    return { index }
+    const children = (newParent as unknown as { children?: Element[] } | undefined)?.children || []
+    const siblings = children.filter((child) => child !== element)
+    const index = siblings.findIndex((child) => level(child) > own)
+    return { index: index === -1 ? siblings.length : index }
   }
 }

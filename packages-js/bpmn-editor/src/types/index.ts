@@ -96,6 +96,9 @@ export interface ModdleElement {
   isCollection?: boolean
   categoryValueRef?: ModdleElement
   ioSpecification?: ModdleElement
+  dataInputAssociations?: ModdleElement[]
+  dataOutputAssociations?: ModdleElement[]
+  properties?: ModdleElement[]
 
   // Kollaboration
   processRef?: ModdleElement
@@ -145,6 +148,9 @@ export type BpmnConnection = DjsConnection & WithBpmn
 export type BpmnRoot = DjsRoot & WithBpmn
 export type BpmnLabel = DjsLabel & WithBpmn
 export type BpmnParent = BpmnShape | BpmnRoot
+
+/** Ergebnis der Elementfabrik: je nach Typ Form, Kante, Wurzel oder Beschriftung. */
+export type CreatedElement = DjsShape & DjsConnection & DjsRoot & DjsLabel & WithBpmn
 
 export interface Point {
   x: number

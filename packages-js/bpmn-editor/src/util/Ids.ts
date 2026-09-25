@@ -5,10 +5,8 @@
  * aus einem lesbaren Präfix und einer zufälligen Base36-Folge.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export default class Ids {
-  private claimed = new Map<string, unknown>()
+  private readonly claimed = new Map<string, unknown>()
 
   claim(id: string, element: unknown = true): void {
     this.claimed.set(id, element)
@@ -44,8 +42,14 @@ export default class Ids {
   }
 }
 
+const REGISTRY = new WeakMap<object, Ids>()
+
 /** Liefert (und legt bei Bedarf an) die Kennungsverwaltung einer moddle-Instanz. */
-export function getIds(moddle: any): Ids {
-  if (!moddle.ids) moddle.ids = new Ids()
-  return moddle.ids
+export function getIds(moddle: object): Ids {
+  let ids = REGISTRY.get(moddle)
+  if (!ids) {
+    ids = new Ids()
+    REGISTRY.set(moddle, ids)
+  }
+  return ids
 }

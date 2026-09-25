@@ -6,6 +6,7 @@
  */
 
 import BaseModeling from 'diagram-js/lib/features/modeling/Modeling'
+import type { Connection, Element, Shape } from 'diagram-js/lib/model/Types'
 
 import {
   AddLaneHandler,
@@ -13,189 +14,190 @@ import {
   SplitLaneHandler,
   UpdateFlowNodeRefsHandler,
   computeLaneRefUpdates,
+  type LaneLocation,
 } from './cmd/LaneHandlers'
 import {
   IdClaimHandler,
   SetColorHandler,
   UpdateCanvasRootHandler,
-  UpdateLabelHandler,
   UpdateModdlePropertiesHandler,
   UpdatePropertiesHandler,
 } from './cmd/PropertyHandlers'
+import UpdateLabelHandler from './cmd/UpdateLabelHandler'
 import { getParticipant } from './LaneUtil'
-import { getBusinessObject, is } from '../util/ModelUtil'
+import { is } from '../util/ModelUtil'
+import type { BpmnElement, Bounds, Canvas, CommandStack, EventBus, ModdleElement } from '../types'
+import type BpmnFactory from './BpmnFactory'
+import type ElementFactory from './ElementFactory'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** Regeldienst, soweit die Modellierung ihn braucht. */
+export interface ConnectRules {
+  canConnect(source: Element, target: Element, connection?: Element | null): false | null | { type: string } | Record<string, unknown>
+}
 
-export default class Modeling extends (BaseModeling as any) {
-  static $inject = ['eventBus', 'elementFactory', 'commandStack', 'bpmnRules', 'bpmnFactory', 'canvas']
+type Attrs = Record<string, unknown>
 
-  _bpmnRules: any
-  _bpmnFactory: any
-  _canvas: any
-
-  constructor(eventBus: any, elementFactory: any, commandStack: any, bpmnRules: any, bpmnFactory: any, canvas: any) {
-    super(eventBus, elementFactory, commandStack)
-    this._bpmnRules = bpmnRules
-    this._bpmnFactory = bpmnFactory
-    this._canvas = canvas
+/** Bündelt verschachtelte Befehle zu einem Schritt. */
+class CompoundHandler {
+  preExecute(context: { run: () => void }): void {
+    context.run()
   }
 
-  getHandlers(): Record<string, unknown> {
-    const handlers = BaseModeling.prototype.getHandlers.call(this)
-    return {
-      ...handlers,
-      'element.updateProperties': UpdatePropertiesHandler,
-      'element.updateModdleProperties': UpdateModdlePropertiesHandler,
-      'element.setColor': SetColorHandler,
-      'element.updateLabel': UpdateLabelHandler,
-      'canvas.updateRoot': UpdateCanvasRootHandler,
-      'id.updateClaim': IdClaimHandler,
-      'lane.add': AddLaneHandler,
-      'lane.split': SplitLaneHandler,
-      'lane.resize': ResizeLaneHandler,
-      'lane.updateRefs': UpdateFlowNodeRefsHandler,
-      'elements.compound': CompoundHandler,
-    }
+  execute(): Element[] {
+    return []
+  }
+
+  revert(): Element[] {
+    return []
+  }
+}
+
+const BPMN_HANDLERS: Record<string, unknown> = {
+  'element.updateProperties': UpdatePropertiesHandler,
+  'element.updateModdleProperties': UpdateModdlePropertiesHandler,
+  'element.setColor': SetColorHandler,
+  'element.updateLabel': UpdateLabelHandler,
+  'canvas.updateRoot': UpdateCanvasRootHandler,
+  'id.updateClaim': IdClaimHandler,
+  'lane.add': AddLaneHandler,
+  'lane.split': SplitLaneHandler,
+  'lane.resize': ResizeLaneHandler,
+  'lane.updateRefs': UpdateFlowNodeRefsHandler,
+  'elements.compound': CompoundHandler,
+}
+
+export default class Modeling extends BaseModeling {
+  static $inject = ['eventBus', 'elementFactory', 'commandStack', 'bpmnRules', 'bpmnFactory', 'canvas']
+
+  private readonly commands: CommandStack
+
+  constructor(
+    eventBus: EventBus,
+    elementFactory: ElementFactory,
+    commandStack: CommandStack,
+    private readonly bpmnRules: ConnectRules,
+    private readonly bpmnFactory: BpmnFactory,
+    private readonly canvas: Canvas,
+  ) {
+    super(eventBus, elementFactory as never, commandStack)
+    this.commands = commandStack
+  }
+
+  getHandlers(): ReturnType<BaseModeling['getHandlers']> {
+    const base = super.getHandlers() as unknown as Record<string, unknown>
+    return { ...base, ...BPMN_HANDLERS } as unknown as ReturnType<BaseModeling['getHandlers']>
+  }
+
+  private run(command: string, context: object): void {
+    this.commands.execute(command, context as never)
   }
 
   /** Führt mehrere Änderungen als einen rückgängig machbaren Schritt aus. */
   compound(run: () => void): void {
-    this._commandStack.execute('elements.compound', { run })
+    this.run('elements.compound', { run })
   }
 
-  updateLabel(element: any, newLabel: string | null, newBounds?: any, hints?: any): void {
-    this._commandStack.execute('element.updateLabel', { element, newLabel, newBounds, hints: hints || {} })
+  updateLabel(element: Element, newLabel: string | null, newBounds?: Bounds, hints?: Attrs): void {
+    this.run('element.updateLabel', { element, newLabel, newBounds, hints: hints || {} })
   }
 
   /** Verbindet zwei Elemente; der Typ ergibt sich aus den Modellierungsregeln. */
-  connect(source: any, target: any, attrs?: any, hints?: any): any {
-    const bpmnRules = this._bpmnRules
-    if (!attrs || !attrs.type) {
-      const rule = bpmnRules.canConnect(source, target)
-      if (!rule) return undefined
-      attrs = { ...(attrs || {}), ...rule }
+  connect(source: Element, target: Element, attrs?: Attrs, hints?: Attrs): Connection {
+    let connectionAttrs = attrs
+    if (!connectionAttrs || !connectionAttrs.type) {
+      const rule = this.bpmnRules.canConnect(source, target)
+      if (!rule) return undefined as unknown as Connection
+      connectionAttrs = { ...(connectionAttrs || {}), ...rule }
     }
-    const parent = getConnectionParent(source, target, attrs.type)
-    return this.createConnection(source, target, attrs, parent, hints)
+    const parent = getConnectionParent(source as BpmnElement, target as BpmnElement, String(connectionAttrs.type))
+    return this.createConnection(source, target, connectionAttrs as never, parent as never, hints)
   }
 
-  updateProperties(element: any, properties: Record<string, unknown>): void {
-    this._commandStack.execute('element.updateProperties', { element, properties })
+  updateProperties(element: Element, properties: Attrs): void {
+    this.run('element.updateProperties', { element, properties })
   }
 
-  updateModdleProperties(element: any, moddleElement: any, properties: Record<string, unknown>): void {
-    this._commandStack.execute('element.updateModdleProperties', { element, moddleElement, properties })
+  updateModdleProperties(element: Element, moddleElement: ModdleElement, properties: Attrs): void {
+    this.run('element.updateModdleProperties', { element, moddleElement, properties })
   }
 
-  setColor(elements: any | any[], colors: { fill?: string | null; stroke?: string | null } = {}): void {
-    const list = Array.isArray(elements) ? elements : [elements]
-    this._commandStack.execute('element.setColor', { elements: list, colors })
+  setColor(elements: Element | Element[], colors: { fill?: string | null; stroke?: string | null } = {}): void {
+    this.run('element.setColor', { elements: Array.isArray(elements) ? elements : [elements], colors })
   }
 
-  addLane(targetLaneShape: any, location: 'top' | 'bottom' | 'left' | 'right' = 'bottom'): any {
-    const context: any = { shape: targetLaneShape, location }
-    this._commandStack.execute('lane.add', context)
-    return context.newLane
+  addLane(targetLaneShape: Element, location: LaneLocation = 'bottom'): BpmnElement {
+    const context: { shape: Element; location: LaneLocation; newLane?: BpmnElement } = { shape: targetLaneShape, location }
+    this.run('lane.add', context)
+    return context.newLane as BpmnElement
   }
 
-  splitLane(targetLane: any, count: number): any[] {
-    const context: any = { shape: targetLane, count }
-    this._commandStack.execute('lane.split', context)
+  splitLane(targetLane: Element, count: number): BpmnElement[] {
+    const context: { shape: Element; count: number; newLanes?: BpmnElement[] } = { shape: targetLane, count }
+    this.run('lane.split', context)
     return context.newLanes || []
   }
 
-  resizeLane(laneShape: any, newBounds: any, balanced?: boolean): void {
-    this._commandStack.execute('lane.resize', { shape: laneShape, newBounds, balanced })
+  resizeLane(laneShape: Element, newBounds: Bounds, balanced?: boolean): void {
+    this.run('lane.resize', { shape: laneShape, newBounds, balanced })
   }
 
   /** Aktualisiert `flowNodeRef` aller Bahnen des Pools (nur bei Änderungen). */
-  updateLaneRefs(participantOrElement: any): void {
-    const participant = is(participantOrElement, 'bpmn:Participant')
-      ? participantOrElement
-      : getParticipant(participantOrElement)
+  updateLaneRefs(participantOrElement: Element): void {
+    const element = participantOrElement as BpmnElement
+    const participant = is(element, 'bpmn:Participant') ? element : getParticipant(element)
     if (!participant) return
     const updates = computeLaneRefUpdates(participant)
-    if (updates.length === 0) return
-    this._commandStack.execute('lane.updateRefs', { updates })
+    if (updates.length) this.run('lane.updateRefs', { updates })
   }
 
   /** Macht aus der Prozesswurzel eine Kollaboration (Prozess bleibt erhalten). */
-  makeCollaboration(): any {
-    const collaboration = this._bpmnFactory.create('bpmn:Collaboration')
-    this._commandStack.execute('canvas.updateRoot', { newBusinessObject: collaboration, keepOld: true })
-    return this._canvas.getRootElement()
+  makeCollaboration(): BpmnElement {
+    this.run('canvas.updateRoot', { newBusinessObject: this.bpmnFactory.create('bpmn:Collaboration'), keepOld: true })
+    return this.canvas.getRootElement() as unknown as BpmnElement
   }
 
   /** Macht aus der Kollaborationswurzel wieder einen Prozess. */
-  makeProcess(): any {
-    const process = this._bpmnFactory.create('bpmn:Process', { isExecutable: false })
-    this._commandStack.execute('canvas.updateRoot', { newBusinessObject: process, keepOld: false })
-    return this._canvas.getRootElement()
+  makeProcess(): BpmnElement {
+    const process = this.bpmnFactory.create('bpmn:Process', { isExecutable: false })
+    this.run('canvas.updateRoot', { newBusinessObject: process, keepOld: false })
+    return this.canvas.getRootElement() as unknown as BpmnElement
   }
 
-  claimId(id: string, moddleElement: any): void {
-    this._commandStack.execute('id.updateClaim', { id, element: moddleElement, claiming: true })
+  claimId(id: string, moddleElement: ModdleElement): void {
+    this.run('id.updateClaim', { id, element: moddleElement, claiming: true })
   }
 
-  unclaimId(id: string, moddleElement: any): void {
-    this._commandStack.execute('id.updateClaim', { id, element: moddleElement, claiming: false })
-  }
-
-  /** Blendet den Inhalt eines Teilprozesses ein bzw. aus. */
-  toggleCollapse(shape: any, hints?: any): void {
-    BaseModeling.prototype.toggleCollapse.call(this, shape, hints)
+  unclaimId(id: string, moddleElement: ModdleElement): void {
+    this.run('id.updateClaim', { id, element: moddleElement, claiming: false })
   }
 }
 
-/** Bündelt verschachtelte Befehle zu einem Schritt. */
-class CompoundHandler {
-  preExecute(context: any): void {
-    context.run()
-  }
-
-  execute(): any[] {
-    return []
-  }
-
-  revert(): any[] {
-    return []
-  }
+function rootOf(element: BpmnElement): BpmnElement {
+  let current = element
+  while (current.parent) current = current.parent as BpmnElement
+  return current
 }
 
-/** Diagramm-Elternform einer neuen Kante. */
-export function getConnectionParent(source: any, target: any, type: string): any {
-  const rootOf = (element: any) => {
-    let current = element
-    while (current.parent) current = current.parent
-    return current
-  }
-  if (type === 'bpmn:MessageFlow') {
-    return rootOf(source)
-  }
-  if (type === 'bpmn:Association' || type === 'bpmn:DataInputAssociation' || type === 'bpmn:DataOutputAssociation') {
-    return commonParent(source, target) || rootOf(source)
-  }
-  // Sequenzfluss: Container des Quellknotens (Randereignisse: Container des Wirts).
-  const base = source.host || source
-  let parent = base.parent
-  while (parent && is(parent, 'bpmn:Lane')) parent = parent.parent
-  return parent || rootOf(source)
-}
-
-function commonParent(a: any, b: any): any {
-  const ancestors = new Set<any>()
-  let current = a.parent
-  while (current) {
-    ancestors.add(current)
-    current = current.parent
-  }
-  current = b.parent
-  while (current) {
+function commonParent(a: BpmnElement, b: BpmnElement): BpmnElement | null {
+  const ancestors = new Set<unknown>()
+  for (let current = a.parent; current; current = current.parent) ancestors.add(current)
+  for (let current = b.parent as BpmnElement | undefined; current; current = current.parent as BpmnElement | undefined) {
     if (ancestors.has(current) && !is(current, 'bpmn:Lane')) return current
-    current = current.parent
   }
   return null
 }
 
-export { getBusinessObject }
+/** Diagramm-Elternform einer neuen Kante. */
+export function getConnectionParent(source: BpmnElement, target: BpmnElement, type: string): BpmnElement {
+  if (type === 'bpmn:MessageFlow') return rootOf(source)
+  if (['bpmn:Association', 'bpmn:DataInputAssociation', 'bpmn:DataOutputAssociation'].includes(type)) {
+    return commonParent(source, target) || rootOf(source)
+  }
+  // Sequenzfluss: Container des Quellknotens (Randereignisse: Container des Wirts).
+  const base = (source.host as BpmnElement | undefined) || source
+  let parent = base.parent as BpmnElement | undefined
+  while (parent && is(parent, 'bpmn:Lane')) parent = parent.parent as BpmnElement | undefined
+  return parent || rootOf(source)
+}
+
+export type { Shape }

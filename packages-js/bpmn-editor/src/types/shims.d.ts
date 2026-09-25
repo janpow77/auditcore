@@ -1,4 +1,6 @@
 declare module 'bpmn-moddle' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export const BpmnModdle: any
+  import type { Moddle } from './index'
+
+  /** bpmn-moddle ohne mitgelieferte Typen: Konstruktor liefert eine moddle-Instanz. */
+  export const BpmnModdle: new (packages?: Record<string, unknown>, options?: Record<string, unknown>) => Moddle
 }

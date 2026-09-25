@@ -3,10 +3,10 @@
  */
 
 import { getIds } from '../util/Ids'
-import { is } from '../util/ModelUtil'
+import { is, isAny } from '../util/ModelUtil'
+import type { Bounds, Moddle, ModdleElement, Point } from '../types'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
+/** Präfix neuer Kennungen je Typ (erster Treffer gewinnt). */
 const ID_PREFIXES: [string, string][] = [
   ['bpmn:Definitions', 'Definitions_'],
   ['bpmn:Process', 'Process_'],
@@ -19,7 +19,6 @@ const ID_PREFIXES: [string, string][] = [
   ['bpmn:DataInputAssociation', 'DataInputAssociation_'],
   ['bpmn:DataOutputAssociation', 'DataOutputAssociation_'],
   ['bpmn:Association', 'Association_'],
-  ['bpmn:BoundaryEvent', 'Event_'],
   ['bpmn:Event', 'Event_'],
   ['bpmn:Gateway', 'Gateway_'],
   ['bpmn:SubProcess', 'SubProcess_'],
@@ -37,77 +36,75 @@ const ID_PREFIXES: [string, string][] = [
   ['bpmn:CategoryValue', 'CategoryValue_'],
   ['bpmn:EventDefinition', 'EventDefinition_'],
   ['bpmn:FormalExpression', 'Expression_'],
-  ['bpmn:Message', 'Message_'],
-  ['bpmn:Signal', 'Signal_'],
-  ['bpmn:Error', 'Error_'],
-  ['bpmn:Escalation', 'Escalation_'],
   ['bpmndi:BPMNDiagram', 'BPMNDiagram_'],
   ['bpmndi:BPMNPlane', 'BPMNPlane_'],
 ]
 
+/** Typen, die eine Kennung erhalten. */
+const NEEDS_ID = [
+  'bpmn:RootElement',
+  'bpmn:FlowElement',
+  'bpmn:MessageFlow',
+  'bpmn:DataAssociation',
+  'bpmn:Artifact',
+  'bpmn:Participant',
+  'bpmn:Lane',
+  'bpmn:LaneSet',
+  'bpmn:EventDefinition',
+  'bpmn:ItemAwareElement',
+  'bpmn:InputOutputSpecification',
+  'bpmn:InputSet',
+  'bpmn:OutputSet',
+  'bpmn:CategoryValue',
+  'bpmn:Property',
+  'bpmn:ParticipantMultiplicity',
+  'bpmndi:BPMNShape',
+  'bpmndi:BPMNEdge',
+  'bpmndi:BPMNDiagram',
+  'bpmndi:BPMNPlane',
+]
+
+function roundBounds(bounds: Bounds): Bounds {
+  return {
+    x: Math.round(bounds.x),
+    y: Math.round(bounds.y),
+    width: Math.round(bounds.width),
+    height: Math.round(bounds.height),
+  }
+}
+
 export default class BpmnFactory {
   static $inject = ['moddle']
 
-  _model: any
+  constructor(private readonly moddle: Moddle) {}
 
-  constructor(moddle: any) {
-    this._model = moddle
+  private prefix(element: ModdleElement): string {
+    const entry = ID_PREFIXES.find(([type]) => is(element, type))
+    if (entry) return entry[1]
+    return `${element.$type.split(':').pop() || 'Element'}_`
   }
 
-  _needsId(element: any): boolean {
-    return (
-      is(element, 'bpmn:RootElement') ||
-      is(element, 'bpmn:FlowElement') ||
-      is(element, 'bpmn:MessageFlow') ||
-      is(element, 'bpmn:DataAssociation') ||
-      is(element, 'bpmn:Artifact') ||
-      is(element, 'bpmn:Participant') ||
-      is(element, 'bpmn:Lane') ||
-      is(element, 'bpmn:LaneSet') ||
-      is(element, 'bpmn:Process') ||
-      is(element, 'bpmn:Collaboration') ||
-      is(element, 'bpmn:EventDefinition') ||
-      is(element, 'bpmn:ItemAwareElement') ||
-      is(element, 'bpmn:InputOutputSpecification') ||
-      is(element, 'bpmn:InputSet') ||
-      is(element, 'bpmn:OutputSet') ||
-      is(element, 'bpmn:CategoryValue') ||
-      is(element, 'bpmn:Property') ||
-      is(element, 'bpmndi:BPMNShape') ||
-      is(element, 'bpmndi:BPMNEdge') ||
-      is(element, 'bpmndi:BPMNDiagram') ||
-      is(element, 'bpmndi:BPMNPlane')
-    )
-  }
-
-  _prefix(element: any): string {
-    for (const [type, prefix] of ID_PREFIXES) {
-      if (is(element, type)) return prefix
-    }
-    const local = String(element.$type || 'Element').split(':').pop()
-    return `${local}_`
-  }
-
-  _ensureId(element: any): void {
+  /** Vergibt bzw. beansprucht die Kennung eines Elements. */
+  _ensureId(element: ModdleElement): void {
+    const ids = getIds(this.moddle)
     if (element.id) {
-      getIds(this._model).claim(element.id, element)
+      ids.claim(element.id, element)
       return
     }
-    if (!this._needsId(element)) return
-    element.id = getIds(this._model).nextPrefixed(this._prefix(element), element)
+    if (isAny(element, NEEDS_ID)) element.id = ids.nextPrefixed(this.prefix(element), element)
   }
 
-  create(type: string, attrs: Record<string, any> = {}): any {
-    const element = this._model.create(type, attrs)
+  create(type: string, attrs: Record<string, unknown> = {}): ModdleElement {
+    const element = this.moddle.create(type, attrs)
     this._ensureId(element)
     return element
   }
 
-  createDiLabel(): any {
+  createDiLabel(): ModdleElement {
     return this.create('bpmndi:BPMNLabel', { bounds: this.createDiBounds() })
   }
 
-  createDiShape(semantic: any, attrs: Record<string, any> = {}): any {
+  createDiShape(semantic: ModdleElement, attrs: Record<string, unknown> = {}): ModdleElement {
     return this.create('bpmndi:BPMNShape', {
       id: semantic.id ? `${semantic.id}_di` : undefined,
       bpmnElement: semantic,
@@ -116,41 +113,32 @@ export default class BpmnFactory {
     })
   }
 
-  createDiBounds(bounds?: { x: number; y: number; width: number; height: number }): any {
-    return this.create('dc:Bounds', bounds ? pick(bounds) : {})
+  createDiBounds(bounds?: Bounds): ModdleElement {
+    return this.create('dc:Bounds', bounds ? { ...roundBounds(bounds) } : {})
   }
 
-  createDiWaypoints(waypoints: { x: number; y: number }[]): any[] {
-    return (waypoints || []).map((point) => this.createDiWaypoint(point))
+  createDiWaypoints(waypoints: readonly Point[]): ModdleElement[] {
+    return waypoints.map((point) => this.createDiWaypoint(point))
   }
 
-  createDiWaypoint(point: { x: number; y: number }): any {
+  createDiWaypoint(point: Point): ModdleElement {
     return this.create('dc:Point', { x: point.x, y: point.y })
   }
 
-  createDiEdge(semantic: any, attrs: Record<string, any> = {}): any {
+  createDiEdge(semantic: ModdleElement, attrs: Record<string, unknown> = {}): ModdleElement {
     return this.create('bpmndi:BPMNEdge', {
       id: semantic.id ? `${semantic.id}_di` : undefined,
       bpmnElement: semantic,
-      waypoint: this.createDiWaypoints([]),
+      waypoint: [],
       ...attrs,
     })
   }
 
-  createDiPlane(semantic: any, attrs: Record<string, any> = {}): any {
+  createDiPlane(semantic: ModdleElement, attrs: Record<string, unknown> = {}): ModdleElement {
     return this.create('bpmndi:BPMNPlane', { bpmnElement: semantic, ...attrs })
   }
 
-  createDiDiagram(plane: any): any {
+  createDiDiagram(plane: ModdleElement): ModdleElement {
     return this.create('bpmndi:BPMNDiagram', { plane })
-  }
-}
-
-function pick(bounds: { x: number; y: number; width: number; height: number }) {
-  return {
-    x: Math.round(bounds.x),
-    y: Math.round(bounds.y),
-    width: Math.round(bounds.width),
-    height: Math.round(bounds.height),
   }
 }

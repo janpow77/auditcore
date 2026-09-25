@@ -8,80 +8,98 @@
 
 import CommandInterceptor from 'diagram-js/lib/command/CommandInterceptor'
 
-import { getBusinessObject, getEventDefinition, is } from '../../util/ModelUtil'
+import { getBusinessObject, getEventDefinition, is, isAny } from '../../util/ModelUtil'
+import type { BpmnElement, CommandEvent, EventBus, ModdleElement } from '../../types'
+import type BpmnFactory from '../BpmnFactory'
+import type BpmnReplace from '../../replace/BpmnReplace'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/** Ereignisdefinitionen, die ein gelöstes Randereignis als Zwischenereignis behält. */
+const CATCH_DEFINITIONS = [
+  'bpmn:MessageEventDefinition',
+  'bpmn:TimerEventDefinition',
+  'bpmn:SignalEventDefinition',
+  'bpmn:ConditionalEventDefinition',
+]
 
-export default class EventBehavior extends (CommandInterceptor as any) {
-  static $inject = ['eventBus', 'bpmnReplace', 'bpmnFactory', 'injector']
+interface CreateContext {
+  shape?: BpmnElement
+  host?: BpmnElement
+  elements?: BpmnElement[]
+  hints?: { attach?: boolean }
+}
 
-  constructor(eventBus: any, private _bpmnReplace: any, bpmnFactory: any, injector: any) {
+interface MoveContext {
+  shapes?: BpmnElement[]
+  newHost?: BpmnElement
+}
+
+export default class EventBehavior extends CommandInterceptor {
+  static $inject = ['eventBus', 'bpmnReplace', 'bpmnFactory']
+
+  constructor(
+    eventBus: EventBus,
+    private readonly bpmnReplace: BpmnReplace,
+    private readonly bpmnFactory: BpmnFactory,
+  ) {
     super(eventBus)
+    this.preExecute('elements.create', 1500, (event: CommandEvent<CreateContext>) => {
+      const { context } = event
+      if (!context.hints?.attach) return
+      const shapes = (context.elements || []).filter((element) => !element.waypoints && !element.labelTarget)
+      if (shapes.length === 1 && shapes[0]) this.toBoundary(shapes[0])
+    })
+    this.preExecute('shape.create', 1500, (event: CommandEvent<CreateContext>) => {
+      if (event.context.host && event.context.shape) this.toBoundary(event.context.shape)
+    })
+    this.postExecuted('elements.move', 500, (event: CommandEvent<MoveContext>) => this.afterMove(event.context))
+  }
 
-    // Beim Anlegen mit Anheften: semantisch direkt Randereignis.
-    const toBoundary = (shape: any) => {
-      if (!shape || !is(shape, 'bpmn:Event') || is(shape, 'bpmn:BoundaryEvent')) return
-      const oldBo = getBusinessObject(shape)
-      const newBo = bpmnFactory.create('bpmn:BoundaryEvent')
-      const definition = getEventDefinition(shape)
-      if (definition) {
-        definition.$parent = newBo
-        newBo.get('eventDefinitions').push(definition)
-      }
-      if (oldBo.name) newBo.name = oldBo.name
-      shape.businessObject = newBo
-      if (shape.di) shape.di.bpmnElement = newBo
-      shape.id = newBo.id
-      shape.type = 'bpmn:BoundaryEvent'
+  /** Neues Ereignis vor dem Anlegen semantisch zum Randereignis machen. */
+  private toBoundary(shape: BpmnElement): void {
+    if (!is(shape, 'bpmn:Event') || is(shape, 'bpmn:BoundaryEvent')) return
+    const oldBo = getBusinessObject(shape)
+    const newBo = this.bpmnFactory.create('bpmn:BoundaryEvent')
+    const definition = getEventDefinition(shape)
+    if (definition) {
+      definition.$parent = newBo
+      newBo.get<ModdleElement[]>('eventDefinitions').push(definition)
     }
+    if (oldBo.name) newBo.name = oldBo.name
+    shape.businessObject = newBo
+    if (shape.di) shape.di.bpmnElement = newBo
+    shape.id = newBo.id as string
+    shape.type = 'bpmn:BoundaryEvent'
+  }
 
-    this.preExecute('elements.create', 1500, (event: any) => {
-      const context = event.context
-      const hints = context.hints || {}
-      if (!hints.attach) return
-      const shapes = (context.elements || []).filter((element: any) => !element.waypoints && !element.labelTarget)
-      if (shapes.length === 1) toBoundary(shapes[0])
-    })
+  private afterMove(context: MoveContext): void {
+    const shapes = context.shapes || []
+    const [single] = shapes
+    if (context.newHost && shapes.length === 1 && single) {
+      this.attach(single)
+      return
+    }
+    for (const shape of shapes) {
+      if (is(shape, 'bpmn:BoundaryEvent') && !shape.host && shape.parent) this.detach(shape)
+    }
+  }
 
-    this.preExecute('shape.create', 1500, (event: any) => {
-      const context = event.context
-      if (context.host) toBoundary(context.shape)
-    })
+  private attach(shape: BpmnElement): void {
+    if (!is(shape, 'bpmn:Event') || is(shape, 'bpmn:BoundaryEvent') || !shape.parent) return
+    const definition = getEventDefinition(shape)
+    this.bpmnReplace.replaceElement(
+      shape,
+      { type: 'bpmn:BoundaryEvent', ...(definition ? { eventDefinitionType: definition.$type } : {}) },
+      { select: false },
+    )
+  }
 
-    // Verschieben mit Anheften / Lösen
-    this.postExecuted('elements.move', 500, (event: any) => {
-      const context = event.context
-      const shapes: any[] = context.shapes || []
-      const newHost = context.newHost
-      if (newHost && shapes.length === 1) {
-        const shape = shapes[0]
-        if (is(shape, 'bpmn:Event') && !is(shape, 'bpmn:BoundaryEvent') && shape.parent) {
-          const definition = getEventDefinition(shape)
-          this._bpmnReplace.replaceElement(
-            shape,
-            { type: 'bpmn:BoundaryEvent', ...(definition ? { eventDefinitionType: definition.$type } : {}) },
-            { select: false },
-          )
-        }
-        return
-      }
-      for (const shape of shapes) {
-        if (is(shape, 'bpmn:BoundaryEvent') && !shape.host && shape.parent) {
-          const definition = getEventDefinition(shape)
-          const keep =
-            definition &&
-            ['bpmn:MessageEventDefinition', 'bpmn:TimerEventDefinition', 'bpmn:SignalEventDefinition', 'bpmn:ConditionalEventDefinition'].some(
-              (type) => is(definition, type),
-            )
-          this._bpmnReplace.replaceElement(
-            shape,
-            { type: 'bpmn:IntermediateCatchEvent', ...(keep ? { eventDefinitionType: definition.$type } : {}) },
-            { select: false },
-          )
-        }
-      }
-    })
-
-    void injector
+  private detach(shape: BpmnElement): void {
+    const definition = getEventDefinition(shape)
+    const keep = !!definition && isAny(definition, CATCH_DEFINITIONS)
+    this.bpmnReplace.replaceElement(
+      shape,
+      { type: 'bpmn:IntermediateCatchEvent', ...(keep && definition ? { eventDefinitionType: definition.$type } : {}) },
+      { select: false },
+    )
   }
 }

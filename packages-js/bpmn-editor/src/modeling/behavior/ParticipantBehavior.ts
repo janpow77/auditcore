@@ -9,115 +9,95 @@
 import CommandInterceptor from 'diagram-js/lib/command/CommandInterceptor'
 
 import { getBusinessObject, is, isHorizontal } from '../../util/ModelUtil'
+import { toBounds } from '../LaneUtil'
+import type { BpmnElement, Bounds, Canvas, CommandEvent, EventBus, Point } from '../../types'
+import type Modeling from '../Modeling'
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+const PADDING = { band: 50, end: 40, side: 30 }
 
-const PADDING = { left: 50, right: 40, top: 30, bottom: 30 }
-
-export default class ParticipantBehavior extends (CommandInterceptor as any) {
-  static $inject = ['eventBus', 'modeling', 'canvas', 'elementRegistry']
-
-  constructor(eventBus: any, modeling: any, canvas: any, _elementRegistry: any) {
-    super(eventBus)
-
-    const wrapCreate = (context: any, shape: any) => {
-      const parent = context.parent || context.target
-      if (!shape || !is(shape, 'bpmn:Participant') || !parent || parent.parent) return
-      if (!is(parent, 'bpmn:Process')) return
-      const root = parent
-      const processBo = getBusinessObject(root)
-      const children = root.children.filter((child: any) => !child.labelTarget || true)
-
-      // Der Pool übernimmt den vorhandenen Prozess.
-      if (getBusinessObject(shape).processRef !== processBo) {
-        getBusinessObject(shape).processRef = processBo
-      }
-
-      if (children.length > 0) {
-        const shapes = children.filter((child: any) => !child.waypoints)
-        const bbox = getBounds(shapes)
-        const horizontal = isHorizontal(shape)
-        const bounds = {
-          x: bbox.x - (horizontal ? PADDING.left : PADDING.top),
-          y: bbox.y - (horizontal ? PADDING.top : PADDING.left),
-          width: bbox.width + PADDING.left + PADDING.right,
-          height: bbox.height + PADDING.top + PADDING.bottom,
-        }
-        bounds.width = Math.max(bounds.width, shape.width)
-        bounds.height = Math.max(bounds.height, shape.height)
-        shape.width = bounds.width
-        shape.height = bounds.height
-        context.wrapChildren = children
-        return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 }
-      }
-      context.wrapChildren = []
-      return null
-    }
-
-    this.preExecute('shape.create', 1500, (event: any) => {
-      const context = event.context
-      const shape = context.shape
-      if (!is(shape, 'bpmn:Participant')) return
-      const parent = context.parent
-      if (!parent || parent.parent || !is(parent, 'bpmn:Process')) return
-      const center = wrapCreate(context, shape)
-      if (center) context.position = center
-      const collaborationRoot = modeling.makeCollaboration()
-      context.parent = collaborationRoot
-    })
-
-    this.postExecute('shape.create', (event: any) => {
-      const context = event.context
-      const children: any[] = context.wrapChildren
-      if (!children || children.length === 0) return
-      const movable = children.filter((child: any) => !child.labelTarget && !child.host && child.parent)
-      if (movable.length) modeling.moveElements(movable, { x: 0, y: 0 }, context.shape, { autoResize: false })
-    })
-
-    // Mehrfaches Einfügen (Palette nutzt elements.create): gleiches Verhalten.
-    this.preExecute('elements.create', 1500, (event: any) => {
-      const context = event.context
-      const elements: any[] = context.elements || []
-      const participant = elements.find((element) => is(element, 'bpmn:Participant') && !element.parent)
-      const parent = context.parent
-      if (!participant || !parent || parent.parent || !is(parent, 'bpmn:Process')) return
-      if (elements.filter((element) => !element.labelTarget && !element.waypoints).length !== 1) return
-      const center = wrapCreate(context, participant)
-      if (center) context.position = center
-      context.parent = modeling.makeCollaboration()
-    })
-
-    this.postExecute('elements.create', (event: any) => {
-      const context = event.context
-      const children: any[] = context.wrapChildren
-      if (!children || children.length === 0) return
-      const participant = (context.elements || []).find((element: any) => is(element, 'bpmn:Participant'))
-      const movable = children.filter((child: any) => !child.labelTarget && !child.host && child.parent)
-      if (participant && movable.length) modeling.moveElements(movable, { x: 0, y: 0 }, participant, { autoResize: false })
-    })
-
-    // Letzter Pool gelöscht → Prozess
-    this.postExecute('shape.delete', (event: any) => {
-      const shape = event.context.shape
-      if (!is(shape, 'bpmn:Participant')) return
-      const root = canvas.getRootElement()
-      if (!is(root, 'bpmn:Collaboration')) return
-      const remaining = root.children.filter((child: any) => !child.labelTarget)
-      if (remaining.length === 0) modeling.makeProcess()
-    })
-  }
+interface CreateContext {
+  shape?: BpmnElement
+  elements?: BpmnElement[]
+  parent?: BpmnElement
+  position?: Point
+  wrapChildren?: BpmnElement[]
 }
 
-function getBounds(shapes: any[]): { x: number; y: number; width: number; height: number } {
-  let minX = Infinity
-  let minY = Infinity
-  let maxX = -Infinity
-  let maxY = -Infinity
-  for (const shape of shapes) {
-    minX = Math.min(minX, shape.x)
-    minY = Math.min(minY, shape.y)
-    maxX = Math.max(maxX, shape.x + shape.width)
-    maxY = Math.max(maxY, shape.y + shape.height)
-  }
+function boundingBox(shapes: BpmnElement[]): Bounds {
+  const boxes = shapes.map(toBounds)
+  const minX = Math.min(...boxes.map((box) => box.x))
+  const minY = Math.min(...boxes.map((box) => box.y))
+  const maxX = Math.max(...boxes.map((box) => box.x + box.width))
+  const maxY = Math.max(...boxes.map((box) => box.y + box.height))
   return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
+}
+
+/** Neue Lage des Pools, sodass er den vorhandenen Inhalt umschließt. */
+function wrappingCenter(participant: BpmnElement, children: BpmnElement[]): Point | null {
+  const shapes = children.filter((child) => !child.waypoints)
+  if (shapes.length === 0) return null
+  const box = boundingBox(shapes)
+  const horizontal = isHorizontal(participant)
+  const x = box.x - (horizontal ? PADDING.band : PADDING.side)
+  const y = box.y - (horizontal ? PADDING.side : PADDING.band)
+  const width = Math.max(box.width + PADDING.band + PADDING.end, participant.width as number)
+  const height = Math.max(box.height + PADDING.side * 2, participant.height as number)
+  participant.width = width
+  participant.height = height
+  return { x: x + width / 2, y: y + height / 2 }
+}
+
+function isProcessRoot(element: BpmnElement | undefined): element is BpmnElement {
+  return !!element && !element.parent && is(element, 'bpmn:Process')
+}
+
+export default class ParticipantBehavior extends CommandInterceptor {
+  static $inject = ['eventBus', 'modeling', 'canvas']
+
+  constructor(
+    eventBus: EventBus,
+    private readonly modeling: Modeling,
+    private readonly canvas: Canvas,
+  ) {
+    super(eventBus)
+    this.preExecute('shape.create', 1500, (event: CommandEvent<CreateContext>) => {
+      const { context } = event
+      if (context.shape && is(context.shape, 'bpmn:Participant')) this.prepareFirstParticipant(context, context.shape)
+    })
+    this.preExecute('elements.create', 1500, (event: CommandEvent<CreateContext>) => {
+      const { context } = event
+      const shapes = (context.elements || []).filter((element) => !element.labelTarget && !element.waypoints)
+      const [participant] = shapes
+      if (shapes.length === 1 && participant && is(participant, 'bpmn:Participant')) this.prepareFirstParticipant(context, participant)
+    })
+    this.postExecute(['shape.create', 'elements.create'], (event: CommandEvent<CreateContext>) => this.wrap(event.context))
+    this.postExecute('shape.delete', (event: CommandEvent<CreateContext>) => this.revertToProcess(event.context.shape))
+  }
+
+  /** Erster Pool: Prozess übernehmen, Wurzel zur Kollaboration machen. */
+  private prepareFirstParticipant(context: CreateContext, participant: BpmnElement): void {
+    const root = context.parent
+    if (!isProcessRoot(root)) return
+    getBusinessObject(participant).processRef = getBusinessObject(root)
+    context.wrapChildren = ((root.children || []) as BpmnElement[]).slice()
+    const center = wrappingCenter(participant, context.wrapChildren)
+    if (center) context.position = center
+    context.parent = this.modeling.makeCollaboration()
+  }
+
+  private wrap(context: CreateContext): void {
+    const children = context.wrapChildren
+    if (!children || children.length === 0) return
+    const participant = context.shape || (context.elements || []).find((element) => is(element, 'bpmn:Participant'))
+    const movable = children.filter((child) => !child.labelTarget && !child.host && child.parent)
+    if (participant && movable.length) this.modeling.moveElements(movable as never, { x: 0, y: 0 }, participant as never, { autoResize: false } as never)
+  }
+
+  private revertToProcess(shape: BpmnElement | undefined): void {
+    if (!shape || !is(shape, 'bpmn:Participant')) return
+    const root = this.canvas.getRootElement() as unknown as BpmnElement
+    if (!is(root, 'bpmn:Collaboration')) return
+    const remaining = ((root.children || []) as BpmnElement[]).filter((child) => !child.labelTarget)
+    if (remaining.length === 0) this.modeling.makeProcess()
+  }
 }

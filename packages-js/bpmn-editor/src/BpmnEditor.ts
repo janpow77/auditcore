@@ -14,8 +14,8 @@ import { translations } from './i18n/translations'
 import { exportSvg } from './export/SvgExport'
 import { DEFAULT_MODULES } from './modules'
 import { INITIAL_DIAGRAM } from './initialDiagram'
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { BpmnImporter } from './import/Importer'
+import type { Canvas, ElementRegistry, EventBus, Moddle, ModdleElement, Translate } from './types'
 
 export interface EditorOptions {
   container: HTMLElement
@@ -28,7 +28,7 @@ export interface EditorOptions {
   gridSize?: number
   /** Sprache der Oberfläche (Standard 'de') */
   locale?: 'de' | 'en'
-  /** Zusätzliche Konfiguration einzelner Module (z. B. `bpmnRenderer`). */
+  /** Zusätzliche Konfiguration einzelner Module (z. B. `bpmnRenderer`, `colorPicker`, `minimap`, `grid`). */
   config?: Record<string, unknown>
 }
 
@@ -36,123 +36,129 @@ export interface ImportXMLResult {
   warnings: string[]
 }
 
+type Listener = (event: unknown) => unknown
+
+interface DiagramInstance {
+  get<T>(name: string, strict?: boolean): T
+  invoke<T>(fn: (...args: unknown[]) => T): T
+  clear(): void
+  destroy(): void
+}
+
+type DiagramConstructor = new (options: Record<string, unknown>) => DiagramInstance
+
+type ParseError = Error & { warnings?: Array<{ message: string } | string> }
+
+function toMessage(warning: { message?: string } | string): string {
+  return typeof warning === 'string' ? warning : warning?.message || String(warning)
+}
+
+function createContainer(host: HTMLElement, label: string): HTMLElement {
+  const container = document.createElement('div')
+  container.className = 'fa-bpmn-editor'
+  container.setAttribute('role', 'application')
+  container.setAttribute('aria-label', label)
+  Object.assign(container.style, { width: '100%', height: '100%', position: 'relative' })
+  host.appendChild(container)
+  return container
+}
+
 export class BpmnEditor {
-  private _diagram: any
-  private _moddle: any
-  private _definitions: any = null
-  private _container: HTMLElement
-  private _hostContainer: HTMLElement
-  private _destroyed = false
+  private readonly diagram: DiagramInstance
+  private readonly moddle: Moddle
+  private readonly element: HTMLElement
+  private definitions: ModdleElement | null = null
+  private destroyed = false
 
   constructor(options: EditorOptions) {
-    if (!options || !options.container) {
-      throw new Error('BpmnEditor: Option „container“ fehlt')
-    }
-    this._hostContainer = options.container
-    this._container = document.createElement('div')
-    this._container.className = 'fa-bpmn-editor'
-    this._container.setAttribute('role', 'application')
-    this._container.style.width = '100%'
-    this._container.style.height = '100%'
-    this._container.style.position = 'relative'
-    this._hostContainer.appendChild(this._container)
-
+    if (!options || !options.container) throw new Error('BpmnEditor: Option „container“ fehlt')
     const locale = options.locale || 'de'
-    this._moddle = createModdle(options.moddleExtensions || {})
-
+    const translate = createTranslate(locale)
+    this.element = createContainer(options.container, translate('BPMN diagram editor'))
+    this.moddle = createModdle(options.moddleExtensions || {})
     const editorModule = {
       bpmnEditor: ['value', this],
-      moddle: ['value', this._moddle],
-      translate: ['value', createTranslate(locale)],
+      moddle: ['value', this.moddle],
+      translate: ['value', translate],
     }
-
-    const config: Record<string, unknown> = {
+    const DiagramClass = Diagram as unknown as DiagramConstructor
+    this.diagram = new DiagramClass({
       ...(options.config || {}),
-      canvas: { container: this._container, deferUpdate: false },
+      canvas: { container: this.element, deferUpdate: false },
       keyboard: options.keyboard,
       gridSize: options.gridSize ?? 10,
       locale,
-    }
-
-    this._container.setAttribute('aria-label', createTranslate(locale)('BPMN diagram editor'))
-
-    this._diagram = new (Diagram as any)({
-      ...config,
       modules: [...DEFAULT_MODULES, editorModule, ...(options.additionalModules || [])],
     })
   }
 
   /** Liest BPMN-2.0-XML ein und stellt das Diagramm dar. */
   async importXML(xml: string): Promise<ImportXMLResult> {
-    this._assertAlive()
-    const eventBus = this.get<any>('eventBus')
-    let parseResult: any
-    xml = eventBus.fire('import.parse.start', { xml }) || xml
+    this.assertAlive()
+    const eventBus = this.get<EventBus>('eventBus')
+    const source = (eventBus.fire('import.parse.start', { xml }) as string | undefined) || xml
+    let parsed: Awaited<ReturnType<Moddle['fromXML']>>
     try {
-      parseResult = await this._moddle.fromXML(xml, 'bpmn:Definitions')
-    } catch (error: any) {
-      const warnings = (error.warnings || []).map(toMessage)
-      eventBus.fire('import.parse.complete', { error, warnings })
-      eventBus.fire('import.done', { error, warnings })
-      const wrapped = new Error(`${this.get<any>('translate')('Invalid BPMN XML')}: ${error.message}`) as Error & {
-        warnings?: string[]
-      }
-      wrapped.warnings = warnings
-      throw wrapped
+      parsed = await this.moddle.fromXML(source, 'bpmn:Definitions')
+    } catch (error) {
+      throw this.parseFailure(error as ParseError)
     }
-
-    const definitions = parseResult.rootElement
-    const parseWarnings: string[] = (parseResult.warnings || []).map(toMessage)
-    eventBus.fire('import.parse.complete', { error: null, definitions, warnings: parseWarnings })
-
+    const parseWarnings = (parsed.warnings || []).map(toMessage)
+    eventBus.fire('import.parse.complete', { error: null, definitions: parsed.rootElement, warnings: parseWarnings })
     try {
-      const result = this.importDefinitions(definitions, parseResult.elementsById)
+      const result = this.importDefinitions(parsed.rootElement, parsed.elementsById)
       const warnings = [...parseWarnings, ...result.warnings]
       eventBus.fire('import.done', { error: null, warnings })
       return { warnings }
-    } catch (error: any) {
+    } catch (error) {
       eventBus.fire('import.done', { error, warnings: parseWarnings })
-      error.warnings = parseWarnings
+      Object.assign(error as object, { warnings: parseWarnings })
       throw error
     }
   }
 
+  private parseFailure(error: ParseError): Error {
+    const eventBus = this.get<EventBus>('eventBus')
+    const warnings = (error.warnings || []).map(toMessage)
+    eventBus.fire('import.parse.complete', { error, warnings })
+    eventBus.fire('import.done', { error, warnings })
+    const wrapped = new Error(`${this.get<Translate>('translate')('Invalid BPMN XML')}: ${error.message}`) as Error & { warnings?: string[] }
+    wrapped.warnings = warnings
+    return wrapped
+  }
+
   /** Stellt bereits geparste Definitionen dar. */
-  importDefinitions(definitions: any, elementsById?: Record<string, any>): ImportXMLResult {
+  importDefinitions(definitions: ModdleElement, elementsById?: Record<string, ModdleElement>): ImportXMLResult {
     this.clear()
-    this._definitions = definitions
-    const ids = getIds(this._moddle)
+    this.definitions = definitions
+    const ids = getIds(this.moddle)
     ids.clear()
-    if (elementsById) {
-      for (const [id, element] of Object.entries(elementsById)) ids.claim(id, element)
-    } else {
-      claimAll(definitions, ids)
-    }
-    const eventBus = this.get<any>('eventBus')
+    for (const [id, element] of Object.entries(elementsById || collectIds(definitions))) ids.claim(id, element)
+    const eventBus = this.get<EventBus>('eventBus')
     eventBus.fire('import.render.start', { definitions })
-    const result = this.get<any>('bpmnImporter').importDefinitions(definitions)
+    const result = this.get<BpmnImporter>('bpmnImporter').importDefinitions(definitions)
     eventBus.fire('import.render.complete', { error: null, warnings: result.warnings })
     return result
   }
 
   /** Serialisiert das Diagramm als BPMN-2.0-XML (mit DI). */
   async saveXML(opts: { format?: boolean } = {}): Promise<{ xml: string }> {
-    this._assertAlive()
-    if (!this._definitions) throw new Error(this.get<any>('translate')('No diagram loaded'))
-    const eventBus = this.get<any>('eventBus')
-    const definitions = eventBus.fire('saveXML.start', { definitions: this._definitions }) || this._definitions
-    const result = await this._moddle.toXML(definitions, { format: !!opts.format, preamble: true })
-    const xml = eventBus.fire('saveXML.serialized', { xml: result.xml }) || result.xml
+    this.assertAlive()
+    if (!this.definitions) throw new Error(this.get<Translate>('translate')('No diagram loaded'))
+    const eventBus = this.get<EventBus>('eventBus')
+    const definitions = (eventBus.fire('saveXML.start', { definitions: this.definitions }) as ModdleElement | undefined) || this.definitions
+    const result = await this.moddle.toXML(definitions, { format: !!opts.format, preamble: true })
+    const xml = (eventBus.fire('saveXML.serialized', { xml: result.xml }) as string | undefined) || result.xml
     eventBus.fire('saveXML.done', { xml })
     return { xml }
   }
 
   /** Erzeugt ein eigenständiges SVG der aktuell angezeigten Ebene. */
   async saveSVG(): Promise<{ svg: string }> {
-    this._assertAlive()
-    const eventBus = this.get<any>('eventBus')
+    this.assertAlive()
+    const eventBus = this.get<EventBus>('eventBus')
     eventBus.fire('saveSVG.start')
-    const svg = exportSvg(this.get('canvas'), this.get('elementRegistry'))
+    const svg = exportSvg(this.get<Canvas>('canvas'), this.get<ElementRegistry>('elementRegistry'))
     eventBus.fire('saveSVG.done', { svg })
     return { svg }
   }
@@ -163,75 +169,72 @@ export class BpmnEditor {
   }
 
   /** Aktuelle `bpmn:Definitions` (oder `null`). */
-  getDefinitions(): any {
-    return this._definitions
+  getDefinitions(): ModdleElement | null {
+    return this.definitions
   }
 
   /** Zugriff auf Dienste des diagram-js-Injektors. */
   get<T = unknown>(service: string, strict = true): T {
-    return this._diagram.get(service, strict)
+    return this.diagram.get<T>(service, strict)
   }
 
-  invoke<T = unknown>(fn: (...args: any[]) => T): T {
-    return this._diagram.invoke(fn)
+  invoke<T = unknown>(fn: (...args: unknown[]) => T): T {
+    return this.diagram.invoke(fn)
   }
 
-  on(event: string, cb: (e: unknown) => void, priority?: number): void
-  on(event: string, priority: number, cb: (e: unknown) => void): void
-  on(event: string, a: any, b?: any): void {
-    const eventBus = this.get<any>('eventBus')
-    if (typeof a === 'function') {
-      if (typeof b === 'number') eventBus.on(event, b, a)
-      else eventBus.on(event, a)
-    } else {
-      eventBus.on(event, a, b)
-    }
+  on(event: string, cb: Listener, priority?: number): void {
+    const eventBus = this.get<EventBus>('eventBus')
+    if (typeof priority === 'number') eventBus.on(event, priority, cb)
+    else eventBus.on(event, cb)
   }
 
-  off(event: string, cb: (e: unknown) => void): void {
-    this.get<any>('eventBus').off(event, cb)
+  off(event: string, cb: Listener): void {
+    this.get<EventBus>('eventBus').off(event, cb)
   }
 
   /** Entfernt alle Elemente (ohne Definitionen zu verwerfen). */
   clear(): void {
-    this._diagram.clear()
+    this.diagram.clear()
   }
 
   /** Gibt alle Ressourcen frei und entfernt die Oberfläche. */
   destroy(): void {
-    if (this._destroyed) return
-    this._destroyed = true
-    this._diagram.destroy()
-    this._container.parentNode?.removeChild(this._container)
+    if (this.destroyed) return
+    this.destroyed = true
+    this.diagram.destroy()
+    this.element.remove()
   }
 
   /** Das vom Editor verwaltete Container-Element. */
   get container(): HTMLElement {
-    return this._container
+    return this.element
   }
 
-  private _assertAlive(): void {
-    if (this._destroyed) throw new Error('BpmnEditor wurde bereits zerstört')
+  private assertAlive(): void {
+    if (this.destroyed) throw new Error('BpmnEditor wurde bereits zerstört')
   }
 }
 
-function toMessage(warning: any): string {
-  if (typeof warning === 'string') return warning
-  return warning?.message || String(warning)
+/** Sammelt alle Kennungen eines moddle-Baums (ohne Verweise zu verfolgen). */
+function collectIds(root: ModdleElement): Record<string, ModdleElement> {
+  const result: Record<string, ModdleElement> = {}
+  const seen = new Set<ModdleElement>()
+  const visit = (element: ModdleElement) => {
+    if (seen.has(element)) return
+    seen.add(element)
+    if (element.id) result[element.id] = element
+    for (const property of element.$descriptor?.properties || []) {
+      if (property.isReference) continue
+      for (const child of childElements(element.get(property.name))) visit(child)
+    }
+  }
+  visit(root)
+  return result
 }
 
-function claimAll(element: any, ids: any, seen = new Set<any>()): void {
-  if (!element || typeof element !== 'object' || seen.has(element)) return
-  seen.add(element)
-  if (element.id && typeof element.$instanceOf === 'function') ids.claim(element.id, element)
-  const descriptor = element.$descriptor
-  if (!descriptor) return
-  for (const property of descriptor.properties || []) {
-    if (property.isReference) continue
-    const value = element[property.name]
-    if (Array.isArray(value)) value.forEach((child) => claimAll(child, ids, seen))
-    else if (value && typeof value === 'object') claimAll(value, ids, seen)
-  }
+function childElements(value: unknown): ModdleElement[] {
+  const values = Array.isArray(value) ? value : [value]
+  return values.filter((item): item is ModdleElement => !!item && typeof item === 'object' && typeof (item as ModdleElement).$type === 'string')
 }
 
 export { translations }

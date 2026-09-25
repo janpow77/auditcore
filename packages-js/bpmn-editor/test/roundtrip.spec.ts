@@ -6,7 +6,8 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { importXml, svc } from './helpers/editor'
+import { importXml } from './helpers/editor'
+import type { ElementRegistry } from '../src/types'
 import { canonicalXml, listFixtures, readFixture } from './helpers/fixtures'
 
 const FIXTURES = [...listFixtures('synthetisch'), ...listFixtures('audit-designer')]
@@ -49,9 +50,10 @@ describe('Rundlauf Import → Export', () => {
   it('stellt jedes Element mit DI dar', async () => {
     const xml = readFixture('synthetisch/alle-elemente.bpmn')
     const { editor } = await importXml(xml)
-    const registry = svc(editor, 'elementRegistry')
+    const registry = editor.get<ElementRegistry>('elementRegistry')
     const ids = [...xml.matchAll(/bpmnElement="([^"]+)"/g)].map((match) => match[1])
     for (const id of ids) {
+      if (!id) continue
       const planeRoot = registry.get(`${id}_plane`)
       expect(registry.get(id) || planeRoot, id).toBeTruthy()
     }
