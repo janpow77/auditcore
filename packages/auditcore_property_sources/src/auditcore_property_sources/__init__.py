@@ -20,7 +20,7 @@ from .catalog import catalog, source_entry
 from .errors import AccessNotPermitted, DependencyError, PropertySourceError
 from .robots import RobotsRules, is_allowed, parse_robots
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "AccessNotPermitted",

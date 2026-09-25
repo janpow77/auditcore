@@ -13,8 +13,9 @@ import re
 from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
+from auditcore_common.hashing import canonical_sha256
+
 from .errors import NotFoundError, ValidationError
-from .hashing import canonical_sha256
 from .legacy_admin import legacy_activities_with_identifiers
 from .model import RegisterVersion
 from .ports import IdFactory
@@ -114,7 +115,7 @@ def _check_activity_types(activity: Mapping[str, object], index: int) -> None:
             )
 
 
-def content_hash(content: Mapping[str, Any]) -> str:
+def content_hash(content: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON content; binds exports and assessments to a version."""
     return canonical_sha256(content)
 
