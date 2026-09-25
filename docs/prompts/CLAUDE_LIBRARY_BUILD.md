@@ -219,7 +219,29 @@ verbindliche FlowAudit-Prüfung des vollständigen betroffenen Projekts beachten
 bei erzeugten Office-Dateien vorhandene XML-/Schema-Prüfwerkzeuge verwenden.
 Fehler analysieren, beheben und erneut prüfen; nichts allein für PASS unterdrücken.
 
-Arbeite mit kleinen logischen Commits und nutze die vorhandene CI. Liefere einen
+Arbeite mit kleinen logischen Commits und nutze die vorhandene CI. PRs nicht
+pollen, sondern sofort nach dem Öffnen zum Auto-Merge anmelden; GitHub mergt per
+Squash, sobald die Required Checks (`code-quality-gate`, `ci-ok`) grün sind, und
+löscht den Branch:
+
+```bash
+gh pr merge <nr> --auto --squash
+# gleichwertig, falls gh pr merge nicht nutzbar ist (node_id aus gh api repos/…/pulls/<nr>):
+gh api graphql -f id=<node_id> -f query='mutation($id:ID!){enablePullRequestAutoMerge(
+  input:{pullRequestId:$id,mergeMethod:SQUASH}){clientMutationId}}'
+```
+
+Auto-Merge gibt es nur über GraphQL, nicht über REST. Ist das GraphQL-Kontingent
+erschöpft, die Anmeldung nach dem Reset nachholen (`gh api rate_limit`).
+
+Den Status bei Bedarf per REST lesen (`gh api repos/janpow77/auditcore/commits/<sha>/check-runs`).
+Formatierung (ruff, ESLint --fix) und reine Baseline-Absenkungen erledigt der
+Workflow `autofix` mit einem Commit „chore(autofix): …“; ebenso aktualisiert
+`update-pr-branches` den Branch nach jedem Push auf main per Merge. Vor dem
+eigenen Push daher `git pull --no-rebase`. Details:
+`docs/deployment/ci-automatisierung.md`.
+
+Liefere einen
 vollständigen Bericht mit Paketnamen/Versionen, Funktionen, Quell-SHAs, Lizenzen,
 Abhängigkeiten, echten Testzahlen, CI, Consumer-Migrationen, pip-/APT-Installation,
 KIRA/Graphify, offenen fachlichen Entscheidungen und Blockern. Bei Veröffentlichung

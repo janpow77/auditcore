@@ -1,5 +1,13 @@
 # Changelog auditcore_dataprotection
 
+## 0.4.2 – Abhängigkeit auf auditcore_reporting 0.2.1
+
+Keine Änderung an Code oder Ergebnissen. Das Extra `excel` verlangt jetzt
+`auditcore_reporting[excel]==0.2.1` (Refaktorierung ohne
+Verhaltensänderung; Profile, Zahlenformate und Arbeitsmappen bytegleich).
+Debian-Zuordnung in `packaging/library-extras.json` entsprechend
+(`python3-auditcore-reporting (>= 0.2.1)`).
+
 ## 0.4.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: Berechnung, Legacy-Adapter, Berichte, Exporte und

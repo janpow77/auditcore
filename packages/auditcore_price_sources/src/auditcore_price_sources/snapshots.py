@@ -12,9 +12,8 @@ import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import Any
 
-from auditcore_harvest import Response, Transport, TransportError
+from auditcore_harvest import JSON, Response, Transport, TransportError
 
 SECRET_PARAMS = frozenset({"apikey", "api_key", "key", "token", "password"})
 
@@ -31,7 +30,7 @@ class SourceSnapshot:
     sha256: str
     body: bytes
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, JSON]:
         """JSON view without the body."""
         return {
             "method": self.method,

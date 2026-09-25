@@ -9,9 +9,9 @@ from importlib.util import find_spec
 def main() -> None:
     """Parse a transparency row, compute its identity, cumulate, run a harvest adapter."""
     package = distribution("auditcore_funding_sources")
-    assert package.version == "0.1.2"
+    assert package.version == "0.1.3"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_harvest==0.1.1"], runtime
+    assert runtime == ["auditcore_common==0.1.0", "auditcore_harvest==0.1.1"], runtime
     assert find_spec("auditcore") is None
     from auditcore_funding_sources import cumulation, snapshot, workshop
 

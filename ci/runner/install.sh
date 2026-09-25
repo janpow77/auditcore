@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Installiert oder aktualisiert die NUC-Runner (idempotent, ohne sudo).
-#   ci/runner/install.sh [ANZAHL]      Standard: 6 Instanzen
+#   ci/runner/install.sh [ANZAHL]      Standard: 10 Instanzen
 #   ci/runner/install.sh --uninstall   Runner stoppen und entfernen
 set -euo pipefail
 
@@ -23,7 +23,7 @@ if [[ "${1:-}" == "--uninstall" ]]; then
   exit 0
 fi
 
-COUNT="${1:-6}"
+COUNT="${1:-10}"
 command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || { echo "gh ist nicht angemeldet"; exit 1; }
 command -v jq >/dev/null || { echo "jq fehlt"; exit 1; }
 

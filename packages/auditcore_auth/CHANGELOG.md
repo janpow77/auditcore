@@ -1,6 +1,6 @@
 # Changelog – auditcore_auth
 
-## 0.1.0 – Erste Fassung
+## 0.1.0 – 2026-09-25
 
 - Passwort-Hashing mit den Profilen `bcrypt`, `bcrypt-passlib` und `argon2id`;
   Verifikation aller gespeicherten bcrypt- und argon2-Formate unabhängig vom

@@ -1,6 +1,7 @@
 name: js-packages
 on:
   push:
+    branches: [main]
     paths:
       - 'packages-js/**'
       - 'package.json'
@@ -8,6 +9,8 @@ on:
       - 'tsconfig.base.json'
       - 'eslint.config.mjs'
       - 'scripts/js/**'
+      - 'scripts/docs/**'
+      - 'docs/bibliotheken/readme-offen.json'
       - '.github/workflows/js-packages.yml'
   pull_request:
     paths:
@@ -17,6 +20,8 @@ on:
       - 'tsconfig.base.json'
       - 'eslint.config.mjs'
       - 'scripts/js/**'
+      - 'scripts/docs/**'
+      - 'docs/bibliotheken/readme-offen.json'
       - '.github/workflows/js-packages.yml'
 permissions:
   contents: read
@@ -33,7 +38,7 @@ jobs:
         node: ['20', '22']
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0
         with:
           node-version: '${{ matrix.node }}'
           cache: npm
@@ -46,3 +51,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - name: README-Schnellstart typprüfen und ausführen (docs/bibliotheken/readme-vorlage.md)
+        run: node scripts/js/check-readme-snippets.mjs
+      - name: README-API-Überblick aktuell
+        run: python3 scripts/docs/api_overview.py --check --js
