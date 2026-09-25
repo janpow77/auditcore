@@ -36,7 +36,9 @@ sudo apt-get install python3-auditcore-geo
 ```
 
 Extras: `[geocoder]` – Nominatim-Adapter (`auditcore_geo.nominatim`) auf
-`auditcore_harvest`; `[dev]` – Test- und Prüfwerkzeuge.
+`auditcore_harvest`; `[web]` – REST-Routen `auditcore_geo.web` auf Starlette
+(Debian: `python3-starlette`); `[fastapi]` – zusätzlich FastAPI-Router
+(`python3-fastapi`); `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
 
@@ -170,6 +172,7 @@ ort = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
 | `auditcore_geo.nominatim` | Nominatim-Geocoder als Quellenadapter auf ``auditcore_harvest`` (Extra ``[geocoder]``). |
 | `auditcore_geo.projektion` | Transversale Mercatorprojektion (UTM) nach Krüger, Reihe bis n³. |
 | `auditcore_geo.vereinfachung` | Linien- und Ringvereinfachung nach Douglas-Peucker. |
+| `auditcore_geo.web` | REST-Vertrag und Routen für Geo-Oberflächen (Extras ``web`` und ``fastapi``). |
 <!-- api-overview:end -->
 
 ## Profile und Konfiguration
@@ -189,6 +192,30 @@ ort = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
   bei regelmäßigen Läufen ≥ 15 s, höchstens 1 000 Anfragen je Tag und Consumer
   (`OEFFENTLICH_TAGESGRENZE`, D5), identifizierenden `user_agent`, Budget und
   https. Eigene Instanzen sind nicht begrenzt.
+
+## Web-Schnittstelle (0.3.0)
+
+`auditcore_geo.web` stellt den REST-Vertrag für die Oberflächenkomponente
+`<flowaudit-geo-map>` aus `@flowaudit/ui` bereit
+([`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md)): Katalog der Erdmodelle
+und Empfehlungen D1/D2, Umkreissuche, Punkt in Fläche mit ausdrücklicher
+Randregel und Randtoleranz, UTM hin und zurück, Douglas-Peucker in Metern
+oder Grad, GeoPackage-Dateien (Upload oder benannte Serverquellen, UTM wird
+zurückgerechnet). Die Vertragsfunktionen sind framework-frei; die Web-Schicht
+trägt wie alle auditcore-Web-Module englische Namen, die JSON-Felder folgen
+den deutschen Begriffen der Bibliothek.
+
+```python
+from auditcore_geo.web import Settings, create_app, create_router
+
+app = create_app("/api/geo")                       # Starlette ([web])
+router = create_router("/api/geo", settings=Settings(max_points=20_000))  # FastAPI
+```
+
+Adresssuche gibt es nur, wenn der Server ausdrücklich einen `Geocoder`
+übergibt (`Settings(geocoder=NominatimGeocoder(...))`, Extra `[geocoder]`,
+Transport/Uhr/Warten injiziert, Zwischenspeicher und Tagesgrenze D5); ohne
+ihn antwortet `/geocode` mit 404 `geocoder_abgeschaltet`.
 
 ## Herkunft und Charakterisierung
 

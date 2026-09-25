@@ -30,7 +30,9 @@
     "auditcore_harvest==0.1.1; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.1)"
   },
   "auditcore_geo": {
-    "auditcore_harvest==0.1.1; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.1)"
+    "auditcore_harvest==0.1.1; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.1)",
+    "starlette>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)",
+    "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92.0)"
   },
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
