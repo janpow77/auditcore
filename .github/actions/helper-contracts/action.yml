@@ -1,0 +1,66 @@
+name: auditcore helper contracts
+description: >-
+  Pflicht-Prüfung der App-Hilfsfunktionen: Scan auf Duplikate von
+  auditcore-Bibliotheksfunktionen, deklarative Fehlmuster-Regeln (Zahlparser,
+  Zeitzonen, Euro-Formatierung, CSV-Formelschutz, 422-Fehlertexte) und die
+  gemeinsamen Vertragsfälle aus contracts/common-cases gegen die im Manifest
+  .auditcore/helpers.json genannten Funktionen. Ratchet gegen
+  .auditcore/helpers-baseline.json: neue Befunde und nicht eingetragene
+  Verbesserungen lassen den Job scheitern. Node.js muss verfügbar sein; für
+  TS-Verträge vorher npm ci im Frontend ausführen.
+inputs:
+  path:
+    description: Wurzel des App-Repositorys
+    required: false
+    default: .
+  manifest:
+    description: Manifest (Standard <path>/.auditcore/helpers.json)
+    required: false
+    default: ''
+  baseline:
+    description: Baseline (Standard <path>/.auditcore/helpers-baseline.json)
+    required: false
+    default: ''
+  compare-ref:
+    description: Git-Revision für die Anhebungsprüfung der Baseline (z. B. origin/main)
+    required: false
+    default: ''
+  output:
+    description: JSON-Bericht
+    required: false
+    default: helper-contracts.json
+  markdown:
+    description: Markdown-Bericht
+    required: false
+    default: helper-contracts.md
+runs:
+  using: composite
+  steps:
+    - name: auditcore aus diesem Action-Stand installieren
+      shell: bash
+      run: |
+        python3 -m venv "$RUNNER_TEMP/auditcore-helpers"
+        "$RUNNER_TEMP/auditcore-helpers/bin/pip" install --quiet "$GITHUB_ACTION_PATH/../../.."
+    - name: Node-Werkzeugkette (TypeScript-Compiler-API, tsx)
+      shell: bash
+      env:
+        AUDITCORE_HELPERS_TOOLCHAIN: ${{ runner.temp }}/auditcore-helpers-node
+      run: '"$RUNNER_TEMP/auditcore-helpers/bin/auditcore-helpers" toolchain'
+    - name: Helfer-Verträge mit Ratchet
+      shell: bash
+      env:
+        AUDITCORE_HELPERS_TOOLCHAIN: ${{ runner.temp }}/auditcore-helpers-node
+        HELPERS_PATH: ${{ inputs.path }}
+        HELPERS_MANIFEST: ${{ inputs.manifest }}
+        HELPERS_BASELINE: ${{ inputs.baseline }}
+        HELPERS_COMPARE_REF: ${{ inputs.compare-ref }}
+        HELPERS_OUTPUT: ${{ inputs.output }}
+        HELPERS_MARKDOWN: ${{ inputs.markdown }}
+      run: |
+        root="$GITHUB_ACTION_PATH/../../.."
+        args=(check "$HELPERS_PATH" --cases "$root/contracts/common-cases" --library-root "$root"
+              --output "$HELPERS_OUTPUT" --markdown "$HELPERS_MARKDOWN" --summary "$GITHUB_STEP_SUMMARY")
+        if [ -n "$HELPERS_MANIFEST" ]; then args+=(--manifest "$HELPERS_MANIFEST"); fi
+        if [ -n "$HELPERS_BASELINE" ]; then args+=(--baseline "$HELPERS_BASELINE"); fi
+        if [ -n "$HELPERS_COMPARE_REF" ]; then args+=(--compare-ref "$HELPERS_COMPARE_REF"); fi
+        "$RUNNER_TEMP/auditcore-helpers/bin/auditcore-helpers" "${args[@]}"

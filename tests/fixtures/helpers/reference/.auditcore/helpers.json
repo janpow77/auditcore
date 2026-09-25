@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "app": "reference",
+  "scan": {
+    "exclude": []
+  },
+  "bindings": [
+    {
+      "contract": "parse-number",
+      "language": "ts",
+      "export": "parseNumber",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:parse-number:parseNumber"
+    },
+    {
+      "contract": "format-money",
+      "language": "ts",
+      "export": "formatMoney",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:format-money:formatMoney"
+    },
+    {
+      "contract": "format-date",
+      "language": "ts",
+      "export": "formatDate",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:format-date:formatDate"
+    },
+    {
+      "contract": "format-datetime",
+      "language": "ts",
+      "export": "formatDateTime",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:format-datetime:formatDateTime"
+    },
+    {
+      "contract": "format-filesize",
+      "language": "ts",
+      "export": "formatFilesize",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:format-filesize:formatFilesize"
+    },
+    {
+      "contract": "iban-valid",
+      "language": "ts",
+      "export": "ibanValid",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:iban-valid:ibanValid"
+    },
+    {
+      "contract": "lei-valid",
+      "language": "ts",
+      "export": "leiValid",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:lei-valid:leiValid"
+    },
+    {
+      "contract": "csv-cell",
+      "language": "ts",
+      "export": "csvCell",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:csv-cell:csvCell"
+    },
+    {
+      "contract": "csv-document",
+      "language": "ts",
+      "export": "csvDocument",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:csv-document:csvDocument"
+    },
+    {
+      "contract": "empty-value",
+      "language": "ts",
+      "export": "formatMoney",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:empty-value:formatMoney"
+    },
+    {
+      "contract": "empty-value",
+      "language": "ts",
+      "export": "formatDate",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:empty-value:formatDate"
+    },
+    {
+      "contract": "parse-number",
+      "language": "python",
+      "export": "parse_number",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:parse-number:parse_number"
+    },
+    {
+      "contract": "format-money",
+      "language": "python",
+      "export": "format_money",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:format-money:format_money"
+    },
+    {
+      "contract": "format-date",
+      "language": "python",
+      "export": "format_date",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:format-date:format_date"
+    },
+    {
+      "contract": "format-datetime",
+      "language": "python",
+      "export": "format_datetime",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:format-datetime:format_datetime"
+    },
+    {
+      "contract": "format-filesize",
+      "language": "python",
+      "export": "format_filesize",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:format-filesize:format_filesize"
+    },
+    {
+      "contract": "iban-valid",
+      "language": "python",
+      "export": "iban_valid",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:iban-valid:iban_valid"
+    },
+    {
+      "contract": "lei-valid",
+      "language": "python",
+      "export": "lei_valid",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:lei-valid:lei_valid"
+    },
+    {
+      "contract": "csv-cell",
+      "language": "python",
+      "export": "csv_cell",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:csv-cell:csv_cell"
+    },
+    {
+      "contract": "csv-document",
+      "language": "python",
+      "export": "csv_document",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:csv-document:csv_document"
+    },
+    {
+      "contract": "empty-value",
+      "language": "python",
+      "export": "format_money",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:empty-value:format_money"
+    },
+    {
+      "contract": "empty-value",
+      "language": "python",
+      "export": "format_date",
+      "module": "refapp.helpers",
+      "python_path": [
+        "backend"
+      ],
+      "id": "python:empty-value:format_date"
+    },
+    {
+      "contract": "api-error-message",
+      "language": "ts",
+      "export": "errorMessage",
+      "module": "frontend/src/helpers.ts",
+      "id": "ts:api-error-message:errorMessage"
+    }
+  ]
+}
