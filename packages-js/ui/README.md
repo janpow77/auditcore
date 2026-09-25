@@ -81,13 +81,26 @@ document.body.append(table)
 
 - **Web Component:** `defineFlowauditElements({ only?, locale? })` aus
   `@flowaudit/ui/elements` registriert `<flowaudit-table>`,
-  `<flowaudit-kanban-board>` und `<flowaudit-kanban-boards>` im Light DOM
+  `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>`,
+  `<flowaudit-sampling>`, `<flowaudit-benford>`,
+  `<flowaudit-screening-review>` und `<flowaudit-risk-flags>` im Light DOM
   (kein Shadow DOM, Designtoken der Seite gelten). Objekte und Listen werden
   als JS-Eigenschaften gesetzt, Ereignisse sind `CustomEvent`s in kebab-case
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
 - **React:** über die Hüllen in `@flowaudit/ui-react` (`FlowauditTable`,
-  `FlowauditKanbanBoard`, `FlowauditKanbanBoards`).
+  `FlowauditKanbanBoard`, `FlowauditKanbanBoards`, `FlowauditSampling`,
+  `FlowauditBenford`, `FlowauditScreeningReview`, `FlowauditRiskFlags`).
+
+Fachkomponenten und ihre REST-Verträge:
+
+| Komponente | Element | Zweck | Vertrag |
+|---|---|---|---|
+| `KanbanBoard`, `KanbanBoardList` | `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>` | Kanban-Boards über einen `BoardPort` | [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md) |
+| `SamplingPanel` | `<flowaudit-sampling>` | Stichprobenumfang und -ziehung über `auditcore_sampling.web` | [`docs/ui/sampling-rest.md`](../../docs/ui/sampling-rest.md) |
+| `BenfordPanel` | `<flowaudit-benford>` | Benford-Analyse über `auditcore_statistics.web` | [`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md) |
+| `ScreeningReview` | `<flowaudit-screening-review>` | Trefferprüfung beim Sanktions-/PEP-Screening | [`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md) |
+| `RiskFlags` | `<flowaudit-risk-flags>` | Risiko-Merkmale aus `auditcore_risk.web`: Verteilung, Filter, Zustand je Datensatz, Begründung; „unbestimmt“ und „übersprungen“ als eigene Zustände | [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md) |
 
 Kanban-Oberfläche mit Ports, Tastaturbedienung und Barrierefreiheit:
 [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md). Neue
@@ -96,7 +109,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (262):
+Exporte der Einstiegspunkte aus `package.json#exports` (327):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -132,6 +145,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `ChartBar` | Schnittstelle | – | `benford/chart` |
 | `@flowaudit/ui` | `ChartBox` | Schnittstelle | – | `benford/chart` |
 | `@flowaudit/ui` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
+| `@flowaudit/ui` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
 | `@flowaudit/ui` | `ColumnView` | Schnittstelle | – | `kanban/useKanbanBoard` |
 | `@flowaudit/ui` | `ComparisonRow` | Schnittstelle | – | `screening/view` |
 | `@flowaudit/ui` | `ConfidenceLevel` | Schnittstelle | – | `sampling/types` |
@@ -139,7 +153,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `ConformityProfile` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `ConformityRow` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `DEFAULT_BOX` | Konstante | – | `benford/chart` |
+| `@flowaudit/ui` | `DEFAULT_FILTER` | Konstante | – | `risk/view/state` |
 | `@flowaudit/ui` | `DEFAULT_LOCALE` | Konstante | – | `i18n/i18n` |
+| `@flowaudit/ui` | `DatasetFinding` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `DecimalSeparator` | Typ | – | `tabular/parse` |
 | `@flowaudit/ui` | `DecisionRequest` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `DecisionView` | Schnittstelle | – | `screening/types` |
@@ -150,7 +166,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `ElementDefinition` | Schnittstelle | Eine Komponente, die als Web Component `flowaudit-<name>` bereitgestellt wird. | `elements/define` |
 | `@flowaudit/ui` | `ElementTag` | Typ | – | `elements/define` |
 | `@flowaudit/ui` | `EntryView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `EvaluateRequest` | Schnittstelle | – | `risk/port` |
+| `@flowaudit/ui` | `Evaluation` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ExportFormat` | Typ | – | `sampling/types` |
+| `@flowaudit/ui` | `FLAG_STATES` | Konstante | – | `risk/view/state` |
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
@@ -158,10 +177,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `FaTable` | Vue-Komponente | – | `table/FaTable.vue` |
 | `@flowaudit/ui` | `FaTextField` | Vue-Komponente | – | `base/FaTextField.vue` |
 | `@flowaudit/ui` | `FetchLike` | Typ | Kleiner JSON-Client für die REST-Ports der Fachkomponenten. | `rest/client` |
+| `@flowaudit/ui` | `FieldEntry` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `FieldError` | Schnittstelle | – | `sampling/model` |
 | `@flowaudit/ui` | `FieldErrorCode` | Typ | – | `sampling/model` |
+| `@flowaudit/ui` | `FieldUse` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `FilterOptions` | Schnittstelle | – | `screening/view` |
 | `@flowaudit/ui` | `FindingView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `FlagEntry` | Schnittstelle | Ein Eintrag der Detailansicht: Treffer oder unbestimmtes Merkmal eines Datensatzes. | `risk/view/state` |
+| `@flowaudit/ui` | `FlagHit` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui` | `FlagState` | Typ | Zustand einer Regel für einen Datensatz. | `risk/view/state` |
 | `@flowaudit/ui` | `FlowauditUiOptions` | Schnittstelle | – | `plugin` |
 | `@flowaudit/ui` | `FreshnessStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui` | `FreshnessView` | Schnittstelle | – | `screening/types` |
@@ -170,6 +194,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@flowaudit/ui` | `IconName` | Typ | – | `base/icons` |
 | `@flowaudit/ui` | `ImportedColumns` | Schnittstelle | Übernommene Spalten einer Datei. | `tabular/useTableImport` |
+| `@flowaudit/ui` | `JsonObject` | Typ | – | `risk/types` |
+| `@flowaudit/ui` | `JsonValue` | Typ | Datentypen des REST-Vertrags `auditcore_risk.web` (docs/ui/risk-rest.md). Die Komponenten lesen nur diese Felder; unbekannte Felder werden ignoriert. | `risk/types` |
 | `@flowaudit/ui` | `KanbanBoard` | Vue-Komponente | – | `kanban/KanbanBoard.vue` |
 | `@flowaudit/ui` | `KanbanBoardList` | Vue-Komponente | – | `kanban/KanbanBoardList.vue` |
 | `@flowaudit/ui` | `KanbanBoardOptions` | Schnittstelle | – | `kanban/useKanbanBoard` |
@@ -197,13 +223,31 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `ParameterSpec` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `ParsedTable` | Schnittstelle | – | `tabular/parse` |
 | `@flowaudit/ui` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `ProfileDetail` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui` | `ProfileReference` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui` | `ProfileStatus` | Typ | – | `risk/types` |
+| `@flowaudit/ui` | `ProfileSummary` | Schnittstelle | – | `risk/port` |
 | `@flowaudit/ui` | `ProfileView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `RecordView` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `RelativeKey` | Typ | – | `kanban/cardView` |
 | `@flowaudit/ui` | `RestError` | Klasse | Fehler der REST-Schnittstelle mit Status, Code und deutscher Meldung des Servers. | `rest/client` |
 | `@flowaudit/ui` | `RestOptions` | Schnittstelle | – | `rest/client` |
 | `@flowaudit/ui` | `ReviewEvents` | Schnittstelle | – | `screening/useScreeningReview` |
 | `@flowaudit/ui` | `ReviewStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui` | `ReviewView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `RiskDistributionRow` | Schnittstelle | – | `risk/view/state` |
+| `@flowaudit/ui` | `RiskFilter` | Schnittstelle | – | `risk/view/state` |
+| `@flowaudit/ui` | `RiskFlagCard` | Vue-Komponente | – | `risk/RiskFlagCard.vue` |
+| `@flowaudit/ui` | `RiskFlagFilter` | Vue-Komponente | – | `risk/RiskFlagFilter.vue` |
+| `@flowaudit/ui` | `RiskFlagState` | Vue-Komponente | – | `risk/RiskFlagState.vue` |
+| `@flowaudit/ui` | `RiskFlagSummary` | Vue-Komponente | – | `risk/RiskFlagSummary.vue` |
+| `@flowaudit/ui` | `RiskFlagTable` | Vue-Komponente | – | `risk/RiskFlagTable.vue` |
+| `@flowaudit/ui` | `RiskFlags` | Vue-Komponente | – | `risk/RiskFlags.vue` |
+| `@flowaudit/ui` | `RiskMessageKey` | Typ | – | `risk/messages` |
+| `@flowaudit/ui` | `RiskPort` | Schnittstelle | – | `risk/port` |
+| `@flowaudit/ui` | `RiskProfileInfo` | Vue-Komponente | – | `risk/RiskProfileInfo.vue` |
+| `@flowaudit/ui` | `RiskRecordDetail` | Vue-Komponente | – | `risk/RiskRecordDetail.vue` |
+| `@flowaudit/ui` | `RuleView` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `RunQuery` | Typ | – | `screening/types` |
 | `@flowaudit/ui` | `RunRequest` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `RunRequestRecord` | Schnittstelle | – | `screening/types` |
@@ -211,6 +255,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `RunView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `Runner` | Schnittstelle | – | `rest/runner` |
 | `@flowaudit/ui` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
+| `@flowaudit/ui` | `STATE_FILTER_KEYS` | Konstante | – | `risk/view/labels` |
+| `@flowaudit/ui` | `STATE_ICONS` | Konstante | Symbol je Zustand: Farbe ist nie der einzige Träger der Bedeutung. | `risk/view/format` |
+| `@flowaudit/ui` | `STATE_KEYS` | Konstante | – | `risk/view/labels` |
 | `@flowaudit/ui` | `SamplingCallbacks` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui` | `SamplingCatalogue` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `SamplingPanel` | Vue-Komponente | – | `sampling/SamplingPanel.vue` |
@@ -233,6 +280,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `SelectionValidation` | Typ | – | `sampling/model` |
 | `@flowaudit/ui` | `SelectionVariant` | Typ | – | `sampling/types` |
 | `@flowaudit/ui` | `SettingsView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `Severity` | Typ | – | `risk/types` |
 | `@flowaudit/ui` | `ShortValues` | Typ | – | `benford/types` |
 | `@flowaudit/ui` | `SizeRequest` | Typ | – | `sampling/types` |
 | `@flowaudit/ui` | `SizeResult` | Schnittstelle | – | `sampling/types` |
@@ -241,6 +289,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `SortState` | Schnittstelle | – | `table/sort` |
 | `@flowaudit/ui` | `SourceView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `SourcesView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `StateFilter` | Typ | Filter: `affected` = Treffer oder unbestimmt; `all` = jeder Datensatz. | `risk/view/state` |
 | `@flowaudit/ui` | `StratumCount` | Schnittstelle | – | `sampling/model` |
 | `@flowaudit/ui` | `StratumResult` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `SubjectInput` | Schnittstelle | – | `screening/types` |
@@ -251,13 +300,17 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `TableImport` | Vue-Komponente | – | `tabular/TableImport.vue` |
 | `@flowaudit/ui` | `TableRow` | Typ | – | `table/sort` |
 | `@flowaudit/ui` | `ThemeMode` | Typ | – | `theme/theme` |
+| `@flowaudit/ui` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/view/format` |
+| `@flowaudit/ui` | `Totals` | Schnittstelle | – | `risk/view/state` |
 | `@flowaudit/ui` | `Translate` | Typ | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
+| `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui` | `UseTableImport` | Schnittstelle | – | `tabular/useTableImport` |
 | `@flowaudit/ui` | `UseTheme` | Schnittstelle | – | `theme/theme` |
 | `@flowaudit/ui` | `ViewMessage` | Schnittstelle | Meldung als Katalogschlüssel mit Platzhaltern; die Komponente übersetzt sie. | `screening/view` |
+| `@flowaudit/ui` | `WhenMissingColumns` | Typ | – | `risk/types` |
 | `@flowaudit/ui` | `acceptsHit` | Funktion | – | `screening/view` |
 | `@flowaudit/ui` | `applyPreview` | Funktion | Spaltenansicht mit der bewegten Karte an der Vorschauposition. | `kanban/movePreview` |
 | `@flowaudit/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
@@ -280,6 +333,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `comparisonRows` | Funktion | – | `screening/view` |
 | `@flowaudit/ui` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
+| `@flowaudit/ui` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@flowaudit/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
 | `@flowaudit/ui` | `createSamplingRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_sampling.web` (Starlette oder FastAPI). | `sampling/rest-port` |
 | `@flowaudit/ui` | `createScreeningRestPort` | Funktion | Port auf den REST-Vertrag `screening_review/1` von `auditcore_registry_sources.web`. | `screening/rest-port` |
@@ -287,14 +341,21 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `detectDecimal` | Funktion | Dezimaltrenner einer Spalte: stehen beide Zeichen in einer Zelle, ist das letzte der Dezimaltrenner; ein Trenner ohne genau drei Folgeziffern ist ebenfalls eindeutig. | `tabular/parse` |
 | `@flowaudit/ui` | `detectDelimiter` | Funktion | Häufigstes Trennzeichen der ersten Zeile; eine Spalte ohne Trenner ergibt ';'. | `tabular/parse` |
 | `@flowaudit/ui` | `digitLabel` | Funktion | Anzeige einer Ziffer: zweite Ziffer 0–9, sonst Zahl. | `benford/model` |
+| `@flowaudit/ui` | `distribution` | Funktion | Verteilung je Regel in Profilreihenfolge (nur Datensatzregeln). | `risk/view/state` |
 | `@flowaudit/ui` | `emptyFilter` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `evaluationRules` | Funktion | Regeln der Auswertung; ohne `rules` aus den Codes der Datensätze abgeleitet. | `risk/view/state` |
 | `@flowaudit/ui` | `fieldValue` | Funktion | Prüft ein Eingabefeld und liefert den Vertragswert (Prozent → Anteil). | `sampling/model` |
 | `@flowaudit/ui` | `filterOptions` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `filterRecords` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `filterSubjects` | Funktion | Subjects with only the hits passing the filter; subjects themselves stay visible. | `screening/view` |
+| `@flowaudit/ui` | `flagState` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `focusableWithin` | Funktion | – | `composables/useFocusTrap` |
+| `@flowaudit/ui` | `formatAmount` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatDate` | Funktion | Datum (ISO-Zeichenkette oder Date) kurz und sprachabhängig; ungültige Werte bleiben leer. | `i18n/format` |
 | `@flowaudit/ui` | `formatNumber` | Funktion | – | `i18n/format` |
 | `@flowaudit/ui` | `formatPercent` | Funktion | – | `i18n/format` |
+| `@flowaudit/ui` | `formatShare` | Funktion | – | `risk/view/format` |
+| `@flowaudit/ui` | `formatValue` | Funktion | Wert eines Eingabefelds: leer ausdrücklich, Zahlen im Sprachformat. | `risk/view/format` |
 | `@flowaudit/ui` | `guessNumberColumn` | Funktion | Index der ersten Spalte, deren nicht leere Zellen überwiegend (≥ 60 %) Zahlen sind; sonst 0. | `tabular/parse` |
 | `@flowaudit/ui` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
 | `@flowaudit/ui` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
@@ -314,6 +375,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `nextOpenHit` | Funktion | The next hit still needing work after ``currentId`` (open, deferred or pending). | `screening/view` |
 | `@flowaudit/ui` | `nextSort` | Funktion | Nächster Zustand beim Klick auf eine Spalte: aufsteigend → absteigend → unsortiert. | `table/sort` |
 | `@flowaudit/ui` | `numberColumn` | Funktion | Eine Spalte als Zahlen; unlesbare Zellen werden verworfen und gemeldet. | `tabular/parse` |
+| `@flowaudit/ui` | `pairs` | Funktion | Objekt als Liste `[Schlüssel, Wert]` in Einfügereihenfolge (für deklarative Tabellen). | `risk/view/state` |
+| `@flowaudit/ui` | `parameterLabel` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
 | `@flowaudit/ui` | `parseNumber` | Funktion | Zelle → Zahl mit ausdrücklichem Dezimaltrenner; der jeweils andere Trenner gilt als Tausenderpunkt. Leer ergibt `null` (fehlend), Unlesbares `undefined`. | `tabular/parse` |
 | `@flowaudit/ui` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
@@ -324,23 +387,35 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `preview` | Funktion | – | `kanban/cardView` |
 | `@flowaudit/ui` | `provideLocale` | Funktion | Stellt die Sprache für alle Nachfahren bereit (App-Ebene oder Teilbaum). | `i18n/i18n` |
 | `@flowaudit/ui` | `readTheme` | Funktion | Liest das explizit gesetzte Farbschema; ohne Attribut 'system'. | `theme/theme` |
+| `@flowaudit/ui` | `recordEntries` | Funktion | Treffer und unbestimmte Merkmale eines Datensatzes in Profilreihenfolge. | `risk/view/state` |
+| `@flowaudit/ui` | `recordLabel` | Funktion | – | `risk/view/state` |
+| `@flowaudit/ui` | `recordRules` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `relativeTime` | Funktion | Relative Zeit für die Boardliste (WorkspaceSidebar.relativeTime). | `kanban/cardView` |
 | `@flowaudit/ui` | `requestFile` | Funktion | POST mit Dateiantwort; der Dateiname kommt aus `Content-Disposition`. | `rest/client` |
 | `@flowaudit/ui` | `requestJson` | Funktion | GET/POST mit JSON-Antwort. Der Antworttyp ist der dokumentierte REST-Vertrag. | `rest/client` |
+| `@flowaudit/ui` | `requirementKey` | Funktion | – | `risk/view/labels` |
 | `@flowaudit/ui` | `resolvedTheme` | Funktion | Tatsächlich wirksames Schema, auch wenn 'system' gewählt ist. | `theme/theme` |
+| `@flowaudit/ui` | `riskFlagsElement` | Konstante | `<flowaudit-risk-flags>`: Eigenschaften `evaluation` (Antwort von `POST /evaluate`) und `profile` (Antwort von `GET /profiles/{id}/{version}`) als JS-Objekte; Ereignisse `record-se … | `risk/element` |
+| `@flowaudit/ui` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
 | `@flowaudit/ui` | `samplingElement` | Konstante | `<flowaudit-sampling>`: Eigenschaften `port` (SamplingPort), `items` (Grundgesamtheit), `locale`; Ereignisse `size-calculated`, `selection-drawn`, `error`. | `sampling/element` |
 | `@flowaudit/ui` | `samplingMessages` | Konstante | Texte des Stichprobenrechners. | `sampling/messages` |
 | `@flowaudit/ui` | `saveFile` | Funktion | Bietet eine Datei im Browser zum Speichern an. | `rest/download` |
 | `@flowaudit/ui` | `screeningMessages` | Konstante | Texte der Screening-Trefferprüfung (Sanktionslisten, PEP). | `screening/messages` |
 | `@flowaudit/ui` | `screeningReviewElement` | Konstante | `<flowaudit-screening-review>`: Eigenschaften `port` (ScreeningPort), `runId`, `locale`; Ereignisse `run-created`, `decided`, `error`. | `screening/element` |
 | `@flowaudit/ui` | `setDefaultLocale` | Funktion | Sprache ohne Provider, z. B. für Web Components ohne umgebende Vue-App. | `i18n/i18n` |
+| `@flowaudit/ui` | `severityTone` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `sortRows` | Funktion | Stabile Sortierung einer Kopie; die Eingabe bleibt unverändert. | `table/sort` |
 | `@flowaudit/ui` | `splitLine` | Funktion | Eine Zeile mit Anführungszeichen nach RFC 4180 (doppelte "" als Maskierung). | `tabular/parse` |
+| `@flowaudit/ui` | `stateTone` | Funktion | – | `risk/view/format` |
+| `@flowaudit/ui` | `statusHintKey` | Funktion | Hinweis für nicht freigegebene Profile, sonst `null`. | `risk/view/labels` |
+| `@flowaudit/ui` | `statusKey` | Funktion | – | `risk/view/labels` |
 | `@flowaudit/ui` | `strataOf` | Funktion | Schichten in Reihenfolge ihres ersten Auftretens; leer, wenn kein Element geschichtet ist. | `sampling/model` |
 | `@flowaudit/ui` | `tableElement` | Konstante | `<flowaudit-table>`: Spalten und Zeilen als JS-Eigenschaften, Ereignisse `row-click`, `sort-change`. | `table/element` |
 | `@flowaudit/ui` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
 | `@flowaudit/ui` | `textOn` | Funktion | Lesbare Schriftfarbe auf einer Kartenfarbe (Luminanzschwelle wie im Original). | `kanban/cardView` |
+| `@flowaudit/ui` | `totals` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `translate` | Funktion | Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. | `i18n/i18n` |
+| `@flowaudit/ui` | `triggeredDataset` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `useBenford` | Funktion | Zustand und Ablauf der Benford-Analyse; Berechnung ausschließlich über den Port. | `benford/useBenford` |
 | `@flowaudit/ui` | `useFocusTrap` | Funktion | Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn danach an das zuvor fokussierte Element zurück. | `composables/useFocusTrap` |
 | `@flowaudit/ui` | `useI18n` | Funktion | Composable für Komponenten. `override` (z. B. eine Prop `locale`) hat Vorrang vor der bereitgestellten Sprache. | `i18n/i18n` |
@@ -350,11 +425,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (262):
 | `@flowaudit/ui` | `useKanbanFilter` | Funktion | Such- und Filterzustand des Boards (Toolbar) als CardFilter der Kernlogik. | `kanban/useKanbanFilter` |
 | `@flowaudit/ui` | `useLocale` | Funktion | – | `i18n/i18n` |
 | `@flowaudit/ui` | `useMoveController` | Funktion | – | `kanban/useMoveController` |
+| `@flowaudit/ui` | `useRiskFlags` | Funktion | Zustand und abgeleitete Daten der Gesamtansicht; ohne DOM testbar. | `risk/useRiskFlags` |
+| `@flowaudit/ui` | `useRiskProfile` | Funktion | Profilbeschreibung zur Auswertung: die übergebene, sonst über den Port nachgeladen (Profil und Version der Auswertung, nie ein Standardprofil). | `risk/useRiskProfile` |
 | `@flowaudit/ui` | `useSampling` | Funktion | Zustand und Abläufe des Stichprobenrechners. Die Fachlogik liegt im Port; hier werden nur Eingaben geprüft, Anfragen gebildet und Ergebnisse gehalten. | `sampling/useSampling` |
 | `@flowaudit/ui` | `useScreeningReview` | Funktion | – | `screening/useScreeningReview` |
 | `@flowaudit/ui` | `useTableImport` | Funktion | Datei lesen, Spalten zuordnen und eine Vorschau der übernommenen Werte bilden. | `tabular/useTableImport` |
 | `@flowaudit/ui` | `useTheme` | Funktion | Composable: reaktives Farbschema, synchron mit dem Attribut am Element. | `theme/theme` |
 | `@flowaudit/ui` | `validateDecision` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `whenMissingKey` | Funktion | – | `risk/view/labels` |
 | `@flowaudit/ui/elements` | `DefineOptions` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui/elements` | `ELEMENTS` | Konstante | Alle Web Components von | `registry` |
 | `@flowaudit/ui/elements` | `ElementDefinition` | Schnittstelle | Eine Komponente, die als Web Component `flowaudit-<name>` bereitgestellt wird. | `elements/define` |
@@ -370,6 +448,7 @@ Web Components:
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
+| `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
 | `<flowaudit-sampling>` | `SamplingPanel` | `sampling/element.ts` |
 | `<flowaudit-screening-review>` | `ScreeningReview` | `screening/element.ts` |
 | `<flowaudit-table>` | `FaTable` | `table/element.ts` |
@@ -596,6 +675,91 @@ Web Components:
 | `share` | `[userId: string, permission: SharePermission]` | – |
 | `revoke` | `[userId: string]` | – |
 
+#### `RiskFlagCard`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `entry` | `FlagEntry` | ja | – | – |
+| `profile` | `ProfileReference \| null` | nein | `null` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+#### `RiskFlagFilter`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `rules` | `readonly RuleView[]` | nein | `() => []` | – |
+| `shown` | `number` | nein | `0` | – |
+| `total` | `number` | nein | `0` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+#### `RiskFlagState`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `state` | `FlagState` | ja | – | – |
+| `code` | `string` | nein | `''` | Code für die Beschriftung (Tabellenzelle), sonst nur der Zustand. |
+| `compact` | `boolean` | nein | `false` | Nur Symbol sichtbar, Text für Screenreader und Tooltip. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+#### `RiskFlagSummary`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `rows` | `readonly RiskDistributionRow[]` | nein | `() => []` | – |
+| `totals` | `Totals \| null` | nein | `null` | – |
+| `dataset` | `readonly DatasetFinding[]` | nein | `() => []` | – |
+| `missingColumns` | `Readonly<Record<string, readonly string[]>>` | nein | `() => ({})` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `code-select` | `[code: string]` | – |
+
+#### `RiskFlagTable`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `columns` | `readonly TableColumn[]` | nein | `() => []` | – |
+| `rows` | `readonly TableRow[]` | nein | `() => []` | – |
+| `codes` | `readonly string[]` | nein | `() => []` | Codes der Regelspalten (Zellen zeigen den Zustand). |
+| `selected` | `number \| null` | nein | `null` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `record-select` | `[index: number]` | – |
+
+#### `RiskFlags`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `evaluation` | `Evaluation \| null` | nein | `null` | Antwort von `POST /evaluate` (docs/ui/risk-rest.md). |
+| `profile` | `ProfileDetail \| null` | nein | `null` | Antwort von `GET /profiles/{id}/{version}`; ohne sie entfällt die Profilansicht. |
+| `port` | `RiskPort \| null` | nein | `null` | Optional: lädt die Profilbeschreibung nach, wenn `profile` fehlt (`createRiskRestPort`). |
+| `heading` | `string` | nein | `''` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `record-select` | `[index: number \| null]` | – |
+| `filter-change` | `[filter: RiskFilter]` | – |
+
+#### `RiskProfileInfo`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `profile` | `ProfileDetail \| null` | nein | `null` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+#### `RiskRecordDetail`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `record` | `RecordView \| null` | nein | `null` | – |
+| `entries` | `readonly FlagEntry[]` | nein | `() => []` | – |
+| `profile` | `ProfileReference \| null` | nein | `null` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
 #### `SamplingPanel`
 
 | Prop | Typ | Pflicht | Standard | Beschreibung |
@@ -658,7 +822,12 @@ Web Components:
 
 ## Herkunft und Charakterisierung
 
-Neu in auditcore entwickelt (PR #80 Gerüst, PR #84 Kanban). Die
+Neu in auditcore entwickelt (PR #80 Gerüst, #84 Kanban, #83 Stichprobe
+und Benford, #111 Screening, #88 Risiko-Merkmale). Die fachliche Parität
+der Komponenten zu den Quellanwendungen ist je Komponente dokumentiert:
+[Stichprobe/Benford](../../docs/ui/sampling-benford-paritaet.md),
+[Screening](../../docs/ui/screening-paritaet.md),
+[Risiko-Merkmale](../../docs/ui/risk-flags-paritaet.md). Die
 Kanban-Komponenten bilden die Bedienung des Workspace-Boards aus
 `janpow77/audit_designer` und des Auftragsboards aus `janpow77/cockpit` nach
 ([Paritätsinventur](../../docs/kanban/paritaet-audit-designer.md)); die

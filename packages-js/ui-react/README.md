@@ -56,7 +56,9 @@ export function Belege({ open }: { open: (row: unknown) => void }) {
   das erste emit-Argument der Vue-Komponente und das `CustomEvent`.
 - **Web Component:** jede Hülle rendert das Element `<flowaudit-…>` aus
   `@flowaudit/ui` (`flowaudit-table`, `flowaudit-kanban-board`,
-  `flowaudit-kanban-boards`); `ref` zeigt auf dieses DOM-Element.
+  `flowaudit-kanban-boards`, `flowaudit-sampling`, `flowaudit-benford`,
+  `flowaudit-screening-review`, `flowaudit-risk-flags`); `ref` zeigt auf
+  dieses DOM-Element.
 - **Vue** läuft innerhalb der Web Components und muss daher installiert
   sein, auch wenn die Anwendung selbst nur React nutzt.
 
@@ -74,7 +76,7 @@ export const FlowauditTableLite = createElementComponent<{ rows: readonly object
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (19):
+Exporte der Einstiegspunkte aus `package.json#exports` (21):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -87,6 +89,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (19):
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardsProps` | Schnittstelle | – | `kanban` |
+| `@flowaudit/ui-react` | `FlowauditRiskFlags` | Konstante | `<flowaudit-risk-flags>` als React-Komponente; `onRecordSelect` erhält den Index oder `null`. | `elements` |
+| `@flowaudit/ui-react` | `FlowauditRiskFlagsProps` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui-react` | `FlowauditSampling` | Konstante | `<flowaudit-sampling>` als React-Komponente: Stichprobenumfang, Auswahl mit Seed, Export. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditSamplingProps` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui-react` | `FlowauditScreeningError` | Typ | Nutzdaten des Ereignisses `error` der Screening-Trefferprüfung. | `elements` |
@@ -112,13 +116,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (19):
   `onNavigate`, `onAttachment`, `onCardOpen`) und `FlowauditKanbanBoards`
   (`onBoardSelect`, `onCreated`); Props wie in
   [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md).
+- `FlowauditSampling` (`onSizeCalculated`, `onSelectionDrawn`, `onError`),
+  `FlowauditBenford` (`port`, `values`, `locale`; `onAnalysisCompleted`,
+  `onError`), `FlowauditScreeningReview` (`onRunCreated`, `onDecided`,
+  `onError`), `FlowauditRiskFlags` (z. B. `evaluation`, `profile`;
+  `onRecordSelect`, `onFilterChange`; Antworten von `auditcore_risk.web`,
+  siehe [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md)).
 - Sprache und Theming wie in `@flowaudit/ui` (`locale`-Prop,
   `defineFlowauditElements({ locale })`, CSS-Variablen `--fa-*`).
 
 ## Herkunft und Charakterisierung
 
-Neu in auditcore entwickelt (PR #80 Gerüst mit `FlowauditTable`, PR #84
-Kanban-Hüllen). Keine Übernahme aus Anwendungen; das Verhalten der Elemente
+Neu in auditcore entwickelt (PR #80 Gerüst mit `FlowauditTable`, #84
+Kanban, #83 Stichprobe und Benford, #111 Screening, #88 Risiko-Merkmale). Keine Übernahme aus Anwendungen; das Verhalten der Elemente
 selbst dokumentiert `@flowaudit/ui`.
 
 ## Abhängigkeiten

@@ -1,10 +1,12 @@
 export { createElementComponent, eventPayload, type BaseElementProps, type ElementComponentOptions, type EventHandlers } from './createElementComponent'
 export {
   FlowauditBenford,
+  FlowauditRiskFlags,
   FlowauditSampling,
   FlowauditScreeningReview,
   FlowauditTable,
   type FlowauditBenfordProps,
+  type FlowauditRiskFlagsProps,
   type FlowauditSamplingProps,
   type FlowauditScreeningError,
   type FlowauditScreeningReviewProps,
