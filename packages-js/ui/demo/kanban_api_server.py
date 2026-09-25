@@ -33,7 +33,7 @@ class Handler(BaseHTTPRequestHandler):
         body = json.loads(raw) if raw else None
         response = API.handle(
             self.command,
-            url.path[len(PREFIX) :] or "/",
+            url.path[len(PREFIX):] or "/",
             user_id=self.headers.get("X-Demo-User"),
             query=dict(parse_qsl(url.query)),
             body=body,
