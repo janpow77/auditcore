@@ -45,7 +45,7 @@ from .profiles import RegistryProfile, available_profiles, load_profile, recomme
 from .sanctions_xml import parse_xml_list, xml_entries
 from .screening import ListFinding, ScreeningHit, ScreeningResult, screen
 
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 CONTRACT_VERSION = "auditcore_registry_sources.screening/1"
 
 __all__ = [
