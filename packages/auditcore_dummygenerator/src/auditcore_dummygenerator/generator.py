@@ -6,14 +6,22 @@ MIT reuse/publication authorized by the rights holder on 2026-09-22; see NOTICE.
 
 from __future__ import annotations
 
-import os
 import random
 import string
-from concurrent.futures import ProcessPoolExecutor, as_completed
-from copy import deepcopy
+from collections.abc import Callable
 from datetime import date, datetime, timedelta
-from multiprocessing import cpu_count, get_context
 from typing import Any, cast
+
+from auditcore_dummygenerator import rows
+from auditcore_dummygenerator.rows import (
+    BatchGenerationError,
+    JoblibApi,
+    JsonObject,
+    get_optimal_workers,
+)
+from auditcore_dummygenerator.rows import run_batch as _generate_batch
+
+__all__ = ["JOBLIB_AVAILABLE", "BatchGenerationError", "TestDataGenerator", "get_optimal_workers"]
 
 # Optional: joblib für optimierte parallele Verarbeitung
 try:
@@ -24,45 +32,9 @@ except ImportError:
     JOBLIB_AVAILABLE = False
 
 
-def get_optimal_workers() -> int:
-    """Ermittelt die optimale Anzahl an Worker-Prozessen."""
-    value = int(os.environ.get("MAX_WORKERS", cpu_count()))
-    if value < 1:
-        raise ValueError("MAX_WORKERS must be a positive integer")
-    return min(cpu_count(), value)
-
-
-def _generate_batch(batch_config: dict[str, Any]) -> list[dict[str, Any]]:
-    """
-    Worker-Funktion für parallele Batch-Generierung.
-    Wird in separaten Prozessen ausgeführt.
-    """
-    generator = TestDataGenerator(
-        seed=batch_config["seed"], base_date=batch_config.get("base_date")
-    )
-    request = batch_config["request"]
-    start_idx = batch_config["start_idx"]
-    batch_size = batch_config["batch_size"]
-
-    # Kopie des Requests mit angepasster Zeilenanzahl
-    batch_request = deepcopy(request)
-    batch_request["rows"] = batch_size
-
-    # Auto-increment Startwerte anpassen
-    fields = batch_request.get("fields", [])
-    for field in fields:
-        if field.get("type") == "auto_increment":
-            params = field.get("params", {}).copy()
-            original_start = params.get("start", 1)
-            step = params.get("step", 1)
-            params["start"] = original_start + (start_idx * step)
-            field["params"] = params
-
-    return generator._generate_rows_sequential(batch_request)
-
-
-class BatchGenerationError(RuntimeError):
-    """A worker failed or returned fewer rows; no partial success is returned."""
+_DE_MOBILE_PREFIXES = (
+    "0151", "0152", "0157", "0160", "0170", "0171", "0175", "0176", "0177", "0178", "0179",
+)  # fmt: skip
 
 
 class TestDataGenerator:
@@ -96,115 +68,46 @@ class TestDataGenerator:
         self.rng = random.Random(seed)
 
         self.first_names_de = [
-            "Max",
-            "Anna",
-            "Peter",
-            "Maria",
-            "Thomas",
-            "Julia",
-            "Michael",
-            "Sarah",
-            "Andreas",
-            "Lisa",
-        ]
+            "Max", "Anna", "Peter", "Maria", "Thomas",
+            "Julia", "Michael", "Sarah", "Andreas", "Lisa",
+        ]  # fmt: skip
         self.first_names_at = [
-            "Franz",
-            "Elisabeth",
-            "Josef",
-            "Katharina",
-            "Johann",
-            "Theresia",
-            "Leopold",
-            "Rosa",
-            "Karl",
-            "Margarethe",
-        ]
+            "Franz", "Elisabeth", "Josef", "Katharina", "Johann",
+            "Theresia", "Leopold", "Rosa", "Karl", "Margarethe",
+        ]  # fmt: skip
         self.last_names_de = [
-            "Müller",
-            "Schmidt",
-            "Schneider",
-            "Fischer",
-            "Weber",
-            "Meyer",
-            "Wagner",
-            "Becker",
-            "Schulz",
-            "Hoffmann",
-        ]
+            "Müller", "Schmidt", "Schneider", "Fischer", "Weber",
+            "Meyer", "Wagner", "Becker", "Schulz", "Hoffmann",
+        ]  # fmt: skip
         self.last_names_at = [
-            "Gruber",
-            "Huber",
-            "Bauer",
-            "Wagner",
-            "Müller",
-            "Pichler",
-            "Steiner",
-            "Moser",
-            "Mayer",
-            "Hofer",
-        ]
+            "Gruber", "Huber", "Bauer", "Wagner", "Müller",
+            "Pichler", "Steiner", "Moser", "Mayer", "Hofer",
+        ]  # fmt: skip
         self.streets_de = [
-            "Hauptstraße",
-            "Bahnhofstraße",
-            "Schulstraße",
-            "Gartenstraße",
-            "Berliner Straße",
-            "Dorfstraße",
-            "Lindenstraße",
-            "Kirchstraße",
-            "Waldstraße",
-            "Bergstraße",
-        ]
+            "Hauptstraße", "Bahnhofstraße", "Schulstraße", "Gartenstraße", "Berliner Straße",
+            "Dorfstraße", "Lindenstraße", "Kirchstraße", "Waldstraße", "Bergstraße",
+        ]  # fmt: skip
         self.streets_at = [
-            "Hauptstraße",
-            "Wiener Straße",
-            "Bahnhofstraße",
-            "Kirchengasse",
-            "Schulgasse",
-            "Feldgasse",
-            "Berggasse",
-            "Wiesengasse",
-            "Mariahilfer Straße",
-            "Ringstraße",
-        ]
+            "Hauptstraße", "Wiener Straße", "Bahnhofstraße", "Kirchengasse", "Schulgasse",
+            "Feldgasse", "Berggasse", "Wiesengasse", "Mariahilfer Straße", "Ringstraße",
+        ]  # fmt: skip
         self.cities_de = [
-            ("Berlin", "10115"),
-            ("Hamburg", "20095"),
-            ("München", "80331"),
-            ("Köln", "50667"),
-            ("Frankfurt", "60311"),
-        ]
+            ("Berlin", "10115"), ("Hamburg", "20095"), ("München", "80331"),
+            ("Köln", "50667"), ("Frankfurt", "60311"),
+        ]  # fmt: skip
         self.cities_at = [
-            ("Wien", "1010"),
-            ("Graz", "8010"),
-            ("Linz", "4020"),
-            ("Salzburg", "5020"),
-            ("Innsbruck", "6020"),
-        ]
+            ("Wien", "1010"), ("Graz", "8010"), ("Linz", "4020"),
+            ("Salzburg", "5020"), ("Innsbruck", "6020"),
+        ]  # fmt: skip
         self.companies = [
-            "TechCorp GmbH",
-            "Digital Solutions AG",
-            "InnoTech KG",
-            "DataServ GmbH",
-            "CloudSys AG",
-            "NetWorks GmbH",
-            "SoftDev KG",
-            "IT-Service GmbH",
-            "WebTech AG",
-            "AppFactory GmbH",
-        ]
+            "TechCorp GmbH", "Digital Solutions AG", "InnoTech KG", "DataServ GmbH",
+            "CloudSys AG", "NetWorks GmbH", "SoftDev KG", "IT-Service GmbH",
+            "WebTech AG", "AppFactory GmbH",
+        ]  # fmt: skip
         self.purposes = [
-            "Beratungsleistung",
-            "Softwarelizenz",
-            "Hardwarebeschaffung",
-            "Schulung",
-            "Wartung",
-            "Support",
-            "Entwicklung",
-            "Hosting",
-            "Consulting",
-            "Projektmanagement",
-        ]
+            "Beratungsleistung", "Softwarelizenz", "Hardwarebeschaffung", "Schulung",
+            "Wartung", "Support", "Entwicklung", "Hosting", "Consulting", "Projektmanagement",
+        ]  # fmt: skip
 
     def generate_first_name(self, country: str) -> str:
         """Draw a first name from the AT catalog, otherwise the DE catalog."""
@@ -241,14 +144,14 @@ class TestDataGenerator:
         """Return a synthetic IBAN-shaped string without validating its checksum."""
         country_code = "AT" if country == "AT" else "DE"
         check = self.rng.randint(10, 99)
-        if country == "AT":
-            bank = "".join([str(self.rng.randint(0, 9)) for _ in range(5)])
-            account = "".join([str(self.rng.randint(0, 9)) for _ in range(11)])
-            return f"{country_code}{check}{bank}{account}"
-        else:
-            bank = "".join([str(self.rng.randint(0, 9)) for _ in range(8)])
-            account = "".join([str(self.rng.randint(0, 9)) for _ in range(10)])
-            return f"{country_code}{check}{bank}{account}"
+        bank_length, account_length = (5, 11) if country == "AT" else (8, 10)
+        bank = self._digits(bank_length)
+        account = self._digits(account_length)
+        return f"{country_code}{check}{bank}{account}"
+
+    def _digits(self, count: int) -> str:
+        """Draw ``count`` decimal digits, one RNG call each."""
+        return "".join([str(self.rng.randint(0, 9)) for _ in range(count)])
 
     def generate_bic(self, country: str) -> str:
         """Return a synthetic BIC-shaped string, not a registered bank identity."""
@@ -262,33 +165,15 @@ class TestDataGenerator:
         """Return a synthetic VAT identifier without checksum or registry validation."""
         if country == "AT":
             return f"ATU{self.rng.randint(10000000, 99999999)}"
-        else:
-            return f"DE{self.rng.randint(100000000, 999999999)}"
+        return f"DE{self.rng.randint(100000000, 999999999)}"
 
     def generate_phone(self, country: str) -> str:
         """Return a synthetic domestic phone number from the country profile."""
         if country == "AT":
             prefix = self.rng.choice(["0664", "0676", "0699", "0650", "0660"])
-            number = "".join([str(self.rng.randint(0, 9)) for _ in range(7)])
-            return f"{prefix} {number}"
         else:
-            prefix = self.rng.choice(
-                [
-                    "0151",
-                    "0152",
-                    "0157",
-                    "0160",
-                    "0170",
-                    "0171",
-                    "0175",
-                    "0176",
-                    "0177",
-                    "0178",
-                    "0179",
-                ]
-            )
-            number = "".join([str(self.rng.randint(0, 9)) for _ in range(7)])
-            return f"{prefix} {number}"
+            prefix = self.rng.choice(_DE_MOBILE_PREFIXES)
+        return f"{prefix} {self._digits(7)}"
 
     def generate_date_range(self, start: str, end: str) -> str:
         """Draw an inclusive ISO date; invalid or reversed ranges raise ValueError."""
@@ -321,10 +206,8 @@ class TestDataGenerator:
     def generate_invoice_no(self, pattern: str = "numeric_8_10") -> str:
         """Draw a numeric invoice identifier or an INV-prefixed fallback."""
         if pattern == "numeric_8_10":
-            length = self.rng.randint(8, 10)
-            return "".join([str(self.rng.randint(0, 9)) for _ in range(length)])
-        else:
-            return f"INV-{self.rng.randint(100000, 999999)}"
+            return self._digits(self.rng.randint(8, 10))
+        return f"INV-{self.rng.randint(100000, 999999)}"
 
     def generate_company(self) -> str:
         """Draw a company name from the built-in synthetic catalog."""
@@ -336,7 +219,7 @@ class TestDataGenerator:
         words = self.rng.choices(self.purposes, k=num_words)
         return " ".join(words)
 
-    def generate_weighted_choice(self, items: list[dict[str, Any]]) -> str:
+    def generate_weighted_choice(self, items: list[JsonObject]) -> str:
         """Draw a weighted value; empty input returns an empty string."""
         if not items:
             return ""
@@ -353,82 +236,85 @@ class TestDataGenerator:
         return self.rng.choice([True, False])
 
     def generate_field(
-        self, field_type: str, params: dict[str, Any], country: str, row_data: dict[str, Any]
+        self, field_type: str, params: JsonObject, country: str, row_data: JsonObject
     ) -> Any:
         """Dispatch legacy field rules with earlier row values available as references."""
-        if field_type == "first_name":
-            return self.generate_first_name(country)
-        elif field_type == "last_name":
-            return self.generate_last_name(country)
-        elif field_type == "street":
-            return self.generate_street(country)
-        elif field_type == "house_number":
-            return self.generate_house_number()
-        elif field_type == "postal_code":
-            return self.generate_postal_code(country)
-        elif field_type == "city":
-            city, _ = self.generate_city(country)
-            return city
-        elif field_type == "iban":
-            return self.generate_iban(country)
-        elif field_type == "bic":
-            return self.generate_bic(country)
-        elif field_type == "ustid":
-            return self.generate_ustid(country)
-        elif field_type == "phone":
-            return self.generate_phone(country)
-        elif field_type == "date_range":
-            start = params.get("start", "2020-01-01")
-            end = params.get("end", "2025-12-31")
-            return self.generate_date_range(start, end)
-        elif field_type == "date_after":
-            ref_field = params.get("refFieldName", "")
-            ref_date = row_data.get(
-                ref_field, (self.base_date or datetime.now().date()).isoformat()
-            )
-            min_days = params.get("minDays", 0)
-            max_days = params.get("maxDays", 30)
-            return self.generate_date_after(ref_date, min_days, max_days)
-        elif field_type == "amount_eur":
-            min_val = params.get("min", 100)
-            max_val = params.get("max", 10000)
-            decimals = params.get("decimals", 2)
-            return self.generate_amount(min_val, max_val, decimals)
-        elif field_type == "amount_eur_relative":
-            ref_field = params.get("refFieldName", "")
-            ref_amount = row_data.get(ref_field, 1000)
-            if isinstance(ref_amount, str):
-                try:
-                    ref_amount = float(ref_amount.replace(",", "."))
-                except (TypeError, ValueError):
-                    ref_amount = 1000
-            min_factor = params.get("minFactor", 0.5)
-            max_factor = params.get("maxFactor", 1.0)
-            return self.generate_amount_relative(ref_amount, min_factor, max_factor)
-        elif field_type == "invoice_no":
-            pattern = params.get("pattern", "numeric_8_10")
-            return self.generate_invoice_no(pattern)
-        elif field_type == "company":
-            return self.generate_company()
-        elif field_type == "purpose_text":
-            min_words = params.get("minWords", 2)
-            max_words = params.get("maxWords", 8)
-            return self.generate_purpose_text(min_words, max_words)
-        elif field_type == "weighted_list":
-            items = params.get("items", [])
-            return self.generate_weighted_choice(items)
-        elif field_type == "number":
-            min_val = params.get("min", 0)
-            max_val = params.get("max", 100)
-            return self.generate_number(min_val, max_val)
-        elif field_type == "boolean":
-            return self.generate_boolean()
-        elif field_type == "auto_increment":
-            return params.get("_current", 1)
-        else:
-            return ""
+        # The literal ``field_type == ...`` comparisons are the dispatch contract that the
+        # profile registry derives its field IDs from; producers run only when selected.
+        rules: tuple[tuple[bool, Callable[[], object]], ...] = (
+            (field_type == "first_name", lambda: self.generate_first_name(country)),
+            (field_type == "last_name", lambda: self.generate_last_name(country)),
+            (field_type == "street", lambda: self.generate_street(country)),
+            (field_type == "house_number", lambda: self.generate_house_number()),
+            (field_type == "postal_code", lambda: self.generate_postal_code(country)),
+            (field_type == "city", lambda: self.generate_city(country)[0]),
+            (field_type == "iban", lambda: self.generate_iban(country)),
+            (field_type == "bic", lambda: self.generate_bic(country)),
+            (field_type == "ustid", lambda: self.generate_ustid(country)),
+            (field_type == "phone", lambda: self.generate_phone(country)),
+            (field_type == "date_range", lambda: self._date_range_field(params)),
+            (field_type == "date_after", lambda: self._date_after_field(params, row_data)),
+            (field_type == "amount_eur", lambda: self._amount_field(params)),
+            (
+                field_type == "amount_eur_relative",
+                lambda: self._relative_amount_field(params, row_data),
+            ),
+            (
+                field_type == "invoice_no",
+                lambda: self.generate_invoice_no(params.get("pattern", "numeric_8_10")),
+            ),
+            (field_type == "company", lambda: self.generate_company()),
+            (field_type == "purpose_text", lambda: self._purpose_text_field(params)),
+            (
+                field_type == "weighted_list",
+                lambda: self.generate_weighted_choice(params.get("items", [])),
+            ),
+            (
+                field_type == "number",
+                lambda: self.generate_number(params.get("min", 0), params.get("max", 100)),
+            ),
+            (field_type == "boolean", lambda: self.generate_boolean()),
+            (field_type == "auto_increment", lambda: params.get("_current", 1)),
+        )
+        for selected, produce in rules:
+            if selected:
+                return produce()
+        return ""
 
-    def apply_deviation(self, row: dict[str, Any], scenario: str, rate: float) -> dict[str, Any]:
+    def _date_range_field(self, params: JsonObject) -> str:
+        return self.generate_date_range(
+            params.get("start", "2020-01-01"), params.get("end", "2025-12-31")
+        )
+
+    def _date_after_field(self, params: JsonObject, row_data: JsonObject) -> str:
+        ref_field = params.get("refFieldName", "")
+        # The fallback reference date is evaluated even when the row supplies one.
+        ref_date = row_data.get(ref_field, (self.base_date or datetime.now().date()).isoformat())
+        return self.generate_date_after(
+            ref_date, params.get("minDays", 0), params.get("maxDays", 30)
+        )
+
+    def _amount_field(self, params: JsonObject) -> float:
+        return self.generate_amount(
+            params.get("min", 100), params.get("max", 10000), params.get("decimals", 2)
+        )
+
+    def _relative_amount_field(self, params: JsonObject, row_data: JsonObject) -> float:
+        ref_field = params.get("refFieldName", "")
+        ref_amount = row_data.get(ref_field, 1000)
+        if isinstance(ref_amount, str):
+            try:
+                ref_amount = float(ref_amount.replace(",", "."))
+            except (TypeError, ValueError):
+                ref_amount = 1000
+        return self.generate_amount_relative(
+            ref_amount, params.get("minFactor", 0.5), params.get("maxFactor", 1.0)
+        )
+
+    def _purpose_text_field(self, params: JsonObject) -> str:
+        return self.generate_purpose_text(params.get("minWords", 2), params.get("maxWords", 8))
+
+    def apply_deviation(self, row: JsonObject, scenario: str, rate: float) -> JsonObject:
         """Apply the selected legacy test-error profile to row in place and return it."""
         if self.rng.random() > rate:
             return row
@@ -436,37 +322,45 @@ class TestDataGenerator:
         if scenario == "NONE":
             return row
         elif scenario == "FOERDERFAEHIG_GT_GEZAHLT":
-            for key in row:
-                if "förderfähig" in key.lower() or "foerderfaehig" in key.lower():
-                    ref_key = None
-                    for k in row:
-                        if "gezahlt" in k.lower() or "betrag" in k.lower():
-                            ref_key = k
-                            break
-                    if ref_key and isinstance(row[ref_key], (int, float)):
-                        row[key] = row[ref_key] * self.rng.uniform(1.1, 1.5)
+            self._raise_eligible_above_paid(row)
         elif scenario == "BEZAHLT_VOR_RECHNUNG":
-            for key in row:
-                if "bezahldatum" in key.lower() or "wertstellung" in key.lower():
-                    for ref_key in row:
-                        if "rechnungsdatum" in ref_key.lower():
-                            try:
-                                ref_date = datetime.strptime(row[ref_key], "%Y-%m-%d")
-                                row[key] = (
-                                    ref_date - timedelta(days=self.rng.randint(1, 30))
-                                ).strftime("%Y-%m-%d")
-                            except (TypeError, ValueError):
-                                pass
+            self._pay_before_invoice(row)
         elif scenario == "NEGATIVE_AMOUNTS":
-            for key in row:
-                if (
-                    "betrag" in key.lower() or "amount" in key.lower() or "eur" in key.lower()
-                ) and isinstance(row[key], (int, float)):
-                    row[key] = -abs(row[key])
+            self._negate_amounts(row)
 
         return row
 
-    def generate_rows(self, request: dict[str, Any]) -> list[dict[str, Any]]:
+    def _raise_eligible_above_paid(self, row: JsonObject) -> None:
+        for key in row:
+            if "förderfähig" in key.lower() or "foerderfaehig" in key.lower():
+                ref_key = next(
+                    (k for k in row if "gezahlt" in k.lower() or "betrag" in k.lower()), None
+                )
+                if ref_key and isinstance(row[ref_key], (int, float)):
+                    row[key] = row[ref_key] * self.rng.uniform(1.1, 1.5)
+
+    def _pay_before_invoice(self, row: JsonObject) -> None:
+        for key in row:
+            if "bezahldatum" in key.lower() or "wertstellung" in key.lower():
+                for ref_key in row:
+                    if "rechnungsdatum" in ref_key.lower():
+                        try:
+                            ref_date = datetime.strptime(row[ref_key], "%Y-%m-%d")
+                            row[key] = (
+                                ref_date - timedelta(days=self.rng.randint(1, 30))
+                            ).strftime("%Y-%m-%d")
+                        except (TypeError, ValueError):
+                            pass
+
+    @staticmethod
+    def _negate_amounts(row: JsonObject) -> None:
+        for key in row:
+            if (
+                "betrag" in key.lower() or "amount" in key.lower() or "eur" in key.lower()
+            ) and isinstance(row[key], (int, float)):
+                row[key] = -abs(row[key])
+
+    def generate_rows(self, request: JsonObject) -> list[JsonObject]:
         """Generiert Zeilen - nutzt automatisch Parallel Processing bei großen Datensätzen."""
         rows_count = request.get("rows", 100)
 
@@ -476,179 +370,30 @@ class TestDataGenerator:
 
         return self._generate_rows_sequential(request)
 
-    def _generate_rows_sequential(self, request: dict[str, Any]) -> list[dict[str, Any]]:
+    def _generate_rows_sequential(self, request: JsonObject) -> list[JsonObject]:
         """Sequentielle Generierung für kleine Datensätze."""
-        rows_count = request.get("rows", 100)
-        countries = request.get("countries", "DE+AT")
-        fields = request.get("fields", [])
-        deviation = request.get("deviation", {"rate": 0, "scenario": "NONE"})
-        belegliste_options = request.get("beleglisteOptions")
-
-        country_list = ["DE", "AT"] if countries == "DE+AT" else [countries]
-
-        auto_increment_counters = {}
-        for field in fields:
-            if field.get("type") == "auto_increment":
-                start = field.get("params", {}).get("start", 1)
-                auto_increment_counters[field["name"]] = start
-
-        results = []
-
-        for i in range(rows_count):
-            country = self.rng.choice(country_list)
-            row = {}
-
-            for field in fields:
-                field_name = field.get("name", f"field_{i}")
-                field_type = field.get("type", "number")
-                params = field.get("params", {}).copy()
-
-                if field_type == "auto_increment":
-                    current = auto_increment_counters.get(field_name, 1)
-                    params["_current"] = current
-                    step = params.get("step", 1)
-                    auto_increment_counters[field_name] = current + step
-
-                if belegliste_options and field_type in ["number", "weighted_list"]:
-                    criteria = belegliste_options.get("criteria", {})
-                    if "vorhabennummer" in field_name.lower() and criteria.get("vorhabennummern"):
-                        dist = criteria["vorhabennummern"]
-                        row[field_name] = self.generate_weighted_choice(dist.get("items", []))
-                        continue
-                    elif "aktenzeichen" in field_name.lower() and criteria.get("aktenzeichen"):
-                        dist = criteria["aktenzeichen"]
-                        row[field_name] = self.generate_weighted_choice(dist.get("items", []))
-                        continue
-                    elif "kostenstelle" in field_name.lower() and criteria.get("kostenstellen"):
-                        dist = criteria["kostenstellen"]
-                        row[field_name] = self.generate_weighted_choice(dist.get("items", []))
-                        continue
-                    elif "kategorie" in field_name.lower() and criteria.get("kategorien"):
-                        dist = criteria["kategorien"]
-                        row[field_name] = self.generate_weighted_choice(dist.get("items", []))
-                        continue
-
-                value = self.generate_field(field_type, params, country, row)
-                row[field_name] = value
-
-            if deviation.get("rate", 0) > 0:
-                row = self.apply_deviation(
-                    row, deviation.get("scenario", "NONE"), deviation.get("rate", 0)
-                )
-
-            results.append(row)
-
-        return results
+        return rows.generate_sequential(self, request)
 
     def generate_rows_parallel(
-        self, request: dict[str, Any], n_workers: int | None = None
-    ) -> list[dict[str, Any]]:
-        """
-        Parallele Generierung für große Datensätze.
-
-        Args:
-            request: Generierungsanfrage
-            n_workers: Anzahl der Worker-Prozesse (default: CPU-Kerne)
-
-        Returns:
-            Liste der generierten Zeilen
-        """
-        rows_count = request.get("rows", 100)
-        if n_workers is not None and n_workers < 1:
-            raise ValueError("n_workers must be a positive integer")
-        n_workers = n_workers or self.max_workers or get_optimal_workers()
-
-        # Mindestens 100 Zeilen pro Worker
-        min_batch_size = 100
-        actual_workers = min(n_workers, max(1, rows_count // min_batch_size))
-
-        if actual_workers <= 1:
-            return self._generate_rows_sequential(request)
-
-        # Batches aufteilen
-        batch_size = rows_count // actual_workers
-        remainder = rows_count % actual_workers
-
-        batch_configs = []
-        current_idx = 0
-        base_seed = self.seed if self.seed is not None else random.randint(0, 2**31)
-
-        for i in range(actual_workers):
-            # Letzter Batch bekommt den Rest
-            size = batch_size + (1 if i < remainder else 0)
-
-            # Deep copy des Requests für jeden Batch
-            batch_request = deepcopy(request)
-
-            batch_configs.append(
-                {
-                    "base_date": self.base_date,
-                    "seed": base_seed + i * 1000,  # Unterschiedliche Seeds pro Batch
-                    "request": batch_request,
-                    "start_idx": current_idx,
-                    "batch_size": size,
-                    "auto_increment_start": current_idx,
-                    "batch_index": i,
-                }
-            )
-            current_idx += size
-
-        results = []
-
-        # joblib verwenden wenn verfügbar (performanter)
-        if self.use_joblib:
-            try:
-                batch_results = Parallel(n_jobs=actual_workers, backend="loky")(
-                    delayed(_generate_batch)(config) for config in batch_configs
-                )
-            except Exception as exc:
-                raise BatchGenerationError("Parallel generation failed") from exc
-            for batch_result in batch_results:
-                results.extend(batch_result)
-        else:
-            # Fallback auf ProcessPoolExecutor
-            with ProcessPoolExecutor(
-                max_workers=actual_workers, mp_context=get_context("spawn")
-            ) as executor:
-                futures = {
-                    executor.submit(_generate_batch, config): config["batch_index"]
-                    for config in batch_configs
-                }
-
-                # Ergebnisse in der richtigen Reihenfolge sammeln
-                indexed_results = {}
-                for future in as_completed(futures):
-                    batch_idx = futures[future]
-                    try:
-                        indexed_results[batch_idx] = future.result()
-                    except Exception as exc:
-                        for pending in futures:
-                            pending.cancel()
-                        raise BatchGenerationError(f"Batch {batch_idx} failed") from exc
-
-                # In korrekter Reihenfolge zusammenführen
-                for i in range(actual_workers):
-                    if i in indexed_results:
-                        results.extend(indexed_results[i])
-
-        if len(results) != rows_count:
-            raise BatchGenerationError("Worker result count differs from requested rows")
-        return results
+        self, request: JsonObject, n_workers: int | None = None
+    ) -> list[JsonObject]:
+        """Parallele Generierung großer Datensätze; ``n_workers`` default: CPU-Kerne."""
+        return rows.generate_parallel(
+            self,
+            request,
+            n_workers,
+            worker=_generate_batch,
+            joblib_backend=_joblib_backend if self.use_joblib else None,
+        )
 
     def generate_rows_parallel_joblib(
-        self, request: dict[str, Any], n_jobs: int = -1
-    ) -> list[dict[str, Any]]:
-        """
-        Parallele Generierung mit joblib (wenn verfügbar).
-
-        Args:
-            request: Generierungsanfrage
-            n_jobs: Anzahl der Jobs (-1 = alle CPUs)
-
-        Returns:
-            Liste der generierten Zeilen
-        """
-        if not JOBLIB_AVAILABLE:
-            return self.generate_rows_parallel(request, n_workers=n_jobs if n_jobs > 0 else None)
-
+        self, request: JsonObject, n_jobs: int = -1
+    ) -> list[JsonObject]:
+        """Parallele Generierung mit joblib (wenn verfügbar); ``n_jobs=-1``: alle CPUs."""
+        # Both branches of the original implementation delegate identically.
         return self.generate_rows_parallel(request, n_workers=n_jobs if n_jobs > 0 else None)
+
+
+def _joblib_backend() -> JoblibApi:
+    """Resolve joblib at call time so an absent backend fails inside the batch guard."""
+    return Parallel, delayed

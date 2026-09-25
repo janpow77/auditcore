@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_dummygenerator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "source": {
     "repository": "janpow77/flowaudit_testdatengenerator_frontend",
     "commit": "05bc5ac560dfff3bc7181323240745215492d09a",
@@ -47,7 +47,8 @@
     "Worker exceptions and incomplete output raise BatchGenerationError",
     "Explicit optional base_date/max_workers/use_joblib contract",
     "Positive worker-limit validation",
-    "Spawn multiprocessing context avoids inheriting thread state"
+    "Spawn multiprocessing context avoids inheriting thread state",
+    "0.1.1: technical refactoring without rule change (rows.py for row assembly and worker batches; profile implementation fingerprints renewed)"
   ],
   "consumer": {
     "repository": "janpow77/flowaudit_testdatengenerator_frontend",
