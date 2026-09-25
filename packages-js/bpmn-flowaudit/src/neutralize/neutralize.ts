@@ -187,10 +187,7 @@ class Neutralizer {
     const id = ownerId(node)
     const inFlowaudit = node.namespaceURI === FLOWAUDIT_NAMESPACE
     for (const attribute of Array.from(node.attributes)) {
-      if (attribute.namespaceURI || attribute.name.includes(':')) continue
-      const relevant = attribute.name === 'name' || (inFlowaudit && !CODE_ATTRIBUTES.has(attribute.name))
-      if (!relevant) continue
-      if (inFlowaudit && attribute.name === 'pruefer') continue
+      if (!isTextAttribute(attribute, inFlowaudit)) continue
       const cleaned = this.clean(attribute.value, id, `@${attribute.name}`)
       if (cleaned !== attribute.value) node.setAttribute(attribute.name, cleaned)
     }
@@ -218,6 +215,13 @@ class Neutralizer {
       if (node.namespaceURI === BPMNDI && node.localName === 'BPMNShape') this.colors(node)
     }
   }
+}
+
+/** Attribute with free text that may contain bodies or persons (codes and the tester stay). */
+function isTextAttribute(attribute: Attr, inFlowaudit: boolean): boolean {
+  if (attribute.namespaceURI || attribute.name.includes(':')) return false
+  if (attribute.name === 'name') return true
+  return inFlowaudit && !CODE_ATTRIBUTES.has(attribute.name) && attribute.name !== 'pruefer'
 }
 
 /** Neutralises a diagram; `replacements` adds names known to the application. */

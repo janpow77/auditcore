@@ -1,5 +1,5 @@
 /**
- * Validation issue of a rule (wire form: `Befund.to_dict()` of
+ * Validation issue of a rule (wire form: `ValidationIssue.to_dict()` of
  * `auditcore_bpmn`).
  */
 
@@ -53,17 +53,17 @@ export function countIssues(issues: ValidationIssue[]): IssueCount {
   return count
 }
 
-/** Converts a server issue (`regel_id`, `schwere`, …) into a `ValidationIssue`. */
+/** Converts a server issue of `auditcore_bpmn` (`rule_id`, `severity`, `params`, …) into a `ValidationIssue`. */
 export function issueFromWire(data: Record<string, unknown>): ValidationIssue {
   const result: ValidationIssue = {
-    ruleId: String(data.regel_id ?? data.rule_id ?? data.ruleId ?? ''),
-    severity: String(data.schwere ?? data.severity ?? 'hinweis') as Severity,
-    params: (data.parameter ?? data.params ?? {}) as Record<string, unknown>,
+    ruleId: String(data.rule_id ?? ''),
+    severity: String(data.severity ?? 'hinweis') as Severity,
+    params: (data.params ?? {}) as Record<string, unknown>,
   }
   const optional: [keyof ValidationIssue, unknown][] = [
-    ['elementId', data.element_id ?? data.elementId],
-    ['diagramId', data.diagramm_id ?? data.diagram_id ?? data.diagramId],
-    ['message', data.meldung ?? data.message],
+    ['elementId', data.element_id],
+    ['diagramId', data.diagram_id],
+    ['message', data.message],
   ]
   for (const [key, value] of optional) if (typeof value === 'string' && value) (result as unknown as Record<string, unknown>)[key] = value
   return result

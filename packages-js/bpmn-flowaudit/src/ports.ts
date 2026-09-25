@@ -14,7 +14,7 @@ import type { ValidationIssue } from './validation/issue'
 
 /**
  * Loading and saving of collection, diagrams and approvals – same split as
- * the `Speicher` protocol of `auditcore_bpmn`.
+ * the `Storage` protocol of `auditcore_bpmn`.
  */
 export interface StoragePort {
   loadCollection(): Promise<CollectionData | null>
@@ -81,12 +81,20 @@ export interface ProfileSummary {
   id: string
   version: string
   title: string
-  fundingPeriod?: string | null
+  programmingPeriod?: string | null
 }
 
 export interface ProfilePort {
   profiles(): Promise<ProfileSummary[]>
   loadProfile(profileId: string, version?: string): Promise<ProfileData>
+}
+
+/**
+ * ESI requirements per element (audit_designer endpoint `/esi-requirements`).
+ * Any of the supported response shapes is accepted (`normalizeEsiResponse`).
+ */
+export interface EsiPort {
+  requirements(xml: string, diagramId?: string): Promise<unknown>
 }
 
 /** Server-side validation (e.g. `auditcore_bpmn`), optional. */

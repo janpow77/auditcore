@@ -11,8 +11,8 @@ import type { Approval, DiagramEntry } from './collectionData'
 export interface GroupOverview {
   count: number
   statusDistribution: Record<string, number>
-  tasks: number
-  tasksWithLegalBasis: number
+  activities: number
+  activitiesWithLegalBasis: number
   /** Share of activities with legal basis (`null` without activities). */
   legalBasisCoverage: number | null
   expired: string[]
@@ -49,14 +49,14 @@ export function groupOverview(
   const day = options.referenceDate ?? new Date().toISOString().slice(0, 10)
   const statusDistribution: Record<string, number> = {}
   for (const entry of entries) statusDistribution[statusKey(entry)] = (statusDistribution[statusKey(entry)] ?? 0) + 1
-  const tasks = entries.reduce((sum, e) => sum + e.excerpt.tasks, 0)
-  const tasksWithLegalBasis = entries.reduce((sum, e) => sum + e.excerpt.tasksWithLegalBasis, 0)
+  const activities = entries.reduce((sum, e) => sum + e.excerpt.activities, 0)
+  const activitiesWithLegalBasis = entries.reduce((sum, e) => sum + e.excerpt.activitiesWithLegalBasis, 0)
   return {
     count: entries.length,
     statusDistribution,
-    tasks,
-    tasksWithLegalBasis,
-    legalBasisCoverage: tasks ? Math.round((tasksWithLegalBasis / tasks) * 10000) / 10000 : null,
+    activities,
+    activitiesWithLegalBasis,
+    legalBasisCoverage: activities ? Math.round((activitiesWithLegalBasis / activities) * 10000) / 10000 : null,
     expired: entries.filter((e) => e.info?.validUntil && /^\d{4}-\d{2}-\d{2}$/.test(e.info.validUntil) && e.info.validUntil < day).map((e) => e.id),
     keyRequirementCoverage: coverage(entries),
     diagrams: entries.map((e) => e.id),
@@ -72,28 +72,41 @@ export interface DiagramReference {
   targetElement?: string | null
 }
 
-/** Calls (call activity → process) and link events across diagram boundaries. */
-export function diagramReferences(collection: DiagramCollection): DiagramReference[] {
+type Targets = { byProcess: Map<string, string[]>; catches: Map<string, [string, string][]> }
+
+function collectTargets(collection: DiagramCollection): Targets {
   const byProcess = new Map<string, string[]>()
   const catches = new Map<string, [string, string][]>()
   for (const entry of collection.diagrams.values()) {
     for (const processId of entry.excerpt.processIds) byProcess.set(processId, [...(byProcess.get(processId) ?? []), entry.id])
     for (const [elementId, name] of entry.excerpt.linkCatches) catches.set(name, [...(catches.get(name) ?? []), [entry.id, elementId]])
   }
-  const result: DiagramReference[] = []
-  for (const entry of [...collection.diagrams.values()].sort((a, b) => a.id.localeCompare(b.id))) {
-    for (const [elementId, called] of entry.excerpt.calls) {
-      const targets = byProcess.get(called) ?? (collection.diagrams.has(called) ? [called] : [])
-      result.push({ sourceDiagram: entry.id, sourceElement: elementId, kind: 'aufruf', key: called, targetDiagram: targets[0] ?? null })
-    }
-    const own = new Set(entry.excerpt.linkCatches.map(([, name]) => name))
-    for (const [elementId, name] of entry.excerpt.linkThrows) {
-      if (own.has(name)) continue
-      const target = (catches.get(name) ?? []).find(([diagramId]) => diagramId !== entry.id)
-      result.push({ sourceDiagram: entry.id, sourceElement: elementId, kind: 'link', key: name, targetDiagram: target?.[0] ?? null, targetElement: target?.[1] ?? null })
-    }
-  }
-  return result
+  return { byProcess, catches }
+}
+
+function callReferences(collection: DiagramCollection, entry: DiagramEntry, targets: Targets): DiagramReference[] {
+  return entry.excerpt.calls.map(([elementId, called]) => {
+    const found = targets.byProcess.get(called) ?? (collection.diagrams.has(called) ? [called] : [])
+    return { sourceDiagram: entry.id, sourceElement: elementId, kind: 'aufruf', key: called, targetDiagram: found[0] ?? null }
+  })
+}
+
+function linkReferences(entry: DiagramEntry, targets: Targets): DiagramReference[] {
+  const own = new Set(entry.excerpt.linkCatches.map(([, name]) => name))
+  return entry.excerpt.linkThrows
+    .filter(([, name]) => !own.has(name))
+    .map(([elementId, name]) => {
+      const target = (targets.catches.get(name) ?? []).find(([diagramId]) => diagramId !== entry.id)
+      return { sourceDiagram: entry.id, sourceElement: elementId, kind: 'link', key: name, targetDiagram: target?.[0] ?? null, targetElement: target?.[1] ?? null }
+    })
+}
+
+/** Calls (call activity → process) and link events across diagram boundaries. */
+export function diagramReferences(collection: DiagramCollection): DiagramReference[] {
+  const targets = collectTargets(collection)
+  return [...collection.diagrams.values()]
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .flatMap((entry) => [...callReferences(collection, entry, targets), ...linkReferences(entry, targets)])
 }
 
 function structureIssues(collection: DiagramCollection): ValidationIssue[] {

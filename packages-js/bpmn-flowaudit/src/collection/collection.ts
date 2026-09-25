@@ -43,8 +43,18 @@ export class CollectionError extends Error {
   }
 }
 
-function byOrder<T extends { order: number; name: string; id: string }>(a: T, b: T): number {
-  return a.order - b.order || a.name.localeCompare(b.name, 'de') || a.id.localeCompare(b.id)
+/** Deep copy of JSON data (also accepts framework proxies). */
+function cloneJson<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
+}
+
+/** Drops `null`/`undefined` fields (the JSON schema has no nulls there). */
+function withoutEmpty<T extends object>(value: T): T {
+  return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== null && item !== undefined)) as T
+}
+
+function byOrder<T extends { position: number; name: string; id: string }>(a: T, b: T): number {
+  return a.position - b.position || a.name.localeCompare(b.name, 'de') || a.id.localeCompare(b.id)
 }
 
 export interface FolderNode {
@@ -78,8 +88,8 @@ export class DiagramCollection {
     this.checkId(id, 'Ordner')
     if (this.folders.has(id)) throw new CollectionError('exists', { id, what: 'Ordner' })
     this.checkFolder(parentId)
-    const order = 1 + Math.max(-1, ...this.subfolders(parentId).map((f) => f.order))
-    const folder: Folder = { id, name, parentId, order, ...(description ? { description } : {}) }
+    const position = 1 + Math.max(-1, ...this.subfolders(parentId).map((f) => f.position))
+    const folder: Folder = { id, name, parentId, position, ...(description ? { description } : {}) }
     this.folders.set(id, folder)
     return folder
   }
@@ -110,7 +120,7 @@ export class DiagramCollection {
     folder.parentId = parentId
     const siblings = this.subfolders(parentId).filter((f) => f.id !== folderId)
     siblings.splice(Math.max(0, Math.min(position ?? siblings.length, siblings.length)), 0, folder)
-    siblings.forEach((item, index) => (item.order = index))
+    siblings.forEach((item, index) => (item.position = index))
   }
 
   removeFolder(folderId: string): void {
@@ -132,8 +142,8 @@ export class DiagramCollection {
     if (this.diagrams.has(id)) throw new CollectionError('exists', { id, what: 'Diagramm' })
     this.checkFolder(options.folderId)
     const tags = this.checkTags(options.tags ?? [])
-    const order = 1 + Math.max(-1, ...this.inFolder(options.folderId ?? null).map((d) => d.order))
-    const entry: DiagramEntry = { id, name: options.name ?? id, folderId: options.folderId ?? null, tags, order, excerpt: emptyExcerpt(), approvals: [] }
+    const position = 1 + Math.max(-1, ...this.inFolder(options.folderId ?? null).map((d) => d.position))
+    const entry: DiagramEntry = { id, name: options.name ?? id, folderId: options.folderId ?? null, tags, position, excerpt: emptyExcerpt(), approvals: [] }
     this.diagrams.set(id, entry)
     if (options.model) this.update(id, options.model)
     return entry
@@ -176,13 +186,13 @@ export class DiagramCollection {
     entry.folderId = folderId
     const siblings = this.inFolder(folderId).filter((d) => d.id !== id)
     siblings.splice(Math.max(0, Math.min(position ?? siblings.length, siblings.length)), 0, entry)
-    siblings.forEach((item, index) => (item.order = index))
+    siblings.forEach((item, index) => (item.position = index))
   }
 
   setOrder(folderId: string | null, ids: string[]): void {
     const current = new Set(this.inFolder(folderId).map((d) => d.id))
     if (ids.length !== current.size || !ids.every((id) => current.has(id))) throw new CollectionError('order')
-    ids.forEach((id, index) => (this.entry(id).order = index))
+    ids.forEach((id, index) => (this.entry(id).position = index))
   }
 
   setTags(id: string, tags: string[]): void {
@@ -245,9 +255,9 @@ export class DiagramCollection {
       schema: COLLECTION_SCHEMA,
       id: this.id,
       name: this.name,
-      folders: sorted(this.folders.values()).map((f) => ({ ...f })),
+      folders: sorted(this.folders.values()).map((f) => withoutEmpty({ ...f })),
       tags: sorted(this.tags.values()).map((t) => ({ ...t })),
-      diagrams: sorted(this.diagrams.values()).map((d) => structuredClone(d)),
+      diagrams: sorted(this.diagrams.values()).map((d) => withoutEmpty(cloneJson(d))),
     }
   }
 
@@ -256,7 +266,7 @@ export class DiagramCollection {
     const collection = new DiagramCollection(data.id, data.name)
     for (const folder of data.folders) collection.folders.set(folder.id, { ...folder })
     for (const tag of data.tags) collection.tags.set(tag.id, { ...tag })
-    for (const entry of data.diagrams) collection.diagrams.set(entry.id, { ...structuredClone(entry), excerpt: { ...emptyExcerpt(), ...entry.excerpt } })
+    for (const entry of data.diagrams) collection.diagrams.set(entry.id, { ...cloneJson(entry), excerpt: { ...emptyExcerpt(), ...entry.excerpt } })
     for (const id of collection.folders.keys()) collection.ancestors(id)
     return collection
   }

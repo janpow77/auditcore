@@ -15,10 +15,19 @@ export function snakeToCamel(key: string): string {
   return key.replace(/_([a-z0-9])/g, (_match, letter: string) => letter.toUpperCase())
 }
 
+/**
+ * Fields whose value is a dictionary with data keys (key index of the
+ * collection, status distribution, KA coverage, message parameters): their
+ * keys are values, not field names, and stay unchanged.
+ */
+const DICTIONARY_FIELDS = new Set(['keys', 'params', 'parameter', 'status_distribution', 'key_requirement_coverage', 'sha256'])
+
 function convertKeys(value: Json, convert: (key: string) => string): Json {
   if (Array.isArray(value)) return value.map((item) => convertKeys(item, convert))
   if (value && typeof value === 'object') {
-    return Object.fromEntries(Object.entries(value).map(([key, item]) => [convert(key), convertKeys(item, convert)]))
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [convert(key), DICTIONARY_FIELDS.has(camelToSnake(key)) ? item : convertKeys(item, convert)]),
+    )
   }
   return value
 }

@@ -7,7 +7,7 @@
 
 import type { DiagramInfo } from '../schema/types'
 
-export const COLLECTION_SCHEMA = 'auditcore_bpmn.diagrammsammlung/1'
+export const COLLECTION_SCHEMA = 'auditcore_bpmn.diagram-collection/1'
 
 /** Kinds of stable domain keys (checklists and notes link only via these). */
 export const KEY_KINDS = ['ka', 'bk', 'prueffeld', 'feststellung_ref', 'register', 'rolle', 'kennzeichen'] as const
@@ -17,7 +17,7 @@ export interface Folder {
   id: string
   name: string
   parentId?: string | null
-  order: number
+  position: number
   description?: string
 }
 
@@ -43,8 +43,8 @@ export interface DiagramExcerpt {
   calls: [string, string][]
   linkThrows: [string, string][]
   linkCatches: [string, string][]
-  tasks: number
-  tasksWithLegalBasis: number
+  activities: number
+  activitiesWithLegalBasis: number
   /** Kind → value → element ids. */
   keys: Partial<Record<KeyKind, Record<string, string[]>>>
 }
@@ -54,12 +54,10 @@ export interface DiagramEntry {
   name: string
   folderId?: string | null
   tags: string[]
-  order: number
+  position: number
   info?: DiagramInfo | null
   excerpt: DiagramExcerpt
   approvals: Approval[]
-  /** Last change (ISO), maintained by the application. */
-  updatedAt?: string
 }
 
 export interface CollectionData {
@@ -72,7 +70,7 @@ export interface CollectionData {
 }
 
 export function emptyExcerpt(): DiagramExcerpt {
-  return { processIds: [], calls: [], linkThrows: [], linkCatches: [], tasks: 0, tasksWithLegalBasis: 0, keys: {} }
+  return { processIds: [], calls: [], linkThrows: [], linkCatches: [], activities: 0, activitiesWithLegalBasis: 0, keys: {} }
 }
 
 export function emptyCollection(id = 'sammlung', name = 'Diagrammsammlung'): CollectionData {

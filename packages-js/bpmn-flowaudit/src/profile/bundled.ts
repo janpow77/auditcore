@@ -3,7 +3,7 @@
  * Profiles shipped with the Python package `auditcore_bpmn`.
  *
  * The JSON files exist exactly once in the repository
- * (`packages/auditcore_bpmn/src/auditcore_bpmn/profildaten/`). Vite reads
+ * (`packages/auditcore_bpmn/src/auditcore_bpmn/profiles/data/`). Vite reads
  * them at build time and bundles them into `dist/profiles.js`; the sources
  * of this package contain no copy. Entry point:
  * `import { bundledProfiles } from '@flowaudit/bpmn-flowaudit/profiles'`.
@@ -11,7 +11,7 @@
 
 import { DEFAULT_PROFILE, latestProfiles, validateProfile, type ProfileData } from './profile'
 
-const files = import.meta.glob('../../../../packages/auditcore_bpmn/src/auditcore_bpmn/profildaten/*.json', {
+const files = import.meta.glob('../../../../packages/auditcore_bpmn/src/auditcore_bpmn/profiles/data/*.json', {
   eager: true,
   import: 'default',
 }) as Record<string, unknown>

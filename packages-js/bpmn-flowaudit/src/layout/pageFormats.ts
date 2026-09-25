@@ -65,32 +65,50 @@ function lines(start: number, end: number, step: number, toScreen: (v: number) =
   return result
 }
 
+interface GridRange {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
+
+function positive(...values: number[]): boolean {
+  return values.every((value) => value > 0)
+}
+
+function pageLabels(range: GridRange, size: PageSize, toX: (x: number) => number, toY: (y: number) => number, screen: { width: number; height: number }, pageLabel: string): PageGrid['pages'] {
+  const pages: PageGrid['pages'] = []
+  for (let column = range.left; column < range.right; column += 1) {
+    for (let row = range.top; row < range.bottom; row += 1) {
+      const x = toX(column * size.widthPx) + 6
+      const y = toY(row * size.heightPx) + 16
+      const visible = x >= -60 && x <= screen.width && y >= 0 && y <= screen.height
+      if (visible) pages.push({ x, y, label: `${pageLabel} ${row + 1}/${column + 1}` })
+    }
+  }
+  return pages
+}
+
 /**
  * Computes the page break grid for the current view. The origin is the
  * diagram origin (0/0), so the grid moves with the diagram like a printout.
  */
 export function computePageGrid(viewbox: ViewboxLike, size: PageSize, screenWidth: number, screenHeight: number, pageLabel = 'Seite'): PageGrid {
   const { widthPx, heightPx } = size
-  if (!(widthPx > 0) || !(heightPx > 0) || !(viewbox.scale > 0)) return EMPTY_GRID
-  const left = Math.floor(viewbox.x / widthPx)
-  const right = Math.ceil((viewbox.x + viewbox.width) / widthPx)
-  const top = Math.floor(viewbox.y / heightPx)
-  const bottom = Math.ceil((viewbox.y + viewbox.height) / heightPx)
+  if (!positive(widthPx, heightPx, viewbox.scale)) return EMPTY_GRID
+  const range: GridRange = {
+    left: Math.floor(viewbox.x / widthPx),
+    right: Math.ceil((viewbox.x + viewbox.width) / widthPx),
+    top: Math.floor(viewbox.y / heightPx),
+    bottom: Math.ceil((viewbox.y + viewbox.height) / heightPx),
+  }
   // More than 200 lines per axis is only load, nobody reads that.
-  if (right - left > 200 || bottom - top > 200) return EMPTY_GRID
+  if (range.right - range.left > 200 || range.bottom - range.top > 200) return EMPTY_GRID
   const toX = (x: number) => (x - viewbox.x) * viewbox.scale
   const toY = (y: number) => (y - viewbox.y) * viewbox.scale
-  const pages: PageGrid['pages'] = []
-  for (let column = left; column < right; column += 1) {
-    for (let row = top; row < bottom; row += 1) {
-      const x = toX(column * widthPx) + 6
-      const y = toY(row * heightPx) + 16
-      if (x >= -60 && x <= screenWidth && y >= 0 && y <= screenHeight) pages.push({ x, y, label: `${pageLabel} ${row + 1}/${column + 1}` })
-    }
-  }
   return {
-    vertical: lines(left, right, widthPx, toX, screenWidth),
-    horizontal: lines(top, bottom, heightPx, toY, screenHeight),
-    pages,
+    vertical: lines(range.left, range.right, widthPx, toX, screenWidth),
+    horizontal: lines(range.top, range.bottom, heightPx, toY, screenHeight),
+    pages: pageLabels(range, size, toX, toY, { width: screenWidth, height: screenHeight }, pageLabel),
   }
 }

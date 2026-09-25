@@ -18,6 +18,14 @@ import type {
   StoragePort,
 } from '../ports'
 
+/**
+ * Deep copy of JSON data. Unlike `structuredClone` this also accepts
+ * framework proxies (e.g. Vue `reactive`) handed in by the application.
+ */
+function cloneJson<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
+}
+
 export class InMemoryStorage implements StoragePort {
   private collection: CollectionData | null
   private readonly diagrams = new Map<string, string>()
@@ -25,16 +33,16 @@ export class InMemoryStorage implements StoragePort {
   private readonly comments = new Map<string, Comment[]>()
 
   constructor(initial: { collection?: CollectionData; diagrams?: Record<string, string> } = {}) {
-    this.collection = initial.collection ? structuredClone(initial.collection) : null
+    this.collection = initial.collection ? cloneJson(initial.collection) : null
     for (const [id, xml] of Object.entries(initial.diagrams ?? {})) this.diagrams.set(id, xml)
   }
 
   async loadCollection(): Promise<CollectionData | null> {
-    return this.collection ? structuredClone(this.collection) : null
+    return this.collection ? cloneJson(this.collection) : null
   }
 
   async saveCollection(collection: CollectionData): Promise<void> {
-    this.collection = structuredClone(collection)
+    this.collection = cloneJson(collection)
   }
 
   async loadDiagram(id: string): Promise<string> {
@@ -64,11 +72,11 @@ export class InMemoryStorage implements StoragePort {
   }
 
   async loadComments(id: string): Promise<Comment[]> {
-    return structuredClone(this.comments.get(id) ?? [])
+    return cloneJson(this.comments.get(id) ?? [])
   }
 
   async saveComments(id: string, comments: Comment[]): Promise<void> {
-    this.comments.set(id, structuredClone(comments))
+    this.comments.set(id, cloneJson(comments))
   }
 }
 
@@ -76,7 +84,7 @@ export class StaticProfilePort implements ProfilePort {
   constructor(private readonly profileList: ProfileData[]) {}
 
   async profiles(): Promise<ProfileSummary[]> {
-    return this.profileList.map((p) => ({ id: p.id, version: p.version, title: localized(p.titel), fundingPeriod: p.foerderperiode ?? null }))
+    return this.profileList.map((p) => ({ id: p.id, version: p.version, title: localized(p.title), programmingPeriod: p.programming_period ?? null }))
   }
 
   async loadProfile(profileId: string, version?: string): Promise<ProfileData> {
@@ -96,11 +104,11 @@ export class ProfileCataloguePort implements CataloguePort {
   async keyRequirements(profileId: string, locale: 'de' | 'en' = 'de'): Promise<KeyRequirementEntry[]> {
     const profile = await this.profilePort.loadProfile(profileId)
     return keyRequirements(profile).map((entry) => ({
-      number: entry.nummer,
-      title: localized(entry.titel, locale),
-      bodies: localized(entry.stellen, locale),
+      number: entry.number,
+      title: localized(entry.title, locale),
+      bodies: localized(entry.bodies, locale),
       criteria:
-        this.criteria[profileId]?.[entry.nummer] ?? (entry.bewertungskriterien ?? []).map((c) => ({ code: c.code, title: localized(c.titel, locale) })),
+        this.criteria[profileId]?.[entry.number] ?? (entry.assessment_criteria ?? []).map((c) => ({ code: c.code, title: localized(c.title, locale) })),
     }))
   }
 }
@@ -117,14 +125,14 @@ export class ProfileLegalSearch implements LegalSearchPort {
     if (!needle) return []
     const parsed = parseCitation(query)
     const typed: LegalSearchHit[] = parsed.act ? [{ ...completeEuAct(parsed), origin: 'Eingabe' }] : []
-    const templates = (this.profile?.rechtsgrundlagen?.eintraege ?? []).map((entry) => ({
-      act: entry.norm,
-      article: entry.artikel,
-      section: entry.paragraph,
+    const templates = (this.profile?.legal_bases?.entries ?? []).map((entry) => ({
+      act: entry.act,
+      article: entry.article,
+      annex: entry.annex,
       celex: entry.celex,
       eli: entry.eli,
-      shortTitle: localized(entry.kurzbezeichnung, options.locale),
-      title: localized(entry.kurzbezeichnung, options.locale),
+      shortTitle: localized(entry.short_title, options.locale),
+      title: localized(entry.short_title, options.locale),
       origin: 'Profil',
     }))
     const matches = templates.filter((hit) =>

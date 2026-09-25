@@ -69,16 +69,21 @@ function isContainer(element: ModelElement): boolean {
   return element.type === 'bpmn:Participant' || element.type === 'bpmn:Lane'
 }
 
-function roleSuggestions(element: ModelElement, options: SuggestionOptions): Draft[] {
-  const aliases = options.roleAliases ?? []
-  if (isContainer(element) && !element.extensions.actor) {
-    const role = roleFromText(options.profile, element.name, aliases)
-    const actor: Actor = { role, ...(element.name ? { displayName: element.name } : {}) }
-    return role ? [{ elementId: element.id, kind: 'actor', value: actor, excerpt: element.name, origin: 'name' }] : []
-  }
+function actorSuggestion(element: ModelElement, options: SuggestionOptions): Draft[] {
+  const role = roleFromText(options.profile, element.name, options.roleAliases ?? [])
+  const actor: Actor = { role, ...(element.name ? { displayName: element.name } : {}) }
+  return role ? [{ elementId: element.id, kind: 'actor', value: actor, excerpt: element.name, origin: 'name' }] : []
+}
+
+function rolePrefixSuggestion(element: ModelElement, options: SuggestionOptions): Draft[] {
   const prefix = isActivity(element.type) && element.name ? ROLE_PREFIX.exec(element.name.trim())?.groups?.praefix : undefined
-  const role = prefix ? roleFromText(options.profile, prefix, aliases) : undefined
+  const role = prefix ? roleFromText(options.profile, prefix, options.roleAliases ?? []) : undefined
   return role && prefix ? [{ elementId: element.id, kind: 'rolePrefix', value: role, excerpt: prefix, origin: 'name' }] : []
+}
+
+function roleSuggestions(element: ModelElement, options: SuggestionOptions): Draft[] {
+  if (isContainer(element) && !element.extensions.actor) return actorSuggestion(element, options)
+  return rolePrefixSuggestion(element, options)
 }
 
 function colorSuggestion(element: ModelElement): Draft[] {

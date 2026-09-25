@@ -6,13 +6,13 @@
 import { isStructured } from '../model/legalBasis'
 import type { ModelElement } from '../model/processModel'
 import { criterionKnown, keyRequirement, keyRequirements, roleOf, roleProvided } from '../profile/profile'
-import { roleAppliesTo } from '../schema/roles'
+import { roleAppliesTo, type Role } from '../schema/roles'
 import type { AuditReference, DiagramInfo, LegalBasis } from '../schema/types'
-import { AUDIT_TYPES, CONFIDENTIALITY, DIAGRAM_STATUS, MARKER_TYPES, VARIANTS, label } from '../schema/vocabulary'
+import { AUDIT_TYPES, CONFIDENTIALITY, DIAGRAM_STATUS, MARKERS, VARIANTS, label } from '../schema/vocabulary'
 import { TASK_TYPES, localType } from '../model/processModel'
 import type { RuleContext } from './context'
 
-const KEY_REFERENCE_KINDS = ['prueffeld', 'feststellung_ref', 'register']
+const CROSS_REFERENCE_KINDS = ['prueffeld', 'feststellung_ref', 'register']
 const COLOR = /^#[0-9A-Fa-f]{6}$/
 
 export function checkLegalBases(ctx: RuleContext, id: string | null | undefined, name: string, list: LegalBasis[]): void {
@@ -20,7 +20,7 @@ export function checkLegalBases(ctx: RuleContext, id: string | null | undefined,
 }
 
 function availableRange(ctx: RuleContext): string {
-  const numbers = keyRequirements(ctx.profile).map((entry) => entry.nummer)
+  const numbers = keyRequirements(ctx.profile).map((entry) => entry.number)
   return numbers.length ? `${Math.min(...numbers)}–${Math.max(...numbers)}` : 'keine'
 }
 
@@ -29,16 +29,22 @@ function isKnownRequirement(ctx: RuleContext, number: number): boolean {
   return ctx.profile ? Boolean(keyRequirement(ctx.profile, number)) : number >= 1
 }
 
+/** KA/BK consistency of one audit reference (unknown KA, BK of another KA, BK not in catalogue). */
+function checkRequirement(ctx: RuleContext, id: string | null | undefined, name: string, ref: AuditReference): void {
+  const number = Number(String(ref.keyRequirement ?? '').trim())
+  if (!isKnownRequirement(ctx, number)) {
+    ctx.report('BPMN-F023', id, { ka: ref.keyRequirement ?? '', name, profil: ctx.profile?.id ?? '–', vorhanden: availableRange(ctx) })
+    return
+  }
+  const criterion = ref.assessmentCriterion
+  if (!criterion) return
+  if (!criterion.trim().startsWith(`${number}.`)) ctx.report('BPMN-F024', id, { bk: criterion, ka: number, name })
+  else if (criterionKnown(ctx.profile, number, criterion) === false) ctx.report('BPMN-F025', id, { bk: criterion, name })
+}
+
 export function checkAuditReferences(ctx: RuleContext, id: string | null | undefined, name: string, list: AuditReference[]): void {
   for (const ref of list) {
-    const number = Number(String(ref.keyRequirement ?? '').trim())
-    if (!isKnownRequirement(ctx, number)) {
-      ctx.report('BPMN-F023', id, { ka: ref.keyRequirement ?? '', name, profil: ctx.profile?.id ?? '–', vorhanden: availableRange(ctx) })
-    } else if (ref.assessmentCriterion && !ref.assessmentCriterion.trim().startsWith(`${number}.`)) {
-      ctx.report('BPMN-F024', id, { bk: ref.assessmentCriterion, ka: number, name })
-    } else if (ref.assessmentCriterion && criterionKnown(ctx.profile, number, ref.assessmentCriterion) === false) {
-      ctx.report('BPMN-F025', id, { bk: ref.assessmentCriterion, name })
-    }
+    checkRequirement(ctx, id, name, ref)
     if (ref.auditType && !(ref.auditType in AUDIT_TYPES)) ctx.report('BPMN-F026', id, { wert: ref.auditType, name })
   }
 }
@@ -56,17 +62,21 @@ function checkActor(ctx: RuleContext, element: ModelElement): void {
     ctx.report('BPMN-F021', element.id, { rolle: actor.role, name, profil: ctx.profile?.id ?? '–' })
     return
   }
-  const period = ctx.model.info?.programmingPeriod || ctx.profile?.foerderperiode || null
-  const provided = ctx.profile ? roleProvided(ctx.profile, actor.role) : true
-  if (!provided || !roleAppliesTo(role, period)) {
-    ctx.report('BPMN-F022', element.id, {
-      rolle: actor.role,
-      bezeichnung: label(role.label),
-      bezeichnung_en: label(role.label, 'en'),
-      name,
-      periode: period ?? '?',
-    })
-  }
+  checkRolePeriod(ctx, element, role, actor.role)
+}
+
+/** Role outside the profile or outside the programming period. */
+function checkRolePeriod(ctx: RuleContext, element: ModelElement, role: Role, code: string): void {
+  const period = ctx.model.info?.programmingPeriod || ctx.profile?.programming_period || null
+  const provided = ctx.profile ? roleProvided(ctx.profile, code) : true
+  if (provided && roleAppliesTo(role, period)) return
+  ctx.report('BPMN-F022', element.id, {
+    rolle: code,
+    bezeichnung: label(role.label),
+    bezeichnung_en: label(role.label, 'en'),
+    name: ctx.name(element),
+    periode: period ?? '?',
+  })
 }
 
 function checkElement(ctx: RuleContext, element: ModelElement, requiredFor: Set<string>): void {
@@ -74,15 +84,20 @@ function checkElement(ctx: RuleContext, element: ModelElement, requiredFor: Set<
   const name = ctx.name(element)
   if (requiredFor.has(localType(element.type)) && !ext.legalBases.length) ctx.report('BPMN-F001', element.id, { name })
   checkLegalBases(ctx, element.id, name, ext.legalBases)
-  for (const marker of ext.markers) {
-    if (!(marker.type in MARKER_TYPES)) ctx.report('BPMN-F011', element.id, { typ: marker.type, name })
-  }
-  if (ext.markers.some((marker) => marker.type === 'rechtsgrundlage') && !ext.legalBases.length) ctx.report('BPMN-F012', element.id, { name })
+  checkMarkers(ctx, element, name)
   checkAuditReferences(ctx, element.id, name, ext.auditReferences)
   for (const ref of ext.crossReferences) {
-    if (!KEY_REFERENCE_KINDS.includes(ref.kind ?? '') || !ref.key) ctx.report('BPMN-F027', element.id, { name, wert: ref.kind ?? '' })
+    if (!CROSS_REFERENCE_KINDS.includes(ref.kind ?? '') || !ref.key) ctx.report('BPMN-F027', element.id, { name, wert: ref.kind ?? '' })
   }
   if (element.type === 'bpmn:Participant' || element.type === 'bpmn:Lane') checkActor(ctx, element)
+}
+
+function checkMarkers(ctx: RuleContext, element: ModelElement, name: string): void {
+  const ext = element.extensions
+  for (const marker of ext.markers) {
+    if (!(marker.type in MARKERS)) ctx.report('BPMN-F011', element.id, { typ: marker.type, name })
+  }
+  if (ext.markers.some((marker) => marker.type === 'rechtsgrundlage') && !ext.legalBases.length) ctx.report('BPMN-F012', element.id, { name })
 }
 
 function validDate(value: string | undefined): string | null {
@@ -110,18 +125,22 @@ function checkProfileFit(ctx: RuleContext, where: string | null, info: DiagramIn
   const profile = ctx.profile
   if (!profile) return
   for (const fund of info.funds ?? []) {
-    if (!(profile.fonds ?? []).includes(fund)) ctx.report('BPMN-F014', where, { wert: fund, profil: profile.id })
+    if (!(profile.funds ?? []).includes(fund)) ctx.report('BPMN-F014', where, { wert: fund, profil: profile.id })
   }
-  if (info.programmingPeriod && profile.foerderperiode && info.programmingPeriod !== profile.foerderperiode) {
-    ctx.report('BPMN-F015', where, { wert: info.programmingPeriod, profil: profile.id, periode: profile.foerderperiode })
+  if (info.programmingPeriod && profile.programming_period && info.programmingPeriod !== profile.programming_period) {
+    ctx.report('BPMN-F015', where, { wert: info.programmingPeriod, profil: profile.id, periode: profile.programming_period })
   }
   if (info.profile && info.profile !== profile.id) ctx.report('BPMN-F016', where, { wert: info.profile, profil: profile.id })
 }
 
-function checkInfoValues(ctx: RuleContext, where: string | null, info: DiagramInfo): void {
+function checkStatus(ctx: RuleContext, where: string | null, info: DiagramInfo): void {
   if (!info.status) ctx.report('BPMN-F003', where)
   else if (!(info.status in DIAGRAM_STATUS)) ctx.report('BPMN-F004', where, { wert: info.status, zulaessig: Object.keys(DIAGRAM_STATUS).join(', ') })
   if (info.status === 'freigegeben' && !(info.approvedBy && info.approvedOn)) ctx.report('BPMN-F008', where)
+}
+
+function checkInfoValues(ctx: RuleContext, where: string | null, info: DiagramInfo): void {
+  checkStatus(ctx, where, info)
   const colors: [string, string | undefined][] = [
     ['kopfzeilenfarbe', info.headerColor],
     ['kopfzeilen_textfarbe', info.headerTextColor],

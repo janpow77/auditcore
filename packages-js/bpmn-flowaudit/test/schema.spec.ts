@@ -51,6 +51,13 @@ describe('round trip', () => {
     expect(model.info?.funds).toEqual(['efre', 'esf_plus'])
     expect(model.info?.keywords).toEqual(['Bewilligung', 'Auszahlung'])
     expect(model.info?.risks?.[0].controls).toEqual(['K1'])
+    const loaded = await loadDefinitions(xml)
+    const out = await saveDefinitions(loaded)
+    expect(snapshot(await modelOf(out))).toBe(snapshot(model))
+  })
+
+  it('reads the 1.1 extensions of tasks, events and data objects', async () => {
+    const model = await modelOf(fixture('schema-1.1.bpmn'))
     const task = model.byId.get('Task_Pruefen')
     expect(task?.extensions.legalBases[0]).toMatchObject({ act: 'Verordnung (EU) 2021/1060', article: '73', paragraph: '2', point: 'b' })
     expect(task?.extensions.controls[0]).toMatchObject({ id: 'K1', keyControl: true, description: 'Zweite Person zeichnet die Checkliste gegen.' })
@@ -60,10 +67,6 @@ describe('round trip', () => {
     expect(model.byId.get('Timer_Frist')?.extensions.deadlines[0].legalBases?.[0].article).toBe('74')
     expect(model.byId.get('DataRef_Vermerk')?.extensions.evidence[0]).toMatchObject({ storageLocation: 'eAkte', itSystem: 'Fördersystem' })
     expect(model.byId.get('Task_Pruefen')?.actor).toMatchObject({ role: 'zgs', displayName: 'Musterförderbank' })
-
-    const loaded = await loadDefinitions(xml)
-    const out = await saveDefinitions(loaded)
-    expect(snapshot(await modelOf(out))).toBe(snapshot(model))
   })
 
   it('preserves unknown flowaudit elements (schema 1.1 requirement)', async () => {

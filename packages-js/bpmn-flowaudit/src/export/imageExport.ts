@@ -23,13 +23,19 @@ export function fileName(name: string, extension: string): string {
   return `${base || 'diagramm'}.${extension}`
 }
 
+function positive(width: number, height: number): { width: number; height: number } | null {
+  return width > 0 && height > 0 ? { width, height } : null
+}
+
+function viewBoxSize(svg: string): { width: number; height: number } | null {
+  const parts = /viewBox="([-\d.\s]+)"/.exec(svg)?.[1]?.trim().split(/\s+/).map(Number) ?? []
+  return parts.length === 4 ? positive(parts[2], parts[3]) : null
+}
+
 export function readSvgSize(svg: string): { width: number; height: number } {
   const width = Number(/width="([\d.]+)"/.exec(svg)?.[1] ?? 0)
   const height = Number(/height="([\d.]+)"/.exec(svg)?.[1] ?? 0)
-  if (width > 0 && height > 0) return { width, height }
-  const parts = /viewBox="([-\d.\s]+)"/.exec(svg)?.[1]?.trim().split(/\s+/).map(Number)
-  if (parts?.length === 4 && parts[2] > 0 && parts[3] > 0) return { width: parts[2], height: parts[3] }
-  return { width: 1200, height: 800 }
+  return positive(width, height) ?? viewBoxSize(svg) ?? { width: 1200, height: 800 }
 }
 
 async function loadImage(svg: string): Promise<HTMLImageElement> {

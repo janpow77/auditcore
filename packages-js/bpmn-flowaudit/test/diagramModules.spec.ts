@@ -116,7 +116,7 @@ describe('role palette and context pads', () => {
     const instance = diagram()
     const entries = instance.get<{ getEntries(): Record<string, { title: string; group: string }> }>('palette').getEntries()
     const roleEntries = Object.keys(entries).filter((id) => id.startsWith('flowaudit-pool-'))
-    expect(roleEntries).toHaveLength(TEST_PROFILE.rollen.length)
+    expect(roleEntries).toHaveLength(TEST_PROFILE.roles.length)
     expect(entries['flowaudit-pool-vb'].title).toBe('Create pool: Verwaltungsbehörde')
     const provider = instance.get<RolePaletteProvider>('flowauditRolePalette')
     expect(provider.roles().map((r) => r.code)).toContain('rfs')

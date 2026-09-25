@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "types": ["node", "vite/client"],
+    "jsx": "preserve",
+    "paths": {
+      "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"],
+      "@flowaudit/bpmn-flowaudit/profiles": ["../bpmn-flowaudit/src/profile/bundled.ts"],
+      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts", "./src/types/bpmn-editor.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts", "demo/**/*.ts", "demo/**/*.vue", "standalone/**/*.ts", "*.ts", "../bpmn-flowaudit/src/types/*.d.ts"]
+}

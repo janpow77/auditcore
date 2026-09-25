@@ -26,7 +26,7 @@ export const DIAGRAM_STATUS = vocabulary({
   archiviert: ['archiviert', 'archived'],
 })
 
-export const MARKER_TYPES = vocabulary({
+export const MARKERS = vocabulary({
   rechtsgrundlage: ['Rechtsgrundlage', 'Legal basis'],
   pruefpunkt: ['Prüfpunkt', 'Check point'],
   frist: ['Frist', 'Deadline'],
@@ -108,14 +108,14 @@ export const FUND_SHORT: Record<string, string> = {
   interreg: 'Interreg',
 }
 
-export const FUNDING_PERIODS = vocabulary({
+export const PROGRAMMING_PERIODS = vocabulary({
   '2014-2020': ['Förderperiode 2014–2020', 'Programming period 2014-2020'],
   '2021-2027': ['Förderperiode 2021–2027', 'Programming period 2021-2027'],
   '2028-2034': ['Förderperiode 2028–2034', 'Programming period 2028-2034'],
 })
 
-export const CONTROL_KINDS = vocabulary({ praeventiv: ['präventiv', 'preventive'], aufdeckend: ['aufdeckend', 'detective'] })
-export const CONTROL_EXECUTION = vocabulary({
+export const CONTROL_TYPES = vocabulary({ praeventiv: ['präventiv', 'preventive'], aufdeckend: ['aufdeckend', 'detective'] })
+export const EXECUTION_MODES = vocabulary({
   manuell: ['manuell', 'manual'],
   it_gestuetzt: ['IT-gestützt', 'IT-supported'],
   automatisiert: ['automatisiert', 'automated'],
@@ -133,7 +133,7 @@ export const TEST_RESULTS = vocabulary({
   nicht_anwendbar: ['nicht anwendbar', 'not applicable'],
   offen: ['offen', 'open'],
 })
-export const FINDING_KINDS = vocabulary({
+export const FINDING_TYPES = vocabulary({
   formell: ['formelle Feststellung', 'formal finding'],
   finanziell: ['finanzielle Feststellung', 'financial finding'],
 })
@@ -149,7 +149,7 @@ export const FINDING_STATUS = vocabulary({
   nicht_umgesetzt: ['nicht umgesetzt', 'not implemented'],
   entfallen: ['entfallen', 'withdrawn'],
 })
-export const SOURCE_KINDS = vocabulary({
+export const SOURCE_TYPES = vocabulary({
   verfahrenshandbuch: ['Verfahrenshandbuch', 'Procedures manual'],
   interview: ['Interview', 'Interview'],
   durchlauftest: ['Durchlauftest', 'Walk-through test'],
@@ -169,7 +169,7 @@ export const CONFIDENTIALITY = vocabulary({
   vs_nfd: ['VS – Nur für den Dienstgebrauch', 'restricted'],
 })
 export const VARIANTS = vocabulary({ soll: ['Soll', 'target'], ist: ['Ist', 'actual'] })
-export const KEY_REFERENCE_KINDS = vocabulary({
+export const CROSS_REFERENCE_KINDS = vocabulary({
   prueffeld: ['Prüffeld', 'Checklist item'],
   feststellung_ref: ['Feststellung', 'Finding reference'],
   register: ['Register der Prüfungsakte', 'Audit file register'],
@@ -183,24 +183,24 @@ export const FUNCTIONING_CATEGORIES = vocabulary({
 
 /** Names of all vocabularies, for panels and validation messages. */
 export const VOCABULARIES = {
-  status: DIAGRAM_STATUS,
-  markers: MARKER_TYPES,
+  diagramStatus: DIAGRAM_STATUS,
+  markers: MARKERS,
   auditTypes: AUDIT_TYPES,
   funds: FUNDS,
-  fundingPeriods: FUNDING_PERIODS,
-  controlKinds: CONTROL_KINDS,
-  controlExecution: CONTROL_EXECUTION,
+  programmingPeriods: PROGRAMMING_PERIODS,
+  controlTypes: CONTROL_TYPES,
+  executionModes: EXECUTION_MODES,
   riskCategories: RISK_CATEGORIES,
   riskLevels: RISK_LEVELS,
   testResults: TEST_RESULTS,
-  findingKinds: FINDING_KINDS,
+  findingTypes: FINDING_TYPES,
   findingSeverities: FINDING_SEVERITIES,
   findingStatus: FINDING_STATUS,
-  sourceKinds: SOURCE_KINDS,
+  sourceTypes: SOURCE_TYPES,
   deadlineUnits: DEADLINE_UNITS,
   confidentiality: CONFIDENTIALITY,
   variants: VARIANTS,
-  keyReferenceKinds: KEY_REFERENCE_KINDS,
+  crossReferenceKinds: CROSS_REFERENCE_KINDS,
 } as const
 
 export type VocabularyName = keyof typeof VOCABULARIES

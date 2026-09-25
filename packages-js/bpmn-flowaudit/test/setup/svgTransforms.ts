@@ -23,3 +23,25 @@ if (listPrototype && typeof listPrototype.consolidate !== 'function') {
     return this.appendItem(svg.createSVGTransformFromMatrix(matrix))
   }
 }
+
+/**
+ * `getCTM()` returns a DOMMatrix in happy-dom, but `SVGMatrix.multiply`
+ * accepts only SVGMatrix (diagram-js `Canvas.scroll`). Other matrices are
+ * converted first.
+ */
+type MatrixValues = { a: number; b: number; c: number; d: number; e: number; f: number }
+const SvgMatrix = (globalThis as unknown as { SVGMatrix?: { prototype: { multiply(m: unknown): unknown } } }).SVGMatrix
+
+if (SvgMatrix) {
+  const multiply = SvgMatrix.prototype.multiply
+  SvgMatrix.prototype.multiply = function patchedMultiply(this: unknown, other: unknown) {
+    if (other instanceof (SvgMatrix as unknown as new () => unknown)) return multiply.call(this, other)
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg') as unknown as { createSVGMatrix(): MatrixValues }
+    const converted = Object.assign(svg.createSVGMatrix(), pick(other as MatrixValues))
+    return multiply.call(this, converted)
+  }
+}
+
+function pick(m: MatrixValues): MatrixValues {
+  return { a: m.a, b: m.b, c: m.c, d: m.d, e: m.e, f: m.f }
+}

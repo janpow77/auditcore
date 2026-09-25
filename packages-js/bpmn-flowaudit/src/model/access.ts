@@ -38,20 +38,25 @@ export function editorAccess(services: EditorServices): ModelAccess {
   }
 }
 
+/** Properties that point to other elements (references, not children). */
+function isChildProperty(key: string): boolean {
+  return !key.startsWith('$') && key !== 'bpmnElement' && !key.endsWith('Ref') && key !== 'di'
+}
+
+function asModdleElement(value: unknown): ModdleElement | null {
+  const element = value as ModdleElement
+  return typeof element.$type === 'string' ? element : null
+}
+
 function indexById(definitions: ModdleElement): Map<string, ModdleElement> {
   const index = new Map<string, ModdleElement>()
-  const visit = (value: unknown, depth: number) => {
+  const visit = (value: unknown, depth: number): void => {
     if (depth > 60 || !value || typeof value !== 'object') return
-    if (Array.isArray(value)) {
-      for (const item of value) visit(item, depth + 1)
-      return
-    }
-    const element = value as ModdleElement
-    if (typeof element.$type !== 'string') return
+    if (Array.isArray(value)) return value.forEach((item) => visit(item, depth + 1))
+    const element = asModdleElement(value)
+    if (!element) return
     if (element.id && !index.has(String(element.id))) index.set(String(element.id), element)
-    for (const [key, child] of Object.entries(element)) {
-      if (!key.startsWith('$') && key !== 'bpmnElement' && !key.endsWith('Ref') && key !== 'di') visit(child, depth + 1)
-    }
+    for (const [key, child] of Object.entries(element)) if (isChildProperty(key)) visit(child, depth + 1)
   }
   visit(definitions, 0)
   return index

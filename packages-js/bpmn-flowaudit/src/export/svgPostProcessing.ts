@@ -143,17 +143,14 @@ function drawHeader(doc: Document, svg: Element, options: PrepareSvgOptions, box
   if (options.subtitle?.trim()) svg.appendChild(svgText(doc, box.minX, top + 48, options.subtitle.trim(), { size: 13, color }))
 }
 
-/** Adds header, legends and directory of legal bases to the exported SVG. */
-export function prepareSvg(source: string, options: PrepareSvgOptions): string {
-  const doc = new DOMParser().parseFromString(source, 'image/svg+xml')
-  const svg = doc.documentElement
-  if (!svg || svg.nodeName.toLowerCase() !== 'svg') return source
+function readViewBox(svg: Element | null): number[] | null {
+  if (!svg || svg.nodeName.toLowerCase() !== 'svg') return null
   const viewBox = (svg.getAttribute('viewBox') ?? '').split(/\s+/).map(Number)
-  if (viewBox.length !== 4 || viewBox.some((value) => !Number.isFinite(value))) return source
-  const [minX, minY, width, height] = viewBox
-  const texts = options.texts ?? GERMAN_SVG_TEXTS
+  return viewBox.length === 4 && viewBox.every((value) => Number.isFinite(value)) ? viewBox : null
+}
 
-  // Wrap the content; <defs> stays on top so arrow markers keep working.
+/** Wraps the content in a group; <defs> stays on top so arrow markers keep working. */
+function wrapContent(doc: Document, svg: Element): SVGGElement {
   const content = svgGroup(doc)
   content.setAttribute('class', 'flowaudit-diagramm')
   for (const child of Array.from(svg.childNodes)) {
@@ -161,6 +158,18 @@ export function prepareSvg(source: string, options: PrepareSvgOptions): string {
     svg.removeChild(child)
     content.appendChild(child)
   }
+  return content
+}
+
+/** Adds header, legends and directory of legal bases to the exported SVG. */
+export function prepareSvg(source: string, options: PrepareSvgOptions): string {
+  const doc = new DOMParser().parseFromString(source, 'image/svg+xml')
+  const svg = doc.documentElement
+  const viewBox = readViewBox(svg)
+  if (!viewBox) return source
+  const [minX, minY, width, height] = viewBox
+  const texts = options.texts ?? GERMAN_SVG_TEXTS
+  const content = wrapContent(doc, svg)
   if (options.showLegalBases) footnoteMarks(doc, content, options.legalBases)
 
   const head = headerHeight(options)

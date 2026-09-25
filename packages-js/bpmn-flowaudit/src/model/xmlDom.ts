@@ -41,7 +41,7 @@ export const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>'
  * every DOM parser accepts single-quoted declarations.
  */
 export function parseXml(xml: string): XMLDocument | null {
-  const body = xml.replace(/^﻿?\s*<\?xml[^?]*\?>\s*/, '')
+  const body = xml.replace(/^\uFEFF?\s*<\?xml[^?]*\?>\s*/, '')
   const document = new DOMParser().parseFromString(body, 'application/xml')
   return document.getElementsByTagName('parsererror').length ? null : document
 }

@@ -6,15 +6,15 @@
 import { localType, type ModelElement } from '../model/processModel'
 import type { AuditFinding, Control, Risk } from '../schema/types'
 import {
-  CONTROL_EXECUTION,
-  CONTROL_KINDS,
+  EXECUTION_MODES,
+  CONTROL_TYPES,
   DEADLINE_UNITS,
-  FINDING_KINDS,
+  FINDING_TYPES,
   FINDING_SEVERITIES,
   FINDING_STATUS,
   RISK_CATEGORIES,
   RISK_LEVELS,
-  SOURCE_KINDS,
+  SOURCE_TYPES,
   TEST_RESULTS,
 } from '../schema/vocabulary'
 import type { RuleContext } from './context'
@@ -49,8 +49,8 @@ function checkControl(ctx: RuleContext, element: ModelElement, control: Control)
   const controlLabel = control.label || control.id || 'Kontrolle'
   if (!control.evidence && !element.hasDataAssociation) ctx.report('BPMN-P001', element.id, { kontrolle: controlLabel, name })
   if (control.keyControl && !isTested(ctx, element, control)) ctx.report('BPMN-P004', element.id, { kontrolle: controlLabel, name })
-  ctx.checkValue(element.id, name, 'art', control.controlType, CONTROL_KINDS)
-  ctx.checkValue(element.id, name, 'durchfuehrung', control.execution, CONTROL_EXECUTION)
+  ctx.checkValue(element.id, name, 'art', control.controlType, CONTROL_TYPES)
+  ctx.checkValue(element.id, name, 'durchfuehrung', control.execution, EXECUTION_MODES)
 }
 
 export function checkRisk(ctx: RuleContext, id: string | null | undefined, name: string, risk: Risk, controls: Map<string, ModelElement>): void {
@@ -67,7 +67,7 @@ export function checkRisk(ctx: RuleContext, id: string | null | undefined, name:
 
 export function checkFinding(ctx: RuleContext, id: string | null | undefined, name: string, finding: AuditFinding): void {
   if (!finding.findingType || !finding.description) ctx.report('BPMN-P009', id, { name })
-  ctx.checkValue(id, name, 'art', finding.findingType, FINDING_KINDS)
+  ctx.checkValue(id, name, 'art', finding.findingType, FINDING_TYPES)
   ctx.checkValue(id, name, 'einstufung', finding.severity, FINDING_SEVERITIES)
   ctx.checkValue(id, name, 'status', finding.status, FINDING_STATUS)
   if (finding.keyRequirement) checkAuditReferences(ctx, id, name, [{ keyRequirement: finding.keyRequirement, assessmentCriterion: finding.assessmentCriterion }])
@@ -112,7 +112,7 @@ function checkElement(ctx: RuleContext, element: ModelElement, controls: Map<str
   checkTestSteps(ctx, element, controls)
   for (const finding of ext.findings) checkFinding(ctx, element.id, name, finding)
   checkDeadlines(ctx, element)
-  for (const source of ext.sources) ctx.checkValue(element.id, name, 'art', source.sourceType, SOURCE_KINDS)
+  for (const source of ext.sources) ctx.checkValue(element.id, name, 'art', source.sourceType, SOURCE_TYPES)
   checkDataObject(ctx, element)
 }
 

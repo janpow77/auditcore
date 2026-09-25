@@ -57,14 +57,14 @@ export const ROLES: Record<string, Role> = Object.fromEntries(
 )
 
 /** Start year from `YYYY-YYYY`, otherwise `null`. */
-export function periodStart(fundingPeriod: string | undefined | null): number | null {
-  if (!fundingPeriod || !/^\d{4}-\d{4}$/.test(fundingPeriod)) return null
-  return Number(fundingPeriod.slice(0, 4))
+export function periodStart(programmingPeriod: string | undefined | null): number | null {
+  if (!programmingPeriod || !/^\d{4}-\d{4}$/.test(programmingPeriod)) return null
+  return Number(programmingPeriod.slice(0, 4))
 }
 
 /** `true` if the role exists in the programming period (unknown period: yes). */
-export function roleAppliesTo(role: Role, fundingPeriod: string | undefined | null): boolean {
-  const start = periodStart(fundingPeriod)
+export function roleAppliesTo(role: Role, programmingPeriod: string | undefined | null): boolean {
+  const start = periodStart(programmingPeriod)
   if (start === null) return true
   if (role.fromYear !== undefined && start < role.fromYear) return false
   return !(role.untilYear !== undefined && start > role.untilYear)

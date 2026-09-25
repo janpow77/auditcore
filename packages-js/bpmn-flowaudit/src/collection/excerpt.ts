@@ -67,8 +67,8 @@ export function excerptFromModel(model: ProcessModel): DiagramExcerpt {
     calls: model.elements.filter((el) => el.calledElement).map((el): [string, string] => [el.id, el.calledElement as string]),
     linkThrows: linkEvents(model, 'intermediateThrowEvent'),
     linkCatches: linkEvents(model, 'intermediateCatchEvent'),
-    tasks: activityList.length,
-    tasksWithLegalBasis: activityList.filter((el) => el.extensions.legalBases.length > 0).length,
+    activities: activityList.length,
+    activitiesWithLegalBasis: activityList.filter((el) => el.extensions.legalBases.length > 0).length,
     keys: indexKeys(model).keys,
   }
 }

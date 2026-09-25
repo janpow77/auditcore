@@ -144,7 +144,7 @@ export type Translate = (template: string, replacements?: Record<string, string>
 
 /** The `get(name)` accessor of the editor (diagram-js injector). */
 export interface ServiceLocator {
-  get<T = unknown>(name: string): T
+  get<T = unknown>(name: string, strict?: boolean): T
 }
 
 /** Minimal editor surface used by the FlowAudit helpers. */

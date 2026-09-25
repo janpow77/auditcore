@@ -57,22 +57,39 @@ function connectedByMessage(ctx: RuleContext): Set<string> {
   return new Set(flows.flatMap((flow) => [flow.sourceId, flow.targetId]).filter((id): id is string => Boolean(id)))
 }
 
-function nodeConnections(ctx: RuleContext, node: ModelElement, messages: Set<string>): void {
-  const type = localType(node.type)
-  const ins = ctx.incoming(node.id).length
-  const outs = ctx.outgoing(node.id).length
-  if (type === 'startEvent' && ins) ctx.report('BPMN-S015', node.id, { name: ctx.name(node) })
-  if (type === 'endEvent' && outs) ctx.report('BPMN-S016', node.id, { name: ctx.name(node) })
-  if (type === 'boundaryEvent' || isExempt(ctx, node)) return
+interface NodeFlows {
+  type: string
+  ins: number
+  outs: number
+}
+
+/** Start events without incoming and end events without outgoing flows. */
+function eventDirections(ctx: RuleContext, node: ModelElement, flows: NodeFlows): void {
+  if (flows.type === 'startEvent' && flows.ins) ctx.report('BPMN-S015', node.id, { name: ctx.name(node) })
+  if (flows.type === 'endEvent' && flows.outs) ctx.report('BPMN-S016', node.id, { name: ctx.name(node) })
+}
+
+function isOrphan(ctx: RuleContext, node: ModelElement, flows: NodeFlows, messages: Set<string>): boolean {
+  if (flows.ins || flows.outs || messages.has(node.id)) return false
   const inEventSubProcess = Boolean(ctx.model.byId.get(node.parentId ?? '')?.isEventSubProcess)
-  if (!ins && !outs && !messages.has(node.id) && !(type === 'startEvent' && inEventSubProcess)) {
-    ctx.report('BPMN-S012', node.id, { name: ctx.name(node) })
-    return
-  }
-  const linkCatch = type === 'intermediateCatchEvent' && node.linkName !== undefined
-  const linkThrow = type === 'intermediateThrowEvent' && node.linkName !== undefined
-  if (!ins && type !== 'startEvent' && !linkCatch) ctx.report('BPMN-S013', node.id, { name: ctx.name(node) })
-  if (!outs && type !== 'endEvent' && !linkThrow) ctx.report('BPMN-S014', node.id, { name: ctx.name(node) })
+  return !(flows.type === 'startEvent' && inEventSubProcess)
+}
+
+/** Missing incoming/outgoing flows (link events connect without flows). */
+function missingFlows(ctx: RuleContext, node: ModelElement, flows: NodeFlows): void {
+  const isLink = node.linkName !== undefined
+  const linkCatch = flows.type === 'intermediateCatchEvent' && isLink
+  const linkThrow = flows.type === 'intermediateThrowEvent' && isLink
+  if (!flows.ins && flows.type !== 'startEvent' && !linkCatch) ctx.report('BPMN-S013', node.id, { name: ctx.name(node) })
+  if (!flows.outs && flows.type !== 'endEvent' && !linkThrow) ctx.report('BPMN-S014', node.id, { name: ctx.name(node) })
+}
+
+function nodeConnections(ctx: RuleContext, node: ModelElement, messages: Set<string>): void {
+  const flows: NodeFlows = { type: localType(node.type), ins: ctx.incoming(node.id).length, outs: ctx.outgoing(node.id).length }
+  eventDirections(ctx, node, flows)
+  if (flows.type === 'boundaryEvent' || isExempt(ctx, node)) return
+  if (isOrphan(ctx, node, flows, messages)) ctx.report('BPMN-S012', node.id, { name: ctx.name(node) })
+  else missingFlows(ctx, node, flows)
 }
 
 function nodes(ctx: RuleContext): void {
@@ -96,7 +113,11 @@ function gateway(ctx: RuleContext, node: ModelElement): void {
   if ((type === 'exclusiveGateway' || type === 'inclusiveGateway') && outs.length > 1) splittingGateway(ctx, node, outs)
   if (type === 'parallelGateway' && outs.some((flow) => flow.conditional)) ctx.report('BPMN-S035', node.id, { name: ctx.name(node) })
   if (ctx.incoming(node.id).length === 1 && outs.length === 1) ctx.report('BPMN-S033', node.id, { name: ctx.name(node) })
-  if (type !== 'eventBasedGateway') return
+  if (type === 'eventBasedGateway') eventGatewayTargets(ctx, node, outs)
+}
+
+/** An event-based gateway may only lead to catching events or receive tasks. */
+function eventGatewayTargets(ctx: RuleContext, node: ModelElement, outs: ModelElement[]): void {
   for (const flow of outs) {
     const target = ctx.model.byId.get(flow.targetId ?? '')
     if (target && !['intermediateCatchEvent', 'receiveTask'].includes(localType(target.type))) {

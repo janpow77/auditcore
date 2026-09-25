@@ -102,6 +102,9 @@ describe('wire JSON', () => {
     const wire = toWire({ validFrom: '2026-01-01', legalBases: [{ shortTitle: 'CPR' }] })
     expect(wire).toEqual({ valid_from: '2026-01-01', legal_bases: [{ short_title: 'CPR' }] })
     expect(fromWire(wire)).toEqual({ validFrom: '2026-01-01', legalBases: [{ shortTitle: 'CPR' }] })
+    const excerpt = { processIds: ['P'], keys: { prueffeld: { 'Prüffeld A': ['T1'] } } }
+    expect(toWire(excerpt)).toEqual({ process_ids: ['P'], keys: { prueffeld: { 'Prüffeld A': ['T1'] } } })
+    expect(fromWire(toWire(excerpt))).toEqual(excerpt)
   })
 })
 

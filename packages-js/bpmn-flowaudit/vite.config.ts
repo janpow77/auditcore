@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
-        profile: resolve(__dirname, 'src/profile/mitgeliefert.ts'),
+        profiles: resolve(__dirname, 'src/profile/bundled.ts'),
       },
       formats: ['es'],
     },

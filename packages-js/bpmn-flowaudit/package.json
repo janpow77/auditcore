@@ -15,9 +15,9 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./profile": {
-      "types": "./dist/profile/mitgeliefert.d.ts",
-      "import": "./dist/profile.js"
+    "./profiles": {
+      "types": "./dist/profile/bundled.d.ts",
+      "import": "./dist/profiles.js"
     },
     "./style.css": "./dist/bpmn-flowaudit.css",
     "./package.json": "./package.json"
@@ -44,6 +44,7 @@
     }
   },
   "devDependencies": {
+    "ajv": "^8.20.0",
     "diagram-js": "^15.27.1"
   }
 }

@@ -6,7 +6,7 @@
 
 import { displayText } from '../model/legalBasis'
 import { displayName, type ModelElement, type ProcessModel } from '../model/processModel'
-import { MARKER_TYPES, label } from '../schema/vocabulary'
+import { MARKERS, label } from '../schema/vocabulary'
 import { PALETTE_COLORS, findPaletteColor, normalizeColor, type PaletteColor } from './colorPalette'
 import type { LegalBasisNote, UsedColor, UsedMarker } from './svgPostProcessing'
 
@@ -39,7 +39,7 @@ export function collectColors(elements: ModelElement[], palette: readonly Palett
 export function collectMarkers(elements: ModelElement[]): UsedMarker[] {
   const counter = new Map<string, number>()
   for (const element of elements) for (const marker of element.extensions.markers) counter.set(marker.type, (counter.get(marker.type) ?? 0) + 1)
-  return [...counter.entries()].map(([type, count]) => ({ type, count, label: label(MARKER_TYPES[type]) || type }))
+  return [...counter.entries()].map(([type, count]) => ({ type, count, label: label(MARKERS[type]) || type }))
 }
 
 export function collectLegalBasisNotes(elements: ModelElement[]): LegalBasisNote[] {

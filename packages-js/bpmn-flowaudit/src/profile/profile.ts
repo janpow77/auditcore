@@ -3,95 +3,103 @@
  * alias list, funds, key requirements/assessment criteria, frequent legal
  * bases, segregation-of-duties rules, templates).
  *
- * `ProfileData` is the file format `auditcore_bpmn.profil/1` of the Python
- * package (its keys are therefore German). The profile files are not
- * duplicated: they are read at build time from
- * `packages/auditcore_bpmn/…/profildaten/` (`bundled.ts`) or delivered by
- * the application through the profile port.
+ * `ProfileData` is the file format `auditcore_bpmn.profile/1` of the Python
+ * package (JSON keys in snake_case). The profile files are not duplicated:
+ * they are read at build time from
+ * `packages/auditcore_bpmn/src/auditcore_bpmn/profiles/data/`
+ * (`bundled.ts`) or delivered by the application through the profile port.
  */
 
 import { ROLES, roleAppliesTo, type Role } from '../schema/roles'
 import { label, type Label, type Locale } from '../schema/vocabulary'
 
-export const PROFILE_SCHEMA = 'auditcore_bpmn.profil/1'
+export const PROFILE_SCHEMA = 'auditcore_bpmn.profile/1'
 export const DEFAULT_PROFILE = 'foerderperiode-2021-2027'
 
 export type LocalizedText = Partial<Label> | string
 
 export interface CriterionData {
   code: string
-  titel?: LocalizedText
+  title?: LocalizedText
 }
 
 export interface KeyRequirementData {
-  nummer: number
-  titel: LocalizedText
-  stellen?: LocalizedText
-  geltungsbereich?: LocalizedText
-  fussnote?: LocalizedText
-  bewertungskriterien?: CriterionData[]
+  number: number
+  title: LocalizedText
+  bodies?: LocalizedText
+  scope?: LocalizedText
+  footnote?: LocalizedText
+  assessment_criteria?: CriterionData[]
 }
 
 export interface LegalBasisTemplateData {
-  norm: string
-  artikel?: string
-  paragraph?: string
-  kurzbezeichnung?: LocalizedText
+  act: string
+  article?: string
+  annex?: string
+  short_title?: LocalizedText
   celex?: string
   eli?: string
 }
 
 export interface SelectionData {
-  kennzeichen?: string[]
-  pruefart?: string[]
+  markers?: string[]
+  audit_types?: string[]
 }
+
+export type SegregationKind = 'separate_bodies' | 'excluded_role' | 'four_eyes'
 
 export interface SegregationRuleData {
   id: string
-  typ: 'getrennte_stellen' | 'rolle_ausgeschlossen' | 'vier_augen' | string
-  schwere: 'fehler' | 'warnung' | 'hinweis' | string
-  titel: LocalizedText
+  kind: SegregationKind | string
+  severity: 'fehler' | 'warnung' | 'hinweis' | string
+  title: LocalizedText
   a?: SelectionData
   b?: SelectionData
-  auswahl?: SelectionData
-  rollen?: string[]
+  selection?: SelectionData
+  roles?: string[]
 }
 
 export interface TemplateData {
   id: string
-  titel: LocalizedText
-  datei: string
-  herkunft?: string
+  title: LocalizedText
+  file: string
+  origin?: string
 }
 
-export interface OwnRoleData {
-  bezeichnung: LocalizedText
-  ab_jahr?: number
-  bis_jahr?: number
-  kurz?: string
-  farbe?: { fill: string; stroke: string }
+export interface CustomRoleData {
+  labels: LocalizedText
+  from_year?: number
+  until_year?: number
+  /** Optional presentation (UI only). */
+  short?: string
+  color?: { fill: string; stroke: string }
   icon?: string
+}
+
+export interface CatalogueBlock<T> {
+  source?: Record<string, unknown>
+  entries: T[]
 }
 
 export interface ProfileData {
   schema: string
   id: string
   version: string
-  titel: LocalizedText
-  foerderperiode?: string | null
-  rollen: string[]
-  fonds?: string[]
-  kernanforderungen?: { quelle?: Record<string, unknown>; eintraege: KeyRequirementData[]; bewertungskriterien_hinweis?: LocalizedText }
-  rollen_aliase?: RoleAlias[]
-  funktionstrennung?: SegregationRuleData[]
-  vorlagen?: TemplateData[]
-  rechtsgrundlagen?: { quelle?: Record<string, unknown>; eintraege: LegalBasisTemplateData[] }
-  eigene_rollen?: Record<string, OwnRoleData>
+  title: LocalizedText
+  programming_period?: string | null
+  roles: string[]
+  funds?: string[]
+  key_requirements?: CatalogueBlock<KeyRequirementData> & { assessment_criteria_note?: LocalizedText }
+  role_aliases?: RoleAlias[]
+  segregation_rules?: SegregationRuleData[]
+  templates?: TemplateData[]
+  legal_bases?: CatalogueBlock<LegalBasisTemplateData>
+  custom_roles?: Record<string, CustomRoleData>
 }
 
 export interface RoleAlias {
-  muster: string
-  rolle: string
+  pattern: string
+  role: string
 }
 
 export function localized(value: LocalizedText | undefined, locale: Locale = 'de'): string {
@@ -122,24 +130,24 @@ function toLabel(value: LocalizedText, fallback: string): Label {
 /** Role by code (own roles of the profile win). */
 export function roleOf(profile: ProfileData | null | undefined, code: string | undefined): Role | undefined {
   if (!code) return undefined
-  const own = profile?.eigene_rollen?.[code]
+  const own = profile?.custom_roles?.[code]
   if (!own) return ROLES[code]
   const base = ROLES[code] ?? ROLES.sonstige
   return {
     code,
-    label: toLabel(own.bezeichnung, code),
-    short: own.kurz ?? code.toUpperCase(),
-    color: own.farbe ?? base.color,
+    label: toLabel(own.labels, code),
+    short: own.short ?? code.toUpperCase(),
+    color: own.color ?? base.color,
     icon: own.icon ?? base.icon,
-    fromYear: own.ab_jahr,
-    untilYear: own.bis_jahr,
+    fromYear: own.from_year,
+    untilYear: own.until_year,
   }
 }
 
 /** Roles of the profile, filtered by programming period (no profile: full catalogue). */
-export function rolesFor(profile: ProfileData | null | undefined, fundingPeriod?: string | null): Role[] {
-  const codes = profile ? [...profile.rollen, ...Object.keys(profile.eigene_rollen ?? {})] : Object.keys(ROLES)
-  const period = fundingPeriod ?? profile?.foerderperiode ?? null
+export function rolesFor(profile: ProfileData | null | undefined, programmingPeriod?: string | null): Role[] {
+  const codes = profile ? [...profile.roles, ...Object.keys(profile.custom_roles ?? {})] : Object.keys(ROLES)
+  const period = programmingPeriod ?? profile?.programming_period ?? null
   return [...new Set(codes)]
     .map((code) => roleOf(profile, code))
     .filter((role): role is Role => Boolean(role) && roleAppliesTo(role as Role, period))
@@ -148,7 +156,7 @@ export function rolesFor(profile: ProfileData | null | undefined, fundingPeriod?
 export function roleProvided(profile: ProfileData | null | undefined, code: string | undefined): boolean {
   if (!code) return false
   if (!profile) return code in ROLES
-  return profile.rollen.includes(code) || Boolean(profile.eigene_rollen?.[code])
+  return profile.roles.includes(code) || Boolean(profile.custom_roles?.[code])
 }
 
 /**
@@ -159,32 +167,32 @@ export function roleProvided(profile: ProfileData | null | undefined, code: stri
 export function roleFromText(profile: ProfileData | null | undefined, text: string | undefined | null, extra: RoleAlias[] = []): string | undefined {
   if (!text) return undefined
   const lower = text.toLocaleLowerCase('de')
-  return [...extra, ...(profile?.rollen_aliase ?? [])].find((alias) => lower.includes(alias.muster.toLocaleLowerCase('de')))?.rolle
+  return [...extra, ...(profile?.role_aliases ?? [])].find((alias) => lower.includes(alias.pattern.toLocaleLowerCase('de')))?.role
 }
 
 export function keyRequirements(profile: ProfileData | null | undefined): KeyRequirementData[] {
-  return profile?.kernanforderungen?.eintraege ?? []
+  return profile?.key_requirements?.entries ?? []
 }
 
 export function keyRequirement(profile: ProfileData | null | undefined, ka: string | number | undefined): KeyRequirementData | undefined {
   const number = Number(String(ka ?? '').trim())
-  return Number.isInteger(number) ? keyRequirements(profile).find((entry) => entry.nummer === number) : undefined
+  return Number.isInteger(number) ? keyRequirements(profile).find((entry) => entry.number === number) : undefined
 }
 
 /** `true`/`false` against the criteria catalogue of the KA; `undefined` if none exists. */
 export function criterionKnown(profile: ProfileData | null | undefined, ka: string | number | undefined, bk: string): boolean | undefined {
   const entry = keyRequirement(profile, ka)
-  if (!entry?.bewertungskriterien?.length) return undefined
-  return entry.bewertungskriterien.some((criterion) => criterion.code === bk.trim())
+  if (!entry?.assessment_criteria?.length) return undefined
+  return entry.assessment_criteria.some((criterion) => criterion.code === bk.trim())
 }
 
 /** Profile with injected assessment criteria (e.g. from a catalogue port). */
 export function withCriteria(profile: ProfileData, criteria: Record<number, CriterionData[]>): ProfileData {
-  if (!profile.kernanforderungen) return profile
-  const eintraege = profile.kernanforderungen.eintraege.map((entry) =>
-    criteria[entry.nummer] ? { ...entry, bewertungskriterien: criteria[entry.nummer] } : entry,
+  if (!profile.key_requirements) return profile
+  const entries = profile.key_requirements.entries.map((entry) =>
+    criteria[entry.number] ? { ...entry, assessment_criteria: criteria[entry.number] } : entry,
   )
-  return { ...profile, kernanforderungen: { ...profile.kernanforderungen, eintraege } }
+  return { ...profile, key_requirements: { ...profile.key_requirements, entries } }
 }
 
 /** Latest version per profile id. */
@@ -200,6 +208,6 @@ export function latestProfiles(profiles: ProfileData[]): ProfileData[] {
 export function validateProfile(data: unknown): ProfileData {
   const profile = data as ProfileData
   if (!profile || profile.schema !== PROFILE_SCHEMA) throw new Error(`Profilschema ${String(profile?.schema)} wird nicht unterstützt.`)
-  if (!profile.id || !profile.version || !Array.isArray(profile.rollen)) throw new Error('Profil unvollständig (id, version, rollen).')
+  if (!profile.id || !profile.version || !Array.isArray(profile.roles)) throw new Error('Profil unvollständig (id, version, roles).')
   return profile
 }

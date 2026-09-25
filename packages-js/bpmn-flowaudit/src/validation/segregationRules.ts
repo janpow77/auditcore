@@ -11,16 +11,16 @@ import type { RuleContext } from './context'
 function matches(element: ModelElement, selection: SelectionData | undefined): boolean {
   if (!selection) return false
   const ext = element.extensions
-  if (selection.kennzeichen?.length && ext.markers.some((marker) => selection.kennzeichen?.includes(marker.type))) return true
-  return Boolean(selection.pruefart?.length) && ext.auditReferences.some((ref) => selection.pruefart?.includes(ref.auditType ?? ''))
+  if (selection.markers?.length && ext.markers.some((marker) => selection.markers?.includes(marker.type))) return true
+  return Boolean(selection.audit_types?.length) && ext.auditReferences.some((ref) => selection.audit_types?.includes(ref.auditType ?? ''))
 }
 
 function reportRule(ctx: RuleContext, rule: SegregationRuleData, template: string, element: ModelElement, params: Record<string, unknown>): void {
-  const severity = (rule.schwere in SEVERITY_LABELS ? rule.schwere : RULES[template].severity) as Severity
+  const severity = (rule.severity in SEVERITY_LABELS ? rule.severity : RULES[template].severity) as Severity
   ctx.add({
     ruleId: `BPMN-${rule.id}`,
     severity,
-    params: { titel: localized(rule.titel), titel_de: localized(rule.titel, 'de'), titel_en: localized(rule.titel, 'en'), ...params },
+    params: { titel: localized(rule.title), titel_de: localized(rule.title, 'de'), titel_en: localized(rule.title, 'en'), ...params },
     elementId: element.id,
     templateId: template,
   })
@@ -44,7 +44,7 @@ function separateBodies(ctx: RuleContext, rule: SegregationRuleData): void {
 function excludedRole(ctx: RuleContext, rule: SegregationRuleData): void {
   for (const node of ctx.nodes) {
     const role = node.actor?.role
-    if (isActivity(node.type) && matches(node, rule.auswahl) && role && (rule.rollen ?? []).includes(role)) {
+    if (isActivity(node.type) && matches(node, rule.selection) && role && (rule.roles ?? []).includes(role)) {
       reportRule(ctx, rule, 'BPMN-FT-ROLLE', node, { name: ctx.name(node), rolle: role })
     }
   }
@@ -86,13 +86,13 @@ function fourEyes(ctx: RuleContext, rule: SegregationRuleData): void {
 }
 
 const HANDLERS: Record<string, (ctx: RuleContext, rule: SegregationRuleData) => void> = {
-  getrennte_stellen: separateBodies,
-  rolle_ausgeschlossen: excludedRole,
-  vier_augen: fourEyes,
+  separate_bodies: separateBodies,
+  excluded_role: excludedRole,
+  four_eyes: fourEyes,
 }
 
 function segregation(ctx: RuleContext): void {
-  for (const rule of ctx.profile?.funktionstrennung ?? []) HANDLERS[rule.typ]?.(ctx, rule)
+  for (const rule of ctx.profile?.segregation_rules ?? []) HANDLERS[rule.kind]?.(ctx, rule)
 }
 
 export const SEGREGATION_RULES = [segregation]

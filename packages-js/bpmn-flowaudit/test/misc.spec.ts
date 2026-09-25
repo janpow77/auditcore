@@ -8,7 +8,7 @@ import { ICONS, hasIcon, iconElement, iconPrimitives, iconSvg } from '../src/ico
 import { InMemoryStorage, ProfileCataloguePort, ProfileLegalSearch, StaticProfilePort } from '../src/ports/inMemory'
 import { bundledProfiles } from '../src/profile/bundled'
 import { criterionKnown, keyRequirement, latestProfiles, roleFromText, roleOf, rolesFor, validateProfile, withCriteria } from '../src/profile/profile'
-import { MARKER_TYPES } from '../src/schema/vocabulary'
+import { MARKERS } from '../src/schema/vocabulary'
 import { ROLES, roleAppliesTo } from '../src/schema/roles'
 import { nextStepId, recordStep, removeStep, walkthroughProgress, walkthroughSteps } from '../src/walkthrough/walkthrough'
 import { headlessAccess } from '../src/model/access'
@@ -20,7 +20,7 @@ import { fixture, modelOf, TEST_PROFILE } from './helpers'
 describe('icons', () => {
   it('has an icon for every role and every marker', () => {
     for (const role of Object.values(ROLES)) expect(hasIcon(role.icon)).toBe(true)
-    for (const type of Object.keys(MARKER_TYPES)) expect(hasIcon(`marker-${type}`)).toBe(true)
+    for (const type of Object.keys(MARKERS)) expect(hasIcon(`marker-${type}`)).toBe(true)
   })
 
   it('uses only the 24 px grid and currentColor', () => {
@@ -43,12 +43,12 @@ describe('profiles', () => {
     expect(rolesFor(TEST_PROFILE, '2014-2020').map((r) => r.code)).not.toContain('rfs')
     expect(roleAppliesTo(ROLES.bb, '2021-2027')).toBe(false)
     expect(roleFromText(TEST_PROFILE, 'Musterbank (zwischengeschaltete Stelle)')).toBe('zgs')
-    expect(roleFromText(TEST_PROFILE, 'Musterbank', [{ muster: 'musterbank', rolle: 'zgs' }])).toBe('zgs')
-    expect(keyRequirement(TEST_PROFILE, '2')?.nummer).toBe(2)
+    expect(roleFromText(TEST_PROFILE, 'Musterbank', [{ pattern: 'musterbank', role: 'zgs' }])).toBe('zgs')
+    expect(keyRequirement(TEST_PROFILE, '2')?.number).toBe(2)
     expect(criterionKnown(TEST_PROFILE, 2, '2.3')).toBe(true)
     expect(criterionKnown(TEST_PROFILE, 4, '4.1')).toBeUndefined()
     expect(criterionKnown(withCriteria(TEST_PROFILE, { 4: [{ code: '4.1' }] }), 4, '4.2')).toBe(false)
-    expect(roleOf({ ...TEST_PROFILE, eigene_rollen: { xy: { bezeichnung: 'Eigene Stelle' } } }, 'xy')?.label.de).toBe('Eigene Stelle')
+    expect(roleOf({ ...TEST_PROFILE, custom_roles: { xy: { labels: 'Eigene Stelle' } } }, 'xy')?.label.de).toBe('Eigene Stelle')
     expect(latestProfiles([TEST_PROFILE, { ...TEST_PROFILE, version: '2026.10.1' }])[0].version).toBe('2026.10.1')
     expect(() => validateProfile({ schema: 'x' })).toThrow('Profilschema')
   })
@@ -57,7 +57,7 @@ describe('profiles', () => {
     const profiles = bundledProfiles()
     if (!profiles.length) return
     expect(profiles.map((p) => p.id)).toContain('foerderperiode-2021-2027')
-    expect(profiles.find((p) => p.id === 'foerderperiode-2021-2027')?.kernanforderungen?.eintraege).toHaveLength(15)
+    expect(profiles.find((p) => p.id === 'foerderperiode-2021-2027')?.key_requirements?.entries).toHaveLength(15)
   })
 })
 
@@ -66,7 +66,7 @@ describe('ports in memory', () => {
     const storage = new InMemoryStorage({ diagrams: { a: '<x/>' } })
     expect(await storage.loadCollection()).toBeNull()
     await storage.saveCollection(emptyCollection())
-    expect((await storage.loadCollection())?.schema).toBe('auditcore_bpmn.diagrammsammlung/1')
+    expect((await storage.loadCollection())?.schema).toBe('auditcore_bpmn.diagram-collection/1')
     expect(await storage.loadDiagram('a')).toBe('<x/>')
     await storage.deleteDiagram('a')
     await expect(storage.loadDiagram('a')).rejects.toThrow('unbekannt')
@@ -79,7 +79,7 @@ describe('ports in memory', () => {
 
   it('serves profiles, catalogue and legal search', async () => {
     const profiles = new StaticProfilePort([TEST_PROFILE])
-    expect((await profiles.profiles())[0]).toMatchObject({ id: 'foerderperiode-2021-2027', fundingPeriod: '2021-2027' })
+    expect((await profiles.profiles())[0]).toMatchObject({ id: 'foerderperiode-2021-2027', programmingPeriod: '2021-2027' })
     const catalogue = new ProfileCataloguePort(profiles, { 'foerderperiode-2021-2027': { 4: [{ code: '4.1', title: 'Verfahren' }] } })
     const entries = await catalogue.keyRequirements('foerderperiode-2021-2027')
     expect(entries[3].criteria).toEqual([{ code: '4.1', title: 'Verfahren' }])

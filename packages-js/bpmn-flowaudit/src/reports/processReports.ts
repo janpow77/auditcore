@@ -7,7 +7,7 @@
 import { displayText } from '../model/legalBasis'
 import { displayName, isActivity, isFlowNode, localType, type ModelElement, type ProcessModel } from '../model/processModel'
 import { ROLES } from '../schema/roles'
-import type { Control, Deadline, Risk } from '../schema/types'
+import type { AuditStep, Control, Deadline, Risk } from '../schema/types'
 import { label } from '../schema/vocabulary'
 import type { Columns, Row } from './tables'
 
@@ -97,6 +97,8 @@ export function processTable(model: ProcessModel, options: { activitiesOnly?: bo
     })
 }
 
+const EMPTY_CONTROL_COLUMNS: Row = { kontrolle_id: '', kontrolle: '', schluesselkontrolle: '', art: '', durchfuehrung: '', haeufigkeit: '', nachweis: '', verantwortlich: '' }
+
 function riskRows(place: string, risk: Risk, controls: Map<string, [ModelElement, Control]>, tests: Map<string, string[]>): Row[] {
   const base = {
     risiko_id: risk.id ?? '',
@@ -108,24 +110,32 @@ function riskRows(place: string, risk: Risk, controls: Map<string, [ModelElement
     ort: place,
   }
   if (!(risk.controls ?? []).length) {
-    return [{ ...base, kontrolle_id: '', kontrolle: '', schluesselkontrolle: '', art: '', durchfuehrung: '', haeufigkeit: '', nachweis: '', verantwortlich: '', test: '' }]
+    return [{ ...base, ...EMPTY_CONTROL_COLUMNS, test: '' }]
   }
   return (risk.controls ?? []).map((controlId) => {
-    const [element, control] = controls.get(controlId) ?? [undefined, undefined]
+    const found = controls.get(controlId)
     return {
       ...base,
-      kontrolle_id: controlId,
-      kontrolle: control ? control.label ?? '' : '(unbekannt)',
-      schluesselkontrolle: control?.keyControl ? 'ja' : 'nein',
-      art: control?.controlType ?? '',
-      durchfuehrung: control?.execution ?? '',
-      haeufigkeit: control?.frequency ?? '',
-      nachweis: control?.evidence ?? '',
-      verantwortlich: control?.responsible ?? '',
+      ...controlColumns(controlId, found?.[1]),
       test: (tests.get(controlId) ?? []).join(', '),
-      ort: element ? displayName(element) : place,
+      ort: found ? displayName(found[0]) : place,
     }
   })
+}
+
+/** Columns of a control in the risk control matrix (unknown control: marked). */
+function controlColumns(controlId: string, control: Control | undefined): Row {
+  if (!control) return { ...EMPTY_CONTROL_COLUMNS, kontrolle_id: controlId, kontrolle: '(unbekannt)', schluesselkontrolle: 'nein' }
+  return {
+    kontrolle_id: controlId,
+    kontrolle: control.label ?? '',
+    schluesselkontrolle: control.keyControl ? 'ja' : 'nein',
+    art: control.controlType ?? '',
+    durchfuehrung: control.execution ?? '',
+    haeufigkeit: control.frequency ?? '',
+    nachweis: control.evidence ?? '',
+    verantwortlich: control.responsible ?? '',
+  }
 }
 
 /** One row per risk and linked control (risks without control once). */
@@ -168,6 +178,20 @@ export interface WalkthroughOverview {
   notWalkedThrough: string[]
 }
 
+function stepRow(element: ModelElement, step: AuditStep, result: string): Row {
+  return {
+    element: displayName(element),
+    element_id: element.id,
+    fall: step.case ?? '',
+    beleg: step.document ?? '',
+    ergebnis: result,
+    datum: step.date ?? '',
+    kontrolle: step.control ?? '',
+    stichprobe: step.sampleSize ?? '',
+    bemerkung: step.remark ?? '',
+  }
+}
+
 /** Audit steps per flow node; activities without steps separately. */
 export function walkthroughOverview(model: ProcessModel): WalkthroughOverview {
   const results: Record<string, number> = {}
@@ -179,17 +203,7 @@ export function walkthroughOverview(model: ProcessModel): WalkthroughOverview {
     for (const step of list) {
       const result = step.result || 'offen'
       results[result] = (results[result] ?? 0) + 1
-      steps.push({
-        element: displayName(element),
-        element_id: element.id,
-        fall: step.case ?? '',
-        beleg: step.document ?? '',
-        ergebnis: result,
-        datum: step.date ?? '',
-        kontrolle: step.control ?? '',
-        stichprobe: step.sampleSize ?? '',
-        bemerkung: step.remark ?? '',
-      })
+      steps.push(stepRow(element, step, result))
     }
   }
   return { results, steps, notWalkedThrough }

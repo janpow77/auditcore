@@ -62,9 +62,9 @@ export function suggestCategories(models: ProcessModel[], profile: ProfileData |
     if (model.info) tallyHolder(tally, model.info.auditReferences ?? [], model.info.findings ?? [], [])
   }
   return keyRequirements(profile).map((requirement) => {
-    const number = requirement.nummer
+    const number = requirement.number
     const findings = tally.findings.get(number) ?? []
-    const title = localized(requirement.titel)
+    const title = localized(requirement.title)
     const base = { keyRequirement: number, title, findings: findings.map((f) => f.reference || f.id || 'Feststellung'), note: NOTE }
     if (!tally.evidence.get(number)) {
       return { ...base, category: null, categoryText: null, reason: 'Keine Prüfbezüge oder Feststellungen zu dieser KA.' }

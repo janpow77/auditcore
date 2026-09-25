@@ -12,8 +12,8 @@ import { iconElement } from '../icons/icons'
 import { readExtensions } from '../model/extensions'
 import { roleOf, type ProfileData } from '../profile/profile'
 import type { Role } from '../schema/roles'
-import type { AuditReference, Marker } from '../schema/types'
-import { MARKER_COLORS, MARKER_TYPES, label } from '../schema/vocabulary'
+import type { AuditReference, Extensions, Marker } from '../schema/types'
+import { MARKER_COLORS, MARKERS, label } from '../schema/vocabulary'
 import type { Canvas, DiagramElement, ElementRegistry, EventBus, EventCallback } from './services'
 
 const SVG = 'http://www.w3.org/2000/svg'
@@ -97,16 +97,25 @@ export class FlowauditDecorations {
     }
   }
 
+  private decoratable(element: DiagramElement): boolean {
+    return !element.labelTarget && !element.waypoints && element !== this.canvas.getRootElement()
+  }
+
   private decorate(element: DiagramElement, gfx: SVGElement): void {
     const visual = gfx.querySelector('.djs-visual')
-    if (!visual || element.labelTarget || element.waypoints || element === this.canvas.getRootElement()) return
+    if (!visual || !this.decoratable(element)) return
     visual.querySelectorAll(':scope > .fa-decoration').forEach((node) => node.remove())
     const extensions = readExtensions(element.businessObject)
-    if (isContainer(element)) {
-      const role = roleOf(this.profile, extensions.actor?.role)
-      if (role && this.visibility.actors) this.drawHeader(visual, element, role)
-      return
-    }
+    if (isContainer(element)) this.decorateContainer(visual, element, extensions)
+    else this.decorateNode(visual, element, extensions)
+  }
+
+  private decorateContainer(visual: Element, element: DiagramElement, extensions: Extensions): void {
+    const role = roleOf(this.profile, extensions.actor?.role)
+    if (role && this.visibility.actors) this.drawHeader(visual, element, role)
+  }
+
+  private decorateNode(visual: Element, element: DiagramElement, extensions: Extensions): void {
     const group = create('g', { class: 'fa-decoration', 'pointer-events': 'none' })
     if (this.visibility.markers && extensions.markers.length) this.drawBadges(group, element, extensions.markers)
     if (this.visibility.auditReferences && extensions.auditReferences.length) this.drawPlaque(group, element, extensions.auditReferences)
@@ -143,7 +152,7 @@ export class FlowauditDecorations {
       const icon = iconElement(document, `marker-${marker.type}`, cx - 6.5, y - 6.5, 13)
       icon.setAttribute('stroke', accent)
       badge.appendChild(icon)
-      badge.appendChild(create('title', {})).textContent = [label(MARKER_TYPES[marker.type], this.locale) || marker.type, marker.text].filter(Boolean).join(': ')
+      badge.appendChild(create('title', {})).textContent = [label(MARKERS[marker.type], this.locale) || marker.type, marker.text].filter(Boolean).join(': ')
       group.appendChild(badge)
     })
     if (markers.length > MAX_BADGES) {

@@ -17,9 +17,9 @@ describe('rule catalogue', () => {
   it('is identical to the catalogue of auditcore_bpmn when present', () => {
     const base = join(process.cwd(), '../../packages/auditcore_bpmn/src/auditcore_bpmn')
     const candidates = existsSync(base) ? findPython(base) : []
-    const source = candidates.map((file) => readFileSync(file, 'utf-8')).find((text) => text.includes('"BPMN-S001"'))
-    if (!source) return
-    const pythonIds = [...source.matchAll(/\("(BPMN-[A-Z0-9-]+)"/g)].map((m) => m[1]).sort()
+    const sources = candidates.filter((file) => /texts_\w+\.py$/.test(file)).map((file) => readFileSync(file, 'utf-8'))
+    if (!sources.length) return
+    const pythonIds = sources.flatMap((source) => [...source.matchAll(/\(\s*"(BPMN-[A-Z0-9-]+)"/g)].map((m) => m[1])).sort()
     expect(Object.keys(RULES).sort()).toEqual(pythonIds)
   })
 })
@@ -98,7 +98,7 @@ describe('issues', () => {
     expect(countIssues(list)).toEqual({ fehler: 1, warnung: 0, hinweis: 1 })
     expect(severityLabel('warnung', 'en')).toBe('Warning')
     expect(issueMessage(list[0])).toBe('Aufgabe „A“ hat keine Rechtsgrundlage.')
-    const wire = issueFromWire({ regel_id: 'BPMN-S010', schwere: 'fehler', meldung: 'Vom Server', element_id: 'P', parameter: {} })
+    const wire = issueFromWire({ rule_id: 'BPMN-S010', severity: 'fehler', message: 'Vom Server', element_id: 'P', params: {} })
     expect(wire).toMatchObject({ ruleId: 'BPMN-S010', elementId: 'P' })
     expect(issueMessage(wire)).toBe('Vom Server')
   })

@@ -63,7 +63,7 @@ describe('collectSuggestions', () => {
   })
 
   it('supports application aliases for names of bodies', async () => {
-    const suggestions = collectSuggestions(await modelOf(fixture('enrichment.bpmn')), { profile: TEST_PROFILE, roleAliases: [{ muster: 'Musterbank', rolle: 'zgs' }] })
+    const suggestions = collectSuggestions(await modelOf(fixture('enrichment.bpmn')), { profile: TEST_PROFILE, roleAliases: [{ pattern: 'Musterbank', role: 'zgs' }] })
     expect(suggestions.find((s) => s.elementId === 'Task_Pruefen' && s.kind === 'rolePrefix')?.value).toBe('zgs')
   })
 })
