@@ -42,6 +42,7 @@ def test_runtime_imports() -> None:
     package = Path(auditcore_property_sources.__file__).parent
     for path in package.glob("*.py"):
         allowed = STDLIB | ({"auditcore_harvest"} if path.name == "adapters.py" else set())
+        allowed |= {"auditcore_common"} if path.name == "_zvg_text.py" else set()
         assert imports(path) <= allowed, (path.name, imports(path) - allowed)
 
 

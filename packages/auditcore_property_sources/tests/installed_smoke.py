@@ -18,8 +18,12 @@ from auditcore_property_sources import (
 def main() -> None:
     """Parsers, lifecycle, robots and catalog from the installed package."""
     package = distribution("auditcore_property_sources")
-    assert package.version == "0.1.1"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    assert package.version == "0.1.2"
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
+    assert zvg.parse_de_number("1234,56") == 1234.56
+    assert zvg.parse_de_number("1.234") is None
+    assert zvg.legacy_parse_de_number("1234,56") == 123.0
     assert zvg.parse_money_amount("80,000,-") == 80000.0
     assert zvg.extract_address("Am Eichbühel 30, 61476 Kronberg") == (
         "Am Eichbühel",

@@ -1,0 +1,177 @@
+{
+  "scope": "PUBLIC_RELEASE_ANONYMOUS_INSTALLATION",
+  "release": {
+    "tag": "v0.4.0",
+    "url": "https://github.com/janpow77/auditcore/releases/tag/v0.4.0",
+    "published_at": "2026-09-25T19:16:00Z",
+    "prerelease": true,
+    "target_commit": "c78067844340389b8b1b91f70d1294d3a9d964cd",
+    "assets": 168
+  },
+  "signing_key_fingerprint": "E427F95CC37CBFD0876314CA0D1580A6CAE37327",
+  "packages": [
+    {
+      "distribution": "auditcore-auth",
+      "version": "0.1.0",
+      "wheel_sha256": "e5fa62b78c06d51527ba3fe208a52fd0c0345c38076fb673f63a40ded769f4e6"
+    },
+    {
+      "distribution": "auditcore-bpmn",
+      "version": "0.1.0",
+      "wheel_sha256": "fadc1f137ab4183cb27ae26a664f521d03f8baf5226031e0f809e2f8419746ad"
+    },
+    {
+      "distribution": "auditcore-common",
+      "version": "0.1.0",
+      "wheel_sha256": "e8b83c282d5306a075f0f051e3f74865b619002272671e90cfc586918ef21eeb"
+    },
+    {
+      "distribution": "auditcore-dataprotection",
+      "version": "0.4.3",
+      "wheel_sha256": "25f5478b1007ddbfadbc0212136032af3650db0a92f77ca5f7a0d3b8136da18a"
+    },
+    {
+      "distribution": "auditcore-documents",
+      "version": "0.3.2",
+      "wheel_sha256": "fb306c651e5871a1dba8b1a2e4a14f7f8222b650feb02921fe968ccab766d1e9"
+    },
+    {
+      "distribution": "auditcore-dummygenerator",
+      "version": "0.1.1",
+      "wheel_sha256": "eaf1f9ff55f5b6044d697f43ed51aeb7ddaf9180763acb9c1dbd0ca238826864"
+    },
+    {
+      "distribution": "auditcore-entity-matching",
+      "version": "0.2.2",
+      "wheel_sha256": "efc579d8d7753fd311bb4124be043d3f1dd301644809a432434c259c72e2167a"
+    },
+    {
+      "distribution": "auditcore-funding-sources",
+      "version": "0.1.3",
+      "wheel_sha256": "8ec5ace1f23a0e5dc29d8b473825296d271af71117e0caf46235f530eafe3f77"
+    },
+    {
+      "distribution": "auditcore-geo",
+      "version": "0.2.1",
+      "wheel_sha256": "3433bd595e51d8d08b8c7ba98fdf667f7158cd0c07fe822af7ed92ab39acf963"
+    },
+    {
+      "distribution": "auditcore-harvest",
+      "version": "0.1.1",
+      "wheel_sha256": "35f3deff4f5b8e9d741fbc93f67050056ab10669003c929f0ae2c07421731b87"
+    },
+    {
+      "distribution": "auditcore-identifiers",
+      "version": "0.1.0",
+      "wheel_sha256": "fb4f0217fd80f7290f799dc1ac12e0717eb770a99d34644082e0b71e084693bb"
+    },
+    {
+      "distribution": "auditcore-invoicegenerator",
+      "version": "0.2.1",
+      "wheel_sha256": "7546b5c7f210eb40a77a6cb92054c5ee643842758592ff5422bdff8069c9da33"
+    },
+    {
+      "distribution": "auditcore-invoicesynth",
+      "version": "0.1.1",
+      "wheel_sha256": "3d91e3d97e8bca8de7f909b731cbac72d989be835267805cabef81732a70709b"
+    },
+    {
+      "distribution": "auditcore-kanban",
+      "version": "0.1.0",
+      "wheel_sha256": "260c50cf6a37c570955886d8455c41650c9329ed53a20b2ddaec5254365afb76"
+    },
+    {
+      "distribution": "auditcore-legal-sources",
+      "version": "0.1.3",
+      "wheel_sha256": "87419f5ddc0a4b93b3865f1db851ccf6680043ea5b54674a4f380c4a6b861e0d"
+    },
+    {
+      "distribution": "auditcore-llm-client",
+      "version": "0.1.1",
+      "wheel_sha256": "2de349bda575a23398f6273f748769676fb9e58114911b0da2a9c75edaeda552"
+    },
+    {
+      "distribution": "auditcore-market-indicators",
+      "version": "0.1.1",
+      "wheel_sha256": "c92a5aba7a5c4692b903fe773dcdd6f3fc51293694e9bc62544a90a93cb54371"
+    },
+    {
+      "distribution": "auditcore-price-analysis",
+      "version": "0.1.1",
+      "wheel_sha256": "b428839afd4dae267a902f7c73ef7a83f0340a7d9f886b1803de44f36523cc8f"
+    },
+    {
+      "distribution": "auditcore-price-sources",
+      "version": "0.1.1",
+      "wheel_sha256": "a21eba39ad14f7a847b256bf44a12345e859b8e09df910e9be64cedb32edc5c7"
+    },
+    {
+      "distribution": "auditcore-procurement",
+      "version": "0.2.2",
+      "wheel_sha256": "dfc0500d0392f5d030c626a193d7556ae176e9687565f69d1e4bcfacc0a7478b"
+    },
+    {
+      "distribution": "auditcore-property-sources",
+      "version": "0.1.1",
+      "wheel_sha256": "76f5877d8f5efba1cb8ff49ef9ef712d75e0c7e8d2634622c80542e682c202aa"
+    },
+    {
+      "distribution": "auditcore-registry-sources",
+      "version": "0.2.1",
+      "wheel_sha256": "dd958343bf84ad6c58be68a1f1f41823ec047d4bf986ad64d74b176b97b2ec89"
+    },
+    {
+      "distribution": "auditcore-reporting",
+      "version": "0.2.1",
+      "wheel_sha256": "d9d982be1b21bacc4bd6596b1dc95208987ece5cdfb278c61fa2a6fc48a24ad7"
+    },
+    {
+      "distribution": "auditcore-risk",
+      "version": "0.3.2",
+      "wheel_sha256": "72f596b5fc0a66a8b4c80a1f1addf1f24601ac19a9e35c31dd2426dd783c8047"
+    },
+    {
+      "distribution": "auditcore-sampling",
+      "version": "0.2.1",
+      "wheel_sha256": "c71cb6d341997c1db74736f68ed0edb980f8ef4efa691c97180fb0b376c2bc2e"
+    },
+    {
+      "distribution": "auditcore-statistics",
+      "version": "0.3.2",
+      "wheel_sha256": "24afa69d1628bad9b110db2e5bd8c9cd8f71a4862d9666286da8e42a75563753"
+    }
+  ],
+  "new_distributions": [
+    "auditcore-auth 0.1.0",
+    "auditcore-bpmn 0.1.0",
+    "auditcore-common 0.1.0",
+    "auditcore-identifiers 0.1.0",
+    "auditcore-kanban 0.1.0",
+    "auditcore-llm-client 0.1.1"
+  ],
+  "pre_upload_verification": {
+    "domain_packages": "PASS (197/197, --apt)",
+    "optional_renderers": "PASS (15/15, --apt)",
+    "code_quality_gate": "PASS",
+    "readme_checks": "PASS",
+    "js_workspace": "PASS (npm ci, lint, typecheck, test, build, README-Schnellstart, API-Überblick)"
+  },
+  "anonymous_pip": {
+    "status": "PASS",
+    "method": "je Paket frische venv, env -i, pip --isolated -r requirements-<paket>.txt (hashgebunden, --no-index) sowie getrennt pip --isolated --index-url https://janpow77.github.io/auditcore/simple/ <paket>; danach tests/installed_smoke.py mit python -I",
+    "smoke": "26/26 (requirements) und 26/26 (Paketindex)"
+  },
+  "anonymous_apt": {
+    "status": "PASS",
+    "image": "debian:bookworm",
+    "steps": "Fingerprint geprüft, signed-by-Quelle, 26 Pakete installiert, Smoke 26/26 mit /usr/bin/python3 -I, purge + autoremove, keine Pakete oder Dateien übrig",
+    "note": "apt meldet „Invalid 'Date' entry in Release file“ (Release ohne Date-Feld, wie in v0.3.x); ohne Auswirkung"
+  },
+  "package_index": {
+    "status": "PASS",
+    "url": "https://janpow77.github.io/auditcore/simple/",
+    "projects": 26
+  },
+  "checked_at": "2026-09-25T19:24:44+00:00",
+  "application_release": "NOT_EVALUATED"
+}

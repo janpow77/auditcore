@@ -2,6 +2,23 @@
 
 Aus der Git-Historie rekonstruiert (`git log -- packages/auditcore_property_sources`).
 
+## 0.1.2 – 2026-09-25
+
+Verhaltensänderung (PS-C10, Nutzerauftrag vom 25.09.2026).
+
+### Behoben
+- `zvg.parse_de_number` liest deutsche Zahlen nach dem gemeinsamen Vertrag
+  `contracts/common-cases/parse-number` (Modus `de`) über
+  `auditcore_common.numbers_de`: „1234,56“ → 1234,56 (bisher 123,0),
+  „2015“ → 2015,0 (bisher 201,0). Mehrdeutiges („1.234“, „1.5“, „1,234“) und
+  Text um die Zahl ergeben `None` statt einer geratenen Zahl. Damit stimmen
+  auch die Wohnflächen aus `parse_detail` („Wohnfläche 1234,56 m²“).
+
+### Hinzugefügt
+- `zvg.legacy_parse_de_number`: das charakterisierte Original, unverändert
+  (Replay und Paritätsnachweise der Consumer).
+- Pflichtabhängigkeit `auditcore_common==0.1.1`.
+
 ## 0.1.1 – 2026-09-25
 
 Refaktorierung ohne Verhaltensänderung; Datensätze, Issues, Cursor,
