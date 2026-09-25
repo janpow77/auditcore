@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Festlegungen der gemeinsamen Vertragsfälle entschieden (Nutzer, 25.09.2026):
+  Ersatzwert „—“, Dateigröße Basis 1024 mit KB/MB und Dezimalkomma, „1.5“ und
+  „1.234“ in Beträgen ungültig bzw. mehrdeutig mit Hinweis, höchstens zwei
+  Nachkommastellen bei Beträgen (de), Anzeige-Zeitzone Europe/Berlin
+  (`contracts/common-cases/decisions.json`: Status „festgelegt (Nutzer
+  2026-09-25)“, `DECISIONS.md`). Verträge `parse-number`, `empty-value`,
+  `format-date`, `format-filesize` jetzt `verbindlich`; Rundung von Beträgen
+  und Trenner Datum/Zeit bleiben vorläufig.
 - Neues Paket `auditcore_bpmn` 0.1.0: BPMN 2.0 mit FlowAudit-Erweiterung
   Schema 1.1 (verbindlich in `docs/bpmn/flowaudit-schema-1.1.md`, XSD im
   Paket), gehärtetes Parsen, Elementmodell, Prüfregeln mit stabilen IDs
