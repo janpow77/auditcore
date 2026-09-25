@@ -69,7 +69,7 @@ def select_tariff(
     *,
     stichtag: date | str,
     profile: ComparisonProfile,
-    q3: Any = None,
+    q3: object = None,
 ) -> Selection:
     """Select one tariff for ``stichtag`` (and meter size ``q3`` for water)."""
     day = parse_day(stichtag)
