@@ -28,6 +28,7 @@ ALLOWED = {
     "typing",
     "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "auditcore_risk",
+    "auditcore_common",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
 }
 LAZY = {"pandas", "rapidfuzz", "auditcore_procurement", "auditcore_entity_matching"}
 

@@ -9,14 +9,14 @@ profiles, and no profile is an implicit default.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from importlib import resources
-from importlib.resources.abc import Traversable
-from types import MappingProxyType
 from typing import Any
+
+from auditcore_common.frozen import freeze
+from auditcore_common.hashing import canonical_sha256
+from auditcore_common.profiles import packaged_profile_entries
 
 from .assessment_schema import SEVERITIES, check_assessment
 from .base import MISSING_AMOUNT_FIELD, WHEN_MISSING, JsonObject
@@ -127,16 +127,12 @@ class RiskProfile:
 
 def fingerprint(data: JsonObject) -> str:
     """SHA-256 of the canonical JSON profile document."""
-    canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return canonical_sha256(data)
 
 
 def _freeze(value: object) -> Any:
-    if isinstance(value, dict):
-        return MappingProxyType({k: _freeze(v) for k, v in value.items()})
-    if isinstance(value, list):
-        return tuple(_freeze(v) for v in value)
-    return value
+    """:func:`auditcore_common.frozen.freeze`, typed ``Any`` for the dataclass fields."""
+    return freeze(value)
 
 
 def _text(data: JsonObject, key: str, where: str) -> str:
@@ -347,25 +343,19 @@ def profile_from_dict(data: JsonObject) -> RiskProfile:
     )
 
 
-def _packaged() -> dict[tuple[str, str], Traversable]:
-    found = {}
-    for entry in resources.files("auditcore_risk.profile_data").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            found[(str(data["id"]), str(data["version"]))] = entry
-    return found
+_RESOURCES = "auditcore_risk.profile_data"
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
     """Packaged ``(id, version)`` pairs; none of them is an implicit default."""
-    return tuple(sorted(_packaged()))
+    return tuple(sorted(packaged_profile_entries(_RESOURCES)))
 
 
 def load_profile(profile_id: str, version: str) -> RiskProfile:
     """Load an explicitly named packaged profile version."""
     if not isinstance(profile_id, str) or not isinstance(version, str):
         raise ProfileError("Profilkennung und Version sind als Text anzugeben.")
-    entry = _packaged().get((profile_id, version))
+    entry = packaged_profile_entries(_RESOURCES).get((profile_id, version))
     if entry is None:
         raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
     return profile_from_dict(json.loads(entry.read_text(encoding="utf-8")))

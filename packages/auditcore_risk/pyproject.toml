@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_risk"
-version = "0.3.1"
+version = "0.3.2"
 description = "Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_entity_matching==0.2.2"]
+dependencies = ["auditcore_common==0.1.0", "auditcore_entity_matching==0.2.2"]
 
 [project.optional-dependencies]
 fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.2"]
