@@ -1,12 +1,15 @@
 name: quality
 on:
+  # workflow_call: Aufruf aus nightly.yml (voller Lauf, alle Pakete)
+  workflow_call:
   push:
     branches: [main]
   pull_request:
 permissions:
   contents: read
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # Fester Name: bei workflow_call wäre github.workflow der Name des Aufrufers.
+  group: quality-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
