@@ -1,5 +1,18 @@
 # Changelog @flowaudit/ui
 
+## Unveröffentlicht
+
+- VVT und DSFA: `FaVvt` (`<flowaudit-vvt>`) und `FaDsfa` (`<flowaudit-dsfa>`)
+  mit REST-Port `createDataProtectionRestPort` auf `auditcore_dataprotection.web`
+  (Vertrag `dataprotection_ui/1`, `docs/ui/dataprotection-rest.md`).
+  Pflichtangaben nach Art. 30 DSGVO, Vollständigkeitsprüfung der Bibliothek
+  beim Tippen, Entwurf/Vier-Augen-Freigabe/Versionen, Druckansicht, Markdown
+  und CSV mit Formelschutz (`csvDocument` aus `@flowaudit/common`);
+  Schwellwertanalyse, Risikoszenarien mit Vorschau der Bibliothek,
+  Entscheidung, DSB-Einholung, Freigabe, Bericht. View-Logik ohne Vue
+  (`registerView`, `dsfaView`, `exporters`). Parität:
+  `docs/ui/dataprotection-paritaet.md`.
+
 ## 0.2.0 – 2026-09-25
 
 - Framework-freie Module nach `@flowaudit/common` 0.1.0 verschoben und unter

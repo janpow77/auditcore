@@ -14,6 +14,13 @@ export {
 } from './elements'
 export { FlowauditKanbanBoard, FlowauditKanbanBoards, type FlowauditKanbanBoardProps, type FlowauditKanbanBoardsProps } from './kanban'
 export { FlowauditSynopsis, type FlowauditSynopsisProps } from './synopsis'
+export {
+  FlowauditDsfa,
+  FlowauditVvt,
+  type FlowauditDataProtectionError,
+  type FlowauditDsfaProps,
+  type FlowauditVvtProps,
+} from './dataprotection'
 export { defineFlowauditElements } from '@flowaudit/ui/elements'
 export * from './hooks'
 export * from './common'

@@ -109,7 +109,7 @@ die bisher nur in `@flowaudit/ui` lagen (`formatDate`, `requestJson`,
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (68):
+Exporte der Einstiegspunkte aus `package.json#exports` (73):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -123,6 +123,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (68):
 | `@flowaudit/ui-react` | `FetchLike` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `FlowauditBenford` | Konstante | `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditBenfordProps` | Schnittstelle | – | `elements` |
+| `@flowaudit/ui-react` | `FlowauditDataProtectionError` | Typ | – | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditDsfa` | Konstante | `<flowaudit-dsfa>` als React-Komponente: Schwellwertanalyse, Risiko, Entscheidung, Freigabe (Art. 35 DSGVO). | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `kanban` |
@@ -138,6 +141,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (68):
 | `@flowaudit/ui-react` | `FlowauditSynopsisProps` | Schnittstelle | – | `synopsis` |
 | `@flowaudit/ui-react` | `FlowauditTable` | Konstante | `<flowaudit-table>` als React-Komponente. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditTableProps` | Schnittstelle | – | `elements` |
+| `@flowaudit/ui-react` | `FlowauditVvt` | Konstante | `<flowaudit-vvt>` als React-Komponente: Verzeichnis von Verarbeitungstätigkeiten (Art. 30 DSGVO). | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditVvtProps` | Schnittstelle | – | `dataprotection` |
 | `@flowaudit/ui-react` | `NextSortOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `NumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
@@ -202,6 +207,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (68):
   `onError`), `FlowauditRiskFlags` (z. B. `evaluation`, `profile`;
   `onRecordSelect`, `onFilterChange`; Antworten von `auditcore_risk.web`,
   siehe [`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md)).
+- `FlowauditVvt` (`port`, `actor`, `editable`, `locale`; `onDraftSaved`,
+  `onReleased`, `onExported`, `onError`) und `FlowauditDsfa` (`port`,
+  `activityId`, `actor`, `editable`, `locale`; `onAssessmentChange`,
+  `onError`), siehe [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md).
 - Sprache und Theming wie in `@flowaudit/ui` (`locale`-Prop,
   `defineFlowauditElements({ locale })`, CSS-Variablen `--fa-*`).
 
