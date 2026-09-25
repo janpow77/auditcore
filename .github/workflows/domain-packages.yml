@@ -8,6 +8,9 @@ on:
       - 'scripts/verify_domain_packages.py'
       - 'scripts/verify_optional_renderers.py'
       - 'scripts/prepare_library_release.py'
+      - 'scripts/verify_code_quality.py'
+      - 'quality/baseline.json'
+      - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
   pull_request:
     paths:
@@ -17,6 +20,9 @@ on:
       - 'scripts/verify_domain_packages.py'
       - 'scripts/verify_optional_renderers.py'
       - 'scripts/prepare_library_release.py'
+      - 'scripts/verify_code_quality.py'
+      - 'quality/baseline.json'
+      - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
 permissions:
   contents: read

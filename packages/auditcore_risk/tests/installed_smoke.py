@@ -18,9 +18,9 @@ from auditcore_risk import (
 def main() -> None:
     """Exercise both legacy profiles and the optional-extra boundaries."""
     package = distribution("auditcore_risk")
-    assert package.version == "0.3.0"
+    assert package.version == "0.3.1"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_entity_matching==0.2.0"], runtime
+    assert runtime == ["auditcore_entity_matching==0.2.1"], runtime
     assert find_spec("auditcore") is None
     assert len(available_profiles()) == 14
     assert len(available_fraud_profiles()) == 5

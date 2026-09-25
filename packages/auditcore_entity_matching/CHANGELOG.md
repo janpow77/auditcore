@@ -1,0 +1,32 @@
+# Changelog auditcore_entity_matching
+
+## 0.2.1 – Refaktorierung ohne Verhaltensänderung
+
+Keine fachliche Änderung: alle 989 bestehenden Tests (Replays gegen die
+aufgezeichneten Originalausgaben von flowworkshop, audit_designer, flowinvoice,
+audit-portal und riskanalysis, Vertrags-, Entscheidungs- und
+Architekturtests) laufen unverändert grün; Profildaten und Fingerprints sind
+bytegleich.
+
+- `normalize` je Algorithmus zerlegt (`_nfkd_lower_regex`,
+  `_lower_nfkd_ascii`, `_translate_then_casefold`, `_casefold_fold_nfkd`)
+  mit gemeinsamen Schritten `_apply_fold_map`, `_strip_combining` und
+  `_drop_tokens`; die Auswahl steht als Tabelle, unbekannte Algorithmen
+  fallen wie bisher auf die Casefold-Variante.
+- `profile_from_dict` je Abschnitt zerlegt (`_normalization`,
+  `_classification`, `_resolution`); Prüfreihenfolge und Fehlermeldungen
+  unverändert.
+- `Any` nur noch an der Grenze zum rohen Profil-JSON (`_RawDocument`) und
+  im öffentlichen Feld `Profile.source`; `fingerprint`, `_strings` und
+  `_mapping` nehmen `object`, `_rapidfuzz` liefert `ModuleType`.
+
+| Messung | 0.2.0 | 0.2.1 |
+|---|---|---|
+| Funktionen mit McCabe > 10 | 2 | 0 |
+| Funktionen > 60 Zeilen | 2 | 0 |
+| Module > 400 Zeilen | 0 | 0 |
+| `Any`-Vorkommen (Gate-Zählung) | 7 | 2 |
+| mypy --strict | sauber | sauber |
+
+Keine Umbenennungen öffentlicher Namen. `auditcore_risk` pinnt die neue
+Version (`auditcore_entity_matching==0.2.1`).

@@ -11,10 +11,7 @@ total was reached (source rule), and the flowworkshop modes are planned by
 from __future__ import annotations
 
 import json
-import math
 from collections.abc import Mapping
-from datetime import date, datetime
-from decimal import Decimal
 from typing import Any
 
 from auditcore_harvest import (
@@ -34,26 +31,12 @@ from auditcore_harvest import (
 )
 
 from . import __version__, deminimis, flowsearch, workshop
+from ._jsonsafe import json_safe, json_safe_mapping
 from .errors import FundingSourceError
 from .workshop import SnapshotContext
 
 ADAPTER_VERSION = __version__
 PROFILE_VERSION = "2026.09.1"
-
-
-def _json(value: Any) -> Any:
-    """JSON-safe copy (Decimal/date as text, NaN as ``None``)."""
-    if isinstance(value, Decimal):
-        return str(value)
-    if isinstance(value, (datetime, date)):
-        return value.isoformat()
-    if isinstance(value, float) and math.isnan(value):
-        return None
-    if isinstance(value, Mapping):
-        return {str(k): _json(v) for k, v in value.items()}
-    if isinstance(value, (list, tuple)):
-        return [_json(v) for v in value]
-    return value
 
 
 class DeMinimisRegisterAdapter:
@@ -134,6 +117,21 @@ class DeMinimisRegisterAdapter:
             raise ParserError(str(exc)) from exc
         if cursor is None:
             reported = deminimis.parse_count(self._post(context, deminimis.count_request(criteria)))
+        records, issues = self._records(context, page, awards)
+        seen += len(records)
+        return _register_page(
+            records,
+            issues,
+            page=page,
+            awards=len(awards),
+            size=criteria.pageSize,
+            reported=reported,
+            seen=seen,
+        )
+
+    def _records(
+        self, context: FetchContext, page: int, awards: list[dict[str, Any]]
+    ) -> tuple[list[HarvestRecord], list[RecordIssue]]:
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []
         for position, award in enumerate(awards):
@@ -146,65 +144,67 @@ class DeMinimisRegisterAdapter:
                 continue
             fields = deminimis.harvest_fields(award)
             fields.pop("raw_payload")
-            normalized = {**_json(fields), "record_hash": deminimis.record_hash(award)}
+            normalized = {**json_safe_mapping(fields), "record_hash": deminimis.record_hash(award)}
             records.append(
                 HarvestRecord(
                     source_id=self.source.source_id,
                     record_id=str(reference),
-                    raw=_json(award),
+                    raw=json_safe(award),
                     normalized=normalized,
-                    provenance=context.provenance(self.source, locator, _json(award)),
+                    provenance=context.provenance(self.source, locator, json_safe(award)),
                 )
             )
-        seen += len(records)
-        size = criteria.pageSize
-        if not awards:
-            if reported is None:
-                issues.append(
-                    RecordIssue(
-                        f"page/{page}",
-                        "Gesamtzahl des Registers unbekannt; Vollständigkeit nicht belegt.",
-                    )
-                )
-            elif seen < int(reported):
-                issues.append(
-                    RecordIssue(
-                        f"page/{page}", f"Register meldete {reported} Sätze, gelesen wurden {seen}."
-                    )
-                )
-            return PageResult(
-                (),
-                None,
-                True,
-                PageStatus.PARTIAL if issues else PageStatus.OK,
-                tuple(issues),
-                reported,
-            )
-        if reported is not None and seen >= int(reported):
-            return PageResult(
-                tuple(records),
-                None,
-                True,
-                PageStatus.PARTIAL if issues else PageStatus.OK,
-                tuple(issues),
-                reported,
-            )
-        if reported is None and len(awards) < size:
+        return records, issues
+
+
+_UNKNOWN_TOTAL = "Gesamtzahl des Registers unbekannt; Vollständigkeit nicht belegt."
+
+
+def _register_page(
+    records: list[HarvestRecord],
+    issues: list[RecordIssue],
+    *,
+    page: int,
+    awards: int,
+    size: int,
+    reported: int | None,
+    seen: int,
+) -> PageResult:
+    """Page result and cursor; completeness only when the reported total is reached."""
+    if not awards:
+        if reported is None:
+            issues.append(RecordIssue(f"page/{page}", _UNKNOWN_TOTAL))
+        elif seen < int(reported):
             issues.append(
                 RecordIssue(
-                    f"page/{page}",
-                    "Gesamtzahl des Registers unbekannt; Vollständigkeit nicht belegt.",
+                    f"page/{page}", f"Register meldete {reported} Sätze, gelesen wurden {seen}."
                 )
             )
-            return PageResult(tuple(records), None, True, PageStatus.PARTIAL, tuple(issues), None)
-        return PageResult(
-            tuple(records),
-            {"page": page + 1, "reported": reported, "seen": seen},
-            False,
-            PageStatus.PARTIAL if issues else PageStatus.OK,
-            tuple(issues),
-            reported,
-        )
+        return _final_page((), issues, reported)
+    if reported is not None and seen >= int(reported):
+        return _final_page(tuple(records), issues, reported)
+    if reported is None and awards < size:
+        issues.append(RecordIssue(f"page/{page}", _UNKNOWN_TOTAL))
+        return PageResult(tuple(records), None, True, PageStatus.PARTIAL, tuple(issues), None)
+    return PageResult(
+        tuple(records),
+        {"page": page + 1, "reported": reported, "seen": seen},
+        False,
+        _status(issues),
+        tuple(issues),
+        reported,
+    )
+
+
+def _status(issues: list[RecordIssue]) -> PageStatus:
+    return PageStatus.PARTIAL if issues else PageStatus.OK
+
+
+def _final_page(
+    records: tuple[HarvestRecord, ...], issues: list[RecordIssue], total: int | None
+) -> PageResult:
+    """Last page of a run: no cursor, status from the issues."""
+    return PageResult(records, None, True, _status(issues), tuple(issues), total)
 
 
 class _FileAdapter:
@@ -296,41 +296,8 @@ class WorkshopBeneficiaryAdapter(_FileAdapter):
                     RecordIssue(locator, "Zeile mit bereits vorhandener Kennung übersprungen.")
                 )
                 continue
-            normalized = {
-                key: _json(row.get(key))
-                for key in (
-                    "beneficiary_name",
-                    "project_name",
-                    "project_aktenzeichen",
-                    "project_description",
-                    "cost_total_raw",
-                    "cost_eu_funding_raw",
-                    "currency",
-                    "location",
-                    "landkreis",
-                    "plz",
-                    "nuts_code",
-                    "latitude",
-                    "longitude",
-                    "project_start_raw",
-                    "project_end_raw",
-                    "funded_at_raw",
-                )
-            }
-            normalized.update(
-                {
-                    "beneficiary_name_normalized": workshop.normalize_company_name_simple(
-                        row["beneficiary_name"]
-                    ),
-                    "cost_total": _json(workshop.parse_amount(row.get("cost_total_raw"))),
-                    "cost_eu_funding": _json(workshop.parse_amount(row.get("cost_eu_funding_raw"))),
-                    "project_start": _json(workshop.parse_date(row.get("project_start_raw"))),
-                    "project_end": _json(workshop.parse_date(row.get("project_end_raw"))),
-                    "funded_at": _json(workshop.parse_date(row.get("funded_at_raw"))),
-                    "source_row_number": row.get("_row_number"),
-                }
-            )
-            raw = _json(row.get("raw_row") or {})
+            normalized = json_safe_mapping(workshop.harvest_values(row))
+            raw = json_safe(row.get("raw_row") or {})
             records[identity] = HarvestRecord(
                 source_id=self.source.source_id,
                 record_id=identity,
@@ -338,14 +305,7 @@ class WorkshopBeneficiaryAdapter(_FileAdapter):
                 normalized=normalized,
                 provenance=context.provenance(self.source, locator, raw),
             )
-        return PageResult(
-            tuple(records.values()),
-            None,
-            True,
-            PageStatus.PARTIAL if issues else PageStatus.OK,
-            tuple(issues),
-            len(records),
-        )
+        return _final_page(tuple(records.values()), issues, len(records))
 
 
 class FlowsearchBeneficiaryAdapter(_FileAdapter):
@@ -392,17 +352,7 @@ class FlowsearchBeneficiaryAdapter(_FileAdapter):
         mappings = {source["source_key"]: mapping, **dict(config.get("fallback") or {})}
         content = self._download(context)
         try:
-            if url.lower().endswith(".zip"):
-                content = flowsearch.extract_from_zip(content)
-            if (
-                url.lower().endswith(".csv")
-                or str(source.get("notes", "")).lower() == "csv statt xlsx"
-            ):
-                items: list[dict[str, Any]] = [
-                    dict(r) for r in flowsearch.parse_csv(content, mapping)
-                ]
-            else:
-                items = flowsearch.parse_excel(content, mapping)
+            items = flowsearch.read_items(content, url, source, mapping)
         except (FundingSourceError, ValueError, KeyError) as exc:
             raise ParserError(f"Datei nicht lesbar: {exc}") from exc
         name_column = dict(mapping.get("columns") or {}).get("beneficiary_name")
@@ -429,22 +379,15 @@ class FlowsearchBeneficiaryAdapter(_FileAdapter):
             if identity in records:
                 issues.append(RecordIssue(locator, "project_id bereits in dieser Datei vorhanden."))
                 continue
-            raw = _json(item)
+            raw = json_safe(item)
             records[identity] = HarvestRecord(
                 source_id=self.source.source_id,
                 record_id=identity,
                 raw=raw,
-                normalized=_json(values),
+                normalized=json_safe_mapping(values),
                 provenance=context.provenance(self.source, locator, raw),
             )
-        return PageResult(
-            tuple(records.values()),
-            None,
-            True,
-            PageStatus.PARTIAL if issues else PageStatus.OK,
-            tuple(issues),
-            len(records),
-        )
+        return _final_page(tuple(records.values()), issues, len(records))
 
 
 def register(registry: Any) -> None:

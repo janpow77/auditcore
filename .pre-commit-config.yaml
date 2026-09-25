@@ -12,3 +12,9 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+      - id: code-quality-gate
+        name: Code-Qualitäts-Gate (Ratchet, ohne mypy; CI prüft vollständig)
+        entry: python scripts/verify_code_quality.py --skip-mypy
+        language: system
+        pass_filenames: false
+        files: ^(src/|packages/|packages-js/|quality/baseline\.json$)
