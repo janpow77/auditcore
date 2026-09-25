@@ -1,0 +1,16 @@
+[Unit]
+Description=auditcore GitHub-Actions-Runner auf der NUC (Instanz %i)
+Documentation=https://github.com/janpow77/auditcore/blob/main/docs/deployment/self-hosted-runner.md
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/share/auditcore-runner/supervisor.sh %i
+Restart=always
+RestartSec=15
+Nice=10
+TimeoutStopSec=60
+KillMode=mixed
+
+[Install]
+WantedBy=default.target

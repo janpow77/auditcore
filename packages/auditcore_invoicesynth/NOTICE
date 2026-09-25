@@ -4,7 +4,7 @@ New implementation in auditcore (docs/architecture/DONUT_OCR_PLAN.md,
 sections 2b and 2d). No code was copied from other repositories; the Donut
 token convention (<s_field>value</s_field>, <sep/>) is reimplemented, no
 clovaai/donut code is included. Invoice base data comes from the dependency
-auditcore_invoicegenerator 0.2.0 (MIT), which is used unchanged.
+auditcore_invoicegenerator 0.2.1 (MIT), which is used unchanged.
 
 On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
 die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
