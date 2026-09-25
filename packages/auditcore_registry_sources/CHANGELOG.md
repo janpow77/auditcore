@@ -1,5 +1,16 @@
 # Changelog auditcore_registry_sources
 
+## 0.2.0 – REST-Schnittstelle Screening-Trefferprüfung
+
+- Neues Unterpaket `auditcore_registry_sources.web` (Vertrag
+  `auditcore_registry_sources.screening_review/1`): Prüfläufe für Sanktionen und
+  PEP, Score-Aufschlüsselung aus `auditcore_entity_matching`, Quellenstand mit
+  Aktualität, Entscheidungen mit Pflichtbegründung und Vier-Augen-Option,
+  append-only Protokoll über das `ReviewStore`-Protocol.
+- Adapter: Starlette (Extra `web`), FastAPI-Router (Extra `fastapi`).
+- Bestehende Module und Ergebnisse unverändert. Vertrag:
+  `docs/ui/screening-rest.md`.
+
 ## 0.1.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: Profile, Regeln, Ergebnisse und alle öffentlichen
