@@ -1,0 +1,43 @@
+{
+ "library": "auditcore_sampling 0.2.0",
+ "method": "portal.mus_poisson",
+ "sample_size": 30,
+ "interval": 15849.298,
+ "inputs": {
+  "population_value": 475478.94,
+  "materiality": 50000.0,
+  "expected_error_rate": 0.005,
+  "confidence_level": 0.95,
+  "factor": 3.0
+ },
+ "warnings": [],
+ "kind": "mus",
+ "status": "RECOMMENDED",
+ "derivation": [
+  {
+   "label": "Zuverlässigkeitsfaktor bei 95% Konfidenz",
+   "formula": "RF",
+   "value": 3.0
+  },
+  {
+   "label": "Erwarteter Fehler",
+   "formula": "E = V · r",
+   "value": 2377.3947000000003
+  },
+  {
+   "label": "Präzision",
+   "formula": "P = max(M − E, M / 2)",
+   "value": 47622.6053
+  },
+  {
+   "label": "Stichprobenumfang",
+   "formula": "n = ⌈RF · V / P⌉",
+   "value": 30
+  },
+  {
+   "label": "Stichprobenintervall",
+   "formula": "J = V / n",
+   "value": 15849.298
+  }
+ ]
+}

@@ -1,4 +1,4 @@
-import type { SortState, TableColumn, TableRow, Locale } from '@flowaudit/ui'
+import type { BenfordPort, Locale, PopulationItem, SamplingPort, ScreeningError, ScreeningPort, SortState, TableColumn, TableRow } from '@flowaudit/ui'
 import { createElementComponent } from './createElementComponent'
 
 export interface FlowauditTableProps {
@@ -20,3 +20,48 @@ export const FlowauditTable = createElementComponent<FlowauditTableProps, { onRo
     events: { onRowClick: 'row-click', onSortChange: 'sort-change' },
   },
 )
+
+export interface FlowauditSamplingProps {
+  port: SamplingPort | null
+  items?: readonly PopulationItem[]
+  locale?: Locale
+}
+
+/** `<flowaudit-sampling>` als React-Komponente: Stichprobenumfang, Auswahl mit Seed, Export. */
+export const FlowauditSampling = createElementComponent<
+  FlowauditSamplingProps,
+  { onSizeCalculated: string; onSelectionDrawn: string; onError: string }
+>('flowaudit-sampling', {
+  properties: ['port', 'items', 'locale'],
+  events: { onSizeCalculated: 'size-calculated', onSelectionDrawn: 'selection-drawn', onError: 'error' },
+})
+
+export interface FlowauditBenfordProps {
+  port: BenfordPort | null
+  values?: readonly (number | null)[]
+  locale?: Locale
+}
+
+/** `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. */
+export const FlowauditBenford = createElementComponent<FlowauditBenfordProps, { onAnalysisCompleted: string; onError: string }>(
+  'flowaudit-benford',
+  { properties: ['port', 'values', 'locale'], events: { onAnalysisCompleted: 'analysis-completed', onError: 'error' } },
+)
+
+export interface FlowauditScreeningReviewProps {
+  port: ScreeningPort | null
+  runId?: string
+  locale?: Locale
+}
+
+/** `<flowaudit-screening-review>` als React-Komponente: Sanktionslisten-/PEP-Treffer prüfen und entscheiden. */
+export const FlowauditScreeningReview = createElementComponent<
+  FlowauditScreeningReviewProps,
+  { onRunCreated: string; onDecided: string; onError: string }
+>('flowaudit-screening-review', {
+  properties: ['port', 'runId', 'locale'],
+  events: { onRunCreated: 'run-created', onDecided: 'decided', onError: 'error' },
+})
+
+/** Nutzdaten des Ereignisses `error` der Screening-Trefferprüfung. */
+export type FlowauditScreeningError = ScreeningError

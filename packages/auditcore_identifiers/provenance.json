@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_identifiers",
+  "version": "0.1.0",
+  "contract": "auditcore_identifiers.check/1",
+  "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
+  "sources": [
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "files": [
+        {
+          "path": "backend/app/services/validators.py",
+          "git_blob": "d3c09fbd9182c74ff6855b7a84f4672322f3f025",
+          "symbols": [
+            "validate_german_tax_id",
+            "validate_german_vat_id",
+            "validate_eu_vat_id",
+            "validate_uk_vat_id",
+            "validate_iban",
+            "validate_bic",
+            "GERMAN_TAX_ID_PATTERNS",
+            "EU_VAT_ID_PATTERNS",
+            "UK_VAT_PATTERNS",
+            "IBAN_LENGTHS",
+            "BIC_PATTERN"
+          ]
+        },
+        {
+          "path": "backend/app/pipeline/stages/validation.py",
+          "git_blob": "679954a2396984ad4ae05a4244f5e38e11dda2c6",
+          "symbols": [
+            "IbanChecksumRule._validate_iban",
+            "VatIdFormatRule.evaluate"
+          ]
+        },
+        {
+          "path": "backend/app/services/risk_checker.py",
+          "git_blob": "b799e855c382760d0a84762b2949462692f7be01",
+          "symbols": [
+            "RiskChecker._normalize_vat_id"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "files": [
+        {
+          "path": "backend/app/services/validators.py",
+          "git_blob": "d3c09fbd9182c74ff6855b7a84f4672322f3f025",
+          "symbols": [
+            "validate_german_tax_id",
+            "validate_german_vat_id",
+            "validate_eu_vat_id",
+            "validate_uk_vat_id",
+            "validate_iban",
+            "validate_bic",
+            "GERMAN_TAX_ID_PATTERNS",
+            "EU_VAT_ID_PATTERNS",
+            "UK_VAT_PATTERNS",
+            "IBAN_LENGTHS",
+            "BIC_PATTERN"
+          ]
+        },
+        {
+          "path": "backend/app/pipeline/stages/validation.py",
+          "git_blob": "a485cb0a73789cb94264fed22bc7186a5ab13e19",
+          "symbols": [
+            "IbanChecksumRule._validate_iban",
+            "VatIdFormatRule.evaluate"
+          ]
+        },
+        {
+          "path": "backend/app/services/risk_checker.py",
+          "git_blob": "5e93b2b8c99ace75ccd8592410906e38d77f224f",
+          "symbols": [
+            "RiskChecker._normalize_vat_id"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+      "files": [
+        {
+          "path": "auditworkshop/backend/services/entity_resolution.py",
+          "git_blob": "d7a799b65e0444e8be8e606b35bd2cc1ecbdfac0",
+          "symbols": [
+            "_LEI_RE",
+            "is_valid_lei",
+            "extract_lei_from_text"
+          ]
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/auditcore",
+      "commit": "99788a18c28bf683ada62bb3ab9d4aeb36f2c5b2",
+      "files": [
+        {
+          "path": "packages/auditcore_invoicesynth/src/auditcore_invoicesynth/identifiers.py",
+          "git_blob": "7b0529b32d17d6fd7fba5b4fc5cd91f4d28f39d4",
+          "symbols": [
+            "iban_valid",
+            "vat_id_valid",
+            "de_vat_check_digit",
+            "at_uid_check_digit"
+          ]
+        },
+        {
+          "path": "packages/auditcore_documents/src/auditcore_documents/pipeline/stages/validation_base.py",
+          "git_blob": "391865454cea422771e990dbb615de837bcc0ef7",
+          "symbols": [
+            "IBAN_COUNTRY_LENGTHS",
+            "VAT_ID_PATTERNS",
+            "validate_iban"
+          ]
+        },
+        {
+          "path": "packages/auditcore_documents/src/auditcore_documents/pipeline/stages/donut_values.py",
+          "git_blob": "9200477cad216cb6d187f126e6da2e100361c9d4",
+          "symbols": [
+            "compact",
+            "de_vat_check_digit",
+            "at_uid_check_digit",
+            "vat_id_check"
+          ]
+        },
+        {
+          "path": "packages/auditcore_entity_matching/src/auditcore_entity_matching/lei.py",
+          "git_blob": "d897b2876f7487e3c5ec261f07d8217e191bd0a0",
+          "symbols": [
+            "check_lei",
+            "extract_lei",
+            "lei_checksum_ok"
+          ]
+        }
+      ]
+    }
+  ],
+  "notes": {
+    "github_verification": "Blobs der gepinnten Commits am 2026-09-25 gegen origin/main geprüft: flowinvoice validators.py und risk_checker.py unverändert (origin/main 5d5d8c5a), audit-portal validators.py unverändert (origin/main 72cc4b1a); flowinvoice backend/app/pipeline/stages/validation.py ist in origin/main entfernt (weitergeführt in auditcore_documents).",
+    "reference_data": [
+      "SWIFT IBAN Registry Release 101 (BBAN-Aufbau, über python-stdnum 2.2 stdnum/iban.dat)",
+      "ISO 3166-1 alpha-2 aus Debian iso-codes 4.16.0 zuzüglich XK",
+      "GLEIF LEI-Datensätze (api.gleif.org, abgerufen 2026-09-25)"
+    ],
+    "independent_crosscheck": "python-stdnum 2.2 (LGPL) nur im Offline-Werkzeug tools/crosscheck_stdnum.py; Ergebnisse als Daten in tests/fixtures/stdnum_crosscheck.json, kein Code übernommen"
+  },
+  "origin": "Neu geschrieben: strenges Profil nach ISO 13616, ISO 9362, ISO 17442, ISO 7064 und den Formaten der EU-Mitgliedstaaten; Legacy-Profile geben die ausgeführten Originale ergebnisgleich wieder (Muster, Normalisierung, Meldungen übernommen).",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung von flowinvoice, audit-portal oder flowworkshop. Nutzerauftrag vom 25.09.2026: neue Bibliothek auditcore_identifiers."
+    }
+  },
+  "characterization": {
+    "flowinvoice": {
+      "fixture": "tests/fixtures/flowinvoice_observed.json",
+      "tool": "tools/capture_originals.py",
+      "cases": 10273
+    },
+    "audit_portal": {
+      "fixture": "tests/fixtures/audit_portal_observed.json",
+      "tool": "tools/capture_originals.py",
+      "cases": 10273
+    },
+    "internal": {
+      "fixture": "tests/fixtures/internal_observed.json",
+      "tool": "tools/capture_originals.py",
+      "cases": 12509
+    },
+    "differences": {
+      "report": "docs/differences.md",
+      "tool": "tools/difference_report.py"
+    },
+    "stdnum": {
+      "fixture": "tests/fixtures/stdnum_crosscheck.json",
+      "tool": "tools/crosscheck_stdnum.py"
+    }
+  }
+}
