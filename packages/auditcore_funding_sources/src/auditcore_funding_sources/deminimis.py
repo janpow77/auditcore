@@ -13,16 +13,21 @@ A register query never releases or decides anything.
 
 from __future__ import annotations
 
-import hashlib
-import json
 import re
-from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass, field
+from collections.abc import Mapping
+from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from functools import lru_cache
 from typing import Any
 
+from .deminimis_inventory import HASH_FIELDS as HASH_FIELDS
+from .deminimis_inventory import Reconciliation as Reconciliation
+from .deminimis_inventory import inventory_hash as inventory_hash
+from .deminimis_inventory import inventory_state as inventory_state
+from .deminimis_inventory import mark_vanished as mark_vanished
+from .deminimis_inventory import reconcile_page as reconcile_page
+from .deminimis_inventory import record_hash as record_hash
 from .profiles import load_profile
 
 PROFILE_ID = "designer.deminimis.register"
@@ -43,18 +48,6 @@ COLUMNS = (
     "sector",
     "instrument",
     "publishedDate",
-    "country",
-)
-HASH_FIELDS = (
-    "referenceNumber",
-    "beneficiaryName",
-    "beneficiaryReferenceNumber",
-    "amountEur",
-    "grantingDate",
-    "deMinimisType",
-    "grantingAuthorityName",
-    "sector",
-    "instrument",
     "country",
 )
 ISO2_TO_ISO3 = {
@@ -164,7 +157,7 @@ class RegisterResponseError(ValueError):
 
 
 def parse_award_list(
-    payload: Any, *, status: int = 200, strict: bool = True
+    payload: object, *, status: int = 200, strict: bool = True
 ) -> list[dict[str, Any]]:
     """Award list of a search or beneficiary response.
 
@@ -187,7 +180,7 @@ def legacy_error_message(status: int | None) -> str:
     return f"Das De-minimis-Register antwortete mit {status}."
 
 
-def parse_count(payload: Any) -> int | None:
+def parse_count(payload: object) -> int | None:
     """Total from ``{"count": n}`` or ``[{"count": n}]``; otherwise unknown (``None``)."""
     if isinstance(payload, dict) and isinstance(payload.get("count"), int):
         return int(payload["count"])
@@ -202,7 +195,7 @@ def row(record: Mapping[str, Any]) -> dict[str, Any]:
     return {column: record.get(column) for column in COLUMNS}
 
 
-def as_date(value: Any) -> date | None:
+def as_date(value: object) -> date | None:
     """Granting date for the cumulation (ISO prefix)."""
     if isinstance(value, date):
         return value
@@ -214,7 +207,7 @@ def as_date(value: Any) -> date | None:
         return None
 
 
-def as_amount(value: Any) -> Decimal | None:
+def as_amount(value: object) -> Decimal | None:
     """Finite amount or ``None``; booleans are not amounts."""
     if value in (None, "") or isinstance(value, bool):
         return None
@@ -232,7 +225,7 @@ def normalize_name(name: str | None) -> str | None:
     return " ".join(name.lower().split())
 
 
-def harvest_amount(value: Any) -> Decimal | None:
+def harvest_amount(value: object) -> Decimal | None:
     """Amount as stored by the harvest (NaN/Infinity are kept, unlike :func:`as_amount`)."""
     if value is None:
         return None
@@ -242,7 +235,7 @@ def harvest_amount(value: Any) -> Decimal | None:
         return None
 
 
-def harvest_date(value: Any) -> date | None:
+def harvest_date(value: object) -> date | None:
     """Date as stored by the harvest."""
     if not value:
         return None
@@ -252,7 +245,7 @@ def harvest_date(value: Any) -> date | None:
         return None
 
 
-def harvest_timestamp(value: Any) -> datetime | None:
+def harvest_timestamp(value: object) -> datetime | None:
     """Publication timestamp (``"YYYY-MM-DD HH:MM:SS"`` accepted)."""
     if not value:
         return None
@@ -300,133 +293,4 @@ def harvest_fields(record: Mapping[str, Any]) -> dict[str, Any]:
         "country": (record.get("country") or "").replace("Country", "") or None,
         "authority_level": authority_level(record.get("grantingAuthorityName")),
         "raw_payload": dict(record),
-    }
-
-
-def record_hash(record: Mapping[str, Any]) -> str:
-    """SHA-256 over the content fields of a register record (change detection)."""
-    canonical = json.dumps(
-        {f: record.get(f) for f in HASH_FIELDS},
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    )
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-
-
-def inventory_hash(hashes: Iterable[str]) -> str:
-    """SHA-256 over the sorted record hashes of one run."""
-    return hashlib.sha256("".join(sorted(hashes)).encode("utf-8")).hexdigest()
-
-
-# ---------------------------------------------------------------------------
-# Inventory reconciliation (source semantics, no database)
-# ---------------------------------------------------------------------------
-
-
-@dataclass
-class Reconciliation:
-    """Outcome of one harvest over the pages that were actually received."""
-
-    reported: int | None = None
-    seen: dict[str, str] = field(default_factory=dict)
-    inserted: list[str] = field(default_factory=list)
-    updated: list[str] = field(default_factory=list)
-    unchanged: list[str] = field(default_factory=list)
-    skipped_without_reference: int = 0
-    requests: int = 0
-    error: str | None = None
-    vanished: list[str] = field(default_factory=list)
-
-    @property
-    def complete(self) -> bool:
-        """Only a run that saw at least the reported total without error is complete."""
-        return self.error is None and self.reported is not None and len(self.seen) >= self.reported
-
-    @property
-    def status(self) -> str:
-        """``ok``, ``partial`` or ``failed`` exactly as in the source."""
-        if self.complete:
-            return "ok"
-        return "failed" if self.error else "partial"
-
-    @property
-    def content_hash(self) -> str:
-        """Inventory hash over the records seen in this run."""
-        return inventory_hash(self.seen.values())
-
-
-def reconcile_page(
-    state: Reconciliation,
-    rows: Sequence[Mapping[str, Any]],
-    reported: int | None,
-    stored: Mapping[str, str],
-) -> bool:
-    """Apply one received page; returns whether another page is required.
-
-    ``stored`` maps reference numbers to the stored content hash (``None``
-    entries mean unknown). Records without reference number are skipped and
-    counted. Order and counters follow ``de_minimis_ernte.ernte``.
-    """
-    state.requests += 1
-    state.reported = reported
-    if not rows:
-        return False
-    for record in rows:
-        reference = record.get("referenceNumber")
-        if not reference:
-            state.skipped_without_reference += 1
-            continue
-        digest = record_hash(record)
-        key = str(reference)
-        # A reference repeated within the run compares with the value just written.
-        previous = state.seen[key] if key in state.seen else stored.get(key)
-        state.seen[key] = digest
-        if previous is None:
-            state.inserted.append(key)
-        elif previous != digest:
-            state.updated.append(key)
-        else:
-            state.unchanged.append(key)
-    return not (reported is not None and len(state.seen) >= reported)
-
-
-def mark_vanished(state: Reconciliation, active_references: Iterable[str]) -> list[str]:
-    """References to mark as vanished — only after a complete run, never after a partial one."""
-    if not state.complete:
-        state.vanished = []
-        return []
-    state.vanished = sorted(r for r in active_references if r not in state.seen)
-    return state.vanished
-
-
-def inventory_state(
-    runs: Sequence[Mapping[str, Any]], active: int, vanished: int, *, legacy: bool = False
-) -> dict[str, Any]:
-    """What the inventory says about itself.
-
-    ``legacy=True`` reproduces ``bestandsstand``: it reports the last *ok* run
-    as current and ``vollstaendig=True`` even when a newer failed or partial
-    run already changed stored rows (FS-D02). The corrected form reports the
-    newest run and is complete only if that newest run is ``ok``.
-    """
-    ordered = sorted(runs, key=lambda r: str(r.get("started_at") or ""), reverse=True)
-    last_ok = next((r for r in ordered if r.get("status") == "ok"), None)
-    newest = ordered[0] if ordered else None
-    if legacy:
-        return {
-            "stand_am": last_ok.get("finished_at") if last_ok else None,
-            "inhaltshash": last_ok.get("content_hash") if last_ok else None,
-            "saetze": active,
-            "verschwunden": vanished,
-            "vollstaendig": bool(last_ok),
-        }
-    return {
-        "stand_am": newest.get("finished_at") if newest else None,
-        "inhaltshash": newest.get("content_hash") if newest else None,
-        "letzter_status": newest.get("status") if newest else None,
-        "letzter_vollstaendiger_lauf": last_ok.get("finished_at") if last_ok else None,
-        "saetze": active,
-        "verschwunden": vanished,
-        "vollstaendig": bool(newest and newest.get("status") == "ok"),
     }
