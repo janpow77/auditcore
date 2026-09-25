@@ -23,25 +23,76 @@ Die vorhandene Funktion `auditcore.reporting.get_number_format` wurde mit
 34 Characterization-Fällen aus Flowlib übernommen; Herkunft und MIT-Lizenz
 stehen unter `docs/provenance` und `LICENSES`.
 
-## Eigenständige Fachpakete
+## Pakete
 
-| Distribution / Import | Funktion | Pflichtabhängigkeiten |
-|---|---|---|
-| [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | Synthetische Felder und Zeilen, feste Seeds/Bezugsdaten, explizite Fehlerszenarien | Keine |
-| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | Vollständige synthetische Rechnungen, Positions-/Betragsdaten, historische Profile und JSON-Ausgabe | `auditcore_dummygenerator==0.1.1` |
-| [`auditcore_reporting`](packages/auditcore_reporting) | Charakterisierte Flowlib-Zahlenformate für Berichte | Keine |
+Alle Bibliotheken des Repositorys – Python-Pakete unter `packages/` und
+npm-Pakete unter `packages-js/`. Die Tabelle wird aus `pyproject.toml`,
+`package.json`, dem Abschnitt „Zweck“ der Paket-README und `provenance.json`
+erzeugt; jede Paket-README folgt der
+[README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
-Die Installation des Rechnungsgenerators benötigt weder Reporting noch die
-Plattformbibliothek. Alle Pakete werden aus eigenen `pyproject.toml` gebaut und
-haben eigene Tests, Anwendbarkeitskontexte und Herkunftsnachweise. Anwendungen
-bleiben getrennte Repositories. Synthetische Testrechnungen sind keine Zusage
-eines Systems zur verbindlichen Rechnungsstellung. PDF-Renderer gehören derzeit
-nicht zum Rechnungspaket.
+<!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
+26 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
-Die [öffentliche Preview v0.1.0](https://github.com/janpow77/auditcore/releases/tag/v0.1.0)
-enthält Wheels, Source-Distributionen und signierte Debian-Pakete.
-[Installation über Requirements oder APT](docs/deployment/package-feed.md) und
-[vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md).
+**Querschnitt**
+
+| Paket | Version | Zweck | Abhängigkeiten | Status |
+|---|---|---|---|---|
+| [`auditcore_common`](packages/auditcore_common) | 0.1.0 | Shared, behaviour-proven helpers of the auditcore domain packages (JSON, hashing, profiles, safe XML, HTML, numerics) | keine; Extras: `xml` | konsolidiert (Gleichheitsnachweis) |
+| [`auditcore_harvest`](packages/auditcore_harvest) | 0.1.1 | Shared harvest core: source contracts, paging/retry engine, checkpoints and adapter contract tests | keine | neu, gegen charakterisierte Verträge |
+
+**Fachbibliotheken**
+
+| Paket | Version | Zweck | Abhängigkeiten | Status |
+|---|---|---|---|---|
+| [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.4.1 | Framework-independent records of processing activities and DPIA calculation | keine; Extras: `excel`, `pdf` | charakterisiert |
+| [`auditcore_documents`](packages/auditcore_documents) | 0.3.0 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | keine; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
+| [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | 0.1.1 | Framework-independent synthetic field and row generation | keine; Extras: `parallel` | charakterisiert |
+| [`auditcore_entity_matching`](packages/auditcore_entity_matching) | 0.2.1 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | keine; Extras: `fuzzy` | charakterisiert |
+| [`auditcore_geo`](packages/auditcore_geo) | 0.2.0 | Characterized geo core: great-circle distances with explicit earth profiles, radius search, point in polygon with boundary, UTM, GeoPackage polygons, Douglas-Peucker and a Nominatim harvest adapter | keine; Extras: `geocoder` | charakterisiert |
+| [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | 0.2.1 | Characterized synthetic invoice profiles and explicit test scenarios | `auditcore_dummygenerator==0.1.1`; Extras: `pdf` | charakterisiert |
+| [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) | 0.1.0 | Synthetic German/Austrian invoice images with Donut ground truth, manifests and evaluation | `auditcore_invoicegenerator==0.2.1`; Extras: `render`, `train` | neu |
+| [`auditcore_kanban`](packages/auditcore_kanban) | 0.1.0 | Framework-free Kanban domain: boards, rank keys, transitions, WIP limits, rights, events and a REST contract | keine; Extras: `ui`, `fastapi` | neu, gegen charakterisierte Verträge |
+| [`auditcore_market_indicators`](packages/auditcore_market_indicators) | 0.1.0 | Technical market indicators (returns, SMA/EMA, RSI, ATR, ADX, MACD …) with explicit source-bound variant profiles | keine; Extras: `polars` | neu, gegen charakterisierte Verträge |
+| [`auditcore_price_analysis`](packages/auditcore_price_analysis) | 0.1.1 | Exact tariff calculation (district heating, water, tiers), tariff selection and comparison rules with versioned profiles | keine | charakterisiert |
+| [`auditcore_procurement`](packages/auditcore_procurement) | 0.2.2 | Procurement notice records (TED, HAD), import normalisation and versioned prechecks | `auditcore_common==0.1.0`; Extras: `html`, `sources` | charakterisiert |
+| [`auditcore_reporting`](packages/auditcore_reporting) | 0.2.0 | Characterized reporting format rules preserving Flowlib behavior | keine; Extras: `excel` | charakterisiert |
+| [`auditcore_risk`](packages/auditcore_risk) | 0.3.1 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement` | charakterisiert |
+| [`auditcore_sampling`](packages/auditcore_sampling) | 0.2.0 | Audit sampling sizes, selection and allocation with named method profiles | keine; Extras: `web` | charakterisiert |
+| [`auditcore_statistics`](packages/auditcore_statistics) | 0.3.1 | Descriptive audit statistics (Benford) with named method profiles | keine; Extras: `web` | charakterisiert |
+
+**Quellen-Adapter**
+
+| Paket | Version | Zweck | Abhängigkeiten | Status |
+|---|---|---|---|---|
+| [`auditcore_funding_sources`](packages/auditcore_funding_sources) | 0.1.2 | Beneficiary, state aid and de-minimis source parsers, identities and cumulation | `auditcore_harvest==0.1.1`; Extras: `xlsx` | charakterisiert |
+| [`auditcore_legal_sources`](packages/auditcore_legal_sources) | 0.1.1 | Framework-independent legal and audit publication source adapters (DIP, EUR-Lex) | `auditcore_harvest==0.1.1`; Extras: `feeds` | charakterisiert |
+| [`auditcore_price_sources`](packages/auditcore_price_sources) | 0.1.0 | Price and market data adapters (Bundesbank, Destatis GENESIS, EIA, Tankerkoenig, Overpass, EU Oil Bulletin) on auditcore_harvest | `auditcore_harvest==0.1.1` | neu, gegen charakterisierte Verträge |
+| [`auditcore_property_sources`](packages/auditcore_property_sources) | 0.1.0 | Property source profiles (Berlin/French rental portals, ZVG forced-auction notices) with harvest adapters, lifecycle and access catalog | keine; Extras: `sources` | charakterisiert |
+| [`auditcore_registry_sources`](packages/auditcore_registry_sources) | 0.2.0 | Register, sanctions and PEP source adapters, list parsers, screening profiles and a screening review API | `auditcore_harvest==0.1.1`, `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `xml`, `html`, `web`, `fastapi` | charakterisiert |
+
+**Oberfläche und Frontend-Logik (npm)**
+
+| Paket | Version | Zweck | Abhängigkeiten | Status |
+|---|---|---|---|---|
+| [`@flowaudit/bpmn-editor`](packages-js/bpmn-editor) | 0.1.0 | Eigener BPMN-2.0-Zeicheneditor auf Basis von diagram-js und bpmn-moddle (Clean-Room, MIT) | `bpmn-moddle@^10.3.1`, `diagram-js@^15.27.1`, `didi@^11.0.0`, `min-dash@^5.1.0`, `min-dom@^5.3.0`, `tiny-svg@^4.1.4` | neu |
+| [`@flowaudit/kanban-core`](packages-js/kanban-core) | 0.1.0 | Framework-freie Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte) – gleiche Regeln wie auditcore_kanban | keine | neu |
+| [`@flowaudit/ui`](packages-js/ui) | 0.1.0 | Gemeinsame FlowAudit-Oberflächenkomponenten: Vue 3, Web Components, Theming und i18n | `@flowaudit/kanban-core@0.1.0`, `vue@^3.5.0` (peer) | neu |
+| [`@flowaudit/ui-react`](packages-js/ui-react) | 0.1.0 | React-18-Hüllen für die Web Components von @flowaudit/ui | `@flowaudit/kanban-core@^0.1.0` (peer), `@flowaudit/ui@^0.1.0` (peer), `react@^18.3.0` (peer), `react-dom@^18.3.0` (peer), `vue@^3.5.0` (peer) | neu |
+<!-- paketkatalog:end -->
+
+Kein Fachpaket benötigt die Plattformbibliothek zur Laufzeit. Alle Pakete
+werden aus eigenen `pyproject.toml` bzw. `package.json` gebaut und haben eigene
+Tests, Anwendbarkeitskontexte und Herkunftsnachweise. Anwendungen bleiben
+getrennte Repositories. Synthetische Testrechnungen sind keine Zusage eines
+Systems zur verbindlichen Rechnungsstellung.
+
+Veröffentlichte Previews (zuletzt
+[v0.3.2](https://github.com/janpow77/auditcore/releases/tag/v0.3.2)) enthalten
+Wheels, Source-Distributionen und signierte Debian-Pakete; der Paketindex
+`https://janpow77.github.io/auditcore/simple/` verlinkt alle Versionen mit
+SHA-256. [Installation über Paketindex, Requirements oder APT](docs/deployment/package-feed.md)
+und [vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md).
 
 [Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md).
 Der technische Frameworknachweis ist im
