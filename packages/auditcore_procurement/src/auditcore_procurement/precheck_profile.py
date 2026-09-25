@@ -8,13 +8,15 @@ year-bound EU thresholds of schema 2 with their official sources.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date
 from importlib import resources
 from typing import Any
+
+from auditcore_common.hashing import canonical_sha256
+from auditcore_common.profiles import load_packaged_profile
 
 AUTHORITY_TYPES = ("central", "sub_central")
 #: Decoded profile or ruleset JSON as read from a file or passed by a consumer.
@@ -128,7 +130,7 @@ def profile_from_dict(data: ProfileData) -> PrecheckProfile:
         if not 0 <= deviation["warning_above_percent"] <= deviation["fail_above_percent"]:
             raise ProfileError("Ungültige Abweichungsschwellen.")
         periods, eu_tier, eu_categories, national, national_status = _schema2(data, tiers)
-        canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        fingerprint = canonical_sha256(data)
         return PrecheckProfile(
             id=data["id"],
             version=data["version"],
@@ -144,7 +146,7 @@ def profile_from_dict(data: ProfileData) -> PrecheckProfile:
             fail_above_percent=float(deviation["fail_above_percent"]),
             fail_reference=deviation["fail_reference"],
             source=dict(data["source"]),
-            fingerprint=hashlib.sha256(canonical.encode()).hexdigest(),
+            fingerprint=fingerprint,
             eu_periods=periods,
             eu_tier=eu_tier,
             eu_categories=eu_categories,
@@ -282,14 +284,15 @@ def profile_from_ruleset(
 
 def load_profile(profile_id: str, version: str) -> PrecheckProfile:
     """Load an explicitly named packaged profile version."""
-    name = f"{profile_id}-{version}.json"
-    entry = resources.files("auditcore_procurement.profiles").joinpath(name)
-    if "/" in name or "\\" in name or not entry.is_file():
-        raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
-    profile = profile_from_dict(json.loads(entry.read_text(encoding="utf-8")))
-    if (profile.id, profile.version) != (profile_id, version):
-        raise ProfileError("Profildatei und Profilkennung stimmen nicht überein.")
-    return profile
+    return load_packaged_profile(
+        "auditcore_procurement.profiles",
+        profile_id,
+        version,
+        parse=profile_from_dict,
+        identity=lambda profile: (profile.id, profile.version),
+        error=ProfileError,
+        invalid_name="missing",
+    )
 
 
 def eu_period(profile: PrecheckProfile, on: date) -> ThresholdPeriod:
