@@ -138,6 +138,24 @@ PACKAGES = {
 }
 
 
+#: Checks every release evidence must contain as executed PASS (plus per-package checks).
+REQUIRED_CHECKS = frozenset(
+    {
+        "installed-platform",
+        # Release blocker: the code-quality ratchet must have passed for these packages.
+        "code-quality-gate",
+        "requirements-install",
+        "pip-check",
+        "isolated-origins",
+        "pip-remove",
+        "pip-removed-imports",
+        "apt-lifecycle",
+        "sign-apt-1",
+        "sign-apt-2",
+    }
+)
+
+
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -197,17 +215,7 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
     if {p["name"] for p in packages} != PACKAGES or len(packages) != len(PACKAGES):
         raise ValueError("Exactly the reviewed release distributions are required")
     checks = report["checks"]
-    required = {
-        "installed-platform",
-        "requirements-install",
-        "pip-check",
-        "isolated-origins",
-        "pip-remove",
-        "pip-removed-imports",
-        "apt-lifecycle",
-        "sign-apt-1",
-        "sign-apt-2",
-    }
+    required = set(REQUIRED_CHECKS)
     for package in packages:
         name = package["name"]
         distribution = name.replace("_", "-")
