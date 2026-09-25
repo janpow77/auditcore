@@ -16,10 +16,12 @@ from typing import Any
 from .engine import Evaluation, evaluate
 from .errors import DependencyError, InputError, ProfileError
 from .profiles import RiskProfile
+from .summary import red_flag_entry
 from .values import is_missing, strict_amount
 
 
 def _pandas() -> Any:
+    """The pandas module (extra ``pandas``); typed ``Any`` because it is imported lazily."""
     try:
         import pandas
     except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
@@ -103,16 +105,7 @@ def red_flag_summary(frame: Any, profile: RiskProfile) -> list[dict[str, Any]]:
         hits = sum(flags)
         chosen = [a for a, f in zip(amounts, flags, strict=True) if f and a is not None]
         volume = math.fsum(chosen) if all(math.isfinite(a) for a in chosen) else sum(chosen)
-        out.append(
-            {
-                "code": rule.code,
-                "bezeichnung": rule.label,
-                "treffer": hits,
-                "basis": n,
-                "anteil_prozent": round(hits / n * 100, 2) if n else 0.0,
-                "volumen": round(float(volume), 2),
-            }
-        )
+        out.append(red_flag_entry(rule, hits, n, float(volume)))
     return out
 
 
