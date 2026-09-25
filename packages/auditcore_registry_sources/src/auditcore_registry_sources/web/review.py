@@ -10,10 +10,11 @@ proposed the decision.
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TypedDict
 
+from ._types import ActorView, DecisionView, ReviewView, SecondReviewView
 from .contract import (
     FINAL_STATUSES,
     STATUS_OPEN,
@@ -44,11 +45,11 @@ class HitReview:
 
     status: str = STATUS_OPEN
     sequence: int = 0
-    decision: dict[str, Any] | None = None
-    second_review: dict[str, Any] | None = None
+    decision: DecisionView | None = None
+    second_review: SecondReviewView | None = None
     events: int = 0
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> ReviewView:
         """JSON view."""
         return {
             "status": self.status,
@@ -72,13 +73,44 @@ class ReviewState:
         return self.hits.get(hit_id) or HitReview()
 
 
-def _decision_view(event: ReviewEvent) -> dict[str, Any]:
+class DecisionData(TypedDict):
+    """Event data of ``decision_recorded``."""
+
+    outcome: str
+    reason: str
+    four_eyes: bool
+    four_eyes_source: str | None
+
+
+class SecondReviewData(TypedDict):
+    """Event data of ``second_review_recorded``."""
+
+    approve: bool
+    reason: str
+    outcome: str
+
+
+def _text(event: ReviewEvent, key: str) -> str:
+    value = event.data.get(key)
+    return value if isinstance(value, str) else ""
+
+
+def _flag(event: ReviewEvent, key: str) -> bool:
+    return event.data.get(key) is True
+
+
+def _actor(event: ReviewEvent) -> ActorView:
+    return {"id": event.actor["id"], "display_name": event.actor["display_name"]}
+
+
+def _decision_view(event: ReviewEvent) -> DecisionView:
+    source = event.data.get("four_eyes_source")
     return {
-        "outcome": event.data["outcome"],
-        "reason": event.data["reason"],
-        "four_eyes": event.data["four_eyes"],
-        "four_eyes_source": event.data.get("four_eyes_source"),
-        "actor": dict(event.actor),
+        "outcome": _text(event, "outcome"),
+        "reason": _text(event, "reason"),
+        "four_eyes": _flag(event, "four_eyes"),
+        "four_eyes_source": source if isinstance(source, str) else None,
+        "actor": _actor(event),
         "at": event.at,
         "sequence": event.sequence,
     }
@@ -90,17 +122,18 @@ def _apply(state: HitReview, event: ReviewEvent) -> None:
     if event.type == EVENT_DECISION:
         state.decision = _decision_view(event)
         state.second_review = None
-        state.status = STATUS_PENDING if event.data["four_eyes"] else str(event.data["outcome"])
+        four_eyes = _flag(event, "four_eyes")
+        state.status = STATUS_PENDING if four_eyes else _text(event, "outcome")
     elif event.type == EVENT_SECOND_REVIEW:
+        approved = _flag(event, "approve")
         state.second_review = {
-            "approve": event.data["approve"],
-            "reason": event.data["reason"],
-            "actor": dict(event.actor),
+            "approve": approved,
+            "reason": _text(event, "reason"),
+            "actor": _actor(event),
             "at": event.at,
             "sequence": event.sequence,
         }
-        approved = bool(event.data["approve"])
-        state.status = str(event.data["outcome"]) if approved else STATUS_OPEN
+        state.status = _text(event, "outcome") if approved else STATUS_OPEN
 
 
 def fold(events: Iterable[ReviewEvent]) -> ReviewState:
@@ -127,7 +160,7 @@ def _check_expected(hit: HitReview, expected: int | None) -> None:
 
 def decision_data(
     hit: HitReview, request: DecisionRequest, *, four_eyes_outcomes: Sequence[str]
-) -> dict[str, Any]:
+) -> DecisionData:
     """Check a decision against the current state; return the event data."""
     _check_expected(hit, request.expected_sequence)
     if hit.status in FINAL_STATUSES:
@@ -155,15 +188,14 @@ def decision_data(
 
 def second_review_data(
     hit: HitReview, request: SecondReviewRequest, actor: Actor
-) -> dict[str, Any]:
+) -> SecondReviewData:
     """Check a second review against the pending decision; return the event data."""
     _check_expected(hit, request.expected_sequence)
     if hit.status != STATUS_PENDING or hit.decision is None:
         raise conflict(
             "no_pending_decision", "Für diesen Treffer wartet keine Entscheidung auf Zweitprüfung."
         )
-    proposer: Mapping[str, Any] = hit.decision["actor"]
-    if proposer.get("id") == actor.id:
+    if hit.decision["actor"]["id"] == actor.id:
         raise conflict(
             "same_person",
             "Die Zweitprüfung muss eine andere Person vornehmen als die, die entschieden hat.",

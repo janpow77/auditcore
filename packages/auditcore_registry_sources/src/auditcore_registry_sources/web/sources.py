@@ -12,9 +12,10 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Any, Protocol
+from typing import Protocol
 
 from ..model import ListSnapshot, SanctionsList
+from ._types import FreshnessView, SourceView
 from .contract import KINDS
 
 FRESH_CURRENT = "current"
@@ -99,12 +100,12 @@ def parse_instant(value: str | None) -> datetime | None:
     return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
 
 
-def freshness(as_of: str | None, now: datetime, stale_after_days: float | None) -> dict[str, Any]:
+def freshness(as_of: str | None, now: datetime, stale_after_days: float | None) -> FreshnessView:
     """Age of a list state and its judgement against the configured maximum age."""
     instant = parse_instant(as_of)
+    age: float | None = None
     if instant is None:
         status = FRESH_UNKNOWN
-        age = None
     else:
         age = round((now - instant).total_seconds() / 86400, 1)
         if stale_after_days is None:
@@ -119,7 +120,7 @@ def freshness(as_of: str | None, now: datetime, stale_after_days: float | None) 
     }
 
 
-def state_view(state: SourceState, now: datetime, stale_after_days: float | None) -> dict[str, Any]:
+def state_view(state: SourceState, now: datetime, stale_after_days: float | None) -> SourceView:
     """JSON view of a list state including licence and freshness."""
     return {
         "list": state.list.to_dict(),

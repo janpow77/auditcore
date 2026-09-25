@@ -13,7 +13,6 @@ from __future__ import annotations
 import inspect
 import json
 from collections.abc import Awaitable, Callable
-from typing import Any
 
 from .contract import Actor, ReviewError
 from .service import ScreeningReviewService
@@ -45,7 +44,7 @@ async def _actor(request: Request, identify: IdentityResolver) -> Actor:
     return actor
 
 
-async def read_json(request: Request) -> Any:
+async def read_json(request: Request) -> object:
     """JSON body with content-type and size checks."""
     content_type = request.headers.get("content-type", "").split(";")[0].strip().lower()
     if content_type != "application/json":
@@ -62,7 +61,7 @@ async def read_json(request: Request) -> Any:
         raise ReviewError(400, "invalid_json", "Die Anfrage ist kein gültiges JSON.") from exc
 
 
-Handler = Callable[[Request, Actor], Awaitable[Any]]
+Handler = Callable[[Request, Actor], Awaitable[object]]
 
 
 def _endpoint(
@@ -82,34 +81,34 @@ def _endpoint(
 def create_routes(service: ScreeningReviewService, identify: IdentityResolver) -> list[Route]:
     """Routes of contract ``auditcore_registry_sources.screening_review/1``."""
 
-    async def settings(_request: Request, _actor: Actor) -> Any:
+    async def settings(_request: Request, _actor: Actor) -> object:
         return await run_in_threadpool(service.settings)
 
-    async def sources(_request: Request, _actor: Actor) -> Any:
+    async def sources(_request: Request, _actor: Actor) -> object:
         return await run_in_threadpool(service.sources)
 
-    async def runs(_request: Request, _actor: Actor) -> Any:
+    async def runs(_request: Request, _actor: Actor) -> object:
         return await run_in_threadpool(service.list_runs)
 
-    async def create_run(request: Request, actor: Actor) -> Any:
+    async def create_run(request: Request, actor: Actor) -> object:
         body = await read_json(request)
         return await run_in_threadpool(service.create_run, body, actor)
 
-    async def get_run(request: Request, _actor: Actor) -> Any:
+    async def get_run(request: Request, _actor: Actor) -> object:
         query = dict(request.query_params)
         return await run_in_threadpool(service.get_run, request.path_params["run_id"], query)
 
-    async def log(request: Request, _actor: Actor) -> Any:
+    async def log(request: Request, _actor: Actor) -> object:
         return await run_in_threadpool(service.log, request.path_params["run_id"])
 
-    async def decide(request: Request, actor: Actor) -> Any:
+    async def decide(request: Request, actor: Actor) -> object:
         body = await read_json(request)
         params = request.path_params
         return await run_in_threadpool(
             service.decide, params["run_id"], params["hit_id"], body, actor
         )
 
-    async def second_review(request: Request, actor: Actor) -> Any:
+    async def second_review(request: Request, actor: Actor) -> object:
         body = await read_json(request)
         params = request.path_params
         return await run_in_threadpool(

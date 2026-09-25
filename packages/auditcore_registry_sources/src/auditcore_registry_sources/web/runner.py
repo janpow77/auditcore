@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 from collections.abc import Sequence
-from typing import Any
+from typing import TypedDict
 
 from auditcore_entity_matching import Profile as NormalizationProfile
 from auditcore_entity_matching import load_profile as load_normalization
@@ -20,7 +20,8 @@ from ..bulk_screening import BulkHit, pep_bulk_screen
 from ..errors import ProfileError, QueryError
 from ..model import ListSnapshot
 from ..profiles import RegistryProfile, available_profiles, load_profile, recommended_profile
-from ..screening import NOT_SEARCHED_NOTE, ScreeningHit, ScreeningSettings, screen
+from ..screening import NOT_SEARCHED_NOTE, ListFinding, ScreeningHit, ScreeningSettings, screen
+from ._types import FindingView, HitView, Scale, SubjectView
 from .breakdown import entry_view, pep_breakdown, sanctions_breakdown
 from .contract import KIND_PEP, KIND_SANCTIONS, RunRequest, Subject, invalid
 
@@ -50,10 +51,24 @@ def _recommended(kind: str) -> tuple[str, str] | None:
     return profile.id, profile.version
 
 
-def profile_views() -> list[dict[str, Any]]:
+class ProfileView(TypedDict):
+    """A screening profile as offered to the client."""
+
+    id: str
+    version: str
+    fingerprint: str
+    status: str
+    kind: str
+    legal_status: str
+    default_min_score: float
+    scale: Scale
+    recommended: bool
+
+
+def profile_views() -> list[ProfileView]:
     """Screening profiles usable by the review API, with the recommendation flag."""
     recommended = {_recommended(kind) for kind in PURPOSES}
-    views = []
+    views: list[ProfileView] = []
     for profile_id, version in available_profiles():
         profile = load_profile(profile_id, version)
         kind = ALGORITHMS.get(str(profile.settings.get("algorithm")))
@@ -61,7 +76,10 @@ def profile_views() -> list[dict[str, Any]]:
             continue
         views.append(
             {
-                **profile.reference,
+                "id": profile.id,
+                "version": profile.version,
+                "fingerprint": profile.fingerprint,
+                "status": profile.status,
                 "kind": kind,
                 "legal_status": profile.legal_status,
                 "default_min_score": float(profile.setting("default_min_score")),
@@ -87,7 +105,7 @@ def resolve_profile(request: RunRequest) -> RegistryProfile:
     return profile
 
 
-def _finding(snapshot: ListSnapshot, searched: bool, hit_count: int) -> dict[str, Any]:
+def _finding(snapshot: ListSnapshot, searched: bool, hit_count: int) -> FindingView:
     return {
         "list_key": snapshot.list.key,
         "list_name": snapshot.list.name,
@@ -101,7 +119,21 @@ def _finding(snapshot: ListSnapshot, searched: bool, hit_count: int) -> dict[str
     }
 
 
-def _status(hit_count: int, findings: Sequence[dict[str, Any]]) -> str:
+def _finding_view(finding: ListFinding) -> FindingView:
+    return {
+        "list_key": finding.list_key,
+        "list_name": finding.list_name,
+        "source_key": finding.source_key,
+        "searched": finding.searched,
+        "entry_count": finding.entry_count,
+        "as_of": finding.as_of,
+        "retrieved_at": finding.retrieved_at,
+        "hit_count": finding.hit_count,
+        "note": finding.note,
+    }
+
+
+def _status(hit_count: int, findings: Sequence[FindingView]) -> str:
     searched = [f for f in findings if f["searched"]]
     if hit_count:
         return "HITS"
@@ -110,17 +142,13 @@ def _status(hit_count: int, findings: Sequence[dict[str, Any]]) -> str:
     return "INCOMPLETE" if len(searched) < len(findings) else "NO_HITS"
 
 
-def _subject_view(subject: Subject, **values: Any) -> dict[str, Any]:
-    return {"subject_id": subject.subject_id, "input": subject.to_dict(), **values}
-
-
 def _sanctions_hit(
     hit: ScreeningHit,
     subject: Subject,
     settings: ScreeningSettings,
     normalized_query: str,
     min_score: float,
-) -> dict[str, Any]:
+) -> HitView:
     return {
         "hit_id": hit_id(subject.subject_id, hit.list_key, hit.entry.entry_id),
         "subject_id": subject.subject_id,
@@ -149,7 +177,7 @@ def _sanctions_subject(
     profile: RegistryProfile,
     settings: ScreeningSettings,
     request: RunRequest,
-) -> dict[str, Any]:
+) -> SubjectView:
     try:
         result = screen(
             subject.name,
@@ -167,18 +195,19 @@ def _sanctions_subject(
         _sanctions_hit(hit, subject, settings, result.normalized_query, result.min_score)
         for hit in result.hits
     ]
-    return _subject_view(
-        subject,
-        status=result.status,
-        normalized_query=result.normalized_query,
-        min_score=result.min_score,
-        findings=[f.to_dict() for f in result.findings],
-        hits=hits,
-        total_hits=result.total_hits,
-        truncated=result.truncated,
-        notice=result.notice,
-        limitations=list(result.limitations),
-    )
+    return {
+        "subject_id": subject.subject_id,
+        "input": subject.to_dict(),
+        "status": result.status,
+        "normalized_query": result.normalized_query,
+        "min_score": result.min_score,
+        "findings": [_finding_view(f) for f in result.findings],
+        "hits": hits,
+        "total_hits": result.total_hits,
+        "truncated": result.truncated,
+        "notice": result.notice,
+        "limitations": list(result.limitations),
+    }
 
 
 def _pep_threshold(request: RunRequest, profile: RegistryProfile) -> float:
@@ -197,7 +226,7 @@ def _pep_hit(
     profile: RegistryProfile,
     normalization: NormalizationProfile,
     threshold: float,
-) -> dict[str, Any]:
+) -> HitView:
     return {
         "hit_id": hit_id(subject.subject_id, snapshot.list.key, hit.entry.entry_id),
         "subject_id": subject.subject_id,
@@ -230,12 +259,12 @@ def _pep_subject(
     snapshots: Sequence[ListSnapshot],
     profile: RegistryProfile,
     request: RunRequest,
-) -> dict[str, Any]:
+) -> SubjectView:
     ref = profile.setting("normalization")
     normalization = load_normalization(ref["id"], ref["version"])
     threshold = _pep_threshold(request, profile)
-    findings: list[dict[str, Any]] = []
-    hits: list[dict[str, Any]] = []
+    findings: list[FindingView] = []
+    hits: list[HitView] = []
     for snapshot in snapshots:
         if not snapshot.entries:
             findings.append(_finding(snapshot, False, 0))
@@ -256,23 +285,24 @@ def _pep_subject(
     hits.sort(key=lambda h: h["score"], reverse=True)
     status = _status(len(hits), findings)
     limitations = [NO_HIT_LIMITATION] if status in ("NO_HITS", "INCOMPLETE") else []
-    return _subject_view(
-        subject,
-        status=status,
-        normalized_query=normalize(subject.name, normalization),
-        min_score=threshold,
-        findings=findings,
-        hits=hits[: request.limit],
-        total_hits=len(hits),
-        truncated=len(hits) > request.limit,
-        notice=PEP_NOTICE,
-        limitations=limitations,
-    )
+    return {
+        "subject_id": subject.subject_id,
+        "input": subject.to_dict(),
+        "status": status,
+        "normalized_query": normalize(subject.name, normalization),
+        "min_score": threshold,
+        "findings": findings,
+        "hits": hits[: request.limit],
+        "total_hits": len(hits),
+        "truncated": len(hits) > request.limit,
+        "notice": PEP_NOTICE,
+        "limitations": limitations,
+    }
 
 
 def execute(
     request: RunRequest, profile: RegistryProfile, snapshots: Sequence[ListSnapshot]
-) -> list[dict[str, Any]]:
+) -> list[SubjectView]:
     """Screen every subject of the request; one view per subject."""
     if request.kind == KIND_PEP:
         return [_pep_subject(s, snapshots, profile, request) for s in request.subjects]

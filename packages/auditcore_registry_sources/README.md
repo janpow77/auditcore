@@ -79,7 +79,8 @@ einen Identitäts-Resolver. Vertrag und Pflichten des Consumers:
 from auditcore_registry_sources.web import InMemoryReviewStore, ScreeningReviewService
 from auditcore_registry_sources.web.http import create_routes  # Extra "web"
 
-service = ScreeningReviewService(provider, store, four_eyes_outcomes=["confirmed"],
-                                 stale_after_days=7)
+service = ScreeningReviewService(
+    provider, store, four_eyes_outcomes=["confirmed"], stale_after_days=7
+)
 app.router.routes.append(Mount("/api/screening", routes=create_routes(service, identify)))
 ```

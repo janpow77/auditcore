@@ -13,8 +13,9 @@ from __future__ import annotations
 import uuid
 from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
-from typing import Any
+from typing import TypedDict
 
+from ._types import HitView, RunSummary, RunView, SourceView
 from .contract import (
     CONTRACT,
     OUTCOMES,
@@ -36,10 +37,34 @@ from .review import (
     fold,
     second_review_data,
 )
-from .runner import execute, profile_views, resolve_profile
+from .runner import ProfileView, execute, profile_views, resolve_profile
 from .sources import SnapshotProvider, SourceState, state_view
 from .store import ReviewEvent, ReviewStore, SequenceConflict, StoredRun
-from .views import HitFilter, hit_view, log_view, run_view, summary
+from .views import HitFilter, LogView, hit_view, log_view, run_view, summary
+
+
+class SettingsView(TypedDict):
+    """Profiles and review rules."""
+
+    contract: str
+    profiles: list[ProfileView]
+    four_eyes_outcomes: list[str]
+    stale_after_days: float | None
+
+
+class SourcesView(TypedDict):
+    """Current state of every list."""
+
+    contract: str
+    checked_at: str
+    sources: list[SourceView]
+
+
+class RunsView(TypedDict):
+    """Summaries of the visible runs."""
+
+    contract: str
+    runs: list[RunSummary]
 
 
 def _utc_now() -> datetime:
@@ -74,7 +99,7 @@ class ScreeningReviewService:
 
     # -- reading -------------------------------------------------------------
 
-    def settings(self) -> dict[str, Any]:
+    def settings(self) -> SettingsView:
         """Profiles and review rules the client needs to render forms."""
         return {
             "contract": CONTRACT,
@@ -83,7 +108,7 @@ class ScreeningReviewService:
             "stale_after_days": self.stale_after_days,
         }
 
-    def sources(self) -> dict[str, Any]:
+    def sources(self) -> SourcesView:
         """Current state (Quellenstand) of every list."""
         now = self.clock()
         return {
@@ -92,7 +117,7 @@ class ScreeningReviewService:
             "sources": [state_view(s, now, self.stale_after_days) for s in self.provider.states()],
         }
 
-    def list_runs(self) -> dict[str, Any]:
+    def list_runs(self) -> RunsView:
         """Summaries of the visible runs, newest first."""
         runs = [summary(run, fold(self.store.events(run.run_id))) for run in self.store.list_runs()]
         return {"contract": CONTRACT, "runs": runs}
@@ -103,13 +128,13 @@ class ScreeningReviewService:
             raise not_found("Prüflauf nicht gefunden.")
         return run
 
-    def get_run(self, run_id: str, query: Mapping[str, str] | None = None) -> dict[str, Any]:
+    def get_run(self, run_id: str, query: Mapping[str, str] | None = None) -> RunView:
         """A run with its hits, filtered by ``query``."""
         run = self._run(run_id)
         state = fold(self.store.events(run_id))
         return run_view(run, state, HitFilter.from_query(query or {}))
 
-    def log(self, run_id: str) -> dict[str, Any]:
+    def log(self, run_id: str) -> LogView:
         """The review log of a run."""
         run = self._run(run_id)
         return log_view(run, self.store.events(run_id))
@@ -129,7 +154,7 @@ class ScreeningReviewService:
             )
         return [states[key] for key in request.lists]
 
-    def create_run(self, body: Any, actor: Actor) -> dict[str, Any]:
+    def create_run(self, body: object, actor: Actor) -> RunView:
         """Screen the subjects and store the run with its creation event."""
         request = parse_run_request(body)
         profile = resolve_profile(request)
@@ -168,7 +193,13 @@ class ScreeningReviewService:
         return self.get_run(run.run_id)
 
     def _append(
-        self, run: StoredRun, hit_id: str, kind: str, data: dict[str, Any], actor: Actor, last: int
+        self,
+        run: StoredRun,
+        hit_id: str,
+        kind: str,
+        data: Mapping[str, object],
+        actor: Actor,
+        last: int,
     ) -> None:
         event = ReviewEvent(
             run_id=run.run_id,
@@ -196,7 +227,7 @@ class ScreeningReviewService:
             raise not_found("Treffer nicht gefunden.") from exc
         return run, state
 
-    def decide(self, run_id: str, hit_id: str, body: Any, actor: Actor) -> dict[str, Any]:
+    def decide(self, run_id: str, hit_id: str, body: object, actor: Actor) -> HitView:
         """Confirm, dismiss or defer a hit, with mandatory reason."""
         request = parse_decision(body)
         run, state = self._hit(run_id, hit_id)
@@ -204,7 +235,7 @@ class ScreeningReviewService:
         self._append(run, hit_id, EVENT_DECISION, data, actor, state.last_sequence)
         return hit_view(run, fold(self.store.events(run_id)), hit_id)
 
-    def second_review(self, run_id: str, hit_id: str, body: Any, actor: Actor) -> dict[str, Any]:
+    def second_review(self, run_id: str, hit_id: str, body: object, actor: Actor) -> HitView:
         """Approve or reject a pending decision as a second, different person."""
         request = parse_second_review(body)
         run, state = self._hit(run_id, hit_id)

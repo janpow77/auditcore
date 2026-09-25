@@ -10,15 +10,13 @@ reviewer sees that the explanation is incomplete instead of a wrong one.
 
 from __future__ import annotations
 
-from typing import Any
-
 from auditcore_entity_matching import Profile as NormalizationProfile
 from auditcore_entity_matching import normalize
 
 from ..bulk_screening import BulkHit, pep_score
-from ..model import LIST_FIELDS
 from ..profiles import RegistryProfile
-from ..screening import ScreeningHit, ScreeningSettings
+from ..screening import EntryLike, ScreeningHit, ScreeningSettings
+from ._types import Breakdown, BreakdownStep, EntryView, ScoreClass
 
 CLASS_LABELS = {
     "exact": "exakt",
@@ -30,29 +28,57 @@ CLASS_LABELS = {
 MAX_ALIASES = 50
 
 
-def entry_view(entry: Any) -> dict[str, Any]:
+def _field(entry: EntryLike, name: str) -> str:
+    value = getattr(entry, name, "")
+    return value if isinstance(value, str) else ""
+
+
+def entry_view(entry: EntryLike) -> EntryView:
     """All list fields of an entry, as the list spells them."""
-    view: dict[str, Any] = {
+    return {
         "entry_id": entry.entry_id,
         "schema": entry.schema,
         "name": entry.name,
         "aliases": list(entry.aliases)[:MAX_ALIASES],
         "aliases_total": len(entry.aliases),
+        "birth_date": entry.birth_date,
+        "countries": entry.countries,
+        "addresses": _field(entry, "addresses"),
+        "identifiers": _field(entry, "identifiers"),
+        "sanctions": _field(entry, "sanctions"),
+        "program_ids": _field(entry, "program_ids"),
+        "first_seen": _field(entry, "first_seen"),
+        "last_seen": _field(entry, "last_seen"),
+        "dataset": _field(entry, "dataset"),
     }
-    for name in LIST_FIELDS:
-        view[name] = getattr(entry, name, "") or ""
-    return view
 
 
-def _step(step: str, label: str, **values: Any) -> dict[str, Any]:
-    return {"step": step, "label": label, **values}
+def _step(
+    step: str,
+    label: str,
+    *,
+    value: str | None = None,
+    detail: str | None = None,
+    points: float | None = None,
+    kind: str | None = None,
+) -> BreakdownStep:
+    item: BreakdownStep = {"step": step, "label": label}
+    if value is not None:
+        item["value"] = value
+    if detail is not None:
+        item["detail"] = detail
+    if points is not None:
+        item["points"] = points
+    if kind is not None:
+        item["kind"] = kind
+    return item
 
 
 def _norm_ref(profile: NormalizationProfile) -> str:
     return f"{profile.id} {profile.version}"
 
 
-def _classes(normalization: NormalizationProfile) -> list[dict[str, Any]]:
+def _classes(normalization: NormalizationProfile) -> list[ScoreClass]:
     rules = normalization.classification
     if rules is None:
         return []
@@ -65,7 +91,7 @@ def _classes(normalization: NormalizationProfile) -> list[dict[str, Any]]:
 
 def sanctions_breakdown(
     hit: ScreeningHit, settings: ScreeningSettings, *, normalized_query: str, min_score: float
-) -> dict[str, Any]:
+) -> Breakdown:
     """Steps from the name comparison to the adjusted score (scale 0–100)."""
     field_label = "Hauptname" if hit.matched_field == "name" else "Alias"
     steps = [
@@ -118,7 +144,7 @@ def sanctions_breakdown(
 
 def _token_steps(
     query_form: str, form: str, profile: RegistryProfile, country: str | None, countries: str
-) -> tuple[list[dict[str, Any]], float]:
+) -> tuple[list[BreakdownStep], float]:
     query_tokens, tokens = set(query_form.split()), set(form.split())
     common = query_tokens & tokens
     if not common:
@@ -158,7 +184,7 @@ def pep_breakdown(
     query: str,
     country: str | None,
     min_score: float,
-) -> dict[str, Any]:
+) -> Breakdown:
     """Steps of the token matching of the PEP variant (scale 0–1)."""
     query_form = normalize(query, normalization)
     form = normalize(hit.matched_name, normalization)

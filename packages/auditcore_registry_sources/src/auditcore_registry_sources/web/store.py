@@ -14,7 +14,9 @@ from __future__ import annotations
 import threading
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import Protocol, TypedDict
+
+from ._types import ActorView, RunRequestRecord, RunResultRecord
 
 
 class SequenceConflict(Exception):
@@ -26,6 +28,18 @@ class SequenceConflict(Exception):
         self.actual = actual
 
 
+class EventView(TypedDict):
+    """JSON view of a log entry."""
+
+    run_id: str
+    sequence: int
+    type: str
+    at: str
+    actor: ActorView
+    hit_id: str | None
+    data: dict[str, object]
+
+
 @dataclass(frozen=True)
 class ReviewEvent:
     """One entry of the review log (Protokoll)."""
@@ -34,18 +48,18 @@ class ReviewEvent:
     sequence: int
     type: str
     at: str
-    actor: Mapping[str, str]
+    actor: ActorView
     hit_id: str | None = None
-    data: Mapping[str, Any] = field(default_factory=dict)
+    data: Mapping[str, object] = field(default_factory=dict)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> EventView:
         """JSON view."""
         return {
             "run_id": self.run_id,
             "sequence": self.sequence,
             "type": self.type,
             "at": self.at,
-            "actor": dict(self.actor),
+            "actor": {"id": self.actor["id"], "display_name": self.actor["display_name"]},
             "hit_id": self.hit_id,
             "data": dict(self.data),
         }
@@ -57,10 +71,10 @@ class StoredRun:
 
     run_id: str
     created_at: str
-    created_by: Mapping[str, str]
+    created_by: ActorView
     kind: str
-    request: Mapping[str, Any]
-    result: Mapping[str, Any]
+    request: RunRequestRecord
+    result: RunResultRecord
 
 
 class ReviewStore(Protocol):
