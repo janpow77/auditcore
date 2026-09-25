@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_price_analysis",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "contract": "auditcore_price_analysis.contract/1",
   "classification": "EXTRACTED_AND_CORRECTED_FROM_CHARACTERIZED_SOURCE",
   "sources": [

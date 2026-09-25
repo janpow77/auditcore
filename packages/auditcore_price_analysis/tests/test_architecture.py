@@ -21,6 +21,7 @@ ALLOWED = {
     "json",
     "re",
     "typing",
+    "auditcore_common",
     "auditcore_price_analysis",
 }
 FORBIDDEN_CALLS = {"open", "eval", "exec", "__import__", "compile", "print"}

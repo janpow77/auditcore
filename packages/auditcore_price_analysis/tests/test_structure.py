@@ -29,6 +29,8 @@ def test_profile_rule_objects_are_reexported_unchanged() -> None:
         (3, Decimal(3)),
         (0.1, Decimal("0.1")),
         (" 2.5 ", Decimal("2.5")),
+        ("1,5", Decimal("1.5")),
+        ("1.234,56 €", Decimal("1234.56")),
     ],
 )
 def test_parse_decimal_types(value: object, expected: Decimal) -> None:
@@ -40,7 +42,8 @@ def test_parse_decimal_types(value: object, expected: Decimal) -> None:
     [
         (None, "missing_value"),
         (True, "invalid_number"),
-        ("1,5", "invalid_number"),
+        ("1,234", "ambiguous_number"),
+        ("1,2,3", "invalid_number"),
         ("1e3", "invalid_number"),
         ([1], "invalid_number"),
         (float("inf"), "invalid_number"),

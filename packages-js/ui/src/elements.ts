@@ -1,6 +1,7 @@
 import './theme/tokens.css'
 import './kanban/kanban.css'
 import './screening/screening.css'
+import './dataprotection/dataprotection.css'
 import './geo/geo.css'
 /**
  * Einstieg für Web Components: `import { defineFlowauditElements } from '@flowaudit/ui/elements'`

@@ -32,7 +32,7 @@ erzeugt; jede Paket-README folgt der
 [README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-33 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+34 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
@@ -49,7 +49,7 @@ erzeugt; jede Paket-README folgt der
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
 | [`auditcore_bpmn`](packages/auditcore_bpmn) | 0.1.0 | BPMN 2.0 mit der FlowAudit-Erweiterung (Schema 1.1) sicher lesen, prüfen, vergleichen, neutralisieren und berichten – für Prozessdiagramme von Verwaltungs- und Kontrollsystemen aller Fonds mit geteilter Mittelverwaltung. | keine; Extras: `xml`, `excel`, `pdf`, `legal` | charakterisiert |
-| [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.4.3 | Framework-independent records of processing activities and DPIA calculation | `auditcore_common==0.1.1`; Extras: `excel`, `pdf` | charakterisiert |
+| [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.5.0 | Framework-independent records of processing activities and DPIA calculation | `auditcore_common==0.1.1`; Extras: `excel`, `pdf`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_documents`](packages/auditcore_documents) | 0.3.2 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | `auditcore_common==0.1.1`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | 0.1.1 | Framework-independent synthetic field and row generation | keine; Extras: `parallel` | charakterisiert |
 | [`auditcore_entity_matching`](packages/auditcore_entity_matching) | 0.2.2 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | `auditcore_common==0.1.1`; Extras: `fuzzy` | charakterisiert |
@@ -58,7 +58,7 @@ erzeugt; jede Paket-README folgt der
 | [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) | 0.1.1 | Synthetische Trainings- und Testdaten für eine Donut-basierte Erkennung deutscher und österreichischer Rechnungen: Rechnungsbilder, Ziel-JSON, Manifest mit Datensatz-Hash und Bewertung. | `auditcore_invoicegenerator==0.2.1`; Extras: `render`, `train` | neu |
 | [`auditcore_kanban`](packages/auditcore_kanban) | 0.1.0 | Framework-free Kanban domain: boards, rank keys, transitions, WIP limits, rights, events and a REST contract | keine; Extras: `ui`, `fastapi` | neu, gegen charakterisierte Verträge |
 | [`auditcore_market_indicators`](packages/auditcore_market_indicators) | 0.1.1 | Technische Marktindikatoren (Renditen, SMA/EMA, RSI, ATR, ADX, MACD, Volatilität, Z-Score, Breakout) auf einfachen Zahlenfolgen, mit ausdrücklich gewählten, quellengebundenen Profilen. | keine; Extras: `polars` | neu, gegen charakterisierte Verträge |
-| [`auditcore_price_analysis`](packages/auditcore_price_analysis) | 0.1.1 | Exact tariff calculation (district heating, water, tiers), tariff selection and comparison rules with versioned profiles | keine | charakterisiert |
+| [`auditcore_price_analysis`](packages/auditcore_price_analysis) | 0.1.2 | Exakte Jahreskostenberechnung für regulierte Tarife (Nahwärme, Wasser mit Staffeln), deterministische Tarifauswahl und Vergleichsregeln (Abweichung, Ampel, Gruppenstatistik) auf versionierten, quellengebundenen Profilen. | `auditcore_common==0.1.1` | charakterisiert |
 | [`auditcore_procurement`](packages/auditcore_procurement) | 0.2.2 | Procurement notice records (TED, HAD), import normalisation and versioned prechecks | `auditcore_common==0.1.1`; Extras: `html`, `sources` | charakterisiert |
 | [`auditcore_reporting`](packages/auditcore_reporting) | 0.2.1 | Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahlenformat) mit benannten Formatprofilen und optionalem, abgesichertem XLSX-Export. | keine; Extras: `excel` | charakterisiert |
 | [`auditcore_risk`](packages/auditcore_risk) | 0.3.2 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_common==0.1.1`, `auditcore_entity_matching==0.2.2`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | charakterisiert |
@@ -83,9 +83,10 @@ erzeugt; jede Paket-README folgt der
 | [`@flowaudit/bpmn-flowaudit`](packages-js/bpmn-flowaudit) | 0.1.0 | Framework-freie FlowAudit-Fachschicht für den BPMN-Editor: Schema flowaudit 1.0/1.1, Rollen, Kennzeichen, Prüfbezüge, Prüfregeln, Anreicherung, Neutralisierung, Vergleiche, Durchlauftest, Berichte und Export. | `bpmn-moddle@^10.3.1`, `@flowaudit/bpmn-editor@^0.1.0` (peer) | neu |
 | [`@flowaudit/bpmn-react`](packages-js/bpmn-react) | 0.1.0 | Dünner, typisierter React-Wrapper um die Web Component `<flowaudit-bpmn-editor>` aus `@flowaudit/bpmn-vue` – für React 18.3 und 19. | `@flowaudit/bpmn-flowaudit@0.1.0`, `@flowaudit/bpmn-vue@0.1.0`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
 | [`@flowaudit/bpmn-vue`](packages-js/bpmn-vue) | 0.1.0 | Vue-3-Oberfläche des FlowAudit-BPMN-Editors mit Eigenschaften-Panel, Sammlung, Prüfansichten und Export – als Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>` und eigenständige App. | `@flowaudit/bpmn-editor@0.1.0`, `@flowaudit/bpmn-flowaudit@0.1.0`, `vue@^3.5.0` (peer) | neu |
+| [`@flowaudit/common`](packages-js/common) | 0.1.0 | Framework-freie Hilfsfunktionen der FlowAudit-Anwendungen in TypeScript: deutsche Formatierung in Berliner Zeit, strikte Zahleneingabe, API-Fehlertexte, REST, Token, CSV, Zeitsteuerung, Sortierung und Prüfziffern. | keine | neu |
 | [`@flowaudit/kanban-core`](packages-js/kanban-core) | 0.1.0 | Framework-freie Kanban-Logik in TypeScript mit denselben Regeln wie das Python-Paket `auditcore_kanban`: Rang-Schlüssel, Übergänge, WIP-Limits, Filter, Fristen, Rechte, Validierung und reine Befehle. | keine | neu |
-| [`@flowaudit/ui`](packages-js/ui) | 0.1.0 | Gemeinsame Oberflächenkomponenten der FlowAudit-Anwendungen als Vue-3-Komponenten und Web Components, mit Designtoken, Hell-/Dunkelmodus und Sprachunterstützung. | `@flowaudit/kanban-core@0.1.0`, `leaflet@^1.9.4`, `vue@^3.5.0` (peer) | neu |
-| [`@flowaudit/ui-react`](packages-js/ui-react) | 0.1.0 | React-18-Hüllen für die Web Components aus `@flowaudit/ui`: Objekte werden als Eigenschaften gesetzt und Ereignisse als `onXxx`-Handler verdrahtet. | `@flowaudit/kanban-core@^0.1.0` (peer), `@flowaudit/ui@^0.1.0` (peer), `react@^18.3.0` (peer), `react-dom@^18.3.0` (peer), `vue@^3.5.0` (peer) | neu |
+| [`@flowaudit/ui`](packages-js/ui) | 0.2.0 | Gemeinsame Oberflächenkomponenten der FlowAudit-Anwendungen als Vue-3-Komponenten und Web Components, mit Designtoken, Hell-/Dunkelmodus und Sprachunterstützung. | `@flowaudit/common@0.1.0`, `@flowaudit/kanban-core@0.1.0`, `leaflet@^1.9.4`, `vue@^3.5.0` (peer) | neu |
+| [`@flowaudit/ui-react`](packages-js/ui-react) | 0.2.0 | React-18-Hüllen für die Web Components aus `@flowaudit/ui` sowie React-Hooks auf Basis von `@flowaudit/common` (Toasts, Media-Query, Klick außerhalb, Sortierung, Entprellen, Token). | `@flowaudit/common@^0.1.0` (peer), `@flowaudit/kanban-core@^0.1.0` (peer), `@flowaudit/ui@^0.2.0` (peer), `react@^18.3.0` (peer), `react-dom@^18.3.0` (peer), `vue@^3.5.0` (peer) | neu |
 <!-- paketkatalog:end -->
 
 Kein Fachpaket benötigt die Plattformbibliothek zur Laufzeit. Alle Pakete

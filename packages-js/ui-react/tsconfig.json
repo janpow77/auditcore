@@ -15,6 +15,12 @@
       ],
       "@flowaudit/kanban-core": [
         "../kanban-core/src/index.ts"
+      ],
+      "@flowaudit/common": [
+        "../common/src/index.ts"
+      ],
+      "@flowaudit/common/browser": [
+        "../common/src/browser.ts"
       ]
     }
   },
