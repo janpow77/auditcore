@@ -1,7 +1,7 @@
 # Adapteranleitung für `auditcore_harvest`
 
 Vertragsversion: **`auditcore_harvest.contract/1`** (`auditcore_harvest.CONTRACT_VERSION`),
-Paketversion 0.1.0. Diese Schnittstelle ist stabil. Inkompatible Änderungen
+Paketversion 0.1.1. Diese Schnittstelle ist stabil. Inkompatible Änderungen
 erscheinen nur als eigener Commit `feat(harvest)!: …` und werden unten unter
 „Änderungen“ eingetragen; kompatible Ergänzungen behalten Version 1.
 
@@ -77,6 +77,17 @@ HarvestRecord(
     deleted=False,
 )
 ```
+
+Kürzer und gleichwertig (seit 0.1.1):
+
+```python
+record = context.record(self.source, "stabile-quellen-id", item, {...}, locator)
+payload = decode_json(response.body, "Antwort ist kein JSON.")  # sonst ParserError
+return page_result(records, issues, next_cursor, total_hint=total)
+```
+
+`page_result` setzt `complete` genau dann, wenn kein `next_cursor` folgt, und
+den Status `PARTIAL`, sobald ein `RecordIssue` vorliegt.
 
 `content_hash` wird aus `normalized` und `deleted` berechnet; unveränderte
 Inhalte sind dadurch als Dublette erkennbar. Nicht übersetzbare Einträge
@@ -187,6 +198,10 @@ Geheimnisse, Fixtures, Implementierungsstatus (`SUPPORTED`, `PLANNED`,
 ## Änderungen
 
 - 0.1.0 / Vertrag 1: Erstfassung (Commit 0ff8d99).
+- 0.1.1 / Vertrag 1 (kompatibel): Hilfen `FetchContext.record`,
+  `decode_json` und `page_result` für die wiederkehrenden Schritte der
+  Quellenpakete; `SourceAdapter.fetch_page` ist als `-> PageResult` typisiert,
+  `require` gibt den geprüften Typ zurück. Laufzeitverhalten unverändert.
 - **Inkompatibel seit c5a5e45:** `auditcore_harvest.UrllibTransport` und
   `auditcore_harvest.transport.UrllibTransport` entfallen, weil ein
   Netzwerkclient im Kern gegen AC-ARCH-002 verstößt. Adapter sind nicht

@@ -20,9 +20,11 @@ from .errors import (
 )
 from .model import (
     CONTRACT_VERSION,
+    JSON,
     AuthKind,
     Capabilities,
     Checkpoint,
+    Cursor,
     HarvestRecord,
     HarvestRequest,
     HarvestResult,
@@ -35,6 +37,7 @@ from .model import (
     SnapshotSemantics,
     Source,
     canonical_hash,
+    page_result,
 )
 from .ports import (
     Clock,
@@ -46,12 +49,13 @@ from .ports import (
     StateStore,
     Transport,
 )
-from .transport import FileTransport, ReplayTransport, raise_for_status
+from .transport import FileTransport, ReplayTransport, decode_json, raise_for_status
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "CONTRACT_VERSION",
+    "JSON",
     "AdapterRegistry",
     "AuthError",
     "AuthKind",
@@ -63,6 +67,7 @@ __all__ = [
     "Clock",
     "ConfigError",
     "CredentialProvider",
+    "Cursor",
     "EventSink",
     "FetchContext",
     "FileTransport",
@@ -95,6 +100,8 @@ __all__ = [
     "TransportError",
     "__version__",
     "canonical_hash",
+    "decode_json",
+    "page_result",
     "raise_for_status",
     "require",
 ]
