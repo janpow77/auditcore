@@ -4,7 +4,7 @@ Synthetische Trainings- und Testdaten für eine Donut-basierte Belegerkennung
 deutscher und österreichischer Rechnungen (Plan
 `docs/architecture/DONUT_OCR_PLAN.md`, Abschnitte 2b und 2d; Entscheidungen
 E1–E9 vom 24.09.2026). Grundlage sind die Datensätze aus
-`auditcore_invoicegenerator` 0.2.0, der unverändert bleibt.
+`auditcore_invoicegenerator` 0.2.1, der unverändert bleibt.
 
 ```bash
 pip install 'auditcore_invoicesynth[render]==0.1.0'

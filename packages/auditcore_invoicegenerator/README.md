@@ -67,7 +67,7 @@ wurde nicht damit gleichgesetzt.
 ### Optionaler PDF-Renderer ab 0.2.0
 
 ```bash
-pip install 'auditcore_invoicegenerator[pdf]==0.2.0'
+pip install 'auditcore_invoicegenerator[pdf]==0.2.1'
 ```
 
 ```python
@@ -117,7 +117,7 @@ Lokale Wheels beziehungsweise freigegebene Paketquelle vorausgesetzt:
 
 ```text
 # requirements.txt
-auditcore_invoicegenerator==0.2.0
+auditcore_invoicegenerator==0.2.1
 ```
 
 `pip install -r requirements.txt` löst die deklarierte Dummy-Abhängigkeit auf.
