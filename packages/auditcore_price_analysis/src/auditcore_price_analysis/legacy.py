@@ -45,7 +45,7 @@ def _decimal(value: object, *, feld: str, default: str = "0") -> Decimal:
     return result
 
 
-def _nicht_negativ(value: object, *, feld: str) -> Decimal:
+def _non_negative(value: object, *, feld: str) -> Decimal:
     result = _decimal(value, feld=feld)
     if result < 0:
         raise ValueError(f"{feld} darf nicht negativ sein")
@@ -54,6 +54,29 @@ def _nicht_negativ(value: object, *, feld: str) -> Decimal:
 
 def _round(value: Decimal, places: Decimal = CENT) -> float:
     return float(value.quantize(places, rounding=ROUND_HALF_UP))
+
+
+def _levy(preisdaten: dict[str, Any], stichtag: date) -> tuple[str, Decimal]:
+    """Levy type and price: heat levy from ``UMLAGEN_STICHTAG``, gas storage levy before."""
+    if stichtag >= UMLAGEN_STICHTAG:
+        return "waermeumlagenpreis", _non_negative(
+            preisdaten.get("waermeumlagenpreis_ct_kwh"), feld="waermeumlagenpreis_ct_kwh"
+        )
+    return "gasspeicherumlage", _non_negative(
+        preisdaten.get("umlagenpreis_ct_kwh"), feld="umlagenpreis_ct_kwh"
+    )
+
+
+_HEAT_CORE_COMPONENTS = ("grundpreis_eur_kw", "arbeitspreis_ct_kwh")
+
+
+def _heat_shares(
+    jahreskosten: Decimal, kwh_d: Decimal, fixkosten: Decimal
+) -> tuple[Decimal, Decimal, Decimal]:
+    """Mixed price in ct/kWh, fixed-cost share and variable-cost share in percent."""
+    mischpreis_ct_kwh = (jahreskosten / kwh_d * 100) if kwh_d > 0 else Decimal(0)
+    fixkostenanteil_pct = fixkosten / jahreskosten * 100 if jahreskosten > 0 else Decimal(0)
+    return mischpreis_ct_kwh, fixkostenanteil_pct, Decimal(100) - fixkostenanteil_pct
 
 
 def calculate_nahwaerme(
@@ -66,24 +89,17 @@ def calculate_nahwaerme(
     if isinstance(stichtag, str):
         stichtag = date.fromisoformat(stichtag)
 
-    kw_d = _nicht_negativ(kw, feld="kw")
-    kwh_d = _nicht_negativ(kwh, feld="kwh")
+    kw_d = _non_negative(kw, feld="kw")
+    kwh_d = _non_negative(kwh, feld="kwh")
 
-    p_g = _nicht_negativ(preisdaten.get("grundpreis_eur_kw"), feld="grundpreis_eur_kw")
-    p_a = _nicht_negativ(preisdaten.get("arbeitspreis_ct_kwh"), feld="arbeitspreis_ct_kwh")
-    p_v = _nicht_negativ(
+    p_g = _non_negative(preisdaten.get("grundpreis_eur_kw"), feld="grundpreis_eur_kw")
+    p_a = _non_negative(preisdaten.get("arbeitspreis_ct_kwh"), feld="arbeitspreis_ct_kwh")
+    p_v = _non_negative(
         preisdaten.get("verrechnungspreis_eur_jahr"), feld="verrechnungspreis_eur_jahr"
     )
-    p_e = _nicht_negativ(preisdaten.get("emissionspreis_ct_kwh"), feld="emissionspreis_ct_kwh")
+    p_e = _non_negative(preisdaten.get("emissionspreis_ct_kwh"), feld="emissionspreis_ct_kwh")
 
-    if stichtag >= UMLAGEN_STICHTAG:
-        umlage_typ = "waermeumlagenpreis"
-        p_u = _nicht_negativ(
-            preisdaten.get("waermeumlagenpreis_ct_kwh"), feld="waermeumlagenpreis_ct_kwh"
-        )
-    else:
-        umlage_typ = "gasspeicherumlage"
-        p_u = _nicht_negativ(preisdaten.get("umlagenpreis_ct_kwh"), feld="umlagenpreis_ct_kwh")
+    umlage_typ, p_u = _levy(preisdaten, stichtag)
 
     grundpreis_anteil = p_g * kw_d
     arbeitspreis_anteil = p_a * kwh_d / 100
@@ -99,13 +115,10 @@ def calculate_nahwaerme(
         + umlagenpreis_anteil
     )
 
-    mischpreis_ct_kwh = (jahreskosten / kwh_d * 100) if kwh_d > 0 else Decimal(0)
-    fixkosten = grundpreis_anteil + verrechnungspreis_anteil
-    fixkostenanteil_pct = fixkosten / jahreskosten * 100 if jahreskosten > 0 else Decimal(0)
-    variablekostenanteil_pct = Decimal(100) - fixkostenanteil_pct
-
-    kern_komponenten = ("grundpreis_eur_kw", "arbeitspreis_ct_kwh")
-    fehlende_komponenten = [k for k in kern_komponenten if preisdaten.get(k) is None]
+    mischpreis_ct_kwh, fixkostenanteil_pct, variablekostenanteil_pct = _heat_shares(
+        jahreskosten, kwh_d, grundpreis_anteil + verrechnungspreis_anteil
+    )
+    fehlende_komponenten = [k for k in _HEAT_CORE_COMPONENTS if preisdaten.get(k) is None]
 
     return {
         "jahreskosten": _round(jahreskosten),
@@ -138,13 +151,13 @@ def calculate_wasser(
     if isinstance(stichtag, str):
         stichtag = date.fromisoformat(stichtag)
 
-    _nicht_negativ(q3, feld="q3")
-    m3_d = _nicht_negativ(m3, feld="m3")
-    gp = _nicht_negativ(preisdaten.get("grundpreis_eur_monat"), feld="grundpreis_eur_monat")
-    vp = _nicht_negativ(
+    _non_negative(q3, feld="q3")
+    m3_d = _non_negative(m3, feld="m3")
+    gp = _non_negative(preisdaten.get("grundpreis_eur_monat"), feld="grundpreis_eur_monat")
+    vp = _non_negative(
         preisdaten.get("verrechnungspreis_eur_monat"), feld="verrechnungspreis_eur_monat"
     )
-    wee = _nicht_negativ(
+    wee = _non_negative(
         preisdaten.get("wasserentnahmeentgelt_eur_m3"),
         feld="wasserentnahmeentgelt_eur_m3",
     )
@@ -155,7 +168,7 @@ def calculate_wasser(
     if isinstance(staffel, list) and len(staffel) > 0:
         arbeitspreis_anteil = _calculate_staffel_decimal(staffel, m3_d)
     else:
-        ap = _nicht_negativ(preisdaten.get("arbeitspreis_eur_m3"), feld="arbeitspreis_eur_m3")
+        ap = _non_negative(preisdaten.get("arbeitspreis_eur_m3"), feld="arbeitspreis_eur_m3")
         arbeitspreis_anteil = m3_d * ap
 
     grundpreis_anteil = gp * 12
@@ -191,7 +204,7 @@ def calculate_wasser(
 
 def calculate_staffel(staffel: list[dict[str, Any]], m3: Any) -> float:
     """Arbeitspreis bei Staffeltarif (Legacy ``_calculate_staffel``)."""
-    return _round(_calculate_staffel_decimal(staffel, _nicht_negativ(m3, feld="m3")))
+    return _round(_calculate_staffel_decimal(staffel, _non_negative(m3, feld="m3")))
 
 
 _calculate_staffel = calculate_staffel
@@ -205,8 +218,8 @@ def _calculate_staffel_decimal(staffel: list[Any], m3: Decimal) -> Decimal:
     for index, stufe in enumerate(staffel, start=1):
         if not isinstance(stufe, dict):
             raise ValueError(f"Staffelstufe {index} muss ein Objekt sein")
-        limit = _nicht_negativ(stufe.get("bis_m3"), feld=f"Staffelstufe {index}.bis_m3")
-        preis = _nicht_negativ(stufe.get("preis"), feld=f"Staffelstufe {index}.preis")
+        limit = _non_negative(stufe.get("bis_m3"), feld=f"Staffelstufe {index}.bis_m3")
+        preis = _non_negative(stufe.get("preis"), feld=f"Staffelstufe {index}.preis")
         if limit <= 0:
             raise ValueError(f"Staffelstufe {index}.bis_m3 muss groesser als 0 sein")
         normalisiert.append((limit, preis))
@@ -279,7 +292,7 @@ def calculate_cluster_statistics(jahreskosten_list: list[float]) -> dict[str, An
     }
 
 
-def _sortier_schluessel(preis: Any) -> tuple[bool, Any, Any]:
+def _sort_key(preis: Any) -> tuple[bool, Any, Any]:
     variant_id = getattr(preis, "variant_id", None)
     zeilen_id = getattr(preis, "id", None)
     return (
@@ -304,7 +317,7 @@ def waehle_preis_deterministisch(
         if getattr(p, "variant_id", None) in (bevorzugte_variant_ids or set())
     ]
     auswahl = bevorzugt or am_stichtag
-    return sorted(auswahl, key=_sortier_schluessel)[0], len(am_stichtag) > 1
+    return sorted(auswahl, key=_sort_key)[0], len(am_stichtag) > 1
 
 
 def waehle_wasser_preis(

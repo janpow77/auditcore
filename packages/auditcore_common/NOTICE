@@ -1,0 +1,11 @@
+auditcore_common 0.1.0 — attribution and authorization
+
+Consolidation of duplicated helper functions of the auditcore domain packages
+(janpow77/auditcore@40ce8f710785b6ca8608512a2e335c14ec9d924f); no code from
+other repositories. Every merged function was proven equal to each package
+copy by differential tests (tests/legacy_reference.py holds the verbatim
+copies with their git blobs in provenance.json).
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.
