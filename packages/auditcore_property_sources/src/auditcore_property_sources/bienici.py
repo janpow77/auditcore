@@ -29,7 +29,9 @@ import re
 import unicodedata
 import urllib.parse
 from collections.abc import Mapping, Sequence
-from typing import Any, Literal
+from typing import Literal
+
+from ._types import JSON
 
 SOURCE_ID = "property.bienici"
 PROFILE_VERSION = "2026.09.1"
@@ -83,9 +85,9 @@ def search_filter(
     min_rooms: int | None = 1,
     max_rooms: int | None = 3,
     property_types: Sequence[str] = ("flat", "house"),
-) -> dict[str, Any]:
+) -> dict[str, JSON]:
     """Filter object exactly as the original builds it (key order included)."""
-    base: dict[str, Any] = {
+    base: dict[str, JSON] = {
         "showAllModels": False,
         "filterType": "rent",
         "propertyType": list(property_types),
@@ -104,7 +106,7 @@ def search_filter(
     return f
 
 
-def search_url(filters: Mapping[str, Any]) -> str:
+def search_url(filters: Mapping[str, JSON]) -> str:
     """``realEstateAds.json?filters=<url-encoded JSON>``."""
     return SEARCH.format(filter=urllib.parse.quote(json.dumps(filters)))
 
@@ -120,7 +122,7 @@ def place_form(name: str | None) -> str:
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
 
 
-def ad_url(ad: Mapping[str, Any]) -> str | None:
+def ad_url(ad: Mapping[str, JSON]) -> str | None:
     """Full ad address, else the short form."""
     kennung = ad.get("id")
     if not kennung:
@@ -141,13 +143,13 @@ def ad_url(ad: Mapping[str, Any]) -> str | None:
     return AD.format(kennung=kennung)
 
 
-def _num(value: Any) -> float | None:
+def _num(value: JSON) -> float | None:
     if isinstance(value, (int, float)):
         return round(float(value), 2)
     return None
 
 
-def date(iso: Any) -> str | None:
+def date(iso: JSON) -> str | None:
     """``2026-09-08T11:54:43.211Z`` → ``08.09.2026``; 1970-01-01 means unknown."""
     if not isinstance(iso, str) or iso.startswith("1970-01-01"):
         return None
@@ -155,35 +157,64 @@ def date(iso: Any) -> str | None:
     return f"{m.group(3)}.{m.group(2)}.{m.group(1)}" if m else None
 
 
-def normalise(
-    ad: Mapping[str, Any],
-    *,
-    advertiser_names: Literal["minimal", "legacy"] = DEFAULT_ADVERTISER_NAMES,
-) -> dict[str, Any]:
-    """Ad in the stock format of the consumer (original ``normalise``, PS-C02)."""
-    kennung = ad.get("id")
-    department = ad.get("departmentCode")
-    district = ad.get("district") or {}
-    insee = district.get("insee_code") or district.get("code_insee")
+def _position(ad: Mapping[str, JSON]) -> tuple[JSON, JSON]:
+    """Blurred position, else the centroid of the blurred area."""
     position = (ad.get("blurInfo") or {}).get("position") or {}
     lat, lon = position.get("lat"), position.get("lon")
     if lat is None:
         centre = (ad.get("blurInfo") or {}).get("centroid") or {}
         lat, lon = centre.get("lat"), centre.get("lon")
+    return lat, lon
+
+
+def _rents(ad: Mapping[str, JSON]) -> tuple[float | None, float | None, float | None]:
+    """Warm rent, charges and cold rent (derived from warm minus charges if absent)."""
     warm = _num(ad.get("price"))
     charges = _num(ad.get("charges"))
     cold = _num(ad.get("rentWithoutCharges"))
     if cold is None and warm is not None and charges is not None:
         cold = round(warm - charges, 2)
-    area = _num(ad.get("surfaceArea"))
-    kind = ad.get("propertyType")
+    return warm, charges, cold
+
+
+def _company(ad: Mapping[str, JSON], advertiser_names: str) -> str:
     individual = ad.get("accountType") == "individual"
     if individual and advertiser_names == "minimal":
-        company = "Privatangebot"
-    else:
-        company = (ad.get("accountDisplayName") or "").strip() or (
-            "Privatangebot" if individual else ""
-        )
+        return "Privatangebot"
+    return (ad.get("accountDisplayName") or "").strip() or ("Privatangebot" if individual else "")
+
+
+def _features(ad: Mapping[str, JSON]) -> str:
+    return ", ".join(
+        t
+        for t in [
+            "Aufzug" if ad.get("hasElevator") else "",
+            "Keller" if ad.get("hasCellar") else "",
+            "Balkon" if ad.get("hasBalcony") else "",
+            "Terrasse" if ad.get("hasTerrace") else "",
+            "Garten" if ad.get("hasGarden") else "",
+            "Stellplatz" if (ad.get("parkingPlacesQuantity") or 0) else "",
+            "möbliert" if ad.get("isFurnished") else "",
+        ]
+        if t
+    )
+
+
+def normalise(
+    ad: Mapping[str, JSON],
+    *,
+    advertiser_names: Literal["minimal", "legacy"] = DEFAULT_ADVERTISER_NAMES,
+) -> dict[str, JSON]:
+    """Ad in the stock format of the consumer (original ``normalise``, PS-C02)."""
+    kennung = ad.get("id")
+    department = ad.get("departmentCode")
+    district = ad.get("district") or {}
+    insee = district.get("insee_code") or district.get("code_insee")
+    lat, lon = _position(ad)
+    warm, charges, cold = _rents(ad)
+    area = _num(ad.get("surfaceArea"))
+    kind = ad.get("propertyType")
+    company = _company(ad, advertiser_names)
     return {
         "id": f"bienici:{kennung}",
         "quelle": QUELLE,
@@ -223,19 +254,7 @@ def normalise(
         "eingestellt_am": date(ad.get("publicationDate")),
         "eingestellt_am_iso": date(ad.get("publicationDate")) and ad.get("publicationDate"),
         "geaendert_am": date(ad.get("modificationDate")),
-        "ausstattung": ", ".join(
-            t
-            for t in [
-                "Aufzug" if ad.get("hasElevator") else "",
-                "Keller" if ad.get("hasCellar") else "",
-                "Balkon" if ad.get("hasBalcony") else "",
-                "Terrasse" if ad.get("hasTerrace") else "",
-                "Garten" if ad.get("hasGarden") else "",
-                "Stellplatz" if (ad.get("parkingPlacesQuantity") or 0) else "",
-                "möbliert" if ad.get("isFurnished") else "",
-            ]
-            if t
-        ),
+        "ausstattung": _features(ad),
         "expose_url": ad_url(ad),
         "bild_url": (ad.get("photos") or [{}])[0].get("url_photo"),
     }
