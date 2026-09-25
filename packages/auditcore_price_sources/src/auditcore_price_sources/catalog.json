@@ -52,7 +52,7 @@
     },
     {
       "source_id": "price.destatis_genesis",
-      "adapter": "DestatisTableAdapter",
+      "adapter": "DestatisTabellenAdapter",
       "harvest_catalog_id": "price.destatis_genesis",
       "origins": [
         {

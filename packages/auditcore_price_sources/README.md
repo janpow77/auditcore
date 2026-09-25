@@ -13,7 +13,7 @@ pip install auditcore_price_sources==0.1.1
 | Quelle | Adapter | Zugang | Einheit | Zeitbezug |
 |---|---|---|---|---|
 | `price.bundesbank` | `BundesbankSeriesAdapter` | keiner | aus der Reihe (z. B. USD je 1 EUR) | Tag |
-| `price.destatis_genesis` | `DestatisTableAdapter` (früher `DestatisTabellenAdapter`, Alias mit Warnung) | `username` + Geheimnis `token` | je Tabelle (`value_unit`) | Zeitangaben der Tabelle |
+| `price.destatis_genesis` | `DestatisTabellenAdapter` | `username` + Geheimnis `token` | je Tabelle (`value_unit`) | Zeitangaben der Tabelle |
 | `price.eia_brent` | `EiaSpotPriceAdapter` | Geheimnis `api_key` | aus `units` (USD/Barrel) | Handelstag |
 | `price.eu_oil_bulletin` | `PageSnapshotAdapter` | keiner | – (nur Seiten-Snapshot) | Abrufzeitpunkt |
 | `price.overpass_fuel_stations` | `OverpassFuelStationAdapter` | keiner | – (Stammdaten, WGS84) | OSM-Datenstand |

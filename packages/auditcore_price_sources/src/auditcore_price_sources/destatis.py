@@ -1,8 +1,7 @@
 """Destatis GENESIS-Online table files (ffcsv), default: fuel price tables.
 
 Moved from regulierung ``external_apis/destatis_genesis.py`` (adapter
-``DestatisTabellenAdapter``, here :class:`DestatisTableAdapter`, which already
-ran on ``auditcore_harvest`` 0.1.0):
+``DestatisTabellenAdapter``, which already ran on ``auditcore_harvest`` 0.1.0):
 one page per table, cursor = table index, the raw table is kept byte-exact
 (base64). A table answered with an HTTP status other than 200 is skipped as
 an issue (``partial``) and not retried, exactly as before; a non-UTF-8 or
@@ -33,7 +32,6 @@ from auditcore_harvest import (
     RecordIssue,
     SnapshotSemantics,
     Source,
-    deprecated_aliases,
     page_result,
 )
 
@@ -140,12 +138,8 @@ def parse_ffcsv(text: str) -> FfcsvTable:
     return FfcsvTable(columns, "ffcsv", tuple(rows), unreadable)
 
 
-class DestatisTableAdapter:
-    """One page per GENESIS table; raw data kept byte-exact.
-
-    Formerly ``DestatisTabellenAdapter``; the old name remains importable with
-    a :class:`DeprecationWarning`.
-    """
+class DestatisTabellenAdapter:
+    """One page per GENESIS table; raw data kept byte-exact."""
 
     source = QUELLE
 
@@ -193,8 +187,3 @@ class DestatisTableAdapter:
             "inhalt": parse_ffcsv(text).summary(),
         }
         return page_result([context.record(QUELLE, table, raw, normalized, table)], (), next_cursor)
-
-
-__getattr__ = deprecated_aliases(
-    __name__, {"DestatisTabellenAdapter": ("DestatisTableAdapter", DestatisTableAdapter)}
-)

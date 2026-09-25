@@ -5,13 +5,6 @@
 Refaktorierung ohne Verhaltensänderung; Datensätze, Issues, Cursor, Fehlertexte
 und Quellbelege unverändert. Benötigt `auditcore_harvest==0.1.1`.
 
-### Umbenannt (mit Alias)
-- `DestatisTabellenAdapter` → `DestatisTableAdapter` (englische Bezeichner).
-  Der alte Name bleibt aus `auditcore_price_sources` und
-  `auditcore_price_sources.destatis` importierbar und warnt mit
-  `DeprecationWarning`. Der Katalog nennt den neuen Klassennamen
-  (Katalogversion 0.1.1); Konstanten `KRAFTSTOFF_TABELLEN` und `QUELLE` bleiben.
-
 ### Geändert (intern)
 - `parse_sdmx_json` in Hilfsfunktionen je Reihe/Beobachtung/Einheit zerlegt
   (McCabe 13 → ≤ 10).
@@ -31,6 +24,12 @@ und Quellbelege unverändert. Benötigt `auditcore_harvest==0.1.1`.
 | McCabe > 10 | 1 | 0 |
 | Funktionen > 60 Zeilen | 4 | 0 |
 | Module > 400 Zeilen | 0 | 0 |
-| Nicht-englische Bezeichner | 1 | 0 |
+| Nicht-englische Bezeichner | 1 | 1 (`DestatisTabellenAdapter`, s. u.) |
 | `Any`-Verwendungen | 31 | 2 |
 | mypy --strict | 0 | 0 |
+
+### Offen
+- `DestatisTabellenAdapter` behält seinen Namen: eine Umbenennung braucht einen
+  Alias mit `DeprecationWarning`, der Architekturtest des Pakets lässt das
+  Modul `warnings` aber nicht zu. Umbenennung, sobald ein gemeinsamer
+  Alias-Helfer (`auditcore_common`) verfügbar ist.

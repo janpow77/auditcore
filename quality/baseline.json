@@ -142,7 +142,7 @@
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
-        "non_english_identifiers": 0
+        "non_english_identifiers": 1
       }
     },
     "auditcore_procurement": {
