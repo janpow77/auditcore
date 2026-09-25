@@ -1,4 +1,5 @@
-"""Framework T-38: the runtime uses only the standard library and its own package."""
+"""Framework T-38: the runtime uses only the standard library, its own package and the
+stdlib-only ``auditcore_common``."""
 
 from __future__ import annotations
 
@@ -10,7 +11,15 @@ import auditcore_statistics
 
 def test_runtime_imports_are_standard_library_only() -> None:
     package = Path(auditcore_statistics.__file__).parent
-    allowed = {"__future__", "math", "collections", "dataclasses", "decimal", "typing"}
+    allowed = {
+        "__future__",
+        "math",
+        "collections",
+        "dataclasses",
+        "decimal",
+        "typing",
+        "auditcore_common",
+    }
     observed: set[str] = set()
     for path in package.glob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"))

@@ -10,41 +10,11 @@ incomplete gamma function (series / continued fraction).
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
 
-_BLOCK = 128
+from auditcore_common.numeric import numpy_pairwise_sum, numpy_round
 
-
-def numpy_pairwise_sum(values: Sequence[float]) -> float:
-    """Sum in NumPy's pairwise order (blocks of 128, eight accumulators)."""
-    count = len(values)
-    if count < 8:
-        result = 0.0
-        for value in values:
-            result += value
-        return result
-    if count <= _BLOCK:
-        acc = [float(v) for v in values[:8]]
-        index = 8
-        limit = count - (count % 8)
-        while index < limit:
-            for lane in range(8):
-                acc[lane] += values[index + lane]
-            index += 8
-        result = ((acc[0] + acc[1]) + (acc[2] + acc[3])) + ((acc[4] + acc[5]) + (acc[6] + acc[7]))
-        while index < count:
-            result += values[index]
-            index += 1
-        return result
-    half = count // 2
-    half -= half % 8
-    return numpy_pairwise_sum(values[:half]) + numpy_pairwise_sum(values[half:])
-
-
-def numpy_round(value: float, decimals: int) -> float:
-    """``numpy.round`` for float64: scale, round half to even, unscale."""
-    factor = 10.0**decimals
-    return round(value * factor) / factor
+#: Same objects as in ``auditcore_common.numeric`` (differentially proven there).
+__all__ = ["chi2_survival", "numpy_pairwise_sum", "numpy_round", "regularized_upper_gamma"]
 
 
 def regularized_upper_gamma(a: float, x: float) -> float:

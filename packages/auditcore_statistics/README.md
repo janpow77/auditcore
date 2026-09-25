@@ -151,8 +151,9 @@ durchgeführt. Die abweichende Benford-Implementierung in audit-portal
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek; keine Abhängigkeit
-von `auditcore`, NumPy oder SciPy. Optional `starlette>=0.26` über `[web]`.
+Python ≥ 3.11 und seit 0.3.2 `auditcore_common==0.1.0` (Summe und Rundung;
+APT `python3-auditcore-common`); keine Abhängigkeit von `auditcore`, NumPy
+oder SciPy. Optional `starlette>=0.26` über `[web]`.
 
 ## Sicherheit und Datenschutz
 

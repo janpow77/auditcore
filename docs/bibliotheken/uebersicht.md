@@ -71,7 +71,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | [`auditcore_reporting`](../../packages/auditcore_reporting) | 0.2.1 | Characterized reporting format rules preserving Flowlib behavior | keine; Extras: `excel` | charakterisiert |
 | [`auditcore_risk`](../../packages/auditcore_risk) | 0.3.1 | Risiko-Merkmale (Red Flags) aus ausdrücklich gewählten, versionierten und quellengebundenen Regelprofilen, jedes Merkmal mit Code, Begründung, Belegwerten und Quellfundstelle. | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_sampling`](../../packages/auditcore_sampling) | 0.2.1 | Stichprobenumfänge (MUS, einfache Zufallsstichprobe), systematische MUS-Auswahl, Zufallsauswahl und Schichtung mit ausdrücklich benannten, quellengebundenen Methoden. | keine; Extras: `web` | charakterisiert |
-| [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.1 | Beschreibende Prüfstatistik (Benford-Test erster und erster zwei Ziffern, Konformitätsmaße nach MAD und z-Test) mit benannten, quellengebundenen Methodenprofilen. | keine; Extras: `web` | charakterisiert |
+| [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.2 | Beschreibende Prüfstatistik (Benford-Test erster und erster zwei Ziffern, Konformitätsmaße nach MAD und z-Test) mit benannten, quellengebundenen Methodenprofilen. | `auditcore_common==0.1.0`; Extras: `web` | charakterisiert |
 
 ### Quellen-Adapter
 
