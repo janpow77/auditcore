@@ -94,7 +94,11 @@ function describeExport(exported, checker, components) {
     const aliased = checker.getAliasedSymbol(exported)
     if (aliased?.declarations?.length) target = aliased
   }
-  const kind = target.declarations?.length ? kindOf(target) : 'Re-Export'
+  // Aus einem anderen Workspace-Paket re-exportiert: als Re-Export mit dessen Specifier
+  // ausgeben, unabhängig davon, ob dort schon dist/ gebaut ist (sonst Ergebnis je nach Build).
+  const declared = target.declarations?.[0]?.getSourceFile().fileName ?? ''
+  const foreign = target !== exported && declared !== '' && !declared.startsWith(join(packageDir, 'src'))
+  const kind = target.declarations?.length && !foreign ? kindOf(target) : 'Re-Export'
   if (kind === 'Re-Export') return { name: exported.name, kind, summary: '', module: reExportSource(exported) }
   return { name: exported.name, kind, summary: docOf(target, checker), module: moduleOf(target) }
 }
