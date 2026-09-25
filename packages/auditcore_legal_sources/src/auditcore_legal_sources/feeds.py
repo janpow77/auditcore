@@ -16,7 +16,7 @@ from __future__ import annotations
 import hashlib
 import re
 from collections.abc import Iterable, Mapping, Sequence
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
 from html.parser import HTMLParser
 from typing import Any
@@ -52,7 +52,7 @@ def _stable_id(prefix: str, value: str) -> str:
     return f"{prefix}_{hashlib.sha256(value.encode('utf-8')).hexdigest()[:16]}"
 
 
-def _published(entry: Mapping[str, Any]) -> tuple[Any, str | None, str | None]:
+def _published(entry: Mapping[str, Any]) -> tuple[date | None, str | None, str | None]:
     """Date from the parsed UTC tuple, else the RFC 822/ISO text; returns (date, precision, iso)."""
     for key in ("published_parsed", "updated_parsed"):
         value = entry.get(key)
