@@ -12,6 +12,7 @@ on:
       - 'scripts/verify_optional_renderers.py'
       - 'scripts/prepare_library_release.py'
       - 'scripts/verify_code_quality.py'
+      - 'scripts/ci_affected_packages.py'
       - 'quality/baseline.json'
       - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
@@ -24,6 +25,7 @@ on:
       - 'scripts/verify_optional_renderers.py'
       - 'scripts/prepare_library_release.py'
       - 'scripts/verify_code_quality.py'
+      - 'scripts/ci_affected_packages.py'
       - 'quality/baseline.json'
       - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
@@ -61,6 +63,7 @@ jobs:
           echo "Geprüfte Pakete:"; cat .affected-packages
           echo "## Geprüfte Pakete" >> "$GITHUB_STEP_SUMMARY"; sed 's/^/- /' .affected-packages >> "$GITHUB_STEP_SUMMARY"
           if [ -s .affected-packages ]; then echo "any=true" >> "$GITHUB_OUTPUT"; else echo "any=false" >> "$GITHUB_OUTPUT"; fi
+          if grep -qE 'auditcore_(invoicegenerator|reporting)$' .affected-packages; then echo "renderers=true" >> "$GITHUB_OUTPUT"; else echo "renderers=false" >> "$GITHUB_OUTPUT"; fi
       - name: Build and install the platform wheel
         if: steps.affected.outputs.any == 'true'
         run: |
@@ -94,7 +97,7 @@ jobs:
           subprocess.run(command, check=True)
           PY
       - name: Verify optional PDF and Excel installations and hash locks
-        if: steps.affected.outputs.any == 'true'
+        if: steps.affected.outputs.renderers == 'true'
         run: |
           python scripts/verify_optional_renderers.py .auditcore/domain-ci \
             --output .auditcore/optional-renderers-ci --release-version 0.2.0 \
