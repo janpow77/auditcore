@@ -16,9 +16,9 @@ from __future__ import annotations
 import math
 import numbers
 import re
+from collections.abc import Hashable
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Any
 
 from .errors import InputError
 
@@ -26,7 +26,7 @@ _DECIMAL = re.compile(r"[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?")
 _INFINITY = re.compile(r"[+-]?(?:inf|infinity)", re.IGNORECASE)
 
 
-def is_missing(value: Any) -> bool:
+def is_missing(value: object) -> bool:
     """``None``, NaN, ``pandas.NA`` and ``NaT`` are missing; everything else is a value."""
     if value is None:
         return True
@@ -38,7 +38,7 @@ def is_missing(value: Any) -> bool:
         return True
 
 
-def strict_amount(value: Any, field: str, missing_value: float | None) -> float | None:
+def strict_amount(value: object, field: str, missing_value: float | None) -> float | None:
     """Number or ``missing_value``; strings and booleans violate the contract."""
     if is_missing(value):
         return missing_value
@@ -47,7 +47,7 @@ def strict_amount(value: Any, field: str, missing_value: float | None) -> float 
     return float(value)
 
 
-def coerce_number(value: Any, field: str) -> float | None:
+def coerce_number(value: object, field: str) -> float | None:
     """``pandas.to_numeric(errors="coerce")`` for one scalar; ``None`` = missing."""
     if is_missing(value):
         return None
@@ -66,12 +66,12 @@ def coerce_number(value: Any, field: str) -> float | None:
     return None
 
 
-def text(value: Any) -> str | None:
+def text(value: object) -> str | None:
     """``str(value)`` for present values (``astype(str)``), ``None`` when missing."""
     return None if is_missing(value) else str(value)
 
 
-def as_date(value: Any, field: str) -> date | None:
+def as_date(value: object, field: str) -> date | None:
     """Calendar date of a ``date``/``datetime``/ISO string; ``None`` when missing."""
     if is_missing(value):
         return None
@@ -87,8 +87,10 @@ def as_date(value: Any, field: str) -> date | None:
     raise InputError(f"Feld {field!r}: kein Datum {value!r}.")
 
 
-def hashable(value: Any, field: str) -> Any:
+def hashable(value: object, field: str) -> Hashable:
     """Grouping key; unhashable values violate the contract."""
+    if not isinstance(value, Hashable):
+        raise InputError(f"Feld {field!r}: Wert ist nicht als Schlüssel nutzbar.")
     try:
         hash(value)
     except TypeError as exc:
