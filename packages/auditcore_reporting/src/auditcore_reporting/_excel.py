@@ -101,25 +101,35 @@ def _value(value: CellValue) -> CellValue:
     raise TypeError(f"Unsupported cell value type: {type(value).__name__}")
 
 
-def _table_columns(table: ReportTable, options: ExcelOptions) -> tuple[str, ...]:
-    if not isinstance(table.name, str) or not table.name or len(table.name) > 31:
+def _check_sheet_name(name: object) -> None:
+    if not isinstance(name, str) or not name or len(name) > 31:
         raise ValueError("Sheet name must contain 1 to 31 characters")
-    if _SHEET_INVALID.search(table.name) or table.name.startswith("'") or table.name.endswith("'"):
+    if _SHEET_INVALID.search(name) or name.startswith("'") or name.endswith("'"):
         raise ValueError("Invalid worksheet name")
-    _text(table.name)
-    if isinstance(table.columns, (str, bytes)):
+    _text(name)
+
+
+def _check_columns(raw: object, options: ExcelOptions) -> tuple[str, ...]:
+    if isinstance(raw, (str, bytes)):
         raise TypeError("Columns must be a sequence of names")
-    columns = tuple(table.columns)
+    columns = tuple(cast(Iterable[str], raw))
     if not columns or len(columns) > min(16384, options.limits.max_columns):
         raise WorkbookLimitError("Invalid or excessive column count")
     if any(not isinstance(column, str) or not column for column in columns):
         raise ValueError("Column names must be nonempty strings")
     if len(set(columns)) != len(columns):
         raise ValueError("Duplicate column names")
-    if isinstance(table.start_row, bool) or not isinstance(table.start_row, int):
+    return columns
+
+
+def _check_start_row(start_row: object) -> None:
+    if isinstance(start_row, bool) or not isinstance(start_row, int):
         raise TypeError("start_row must be an integer")
-    if not 1 <= table.start_row <= 1048576:
+    if not 1 <= start_row <= 1048576:
         raise WorkbookLimitError("start_row exceeds XLSX bounds")
+
+
+def _check_formats(table: ReportTable, columns: tuple[str, ...]) -> None:
     if table.profile not in PROFILE_IDS:
         raise ValueError("Unknown format profile")
     if set(table.formats) - set(columns):
@@ -128,6 +138,14 @@ def _table_columns(table: ReportTable, options: ExcelOptions) -> tuple[str, ...]
         if not isinstance(fmt, str) or not fmt or len(fmt) > 255:
             raise ValueError("Format overrides must contain 1 to 255 characters")
         _text(fmt)
+
+
+def _table_columns(table: ReportTable, options: ExcelOptions) -> tuple[str, ...]:
+    """Validate one table in the historical order and return its column names."""
+    _check_sheet_name(table.name)
+    columns = _check_columns(table.columns, options)
+    _check_start_row(table.start_row)
+    _check_formats(table, columns)
     return columns
 
 
@@ -167,6 +185,34 @@ def _header(
     return widths
 
 
+def _cell_format(table: ReportTable, column: str, value: CellValue) -> str:
+    fmt = table.formats.get(column)
+    if fmt is None:
+        fmt = get_profile_format(table.profile, column, value)
+    return fmt
+
+
+def _write_cell(cell: Cell, value: CellValue, fmt: str, offset: int, budget: _Budget) -> None:
+    _assign(cell, value, budget)
+    if fmt != "General":
+        cell.number_format = fmt
+    if budget.options.zebra and offset % 2 == 0:
+        cell.fill = _ZEBRA
+    if budget.options.border:
+        cell.border = _BORDER
+
+
+def _finish_sheet(
+    ws: Worksheet, table: ReportTable, widths: list[float], last_row: int, options: ExcelOptions
+) -> None:
+    for index, width in enumerate(widths, 1):
+        ws.column_dimensions[get_column_letter(index)].width = min(width, options.max_width)
+    if options.freeze_header and table.start_row < 1048576:
+        ws.freeze_panes = f"A{table.start_row + 1}"
+    if options.auto_filter:
+        ws.auto_filter.ref = f"A{table.start_row}:{get_column_letter(len(widths))}{last_row}"
+
+
 def _body(ws: Worksheet, table: ReportTable, columns: tuple[str, ...], budget: _Budget) -> None:
     widths = _header(ws, columns, table, budget)
     last_row = table.start_row
@@ -175,25 +221,12 @@ def _body(ws: Worksheet, table: ReportTable, columns: tuple[str, ...], budget: _
         if offset > budget.options.limits.max_rows_per_sheet or last_row > 1048576:
             raise WorkbookLimitError("Sheet row budget exceeded")
         for index, value in enumerate(_row_values(row, columns), 1):
+            column = columns[index - 1]
             cell = cast(Cell, ws.cell(last_row, index))
-            _assign(cell, value, budget)
-            fmt = table.formats.get(columns[index - 1])
-            if fmt is None:
-                fmt = get_profile_format(table.profile, columns[index - 1], value)
-            if fmt != "General":
-                cell.number_format = fmt
-            if budget.options.zebra and offset % 2 == 0:
-                cell.fill = _ZEBRA
-            if budget.options.border:
-                cell.border = _BORDER
+            _write_cell(cell, value, _cell_format(table, column, value), offset, budget)
             if value is not None:
                 widths[index - 1] = max(widths[index - 1], len(str(value)) + 2)
-    for index, width in enumerate(widths, 1):
-        ws.column_dimensions[get_column_letter(index)].width = min(width, budget.options.max_width)
-    if budget.options.freeze_header and table.start_row < 1048576:
-        ws.freeze_panes = f"A{table.start_row + 1}"
-    if budget.options.auto_filter:
-        ws.auto_filter.ref = f"A{table.start_row}:{get_column_letter(len(columns))}{last_row}"
+    _finish_sheet(ws, table, widths, last_row, budget.options)
 
 
 def render(tables: Iterable[ReportTable], options: ExcelOptions) -> bytes:
