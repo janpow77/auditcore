@@ -55,5 +55,12 @@
   "auditcore_kanban": {
     "starlette>=0.26; extra == \"ui\"": "python3-starlette (>= 0.26)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)"
+  },
+  "auditcore_auth": {
+    "bcrypt>=4.0.1; extra == \"bcrypt\"": "python3-bcrypt (>= 4.0.1)",
+    "argon2-cffi>=21.1; extra == \"argon2\"": "python3-argon2 (>= 21.1)",
+    "PyJWT>=2.6; extra == \"jwt\"": "python3-jwt (>= 2.6)",
+    "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)",
+    "PyJWT>=2.6; extra == \"fastapi\"": "python3-jwt (>= 2.6)"
   }
 }
