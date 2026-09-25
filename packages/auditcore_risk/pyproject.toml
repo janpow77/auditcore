@@ -15,7 +15,9 @@ dependencies = ["auditcore_entity_matching==0.2.2"]
 [project.optional-dependencies]
 fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.2"]
 pandas = ["pandas>=2.1"]
-procurement = ["auditcore_procurement==0.2.1"]
+procurement = ["auditcore_procurement==0.2.2"]
+web = ["starlette>=0.26.1"]
+fastapi = ["fastapi>=0.92"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
@@ -23,14 +25,17 @@ dev = [
     "build>=1.2",
     "pandas>=2.1",
     "auditcore_entity_matching[fuzzy]==0.2.2",
-    "auditcore_procurement==0.2.1",
+    "auditcore_procurement==0.2.2",
+    "starlette>=0.26.1",
+    "fastapi>=0.92",
+    "httpx>=0.23.3",
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-auditcore_risk = ["py.typed", "provenance.json", "profile_data/*.json", "fraud_profiles/*.json"]
+auditcore_risk = ["py.typed", "provenance.json", "profile_data/*.json", "fraud_profiles/*.json", "web/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
