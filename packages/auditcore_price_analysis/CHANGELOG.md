@@ -35,3 +35,13 @@ Messung mit `auditcore-codegate check --package auditcore_price_analysis`:
 | nicht-englische Bezeichner | 2 | 0 |
 | mypy --strict | sauber | sauber |
 | Tests / Abdeckung | 622 / 98,0 % | 633 / 98,0 % |
+
+## 0.1.0 – 2026-09-23
+
+Erstausgabe: Vertrag `auditcore_price_analysis.contract/1` mit `calculate`,
+`select_tariff`, `delta_pct`, `traffic_light`, `group_statistics`,
+charakterisierte Profile @2026.09.1 und Modul `legacy` (274 ausgeführte Fälle
+aus regulierung, exakt). Nachgetragen am selben Tag: empfohlene Profile
+@2026.09.2 mit den Nutzerentscheidungen PA-H01 bis PA-H04
+(`load_recommended_calculation_profile`, `load_recommended_comparison_profile`,
+`standard_consumption`).

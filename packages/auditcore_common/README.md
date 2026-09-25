@@ -1,20 +1,65 @@
 # auditcore_common
 
-Gemeinsame Hilfsfunktionen der auditcore-Fachpakete – **nur zusammengeführt,
-wenn die Gleichheit mit jeder Paketkopie bewiesen ist**. Kern ohne
-Laufzeitabhängigkeiten; `defusedxml` nur über das Extra `[xml]`, verzögert
-importiert. Unterschiede zwischen den Paketkopien sind benannte Parameter,
-nie stille Vereinheitlichung.
+## Zweck
+
+Gemeinsame Hilfsfunktionen der auditcore-Fachpakete (JSON-Werte, Hashing, paketierte Profile, sicheres XML, HTML-Links, Numerik), nur zusammengeführt, wenn die Gleichheit mit jeder Paketkopie bewiesen ist.
+
+Für die Fachpakete dieses Repositorys, nicht für Anwendungen als allgemeine
+Werkzeugkiste. Unterschiede zwischen den früheren Paketkopien sind benannte
+Parameter, nie stille Vereinheitlichung; Fehler bleiben paketeigen. Neue
+Module kommen nur nach Thema hinzu (keine Sammeldatei `utils`).
+
+## Installation
+
+Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt):
+
+```bash
+python -m pip install auditcore_common \
+  --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+Version 0.1.0 ist noch nicht veröffentlicht; nach dem nächsten Release steht
+sie mit Direkt-URL und Hash unter
+`https://janpow77.github.io/auditcore/simple/auditcore-common/`. Muster für eine
+hashgebundene `requirements.txt`:
+
+```text
+auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_common-0.1.0-py3-none-any.whl#sha256=<sha256 aus dem Index>
+```
+
+Debian/Ubuntu über die signierte APT-Quelle eines Releases
+([Einrichtung](../../docs/deployment/package-feed.md)):
+
+```bash
+sudo apt-get install python3-auditcore-common
+```
+
+Extras: `[xml]` – `defusedxml` für `safe_xml` (verzögert importiert);
+`[dev]` – Test- und Prüfwerkzeuge.
+
+## Schnellstart
 
 ```python
 from datetime import date
 
 from auditcore_common.hashing import canonical_sha256
 from auditcore_common.json_values import jsonable
+from auditcore_common.text import group_thousands_de
 
+# Schlüsselreihenfolge ändert den kanonischen Hash nicht.
 assert canonical_sha256({"b": 1, "a": "ä"}) == canonical_sha256({"a": "ä", "b": 1})
 assert jsonable({"am": date(2026, 9, 25)}) == {"am": "2026-09-25"}
 ```
+
+```pycon
+>>> group_thousands_de(1234567)
+'1.234.567'
+```
+
+## API-Überblick
+
+Der Paketstamm exportiert nur `__version__`; eingebunden wird je Thema über
+das Modul:
 
 | Modul | Inhalt | Varianten (Parameter) |
 |---|---|---|
@@ -29,19 +74,78 @@ assert jsonable({"am": date(2026, 9, 25)}) == {"am": "2026-09-25"}
 | `text` | `group_thousands_de`, `compact_upper` | – |
 | `optional` | `require_module` – verzögerter Import eines Extras mit paketeigenem Fehler | – |
 
-Fehler bleiben paketeigen: Die Funktionen nehmen die Fehlerklasse
-(oder -fabrik) des aufrufenden Pakets entgegen, damit Typen und Meldungen
-der charakterisierten Pakete unverändert bleiben.
+<!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
+Öffentliche Namen aus `auditcore_common.__all__` (1):
 
-**Gleichheitsnachweis.** `tests/legacy_reference.py` enthält die wörtlichen
-Kopien aller zusammengeführten Funktionen (Quelle und Git-Blob in
-`provenance.json`). Die Differenztests vergleichen alt gegen neu mit
-seeded Zufallsstichproben (je Gruppe mehrere tausend Eingaben) und
-Randfällen: Ergebnis einschließlich Typen, Float-Bitmuster und
-Schlüsselreihenfolge oder Fehler einschließlich Typ, Meldung und Ursache.
-`numpy_pairwise_sum`/`numpy_round` werden zusätzlich gegen NumPy selbst
-geprüft, wenn NumPy installiert ist.
+| Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
+|---|---|---|---|
+| `__version__` | Wert | – | `(Paketstamm)` |
 
-Neue Module kommen nur nach Thema hinzu (keine Sammeldatei `utils`); die
-Auswahl steht in [docs/quality/duplikate.md](../../docs/quality/duplikate.md).
-Debian-Paket: `python3-auditcore-common`.
+Öffentliche Module:
+
+| Modul | Kurzbeschreibung |
+|---|---|
+| `auditcore_common.clock` | Timezone-aware time. |
+| `auditcore_common.frozen` | Read-only copies of JSON data and their mutable counterparts. |
+| `auditcore_common.hashing` | Canonical JSON and SHA-256 digests. |
+| `auditcore_common.html_text` | Anchor links of HTML pages and HTML marker detection (standard library only). |
+| `auditcore_common.ids` | Random identifiers. |
+| `auditcore_common.json_values` | JSON value types and conversions to JSON-compatible values. |
+| `auditcore_common.numeric` | Floating-point helpers with documented, NumPy-compatible results without NumPy. |
+| `auditcore_common.optional` | Lazy import of optional extras with the caller's own error type and message. |
+| `auditcore_common.profiles` | Packaged, versioned JSON profiles: list, recommend and load them explicitly. |
+| `auditcore_common.safe_xml` | XML parsing only through ``defusedxml`` (extra ``xml``), imported lazily. |
+| `auditcore_common.text` | Small text normalisations shared by several packages. |
+<!-- api-overview:end -->
+
+## Profile und Konfiguration
+
+Keine eigenen Profile oder Einstellungen. `profiles` ist der gemeinsame Lader
+für die paketierten, versionierten JSON-Profile der Fachpakete; welche
+Variante (Parameter) ein Paket braucht, steht in
+[docs/quality/duplikate.md](../../docs/quality/duplikate.md) (Tabelle A).
+Anbindung eines Fachpakets (Pin, Architekturtest, paketeigene Fehler,
+Deprecation-Aliase): [docs/consumer-integration.md](docs/consumer-integration.md).
+
+## Herkunft und Charakterisierung
+
+Konsolidierung innerhalb von auditcore (Stand `40ce8f71`), kein Code aus
+anderen Repositories. Auswahl per AST-Inventur
+(`scripts/inventory_duplicate_functions.py`, `docs/quality/duplikate.md`).
+`tests/legacy_reference.py` enthält die wörtlichen Kopien aller
+zusammengeführten Funktionen, Quelle und Git-Blob stehen in
+`provenance.json`. Die Differenztests vergleichen alt gegen neu mit seeded
+Zufallsstichproben (je Gruppe mehrere tausend Eingaben) und Randfällen:
+Ergebnis einschließlich Typen, Float-Bitmuster und Schlüsselreihenfolge oder
+Fehler einschließlich Typ, Meldung und Ursache. `numpy_pairwise_sum` und
+`numpy_round` werden zusätzlich gegen NumPy geprüft, wenn es installiert ist.
+
+## Bewusste Verhaltensabweichungen
+
+Keine. Jede Funktion verhält sich wie die jeweilige Paketkopie; wo sich die
+Kopien unterschieden, wählt der Aufrufer die Variante über einen benannten
+Parameter.
+
+## Abhängigkeiten
+
+Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Optional
+`defusedxml>=0.7.1` über `[xml]`. Keine Abhängigkeit von der Plattform
+`auditcore` oder anderen Fachpaketen; umgekehrt pinnen Fachpakete
+`auditcore_common` exakt (z. B. `auditcore_procurement`).
+
+## Sicherheit und Datenschutz
+
+Kein Netzwerk, keine Speicherung. XML wird ausschließlich über `defusedxml`
+gelesen (`safe_xml`, optional `forbid_dtd`); fehlt das Extra, meldet
+`require_module` den Fehler des aufrufenden Pakets. `sha256_file` liest die
+übergebene Datei nur lesend.
+
+## Lizenz und Herkunftsnachweis
+
+MIT (`LICENSE`). Freigabe des Rechteinhabers vom 22.09.2026 für die
+Bibliotheken in auditcore (`USER_AUTHORIZED_MIT`). Zusammengeführte Dateien
+mit Git-Blobs: `provenance.json`; Zuschreibung: `NOTICE`.
+
+## Änderungen
+
+Siehe [CHANGELOG.md](CHANGELOG.md).
