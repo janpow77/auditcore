@@ -1,6 +1,6 @@
 {
   "name": "@flowaudit/ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Gemeinsame FlowAudit-Oberflächenkomponenten: Vue 3, Web Components, Theming und i18n",
   "license": "MIT",
   "type": "module",
@@ -38,6 +38,7 @@
     "e2e:api": "playwright test -c e2e/playwright.api.config.ts"
   },
   "dependencies": {
+    "@flowaudit/common": "0.1.0",
     "@flowaudit/kanban-core": "0.1.0"
   },
   "peerDependencies": {
