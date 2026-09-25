@@ -6,6 +6,7 @@
 import type { Injector } from 'didi'
 import type { Element } from 'diagram-js/lib/model/Types'
 
+import { popupPositionFor } from '../popup-menu/position'
 import { isAny } from '../util/ModelUtil'
 import type { Canvas, ElementRegistry, EventBus, Selection } from '../types'
 
@@ -77,13 +78,12 @@ export default class BpmnEditorActions {
     if (searchPad) actions.find = () => searchPad.toggle()
 
     const popupMenu = optional<{ open(target: unknown, id: string, position: unknown, options?: unknown): void }>(injector, 'popupMenu')
-    const contextPad = optional<{ getPad(target: unknown): { html: HTMLElement } }>(injector, 'contextPad')
-    if (popupMenu && contextPad) {
+    if (popupMenu) {
+      const canvas = injector.get('canvas') as Canvas
       actions.replaceElement = () => {
         const [element] = selected()
         if (!element || isAny(element, ['bpmn:Lane'])) return
-        const rect = contextPad.getPad(element).html.getBoundingClientRect()
-        popupMenu.open(element, 'bpmn-replace', { x: rect.left, y: rect.bottom + 5 })
+        popupMenu.open(element, 'bpmn-replace', popupPositionFor(canvas, element))
       }
     }
   }

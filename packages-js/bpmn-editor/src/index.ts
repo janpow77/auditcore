@@ -1,3 +1,5 @@
+import './styles/bpmn-editor.css'
+
 export { BpmnEditor, type EditorOptions, type ImportXMLResult } from './BpmnEditor'
 export { translations } from './i18n/translations'
 export { createTranslate, type Translate } from './i18n/translate'

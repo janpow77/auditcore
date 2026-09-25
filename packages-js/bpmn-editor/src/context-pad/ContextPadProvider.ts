@@ -17,7 +17,8 @@ import { getChildLanes } from '../modeling/LaneUtil'
 import { getBusinessObject, hasEventDefinition, is, isAny, isEventSubProcess, isHorizontal } from '../util/ModelUtil'
 import type ElementFactory from '../modeling/ElementFactory'
 import type Modeling from '../modeling/Modeling'
-import type { BpmnShape, Translate } from '../types'
+import { popupPositionFor } from '../popup-menu/position'
+import type { BpmnShape, Canvas, Translate } from '../types'
 
 interface AppendSpec {
   id: string
@@ -94,10 +95,11 @@ export default class ContextPadProvider {
     'popupMenu',
     'autoPlace',
     'translate',
+    'canvas',
   ]
 
   constructor(
-    private readonly contextPad: ContextPad,
+    contextPad: ContextPad,
     private readonly modeling: Modeling,
     private readonly elementFactory: ElementFactory,
     private readonly connect: Connect,
@@ -105,6 +107,7 @@ export default class ContextPadProvider {
     private readonly popupMenu: PopupMenu,
     private readonly autoPlace: AutoPlace,
     private readonly translate: Translate,
+    private readonly canvas: Canvas,
   ) {
     contextPad.registerProvider(this)
   }
@@ -281,21 +284,17 @@ export default class ContextPadProvider {
   }
 
   private openPopup(target: Element | Element[], providerId: string, event: Event): void {
-    const position = this.popupPosition(target, event)
-    this.popupMenu.open(target as never, providerId, position, {
-      title: this.translate(providerId === 'bpmn-replace' ? 'Change element' : providerId === 'bpmn-color' ? 'Set color' : 'Align elements'),
-      width: 320,
-    })
-  }
-
-  private popupPosition(target: Element | Element[], event: Event): { x: number; y: number; cursor?: { x: number; y: number } } {
-    const pad = this.contextPad.getPad(target as never).html as HTMLElement
-    const rect = pad.getBoundingClientRect()
     const mouse = event as MouseEvent
-    return {
-      x: rect.left,
-      y: rect.bottom + 5,
-      cursor: { x: mouse.clientX ?? rect.left, y: mouse.clientY ?? rect.bottom },
+    const position = {
+      ...popupPositionFor(this.canvas, target),
+      ...(typeof mouse.clientX === 'number' ? { cursor: { x: mouse.clientX, y: mouse.clientY } } : {}),
     }
+    this.popupMenu.open(target as never, providerId, position, { title: this.translate(POPUP_TITLES[providerId] || ''), width: 320 })
   }
+}
+
+const POPUP_TITLES: Record<string, string> = {
+  'bpmn-replace': 'Change element',
+  'bpmn-color': 'Set color',
+  'bpmn-align': 'Align elements',
 }

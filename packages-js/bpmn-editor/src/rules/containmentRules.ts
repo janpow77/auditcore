@@ -67,7 +67,9 @@ export function canMove(elements: Element[], target: Element | undefined): boole
   // Bahnen werden nur mit ihrem Pool verschoben.
   if (elements.some((element) => is(element, 'bpmn:Lane') && !elements.includes(element.parent as Element))) return false
   if (!target) return true
-  return elements.every((element) => isLabel(element) || (element.host && elements.includes(element.host)) || canDrop(element, target))
+  // Mitgeführte Elemente (Kinder, Beschriftungen, Randereignisse) folgen ihrem Träger.
+  const carried = (element: Element) => isLabel(element) || elements.includes(element.host) || elements.includes(element.parent as Element)
+  return elements.every((element) => carried(element) || canDrop(element, target))
 }
 
 /** Ein vom Wirt gelöstes Randereignis darf als Zwischenereignis abgelegt werden. */

@@ -47,6 +47,20 @@ const COLOR_KEYS: [string, 'fill' | 'stroke'][] = [
   ['color:border-color', 'stroke'],
 ]
 
+/**
+ * Fremde Attribute (z. B. `flowaudit:marke`) brauchen im Zieldiagramm die
+ * Namensraum-Erklärung (`xmlns:flowaudit`), sonst gehen sie beim Export verloren.
+ */
+function copyNamespaceDeclarations(element: ModdleElement, source: ModdleElement | undefined, target: ModdleElement | undefined): void {
+  if (!source || !target) return
+  for (const key of Object.keys(element.$attrs || {})) {
+    const prefix = key.includes(':') ? key.split(':')[0] : undefined
+    const declaration = prefix && prefix !== 'xmlns' ? `xmlns:${prefix}` : undefined
+    const uri = declaration ? source.$attrs[declaration] : undefined
+    if (declaration && uri && !target.$attrs[declaration]) target.$attrs[declaration] = uri
+  }
+}
+
 interface Descriptor {
   id: string
   labelTarget?: string
@@ -139,6 +153,7 @@ export default class BpmnCopyPaste {
       mapReference: (value, property) => this.mapReference(value, property, sameDiagram),
       onCreate: (copy, original) => {
         if (copy.$descriptor?.propertiesByName?.id && original.id) this.bpmnFactory._ensureId(copy)
+        if (!sameDiagram) copyNamespaceDeclarations(original, getDefinitions(oldBo), targetDefinitions)
       },
     }
     const newBo = cloneModdleElement(this.moddle, oldBo, options)

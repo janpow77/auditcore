@@ -183,9 +183,11 @@ export default class LabelEditing {
   }
 
   private removeBox(): void {
-    if (this.box && this.box.parentNode) this.box.parentNode.removeChild(this.box)
+    // Erst abmelden, dann entfernen: Das Entfernen löst `blur` aus, das sonst erneut abschließen würde.
+    const box = this.box
     this.box = null
     this.element = null
+    box?.remove()
   }
 }
 

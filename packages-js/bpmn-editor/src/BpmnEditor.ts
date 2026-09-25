@@ -85,7 +85,9 @@ export class BpmnEditor {
     this.diagram = new DiagramClass({
       ...(options.config || {}),
       canvas: { container: this.element, deferUpdate: false },
-      keyboard: options.keyboard,
+      // diagram-js bindet Tastenkürzel seit Version 15 an die fokussierte Zeichenfläche;
+      // `keyboard.bindTo` wird aus Kompatibilitätsgründen angenommen, aber nicht weitergereicht.
+      keyboard: {},
       gridSize: options.gridSize ?? 10,
       locale,
       modules: [...DEFAULT_MODULES, editorModule, ...(options.additionalModules || [])],
