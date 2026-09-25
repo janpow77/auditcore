@@ -24,7 +24,7 @@ FEED = """<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>
 def main() -> None:
     """Catalogue, engine run and contract suite from the installed package."""
     package = distribution("auditcore_harvest")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert not [r for r in package.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     assert CONTRACT_VERSION == "auditcore_harvest.contract/1"

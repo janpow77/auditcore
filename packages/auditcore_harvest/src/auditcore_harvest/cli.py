@@ -16,9 +16,10 @@ import argparse
 import importlib
 import json
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any
 
+from .adapter import SourceAdapter
 from .catalog import load_catalog, summary, validate_catalog
 from .engine import HarvestEngine
 from .errors import ConfigError
@@ -27,11 +28,12 @@ from .model import HarvestRequest
 from .transport import ReplayTransport
 
 
-def _factory(spec: str) -> Any:
+def _factory(spec: str) -> Callable[[], SourceAdapter]:
     module_name, _, attribute = spec.partition(":")
     if not module_name or not attribute:
         raise ConfigError("Adapter als 'modul:fabrik' angeben.")
-    return getattr(importlib.import_module(module_name), attribute)
+    factory: Callable[[], SourceAdapter] = getattr(importlib.import_module(module_name), attribute)
+    return factory
 
 
 def main(argv: list[str] | None = None) -> int:

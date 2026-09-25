@@ -8,30 +8,31 @@ Both use only the standard library and the injected transport.
 
 from __future__ import annotations
 
-import json
 import xml.etree.ElementTree as ElementTree
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any
 
 from .adapter import FetchContext, require
 from .errors import ConfigError, ParserError
 from .model import (
+    JSON,
     AuthKind,
     Capabilities,
+    Cursor,
     HarvestRecord,
     PageResult,
-    PageStatus,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    page_result,
 )
-from .transport import raise_for_status
+from .transport import decode_json, raise_for_status
 
-Normalizer = Callable[[Mapping[str, Any]], Mapping[str, Any]]
+Normalizer = Callable[[Mapping[str, JSON]], Mapping[str, JSON]]
+FeedItem = tuple[str, dict[str, str]]
 
 
-def _identity(item: Mapping[str, Any]) -> Mapping[str, Any]:
+def _identity(item: Mapping[str, JSON]) -> Mapping[str, JSON]:
     return dict(item)
 
 
@@ -54,7 +55,7 @@ class JsonApiAdapter:
     api_key_param: str | None = None
     normalize: Normalizer = _identity
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` must be an http(s) address; ``page_size`` a positive int."""
         url = require(config, "url", str)
         if not url.startswith(("http://", "https://")):
@@ -63,8 +64,32 @@ class JsonApiAdapter:
         if size is not None and (isinstance(size, bool) or not isinstance(size, int) or size < 1):
             raise ConfigError("'page_size' muss eine positive ganze Zahl sein.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch one page and map every item to a record."""
+        params = self._params(context, cursor)
+        secret_params = dict(params)
+        if self.api_key_param:
+            secret_params[self.api_key_param] = context.secret(self.source.source_id, "api_key")
+        url = str(context.config["url"])
+        response = raise_for_status(
+            context.transport.request("GET", url, params=secret_params, timeout=context.timeout)
+        )
+        payload = decode_json(response.body)
+        if not isinstance(payload, dict) or not isinstance(payload.get(self.items_key), list):
+            raise ParserError(f"Antwort enthält keine Liste '{self.items_key}'.")
+        locator = f"{url}?{'&'.join(f'{k}={v}' for k, v in sorted(params.items()))}"
+        records, issues = self._records(context, payload[self.items_key], locator)
+        token = payload.get(self.next_key)
+        total = payload.get("total")
+        return page_result(
+            records,
+            issues,
+            None if token in (None, "") else {"token": str(token)},
+            total_hint=total if isinstance(total, int) else None,
+        )
+
+    def _params(self, context: FetchContext, cursor: Cursor | None) -> dict[str, str]:
+        """Secret-free query parameters: page size, continuation token, declared filters."""
         params: dict[str, str] = {}
         size = context.request.page_size or context.config.get("page_size")
         if size:
@@ -74,23 +99,15 @@ class JsonApiAdapter:
         for name, value in context.request.filters.items():
             if name in self.source.filters:
                 params[name] = str(value)
-        secret_params = dict(params)
-        if self.api_key_param:
-            secret_params[self.api_key_param] = context.secret(self.source.source_id, "api_key")
-        url = str(context.config["url"])
-        response = raise_for_status(
-            context.transport.request("GET", url, params=secret_params, timeout=context.timeout)
-        )
-        try:
-            payload = json.loads(response.body)
-        except ValueError as exc:
-            raise ParserError("Antwort ist kein JSON.") from exc
-        if not isinstance(payload, dict) or not isinstance(payload.get(self.items_key), list):
-            raise ParserError(f"Antwort enthält keine Liste '{self.items_key}'.")
+        return params
+
+    def _records(
+        self, context: FetchContext, items: list[JSON], locator: str
+    ) -> tuple[list[HarvestRecord], list[RecordIssue]]:
+        """Map items to records; items without id or with a failing normalizer are issues."""
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []
-        locator = f"{url}?{'&'.join(f'{k}={v}' for k, v in sorted(params.items()))}"
-        for index, item in enumerate(payload[self.items_key]):
+        for index, item in enumerate(items):
             where = f"{locator}#{index}"
             if not isinstance(item, dict) or item.get(self.id_field) in (None, ""):
                 issues.append(RecordIssue(where, f"Eintrag ohne '{self.id_field}'."))
@@ -100,26 +117,12 @@ class JsonApiAdapter:
             except (KeyError, TypeError, ValueError) as exc:
                 issues.append(RecordIssue(where, f"Normalisierung fehlgeschlagen: {exc}"))
                 continue
+            record_id = str(item[self.id_field])
+            deleted = bool(item.get("deleted") is True)
             records.append(
-                HarvestRecord(
-                    source_id=self.source.source_id,
-                    record_id=str(item[self.id_field]),
-                    raw=item,
-                    normalized=normalized,
-                    provenance=context.provenance(self.source, where, item),
-                    deleted=bool(item.get("deleted") is True),
-                )
+                context.record(self.source, record_id, item, normalized, where, deleted=deleted)
             )
-        token = payload.get(self.next_key)
-        complete = token in (None, "")
-        return PageResult(
-            records=tuple(records),
-            next_cursor=None if complete else {"token": str(token)},
-            complete=complete,
-            status=PageStatus.PARTIAL if issues else PageStatus.OK,
-            issues=tuple(issues),
-            total_hint=payload.get("total") if isinstance(payload.get("total"), int) else None,
-        )
+        return records, issues
 
 
 _ATOM = "{http://www.w3.org/2005/Atom}"
@@ -127,6 +130,63 @@ _ATOM = "{http://www.w3.org/2005/Atom}"
 
 def _text(element: ElementTree.Element | None) -> str:
     return "" if element is None or element.text is None else element.text.strip()
+
+
+def _parse_feed(text: str) -> ElementTree.Element:
+    """Well-formed XML without DOCTYPE/ENTITY, else a :class:`ParserError`."""
+    if "<!DOCTYPE" in text.upper() or "<!ENTITY" in text.upper():
+        raise ParserError("Feed mit DOCTYPE/ENTITY wird aus Sicherheitsgründen abgelehnt.")
+    try:
+        # DOCTYPE/ENTITY are rejected above (tested); no DTD or entity expansion occurs.
+        return ElementTree.fromstring(text)  # nosec B314
+    except ElementTree.ParseError as exc:
+        raise ParserError(f"Feed ist kein wohlgeformtes XML: {exc}") from exc
+
+
+def _rss_items(root: ElementTree.Element) -> list[FeedItem]:
+    channel = root.find("channel")
+    if channel is None:
+        raise ParserError("RSS ohne channel.")
+    return [
+        (
+            _text(item.find("guid")) or _text(item.find("link")),
+            {
+                "title": _text(item.find("title")),
+                "link": _text(item.find("link")),
+                "published": _text(item.find("pubDate")),
+                "summary": _text(item.find("description")),
+            },
+        )
+        for item in channel.findall("item")
+    ]
+
+
+def _atom_items(root: ElementTree.Element) -> list[FeedItem]:
+    items: list[FeedItem] = []
+    for entry in root.findall(f"{_ATOM}entry"):
+        link = entry.find(f"{_ATOM}link")
+        href = "" if link is None else link.get("href", "")
+        items.append(
+            (
+                _text(entry.find(f"{_ATOM}id")) or href,
+                {
+                    "title": _text(entry.find(f"{_ATOM}title")),
+                    "link": href,
+                    "published": _text(entry.find(f"{_ATOM}updated")),
+                    "summary": _text(entry.find(f"{_ATOM}summary")),
+                },
+            )
+        )
+    return items
+
+
+def _feed_items(root: ElementTree.Element) -> list[FeedItem]:
+    """``(identifier, fields)`` per RSS item or Atom entry; other roots are parser errors."""
+    if root.tag == "rss":
+        return _rss_items(root)
+    if root.tag == f"{_ATOM}feed":
+        return _atom_items(root)
+    raise ParserError(f"Unbekanntes Feedformat '{root.tag}'.")
 
 
 @dataclass
@@ -140,83 +200,26 @@ class FeedAdapter:
 
     source: Source
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` required (http(s) or ``file:``)."""
         url = require(config, "url", str)
         if not url.startswith(("http://", "https://", "file:")):
             raise ConfigError("'url' muss http(s) oder file: sein.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch and parse the whole feed."""
         url = str(context.config["url"])
         response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
-        text = response.text()
-        if "<!DOCTYPE" in text.upper() or "<!ENTITY" in text.upper():
-            raise ParserError("Feed mit DOCTYPE/ENTITY wird aus Sicherheitsgründen abgelehnt.")
-        try:
-            # DOCTYPE/ENTITY are rejected above (tested); no DTD or entity expansion occurs.
-            root = ElementTree.fromstring(text)  # nosec B314
-        except ElementTree.ParseError as exc:
-            raise ParserError(f"Feed ist kein wohlgeformtes XML: {exc}") from exc
-        if root.tag == "rss":
-            channel = root.find("channel")
-            if channel is None:
-                raise ParserError("RSS ohne channel.")
-            items = [
-                (
-                    item,
-                    _text(item.find("guid")) or _text(item.find("link")),
-                    {
-                        "title": _text(item.find("title")),
-                        "link": _text(item.find("link")),
-                        "published": _text(item.find("pubDate")),
-                        "summary": _text(item.find("description")),
-                    },
-                )
-                for item in channel.findall("item")
-            ]
-        elif root.tag == f"{_ATOM}feed":
-            items = []
-            for entry in root.findall(f"{_ATOM}entry"):
-                link = entry.find(f"{_ATOM}link")
-                href = "" if link is None else link.get("href", "")
-                items.append(
-                    (
-                        entry,
-                        _text(entry.find(f"{_ATOM}id")) or href,
-                        {
-                            "title": _text(entry.find(f"{_ATOM}title")),
-                            "link": href,
-                            "published": _text(entry.find(f"{_ATOM}updated")),
-                            "summary": _text(entry.find(f"{_ATOM}summary")),
-                        },
-                    )
-                )
-        else:
-            raise ParserError(f"Unbekanntes Feedformat '{root.tag}'.")
+        items = _feed_items(_parse_feed(response.text()))
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []
-        for index, (_, identifier, normalized) in enumerate(items):
+        for index, (identifier, normalized) in enumerate(items):
             where = f"{url}#{index}"
             if not identifier:
                 issues.append(RecordIssue(where, "Eintrag ohne guid/id/link."))
                 continue
-            records.append(
-                HarvestRecord(
-                    source_id=self.source.source_id,
-                    record_id=identifier,
-                    raw=normalized,
-                    normalized=normalized,
-                    provenance=context.provenance(self.source, where, normalized),
-                )
-            )
-        return PageResult(
-            records=tuple(records),
-            next_cursor=None,
-            complete=True,
-            status=PageStatus.PARTIAL if issues else PageStatus.OK,
-            issues=tuple(issues),
-        )
+            records.append(context.record(self.source, identifier, normalized, normalized, where))
+        return page_result(records, issues)
 
 
 def example_json_source() -> Source:
