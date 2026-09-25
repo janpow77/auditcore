@@ -24,10 +24,7 @@ Zwischenspeicher und Tageszählung verantwortet der Consumer.
 from __future__ import annotations
 
 import json
-import math
-import re
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlsplit
 
@@ -49,47 +46,63 @@ from auditcore_harvest import (
 )
 
 from . import __version__
+from ._nominatim_daten import (
+    _ANFRAGE_ID,
+    _LAENDERCODES,
+    _STANDARDKENNUNG,
+    LAUFARTEN,
+    MINDESTABSTAND_EINMALIG_S,
+    MINDESTABSTAND_REGELMAESSIG_S,
+    NAMENSNENNUNG,
+    NUTZUNGSBEDINGUNGEN_URL,
+    OEFFENTLICH_TAGESGRENZE,
+    OEFFENTLICHER_ENDPUNKT,
+    STRUKTUR_FELDER,
+    Anfrage,
+    _ein_treffer,
+    _zahl,
+    ist_oeffentlicher_endpunkt,
+)
 
 ADAPTER_VERSION = __version__
 PROFILE_VERSION = "2026.09.1"
-OEFFENTLICHER_ENDPUNKT = "https://nominatim.openstreetmap.org"
-NUTZUNGSBEDINGUNGEN_URL = "https://operations.osmfoundation.org/policies/nominatim/"
-NAMENSNENNUNG = "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright"
-#: Mindestabstand zweier Anfragen am öffentlichen Endpunkt (Sekunden).
-MINDESTABSTAND_EINMALIG_S = 1.0
-#: Läufe über einen Tag oder regelmäßig: höchstens 4 Anfragen je Minute.
-MINDESTABSTAND_REGELMAESSIG_S = 15.0
-#: Entscheidung vom 23.09.2026 (vom Nutzer delegiert): höchstens 1 000 Anfragen je
-#: Tag und Consumer am öffentlichen Endpunkt; darüber eigene Instanz oder Import.
-OEFFENTLICH_TAGESGRENZE = 1000
-LAUFARTEN = ("einmalig", "regelmaessig")
-STRUKTUR_FELDER = ("street", "city", "county", "state", "country", "postalcode")
-#: Standardkennungen von HTTP-Bibliotheken und Browsern identifizieren keine Anwendung.
-_STANDARDKENNUNG = re.compile(
-    r"^\s*(python-requests|python-urllib|python-httpx|httpx|aiohttp|curl|wget|"
-    r"java|go-http-client|okhttp|mozilla/5\.0)\b",
-    re.IGNORECASE,
-)
-_LAENDERCODES = re.compile(r"^[a-z]{2}(,[a-z]{2})*$")
-_ANFRAGE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,199}$")
+
+__all__ = [
+    "ADAPTER_VERSION",
+    "LAUFARTEN",
+    "MINDESTABSTAND_EINMALIG_S",
+    "MINDESTABSTAND_REGELMAESSIG_S",
+    "NAMENSNENNUNG",
+    "NUTZUNGSBEDINGUNGEN_URL",
+    "OEFFENTLICHER_ENDPUNKT",
+    "OEFFENTLICH_TAGESGRENZE",
+    "PROFILE_VERSION",
+    "STRUKTUR_FELDER",
+    "Anfrage",
+    "NominatimAdapter",
+    "anfragen_aus",
+    "empfohlene_laufparameter",
+    "ist_oeffentlicher_endpunkt",
+    "mindestabstand_s",
+    "check_config",
+    "pruefe_laufparameter",
+]
 
 
-@dataclass(frozen=True)
-class Anfrage:
-    """Eine Geocodieranfrage mit stabiler Kennung des Consumers."""
-
-    anfrage_id: str
-    q: str | None = None
-    strukturiert: Mapping[str, str] | None = None
-
-    def parameter(self) -> dict[str, str]:
-        """Suchparameter (Freitext ``q`` oder strukturierte Felder)."""
-        if self.q is not None:
-            return {"q": self.q}
-        return dict(sorted((self.strukturiert or {}).items()))
+def _strukturfelder(struktur: object, nummer: int) -> dict[str, str]:
+    if not isinstance(struktur, Mapping) or not struktur:
+        raise ConfigError(f"anfragen[{nummer}].strukturiert muss ein nichtleeres Objekt sein.")
+    felder: dict[str, str] = {}
+    for name, wert in struktur.items():
+        if name not in STRUKTUR_FELDER:
+            raise ConfigError(f"anfragen[{nummer}]: unbekanntes Feld {name!r}.")
+        if not isinstance(wert, str) or not wert.strip():
+            raise ConfigError(f"anfragen[{nummer}].{name} ist leer.")
+        felder[name] = " ".join(wert.split())
+    return felder
 
 
-def _anfrage(roh: Any, nummer: int) -> Anfrage:
+def _anfrage(roh: object, nummer: int) -> Anfrage:
     if not isinstance(roh, Mapping):
         raise ConfigError(f"anfragen[{nummer}] muss ein Objekt sein.")
     kennung = roh.get("id")
@@ -103,19 +116,10 @@ def _anfrage(roh: Any, nummer: int) -> Anfrage:
         if not isinstance(q, str) or not q.strip():
             raise ConfigError(f"anfragen[{nummer}].q ist leer.")
         return Anfrage(kennung, q=" ".join(q.split()))
-    if not isinstance(struktur, Mapping) or not struktur:
-        raise ConfigError(f"anfragen[{nummer}].strukturiert muss ein nichtleeres Objekt sein.")
-    felder: dict[str, str] = {}
-    for name, wert in struktur.items():
-        if name not in STRUKTUR_FELDER:
-            raise ConfigError(f"anfragen[{nummer}]: unbekanntes Feld {name!r}.")
-        if not isinstance(wert, str) or not wert.strip():
-            raise ConfigError(f"anfragen[{nummer}].{name} ist leer.")
-        felder[name] = " ".join(wert.split())
-    return Anfrage(kennung, strukturiert=felder)
+    return Anfrage(kennung, strukturiert=_strukturfelder(struktur, nummer))
 
 
-def anfragen_aus(config: Mapping[str, Any]) -> tuple[Anfrage, ...]:
+def anfragen_aus(config: Mapping[str, object]) -> tuple[Anfrage, ...]:
     """Geprüfte Anfragen der Konfiguration; doppelte Kennungen sind ein Fehler."""
     roh = config.get("anfragen")
     if not isinstance(roh, Sequence) or isinstance(roh, (str, bytes)) or not roh:
@@ -127,11 +131,6 @@ def anfragen_aus(config: Mapping[str, Any]) -> tuple[Anfrage, ...]:
     return anfragen
 
 
-def ist_oeffentlicher_endpunkt(basis_url: str) -> bool:
-    """Wird der Dienst der OSMF angesprochen (für den die Nutzungsbedingungen gelten)?"""
-    return (urlsplit(basis_url).hostname or "").lower() == "nominatim.openstreetmap.org"
-
-
 def mindestabstand_s(basis_url: str, laufart: str) -> float:
     """Mindestabstand zweier Anfragen am Endpunkt; für eigene Instanzen 0 (Sache des Betreibers)."""
     if laufart not in LAUFARTEN:
@@ -139,6 +138,61 @@ def mindestabstand_s(basis_url: str, laufart: str) -> float:
     if not ist_oeffentlicher_endpunkt(basis_url):
         return 0.0
     return MINDESTABSTAND_REGELMAESSIG_S if laufart == "regelmaessig" else MINDESTABSTAND_EINMALIG_S
+
+
+def _check_user_agent(kennung: object) -> None:
+    if not isinstance(kennung, str) or len(kennung.strip()) < 3:
+        raise ConfigError("user_agent muss die Anwendung identifizieren.")
+    if _STANDARDKENNUNG.match(kennung):
+        raise ConfigError("user_agent ist eine Standardkennung; Anwendung benennen.")
+
+
+def _check_budget(budget: object, anzahl: int) -> int:
+    if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
+        raise ConfigError("budget (Obergrenze der Anfragen) muss eine positive Zahl sein.")
+    if anzahl > budget:
+        raise ConfigError(f"{anzahl} Anfragen überschreiten das Budget {budget}.")
+    return budget
+
+
+def _check_base_url(basis: object, budget: int) -> str:
+    if not isinstance(basis, str) or urlsplit(basis).scheme not in ("https", "http"):
+        raise ConfigError("basis_url muss eine http(s)-Adresse sein.")
+    if ist_oeffentlicher_endpunkt(basis) and urlsplit(basis).scheme != "https":
+        raise ConfigError("Der öffentliche Endpunkt wird nur über https angesprochen.")
+    if ist_oeffentlicher_endpunkt(basis) and budget > OEFFENTLICH_TAGESGRENZE:
+        raise ConfigError(
+            f"budget über der Tagesgrenze {OEFFENTLICH_TAGESGRENZE} des öffentlichen "
+            "Endpunkts; eigene Nominatim-Instanz oder Import verwenden."
+        )
+    return basis
+
+
+def _check_search_options(config: Mapping[str, object]) -> None:
+    limit = config.get("limit", 1)
+    if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 40:
+        raise ConfigError("limit muss 1..40 sein.")
+    laender = config.get("countrycodes")
+    if laender is not None and (
+        not isinstance(laender, str) or not _LAENDERCODES.fullmatch(laender)
+    ):
+        raise ConfigError("countrycodes: ISO-3166-1-alpha-2 klein, kommagetrennt.")
+    for name in ("accept_language", "email"):
+        wert = config.get(name)
+        if wert is not None and (not isinstance(wert, str) or not wert.strip()):
+            raise ConfigError(f"{name} ist leer.")
+    if not isinstance(config.get("addressdetails", False), bool):
+        raise ConfigError("addressdetails muss wahr/falsch sein.")
+
+
+def check_config(config: Mapping[str, object]) -> None:
+    """Konfiguration prüfen, ohne den Dienst anzufragen (Reihenfolge der Prüfungen fest)."""
+    anfragen = anfragen_aus(config)
+    _check_user_agent(config.get("user_agent"))
+    budget = _check_budget(config.get("budget"), len(anfragen))
+    basis = _check_base_url(config.get("basis_url", OEFFENTLICHER_ENDPUNKT), budget)
+    mindestabstand_s(basis, str(config.get("laufart", "")))
+    _check_search_options(config)
 
 
 class NominatimAdapter:
@@ -168,46 +222,11 @@ class NominatimAdapter:
         filters=(),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, object]) -> None:
         """Konfiguration prüfen, ohne den Dienst anzufragen."""
-        anfragen = anfragen_aus(config)
-        kennung = config.get("user_agent")
-        if not isinstance(kennung, str) or len(kennung.strip()) < 3:
-            raise ConfigError("user_agent muss die Anwendung identifizieren.")
-        if _STANDARDKENNUNG.match(kennung):
-            raise ConfigError("user_agent ist eine Standardkennung; Anwendung benennen.")
-        budget = config.get("budget")
-        if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
-            raise ConfigError("budget (Obergrenze der Anfragen) muss eine positive Zahl sein.")
-        if len(anfragen) > budget:
-            raise ConfigError(f"{len(anfragen)} Anfragen überschreiten das Budget {budget}.")
-        basis = config.get("basis_url", OEFFENTLICHER_ENDPUNKT)
-        if not isinstance(basis, str) or urlsplit(basis).scheme not in ("https", "http"):
-            raise ConfigError("basis_url muss eine http(s)-Adresse sein.")
-        if ist_oeffentlicher_endpunkt(basis) and urlsplit(basis).scheme != "https":
-            raise ConfigError("Der öffentliche Endpunkt wird nur über https angesprochen.")
-        if ist_oeffentlicher_endpunkt(basis) and budget > OEFFENTLICH_TAGESGRENZE:
-            raise ConfigError(
-                f"budget über der Tagesgrenze {OEFFENTLICH_TAGESGRENZE} des öffentlichen "
-                "Endpunkts; eigene Nominatim-Instanz oder Import verwenden."
-            )
-        mindestabstand_s(basis, str(config.get("laufart", "")))
-        limit = config.get("limit", 1)
-        if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 40:
-            raise ConfigError("limit muss 1..40 sein.")
-        laender = config.get("countrycodes")
-        if laender is not None and (
-            not isinstance(laender, str) or not _LAENDERCODES.fullmatch(laender)
-        ):
-            raise ConfigError("countrycodes: ISO-3166-1-alpha-2 klein, kommagetrennt.")
-        for name in ("accept_language", "email"):
-            wert = config.get(name)
-            if wert is not None and (not isinstance(wert, str) or not wert.strip()):
-                raise ConfigError(f"{name} ist leer.")
-        if not isinstance(config.get("addressdetails", False), bool):
-            raise ConfigError("addressdetails muss wahr/falsch sein.")
+        check_config(config)
 
-    def _parameter(self, config: Mapping[str, Any], anfrage: Anfrage) -> dict[str, str]:
+    def _parameter(self, config: Mapping[str, object], anfrage: Anfrage) -> dict[str, str]:
         parameter = {
             **anfrage.parameter(),
             "format": "jsonv2",
@@ -252,7 +271,7 @@ class NominatimAdapter:
             (str(t["licence"]) for t in daten if isinstance(t, Mapping) and t.get("licence")),
             NAMENSNENNUNG,
         )
-        normalized: dict[str, Any] = {
+        normalized: dict[str, object] = {
             "anfrage_id": anfrage.anfrage_id,
             "anfrage": parameter,
             "endpunkt": f"{basis}/search",
@@ -279,16 +298,10 @@ class NominatimAdapter:
         )
 
 
-def _zahl(wert: Any) -> float | None:
-    try:
-        zahl = float(wert)
-    except (TypeError, ValueError):
-        return None
-    return zahl if math.isfinite(zahl) else None
-
-
-def _treffer(daten: list[Any], kennung: str) -> tuple[list[dict[str, Any]], list[RecordIssue]]:
-    treffer: list[dict[str, Any]] = []
+def _treffer(
+    daten: Sequence[object], kennung: str
+) -> tuple[list[dict[str, object]], list[RecordIssue]]:
+    treffer: list[dict[str, object]] = []
     issues: list[RecordIssue] = []
     for rang, eintrag in enumerate(daten, 1):
         ort = f"anfrage/{kennung}/{rang}"
@@ -299,32 +312,7 @@ def _treffer(daten: list[Any], kennung: str) -> tuple[list[dict[str, Any]], list
         if lat is None or lon is None or not (-90 <= lat <= 90 and -180 <= lon <= 180):
             issues.append(RecordIssue(ort, "Treffer ohne gültige Koordinate; nicht übernommen."))
             continue
-        box = eintrag.get("boundingbox")
-        rahmen = None
-        if isinstance(box, Sequence) and not isinstance(box, str) and len(box) == 4:
-            werte = [_zahl(v) for v in box]
-            if all(w is not None for w in werte):
-                rahmen = dict(zip(("sued", "nord", "west", "ost"), werte, strict=True))
-        treffer.append(
-            {
-                "rang": rang,
-                "lat": lat,
-                "lon": lon,
-                "achsenfolge": "lat_lon",
-                "anzeigename": eintrag.get("display_name"),
-                "osm_typ": eintrag.get("osm_type"),
-                "osm_id": eintrag.get("osm_id"),
-                "kategorie": eintrag.get("category", eintrag.get("class")),
-                "typ": eintrag.get("type"),
-                "adresstyp": eintrag.get("addresstype"),
-                "place_rank": eintrag.get("place_rank"),
-                "importance": _zahl(eintrag.get("importance")),
-                "rahmen": rahmen,
-                "adresse": eintrag.get("address")
-                if isinstance(eintrag.get("address"), Mapping)
-                else None,
-            }
-        )
+        treffer.append(_ein_treffer(rang, eintrag, lat, lon))
     return treffer, issues
 
 

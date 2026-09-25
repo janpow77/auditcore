@@ -18,23 +18,24 @@ mapping, including its placeholders, for the consumer migration.
 
 from __future__ import annotations
 
-import json
 import urllib.parse
 from collections.abc import Mapping
-from typing import Any
 
 from auditcore_harvest import (
+    JSON,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
     HarvestRecord,
     PageResult,
-    PageStatus,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    decode_json,
+    page_result,
     raise_for_status,
 )
 
@@ -77,7 +78,7 @@ class OverpassFuelStationAdapter:
         filters=("area_iso",),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` (interpreter endpoint), optional ``area_iso`` and ``timeout_seconds``."""
         if not isinstance(config.get("url"), str) or not config["url"].startswith("http"):
             raise ConfigError("url (Interpreter-Adresse) fehlt.")
@@ -88,7 +89,7 @@ class OverpassFuelStationAdapter:
         if not isinstance(timeout, (int, float)) or isinstance(timeout, bool) or timeout <= 0:
             raise ConfigError("timeout_seconds muss positiv sein.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Post the query once and turn every element into a station record."""
         area = str(
             context.request.filters.get("area_iso") or context.config.get("area_iso", DEFAULT_AREA)
@@ -104,10 +105,7 @@ class OverpassFuelStationAdapter:
                 timeout=float(context.config.get("timeout_seconds", DEFAULT_TIMEOUT_SECONDS)),
             )
         )
-        try:
-            payload = json.loads(response.body)
-        except ValueError as exc:
-            raise ParserError("Overpass-Antwort ist kein JSON.") from exc
+        payload = decode_json(response.body, "Overpass-Antwort ist kein JSON.")
         if not isinstance(payload, Mapping) or not isinstance(payload.get("elements"), list):
             raise ParserError("Overpass-Antwort ohne elements-Liste.")
         osm = payload.get("osm3s") or {}
@@ -125,50 +123,48 @@ class OverpassFuelStationAdapter:
             ):
                 issues.append(RecordIssue(locator, "Element ohne Typ oder Kennung"))
                 continue
-            kind, ident = str(element["type"]), element["id"]
-            lat, lon, origin = element.get("lat"), element.get("lon"), "element"
-            if lat is None or lon is None:
-                center = element.get("center") or {}
-                lat, lon, origin = center.get("lat"), center.get("lon"), "center"
-            if lat is None or lon is None:
-                origin = "fehlt"
-            tags = element.get("tags") or {}
-            normalized = {
-                "schema": STATION_SCHEMA,
-                "station_id": f"osm-{kind}-{ident}",
-                "osm_typ": kind,
-                "osm_id": ident,
-                "name": tags.get("name"),
-                "marke": tags.get("brand"),
-                "strasse": tags.get("addr:street"),
-                "hausnummer": tags.get("addr:housenumber"),
-                "plz": tags.get("addr:postcode"),
-                "ort": tags.get("addr:city") or tags.get("addr:place"),
-                "lat": lat,
-                "lng": lon,
-                "koordinaten_herkunft": origin,
-                "tags": dict(tags),
-                "zeitbezug": {"art": "datenstand", "wert": None, "quelle": "raw.datenstand"},
-                "lizenz": "ODbL (OpenStreetMap)",
-                "gebiet": area,
-            }
             raw = {"element": dict(element), "datenstand": stand}
+            normalized = _station(element, area)
             records.append(
-                HarvestRecord(
-                    source_id=self.source.source_id,
-                    record_id=f"osm-{kind}-{ident}",
-                    raw=raw,
-                    normalized=normalized,
-                    provenance=context.provenance(self.source, locator, raw),
-                )
+                context.record(self.source, str(normalized["station_id"]), raw, normalized, locator)
             )
-        status = PageStatus.PARTIAL if issues else PageStatus.OK
-        return PageResult(tuple(records), None, complete=True, status=status, issues=tuple(issues))
+        return page_result(records, issues)
+
+
+def _station(element: Mapping[str, JSON], area: str) -> dict[str, JSON]:
+    """Normalized station of one OSM node/way; missing source values stay ``None``."""
+    kind, ident = str(element["type"]), element["id"]
+    lat, lon, origin = element.get("lat"), element.get("lon"), "element"
+    if lat is None or lon is None:
+        center = element.get("center") or {}
+        lat, lon, origin = center.get("lat"), center.get("lon"), "center"
+    if lat is None or lon is None:
+        origin = "fehlt"
+    tags = element.get("tags") or {}
+    return {
+        "schema": STATION_SCHEMA,
+        "station_id": f"osm-{kind}-{ident}",
+        "osm_typ": kind,
+        "osm_id": ident,
+        "name": tags.get("name"),
+        "marke": tags.get("brand"),
+        "strasse": tags.get("addr:street"),
+        "hausnummer": tags.get("addr:housenumber"),
+        "plz": tags.get("addr:postcode"),
+        "ort": tags.get("addr:city") or tags.get("addr:place"),
+        "lat": lat,
+        "lng": lon,
+        "koordinaten_herkunft": origin,
+        "tags": dict(tags),
+        "zeitbezug": {"art": "datenstand", "wert": None, "quelle": "raw.datenstand"},
+        "lizenz": "ODbL (OpenStreetMap)",
+        "gebiet": area,
+    }
 
 
 def legacy_station_fields(
-    normalized: Mapping[str, Any], *, bundesland: str = "HE"
-) -> dict[str, Any] | None:
+    normalized: Mapping[str, JSON], *, bundesland: str = "HE"
+) -> dict[str, JSON] | None:
     """Row values exactly as regulierung stored a new ``Tankstelle`` (``None`` = skipped).
 
     Keeps the original placeholders and truncations; ``stamm_id``,
