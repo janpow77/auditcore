@@ -1,0 +1,14 @@
+{
+  "name": "auditcore-helpers-node",
+  "private": true,
+  "description": "Node-Werkzeugkette von auditcore-helpers (TypeScript-Compiler-API und tsx), wird per npm ci in ein Cache-Verzeichnis installiert",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "dependencies": {
+    "tsx": "4.23.15",
+    "typescript": "5.9.3"
+  }
+}

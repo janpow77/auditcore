@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 
+from auditcore.tools.quality.codegate_duplicates import duplicate_findings
 from auditcore.tools.quality.codegate_js import measure_js_package
 from auditcore.tools.quality.codegate_python import (
     PYTHON_METRICS,
@@ -64,13 +65,19 @@ def _python_search_path(found: list[PackageSource]) -> list[Path]:
     return [package.path for package in found if package.kind == "python"]
 
 
+def _python_source(package: PackageSource) -> Path:
+    if package.name == PLATFORM_PACKAGE:
+        return package.path / PLATFORM_PACKAGE
+    return package.path
+
+
 def _measure_python(
     package: PackageSource, root: Path, search_path: list[Path], with_mypy: bool
 ) -> PackageMeasurement:
     measurement = PackageMeasurement(name=package.name, kind="python")
     metrics = [m for m in PYTHON_METRICS if with_mypy or m != "mypy_strict_errors"]
     measurement.metrics = dict.fromkeys(metrics, 0)
-    source = package.path / PLATFORM_PACKAGE if package.name == PLATFORM_PACKAGE else package.path
+    source = _python_source(package)
     measure_source_files(source, root, measurement)
     for finding in complexity_findings([source], root):
         measurement.add(finding)
@@ -95,7 +102,14 @@ def measure(
         return _measure_python(package, root, search_path, with_mypy)
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        return list(pool.map(run, packages))
+        measurements = list(pool.map(run, packages))
+    # Duplicates are cross-package: always compare against every Python package.
+    sources = [(p.name, _python_source(p)) for p in all_packages if p.kind == "python"]
+    duplicates = duplicate_findings(sources, root)
+    for measurement in measurements:
+        for finding in duplicates.get(measurement.name, []):
+            measurement.add(finding)
+    return measurements
 
 
 def tool_versions(with_mypy: bool) -> dict[str, str]:

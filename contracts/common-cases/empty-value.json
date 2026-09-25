@@ -1,0 +1,69 @@
+{
+  "$schema": "./schema.json",
+  "contract": "empty-value",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "Ersatzwert für leere Werte in Anzeigeformatierern",
+  "description": "Jeder Anzeigeformatierer (Datum, Betrag, Zahl, Dateigröße) gibt für fehlende oder ungültige Werte denselben Ersatzwert aus (zentral in decisions.json).",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "value"
+  ],
+  "result": "text",
+  "cases": [
+    {
+      "id": "null",
+      "input": {
+        "value": null
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "undefined",
+      "input": {
+        "value": {
+          "$undefined": true
+        }
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      },
+      "languages": [
+        "ts"
+      ]
+    },
+    {
+      "id": "leerer-string",
+      "input": {
+        "value": ""
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "nan",
+      "input": {
+        "value": {
+          "$nan": true
+        }
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    }
+  ]
+}
