@@ -24,6 +24,7 @@ ALLOWED = {
     "re",
     "typing",
     "unicodedata",
+    "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "zipfile",
     "auditcore_funding_sources",
 }

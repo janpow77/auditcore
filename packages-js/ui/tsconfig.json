@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "types": [
+      "node"
+    ],
+    "jsx": "preserve",
+    "paths": {
+      "@flowaudit/ui": [
+        "./src/index.ts"
+      ],
+      "@flowaudit/ui/elements": [
+        "./src/elements.ts"
+      ],
+      "@flowaudit/kanban-core": [
+        "../kanban-core/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "test/**/*.ts",
+    "demo/**/*.ts",
+    "demo/**/*.vue",
+    "e2e/**/*.ts",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "env.d.ts"
+  ]
+}
