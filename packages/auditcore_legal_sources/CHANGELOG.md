@@ -1,5 +1,22 @@
 # Changelog – auditcore_legal_sources
 
+## 0.1.2 – Harvest-Hilfen, Typen
+
+Refaktorierung ohne Verhaltensänderung; benötigt `auditcore_harvest==0.1.1`.
+
+- Die Adapter nutzen die gemeinsamen Hilfen von `auditcore_harvest` 0.1.1:
+  `decode_json` (gleiche Fehlertexte „DIP: …“/„EUR-Lex: …“), `page_result`
+  und `FetchContext.record`. Die eigenen Kopien `_json` und `_page` in
+  `_adapter_support` entfallen (privat), `_record` ist ein Einzeiler.
+- Roh-JSON-Grenzen (Profile, DIP-Items, Feedeinträge, Legacy-Eingaben und
+  -Ausgaben) sind mit dem Vertragsalias `auditcore_harvest.JSON` statt
+  `typing.Any` annotiert (typgleich); `legacy_parse_date` nimmt `object`.
+  Cursor als `auditcore_harvest.Cursor`.
+- Messung (Code-Qualitäts-Gate): `Any` 50 → 0 (JSON-Alias), McCabe > 10 0,
+  Funktionen > 60 Zeilen 0, Module > 400 Zeilen 0, mypy --strict sauber.
+  Verbleibend: `legacy.designer_dip_vorgang` (Spiegel von
+  `_parse_vorgang`, DIP-Ressource „vorgang“) als fachlicher Name belassen.
+
 ## 0.1.1 – Refaktorierung ohne Verhaltensänderung
 
 - `legacy` ist ein Unterpaket nach Quelle: `legacy.common` (Datumsparser,

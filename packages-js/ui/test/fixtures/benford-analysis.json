@@ -1,0 +1,188 @@
+{
+ "library": "auditcore_statistics 0.3.0",
+ "test": "first",
+ "test_label": "Erste Ziffer (1–9)",
+ "distribution": {
+  "library": "auditcore_statistics 0.3.0",
+  "method": "auditcore_statistics.benford/1",
+  "digits": 1,
+  "short_values": null,
+  "analysed": 425,
+  "excluded": {
+   "missing": 0,
+   "zero": 0,
+   "short": 0
+  },
+  "negative_absolute": 0,
+  "chi2_statistic": 40.340489889799954,
+  "degrees_of_freedom": 8,
+  "p_value": 2.768143625312983e-06,
+  "significance_level": null,
+  "deviates_at_level": null,
+  "rows": [
+   {
+    "digit": 1,
+    "observed_count": 120,
+    "observed_share": 0.2823529411764706,
+    "expected_share": 0.3010299956639812,
+    "deviation": -0.018677054487510614
+   },
+   {
+    "digit": 2,
+    "observed_count": 70,
+    "observed_share": 0.16470588235294117,
+    "expected_share": 0.17609125905568124,
+    "deviation": -0.011385376702740063
+   },
+   {
+    "digit": 3,
+    "observed_count": 44,
+    "observed_share": 0.10352941176470588,
+    "expected_share": 0.12493873660829992,
+    "deviation": -0.021409324843594035
+   },
+   {
+    "digit": 4,
+    "observed_count": 34,
+    "observed_share": 0.08,
+    "expected_share": 0.09691001300805642,
+    "deviation": -0.016910013008056418
+   },
+   {
+    "digit": 5,
+    "observed_count": 68,
+    "observed_share": 0.16,
+    "expected_share": 0.07918124604762482,
+    "deviation": 0.08081875395237519
+   },
+   {
+    "digit": 6,
+    "observed_count": 25,
+    "observed_share": 0.058823529411764705,
+    "expected_share": 0.06694678963061322,
+    "deviation": -0.008123260218848516
+   },
+   {
+    "digit": 7,
+    "observed_count": 27,
+    "observed_share": 0.06352941176470588,
+    "expected_share": 0.05799194697768673,
+    "deviation": 0.005537464787019143
+   },
+   {
+    "digit": 8,
+    "observed_count": 22,
+    "observed_share": 0.05176470588235294,
+    "expected_share": 0.05115252244738129,
+    "deviation": 0.0006121834349716512
+   },
+   {
+    "digit": 9,
+    "observed_count": 15,
+    "observed_share": 0.03529411764705882,
+    "expected_share": 0.04575749056067514,
+    "deviation": -0.01046337291361632
+   }
+  ]
+ },
+ "conformity": {
+  "profile": "nigrini.2012",
+  "test": "first",
+  "analysed": 425,
+  "mad": 0.01932631159430355,
+  "mad_level": 3,
+  "mad_label": "Keine Übereinstimmung",
+  "chi2_statistic": 40.340489889799954,
+  "degrees_of_freedom": 8,
+  "p_value": 2.768143625312983e-06,
+  "significance_level": 0.05,
+  "chi2_exceeds": true,
+  "z_critical": 1.96,
+  "exceeding_digits": [
+   5
+  ],
+  "rows": [
+   {
+    "digit": 1,
+    "observed_count": 120,
+    "observed_share": 0.2823529411764706,
+    "expected_share": 0.3010299956639812,
+    "deviation": -0.018677054487510614,
+    "z": 0.7865255741592003,
+    "exceeds": false
+   },
+   {
+    "digit": 2,
+    "observed_count": 70,
+    "observed_share": 0.16470588235294117,
+    "expected_share": 0.17609125905568124,
+    "deviation": -0.011385376702740063,
+    "z": 0.5525419046230825,
+    "exceeds": false
+   },
+   {
+    "digit": 3,
+    "observed_count": 44,
+    "observed_share": 0.10352941176470588,
+    "expected_share": 0.12493873660829992,
+    "deviation": -0.021409324843594035,
+    "z": 1.26149006219657,
+    "exceeds": false
+   },
+   {
+    "digit": 4,
+    "observed_count": 34,
+    "observed_share": 0.08,
+    "expected_share": 0.09691001300805642,
+    "deviation": -0.016910013008056418,
+    "z": 1.0964053371221687,
+    "exceeds": false
+   },
+   {
+    "digit": 5,
+    "observed_count": 68,
+    "observed_share": 0.16,
+    "expected_share": 0.07918124604762482,
+    "deviation": 0.08081875395237519,
+    "z": 6.080508838275734,
+    "exceeds": true
+   },
+   {
+    "digit": 6,
+    "observed_count": 25,
+    "observed_share": 0.058823529411764705,
+    "expected_share": 0.06694678963061322,
+    "deviation": -0.008123260218848516,
+    "z": 0.5730077934050104,
+    "exceeds": false
+   },
+   {
+    "digit": 7,
+    "observed_count": 27,
+    "observed_share": 0.06352941176470588,
+    "expected_share": 0.05799194697768673,
+    "deviation": 0.005537464787019143,
+    "z": 0.3846527320267461,
+    "exceeds": false
+   },
+   {
+    "digit": 8,
+    "observed_count": 22,
+    "observed_share": 0.05176470588235294,
+    "expected_share": 0.05115252244738129,
+    "deviation": 0.0006121834349716512,
+    "z": 0.05728544721622052,
+    "exceeds": false
+   },
+   {
+    "digit": 9,
+    "observed_count": 15,
+    "observed_share": 0.03529411764705882,
+    "expected_share": 0.04575749056067514,
+    "deviation": -0.01046337291361632,
+    "z": 0.9162307511337383,
+    "exceeds": false
+   }
+  ]
+ }
+}
