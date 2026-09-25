@@ -1,0 +1,107 @@
+{
+  "$schema": "./schema.json",
+  "contract": "iban-valid",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "IBAN prüfen (Länderlänge und Prüfziffer mod 97)",
+  "description": "Gültig nur mit bekanntem Ländercode, passender Länge und Prüfziffer nach ISO 7064 mod 97-10. Leerzeichen und Kleinbuchstaben sind zulässig.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "text"
+  ],
+  "result": "boolean",
+  "cases": [
+    {
+      "id": "gueltig-de",
+      "input": {
+        "text": "DE89370400440532013000"
+      },
+      "expect": {
+        "value": true
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "gueltig-mit-leerzeichen",
+      "input": {
+        "text": "DE89 3704 0044 0532 0130 00"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "gueltig-kleinbuchstaben",
+      "input": {
+        "text": "de89370400440532013000"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "gueltig-gb",
+      "input": {
+        "text": "GB82WEST12345698765432"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "gueltig-at",
+      "input": {
+        "text": "AT611904300234573201"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "falsche-pruefziffer",
+      "input": {
+        "text": "DE88370400440532013000"
+      },
+      "expect": {
+        "value": false
+      },
+      "tags": [
+        "probe"
+      ],
+      "note": "Formatprüfung allein erkennt das nicht"
+    },
+    {
+      "id": "falsche-laenge",
+      "input": {
+        "text": "DE8937040044053201300"
+      },
+      "expect": {
+        "value": false
+      }
+    },
+    {
+      "id": "unbekanntes-land",
+      "input": {
+        "text": "XX46370400440532013000"
+      },
+      "expect": {
+        "value": false
+      },
+      "note": "Prüfziffer stimmt, Land unbekannt"
+    },
+    {
+      "id": "leer",
+      "input": {
+        "text": ""
+      },
+      "expect": {
+        "value": false
+      }
+    }
+  ]
+}

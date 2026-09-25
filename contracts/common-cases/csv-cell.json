@@ -1,0 +1,139 @@
+{
+  "$schema": "./schema.json",
+  "contract": "csv-cell",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "CSV-Zelle schreiben (Trenner „;“, Formelschutz)",
+  "description": "Eine Zelle für Excel-DE: Trenner „;“; Anführungszeichen nach RFC 4180 bei Trenner, Anführungszeichen oder Zeilenumbruch; Texte, die mit = + - @ Tab oder CR beginnen, erhalten den Präfix „'“ (Schutz gegen Formel-Injektion); Zahlen mit Dezimalkomma ohne Tausendertrenner und ohne Präfix; leere Werte bleiben leer.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "value"
+  ],
+  "result": "text",
+  "cases": [
+    {
+      "id": "text",
+      "input": {
+        "value": "Prüfung"
+      },
+      "expect": {
+        "value": "Prüfung"
+      }
+    },
+    {
+      "id": "trenner",
+      "input": {
+        "value": "a;b"
+      },
+      "expect": {
+        "value": "\"a;b\""
+      }
+    },
+    {
+      "id": "anfuehrungszeichen",
+      "input": {
+        "value": "Er sagte \"ja\""
+      },
+      "expect": {
+        "value": "\"Er sagte \"\"ja\"\"\""
+      }
+    },
+    {
+      "id": "zeilenumbruch",
+      "input": {
+        "value": "Zeile 1\nZeile 2"
+      },
+      "expect": {
+        "value": "\"Zeile 1\nZeile 2\""
+      }
+    },
+    {
+      "id": "formel-gleich",
+      "input": {
+        "value": "=SUMME(A1:A2)"
+      },
+      "expect": {
+        "value": "'=SUMME(A1:A2)"
+      },
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "formel-plus",
+      "input": {
+        "value": "+49 69 1234"
+      },
+      "expect": {
+        "value": "'+49 69 1234"
+      }
+    },
+    {
+      "id": "formel-minus-text",
+      "input": {
+        "value": "-Rabatt"
+      },
+      "expect": {
+        "value": "'-Rabatt"
+      }
+    },
+    {
+      "id": "formel-at",
+      "input": {
+        "value": "@cmd"
+      },
+      "expect": {
+        "value": "'@cmd"
+      }
+    },
+    {
+      "id": "formel-tab",
+      "input": {
+        "value": "\t=1"
+      },
+      "expect": {
+        "value": "'\t=1"
+      }
+    },
+    {
+      "id": "formel-mit-trenner",
+      "input": {
+        "value": "=1;2"
+      },
+      "expect": {
+        "value": "\"'=1;2\""
+      }
+    },
+    {
+      "id": "zahl",
+      "input": {
+        "value": 1234.5
+      },
+      "expect": {
+        "value": "1234,5"
+      }
+    },
+    {
+      "id": "negative-zahl",
+      "input": {
+        "value": -5
+      },
+      "expect": {
+        "value": "-5"
+      },
+      "note": "Zahlen erhalten keinen Formelschutz-Präfix"
+    },
+    {
+      "id": "leer",
+      "input": {
+        "value": null
+      },
+      "expect": {
+        "value": ""
+      }
+    }
+  ]
+}

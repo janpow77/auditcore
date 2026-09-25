@@ -5,7 +5,7 @@ import dts from 'vite-plugin-dts'
 
 // Bibliotheksbau: Vue-Komponenten (index) und Web Components (elements) als ES-Module.
 export default defineConfig({
-  plugins: [vue(), dts({ include: ['src'], tsconfigPath: './tsconfig.json', entryRoot: 'src' })],
+  plugins: [vue(), dts({ include: ['src'], tsconfigPath: './tsconfig.json', entryRoot: 'src', pathsToAliases: false })],
   build: {
     lib: {
       entry: {
