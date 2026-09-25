@@ -163,12 +163,16 @@ Consumer: [docs/consumer-migration.md](docs/consumer-migration.md).
 
 ## Bewusste Verhaltensabweichungen
 
-Korrigiert (PS-C01 bis PS-C09): keine modulglobalen Zustände und versteckten
+Korrigiert (PS-C01 bis PS-C10): keine modulglobalen Zustände und versteckten
 Dateizugriffe, Zuordnungen werden übergeben; das Baujahr wird gegen ein
 übergebenes `reference_year` geprüft; ZVG-Meldungen ohne Koordinaten
 (Geokodierung beim Consumer); still übergangene Einträge erzeugen
 `RecordIssue` und Seitenstatus `partial`; unbekannte Gerichte sind
-Konfigurationsfehler. Beibehalten (PS-L01 bis PS-L07) unter anderem die
+Konfigurationsfehler; `zvg.parse_de_number` liest deutsche Zahlen ab 0.1.2
+nach dem gemeinsamen Vertrag `parse-number` (Modus `de`, über
+`auditcore_common.numbers_de`): „1234,56“ ergibt 1234,56 statt 123,0,
+Mehrdeutiges („1.234“, „1.5“) ergibt `None`; das Original bleibt als
+`zvg.legacy_parse_de_number`. Beibehalten (PS-L01 bis PS-L07) unter anderem die
 getrennte Preissemantik und die ZVG-Betragsregeln. Entschieden am 23.09.2026
 (PS-D01 bis PS-D03): robots.txt wird standardmäßig nicht erzwungen, bien'ici
 sendet die Kopfzeilen des Originals, Anbieternamen wie im Original.
@@ -176,7 +180,8 @@ Vollständig: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, Parser nur Standardbibliothek. Keine Pflichtabhängigkeit;
+Python ≥ 3.11, Parser nur Standardbibliothek und `auditcore_common==0.1.1`
+(Zahleneingabe `numbers_de`, ab 0.1.2 einzige Pflichtabhängigkeit);
 Extra `sources`: `auditcore_harvest==0.1.1` (das im Release v0.3.0
 veröffentlichte Wheel 0.1.0 verlangt noch 0.1.0). Kein beautifulsoup4, kein
 HTTP-Client, keine Datenbank.
