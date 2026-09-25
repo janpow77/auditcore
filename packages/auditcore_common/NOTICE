@@ -1,4 +1,4 @@
-auditcore_common 0.1.0 — attribution and authorization
+auditcore_common 0.1.1 — attribution and authorization
 
 Consolidation of duplicated helper functions of the auditcore domain packages
 (janpow77/auditcore@40ce8f710785b6ca8608512a2e335c14ec9d924f); no code from

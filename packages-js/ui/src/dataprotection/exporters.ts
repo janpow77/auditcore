@@ -1,15 +1,12 @@
 /**
  * Exporte des Verzeichnisses aus dem angezeigten Stand, ohne Vue: CSV mit
- * Formelschutz (Verträge `csv-cell`/`csv-document` in contracts/common-cases),
+ * Formelschutz (`toCsv` aus @flowaudit/common, Verträge `csv-cell`/`csv-document`),
  * Markdown und eigenständiges HTML als Druckansicht („Als PDF speichern“).
- * csvCell/csvDocument wandern nach @flowaudit/common, sobald es veröffentlicht ist.
  */
-import { escapeHtml, escapeMarkdown, exportFilename } from '../synopsis/exporters'
+import { escapeHtml, toCsv } from '@flowaudit/common'
+import { escapeMarkdown, exportFilename } from '../synopsis/exporters'
 import { displayValue, groupByDepartment } from './registerView'
 import type { RegisterColumn, FieldValue, Issue, RegisterContent } from './types'
-
-const FORMULA_START = /^[=+\-@\t\r]/
-const NEEDS_QUOTES = /[;"\n\r]/
 
 export interface ExportTexts {
   yes: string
@@ -41,20 +38,6 @@ export interface RegisterExportInput {
   generatedAt?: string
 }
 
-/** Eine CSV-Zelle für Excel-DE (Trenner „;“, Formelschutz, Zahlen mit Dezimalkomma). */
-export function csvCell(value: string | number | boolean | null | undefined, yes = 'ja', no = 'nein'): string {
-  if (value === null || value === undefined) return ''
-  if (typeof value === 'boolean') return value ? yes : no
-  if (typeof value === 'number') return String(value).replace('.', ',')
-  const text = FORMULA_START.test(value) ? `'${value}` : value
-  return NEEDS_QUOTES.test(text) ? `"${text.replace(/"/g, '""')}"` : text
-}
-
-/** Ganze CSV-Datei: BOM, Zellen nach `csvCell`, Zeilenende CRLF. */
-export function csvDocument(rows: readonly (readonly (string | number | boolean | null | undefined)[])[]): string {
-  return '﻿' + rows.map((row) => row.map((cell) => csvCell(cell)).join(';') + '\r\n').join('')
-}
-
 function cell(value: FieldValue | undefined, texts: ExportTexts): string {
   return displayValue(value, texts)
 }
@@ -67,7 +50,7 @@ export function registerCsv(input: RegisterExportInput): string {
     const value = activity[key]
     return typeof value === 'boolean' ? (value ? texts.yes : texts.no) : value
   }))
-  return csvDocument([titles, ...rows])
+  return toCsv([titles, ...rows])
 }
 
 function issueLine(issue: Issue, texts: ExportTexts): string {

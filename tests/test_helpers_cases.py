@@ -51,12 +51,23 @@ def test_all_contracts_load_with_resolved_decisions() -> None:
     assert library.probe_timezone == "America/New_York"
 
 
-def test_every_decision_is_documented_as_provisional() -> None:
+def test_every_decision_is_documented_with_its_status() -> None:
     text = (CASES / "DECISIONS.md").read_text(encoding="utf-8")
     decisions = json.loads((CASES / "decisions.json").read_text(encoding="utf-8"))
-    assert decisions["status"] == "vorläufig" and "vorläufig" in text
+    assert decisions["status"] == "festgelegt (Nutzer 2026-09-25)"
+    assert "**Status: festgelegt (Nutzer 2026-09-25).**" in text
+    groups = [decisions[name] for name in ("festgelegt", "vorläufig", "technisch")]
+    assert sorted(key for group in groups for key in group) == sorted(decisions["decisions"])
     for key in decisions["decisions"]:
         assert f"`{key}`" in text, key
+
+
+def test_contracts_are_binding_once_their_decisions_are_fixed() -> None:
+    library = load_cases(CASES)
+    binding = {"parse-number", "empty-value", "format-date", "format-filesize"}
+    for name in EXPECTED_CONTRACTS:
+        expected = "verbindlich" if name in binding else "vorläufig"
+        assert library.contract(name).status == expected, name
 
 
 def test_probe_cases_exist_for_probe_rules() -> None:

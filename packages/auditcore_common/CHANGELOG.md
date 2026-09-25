@@ -1,5 +1,21 @@
 # Changelog auditcore_common
 
+## 0.1.1 – Deutsche Zahleneingabe nach dem gemeinsamen Vertrag
+
+- Neues Modul `numbers_de`: `parse_number(text, mode)`, `parse_de_number(text)`
+  und `parse_number_result(text, mode)` (Ergebnis `ParsedNumber` mit Wert oder
+  Hinweis `leer`/`mehrdeutig`/`ungültig`, `message` als deutscher Text).
+  Umsetzung des Vertrags `contracts/common-cases/parse-number.json` (Modi
+  `de`, `en`, `auto`) mit den Festlegungen des Nutzers vom 25.09.2026:
+  „1.5“ und „1.234“ sind in Beträgen mehrdeutig und werden mit Hinweis
+  abgelehnt, höchstens zwei Nachkommastellen (`max_fraction_digits`, `None`
+  hebt die Grenze für Mengen und Sätze auf). Im Modus `auto` gilt ein
+  einzelner Trenner vor genau drei Ziffern nur dann als mehrdeutig, wenn der
+  ganzzahlige Teil eine gültige Tausendergruppe sein kann (`"0.345"` und
+  `"1234.567"` sind eindeutig).
+- Alle Python-Fälle des Vertrags laufen als Tests (`tests/test_numbers_de.py`).
+- Pins `auditcore_common==0.1.1` in den abhängigen Paketen.
+
 ## 0.1.0 – Erstausgabe
 
 **Nachtrag vor der ersten Veröffentlichung** (0.1.0 war noch in keinem Release;

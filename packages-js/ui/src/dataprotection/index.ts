@@ -90,4 +90,4 @@ export {
   type BlockProgress,
   type TabItem,
 } from './dsfaView'
-export { csvCell, csvDocument, registerCsv, registerFilename, registerHtml, registerMarkdown, type RegisterExportInput, type ExportTexts } from './exporters'
+export { registerCsv, registerFilename, registerHtml, registerMarkdown, type RegisterExportInput, type ExportTexts } from './exporters'

@@ -64,7 +64,7 @@
       "kind": "function",
       "severity": "fehler",
       "contract": "parse-number",
-      "message": "Zahlparser entfernt jeden Punkt: „1.5“ wird stillschweigend zu 15. Mehrdeutige Eingaben sind nach der (vorläufigen) Festlegung ungültig und brauchen einen Hinweis.",
+      "message": "Zahlparser entfernt jeden Punkt: „1.5“ wird stillschweigend zu 15. Mehrdeutige Eingaben sind nach der Festlegung des Nutzers (25.09.2026) ungültig und brauchen einen Hinweis.",
       "remedy": "Tausenderpunkte nur in Dreiergruppen akzeptieren, sonst ablehnen (Vertrag parse-number, Fall de-mehrdeutig-punkt).",
       "spec": {
         "ts": {

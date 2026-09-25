@@ -31,7 +31,7 @@ def main() -> None:
     package = distribution("auditcore_dataprotection")
     assert package.version == "0.5.0"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.1.0"], runtime
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     assert available_profiles() == (
         ("auditcore.dsgvo", "2026.10.1"),

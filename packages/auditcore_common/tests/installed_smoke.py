@@ -7,7 +7,7 @@ from importlib.util import find_spec
 def main() -> None:
     """Exercise every module of the installed distribution."""
     package = distribution("auditcore_common")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
 
@@ -17,11 +17,14 @@ def main() -> None:
     from auditcore_common.html_text import anchor_links, has_html_marker
     from auditcore_common.ids import new_uuid
     from auditcore_common.json_values import decode_json, jsonable
+    from auditcore_common.numbers_de import parse_de_number, parse_number_result
     from auditcore_common.numeric import numpy_pairwise_sum, numpy_round, parse_percent_rate
     from auditcore_common.optional import require_module
     from auditcore_common.profiles import packaged_profile_ids
     from auditcore_common.text import compact_upper, group_thousands_de
 
+    assert str(parse_de_number("1.234,56 €")) == "1234.56"
+    assert parse_number_result("1.234").hint == "mehrdeutig"
     assert canonical_json({"b": 1, "a": "ä"}) == '{"a":"ä","b":1}'
     assert canonical_sha256({}) == (
         "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"

@@ -5,8 +5,6 @@ import {
   addScenario,
   bandTone,
   blockProgress,
-  csvCell,
-  csvDocument,
   groupByDepartment,
   isDeviation,
   mayRelease,
@@ -63,9 +61,12 @@ describe('View-Logik Verzeichnis', () => {
 })
 
 describe('Exporte mit Formelschutz', () => {
-  it('erfüllt die gemeinsamen Verträge csv-cell und csv-document', () => {
-    for (const entry of contract('csv-cell').cases) expect(csvCell(entry.input.value as string | number | null), entry.id).toBe(entry.expect.value)
-    for (const entry of contract('csv-document').cases) expect(csvDocument(entry.input.rows as string[][]), entry.id).toBe(entry.expect.value)
+  it('schützt jede Zelle nach dem gemeinsamen Vertrag csv-cell (über @flowaudit/common)', () => {
+    const cells = contract('csv-cell').cases.map((entry) => entry.input.value as string | number | null)
+    const activities = cells.map((value) => ({ name: 'x', anmerkungen: value }))
+    const csv = registerCsv({ content: { ...content, taetigkeiten: activities }, columns: [{ key: 'anmerkungen', title: 'A', reference: '', kind: 'text', required: false }], issues: [], versionLabel: '', texts })
+    const expected = contract('csv-cell').cases.map((entry) => `;${entry.expect.value}`)
+    expect(csv.split('\r\n').slice(1, -1)).toEqual(expected)
   })
 
   it('schreibt das Verzeichnis als CSV, Markdown und Druckansicht', () => {

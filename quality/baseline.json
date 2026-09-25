@@ -301,6 +301,15 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
+    },
+    "js:common": {
+      "metrics": {
+        "eslint_file_disables": 0,
+        "eslint_unjustified_line_disables": 0,
+        "explicit_any": 0,
+        "files_over_400_lines": 0,
+        "vue_sfc_over_250_lines": 0
+      }
     }
   }
 }
