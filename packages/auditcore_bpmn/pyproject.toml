@@ -1,0 +1,76 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_bpmn"
+version = "0.1.0"
+description = "BPMN 2.0 with the FlowAudit extension (schema 1.1) for audit authorities: safe parsing, element model, validation rules, legacy-exact process figures, diagram collections, comparison, neutralisation and reports"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = []
+
+[project.optional-dependencies]
+xml = ["defusedxml>=0.7.1"]
+excel = ["openpyxl>=3.0.9,<4"]
+pdf = ["reportlab>=3.6.12,<6"]
+legal = ["auditcore_legal_sources==0.1.0"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "bandit>=1.7",
+    "defusedxml>=0.7.1",
+    "openpyxl>=3.1.2,<4",
+    "reportlab>=4.0.8,<6",
+    "pypdf>=4,<7",
+    "lxml>=6.1.0,<7",
+    "jsonschema>=4.10",
+    "auditcore_legal_sources==0.1.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_bpmn = [
+    "py.typed",
+    "provenance.json",
+    "profiles/data/*.json",
+    "schemas/*.json",
+    "schemas/*.xsd",
+    "templates/*.bpmn",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "C901"]
+
+[tool.ruff.lint.per-file-ignores]
+# Testdaten und Werkzeuge enthalten lange XML- und Rechtstext-Zeilen.
+"tests/*" = ["E501"]
+"tools/*" = ["E501"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.mypy]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["defusedxml.*", "openpyxl.*", "reportlab.*", "pypdf.*", "lxml.*", "jsonschema.*", "auditcore_legal_sources.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]
