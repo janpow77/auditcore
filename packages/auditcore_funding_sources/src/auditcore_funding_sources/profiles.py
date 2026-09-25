@@ -2,32 +2,27 @@
 
 from __future__ import annotations
 
-import hashlib
-import json
 from collections.abc import Mapping
 from functools import cache
-from importlib import resources
 from typing import Any
+
+from auditcore_common.hashing import canonical_sha256
+from auditcore_common.profiles import load_packaged_profile, packaged_profile_ids
 
 from .errors import ProfileError
 
 PROFILE_VERSION = "2026.09.1"
+_RESOURCES = "auditcore_funding_sources.data"
 
 
 def fingerprint(data: object) -> str:
     """SHA-256 of the canonical JSON representation."""
-    canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return canonical_sha256(data)
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
     """``(id, version)`` of every packaged profile."""
-    found = []
-    for entry in resources.files("auditcore_funding_sources.data").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            found.append((str(data["id"]), str(data["version"])))
-    return tuple(sorted(found))
+    return packaged_profile_ids(_RESOURCES)
 
 
 @cache
@@ -37,16 +32,21 @@ def load_profile(profile_id: str, version: str = PROFILE_VERSION) -> dict[str, A
     Raises:
         ProfileError: unknown id/version or mismatching content.
     """
-    name = f"{profile_id}-{version}.json"
-    if "/" in name or "\\" in name or name.startswith("."):
-        raise ProfileError("Ungültige Profilkennung.")
-    entry = resources.files("auditcore_funding_sources.data").joinpath(name)
-    if not entry.is_file():
-        raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
-    data = json.loads(entry.read_text(encoding="utf-8"))
-    if (data.get("id"), data.get("version")) != (profile_id, version):
-        raise ProfileError("Profildatei und Profilkennung stimmen nicht überein.")
+    data = load_packaged_profile(
+        _RESOURCES,
+        profile_id,
+        version,
+        parse=_raw,
+        identity=lambda raw: (raw.get("id"), raw.get("version")),
+        error=ProfileError,
+        invalid_name="invalid_or_hidden",
+    )
     return {**data, "fingerprint": fingerprint(data)}
+
+
+def _raw(data: dict[str, object]) -> dict[str, object]:
+    """The profile document as read; checked by the identity comparison only."""
+    return data
 
 
 def reference(profile: Mapping[str, Any]) -> dict[str, str]:

@@ -74,17 +74,24 @@ export const FlowauditTableLite = createElementComponent<{ rows: readonly object
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (12):
+Exporte der Einstiegspunkte aus `package.json#exports` (19):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@flowaudit/ui-react` | `BaseElementProps` | Schnittstelle | – | `createElementComponent` |
 | `@flowaudit/ui-react` | `ElementComponentOptions` | Schnittstelle | – | `createElementComponent` |
 | `@flowaudit/ui-react` | `EventHandlers` | Typ | Ereignis-Handler einer Hülle erhalten das erste Argument des Vue-emit (CustomEvent.detail[0]). | `createElementComponent` |
+| `@flowaudit/ui-react` | `FlowauditBenford` | Konstante | `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. | `elements` |
+| `@flowaudit/ui-react` | `FlowauditBenfordProps` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardsProps` | Schnittstelle | – | `kanban` |
+| `@flowaudit/ui-react` | `FlowauditSampling` | Konstante | `<flowaudit-sampling>` als React-Komponente: Stichprobenumfang, Auswahl mit Seed, Export. | `elements` |
+| `@flowaudit/ui-react` | `FlowauditSamplingProps` | Schnittstelle | – | `elements` |
+| `@flowaudit/ui-react` | `FlowauditScreeningError` | Typ | Nutzdaten des Ereignisses `error` der Screening-Trefferprüfung. | `elements` |
+| `@flowaudit/ui-react` | `FlowauditScreeningReview` | Konstante | `<flowaudit-screening-review>` als React-Komponente: Sanktionslisten-/PEP-Treffer prüfen und entscheiden. | `elements` |
+| `@flowaudit/ui-react` | `FlowauditScreeningReviewProps` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui-react` | `FlowauditTable` | Konstante | `<flowaudit-table>` als React-Komponente. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditTableProps` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui-react` | `createElementComponent` | Funktion | Erzeugt eine React-18-Komponente für ein Custom Element. | `createElementComponent` |

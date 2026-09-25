@@ -1,0 +1,4551 @@
+{
+ "groups": [
+  {
+   "cases": [
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-generate",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "System",
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "system": "System"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "System",
+          "role": "system"
+         },
+         {
+          "content": "Frage",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 4000,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "temperature": 0.2,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "eval_count": 7,
+        "message": {
+         "content": "<think>x</think>Antwort",
+         "role": "assistant"
+        },
+        "model": "qwen3.5:35b",
+        "prompt_eval_count": 5
+       }
+      }
+     ],
+     "result": "Antwort",
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-generate-options",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "S",
+       "U"
+      ],
+      "fn": "call_llm",
+      "kwargs": {
+       "json_mode": true,
+       "max_tokens": 50,
+       "model": "m1",
+       "seed": 7,
+       "temperature": 0.7
+      }
+     },
+     "library": {
+      "args": [
+       "U"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "json_mode": true,
+       "max_tokens": 50,
+       "model": "m1",
+       "seed": 7,
+       "system": "S",
+       "temperature": 0.7
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "format": "json",
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "m1",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 50,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "seed": 7,
+         "temperature": 0.7,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "message": {
+         "content": "{}"
+        }
+       }
+      }
+     ],
+     "result": "{}",
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-generate-fallback-404",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "S",
+       "U"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "U"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "system": "S"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 4000,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "temperature": 0.2,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      },
+      {
+       "body": {
+        "max_tokens": 4000,
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "stream": false,
+        "temperature": 0.2
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "status": 404,
+       "text": "not found"
+      },
+      {
+       "json": {
+        "choices": [
+         {
+          "message": {
+           "content": "<think>t</think>Fallback",
+           "role": "assistant"
+          }
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "usage": {
+         "completion_tokens": 3,
+         "prompt_tokens": 11
+        }
+       }
+      }
+     ],
+     "result": "Fallback",
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "ai-router /api/chat HTTP 500: upstream kaputt",
+      "status_code": 500,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": false,
+      "last_error_message": "ai-router /api/chat HTTP 500: upstream kaputt"
+     },
+     "id": "ad-generate-http-500",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "S",
+       "U"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "U"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "system": "S"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 4000,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "temperature": 0.2,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "status": 500,
+       "text": "upstream kaputt"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": true,
+      "message": "ai-router /api/chat HTTP 403: {\"detail\":\"Ungültiger X-Api-Key <key>\"}",
+      "status_code": 403,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": true,
+      "last_error_message": "ai-router /api/chat HTTP 403: {\"detail\":\"Ungültiger X-Api-Key <key>\"}"
+     },
+     "id": "ad-generate-key-echo",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "S",
+       "U"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "U"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "system": "S"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 4000,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "temperature": 0.2,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "detail": "Ungültiger X-Api-Key <key>"
+       },
+       "status": 403
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": true,
+      "message": "ai-router /api/chat unreachable: connect failed http://user:<key>@router.test",
+      "status_code": null,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": false,
+      "last_error_message": "ai-router /api/chat unreachable: connect failed <url>"
+     },
+     "id": "ad-generate-unreachable",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "S",
+       "U"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "U"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "system": "S"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 4000,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "temperature": 0.2,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "message": "connect failed http://user:<key>@router.test",
+       "raise": "connect"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-chat",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "call_llm_with_messages",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "max_tokens": 4000,
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "stream": false,
+        "temperature": 0.2
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "choices": [
+         {
+          "message": {
+           "content": "<think>t</think>Fallback",
+           "role": "assistant"
+          }
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "usage": {
+         "completion_tokens": 3,
+         "prompt_tokens": 11
+        }
+       }
+      }
+     ],
+     "result": "Fallback",
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-chat-params",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "call_llm_with_messages",
+      "kwargs": {
+       "max_tokens": 10,
+       "model": "m2",
+       "temperature": 0.1
+      }
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat",
+      "kwargs": {
+       "max_tokens": 10,
+       "model": "m2",
+       "temperature": 0.1
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "max_tokens": 10,
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "m2",
+        "stream": false,
+        "temperature": 0.1
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "choices": []
+       }
+      }
+     ],
+     "result": "",
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-ocr",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       },
+       "rechnung.pdf"
+      ],
+      "fn": "call_ocr",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "ocr",
+      "kwargs": {
+       "filename": "rechnung.pdf"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "file": {
+         "content_type": "application/octet-stream",
+         "filename": "rechnung.pdf",
+         "sha256": "b1319bd333636d09ce633f56194f03ff234b873db7e8b9686be6b4c6e8829281"
+        },
+        "language": "auto",
+        "model": "auto"
+       },
+       "headers": {
+        "content-type": "multipart/form-data",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/ocr"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "confidence": 0.91,
+        "duration_ms": 12,
+        "fields": {
+         "iban": "DE00"
+        },
+        "model": "tesseract",
+        "pages": [
+         {
+          "boxes": [],
+          "page": 1,
+          "text": "Seite 1"
+         }
+        ],
+        "spoke": "vision",
+        "text": "Seite 1"
+       }
+      }
+     ],
+     "result": {
+      "confidence": 0.91,
+      "duration_ms": 12,
+      "fields": {
+       "iban": "DE00"
+      },
+      "model": "tesseract",
+      "pages": [
+       {
+        "boxes": [],
+        "page": 1,
+        "text": "Seite 1"
+       }
+      ],
+      "spoke": "vision",
+      "text": "Seite 1"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-rerank",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "frage",
+       [
+        "a",
+        "b",
+        "c"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {
+       "top_k": 2
+      }
+     },
+     "library": {
+      "args": [
+       "frage",
+       [
+        "a",
+        "b",
+        "c"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {
+       "top_k": 2
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "documents": [
+         "a",
+         "b",
+         "c"
+        ],
+        "model": "bge-reranker-v2-m3",
+        "query": "frage",
+        "top_k": 2
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/reranker"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "duration_ms": 4,
+        "model": "bge-reranker-v2-m3",
+        "results": [
+         {
+          "document": "c",
+          "index": 2,
+          "score": 0.9
+         },
+         {
+          "document": "a",
+          "index": 0,
+          "score": 0.1
+         },
+         {
+          "index": "x",
+          "score": 1
+         }
+        ],
+        "spoke": "gpu"
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 4,
+      "model": "bge-reranker-v2-m3",
+      "results": [
+       {
+        "document": "c",
+        "index": 2,
+        "score": 0.9
+       },
+       {
+        "document": "a",
+        "index": 0,
+        "score": 0.1
+       }
+      ],
+      "scores": [
+       0.1,
+       0.0,
+       0.9
+      ],
+      "spoke": "gpu"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-rerank-fallback-404",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "frage",
+       [
+        "a",
+        "b",
+        "c"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "frage",
+       [
+        "a",
+        "b",
+        "c"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "documents": [
+         "a",
+         "b",
+         "c"
+        ],
+        "model": "bge-reranker-v2-m3",
+        "query": "frage"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/reranker"
+      },
+      {
+       "body": {
+        "model": "bge-reranker-v2-m3",
+        "passages": [
+         "a",
+         "b",
+         "c"
+        ],
+        "query": "frage"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/rerank"
+      }
+     ],
+     "responses": [
+      {
+       "status": 404,
+       "text": "not found"
+      },
+      {
+       "json": {
+        "scores": [
+         0.2,
+         0.3,
+         0.1
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "model": "bge-reranker-v2-m3",
+      "results": [
+       {
+        "document": "a",
+        "index": 0,
+        "score": 0.2
+       },
+       {
+        "document": "b",
+        "index": 1,
+        "score": 0.3
+       },
+       {
+        "document": "c",
+        "index": 2,
+        "score": 0.1
+       }
+      ],
+      "scores": [
+       0.2,
+       0.3,
+       0.1
+      ],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-rerank-length-mismatch",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "frage",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "frage",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "documents": [
+         "a",
+         "b"
+        ],
+        "model": "bge-reranker-v2-m3",
+        "query": "frage"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/reranker"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "scores": [
+         0.2
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "model": "bge-reranker-v2-m3",
+      "results": [
+       {
+        "document": "a",
+        "index": 0,
+        "score": 0.0
+       },
+       {
+        "document": "b",
+        "index": 1,
+        "score": 0.0
+       }
+      ],
+      "scores": [
+       0.0,
+       0.0
+      ],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-rerank-empty",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "frage",
+       []
+      ],
+      "fn": "call_rerank",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "frage",
+       []
+      ],
+      "fn": "rerank",
+      "kwargs": {}
+     },
+     "requests": [],
+     "responses": [],
+     "result": {
+      "duration_ms": 0,
+      "model": "bge-reranker-v2-m3",
+      "results": [],
+      "scores": [],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-embed",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a",
+         "b"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/embed"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "duration_ms": 3,
+        "embeddings": [
+         [
+          0.1,
+          0.2
+         ],
+         [
+          0.3,
+          0.4
+         ]
+        ],
+        "model": "bge-m3",
+        "spoke": "s"
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 3,
+      "embeddings": [
+       [
+        0.1,
+        0.2
+       ],
+       [
+        0.3,
+        0.4
+       ]
+      ],
+      "model": "bge-m3",
+      "spoke": "s"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-embed-fallback-404",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a",
+         "b"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/embed"
+      },
+      {
+       "body": {
+        "input": [
+         "a",
+         "b"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/embeddings"
+      }
+     ],
+     "responses": [
+      {
+       "status": 404,
+       "text": "nope"
+      },
+      {
+       "json": {
+        "data": [
+         {
+          "embedding": [
+           2.0
+          ],
+          "index": 1
+         },
+         {
+          "embedding": [
+           1.0
+          ],
+          "index": 0
+         }
+        ],
+        "model": "bge-m3"
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "embeddings": [
+       [
+        1.0
+       ],
+       [
+        2.0
+       ]
+      ],
+      "model": "bge-m3",
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "ai-router /api/embed: erwartete 2 Vektoren, bekam 1",
+      "status_code": null,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": false,
+      "last_error_message": "ai-router /api/embed: erwartete 2 Vektoren, bekam 1"
+     },
+     "id": "ad-embed-count-mismatch",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a",
+         "b"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/embed"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "embeddings": [
+         [
+          0.1
+         ]
+        ]
+       }
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ad-health",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/health"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "spokes": [],
+        "status": "ok"
+       }
+      }
+     ],
+     "result": {
+      "spokes": [],
+      "status": "ok"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "ai-router health-check fehlgeschlagen: Server error '503 Service Unavailable' for url 'http://router.test:7842/health'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503",
+      "status_code": null,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": false,
+      "last_error_message": "ai-router health-check fehlgeschlagen: Server error '503 Service Unavailable' for url '<url>\nFor more information check: <url>"
+     },
+     "id": "ad-health-503",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/health"
+      }
+     ],
+     "responses": [
+      {
+       "status": 503,
+       "text": "degraded"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": true,
+      "last_error_message": "ai-router /api/chat HTTP 403: {\"detail\":\"Ungültiger X-Api-Key <key>\"}"
+     },
+     "id": "ad-safe-llm-key-echo",
+     "key_in_logs": false,
+     "key_in_result": true,
+     "legacy": {
+      "args": [
+       "S",
+       "U"
+      ],
+      "fn": "safe_call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "U"
+      ],
+      "fn": "safe:generate",
+      "kwargs": {
+       "system": "S"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "keep_alive": "10m",
+        "messages": [
+         {
+          "content": "S",
+          "role": "system"
+         },
+         {
+          "content": "U",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3.5:35b",
+        "options": {
+         "num_ctx": 16384,
+         "num_predict": 4000,
+         "presence_penalty": 0.0,
+         "repeat_penalty": 1.05,
+         "temperature": 0.2,
+         "top_k": 20,
+         "top_p": 0.8
+        },
+        "stream": false,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit_designer"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "detail": "Ungültiger X-Api-Key <key>"
+       },
+       "status": 403
+      }
+     ],
+     "result": [
+      null,
+      "ai-router /api/chat HTTP 403: {\"detail\":\"Ungültiger X-Api-Key <key>\"}"
+     ],
+     "unused_responses": 0,
+     "usage": []
+    }
+   ],
+   "env": {
+    "LLM_ROUTER_API_KEY": "<key>",
+    "LLM_ROUTER_APP_ID": "audit_designer",
+    "LLM_ROUTER_URL": "http://router.test:7842",
+    "OLLAMA_MODEL": "qwen3:14b",
+    "VP_AI_EGPU_MODEL": "qwen3.5:35b",
+    "VP_AI_LLM_KEEP_ALIVE": "10m"
+   },
+   "group": "audit_designer",
+   "profile": "audit_designer",
+   "source": {
+    "commit": "ccd65245182982af3ef885a7a6d43583f4f72cbb",
+    "git_blob": "3f748dfa52d143ff3098a45ca977d0259959835f",
+    "path": "backend/app/utils/ai_router_client.py",
+    "repository": "janpow77/audit_designer",
+    "sha256": "064a03f5acc58d2a6a64cc6a593600f46d55a2bd69fb827fc793f0b851dd3f72"
+   }
+  },
+  {
+   "cases": [
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-generate",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "model": "qwen3:14b",
+        "prompt": "Frage",
+        "stream": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/generate"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "eval_count": 4,
+        "model": "qwen3:14b",
+        "prompt_eval_count": 3,
+        "response": "Antwort",
+        "total_duration": 5000000
+       }
+      }
+     ],
+     "result": {
+      "content": "Antwort",
+      "input_tokens": 3,
+      "latency_ms": 5,
+      "model": "qwen3:14b",
+      "output_tokens": 4,
+      "raw_response": {
+       "eval_count": 4,
+       "model": "qwen3:14b",
+       "prompt_eval_count": 3,
+       "response": "Antwort",
+       "total_duration": 5000000
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-generate-options",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {
+       "extra_options": {
+        "num_ctx": 8192,
+        "top_p": 0.9
+       },
+       "json_mode": true,
+       "max_tokens": 9,
+       "model": "m",
+       "system": "Sys",
+       "temperature": 0.2
+      }
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "json_mode": true,
+       "max_tokens": 9,
+       "model": "m",
+       "options": {
+        "num_ctx": 8192,
+        "top_p": 0.9
+       },
+       "system": "Sys",
+       "temperature": 0.2
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "format": "json",
+        "model": "m",
+        "options": {
+         "num_ctx": 8192,
+         "num_predict": 9,
+         "temperature": 0.2,
+         "top_p": 0.9
+        },
+        "prompt": "Frage",
+        "stream": false,
+        "system": "Sys"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/generate"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "eval_count": 4,
+        "model": "qwen3:14b",
+        "prompt_eval_count": 3,
+        "response": "Antwort",
+        "total_duration": 5000000
+       }
+      }
+     ],
+     "result": {
+      "content": "Antwort",
+      "input_tokens": 3,
+      "latency_ms": 5,
+      "model": "qwen3:14b",
+      "output_tokens": 4,
+      "raw_response": {
+       "eval_count": 4,
+       "model": "qwen3:14b",
+       "prompt_eval_count": 3,
+       "response": "Antwort",
+       "total_duration": 5000000
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "/api/generate HTTP 502: bad gateway",
+      "status_code": 502,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-generate-http-502",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "model": "qwen3:14b",
+        "prompt": "Frage",
+        "stream": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/generate"
+      }
+     ],
+     "responses": [
+      {
+       "status": 502,
+       "text": "bad gateway"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-chat",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "call_llm_with_messages",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "stream": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "choices": [
+         {
+          "message": {
+           "content": "Chat"
+          }
+         }
+        ],
+        "model": "qwen3:14b",
+        "usage": {
+         "completion_tokens": 1,
+         "prompt_tokens": 2
+        }
+       }
+      }
+     ],
+     "result": {
+      "content": "Chat",
+      "input_tokens": 2,
+      "latency_ms": 0,
+      "model": "qwen3:14b",
+      "output_tokens": 1,
+      "raw_response": {
+       "choices": [
+        {
+         "message": {
+          "content": "Chat"
+         }
+        }
+       ],
+       "model": "qwen3:14b",
+       "usage": {
+        "completion_tokens": 1,
+        "prompt_tokens": 2
+       }
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-chat-json",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "call_llm_with_messages",
+      "kwargs": {
+       "json_mode": true,
+       "max_tokens": 5,
+       "temperature": 0.0
+      }
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat",
+      "kwargs": {
+       "json_mode": true,
+       "max_tokens": 5,
+       "temperature": 0.0
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "max_tokens": 5,
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "response_format": {
+         "type": "json_object"
+        },
+        "stream": false,
+        "temperature": 0.0
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "choices": [
+         {
+          "message": {
+           "content": "Chat"
+          }
+         }
+        ],
+        "model": "qwen3:14b",
+        "usage": {
+         "completion_tokens": 1,
+         "prompt_tokens": 2
+        }
+       }
+      }
+     ],
+     "result": {
+      "content": "Chat",
+      "input_tokens": 2,
+      "latency_ms": 0,
+      "model": "qwen3:14b",
+      "output_tokens": 1,
+      "raw_response": {
+       "choices": [
+        {
+         "message": {
+          "content": "Chat"
+         }
+        }
+       ],
+       "model": "qwen3:14b",
+       "usage": {
+        "completion_tokens": 1,
+        "prompt_tokens": 2
+       }
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-ocr",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "call_ocr",
+      "kwargs": {
+       "content_type": "image/png",
+       "filename": "beleg.png",
+       "language": "deu",
+       "model": "tesseract"
+      }
+     },
+     "library": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "ocr",
+      "kwargs": {
+       "content_type": "image/png",
+       "filename": "beleg.png",
+       "language": "deu",
+       "model": "tesseract"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "file": {
+         "content_type": "image/png",
+         "filename": "beleg.png",
+         "sha256": "b1319bd333636d09ce633f56194f03ff234b873db7e8b9686be6b4c6e8829281"
+        },
+        "language": "deu",
+        "model": "tesseract"
+       },
+       "headers": {
+        "content-type": "multipart/form-data",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/ocr"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "confidence": 0.5,
+        "duration_ms": 9,
+        "model": "tesseract",
+        "pages": [],
+        "spoke": "vision",
+        "text": "Beleg"
+       }
+      }
+     ],
+     "result": {
+      "confidence": 0.5,
+      "duration_ms": 9,
+      "fields": null,
+      "model": "tesseract",
+      "pages": [],
+      "spoke": "vision",
+      "text": "Beleg"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-rerank",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {
+       "top_k": 1
+      }
+     },
+     "library": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {
+       "top_k": 1
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "passages": [
+         "a",
+         "b"
+        ],
+        "query": "q",
+        "top_k": 1
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/rerank"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "duration_ms": 2,
+        "model": "ce",
+        "scores": [
+         0.4,
+         0.6
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 2,
+      "model": "ce",
+      "results": [
+       {
+        "document": "a",
+        "index": 0,
+        "score": 0.4
+       },
+       {
+        "document": "b",
+        "index": 1,
+        "score": 0.6
+       }
+      ],
+      "scores": [
+       0.4,
+       0.6
+      ],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-rerank-results",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "passages": [
+         "a",
+         "b"
+        ],
+        "query": "q"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/rerank"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "results": [
+         {
+          "document": "b",
+          "index": 1,
+          "score": 0.8
+         }
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "results": [
+       {
+        "document": "b",
+        "index": 1,
+        "score": 0.8
+       }
+      ],
+      "scores": [
+       0.0,
+       0.8
+      ],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-rerank-length-mismatch",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        "passages": [
+         "a",
+         "b"
+        ],
+        "query": "q"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/rerank"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "scores": [
+         1.0
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+      "results": [
+       {
+        "document": "a",
+        "index": 0,
+        "score": 0.0
+       },
+       {
+        "document": "b",
+        "index": 1,
+        "score": 0.0
+       }
+      ],
+      "scores": [
+       0.0,
+       0.0
+      ],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-embed",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a",
+         "b"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/embeddings"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "data": [
+         {
+          "embedding": [
+           0.2
+          ],
+          "index": 1
+         },
+         {
+          "embedding": [
+           0.1
+          ],
+          "index": 0
+         }
+        ],
+        "model": "bge-m3"
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "embeddings": [
+       [
+        0.1
+       ],
+       [
+        0.2
+       ]
+      ],
+      "model": "bge-m3",
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "/v1/embeddings: erwartete 2 Vektoren, bekam 0",
+      "status_code": null,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-embed-count-mismatch",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a",
+         "b"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/embeddings"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "data": []
+       }
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": true,
+      "message": "/v1/embeddings unreachable: connect failed http://user:<key>@router.test",
+      "status_code": null,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-embed-unreachable",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/embeddings"
+      }
+     ],
+     "responses": [
+      {
+       "message": "connect failed http://user:<key>@router.test",
+       "raise": "connect"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-health",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {},
+       "method": "GET",
+       "url": "http://router.test:7842/health"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "status": "ok"
+       }
+      }
+     ],
+     "result": {
+      "status": "ok"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fi-health-not-json",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {},
+       "method": "GET",
+       "url": "http://router.test:7842/health"
+      }
+     ],
+     "responses": [
+      {
+       "text": "OK"
+      }
+     ],
+     "result": {
+      "raw": "OK",
+      "status": "ok"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 1,
+      "key_in_health": true,
+      "last_error_message": "/v1/chat/completions HTTP 403: {\"detail\":\"Ungültiger X-Api-Key <key>\"}"
+     },
+     "id": "fi-safe-llm-key-echo",
+     "key_in_logs": true,
+     "key_in_result": true,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "safe_call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "safe:chat",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "stream": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "flowinvoice"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "detail": "Ungültiger X-Api-Key <key>"
+       },
+       "status": 403
+      }
+     ],
+     "result": [
+      null,
+      "/v1/chat/completions HTTP 403: {\"detail\":\"Ungültiger X-Api-Key <key>\"}"
+     ],
+     "unused_responses": 0,
+     "usage": []
+    }
+   ],
+   "env": {
+    "LLM_ROUTER_API_KEY": "<key>",
+    "LLM_ROUTER_APP_ID": "flowinvoice",
+    "LLM_ROUTER_URL": "http://router.test:7842",
+    "OLLAMA_DEFAULT_MODEL": "qwen3:14b"
+   },
+   "group": "flowinvoice_router",
+   "profile": "flowinvoice",
+   "source": {
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "git_blob": "1795b397478e7b5c3442e710a8db95ebc526fc85",
+    "path": "backend/app/clients/ai_router_client.py",
+    "repository": "janpow77/flowinvoice",
+    "sha256": "b4f9b1df85a4ebf98e86cfcec3b9c55578057954685774dc1f3f9514c7b482df"
+   }
+  },
+  {
+   "cases": [
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-generate",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {
+       "extra_options": {
+        "num_ctx": 16384
+       },
+       "json_mode": true,
+       "max_tokens": 100,
+       "system": "Sys"
+      }
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {
+       "json_mode": true,
+       "max_tokens": 100,
+       "options": {
+        "num_ctx": 16384
+       },
+       "system": "Sys"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "capability": "chat",
+        "max_tokens": 100,
+        "min_context_window": 16384,
+        "prompt": "Frage",
+        "quality": "balanced",
+        "response_format": "json",
+        "system": "Sys",
+        "temperature": 0.3
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "application/json"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/generate"
+      }
+     ],
+     "responses": [
+      {
+       "headers": {
+        "X-Flow-Agent-Model": "qwen3:32b",
+        "X-Flow-Agent-Request-Id": "r1",
+        "X-Flow-Agent-Workers": "w1,w2"
+       },
+       "json": {
+        "app_id": "flowinvoice",
+        "content": "Antwort",
+        "model_id": "qwen3:32b",
+        "request_id": "r1",
+        "route_mode": "local",
+        "worker_ids": [
+         "w1"
+        ]
+       }
+      }
+     ],
+     "result": {
+      "content": "Antwort",
+      "input_tokens": 0,
+      "latency_ms": 0,
+      "model": "qwen3:32b",
+      "output_tokens": 0,
+      "raw_response": {
+       "app_id": "flowinvoice",
+       "content": "Antwort",
+       "model_id": "qwen3:32b",
+       "request_id": "r1",
+       "route_mode": "local",
+       "worker_ids": [
+        "w1"
+       ]
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-generate-defaults",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "capability": "chat",
+        "prompt": "Frage",
+        "quality": "balanced",
+        "temperature": 0.3
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "application/json"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/generate"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "app_id": "flowinvoice",
+        "content": "Antwort",
+        "model_id": "qwen3:32b",
+        "request_id": "r1",
+        "route_mode": "local",
+        "worker_ids": [
+         "w1"
+        ]
+       }
+      }
+     ],
+     "result": {
+      "content": "Antwort",
+      "input_tokens": 0,
+      "latency_ms": 0,
+      "model": "qwen3:32b",
+      "output_tokens": 0,
+      "raw_response": {
+       "app_id": "flowinvoice",
+       "content": "Antwort",
+       "model_id": "qwen3:32b",
+       "request_id": "r1",
+       "route_mode": "local",
+       "worker_ids": [
+        "w1"
+       ]
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-chat",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "call_llm_with_messages",
+      "kwargs": {
+       "model": "gpt-4"
+      }
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat",
+      "kwargs": {
+       "model": "gpt-4"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "flow-agent-balanced",
+        "stream": false
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "application/json"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "headers": {
+        "X-Flow-Agent-Model": "qwen3:32b",
+        "X-Flow-Agent-Request-Id": "r1",
+        "X-Flow-Agent-Workers": "w1,w2"
+       },
+       "json": {
+        "choices": [
+         {
+          "message": {
+           "content": "Chat"
+          }
+         }
+        ],
+        "model": "qwen3:14b",
+        "usage": {
+         "completion_tokens": 1,
+         "prompt_tokens": 2
+        }
+       }
+      }
+     ],
+     "result": {
+      "content": "Chat",
+      "input_tokens": 2,
+      "latency_ms": 0,
+      "model": "qwen3:14b",
+      "output_tokens": 1,
+      "raw_response": {
+       "choices": [
+        {
+         "message": {
+          "content": "Chat"
+         }
+        }
+       ],
+       "model": "qwen3:14b",
+       "usage": {
+        "completion_tokens": 1,
+        "prompt_tokens": 2
+       }
+      }
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-ocr",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "call_ocr",
+      "kwargs": {
+       "content_type": "image/png",
+       "filename": "scan.png",
+       "language": "de",
+       "model": "Tesseract"
+      }
+     },
+     "library": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "ocr",
+      "kwargs": {
+       "content_type": "image/png",
+       "filename": "scan.png",
+       "language": "de",
+       "model": "Tesseract"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "backend": "tesseract",
+        "image": {
+         "content_type": "image/png",
+         "filename": "scan.png",
+         "sha256": "b1319bd333636d09ce633f56194f03ff234b873db7e8b9686be6b4c6e8829281"
+        },
+        "lang": "deu"
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "multipart/form-data"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/v1/ocr"
+      }
+     ],
+     "responses": [
+      {
+       "headers": {
+        "X-Flow-Agent-Capability": "ocr"
+       },
+       "json": {
+        "backend": "tesseract",
+        "confidence": 0.8,
+        "duration_ms": 40,
+        "text": "Hallo"
+       }
+      }
+     ],
+     "result": {
+      "confidence": 0.8,
+      "duration_ms": 40,
+      "fields": null,
+      "model": "tesseract",
+      "pages": [],
+      "spoke": "ocr",
+      "text": "Hallo"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-ocr-auto",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "call_ocr",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       {
+        "$bytes": "%PDF-1.4 Prüfbeleg"
+       }
+      ],
+      "fn": "ocr",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "backend": "auto",
+        "image": {
+         "content_type": "application/octet-stream",
+         "filename": "upload.bin",
+         "sha256": "b1319bd333636d09ce633f56194f03ff234b873db7e8b9686be6b4c6e8829281"
+        }
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "multipart/form-data"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/v1/ocr"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "text": "Hallo"
+       }
+      }
+     ],
+     "result": {
+      "confidence": null,
+      "duration_ms": 0,
+      "fields": null,
+      "model": "auto",
+      "pages": [],
+      "spoke": "",
+      "text": "Hallo"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-rerank",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "call_rerank",
+      "kwargs": {
+       "model": "ignored",
+       "top_k": 1
+      }
+     },
+     "library": {
+      "args": [
+       "q",
+       [
+        "a",
+        "b"
+       ]
+      ],
+      "fn": "rerank",
+      "kwargs": {
+       "model": "ignored",
+       "top_k": 1
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "passages": [
+         "a",
+         "b"
+        ],
+        "query": "q",
+        "top_k": 1
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "application/json"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/v1/rerank"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "scores": [
+         0.1,
+         0.9
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "model": "ignored",
+      "results": [
+       {
+        "document": "a",
+        "index": 0,
+        "score": 0.1
+       },
+       {
+        "document": "b",
+        "index": 1,
+        "score": 0.9
+       }
+      ],
+      "scores": [
+       0.1,
+       0.9
+      ],
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-embed",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {
+       "model": "ignored"
+      }
+     },
+     "library": {
+      "args": [
+       [
+        "a"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {
+       "model": "ignored"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a"
+        ]
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "application/json"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/v1/embeddings"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "data": [
+         {
+          "embedding": [
+           0.5
+          ],
+          "index": 0
+         }
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "embeddings": [
+       [
+        0.5
+       ]
+      ],
+      "model": "ignored",
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-health",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "authorization": "Bearer <key>"
+       },
+       "method": "GET",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/ready?capability=chat"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "app_id": "flowinvoice",
+        "request_id": "r",
+        "status": "assigned"
+       }
+      }
+     ],
+     "result": {
+      "app_id": "flowinvoice",
+      "request_id": "r",
+      "status": "assigned"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-health-embedding",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {
+       "capability": "embedding"
+      }
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {
+       "capability": "embedding"
+      }
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "authorization": "Bearer <key>"
+       },
+       "method": "GET",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/ready?capability=embedding"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "status": "assigned"
+       }
+      }
+     ],
+     "result": {
+      "status": "assigned"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "flow-agent capability 'chat' nicht zugewiesen: rejected ['kein Worker']",
+      "status_code": null,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-health-not-assigned",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "authorization": "Bearer <key>"
+       },
+       "method": "GET",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/ready?capability=chat"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "reasons": [
+         "kein Worker"
+        ],
+        "status": "rejected"
+       }
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "error": {
+      "key_in_message": false,
+      "message": "/api/v1/ai/apps/flowinvoice/generate HTTP 401: {\"detail\":\"Ungueltiger AI-Schluessel.\"}",
+      "status_code": 401,
+      "type": "AiRouterError"
+     },
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "fa-generate-401",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "capability": "chat",
+        "prompt": "Frage",
+        "quality": "balanced",
+        "temperature": 0.3
+       },
+       "headers": {
+        "authorization": "Bearer <key>",
+        "content-type": "application/json"
+       },
+       "method": "POST",
+       "url": "https://agent.test/api/v1/ai/apps/flowinvoice/generate"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "detail": "Ungueltiger AI-Schluessel."
+       },
+       "status": 401
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    }
+   ],
+   "env": {
+    "FLOW_AGENT_APP_ID": "flowinvoice",
+    "FLOW_AGENT_APP_KEY": "<key>",
+    "FLOW_AGENT_QUALITY": "balanced",
+    "FLOW_AGENT_URL": "https://agent.test",
+    "OLLAMA_DEFAULT_MODEL": "qwen3:14b"
+   },
+   "group": "flowinvoice_flow_agent",
+   "profile": "flowinvoice",
+   "source": {
+    "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+    "git_blob": "1795b397478e7b5c3442e710a8db95ebc526fc85",
+    "path": "backend/app/clients/ai_router_client.py",
+    "repository": "janpow77/flowinvoice",
+    "sha256": "b4f9b1df85a4ebf98e86cfcec3b9c55578057954685774dc1f3f9514c7b482df"
+   }
+  },
+  {
+   "cases": [
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ap-generate",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "call_llm",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       "Frage"
+      ],
+      "fn": "generate",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "model": "qwen3:14b",
+        "prompt": "Frage",
+        "stream": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit-portal"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/generate"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "eval_count": 4,
+        "model": "qwen3:14b",
+        "prompt_eval_count": 3,
+        "response": "Antwort",
+        "total_duration": 5000000
+       }
+      }
+     ],
+     "result": {
+      "content": "Antwort",
+      "input_tokens": 3,
+      "latency_ms": 5,
+      "model": "qwen3:14b",
+      "output_tokens": 4,
+      "raw_response": {
+       "eval_count": 4,
+       "model": "qwen3:14b",
+       "prompt_eval_count": 3,
+       "response": "Antwort",
+       "total_duration": 5000000
+      }
+     },
+     "unused_responses": 0,
+     "usage": [
+      {
+       "completion_tokens": 4,
+       "gpu_time_ms": 5,
+       "model_name": "qwen3:14b",
+       "prompt_tokens": 3
+      }
+     ]
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ap-chat",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "call_llm_with_messages",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "stream": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit-portal"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/chat/completions"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "choices": [
+         {
+          "message": {
+           "content": "Chat"
+          }
+         }
+        ],
+        "model": "qwen3:14b",
+        "usage": {
+         "completion_tokens": 1,
+         "prompt_tokens": 2
+        }
+       }
+      }
+     ],
+     "result": {
+      "content": "Chat",
+      "input_tokens": 2,
+      "latency_ms": 0,
+      "model": "qwen3:14b",
+      "output_tokens": 1,
+      "raw_response": {
+       "choices": [
+        {
+         "message": {
+          "content": "Chat"
+         }
+        }
+       ],
+       "model": "qwen3:14b",
+       "usage": {
+        "completion_tokens": 1,
+        "prompt_tokens": 2
+       }
+      }
+     },
+     "unused_responses": 0,
+     "usage": [
+      {
+       "completion_tokens": 1,
+       "gpu_time_ms": 0,
+       "model_name": "qwen3:14b",
+       "prompt_tokens": 2
+      }
+     ]
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ap-embed",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [
+       [
+        "a"
+       ]
+      ],
+      "fn": "call_embed",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        "a"
+       ]
+      ],
+      "fn": "embed",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": {
+        "input": [
+         "a"
+        ],
+        "model": "bge-m3"
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "audit-portal"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/v1/embeddings"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "data": [
+         {
+          "embedding": [
+           1.5
+          ],
+          "index": 0
+         }
+        ]
+       }
+      }
+     ],
+     "result": {
+      "duration_ms": 0,
+      "embeddings": [
+       [
+        1.5
+       ]
+      ],
+      "model": "bge-m3",
+      "spoke": ""
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": {
+      "consecutive_failures": 0,
+      "key_in_health": false,
+      "last_error_message": null
+     },
+     "id": "ap-health",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "health",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {},
+       "method": "GET",
+       "url": "http://router.test:7842/health"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "status": "ok"
+       }
+      }
+     ],
+     "result": {
+      "status": "ok"
+     },
+     "unused_responses": 0,
+     "usage": []
+    }
+   ],
+   "env": {
+    "LLM_ROUTER_API_KEY": "<key>",
+    "LLM_ROUTER_APP_ID": "audit-portal",
+    "LLM_ROUTER_URL": "http://router.test:7842",
+    "OLLAMA_DEFAULT_MODEL": "qwen3:14b"
+   },
+   "group": "audit_portal",
+   "profile": "audit_portal",
+   "source": {
+    "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+    "git_blob": "7e7fd0e381bde1cca4ebbfb0dd3ff9b554ff9991",
+    "path": "backend/app/clients/ai_router_client.py",
+    "repository": "janpow77/audit-portal",
+    "sha256": "b443b7e73df364581f32025f0a7de4a8ab92fcab68556a138b4ff8bb8df1cfb3"
+   }
+  },
+  {
+   "cases": [
+    {
+     "health": null,
+     "id": "ck-models",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "models": [
+         {
+          "details": {
+           "family": "qwen3",
+           "parameter_size": "14B"
+          },
+          "name": "qwen3:14b",
+          "size": 123
+         },
+         "kaputt",
+         {
+          "details": "none",
+          "name": "bge-m3",
+          "size": "n/a"
+         }
+        ]
+       }
+      }
+     ],
+     "result": {
+      "cache_ttl": 60,
+      "http_status": 200,
+      "message": "Router bereit",
+      "models": [
+       {
+        "family": "qwen3",
+        "name": "qwen3:14b",
+        "parameter_size": "14B",
+        "size_bytes": 123
+       },
+       {
+        "family": "",
+        "name": "bge-m3",
+        "parameter_size": "",
+        "size_bytes": 0
+       }
+      ],
+      "ok": true,
+      "reachable": true,
+      "retry_after": null,
+      "stale": false,
+      "state": "ok",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-models-empty",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "models": []
+       }
+      }
+     ],
+     "result": {
+      "cache_ttl": 60,
+      "http_status": 200,
+      "message": "ai-router erreichbar, meldet aber keine Modelle",
+      "models": [],
+      "ok": false,
+      "reachable": true,
+      "retry_after": null,
+      "stale": false,
+      "state": "empty",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-models-429",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "headers": {
+        "Retry-After": "7"
+       },
+       "status": 429,
+       "text": "slow down"
+      }
+     ],
+     "result": {
+      "cache_ttl": 7,
+      "http_status": 429,
+      "message": "ai-router überlastet (HTTP 429) – Modellabruf gedrosselt",
+      "models": [],
+      "ok": false,
+      "reachable": true,
+      "retry_after": 7,
+      "stale": false,
+      "state": "overloaded",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-models-401",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "status": 401,
+       "text": "no"
+      }
+     ],
+     "result": {
+      "cache_ttl": 5,
+      "http_status": 401,
+      "message": "ai-router: Zugriff verweigert (HTTP 401)",
+      "models": [],
+      "ok": false,
+      "reachable": true,
+      "retry_after": null,
+      "stale": false,
+      "state": "auth_error",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-models-500",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "status": 500,
+       "text": "boom"
+      }
+     ],
+     "result": {
+      "cache_ttl": 5,
+      "http_status": 500,
+      "message": "ai-router: Modellabruf fehlgeschlagen (HTTP 500)",
+      "models": [],
+      "ok": false,
+      "reachable": true,
+      "retry_after": null,
+      "stale": false,
+      "state": "http_error",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-models-invalid",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "json": {
+        "foo": 1
+       }
+      }
+     ],
+     "result": {
+      "cache_ttl": 5,
+      "http_status": 200,
+      "message": "ai-router: ungültige Antwort auf den Modellabruf",
+      "models": [],
+      "ok": false,
+      "reachable": true,
+      "retry_after": null,
+      "stale": false,
+      "state": "invalid_response",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-models-unreachable",
+     "key_in_logs": false,
+     "legacy": {
+      "args": [],
+      "fn": "_fetch_models",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [],
+      "fn": "snapshot",
+      "kwargs": {}
+     },
+     "requests": [
+      {
+       "body": null,
+       "headers": {
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "GET",
+       "url": "http://router.test:7842/api/tags"
+      }
+     ],
+     "responses": [
+      {
+       "message": "connect failed http://user:<key>@router.test",
+       "raise": "connect"
+      }
+     ],
+     "result": {
+      "cache_ttl": 5,
+      "http_status": null,
+      "message": "ai-router nicht erreichbar",
+      "models": [],
+      "ok": false,
+      "reachable": false,
+      "retry_after": null,
+      "stale": false,
+      "state": "unreachable",
+      "url": "http://router.test:7842"
+     },
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-stream",
+     "key_in_logs": false,
+     "key_in_result": false,
+     "legacy": {
+      "args": [
+       "qwen3:14b",
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat_stream",
+      "kwargs": {
+       "options": {
+        "num_ctx": 4096
+       },
+       "think": false
+      }
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "stream",
+      "kwargs": {
+       "model": "qwen3:14b",
+       "options": {
+        "num_ctx": 4096
+       },
+       "think": false
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "options": {
+         "num_ctx": 4096
+        },
+        "stream": true,
+        "think": false
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "lines": [
+        "{\"message\": {\"content\": \"Hal\"}}",
+        "kein json",
+        "",
+        "{\"message\": {\"content\": \"lo\"}, \"done\": false}",
+        "{\"message\": {\"content\": \"\"}, \"done\": true, \"eval_count\": 2, \"prompt_eval_count\": 3, \"eval_duration\": 2000000, \"total_duration\": 5000000}",
+        "{\"message\": {\"content\": \"nachlauf\"}}"
+       ]
+      }
+     ],
+     "result": [
+      {
+       "delta": "Hal"
+      },
+      {
+       "delta": "lo"
+      },
+      {
+       "done": true,
+       "eval_count": 2,
+       "eval_duration_ms": 2,
+       "prompt_eval_count": 3,
+       "total_duration_ms": 5
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-stream-error-line",
+     "key_in_logs": false,
+     "key_in_result": false,
+     "legacy": {
+      "args": [
+       "qwen3:14b",
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat_stream",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "stream",
+      "kwargs": {
+       "model": "qwen3:14b"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "stream": true
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "lines": [
+        "{\"message\": {\"content\": \"a\"}}",
+        "{\"error\": \"model not found\"}"
+       ]
+      }
+     ],
+     "result": [
+      {
+       "delta": "a"
+      },
+      {
+       "error": "model not found"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-stream-http-500",
+     "key_in_logs": false,
+     "key_in_result": true,
+     "legacy": {
+      "args": [
+       "qwen3:14b",
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat_stream",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "stream",
+      "kwargs": {
+       "model": "qwen3:14b"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "stream": true
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "status": 500,
+       "text": "proxy error for key <key>"
+      }
+     ],
+     "result": [
+      {
+       "error": "ai-router antwortete 500: proxy error for key <key>"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    },
+    {
+     "health": null,
+     "id": "ck-stream-unreachable",
+     "key_in_logs": false,
+     "key_in_result": true,
+     "legacy": {
+      "args": [
+       "qwen3:14b",
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "chat_stream",
+      "kwargs": {}
+     },
+     "library": {
+      "args": [
+       [
+        {
+         "content": "Du prüfst.",
+         "role": "system"
+        },
+        {
+         "content": "Hallo",
+         "role": "user"
+        }
+       ]
+      ],
+      "fn": "stream",
+      "kwargs": {
+       "model": "qwen3:14b"
+      }
+     },
+     "requests": [
+      {
+       "body": {
+        "messages": [
+         {
+          "content": "Du prüfst.",
+          "role": "system"
+         },
+         {
+          "content": "Hallo",
+          "role": "user"
+         }
+        ],
+        "model": "qwen3:14b",
+        "stream": true
+       },
+       "headers": {
+        "content-type": "application/json",
+        "x-api-key": "<key>",
+        "x-app-id": "cockpit"
+       },
+       "method": "POST",
+       "url": "http://router.test:7842/api/chat"
+      }
+     ],
+     "responses": [
+      {
+       "message": "connect failed http://user:<key>@router.test",
+       "raise": "connect"
+      }
+     ],
+     "result": [
+      {
+       "error": "ai-router nicht erreichbar: connect failed http://user:<key>@router.test"
+      }
+     ],
+     "unused_responses": 0,
+     "usage": []
+    }
+   ],
+   "env": {
+    "AI_ROUTER_API_KEY": "<key>",
+    "AI_ROUTER_URL": "http://router.test:7842"
+   },
+   "group": "cockpit",
+   "profile": "cockpit",
+   "source": {
+    "commit": "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+    "git_blob": "593b0bc0e162186c8731f1b23a391eced293bab7",
+    "path": "src/cockpit/services/ai_router_client.py",
+    "repository": "janpow77/cockpit",
+    "sha256": "a59dc46f2305f0ee86a58f67c7006d608d6081421b40670c663f03cb8e0984a5"
+   }
+  }
+ ],
+ "httpx": "0.28.1",
+ "key_placeholder": "<key>",
+ "python": "3.12.3",
+ "schema": "auditcore_llm_client.legacy_observed/1",
+ "tool": "tools/capture_legacy_clients.py"
+}

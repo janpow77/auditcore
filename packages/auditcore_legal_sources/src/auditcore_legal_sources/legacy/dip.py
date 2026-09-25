@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable, Mapping, Sequence
-from typing import Any
+
+from auditcore_harvest import JSON
 
 
-def _legacy_pdf_url(doc: Mapping[str, Any], number: object, period_number: object) -> object:
+def _legacy_pdf_url(doc: Mapping[str, JSON], number: object, period_number: object) -> object:
     """``fundstelle.pdf_url``, else the dserver URL derived from ``WP/NR``."""
     pdf_url = None
     fundstelle = doc.get("fundstelle", {})
@@ -22,7 +23,7 @@ def _legacy_pdf_url(doc: Mapping[str, Any], number: object, period_number: objec
     return pdf_url
 
 
-def _legacy_funding_period(datum: Any) -> str:
+def _legacy_funding_period(datum: JSON) -> str:
     """2021-2027 unless the date starts with a year before 2021."""
     if datum:
         try:
@@ -33,7 +34,7 @@ def _legacy_funding_period(datum: Any) -> str:
     return "2021-2027"
 
 
-def _legacy_fund(title: Any) -> str:
+def _legacy_fund(title: JSON) -> str:
     """Title keyword rule; EFRE when nothing matches."""
     lower = title.lower()
     if "esf" in lower or "sozialfonds" in lower:
@@ -43,7 +44,7 @@ def _legacy_fund(title: Any) -> str:
     return "EFRE"
 
 
-def legacy_dip_normalize(doc: Mapping[str, Any]) -> dict[str, Any] | None:
+def legacy_dip_normalize(doc: Mapping[str, JSON]) -> dict[str, JSON] | None:
     """auditdatabase ``DIPHarvester._normalize_drucksache``."""
     try:
         doc_id = doc.get("id", "")
@@ -80,24 +81,24 @@ def legacy_dip_normalize(doc: Mapping[str, Any]) -> dict[str, Any] | None:
         return None
 
 
-def legacy_dip_query(api_key: str, keyword: str, limit: int = 30) -> dict[str, Any]:
+def legacy_dip_query(api_key: str, keyword: str, limit: int = 30) -> dict[str, JSON]:
     """Query parameters the source sent per keyword (API key in the query string)."""
     return {"apikey": api_key, "format": "json", "num": min(limit, 100), "f.titel": keyword}
 
 
 async def legacy_dip_harvest(
-    fetch: Callable[[str, dict[str, Any]], Awaitable[tuple[int, Any]]],
+    fetch: Callable[[str, dict[str, JSON]], Awaitable[tuple[int, JSON]]],
     keywords: Sequence[str],
     api_key: str,
     limit: int = 200,
-) -> dict[str, Any]:
+) -> dict[str, JSON]:
     """``DIPHarvester.harvest`` flow: every keyword, dedupe by id, truncate, errors swallowed.
 
     ``fetch(url, params)`` returns ``(status_code, parsed_json)`` or raises. As
     in the source, failures of single keywords only drop their results and the
     result is ``success=True`` even when every request failed.
     """
-    documents: list[dict[str, Any]] = []
+    documents: list[dict[str, JSON]] = []
     url = "https://search.dip.bundestag.de/api/v1/drucksache"
     for keyword in keywords:
         try:
@@ -125,7 +126,7 @@ async def legacy_dip_harvest(
     }
 
 
-def designer_dip_drucksache(item: Mapping[str, Any], query: str) -> dict[str, Any] | None:
+def designer_dip_drucksache(item: Mapping[str, JSON], query: str) -> dict[str, JSON] | None:
     """audit_designer ``BundestagDIPHarvester._parse_drucksache``."""
     title = item.get("titel", item.get("title", ""))
     number = item.get("dokumentnummer", item.get("drucksachenummer", ""))
@@ -153,7 +154,7 @@ def designer_dip_drucksache(item: Mapping[str, Any], query: str) -> dict[str, An
     }
 
 
-def designer_dip_vorgang(item: Mapping[str, Any], query: str) -> dict[str, Any] | None:
+def designer_dip_vorgang(item: Mapping[str, JSON], query: str) -> dict[str, JSON] | None:
     """audit_designer ``BundestagDIPHarvester._parse_vorgang``."""
     title = item.get("titel", item.get("title", ""))
     identifier = item.get("id", "")
