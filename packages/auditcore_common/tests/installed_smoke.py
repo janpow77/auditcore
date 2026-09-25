@@ -39,7 +39,21 @@ def main() -> None:
     assert require_aware(utc_now()).tzinfo is not None
     assert len(new_uuid()) == 36
     assert require_module("json", ValueError, "x").__name__ == "json"
-    assert packaged_profile_ids("email") == ()  # stdlib package without profiles
+    assert packaged_profile_ids("email") == ()
+
+    from auditcore_common.aio import run_sync
+    from auditcore_common.filenames import dashed_slug, path_component
+    from auditcore_common.numeric import as_float, share_percent
+
+    async def answer() -> int:
+        return 42
+
+    assert run_sync(answer()) == 42
+    assert share_percent(1, 3) == 33.33 and share_percent(1, 0) == 0.0
+    assert as_float("") is None and as_float("", blank_as_none=True) is None
+    assert as_float("1.5") == 1.5 and as_float("x") is None
+    assert path_component("../a/b.txt") == "b.txt"
+    assert dashed_slug("Aral Tankstelle!", "tankstelle") == "aral-tankstelle"  # stdlib package without profiles
     if find_spec("defusedxml") is not None:
         from auditcore_common.safe_xml import parse_xml
 
