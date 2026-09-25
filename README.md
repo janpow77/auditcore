@@ -32,12 +32,13 @@ erzeugt; jede Paket-README folgt der
 [README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-31 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+32 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
+| [`auditcore_auth`](packages/auditcore_auth) | 0.1.0 | Passwort-Hashing mit benannten Profilen (bcrypt, argon2id) und JWT-Ausstellung/-Prüfung über PyJWT, mit Kompatibilitätsprofilen, unter denen bisherige Hashes und Token der Anwendungen gültig bleiben. | keine; Extras: `bcrypt`, `argon2`, `jwt`, `fastapi` | neu, gegen charakterisierte Verträge |
 | [`auditcore_common`](packages/auditcore_common) | 0.1.0 | Shared, behaviour-proven helpers of the auditcore domain packages (JSON, hashing, profiles, safe XML, HTML, numerics) | keine; Extras: `xml` | konsolidiert (Gleichheitsnachweis) |
 | [`auditcore_harvest`](packages/auditcore_harvest) | 0.1.1 | Shared harvest core: source contracts, paging/retry engine, checkpoints and adapter contract tests | keine | neu, gegen charakterisierte Verträge |
 | [`auditcore_identifiers`](packages/auditcore_identifiers) | 0.1.0 | Prüfen und Normalisieren von Kennungen – IBAN, BIC, USt-IdNr. (alle EU-Staaten), Steuer-ID, Steuernummer, LEI und Handelsregisternummer – mit einheitlichem Ergebnisobjekt und benannten Profilen. | keine | neu, gegen charakterisierte Verträge |
