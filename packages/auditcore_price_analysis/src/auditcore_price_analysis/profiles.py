@@ -13,24 +13,50 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Mapping
-from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 from importlib import resources
 from typing import Any
 
+from ._profile_model import (
+    CalculationProfile,
+    ComparisonProfile,
+    ComponentRule,
+    ConsumptionRule,
+    MixedPriceRule,
+    TierRule,
+)
 from .errors import ProfileError
 from .numbers import Rounding
+
+__all__ = [
+    "SCHEMA",
+    "CalculationProfile",
+    "ComparisonProfile",
+    "ComponentRule",
+    "ConsumptionRule",
+    "MixedPriceRule",
+    "TierRule",
+    "available_profiles",
+    "calculation_profile_from_dict",
+    "comparison_profile_from_dict",
+    "load_calculation_profile",
+    "load_comparison_profile",
+    "load_recommended_calculation_profile",
+    "load_recommended_comparison_profile",
+    "recommended_version",
+    "standard_consumption",
+]
 
 SCHEMA = "auditcore_price_analysis.profile/1"
 
 
-def _fingerprint(data: Mapping[str, Any]) -> str:
+def _fingerprint(data: Mapping[str, object]) -> str:
     raw = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
-def _dec(data: Mapping[str, Any], key: str, where: str) -> Decimal:
+def _dec(data: Mapping[str, object], key: str, where: str) -> Decimal:
     value = data.get(key)
     if not isinstance(value, str):
         raise ProfileError(f"{where}.{key} muss als Dezimaltext angegeben sein.")
@@ -43,7 +69,7 @@ def _dec(data: Mapping[str, Any], key: str, where: str) -> Decimal:
     return result
 
 
-def _day(value: Any, where: str) -> date | None:
+def _day(value: object, where: str) -> date | None:
     if value is None:
         return None
     try:
@@ -52,145 +78,13 @@ def _day(value: Any, where: str) -> date | None:
         raise ProfileError(f"{where} ist kein Datum.") from exc
 
 
-def _rounding(data: Any, where: str) -> Rounding:
+def _rounding(data: object, where: str) -> Rounding:
     if not isinstance(data, Mapping):
         raise ProfileError(f"{where} fehlt.")
     return Rounding(_dec(data, "places", where), str(data.get("mode")))
 
 
-@dataclass(frozen=True)
-class ConsumptionRule:
-    """A consumption quantity of the formula (``legacy_default`` is documentation only)."""
-
-    name: str
-    unit: str
-    legacy_default: Decimal | None
-    note: str = ""
-    standard: Decimal | None = None
-    standard_source: str | None = None
-
-
-@dataclass(frozen=True)
-class ComponentRule:
-    """One price component: amount = price × quantity(basis) × factor."""
-
-    name: str
-    line: str
-    unit: str
-    basis: str | None
-    factor: Decimal
-    required: bool
-    fixed: bool
-    label: str | None = None
-    valid_from: date | None = None
-    valid_until: date | None = None
-    tiered_by: str | None = None
-
-    def applies(self, day: date) -> bool:
-        """Whether the component belongs to the formula on ``day``."""
-        if self.valid_from is not None and day < self.valid_from:
-            return False
-        return not (self.valid_until is not None and day > self.valid_until)
-
-
-@dataclass(frozen=True)
-class TierRule:
-    """Tiered price for one component (for example the water work price)."""
-
-    field: str
-    quantity: str
-    limit_key: str
-    price_key: str
-    unit: str
-    wrapper_key: str | None
-    open_last: bool
-
-
-@dataclass(frozen=True)
-class MixedPriceRule:
-    """Average price = total / quantity × factor (undefined for quantity 0)."""
-
-    name: str
-    unit: str
-    basis: str
-    factor: Decimal
-
-
-@dataclass(frozen=True)
-class CalculationProfile:
-    """Versioned rules of one annual cost calculation."""
-
-    profile_id: str
-    version: str
-    kind: str
-    title: str
-    status: str
-    source: Mapping[str, Any]
-    formula: str
-    consumption: tuple[ConsumptionRule, ...]
-    components: tuple[ComponentRule, ...]
-    tiers: TierRule | None
-    mixed_price: MixedPriceRule
-    money: Rounding
-    percent: Rounding
-    mixed_rounding: Rounding
-    optional_missing_blocks_comparison: bool
-    require_released_for_comparison: bool
-    fingerprint: str
-    raw: Mapping[str, Any]
-    recommended: bool = False
-
-    @property
-    def reference(self) -> dict[str, str]:
-        """Identity carried by every result."""
-        return {
-            "profile_id": self.profile_id,
-            "version": self.version,
-            "fingerprint": self.fingerprint,
-        }
-
-    def component(self, name: str) -> ComponentRule:
-        """Rule by component name."""
-        for rule in self.components:
-            if rule.name == name:
-                return rule
-        raise ProfileError(f"Profil {self.profile_id} kennt die Komponente {name} nicht.")
-
-
-@dataclass(frozen=True)
-class ComparisonProfile:
-    """Versioned rules for deviation, traffic light, statistics and tariff selection."""
-
-    profile_id: str
-    version: str
-    title: str
-    status: str
-    source: Mapping[str, Any]
-    delta_rounding: Rounding
-    threshold_pct: Decimal
-    yellow_from_fraction: Decimal
-    statistics_rounding: Rounding
-    stddev: str
-    only_released: bool
-    not_after_reference_date: bool
-    respect_valid_to: bool
-    q3_tolerance: Decimal
-    prefer_standard_variants: bool
-    fingerprint: str
-    raw: Mapping[str, Any]
-    recommended: bool = False
-
-    @property
-    def reference(self) -> dict[str, str]:
-        """Identity carried by every result."""
-        return {
-            "profile_id": self.profile_id,
-            "version": self.version,
-            "fingerprint": self.fingerprint,
-        }
-
-
-def _header(data: Mapping[str, Any], kind: str) -> tuple[str, str]:
+def _header(data: Mapping[str, object], kind: str) -> tuple[str, str]:
     if data.get("schema") != SCHEMA or data.get("type") != kind:
         raise ProfileError(f"Profil ist kein {kind}-Profil des Schemas {SCHEMA}.")
     profile_id, version = data.get("profile_id"), data.get("version")
@@ -201,10 +95,8 @@ def _header(data: Mapping[str, Any], kind: str) -> tuple[str, str]:
     return profile_id, version
 
 
-def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile:
-    """Validate and freeze a calculation profile."""
-    profile_id, version = _header(data, "calculation")
-    consumption = tuple(
+def _consumption_rules(data: Mapping[str, Any]) -> tuple[ConsumptionRule, ...]:
+    return tuple(
         ConsumptionRule(
             name=str(c["name"]),
             unit=str(c["unit"]),
@@ -217,49 +109,70 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
         )
         for c in data.get("consumption", [])
     )
-    names = {c.name for c in consumption}
-    components: list[ComponentRule] = []
-    for raw in data.get("components", []):
-        where = f"components.{raw.get('name')}"
-        basis = raw.get("basis")
-        if basis is not None and basis not in names:
-            raise ProfileError(f"{where}: Bezugsgröße {basis} ist keine Verbrauchsgröße.")
-        components.append(
-            ComponentRule(
-                name=str(raw["name"]),
-                line=str(raw["line"]),
-                unit=str(raw["unit"]),
-                basis=basis,
-                factor=_dec(raw, "factor", where),
-                required=bool(raw["required"]),
-                fixed=bool(raw["fixed"]),
-                label=raw.get("label"),
-                valid_from=_day(raw.get("valid_from"), f"{where}.valid_from"),
-                valid_until=_day(raw.get("valid_until"), f"{where}.valid_until"),
-                tiered_by=raw.get("tiered_by"),
-            )
-        )
-    if len({c.name for c in components}) != len(components) or not components:
-        raise ProfileError("Komponenten fehlen oder sind doppelt.")
-    tiers_raw = data.get("tiers")
-    tiers = None
-    if tiers_raw is not None:
-        tiers = TierRule(
-            field=str(tiers_raw["field"]),
-            quantity=str(tiers_raw["quantity"]),
-            limit_key=str(tiers_raw["limit_key"]),
-            price_key=str(tiers_raw["price_key"]),
-            unit=str(tiers_raw["unit"]),
-            wrapper_key=tiers_raw.get("wrapper_key"),
-            open_last=bool(tiers_raw["open_last"]),
-        )
-        if tiers.quantity not in names:
-            raise ProfileError("tiers.quantity ist keine Verbrauchsgröße.")
-        if not any(c.tiered_by == tiers.field for c in components):
-            raise ProfileError("Keine Komponente verweist auf die Staffel.")
-    mixed = data["mixed_price"]
+
+
+def _component_rule(raw: Mapping[str, Any], names: set[str]) -> ComponentRule:
+    where = f"components.{raw.get('name')}"
+    basis = raw.get("basis")
+    if basis is not None and basis not in names:
+        raise ProfileError(f"{where}: Bezugsgröße {basis} ist keine Verbrauchsgröße.")
+    return ComponentRule(
+        name=str(raw["name"]),
+        line=str(raw["line"]),
+        unit=str(raw["unit"]),
+        basis=basis,
+        factor=_dec(raw, "factor", where),
+        required=bool(raw["required"]),
+        fixed=bool(raw["fixed"]),
+        label=raw.get("label"),
+        valid_from=_day(raw.get("valid_from"), f"{where}.valid_from"),
+        valid_until=_day(raw.get("valid_until"), f"{where}.valid_until"),
+        tiered_by=raw.get("tiered_by"),
+    )
+
+
+def _tier_rule(
+    tiers_raw: Mapping[str, Any] | None, names: set[str], components: list[ComponentRule]
+) -> TierRule | None:
+    if tiers_raw is None:
+        return None
+    tiers = TierRule(
+        field=str(tiers_raw["field"]),
+        quantity=str(tiers_raw["quantity"]),
+        limit_key=str(tiers_raw["limit_key"]),
+        price_key=str(tiers_raw["price_key"]),
+        unit=str(tiers_raw["unit"]),
+        wrapper_key=tiers_raw.get("wrapper_key"),
+        open_last=bool(tiers_raw["open_last"]),
+    )
+    if tiers.quantity not in names:
+        raise ProfileError("tiers.quantity ist keine Verbrauchsgröße.")
+    if not any(c.tiered_by == tiers.field for c in components):
+        raise ProfileError("Keine Komponente verweist auf die Staffel.")
+    return tiers
+
+
+def _mixed_price_rule(mixed: Mapping[str, Any], names: set[str]) -> MixedPriceRule:
     if mixed["basis"] not in names:
         raise ProfileError("mixed_price.basis ist keine Verbrauchsgröße.")
+    return MixedPriceRule(
+        str(mixed["name"]),
+        str(mixed["unit"]),
+        str(mixed["basis"]),
+        _dec(mixed, "factor", "mixed_price"),
+    )
+
+
+def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile:
+    """Validate and freeze a calculation profile."""
+    profile_id, version = _header(data, "calculation")
+    consumption = _consumption_rules(data)
+    names = {c.name for c in consumption}
+    components = [_component_rule(raw, names) for raw in data.get("components", [])]
+    if len({c.name for c in components}) != len(components) or not components:
+        raise ProfileError("Komponenten fehlen oder sind doppelt.")
+    tiers = _tier_rule(data.get("tiers"), names, components)
+    mixed_price = _mixed_price_rule(data["mixed_price"], names)
     rounding = data.get("rounding", {})
     missing = data.get("missing", {})
     release = data.get("release", {})
@@ -274,12 +187,7 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
         consumption=consumption,
         components=tuple(components),
         tiers=tiers,
-        mixed_price=MixedPriceRule(
-            str(mixed["name"]),
-            str(mixed["unit"]),
-            str(mixed["basis"]),
-            _dec(mixed, "factor", "mixed_price"),
-        ),
+        mixed_price=mixed_price,
         money=_rounding(rounding.get("money"), "rounding.money"),
         percent=_rounding(rounding.get("percent"), "rounding.percent"),
         mixed_rounding=_rounding(rounding.get("mixed_price"), "rounding.mixed_price"),
