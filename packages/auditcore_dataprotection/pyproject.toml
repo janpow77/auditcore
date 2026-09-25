@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_dataprotection"
-version = "0.4.1"
+version = "0.4.2"
 description = "Framework-independent records of processing activities and DPIA calculation"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = []
+dependencies = ["auditcore_common==0.1.0"]
 
 [project.optional-dependencies]
 excel = ["openpyxl>=3.0.9,<4", "auditcore_reporting[excel]==0.2.0"]

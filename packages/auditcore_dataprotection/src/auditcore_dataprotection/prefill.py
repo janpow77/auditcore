@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from auditcore_common.text import group_thousands_de as _number
+
 from .rules import RuleProfile
 
 
@@ -25,10 +27,6 @@ def _count(value: object) -> int | None:
     if isinstance(value, str) and value.strip().isdigit():
         return int(value.strip())
     return None
-
-
-def _number(value: int) -> str:
-    return f"{value:,}".replace(",", ".")
 
 
 def _sensitive_data_suggestions(

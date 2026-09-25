@@ -1,5 +1,21 @@
 # Changelog auditcore_dataprotection
 
+## 0.4.2 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- Profil-Fingerprint und Inhaltshash → `auditcore_common.hashing.canonical_sha256`;
+  `hashing.canonical_sha256` bleibt als veralteter Alias (`DeprecationWarning`).
+- `available_profiles`/`load_profile` → `auditcore_common.profiles`
+  (`require_text=True, invalid_name="missing"`).
+- `report_data.plain` ist veraltet; intern
+  `jsonable(value, enums=True, dataclasses=True, sets=True)`.
+- openpyxl über `optional.require_module`, Tausendertrennung der
+  Vorbelegungstexte über `text.group_thousands_de`.
+- `fingerprint`/`content_hash` nehmen `Mapping[str, object]` (statt `Any`); Code-Gate `any_usages` 146 → 145.
+- Meldungen, Fingerprints und Berichtsdaten unverändert; 501 Tests grün.
+
 ## 0.4.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: Berechnung, Legacy-Adapter, Berichte, Exporte und
