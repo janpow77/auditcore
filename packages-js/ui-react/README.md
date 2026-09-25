@@ -109,7 +109,7 @@ die bisher nur in `@flowaudit/ui` lagen (`formatDate`, `requestJson`,
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (73):
+Exporte der Einstiegspunkte aus `package.json#exports` (75):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -126,6 +126,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (73):
 | `@flowaudit/ui-react` | `FlowauditDataProtectionError` | Typ | – | `dataprotection` |
 | `@flowaudit/ui-react` | `FlowauditDsfa` | Konstante | `<flowaudit-dsfa>` als React-Komponente: Schwellwertanalyse, Risiko, Entscheidung, Freigabe (Art. 35 DSGVO). | `dataprotection` |
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection` |
+| `@flowaudit/ui-react` | `FlowauditGeoMap` | Konstante | `<flowaudit-geo-map>` als React-Komponente: Karte, Umkreis, Punkt in Fläche, UTM, Vereinfachung, GeoPackage. | `geo` |
+| `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `kanban` |
@@ -211,13 +213,17 @@ Exporte der Einstiegspunkte aus `package.json#exports` (73):
   `onReleased`, `onExported`, `onError`) und `FlowauditDsfa` (`port`,
   `activityId`, `actor`, `editable`, `locale`; `onAssessmentChange`,
   `onError`), siehe [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md).
+- `FlowauditGeoMap` (`port`, `points`, `areas`, `tiles`, `center`, `zoom`,
+  `locale`; `onRadiusCompleted`, `onLocationChecked`, `onAreasLoaded`,
+  `onReferenceChange`, `onError`), siehe
+  [`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md).
 - Sprache und Theming wie in `@flowaudit/ui` (`locale`-Prop,
   `defineFlowauditElements({ locale })`, CSS-Variablen `--fa-*`).
 
 ## Herkunft und Charakterisierung
 
 Neu in auditcore entwickelt (PR #80 Gerüst mit `FlowauditTable`, #84
-Kanban, #83 Stichprobe und Benford, #111 Screening, #88 Risiko-Merkmale). Keine Übernahme aus Anwendungen; das Verhalten der Elemente
+Kanban, #83 Stichprobe und Benford, #111 Screening, #88 Risiko-Merkmale, Geo-Karte). Keine Übernahme aus Anwendungen; das Verhalten der Elemente
 selbst dokumentiert `@flowaudit/ui`. Die Hooks (0.2.0) sind Neuentwicklungen
 nach dem Zuschnitt in
 [`docs/reports/app-helfer-ts.md`](../../docs/reports/app-helfer-ts.md)

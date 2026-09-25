@@ -12,6 +12,7 @@ export {
   type FlowauditScreeningReviewProps,
   type FlowauditTableProps,
 } from './elements'
+export { FlowauditGeoMap, type FlowauditGeoMapProps } from './geo'
 export { FlowauditKanbanBoard, FlowauditKanbanBoards, type FlowauditKanbanBoardProps, type FlowauditKanbanBoardsProps } from './kanban'
 export { FlowauditSynopsis, type FlowauditSynopsisProps } from './synopsis'
 export {

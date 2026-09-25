@@ -18,6 +18,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'screening', title: 'Screening-Trefferprüfung', group: 'Komponenten', load: () => import('./pages/screening/ScreeningPage.vue') },
   { id: 'kanban', title: 'Kanban', group: 'Komponenten', load: () => import('./pages/kanban/KanbanPage.vue') },
   { id: 'datenschutz', title: 'Datenschutz: VVT und DSFA', group: 'Komponenten', load: () => import('./pages/dataprotection/DataProtectionPage.vue') },
+  { id: 'geo-karte', title: 'Geo-Karte', group: 'Komponenten', load: () => import('./pages/geo/GeoPage.vue') },
   { id: 'synopse', title: 'Synopse / Versionsvergleich', group: 'Komponenten', load: () => import('./pages/synopsis/SynopsisPage.vue') },
 ]
 

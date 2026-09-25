@@ -16,7 +16,7 @@ export default defineConfig({
       cssFileName: 'ui',
     },
     rollupOptions: {
-      external: ['vue', '@flowaudit/kanban-core', /^@flowaudit\/common(\/.*)?$/],
+      external: ['vue', '@flowaudit/kanban-core', /^@flowaudit\/common(\/.*)?$/, 'leaflet'],
     },
     sourcemap: true,
   },
