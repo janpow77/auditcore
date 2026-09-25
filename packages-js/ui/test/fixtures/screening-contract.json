@@ -1,0 +1,974 @@
+{
+ "settings": {
+  "contract": "auditcore_registry_sources.screening_review/1",
+  "profiles": [
+   {
+    "id": "audit_designer.sanctions_screening",
+    "version": "2026.09.1",
+    "fingerprint": "00609e3244a8d9d6ea07f553b8df33dc8197bbbd8fe3f48825a593d0fd335b8d",
+    "status": "SOURCE_CHARACTERIZED",
+    "kind": "sanctions",
+    "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+    "default_min_score": 70.0,
+    "scale": {
+     "min": 0.0,
+     "max": 100.0
+    },
+    "recommended": false
+   },
+   {
+    "id": "audit_designer.sanctions_screening",
+    "version": "2026.09.2",
+    "fingerprint": "9e722393cb2c60567a12d61aa0621e291591cadce9571ea1bfa8dcb00c62bae8",
+    "status": "USER_DECIDED",
+    "kind": "sanctions",
+    "legal_status": "Nutzerentscheidung vom 23.09.2026 („alle empfehlungen“), abgeleitet aus dem gebundenen Quellprofil; keine Rechtsauskunft, keine Freigabe einzelner Ergebnisse.",
+    "default_min_score": 70.0,
+    "scale": {
+     "min": 0.0,
+     "max": 100.0
+    },
+    "recommended": true
+   },
+   {
+    "id": "flowinvoice.pep_bulk",
+    "version": "2026.09.1",
+    "fingerprint": "57c4507d990380cae386f5500684c6ffd1144d413dbcbaf07e8a1b7de0403bf7",
+    "status": "SOURCE_CHARACTERIZED",
+    "kind": "pep",
+    "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+    "default_min_score": 0.8,
+    "scale": {
+     "min": 0.0,
+     "max": 1.0
+    },
+    "recommended": false
+   },
+   {
+    "id": "flowinvoice.pep_bulk",
+    "version": "2026.09.2",
+    "fingerprint": "933231f40563bf90cd78a80c9452ff6a9aada74c0d5ec51ae27da86610240fbd",
+    "status": "USER_DECIDED",
+    "kind": "pep",
+    "legal_status": "Nutzerentscheidung vom 23.09.2026 („alle empfehlungen“), abgeleitet aus dem gebundenen Quellprofil; keine Rechtsauskunft, keine Freigabe einzelner Ergebnisse.",
+    "default_min_score": 0.8,
+    "scale": {
+     "min": 0.0,
+     "max": 1.0
+    },
+    "recommended": true
+   },
+   {
+    "id": "flowworkshop.sanctions_screening",
+    "version": "2026.09.1",
+    "fingerprint": "48a22e218e2a75ca14eddee510e866d01a6eb4de9dcc8ca1a47983cb2dc23c0e",
+    "status": "SOURCE_CHARACTERIZED",
+    "kind": "sanctions",
+    "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+    "default_min_score": 70.0,
+    "scale": {
+     "min": 0.0,
+     "max": 100.0
+    },
+    "recommended": false
+   },
+   {
+    "id": "flowworkshop.sanctions_screening",
+    "version": "2026.09.2",
+    "fingerprint": "d9dd8ebc11a7785350e7a4c3f10607d1b09fe1c91f34c5caba7a1c82080e4a15",
+    "status": "USER_DECIDED",
+    "kind": "sanctions",
+    "legal_status": "Nutzerentscheidung vom 23.09.2026 („alle empfehlungen“), abgeleitet aus dem gebundenen Quellprofil; keine Rechtsauskunft, keine Freigabe einzelner Ergebnisse.",
+    "default_min_score": 70.0,
+    "scale": {
+     "min": 0.0,
+     "max": 100.0
+    },
+    "recommended": false
+   }
+  ],
+  "four_eyes_outcomes": [
+   "confirmed"
+  ],
+  "stale_after_days": 7
+ },
+ "sources": {
+  "contract": "auditcore_registry_sources.screening_review/1",
+  "checked_at": "2026-09-25T12:00:00Z",
+  "sources": [
+   {
+    "list": {
+     "key": "eu_fsf",
+     "source_key": "eu_sanktionsliste",
+     "name": "Konsolidierte Finanzsanktionsliste der Union (FSF)",
+     "issuer": "Europäische Kommission",
+     "url": "https://data.opensanctions.org/datasets/latest/eu_fsf/targets.simple.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "OpenSanctions",
+     "licence_claimed_in_source": "CC BY 4.0",
+     "data_licence": {
+      "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+      "status": "REVIEW_REQUIRED"
+     }
+    },
+    "kind": "sanctions",
+    "entry_count": 3,
+    "as_of": "2026-09-22T18:00:00Z",
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": true,
+    "freshness": {
+     "status": "current",
+     "label": "aktuell",
+     "age_days": 2.8,
+     "stale_after_days": 7
+    }
+   },
+   {
+    "list": {
+     "key": "un_sc",
+     "source_key": "un_sanktionslisten",
+     "name": "Konsolidierte Liste des Sicherheitsrats der Vereinten Nationen",
+     "issuer": "Sicherheitsrat der Vereinten Nationen",
+     "url": "https://data.opensanctions.org/datasets/latest/un_sc_sanctions/targets.simple.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "OpenSanctions",
+     "licence_claimed_in_source": "gemeinfrei",
+     "data_licence": {
+      "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+      "status": "REVIEW_REQUIRED"
+     }
+    },
+    "kind": "sanctions",
+    "entry_count": 1,
+    "as_of": "2026-08-01",
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": true,
+    "freshness": {
+     "status": "stale",
+     "label": "veraltet",
+     "age_days": 55.5,
+     "stale_after_days": 7
+    }
+   },
+   {
+    "list": {
+     "key": "us_ofac_sdn",
+     "source_key": "ofac_sdn",
+     "name": "SDN-Liste des amerikanischen Finanzministeriums",
+     "issuer": "US-Finanzministerium, OFAC",
+     "url": "https://data.opensanctions.org/datasets/latest/us_ofac_sdn/targets.simple.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "OpenSanctions",
+     "licence_claimed_in_source": "gemeinfrei",
+     "data_licence": {
+      "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+      "status": "REVIEW_REQUIRED"
+     }
+    },
+    "kind": "sanctions",
+    "entry_count": 0,
+    "as_of": null,
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": false,
+    "freshness": {
+     "status": "unknown",
+     "label": "Stand unbekannt",
+     "age_days": null,
+     "stale_after_days": 7
+    }
+   },
+   {
+    "list": {
+     "key": "peps",
+     "source_key": null,
+     "name": "Politisch exponierte Personen (synthetischer Testbestand)",
+     "issuer": "Testdaten",
+     "url": "https://example.invalid/peps.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "Testdaten",
+     "licence_claimed_in_source": null,
+     "data_licence": {
+      "status": "SYNTHETIC",
+      "note": "Erfundene Testdaten."
+     }
+    },
+    "kind": "pep",
+    "entry_count": 2,
+    "as_of": "2026-09-24",
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": true,
+    "freshness": {
+     "status": "current",
+     "label": "aktuell",
+     "age_days": 1.5,
+     "stale_after_days": 7
+    }
+   }
+  ]
+ },
+ "run": {
+  "run_id": "run-1",
+  "created_at": "2026-09-25T12:00:00Z",
+  "created_by": {
+   "id": "pruefer-a",
+   "display_name": "Prüferin A"
+  },
+  "kind": "sanctions",
+  "case_reference": "Vorgang 2026/0001 (Test)",
+  "profile": {
+   "id": "audit_designer.sanctions_screening",
+   "version": "2026.09.2",
+   "fingerprint": "9e722393cb2c60567a12d61aa0621e291591cadce9571ea1bfa8dcb00c62bae8",
+   "status": "USER_DECIDED"
+  },
+  "subject_count": 2,
+  "subjects_with_hits": 1,
+  "subjects_incomplete": 1,
+  "hit_count": 2,
+  "review_counts": {
+   "open": 1,
+   "pending_second_review": 1,
+   "confirmed": 0,
+   "dismissed": 0,
+   "deferred": 0
+  },
+  "review_complete": false,
+  "last_sequence": 2,
+  "contract": "auditcore_registry_sources.screening_review/1",
+  "request": {
+   "kind": "sanctions",
+   "profile": {
+    "id": "audit_designer.sanctions_screening",
+    "version": "2026.09.2",
+    "fingerprint": "9e722393cb2c60567a12d61aa0621e291591cadce9571ea1bfa8dcb00c62bae8",
+    "status": "USER_DECIDED"
+   },
+   "lists": [
+    "eu_fsf",
+    "un_sc",
+    "us_ofac_sdn"
+   ],
+   "min_score": null,
+   "limit": 15,
+   "case_reference": "Vorgang 2026/0001 (Test)",
+   "subjects": [
+    {
+     "subject_id": "s1",
+     "name": "Maximilian Beispielmann",
+     "birth_date": "1970-03-14",
+     "country": "de",
+     "schema": null,
+     "reference": null
+    },
+    {
+     "subject_id": "s2",
+     "name": "Niemand Unbekannt",
+     "birth_date": null,
+     "country": null,
+     "schema": null,
+     "reference": null
+    }
+   ]
+  },
+  "sources": [
+   {
+    "list": {
+     "key": "eu_fsf",
+     "source_key": "eu_sanktionsliste",
+     "name": "Konsolidierte Finanzsanktionsliste der Union (FSF)",
+     "issuer": "Europäische Kommission",
+     "url": "https://data.opensanctions.org/datasets/latest/eu_fsf/targets.simple.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "OpenSanctions",
+     "licence_claimed_in_source": "CC BY 4.0",
+     "data_licence": {
+      "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+      "status": "REVIEW_REQUIRED"
+     }
+    },
+    "kind": "sanctions",
+    "entry_count": 3,
+    "as_of": "2026-09-22T18:00:00Z",
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": true,
+    "freshness": {
+     "status": "current",
+     "label": "aktuell",
+     "age_days": 2.8,
+     "stale_after_days": 7
+    }
+   },
+   {
+    "list": {
+     "key": "un_sc",
+     "source_key": "un_sanktionslisten",
+     "name": "Konsolidierte Liste des Sicherheitsrats der Vereinten Nationen",
+     "issuer": "Sicherheitsrat der Vereinten Nationen",
+     "url": "https://data.opensanctions.org/datasets/latest/un_sc_sanctions/targets.simple.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "OpenSanctions",
+     "licence_claimed_in_source": "gemeinfrei",
+     "data_licence": {
+      "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+      "status": "REVIEW_REQUIRED"
+     }
+    },
+    "kind": "sanctions",
+    "entry_count": 1,
+    "as_of": "2026-08-01",
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": true,
+    "freshness": {
+     "status": "stale",
+     "label": "veraltet",
+     "age_days": 55.5,
+     "stale_after_days": 7
+    }
+   },
+   {
+    "list": {
+     "key": "us_ofac_sdn",
+     "source_key": "ofac_sdn",
+     "name": "SDN-Liste des amerikanischen Finanzministeriums",
+     "issuer": "US-Finanzministerium, OFAC",
+     "url": "https://data.opensanctions.org/datasets/latest/us_ofac_sdn/targets.simple.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "OpenSanctions",
+     "licence_claimed_in_source": "gemeinfrei",
+     "data_licence": {
+      "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+      "status": "REVIEW_REQUIRED"
+     }
+    },
+    "kind": "sanctions",
+    "entry_count": 0,
+    "as_of": null,
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": false,
+    "freshness": {
+     "status": "unknown",
+     "label": "Stand unbekannt",
+     "age_days": null,
+     "stale_after_days": 7
+    }
+   }
+  ],
+  "subjects": [
+   {
+    "subject_id": "s1",
+    "input": {
+     "subject_id": "s1",
+     "name": "Maximilian Beispielmann",
+     "birth_date": "1970-03-14",
+     "country": "de",
+     "schema": null,
+     "reference": null
+    },
+    "status": "HITS",
+    "normalized_query": "maximilian beispielmann",
+    "min_score": 70.0,
+    "findings": [
+     {
+      "list_key": "eu_fsf",
+      "list_name": "Konsolidierte Finanzsanktionsliste der Union (FSF)",
+      "source_key": "eu_sanktionsliste",
+      "searched": true,
+      "entry_count": 3,
+      "as_of": "2026-09-22T18:00:00Z",
+      "retrieved_at": null,
+      "hit_count": 1,
+      "note": null
+     },
+     {
+      "list_key": "un_sc",
+      "list_name": "Konsolidierte Liste des Sicherheitsrats der Vereinten Nationen",
+      "source_key": "un_sanktionslisten",
+      "searched": true,
+      "entry_count": 1,
+      "as_of": "2026-08-01",
+      "retrieved_at": null,
+      "hit_count": 1,
+      "note": null
+     },
+     {
+      "list_key": "us_ofac_sdn",
+      "list_name": "SDN-Liste des amerikanischen Finanzministeriums",
+      "source_key": "ofac_sdn",
+      "searched": false,
+      "entry_count": 0,
+      "as_of": null,
+      "retrieved_at": null,
+      "hit_count": 0,
+      "note": "Für diese Liste liegt kein Bestand vor. Sie wurde nicht abgefragt; das Ergebnis sagt über sie nichts aus."
+     }
+    ],
+    "hits": [
+     {
+      "hit_id": "hd1a579414038050b",
+      "subject_id": "s1",
+      "list_key": "eu_fsf",
+      "list_name": "Konsolidierte Finanzsanktionsliste der Union (FSF)",
+      "source_key": "eu_sanktionsliste",
+      "entry": {
+       "entry_id": "eu-001",
+       "schema": "Person",
+       "name": "Maximilian Beispielmann",
+       "aliases": [
+        "Max Beispielmann",
+        "Maksim Beispielman"
+       ],
+       "aliases_total": 2,
+       "birth_date": "1970-03-14",
+       "countries": "de",
+       "addresses": "Musterstraße 1, 12345 Musterstadt",
+       "identifiers": "",
+       "sanctions": "Beispielverordnung (EU) 0000/00",
+       "program_ids": "EU-TEST-1",
+       "first_seen": "",
+       "last_seen": "",
+       "dataset": ""
+      },
+      "matched_name": "Maximilian Beispielmann",
+      "matched_field": "name",
+      "raw_score": 100.0,
+      "score": 100.0,
+      "confidence": "exact",
+      "dob_conflict": false,
+      "country_conflict": false,
+      "below_min_score": false,
+      "indicators": [],
+      "breakdown": {
+       "method": "rapidfuzz_token_set",
+       "scale": {
+        "min": 0.0,
+        "max": 100.0
+       },
+       "steps": [
+        {
+         "step": "normalization",
+         "label": "Vergleichsform der Eingabe",
+         "value": "maximilian beispielmann",
+         "detail": "Normalisierungsprofil audit_designer.sanctions 2026.09.3"
+        },
+        {
+         "step": "normalization",
+         "label": "Vergleichsform der getroffenen Schreibweise (Hauptname)",
+         "value": "maximilian beispielmann",
+         "detail": "Maximilian Beispielmann"
+        },
+        {
+         "step": "base",
+         "label": "Namensähnlichkeit (Token-Set-Vergleich, beste Form über Name und Aliasse)",
+         "points": 100.0
+        },
+        {
+         "step": "adjustment",
+         "label": "Geburtsjahr stimmt überein.",
+         "points": 6.0,
+         "kind": "date_of_birth"
+        },
+        {
+         "step": "adjustment",
+         "label": "Land stimmt überein.",
+         "points": 4.0,
+         "kind": "country"
+        },
+        {
+         "step": "clamp",
+         "label": "Auf den Wertebereich 0–100 begrenzt",
+         "points": -10.0
+        },
+        {
+         "step": "result",
+         "label": "Ergebniswert",
+         "points": 100.0
+        }
+       ],
+       "min_score": 70.0,
+       "classes": [
+        {
+         "class": "exact",
+         "label": "exakt",
+         "from": 97.0
+        },
+        {
+         "class": "high",
+         "label": "hoch",
+         "from": 90.0
+        },
+        {
+         "class": "medium",
+         "label": "mittel",
+         "from": 80.0
+        }
+       ],
+       "class": "exact",
+       "class_label": "exakt",
+       "consistent": true
+      },
+      "review": {
+       "status": "pending_second_review",
+       "status_label": "wartet auf Zweitprüfung",
+       "sequence": 2,
+       "decision": {
+        "outcome": "confirmed",
+        "reason": "Identisch.",
+        "four_eyes": true,
+        "four_eyes_source": "policy",
+        "actor": {
+         "id": "pruefer-a",
+         "display_name": "Prüferin A"
+        },
+        "at": "2026-09-25T12:00:00Z",
+        "sequence": 2
+       },
+       "second_review": null,
+       "events": 1
+      }
+     },
+     {
+      "hit_id": "h7375f6fcaff40fe6",
+      "subject_id": "s1",
+      "list_key": "un_sc",
+      "list_name": "Konsolidierte Liste des Sicherheitsrats der Vereinten Nationen",
+      "source_key": "un_sanktionslisten",
+      "entry": {
+       "entry_id": "un-001",
+       "schema": "Person",
+       "name": "Maximilian Beispielman",
+       "aliases": [],
+       "aliases_total": 0,
+       "birth_date": "1971",
+       "countries": "ru",
+       "addresses": "",
+       "identifiers": "",
+       "sanctions": "",
+       "program_ids": "",
+       "first_seen": "",
+       "last_seen": "",
+       "dataset": ""
+      },
+      "matched_name": "Maximilian Beispielman",
+      "matched_field": "name",
+      "raw_score": 97.77777777777777,
+      "score": 69.8,
+      "confidence": "low",
+      "dob_conflict": true,
+      "country_conflict": true,
+      "below_min_score": true,
+      "indicators": [
+       "token_subset",
+       "below_min_score_after_adjustment"
+      ],
+      "breakdown": {
+       "method": "rapidfuzz_token_set",
+       "scale": {
+        "min": 0.0,
+        "max": 100.0
+       },
+       "steps": [
+        {
+         "step": "normalization",
+         "label": "Vergleichsform der Eingabe",
+         "value": "maximilian beispielmann",
+         "detail": "Normalisierungsprofil audit_designer.sanctions 2026.09.3"
+        },
+        {
+         "step": "normalization",
+         "label": "Vergleichsform der getroffenen Schreibweise (Hauptname)",
+         "value": "maximilian beispielman",
+         "detail": "Maximilian Beispielman"
+        },
+        {
+         "step": "base",
+         "label": "Namensähnlichkeit (Token-Set-Vergleich, beste Form über Name und Aliasse)",
+         "points": 97.77777777777777
+        },
+        {
+         "step": "adjustment",
+         "label": "Geburtsjahr widerspricht dem Eintrag.",
+         "points": -18.0,
+         "kind": "date_of_birth"
+        },
+        {
+         "step": "adjustment",
+         "label": "Land widerspricht dem Eintrag.",
+         "points": -10.0,
+         "kind": "country"
+        },
+        {
+         "step": "result",
+         "label": "Ergebniswert",
+         "points": 69.8
+        }
+       ],
+       "min_score": 70.0,
+       "classes": [
+        {
+         "class": "exact",
+         "label": "exakt",
+         "from": 97.0
+        },
+        {
+         "class": "high",
+         "label": "hoch",
+         "from": 90.0
+        },
+        {
+         "class": "medium",
+         "label": "mittel",
+         "from": 80.0
+        }
+       ],
+       "class": "low",
+       "class_label": "niedrig",
+       "consistent": true
+      },
+      "review": {
+       "status": "open",
+       "status_label": "offen",
+       "sequence": 0,
+       "decision": null,
+       "second_review": null,
+       "events": 0
+      }
+     }
+    ],
+    "total_hits": 2,
+    "truncated": false,
+    "notice": "Ein Treffer ist ein Prüfhinweis, keine Feststellung. Namensgleichheit ist kein Nachweis der Identität; Geburtsdatum, Land und Kennungen sind gegen den Vorgang abzugleichen.",
+    "limitations": [
+     "Ein phonetisches Verfahren ist nicht im Einsatz. Kyrillische, arabische und chinesische Namen werden nur gefunden, wenn die Liste selbst eine lateinische Schreibweise als Alias führt; Transliterationsvarianten bleiben sonst unerkannt. Umgekehrt erzeugen häufige Namen Treffer ohne jeden Bezug. Der Abgleich ist damit in beide Richtungen unvollständig — ein Treffer ist zu verifizieren, ein Nullbefund belegt keine Unbedenklichkeit.",
+     "Der Abgleich erfasst nur die geführten Listen. Ausfuhr- und Embargohinweise anderer Stellen sowie das Ausschlusssystem der EU-Haushaltsordnung sind gesondert zu recherchieren.",
+     "Das Bereitstellungsverbot greift auch mittelbar über beherrschte Unternehmen. Ohne Prüfung der Eigentümerstruktur bleibt der Abgleich unvollständig."
+    ],
+    "hits_before_filter": 2
+   },
+   {
+    "subject_id": "s2",
+    "input": {
+     "subject_id": "s2",
+     "name": "Niemand Unbekannt",
+     "birth_date": null,
+     "country": null,
+     "schema": null,
+     "reference": null
+    },
+    "status": "INCOMPLETE",
+    "normalized_query": "niemand unbekannt",
+    "min_score": 70.0,
+    "findings": [
+     {
+      "list_key": "eu_fsf",
+      "list_name": "Konsolidierte Finanzsanktionsliste der Union (FSF)",
+      "source_key": "eu_sanktionsliste",
+      "searched": true,
+      "entry_count": 3,
+      "as_of": "2026-09-22T18:00:00Z",
+      "retrieved_at": null,
+      "hit_count": 0,
+      "note": null
+     },
+     {
+      "list_key": "un_sc",
+      "list_name": "Konsolidierte Liste des Sicherheitsrats der Vereinten Nationen",
+      "source_key": "un_sanktionslisten",
+      "searched": true,
+      "entry_count": 1,
+      "as_of": "2026-08-01",
+      "retrieved_at": null,
+      "hit_count": 0,
+      "note": null
+     },
+     {
+      "list_key": "us_ofac_sdn",
+      "list_name": "SDN-Liste des amerikanischen Finanzministeriums",
+      "source_key": "ofac_sdn",
+      "searched": false,
+      "entry_count": 0,
+      "as_of": null,
+      "retrieved_at": null,
+      "hit_count": 0,
+      "note": "Für diese Liste liegt kein Bestand vor. Sie wurde nicht abgefragt; das Ergebnis sagt über sie nichts aus."
+     }
+    ],
+    "hits": [],
+    "total_hits": 0,
+    "truncated": false,
+    "notice": "Ein Treffer ist ein Prüfhinweis, keine Feststellung. Namensgleichheit ist kein Nachweis der Identität; Geburtsdatum, Land und Kennungen sind gegen den Vorgang abzugleichen.",
+    "limitations": [
+     "Ein phonetisches Verfahren ist nicht im Einsatz. Kyrillische, arabische und chinesische Namen werden nur gefunden, wenn die Liste selbst eine lateinische Schreibweise als Alias führt; Transliterationsvarianten bleiben sonst unerkannt. Umgekehrt erzeugen häufige Namen Treffer ohne jeden Bezug. Der Abgleich ist damit in beide Richtungen unvollständig — ein Treffer ist zu verifizieren, ein Nullbefund belegt keine Unbedenklichkeit.",
+     "Der Abgleich erfasst nur die geführten Listen. Ausfuhr- und Embargohinweise anderer Stellen sowie das Ausschlusssystem der EU-Haushaltsordnung sind gesondert zu recherchieren.",
+     "Das Bereitstellungsverbot greift auch mittelbar über beherrschte Unternehmen. Ohne Prüfung der Eigentümerstruktur bleibt der Abgleich unvollständig.",
+     "Ein Ergebnis ohne Treffer belegt keine Unbedenklichkeit; es bezieht sich nur auf die abgefragten Listen in ihrem angegebenen Stand."
+    ],
+    "hits_before_filter": 0
+   }
+  ]
+ },
+ "log": {
+  "contract": "auditcore_registry_sources.screening_review/1",
+  "run_id": "run-1",
+  "events": [
+   {
+    "run_id": "run-1",
+    "sequence": 1,
+    "type": "run_created",
+    "at": "2026-09-25T12:00:00Z",
+    "actor": {
+     "id": "pruefer-a",
+     "display_name": "Prüferin A"
+    },
+    "hit_id": null,
+    "data": {
+     "subjects": 2
+    },
+    "type_label": "Prüflauf angelegt"
+   },
+   {
+    "run_id": "run-1",
+    "sequence": 2,
+    "type": "decision_recorded",
+    "at": "2026-09-25T12:00:00Z",
+    "actor": {
+     "id": "pruefer-a",
+     "display_name": "Prüferin A"
+    },
+    "hit_id": "hd1a579414038050b",
+    "data": {
+     "outcome": "confirmed",
+     "reason": "Identisch.",
+     "four_eyes": true,
+     "four_eyes_source": "policy"
+    },
+    "type_label": "Entscheidung erfasst",
+    "hit": {
+     "subject_name": "Maximilian Beispielmann",
+     "entry_name": "Maximilian Beispielmann",
+     "list_name": "Konsolidierte Finanzsanktionsliste der Union (FSF)"
+    },
+    "outcome_label": "bestätigt"
+   }
+  ]
+ },
+ "pep_run": {
+  "run_id": "run-2",
+  "created_at": "2026-09-25T12:00:00Z",
+  "created_by": {
+   "id": "pruefer-a",
+   "display_name": "Prüferin A"
+  },
+  "kind": "pep",
+  "case_reference": null,
+  "profile": {
+   "id": "flowinvoice.pep_bulk",
+   "version": "2026.09.2",
+   "fingerprint": "933231f40563bf90cd78a80c9452ff6a9aada74c0d5ec51ae27da86610240fbd",
+   "status": "USER_DECIDED"
+  },
+  "subject_count": 1,
+  "subjects_with_hits": 1,
+  "subjects_incomplete": 0,
+  "hit_count": 1,
+  "review_counts": {
+   "open": 1,
+   "pending_second_review": 0,
+   "confirmed": 0,
+   "dismissed": 0,
+   "deferred": 0
+  },
+  "review_complete": false,
+  "last_sequence": 1,
+  "contract": "auditcore_registry_sources.screening_review/1",
+  "request": {
+   "kind": "pep",
+   "profile": {
+    "id": "flowinvoice.pep_bulk",
+    "version": "2026.09.2",
+    "fingerprint": "933231f40563bf90cd78a80c9452ff6a9aada74c0d5ec51ae27da86610240fbd",
+    "status": "USER_DECIDED"
+   },
+   "lists": [
+    "peps"
+   ],
+   "min_score": null,
+   "limit": 15,
+   "case_reference": null,
+   "subjects": [
+    {
+     "subject_id": "s1",
+     "name": "Petra Musterfrau",
+     "birth_date": null,
+     "country": "de",
+     "schema": null,
+     "reference": null
+    }
+   ]
+  },
+  "sources": [
+   {
+    "list": {
+     "key": "peps",
+     "source_key": null,
+     "name": "Politisch exponierte Personen (synthetischer Testbestand)",
+     "issuer": "Testdaten",
+     "url": "https://example.invalid/peps.csv",
+     "format": "opensanctions_targets_simple_csv",
+     "provider": "Testdaten",
+     "licence_claimed_in_source": null,
+     "data_licence": {
+      "status": "SYNTHETIC",
+      "note": "Erfundene Testdaten."
+     }
+    },
+    "kind": "pep",
+    "entry_count": 2,
+    "as_of": "2026-09-24",
+    "retrieved_at": null,
+    "content_sha256": null,
+    "note": null,
+    "searchable": true,
+    "freshness": {
+     "status": "current",
+     "label": "aktuell",
+     "age_days": 1.5,
+     "stale_after_days": 7
+    }
+   }
+  ],
+  "subjects": [
+   {
+    "subject_id": "s1",
+    "input": {
+     "subject_id": "s1",
+     "name": "Petra Musterfrau",
+     "birth_date": null,
+     "country": "de",
+     "schema": null,
+     "reference": null
+    },
+    "status": "HITS",
+    "normalized_query": "petra musterfrau",
+    "min_score": 0.8,
+    "findings": [
+     {
+      "list_key": "peps",
+      "list_name": "Politisch exponierte Personen (synthetischer Testbestand)",
+      "source_key": null,
+      "searched": true,
+      "entry_count": 2,
+      "as_of": "2026-09-24",
+      "retrieved_at": null,
+      "hit_count": 1,
+      "note": null
+     }
+    ],
+    "hits": [
+     {
+      "hit_id": "h59e48d51c240e25c",
+      "subject_id": "s1",
+      "list_key": "peps",
+      "list_name": "Politisch exponierte Personen (synthetischer Testbestand)",
+      "source_key": null,
+      "entry": {
+       "entry_id": "pep-001",
+       "schema": "Person",
+       "name": "Petra Musterfrau",
+       "aliases": [
+        "Petra Muster-Frau"
+       ],
+       "aliases_total": 1,
+       "birth_date": "",
+       "countries": "de",
+       "addresses": "",
+       "identifiers": "",
+       "sanctions": "Mitglied eines Landesparlaments (erfunden)",
+       "program_ids": "",
+       "first_seen": "",
+       "last_seen": "",
+       "dataset": ""
+      },
+      "matched_name": "Petra Musterfrau",
+      "matched_field": "name",
+      "raw_score": 1.0,
+      "score": 1.0,
+      "confidence": "exact",
+      "dob_conflict": false,
+      "country_conflict": false,
+      "below_min_score": false,
+      "indicators": [],
+      "breakdown": {
+       "method": "token_f1",
+       "scale": {
+        "min": 0.0,
+        "max": 1.0
+       },
+       "steps": [
+        {
+         "step": "normalization",
+         "label": "Vergleichsform der Eingabe",
+         "value": "petra musterfrau",
+         "detail": "Normalisierungsprofil flowinvoice.pep 2026.09.2"
+        },
+        {
+         "step": "normalization",
+         "label": "Vergleichsform der getroffenen Schreibweise (Hauptname)",
+         "value": "petra musterfrau",
+         "detail": "Petra Musterfrau"
+        },
+        {
+         "step": "base",
+         "label": "Vergleichsformen identisch",
+         "points": 1.0
+        },
+        {
+         "step": "result",
+         "label": "Ergebniswert",
+         "points": 1.0
+        }
+       ],
+       "min_score": 0.8,
+       "classes": [
+        {
+         "class": "exact",
+         "label": "exakt",
+         "from": 0.99
+        }
+       ],
+       "class": "exact",
+       "class_label": "exakt",
+       "consistent": true
+      },
+      "review": {
+       "status": "open",
+       "status_label": "offen",
+       "sequence": 0,
+       "decision": null,
+       "second_review": null,
+       "events": 0
+      }
+     }
+    ],
+    "total_hits": 1,
+    "truncated": false,
+    "notice": "Ein Treffer ist ein Prüfhinweis auf eine möglicherweise politisch exponierte Person, keine Feststellung. Identität, Funktion und Zeitraum sind am Vorgang zu verifizieren.",
+    "limitations": [],
+    "hits_before_filter": 1
+   }
+  ]
+ }
+}
