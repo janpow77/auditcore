@@ -71,7 +71,7 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 | [`auditcore_reporting`](../../packages/auditcore_reporting) | 0.2.1 | Characterized reporting format rules preserving Flowlib behavior | keine; Extras: `excel` | charakterisiert |
 | [`auditcore_risk`](../../packages/auditcore_risk) | 0.3.1 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_sampling`](../../packages/auditcore_sampling) | 0.2.1 | Audit sampling sizes, selection and allocation with named method profiles | keine; Extras: `web` | charakterisiert |
-| [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.1 | Descriptive audit statistics (Benford) with named method profiles | keine; Extras: `web` | charakterisiert |
+| [`auditcore_statistics`](../../packages/auditcore_statistics) | 0.3.2 | Descriptive audit statistics (Benford) with named method profiles | `auditcore_common==0.1.0`; Extras: `web` | charakterisiert |
 
 ### Quellen-Adapter
 
