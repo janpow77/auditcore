@@ -1,0 +1,959 @@
+[
+ {
+  "name": "between None None",
+  "input": {
+   "op": "between",
+   "a": null,
+   "b": null
+  },
+  "expected": "V"
+ },
+ {
+  "name": "between None 'V'",
+  "input": {
+   "op": "between",
+   "a": null,
+   "b": "V"
+  },
+  "expected": "F"
+ },
+ {
+  "name": "between 'V' None",
+  "input": {
+   "op": "between",
+   "a": "V",
+   "b": null
+  },
+  "expected": "k"
+ },
+ {
+  "name": "between 'A' 'B'",
+  "input": {
+   "op": "between",
+   "a": "A",
+   "b": "B"
+  },
+  "expected": "AV"
+ },
+ {
+  "name": "between 'A' 'C'",
+  "input": {
+   "op": "between",
+   "a": "A",
+   "b": "C"
+  },
+  "expected": "B"
+ },
+ {
+  "name": "between 'V' 'V1'",
+  "input": {
+   "op": "between",
+   "a": "V",
+   "b": "V1"
+  },
+  "expected": "V0V"
+ },
+ {
+  "name": "between '0V' '1'",
+  "input": {
+   "op": "between",
+   "a": "0V",
+   "b": "1"
+  },
+  "expected": "0k"
+ },
+ {
+  "name": "between 'z' None",
+  "input": {
+   "op": "between",
+   "a": "z",
+   "b": null
+  },
+  "expected": "zV"
+ },
+ {
+  "name": "between 'zz' None",
+  "input": {
+   "op": "between",
+   "a": "zz",
+   "b": null
+  },
+  "expected": "zzV"
+ },
+ {
+  "name": "between None '01'",
+  "input": {
+   "op": "between",
+   "a": null,
+   "b": "01"
+  },
+  "expected": "00V"
+ },
+ {
+  "name": "between None '001'",
+  "input": {
+   "op": "between",
+   "a": null,
+   "b": "001"
+  },
+  "expected": "000V"
+ },
+ {
+  "name": "between 'a' 'a1'",
+  "input": {
+   "op": "between",
+   "a": "a",
+   "b": "a1"
+  },
+  "expected": "a0V"
+ },
+ {
+  "name": "between 'Az' 'B'",
+  "input": {
+   "op": "between",
+   "a": "Az",
+   "b": "B"
+  },
+  "expected": "AzV"
+ },
+ {
+  "name": "between 'y1' 'z'",
+  "input": {
+   "op": "between",
+   "a": "y1",
+   "b": "z"
+  },
+  "expected": "yV"
+ },
+ {
+  "name": "between 'V' 'V'",
+  "input": {
+   "op": "between",
+   "a": "V",
+   "b": "V"
+  },
+  "expected": {
+   "error": "INVALID_RANK_ORDER"
+  }
+ },
+ {
+  "name": "between 'W' 'V'",
+  "input": {
+   "op": "between",
+   "a": "W",
+   "b": "V"
+  },
+  "expected": {
+   "error": "INVALID_RANK_ORDER"
+  }
+ },
+ {
+  "name": "between 'V0' None",
+  "input": {
+   "op": "between",
+   "a": "V0",
+   "b": null
+  },
+  "expected": {
+   "error": "INVALID_RANK"
+  }
+ },
+ {
+  "name": "between '' 'V'",
+  "input": {
+   "op": "between",
+   "a": "",
+   "b": "V"
+  },
+  "expected": {
+   "error": "INVALID_RANK"
+  }
+ },
+ {
+  "name": "between 'A!' None",
+  "input": {
+   "op": "between",
+   "a": "A!",
+   "b": null
+  },
+  "expected": {
+   "error": "INVALID_RANK"
+  }
+ },
+ {
+  "name": "between 'V' 'W'",
+  "input": {
+   "op": "between",
+   "a": "V",
+   "b": "W"
+  },
+  "expected": "VV"
+ },
+ {
+  "name": "between 'V' 'V01'",
+  "input": {
+   "op": "between",
+   "a": "V",
+   "b": "V01"
+  },
+  "expected": "V00V"
+ },
+ {
+  "name": "spread 0",
+  "input": {
+   "op": "spread",
+   "count": 0
+  },
+  "expected": []
+ },
+ {
+  "name": "spread 1",
+  "input": {
+   "op": "spread",
+   "count": 1
+  },
+  "expected": [
+   "V"
+  ]
+ },
+ {
+  "name": "spread 2",
+  "input": {
+   "op": "spread",
+   "count": 2
+  },
+  "expected": [
+   "K",
+   "f"
+  ]
+ },
+ {
+  "name": "spread 3",
+  "input": {
+   "op": "spread",
+   "count": 3
+  },
+  "expected": [
+   "F",
+   "V",
+   "k"
+  ]
+ },
+ {
+  "name": "spread 5",
+  "input": {
+   "op": "spread",
+   "count": 5
+  },
+  "expected": [
+   "A",
+   "K",
+   "V",
+   "f",
+   "p"
+  ]
+ },
+ {
+  "name": "spread 10",
+  "input": {
+   "op": "spread",
+   "count": 10
+  },
+  "expected": [
+   "5",
+   "B",
+   "G",
+   "M",
+   "S",
+   "X",
+   "d",
+   "j",
+   "o",
+   "u"
+  ]
+ },
+ {
+  "name": "spread 61",
+  "input": {
+   "op": "spread",
+   "count": 61
+  },
+  "expected": [
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "6",
+   "7",
+   "8",
+   "9",
+   "A",
+   "B",
+   "C",
+   "D",
+   "E",
+   "F",
+   "G",
+   "H",
+   "I",
+   "J",
+   "K",
+   "L",
+   "M",
+   "N",
+   "O",
+   "P",
+   "Q",
+   "R",
+   "S",
+   "T",
+   "U",
+   "V",
+   "W",
+   "X",
+   "Y",
+   "Z",
+   "a",
+   "b",
+   "c",
+   "d",
+   "e",
+   "f",
+   "g",
+   "h",
+   "i",
+   "j",
+   "k",
+   "l",
+   "m",
+   "n",
+   "o",
+   "p",
+   "q",
+   "r",
+   "s",
+   "t",
+   "u",
+   "v",
+   "w",
+   "x",
+   "y",
+   "z"
+  ]
+ },
+ {
+  "name": "spread 62",
+  "input": {
+   "op": "spread",
+   "count": 62
+  },
+  "expected": [
+   "0z",
+   "1y",
+   "2x",
+   "3w",
+   "4v",
+   "5u",
+   "6t",
+   "7s",
+   "8r",
+   "9q",
+   "Ap",
+   "Bo",
+   "Cn",
+   "Dm",
+   "El",
+   "Fk",
+   "Gj",
+   "Hi",
+   "Ih",
+   "Jg",
+   "Kf",
+   "Le",
+   "Md",
+   "Nc",
+   "Ob",
+   "Pa",
+   "QZ",
+   "RY",
+   "SX",
+   "TW",
+   "UV",
+   "VU",
+   "WT",
+   "XS",
+   "YR",
+   "ZQ",
+   "aP",
+   "bO",
+   "cN",
+   "dM",
+   "eL",
+   "fK",
+   "gJ",
+   "hI",
+   "iH",
+   "jG",
+   "kF",
+   "lE",
+   "mD",
+   "nC",
+   "oB",
+   "pA",
+   "q9",
+   "r8",
+   "s7",
+   "t6",
+   "u5",
+   "v4",
+   "w3",
+   "x2",
+   "y1",
+   "z"
+  ]
+ },
+ {
+  "name": "spread 100",
+  "input": {
+   "op": "spread",
+   "count": 100
+  },
+  "expected": [
+   "0c",
+   "1E",
+   "1q",
+   "2S",
+   "34",
+   "3g",
+   "4I",
+   "4u",
+   "5W",
+   "68",
+   "6k",
+   "7M",
+   "7y",
+   "8a",
+   "9C",
+   "9o",
+   "AR",
+   "B3",
+   "Bf",
+   "CH",
+   "Ct",
+   "DV",
+   "E7",
+   "Ej",
+   "FL",
+   "Fx",
+   "GZ",
+   "HB",
+   "Hn",
+   "IP",
+   "J1",
+   "Jd",
+   "KF",
+   "Ks",
+   "LU",
+   "M6",
+   "Mi",
+   "NK",
+   "Nw",
+   "OY",
+   "PA",
+   "Pm",
+   "QO",
+   "R",
+   "Rc",
+   "SE",
+   "Sq",
+   "TS",
+   "U4",
+   "Ug",
+   "VJ",
+   "Vv",
+   "WX",
+   "X9",
+   "Xl",
+   "YN",
+   "Yz",
+   "Zb",
+   "aD",
+   "ap",
+   "bR",
+   "c3",
+   "cf",
+   "dH",
+   "dt",
+   "eV",
+   "f7",
+   "fk",
+   "gM",
+   "gy",
+   "ha",
+   "iC",
+   "io",
+   "jQ",
+   "k2",
+   "ke",
+   "lG",
+   "ls",
+   "mU",
+   "n6",
+   "ni",
+   "oK",
+   "ow",
+   "pY",
+   "qB",
+   "qn",
+   "rP",
+   "s1",
+   "sd",
+   "tF",
+   "tr",
+   "uT",
+   "v5",
+   "vh",
+   "wJ",
+   "wv",
+   "xX",
+   "y9",
+   "yl",
+   "zN"
+  ]
+ },
+ {
+  "name": "valid 'V'",
+  "input": {
+   "op": "valid",
+   "key": "V"
+  },
+  "expected": true
+ },
+ {
+  "name": "valid 'V0'",
+  "input": {
+   "op": "valid",
+   "key": "V0"
+  },
+  "expected": false
+ },
+ {
+  "name": "valid ''",
+  "input": {
+   "op": "valid",
+   "key": ""
+  },
+  "expected": false
+ },
+ {
+  "name": "valid '0'",
+  "input": {
+   "op": "valid",
+   "key": "0"
+  },
+  "expected": false
+ },
+ {
+  "name": "valid 'a1'",
+  "input": {
+   "op": "valid",
+   "key": "a1"
+  },
+  "expected": true
+ },
+ {
+  "name": "valid 'a-'",
+  "input": {
+   "op": "valid",
+   "key": "a-"
+  },
+  "expected": false
+ },
+ {
+  "name": "valid 'zzzz'",
+  "input": {
+   "op": "valid",
+   "key": "zzzz"
+  },
+  "expected": true
+ },
+ {
+  "name": "valid 'Ä'",
+  "input": {
+   "op": "valid",
+   "key": "Ä"
+  },
+  "expected": false
+ },
+ {
+  "name": "random insert sequence",
+  "input": {
+   "op": "sequence",
+   "steps": [
+    {
+     "a": null,
+     "b": null,
+     "key": "V"
+    },
+    {
+     "a": null,
+     "b": "V",
+     "key": "F"
+    },
+    {
+     "a": "V",
+     "b": null,
+     "key": "k"
+    },
+    {
+     "a": null,
+     "b": "F",
+     "key": "7"
+    },
+    {
+     "a": "V",
+     "b": "k",
+     "key": "c"
+    },
+    {
+     "a": "c",
+     "b": "k",
+     "key": "g"
+    },
+    {
+     "a": "g",
+     "b": "k",
+     "key": "i"
+    },
+    {
+     "a": "V",
+     "b": "c",
+     "key": "Y"
+    },
+    {
+     "a": "i",
+     "b": "k",
+     "key": "j"
+    },
+    {
+     "a": "g",
+     "b": "i",
+     "key": "h"
+    },
+    {
+     "a": "7",
+     "b": "F",
+     "key": "B"
+    },
+    {
+     "a": "h",
+     "b": "i",
+     "key": "hV"
+    },
+    {
+     "a": "V",
+     "b": "Y",
+     "key": "W"
+    },
+    {
+     "a": null,
+     "b": "7",
+     "key": "3"
+    },
+    {
+     "a": "F",
+     "b": "V",
+     "key": "N"
+    },
+    {
+     "a": null,
+     "b": "3",
+     "key": "1"
+    },
+    {
+     "a": "c",
+     "b": "g",
+     "key": "e"
+    },
+    {
+     "a": "V",
+     "b": "W",
+     "key": "VV"
+    },
+    {
+     "a": "V",
+     "b": "VV",
+     "key": "VF"
+    },
+    {
+     "a": "g",
+     "b": "h",
+     "key": "gV"
+    },
+    {
+     "a": "i",
+     "b": "j",
+     "key": "iV"
+    },
+    {
+     "a": null,
+     "b": "1",
+     "key": "0V"
+    },
+    {
+     "a": "3",
+     "b": "7",
+     "key": "5"
+    },
+    {
+     "a": "B",
+     "b": "F",
+     "key": "D"
+    },
+    {
+     "a": "e",
+     "b": "g",
+     "key": "f"
+    },
+    {
+     "a": "F",
+     "b": "N",
+     "key": "J"
+    },
+    {
+     "a": "iV",
+     "b": "j",
+     "key": "ik"
+    },
+    {
+     "a": "f",
+     "b": "g",
+     "key": "fV"
+    },
+    {
+     "a": "VV",
+     "b": "W",
+     "key": "Vk"
+    },
+    {
+     "a": "N",
+     "b": "V",
+     "key": "R"
+    },
+    {
+     "a": "B",
+     "b": "D",
+     "key": "C"
+    },
+    {
+     "a": "VF",
+     "b": "VV",
+     "key": "VN"
+    },
+    {
+     "a": "VF",
+     "b": "VN",
+     "key": "VJ"
+    },
+    {
+     "a": "h",
+     "b": "hV",
+     "key": "hF"
+    },
+    {
+     "a": "iV",
+     "b": "ik",
+     "key": "ic"
+    },
+    {
+     "a": "hF",
+     "b": "hV",
+     "key": "hN"
+    },
+    {
+     "a": "0V",
+     "b": "1",
+     "key": "0k"
+    },
+    {
+     "a": "3",
+     "b": "5",
+     "key": "4"
+    },
+    {
+     "a": "4",
+     "b": "5",
+     "key": "4V"
+    },
+    {
+     "a": "VJ",
+     "b": "VN",
+     "key": "VL"
+    },
+    {
+     "a": "g",
+     "b": "gV",
+     "key": "gF"
+    },
+    {
+     "a": "B",
+     "b": "C",
+     "key": "BV"
+    },
+    {
+     "a": "VF",
+     "b": "VJ",
+     "key": "VH"
+    },
+    {
+     "a": "C",
+     "b": "D",
+     "key": "CV"
+    },
+    {
+     "a": "ik",
+     "b": "j",
+     "key": "is"
+    },
+    {
+     "a": "e",
+     "b": "f",
+     "key": "eV"
+    },
+    {
+     "a": "Y",
+     "b": "c",
+     "key": "a"
+    },
+    {
+     "a": "VN",
+     "b": "VV",
+     "key": "VR"
+    },
+    {
+     "a": "7",
+     "b": "B",
+     "key": "9"
+    },
+    {
+     "a": "Vk",
+     "b": "W",
+     "key": "Vs"
+    },
+    {
+     "a": "ic",
+     "b": "ik",
+     "key": "ig"
+    },
+    {
+     "a": "VR",
+     "b": "VV",
+     "key": "VT"
+    },
+    {
+     "a": "eV",
+     "b": "f",
+     "key": "ek"
+    },
+    {
+     "a": "VL",
+     "b": "VN",
+     "key": "VM"
+    },
+    {
+     "a": "W",
+     "b": "Y",
+     "key": "X"
+    },
+    {
+     "a": "iV",
+     "b": "ic",
+     "key": "iY"
+    },
+    {
+     "a": "a",
+     "b": "c",
+     "key": "b"
+    },
+    {
+     "a": "a",
+     "b": "b",
+     "key": "aV"
+    },
+    {
+     "a": "1",
+     "b": "3",
+     "key": "2"
+    },
+    {
+     "a": "iV",
+     "b": "iY",
+     "key": "iW"
+    }
+   ]
+  },
+  "expected": [
+   "0V",
+   "0k",
+   "1",
+   "2",
+   "3",
+   "4",
+   "4V",
+   "5",
+   "7",
+   "9",
+   "B",
+   "BV",
+   "C",
+   "CV",
+   "D",
+   "F",
+   "J",
+   "N",
+   "R",
+   "V",
+   "VF",
+   "VH",
+   "VJ",
+   "VL",
+   "VM",
+   "VN",
+   "VR",
+   "VT",
+   "VV",
+   "Vk",
+   "Vs",
+   "W",
+   "X",
+   "Y",
+   "a",
+   "aV",
+   "b",
+   "c",
+   "e",
+   "eV",
+   "ek",
+   "f",
+   "fV",
+   "g",
+   "gF",
+   "gV",
+   "h",
+   "hF",
+   "hN",
+   "hV",
+   "i",
+   "iV",
+   "iW",
+   "iY",
+   "ic",
+   "ig",
+   "ik",
+   "is",
+   "j",
+   "k"
+  ]
+ }
+]

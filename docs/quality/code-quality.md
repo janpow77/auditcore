@@ -20,6 +20,19 @@ festgeschrieben, neue Pakete müssen die Maßstäbe vollständig erfüllen.
 | `mypy --strict` je Paket fehlerfrei | `mypy_strict_errors` |
 | Bezeichner (def/class) Englisch; Deutsch nur in Strings, Daten und festen fachlichen Schlüsseln | `non_english_identifiers` (Heuristik: Umlaute oder deutsche Wortstämme, auch in Umlaut-Ersatzschreibung) |
 
+#### `warnings` nur für Deprecation-Aliase
+
+Die Architekturtests der Pakete (`packages/auditcore_*/tests/test_architecture.py`)
+lassen das Standardmodul `warnings` zu (Entscheidung vom 25.09.2026) –
+**ausschließlich**, damit ein umbenannter öffentlicher Name einen Alias mit
+`DeprecationWarning` behalten kann (Muster: modulweites `__getattr__`, das die
+neue Funktion liefert und `warnings.warn(..., DeprecationWarning, stacklevel=2)`
+aufruft; Beispiel `auditcore_funding_sources.designer`). Erlaubt ist nur
+`import warnings` mit `warnings.warn(…, DeprecationWarning …)`; Filter,
+`catch_warnings`, andere Kategorien und `from warnings import …` sind verboten.
+`tests/test_warnings_usage.py` prüft das für `src/auditcore` und alle
+`packages/auditcore_*/src` zugleich.
+
 Messdetails, damit die Zahlen reproduzierbar sind:
 
 - C901 läuft mit `ruff check --isolated --ignore-noqa`: Projektkonfiguration und
