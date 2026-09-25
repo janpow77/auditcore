@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Verbindliche Code-Qualitätsmaßstäbe als Ratchet (Rechteinhaber, 25.09.2026):
+  neue Module `auditcore.tools.quality.codegate*`, Befehl
+  `auditcore-codegate check` bzw. `scripts/verify_code_quality.py`, Baseline
+  `quality/baseline.json`, Pflicht-Job `code-quality-gate`, pre-commit-Hook
+  und Release-Blocker in `verify_domain_packages.py`/`prepare_library_release.py`.
+  Siehe `docs/quality/code-quality.md`.
+
 ## 0.2.0
 
 - Pflicht zum fachlichen Rauchtest nach Produktions-Deploys (Rechteinhaber,
