@@ -9,9 +9,7 @@ consumer's credential provider under the name ``api_key``.
 
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping, Sequence
-from datetime import date
 from typing import Any
 
 from auditcore_harvest import (
@@ -20,9 +18,7 @@ from auditcore_harvest import (
     Capabilities,
     ConfigError,
     FetchContext,
-    HarvestRecord,
     PageResult,
-    PageStatus,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
@@ -31,72 +27,12 @@ from auditcore_harvest import (
 )
 
 from . import dip, eurlex, feeds
-from .errors import ConfigurationError, LegalSourceError, ParseError, ProfileError
+from ._adapter_support import _issues, _json, _page, _profile, _record, _since
+from .errors import ConfigurationError, LegalSourceError, ParseError
 from .model import ADAPTER_VERSION, LegalDocument
-from .profile import SourceProfile, load_profile
+from .profile import SourceProfile
 
 FAMILY = "legal"
-
-
-def _profile(config: Mapping[str, Any]) -> SourceProfile:
-    spec = config.get("profile")
-    if not isinstance(spec, Mapping) or not all(
-        isinstance(spec.get(k), str) for k in ("id", "version")
-    ):
-        raise ConfigError("Konfiguration 'profile' mit 'id' und 'version' fehlt.")
-    try:
-        return load_profile(str(spec["id"]), str(spec["version"]))
-    except ProfileError as exc:
-        raise ConfigError(str(exc)) from exc
-
-
-def _json(response_body: bytes, what: str) -> Any:
-    try:
-        return json.loads(response_body)
-    except ValueError as exc:
-        raise ParserError(f"{what}: Antwort ist kein JSON.") from exc
-
-
-def _record(
-    source: Source, context: FetchContext, document: LegalDocument, raw: Any, locator: str
-) -> HarvestRecord:
-    normalized = document.to_dict()
-    return HarvestRecord(
-        source_id=source.source_id,
-        record_id=document.external_id,
-        raw=raw,
-        normalized=normalized,
-        provenance=context.provenance(source, locator, raw),
-    )
-
-
-def _page(
-    records: Sequence[HarvestRecord],
-    issues: Sequence[RecordIssue],
-    next_cursor: Mapping[str, Any] | None,
-    total: int | None = None,
-) -> PageResult:
-    return PageResult(
-        records=tuple(records),
-        next_cursor=dict(next_cursor) if next_cursor is not None else None,
-        complete=next_cursor is None,
-        status=PageStatus.PARTIAL if issues else PageStatus.OK,
-        issues=tuple(issues),
-        total_hint=total,
-    )
-
-
-def _issues(errors: Sequence[ParseError]) -> list[RecordIssue]:
-    return [RecordIssue(error.location or "?", str(error)) for error in errors]
-
-
-def _since(value: str | None) -> date | None:
-    if value is None:
-        return None
-    try:
-        return date.fromisoformat(value[:10])
-    except ValueError as exc:
-        raise ConfigError(f"'since' ist kein ISO-Datum: {value!r}.") from exc
 
 
 class DipDrucksachenAdapter:
@@ -121,13 +57,13 @@ class DipDrucksachenAdapter:
         filters=("keywords",),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, object]) -> None:
         """Profile must exist; optional ``keywords`` must be a subset of its terms."""
         profile = _profile(config)
         self._keywords(profile, config)
 
     @staticmethod
-    def _keywords(profile: SourceProfile, config: Mapping[str, Any]) -> tuple[str, ...]:
+    def _keywords(profile: SourceProfile, config: Mapping[str, object]) -> tuple[str, ...]:
         selected = config.get("keywords")
         if selected is not None and (
             not isinstance(selected, list) or not all(isinstance(k, str) for k in selected)
@@ -175,7 +111,7 @@ class DipDrucksachenAdapter:
             for d in documents
         ]
         if not page.is_last(str(previous) if previous else None):
-            next_cursor: dict[str, Any] | None = {"keyword": index, "dip": page.cursor}
+            next_cursor: dict[str, object] | None = {"keyword": index, "dip": page.cursor}
         elif index + 1 < len(terms):
             next_cursor = {"keyword": index + 1, "dip": None}
         else:
@@ -206,7 +142,7 @@ class EurLexAdapter:
         filters=(),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, object]) -> None:
         """Profile must exist."""
         _profile(config)
 
@@ -315,7 +251,7 @@ class FeedAdapter:
             filters=("relevant_only",),
         )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, object]) -> None:
         """Profile must contain this feed source."""
         try:
             feeds.feed_source(_profile(config), self.key)
@@ -387,7 +323,7 @@ class EcaPublicationsAdapter:
         filters=(),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, object]) -> None:
         """Profile must contain the ECA page source."""
         try:
             feeds.feed_source(_profile(config), "eca")
