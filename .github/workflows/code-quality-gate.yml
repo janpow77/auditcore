@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   code-quality-gate:
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:

@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
+    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || matrix.python == '3.12') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
     strategy:
       fail-fast: false
       matrix:
