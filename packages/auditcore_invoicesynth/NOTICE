@@ -1,4 +1,4 @@
-auditcore_invoicesynth 0.1.0 — attribution and authorization
+auditcore_invoicesynth 0.1.1 — attribution and authorization
 
 New implementation in auditcore (docs/architecture/DONUT_OCR_PLAN.md,
 sections 2b and 2d). No code was copied from other repositories; the Donut

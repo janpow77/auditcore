@@ -9,10 +9,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import ModuleType
 from typing import TYPE_CHECKING, Any
 
+from auditcore_invoicesynth.enrich import SynthInvoice
 from auditcore_invoicesynth.fonts import FontSet
-from auditcore_invoicesynth.layouts import BLACK, LAYOUTS, Color
+from auditcore_invoicesynth.layouts import BLACK, LAYOUTS, Color, Variant
 
 if TYPE_CHECKING:  # pragma: no cover
     from PIL.Image import Image
@@ -24,7 +26,7 @@ class RenderDependencyError(ImportError):
     """Das Extra ``render`` (Pillow) ist nicht installiert."""
 
 
-def _pil() -> Any:
+def _pil() -> tuple[ModuleType, ModuleType, ModuleType]:
     try:
         from PIL import Image, ImageDraw, ImageFont
     except ImportError as exc:  # pragma: no cover - abhängig von der Installation
@@ -131,8 +133,8 @@ class PillowCanvas:
 
 
 def render_pages(
-    invoice: Any,
-    variant: Any,
+    invoice: SynthInvoice,
+    variant: Variant,
     layout: str,
     fonts: FontSet,
     *,

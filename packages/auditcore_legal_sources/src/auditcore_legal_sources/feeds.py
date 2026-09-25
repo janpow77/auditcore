@@ -18,9 +18,9 @@ import re
 from collections.abc import Iterable, Mapping, Sequence
 from datetime import UTC, date, datetime
 from email.utils import parsedate_to_datetime
-from html.parser import HTMLParser
 from urllib.parse import urljoin
 
+from auditcore_common.html_text import anchor_links
 from auditcore_harvest import JSON
 
 from .errors import ConfigurationError, ParseError
@@ -144,39 +144,11 @@ def select_relevant(
     return [d for d in documents if is_relevant(f"{d.title} {d.content or ''}", words)]
 
 
-class _Links(HTMLParser):
-    def __init__(self) -> None:
-        super().__init__(convert_charrefs=True)
-        self.links: list[tuple[str, str]] = []
-        self._href: str | None = None
-        self._text: list[str] = []
-
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
-        """Start collecting the text of an anchor with ``href``."""
-        if tag == "a":
-            href = dict(attrs).get("href")
-            if href:
-                self._href, self._text = href, []
-
-    def handle_data(self, data: str) -> None:
-        """Collect anchor text."""
-        if self._href is not None:
-            self._text.append(data)
-
-    def handle_endtag(self, tag: str) -> None:
-        """Finish the current anchor."""
-        if tag == "a" and self._href is not None:
-            self.links.append((self._href, " ".join("".join(self._text).split())))
-            self._href = None
-
-
 def publication_links(html: str, profile: SourceProfile, key: str = "eca") -> list[LegalDocument]:
     """Publication links of an ECA overview page (source rule: marker in href, title > 10)."""
     source = feed_source(profile, key)
-    parser = _Links()
-    parser.feed(html)
     documents = []
-    for href, text in parser.links:
+    for href, text in anchor_links(html):
         if not any(marker in href.lower() for marker in source.link_markers):
             continue
         if len(text) < source.min_title_length:

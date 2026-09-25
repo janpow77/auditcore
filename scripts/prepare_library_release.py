@@ -23,6 +23,19 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     "auditcore_bpmn": frozenset(
         {("janpow77/audit_designer", "eff41a4ccedab12b9a73bafff41468712459cb2b")}
     ),
+    "auditcore_auth": frozenset(
+        {
+            ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
+            ("janpow77/audit_designer", "ccd65245182982af3ef885a7a6d43583f4f72cbb"),
+            ("janpow77/flowinvoice", "5d5d8c5aded2b7eee82c0813994e9efd549277b3"),
+            ("janpow77/flowlib", "aca2dc6aad25aea0720312dbcc6da00b0bcba330"),
+            ("janpow77/flownavigator", "9dff858d3772e59533886dfbae70c672d574a1d4"),
+            ("janpow77/flowsearch", "9ac5e0dd0c2b7363b5a077551e4fb7103f32c697"),
+            ("janpow77/qaaudit", "c78be5c86454d457e5c66d0c65b5117a8528d462"),
+            ("janpow77/regulierung", "ce76e48c8ad7f1cbe430948158a4e7001a02ba99"),
+            ("janpow77/versteigerung", "729f9a10bc5478bd724ef40c1f4cd572e5a3dada"),
+        }
+    ),
     # Zusammengeführte Hilfsfunktionen: auditcore-Pakete (keine Fremdquelle) und die
     # generischen App-Hilfen aus docs/reports/app-helfer-python.md (Commits unten).
     "auditcore_common": frozenset(

@@ -6,18 +6,19 @@ different applications stay separate; nothing here merges them.
 
 from __future__ import annotations
 
-import hashlib
-import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from importlib import resources
 from types import MappingProxyType
 
+from auditcore_common.hashing import canonical_sha256
+from auditcore_common.profiles import load_packaged_profile, packaged_profile_ids
 from auditcore_harvest import JSON
 
 from .errors import ProfileError
 
 PROFILE_SCHEMA = "auditcore_legal_sources.profile/1"
+
+_RESOURCES = "auditcore_legal_sources.profiles"
 
 
 @dataclass(frozen=True)
@@ -90,8 +91,7 @@ class SourceProfile:
 
 def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
-    canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return canonical_sha256(data)
 
 
 def profile_from_dict(data: Mapping[str, JSON]) -> SourceProfile:
@@ -149,23 +149,17 @@ def profile_from_dict(data: Mapping[str, JSON]) -> SourceProfile:
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
     """Packaged ``(id, version)`` pairs; there is no implicit default profile."""
-    found = []
-    for entry in resources.files("auditcore_legal_sources.profiles").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            found.append((str(data["id"]), str(data["version"])))
-    return tuple(sorted(found))
+    return packaged_profile_ids(_RESOURCES)
 
 
 def load_profile(profile_id: str, version: str) -> SourceProfile:
     """Load an explicitly named packaged profile version."""
-    name = f"{profile_id}-{version}.json"
-    if "/" in name or "\\" in name or name.startswith("."):
-        raise ProfileError("Ungültige Profilkennung.")
-    entry = resources.files("auditcore_legal_sources.profiles").joinpath(name)
-    if not entry.is_file():
-        raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
-    profile = profile_from_dict(json.loads(entry.read_text(encoding="utf-8")))
-    if (profile.id, profile.version) != (profile_id, version):
-        raise ProfileError("Profildatei und Profilkennung stimmen nicht überein.")
-    return profile
+    return load_packaged_profile(
+        _RESOURCES,
+        profile_id,
+        version,
+        parse=profile_from_dict,
+        identity=lambda profile: (profile.id, profile.version),
+        error=ProfileError,
+        invalid_name="invalid_or_hidden",
+    )

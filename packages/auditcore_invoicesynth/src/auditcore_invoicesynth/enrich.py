@@ -173,51 +173,21 @@ def enrich(
     ``invoice_date`` ersetzt die fortlaufenden Generator-Daten (Leistungs- und
     Fälligkeitsdatum werden dann relativ dazu gezogen).
     """
-    if vat_scheme not in VAT_SCHEMES:
-        raise ValueError(f"Unbekanntes Steuerschema: {vat_scheme}")
-    unknown = set(errors) - set(ERRORS)
-    if unknown:
-        raise ValueError(f"Unbekannte Fehlerfälle: {sorted(unknown)}")
+    _check_arguments(vat_scheme, errors)
     country, rates = VAT_SCHEMES[vat_scheme]
     recipient_country = "AT" if vat_scheme == "de_reverse_charge" else country
     supplier = _party(dict(record["supplier"]), country, rng)
     recipient = _party(dict(record["beneficiary"]), recipient_country, rng)
     bank = fictional_bank_account(rng, country)
-    positions: list[Position] = []
-    for number, item in enumerate(record["line_items"]):
-        rate = rates[number % len(rates)]
-        quantity = int(item["quantity"])
-        unit_price = cents(Decimal(str(item["unit_price"])))
-        amount = cents(unit_price * quantity)
-        if expand_positions > 1:
-            for part_no, part in enumerate(_split_amount(amount, expand_positions, rng), 1):
-                positions.append(
-                    Position(f"{item['description']} (Teil {part_no})", 1, part, part, rate)
-                )
-        else:
-            positions.append(Position(str(item["description"]), quantity, unit_price, amount, rate))
-    vat_lines = []
-    for rate in sorted({p.rate for p in positions}, reverse=True):
-        base = sum((p.amount for p in positions if p.rate == rate), Decimal(0))
-        vat_lines.append(VatLine(rate, base, cents(base * rate / 100)))
+    positions = _positions(record, rates, expand_positions, rng)
+    vat_lines = _vat_lines(positions)
     net = sum((line.base for line in vat_lines), Decimal(0))
     vat = sum((line.amount for line in vat_lines), Decimal(0))
     total = net + vat
-    printed_total = total
-    if "wrong_total" in errors:
-        delta = cents(
-            Decimal(rng.choice((1, 10, 100))) * rng.choice((1, -1)) / rng.choice((1, 100))
-        )
-        printed_total = total + delta if total + delta > 0 else total + abs(delta)
+    printed_total = _printed_total(total, errors, rng)
     if "missing_vat_id" in errors:
         supplier = replace(supplier, vat_id="")
-    if invoice_date is None:
-        invoice_date = date.fromisoformat(record["invoice_date"])
-        supply_date = date.fromisoformat(record["supply_date"])
-        due_date = date.fromisoformat(record["due_date"])
-    else:
-        supply_date = invoice_date - timedelta(days=rng.randint(0, 30))
-        due_date = invoice_date + timedelta(days=rng.choice((7, 10, 14, 30, 30, 45)))
+    invoice_date, supply_date, due_date = _dates(record, invoice_date, rng)
     return SynthInvoice(
         document_id=str(record["id"]),
         kind=kind,
@@ -240,10 +210,75 @@ def enrich(
         printed_total=printed_total,
         vat_scheme=vat_scheme,
         errors=tuple(sorted(errors)),
-        source={
-            "generator": "auditcore_invoicegenerator.InvoiceScenario",
-            "profile": record["metadata"].get("profile"),
-            "seed": record["metadata"].get("seed"),
-            "document_id": record["id"],
-        },
+        source=_source(record),
     )
+
+
+def _check_arguments(vat_scheme: str, errors: tuple[str, ...]) -> None:
+    if vat_scheme not in VAT_SCHEMES:
+        raise ValueError(f"Unbekanntes Steuerschema: {vat_scheme}")
+    unknown = set(errors) - set(ERRORS)
+    if unknown:
+        raise ValueError(f"Unbekannte Fehlerfälle: {sorted(unknown)}")
+
+
+def _source(record: InvoiceRecord) -> dict[str, Any]:
+    """Herkunft des Generator-Datensatzes (Profil, Seed, Dokument)."""
+    return {
+        "generator": "auditcore_invoicegenerator.InvoiceScenario",
+        "profile": record["metadata"].get("profile"),
+        "seed": record["metadata"].get("seed"),
+        "document_id": record["id"],
+    }
+
+
+def _positions(
+    record: InvoiceRecord, rates: tuple[Decimal, ...], expand_positions: int, rng: Random
+) -> list[Position]:
+    """Positionen mit Steuersatz im Wechsel; ``expand_positions`` > 1 zerlegt jede Position."""
+    positions: list[Position] = []
+    for number, item in enumerate(record["line_items"]):
+        rate = rates[number % len(rates)]
+        quantity = int(item["quantity"])
+        unit_price = cents(Decimal(str(item["unit_price"])))
+        amount = cents(unit_price * quantity)
+        if expand_positions > 1:
+            for part_no, part in enumerate(_split_amount(amount, expand_positions, rng), 1):
+                positions.append(
+                    Position(f"{item['description']} (Teil {part_no})", 1, part, part, rate)
+                )
+        else:
+            positions.append(Position(str(item["description"]), quantity, unit_price, amount, rate))
+    return positions
+
+
+def _vat_lines(positions: list[Position]) -> list[VatLine]:
+    """Eine Steuerzeile je Satz, absteigend, Steuer je Zeile kaufmännisch gerundet."""
+    vat_lines = []
+    for rate in sorted({p.rate for p in positions}, reverse=True):
+        base = sum((p.amount for p in positions if p.rate == rate), Decimal(0))
+        vat_lines.append(VatLine(rate, base, cents(base * rate / 100)))
+    return vat_lines
+
+
+def _printed_total(total: Decimal, errors: tuple[str, ...], rng: Random) -> Decimal:
+    """Gedruckter Gesamtbetrag; beim Fehlerfall ``wrong_total`` bewusst abweichend und positiv."""
+    if "wrong_total" not in errors:
+        return total
+    delta = cents(Decimal(rng.choice((1, 10, 100))) * rng.choice((1, -1)) / rng.choice((1, 100)))
+    return total + delta if total + delta > 0 else total + abs(delta)
+
+
+def _dates(
+    record: InvoiceRecord, invoice_date: date | None, rng: Random
+) -> tuple[date, date, date]:
+    """Rechnungs-, Leistungs- und Fälligkeitsdatum; ohne ``invoice_date`` aus dem Generator."""
+    if invoice_date is None:
+        return (
+            date.fromisoformat(record["invoice_date"]),
+            date.fromisoformat(record["supply_date"]),
+            date.fromisoformat(record["due_date"]),
+        )
+    supply_date = invoice_date - timedelta(days=rng.randint(0, 30))
+    due_date = invoice_date + timedelta(days=rng.choice((7, 10, 14, 30, 30, 45)))
+    return invoice_date, supply_date, due_date
