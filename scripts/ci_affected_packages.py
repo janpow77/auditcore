@@ -97,7 +97,10 @@ def main() -> None:
         chosen = select(root, changed_files(args.base))
     else:
         chosen = list(all_packages(root).values())
-    print("\n".join(str(path.relative_to(root)) for path in chosen))
+    # No trailing empty line: the workflow tests the file with ``-s`` and would
+    # otherwise build the platform and call pip without any package.
+    for path in chosen:
+        print(path.relative_to(root))
 
 
 if __name__ == "__main__":
