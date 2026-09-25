@@ -96,7 +96,8 @@ def routes(max_records: int = MAX_RECORDS, max_body_bytes: int = MAX_BODY_BYTES)
     async def evaluate(request: Request) -> JsonObject:
         body = await _body(request, max_body_bytes)
         # CPU-bound evaluation off the event loop.
-        return await run_in_threadpool(handle_evaluate, body, limits)
+        result: JsonObject = await run_in_threadpool(handle_evaluate, body, limits)
+        return result
 
     base = "/profiles/{profile_id}/{version}"
     return [
