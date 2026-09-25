@@ -84,11 +84,11 @@
     },
     "auditcore_geo": {
       "metrics": {
-        "any_usages": 27,
-        "complexity_over_10": 2,
+        "any_usages": 12,
+        "complexity_over_10": 0,
         "duplicate_functions": 0,
         "functions_over_60_lines": 0,
-        "modules_over_400_lines": 2,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 20
       }
@@ -159,13 +159,24 @@
         "non_english_identifiers": 1
       }
     },
+    "auditcore_llm_client": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
     "auditcore_market_indicators": {
       "metrics": {
-        "any_usages": 8,
-        "complexity_over_10": 2,
+        "any_usages": 4,
+        "complexity_over_10": 0,
         "duplicate_functions": 4,
-        "functions_over_60_lines": 2,
-        "modules_over_400_lines": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
@@ -183,10 +194,10 @@
     },
     "auditcore_price_sources": {
       "metrics": {
-        "any_usages": 31,
-        "complexity_over_10": 1,
+        "any_usages": 2,
+        "complexity_over_10": 0,
         "duplicate_functions": 0,
-        "functions_over_60_lines": 4,
+        "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 1
@@ -228,7 +239,7 @@
     "auditcore_reporting": {
       "metrics": {
         "any_usages": 4,
-        "complexity_over_10": 2,
+        "complexity_over_10": 0,
         "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
@@ -249,7 +260,7 @@
     },
     "auditcore_sampling": {
       "metrics": {
-        "any_usages": 11,
+        "any_usages": 8,
         "complexity_over_10": 0,
         "duplicate_functions": 0,
         "functions_over_60_lines": 0,

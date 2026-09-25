@@ -78,11 +78,8 @@ class _Leser:
         return tuple(ringe)
 
 
-def lies_gpkg_polygone(blob: bytes) -> GpkgGeometrie:
-    """Polygone eines GeoPackage-Blobs samt ``srs_id``."""
-    if not isinstance(blob, (bytes, bytearray, memoryview)):
-        raise GeometrieFehler("Blob (bytes) erwartet.")
-    daten = bytes(blob)
+def _kopf(daten: bytes) -> tuple[int, int]:
+    """GeoPackageBinary-Kopf prüfen; liefert ``(srs_id, Länge des Hüllrechtecks)``."""
     if len(daten) < 8 or daten[:2] != b"GP":
         raise GeometrieFehler("Kein GeoPackage-Blob.")
     if daten[2] != 0:
@@ -97,6 +94,27 @@ def lies_gpkg_polygone(blob: bytes) -> GpkgGeometrie:
         raise GeometrieFehler(f"Ungültige Hüllrechteck-Kennung {(flags >> 1) & 7}.")
     kopf_folge = "<" if flags & 1 else ">"
     (srs_id,) = struct.unpack(kopf_folge + "i", daten[4:8])
+    return int(srs_id), huelle
+
+
+def _multipolygon(leser: _Leser, folge: str) -> tuple[GpkgPolygon, ...]:
+    """Teilpolygone eines MultiPolygon; jede andere Teilgeometrie ist ein Fehler."""
+    teile = []
+    for _ in range(leser.uint(folge)):
+        teil_folge = leser.reihenfolge()
+        teil_typ = leser.typ(teil_folge)
+        if teil_typ != 3:
+            raise GeometrieFehler(f"MultiPolygon enthält Teilgeometrie vom Typ {teil_typ}.")
+        teile.append(leser.polygon(teil_folge))
+    return tuple(teile)
+
+
+def lies_gpkg_polygone(blob: bytes) -> GpkgGeometrie:
+    """Polygone eines GeoPackage-Blobs samt ``srs_id``."""
+    if not isinstance(blob, (bytes, bytearray, memoryview)):
+        raise GeometrieFehler("Blob (bytes) erwartet.")
+    daten = bytes(blob)
+    srs_id, huelle = _kopf(daten)
     leser = _Leser(daten, 8)
     leser.bytes(huelle)
     folge = leser.reihenfolge()
@@ -104,16 +122,9 @@ def lies_gpkg_polygone(blob: bytes) -> GpkgGeometrie:
     if typ == 3:
         polygone: tuple[GpkgPolygon, ...] = (leser.polygon(folge),)
     elif typ == 6:
-        teile = []
-        for _ in range(leser.uint(folge)):
-            teil_folge = leser.reihenfolge()
-            teil_typ = leser.typ(teil_folge)
-            if teil_typ != 3:
-                raise GeometrieFehler(f"MultiPolygon enthält Teilgeometrie vom Typ {teil_typ}.")
-            teile.append(leser.polygon(teil_folge))
-        polygone = tuple(teile)
+        polygone = _multipolygon(leser, folge)
     else:
         raise GeometrieFehler(f"WKB-Typ {typ} nicht vorgesehen (nur Polygon/MultiPolygon).")
     if leser.pos != len(daten):
         raise GeometrieFehler(f"{len(daten) - leser.pos} unerwartete Restbytes nach der Geometrie.")
-    return GpkgGeometrie(int(srs_id), polygone)
+    return GpkgGeometrie(srs_id, polygone)

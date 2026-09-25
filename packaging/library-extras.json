@@ -8,7 +8,7 @@
   },
   "auditcore_dataprotection": {
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
-    "auditcore_reporting[excel]==0.2.0; extra == \"excel\"": "python3-auditcore-reporting (>= 0.2.0)"
+    "auditcore_reporting[excel]==0.2.1; extra == \"excel\"": "python3-auditcore-reporting (>= 0.2.1)"
   },
   "auditcore_legal_sources": {
     "feedparser<7,>=6.0.10; extra == \"feeds\"": "python3-feedparser (>= 6.0.10)"
@@ -60,5 +60,8 @@
   "auditcore_kanban": {
     "starlette>=0.26; extra == \"ui\"": "python3-starlette (>= 0.26)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)"
+  },
+  "auditcore_llm_client": {
+    "httpx>=0.23; extra == \"http\"": "python3-httpx (>= 0.23)"
   }
 }
