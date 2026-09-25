@@ -1,5 +1,22 @@
 # Changelog – auditcore_documents
 
+## 0.3.1 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- Profil-Fingerprints → `canonical_sha256(data, compact=False)` (Standardtrenner
+  wie bisher; das Weglassen der Altvorgaben bleibt im Paket).
+- `HashingService.hash_string`/`hash_json`/`hash_file` →
+  `sha256_text`/`canonical_sha256(ensure_ascii=True, default=str)`/`sha256_file`;
+  `compare.sha256_file`, `pipeline.donut.sha256_file`, `utc_now`, `new_id`,
+  `rate`, `compact` sind dieselben Objekte aus `auditcore_common`
+  (`sha256_file`, `clock.utc_now`, `ids.new_uuid`, `numeric.parse_percent_rate`,
+  `text.compact_upper`); Namen bleiben.
+- Audit-Details einfrieren/auftauen → `auditcore_common.frozen`; lxml über
+  `optional.require_module`.
+- 634 Tests grün (Replays unverändert).
+
 ## 0.2.1 – Refaktorierung ohne Verhaltensänderung
 
 - `pipeline.watchdog` ist ein Unterpaket nach Prüfgruppen: `model`

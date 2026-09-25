@@ -13,6 +13,8 @@ import zipfile
 from pathlib import Path
 from typing import Any
 
+from auditcore_common.optional import require_module
+
 from auditcore_documents.errors import DependencyError, LimitExceededError, ParseError
 from auditcore_documents.limits import ReadLimits
 from auditcore_documents.model import CompareItem
@@ -44,11 +46,9 @@ _IGNORED_STABLE_IDS = {"bemerkung", "antwort", "checkbox", "datum", "text", "ric
 
 
 def _etree() -> Any:
-    try:
-        from lxml import etree
-    except ImportError as exc:  # pragma: no cover - abhängig von der Umgebung
-        raise DependencyError("Das Lesen von DOCX/DOCM benötigt das Extra 'docx' (lxml).") from exc
-    return etree
+    return require_module(
+        "lxml.etree", DependencyError, "Das Lesen von DOCX/DOCM benötigt das Extra 'docx' (lxml)."
+    )
 
 
 def _parser(etree: Any) -> Any:
