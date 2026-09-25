@@ -2,7 +2,7 @@
   "$schema": "./schema.json",
   "contract": "format-filesize",
   "version": "1.0.0",
-  "status": "vorläufig",
+  "status": "verbindlich",
   "title": "Dateigröße formatieren",
   "description": "Basis 1024 mit den Einheiten B, KB, MB, GB, TB; höchstens eine Nachkommastelle mit Dezimalkomma, „,0“ entfällt; Bytes unter 1024 ganzzahlig ohne Tausendertrenner; negative oder fehlende Werte ergeben den Ersatzwert.",
   "languages": [
