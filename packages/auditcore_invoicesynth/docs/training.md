@@ -46,7 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3-venv fo
     && rm -rf /var/lib/apt/lists/*
 RUN python3 -m venv /opt/venv && /opt/venv/bin/pip install --no-cache-dir \
       --index-url https://download.pytorch.org/whl/cu128 "torch>=2.7" \
-    && /opt/venv/bin/pip install --no-cache-dir "auditcore_invoicesynth[train]==0.1.0" bitsandbytes
+    && /opt/venv/bin/pip install --no-cache-dir "auditcore_invoicesynth[train]==0.1.1" bitsandbytes
 ENV PATH=/opt/venv/bin:$PATH HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
 ENTRYPOINT ["auditcore-invoicesynth-train"]
 ```
