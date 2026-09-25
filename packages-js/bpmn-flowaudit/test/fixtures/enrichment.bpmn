@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Definitions_Anreicherung" targetNamespace="https://example.org/bpmn/anreicherung" exporter="Synthetischer Erzeuger">
+  <bpmn:collaboration id="Collaboration_A">
+    <bpmn:participant id="Pool_A" name="Antragsverfahren Musterprogramm" processRef="Process_A">
+      <bpmn:documentation>Systemprüfung Muster. Modell 1 von 3. Betroffene Bewertungskriterien: Bewertungskriterien 2.4 und 2.6. Stand 01.09.2026.</bpmn:documentation>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_A" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_A">
+      <bpmn:lane id="Lane_Bank" name="Musterbank (zwischengeschaltete Stelle)">
+        <bpmn:flowNodeRef>Start_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Pruefen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Nachfordern</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_VB" name="Verwaltungsbehörde (Referat A)">
+        <bpmn:flowNodeRef>Task_Auswahl</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Antrag" name="Antragstellende">
+        <bpmn:flowNodeRef>Task_Nachreichen</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_1" name="Antrag eingegangen">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Pruefen" name="Musterbank: Antrag prüfen">
+      <bpmn:documentation>Förderhandbuch 21+ V 1.1, Kapitel 11.2.1 (PDF-Seiten 77 bis 82). Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060. Antragsprüfcheckliste FP 1000 V 1.2, Prüffeld 3.21. Feststellungen T15 F1 und T15 F6. [A1, A3, B1]</bpmn:documentation>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Nachfordern" name="Musterbank: Unterlagen nachfordern">
+      <bpmn:documentation>Art. 74 Abs. 2 UAbs. 2 VO (EU) 2021/1060 sowie §§ 23 und 44 LHO; VV Nummer 4.2 zu § 44 LHO; § 37 Absatz 2 Satz 2 HVwVfG. BK 2.3</bpmn:documentation>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Nachreichen" name="Antragstellende: Unterlagen nachreichen">
+      <bpmn:documentation>Anhang XIII der Verordnung (EU) 2021/1060; Verordnung (EU) Nr. 651/2014.</bpmn:documentation>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Auswahl" name="Verwaltungsbehörde: Auswahl bestätigen">
+      <bpmn:documentation>Feststellung T07 F2 (Themenvermerk T07).</bpmn:documentation>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_1" name="Auswahl bestätigt">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_1" targetRef="Task_Pruefen" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Pruefen" targetRef="Task_Nachfordern" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Nachfordern" targetRef="Task_Nachreichen" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_Nachreichen" targetRef="Task_Auswahl" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_Auswahl" targetRef="End_1" />
+    <bpmn:textAnnotation id="Note_1">
+      <bpmn:text>Lücke: Frist für die Nachforderung ist nicht geregelt.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Assoc_1" sourceRef="Task_Nachfordern" targetRef="Note_1" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_A">
+    <bpmndi:BPMNPlane id="Plane_A" bpmnElement="Collaboration_A">
+      <bpmndi:BPMNShape id="Pool_A_di" bpmnElement="Pool_A" isHorizontal="true">
+        <dc:Bounds x="100" y="60" width="900" height="480" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Bank_di" bpmnElement="Lane_Bank" isHorizontal="true">
+        <dc:Bounds x="130" y="60" width="870" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_VB_di" bpmnElement="Lane_VB" isHorizontal="true">
+        <dc:Bounds x="130" y="260" width="870" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Antrag_di" bpmnElement="Lane_Antrag" isHorizontal="true">
+        <dc:Bounds x="130" y="400" width="870" height="140" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_1_di" bpmnElement="Start_1">
+        <dc:Bounds x="180" y="122" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Pruefen_di" bpmnElement="Task_Pruefen" bioc:stroke="#b3261e" bioc:fill="#fce8e6" color:background-color="#fce8e6" color:border-color="#b3261e">
+        <dc:Bounds x="260" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Nachfordern_di" bpmnElement="Task_Nachfordern" bioc:stroke="#cc0000" bioc:fill="#ffe0e0" color:background-color="#ffe0e0" color:border-color="#cc0000">
+        <dc:Bounds x="420" y="100" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Nachreichen_di" bpmnElement="Task_Nachreichen">
+        <dc:Bounds x="580" y="430" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Auswahl_di" bpmnElement="Task_Auswahl" bioc:stroke="#1b5e20" bioc:fill="#c8e6c9" color:background-color="#c8e6c9" color:border-color="#1b5e20">
+        <dc:Bounds x="740" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_1_di" bpmnElement="End_1">
+        <dc:Bounds x="902" y="312" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Note_1_di" bpmnElement="Note_1">
+        <dc:Bounds x="560" y="80" width="180" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="216" y="140" />
+        <di:waypoint x="260" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="360" y="140" />
+        <di:waypoint x="420" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="470" y="180" />
+        <di:waypoint x="470" y="470" />
+        <di:waypoint x="580" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="680" y="470" />
+        <di:waypoint x="790" y="470" />
+        <di:waypoint x="790" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="840" y="330" />
+        <di:waypoint x="902" y="330" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_1_di" bpmnElement="Assoc_1">
+        <di:waypoint x="520" y="120" />
+        <di:waypoint x="560" y="110" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

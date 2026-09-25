@@ -1,0 +1,55 @@
+{
+  "name": "@flowaudit/bpmn-vue",
+  "version": "0.1.0",
+  "description": "Vue-3-Oberfläche für den FlowAudit-BPMN-Editor: Editor, Eigenschaften, Sammlung, Prüfbehörden-Ansichten, Web Component und eigenständige App (MIT)",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "*.css",
+    "./dist-wc/flowaudit-bpmn-editor.js"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./web-component": {
+      "types": "./dist/web-component/register.d.ts",
+      "import": "./dist-wc/flowaudit-bpmn-editor.js"
+    },
+    "./style.css": "./dist/bpmn-vue.css",
+    "./package.json": "./package.json",
+    "./standalone/*": "./dist-standalone/*"
+  },
+  "files": [
+    "dist",
+    "dist-wc",
+    "dist-standalone",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build && vite build -c vite.wc.config.ts && vite build -c vite.standalone.config.ts",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "demo": "vite -c demo/vite.config.ts",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@flowaudit/bpmn-editor": "0.1.0",
+    "@flowaudit/bpmn-flowaudit": "0.1.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "vue": "^3.5.22",
+    "vue-tsc": "^3.1.1"
+  }
+}

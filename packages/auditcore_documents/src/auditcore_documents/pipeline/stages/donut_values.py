@@ -8,8 +8,15 @@ from datetime import date, datetime
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
+from auditcore_common.numeric import parse_percent_rate
+from auditcore_common.text import compact_upper
+
 from auditcore_documents.pipeline.stages.postprocess import parse_amount
 from auditcore_documents.pipeline.stages.validation import VAT_ID_PATTERNS
+
+#: Donut names of the shared helpers (same objects as in ``auditcore_common``).
+rate = parse_percent_rate
+compact = compact_upper
 
 ALLOWED_VAT_RATES = {
     "DE": frozenset({Decimal(19), Decimal(7), Decimal(0)}),
@@ -93,18 +100,6 @@ def iso_date(raw: str) -> str | None:
             except ValueError:
                 return None
     return None
-
-
-def rate(raw: str) -> Decimal | None:
-    match = re.fullmatch(r"(\d{1,2})(?:[.,](\d))?\s*%?", raw.strip())
-    if not match:
-        return None
-    value = Decimal(match[1] + ("." + match[2] if match[2] else ""))
-    return value.quantize(Decimal(1)) if value == value.to_integral() else value
-
-
-def compact(raw: str) -> str:
-    return "".join(raw.split()).upper()
 
 
 def de_vat_check_digit(first_eight: str) -> int:
