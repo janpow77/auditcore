@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_geo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "classification": "Kleiner Geokern (H4) mit Nominatim-Adapter auf auditcore_harvest als Extra [geocoder]",
   "multi_use_evidence": {
     "haversine": "6 Implementierungen in osint, audit_designer (3), flowsearch (2)",

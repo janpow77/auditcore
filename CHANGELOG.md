@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- CI-Automatisierung (Rechteinhaber, 25.09.2026): Sammel-Check `ci-ok` als
+  Required Check neben `code-quality-gate`, Workflows `autofix` (ruff, ESLint,
+  reine Baseline-Absenkungen; Hilfsskript `scripts/ci_baseline_lower_only.py`),
+  `update-pr-branches`, `dependabot-automerge` und `nightly` (Vollprüfung mit
+  Issue „Nightly rot“), dazu `.github/dependabot.yml` und Auto-Merge im
+  Repository. Siehe `docs/deployment/ci-automatisierung.md`.
 - Verbindliche Code-Qualitätsmaßstäbe als Ratchet (Rechteinhaber, 25.09.2026):
   neue Module `auditcore.tools.quality.codegate*`, Befehl
   `auditcore-codegate check` bzw. `scripts/verify_code_quality.py`, Baseline

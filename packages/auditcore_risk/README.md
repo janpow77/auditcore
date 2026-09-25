@@ -39,7 +39,9 @@ Extras: `[fuzzy]` – Namensabgleich (RF09) über
 `auditcore_entity_matching[fuzzy]` (rapidfuzz); ohne Extra löst der
 Namensabgleich `DependencyError` aus. `[pandas]` – DataFrame-Adapter
 `auditcore_risk.frame`. `[procurement]` – jahresbezogene EU-Schwellen aus
-`auditcore_procurement`. `[dev]` – Test- und Prüfwerkzeuge.
+`auditcore_procurement`. `[web]` – REST-Schnittstelle `auditcore_risk.web`
+als Starlette-Anwendung; `[fastapi]` – dieselben Endpunkte als FastAPI-Router.
+`[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
 
@@ -138,6 +140,7 @@ Betrag 40.000,00 über 25.000,00; Vergabekennung fehlt; Kostenart vergaberelevan
 | `auditcore_risk.summary` | Overview of an evaluation in the summary format the profile names. |
 | `auditcore_risk.templates` | Message templates of profiles: only plain placeholders, no attribute or index access. |
 | `auditcore_risk.values` | Value semantics of the characterized sources, expressed without pandas. |
+| `auditcore_risk.web` | REST interface and display data for risk flags (extras ``web`` / ``fastapi``). |
 <!-- api-overview:end -->
 
 Module und Regelarten:
@@ -152,6 +155,7 @@ Module und Regelarten:
 | `score_rules` | Kriterien für Punkte-Scores (`truthy_all`, `text_in_set`, `number_range`, `set_overlap`) mit Bewertung `points_stages` | – |
 | `frame` | pandas-Adapter: `compute_red_flags`, `red_flag_summary`, `evaluate_frame`, `annotate` | Extra `pandas` |
 | Namensabgleich (RF09) | Normalisierung über `auditcore_entity_matching` (Profil `riskanalysis.payee`) | Extra `fuzzy` (rapidfuzz) |
+| `web` | REST-Schnittstelle: `create_app` (Starlette), `routes`, `build_fastapi_router`; framework-freie Handler und Profilbeschreibung mit Eingabefeldern (`field_catalog.json`) | Extra `web` (starlette), für den Router Extra `fastapi` |
 | Jahresbezogene Schwellen | EU-Schwellen je Geltungszeitraum aus `auditcore_procurement` 0.2.0 (`procurement.hvtg 2026.09.3`: 2014–2027; abgelöste Profilfassungen: 2026.09.2), nicht dupliziert | Extra `procurement` |
 
 ## Profile und Konfiguration
@@ -198,6 +202,21 @@ Verhalten bei fehlender Spalte oder leerem Wert):
 [docs/eingabefelder.md](docs/eingabefelder.md), erzeugt mit
 `python tools/document_fields.py`; `tests/test_eingabefelder.py` hält die
 Datei aktuell.
+
+### Web-Schnittstelle (Extras `web`, `fastapi`)
+
+```python no-run
+from auditcore_risk.web import create_app          # Starlette, Pfade unter /risk
+from auditcore_risk.web import build_fastapi_router  # app.include_router(...)
+```
+
+`GET /profiles`, `GET /profiles/{id}/{version}` (Regeln, Schwellen, Eingabefelder),
+`POST /profiles/{id}/{version}/check-columns`, `POST /evaluate` (Merkmale je
+Datensatz mit Begründung, verwendeten Eingabewerten, unbestimmten und
+übersprungenen Regeln). Vertrag: [docs/ui/risk-rest.md](../../docs/ui/risk-rest.md).
+Die Eingabefelder je Profil liefert `src/auditcore_risk/web/field_catalog.json`,
+erzeugt mit `python tools/export_field_catalog.py` aus derselben Ableitung wie
+`docs/eingabefelder.md`; `tests/test_web_field_catalog.py` hält die Datei aktuell.
 
 ### Fehlender Betrag: „unbestimmt“ statt Ersatzwert (ab 0.3.0)
 
@@ -251,15 +270,17 @@ Details und alle Entscheidungen: [docs/behavior-changes.md](docs/behavior-change
 Python ≥ 3.11 und `auditcore_entity_matching==0.2.1` (Normalisierung für
 RF09). Optional: `auditcore_entity_matching[fuzzy]==0.2.1` über `[fuzzy]`,
 `pandas>=2.1` über `[pandas]`, `auditcore_procurement==0.2.2` über
-`[procurement]`. Die Benford-Prüfung aus flowinvoice liegt in
+`[procurement]`, `starlette>=0.26.1` über `[web]`, `fastapi>=0.92` über
+`[fastapi]`. Die Benford-Prüfung aus flowinvoice liegt in
 `auditcore_statistics` (keine Abhängigkeit).
 
 ## Sicherheit und Datenschutz
 
 Verarbeitet Beleg- und Rechnungsdaten mit Namen von Rechnungsstellern und
 Zahlungsempfängern, die der Aufrufer übergibt; das Paket speichert nichts und
-nutzt kein Netzwerk (die SQL-Auswahl der TED-Kandidaten bleibt in der
-Anwendung). Regelprofile sind charakterisiertes Softwareverhalten zur
+nutzt im Kern kein Netzwerk (die SQL-Auswahl der TED-Kandidaten bleibt in der
+Anwendung). Die REST-Schnittstelle aus `[web]` authentifiziert nicht;
+Anmeldung und Rechte liefert die einbindende Anwendung. Regelprofile sind charakterisiertes Softwareverhalten zur
 Priorisierung von Stichproben, keine rechtliche Bewertung und keine
 Fehlerquote (TER/RER). Testdaten sind synthetisch.
 

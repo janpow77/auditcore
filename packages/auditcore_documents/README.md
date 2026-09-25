@@ -45,7 +45,7 @@ Extras (`[dev]` – Test- und Prüfwerkzeuge):
 
 | Extra | Pakete | Zweck |
 |---|---|---|
-| – | nur Standardbibliothek | Modell, Normalisierung, Zuordnung, Befehle, Einstellungen, Begründungsport, Synopse-Datensätze |
+| – | Standardbibliothek und `auditcore_common` | Modell, Normalisierung, Zuordnung, Befehle, Einstellungen, Begründungsport, Synopse-Datensätze |
 | `[docx]` | lxml ≥ 6.1.0 | DOCX/DOCM lesen (gehärteter Parser; 6.1.0 behebt CVE-2026-41066) |
 | `[pdf-text]` | pypdf ≥ 4 | PDF-Text ohne pdftotext |
 | `[fuzzy]` | rapidfuzz ≥ 3.10 | Ähnlichkeitsmaß der Produktion (`token_set_ratio`) |
@@ -375,9 +375,10 @@ dokumentiert.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Die Extras und ihre
-Drittpakete stehen in der Tabelle unter „Installation“. Keine Abhängigkeit
-von der Plattform `auditcore` oder anderen Fachpaketen; für XLSX liefert
+Python ≥ 3.11 und seit 0.3.1 `auditcore_common==0.1.0` (Hashing, Uhr,
+Kennungen, eingefrorene Audit-Details; APT `python3-auditcore-common`). Die
+Extras und ihre Drittpakete stehen in der Tabelle unter „Installation“. Keine
+Abhängigkeit von der Plattform `auditcore`; für XLSX liefert
 `synopsis_records` Datensätze für `auditcore_reporting`.
 
 ## Sicherheit und Datenschutz

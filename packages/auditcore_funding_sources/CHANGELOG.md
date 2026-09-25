@@ -1,5 +1,18 @@
 # Changelog auditcore_funding_sources
 
+## 0.1.3 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- `fingerprint` → `hashing.canonical_sha256`; `available_profiles`/
+  `load_profile` → `auditcore_common.profiles` (`invalid_name="invalid_or_hidden"`,
+  Identitätsprüfung weiter am Rohdokument, Fingerprint angehängt, Cache bleibt).
+- `_jsonsafe` bindet nur noch die Variante
+  `jsonable(value, decimals=True, nan_as_none=True)`; openpyxl über
+  `optional.require_module`.
+- Meldungen und Ergebnisse unverändert; 877 Tests grün.
+
 ## 0.1.2 – Englische Namen der designer-Parser
 
 Keine fachliche Änderung: Die Replays gegen die aufgezeichneten Originalausgaben

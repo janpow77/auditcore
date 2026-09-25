@@ -35,7 +35,7 @@ sudo apt-get install python3-auditcore-dataprotection
 ```
 
 Extras: `[excel]` – XLSX-Ausgabe (openpyxl und
-`auditcore_reporting[excel]==0.2.0`); `[pdf]` – PDF-Bericht über WeasyPrint;
+`auditcore_reporting[excel]==0.2.1`); `[pdf]` – PDF-Bericht über WeasyPrint;
 `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
@@ -296,7 +296,7 @@ Bausteine:
 | `register` | VVT-Inhalt prüfen (Art. 30 Abs. 1 DSGVO), stabile Tätigkeitskennungen, Entwurf, Freigabe und Ablösung mit Vier-Augen-Prinzip und Revisionen. |
 | `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
 | `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
-| `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.0; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
+| `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.1; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
 | `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
 
 Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie
@@ -404,7 +404,7 @@ Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek; die Plattform
 `auditcore` ist keine Abhängigkeit. Optional über `[excel]`
-`openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.0`, über `[pdf]`
+`openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.1`, über `[pdf]`
 `weasyprint>=60.2`.
 
 ## Sicherheit und Datenschutz
