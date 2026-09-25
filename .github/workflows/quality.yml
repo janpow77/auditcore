@@ -26,7 +26,12 @@ jobs:
           python-version: '${{ matrix.python }}'
       - run: python -m pip install --upgrade pip 'setuptools>=83' wheel
       - run: python -m pip install -e '.[dev]'
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        with:
+          node-version: '20'
       - run: pytest --cov=auditcore --cov-report=term-missing
+        env:
+          AUDITCORE_HELPERS_REQUIRE_NODE: '1'
       - run: ruff check .
       - run: mypy src
       - run: auditcore-quality --help
@@ -39,6 +44,8 @@ jobs:
       - run: auditcore-refactor --help
       - run: auditcore-deploy --help
       - run: auditcore-codegate --help
+      - run: auditcore-helpers --help
+      - run: auditcore-helpers rules
       - run: python -m build
       - name: Prepare isolated Debian lifecycle image
         if: matrix.python == '3.12'
@@ -47,10 +54,10 @@ jobs:
           print(DockerPackageTester().prepare())"
       - name: Verify installed platform and technical package lifecycle
         if: matrix.python == '3.12'
-        run: python scripts/verify_installed_framework.py dist/auditcore-0.2.0-py3-none-any.whl
+        run: python scripts/verify_installed_framework.py dist/auditcore-0.3.0-py3-none-any.whl
       - name: Verify installed platform CLI and package inventory
         if: matrix.python != '3.12'
-        run: python scripts/verify_installed_framework.py dist/auditcore-0.2.0-py3-none-any.whl --smoke-only
+        run: python scripts/verify_installed_framework.py dist/auditcore-0.3.0-py3-none-any.whl --smoke-only
       - run: bandit -q -ll -r src
       - run: pip-audit --timeout 60 --format json --output dependency-audit.json
         if: always()

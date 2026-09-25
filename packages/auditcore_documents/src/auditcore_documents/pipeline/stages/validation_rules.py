@@ -164,16 +164,9 @@ class AmountFormatRule(ValidationRule):
         )
 
     async def evaluate(self, context: PipelineContext) -> ValidationResult:
-        from auditcore_documents.pipeline.stages.postprocess import AMOUNT_FIELDS, parse_amount
+        from auditcore_documents.pipeline.stages.postprocess import amount_findings
 
-        raw = context.artifacts.extracted_fields or {}
-        unclear = {}
-        for name in AMOUNT_FIELDS:
-            value = raw.get(name)
-            if isinstance(value, str):
-                parsed, state = parse_amount(value)
-                if parsed is None:
-                    unclear[name] = {"raw": value, "state": state}
+        unclear = amount_findings(context.artifacts.extracted_fields or {})
         if not unclear:
             return self.result("INFO", "PASS", "All amounts unambiguous")
         return self.result(

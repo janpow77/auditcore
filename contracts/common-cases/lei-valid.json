@@ -1,0 +1,81 @@
+{
+  "$schema": "./schema.json",
+  "contract": "lei-valid",
+  "version": "1.0.0",
+  "status": "vorläufig",
+  "title": "LEI prüfen (ISO 17442, Prüfziffer mod 97)",
+  "description": "20 Zeichen A–Z/0–9, die letzten beiden Stellen sind Prüfziffern nach ISO 7064 mod 97-10.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "text"
+  ],
+  "result": "boolean",
+  "cases": [
+    {
+      "id": "gueltig-1",
+      "input": {
+        "text": "5493001KJTIIGC8Y1R12"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "gueltig-2",
+      "input": {
+        "text": "529900T8BM49AURSDO55"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "gueltig-kleinbuchstaben",
+      "input": {
+        "text": "529900t8bm49aursdo55"
+      },
+      "expect": {
+        "value": true
+      }
+    },
+    {
+      "id": "falsche-pruefziffer",
+      "input": {
+        "text": "529900T8BM49AURSDO56"
+      },
+      "expect": {
+        "value": false
+      }
+    },
+    {
+      "id": "zu-kurz",
+      "input": {
+        "text": "529900T8BM49AURSDO5"
+      },
+      "expect": {
+        "value": false
+      }
+    },
+    {
+      "id": "sonderzeichen",
+      "input": {
+        "text": "529900T8BM49AURSD-55"
+      },
+      "expect": {
+        "value": false
+      }
+    },
+    {
+      "id": "leer",
+      "input": {
+        "text": ""
+      },
+      "expect": {
+        "value": false
+      }
+    }
+  ]
+}

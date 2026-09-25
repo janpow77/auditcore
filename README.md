@@ -38,7 +38,7 @@ erzeugt; jede Paket-README folgt der
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
-| [`auditcore_common`](packages/auditcore_common) | 0.1.0 | Gemeinsame Hilfsfunktionen der auditcore-Fachpakete (JSON-Werte, Hashing, paketierte Profile, sicheres XML, HTML-Links, Numerik), nur zusammengeführt, wenn die Gleichheit mit jeder Paketkopie bewiesen ist. | keine; Extras: `xml` | konsolidiert (Gleichheitsnachweis) |
+| [`auditcore_common`](packages/auditcore_common) | 0.1.0 | Gemeinsame Hilfsfunktionen der auditcore-Fachpakete und Anwendungen (JSON, Hashing, Profile, sicheres XML, HTML-Links, Numerik, Dateinamen, Event-Loop), nur zusammengeführt, wenn die Gleichheit mit jeder Paketkopie bewiesen ist. | keine; Extras: `xml` | konsolidiert (Gleichheitsnachweis) |
 | [`auditcore_harvest`](packages/auditcore_harvest) | 0.1.1 | Gemeinsamer, frameworkunabhängiger Kern für Datenharvester: Quellenvertrag, Abruf mit Pagination, Zeitgrenzen, Rate-Limits und begrenzten Wiederholungen, Dubletten, idempotente Übergabe an eine Senke und Checkpoints. | keine | neu, gegen charakterisierte Verträge |
 | [`auditcore_identifiers`](packages/auditcore_identifiers) | 0.1.0 | Prüfen und Normalisieren von Kennungen – IBAN, BIC, USt-IdNr. (alle EU-Staaten), Steuer-ID, Steuernummer, LEI und Handelsregisternummer – mit einheitlichem Ergebnisobjekt und benannten Profilen. | keine | neu, gegen charakterisierte Verträge |
 | [`auditcore_llm_client`](packages/auditcore_llm_client) | 0.1.0 | Client for the ai-router and the Flow-Agent inference gateway: chat, streaming, embeddings, rerank, OCR, health; redaction, retries and circuit breaker | keine; Extras: `http` | neu, gegen charakterisierte Verträge |
@@ -48,7 +48,7 @@ erzeugt; jede Paket-README folgt der
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
 | [`auditcore_dataprotection`](packages/auditcore_dataprotection) | 0.4.2 | Framework-independent records of processing activities and DPIA calculation | keine; Extras: `excel`, `pdf` | charakterisiert |
-| [`auditcore_documents`](packages/auditcore_documents) | 0.3.1 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | `auditcore_common==0.1.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
+| [`auditcore_documents`](packages/auditcore_documents) | 0.3.2 | Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies | `auditcore_common==0.1.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | 0.1.1 | Frameworkunabhängiger Generator für synthetische Testdaten: einzelne Felder (Namen, Adressen, Kennungen, Beträge, Datumswerte) und ganze Zeilen mit festem Seed und Bezugsdatum. | keine; Extras: `parallel` | charakterisiert |
 | [`auditcore_entity_matching`](packages/auditcore_entity_matching) | 0.2.1 | Characterized entity name normalisation, LEI checks and transparent fuzzy matching | keine; Extras: `fuzzy` | charakterisiert |
 | [`auditcore_geo`](packages/auditcore_geo) | 0.2.1 | Characterized geo core: great-circle distances with explicit earth profiles, radius search, point in polygon with boundary, UTM, GeoPackage polygons, Douglas-Peucker and a Nominatim harvest adapter | keine; Extras: `geocoder` | charakterisiert |
@@ -61,17 +61,17 @@ erzeugt; jede Paket-README folgt der
 | [`auditcore_reporting`](packages/auditcore_reporting) | 0.2.1 | Characterized reporting format rules preserving Flowlib behavior | keine; Extras: `excel` | charakterisiert |
 | [`auditcore_risk`](packages/auditcore_risk) | 0.3.1 | Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags) | `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_sampling`](packages/auditcore_sampling) | 0.2.1 | Audit sampling sizes, selection and allocation with named method profiles | keine; Extras: `web` | charakterisiert |
-| [`auditcore_statistics`](packages/auditcore_statistics) | 0.3.1 | Descriptive audit statistics (Benford) with named method profiles | keine; Extras: `web` | charakterisiert |
+| [`auditcore_statistics`](packages/auditcore_statistics) | 0.3.2 | Descriptive audit statistics (Benford) with named method profiles | `auditcore_common==0.1.0`; Extras: `web` | charakterisiert |
 
 **Quellen-Adapter**
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
-| [`auditcore_funding_sources`](packages/auditcore_funding_sources) | 0.1.3 | Beneficiary, state aid and de-minimis source parsers, identities and cumulation | `auditcore_common==0.1.0`, `auditcore_harvest==0.1.1`; Extras: `xlsx` | charakterisiert |
-| [`auditcore_legal_sources`](packages/auditcore_legal_sources) | 0.1.2 | Framework-independent legal and audit publication source adapters (DIP, EUR-Lex) | `auditcore_harvest==0.1.1`; Extras: `feeds` | charakterisiert |
-| [`auditcore_price_sources`](packages/auditcore_price_sources) | 0.1.1 | Price and market data adapters (Bundesbank, Destatis GENESIS, EIA, Tankerkoenig, Overpass, EU Oil Bulletin) on auditcore_harvest | `auditcore_harvest==0.1.1` | neu, gegen charakterisierte Verträge |
-| [`auditcore_property_sources`](packages/auditcore_property_sources) | 0.1.0 | Property source profiles (Berlin/French rental portals, ZVG forced-auction notices) with harvest adapters, lifecycle and access catalog | keine; Extras: `sources` | charakterisiert |
-| [`auditcore_registry_sources`](packages/auditcore_registry_sources) | 0.2.0 | Register, sanctions and PEP source adapters, list parsers, screening profiles and a screening review API | `auditcore_harvest==0.1.1`, `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `xml`, `html`, `web`, `fastapi` | charakterisiert |
+| [`auditcore_funding_sources`](packages/auditcore_funding_sources) | 0.1.3 | Quellenprofile für Fördertransparenz, Beihilfen und das zentrale De-minimis-Register: Parser, stabile Identitäten, Bestandssemantik der Harvest-Modi, Registerabgleich und eine versionierte De-minimis-Kumulierung. | `auditcore_common==0.1.0`, `auditcore_harvest==0.1.1`; Extras: `xlsx` | charakterisiert |
+| [`auditcore_legal_sources`](packages/auditcore_legal_sources) | 0.1.2 | Quellenadapter für Rechts-, Parlaments- und Prüfquellen – Bundestag DIP, EUR-Lex/Cellar, BaFin, CURIA und Europäischer Rechnungshof – mit strikter Antwortprüfung und Normalisierung zu `LegalDocument`. | `auditcore_harvest==0.1.1`; Extras: `feeds` | charakterisiert |
+| [`auditcore_price_sources`](packages/auditcore_price_sources) | 0.1.1 | Preis- und Marktdatenquellen (Bundesbank, Destatis GENESIS, EIA, Tankerkönig, Overpass, EU Oil Bulletin) als Adapter auf `auditcore_harvest`, mit Einheit, Zeitbezug und Wertstatus je Datensatz. | `auditcore_harvest==0.1.1` | neu, gegen charakterisierte Verträge |
+| [`auditcore_property_sources`](packages/auditcore_property_sources) | 0.1.0 | Getrennte Quellprofile für Immobiliendaten – Berliner und französische Mietportale sowie Zwangsversteigerungen des ZVG-Portals – mit Harvest-Adaptern, reinem ZVG-Lebenszyklus und Zugangskatalog. | keine; Extras: `sources` | charakterisiert |
+| [`auditcore_registry_sources`](packages/auditcore_registry_sources) | 0.2.0 | Register-, Sanktions- und PEP-Quellen mit quellengebundenen Profilen: Listenformate lesen, Listen über `auditcore_harvest` abrufen, Namen abgleichen, Firmendaten prüfen und Screening-Treffer nachvollziehbar entscheiden. | `auditcore_harvest==0.1.1`, `auditcore_entity_matching==0.2.1`; Extras: `fuzzy`, `xml`, `html`, `web`, `fastapi` | charakterisiert |
 
 **Oberfläche und Frontend-Logik (npm)**
 

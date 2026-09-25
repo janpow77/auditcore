@@ -213,3 +213,65 @@ def test_first_baseline_against_reference_without_baseline_is_bootstrap(
     assert gate(tmp_path, "--compare-ref", "HEAD") == 0
     assert "Erstanlage der Baseline" in capsys.readouterr().out
     assert gate(tmp_path, "--compare-ref", "no-such-ref") == 2
+
+
+HELPER = '''"""Helpers."""
+
+import hashlib
+import json
+
+
+def digest(data: dict[str, object]) -> str:
+    """Canonical digest."""
+    text = json.dumps(data, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+'''
+
+
+def test_cross_package_duplicates_are_counted(repo: Path) -> None:
+    from auditcore.tools.quality.codegate_duplicates import duplicate_findings
+
+    renamed = HELPER.replace("digest(data", "fingerprint(profile").replace("(data,", "(profile,")
+    renamed = renamed.replace('"utf-8"', '"utf8"').replace("text", "payload")
+    make_package(repo, "auditcore_one", HELPER)
+    make_package(repo, "auditcore_two", renamed)
+    make_package(repo, "auditcore_common", HELPER)
+    sources = [
+        (name, repo / "packages" / name / "src")
+        for name in ("auditcore_one", "auditcore_two", "auditcore_common")
+    ]
+    findings = duplicate_findings(sources, repo)
+    assert set(findings) == {"auditcore_one", "auditcore_two"}, "common is canonical"
+    assert "auditcore_common:digest" in findings["auditcore_one"][0].detail
+    assert gate(repo) == 1
+    assert gate(repo, "--package", "auditcore_one") == 1, "compared against all packages"
+
+
+def test_small_or_different_functions_are_not_duplicates(repo: Path) -> None:
+    from auditcore.tools.quality.codegate_duplicates import duplicate_findings
+
+    make_package(repo, "auditcore_one", HELPER)
+    make_package(repo, "auditcore_two", HELPER.replace("sort_keys=True", "sort_keys=False"))
+    make_package(repo, "auditcore_three", CLEAN)
+    make_package(repo, "auditcore_four", CLEAN.replace("add", "plus"))
+    sources = [
+        (name, repo / "packages" / name / "src")
+        for name in ("auditcore_one", "auditcore_two", "auditcore_three", "auditcore_four")
+    ]
+    assert duplicate_findings(sources, repo) == {}
+
+
+def test_metric_introduced_later_is_recorded_once(repo: Path) -> None:
+    path = repo / "quality/baseline.json"
+    data = json.loads(path.read_text())
+    del data["packages"]["auditcore_demo"]["metrics"]["duplicate_functions"]
+    path.write_text(json.dumps(data))
+    make_package(repo, "auditcore_one", HELPER)
+    make_package(repo, "auditcore_demo_copy", HELPER)
+    module = repo / "packages/auditcore_demo/src/auditcore_demo/core.py"
+    module.write_text(module.read_text() + "\n\n" + HELPER.split('"""Helpers."""')[1])
+    assert gate(repo, "--package", "auditcore_demo") == 1
+    assert gate(repo, "--package", "auditcore_demo", "--update-baseline") == 0
+    assert baseline(repo)["auditcore_demo"]["metrics"]["duplicate_functions"] == 1
+    module.write_text(module.read_text() + "\n\ndef other(x: int) -> int:\n    return x\n")
+    assert gate(repo, "--package", "auditcore_demo") == 0

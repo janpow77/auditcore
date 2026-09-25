@@ -2,10 +2,10 @@
 
 ## Zweck
 
-Gemeinsame Hilfsfunktionen der auditcore-Fachpakete (JSON-Werte, Hashing, paketierte Profile, sicheres XML, HTML-Links, Numerik), nur zusammengeführt, wenn die Gleichheit mit jeder Paketkopie bewiesen ist.
+Gemeinsame Hilfsfunktionen der auditcore-Fachpakete und Anwendungen (JSON, Hashing, Profile, sicheres XML, HTML-Links, Numerik, Dateinamen, Event-Loop), nur zusammengeführt, wenn die Gleichheit mit jeder Paketkopie bewiesen ist.
 
-Für die Fachpakete dieses Repositorys, nicht für Anwendungen als allgemeine
-Werkzeugkiste. Unterschiede zwischen den früheren Paketkopien sind benannte
+Für die Fachpakete dieses Repositorys und – mit den App-Hilfen – für die
+Anwendungen, aus denen die Kopien stammen; keine allgemeine Werkzeugkiste. Unterschiede zwischen den früheren Paketkopien sind benannte
 Parameter, nie stille Vereinheitlichung; Fehler bleiben paketeigen. Neue
 Module kommen nur nach Thema hinzu (keine Sammeldatei `utils`).
 
@@ -69,7 +69,9 @@ das Modul:
 | `frozen` | `freeze`, `thaw` | – |
 | `safe_xml` | `parse_xml`, `defused_fromstring` (Extra `xml`) | `forbid_dtd` |
 | `html_text` | `LinkCollector`, `anchor_links`, `has_html_marker` | `markers`, `window` |
-| `numeric` | `numpy_pairwise_sum`, `numpy_round`, `require_finite`, `parse_percent_rate` | Fehlermeldungen als Fabriken |
+| `numeric` | `numpy_pairwise_sum`, `numpy_round`, `require_finite`, `parse_percent_rate`, `share_percent`, `as_float`, `as_float_comma` | Fehlermeldungen als Fabriken; `digits`, `multiply_first`; `blank_as_none`, `bool_as_none`, `catch_type_error` |
+| `filenames` | `path_component`, `unicode_filename`, `replace_reserved`, `underscore_slug`, `dashed_slug`, `export_filename` | je Funktion eine charakterisierte App-Variante; Fallback und Länge als Parameter |
+| `aio` | `ThreadLoopRunner`, `run_sync`, `run_on_current_loop` | ein Loop je Thread und Runner (fork-sicher) bzw. Legacy-Variante |
 | `clock`, `ids` | `utc_now`, `require_aware`, `new_uuid` | – |
 | `text` | `group_thousands_de`, `compact_upper` | – |
 | `optional` | `require_module` – verzögerter Import eines Extras mit paketeigenem Fehler | – |
@@ -85,7 +87,9 @@ das Modul:
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_common.aio` | Run coroutines from synchronous code (Celery tasks, thread pools). |
 | `auditcore_common.clock` | Timezone-aware time. |
+| `auditcore_common.filenames` | File names for downloads and exports; each function is one characterized variant. |
 | `auditcore_common.frozen` | Read-only copies of JSON data and their mutable counterparts. |
 | `auditcore_common.hashing` | Canonical JSON and SHA-256 digests. |
 | `auditcore_common.html_text` | Anchor links of HTML pages and HTML marker detection (standard library only). |
@@ -109,8 +113,8 @@ Deprecation-Aliase): [docs/consumer-integration.md](docs/consumer-integration.md
 
 ## Herkunft und Charakterisierung
 
-Konsolidierung innerhalb von auditcore (Stand `40ce8f71`), kein Code aus
-anderen Repositories. Auswahl per AST-Inventur
+Konsolidierung innerhalb von auditcore (Stand `40ce8f71`) sowie App-Hilfen aus
+den Anwendungsrepositories (siehe unten). Auswahl per AST-Inventur
 (`scripts/inventory_duplicate_functions.py`, `docs/quality/duplikate.md`).
 `tests/legacy_reference.py` enthält die wörtlichen Kopien aller
 zusammengeführten Funktionen, Quelle und Git-Blob stehen in
@@ -119,6 +123,13 @@ Zufallsstichproben (je Gruppe mehrere tausend Eingaben) und Randfällen:
 Ergebnis einschließlich Typen, Float-Bitmuster und Schlüsselreihenfolge oder
 Fehler einschließlich Typ, Meldung und Ursache. `numpy_pairwise_sum` und
 `numpy_round` werden zusätzlich gegen NumPy geprüft, wenn es installiert ist.
+
+Die App-Hilfen (`share_percent`, `as_float`, `as_float_comma`, `filenames`,
+`aio`) stammen aus der Inventur `docs/reports/app-helfer-python.md` (Klasse b:
+audit_designer, audit-portal, flowinvoice, riskanalysis, regulierung,
+versteigerung, flowaudit) und sind gegen die wörtlichen App-Kopien in
+`tests/legacy_apps.py` differenziell geprüft (Quellcommits in
+`provenance.json`, `sources`).
 
 ## Bewusste Verhaltensabweichungen
 
