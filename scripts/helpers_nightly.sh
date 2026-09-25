@@ -80,8 +80,13 @@ library = sum(1 for m in scan.get("library_matches", []) if m.get("status") == "
 lint = len(report.get("lint", {}).get("findings", []))
 violations = sum(len(run.get("violations", [])) for run in report.get("contracts", []))
 ratchet = report.get("ratchet", {})
-new = sum(1 for v in ratchet.get("verdicts", []) if v.get("message", "").startswith("neu"))
-print(f"| {sys.argv[2]} | {ratchet.get('status')} | {library} | {lint} | {violations} | {new} neu |")
+verdicts = ratchet.get("verdicts", [])
+new = sum(1 for v in verdicts if v.get("message", "").startswith("neu"))
+fixed = sum(1 for v in verdicts if v.get("message", "").startswith("behoben"))
+status = ratchet.get("status")
+if any(v.get("message", "").startswith("Keine Baseline") for v in verdicts):
+    status = "keine Baseline"
+print(f"| {sys.argv[2]} | {status} | {library} | {lint} | {violations} | {new} neu, {fixed} behoben |")
 PY
 }
 
