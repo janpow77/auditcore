@@ -69,7 +69,7 @@ class DipPage:
         return not self.items or self.cursor is None or self.cursor == previous_cursor
 
 
-def parse_page(payload: Any) -> DipPage:
+def parse_page(payload: object) -> DipPage:
     """Validate the documented ``{"numFound", "cursor", "documents"}`` shape.
 
     Raises:
@@ -105,7 +105,7 @@ def _pdf_url(item: Mapping[str, Any], number: str) -> str | None:
     return f"https://dserver.bundestag.de/btd/{period}/{padded[:3]}/{period}{padded}.pdf"
 
 
-def _classification(profile: SourceProfile, title: str, raw_date: str) -> dict[str, Any]:
+def _classification(profile: SourceProfile, title: str, raw_date: str) -> dict[str, str | bool]:
     if profile.dip_classification != "auditdatabase.dip":
         return {}
     period = "2021-2027"

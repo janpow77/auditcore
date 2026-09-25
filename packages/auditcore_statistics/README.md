@@ -26,3 +26,9 @@ Empfohlen (Entscheidung 23.09.2026): `recommended_flowinvoice_benford`, also
 `benford_test` mit `digits=1` und `significance_level=0.05`. Unterschiede und offene Entscheidungen:
 [docs/behavior-changes.md](docs/behavior-changes.md). Herkunft und
 MIT-Freigabe: `NOTICE`, `provenance.json`. Debian: `python3-auditcore-statistics`.
+
+**Konformität und Oberflächen (ab 0.3.0):** `auditcore_statistics.conformity.assess`
+liefert MAD-Band, z-Werte je Ziffer und den Zweitziffertest unter dem
+benannten Profil `nigrini.2012`. `auditcore_statistics.web` stellt den
+REST-Vertrag für `<flowaudit-benford>` bereit (Extra `web`); Vertrag:
+`docs/ui/benford-rest.md` im Repository.

@@ -155,7 +155,8 @@ begrenzten, zulässigen Abrufen. Fehlende Konfiguration: NOT_CONFIGURED.
 ## 4. Nutze das vorhandene Framework für jedes Paket
 
 Lies die CLI-Hilfen und bestehenden Implementierungen, statt Befehle zu erfinden:
-`auditcore-quality`, `auditcore-consolidate`, `auditcore-refactor`, `auditcore-deploy`.
+`auditcore-quality`, `auditcore-consolidate`, `auditcore-refactor`, `auditcore-deploy`,
+`auditcore-codegate`.
 
 Pro Paket vollständig durchführen:
 
@@ -165,6 +166,17 @@ Pro Paket vollständig durchführen:
 - ApplicabilityContext vollständig erfassen. UNKNOWN bleibt unbekannt.
 - FrameworkPolicyProvider gegen `janpow77/verwaltung-app-framework` ausführen.
   MUSS/BEDINGT/SOLL und tatsächliche Anwendbarkeit beachten; keine pauschale Maximal-Security.
+- Code-Qualitätsmaßstäbe einhalten (verbindlich, per Ratchet erzwungen, siehe
+  `docs/quality/code-quality.md`): McCabe ≤ 10 je Funktion, Module ≤ 400 Zeilen,
+  Funktionen ≤ 60 Zeilen, `Any` nur sparsam, `mypy --strict` fehlerfrei,
+  Bezeichner Englisch (Deutsch nur in Strings, Daten und festen fachlichen
+  Schlüsseln); TypeScript/Vue: kein `any` ohne begründete Zeilenausnahme,
+  complexity ≤ 12, strict + `noUncheckedIndexedAccess`, Dateien ≤ 400 Zeilen,
+  Vue-SFC ≤ 250 Zeilen, keine dateiweiten `eslint-disable`. Ein **neues Paket**
+  muss alle Maßstäbe vollständig erfüllen (Baseline 0). `auditcore-codegate check`
+  muss grün sein; wer Altbestand verbessert, senkt im selben PR die Baseline mit
+  `--update-baseline`. Ohne grünes Gate kein Release (`verify_domain_packages.py`
+  und `prepare_library_release.py` blockieren).
 - Quality Gates einschließlich konfiguriertem, tatsächlich ausgeführtem
   Regressionsbefehl, API-Stabilität, Security, Dependencies und Supply Chain ausführen.
 - Wheel/sdist und SBOM bauen; Installation über Requirements in einer sauberen

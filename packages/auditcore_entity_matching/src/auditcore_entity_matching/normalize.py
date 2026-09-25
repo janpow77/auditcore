@@ -34,9 +34,10 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from collections.abc import Callable, Mapping
 
 from .errors import ProfileError
-from .profiles import Profile
+from .profiles import Normalization, Profile
 
 _WORD = re.compile(r"[^\w\s]", re.UNICODE)
 _ASCII_WORD = re.compile(r"[^a-z0-9\s]")
@@ -59,42 +60,68 @@ def normalize(text: str | None, profile: Profile, *, drop_filler: bool = False) 
     if rules.compose == "NFC":
         text = unicodedata.normalize("NFC", text)
     if rules.algorithm == "nfkd_lower_regex":
-        if rules.compose is None and not rules.fold_map:
-            value = unicodedata.normalize("NFKD", text).lower()
-        else:
-            # Decided variant: transliterate before decomposition, then drop the
-            # remaining combining marks instead of turning them into separators.
-            value = text.lower()
-            for source, target in rules.fold_map.items():
-                value = value.replace(source, target)
-            decomposed = unicodedata.normalize("NFKD", value)
-            value = "".join(c for c in decomposed if not unicodedata.combining(c))
-        value = re.sub(str(rules.nonword_pattern), " ", value)
-        value = re.sub(str(rules.removal_pattern), " ", value)
-        return _SPACE.sub(" ", value).strip()
-    if rules.algorithm == "lower_nfkd_ascii":
-        lowered = text.lower().strip()
-        for source, target in rules.fold_map.items():
-            lowered = lowered.replace(source, target)
-        decomposed = unicodedata.normalize("NFKD", lowered)
-        value = "".join(c for c in decomposed if not unicodedata.combining(c))
-        value = _ASCII_WORD.sub(" ", value)
-    elif rules.algorithm == "translate_then_casefold":
-        table: dict[str, str | int | None] = dict(rules.translation)
-        value = text.translate(str.maketrans(table)).casefold()
-        if rules.ampersand is not None:
-            value = value.replace("&", rules.ampersand)
-        value = _SPACE.sub(" ", _WORD.sub(" ", value)).strip()
+        return _nfkd_lower_regex(text, rules)
+    prepare = _TOKEN_ALGORITHMS.get(rules.algorithm, _casefold_fold_nfkd)
+    return _drop_tokens(prepare(text, rules), rules, drop_filler=drop_filler)
+
+
+def _apply_fold_map(value: str, fold_map: Mapping[str, str]) -> str:
+    """Replace every fold-map source in table order."""
+    for source, target in fold_map.items():
+        value = value.replace(source, target)
+    return value
+
+
+def _strip_combining(value: str) -> str:
+    """NFKD decomposition without combining marks (``ä → a``)."""
+    decomposed = unicodedata.normalize("NFKD", value)
+    return "".join(c for c in decomposed if not unicodedata.combining(c))
+
+
+def _nfkd_lower_regex(text: str, rules: Normalization) -> str:
+    """riskanalysis payee variant; removes legal forms by pattern, not by token."""
+    if rules.compose is None and not rules.fold_map:
+        value = unicodedata.normalize("NFKD", text).lower()
     else:
-        value = text.casefold()
-        if rules.algorithm == "casefold_nfc_fold_nfkd":
-            value = unicodedata.normalize("NFC", value)
-        for source, target in rules.fold_map.items():
-            if source in value:
-                value = value.replace(source, target)
-        decomposed = unicodedata.normalize("NFKD", value)
-        value = "".join(c for c in decomposed if not unicodedata.combining(c))
-        value = _WORD.sub(" ", value)
+        # Decided variant: transliterate before decomposition, then drop the
+        # remaining combining marks instead of turning them into separators.
+        value = _strip_combining(_apply_fold_map(text.lower(), rules.fold_map))
+    value = re.sub(str(rules.nonword_pattern), " ", value)
+    value = re.sub(str(rules.removal_pattern), " ", value)
+    return _SPACE.sub(" ", value).strip()
+
+
+def _lower_nfkd_ascii(text: str, rules: Normalization) -> str:
+    """flowinvoice PEP variant: everything outside ``a-z0-9`` becomes a separator."""
+    value = _strip_combining(_apply_fold_map(text.lower().strip(), rules.fold_map))
+    return _ASCII_WORD.sub(" ", value)
+
+
+def _translate_then_casefold(text: str, rules: Normalization) -> str:
+    """flowworkshop state aid variant: character table before case folding."""
+    table: dict[str, str | int | None] = dict(rules.translation)
+    value = text.translate(str.maketrans(table)).casefold()
+    if rules.ampersand is not None:
+        value = value.replace("&", rules.ampersand)
+    return _SPACE.sub(" ", _WORD.sub(" ", value)).strip()
+
+
+def _casefold_fold_nfkd(text: str, rules: Normalization) -> str:
+    """Sanctions variants ``casefold_fold_nfkd`` and ``casefold_nfc_fold_nfkd``."""
+    value = text.casefold()
+    if rules.algorithm == "casefold_nfc_fold_nfkd":
+        value = unicodedata.normalize("NFC", value)
+    return _WORD.sub(" ", _strip_combining(_apply_fold_map(value, rules.fold_map)))
+
+
+_TOKEN_ALGORITHMS: Mapping[str, Callable[[str, Normalization], str]] = {
+    "lower_nfkd_ascii": _lower_nfkd_ascii,
+    "translate_then_casefold": _translate_then_casefold,
+}
+
+
+def _drop_tokens(value: str, rules: Normalization, *, drop_filler: bool) -> str:
+    """Remove legal-form tokens (and filler words on request); keep the original token."""
     tokens = []
     for token in value.split():
         compact = token.replace(".", "").replace("-", "") if rules.compact_tokens else token

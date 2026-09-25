@@ -114,6 +114,7 @@ def main() -> int:
         "auditcore-consolidate",
         "auditcore-refactor",
         "auditcore-deploy",
+        "auditcore-codegate",
     ):
         check(name + "-help", [str(binary / name), "--help"])
     check(

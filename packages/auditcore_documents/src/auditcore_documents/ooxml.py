@@ -183,6 +183,37 @@ def _clean_checkbox_label(text: str) -> str:
     return re.sub(r"[☐☑☒]", "", text or "").strip(" |;,")
 
 
+def _question(values: list[tuple[str, str]]) -> tuple[int, str] | None:
+    """Fragespalte: erste Zelle, sonst erste Zelle (außer der letzten) mit Text."""
+    first = _clean_checkbox_label(values[0][0])
+    if len(normalise_for_match(first)) < 3:
+        for index, (candidate, _note) in enumerate(values[:-1]):
+            cleaned = _clean_checkbox_label(candidate)
+            if len(normalise_for_match(cleaned)) >= 3:
+                return index, cleaned
+        return None
+    return 0, first
+
+
+def _answers(cells: list[Any], values: list[tuple[str, str]], question_index: int) -> list[str]:
+    """Beschriftungen angekreuzter Zellen (höchstens 160 Zeichen) außer der Frage."""
+    answers: list[str] = []
+    for index, cell in enumerate(cells):
+        if index == question_index or not _checkbox_state(cell):
+            continue
+        label = _clean_checkbox_label(values[index][0])
+        if label and len(label) <= 160:
+            answers.append(label)
+    return answers
+
+
+def _comment(cells: list[Any], values: list[tuple[str, str]], question_index: int) -> str:
+    """Letzte Zelle ohne Kontrollkästchen ist die Bemerkung (wenn nicht die Frage)."""
+    if question_index == len(cells) - 1 or _checkbox_state(cells[-1]) is not None:
+        return ""
+    return _clean_checkbox_label(values[-1][0])
+
+
 def checklist_items(root: Any) -> list[CompareItem]:
     """Prüffragen aus Tabellenzeilen (einspaltige Zeilen sind Abschnittstitel)."""
     items: list[CompareItem] = []
@@ -191,52 +222,25 @@ def checklist_items(root: Any) -> list[CompareItem]:
         cells = _row_cells(row)
         if not cells:
             continue
-        whole_row = visible_text(row)
         if len(cells) == 1:
+            whole_row = visible_text(row)
             if whole_row:
                 section = whole_row[:240]
             continue
-
         values = [_cell_text(cell) for cell in cells]
-        question_index = 0
-        first = _clean_checkbox_label(values[0][0])
-        if len(normalise_for_match(first)) < 3:
-            for index, (candidate, _note) in enumerate(values[:-1], start=0):
-                cleaned = _clean_checkbox_label(candidate)
-                if len(normalise_for_match(cleaned)) >= 3:
-                    question_index = index
-                    first = cleaned
-                    break
-        question = first
-        if len(normalise_for_match(question)) < 3:
+        found = _question(values)
+        if found is None:
             continue
-
-        answers: list[str] = []
-        for index, cell in enumerate(cells):
-            if index == question_index:
-                continue
-            state = _checkbox_state(cell)
-            if state:
-                label = _clean_checkbox_label(values[index][0])
-                if label and len(label) <= 160:
-                    answers.append(label)
-
-        comment = ""
-        if len(cells) > 1 and question_index != len(cells) - 1:
-            last_visible = _clean_checkbox_label(values[-1][0])
-            if _checkbox_state(cells[-1]) is None:
-                comment = last_visible
-        notes = [note for _visible, note in values if note]
-        location = section or f"Prüffrage {len(items) + 1}"
+        question_index, question = found
         items.append(
             CompareItem(
                 source_id=str(row_index),
                 section=section,
                 text=question,
-                answer=" | ".join(answers),
-                comment=comment,
-                note=" | ".join(notes),
-                location=location,
+                answer=" | ".join(_answers(cells, values, question_index)),
+                comment=_comment(cells, values, question_index),
+                note=" | ".join(note for _visible, note in values if note),
+                location=section or f"Prüffrage {len(items) + 1}",
                 kind="checklist",
                 stable_id=_stable_id(row),
                 order=len(items),
