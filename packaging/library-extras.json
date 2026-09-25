@@ -54,6 +54,9 @@
   "auditcore_statistics": {
     "starlette>=0.26; extra == \"web\"": "python3-starlette (>= 0.26)"
   },
+  "auditcore_common": {
+    "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)"
+  },
   "auditcore_kanban": {
     "starlette>=0.26; extra == \"ui\"": "python3-starlette (>= 0.26)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)"
