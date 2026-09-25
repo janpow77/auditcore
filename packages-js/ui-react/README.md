@@ -101,7 +101,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (23):
 | `@flowaudit/ui-react` | `FlowauditTable` | Konstante | `<flowaudit-table>` als React-Komponente. | `elements` |
 | `@flowaudit/ui-react` | `FlowauditTableProps` | Schnittstelle | – | `elements` |
 | `@flowaudit/ui-react` | `createElementComponent` | Funktion | Erzeugt eine React-18-Komponente für ein Custom Element. | `createElementComponent` |
-| `@flowaudit/ui-react` | `defineFlowauditElements` | Funktion | – | `../../ui/dist/elements.d` |
+| `@flowaudit/ui-react` | `defineFlowauditElements` | Re-Export | – | `@flowaudit/ui/elements` |
 | `@flowaudit/ui-react` | `eventPayload` | Funktion | Liest das erste emit-Argument aus Vue-CustomEvents (detail ist ein Argument-Array). | `createElementComponent` |
 <!-- api-overview:end -->
 
