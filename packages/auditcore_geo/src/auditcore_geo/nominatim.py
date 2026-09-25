@@ -84,7 +84,7 @@ __all__ = [
     "empfohlene_laufparameter",
     "ist_oeffentlicher_endpunkt",
     "mindestabstand_s",
-    "pruefe_konfiguration",
+    "check_config",
     "pruefe_laufparameter",
 ]
 
@@ -140,14 +140,14 @@ def mindestabstand_s(basis_url: str, laufart: str) -> float:
     return MINDESTABSTAND_REGELMAESSIG_S if laufart == "regelmaessig" else MINDESTABSTAND_EINMALIG_S
 
 
-def _pruefe_user_agent(kennung: object) -> None:
+def _check_user_agent(kennung: object) -> None:
     if not isinstance(kennung, str) or len(kennung.strip()) < 3:
         raise ConfigError("user_agent muss die Anwendung identifizieren.")
     if _STANDARDKENNUNG.match(kennung):
         raise ConfigError("user_agent ist eine Standardkennung; Anwendung benennen.")
 
 
-def _pruefe_budget(budget: object, anzahl: int) -> int:
+def _check_budget(budget: object, anzahl: int) -> int:
     if isinstance(budget, bool) or not isinstance(budget, int) or budget < 1:
         raise ConfigError("budget (Obergrenze der Anfragen) muss eine positive Zahl sein.")
     if anzahl > budget:
@@ -155,7 +155,7 @@ def _pruefe_budget(budget: object, anzahl: int) -> int:
     return budget
 
 
-def _pruefe_basis(basis: object, budget: int) -> str:
+def _check_base_url(basis: object, budget: int) -> str:
     if not isinstance(basis, str) or urlsplit(basis).scheme not in ("https", "http"):
         raise ConfigError("basis_url muss eine http(s)-Adresse sein.")
     if ist_oeffentlicher_endpunkt(basis) and urlsplit(basis).scheme != "https":
@@ -168,7 +168,7 @@ def _pruefe_basis(basis: object, budget: int) -> str:
     return basis
 
 
-def _pruefe_suchoptionen(config: Mapping[str, object]) -> None:
+def _check_search_options(config: Mapping[str, object]) -> None:
     limit = config.get("limit", 1)
     if isinstance(limit, bool) or not isinstance(limit, int) or not 1 <= limit <= 40:
         raise ConfigError("limit muss 1..40 sein.")
@@ -185,14 +185,14 @@ def _pruefe_suchoptionen(config: Mapping[str, object]) -> None:
         raise ConfigError("addressdetails muss wahr/falsch sein.")
 
 
-def pruefe_konfiguration(config: Mapping[str, object]) -> None:
+def check_config(config: Mapping[str, object]) -> None:
     """Konfiguration prüfen, ohne den Dienst anzufragen (Reihenfolge der Prüfungen fest)."""
     anfragen = anfragen_aus(config)
-    _pruefe_user_agent(config.get("user_agent"))
-    budget = _pruefe_budget(config.get("budget"), len(anfragen))
-    basis = _pruefe_basis(config.get("basis_url", OEFFENTLICHER_ENDPUNKT), budget)
+    _check_user_agent(config.get("user_agent"))
+    budget = _check_budget(config.get("budget"), len(anfragen))
+    basis = _check_base_url(config.get("basis_url", OEFFENTLICHER_ENDPUNKT), budget)
     mindestabstand_s(basis, str(config.get("laufart", "")))
-    _pruefe_suchoptionen(config)
+    _check_search_options(config)
 
 
 class NominatimAdapter:
@@ -224,7 +224,7 @@ class NominatimAdapter:
 
     def validate_config(self, config: Mapping[str, object]) -> None:
         """Konfiguration prüfen, ohne den Dienst anzufragen."""
-        pruefe_konfiguration(config)
+        check_config(config)
 
     def _parameter(self, config: Mapping[str, object], anfrage: Anfrage) -> dict[str, str]:
         parameter = {

@@ -107,7 +107,7 @@ def _ist_folge(wert: object) -> TypeGuard[Sequence[object]]:
     return isinstance(wert, Sequence) and not isinstance(wert, (str, bytes))
 
 
-def _ist_zahl(wert: object) -> TypeGuard[int | float]:
+def _is_number(wert: object) -> TypeGuard[int | float]:
     return isinstance(wert, (int, float)) and not isinstance(wert, bool)
 
 
@@ -116,7 +116,7 @@ def _position(position: object, name: str) -> tuple[float, float]:
     if not _ist_folge(position) or len(position) < 2:
         raise GeometrieFehler(f"{name}: Position {position!r} ist kein Zahlenpaar.")
     x, y = position[0], position[1]
-    if not (_ist_zahl(x) and _ist_zahl(y)):
+    if not (_is_number(x) and _is_number(y)):
         raise GeometrieFehler(f"{name}: Position {position!r} ist kein Zahlenpaar.")
     if not (math.isfinite(x) and math.isfinite(y)):
         raise GeometrieFehler(f"{name}: Position {position!r} ist nicht endlich.")
@@ -207,7 +207,7 @@ class Flaeche:
         return tuple(e.hinweis() for e in self.entartet)
 
 
-def _pruefe_strikt(nummer: int, arten: Sequence[Entartung | None]) -> None:
+def _check_strict(nummer: int, arten: Sequence[Entartung | None]) -> None:
     """Mit ``strikt=True`` ist jeder zusammengefallene Ring ein Fehler."""
     for i, art in enumerate(arten):
         if art is not None:
@@ -217,7 +217,7 @@ def _pruefe_strikt(nummer: int, arten: Sequence[Entartung | None]) -> None:
             )
 
 
-def _polygon_aus_ringen(
+def _polygon_from_rings(
     nummer: int, ringe: Sequence[Ring], arten: Sequence[Entartung | None]
 ) -> tuple[Polygon | None, list[EntarteterRing]]:
     """Echtes Polygon mit gültigen Löchern oder – bei zusammengefallenem Außenring – keines."""
@@ -253,8 +253,8 @@ def flaeche_aus_ringen(polygone: Sequence[object], *, strikt: bool = False) -> F
         ringe = [_positionen(r, f"Polygon {nummer}, Ring {i}") for i, r in enumerate(roh)]
         arten = [_entartung(r) for r in ringe]
         if strikt:
-            _pruefe_strikt(nummer, arten)
-        polygon, zusammengefallen = _polygon_aus_ringen(nummer, ringe, arten)
+            _check_strict(nummer, arten)
+        polygon, zusammengefallen = _polygon_from_rings(nummer, ringe, arten)
         entartet.extend(zusammengefallen)
         if polygon is not None:
             echte.append(polygon)

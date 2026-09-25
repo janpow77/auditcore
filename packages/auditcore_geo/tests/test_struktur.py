@@ -66,7 +66,7 @@ def test_rahmen_nur_mit_vier_zahlen() -> None:
 )
 def test_pruefe_konfiguration_meldet_wie_zuvor(aenderung: dict[str, Any], meldung: str) -> None:
     with pytest.raises(harvest.ConfigError, match=meldung):
-        nominatim.pruefe_konfiguration({**GUELTIG, **aenderung})
+        nominatim.check_config({**GUELTIG, **aenderung})
     with pytest.raises(harvest.ConfigError, match=meldung):
         nominatim.NominatimAdapter().validate_config({**GUELTIG, **aenderung})
 
