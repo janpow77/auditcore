@@ -1,0 +1,86 @@
+name: ci-ok
+# Sammel-Check für die Branch-Protection. Die Fach-Workflows haben Pfadfilter
+# (domain-packages, js-packages) und starten deshalb nicht bei jedem PR; als
+# Required Check würden sie solche PRs für immer blockieren. Dieser Workflow
+# läuft bei jedem PR, wartet auf alle anderen Workflow-Läufe desselben Commits
+# und wird nur grün, wenn keiner davon fehlgeschlagen ist. Nicht gestartete
+# Workflows zählen als „nicht betroffen“.
+#
+# Hilfsworkflows (autofix, dependabot-automerge) zählen nicht: Sie prüfen nichts.
+# Wird ein fehlgeschlagener Lauf neu gestartet, muss ci-ok ebenfalls neu gestartet werden.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions: {}
+concurrency:
+  group: ci-ok-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci-ok:
+    # Leichter Warte-Job: bewusst auf GitHub-Runnern, damit er keinen NUC-Platz belegt.
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      actions: read
+    steps:
+      - name: Auf die übrigen Workflows dieses Commits warten
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          OWN_RUN_ID: ${{ github.run_id }}
+          IGNORED: ci-ok,autofix,dependabot-automerge
+          GRACE_SECONDS: '45'
+          POLL_SECONDS: '30'
+          TIMEOUT_SECONDS: '6600'
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess, sys, time
+
+          repo, sha, own = os.environ["REPO"], os.environ["HEAD_SHA"], int(os.environ["OWN_RUN_ID"])
+          ignored = set(os.environ["IGNORED"].split(","))
+          ok = {"success", "skipped", "neutral"}
+          poll = int(os.environ["POLL_SECONDS"])
+          deadline = time.monotonic() + int(os.environ["TIMEOUT_SECONDS"])
+
+          def latest_runs():
+              out = subprocess.run(
+                  ["gh", "api", "--paginate", "--slurp",
+                   f"repos/{repo}/actions/runs?head_sha={sha}&event=pull_request&per_page=100"],
+                  check=True, capture_output=True, text=True).stdout
+              runs = [r for page in json.loads(out) for r in page["workflow_runs"]]
+              latest = {}
+              for run in runs:
+                  if run["id"] == own or run["name"] in ignored:
+                      continue
+                  known = latest.get(run["workflow_id"])
+                  if known is None or run["created_at"] > known["created_at"]:
+                      latest[run["workflow_id"]] = run
+              return list(latest.values())
+
+          time.sleep(int(os.environ["GRACE_SECONDS"]))  # späte Läufe desselben Ereignisses abwarten
+          while True:
+              runs = latest_runs()
+              pending = [r for r in runs if r["status"] != "completed"]
+              failed = [r for r in runs if r["status"] == "completed" and r["conclusion"] not in ok]
+              if failed:
+                  for r in failed:
+                      print(f"::error::{r['name']}: {r['conclusion']} – {r['html_url']}")
+                  sys.exit(1)
+              if not pending:
+                  break
+              if time.monotonic() > deadline:
+                  print("::error::Zeitlimit: " + ", ".join(r["name"] for r in pending))
+                  sys.exit(1)
+              print("warte auf: " + ", ".join(f"{r['name']} ({r['status']})" for r in pending), flush=True)
+              time.sleep(poll)
+
+          summary = ["## ci-ok", "", "| Workflow | Ergebnis |", "|---|---|"]
+          summary += [f"| {r['name']} | {r['conclusion']} |" for r in sorted(runs, key=lambda r: r["name"])]
+          if not runs:
+              summary.append("| – | keine weiteren Workflows betroffen |")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as handle:
+              handle.write("\n".join(summary) + "\n")
+          print("\n".join(summary))
+          PY

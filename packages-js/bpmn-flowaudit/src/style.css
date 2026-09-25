@@ -1,0 +1,108 @@
+/*
+ * Styles of the FlowAudit diagram layer (highlight layers, palette and
+ * context pad entries). Colours are CSS variables so applications can
+ * theme them; defaults work in light and dark themes.
+ */
+
+:root {
+  --fa-hit: #1a73e8;
+  --fa-dimmed-opacity: 0.22;
+  --fa-walk-current: #f59e0b;
+  --fa-walk-met: #1e8e3e;
+  --fa-walk-not-met: #b3261e;
+  --fa-diff-added-fill: #e6f4ea;
+  --fa-diff-added-stroke: #1e8e3e;
+  --fa-diff-removed-fill: #fce8e6;
+  --fa-diff-removed-stroke: #b3261e;
+  --fa-diff-changed-fill: #fef7e0;
+  --fa-diff-changed-stroke: #e37400;
+  --fa-issue-error: #b3261e;
+  --fa-issue-warning: #b06000;
+}
+
+.djs-element.fa-dimmed > .djs-visual {
+  opacity: var(--fa-dimmed-opacity);
+  transition: opacity 120ms ease-out;
+}
+
+.djs-element.fa-hit > .djs-visual > :first-child {
+  stroke: var(--fa-hit) !important;
+  stroke-width: 3px !important;
+}
+
+.djs-element.fa-walk-current > .djs-visual > :first-child {
+  stroke: var(--fa-walk-current) !important;
+  stroke-width: 4px !important;
+  animation: fa-pulse 1.4s ease-in-out infinite;
+}
+
+.djs-element.fa-walk-met > .djs-visual > :first-child {
+  stroke: var(--fa-walk-met) !important;
+  stroke-width: 3px !important;
+}
+
+.djs-element.fa-walk-not-met > .djs-visual > :first-child {
+  stroke: var(--fa-walk-not-met) !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 6 3;
+}
+
+.djs-element.fa-diff-added > .djs-visual > :first-child {
+  fill: var(--fa-diff-added-fill) !important;
+  stroke: var(--fa-diff-added-stroke) !important;
+  stroke-width: 2.5px !important;
+}
+
+.djs-element.fa-diff-removed > .djs-visual > :first-child {
+  fill: var(--fa-diff-removed-fill) !important;
+  stroke: var(--fa-diff-removed-stroke) !important;
+  stroke-width: 2.5px !important;
+  stroke-dasharray: 5 3;
+}
+
+.djs-element.fa-diff-changed > .djs-visual > :first-child {
+  fill: var(--fa-diff-changed-fill) !important;
+  stroke: var(--fa-diff-changed-stroke) !important;
+  stroke-width: 2.5px !important;
+}
+
+.djs-element.fa-diff-same > .djs-visual {
+  opacity: 0.55;
+}
+
+.djs-element.fa-issue-error > .djs-visual > :first-child {
+  stroke: var(--fa-issue-error) !important;
+  stroke-width: 2.5px !important;
+}
+
+.djs-element.fa-issue-warning > .djs-visual > :first-child {
+  stroke: var(--fa-issue-warning) !important;
+}
+
+@keyframes fa-pulse {
+  50% {
+    stroke-opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .djs-element.fa-walk-current > .djs-visual > :first-child {
+    animation: none;
+  }
+}
+
+.fa-role-entry,
+.fa-context-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.fa-context-icon {
+  width: 22px;
+  height: 22px;
+  color: currentColor;
+}

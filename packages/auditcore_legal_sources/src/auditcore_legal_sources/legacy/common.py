@@ -5,14 +5,15 @@ from __future__ import annotations
 import hashlib
 from collections.abc import Iterable, Mapping
 from datetime import datetime
-from typing import Any
+
+from auditcore_harvest import JSON
 
 from ..normalize import detect_fund, funding_period_auditdatabase, funding_period_designer
 
 _LEGACY_FORMATS = ("%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%d.%m.%Y", "%Y")
 
 
-def legacy_parse_date(value: Any) -> datetime | None:
+def legacy_parse_date(value: object) -> datetime | None:
     """``BaseHarvester._parse_date`` of both applications, slicing defect included."""
     if value is None:
         return None
@@ -58,7 +59,7 @@ def legacy_content_hash(content: str | None, abstract: str | None, title: str) -
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def legacy_harvested_document(source_id: str, **fields: Any) -> dict[str, Any]:
+def legacy_harvested_document(source_id: str, **fields: JSON) -> dict[str, JSON]:
     """``vars(HarvestedDocument(...))`` of auditdatabase with its defaults."""
     return {
         "source_id": source_id,
@@ -76,7 +77,7 @@ def legacy_harvested_document(source_id: str, **fields: Any) -> dict[str, Any]:
     }
 
 
-def legacy_normalize_document(source_id: str, raw: Mapping[str, Any]) -> dict[str, Any]:
+def legacy_normalize_document(source_id: str, raw: Mapping[str, JSON]) -> dict[str, JSON]:
     """auditdatabase ``BaseHarvester.normalize_document``."""
     return legacy_harvested_document(
         source_id,

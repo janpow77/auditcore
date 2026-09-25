@@ -2,12 +2,12 @@
 
 Preis- und Marktdatenquellen als Adapter auf dem gemeinsamen Harvest-Kern
 `auditcore_harvest` (Vertrag `auditcore_harvest.contract/1`). Laufzeit:
-Standardbibliothek und `auditcore_harvest==0.1.0`; kein Netzwerkclient, keine
+Standardbibliothek und `auditcore_harvest==0.1.1`; kein Netzwerkclient, keine
 Datenbank, kein Scheduler. Erster Consumer: `janpow77/regulierung`
 (`services/external_apis/`, Admin-API `api/admin/external_apis.py`).
 
 ```bash
-pip install auditcore_price_sources==0.1.0
+pip install auditcore_price_sources==0.1.1
 ```
 
 | Quelle | Adapter | Zugang | Einheit | Zeitbezug |
