@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import Any
 
 from ..model import BpmnElement
 from ..profiles import SegregationRule, Selection
@@ -17,7 +16,7 @@ Issues = Iterator[ValidationIssue]
 
 
 def _issue(
-    ctx: ValidationContext, spec: SegregationRule, message_id: str, element: BpmnElement, **params: Any
+    ctx: ValidationContext, spec: SegregationRule, message_id: str, element: BpmnElement, **params: object
 ) -> ValidationIssue:
     severity = spec.severity if spec.severity in SEVERITIES else MESSAGES[message_id].severity
     titles = {"titel": label(spec.title), "titel_de": label(spec.title, "de"), "titel_en": label(spec.title, "en")}

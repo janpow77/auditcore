@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from ..model import BpmnDocument, as_document
 from .process_table import flow_order
 
 
-def walkthrough_status(source: str | bytes | BpmnDocument) -> dict[str, Any]:
+def walkthrough_status(source: str | bytes | BpmnDocument) -> dict[str, object]:
     """Ergebnisse je Prüfschritt und nicht durchlaufene Aktivitäten."""
     document = as_document(source)
     counts: dict[str, int] = {}

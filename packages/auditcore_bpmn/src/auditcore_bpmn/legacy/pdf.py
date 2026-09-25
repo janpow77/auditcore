@@ -2,27 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from io import BytesIO
-from typing import Any
 
 from ..optional import require_module
-from .analyzer import ProcessAnalysis
-
-
-def _table_style(colors: Any, platypus: Any) -> Any:
-    return platypus.TableStyle(
-        [
-            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F4E78")),
-            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
-            ("FONTSIZE", (0, 0), (-1, -1), 8),
-            ("VALIGN", (0, 0), (-1, -1), "TOP"),
-            ("GRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#CBD5E1")),
-            ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F8FAFC")]),
-            ("LEFTPADDING", (0, 0), (-1, -1), 4),
-            ("RIGHTPADDING", (0, 0), (-1, -1), 4),
-        ]
-    )
+from .analyzer import ProcessAnalysis, TaskRow
 
 
 class _Builder:
@@ -33,13 +17,30 @@ class _Builder:
         self.mm = require_module("reportlab.lib.units", "pdf").mm
         self.styles = require_module("reportlab.lib.styles", "pdf").getSampleStyleSheet()
 
-    def table(self, rows: list[list[Any]], widths: list[float]) -> Any:
+    def style(self) -> object:
+        """Tabellenstil des Originals."""
+        colors = self.colors
+        return self.platypus.TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1F4E78")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 8),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("GRID", (0, 0), (-1, -1), 0.25, colors.HexColor("#CBD5E1")),
+                ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F8FAFC")]),
+                ("LEFTPADDING", (0, 0), (-1, -1), 4),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 4),
+            ]
+        )
+
+    def table(self, rows: Sequence[Sequence[object]], widths: list[float]) -> object:
         """Tabelle im Stil des Originals."""
         table = self.platypus.Table(rows, colWidths=[w * self.mm for w in widths], repeatRows=1)
-        table.setStyle(_table_style(self.colors, self.platypus))
+        table.setStyle(self.style())
         return table
 
-    def overview(self) -> list[Any]:
+    def overview(self) -> list[object]:
         """Kennzahlentabelle."""
         a = self.analysis
         rows = [
@@ -54,13 +55,14 @@ class _Builder:
         return [self.table(rows, [90, 80]), self.platypus.Spacer(1, 8 * self.mm)]
 
     @staticmethod
-    def _task_row(task: dict[str, Any]) -> list[str]:
+    def _task_row(task: TaskRow) -> list[str]:
         duration = " ".join(
             value
             for value in (str(task.get("duration_estimated") or ""), str(task.get("duration_unit") or ""))
             if value
         )
-        cost = f"{float(task['cost_estimate']):,.2f} EUR" if task.get("cost_estimate") is not None else ""
+        cost_value = task.get("cost_estimate")
+        cost = f"{float(cost_value):,.2f} EUR" if cost_value is not None else ""
         return [
             str(task.get("task_name") or task.get("task_id") or ""),
             str(task.get("task_type") or ""),
@@ -70,13 +72,13 @@ class _Builder:
             cost,
         ]
 
-    def tasks(self) -> list[Any]:
+    def tasks(self) -> list[object]:
         """Aufgabentabelle."""
         rows = [["Task", "Typ", "Verantwortlich", "Abteilung", "Dauer", "Kosten"]]
         rows += [self._task_row(task) for task in self.analysis.tasks]
         return [self.platypus.Paragraph("Tasks", self.styles["Heading2"]), self.table(rows, [62, 30, 45, 42, 34, 34])]
 
-    def legal(self) -> list[Any]:
+    def legal(self) -> list[object]:
         """Verzeichnis der Rechtsgrundlagen (entfällt ohne Angaben)."""
         rows = [
             [str(task.get("task_name") or task.get("task_id") or ""), str(basis)]
@@ -91,7 +93,7 @@ class _Builder:
         )
         return [self.platypus.Spacer(1, 8 * self.mm), paragraph("Rechtsgrundlagen", self.styles["Heading2"]), table]
 
-    def resources(self) -> list[Any]:
+    def resources(self) -> list[object]:
         """Ressourcenübersicht auf neuer Seite (entfällt ohne Angaben)."""
         a = self.analysis
         if not (a.unique_owners or a.unique_departments or a.unique_systems):
@@ -121,7 +123,7 @@ def build_pdf(analysis: ProcessAnalysis, diagram_name: str) -> BytesIO:
         bottomMargin=12 * mm,
         title=f"Prozessanalyse – {diagram_name}",
     )
-    story: list[Any] = [
+    story: list[object] = [
         builder.platypus.Paragraph(f"Prozessanalyse: {diagram_name}", builder.styles["Title"]),
         builder.platypus.Spacer(1, 5 * mm),
         *builder.overview(),

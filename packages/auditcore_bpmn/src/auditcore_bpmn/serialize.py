@@ -10,7 +10,6 @@ Verarbeitungsanweisungen und arbeitet ohne globalen Zustand (threadsicher).
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
 from xml.etree import ElementTree as ET
 
 from .namespaces import PREFERRED_PREFIXES, namespace_of
@@ -106,7 +105,18 @@ def _collect(element: ET.Element, prefixes: _PrefixMap) -> None:
                 _qualified(key, prefixes, attribute=True)
 
 
-def _write(element: ET.Element[Any], prefixes: _PrefixMap, out: list[str], root: bool) -> None:
+def _start_tag(element: ET.Element, name: str, prefixes: _PrefixMap, root: bool) -> str:
+    parts = [f"<{name}"]
+    if root:
+        for prefix, uri in prefixes.declarations():
+            attribute = f"xmlns:{prefix}" if prefix else "xmlns"
+            parts.append(f' {attribute}="{_escape_attr(uri)}"')
+    for key, value in element.attrib.items():
+        parts.append(f' {_qualified(key, prefixes, attribute=True)}="{_escape_attr(value)}"')
+    return "".join(parts)
+
+
+def _write(element: ET.Element, prefixes: _PrefixMap, out: list[str], root: bool) -> None:
     tag: object = element.tag
     if tag is ET.Comment:
         out.append(f"<!--{element.text or ''}-->")
@@ -114,17 +124,9 @@ def _write(element: ET.Element[Any], prefixes: _PrefixMap, out: list[str], root:
         out.append(f"<?{element.text or ''}?>")
     else:
         name = _qualified(str(tag), prefixes, attribute=False)
-        out.append(f"<{name}")
-        if root:
-            for prefix, uri in prefixes.declarations():
-                attribute = f"xmlns:{prefix}" if prefix else "xmlns"
-                out.append(f' {attribute}="{_escape_attr(uri)}"')
-        for key, value in element.attrib.items():
-            out.append(f' {_qualified(key, prefixes, attribute=True)}="{_escape_attr(value)}"')
+        out.append(_start_tag(element, name, prefixes, root))
         if element.text or len(element):
-            out.append(">")
-            if element.text:
-                out.append(_escape_text(element.text))
+            out.append(">" + _escape_text(element.text or ""))
             for child in element:
                 _write(child, prefixes, out, root=False)
             out.append(f"</{name}>")
@@ -139,17 +141,13 @@ def serialize_element(
     namespaces: Iterable[tuple[str, str]] = (),
     *,
     xml_declaration: bool = True,
-    prolog: Iterable[ET.Element] = (),
+    prolog: Iterable[str] = (),
 ) -> str:
-    """Schreibt ``element`` als vollständiges Dokument (UTF-8-Deklaration)."""
+    """Schreibt ``element`` als vollständiges Dokument (UTF-8-Deklaration, Prolog als Markup)."""
     prefixes = _PrefixMap(namespaces)
     _collect(element, prefixes)
-    out: list[str] = []
-    if xml_declaration:
-        out.append('<?xml version="1.0" encoding="UTF-8"?>\n')
-    for node in prolog:
-        _write(node, prefixes, out, root=False)
-        out.append("\n")
+    out: list[str] = ['<?xml version="1.0" encoding="UTF-8"?>\n'] if xml_declaration else []
+    out += [f"{markup}\n" for markup in prolog]
     _write(element, prefixes, out, root=True)
     out.append("\n")
     return "".join(out)

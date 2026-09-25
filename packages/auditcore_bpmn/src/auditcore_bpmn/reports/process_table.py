@@ -5,13 +5,11 @@ Spalten: Schritt, Akteur, Rechtsgrundlage, Kontrolle, Nachweis, IT-System, Frist
 
 from __future__ import annotations
 
-from typing import Any
-
 from ..extensions import Extensions
 from ..model import BpmnDocument, BpmnElement, as_document
 from ..vocabulary import ROLES, label
 
-Row = dict[str, Any]
+Row = dict[str, str | int]
 
 PROCESS_TABLE_COLUMNS = {
     "nr": "Nr.",

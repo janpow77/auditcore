@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, replace
-from typing import Any, Protocol
+from typing import Protocol
 
 from .extensions import LegalBasis, act_long
 
@@ -164,14 +164,19 @@ def _group(match: re.Match[str], name: str) -> str | None:
     return value.strip() if value else None
 
 
-def _subdivisions(match: re.Match[str]) -> dict[str, Any]:
-    return {
-        "paragraph": _group(match, "abs"),
-        "subparagraph": _group(match, "uabs"),
-        "sentence": _group(match, "satz"),
-        "point": _group(match, "buchst"),
-        "number": _group(match, "nr"),
-    }
+def _legal_basis(match: re.Match[str], act: str | None, **anchor: str | None) -> LegalBasis:
+    """Rechtsgrundlage mit Untergliederung aus den benannten Gruppen des Treffers."""
+    return LegalBasis(
+        act=act,
+        article=anchor.get("article"),
+        section=anchor.get("section"),
+        annex=anchor.get("annex"),
+        paragraph=_group(match, "abs"),
+        subparagraph=_group(match, "uabs"),
+        sentence=_group(match, "satz"),
+        point=_group(match, "buchst"),
+        number=_group(match, "nr"),
+    )
 
 
 def _admin_rule(match: re.Match[str]) -> list[LegalBasis]:
@@ -179,13 +184,11 @@ def _admin_rule(match: re.Match[str]) -> list[LegalBasis]:
 
 
 def _long(match: re.Match[str]) -> list[LegalBasis]:
-    return [
-        LegalBasis(act=match["norm"], article=_group(match, "art"), annex=_group(match, "anh"), **_subdivisions(match))
-    ]
+    return [_legal_basis(match, match["norm"], article=_group(match, "art"), annex=_group(match, "anh"))]
 
 
 def _short(match: re.Match[str]) -> list[LegalBasis]:
-    return [LegalBasis(act=_group(match, "norm"), article=match["art"], **_subdivisions(match))]
+    return [_legal_basis(match, _group(match, "norm"), article=match["art"])]
 
 
 def _sections(match: re.Match[str]) -> list[LegalBasis]:
@@ -193,7 +196,7 @@ def _sections(match: re.Match[str]) -> list[LegalBasis]:
 
 
 def _section(match: re.Match[str]) -> list[LegalBasis]:
-    return [LegalBasis(act=match["norm"], section=match["par"], **_subdivisions(match))]
+    return [_legal_basis(match, match["norm"], section=match["par"])]
 
 
 #: Reihenfolge = Vorrang bei Überlappung.

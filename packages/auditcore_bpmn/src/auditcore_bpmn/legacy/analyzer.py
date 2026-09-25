@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass
-from typing import Any
+from typing import TypedDict, TypeVar, cast
 from xml.etree import ElementTree as ET
 
 from ..namespaces import BPMN_NS, BPMNDI_NS, DC_NS, DI_NS, FLOWAUDIT_NAMESPACE
@@ -50,6 +50,44 @@ class TaskProperties:
     calculated_personnel_cost: float | None = None
 
 
+class TaskRow(TypedDict):
+    """Eine Aufgabe als Dictionary (``asdict(TaskProperties)``)."""
+
+    task_id: str
+    task_name: str
+    task_type: str
+    process_owner: str | None
+    process_department: str | None
+    process_type: str | None
+    resources_personnel: str | None
+    resources_systems: str | None
+    resources_documents: str | None
+    duration_estimated: str | None
+    duration_unit: str | None
+    personnel_grade: str | None
+    personnel_count: int | None
+    cost_estimate: float | None
+    effort_person_days: float | None
+    frequency: int | None
+    documentation: str | None
+    legal_basis: str | None
+    internal_note: str | None
+    calculated_personnel_cost: float | None
+
+
+class EsiResult(TypedDict):
+    """Rohe ESI-Kernanforderungen wie im Original."""
+
+    profile: str | None
+    requirements_raw: str | None
+    requirements_parsed: dict[str, list[str]]
+    total_requirements: int
+    total_criteria: int
+
+
+N = TypeVar("N", int, float)
+
+
 @dataclass
 class ProcessAnalysis:
     """Aggregierte Prozessanalyse (Feldnamen wie im Original)."""
@@ -67,7 +105,7 @@ class ProcessAnalysis:
     unique_owners: list[str]
     unique_departments: list[str]
     unique_systems: list[str]
-    tasks: list[dict[str, Any]]
+    tasks: list[TaskRow]
     tasks_with_cost: int
     tasks_with_duration: int
     tasks_with_owner: int
@@ -81,7 +119,7 @@ def _unique(values: Iterable[str | None]) -> list[str]:
     return list(dict.fromkeys(value for value in values if value))
 
 
-def _parse_number(value: str | None, kind: Callable[[str], Any]) -> Any:
+def _parse_number(value: str | None, kind: Callable[[str], N]) -> N | None:
     """``kind(value)`` oder ``None`` bei leerem oder ungültigem Wert (wie im Original)."""
     try:
         return kind(value) if value else None
@@ -218,7 +256,7 @@ class BpmnAnalyzer:
                 total_personnel_cost += personnel_cost
         return _aggregate(diagram_name, tasks, total_personnel_cost)
 
-    def extract_esi_requirements(self) -> dict[str, Any]:
+    def extract_esi_requirements(self) -> EsiResult:
         """Rohe ESI-Kernanforderungen aus Prozess- bzw. Unterprozess-Attributen (legacy)."""
         for local in ("process", "subProcess"):
             for element in self.root.findall(f".//bpmn:{local}", self.NAMESPACES):
@@ -233,7 +271,7 @@ class BpmnAnalyzer:
             "total_criteria": 0,
         }
 
-    def _esi_result(self, profile: str | None, raw: str | None) -> dict[str, Any]:
+    def _esi_result(self, profile: str | None, raw: str | None) -> EsiResult:
         parsed = self._parse_esi_requirements_string(raw) if raw else {}
         return {
             "profile": profile or "ESI",
@@ -257,7 +295,7 @@ class BpmnAnalyzer:
                 result[entry] = []
         return result
 
-    def export_to_dict(self) -> dict[str, Any]:
+    def export_to_dict(self) -> dict[str, object]:
         """Analyse als Dictionary."""
         return asdict(self.analyze_process())
 
@@ -303,7 +341,7 @@ def _aggregate(diagram_name: str, tasks: list[TaskProperties], total_personnel_c
         unique_owners=_unique(t.process_owner for t in tasks),
         unique_departments=_unique(t.process_department for t in tasks),
         unique_systems=_unique(t.resources_systems for t in tasks),
-        tasks=[asdict(t) for t in tasks],
+        tasks=[cast(TaskRow, asdict(t)) for t in tasks],
         tasks_with_cost=counts["cost"],
         tasks_with_duration=counts["duration"],
         tasks_with_owner=counts["owner"],
@@ -316,6 +354,6 @@ def _aggregate(diagram_name: str, tasks: list[TaskProperties], total_personnel_c
 
 def analyze_bpmn(
     xml_content: str | bytes, diagram_name: str = "BPMN-Prozess", personnel_rate: PersonnelRateLookup | None = None
-) -> dict[str, Any]:
+) -> dict[str, object]:
     """Kurzform wie im Original (``db_session`` → ``personnel_rate``)."""
     return asdict(BpmnAnalyzer(xml_content, personnel_rate=personnel_rate).analyze_process(diagram_name))

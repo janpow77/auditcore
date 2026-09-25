@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import Any
 
 from ..vocabulary import label
 from .messages import ERROR, MESSAGES, NOTE, SEVERITY_LABELS, WARNING
@@ -23,7 +22,7 @@ class ValidationIssue:
 
     rule_id: str
     severity: str
-    params: Mapping[str, Any] = field(default_factory=dict)
+    params: Mapping[str, object] = field(default_factory=dict)
     element_id: str | None = None
     diagram_id: str | None = None
     #: Meldungsvorlage, falls sie von der Regel-ID abweicht (Funktionstrennung aus dem Profil).
@@ -33,9 +32,9 @@ class ValidationIssue:
         """Meldungstext in ``language`` (``de`` oder ``en``)."""
         return MESSAGES[self.message_id or self.rule_id].render(language, self.params)
 
-    def to_dict(self, language: str = "de") -> dict[str, Any]:
+    def to_dict(self, language: str = "de") -> dict[str, object]:
         """JSON-fähige Darstellung."""
-        data: dict[str, Any] = {
+        data: dict[str, object] = {
             "rule_id": self.rule_id,
             "severity": self.severity,
             "severity_label": label(SEVERITY_LABELS[self.severity], language),
@@ -49,7 +48,7 @@ class ValidationIssue:
         return data
 
 
-def issue(rule_id: str, element_id: str | None = None, **params: Any) -> ValidationIssue:
+def issue(rule_id: str, element_id: str | None = None, **params: object) -> ValidationIssue:
     """Treffer mit dem Schweregrad aus dem Meldungskatalog."""
     return ValidationIssue(rule_id, MESSAGES[rule_id].severity, params, element_id)
 
@@ -91,7 +90,7 @@ class ValidationReport:
         """Regel-IDs aller Treffer."""
         return [i.rule_id for i in self.issues]
 
-    def to_dict(self, language: str = "de") -> dict[str, Any]:
+    def to_dict(self, language: str = "de") -> dict[str, object]:
         """JSON nach ``validation-report-1.schema.json``."""
         return {
             "schema": REPORT_SCHEMA,

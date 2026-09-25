@@ -5,16 +5,17 @@ from __future__ import annotations
 import csv
 import io
 from collections.abc import Mapping, Sequence
-from typing import Any
 
 from ..optional import require_module
 
 
-def _columns(rows: Sequence[Mapping[str, Any]], columns: Mapping[str, str] | None) -> dict[str, str]:
+def _columns(rows: Sequence[Mapping[str, object]], columns: Mapping[str, str] | None) -> dict[str, str]:
     return dict(columns) if columns else {key: key for key in (rows[0] if rows else {})}
 
 
-def to_csv(rows: Sequence[Mapping[str, Any]], columns: Mapping[str, str] | None = None, *, delimiter: str = ";") -> str:
+def to_csv(
+    rows: Sequence[Mapping[str, object]], columns: Mapping[str, str] | None = None, *, delimiter: str = ";"
+) -> str:
     """CSV (UTF-8, Standard-Trennzeichen Semikolon), Kopfzeile aus ``columns`` oder den Schlüsseln."""
     selected = _columns(rows, columns)
     output = io.StringIO()
@@ -25,12 +26,12 @@ def to_csv(rows: Sequence[Mapping[str, Any]], columns: Mapping[str, str] | None 
     return output.getvalue()
 
 
-def _cell(value: Any) -> str:
+def _cell(value: object) -> str:
     return ("" if value is None else str(value)).replace("|", "\\|").replace("\n", " ")
 
 
 def to_myst(
-    rows: Sequence[Mapping[str, Any]],
+    rows: Sequence[Mapping[str, object]],
     columns: Mapping[str, str] | None = None,
     *,
     title: str | None = None,
@@ -47,7 +48,7 @@ def to_myst(
     return "\n".join(lines) + "\n"
 
 
-def to_xlsx(tables: Mapping[str, Sequence[Mapping[str, Any]]]) -> bytes:
+def to_xlsx(tables: Mapping[str, Sequence[Mapping[str, object]]]) -> bytes:
     """Mehrere Tabellen als Excel-Mappe (Extra ``excel``)."""
     openpyxl = require_module("openpyxl", "excel")
     styles = require_module("openpyxl.styles", "excel")

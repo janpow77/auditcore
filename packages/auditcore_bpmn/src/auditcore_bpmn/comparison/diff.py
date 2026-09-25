@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 from ..model import BpmnDocument, as_document
 from .matching import comparable, features, match_elements
@@ -25,9 +24,9 @@ class Change:
     name: str
     old_id: str | None = None
     new_id: str | None = None
-    fields: tuple[tuple[str, Any, Any], ...] = ()
+    fields: tuple[tuple[str, object, object], ...] = ()
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         return {
             "kind": self.kind,
@@ -39,7 +38,7 @@ class Change:
         }
 
 
-def _text(value: Any) -> str:
+def _text(value: object) -> str:
     if isinstance(value, list):
         return ", ".join(str(v) for v in value)
     if isinstance(value, dict):
@@ -99,7 +98,7 @@ class Comparison:
                 new[change.new_id] = color
         return old, new
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         return {"changes": [c.to_dict() for c in self.changes]}
 

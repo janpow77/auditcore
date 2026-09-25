@@ -5,13 +5,12 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass, field, replace
 from types import MappingProxyType
-from typing import Any
 
 from ..errors import CatalogError
 from ..vocabulary import ROLES, Labels, Role
 
 
-def labels(value: Any) -> Labels:
+def labels(value: object) -> Labels:
     """Bezeichnung aus Text oder ``{de, en}``."""
     if isinstance(value, str):
         return MappingProxyType({"de": value})
@@ -99,10 +98,10 @@ class Profile:
     roles: tuple[str, ...]
     funds: tuple[str, ...]
     key_requirements: tuple[KeyRequirement, ...]
-    key_requirement_source: Mapping[str, Any] = field(default_factory=lambda: MappingProxyType({}))
+    key_requirement_source: Mapping[str, object] = field(default_factory=lambda: MappingProxyType({}))
     assessment_criteria_note: Labels | None = None
     legal_bases: tuple[LegalBasisTemplate, ...] = ()
-    legal_bases_source: Mapping[str, Any] = field(default_factory=lambda: MappingProxyType({}))
+    legal_bases_source: Mapping[str, object] = field(default_factory=lambda: MappingProxyType({}))
     segregation_rules: tuple[SegregationRule, ...] = ()
     role_aliases: tuple[tuple[str, str], ...] = ()
     templates: tuple[Template, ...] = ()

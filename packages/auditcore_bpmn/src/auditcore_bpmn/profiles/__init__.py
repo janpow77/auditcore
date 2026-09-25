@@ -8,15 +8,7 @@ Rechtstexte; die Anwendung speist sie über
 :meth:`Profile.with_assessment_criteria` ein.
 """
 
-from .loader import (
-    PROFILE_SCHEMA,
-    STANDARD_PROFILE,
-    ProfileRegistry,
-    available_profiles,
-    load_profile,
-    load_template,
-    profile_from_dict,
-)
+from .loader import STANDARD_PROFILE, ProfileRegistry, available_profiles, load_profile, load_template
 from .model import (
     AssessmentCriterion,
     KeyRequirement,
@@ -26,6 +18,7 @@ from .model import (
     Selection,
     Template,
 )
+from .parsing import PROFILE_SCHEMA, profile_from_dict
 
 __all__ = [
     "PROFILE_SCHEMA",

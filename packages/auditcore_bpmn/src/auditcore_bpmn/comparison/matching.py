@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import re
-from typing import Any
 
 from ..model import BpmnDocument, BpmnElement
 
@@ -61,7 +60,7 @@ def neighbours(document: BpmnDocument, element: BpmnElement, direction: str) -> 
     return sorted(result)
 
 
-def features(document: BpmnDocument, element: BpmnElement) -> dict[str, Any]:
+def features(document: BpmnDocument, element: BpmnElement) -> dict[str, object]:
     """Vergleichsmerkmale eines Elements."""
     return {
         "typ": element.type,

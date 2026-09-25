@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass, field
-from typing import Any
 from xml.etree import ElementTree as ET
 
 from ..extensions import Actor, DiagramInfo, EsiRequirements, Extensions, to_dict
@@ -96,9 +95,9 @@ class BpmnElement:
         """Name oder, falls leer, ID."""
         return (self.name or "").strip() or self.id
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung ohne leere Werte."""
-        data: dict[str, Any] = {"id": self.id, "type": self.type, "category": self.category}
+        data: dict[str, object] = {"id": self.id, "type": self.type, "category": self.category}
         for key in (
             "name",
             "process_id",
@@ -228,7 +227,7 @@ class BpmnDocument:
     def __iter__(self) -> Iterator[BpmnElement]:
         return iter(self.elements.values())
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung des Modells."""
         return {
             "definitions_id": self.definitions_id,

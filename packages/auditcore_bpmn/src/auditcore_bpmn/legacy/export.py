@@ -13,10 +13,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from io import BytesIO
-from typing import Any
+from types import ModuleType
 
 from ..optional import require_module
-from .analyzer import BpmnAnalyzer, PersonnelRateLookup, ProcessAnalysis
+from .analyzer import BpmnAnalyzer, EsiResult, PersonnelRateLookup, ProcessAnalysis, TaskRow
+
+Cell = str | int | float | None
 
 _OVERVIEW_LABELS = (
     "Prozessname",
@@ -82,13 +84,13 @@ class Sheet:
 
     name: str
     header: list[str]
-    rows: list[list[Any]]
+    rows: list[list[Cell]]
     header_styled: bool = True
     auto_width: bool = False
 
 
 def _overview(a: ProcessAnalysis) -> Sheet:
-    values: list[Any] = [
+    values: list[Cell] = [
         a.diagram_name,
         a.total_tasks,
         "",
@@ -121,20 +123,24 @@ def _overview(a: ProcessAnalysis) -> Sheet:
     return Sheet("Prozessübersicht", ["Kennzahl", "Wert"], rows)
 
 
-def _value(value: Any) -> Any:
+def _value(value: Cell) -> Cell:
     return value if value is not None else ""
 
 
-def _task_row(task: dict[str, Any]) -> list[Any]:
-    texts = ("process_owner", "process_department", "process_type", "resources_personnel")
-    later = ("resources_systems", "resources_documents", "duration_estimated", "duration_unit")
+def _task_row(task: TaskRow) -> list[Cell]:
     return [
         task["task_id"],
         task["task_name"],
         task["task_type"],
-        *(task[key] or "" for key in texts),
+        task["process_owner"] or "",
+        task["process_department"] or "",
+        task["process_type"] or "",
+        task["resources_personnel"] or "",
         _value(task["personnel_count"]),
-        *(task[key] or "" for key in later),
+        task["resources_systems"] or "",
+        task["resources_documents"] or "",
+        task["duration_estimated"] or "",
+        task["duration_unit"] or "",
         _value(task["cost_estimate"]),
         _value(task["effort_person_days"]),
         _value(task["frequency"]),
@@ -150,7 +156,7 @@ def _tasks(a: ProcessAnalysis) -> Sheet:
 
 
 def _resources(a: ProcessAnalysis) -> Sheet:
-    rows: list[list[Any]] = []
+    rows: list[list[Cell]] = []
     for title, values in (
         ("Prozessverantwortliche", a.unique_owners),
         ("Abteilungen", a.unique_departments),
@@ -164,32 +170,34 @@ def _resources(a: ProcessAnalysis) -> Sheet:
 
 
 def _costs(a: ProcessAnalysis) -> Sheet:
-    rows = []
+    entries: list[tuple[str, float, int, float, float]] = []
     for task in a.tasks:
-        if task["cost_estimate"] is None:
+        cost = task["cost_estimate"]
+        if cost is None:
             continue
         frequency = task["frequency"] or a.annual_frequency
-        annual = task["cost_estimate"] * frequency
+        annual = cost * frequency
         share = annual / a.annual_cost * 100 if a.annual_cost > 0 else 0
-        rows.append([task["task_name"], task["cost_estimate"], frequency, round(annual, 2), round(share, 2)])
+        entries.append((task["task_name"], cost, frequency, round(annual, 2), round(share, 2)))
     # pandas sort_values(ascending=False) behält bei gleichen Werten die Reihenfolge (kleine Tabellen).
-    rows.sort(key=lambda row: -row[3])
+    entries.sort(key=lambda row: -row[3])
+    rows: list[list[Cell]] = [list(entry) for entry in entries]
     return Sheet("Kostenanalyse", list(COST_COLUMNS) if rows else [], rows, auto_width=True)
 
 
-def _esi(esi: dict[str, Any]) -> Sheet:
-    if not esi.get("requirements_parsed"):
-        note = [
+def _esi(esi: EsiResult) -> Sheet:
+    if not esi["requirements_parsed"]:
+        note: list[list[Cell]] = [
             [
                 "Keine ESI-Kernanforderungen im Prozess definiert",
                 "Fügen Sie ESI-Anforderungen im BPMN-Editor hinzu (Process-Element -> ESI-Profil)",
             ]
         ]
         return Sheet("ESI-Anforderungen", ["Hinweis", "Information"], note, header_styled=False, auto_width=True)
-    rows: list[list[Any]] = [
-        ["ESI-Profil", esi.get("profile") or "ESI"],
-        ["Anzahl Kernanforderungen", esi.get("total_requirements", 0)],
-        ["Anzahl Bewertungskriterien", esi.get("total_criteria", 0)],
+    rows: list[list[Cell]] = [
+        ["ESI-Profil", esi["profile"] or "ESI"],
+        ["Anzahl Kernanforderungen", esi["total_requirements"]],
+        ["Anzahl Bewertungskriterien", esi["total_criteria"]],
         ["", ""],
         ["--- Anforderungen (roh) ---", ""],
     ]
@@ -197,46 +205,68 @@ def _esi(esi: dict[str, Any]) -> Sheet:
     return Sheet("ESI-Anforderungen", ["Kategorie", "Wert"], rows, auto_width=True)
 
 
-def analysis_sheets(analysis: ProcessAnalysis, esi: dict[str, Any]) -> list[Sheet]:
+def analysis_sheets(analysis: ProcessAnalysis, esi: EsiResult) -> list[Sheet]:
     """Die fünf Blätter des Originalberichts in Originalreihenfolge."""
     return [_overview(analysis), _tasks(analysis), _resources(analysis), _costs(analysis), _esi(esi)]
 
 
-def _write_sheet(workbook: Any, styles: Any, sheet: Sheet) -> None:
-    target = workbook.create_sheet(sheet.name)
-    thin = styles.Side(style="thin")
-    for column, title in enumerate(sheet.header, start=1):
-        cell = target.cell(row=1, column=column, value=title)
-        cell.font = styles.Font(bold=True)
-        cell.border = styles.Border(left=thin, right=thin, top=thin, bottom=thin)
-        cell.alignment = styles.Alignment(horizontal="center", vertical="top")
-    for row_index, row in enumerate(sheet.rows, start=2):
-        for column, value in enumerate(row, start=1):
-            if value not in (None, ""):
-                target.cell(row=row_index, column=column, value=value)
-    if sheet.header_styled:
-        for cell in target[1]:
+class _WorkbookWriter:
+    """Schreibt Blätter wie ``pandas.DataFrame.to_excel`` plus Formatierung des Originals."""
+
+    def __init__(self) -> None:
+        self.styles: ModuleType = require_module("openpyxl.styles", "excel")
+        self.workbook = require_module("openpyxl", "excel").Workbook()
+        self.workbook.remove(self.workbook.active)
+
+    def _header(self, sheet: Sheet) -> None:
+        styles = self.styles
+        thin = styles.Side(style="thin")
+        for column, title in enumerate(sheet.header, start=1):
+            cell = self.sheet.cell(row=1, column=column, value=title)
+            cell.font = styles.Font(bold=True)
+            cell.border = styles.Border(left=thin, right=thin, top=thin, bottom=thin)
+            cell.alignment = styles.Alignment(horizontal="center", vertical="top")
+
+    def _rows(self, sheet: Sheet) -> None:
+        for row_index, row in enumerate(sheet.rows, start=2):
+            for column, value in enumerate(row, start=1):
+                if value not in (None, ""):
+                    self.sheet.cell(row=row_index, column=column, value=value)
+
+    def _style_header(self) -> None:
+        styles = self.styles
+        for cell in self.sheet[1]:
             cell.fill = styles.PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
             cell.font = styles.Font(color="FFFFFF", bold=True)
             cell.alignment = styles.Alignment(horizontal="center", vertical="center")
-    if sheet.auto_width:
-        for cells in target.columns:
+
+    def _widths(self) -> None:
+        for cells in self.sheet.columns:
             length = max((len(str(c.value)) for c in cells if c.value), default=0)
-            target.column_dimensions[cells[0].column_letter].width = min(length + 2, 50)
+            self.sheet.column_dimensions[cells[0].column_letter].width = min(length + 2, 50)
+
+    def add(self, sheet: Sheet) -> None:
+        self.sheet = self.workbook.create_sheet(sheet.name)
+        self._header(sheet)
+        self._rows(sheet)
+        if sheet.header_styled:
+            self._style_header()
+        if sheet.auto_width:
+            self._widths()
+
+    def save(self) -> BytesIO:
+        output = BytesIO()
+        self.workbook.save(output)
+        output.seek(0)
+        return output
 
 
 def write_workbook(sheets: list[Sheet]) -> BytesIO:
-    """Schreibt Blätter wie ``pandas.DataFrame.to_excel`` plus Formatierung des Originals."""
-    openpyxl = require_module("openpyxl", "excel")
-    styles = require_module("openpyxl.styles", "excel")
-    workbook = openpyxl.Workbook()
-    workbook.remove(workbook.active)
+    """Schreibt die Blätter als Excel-Mappe (Extra ``excel``)."""
+    writer = _WorkbookWriter()
     for sheet in sheets:
-        _write_sheet(workbook, styles, sheet)
-    output = BytesIO()
-    workbook.save(output)
-    output.seek(0)
-    return output
+        writer.add(sheet)
+    return writer.save()
 
 
 class BpmnExcelExporter:

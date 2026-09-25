@@ -25,6 +25,7 @@ Feststellungsliste, Durchlauftest, KA-Kategorievorschlag), Vorlagen
 | Charakterisierung gegen Originale (95 Fälle, pandas 2.1.4) | eine dokumentierte Abweichung (DOCTYPE), sonst gleich inkl. Excel-Zellen/-Format und PDF-Bytes |
 | lokal: 54 Nutzerdiagramme (`AUDITCORE_BPMN_LOCAL_FIXTURES`, nicht im Repo) | 54 bestanden (Lesen, Rundlauf, Regeln, Kennzahlen, Vorschläge, Neutralisieren ohne E-Mail-Reste) |
 | `ruff check` (inkl. C901 ≤ 10), `mypy --strict src`, `bandit -ll` | PASS |
+| `scripts/verify_code_quality.py --package auditcore_bpmn` (Ratchet-Gate) | PASS: 0 in allen Metriken (kein `Any`, Module ≤ 400, Funktionen ≤ 60 Zeilen, McCabe ≤ 10, englische Bezeichner) |
 | `auditcore-bibquality --strict` | REVIEW_REQUIRED (Policy/Supply-Chain/OSS-Prüfung wie bei den übrigen Paketen), keine FAIL |
 | `scripts/verify_domain_packages.py … --apt` (Debian bookworm, ohne Netz) | PASS: Wheel, pip-Index, Hash-Installation, Selektivinstallation, `.deb` Revision 1→2, signierte APT-Quelle, Installieren/Upgrade/Entfernen |
 

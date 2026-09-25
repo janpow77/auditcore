@@ -14,11 +14,11 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable, Iterator
-from dataclasses import dataclass, is_dataclass, replace
-from typing import Any
+from dataclasses import dataclass, replace
+from typing import TypeVar
 
 from .citations import find_citations
-from .extensions import Actor, AuditReference, CrossReference, Extensions, Marker, Source, to_dict
+from .extensions import Actor, AuditReference, CrossReference, Extensions, LegalBasis, Marker, Source, to_dict
 from .model import BpmnDocument, as_document
 from .namespaces import BIOC_NS, BPMNDI_NS, COLOR_NS, q
 from .profiles import Profile, load_profile
@@ -50,19 +50,23 @@ _LOCATION = re.compile(
 _PREFIX = re.compile(r"^(?P<prefix>[^:\n]{2,60}):\s+\S")
 
 
+SuggestionValue = LegalBasis | AuditReference | CrossReference | Source | Marker | Actor | str
+Found = list[tuple[str, SuggestionValue]]
+
+
 @dataclass(frozen=True)
 class Suggestion:
     """Vorschlag für eine Erweiterung eines Elements samt Fundstelle im Text."""
 
     element_id: str
     kind: str
-    value: Any
+    value: SuggestionValue
     evidence: str
     origin: str
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
-        value = to_dict(self.value) if is_dataclass(self.value) else self.value
+        value = self.value if isinstance(self.value, str) else to_dict(self.value)
         return {
             "element_id": self.element_id,
             "kind": self.kind,
@@ -76,34 +80,34 @@ def _split(values: str) -> list[str]:
     return [part.strip() for part in re.split(r"\s*(?:,|und|sowie)\s*", values) if part.strip()]
 
 
-def _criteria(match: re.Match[str]) -> list[tuple[str, Any]]:
+def _criteria(match: re.Match[str]) -> Found:
     return [
         ("pruefbezug", AuditReference(key_requirement=bk.split(".")[0], assessment_criterion=bk))
         for bk in _split(match["list"])
     ]
 
 
-def _findings(match: re.Match[str]) -> list[tuple[str, Any]]:
+def _findings(match: re.Match[str]) -> Found:
     return [
         ("verweis", CrossReference(kind="feststellung_ref", key=" ".join(r.split()))) for r in _split(match["list"])
     ]
 
 
-def _check_fields(match: re.Match[str]) -> list[tuple[str, Any]]:
+def _check_fields(match: re.Match[str]) -> Found:
     document = " ".join(match["doc"].split()) if match["doc"] else None
     return [("verweis", CrossReference(kind="prueffeld", key=match["nr"], document=document))]
 
 
-def _registers(match: re.Match[str]) -> list[tuple[str, Any]]:
+def _registers(match: re.Match[str]) -> Found:
     return [("verweis", CrossReference(kind="register", key=key)) for key in _split(match["list"])]
 
 
-def _locations(match: re.Match[str]) -> list[tuple[str, Any]]:
+def _locations(match: re.Match[str]) -> Found:
     place = match["place"] + (f" ({match['pages']})" if match["pages"] else "")
     return [("quelle", Source(source_type="verfahrenshandbuch", location=f"{match['doc']}, {place}"))]
 
 
-_TEXT_PATTERNS: tuple[tuple[re.Pattern[str], Callable[[re.Match[str]], list[tuple[str, Any]]]], ...] = (
+_TEXT_PATTERNS: tuple[tuple[re.Pattern[str], Callable[[re.Match[str]], Found]], ...] = (
     (_CRITERIA, _criteria),
     (_CRITERION_SHORT, _criteria),
     (_FINDINGS, _findings),
@@ -163,30 +167,62 @@ def suggest(source: str | bytes | BpmnDocument, *, profile: Profile | None = Non
     return list(unique.values())
 
 
-_LISTS: dict[str, tuple[str, Callable[[Any], object]]] = {
-    "rechtsgrundlage": ("legal_bases", lambda v: v.citation()),
-    "pruefbezug": ("audit_references", lambda v: (v.key_requirement, v.assessment_criterion)),
-    "verweis": ("cross_references", lambda v: (v.kind, v.key)),
-    "quelle": ("sources", lambda v: v.location),
-    "kennzeichen": ("markers", lambda v: v.type),
-}
+V = TypeVar("V")
+
+
+def _added(current: tuple[V, ...], value: V, key: Callable[[V], object]) -> tuple[V, ...] | None:
+    """``current`` plus ``value`` oder ``None``, wenn ein gleichwertiger Eintrag existiert."""
+    return None if key(value) in {key(entry) for entry in current} else (*current, value)
+
+
+def _merge_legal(ext: Extensions, value: LegalBasis) -> Extensions | None:
+    added = _added(ext.legal_bases, value, LegalBasis.citation)
+    return replace(ext, legal_bases=added) if added else None
+
+
+def _merge_reference(ext: Extensions, value: AuditReference) -> Extensions | None:
+    added = _added(ext.audit_references, value, lambda v: (v.key_requirement, v.assessment_criterion))
+    return replace(ext, audit_references=added) if added else None
+
+
+def _merge_link(ext: Extensions, value: CrossReference) -> Extensions | None:
+    added = _added(ext.cross_references, value, lambda v: (v.kind, v.key))
+    return replace(ext, cross_references=added) if added else None
+
+
+def _merge_source(ext: Extensions, value: Source) -> Extensions | None:
+    added = _added(ext.sources, value, lambda v: v.location)
+    return replace(ext, sources=added) if added else None
+
+
+def _merge_marker(ext: Extensions, value: Marker) -> Extensions | None:
+    added = _added(ext.markers, value, lambda v: v.type)
+    return replace(ext, markers=added) if added else None
+
+
+def _merge_one(ext: Extensions, value: SuggestionValue) -> tuple[Extensions | None, str]:
+    if isinstance(value, Actor):
+        return (replace(ext, actor=value) if ext.actor is None else None), "akteur"
+    if isinstance(value, LegalBasis):
+        return _merge_legal(ext, value), "rechtsgrundlage"
+    if isinstance(value, AuditReference):
+        return _merge_reference(ext, value), "pruefbezug"
+    if isinstance(value, CrossReference):
+        return _merge_link(ext, value), "verweis"
+    if isinstance(value, Source):
+        return _merge_source(ext, value), "quelle"
+    if isinstance(value, Marker):
+        return _merge_marker(ext, value), "kennzeichen"
+    return None, ""
 
 
 def _merge(extensions: Extensions, items: list[Suggestion]) -> tuple[Extensions, set[str]]:
     changed: set[str] = set()
     for item in items:
-        if item.kind == "akteur" and extensions.actor is None:
-            extensions = replace(extensions, actor=item.value)
-            changed.add("akteur")
-            continue
-        if item.kind not in _LISTS:
-            continue
-        attribute, key = _LISTS[item.kind]
-        current = getattr(extensions, attribute)
-        if key(item.value) not in {key(entry) for entry in current}:
-            changes: dict[str, Any] = {attribute: (*current, item.value)}
-            extensions = replace(extensions, **changes)
-            changed.add(item.kind)
+        merged, kind = _merge_one(extensions, item.value)
+        if merged is not None:
+            extensions = merged
+            changed.add(kind)
     return extensions, changed
 
 

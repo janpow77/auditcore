@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from collections import Counter
 from collections.abc import Iterable, Iterator, Mapping
-from typing import Any
 
 from ..extensions import AuditFinding, Risk
 from ..model import BpmnElement
@@ -29,7 +28,7 @@ _DATA_TYPES = ("dataObjectReference", "dataStoreReference", "dataObject", "dataS
 
 
 def _unknown_values(
-    element_id: str | None, name: str, checks: Iterable[tuple[str, str | None, Mapping[str, Any]]]
+    element_id: str | None, name: str, checks: Iterable[tuple[str, str | None, Mapping[str, object]]]
 ) -> Issues:
     for field_name, value, vocabulary in checks:
         if value and value not in vocabulary:

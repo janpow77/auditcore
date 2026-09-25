@@ -4,14 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from typing import Any
 
 from ..extensions import AuditFinding, AuditReference, AuditStep
 from ..model import BpmnDocument, as_document
 from ..profiles import Profile, ProfileRegistry
 from ..vocabulary import FUNCTIONING_CATEGORIES, label
 
-Row = dict[str, Any]
+Row = dict[str, str]
 
 
 def _finding_row(element_id: str, name: str, finding: AuditFinding) -> Row:
@@ -52,7 +51,7 @@ class CategoryProposal:
     findings: tuple[str, ...]
     note: str = "Vorschlag – die Einstufung entscheidet der Prüfer."
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         text = label(FUNCTIONING_CATEGORIES[str(self.proposal)]) if self.proposal else None
         return {

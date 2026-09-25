@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from ..extensions import Control, Risk
 from ..model import BpmnDocument, BpmnElement, as_document
 
-Row = dict[str, Any]
+Row = dict[str, str]
 _CONTROL_FIELDS = (
     "kontrolle_id",
     "kontrolle",

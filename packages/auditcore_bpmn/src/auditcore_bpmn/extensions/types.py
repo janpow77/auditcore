@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 from ..namespaces import FLOWAUDIT_SCHEMA_VERSION
 from .legal_basis import LegalBasis
-from .mapping import xml_field
+from .mapping import xml_field, xml_items
 
 
 @dataclass(frozen=True)
@@ -71,7 +71,7 @@ class EsiRequirement:
     """Eine ESI-Anforderung mit Kriterien."""
 
     code: str = xml_field("code", default="")
-    criteria: tuple[str, ...] = xml_field("kriterium", "texts")
+    criteria: tuple[str, ...] = xml_items("kriterium", "texts")
 
 
 @dataclass(frozen=True)
@@ -79,7 +79,7 @@ class EsiRequirements:
     """``flowaudit:esiAnforderungen`` bzw. Altattribute ``esiProfile``/``esiCoreRequirements``."""
 
     profile: str | None = xml_field("profil")
-    requirements: tuple[EsiRequirement, ...] = xml_field("esiAnforderung", "elements", item_type=EsiRequirement)
+    requirements: tuple[EsiRequirement, ...] = xml_items("esiAnforderung", "elements", EsiRequirement)
     #: ``"flowaudit-1.1"`` oder ``"legacy-attribute"`` (nicht im XML).
     origin: str = field(default="flowaudit-1.1", metadata={"kind": "internal"})
 
@@ -110,7 +110,7 @@ class Risk:
     inherent: str | None = xml_field("inhaerent")
     control_risk: str | None = xml_field("kontrollrisiko")
     residual: str | None = xml_field("restrisiko")
-    controls: tuple[str, ...] = xml_field("kontrollen", "tokens")
+    controls: tuple[str, ...] = xml_items("kontrollen", "tokens")
     description: str | None = xml_field("beschreibung", "text")
     confidential: bool | None = xml_field("vertraulich", bool_value=True)
 
@@ -191,7 +191,7 @@ class Deadline:
     unit: str | None = xml_field("einheit")
     basis: str | None = xml_field("bezug")
     note: str | None = xml_field("anmerkung")
-    legal_bases: tuple[LegalBasis, ...] = xml_field("rechtsgrundlage", "elements", item_type=LegalBasis)
+    legal_bases: tuple[LegalBasis, ...] = xml_items("rechtsgrundlage", "elements", LegalBasis)
 
     @property
     def display(self) -> str:
@@ -227,11 +227,11 @@ class DiagramInfo:
     reference_diagram: str | None = xml_field("bezugDiagramm")
     system_cutoff_date: str | None = xml_field("vksStichtag")
     description: str | None = xml_field("beschreibung", "text")
-    keywords: tuple[str, ...] = xml_field("schlagwort", "texts")
-    funds: tuple[str, ...] = xml_field("fonds", "texts")
-    legal_bases: tuple[LegalBasis, ...] = xml_field("rechtsgrundlage", "elements", item_type=LegalBasis)
-    audit_references: tuple[AuditReference, ...] = xml_field("pruefbezug", "elements", item_type=AuditReference)
-    risks: tuple[Risk, ...] = xml_field("risiko", "elements", item_type=Risk)
-    findings: tuple[AuditFinding, ...] = xml_field("feststellung", "elements", item_type=AuditFinding)
-    sources: tuple[Source, ...] = xml_field("quelle", "elements", item_type=Source)
-    cross_references: tuple[CrossReference, ...] = xml_field("verweis", "elements", item_type=CrossReference)
+    keywords: tuple[str, ...] = xml_items("schlagwort", "texts")
+    funds: tuple[str, ...] = xml_items("fonds", "texts")
+    legal_bases: tuple[LegalBasis, ...] = xml_items("rechtsgrundlage", "elements", LegalBasis)
+    audit_references: tuple[AuditReference, ...] = xml_items("pruefbezug", "elements", AuditReference)
+    risks: tuple[Risk, ...] = xml_items("risiko", "elements", Risk)
+    findings: tuple[AuditFinding, ...] = xml_items("feststellung", "elements", AuditFinding)
+    sources: tuple[Source, ...] = xml_items("quelle", "elements", Source)
+    cross_references: tuple[CrossReference, ...] = xml_items("verweis", "elements", CrossReference)

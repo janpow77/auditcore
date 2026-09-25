@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass, fields
-from typing import Any
+from typing import TypeVar
 from xml.etree import ElementTree as ET
 
 from ..namespaces import BPMN_NS, FLOWAUDIT_NAMESPACE, local_name, namespace_of, q
 from .legal_basis import LegalBasis
-from .mapping import read_element, to_dict, write_element
+from .mapping import JsonObject, read_element, to_dict, write_element
 from .types import (
     Actor,
     AuditFinding,
@@ -97,9 +97,9 @@ class Extensions:
         """Typen aller Kennzeichen."""
         return tuple(marker.type for marker in self.markers)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON-fähige Darstellung ohne leere Werte."""
-        result: dict[str, Any] = {}
+        result: JsonObject = {}
         for item in fields(self):
             value = getattr(self, item.name)
             if value in (None, (), ""):
@@ -122,27 +122,48 @@ def _flowaudit_children(container: ET.Element) -> Iterable[tuple[str, ET.Element
             yield local_name(child.tag), child
 
 
+V = TypeVar("V")
+
+
+def _of(values: list[object], cls: type[V]) -> tuple[V, ...]:
+    return tuple(value for value in values if isinstance(value, cls))
+
+
+def _first(values: list[object], cls: type[V]) -> V | None:
+    return next((value for value in values if isinstance(value, cls)), None)
+
+
 def read_extensions(element: ET.Element) -> Extensions:
     """Liest alle FlowAudit-Angaben aus ``bpmn:extensionElements`` von ``element``."""
     container = extension_elements(element)
     if container is None:
         return Extensions()
-    repeated: dict[str, list[Any]] = {name: [] for name, _cls in REPEATED.values()}
-    single: dict[str, Any] = {}
+    found: list[object] = []
+    notes: list[str] = []
     for name, child in _flowaudit_children(container):
         if name in REPEATED:
-            attribute, cls = REPEATED[name]
-            repeated[attribute].append(read_element(cls, child))
-        elif name in SINGLE and SINGLE[name][0] not in single:
-            attribute, cls = SINGLE[name]
-            single[attribute] = read_element(cls, child)
-        elif name in ("interneNotiz", "notiz") and "internal_note" not in single:
-            note = read_element(InternalNote, child).text
-            if note:
-                single["internal_note"] = note
-    values: dict[str, Any] = {key: tuple(value) for key, value in repeated.items()}
-    values.update(single)
-    return Extensions(**values)
+            found.append(read_element(REPEATED[name][1], child))
+        elif name in SINGLE:
+            found.append(read_element(SINGLE[name][1], child))
+        elif name in ("interneNotiz", "notiz"):
+            notes += [note] if (note := read_element(InternalNote, child).text) else []
+    return Extensions(
+        legal_bases=_of(found, LegalBasis),
+        internal_note=notes[0] if notes else None,
+        markers=_of(found, Marker),
+        audit_references=_of(found, AuditReference),
+        actor=_first(found, Actor),
+        controls=_of(found, Control),
+        risks=_of(found, Risk),
+        evidence=_of(found, Evidence),
+        audit_steps=_of(found, AuditStep),
+        findings=_of(found, AuditFinding),
+        sources=_of(found, Source),
+        deadlines=_of(found, Deadline),
+        cross_references=_of(found, CrossReference),
+        esi=_first(found, EsiRequirements),
+        diagram_info=_first(found, DiagramInfo),
+    )
 
 
 def legacy_esi(element: ET.Element) -> EsiRequirements | None:

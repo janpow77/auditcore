@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass, field
-from typing import Any
 
 from ..errors import CollectionError
 from ..extensions import DiagramInfo
@@ -140,7 +139,7 @@ class GroupOverview:
         """Anteil der Aktivitäten mit Rechtsgrundlage (``None`` ohne Aktivitäten)."""
         return round(self.activities_with_legal_basis / self.activities, 4) if self.activities else None
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         return {
             "count": self.count,

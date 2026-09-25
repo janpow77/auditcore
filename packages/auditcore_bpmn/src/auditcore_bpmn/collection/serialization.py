@@ -4,21 +4,21 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from typing import Any
 
 from ..errors import CollectionError
 from ..extensions import DiagramInfo, from_dict, to_dict
+from ..jsondata import integer, items, mapping, optional_mapping, optional_text, strings, text
 from .collection import DiagramCollection
 from .model import Approval, DiagramEntry, DiagramExcerpt, Folder, check_id
 
 COLLECTION_SCHEMA = "auditcore_bpmn.diagram-collection/1"
 
 
-def _compact(values: Mapping[str, Any]) -> dict[str, Any]:
+def _compact(values: Mapping[str, object]) -> dict[str, object]:
     return {k: v for k, v in values.items() if v is not None}
 
 
-def _excerpt_to_dict(excerpt: DiagramExcerpt) -> dict[str, Any]:
+def _excerpt_to_dict(excerpt: DiagramExcerpt) -> dict[str, object]:
     return {
         "process_ids": list(excerpt.process_ids),
         "calls": [list(x) for x in excerpt.calls],
@@ -30,8 +30,8 @@ def _excerpt_to_dict(excerpt: DiagramExcerpt) -> dict[str, Any]:
     }
 
 
-def _entry_to_dict(entry: DiagramEntry) -> dict[str, Any]:
-    data: dict[str, Any] = {
+def _entry_to_dict(entry: DiagramEntry) -> dict[str, object]:
+    data: dict[str, object] = {
         "id": entry.id,
         "name": entry.name,
         "folder_id": entry.folder_id,
@@ -45,7 +45,7 @@ def _entry_to_dict(entry: DiagramEntry) -> dict[str, Any]:
     return data
 
 
-def collection_to_dict(collection: DiagramCollection) -> dict[str, Any]:
+def collection_to_dict(collection: DiagramCollection) -> dict[str, object]:
     """JSON-Daten der Sammlung."""
     return {
         "schema": COLLECTION_SCHEMA,
@@ -62,52 +62,83 @@ def collection_to_json(collection: DiagramCollection) -> str:
     return json.dumps(collection_to_dict(collection), ensure_ascii=False, indent=2) + "\n"
 
 
-def _pairs(values: Any) -> list[tuple[str, str]]:
-    return [(str(a), str(b)) for a, b in values or ()]
+def _pairs(values: object) -> list[tuple[str, str]]:
+    pairs = []
+    for pair in values if isinstance(values, list | tuple) else ():
+        if not isinstance(pair, list | tuple) or len(pair) != 2:
+            raise ValueError("Paar aus zwei Werten erwartet.")
+        pairs.append((str(pair[0]), str(pair[1])))
+    return pairs
 
 
-def _excerpt(data: Mapping[str, Any]) -> DiagramExcerpt:
+def _keys(value: object) -> dict[str, dict[str, list[str]]]:
+    return {
+        kind: {key: list(strings(ids)) for key, ids in mapping(values, "Schlüssel").items()}
+        for kind, values in optional_mapping(value, "Schlüsselindex").items()
+    }
+
+
+def _excerpt(data: Mapping[str, object]) -> DiagramExcerpt:
     return DiagramExcerpt(
-        process_ids=[str(x) for x in data.get("process_ids", ())],
+        process_ids=list(strings(data.get("process_ids"))),
         calls=_pairs(data.get("calls")),
         link_throws=_pairs(data.get("link_throws")),
         link_catches=_pairs(data.get("link_catches")),
-        activities=int(data.get("activities", 0)),
-        activities_with_legal_basis=int(data.get("activities_with_legal_basis", 0)),
-        keys={kind: {k: list(v) for k, v in values.items()} for kind, values in (data.get("keys") or {}).items()},
+        activities=integer(data.get("activities"), "Aktivitäten", 0),
+        activities_with_legal_basis=integer(data.get("activities_with_legal_basis"), "Aktivitäten", 0),
+        keys=_keys(data.get("keys")),
     )
 
 
-def _entry(item: Mapping[str, Any]) -> DiagramEntry:
+def _approval(data: Mapping[str, object]) -> Approval:
+    return Approval(
+        version=text(data.get("version"), "Version"),
+        sha256=text(data.get("sha256"), "SHA-256"),
+        cutoff_date=optional_text(data.get("cutoff_date")),
+        approved_on=optional_text(data.get("approved_on")),
+        approved_by=optional_text(data.get("approved_by")),
+    )
+
+
+def _entry(item: Mapping[str, object]) -> DiagramEntry:
+    identifier = check_id(text(item.get("id"), "Diagramm-ID"), "Diagramm")
+    info = item.get("info")
     return DiagramEntry(
-        id=check_id(item["id"], "Diagramm"),
-        name=str(item.get("name", item["id"])),
-        folder_id=item.get("folder_id"),
-        tags=[str(t) for t in item.get("tags", ())],
-        position=int(item.get("position", 0)),
-        info=from_dict(DiagramInfo, item["info"]) if item.get("info") else None,
-        excerpt=_excerpt(item.get("excerpt") or {}),
-        approvals=[Approval(**a) for a in item.get("approvals", ())],
+        id=identifier,
+        name=str(item.get("name", identifier)),
+        folder_id=optional_text(item.get("folder_id")),
+        tags=list(strings(item.get("tags"))),
+        position=integer(item.get("position"), "Position", 0),
+        info=from_dict(DiagramInfo, mapping(info, "Diagramm-Infos")) if info else None,
+        excerpt=_excerpt(optional_mapping(item.get("excerpt"), "Auszug")),
+        approvals=[_approval(a) for a in items(item.get("approvals"), "Freigaben")],
     )
 
 
-def _fill(collection: DiagramCollection, data: Mapping[str, Any]) -> None:
-    for folder in data.get("folders", ()):
-        collection.folders[check_id(folder["id"], "Ordner")] = Folder(
-            folder["id"],
-            folder["name"],
-            folder.get("parent_id"),
-            int(folder.get("position", 0)),
-            folder.get("description"),
+def _folder(data: Mapping[str, object]) -> Folder:
+    return Folder(
+        check_id(text(data.get("id"), "Ordner-ID"), "Ordner"),
+        text(data.get("name"), "Ordnername"),
+        optional_text(data.get("parent_id")),
+        integer(data.get("position"), "Position", 0),
+        optional_text(data.get("description")),
+    )
+
+
+def _fill(collection: DiagramCollection, data: Mapping[str, object]) -> None:
+    for raw_folder in items(data.get("folders"), "Ordner"):
+        folder = _folder(raw_folder)
+        collection.folders[folder.id] = folder
+    for tag in items(data.get("tags"), "Tags"):
+        collection.add_tag(
+            text(tag.get("id"), "Tag-ID"), text(tag.get("name"), "Tagname"), optional_text(tag.get("color"))
         )
-    for tag in data.get("tags", ()):
-        collection.add_tag(tag["id"], tag["name"], tag.get("color"))
-    for item in data.get("diagrams", ()):
+    for item in items(data.get("diagrams"), "Diagramme"):
         entry = _entry(item)
         collection.diagrams[entry.id] = entry
 
 
-def collection_from_dict(data: Mapping[str, Any]) -> DiagramCollection:
+def collection_from_dict(data: Mapping[str, object]) -> DiagramCollection:
     """Sammlung aus JSON-Daten (Schema, IDs und Ordnerzyklen geprüft)."""
     if data.get("schema") != COLLECTION_SCHEMA:
         raise CollectionError(f"Sammlungsschema {data.get('schema')!r} wird nicht unterstützt.")

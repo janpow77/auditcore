@@ -11,7 +11,6 @@ Standardfarben des Altmodells (``#1976d2``/``#ffffff``) bleiben erhalten.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any
 
 from ..extensions import DiagramInfo
 
@@ -19,12 +18,12 @@ LEGACY_HEADER_COLOR = "#1976d2"
 LEGACY_HEADER_TEXT_COLOR = "#ffffff"
 
 
-def _text(value: Any) -> str | None:
+def _text(value: object) -> str | None:
     text = str(value).strip() if value is not None else ""
     return text or None
 
 
-def diagram_info_from_legacy(row: Mapping[str, Any], *, profile: str | None = None) -> DiagramInfo:
+def diagram_info_from_legacy(row: Mapping[str, object], *, profile: str | None = None) -> DiagramInfo:
     """``DiagramInfo`` aus einer Altzeile (``dict`` oder ORM-Objekt über ``vars``).
 
     ``header_title`` hat Vorrang vor ``name``; archivierte Diagramme erhalten

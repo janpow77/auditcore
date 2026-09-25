@@ -18,7 +18,7 @@ from __future__ import annotations
 import xml.parsers.expat as expat
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Literal, NoReturn
+from typing import Literal, NoReturn
 from xml.etree import ElementTree as ET
 
 from .errors import BpmnXmlError, UnsafeXmlError, XmlTooLargeError
@@ -38,8 +38,8 @@ class ParsedXml:
     namespaces: list[tuple[str, str]] = field(default_factory=list)
     #: Tatsächlich verwendeter Parser: ``"defusedxml"`` oder ``"expat"``.
     backend: str = "expat"
-    #: Kommentare und Verarbeitungsanweisungen vor dem Wurzelelement.
-    prolog: list[ET.Element[Any]] = field(default_factory=list)
+    #: Kommentare und Verarbeitungsanweisungen vor dem Wurzelelement (als Markup).
+    prolog: list[str] = field(default_factory=list)
 
 
 class _Target:
@@ -48,7 +48,7 @@ class _Target:
     def __init__(self) -> None:
         self._builder = ET.TreeBuilder(insert_comments=True, insert_pis=True)
         self.namespaces: list[tuple[str, str]] = []
-        self.prolog: list[ET.Element[Any]] = []
+        self.prolog: list[str] = []
         self._depth = 0
 
     def start_ns(self, prefix: str | None, uri: str | None) -> None:
@@ -72,14 +72,14 @@ class _Target:
     def comment(self, text: str) -> ET.Element | None:
         """Kommentar (vor der Wurzel im Prolog)."""
         if self._depth == 0:
-            self.prolog.append(ET.Comment(text))
+            self.prolog.append(f"<!--{text}-->")
             return None
         return self._builder.comment(text)
 
     def pi(self, target: str, text: str | None = None) -> ET.Element | None:
         """Verarbeitungsanweisung (vor der Wurzel im Prolog)."""
         if self._depth == 0:
-            self.prolog.append(ET.ProcessingInstruction(target, text))
+            self.prolog.append(f"<?{target} {text}?>" if text else f"<?{target}?>")
             return None
         return self._builder.pi(target, text)
 

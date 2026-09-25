@@ -4,134 +4,16 @@ from __future__ import annotations
 
 import json
 import re
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable
 from importlib import resources
-from types import MappingProxyType
-from typing import Any
 
 from ..errors import CatalogError
 from ..extensions import DiagramInfo
-from ..vocabulary import ROLES, Role
-from .model import (
-    AssessmentCriterion,
-    KeyRequirement,
-    LegalBasisTemplate,
-    Profile,
-    SegregationRule,
-    Selection,
-    Template,
-    check_criteria,
-    labels,
-)
+from .model import Profile
+from .parsing import profile_from_dict
 
-PROFILE_SCHEMA = "auditcore_bpmn.profile/1"
 STANDARD_PROFILE = "foerderperiode-2021-2027"
 _FILE = re.compile(r"^(?P<id>[a-z0-9-]+?)-(?P<version>\d{4}\.\d{2}\.\d+)\.json$")
-
-
-def _optional_labels(value: Any) -> Any:
-    return labels(value) if value else None
-
-
-def _key_requirement(entry: Mapping[str, Any]) -> KeyRequirement:
-    requirement = KeyRequirement(
-        number=int(entry["number"]),
-        title=labels(entry["title"]),
-        bodies=labels(entry["bodies"]) if entry.get("bodies") else MappingProxyType({}),
-        scope=_optional_labels(entry.get("scope")),
-        footnote=_optional_labels(entry.get("footnote")),
-        assessment_criteria=tuple(
-            AssessmentCriterion(str(c["code"]), labels(c.get("title") or {"de": ""}))
-            for c in entry.get("assessment_criteria", ())
-        ),
-    )
-    check_criteria(requirement)
-    return requirement
-
-
-def _selection(data: Mapping[str, Any] | None) -> Selection:
-    data = data or {}
-    return Selection(markers=tuple(data.get("markers", ())), audit_types=tuple(data.get("audit_types", ())))
-
-
-def _segregation_rule(rule: Mapping[str, Any]) -> SegregationRule:
-    return SegregationRule(
-        id=str(rule["id"]),
-        kind=str(rule["kind"]),
-        severity=str(rule.get("severity", "warnung")),
-        title=labels(rule["title"]),
-        a=_selection(rule.get("a")),
-        b=_selection(rule.get("b")),
-        selection=_selection(rule.get("selection")),
-        roles=tuple(rule.get("roles", ())),
-    )
-
-
-def _legal_basis_template(entry: Mapping[str, Any]) -> LegalBasisTemplate:
-    return LegalBasisTemplate(
-        act=str(entry["act"]),
-        short_title=labels(entry["short_title"]),
-        article=entry.get("article"),
-        annex=entry.get("annex"),
-        celex=entry.get("celex"),
-        eli=entry.get("eli"),
-    )
-
-
-def _custom_roles(data: Mapping[str, Any]) -> dict[str, Role]:
-    return {
-        str(code): Role(str(code), labels(entry["labels"]), entry.get("from_year"), entry.get("until_year"))
-        for code, entry in (data.get("custom_roles") or {}).items()
-    }
-
-
-def _check_roles(roles: tuple[str, ...], custom: Mapping[str, Role]) -> None:
-    unknown = [code for code in roles if code not in ROLES and code not in custom]
-    if unknown:
-        raise CatalogError(f"Unbekannte Rollen ohne Bezeichnung: {unknown}")
-
-
-def _build(data: Mapping[str, Any]) -> Profile:
-    requirements = data.get("key_requirements") or {}
-    legal = data.get("legal_bases") or {}
-    custom = _custom_roles(data)
-    roles = tuple(str(code) for code in data.get("roles", ()))
-    _check_roles(roles, custom)
-    entries = tuple(_key_requirement(entry) for entry in requirements.get("entries", ()))
-    if len({e.number for e in entries}) != len(entries):
-        raise CatalogError("Kernanforderungen sind doppelt nummeriert.")
-    return Profile(
-        id=str(data["id"]),
-        version=str(data["version"]),
-        title=labels(data["title"]),
-        programming_period=data.get("programming_period"),
-        roles=roles,
-        funds=tuple(str(code) for code in data.get("funds", ())),
-        key_requirements=entries,
-        key_requirement_source=MappingProxyType(dict(requirements.get("source") or {})),
-        assessment_criteria_note=_optional_labels(requirements.get("assessment_criteria_note")),
-        legal_bases=tuple(_legal_basis_template(entry) for entry in legal.get("entries", ())),
-        legal_bases_source=MappingProxyType(dict(legal.get("source") or {})),
-        segregation_rules=tuple(_segregation_rule(rule) for rule in data.get("segregation_rules", ())),
-        role_aliases=tuple((str(a["pattern"]), str(a["role"])) for a in data.get("role_aliases", ())),
-        templates=tuple(
-            Template(str(t["id"]), labels(t["title"]), str(t["file"]), str(t.get("origin", "")))
-            for t in data.get("templates", ())
-        ),
-        custom_roles=MappingProxyType(custom),
-    )
-
-
-def profile_from_dict(data: Mapping[str, Any]) -> Profile:
-    """Profil aus JSON-Daten (Schema ``auditcore_bpmn.profile/1``)."""
-    if data.get("schema") != PROFILE_SCHEMA:
-        raise CatalogError(f"Profilschema {data.get('schema')!r} wird nicht unterstützt.")
-    try:
-        return _build(data)
-    except CatalogError:
-        raise
-    except (KeyError, TypeError, ValueError) as error:
-        raise CatalogError(f"Profil ist unvollständig oder fehlerhaft: {error!r}") from error
 
 
 def available_profiles() -> tuple[tuple[str, str], ...]:

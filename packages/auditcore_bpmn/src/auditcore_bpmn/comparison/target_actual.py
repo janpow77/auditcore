@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 from ..model import BpmnDocument, BpmnElement, as_document
 from .matching import body, match_elements, neighbours
@@ -19,7 +18,7 @@ class TargetActualResult:
     actual_id: str | None = None
     reasons: tuple[str, ...] = ()
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         return {
             "target_id": self.target_id,
@@ -47,7 +46,7 @@ class TargetActualComparison:
         """Anzahl nicht erfüllter Soll-Elemente."""
         return len(self.results) - self.met
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         return {
             "met": self.met,

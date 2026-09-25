@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from auditcore_bpmn import extensions  # noqa: E402
 from auditcore_bpmn.collection.serialization import COLLECTION_SCHEMA  # noqa: E402
-from auditcore_bpmn.profiles.loader import PROFILE_SCHEMA  # noqa: E402
+from auditcore_bpmn.profiles import PROFILE_SCHEMA  # noqa: E402
 from auditcore_bpmn.validation.issues import REPORT_SCHEMA  # noqa: E402
 from auditcore_bpmn.validation.messages import SEVERITIES  # noqa: E402
 

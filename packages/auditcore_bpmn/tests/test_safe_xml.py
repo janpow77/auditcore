@@ -33,7 +33,7 @@ def test_parses_tree_namespaces_and_prolog(backend: str) -> None:
     process = parsed.root[1]
     assert process.get("{urn:x}a") == "1"
     assert "Tä & <" in "".join(process.itertext())
-    assert [node.tag for node in parsed.prolog] == [ET.Comment, ET.ProcessingInstruction]
+    assert parsed.prolog == ["<!-- vorne -->", "<?pi vorne?>"]
 
 
 def test_both_backends_build_identical_trees() -> None:

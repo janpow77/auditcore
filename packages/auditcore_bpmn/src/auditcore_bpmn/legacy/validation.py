@@ -14,7 +14,6 @@ Die fachlichen Prüfregeln mit stabilen Regel-IDs stehen in
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from typing import Any
 from xml.etree import ElementTree as ET
 
 from ..errors import BpmnXmlError
@@ -30,7 +29,7 @@ class BvaValidationResult:
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """JSON-fähige Darstellung."""
         return asdict(self)
 
