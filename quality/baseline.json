@@ -2,7 +2,7 @@
   "schema_version": 1,
   "tool_versions": {
     "mypy": "2.3.1",
-    "ruff": "0.16.9"
+    "ruff": "0.16.8"
   },
   "packages": {
     "auditcore": {
