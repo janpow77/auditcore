@@ -9,7 +9,7 @@ Checkpoints. Laufzeit: nur die Standardbibliothek; die Plattform `auditcore`
 ist keine Abhängigkeit. Der Kern installiert keine Quellenadapter.
 
 ```bash
-pip install auditcore_harvest==0.1.0
+pip install auditcore_harvest==0.1.1
 auditcore-harvest catalog        # versionierten Quellenkatalog prüfen
 ```
 

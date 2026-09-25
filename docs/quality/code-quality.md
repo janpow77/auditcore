@@ -35,8 +35,8 @@ niedriger als „5 Anweisungen“: der Profil-Fingerprint (zwei Anweisungen, neu
 Kopien) fiele sonst heraus; Ein-Ausdruck-Methoden wie `reference` zählen
 nicht. `auditcore_common` ist der kanonische Ort: seine Funktionen zählen nie,
 eine Paketkopie davon schon. Jede Fundstelle nennt im Bericht die Gegenstücke.
-Ausgangswert bei Einführung (main, 25.09.2026): **29** in 12 Paketen; die
-fachliche Inventur steht in [duplikate.md](duplikate.md) (sobald gemergt).
+Ausgangswert bei Einführung (main nach `auditcore_common` 0.1.0, 25.09.2026):
+**33** in 12 Paketen; die fachliche Inventur steht in [duplikate.md](duplikate.md).
 
 Eine nach Paketaufnahme eingeführte Metrik wird mit `--update-baseline` mit
 ihrem Erstwert erfasst; die Anhebungsprüfung meldet das als WARN

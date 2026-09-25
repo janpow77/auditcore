@@ -16,6 +16,17 @@
         "non_english_identifiers": 0
       }
     },
+    "auditcore_common": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
     "auditcore_dataprotection": {
       "metrics": {
         "any_usages": 146,
@@ -31,7 +42,7 @@
       "metrics": {
         "any_usages": 182,
         "complexity_over_10": 0,
-        "duplicate_functions": 3,
+        "duplicate_functions": 4,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -84,10 +95,10 @@
     },
     "auditcore_harvest": {
       "metrics": {
-        "any_usages": 45,
-        "complexity_over_10": 2,
+        "any_usages": 3,
+        "complexity_over_10": 0,
         "duplicate_functions": 1,
-        "functions_over_60_lines": 3,
+        "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
@@ -130,7 +141,7 @@
       "metrics": {
         "any_usages": 50,
         "complexity_over_10": 0,
-        "duplicate_functions": 2,
+        "duplicate_functions": 5,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -150,13 +161,13 @@
     },
     "auditcore_price_analysis": {
       "metrics": {
-        "any_usages": 61,
-        "complexity_over_10": 2,
+        "any_usages": 42,
+        "complexity_over_10": 0,
         "duplicate_functions": 1,
-        "functions_over_60_lines": 2,
-        "modules_over_400_lines": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
-        "non_english_identifiers": 2
+        "non_english_identifiers": 0
       }
     },
     "auditcore_price_sources": {

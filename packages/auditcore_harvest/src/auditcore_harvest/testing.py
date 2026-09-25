@@ -27,7 +27,7 @@ from .memory import (
     MemoryStateStore,
     StaticCredentials,
 )
-from .model import AuthKind, HarvestRequest, RunStatus, SnapshotSemantics
+from .model import JSON, AuthKind, HarvestRequest, HarvestResult, RunStatus, SnapshotSemantics
 from .ports import Response, Transport
 
 AdapterFactory = Callable[[], SourceAdapter]
@@ -43,7 +43,6 @@ class FlakyTransport:
     calls: int = 0
 
     def request(self, method: str, url: str, **kwargs: Any) -> Response:
-        """Request for one contract run."""
         """Delegate or fail."""
         self.calls += 1
         if self.calls in self.fail_calls:
@@ -58,7 +57,6 @@ class GarbageTransport:
     body: bytes = b"\x00<<kein gueltiges Format>>"
 
     def request(self, method: str, url: str, **kwargs: Any) -> Response:
-        """Request for one contract run."""
         """Garbage response."""
         return Response(200, self.body, {"content-type": "text/plain"}, url)
 
@@ -75,7 +73,7 @@ class ContractReport:
         """True if no case failed."""
         return not any(v.startswith("FAIL") for v in self.cases.values())
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, JSON]:
         """JSON view."""
         return {"source_id": self.source_id, "passed": self.passed, "cases": dict(self.cases)}
 
@@ -102,165 +100,205 @@ def _content(sink: ListSink) -> set[tuple[tuple[str, str], str]]:
     return {(key, record.content_hash) for key, record in sink.records.items()}
 
 
-def check_adapter(
-    factory: AdapterFactory,
-    *,
-    config: Mapping[str, Any],
-    transport_factory: TransportFactory,
-    credentials: Mapping[tuple[str, str], str] | None = None,
-    request_filters: Mapping[str, Any] | None = None,
-    min_records: int = 1,
-) -> ContractReport:
-    """Run the contract suite and return a report (never raises for adapter faults)."""
-    adapter = factory()
-    source = adapter.source
-    report = ContractReport(source.source_id)
-    secrets = StaticCredentials(dict(credentials or {}))
+class _ContractSuite:
+    """The contract cases of one adapter; each case raises ``AssertionError`` on failure."""
 
-    def request(run: str) -> HarvestRequest:
+    def __init__(
+        self,
+        factory: AdapterFactory,
+        config: Mapping[str, JSON],
+        transport_factory: TransportFactory,
+        credentials: Mapping[tuple[str, str], str],
+        request_filters: Mapping[str, JSON],
+        min_records: int,
+    ) -> None:
+        self.factory = factory
+        self.config = config
+        self.transport_factory = transport_factory
+        self.credentials = credentials
+        self.request_filters = request_filters
+        self.min_records = min_records
+        self.adapter = factory()
+        self.source = self.adapter.source
+        self.secrets = StaticCredentials(dict(credentials))
+        self.baseline = ListSink()
+        self.first: HarvestResult | None = None
+
+    def cases(self) -> tuple[tuple[str, Callable[[], str | None]], ...]:
+        """All cases in execution order (later cases compare against ``full_replay``)."""
+        return (
+            ("declaration", self.declaration),
+            ("configuration", self.configuration),
+            ("full_replay", self.full_replay),
+            ("determinism", self.determinism),
+            ("idempotent_rerun", self.idempotent_rerun),
+            ("resume_after_sink_failure", self.resume_after_sink_failure),
+            ("resume_after_transport_failure", self.resume_after_transport_failure),
+            ("malformed_response", self.malformed_response),
+            ("missing_credentials", self.missing_credentials),
+            ("secret_free", self.secret_free),
+        )
+
+    def request(self, run: str) -> HarvestRequest:
         """Request for one contract run."""
-        return HarvestRequest(source.source_id, run, filters=dict(request_filters or {}))
+        return HarvestRequest(self.source.source_id, run, filters=dict(self.request_filters))
 
-    def case(name: str, check: Callable[[], str | None]) -> None:
-        """Run one case and record its outcome."""
-        try:
-            outcome = check()
-        except AssertionError as exc:
-            report.cases[name] = f"FAIL: {exc}"
-        except Exception as exc:  # noqa: BLE001 - suite reports, never crashes
-            report.cases[name] = f"FAIL: {type(exc).__name__}: {exc}"
-        else:
-            report.cases[name] = outcome or "PASS"
+    def _run(self, engine: HarvestEngine, run: str, sink: ListSink) -> HarvestResult:
+        return engine.run(self.factory(), self.request(run), sink, config=self.config)
 
-    def declaration() -> None:
+    def declaration(self) -> None:
         """Source declaration is complete."""
+        source = self.source
         assert source.source_id and "." in source.source_id, "source_id 'familie.quelle' erwartet"
         assert source.adapter_version and source.profile_version, "Versionen fehlen"
         assert source.family and source.data_format, "Familie/Datenformat fehlen"
         assert isinstance(source.snapshot_semantics, SnapshotSemantics)
 
-    def configuration() -> None:
+    def configuration(self) -> None:
         """The given configuration is accepted."""
-        adapter.validate_config(config)
+        self.adapter.validate_config(self.config)
 
-    baseline = ListSink()
-    first: dict[str, Any] = {}
-
-    def full_replay() -> None:
+    def full_replay(self) -> None:
         """A full replay completes and yields records with provenance."""
-        result = _engine(transport_factory(), secrets).run(
-            factory(), request("contract-1"), baseline, config=config
-        )
-        first["result"] = result
+        engine = _engine(self.transport_factory(), self.secrets)
+        result = self._run(engine, "contract-1", self.baseline)
+        self.first = result
         assert result.status is RunStatus.COMPLETE, f"Status {result.status.value}: {result.errors}"
         assert result.source_exhausted, "Quelle nicht vollständig gelesen"
-        assert result.records_delivered >= min_records, "zu wenige Datensätze"
-        for record in baseline.records.values():
+        assert result.records_delivered >= self.min_records, "zu wenige Datensätze"
+        for record in self.baseline.records.values():
             assert record.record_id, "leere Quellen-ID"
-            assert record.provenance.adapter_version == source.adapter_version
-            assert record.provenance.profile_version == source.profile_version
+            assert record.provenance.adapter_version == self.source.adapter_version
+            assert record.provenance.profile_version == self.source.profile_version
             assert record.provenance.raw_sha256, "Provenienz ohne Rohwert-Hash"
 
-    def determinism() -> None:
+    def determinism(self) -> None:
         """A second replay yields identical ids and hashes."""
         other = ListSink()
-        _engine(transport_factory(), secrets).run(
-            factory(), request("contract-2"), other, config=config
-        )
-        assert _content(other) == _content(baseline), "zweiter Lauf liefert andere IDs/Hashes"
+        self._run(_engine(self.transport_factory(), self.secrets), "contract-2", other)
+        assert _content(other) == _content(self.baseline), "zweiter Lauf liefert andere IDs/Hashes"
 
-    def idempotent_rerun() -> None:
+    def idempotent_rerun(self) -> None:
         """Re-running with the same sink delivers nothing new."""
-        state = MemoryStateStore()
         sink = ListSink()
-        engine = _engine(transport_factory(), secrets, state)
-        engine.run(factory(), request("contract-3a"), sink, config=config)
-        engine.transport = transport_factory()
-        again = engine.run(factory(), request("contract-3b"), sink, config=config)
+        engine = _engine(self.transport_factory(), self.secrets, MemoryStateStore())
+        self._run(engine, "contract-3a", sink)
+        engine.transport = self.transport_factory()
+        again = self._run(engine, "contract-3b", sink)
         assert again.status in (RunStatus.COMPLETE, RunStatus.PARTIAL), again.errors
         assert again.records_delivered == 0, "unveränderte Datensätze erneut als neu übernommen"
-        assert _content(sink) == _content(baseline)
+        assert _content(sink) == _content(self.baseline)
 
-    def resume_after_sink_failure() -> str | None:
+    def resume_after_sink_failure(self) -> None:
         """A sink failure keeps the checkpoint; resume loses nothing."""
-        pages = first["result"].pages if "result" in first else 1
+        pages = self.first.pages if self.first is not None else 1
         state = MemoryStateStore()
         sink = ListSink(fail_on_page=pages)
-        engine = _engine(transport_factory(), secrets, state)
-        broken = engine.run(factory(), request("contract-4a"), sink, config=config)
+        engine = _engine(self.transport_factory(), self.secrets, state)
+        broken = self._run(engine, "contract-4a", sink)
         assert broken.status in (RunStatus.PARTIAL, RunStatus.FAILED), "Senkenfehler nicht erkannt"
         assert broken.errors and broken.errors[0]["code"] == "sink_error"
-        checkpoint = state.load(source.source_id)
+        checkpoint = state.load(self.source.source_id)
         assert checkpoint is None or not checkpoint.finished, (
             "Checkpoint trotz Fehler abgeschlossen"
         )
-        engine.transport = transport_factory()
-        resumed = engine.run(factory(), request("contract-4b"), sink, config=config)
+        engine.transport = self.transport_factory()
+        resumed = self._run(engine, "contract-4b", sink)
         assert resumed.status is RunStatus.COMPLETE, resumed.errors
-        assert _content(sink) == _content(baseline), "Datenverlust nach Wiederanlauf"
-        return None
+        assert _content(sink) == _content(self.baseline), "Datenverlust nach Wiederanlauf"
 
-    def resume_after_transport_failure() -> None:
+    def resume_after_transport_failure(self) -> None:
         """Retries are bounded; resume after a network failure completes."""
-        state = MemoryStateStore()
         sink = ListSink()
-        engine = _engine(FlakyTransport(transport_factory(), frozenset({1, 2})), secrets, state)
-        broken = engine.run(factory(), request("contract-5a"), sink, config=config)
+        flaky = FlakyTransport(self.transport_factory(), frozenset({1, 2}))
+        engine = _engine(flaky, self.secrets, MemoryStateStore())
+        broken = self._run(engine, "contract-5a", sink)
         assert broken.status is RunStatus.FAILED, "dauerhafter Netzwerkfehler nicht erkannt"
         assert broken.errors[0]["code"] == "transport_error" and broken.errors[0]["retryable"]
         assert broken.attempts == 2, "Wiederholungen nicht begrenzt"
-        engine.transport = transport_factory()
-        resumed = engine.run(factory(), request("contract-5b"), sink, config=config)
-        assert resumed.status is RunStatus.COMPLETE and _content(sink) == _content(baseline)
+        engine.transport = self.transport_factory()
+        resumed = self._run(engine, "contract-5b", sink)
+        assert resumed.status is RunStatus.COMPLETE and _content(sink) == _content(self.baseline)
 
-    def malformed_response() -> None:
+    def malformed_response(self) -> None:
         """An unparsable response is a parser error, not an empty result."""
-        result = _engine(GarbageTransport(), secrets).run(
-            factory(), request("contract-6"), ListSink(), config=config
-        )
+        result = self._run(_engine(GarbageTransport(), self.secrets), "contract-6", ListSink())
         assert result.status is RunStatus.FAILED, "unlesbare Antwort als Erfolg gewertet"
         assert result.errors[0]["code"] == "parser_error", result.errors
 
-    def missing_credentials() -> str | None:
+    def missing_credentials(self) -> str | None:
         """Missing credentials are an authentication error."""
-        if source.auth in (AuthKind.NONE,):
+        if self.source.auth in (AuthKind.NONE,):
             return "SKIPPED: Quelle ohne Zugangsdaten"
-        result = _engine(transport_factory(), StaticCredentials()).run(
-            factory(), request("contract-7"), ListSink(), config=config
-        )
+        engine = _engine(self.transport_factory(), StaticCredentials())
+        result = self._run(engine, "contract-7", ListSink())
         assert result.status is RunStatus.FAILED
         assert result.errors[0]["code"] == "auth_error", result.errors
         return None
 
-    def secret_free() -> None:
+    def secret_free(self) -> None:
         """Results and events contain no credential values."""
         events = ListEvents()
-        result = _engine(transport_factory(), secrets, events=events).run(
-            factory(), request("contract-8"), ListSink(), config=config
-        )
+        engine = _engine(self.transport_factory(), self.secrets, events=events)
+        result = self._run(engine, "contract-8", ListSink())
         text = repr(result.to_dict()) + repr(events.events)
-        for value in (credentials or {}).values():
+        for value in self.credentials.values():
             assert value not in text, "Zugangsdaten in Ergebnis oder Ereignissen"
 
-    for name, check in (
-        ("declaration", declaration),
-        ("configuration", configuration),
-        ("full_replay", full_replay),
-        ("determinism", determinism),
-        ("idempotent_rerun", idempotent_rerun),
-        ("resume_after_sink_failure", resume_after_sink_failure),
-        ("resume_after_transport_failure", resume_after_transport_failure),
-        ("malformed_response", malformed_response),
-        ("missing_credentials", missing_credentials),
-        ("secret_free", secret_free),
-    ):
-        case(name, check)
+
+def _outcome(check: Callable[[], str | None]) -> str:
+    """``PASS``, the case's own verdict, or ``FAIL: reason``; the suite never crashes."""
+    try:
+        outcome = check()
+    except AssertionError as exc:
+        return f"FAIL: {exc}"
+    except Exception as exc:  # noqa: BLE001 - suite reports, never crashes
+        return f"FAIL: {type(exc).__name__}: {exc}"
+    return outcome or "PASS"
+
+
+def check_adapter(
+    factory: AdapterFactory,
+    *,
+    config: Mapping[str, JSON],
+    transport_factory: TransportFactory,
+    credentials: Mapping[tuple[str, str], str] | None = None,
+    request_filters: Mapping[str, JSON] | None = None,
+    min_records: int = 1,
+) -> ContractReport:
+    """Run the contract suite and return a report (never raises for adapter faults)."""
+    suite = _ContractSuite(
+        factory,
+        config,
+        transport_factory,
+        credentials or {},
+        request_filters or {},
+        min_records,
+    )
+    report = ContractReport(suite.source.source_id)
+    for name, check in suite.cases():
+        report.cases[name] = _outcome(check)
     return report
 
 
-def assert_adapter(factory: AdapterFactory, **kwargs: Any) -> ContractReport:
+def assert_adapter(
+    factory: AdapterFactory,
+    *,
+    config: Mapping[str, JSON],
+    transport_factory: TransportFactory,
+    credentials: Mapping[tuple[str, str], str] | None = None,
+    request_filters: Mapping[str, JSON] | None = None,
+    min_records: int = 1,
+) -> ContractReport:
     """Like :func:`check_adapter` but raises ``AssertionError`` listing failed cases."""
-    report = check_adapter(factory, **kwargs)
+    report = check_adapter(
+        factory,
+        config=config,
+        transport_factory=transport_factory,
+        credentials=credentials,
+        request_filters=request_filters,
+        min_records=min_records,
+    )
     if not report.passed:
         failed = {k: v for k, v in report.cases.items() if v.startswith("FAIL")}
         raise AssertionError(f"Adaptervertrag verletzt für {report.source_id}: {failed}")
