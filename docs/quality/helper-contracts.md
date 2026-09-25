@@ -17,7 +17,7 @@ und das Code-Gate (Ratchet gegen eine Baseline).
 | Baustein | Ort | Aufgabe |
 |---|---|---|
 | Vertragsfälle | [`contracts/common-cases/*.json`](../../contracts/common-cases) | Versionierte Ein-/Ausgabe-Fälle, gleich für TypeScript und Python (JSON-Schema `schema.json`) |
-| Festlegungen | [`contracts/common-cases/DECISIONS.md`](../../contracts/common-cases/DECISIONS.md), `decisions.json` | Ersatzwert, Zeitzone, Dateigrößen, Mehrdeutigkeit – **vorläufig**, zentral änderbar |
+| Festlegungen | [`contracts/common-cases/DECISIONS.md`](../../contracts/common-cases/DECISIONS.md), `decisions.json` | Ersatzwert, Zeitzone, Dateigrößen, Mehrdeutigkeit, Nachkommastellen – **festgelegt (Nutzer 2026-09-25)**; Rundung von Beträgen und Trenner Datum/Zeit noch vorläufig; zentral änderbar |
 | Scan | `auditcore-helpers scan` | Hilfsfunktionen (Python-AST, TypeScript-Compiler-API inkl. Vue-SFC-Skriptblöcken), Duplikatgruppen, Abgleich mit dem Katalog der auditcore-Bibliotheken |
 | Lint | `auditcore-helpers lint` | Deklarative Fehlmuster-Regeln (`src/auditcore/tools/helpers/data/rules.json`), zwei davon führen erkannte Helfer tatsächlich aus |
 | Verträge | `auditcore-helpers contracts` | Führt die Vertragsfälle gegen die Funktionen aus, die die App im Manifest `.auditcore/helpers.json` nennt |
@@ -25,7 +25,7 @@ und das Code-Gate (Ratchet gegen eine Baseline).
 | Action | [`.github/actions/helper-contracts`](../../.github/actions/helper-contracts/action.yml) | Einbindung in die App-Workflows (per SHA) |
 | Nachtlauf | [`scripts/helpers_nightly.sh`](../../scripts/helpers_nightly.sh) + `scripts/systemd/` | Lauf über alle App-Repositorys unter `~/Projekte` auf der NUC |
 
-### Vertragsfälle (Status vorläufig; `parse-number` 1.1.0, übrige 1.0.0)
+### Vertragsfälle (`parse-number` 1.1.0, übrige 1.0.0; verbindlich: `parse-number`, `empty-value`, `format-date`, `format-filesize`, übrige vorläufig)
 
 | Vertrag | Fälle | Inhalt |
 |---|---:|---|
@@ -221,8 +221,9 @@ Einzellauf: `bash ~/.local/share/auditcore/helpers_nightly.sh`; Auswahl über
   `tests/fixtures/helpers/reference` ergänzen; `tests/test_helpers_contracts.py`
   verlangt, dass beide Sprachen alle Fälle bestehen.
 - **Festlegung ändern:** nur `decisions.json` und `DECISIONS.md`; Falldateien
-  verweisen mit `{"$decision": …}` darauf. Mit der Nutzerentscheidung wechselt
-  der Status von „vorläufig“ auf „verbindlich“.
+  verweisen mit `{"$decision": …}` darauf. Sind alle Festlegungen einer
+  Falldatei vom Nutzer entschieden, wechselt ihr Status von „vorläufig“ auf
+  „verbindlich“.
 - **Katalog:** neue Bibliotheksfunktionen in `data/catalog.json` mit Status
   `vorhanden` eintragen, sobald sie in `main` sind.
 

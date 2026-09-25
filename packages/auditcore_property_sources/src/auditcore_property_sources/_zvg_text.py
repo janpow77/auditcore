@@ -6,6 +6,8 @@ import re
 import unicodedata
 from html import unescape
 
+from auditcore_common.numbers_de import parse_de_number as _parse_de_amount
+
 MOJIBAKE_REPLACEMENTS = {
     "Ã¤": "ä",
     "Ã¶": "ö",
@@ -98,7 +100,24 @@ def decode_portal_bytes(content: bytes) -> str:
 
 
 def parse_de_number(s: str) -> float | None:
-    """``'945,80'`` → 945.8, ``'2015'`` → 2015.0; no money heuristic."""
+    """German number text after the shared contract ``parse-number`` (mode ``de``).
+
+    ``'945,80'`` → 945.8, ``'1234,56'`` → 1234.56, ``'2015'`` → 2015.0. The
+    whole text must be the number (currency and white space allowed); at most
+    two decimals; ambiguous forms such as ``'1.5'``, ``'1.234'`` or
+    ``'1,234'`` and anything else give ``None``. Characterized predecessor:
+    :func:`legacy_parse_de_number` (PS-C10).
+    """
+    value = _parse_de_amount(s)
+    return None if value is None else float(value)
+
+
+def legacy_parse_de_number(s: str) -> float | None:
+    """Original ``zvg_crawler.parse_de_number``: first number found anywhere in ``s``.
+
+    Kept exactly for replay and migration. Misreads numbers without thousands
+    points: ``'1234,56'`` → 123.0, ``'2015'`` → 201.0 (PS-C10).
+    """
     m = re.search(r"(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?|\d+(?:,\d{1,2})?)", s)
     if not m:
         return None

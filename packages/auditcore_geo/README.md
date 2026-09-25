@@ -20,12 +20,12 @@ python -m pip install auditcore_geo \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.1 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-geo/`):
 
 ```text
-auditcore_geo @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_geo-0.2.0-py3-none-any.whl#sha256=6a460f39bb1a41ce3c547a6c09eb23ea5a9b43348e3cdd8baad1e058e12d4ee5
+auditcore_geo @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_geo-0.2.1-py3-none-any.whl#sha256=3433bd595e51d8d08b8c7ba98fdf667f7158cd0c07fe822af7ed92ab39acf963
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

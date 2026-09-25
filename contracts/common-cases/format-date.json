@@ -2,7 +2,7 @@
   "$schema": "./schema.json",
   "contract": "format-date",
   "version": "1.0.0",
-  "status": "vorläufig",
+  "status": "verbindlich",
   "title": "Datum formatieren (TT.MM.JJJJ)",
   "description": "Anzeige in der festen Zeitzone Europe/Berlin, unabhängig von der Zeitzone des Rechners (der Läufer setzt eine Prüfzeitzone westlich von UTC). Reine Datumswerte „JJJJ-MM-TT“ sind Kalendertage und werden ohne Zeitzonenumrechnung angezeigt. Zeitstempel mit Zone werden nach Europe/Berlin umgerechnet.",
   "languages": [

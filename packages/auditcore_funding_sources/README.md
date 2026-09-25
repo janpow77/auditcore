@@ -19,12 +19,12 @@ python -m pip install auditcore_funding_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.0; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.3 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-funding-sources/`):
 
 ```text
-auditcore_funding_sources @ https://github.com/janpow77/auditcore/releases/download/v0.3.0/auditcore_funding_sources-0.1.0-py3-none-any.whl#sha256=b2bdc5a904540a3a729edf80a861635552cd7d21007ae1b2600b2b3a84f92667
+auditcore_funding_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_funding_sources-0.1.3-py3-none-any.whl#sha256=8ec5ace1f23a0e5dc29d8b473825296d271af71117e0caf46235f530eafe3f77
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -166,7 +166,7 @@ führende Variante, Kumulierungsprofil, Datenlizenzen) sind als
 ## Abhängigkeiten
 
 Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.1` (Adaptervertrag) und
-`auditcore_common==0.1.0` (Hashing, Profilladen, JSON-Sicherung, optionale
+`auditcore_common==0.1.1` (Hashing, Profilladen, JSON-Sicherung, optionale
 Module; seit 0.1.3). Extra
 `xlsx`: openpyxl und defusedxml. Keine Abhängigkeit von pandas, der Plattform
 `auditcore`, Datenbanken oder HTTP-Clients.
