@@ -3,7 +3,198 @@
   "package": "auditcore_common",
   "version": "0.1.0",
   "classification": "CONSOLIDATION",
-  "sources": [],
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/modules/ecohesion/community/metrics.py",
+      "git_blob": "4f85768d49d383741bc173939e19c00fbc19f195",
+      "symbols": [
+        "_anteil"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "path": "backend/app/verwk/pipeline/datenqualitaet.py",
+      "git_blob": "faa01910bbf5fadc79b652694d41e1fefe018e61",
+      "symbols": [
+        "_anteil"
+      ]
+    },
+    {
+      "repository": "janpow77/riskanalysis",
+      "commit": "dace0f66abde171ab91685483092ad7c3550ce55",
+      "path": "backend/app/pipeline/datenqualitaet.py",
+      "git_blob": "9aff9f6515db94324b0cb433b2f9f45c2b4b0ffc",
+      "symbols": [
+        "_anteil"
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "path": "backend/app/api/kpang/monitoring.py",
+      "git_blob": "e559f8d64acdd9b1259e26ae78973dfb7c583c59",
+      "symbols": [
+        "_quote_pct"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/core/shared/research/register/state_aid.py",
+      "git_blob": "79fb0ab5aa2082a3c080867bec9e8e14d3245b06",
+      "symbols": [
+        "_als_float",
+        "_als_zahl"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/modules/vp_ai/services/pdb_import_service.py",
+      "git_blob": "5ef1dd04840f9e80f960d5ad9f9080985737a2a5",
+      "symbols": [
+        "_float"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/core/shared/research/register/beneficiaries.py",
+      "git_blob": "88f8d649c6a43607daaabab93a16cb6fdf82a8b2",
+      "symbols": [
+        "_als_float"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "path": "backend/app/modules/company_research/read_model_service.py",
+      "git_blob": "ee88dc63dbd8311adc60b6df79ca8ac37f0896cd",
+      "symbols": [
+        "_to_float"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "path": "backend/app/verwk/services/modellguete.py",
+      "git_blob": "456508b990aceab65ea9c63c155d9853aeef1704",
+      "symbols": [
+        "_zahl"
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "path": "backend/scripts/import_tankerkoenig_history.py",
+      "git_blob": "4739557b0e5f23cda4305d627e265c9de030a542",
+      "symbols": [
+        "_safe_float"
+      ]
+    },
+    {
+      "repository": "janpow77/versteigerung",
+      "commit": "729f9a10bc5478bd724ef40c1f4cd572e5a3dada",
+      "path": "backend/app/api/routers/auctions.py",
+      "git_blob": "68699eea1ce5e753079ed6eec990af0095e68f00",
+      "symbols": [
+        "_money_float"
+      ]
+    },
+    {
+      "repository": "janpow77/versteigerung",
+      "commit": "729f9a10bc5478bd724ef40c1f4cd572e5a3dada",
+      "path": "backend/app/services/data_quality.py",
+      "git_blob": "17f40c420cc7b061cecff6b63eee2cf3857240ff",
+      "symbols": [
+        "_to_float"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/api/document_comparisons.py",
+      "git_blob": "f8d06f5a630bf047131b4fe9bb1bf74bf1b16d32",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/api/vpai_notebook/jupyter.py",
+      "git_blob": "3787cb344bed2bed9207c3b927cddf36c679dbe6",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/services/presentation_export_service.py",
+      "git_blob": "586b5cfef0562d055ff1990ec772e954a9584b58",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "path": "backend/app/api/vvt_templates.py",
+      "git_blob": "70ed662b0e271911b58f3a37116e66319bdcff04",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "path": "backend/app/services/help_export_service.py",
+      "git_blob": "ad6a57af2ab08fa350b124cde705585278ed6b90",
+      "symbols": [
+        "safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "path": "backend/app/api/kpang/vollzug.py",
+      "git_blob": "03ea056449d245587d3a7ff97082c8468af50fd9",
+      "symbols": [
+        "_safe_filename_part"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/modules/vp_ai/api/runs.py",
+      "git_blob": "fa14e6f3c870b881d84c787b727539fa2d5cb2ea",
+      "symbols": [
+        "_run_async_in_thread"
+      ]
+    },
+    {
+      "repository": "janpow77/flowaudit",
+      "commit": "d8107f6b4287228974bc3b0f405bdd95182a66d5",
+      "path": "backend/flowaudit/modules/module_converter/api/protocol.py",
+      "git_blob": "d0ad3099e9a39fe98e14ab72e233dc73f75512cc",
+      "symbols": [
+        "run_async"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "path": "backend/app/worker/tasks.py",
+      "git_blob": "9c634e9d9876e6704e8362d1a686cafbdc29a2ef",
+      "symbols": [
+        "run_async"
+      ]
+    }
+  ],
   "consolidates": {
     "monorepo": "janpow77/auditcore (intern, keine Fremdquelle)",
     "monorepo_revision": "40ce8f710785b6ca8608512a2e335c14ec9d924f",
@@ -282,7 +473,7 @@
       }
     ]
   },
-  "origin": "Zusammenführung doppelter Hilfsfunktionen der auditcore-Fachpakete; kein Code aus anderen Repositories.",
+  "origin": "Zusammenführung doppelter Hilfsfunktionen der auditcore-Fachpakete und – nach der App-Inventur docs/reports/app-helfer-python.md – generischer Hilfsfunktionen mehrerer Anwendungen (Quellen unter sources).",
   "rights": {
     "license_status": "MIT",
     "public_release_status": "USER_AUTHORIZED_MIT",
@@ -290,7 +481,7 @@
       "status": "USER_AUTHORIZED_MIT",
       "date": "2026-09-22",
       "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
-      "limitation": "Gilt für die Bibliothek in auditcore; die zusammengeführten Funktionen stammen aus auditcore-Paketen, die bereits unter derselben Freigabe stehen."
+      "limitation": "Gilt für die Bibliothek in auditcore; die Anwendungsrepositories selbst werden nicht umlizenziert. Übernommen sind nur die unter sources genannten Hilfsfunktionen."
     }
   }
 }

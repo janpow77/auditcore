@@ -165,6 +165,10 @@ def raises(baseline: Baseline, reference: Baseline | None) -> list[Verdict]:
     for package in sorted(packages_of(baseline)):
         before = metrics_of(reference, package)
         for metric, value in sorted(metrics_of(baseline, package).items()):
+            if before and metric not in before:
+                message = f"Einführung der Metrik mit Erstwert {value}"
+                verdicts.append(Verdict(package, metric, 0, value, "WARN", message))
+                continue
             old = before.get(metric, 0)
             if value <= old:
                 continue
@@ -185,6 +189,10 @@ def _updated_metrics(
     metrics = dict(recorded)
     reasons: dict[str, str] = {}
     for metric, current in measurement.metrics.items():
+        if recorded and metric not in recorded:
+            # A metric introduced after the package was recorded: first measurement.
+            metrics[metric] = current
+            continue
         old = recorded.get(metric, 0)
         if current > old and _version_mismatch(metric, baseline, versions):
             tool = VERSION_BOUND_METRICS[metric]

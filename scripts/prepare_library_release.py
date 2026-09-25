@@ -20,8 +20,19 @@ ROOT = Path(__file__).resolve().parents[1]
 #: sein, die anderen repos nicht"). The provenance of each wheel must list exactly
 #: these repository/commit pairs; any other or missing binding fails the release.
 EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
-    # Zusammenführung doppelter Hilfsfunktionen der auditcore-Pakete: keine Fremdquelle.
-    "auditcore_common": frozenset(),
+    # Zusammengeführte Hilfsfunktionen: auditcore-Pakete (keine Fremdquelle) und die
+    # generischen App-Hilfen aus docs/reports/app-helfer-python.md (Commits unten).
+    "auditcore_common": frozenset(
+        {
+            ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
+            ("janpow77/audit_designer", "4b629dd970e5242d6d5d6c74863132b70ce85216"),
+            ("janpow77/flowaudit", "d8107f6b4287228974bc3b0f405bdd95182a66d5"),
+            ("janpow77/flowinvoice", "5d5d8c5aded2b7eee82c0813994e9efd549277b3"),
+            ("janpow77/regulierung", "ce76e48c8ad7f1cbe430948158a4e7001a02ba99"),
+            ("janpow77/riskanalysis", "dace0f66abde171ab91685483092ad7c3550ce55"),
+            ("janpow77/versteigerung", "729f9a10bc5478bd724ef40c1f4cd572e5a3dada"),
+        }
+    ),
     "auditcore_dataprotection": frozenset(
         {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
     ),
