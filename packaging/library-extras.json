@@ -37,5 +37,9 @@
   },
   "auditcore_invoicesynth": {
     "pillow>=9.4; extra == \"render\"": "python3-pil (>= 9.4)"
+  },
+  "auditcore_kanban": {
+    "starlette>=0.26; extra == \"ui\"": "python3-starlette (>= 0.26)",
+    "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)"
   }
 }

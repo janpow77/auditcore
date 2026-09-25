@@ -23,6 +23,8 @@ dev = [
     "starlette>=0.26",
     "fastapi>=0.92",
     "httpx>=0.23",
+    "jsonschema>=4.10",
+    "bandit>=1.7",
 ]
 
 [tool.setuptools.packages.find]
