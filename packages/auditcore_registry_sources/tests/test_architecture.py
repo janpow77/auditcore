@@ -1,4 +1,4 @@
-"""Runtime modules: stdlib, own package, entity_matching, harvest; optional extras lazily."""
+"""Runtime modules: stdlib, own package, entity_matching, harvest, common; extras lazily."""
 
 from __future__ import annotations
 
@@ -30,6 +30,7 @@ ALLOWED = {
     "auditcore_registry_sources",
     "auditcore_entity_matching",
     "auditcore_harvest",
+    "auditcore_common",
 }
 OPTIONAL = {"rapidfuzz", "defusedxml", "bs4"}
 FORBIDDEN_CALLS = {"open", "eval", "exec", "__import__", "compile"}
