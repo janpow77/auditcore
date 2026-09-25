@@ -172,22 +172,14 @@ class OcrStage(PipelineStage):
 
     async def _run_router_ocr(self, context: PipelineContext) -> OcrOutput:
         start = self.timer()
-        input_path = context.input_uri
-        if not input_path:
-            raise StageError(
-                stage=self.name,
-                error_code="NO_INPUT_URI",
-                message="No input URI provided for OCR",
-                recoverable=False,
-            )
-        path = Path(input_path)
+        path = self._input(context)
         try:
             file_bytes = path.read_bytes()
         except FileNotFoundError as exc:
             raise StageError(
                 stage=self.name,
                 error_code="INPUT_NOT_FOUND",
-                message=f"OCR-Input nicht lesbar: {input_path}",
+                message=f"OCR-Input nicht lesbar: {context.input_uri}",
                 recoverable=False,
             ) from exc
         if self.router is None:
@@ -197,44 +189,49 @@ class OcrStage(PipelineStage):
                 message="No OCR router configured",
                 recoverable=False,
             )
-        filename = path.name or "upload.pdf"
         page_images = (
             self.rasterizer(file_bytes)
             if self.rasterizer is not None and looks_like_pdf(file_bytes)
             else None
         )
         if page_images:
-            page_texts: list[dict[str, object]] = []
-            page_errors: list[str] = []
-            for page_no, png in page_images:
-                page_result, page_error = await self.router(
-                    png,
-                    filename=f"{path.stem or 'seite'}-{page_no}.png",
-                    model="auto",
-                    language=self.routing.languages,
-                )
-                if page_error or page_result is None:
-                    page_errors.append(f"S.{page_no}: {page_error}")
-                    continue
-                page_texts.append(
-                    {
-                        "page": page_no,
-                        "text": page_result.text or "",
-                        "confidence": page_result.confidence,
-                        "model": page_result.model,
-                    }
-                )
-            if not page_texts:
-                self._raise_outage("; ".join(page_errors) or "no_result")
-            return combine_router_pages(
-                page_texts, page_errors, len(page_images), self._elapsed_ms(start)
-            )
+            return await self._router_pages(self.router, path, page_images, start)
         result, error = await self.router(
-            file_bytes, filename=filename, model="auto", language="auto"
+            file_bytes, filename=path.name or "upload.pdf", model="auto", language="auto"
         )
         if error or result is None:
             self._raise_outage(str(error) if error else "no_result")
         return single_router_result(result, error, self._elapsed_ms(start))
+
+    async def _router_pages(
+        self, router: RouterOcr, path: Path, page_images: list[tuple[int, bytes]], start: float
+    ) -> OcrOutput:
+        """Seitenweise Gateway-Erkennung; Seitenfehler werden gesammelt, nicht abgebrochen."""
+        page_texts: list[dict[str, object]] = []
+        page_errors: list[str] = []
+        for page_no, png in page_images:
+            page_result, page_error = await router(
+                png,
+                filename=f"{path.stem or 'seite'}-{page_no}.png",
+                model="auto",
+                language=self.routing.languages,
+            )
+            if page_error or page_result is None:
+                page_errors.append(f"S.{page_no}: {page_error}")
+                continue
+            page_texts.append(
+                {
+                    "page": page_no,
+                    "text": page_result.text or "",
+                    "confidence": page_result.confidence,
+                    "model": page_result.model,
+                }
+            )
+        if not page_texts:
+            self._raise_outage("; ".join(page_errors) or "no_result")
+        return combine_router_pages(
+            page_texts, page_errors, len(page_images), self._elapsed_ms(start)
+        )
 
     def _raise_outage(self, reason: str) -> None:
         """Entscheidung D6: Gateway-Ausfall als wiederholbarer Fehler statt Ablehnung."""

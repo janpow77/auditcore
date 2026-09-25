@@ -12,7 +12,6 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
 
 from auditcore_documents.model import CompareItem, CompareRow, ComparisonResult
 
@@ -275,19 +274,8 @@ def apply_commands(
     return paragraphs, open_commands, recognised
 
 
-def article_law_result(
-    paragraphs: list[LawParagraph],
-    open_commands: list[str],
-    recognised: int,
-    *,
-    old_filename: str,
-    new_filename: str,
-    old_sha256: str,
-    new_sha256: str,
-    version: str,
-    now: Callable[[], datetime],
-) -> ComparisonResult:
-    """Ergebnis mit Synopsezeilen und konsolidierter Arbeitsfassung."""
+def _law_rows(paragraphs: list[LawParagraph]) -> list[CompareRow]:
+    """Synopsezeilen: eingefügt, aufgehoben oder geändert (unveränderte entfallen)."""
     rows: list[CompareRow] = []
     for item in paragraphs:
         if item.inserted:
@@ -309,7 +297,12 @@ def article_law_result(
                 reason_source="article_law",
             )
         )
-    consolidated: list[dict[str, Any]] = [
+    return rows
+
+
+def _consolidated_text(paragraphs: list[LawParagraph]) -> list[dict[str, object]]:
+    """Konsolidierte Arbeitsfassung (nicht amtlich) in Absatzreihenfolge."""
+    return [
         {
             "section": item.section,
             "paragraph": item.paragraph,
@@ -319,6 +312,23 @@ def article_law_result(
         }
         for item in paragraphs
     ]
+
+
+def article_law_result(
+    paragraphs: list[LawParagraph],
+    open_commands: list[str],
+    recognised: int,
+    *,
+    old_filename: str,
+    new_filename: str,
+    old_sha256: str,
+    new_sha256: str,
+    version: str,
+    now: Callable[[], datetime],
+) -> ComparisonResult:
+    """Ergebnis mit Synopsezeilen und konsolidierter Arbeitsfassung."""
+    rows = _law_rows(paragraphs)
+    consolidated = _consolidated_text(paragraphs)
     return ComparisonResult(
         version=version,
         mode="text",

@@ -52,6 +52,15 @@ def fraud_invoice_date(value: str | None, today: date) -> date:
     return today
 
 
+def _total_amount(total_str: object) -> Decimal:
+    try:
+        return Decimal(str(total_str).replace(",", ".")) if total_str else Decimal("0")
+    except (ValueError, TypeError):
+        # decimal.InvalidOperation ist kein ValueError: sie verlässt die Regel wie im
+        # Original und wird von der Stufe als ERROR_VAL_FRAUD_DETECTION gewertet.
+        return Decimal("0")
+
+
 class FraudDetectionRule(ValidationRule):
     def __init__(
         self,
@@ -82,12 +91,7 @@ class FraudDetectionRule(ValidationRule):
                 "PASS",
                 "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
             )
-        try:
-            total_amount = Decimal(str(total_str).replace(",", ".")) if total_str else Decimal("0")
-        except (ValueError, TypeError):
-            # decimal.InvalidOperation ist kein ValueError: sie verlässt die Regel wie im
-            # Original und wird von der Stufe als ERROR_VAL_FRAUD_DETECTION gewertet.
-            total_amount = Decimal("0")
+        total_amount = _total_amount(total_str)
         invoice_date = fraud_invoice_date(
             fields.get("date") or fields.get("invoice_date"), self.today()
         )
@@ -106,6 +110,10 @@ class FraudDetectionRule(ValidationRule):
             )
         except Exception as exc:  # noqa: BLE001 - Originalvertrag
             return self.result("WARN", "REVIEW", f"Fraud detection error: {exc}")
+        return self._assessment_result(result)
+
+    def _assessment_result(self, result: FraudAssessment) -> ValidationResult:
+        """Risikostufe des Ports → Regelergebnis (kritisch, hoch/mittel, sonst bestanden)."""
         level = str(result.risk_level)
         factors = ", ".join(result.risk_factors)
         if level == "critical":

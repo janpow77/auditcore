@@ -23,7 +23,10 @@
 - `PipelineOrchestrator.run`, `apply_commands` (Handler-Tabelle je
   Befehlsart), `checklist_items`, `dumps_compact`, `sanitise_settings` und
   `_sanitise_layout` (deklarative Bereinigungstabellen in unveränderter
-  Reihenfolge) in kurze Funktionen zerlegt.
+  Reihenfolge) in kurze Funktionen zerlegt; ebenso `compare_files`,
+  `build_rows`, `article_law_result`, `build_pipeline`,
+  `FraudDetectionRule.evaluate` und der Gateway-Pfad der OCR-Stufe
+  (keine Funktion über 60 Zeilen).
 - DOCX-Synopse: Seite, Kopf-/Fußzeile, Titelblock, Gliederung, Tabelle,
   Zeilen und Anhänge als eigene Schritte, Zell-/Formatbausteine und
   `DocxStyle` in `docx_parts`; PDF-Synopse über einen Absatzbaukasten.
@@ -41,8 +44,10 @@ Einstellungen (3 000) und `dumps_compact` (3 000) ergebnisgleich.
 |---|---|---|
 | Funktionen mit McCabe > 10 | 11 | 0 |
 | Module > 400 Zeilen | 6 | 0 |
-| `Any`-Vorkommen | 221 | 211 |
-| mypy --strict | sauber | sauber |
+| `Any`-Vorkommen (`grep -wo`) | 221 | 209 |
+| Funktionen > 60 Zeilen (Code-Gate) | 16 | 0 |
+| Code-Gate `any_usages` / `mypy_strict_errors` / `non_english_identifiers` | 196 / 1 / 1 | 182 / 0 / 0 |
+| mypy --strict (Paketkonfiguration) | sauber | sauber |
 | Tests / Abdeckung | 581 (+3 übersprungen) / 94 % | 591 (+3 übersprungen) / 95 % |
 
 Verbleibende `Any` stehen an Grenzen ohne Typinformation: python-docx-,
