@@ -5,8 +5,8 @@
   "classification": "CONSOLIDATION",
   "sources": [],
   "consolidates": {
-    "repository": "janpow77/auditcore",
-    "commit": "40ce8f710785b6ca8608512a2e335c14ec9d924f",
+    "monorepo": "janpow77/auditcore (intern, keine Fremdquelle)",
+    "monorepo_revision": "40ce8f710785b6ca8608512a2e335c14ec9d924f",
     "method": "AST-Inventur (scripts/inventory_duplicate_functions.py, docs/quality/duplikate.md); je Gruppe Differenztest gegen die wörtliche Kopie in tests/legacy_reference.py",
     "files": [
       {
