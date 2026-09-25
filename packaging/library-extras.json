@@ -15,7 +15,7 @@
   },
   "auditcore_procurement": {
     "lxml>=4.9.2; extra == \"html\"": "python3-lxml (>= 4.9.2)",
-    "auditcore_harvest==0.1.0; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.0)"
+    "auditcore_harvest==0.1.1; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.1)"
   },
   "auditcore_funding_sources": {
     "openpyxl<4,>=3.0.9; extra == \"xlsx\"": "python3-openpyxl (>= 3.0.9)",
@@ -26,10 +26,10 @@
     "beautifulsoup4<5,>=4.11.2; extra == \"html\"": "python3-bs4 (>= 4.11.2)"
   },
   "auditcore_property_sources": {
-    "auditcore_harvest==0.1.0; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.0)"
+    "auditcore_harvest==0.1.1; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.1)"
   },
   "auditcore_geo": {
-    "auditcore_harvest==0.1.0; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.0)"
+    "auditcore_harvest==0.1.1; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.1)"
   },
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
