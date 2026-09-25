@@ -1,13 +1,14 @@
 # Changelog auditcore_statistics
 
-## 0.2.1 – Refaktorierung ohne Verhaltensänderung
+## 0.3.1 – Refaktorierung ohne Verhaltensänderung
 
-Keine fachliche Änderung: alle 160 bestehenden Tests (Replays gegen die
+Keine fachliche Änderung: alle 184 bestehenden Tests (Replays gegen die
 aufgezeichneten Ausgaben von flowstat `run_benford` und flowinvoice
-`BenfordsLawAnalyzer.analyze`, Reproduzierbarkeit, Architektur) laufen
-unverändert grün. Ein zusätzlicher Differenzlauf gegen 0.2.0 (56 695 Aufrufe mit
-Zufallsdaten inkl. `None`, NaN, Null, Negativwerten, `Decimal`, Text und allen
-Fehlerpfaden) ergab bitgleiche Ergebnisse und identische Fehlermeldungen.
+`BenfordsLawAnalyzer.analyze`, Konformität, REST-Vertrag, Reproduzierbarkeit,
+Architektur) laufen unverändert grün. Ein zusätzlicher Differenzlauf gegen
+0.3.0 (56 695 Aufrufe mit Zufallsdaten inkl. `None`, NaN, Null, Negativwerten,
+`Decimal`, Text und allen Fehlerpfaden) ergab bitgleiche Ergebnisse und
+identische Fehlermeldungen.
 
 - `benford_test`: Klassifizierung der Werte (`_classify` mit `_Tally`) und
   χ²-Summe (`_chi2_statistic`) als eigene Schritte.
@@ -19,14 +20,16 @@ Fehlerpfaden) ergab bitgleiche Ergebnisse und identische Fehlermeldungen.
 - Typen: `legacy_run_benford(digit=…)` von `Any` auf `object`,
   `recommended_flowinvoice_benford` liefert annotiert `BenfordResult` statt
   `Any`; interne Zeilen als `dict[str, object]`.
+- `conformity` und `web` (seit 0.3.0) erfüllen die Maßstäbe bereits und sind
+  unverändert.
 
 Einzige sichtbare Änderung ist die Versionskennung `library` in
-`BenfordResult.to_dict()` („auditcore_statistics 0.2.1“); sie folgt vertraglich
+`BenfordResult.to_dict()` („auditcore_statistics 0.3.1“); sie folgt vertraglich
 `__version__` (siehe `tests/test_reproducibility.py`).
 
 Messung mit `auditcore-codegate check --package auditcore_statistics`:
 
-| Messung | 0.2.0 | 0.2.1 |
+| Messung | 0.3.0 | 0.3.1 |
 |---|---|---|
 | Funktionen mit McCabe > 10 | 1 | 0 |
 | Funktionen > 60 Zeilen | 3 | 0 |
@@ -39,3 +42,17 @@ Keine Umbenennungen öffentlicher Namen. Die verbleibenden `Any` stehen an
 `RECOMMENDED_PARAMETERS` und dem Parameter von
 `recommended_flowinvoice_benford`; eine Verengung dort würde typisierte
 Consumer brechen.
+
+## 0.3.0 – Konformitätskennzahlen und REST-Vertrag (Extra `web`)
+
+`benford_test`, die Legacy-Adapter und ihre Ergebnisse bleiben unverändert.
+
+- Neues Modul `auditcore_statistics.conformity`: MAD mit Bewertungsbändern,
+  z-Wert je Ziffer (mit Stetigkeitskorrektur) und Zweitziffertest, abgeleitet
+  aus einem `BenfordResult`. Stufen und kritische Werte nur aus dem
+  ausdrücklich benannten Profil `nigrini.2012`; eine Stufe ist keine
+  Feststellung.
+- Neues Unterpaket `auditcore_statistics.web`: REST-Vertrag (`catalogue`,
+  `analyse`; JSON-Zahlen exakt als `Decimal`), Starlette-Routen und optionaler
+  FastAPI-Router. Vertrag: `docs/ui/benford-rest.md`.
+- Extra `web` (`starlette>=0.26`, Debian `python3-starlette`).

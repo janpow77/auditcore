@@ -29,6 +29,10 @@ ALGORITHMS = frozenset(
     }
 )
 
+#: A profile document as read from JSON. Values are validated field by field
+#: while the profile is built, so the raw form stays untyped at this boundary.
+_RawDocument = Mapping[str, Any]
+
 
 @dataclass(frozen=True)
 class Normalization:
@@ -96,19 +100,19 @@ class Profile:
         return {"id": self.id, "version": self.version, "fingerprint": self.fingerprint}
 
 
-def fingerprint(data: Mapping[str, Any]) -> str:
+def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
     canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def _strings(values: Any, label: str) -> frozenset[str]:
+def _strings(values: object, label: str) -> frozenset[str]:
     if not isinstance(values, list) or not all(isinstance(v, str) for v in values):
         raise ProfileError(f"{label} muss eine Liste von Texten sein.")
     return frozenset(values)
 
 
-def _mapping(values: Any, label: str) -> Mapping[str, str]:
+def _mapping(values: object, label: str) -> Mapping[str, str]:
     if not isinstance(values, dict) or not all(
         isinstance(k, str) and isinstance(v, str) for k, v in values.items()
     ):
@@ -132,60 +136,66 @@ def _check_patterns(rules: Normalization) -> None:
             raise ProfileError(f"Ungültiges Muster {pattern!r}: {exc}") from exc
 
 
-def profile_from_dict(data: Mapping[str, Any]) -> Profile:
+def _normalization(n: _RawDocument) -> Normalization:
+    if n["algorithm"] not in ALGORITHMS:
+        raise ProfileError(f"Unbekannter Algorithmus {n['algorithm']!r}.")
+    normalization = Normalization(
+        algorithm=n["algorithm"],
+        translation=_mapping(n.get("translation", {}), "translation"),
+        fold_map=_mapping(n.get("fold_map", {}), "fold_map"),
+        ampersand=n["ampersand"],
+        legal_suffixes=_strings(n["legal_suffixes"], "legal_suffixes"),
+        filler_words=_strings(n["filler_words"], "filler_words"),
+        compact_tokens=bool(n["compact_tokens"]),
+        nonword_pattern=n.get("nonword_pattern"),
+        compose=n.get("compose"),
+        removal_pattern=n.get("removal_pattern"),
+    )
+    _check_patterns(normalization)
+    if normalization.compose not in (None, "NFC"):
+        raise ProfileError("compose kennt nur 'NFC'.")
+    return normalization
+
+
+def _classification(c: _RawDocument) -> Classification:
+    classification = Classification(
+        exact_from=float(c["exact_from"]),
+        high_from=float(c["high_from"]),
+        medium_from=float(c["medium_from"]),
+        exact_token_sort_from=float(c["exact_token_sort_from"]),
+        minimum_score=None if c.get("minimum_score") is None else float(c["minimum_score"]),
+    )
+    if not classification.medium_from < classification.high_from <= classification.exact_from:
+        raise ProfileError("Klassengrenzen sind nicht aufsteigend.")
+    return classification
+
+
+def _resolution(r: _RawDocument) -> Resolution:
+    resolution = Resolution(
+        normalization_profile=r["normalization_profile"],
+        scorers=tuple(r["scorers"]),
+        min_token_length=int(r["min_token_length"]),
+        per_scorer_limit=int(r["per_scorer_limit"]),
+        fuzzy_threshold=float(r["fuzzy_threshold"]),
+        lei_pattern=r["lei_pattern"],
+        lei_checksum=bool(r["lei_checksum"]),
+        confidence=MappingProxyType({k: float(v) for k, v in r["confidence"].items()}),
+    )
+    if not set(resolution.scorers) <= {"token_set_ratio", "WRatio"}:
+        raise ProfileError("Unbekannter Scorer im Profil.")
+    return resolution
+
+
+def profile_from_dict(data: _RawDocument) -> Profile:
     """Validate a profile document; nothing is defaulted silently."""
     try:
         if data["schema"] != SCHEMA:
             raise ProfileError("Unbekanntes Profilschema.")
-        normalization = classification = resolution = None
-        if "normalization" in data:
-            n = data["normalization"]
-            if n["algorithm"] not in ALGORITHMS:
-                raise ProfileError(f"Unbekannter Algorithmus {n['algorithm']!r}.")
-            normalization = Normalization(
-                algorithm=n["algorithm"],
-                translation=_mapping(n.get("translation", {}), "translation"),
-                fold_map=_mapping(n.get("fold_map", {}), "fold_map"),
-                ampersand=n["ampersand"],
-                legal_suffixes=_strings(n["legal_suffixes"], "legal_suffixes"),
-                filler_words=_strings(n["filler_words"], "filler_words"),
-                compact_tokens=bool(n["compact_tokens"]),
-                nonword_pattern=n.get("nonword_pattern"),
-                compose=n.get("compose"),
-                removal_pattern=n.get("removal_pattern"),
-            )
-            _check_patterns(normalization)
-            if normalization.compose not in (None, "NFC"):
-                raise ProfileError("compose kennt nur 'NFC'.")
-        if "classification" in data:
-            c = data["classification"]
-            classification = Classification(
-                exact_from=float(c["exact_from"]),
-                high_from=float(c["high_from"]),
-                medium_from=float(c["medium_from"]),
-                exact_token_sort_from=float(c["exact_token_sort_from"]),
-                minimum_score=None if c.get("minimum_score") is None else float(c["minimum_score"]),
-            )
-            if (
-                not classification.medium_from
-                < classification.high_from
-                <= classification.exact_from
-            ):
-                raise ProfileError("Klassengrenzen sind nicht aufsteigend.")
-        if "resolution" in data:
-            r = data["resolution"]
-            resolution = Resolution(
-                normalization_profile=r["normalization_profile"],
-                scorers=tuple(r["scorers"]),
-                min_token_length=int(r["min_token_length"]),
-                per_scorer_limit=int(r["per_scorer_limit"]),
-                fuzzy_threshold=float(r["fuzzy_threshold"]),
-                lei_pattern=r["lei_pattern"],
-                lei_checksum=bool(r["lei_checksum"]),
-                confidence=MappingProxyType({k: float(v) for k, v in r["confidence"].items()}),
-            )
-            if not set(resolution.scorers) <= {"token_set_ratio", "WRatio"}:
-                raise ProfileError("Unbekannter Scorer im Profil.")
+        normalization = _normalization(data["normalization"]) if "normalization" in data else None
+        classification = (
+            _classification(data["classification"]) if "classification" in data else None
+        )
+        resolution = _resolution(data["resolution"]) if "resolution" in data else None
         if normalization is None and resolution is None:
             raise ProfileError("Profil enthält weder Normalisierung noch Auflösung.")
         return Profile(
