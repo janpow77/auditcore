@@ -13,8 +13,8 @@ versioniertes Precheck-Profil. Der Kern benötigt nur die Standardbibliothek.
 | `sources` | Harvest-Adapter `procurement.ted_awards` und `procurement.had_search` auf `auditcore_harvest==0.1.0` |
 
 ```bash
-pip install auditcore_procurement==0.2.0                     # reiner Kern
-pip install 'auditcore_procurement[sources,html]==0.2.0'      # plus Online-Abruf
+pip install auditcore_procurement==0.2.1                     # reiner Kern
+pip install 'auditcore_procurement[sources,html]==0.2.1'      # plus Online-Abruf
 ```
 
 ```python

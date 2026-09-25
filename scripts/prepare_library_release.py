@@ -67,6 +67,12 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     ),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
+    "auditcore_kanban": frozenset(
+        {
+            ("janpow77/audit_designer", "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"),
+            ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
+        }
+    ),
     "auditcore_legal_sources": frozenset(
         {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),

@@ -1,0 +1,108 @@
+{
+  "source": {
+    "repository": "janpow77/cockpit",
+    "commit": "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+    "files": [
+      {
+        "path": "frontend/src/components/kanban/labels.ts",
+        "git_blob": "c98320f5940692d78d37f1041634c6ecb8e4f960"
+      },
+      {
+        "path": "frontend/src/views/KanbanView.vue",
+        "git_blob": "7e86a8d4b7f437dcdfb3bbf55335a5cd13b38df8"
+      },
+      {
+        "path": "src/cockpit/routes/auftraege.py",
+        "git_blob": "666cb4f184d4259de7a2cd733b217766a3db8b5d"
+      },
+      {
+        "path": "src/cockpit/services/auftraege.py",
+        "git_blob": "14ad907a101413df73ea9bd06fcc7e301761cd7b"
+      }
+    ]
+  },
+  "tool": "tools/capture_cockpit_rules.py",
+  "observed": {
+    "spalteVon": {
+      "eingang": "eingang",
+      "geplant": "geplant",
+      "laeuft": "laeuft",
+      "rueckfrage": "rueckfrage",
+      "freigabe": "rueckfrage",
+      "unterbrochen": "rueckfrage",
+      "fertig": "fertig",
+      "fehler": "fertig",
+      "abgebrochen": "fertig"
+    },
+    "darfVerschieben": {
+      "eingang": {
+        "eingang": true,
+        "geplant": true,
+        "laeuft": false,
+        "rueckfrage": false,
+        "fertig": false
+      },
+      "geplant": {
+        "eingang": true,
+        "geplant": true,
+        "laeuft": false,
+        "rueckfrage": false,
+        "fertig": false
+      },
+      "laeuft": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": true,
+        "rueckfrage": false,
+        "fertig": false
+      },
+      "rueckfrage": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": false,
+        "rueckfrage": true,
+        "fertig": false
+      },
+      "freigabe": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": false,
+        "rueckfrage": true,
+        "fertig": false
+      },
+      "unterbrochen": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": false,
+        "rueckfrage": true,
+        "fertig": false
+      },
+      "fertig": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": false,
+        "rueckfrage": false,
+        "fertig": true
+      },
+      "fehler": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": false,
+        "rueckfrage": false,
+        "fertig": true
+      },
+      "abgebrochen": {
+        "eingang": false,
+        "geplant": false,
+        "laeuft": false,
+        "rueckfrage": false,
+        "fertig": true
+      }
+    },
+    "source_lines": {
+      "running_status_change": "if a.status == \"laeuft\":",
+      "running_status_change_error": "raise HTTPException(status_code=409, detail=\"Laufender Auftrag – zuerst stoppen\")",
+      "order_gap": "reihenfolge = (max((a.reihenfolge for a in liste(session)), default=0) or 0) + 10"
+    }
+  }
+}

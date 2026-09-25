@@ -34,7 +34,7 @@
   },
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
-    "auditcore_procurement==0.2.0; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.0)"
+    "auditcore_procurement==0.2.1; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.1)"
   },
   "auditcore_invoicesynth": {
     "pillow>=9.4; extra == \"render\"": "python3-pil (>= 9.4)"
@@ -50,5 +50,9 @@
   },
   "auditcore_statistics": {
     "starlette>=0.26; extra == \"web\"": "python3-starlette (>= 0.26)"
+  },
+  "auditcore_kanban": {
+    "starlette>=0.26; extra == \"ui\"": "python3-starlette (>= 0.26)",
+    "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)"
   }
 }

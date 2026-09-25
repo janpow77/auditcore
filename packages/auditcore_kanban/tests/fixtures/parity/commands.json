@@ -1,0 +1,2142 @@
+[
+ {
+  "name": "move to top",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "move",
+   "card_id": "b",
+   "column_id": "offen",
+   "index": 0
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "b",
+      "F"
+     ],
+     [
+      "a",
+      "V"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "move before",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "move",
+   "card_id": "d",
+   "column_id": "offen",
+   "before_id": "b"
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "a",
+      "V"
+     ],
+     [
+      "d",
+      "c"
+     ],
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": []
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "move after",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "move",
+   "card_id": "d",
+   "column_id": "offen",
+   "after_id": "b"
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "a",
+      "V"
+     ],
+     [
+      "b",
+      "k"
+     ],
+     [
+      "d",
+      "s"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": []
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "move end default",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "move",
+   "card_id": "a",
+   "column_id": "erledigt"
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ],
+     [
+      "a",
+      "k"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "move index clamp",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "move",
+   "card_id": "a",
+   "column_id": "erledigt",
+   "index": 99
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ],
+     [
+      "a",
+      "k"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "move negative",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "move",
+   "card_id": "d",
+   "column_id": "offen",
+   "index": -3
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "d",
+      "F"
+     ],
+     [
+      "a",
+      "V"
+     ],
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": []
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "toggle done",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "toggle_done",
+   "card_id": "a"
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ],
+     [
+      "a",
+      "k"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "toggle reopen",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "toggle_done",
+   "card_id": "d"
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "d",
+      "F"
+     ],
+     [
+      "a",
+      "V"
+     ],
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": []
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "create end",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "create",
+   "fields": {
+    "title": "Neu",
+    "column_id": "offen"
+   }
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "a",
+      "V"
+     ],
+     [
+      "b",
+      "k"
+     ],
+     [
+      "new",
+      "s"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "create index",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "create",
+   "fields": {
+    "title": "Neu",
+    "index": 1
+   }
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "a",
+      "V"
+     ],
+     [
+      "new",
+      "c"
+     ],
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "configure remove",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "k",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "new_id": "new",
+   "op": "configure",
+   "columns": [
+    {
+     "id": "offen",
+     "label": "Offen"
+    },
+    {
+     "id": "erledigt",
+     "label": "Erledigt"
+    }
+   ]
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "a",
+      "V"
+     ],
+     [
+      "b",
+      "k"
+     ],
+     [
+      "c",
+      "s"
+     ]
+    ],
+    "erledigt": [
+     [
+      "d",
+      "V"
+     ]
+    ]
+   },
+   "version": 4
+  }
+ },
+ {
+  "name": "move with duplicate ranks rebalances",
+  "input": {
+   "board": {
+    "schema_version": "auditcore_kanban.board/1",
+    "id": "b1",
+    "title": "Prüfung 2026",
+    "icon": "📋",
+    "owner_id": "u1",
+    "pinned": false,
+    "archived": false,
+    "version": 3,
+    "created_at": "",
+    "updated_at": "",
+    "columns": [
+     {
+      "id": "offen",
+      "label": "Offen",
+      "color": "#7c3aed",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "in_arbeit",
+      "label": "In Arbeit",
+      "color": "#7c3aed",
+      "wip_limit": 2,
+      "done": false,
+      "status_aliases": []
+     },
+     {
+      "id": "erledigt",
+      "label": "Erledigt",
+      "color": "#10b981",
+      "wip_limit": null,
+      "done": false,
+      "status_aliases": []
+     }
+    ],
+    "cards": [
+     {
+      "id": "a",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Prüfbericht Entwurf",
+      "description": "",
+      "priority": "hoch",
+      "tags": [
+       "VP",
+       "Bericht"
+      ],
+      "assignees": [
+       "u2"
+      ],
+      "due": "2026-09-20",
+      "color": null,
+      "image": null,
+      "badge": "VP-19",
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "b",
+      "column_id": "offen",
+      "rank": "V",
+      "title": "Belegliste anfordern",
+      "description": "Straße prüfen",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [],
+      "due": "2026-09-27",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "c",
+      "column_id": "in_arbeit",
+      "rank": "V",
+      "title": "Vergabe prüfen",
+      "description": "",
+      "priority": "niedrig",
+      "tags": [
+       "Vergabe"
+      ],
+      "assignees": [],
+      "due": "2026-10-30",
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     },
+     {
+      "id": "d",
+      "column_id": "erledigt",
+      "rank": "V",
+      "title": "Kick-off",
+      "description": "",
+      "priority": "mittel",
+      "tags": [],
+      "assignees": [
+       "u3"
+      ],
+      "due": null,
+      "color": null,
+      "image": null,
+      "badge": null,
+      "checklist": [],
+      "links": [],
+      "attachments": [],
+      "created_at": "2026-09-01",
+      "updated_at": "",
+      "extra": {}
+     }
+    ],
+    "labels": [],
+    "shares": [],
+    "transitions": {
+     "mode": "free",
+     "allowed": [],
+     "locked_columns": [],
+     "fixed_order_columns": []
+    },
+    "wip_mode": "block",
+    "extra": {}
+   },
+   "actor": "u1",
+   "now": "2026-09-25T12:00:00+00:00",
+   "op": "move",
+   "card_id": "d",
+   "column_id": "offen",
+   "index": 1
+  },
+  "expected": {
+   "orders": {
+    "offen": [
+     [
+      "a",
+      "F"
+     ],
+     [
+      "d",
+      "V"
+     ],
+     [
+      "b",
+      "k"
+     ]
+    ],
+    "in_arbeit": [
+     [
+      "c",
+      "V"
+     ]
+    ],
+    "erledigt": []
+   },
+   "version": 4
+  }
+ }
+]
