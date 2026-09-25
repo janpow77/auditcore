@@ -17,7 +17,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, TypedDict
 
 from .errors import DependencyError, FormatError
 
@@ -35,11 +35,25 @@ _PLZ = re.compile(r"^(\d{4,5})\s+(\D.*)$")
 _STREET = re.compile(r"^(.+?)\s+(\d+[a-zA-Z]?(?:\s*[-–/]\s*\d+[a-zA-Z]?)?)$")
 
 
+class ChamberRecord(TypedDict, total=False):
+    """An address record; the register has ``land``, the chambers ``lat``/``lon``/``art``."""
+
+    name: str
+    plz: str
+    ort: str
+    strasse: str
+    hnr: str
+    land: str
+    lat: float | None
+    lon: float | None
+    art: str
+
+
 @dataclass(frozen=True)
 class AddressDelivery:
     """Parsed address records with the rows the source drops and open issues."""
 
-    records: tuple[dict[str, Any], ...]
+    records: tuple[ChamberRecord, ...]
     rows_seen: int
     dropped: int
     issues: tuple[str, ...]
@@ -76,7 +90,7 @@ def parse_zer_register(data: bytes, *, reported_total: int | None = None) -> Add
     rows = _json(data, "ZER-Register")
     if not isinstance(rows, list):
         raise FormatError("ZER-Register: erwartet wird eine Liste.")
-    records = []
+    records: list[ChamberRecord] = []
     for row in rows:
         name = (row.get("label") or "").strip()
         plz = (row.get("plz") or "").strip()
@@ -110,7 +124,7 @@ def parse_ihk_locations(data: bytes) -> AddressDelivery:
     entries = raw if isinstance(raw, list) else raw.get("locations", raw)
     if not isinstance(entries, list):
         raise FormatError("IHK-Standorte: erwartet wird eine Liste.")
-    chambers = []
+    chambers: list[ChamberRecord] = []
     for item in entries:
         geo = item.get("geodata") or []
         chambers.append(
@@ -148,7 +162,7 @@ def parse_hwk_page(html: bytes, *, expected: int | None = EXPECTED_HWK) -> Addre
     chambers than ``expected`` is an issue (the page has probably changed).
     """
     lines = page_lines(html)
-    chambers = []
+    chambers: list[ChamberRecord] = []
     for index, line in enumerate(lines):
         found = _PLZ.match(line)
         if not found or index < 2:

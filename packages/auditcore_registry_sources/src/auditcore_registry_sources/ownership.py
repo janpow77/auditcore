@@ -19,6 +19,7 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
+from ._types import JsonObject, JsonValue
 from .profiles import RegistryProfile
 
 
@@ -42,7 +43,7 @@ class OwnershipGraph:
 
     nodes: list[OwnershipNode] = field(default_factory=list)
     graph: dict[str, OwnershipNode] = field(default_factory=dict)
-    visited: set[Any] = field(default_factory=set)
+    visited: set[object] = field(default_factory=set)
 
     @property
     def self_references(self) -> list[str]:
@@ -157,9 +158,10 @@ def ownership_chain(graph: OwnershipGraph, node_id: str) -> Chain:
     return Chain(tuple(reversed(chain)))
 
 
-def network(graph: OwnershipGraph) -> dict[str, list[dict[str, Any]]]:
+def network(graph: OwnershipGraph) -> dict[str, list[JsonObject]]:
     """Cytoscape-compatible nodes and edges (as the source)."""
-    nodes, edges = [], []
+    nodes: list[JsonObject] = []
+    edges: list[JsonObject] = []
     for node_id, node in graph.graph.items():
         nodes.append(
             {
@@ -190,10 +192,10 @@ class SmeAssessment:
     balance_sheet: Any
     status: str
     profile: Mapping[str, str]
-    decisions: tuple[Mapping[str, Any], ...]
+    decisions: tuple[Mapping[str, JsonValue], ...]
     notes: tuple[str, ...] = ()
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> JsonObject:
         """JSON view."""
         return {
             "is_sme": self.is_sme,
