@@ -26,13 +26,20 @@ Replay, Verträge) laufen unverändert.
   `dict[str, Any]`; Positionen, Kammeradressen (`ChamberRecord`) und die
   Rückgaben der Legacy-Nachbildungen sind `TypedDict`s. `Any` bleibt nur an
   echten Rohdatengrenzen (Profil-JSON, API-/CSV-Rohdaten, Adapterprotokoll von
-  `auditcore_harvest`, vom Aufrufer durchgereichte KMU-Werte).
+  `auditcore_harvest`, vom Aufrufer durchgereichte KMU-Werte, jetzt als
+  Alias `ownership.CompanyData`).
+- Funktionen über 60 Zeilen zerlegt: `flowinvoice_pep_check`
+  (`_best_pep_form`, `_pep_match`), `parse_targets_simple_csv` (`_decode`,
+  `_checked_columns`, `_read_rows`), AGVO-Prüfung (`_aggregated`,
+  `_agvo_category`).
 
 | Messung (src) | 0.1.0 | 0.1.1 |
 |---|---|---|
 | Funktionen mit McCabe > 10 | 4 | 0 |
+| Funktionen > 60 Zeilen (Code-Gate) | 8 | 0 |
 | Module > 400 Zeilen | 4 | 0 |
-| `Any`-Vorkommen | 143 | 59 |
+| `Any`-Vorkommen (Text) | 143 | 58 |
+| `Any`-Verwendungen (Code-Gate) | 132 | 45 |
 | mypy --strict | sauber | sauber |
 | Testabdeckung | 96,1 % | 96,9 % |
 

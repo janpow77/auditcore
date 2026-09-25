@@ -14,6 +14,7 @@ from auditcore_entity_matching import legacy as matching_legacy
 from ._legacy_shared import _profile
 from ._legacy_types import PepEntry
 from .bulk_screening import difflib_score, pep_score
+from .profiles import RegistryProfile
 
 
 def flowinvoice_to_list(value: object) -> list[str] | None:
@@ -211,9 +212,52 @@ class PEPResult:
     error_message: str | None = None
 
 
+#: A raw PEP record as loaded by the source (keys vary between dataset versions).
+_PepRecord = Mapping[str, Any]
+
+
+def _best_pep_form(
+    entry: _PepRecord,
+    query: str,
+    profile: RegistryProfile,
+    country: str | None,
+    exact: float,
+) -> tuple[float, str, str]:
+    """Best score over name and aliases: ``(score, method, matched display name)``."""
+    pairs = [(entry.get("name", ""), entry.get("name_normalized", ""))]
+    pairs.extend(zip(entry.get("aliases", []), entry.get("aliases_normalized", []), strict=True))
+    best, method, best_name = 0.0, "fuzzy", ""
+    for display, form in pairs:
+        if not form:
+            continue
+        value = pep_score(
+            query, form, profile, country=country, entry_countries=entry.get("countries", "")
+        )
+        if value > best:
+            best, best_name = value, display
+            method = "exact" if value >= exact else "fuzzy"
+    return best, method, best_name
+
+
+def _pep_match(entry: _PepRecord, best: float, method: str, best_name: str) -> PEPMatch:
+    return PEPMatch(
+        person_name=entry.get("name", ""),
+        position=entry.get("position", ""),
+        country=entry.get("countries", ""),
+        match_score=round(best, 3),
+        match_method=method,
+        source="opensanctions",
+        dataset=entry.get("dataset", "peps"),
+        first_seen=entry.get("first_seen"),
+        last_seen=entry.get("last_seen"),
+        matched_name=best_name,
+        via_alias=bool(best_name and best_name != entry.get("name", "")),
+    )
+
+
 def flowinvoice_pep_check(
     name: str,
-    entries: Sequence[Mapping[str, Any]] | None,
+    entries: Sequence[_PepRecord] | None,
     *,
     country: str | None = None,
     min_score: float | None = None,
@@ -237,36 +281,9 @@ def flowinvoice_pep_check(
     query = matching_legacy.flowinvoice_pep_normalize_name(name)
     matches = []
     for entry in entries:
-        pairs = [(entry.get("name", ""), entry.get("name_normalized", ""))]
-        pairs.extend(
-            zip(entry.get("aliases", []), entry.get("aliases_normalized", []), strict=True)
-        )
-        best, method, best_name = 0.0, "fuzzy", ""
-        for display, form in pairs:
-            if not form:
-                continue
-            value = pep_score(
-                query, form, profile, country=country, entry_countries=entry.get("countries", "")
-            )
-            if value > best:
-                best, best_name = value, display
-                method = "exact" if value >= exact else "fuzzy"
+        best, method, best_name = _best_pep_form(entry, query, profile, country, exact)
         if best >= threshold:
-            matches.append(
-                PEPMatch(
-                    person_name=entry.get("name", ""),
-                    position=entry.get("position", ""),
-                    country=entry.get("countries", ""),
-                    match_score=round(best, 3),
-                    match_method=method,
-                    source="opensanctions",
-                    dataset=entry.get("dataset", "peps"),
-                    first_seen=entry.get("first_seen"),
-                    last_seen=entry.get("last_seen"),
-                    matched_name=best_name,
-                    via_alias=bool(best_name and best_name != entry.get("name", "")),
-                )
-            )
+            matches.append(_pep_match(entry, best, method, best_name))
     matches.sort(key=lambda m: m.match_score, reverse=True)
     matches = matches[: int(profile.setting("max_hits"))]
     return PEPResult(

@@ -22,6 +22,9 @@ from typing import Any
 from ._types import JsonObject, JsonValue
 from .profiles import RegistryProfile
 
+#: Company data as passed by the caller (source field names, values unchecked).
+CompanyData = Mapping[str, Any]
+
 
 @dataclass
 class OwnershipNode:
@@ -52,7 +55,7 @@ class OwnershipGraph:
 
 
 def traverse(
-    company: Mapping[str, Any],
+    company: CompanyData,
     profile: RegistryProfile,
     *,
     graph: OwnershipGraph | None = None,
@@ -219,53 +222,62 @@ def _number(value: Any) -> float | None:
         return None
 
 
-def _agvo(company: Mapping[str, Any], profile: RegistryProfile) -> SmeAssessment:
+def _aggregated(company: CompanyData, key: str) -> float | None:
+    """Own value plus linked (full) and partner (by share) values; any gap → ``None``."""
+    total = _number(company.get(key))
+    for linked in company.get("linked", []) or []:
+        value = _number(linked.get(key))
+        total = None if total is None or value is None else total + value
+    for partner in company.get("partners", []) or []:
+        value, share = _number(partner.get(key)), _number(partner.get("share"))
+        total = (
+            None
+            if total is None or value is None or share is None
+            else total + value * share / 100.0
+        )
+    return total
+
+
+def _agvo_category(
+    employees: float,
+    turnover: float | None,
+    balance: float | None,
+    profile: RegistryProfile,
+    notes: list[str],
+) -> tuple[str, bool | None]:
+    """Size class by headcount and (turnover or balance sheet); appends open points."""
+    for key, label in (
+        ("micro", "Kleinstunternehmen"),
+        ("small", "Kleinunternehmen"),
+        ("medium", "Mittleres Unternehmen"),
+    ):
+        rule = profile.setting(key)
+        financial = (turnover is not None and turnover <= rule["turnover_max"]) or (
+            balance is not None and balance <= rule["balance_sheet_max"]
+        )
+        if employees < rule["employees_below"] and financial:
+            return label, True
+    if turnover is None or balance is None:
+        notes.append("Ein Finanzwert fehlt; die Alternative Umsatz/Bilanzsumme ist offen.")
+        return "Nicht bestimmbar", None
+    return "Großunternehmen", False
+
+
+def _agvo(company: CompanyData, profile: RegistryProfile) -> SmeAssessment:
     """Anhang I AGVO: headcount and (turnover or balance sheet), linked/partner aggregated."""
     notes = [str(n) + " – nicht ausgewertet." for n in profile.setting("not_evaluated")]
-    totals: dict[str, float | None] = {}
-    for key in ("employees", "revenue", "balance_sheet_total"):
-        own = _number(company.get(key))
-        total = own
-        for linked in company.get("linked", []) or []:
-            value = _number(linked.get(key))
-            total = None if total is None or value is None else total + value
-        for partner in company.get("partners", []) or []:
-            value, share = _number(partner.get(key)), _number(partner.get("share"))
-            total = (
-                None
-                if total is None or value is None or share is None
-                else total + value * share / 100.0
-            )
-        totals[key] = total
+    employees = _aggregated(company, "employees")
+    turnover = _aggregated(company, "revenue")
+    balance = _aggregated(company, "balance_sheet_total")
     if not company.get("linked") and not company.get("partners"):
         notes.append(
             "Keine verbundenen oder Partnerunternehmen angegeben; eigenständiges Unternehmen "
             "angenommen, vom Nutzer zu bestätigen."
         )
-    employees, turnover, balance = (
-        totals["employees"],
-        totals["revenue"],
-        totals["balance_sheet_total"],
-    )
     category = "Nicht bestimmbar"
     is_sme: bool | None = None
     if employees is not None and (turnover is not None or balance is not None):
-        category, is_sme = "Großunternehmen", False
-        for key, label in (
-            ("micro", "Kleinstunternehmen"),
-            ("small", "Kleinunternehmen"),
-            ("medium", "Mittleres Unternehmen"),
-        ):
-            rule = profile.setting(key)
-            financial = (turnover is not None and turnover <= rule["turnover_max"]) or (
-                balance is not None and balance <= rule["balance_sheet_max"]
-            )
-            if employees < rule["employees_below"] and financial:
-                category, is_sme = label, True
-                break
-        if category == "Großunternehmen" and (turnover is None or balance is None):
-            category, is_sme = "Nicht bestimmbar", None
-            notes.append("Ein Finanzwert fehlt; die Alternative Umsatz/Bilanzsumme ist offen.")
+        category, is_sme = _agvo_category(employees, turnover, balance, profile, notes)
     else:
         notes.append(
             "Mitarbeiterzahl oder beide Finanzwerte fehlen (auch bei Partnern/Verbundenen)."
@@ -283,7 +295,7 @@ def _agvo(company: Mapping[str, Any], profile: RegistryProfile) -> SmeAssessment
     )
 
 
-def sme_status(company: Mapping[str, Any], profile: RegistryProfile) -> SmeAssessment:
+def sme_status(company: CompanyData, profile: RegistryProfile) -> SmeAssessment:
     """``calculate_kmu_status``: thresholds of the profile, no aggregation (see decisions)."""
     profile.require_kind("sme")
     if profile.settings.get("method") == "agvo_annex_i":
