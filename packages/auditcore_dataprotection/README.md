@@ -402,8 +402,9 @@ Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek; die Plattform
-`auditcore` ist keine Abhängigkeit. Optional über `[excel]`
+Python ≥ 3.11, zur Laufzeit `auditcore_common==0.1.0` (gemeinsame
+Hilfsfunktionen, nur Standardbibliothek); die Plattform `auditcore` ist keine
+Abhängigkeit. Optional über `[excel]`
 `openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.1`, über `[pdf]`
 `weasyprint>=60.2`.
 

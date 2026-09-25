@@ -34,9 +34,12 @@ class RobotsRules:
         return cls(tuple((bool(a), str(p)) for a, p in rules), str(marker[1]))
 
 
-def parse_robots(text: str, token: str = "*") -> RobotsRules:
-    """Rules of the group for ``token`` (case-insensitive), else of ``*``."""
-    groups: list[tuple[list[str], list[tuple[bool, str]]]] = []
+Group = tuple[list[str], list[tuple[bool, str]]]
+
+
+def _groups(text: str) -> list[Group]:
+    """``(agents, rules)`` groups in file order; consecutive user-agent lines share a group."""
+    groups: list[Group] = []
     agents: list[str] = []
     rules: list[tuple[bool, str]] = []
     collecting_agents = False
@@ -52,15 +55,16 @@ def parse_robots(text: str, token: str = "*") -> RobotsRules:
                 groups.append((agents, rules))
                 collecting_agents = True
             agents.append(value.lower())
-        elif field in ("allow", "disallow"):
-            collecting_agents = False
-            if not groups:
-                continue
-            if field == "disallow" and not value:
-                continue  # empty Disallow: everything allowed
-            rules.append((field == "allow", value))
-        else:
-            collecting_agents = False
+            continue
+        collecting_agents = False
+        if field in ("allow", "disallow") and groups and (field == "allow" or value):
+            rules.append((field == "allow", value))  # empty Disallow: everything allowed
+    return groups
+
+
+def parse_robots(text: str, token: str = "*") -> RobotsRules:
+    """Rules of the group for ``token`` (case-insensitive), else of ``*``."""
+    groups = _groups(text)
     wanted = token.lower()
     if wanted != "*":
         for group_agents, group_rules in groups:

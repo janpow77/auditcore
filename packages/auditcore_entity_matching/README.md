@@ -169,9 +169,10 @@ Anbindung von flowworkshop: [docs/consumer-integration.md](docs/consumer-integra
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Optional
-`rapidfuzz>=3.10.1,<4` über `[fuzzy]`. Keine Abhängigkeit von der Plattform
-`auditcore` oder anderen Fachpaketen.
+Python ≥ 3.11, zur Laufzeit `auditcore_common==0.1.0` (gemeinsame
+Hilfsfunktionen, nur Standardbibliothek). Optional `rapidfuzz>=3.10.1,<4` über
+`[fuzzy]`. Keine Abhängigkeit von der Plattform `auditcore` oder weiteren
+Fachpaketen.
 
 ## Sicherheit und Datenschutz
 

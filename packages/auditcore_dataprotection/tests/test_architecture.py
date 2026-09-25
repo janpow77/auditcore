@@ -1,4 +1,5 @@
-"""Framework T-38: the installed runtime is stdlib-only and cannot bypass the consumer.
+"""Framework T-38: the installed runtime uses only the standard library and the
+stdlib-only ``auditcore_common`` and cannot bypass the consumer.
 
 Optional renderers may import their third-party dependency only lazily inside
 a function, so importing the package never requires openpyxl or WeasyPrint.
@@ -63,7 +64,7 @@ def test_runtime_imports_are_stdlib_or_own_package() -> None:
             elif isinstance(node, ast.ImportFrom):
                 names = ["auditcore_dataprotection"] if node.level else [_root(node.module)]
             for name in names:
-                if name == "auditcore_dataprotection":
+                if name in {"auditcore_dataprotection", "auditcore_common"}:
                     continue
                 if name in allowed_lazy:
                     assert id(node) not in top_level, f"{path.name}: {name} must be lazy"

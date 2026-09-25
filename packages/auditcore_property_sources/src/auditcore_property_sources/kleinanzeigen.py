@@ -21,7 +21,8 @@ from __future__ import annotations
 import html
 import re
 from collections.abc import Mapping
-from typing import Any
+
+from ._types import JSON
 
 SOURCE_ID = "property.kleinanzeigen"
 PROFILE_VERSION = "2026.09.1"
@@ -96,14 +97,14 @@ def number(s: str | None) -> float | None:
         return None
 
 
-def parse_page(doc: str) -> dict[str, dict[str, Any]]:
+def parse_page(doc: str) -> dict[str, dict[str, JSON]]:
     """All ads of a result page as raw records (original ``parse_page``)."""
     starts = [m.start() for m in _AD.finditer(doc)]
     ids = _AD.findall(doc)
     if not starts:
         return {}
     starts.append(len(doc))
-    ads: dict[str, dict[str, Any]] = {}
+    ads: dict[str, dict[str, JSON]] = {}
     for i, ident in enumerate(ids):
         raw = doc[starts[i] : starts[i + 1]]
         href = _HREF.search(raw)
@@ -127,7 +128,7 @@ def parse_page(doc: str) -> dict[str, dict[str, Any]]:
     return ads
 
 
-def usable(raw: Mapping[str, Any]) -> bool:
+def usable(raw: Mapping[str, JSON]) -> bool:
     """Quality filter: no requests, swaps, interim lets, shared rooms or commercial space."""
     text = raw.get("beschreibung") or ""
     title = text.split(" | ")[0]
@@ -136,7 +137,7 @@ def usable(raw: Mapping[str, Any]) -> bool:
     return not EXCLUDED.search(text)
 
 
-def normalise(raw: Mapping[str, Any], districts: Mapping[str, str]) -> dict[str, Any]:
+def normalise(raw: Mapping[str, JSON], districts: Mapping[str, str]) -> dict[str, JSON]:
     """Ad in the stock format; ``districts`` from :func:`district_index`."""
     place = (raw.get("ort") or "").strip()
     district = districts.get(place_key(place)) or (place or None)

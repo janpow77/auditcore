@@ -19,6 +19,17 @@
         "duplicate_functions": "as_dict (Helfer-Verträge) gleicht as_object in auditcore_llm_client; die Plattform darf keine Fachbibliothek importieren und llm_client bleibt ohne Abhängigkeiten – bewusste Doppelung, Zusammenführung in auditcore_common geplant (v0.4.1)."
       }
     },
+    "auditcore_auth": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
     "auditcore_common": {
       "metrics": {
         "any_usages": 0,
@@ -32,9 +43,9 @@
     },
     "auditcore_dataprotection": {
       "metrics": {
-        "any_usages": 146,
+        "any_usages": 145,
         "complexity_over_10": 0,
-        "duplicate_functions": 2,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -67,7 +78,7 @@
       "metrics": {
         "any_usages": 2,
         "complexity_over_10": 0,
-        "duplicate_functions": 3,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -131,11 +142,11 @@
     },
     "auditcore_invoicesynth": {
       "metrics": {
-        "any_usages": 54,
-        "complexity_over_10": 6,
+        "any_usages": 41,
+        "complexity_over_10": 0,
         "duplicate_functions": 0,
-        "functions_over_60_lines": 7,
-        "modules_over_400_lines": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
@@ -155,7 +166,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
-        "duplicate_functions": 5,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -222,11 +233,11 @@
     },
     "auditcore_property_sources": {
       "metrics": {
-        "any_usages": 66,
-        "complexity_over_10": 4,
+        "any_usages": 1,
+        "complexity_over_10": 0,
         "duplicate_functions": 0,
-        "functions_over_60_lines": 5,
-        "modules_over_400_lines": 2,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       }
@@ -235,7 +246,7 @@
       "metrics": {
         "any_usages": 45,
         "complexity_over_10": 0,
-        "duplicate_functions": 5,
+        "duplicate_functions": 4,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,

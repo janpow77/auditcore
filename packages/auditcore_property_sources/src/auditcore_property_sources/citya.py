@@ -15,7 +15,8 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Mapping
-from typing import Any
+
+from ._types import JSON
 
 SOURCE_ID = "property.citya"
 PROFILE_VERSION = "2026.09.1"
@@ -70,7 +71,7 @@ def search_url(department_path: str, page: int) -> str:
     return SEARCH.format(dep=department_path, seite=page)
 
 
-def number(value: Any) -> float | None:
+def number(value: JSON) -> float | None:
     if value is None:
         return None
     try:
@@ -79,7 +80,7 @@ def number(value: Any) -> float | None:
         return None
 
 
-def catalog(doc: str) -> list[dict[str, Any]]:
+def catalog(doc: str) -> list[dict[str, JSON]]:
     """Offers of the first JSON-LD block with ``offers`` (original ``katalog``)."""
     for block in _CATALOG.findall(doc):
         try:
@@ -87,7 +88,7 @@ def catalog(doc: str) -> list[dict[str, Any]]:
         except ValueError:
             continue
         if isinstance(d, dict) and d.get("offers"):
-            offers: list[dict[str, Any]] = d["offers"]
+            offers: list[dict[str, JSON]] = d["offers"]
             return offers
     return []
 
@@ -106,8 +107,8 @@ def is_residential(title: str | None) -> bool:
 
 
 def normalise(
-    offer: Mapping[str, Any], dep_name: str, dep_code: str | None = None
-) -> dict[str, Any]:
+    offer: Mapping[str, JSON], dep_name: str, dep_code: str | None = None
+) -> dict[str, JSON]:
     """Offer in the stock format (original ``normalise``)."""
     item = offer.get("itemOffered") or {}
     address = item.get("address") or {}

@@ -1,0 +1,2432 @@
+{
+ "schema_version": 1,
+ "frozen_instant": "2026-09-25T12:00:00.654321+00:00",
+ "secret": "characterization-secret-0123456789abcdef",
+ "wrong_secret": "another-secret-0123456789abcdef-xyz",
+ "libraries": {
+  "passlib": "1.7.4",
+  "python-jose": "3.3.0",
+  "bcrypt": "4.2.1",
+  "PyJWT": "2.10.1",
+  "argon2-cffi": "23.1.0"
+ },
+ "sources": {
+  "audit_designer": {
+   "repository": "janpow77/audit_designer",
+   "commit": "ccd65245182982af3ef885a7a6d43583f4f72cbb",
+   "checkout": "audit_designer",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/core/config.py",
+    "backend/app/api/auth.py",
+    "backend/app/api/vpai_notebook/jupyter.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "f5f779fbd50a4122033fd1e8a0be53d3cde14962",
+    "backend/app/core/config.py": "97e525c3426d5e8f3eb62fc434cbb31d856b698c",
+    "backend/app/api/auth.py": "39dad0bc4224d756b0c23098fd0b0b8957de3b5a",
+    "backend/app/api/vpai_notebook/jupyter.py": "3787cb344bed2bed9207c3b927cddf36c679dbe6"
+   }
+  },
+  "flownavigator": {
+   "repository": "janpow77/flownavigator",
+   "commit": "9dff858d3772e59533886dfbae70c672d574a1d4",
+   "checkout": "flownavigator",
+   "security": "apps/backend/app/core/security.py",
+   "files": [
+    "apps/backend/app/core/security.py",
+    "apps/backend/app/core/config.py",
+    "apps/backend/app/services/auth_service.py",
+    "apps/backend/app/api/vendor.py"
+   ],
+   "blobs": {
+    "apps/backend/app/core/security.py": "94d468fafaf606318299be1e2ae2a72745e4d904",
+    "apps/backend/app/core/config.py": "7e293d4c5b97d3d1d2887868b04f8dd390f5f423",
+    "apps/backend/app/services/auth_service.py": "cb3ead3b0e22f4c978cc1fdff7aa10e07ef81c38",
+    "apps/backend/app/api/vendor.py": "dd4ced4f57fd8a6f6acc65c4f1a2381afd1b3c57"
+   }
+  },
+  "flowsearch": {
+   "repository": "janpow77/flowsearch",
+   "commit": "9ac5e0dd0c2b7363b5a077551e4fb7103f32c697",
+   "checkout": "flowsearch",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/core/config.py",
+    "backend/app/api/auth.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "441e89cdd7668345b89902857e2b21d7b4d25c5e",
+    "backend/app/core/config.py": "51ce4ec68dd53aded044ea3c0d9e34fdd42e3341",
+    "backend/app/api/auth.py": "4553e42148b7dff3d02275aef8e0fa7cbf8af251"
+   }
+  },
+  "qaaudit": {
+   "repository": "janpow77/qaaudit",
+   "commit": "c78be5c86454d457e5c66d0c65b5117a8528d462",
+   "checkout": "qaaudit",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/core/config.py",
+    "backend/app/api/v1/auth.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "da38b9997ffce391c439f9a9fe17a1fe4d37e70d",
+    "backend/app/core/config.py": "5576b1b1ed8cf212b650c596117f82c7b676a551",
+    "backend/app/api/v1/auth.py": "0a7a1999dab2a6a22a1516fc1fb1baa9ac45bc4e"
+   }
+  },
+  "versteigerung": {
+   "repository": "janpow77/versteigerung",
+   "commit": "729f9a10bc5478bd724ef40c1f4cd572e5a3dada",
+   "checkout": "versteigerung",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/core/config.py",
+    "backend/app/api/routers/auth.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "5d902f9e275d99f76116a42d636023fe191e67b7",
+    "backend/app/core/config.py": "9303702bb6ea322d50ace2a52608c2613524759d",
+    "backend/app/api/routers/auth.py": "faffbbde6b9abc6d94370cd466e1ddad4ac98964"
+   }
+  },
+  "regulierung": {
+   "repository": "janpow77/regulierung",
+   "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+   "checkout": "regulierung",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/config.py",
+    "backend/app/core/auth/jwt_backend.py",
+    "backend/app/api/auth_routes.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "e0e8a42615f9d98e0d0cd5656a173a371573ea87",
+    "backend/app/config.py": "00c9c07569be8b6b930fb5894b039c729a9d7684",
+    "backend/app/core/auth/jwt_backend.py": "149204e0d6c08658aeb94a5582814e0507d187ec",
+    "backend/app/api/auth_routes.py": "91ec71c405d10efca150f8bc3f1392be442412f7"
+   }
+  },
+  "flowinvoice": {
+   "repository": "janpow77/flowinvoice",
+   "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+   "checkout": "flowinvoice",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/config.py",
+    "backend/app/api/user_auth.py",
+    "backend/app/api/deps.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "350a21ce5fde6b53dab52d7a11e012cc29cbb8e9",
+    "backend/app/config.py": "3363ac28b5ea38689426dd99f1b65b0b1f48b142",
+    "backend/app/api/user_auth.py": "09b641a68f78f3bbe8243d2492722b4e3a8d93f2",
+    "backend/app/api/deps.py": "7762214807b6c1ba0c6fb623263945bf8d5f8383"
+   }
+  },
+  "audit-portal": {
+   "repository": "janpow77/audit-portal",
+   "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+   "checkout": "audit-portal",
+   "security": "backend/app/core/security.py",
+   "files": [
+    "backend/app/core/security.py",
+    "backend/app/config.py",
+    "backend/app/api/user_auth.py",
+    "backend/app/api/deps.py"
+   ],
+   "blobs": {
+    "backend/app/core/security.py": "8a4f81da4fe30f312f5dff092d9a0909f407a485",
+    "backend/app/config.py": "d0e22d8a497231eea31a9029cde8f7a27b8dc9ef",
+    "backend/app/api/user_auth.py": "c70462e6675532f7a7150386394c283a544c1735",
+    "backend/app/api/deps.py": "67dc4ac82f2a6daa6a87f8496b47d72678a73b71"
+   }
+  },
+  "flowlib": {
+   "repository": "janpow77/flowlib",
+   "commit": "aca2dc6aad25aea0720312dbcc6da00b0bcba330",
+   "checkout": "flowlib",
+   "security": "python/flowlib/auth.py",
+   "files": [
+    "python/flowlib/auth.py"
+   ],
+   "blobs": {
+    "python/flowlib/auth.py": "721ff6be8d39abc2c40d5e00bb64d4d7f0f59a0e"
+   }
+  }
+ },
+ "reference_only": {
+  "cockpit": {
+   "repository": "janpow77/cockpit",
+   "commit": "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+   "checkout": "cockpit",
+   "files": [
+    "src/cockpit/auth.py"
+   ],
+   "finding": "Opake Sitzungstoken in der Datenbank und Klartext-Adminpasswort aus der Konfiguration (secrets.compare_digest); kein JWT, kein Hash."
+  },
+  "riskanalysis": {
+   "repository": "janpow77/riskanalysis",
+   "commit": "dace0f66abde171ab91685483092ad7c3550ce55",
+   "checkout": "riskanalysis",
+   "files": [],
+   "finding": "Keine Authentifizierung, kein JWT und kein Passwort-Hashing im Backend."
+  }
+ },
+ "apps": {
+  "audit_designer": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$tykvNDpREeaFzESOYJImI.kzQ1zN4yEwmBO6UHdoYyoYK7TmEubSO"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$pGje6iPWohYm0Jhqfp4g9eRdbFwrHivUTybKQt2X4GbGnWN0obvre"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$RhZB0pJFn4FgDVqH7sKPm.msKW8218Ts6EM8j6qv2R2R.8NwbzY8."
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$npDJjuxFWS7uPIde4EzRCe.34ClJ6kIwqXdq5BybareVwNJiQQhQq"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$zPfoRH6a4ssTG9VyvAJ2LeKlJVdvCRWB8yyxKnRYfQKCBGb/LFllO"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "error": "PasswordValueError"
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MiIsIm1mYSI6dHJ1ZSwiZXhwIjoxNzkwMzgwODAwLCJpYXQiOjE3OTAzMzc2MDB9.IItKlwSXaOkMRs7cZrgB7N10zgo0Opww_v7zMpC5e-I",
+     "claims": {
+      "sub": "42",
+      "mfa": true,
+      "exp": 1790380800,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "default",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZXhwIjoxNzkwMzgwODAwLCJpYXQiOjE3OTAzMzc2MDB9.MQWDYQZTLQ9XRWoRUCiKIrj9mzpVzOyKGfOdvp8A1pc",
+     "claims": {
+      "sub": "1",
+      "exp": 1790380800,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "kernel_capability",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoibm90ZWJvb2tfa2VybmVsIiwicGFnZV9pZCI6InAtMSIsInVzZXJfaWQiOjQyLCJzY29wZSI6Im5vdGVib29rOmtlcm5lbC1hcGkiLCJleHAiOjE3OTAzMzc5MDAsImlhdCI6MTc5MDMzNzYwMH0.9-1nv4I1vSn66bMAGN3Vqv7UA8T8_khgG_ifN11xGxk",
+     "claims": {
+      "token_type": "notebook_kernel",
+      "page_id": "p-1",
+      "user_id": 42,
+      "scope": "notebook:kernel-api",
+      "exp": 1790337900,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "sse_ticket",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MiIsInNjb3BlIjoidnAtYWk6cHJvZ3Jlc3Mtc3NlIiwicHJvamVjdF9pZCI6InByLTEiLCJleHAiOjE3OTAzMzc2NjAsImlhdCI6MTc5MDMzNzYwMH0.9SSnppZtsn0Oz_zE71WzxumbddcbPXBbouxdXorEnSo",
+     "claims": {
+      "sub": "42",
+      "scope": "vp-ai:progress-sse",
+      "project_id": "pr-1",
+      "exp": 1790337660,
+      "iat": 1790337600
+     }
+    }
+   ],
+   "decode_now": 1790349827,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.i0whfVt8Yw75gZlaxYQFVvFyYysy3h-SIgNvBL-mraA",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349827,
+      "exp": 1790353427
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDI3fQ.78OVxEK4CL9qo2wEuBIgDDoC0X7-VpEudiH8tRrwnMU",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353427
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4MjcsImV4cCI6MTc5MDM1MzQyN30.Ka05L0dZ_RC7997uzzibBVmCQy1A_QVMhKdd5hQ5n2o",
+     "outcome": "accept",
+     "claims": {
+      "iat": 1790349827,
+      "exp": 1790353427
+     }
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3fQ.EJmUQMh8H-UaZ6Cy-K5---1fThahcUNlI0-hY3fEwng",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349827
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjI3LCJleHAiOjE3OTAzNDYyMjd9.jZJDzlloDf6ekTA8OgGJZlgj0wgkJ-VBhk0YbU_AKc8",
+     "outcome": "reject",
+     "claims": null
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjI3LCJleHAiOjE3OTAzNDk3OTd9.6iV8xcOwVsf5B65pfCqAzDhpJSLjOFe6eRUt9ITFY5Y",
+     "outcome": "reject",
+     "claims": null
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.f2SqqBLS40nQJ1bfH7A_r73ZfWjcLS0bytE5_zc6zdI",
+     "outcome": "reject",
+     "claims": null
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.",
+     "outcome": "reject",
+     "claims": null
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.TpdZUOUuElfgJX6muzaK8HHUdyz8-7kwRfpgxi3BgRh-lLy6ZRrydSn2WrMWAQZerhGYIMYzKhRMwjtAz2UjHA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.i0whfVt8Yw75gZlaxYQFVvFyYysy3h-SIgNvBL-mraA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.i0whfVt8Yw75gZlaxYQFVvFyYysy3h-SIgNvBL-mrAA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "claims": null
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "claims": null
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTgyNywiZXhwIjoxNzkwMzUzNDI3fQ.h8AH3I67lXs5Tk8O-4-Zpj2B1JeIc447W03Z5fo3Kw8",
+     "outcome": "reject",
+     "claims": null
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDI3LCJleHAiOjE3OTAzNTM0Mjd9.pYWB6zECfkQwpD1yBpfHDynqm5qZrugHMeu-h9HL5sA",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350427,
+      "exp": 1790353427
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODI3LCJuYmYiOjE3OTAzNTA0MjcsImV4cCI6MTc5MDM1MzQyN30.6ukhUK5XYsM2Qc6mzbRHg9lgaFbTtjuwkI3_Q7xzXb0",
+     "outcome": "reject",
+     "claims": null
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODI3LCJleHAiOjE3OTAzNTM0Mjd9.UnCigi28j1jZlcCASMrh2Ji6UE6MwPeuwpqpt1aiIqA",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349827,
+      "exp": 1790353427
+     }
+    }
+   }
+  },
+  "flownavigator": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$uTk0npP9zrs7HymoxNK5NeyHjzBZFjeha4.YwVPptzCJb9OJwr9p2"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$eh6eMM8.eFRT27KJeY2n4.VOyxCnTLmQ41awM7uSkkd8gRszQqO.6"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$hHJcj1Y4VhLmJfZ3VTSgzOuay1BAEnGC2OdDCLE8xqh18Vy2Z5vei"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$7mfHD1HRnkkgTwSQYuWypeuysnp9DWN.ab.xsZwO7S3ZYf1LemUui"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$AqLJwhl9ItrQCN2Lwo0k2uKfRKd1weENGWebuWbjVMTyPr//vCDX6"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "error": "PasswordValueError"
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1LTEiLCJ0ZW5hbnRfaWQiOiJ0LTEiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3OTA0MjQwMDB9.z8X0V6_1YqT_wTnaZl2P8r3fNkC7PkVU-uW96KaqdZA",
+     "claims": {
+      "sub": "u-1",
+      "tenant_id": "t-1",
+      "role": "admin",
+      "exp": 1790424000
+     }
+    },
+    {
+     "label": "vendor",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2LTEiLCJ0eXBlIjoidmVuZG9yIiwicm9sZSI6InZlbmRvcl9hZG1pbiIsImV4cCI6MTc5MDQyNDAwMH0.657TDoyLgjTXIn4rE_JCLYp3tsrEUE1zV1K2mkUROMQ",
+     "claims": {
+      "sub": "v-1",
+      "type": "vendor",
+      "role": "vendor_admin",
+      "exp": 1790424000
+     }
+    }
+   ],
+   "decode_now": 1790349833,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.nkoMWjrvFXG_ZWjK6i-S7lcXQ5lEsJJ4xIF_pwIbus0",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349833,
+      "exp": 1790353433
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDMzfQ.YIUSdnSXfn4t46smpPYboc9KBCFFM7Wo09AYNV6jU1g",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353433
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4MzMsImV4cCI6MTc5MDM1MzQzM30.skOegVf2Mq2HSY2OGzccBCg9y0MK0GpvLw0brpej9fI",
+     "outcome": "accept",
+     "claims": {
+      "iat": 1790349833,
+      "exp": 1790353433
+     }
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzfQ.7Y1s4cbBlbRjIboNKQ-Kw_c9PQ1Zsbqo6FpDelEtf94",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349833
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjMzLCJleHAiOjE3OTAzNDYyMzN9.lK2FTg3GVNXuhdKB6FNOALjZHepKkBLqIrOaBKEmckE",
+     "outcome": "reject",
+     "claims": null
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjMzLCJleHAiOjE3OTAzNDk4MDN9.urPFFXpt5ZrOvK3vbBps9pbdgFWbrKfq7QOd7Q-lKZ0",
+     "outcome": "reject",
+     "claims": null
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.pLXtCMZKbKbyHhHESOsP2W2v7svkInAZRf0M0Rw8hp0",
+     "outcome": "reject",
+     "claims": null
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.",
+     "outcome": "reject",
+     "claims": null
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.KdzNghdTCcpDRf8SAWM2rLASjaInOp1SFW9tDrMLi2Q1KOcgReq6tWQsAA3YZEwd7JO1ghre_Zi5eAP0yL1DxA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.nkoMWjrvFXG_ZWjK6i-S7lcXQ5lEsJJ4xIF_pwIbus0",
+     "outcome": "reject",
+     "claims": null
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.nkoMWjrvFXG_ZWjK6i-S7lcXQ5lEsJJ4xIF_pwIbuAA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "claims": null
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "claims": null
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTgzMywiZXhwIjoxNzkwMzUzNDMzfQ.LpVjFtyn4jNiLh_oLqe88ywMU2ftlGmMuwWmxhtLVVA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDMzLCJleHAiOjE3OTAzNTM0MzN9.Ywv4yrJlHx5unYFRquId0kfA_Mp03yoMwGV6Pf8Hr5Q",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350433,
+      "exp": 1790353433
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODMzLCJuYmYiOjE3OTAzNTA0MzMsImV4cCI6MTc5MDM1MzQzM30.azraG42eyq01dXHUFEd5QoYCWE05Dx-6UQu2lOrH2nA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODMzLCJleHAiOjE3OTAzNTM0MzN9.WnkQiJJk-YapIH8xUyP6fM6wwmPoMK8EjOPRFJXPn0o",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349833,
+      "exp": 1790353433
+     }
+    }
+   }
+  },
+  "flowsearch": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$e0EFCMVLg33C0h78gjwNmOWBSgGt0LevChp5lHixCUxIV3GNVU.56"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$8vh03hdFAZ5jyAvzw49gy.fHdaoLmPApyM/a70UgdBQwXt1HpTc3C"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$U2XvvgdtrT6qXoCHlql.B./EkimJMiKj1CCq7aNRjx7iJlxEZngMa"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$Q8gXnnyT0SHxwi/yycuq2ee0nhjV5ZbrsD3x6rKibd1Mt8MBbOH02"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$xQnkW6iuEwim5JQla891leJ/VFVEspcRcpiTTKupd3KUGSOPxiQUW"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "result": "$2b$12$TJ8eU55UTJ1lT4vsbX8qbeqIMZ.IH1x8DBiSQGI40qNxUDl5aTt3."
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "PanicException"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "ValueError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwidGVuYW50X2lkIjozLCJleHAiOjE3OTAzMzk0MDB9.UegZZoYEKSdIM2oKIziHHOMvZp6IOyTFiRZ4d1t4tgI",
+     "claims": {
+      "sub": "7",
+      "tenant_id": 3,
+      "exp": 1790339400
+     }
+    }
+   ],
+   "decode_now": 1790349841,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.DMjIsMyqlL0dsI20KLNDSmpJTpZEadlgLRvwfci7-6M",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349841,
+      "exp": 1790353441
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDQxfQ.m_aWbz5yvFZVsKrMwwAswObhYIpxVPEPu7I-LHP6vW8",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353441
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4NDEsImV4cCI6MTc5MDM1MzQ0MX0.sdfw6F6LIS3JDwH3GT5S1kNgnHsb3xE3llrB51lX-0s",
+     "outcome": "reject",
+     "error": "LookupError"
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxfQ.JuvV1sI3YzCUYKGqz9MM93r9EIn3wcdVHb1M-G5phHk",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349841
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjQxLCJleHAiOjE3OTAzNDYyNDF9.TFGLd5pbrv_QVokcLFmYC-7WisCati24e_RB7iQv2N0",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjQxLCJleHAiOjE3OTAzNDk4MTF9._zo6T3Djvdze2BjA1X_6Y1Xiiic248gDooMuUnRXYRk",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.pcE4PG6a-i-mFIMs0eZ4f8oF4UaMsQDka_SUpGPwHCc",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.oL-m7kZEG15MpyLRI06GcKMDFiq6ujS9OiZwjW95SIum04Lg_f59mX96zH1DNFt9lexDcRbu4q0x9EGB7Qjuaw",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.DMjIsMyqlL0dsI20KLNDSmpJTpZEadlgLRvwfci7-6M",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.DMjIsMyqlL0dsI20KLNDSmpJTpZEadlgLRvwfci7-AA",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg0MSwiZXhwIjoxNzkwMzUzNDQxfQ.q0ghpwtNfjGFV9sYqyEi60iO1c4_EJ51f4GCxhjgTrM",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDQxLCJleHAiOjE3OTAzNTM0NDF9.e8sowXbW1D619UPHJgD5xWaalaKyq8Cb9VCrX1Q2Og8",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350441,
+      "exp": 1790353441
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQxLCJuYmYiOjE3OTAzNTA0NDEsImV4cCI6MTc5MDM1MzQ0MX0.Tn3GJVkhOJDpZt7Rpa9Brr069-cNZ-YEntZXl5qer8E",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODQxLCJleHAiOjE3OTAzNTM0NDF9.UTtAs2lD5-sNpP4daJpI7yOyIxBGz56kSQ10ra57EpA",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349841,
+      "exp": 1790353441
+     }
+    }
+   }
+  },
+  "qaaudit": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$CSySwSbYsfp7eg9eS64XXOb0wPGTRjdZV/Aq9XbY9QlF2yCEh5FUK"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$yvrOT5Ar/vjI0Y/ZTPtHBOwduS3RPkV02qeOF0hdWz1VsFN2SckOq"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$AdqfB2x7avwnWR9Fbp8KO.CyCnhlkE6vDNgFI6y4DH6l6KfnEKHnq"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$rNuITu/NcptbuHfwx3iH3.VdeA0GJQtvGlGTBum8Yooc42V.TViQ."
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$wDoFlMHkiSZ4sYfJObzANOPL63NwSEua.2HiFJnHqnS6gMUvqzgmO"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "error": "PasswordValueError"
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "result": false
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "result": false
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "result": false
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "result": false
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1Iiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzkwMzM3NjAwLCJleHAiOjE3OTA0MjQwMDB9.VCKnAdRRR5YZzAdwyps5wmi2_d0SVxajgvgdOEGJ8bU",
+     "claims": {
+      "sub": "5",
+      "role": "admin",
+      "iat": 1790337600,
+      "exp": 1790424000
+     }
+    },
+    {
+     "label": "extra_claims",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1Iiwicm9sZSI6InBydWVmZXIiLCJpYXQiOjE3OTAzMzc2MDAsImV4cCI6MTc5MDM0NDgwMCwic2NvcGUiOiJ4In0.2kpzfms4RVWefX4GBlIiMryS2zYGtLzWfaMpKS4LaDE",
+     "claims": {
+      "sub": "5",
+      "role": "pruefer",
+      "iat": 1790337600,
+      "exp": 1790344800,
+      "scope": "x"
+     }
+    }
+   ],
+   "decode_now": 1790349848,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.O5B5d19zAdYJOHKjnHvXhRUc1P1nUkTYvwDsAc3i2HU",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349848,
+      "exp": 1790353448
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDQ4fQ.sRjrS888B-5RRB48IZGaZb-CY0ek6gsFDWxiEorrs0Y",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353448
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4NDgsImV4cCI6MTc5MDM1MzQ0OH0.ONZzb0IwsefeocnrlgWiXNkV2pWvzMpjsxK7AA4jWjc",
+     "outcome": "accept",
+     "claims": {
+      "iat": 1790349848,
+      "exp": 1790353448
+     }
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4fQ.MAQdIo5u8FyzpPoWrj78RL1S74H4o_wAQD_4A4iuohU",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349848
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjQ4LCJleHAiOjE3OTAzNDYyNDh9.iphGqkovshE6besV9GopTbtPvfQc0rxjxxfvXKjIjy8",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjQ4LCJleHAiOjE3OTAzNDk4MTh9.eQp7c_eEtGZuY5cDeoIoVRpoGkcGyc-GO0GddkaXKSo",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.tGHr6_tEVEPucfQi_RICg_lK4BTehGDBOoJuQbHQt1M",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.ZQC2yMJ-zvDp-Xd8C7R2pgghUmehZmxfTDqx1C8bQH32s5zWX32KAl8puIwxYN7PpZY9mgWMY88T84YjvfjMyw",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.O5B5d19zAdYJOHKjnHvXhRUc1P1nUkTYvwDsAc3i2HU",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.O5B5d19zAdYJOHKjnHvXhRUc1P1nUkTYvwDsAc3i2AA",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg0OCwiZXhwIjoxNzkwMzUzNDQ4fQ.VUjBgsj_PBHn7aTyPZ129wodyze-BeAEUdPwa8N1mGg",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDQ4LCJleHAiOjE3OTAzNTM0NDh9.zzHSor1oBbAMhC2jf6SLbreRV0wTrPjr6juipFHHQ0k",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350448,
+      "exp": 1790353448
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODQ4LCJuYmYiOjE3OTAzNTA0NDgsImV4cCI6MTc5MDM1MzQ0OH0.5ClJ4GLisvAoKsB4xHJFNggrPBIgPo7KlxGfUjZ__yo",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODQ4LCJleHAiOjE3OTAzNTM0NDh9.ArIBSbDv1_avAXuDd-L5uYTgyYZT2TubviS0ocnp4sk",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349848,
+      "exp": 1790353448
+     }
+    }
+   }
+  },
+  "versteigerung": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$argon2id$v=19$m=65536,t=3,p=4$RSjFOAcg5HzPea91DuE8pw$tdo13QaSPnhHphuLfm/KI26wM2p4ycFOCe/afE9AHBQ"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$argon2id$v=19$m=65536,t=3,p=4$+n8P4fzfuzcGYGwNwRjDuA$Um37N930Mjlfp7pEhHcL1xhw15kEwxDlMKv73kJchYQ"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$argon2id$v=19$m=65536,t=3,p=4$0vq/l5JyDoHQuhcCICSkFA$gYSp+bhABe4Mj5zN6EMo3BE90TscOulU1EJObsoXSxs"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$argon2id$v=19$m=65536,t=3,p=4$kBKCkJJSqtV6zxlD6D3n/A$l/JsqeHqTMwHCODW1aTViV9aY8NWgsY9Rs+4aL1om3M"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": false
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$argon2id$v=19$m=65536,t=3,p=4$VEqplbIWQmiN0br3/j+H0A$FLcJWDZ/rVJkfaO9ECuUSU45ij9QdC5MWeTBI7Awgk4"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": false
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "result": "$argon2id$v=19$m=65536,t=3,p=4$TWnt/R8jJMR47723FsIYow$39cqMo+ZdfqA2mD1LqdsYXqvveK+Sk7oSLS3EznrfQg"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "result": false
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "result": false
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "result": false
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "result": false
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5IiwiaWF0IjoxNzkwMzM3NjAwLCJleHAiOjE3OTAzMzk0MDAsInR5cGUiOiJhY2Nlc3MiLCJlbWFpbCI6ImFAYi5kZSIsInJvbGUiOiJiaWV0ZXIifQ.tnhXBfMFwQ8dR1LQHwx360rBzYLDrAzfWFNFBlI6JXs",
+     "claims": {
+      "sub": "9",
+      "iat": 1790337600,
+      "exp": 1790339400,
+      "type": "access",
+      "email": "a@b.de",
+      "role": "bieter"
+     }
+    }
+   ],
+   "decode_now": 1790349850,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.6Yi9DveSCTUE6wnmJX8AELTMgI2eZXRjtxWA4NkOvpM",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349850,
+      "exp": 1790353450
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDUwfQ.bTpTIIe-SWj-EAYZ7H-JZebENSVn8tZRNLEUJYUERUI",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353450
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4NTAsImV4cCI6MTc5MDM1MzQ1MH0.WUPrte8unutgnFLy-cQXW_ptBpTIyuqtCONnndmhOto",
+     "outcome": "accept",
+     "claims": {
+      "iat": 1790349850,
+      "exp": 1790353450
+     }
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwfQ.ggDazXl9TXEvn0AYDMMAZiQzC1LYa6Cx9zxF6NkamE4",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349850
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjUwLCJleHAiOjE3OTAzNDYyNTB9.t2xiAIekc4cQrSuXlymyn7MXj5et5rOJb0HUrvNqqrw",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjUwLCJleHAiOjE3OTAzNDk4MjB9.xDZmsSdKoCzw2h_r1wqCk1F1yTiwwOXuX00EJ-T_Sus",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.4E4rFEE6yrgG3as1vjfffjceuWbSiKhM0WVtvGgk3pw",
+     "outcome": "reject",
+     "error": "InvalidSignatureError"
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.",
+     "outcome": "reject",
+     "error": "InvalidAlgorithmError"
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.TKeJhZ0M2oxrkpulbVcJ4NKc7B0QaChzhTOpLAtH7p64V3xLGHC2kPNMX491cL_Lm9pIdE191fPAIXC1pa2wdA",
+     "outcome": "reject",
+     "error": "InvalidAlgorithmError"
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.6Yi9DveSCTUE6wnmJX8AELTMgI2eZXRjtxWA4NkOvpM",
+     "outcome": "reject",
+     "error": "InvalidSignatureError"
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.6Yi9DveSCTUE6wnmJX8AELTMgI2eZXRjtxWA4NkOvAA",
+     "outcome": "reject",
+     "error": "InvalidSignatureError"
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "error": "DecodeError"
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "error": "DecodeError"
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg1MCwiZXhwIjoxNzkwMzUzNDUwfQ.-EZD7k0PiPrqPBDqZ4B-vg1q-0lPwBKPCGQl1iTK2OQ",
+     "outcome": "reject",
+     "error": "InvalidSubjectError"
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDUwLCJleHAiOjE3OTAzNTM0NTB9._07JPd33WcxEDThcH3ZoMmWYZcKbyvncJxNoVIlOQ9w",
+     "outcome": "reject",
+     "error": "ImmatureSignatureError"
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODUwLCJuYmYiOjE3OTAzNTA0NTAsImV4cCI6MTc5MDM1MzQ1MH0.ME-_i36DTePxhbuUK-FGMnqU71hKwaJc61Ax-6KKRk0",
+     "outcome": "reject",
+     "error": "ImmatureSignatureError"
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODUwLCJleHAiOjE3OTAzNTM0NTB9.L-TsyDW3sdKamHP-YENdP4N3uszUeE0v2dNcH8GGJ3U",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349850,
+      "exp": 1790353450
+     }
+    }
+   }
+  },
+  "regulierung": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$i4AC1VDbTJaMIazjzlNXluSZ.TNYjRhI0vHvnWyKEo8gJbHqxVr1C"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$RK3suf2ptr4z9e2LVSozSecgWe52NeciyN1JHOm8xHBUY/h3iCY/q"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$PjHodfYZa4fODYs7IraGy./qY2.pAHW2eIlNPkNocot6OHgsmKgxC"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$OS4l9aNogbEL61etyDzeSe4ZOc9i7jJ1n7eDpRKjcyqZi0AzErLq6"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$jOMx8AM.1uPu8Bpkp1SdpuwbxW.ZaT9aVr.Yw9GT6LwoNIN1a0h2K"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "result": "$2b$12$eqDq7TS1ewMPILPuSqcDguRhtBzAHSvu5JkGHcpbyLPPTH0ZiEkOK"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "PanicException"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "ValueError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "access_lkb",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWNoYmVhcmJlaXRlciIsInJvbGUiOiJsa2IiLCJleHAiOjE3OTAzNjY0MDAsImlhdCI6MTc5MDMzNzYwMH0.ABJx4aaBuVYQXTYKxlwBEHY5-ZNv_MvmArdK-f6DsLs",
+     "claims": {
+      "sub": "sachbearbeiter",
+      "role": "lkb",
+      "exp": 1790366400,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "access_admin",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTc5MDQyNDAwMCwiaWF0IjoxNzkwMzM3NjAwfQ.6fmQK6mYlezxAR08CxXV1DGh9utNkQktVPQO4cZMEgY",
+     "claims": {
+      "sub": "admin",
+      "role": "admin",
+      "exp": 1790424000,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "refresh",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWNoYmVhcmJlaXRlciIsInJvbGUiOiJsa2IiLCJ0eXBlIjoicmVmcmVzaCIsImV4cCI6MTc5MDk0MjQwMCwiaWF0IjoxNzkwMzM3NjAwfQ.DGfbRvbNgYjX6dch9jXmDjHQ5bTY3PcfFY6jVEMZG08",
+     "claims": {
+      "sub": "sachbearbeiter",
+      "role": "lkb",
+      "type": "refresh",
+      "exp": 1790942400,
+      "iat": 1790337600
+     }
+    }
+   ],
+   "decode_now": 1790349857,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.vJbBrHGtj6dy-VOidgJFheZJnsIvb5ZLZBT9MQg8z6Y",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349857,
+      "exp": 1790353457
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDU3fQ.w_TqZx0DethjJNz3hXrJfU7vTHmSu0-ENQBu8qgRe3w",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353457
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4NTcsImV4cCI6MTc5MDM1MzQ1N30.3DfFeU570E62WNotBvgTNp9eLhqKioXAFs2oL0uEMz0",
+     "outcome": "reject",
+     "error": "LookupError"
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3fQ.gjan5aT-M2huK9a5VOCBXURB1NahP9z1HWv2bIhN68A",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349857
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjU3LCJleHAiOjE3OTAzNDYyNTd9.wso49rh-Ki1XPopsmyvbqLH9dRlN5y-VLcuelb4C-DQ",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjU3LCJleHAiOjE3OTAzNDk4Mjd9.Xk5LyF49b73PN_hQZWF-IHw4ZTJGkyw58zDOTsTPCsY",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.lsu_jpxc_SFzZWf9CkAU3T7U3DiDwQmA6tzQyjAO5OI",
+     "outcome": "reject",
+     "error": "InvalidSignatureError"
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.",
+     "outcome": "reject",
+     "error": "InvalidAlgorithmError"
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.R_4gOcN_J2ZfcAuB9JrhgVySqsFf8pK9EhtMl4GXuqwoVG3uBpItkrlU5ZgWlNlT-pIrshBtUyDvPEHkBUh_7w",
+     "outcome": "reject",
+     "error": "InvalidAlgorithmError"
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.vJbBrHGtj6dy-VOidgJFheZJnsIvb5ZLZBT9MQg8z6Y",
+     "outcome": "reject",
+     "error": "InvalidSignatureError"
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.vJbBrHGtj6dy-VOidgJFheZJnsIvb5ZLZBT9MQg8zAA",
+     "outcome": "reject",
+     "error": "InvalidSignatureError"
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "error": "DecodeError"
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "error": "DecodeError"
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg1NywiZXhwIjoxNzkwMzUzNDU3fQ.JCawp-1RvEcFcTt6r6fB4s6oQ6QpqTopZ1GAuSlmS28",
+     "outcome": "reject",
+     "error": "InvalidSubjectError"
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDU3LCJleHAiOjE3OTAzNTM0NTd9.BJFWRGnau0xGWsdM-Tz2uut26Um-hLOwNm1nA6z9Y2M",
+     "outcome": "reject",
+     "error": "ImmatureSignatureError"
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODU3LCJuYmYiOjE3OTAzNTA0NTcsImV4cCI6MTc5MDM1MzQ1N30.8aZ5Dd0IttbC9fAgkeQNCidF-OkrummdrL291y7QqeI",
+     "outcome": "reject",
+     "error": "ImmatureSignatureError"
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODU3LCJleHAiOjE3OTAzNTM0NTd9.-GhUINzVY0aGfJXOeMYlB7FL_D9HyHLZxlE0-ZQXA0g",
+     "outcome": "reject",
+     "error": "PermissionError"
+    }
+   }
+  },
+  "flowinvoice": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$ETULdFLYrNNmCnZPGkG6xOkWwHK35r0sdxqIB1GjWHxN.fw2YcVhO"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$F9d1tJVy5qM1F41cMHrvAe6spyHjulbLNmfs/YjL20p7c9Qczpjm2"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$f5XlCjSWROxxsuEpgYin7eHGJ5eYHv51SwnrXTPr/LiFA0ELyCGse"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$Gjsi/pwBOJRnm7JRgUA1bO6DjkGuu8l3qaBT4F6IRs20AI0uFzgj6"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$/HvEC.sn.I4ageObUhEfweWxLZqMjbr.fW1j9cKysbxcOTZW0bdaW"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "result": "$2b$12$/SMZIandS7s1pEuMLrlOg.7h6RLMCO.T1B09FGarJj//mhwlOIULe"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "PanicException"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "ValueError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcnVlZmVyIiwicm9sZSI6ImF1ZGl0b3IiLCJleHAiOjE3OTA0MjQwMDAsImlhdCI6MTc5MDMzNzYwMH0.ztEobWl8QdeKSugqe3p62CwWbfjK7el13ncMQnHYr2A",
+     "claims": {
+      "sub": "pruefer",
+      "role": "auditor",
+      "exp": 1790424000,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "core_default",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcnVlZmVyIiwiZXhwIjoxNzkwMzY2NDAwLCJpYXQiOjE3OTAzMzc2MDB9.XDEXl6uA5pVaAtc3V4o4Ylbq_NjjGMs3lfw803UU90Y",
+     "claims": {
+      "sub": "pruefer",
+      "exp": 1790366400,
+      "iat": 1790337600
+     }
+    }
+   ],
+   "decode_now": 1790349865,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.dlIhOSJKNxphEY8SNWrOzanAOalOXRVCgFGUdk6HJG8",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349865,
+      "exp": 1790353465
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDY1fQ.QdzwIoFJJDDkZJ69oFJEzV3WCb_z8fUKUuZuGfbYDV0",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353465
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4NjUsImV4cCI6MTc5MDM1MzQ2NX0.u9DkMVMQ-oBa4e8-kQrnrLf1gq2AkDr_nye6O16YKtU",
+     "outcome": "reject",
+     "error": "LookupError"
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1fQ.b63gTVWUME8B031LsOLPGQFAdBBwci0pJkm5ZWIqH9U",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349865
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjY1LCJleHAiOjE3OTAzNDYyNjV9.pOgY_k15iRdI3Dm0--j7lzMo36J6fc76YUpnzw5fgJw",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjY1LCJleHAiOjE3OTAzNDk4MzV9.gt4zs_OTIU7j6UrfvGiHCi2xa7umeWfewuyYpxsBWYg",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.zRj5W0dQK21cB2jUtiIwRpq-xErxFJVRnz987s0INM0",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.SbIxSe-JQyv8ioB7AU-ABIWuJKqxig9_wdFKPJUgggDImUe0BePOCHlhxKBYkpr7y0V25q6m4auC7bN44iqHXw",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.dlIhOSJKNxphEY8SNWrOzanAOalOXRVCgFGUdk6HJG8",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.dlIhOSJKNxphEY8SNWrOzanAOalOXRVCgFGUdk6HJAA",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg2NSwiZXhwIjoxNzkwMzUzNDY1fQ.7D1Ud_mO2gkB3ySUkxWJeXo20Swl6TY6WSfZcBCxJ0c",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDY1LCJleHAiOjE3OTAzNTM0NjV9.7Vo__PGfmtSBsquKWbL9r1mkes-uSxuwRDnd-zdv158",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350465,
+      "exp": 1790353465
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODY1LCJuYmYiOjE3OTAzNTA0NjUsImV4cCI6MTc5MDM1MzQ2NX0.SUADAQPP2XtG1OB-r8d5surSl1x4dwSjaYKkUKr8xGE",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODY1LCJleHAiOjE3OTAzNTM0NjV9.qEIMaa8-niUpntDW14USie6QCauObKJKgSV7EgLMUEM",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349865,
+      "exp": 1790353465
+     }
+    }
+   }
+  },
+  "audit-portal": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$OEnz50izz4.yp6bW06sDo.6h7l75MONhsoy6NyOBqSouRTE31tPWy"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$IeVK.R2EJvg835TYf0i1p.xfa9pDl8/8gz0luoWPWRlsBlkqCx/tm"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$qCUFNR71KlpzD8fnHLVPo.0iiXlfxldTcG509cGd8Ab2Xb5vz3wEy"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$.Z5GexqubM50Da7bV7FSmeXHK8LR7aHBDop82McdvK5jyA/cBTWua"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$W7DH/8bUT217knM9oXnGkeVEE01zmu4.tTtnaUhKuAbrY9jQuqQh6"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "result": "$2b$12$bnyS.l8ASleoZYPpA72rtedl1ik5wZlMc8t8leSzkMheQvMmq2vrm"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "PanicException"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "ValueError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "login",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcnVlZmVyIiwicm9sZSI6ImF1ZGl0b3IiLCJleHAiOjE3OTA0MjQwMDAsImlhdCI6MTc5MDMzNzYwMH0.ztEobWl8QdeKSugqe3p62CwWbfjK7el13ncMQnHYr2A",
+     "claims": {
+      "sub": "pruefer",
+      "role": "auditor",
+      "exp": 1790424000,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "sse_ticket",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6ImZsb3dzdGF0OnNzZSIsInJ1bl91dWlkIjoici0xIiwic3ViIjoicHJ1ZWZlciIsImV4cCI6MTc5MDMzNzY2MCwiaWF0IjoxNzkwMzM3NjAwfQ.YftinOSzc9RKh9HRVVX40hUOgUIO3-Vr6ZQUNH8j6cA",
+     "claims": {
+      "scope": "flowstat:sse",
+      "run_uuid": "r-1",
+      "sub": "pruefer",
+      "exp": 1790337660,
+      "iat": 1790337600
+     }
+    },
+    {
+     "label": "core_default",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcnVlZmVyIiwiZXhwIjoxNzkwMzY2NDAwLCJpYXQiOjE3OTAzMzc2MDB9.XDEXl6uA5pVaAtc3V4o4Ylbq_NjjGMs3lfw803UU90Y",
+     "claims": {
+      "sub": "pruefer",
+      "exp": 1790366400,
+      "iat": 1790337600
+     }
+    }
+   ],
+   "decode_now": 1790349873,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.oBbH5lBDYn5IPmOMpdSPwgLaSyoeX9kjKcL1AxQxM_k",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349873,
+      "exp": 1790353473
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDczfQ.uo5fMujuzi9KkdWLsEt35wrWaclv5ET0z8E8Y-DQE34",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353473
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4NzMsImV4cCI6MTc5MDM1MzQ3M30.qDwMT6vhzao1g124MS8L3ogcU5JZZdNON0wmon6U1nw",
+     "outcome": "reject",
+     "error": "LookupError"
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczfQ.l9aOxvYTUfB77Y_CMecAQQGwfbxafc4RZMrDah8sFqg",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349873
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjczLCJleHAiOjE3OTAzNDYyNzN9.09IoC5u49qaQdfDiEP_912QuUQMEufchxfBP8JQHS3U",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjczLCJleHAiOjE3OTAzNDk4NDN9.P42W8QtLXVJdHpFigqrtSSnrVAyw4ZkybLa35Wr3twA",
+     "outcome": "reject",
+     "error": "ExpiredSignatureError"
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.PrvZM6bsrDDch4xnJbGwKJNGgRlBQ5KVcy5p03BPDc8",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.Vj7QoFNVBRh9q0qmU52jfW--_sPF7gjOfUl4putkW8HspZ5RDs6arujQRp4C1ZkaufgdrrkVlYbKkwVbatzWHA",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.oBbH5lBDYn5IPmOMpdSPwgLaSyoeX9kjKcL1AxQxM_k",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.oBbH5lBDYn5IPmOMpdSPwgLaSyoeX9kjKcL1AxQxMAA",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "error": "JWTError"
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg3MywiZXhwIjoxNzkwMzUzNDczfQ.q7YBgcnTxrxKFrzese1bO_5P5QDYARay16AOLx6wF2c",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDczLCJleHAiOjE3OTAzNTM0NzN9.5l4yELGwhJOcHNvXH29llWAOBET3Z4WjZ7S0W7lXU9w",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350473,
+      "exp": 1790353473
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODczLCJuYmYiOjE3OTAzNTA0NzMsImV4cCI6MTc5MDM1MzQ3M30.LaGsWbzd_KoagkXhvAFMzjwxfeiJZyhj4x-qn6MbGEI",
+     "outcome": "reject",
+     "error": "JWTClaimsError"
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODczLCJleHAiOjE3OTAzNTM0NzN9.iNDsOiiIlCIgc1o_3pZk7hUW8QW4czshhJUf8ye9ufo",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349873,
+      "exp": 1790353473
+     }
+    }
+   }
+  },
+  "flowlib": {
+   "passwords": {
+    "cases": [
+     {
+      "password": "geheim123",
+      "hash": {
+       "result": "$2b$12$eLRG/tLGFpaaHy9sfZRyTuOEsa9fwmyDQsTO/GXOvyt5zJOAkCfee"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "Prüfung-ÄÖÜß",
+      "hash": {
+       "result": "$2b$12$HhHP02.AO.7xDmeOy9o4CODcj1091n1p1tX2eG3cJVsMDDGdsSIOK"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "",
+      "hash": {
+       "result": "$2b$12$uy0XKVD1Ly5oaISLJHsZ0uqAEy3rDeKH1UD0f.EumSLVIpH.lHgtS"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "hash": {
+       "result": "$2b$12$afGuAjhwMglJSeVSXtC4uuTyF8aDjf9tLsnadNjhjvrVNfUa2xJLK"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "ääääääääääääääääääääääääääääääääääääääää",
+      "hash": {
+       "result": "$2b$12$qLdEwoCfHIMt3yde4YjK8.yajFVbw9efrU8G4rQRnS.BExx2cjnUS"
+      },
+      "verify_same": {
+       "result": true
+      },
+      "verify_wrong": {
+       "result": false
+      },
+      "verify_prefix72": {
+       "result": true
+      }
+     },
+     {
+      "password": "a\u0000b",
+      "hash": {
+       "error": "PasswordValueError"
+      }
+     }
+    ],
+    "malformed": [
+     {
+      "hash": "",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     },
+     {
+      "hash": "garbage",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     },
+     {
+      "hash": "$2b$12$short",
+      "verify": {
+       "error": "ValueError"
+      }
+     },
+     {
+      "hash": "$argon2id$v=19$m=65536,t=3,p=4$abc",
+      "verify": {
+       "error": "UnknownHashError"
+      }
+     }
+    ]
+   },
+   "issued": [
+    {
+     "label": "default",
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwicm9sZSI6IngiLCJleHAiOjE3OTA0MjQwMDAsImlhdCI6MTc5MDMzNzYwMH0.1NT9-xFO0M4vYWj6A5Uz4zB38hnJIIfcwYMubixjzUA",
+     "claims": {
+      "sub": "1",
+      "role": "x",
+      "exp": 1790424000,
+      "iat": 1790337600
+     }
+    }
+   ],
+   "decode_now": 1790349880,
+   "decoded": {
+    "valid": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.TK2_Glu5ByOnb_-UdJYPWv4Q6v6c3MxXm-tT85QRPgk",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349880,
+      "exp": 1790353480
+     }
+    },
+    "valid_without_iat": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiZXhwIjoxNzkwMzUzNDgwfQ.093HjBvjd6J9ty_PpUWj2kANwQdArs9i1CBF8FhTeIo",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "exp": 1790353480
+     }
+    },
+    "without_sub": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3OTAzNDk4ODAsImV4cCI6MTc5MDM1MzQ4MH0.EvYBzijjG475VgMinwIQgiGIEjE6l46GCk4xl3pS24o",
+     "outcome": "accept",
+     "claims": {
+      "iat": 1790349880,
+      "exp": 1790353480
+     }
+    },
+    "without_exp": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwfQ.eMRRCUvLqLrNCrl-DSDwuK5qxb4lgk9UzrZGgoKsWIo",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790349880
+     }
+    },
+    "expired": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQyNjgwLCJleHAiOjE3OTAzNDYyODB9.LhTIw0iOwVkRPEeHfNHU_1010m8t6NG0pIGT3KZ6sck",
+     "outcome": "reject",
+     "claims": null
+    },
+    "expired_30s": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5MjgwLCJleHAiOjE3OTAzNDk4NTB9.gV7NoJpT_7KUivtm4ejCMFtRN5GiCUTDvj-Jzmt25l0",
+     "outcome": "reject",
+     "claims": null
+    },
+    "wrong_key": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.WZFiR6K0_WV67vyVHKRLmN_DFab2phBAymVeUMh7tjg",
+     "outcome": "reject",
+     "claims": null
+    },
+    "alg_none": {
+     "token": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.",
+     "outcome": "reject",
+     "claims": null
+    },
+    "alg_hs512": {
+     "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.GweOkz11UxVWMwZs5dkYu98SMZAZPbQlCEcWqaLfT9O07KC6Tgvk88wh7L8VdbLSTEq9bturZsW09UxJjpZsKQ",
+     "outcome": "reject",
+     "claims": null
+    },
+    "tampered_payload": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.TK2_Glu5ByOnb_-UdJYPWv4Q6v6c3MxXm-tT85QRPgk",
+     "outcome": "reject",
+     "claims": null
+    },
+    "tampered_signature": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.TK2_Glu5ByOnb_-UdJYPWv4Q6v6c3MxXm-tT85QRPAA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "garbage": {
+     "token": "abc",
+     "outcome": "reject",
+     "claims": null
+    },
+    "empty": {
+     "token": "",
+     "outcome": "reject",
+     "claims": null
+    },
+    "sub_int": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcsImlhdCI6MTc5MDM0OTg4MCwiZXhwIjoxNzkwMzUzNDgwfQ.wQw8qzOtH2-1YxBwlsC-wZTXyMa78ya9NxADp6seb60",
+     "outcome": "reject",
+     "claims": null
+    },
+    "iat_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzUwNDgwLCJleHAiOjE3OTAzNTM0ODB9.miqLFhhWCqB6QNEnBSQuJaJKsiEq0Slf4Yo4P9NKUVg",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "iat": 1790350480,
+      "exp": 1790353480
+     }
+    },
+    "nbf_future": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiaWF0IjoxNzkwMzQ5ODgwLCJuYmYiOjE3OTAzNTA0ODAsImV4cCI6MTc5MDM1MzQ4MH0.bKsKnoCOp2VBHDCQbdiA2aLu7JGYeAHe6SUNl6fpzrA",
+     "outcome": "reject",
+     "claims": null
+    },
+    "refresh_type": {
+     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Iiwicm9sZSI6ImxrYiIsInR5cGUiOiJyZWZyZXNoIiwiaWF0IjoxNzkwMzQ5ODgwLCJleHAiOjE3OTAzNTM0ODB9.3pSXOf1u4oRcWpGEw8wZXV4GcJCvyU6vr3bIDPJ6ecI",
+     "outcome": "accept",
+     "claims": {
+      "sub": "7",
+      "role": "lkb",
+      "type": "refresh",
+      "iat": 1790349880,
+      "exp": 1790353480
+     }
+    }
+   }
+  }
+ }
+}

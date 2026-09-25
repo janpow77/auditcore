@@ -18,7 +18,8 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Mapping, Sequence
-from typing import Any
+
+from ._types import JSON
 
 SOURCE_ID = "property.immobilien_de"
 PROFILE_VERSION = "2026.09.1"
@@ -40,7 +41,7 @@ def ld_blocks(doc: str) -> list[str]:
     return list(_LD.findall(doc))
 
 
-def _collect(node: Any, out: list[dict[str, Any]]) -> None:
+def _collect(node: JSON, out: list[dict[str, JSON]]) -> None:
     if isinstance(node, dict):
         kind = node.get("@type")
         if kind and "RealEstateListing" in (kind if isinstance(kind, list) else [kind]):
@@ -59,7 +60,7 @@ def rent_types(doc: str) -> dict[str, str]:
     return {p: art for p, art in _MIETART.findall(t)}
 
 
-def rent_type_for(price: Any, types: Mapping[str, str]) -> str | None:
+def rent_type_for(price: JSON, types: Mapping[str, str]) -> str | None:
     """Rent type of a JSON-LD price, looked up in several notations (original order)."""
     if price is None:
         return None
@@ -78,14 +79,14 @@ def rent_type_for(price: Any, types: Mapping[str, str]) -> str | None:
     return None
 
 
-def parse_page(doc: str) -> tuple[dict[str, dict[str, Any]], list[int]]:
+def parse_page(doc: str) -> tuple[dict[str, dict[str, JSON]], list[int]]:
     """Listings by numeric id plus the indexes of unreadable JSON-LD blocks.
 
     The original silently skips unreadable blocks; they are reported here so
     that an adapter can mark the page as partial (PS-C06).
     """
     types = rent_types(doc)
-    listings: dict[str, dict[str, Any]] = {}
+    listings: dict[str, dict[str, JSON]] = {}
     unreadable: list[int] = []
     for index, raw in enumerate(ld_blocks(doc)):
         try:
@@ -93,7 +94,7 @@ def parse_page(doc: str) -> tuple[dict[str, dict[str, Any]], list[int]]:
         except ValueError:
             unreadable.append(index)
             continue
-        found: list[dict[str, Any]] = []
+        found: list[dict[str, JSON]] = []
         _collect(data, found)
         for listing in found:
             url = listing.get("url") or ""
@@ -107,8 +108,8 @@ def parse_page(doc: str) -> tuple[dict[str, dict[str, Any]], list[int]]:
 
 
 def normalise(
-    listing: Mapping[str, Any], plz_bezirke: Mapping[str, Sequence[str]]
-) -> dict[str, Any]:
+    listing: Mapping[str, JSON], plz_bezirke: Mapping[str, Sequence[str]]
+) -> dict[str, JSON]:
     """Listing in the stock format of the consumer (original ``normalise``)."""
     adresse = listing.get("address") or {}
     plz = adresse.get("postalCode")

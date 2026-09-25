@@ -1,4 +1,5 @@
-"""F-09/T-38: runtime modules use only the standard library and their own package."""
+"""F-09/T-38: runtime modules use only the standard library, their own package and
+``auditcore_common``."""
 
 import ast
 from pathlib import Path
@@ -19,6 +20,7 @@ ALLOWED = {
     "unicodedata",
     "warnings",  # only for DeprecationWarning aliases (docs/quality/code-quality.md)
     "auditcore_entity_matching",
+    "auditcore_common",
 }
 
 

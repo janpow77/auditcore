@@ -83,7 +83,7 @@ def ordered(ground_truth: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def _encode(value: Any) -> str:
+def _encode(value: object) -> str:
     if isinstance(value, dict):
         return "".join(f"<s_{k}>{_encode(v)}</s_{k}>" for k, v in value.items())
     if isinstance(value, list):
