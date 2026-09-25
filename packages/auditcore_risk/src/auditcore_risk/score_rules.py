@@ -9,15 +9,14 @@ ranges and membership in a set of earlier finding families.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import Any
 
-from .base import Context, Kind, Outcome, Table, is_number, need
+from .base import Context, JsonObject, Kind, Outcome, Table, is_number, need
 from .errors import InputError
 from .values import is_missing
 
 
-def _truthy(value: Any, truthy: frozenset[str]) -> bool:
+def _truthy(value: object, truthy: frozenset[str]) -> bool:
     if isinstance(value, bool):
         return value
     if is_missing(value):
@@ -25,7 +24,7 @@ def _truthy(value: Any, truthy: frozenset[str]) -> bool:
     return str(value).strip().lower() in truthy
 
 
-def _truthy_all(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _truthy_all(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     truthy = frozenset(p["truthy_values"])
     out = Outcome.constant(len(table), False)
     for i in range(len(table)):
@@ -37,7 +36,7 @@ def _truthy_all(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _text_in_set(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _text_in_set(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     allowed = frozenset(p["values"])
     out = Outcome.constant(len(table), False)
     for i in range(len(table)):
@@ -51,14 +50,17 @@ def _text_in_set(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
 
 
 def _as_number(value: Any, field: str, missing: float) -> float:
-    """``float(value or missing)`` exactly like the sources (``NaN`` stays ``NaN``)."""
+    """``float(value or missing)`` exactly like the sources (``NaN`` stays ``NaN``).
+
+    ``value`` stays ``Any``: whatever ``float()`` accepts is accepted, as in the source.
+    """
     try:
         return float(value or missing)
     except (TypeError, ValueError) as exc:
         raise InputError(f"Feld {field!r} erwartet eine Zahl, erhalten {value!r}.") from exc
 
 
-def _number_range(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _number_range(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     out = Outcome.constant(len(table), False)
     low, high = p["lower"], p["upper"]
     for i in range(len(table)):
@@ -74,13 +76,13 @@ def _number_range(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _set_overlap(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
+def _set_overlap(p: JsonObject, table: Table, ctx: Context) -> Outcome:
     values = frozenset(p["values"])
     out = Outcome.constant(len(table), False)
     for i in range(len(table)):
         raw = table.value(i, p["field"])
         if is_missing(raw):
-            members: set[Any] = set()
+            members: set[object] = set()
         elif isinstance(raw, list | tuple | set | frozenset):
             members = set(raw)
         else:
@@ -93,7 +95,7 @@ def _set_overlap(p: Mapping[str, Any], table: Table, ctx: Context) -> Outcome:
     return out
 
 
-def _check_truthy(params: Mapping[str, Any], where: str) -> None:
+def _check_truthy(params: JsonObject, where: str) -> None:
     need(
         isinstance(params["fields"], list) and bool(params["fields"]),
         where,
@@ -102,11 +104,11 @@ def _check_truthy(params: Mapping[str, Any], where: str) -> None:
     need(isinstance(params["truthy_values"], list), where, "truthy_values muss eine Liste sein")
 
 
-def _check_set(params: Mapping[str, Any], where: str) -> None:
+def _check_set(params: JsonObject, where: str) -> None:
     need(isinstance(params["values"], list), where, "values muss eine Liste sein")
 
 
-def _check_range(params: Mapping[str, Any], where: str) -> None:
+def _check_range(params: JsonObject, where: str) -> None:
     for key in ("lower", "upper"):
         need(
             params[key] is None or is_number(params[key]), where, f"{key} muss Zahl oder null sein"
@@ -119,7 +121,7 @@ def _check_range(params: Mapping[str, Any], where: str) -> None:
     need(is_number(params["missing_value"]), where, "missing_value muss eine Zahl sein")
 
 
-def _check_overlap(params: Mapping[str, Any], where: str) -> None:
+def _check_overlap(params: JsonObject, where: str) -> None:
     _check_set(params, where)
     need(params["mode"] in ("any", "outside"), where, "mode muss any/outside sein")
 
