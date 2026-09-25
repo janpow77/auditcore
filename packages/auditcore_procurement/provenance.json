@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_procurement",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "sources": [
     {
       "repository": "janpow77/audit-portal",

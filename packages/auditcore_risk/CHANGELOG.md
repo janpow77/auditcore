@@ -1,5 +1,21 @@
 # Changelog – auditcore_risk
 
+## Unveröffentlicht – Web-Schnittstelle
+
+Neue Funktion, Regeln und Ergebnisse unverändert; die Versionsnummer setzt der
+nächste Paket-Release.
+
+- **`auditcore_risk.web`** (Extras `web`: starlette ≥ 0.26.1, `fastapi`:
+  fastapi ≥ 0.92): `create_app`/`routes` (Starlette) und `build_fastapi_router`
+  mit `GET /profiles`, `GET /profiles/{id}/{version}`,
+  `POST /profiles/{id}/{version}/check-columns`, `POST /evaluate`; die Handler
+  sind ohne Web-Framework aufrufbar. Auswertungen nennen je Treffer und je
+  unbestimmtem Merkmal die gelesenen Eingabefelder mit Werten.
+- **`web/field_catalog.json`**: Eingabefelder je Profil (Bedeutung, Pflicht,
+  Folge bei fehlender Spalte/leerem Wert) als JSON, erzeugt mit
+  `tools/export_field_catalog.py` aus derselben Ableitung wie
+  `docs/eingabefelder.md`.
+
 ## 0.3.1 – Refaktorierung ohne Verhaltensänderung
 
 Alle Profile, Fingerprints, Meldungstexte, Ergebnisschlüssel und die
