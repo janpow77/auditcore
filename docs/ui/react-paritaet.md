@@ -35,6 +35,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Stichprobe | `SamplingPanel` | `FlowauditSampling` | `auditcore_sampling.web` ([sampling-rest.md](sampling-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Benford-Analyse | `BenfordPanel` | `FlowauditBenford` | `auditcore_statistics.web` ([benford-rest.md](benford-rest.md)) | 4 + Interaktionsfolge |
 | Kennung prüfen | `IdentifierCheck` | `FlowauditIdentifierCheck` | `identifiers_ui/1` ([identifiers-rest.md](identifiers-rest.md)) | 4 + 2 Interaktionsfolgen |
+| Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
 
 ## Nachweis
 

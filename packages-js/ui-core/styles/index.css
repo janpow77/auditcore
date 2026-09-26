@@ -11,5 +11,6 @@
 @import './benford.css';
 @import './documents.css';
 @import './identifiers.css';
+@import './extraction.css';
 @import './kanban.css';
 @import './dbkanban.css';
