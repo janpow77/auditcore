@@ -1,4 +1,5 @@
-"""Framework T-38: stdlib-only runtime, no global random state, no I/O."""
+"""Framework T-38: stdlib-only runtime (plus the stdlib-only ``auditcore_common``),
+no global random state, no I/O."""
 
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ def test_runtime_imports_and_calls() -> None:
     package = Path(auditcore_sampling.__file__).parent
     allowed = {
         "__future__",
+        "auditcore_common",
         "bisect",
         "collections",
         "dataclasses",

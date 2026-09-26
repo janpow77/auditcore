@@ -13,6 +13,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, cast
 
+from auditcore_common.optional import require_module
+
 from . import indicators as core
 from .errors import DependencyError, IndicatorInputError
 from .profiles import IndicatorProfile
@@ -22,13 +24,11 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def _pl() -> Any:
-    try:
-        import polars
-    except ImportError as exc:  # pragma: no cover - exercised without the extra
-        raise DependencyError(
-            "polars ist nicht installiert: auditcore_market_indicators[polars] installieren."
-        ) from exc
-    return polars
+    return require_module(
+        "polars",
+        DependencyError,
+        "polars ist nicht installiert: auditcore_market_indicators[polars] installieren.",
+    )
 
 
 def _checked(series: pl.Series) -> pl.Series:

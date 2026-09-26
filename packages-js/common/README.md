@@ -13,24 +13,20 @@ Risiko, Stichprobe) gehört nicht hierher.
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                               # im Repository-Stamm
-npm run build -w @flowaudit/common   # dist/: ESM und Typen
-npm test -w @flowaudit/common        # Vitest, zweiter Lauf mit TZ=America/New_York
+npm install @flowaudit/common@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.0.tgz
 ```
 
-Im Anwendungsrepository:
+Keine Peer-Abhängigkeiten, kein CSS, keine weiteren `@flowaudit`-Pakete.
 
-```sh
-npm install @flowaudit/common
-```
-
-Das Paket ist noch nicht in einer npm-Registry veröffentlicht; bis dahin
-Bezug über den Workspace oder ein mit `npm pack -w @flowaudit/common`
-erzeugtes Tarball (`npm install ./flowaudit-common-0.1.0.tgz`). Keine
-Peer-Abhängigkeiten, kein CSS.
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/common`).
 
 ## Schnellstart
 

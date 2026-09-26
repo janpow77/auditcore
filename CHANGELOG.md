@@ -13,6 +13,28 @@
   Berichtsvorlagen; „Vorlage“ ist hier das Formatprofil
   (`docs/ui/reporting-rest.md`). Sechs Paritätsfälle plus Interaktionsfolge,
   Demo-Seite „Tabellenexport (Excel)“ und API-E2E-Test.
+
+- Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
+  Job-Image `ghcr.io/janpow77/auditcore-donut-train:cu128` (Workflow
+  `donut-train-image`, Basis per Digest, torch 2.11.0+cu128, gepinnte
+  Laufzeit, Lizenzhinweise unter `/licenses`); Hängeschutz mit atomarer
+  `progress.json` samt Herzschlag, SIGTERM → Checkpoint (Frist 90 s),
+  NaN/Inf-Loss und CUDA-OOM mit Sicherung des letzten guten Stands und
+  eigenen Exit-Codes, gezählte unlesbare Beispiele; Kommando je Lauf im
+  FlowAgent-Job (zweiter Lauf 1536×1152, Seed + 1, vorher gleiche
+  Konfiguration auf beiden Karten); `train.evaluate` bewertet Kandidat und
+  Donut-CORD mit einem Befehl. Keine Versionsanhebung.
+
+- `auditcore_common`-Migrationen Teil A: neues Modul `auditcore_common.rest`
+  (rahmenwerkfreier Teil der REST-Schicht, Duplikatgruppe B1);
+  `auditcore_sampling` und `auditcore_statistics` nutzen es,
+  `auditcore_sampling` zusätzlich `numeric.numpy_pairwise_sum`/`numpy_round`,
+  `auditcore_market_indicators` `numpy_pairwise_sum`, `require_finite`,
+  `canonical_sha256` und die Profil-Lader. sampling und market_indicators
+  hängen neu von `auditcore_common==0.1.1` ab. Paritätstests alt ↔ neu
+  (Differenz- und Hypothesis-Tests in `auditcore_common`); keine
+  Verhaltensänderung.
+
 - Offene `auditcore_common`-Migrationen (Teil B): `auditcore_price_sources`
   (kanonisches JSON, Paketbytes bytegleich), `auditcore_geo` (Endlichkeit),
   `auditcore_property_sources` (HTML-Erkennung, Zeitzonenprüfung) und
