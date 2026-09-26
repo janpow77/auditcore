@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { FindingView, SubjectView } from '../types'
-import { formatDate } from '../view'
+import { screeningMessages } from '../core'
+import type { FindingView, SubjectView } from '../core'
+import { formatDate } from '../core'
 
 const props = defineProps<{ subject: SubjectView }>()
 const { t } = useI18n(screeningMessages)

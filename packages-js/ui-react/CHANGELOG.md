@@ -9,7 +9,11 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   REST-Verträge wie die Vue-Fassung; Logik aus `@flowaudit/ui-core`):
   `FlowauditTable`, `FlowauditSynopsis` (Vertrag `auditcore_documents.web`),
   `FlowauditVvt` und `FlowauditDsfa` (Vertrag `dataprotection_ui/1`),
-  `FlowauditGeoMap` (Vertrag `auditcore_geo.web`, Leaflet), dazu
+  `FlowauditGeoMap` (Vertrag `auditcore_geo.web`, Leaflet),
+  `FlowauditRiskFlags` mit Teilkomponenten (`auditcore_risk.web`),
+  `FlowauditScreeningReview` (`screening_review/1`), `FlowauditSampling`
+  (`auditcore_sampling.web`) und `FlowauditBenford`
+  (`auditcore_statistics.web`), dazu
   `Button`, `Badge`, `Icon`, `TextField`, `Dialog` (Fokusfalle aus dem Kern), `LocaleProvider`, `useTranslation`,
   `useStoreState`.
 - Ereignisse heißen wie bisher `onXxx`, erhalten aber direkt die Nutzdaten
@@ -19,10 +23,11 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   (`FlowauditSynopsisHandle`).
 - Stile aus `@flowaudit/ui-core/style.css` (statt `@flowaudit/ui/style.css`).
 - Entfernt: die Hüllen `FlowauditTable`, `FlowauditSynopsis`,
-  `FlowauditVvt`, `FlowauditDsfa`, `FlowauditGeoMap` (ersetzt durch die nativen Fassungen) und
+  `FlowauditVvt`, `FlowauditDsfa`, `FlowauditGeoMap`, `FlowauditRiskFlags`,
+  `FlowauditScreeningReview`, `FlowauditSampling`, `FlowauditBenford`
+  (ersetzt durch die nativen Fassungen im Haupteinstieg) und
   das Weiterreichen von `defineFlowauditElements` im Haupteinstieg.
-- **Veraltet:** Die übrigen Hüllen (`FlowauditSampling`, `FlowauditBenford`,
-  `FlowauditScreeningReview`, `FlowauditRiskFlags`, `FlowauditKanbanBoard(s)`,
+- **Veraltet:** Die übrigen Hüllen (`FlowauditKanbanBoard(s)`,
   `createElementComponent`, `eventPayload`,
   `defineFlowauditElements`) stehen nur noch unter `@flowaudit/ui-react/elements`;
   `@flowaudit/ui`, `@flowaudit/kanban-core` und `vue` sind dafür optionale

@@ -3,8 +3,7 @@ import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 import type { TableColumn, TableRow } from '../table'
 import RiskFlagState from './RiskFlagState.vue'
-import { riskMessages } from './messages'
-import type { FlagState } from './view/state'
+import { riskMessages, type FlagState } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   columns?: readonly TableColumn[]
@@ -48,10 +47,3 @@ function onRow(row: TableRow): void {
     </FaTable>
   </div>
 </template>
-
-<style>
-.fa-risk-table .fa-table td { padding-block: var(--fa-space-1); }
-.fa-risk-table__record { font-family: var(--fa-font-mono); font-size: var(--fa-font-size-sm); }
-.fa-risk-table__record[aria-current='true'] { font-weight: 700; color: var(--fa-color-accent); }
-.fa-risk-table__record[aria-current='true']::before { content: '▸ '; }
-</style>

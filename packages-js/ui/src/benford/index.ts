@@ -1,8 +1,52 @@
 export { default as BenfordPanel } from './BenfordPanel.vue'
 export { benfordElement } from './element'
-export { benfordMessages } from './messages'
-export * from './chart'
-export * from './model'
-export { createBenfordRestPort } from './rest-port'
-export type * from './types'
 export { useBenford, type BenfordCallbacks, type UseBenford } from './useBenford'
+/** Kern (Vertrag, Diagrammgeometrie, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+export {
+  benfordMessages,
+  type BenfordMessageKey,
+  createBenfordRestPort,
+  createBenfordController,
+  benfordValues,
+  benfordProfile,
+  INITIAL_BENFORD,
+  type BenfordBusy,
+  type BenfordController,
+  type BenfordData,
+  type BenfordSource,
+  DEFAULT_BOX,
+  axisMaximum,
+  chartGeometry,
+  type ChartBox,
+  type ChartBar,
+  type ChartGeometry,
+  needsShortValues,
+  buildAnalyseRequest,
+  levelTone,
+  digitLabel,
+  type AnalyseInput,
+  type AnalyseError,
+  type AnalyseValidation,
+  type LevelTone,
+  analyseErrorKey,
+  benfordValuesText,
+  benfordBarTitle,
+  benfordChartTitle,
+  benfordTickText,
+  benfordMetricTexts,
+  benfordDigitColumns,
+  benfordDigitRows,
+  type BenfordTranslate,
+  type BenfordMetricTexts,
+  type BenfordTest,
+  type ShortValues,
+  type ConformityProfile,
+  type BenfordCatalogue,
+  type AnalyseRequest,
+  type DistributionRow,
+  type ConformityRow,
+  type BenfordDistribution,
+  type Conformity,
+  type BenfordAnalysis,
+  type BenfordPort,
+} from '@flowaudit/ui-core'

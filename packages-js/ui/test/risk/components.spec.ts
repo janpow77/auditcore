@@ -3,9 +3,9 @@ import { nextTick } from 'vue'
 import { afterEach, describe, expect, it } from 'vitest'
 import { RiskFlagCard, RiskFlags, RiskProfileInfo, recordEntries, recordRules, type Evaluation, type ProfileDetail } from '../../src'
 import { defineFlowauditElements } from '../../src/elements'
-import flowstatJson from './fixtures/evaluation-flowstat.json'
-import profileJson from './fixtures/profile-year-bound.json'
-import yearBoundJson from './fixtures/evaluation-year-bound.json'
+import flowstatJson from '../../../ui-core/test/fixtures/risk/evaluation-flowstat.json'
+import profileJson from '../../../ui-core/test/fixtures/risk/profile-year-bound.json'
+import yearBoundJson from '../../../ui-core/test/fixtures/risk/evaluation-year-bound.json'
 
 const evaluation = yearBoundJson as unknown as Evaluation
 const flowstat = flowstatJson as unknown as Evaluation

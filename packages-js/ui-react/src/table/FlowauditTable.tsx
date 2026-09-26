@@ -23,6 +23,8 @@ export interface FlowauditTableProps {
   onRowClick?: (row: TableRow) => void
   /** Eigene Zelle (Gegenstück zum Vue-Slot `cell-<key>`); `undefined` = Standardtext. */
   renderCell?: (column: TableColumn, row: TableRow, value: unknown) => ReactNode
+  /** `data-testid` am Rahmen (in Vue als durchgereichtes Attribut). */
+  testId?: string
 }
 
 function HeaderCell({ column, sort, t, onToggle }: { column: TableColumn; sort: SortState | null; t: Translate<BaseKey>; onToggle: (column: TableColumn) => void }) {
@@ -62,7 +64,7 @@ export function FlowauditTable(props: FlowauditTableProps) {
     if (clickable) props.onRowClick?.(row)
   }
   return (
-    <div className="fa-table-wrap">
+    <div className="fa-table-wrap" data-testid={props.testId}>
       <table className={classes('fa-table', clickable && 'fa-table--clickable')}>
         {props.caption ? <caption className="fa-table__caption">{props.caption}</caption> : null}
         <thead>

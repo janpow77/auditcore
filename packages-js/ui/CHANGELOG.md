@@ -10,6 +10,18 @@
   React-Fassung `@flowaudit/ui-react` 1.0.0. Öffentliche Namen der
   Kernfunktionen werden unverändert weitergereicht; `ui.css` enthält die
   Kernstile weiterhin.
+- **Risiko-Merkmale, Screening, Stichprobe, Benford, Datei-Import:** Kern
+  (Verträge, Ports, View-Logik, Zustandsautomaten, Stile) ebenfalls in
+  `@flowaudit/ui-core`; `RiskFlags`, `ScreeningReview`, `SamplingPanel`,
+  `BenfordPanel` und `TableImport` sind in Props, Ereignissen und Markup
+  unverändert und haben jetzt native Gegenstücke in `@flowaudit/ui-react`.
+  Die Stildatei `screening.css` liegt jetzt in `@flowaudit/ui-core/styles`.
+- **Breaking (Composables, Risiko bis Datei-Import):** `useSampling`,
+  `useBenford` und `useTableImport` liefern `{ controller, state, … }` statt
+  einzelner Refs; `useScreeningReview` hat statt beschreibbarer `filter`/
+  `selectedHitId` die Aktionen `setFilter` und `select`; `useRiskFlags`
+  liefert `filter` als beschreibbares `computed` und `selectedIndex` nur
+  lesbar (Auswahl über `select`), zusätzlich `controller`.
 - **Breaking (Composables):** `useSynopsis`, `useSynopsisNavigation`,
   `useSynopsisExport`, `useVvt` und `useDsfa` liefern jetzt Controller und
   Zustand des Kerns (`controller`, `state`, `view`/`selection`/`derived`)

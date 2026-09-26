@@ -28,7 +28,11 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Datenschutz-Folgenabschätzung | `FaDsfa` | `FlowauditDsfa` | `dataprotection_ui/1` | 6 + 3 Interaktionsfolgen |
 | Geo-Karte | `FaGeoMap` | `FlowauditGeoMap` | `auditcore_geo.web` ([geo-rest.md](geo-rest.md)) | 4 + Interaktionsfolge |
 | Basis (Schaltfläche, Eingabefeld, Dialog) | `FaButton`, `FaTextField`, `FaDialog` | `Button`, `TextField`, `Dialog` | – | 9 |
-| Stichprobe, Benford, Screening, Risiko-Merkmale, Kanban | ja | noch veraltete Hüllen (`@flowaudit/ui-react/elements`); native Fassungen in Arbeit | – | – |
+| Risiko-Merkmale | `RiskFlags` | `FlowauditRiskFlags` | `auditcore_risk.web` ([risk-rest.md](risk-rest.md)) | 7 + Interaktionsfolge |
+| Screening-Trefferprüfung | `ScreeningReview` | `FlowauditScreeningReview` | `screening_review/1` ([screening-rest.md](screening-rest.md)) | 5 + 2 Interaktionsfolgen |
+| Stichprobe | `SamplingPanel` | `FlowauditSampling` | `auditcore_sampling.web` ([sampling-rest.md](sampling-rest.md)) | 5 + 2 Interaktionsfolgen |
+| Benford-Analyse | `BenfordPanel` | `FlowauditBenford` | `auditcore_statistics.web` ([benford-rest.md](benford-rest.md)) | 4 + Interaktionsfolge |
+| Kanban | ja | nur veraltete Hüllen (`@flowaudit/ui-react/elements`) | – | – |
 
 ## Nachweis
 
@@ -71,3 +75,6 @@ Formularzustand).
 | `defineExpose` der Synopse | React: `ref` mit `next()`, `previous()`, `exportAs()`. |
 | Ereignisse | Gleiche Nutzdaten; React übergibt sie direkt statt als `CustomEvent`. |
 | Grund einer Synopse-Zeile | Vue sendet bei `change`, React beim Verlassen des Feldes nur bei geändertem Text – dieselbe Auslösung. |
+| Filter der Risiko-Merkmale (`v-model` an `RiskFlagFilter`) | React: gesteuert `filter`/`onFilterChange`; `FlowauditRiskFlags` meldet jede Änderung wie Vues `filter-change`. |
+| Leerer Mindestwert im Screening-Laufformular | Vue (`v-model.number`) liefert `''`, React `null`; beides heißt „kein Mindestwert“. |
+| Profilauswahl der Benford-Analyse | Leere Auswahl in beiden Fassungen `<option value="">` (Vue vorher `:value="null"`, nicht sichtbar). |

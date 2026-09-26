@@ -2,9 +2,9 @@
 import FaBadge from '../../base/FaBadge.vue'
 import type { BadgeTone } from '../../base/types'
 import { useI18n } from '../../i18n'
-import { codeLabel, screeningMessages } from '../messages'
-import type { HitView, ReviewStatus, SubjectStatus, SubjectView } from '../types'
-import { formatScore, scorePercent } from '../view'
+import { codeLabel, screeningMessages } from '../core'
+import type { HitView, ReviewStatus, SubjectStatus, SubjectView } from '../core'
+import { formatScore, scorePercent } from '../core'
 import ScreeningSubjectInfo from './ScreeningSubjectInfo.vue'
 
 defineProps<{ subjects: SubjectView[]; selectedId: string | null }>()

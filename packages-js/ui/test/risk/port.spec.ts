@@ -1,8 +1,8 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { RestError, RiskFlags, createRiskRestPort, type Evaluation, type ProfileDetail, type RiskPort } from '../../src'
-import profileJson from './fixtures/profile-year-bound.json'
-import yearBoundJson from './fixtures/evaluation-year-bound.json'
+import profileJson from '../../../ui-core/test/fixtures/risk/profile-year-bound.json'
+import yearBoundJson from '../../../ui-core/test/fixtures/risk/evaluation-year-bound.json'
 
 const evaluation = yearBoundJson as unknown as Evaluation
 const profile = profileJson as unknown as ProfileDetail

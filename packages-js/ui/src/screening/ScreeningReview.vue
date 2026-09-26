@@ -5,10 +5,9 @@ import ScreeningRunDetail from './components/ScreeningRunDetail.vue'
 import ScreeningRunForm from './components/ScreeningRunForm.vue'
 import ScreeningRunList from './components/ScreeningRunList.vue'
 import ScreeningSources from './components/ScreeningSources.vue'
-import { screeningMessages } from './messages'
-import type { RunView, ScreeningPort } from './types'
+import { screeningMessages } from './core'
+import type { RunView, ScreeningPort } from './core'
 import { useScreeningReview, type ScreeningError } from './useScreeningReview'
-import type { HitFilter } from './view'
 
 const props = withDefaults(defineProps<{
   /** Datenzugang (Vertrag screening_review/1), z. B. `createScreeningRestPort({ baseUrl: '/api/screening' })`. */
@@ -40,10 +39,6 @@ watch(() => props.port, async (port) => {
   await state.load()
   if (props.runId) await state.openRun(props.runId)
 }, { immediate: true })
-
-function updateFilter(value: HitFilter): void {
-  Object.assign(filter, value)
-}
 </script>
 
 <template>
@@ -76,8 +71,8 @@ function updateFilter(value: HitFilter): void {
           :settings="settings"
           :events="log?.events ?? []"
           :busy="busy"
-          @update:filter="updateFilter"
-          @select="state.selectedHitId.value = $event"
+          @update:filter="state.setFilter"
+          @select="state.select"
           @next="state.selectNext"
           @decide="state.decide"
           @second-review="state.secondReview"
