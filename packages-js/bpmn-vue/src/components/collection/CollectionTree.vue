@@ -4,13 +4,13 @@
  * by status and tag (legacy `BpmnDiagramTree`, now with real folders).
  */
 import { computed, ref } from 'vue'
-import { DIAGRAM_STATUS, label } from '@flowaudit/bpmn-flowaudit'
+import { DIAGRAM_STATUS, label } from '@auditcore/bpmn-flowaudit'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import type { CollectionStore } from '../../stores/collectionStore'
 import PromptDialog from '../base/PromptDialog.vue'
 import TreeFolder from './TreeFolder.vue'
-import { readDrag } from '@flowaudit/bpmn-flowaudit/ui'
+import { readDrag } from '@auditcore/bpmn-flowaudit/ui'
 
 const props = defineProps<{ store: CollectionStore; selectedDiagram: string | null; openDiagram: string | null }>()
 const emit = defineEmits<{ (e: 'select-diagram', id: string | null): void; (e: 'open-diagram', id: string): void }>()

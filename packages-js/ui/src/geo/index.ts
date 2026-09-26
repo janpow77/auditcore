@@ -1,7 +1,7 @@
 export { default as FaGeoMap } from './FaGeoMap.vue'
 export { geoMapElement } from './element'
 export { useGeoMap, type GeoBusy, type GeoHint, type GeoMapCallbacks, type UseGeoMap } from './useGeoMap'
-/** Kern (Vertrag auditcore_geo.web, Modell, Port, Kartenansicht, Zustandsautomat) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag auditcore_geo.web, Modell, Port, Kartenansicht, Zustandsautomat) aus `@auditcore/ui-core`. */
 export {
   geoMessages,
   TOLERANCE_STEPS,
@@ -21,7 +21,7 @@ export {
   type UtmInputError,
   createGeoRestPort,
   type GeoRestOptions,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 export type {
   LatLon,
   AreaGeometry,
@@ -49,4 +49,4 @@ export type {
   GeocodeHit,
   GeocodeResult,
   GeoPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

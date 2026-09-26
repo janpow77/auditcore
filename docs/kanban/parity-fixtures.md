@@ -1,6 +1,6 @@
 # Paritätsfixtures Python ↔ TypeScript
 
-`auditcore_kanban` (Python) und `@flowaudit/kanban-core` (TypeScript) müssen bei
+`auditcore_kanban` (Python) und `@auditcore/kanban-core` (TypeScript) müssen bei
 Rang, Übergängen, WIP, Filter, Fristen, Rechten, Validierung, Befehlen und
 der Gruppierung der Datenbankansicht
 identisch entscheiden. Die gemeinsame Referenz sind die JSON-Dateien unter

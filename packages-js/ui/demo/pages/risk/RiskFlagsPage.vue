@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { RiskFlags, type Evaluation, type ProfileDetail } from '@flowaudit/ui'
+import { RiskFlags, type Evaluation, type ProfileDetail } from '@auditcore/ui'
 import flowstatJson from '../../../../ui-core/test/fixtures/risk/evaluation-flowstat.json'
 import profileJson from '../../../../ui-core/test/fixtures/risk/profile-year-bound.json'
 import yearBoundJson from '../../../../ui-core/test/fixtures/risk/evaluation-year-bound.json'

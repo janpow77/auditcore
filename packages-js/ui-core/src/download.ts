@@ -2,7 +2,7 @@
  * Browser-Helfer für Exporte (DOM, aber framework-frei): Datei anbieten und
  * Druckansicht öffnen. Vue- und React-Fassung rufen dieselben Funktionen.
  */
-import { saveFile } from '@flowaudit/common/browser'
+import { saveFile } from '@auditcore/common/browser'
 
 /** Text als Datei anbieten (Blob-URL); ohne Blob-Unterstützung geschieht nichts. */
 export function downloadText(content: string, filename: string, mimeType: string): boolean {

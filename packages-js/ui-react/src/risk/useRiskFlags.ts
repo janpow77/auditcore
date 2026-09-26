@@ -12,7 +12,7 @@ import {
   type RiskPort,
   type RiskSelection,
   type RiskTranslate,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -23,7 +23,7 @@ export interface UseRiskFlags {
   selection: RiskSelection
 }
 
-/** React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useRiskFlags`/`useRiskProfile` in Vue). */
+/** React-Anbindung des Zustandsautomaten aus `@auditcore/ui-core` (dieselbe Logik wie `useRiskFlags`/`useRiskProfile` in Vue). */
 export function useRiskFlags(props: { evaluation?: Evaluation | null; profile?: ProfileDetail | null; port?: RiskPort | null; locale?: Locale }): UseRiskFlags {
   const { t } = useTranslation(riskMessages, props.locale)
   const [controller] = useState(createRiskController)

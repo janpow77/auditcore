@@ -1,7 +1,7 @@
 """JSON (de)serialization of boards; format ``auditcore_kanban.board/1``.
 
 The shape is described by ``schemas/board.schema.json`` (JSON Schema 2020-12)
-and mirrored by ``@flowaudit/kanban-core``.
+and mirrored by ``@auditcore/kanban-core``.
 """
 
 from __future__ import annotations

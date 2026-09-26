@@ -1,5 +1,5 @@
-import { COLUMN_COLORS, type Column } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import { COLUMN_COLORS, type Column } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import type { ChangeEvent, CSSProperties } from 'react'
 import { Button } from '../base/Button'
 import { useKanbanDialogText } from './text'

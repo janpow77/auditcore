@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import { comparisonsMessages, DEFAULT_MAX_UPLOAD_BYTES, synopsisPortOf, type Comparison, type ComparisonsError, type ComparisonsPort } from '@flowaudit/ui-core'
+import { comparisonsMessages, DEFAULT_MAX_UPLOAD_BYTES, synopsisPortOf, type Comparison, type ComparisonsError, type ComparisonsPort } from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import FaDialog from '../base/FaDialog.vue'
 import { useId } from '../composables/useId'

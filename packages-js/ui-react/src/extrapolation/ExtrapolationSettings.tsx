@@ -1,4 +1,4 @@
-import { confidenceChoices, extrapolationConfidenceLabel, extrapolationIssueText, extrapolationMethodGroups } from '@flowaudit/ui-core'
+import { confidenceChoices, extrapolationConfidenceLabel, extrapolationIssueText, extrapolationMethodGroups } from '@auditcore/ui-core'
 import { classes, useElementId } from '../store'
 import type { UseExtrapolation } from './useExtrapolation'
 

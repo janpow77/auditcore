@@ -14,7 +14,7 @@ import {
   type VvtExport,
   type VvtExportFormat,
   type VvtView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { LocaleProvider, useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 import { VvtActivityDetail } from './vvt/VvtActivityDetail'

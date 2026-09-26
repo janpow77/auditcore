@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FaBadge, FaButton, FaDialog, FaIcon, FaTextField, ICONS, type IconName } from '@flowaudit/ui'
+import { FaBadge, FaButton, FaDialog, FaIcon, FaTextField, ICONS, type IconName } from '@auditcore/ui'
 
 const dialogOpen = ref(false)
 const title = ref('')

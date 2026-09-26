@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { RecordTable } from '@flowaudit/kanban-core'
+import type { RecordTable } from '@auditcore/kanban-core'
 import { recordPort, recordTable } from '../../ui-core/test/dbkanban/fixtures'
 import { FlowauditDbKanban } from '../src'
 

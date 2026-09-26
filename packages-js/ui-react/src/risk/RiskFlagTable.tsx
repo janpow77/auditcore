@@ -1,5 +1,5 @@
-import type { TableColumn, TableRow } from '@flowaudit/common'
-import { riskMessages, type FlagState, type Locale } from '@flowaudit/ui-core'
+import type { TableColumn, TableRow } from '@auditcore/common'
+import { riskMessages, type FlagState, type Locale } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { FlowauditTable } from '../table/FlowauditTable'
 import { RiskFlagState } from './RiskFlagState'

@@ -1,4 +1,4 @@
-import { bearerHeaders, isTokenExpired, type TokenStore } from '@flowaudit/common'
+import { bearerHeaders, isTokenExpired, type TokenStore } from '@auditcore/common'
 import { computed, getCurrentScope, onScopeDispose, readonly, ref, type ComputedRef, type Ref } from 'vue'
 
 export interface UseAuthToken {
@@ -11,7 +11,7 @@ export interface UseAuthToken {
   clear: () => void
 }
 
-/** Reaktiver Zugriff auf einen `TokenStore` aus `@flowaudit/common`. */
+/** Reaktiver Zugriff auf einen `TokenStore` aus `@auditcore/common`. */
 export function useAuthToken(store: TokenStore): UseAuthToken {
   const token = ref<string | null>(store.get())
   const stop = store.subscribe((next) => {

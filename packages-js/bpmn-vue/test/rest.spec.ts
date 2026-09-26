@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { emptyCollection } from '@flowaudit/bpmn-flowaudit'
-import { restPorts } from '@flowaudit/bpmn-flowaudit/ui'
+import { emptyCollection } from '@auditcore/bpmn-flowaudit'
+import { restPorts } from '@auditcore/bpmn-flowaudit/ui'
 
 type Call = { url: string; init: RequestInit }
 

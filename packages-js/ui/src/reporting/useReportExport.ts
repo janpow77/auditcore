@@ -8,10 +8,10 @@ import {
   type ReportingData,
   type ReportingPort,
   type ReportTableInput,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { ReportingCallbacks } from '@flowaudit/ui-core'
+export type { ReportingCallbacks } from '@auditcore/ui-core'
 
 export interface UseReportExport {
   controller: ReportingController
@@ -19,7 +19,7 @@ export interface UseReportExport {
   profile: ComputedRef<FormatProfile | null>
 }
 
-/** Vue-Anbindung des Tabellenexports aus `@flowaudit/ui-core` (`createReportingController`). */
+/** Vue-Anbindung des Tabellenexports aus `@auditcore/ui-core` (`createReportingController`). */
 export function useReportExport(
   port: () => ReportingPort | null,
   tables: () => readonly ReportTableInput[],

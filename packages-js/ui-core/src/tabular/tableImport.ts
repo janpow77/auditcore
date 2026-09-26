@@ -9,7 +9,7 @@ import {
   parseTable,
   type DecimalSeparator,
   type ParsedTable,
-} from '@flowaudit/common'
+} from '@auditcore/common'
 import { createStore } from '../store'
 
 /** Übernommene Spalten einer Datei. */

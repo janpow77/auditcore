@@ -1,6 +1,6 @@
 // Framework-freie Warteschlange für Benachrichtigungen (Toasts). Vue
-// (`useToast` in `@flowaudit/ui`) und React (`useToast` in
-// `@flowaudit/ui-react`) abonnieren dieselbe Warteschlange.
+// (`useToast` in `@auditcore/ui`) und React (`useToast` in
+// `@auditcore/ui-react`) abonnieren dieselbe Warteschlange.
 
 /** Art eines Toasts (bestimmt Farbe und Standarddauer). */
 export type ToastKind = 'success' | 'error' | 'info' | 'warning'

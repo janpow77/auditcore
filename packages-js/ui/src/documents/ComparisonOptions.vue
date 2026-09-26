@@ -10,7 +10,7 @@ import {
   type ComparisonsMessageKey,
   type ProfileOption,
   type RowStatus,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import { useI18n } from '../i18n'
 

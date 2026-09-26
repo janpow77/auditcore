@@ -1,9 +1,9 @@
 /** Small React helpers shared by the components (counterparts of the Vue bindings). */
 
 import { useId, useSyncExternalStore } from 'react'
-import type { Store } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Store } from '@auditcore/bpmn-flowaudit/ui'
 
-/** State of a core controller (`@flowaudit/bpmn-flowaudit/ui`) as React state. */
+/** State of a core controller (`@auditcore/bpmn-flowaudit/ui`) as React state. */
 export function useStoreState<S extends object>(store: Store<S>): S {
   return useSyncExternalStore(store.subscribe, store.get, store.get)
 }

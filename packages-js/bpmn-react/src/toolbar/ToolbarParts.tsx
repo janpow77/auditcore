@@ -1,7 +1,7 @@
 /** Parts of the editor toolbar: name field, undo/redo, check menu and mode toggles. */
 
 import { useEffect, useState } from 'react'
-import { CHECK_ACTIONS, EDIT_ACTIONS, MODE_ACTIONS, type ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
+import { CHECK_ACTIONS, EDIT_ACTIONS, MODE_ACTIONS, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { ToolbarMenu } from '../base/ToolbarMenu'
 import { useI18n } from '../i18n'

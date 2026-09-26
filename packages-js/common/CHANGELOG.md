@@ -1,4 +1,8 @@
-# Changelog @flowaudit/common
+# Changelog @auditcore/common
+
+## Unreleased
+
+- **Breaking:** Paketname `@auditcore/common` statt `@flowaudit/common` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-common-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 ## 0.1.0 – 2026-09-25
 

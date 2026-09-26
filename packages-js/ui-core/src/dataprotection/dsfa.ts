@@ -1,7 +1,7 @@
 // Zustandsautomat von <flowaudit-dsfa> (Vue und React): Übersicht, Erhebung mit
 // Vorschau der Bibliothek, Entscheidung, DSB-Stellungnahme, Freigabe, Neubewertung.
 
-import { saveFile } from '@flowaudit/common/browser'
+import { saveFile } from '@auditcore/common/browser'
 import { createDelay, createRunner, createStore, IDLE, type RequestState, type Store } from '../store'
 import { sameSurvey, surveyFrom, type TabItem } from './dsfaView'
 import type { DataProtectionKey, DataProtectionTranslate } from './messages'

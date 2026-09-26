@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { screeningMessages, type BadgeTone, type ScreeningKey, type ScreeningTranslate } from '@flowaudit/ui-core'
+import { screeningMessages, type BadgeTone, type ScreeningKey, type ScreeningTranslate } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 
 /** Übersetzung der Screening-Texte in der Sprache des umgebenden `LocaleProvider` (wie `provideLocale` in Vue). */

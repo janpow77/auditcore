@@ -2,7 +2,7 @@
 // Datensatzauswahl und nachgeladene Profilbeschreibung; alles Übrige sind
 // reine Selektoren über der Auswertung.
 
-import type { TableColumn, TableRow } from '@flowaudit/common'
+import type { TableColumn, TableRow } from '@auditcore/common'
 import type { Translate } from '../i18n'
 import { createStore } from '../store'
 import type { RiskMessageKey } from './messages'

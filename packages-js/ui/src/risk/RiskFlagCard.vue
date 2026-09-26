@@ -4,7 +4,7 @@ import FaBadge from '../base/FaBadge.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
 import RiskFlagState from './RiskFlagState.vue'
-import { riskMessages, type ProfileReference, formatValue, parameterLabel, severityTone, profileStatusText, pairs, type FlagEntry } from '@flowaudit/ui-core'
+import { riskMessages, type ProfileReference, formatValue, parameterLabel, severityTone, profileStatusText, pairs, type FlagEntry } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   entry: FlagEntry

@@ -1,8 +1,8 @@
 # Paritätsinventur Risiko-Merkmale (Red Flags) – Oberfläche
 
 Stand 2026-09-25. Grundlage für die wiederverwendbaren Komponenten in
-`@flowaudit/ui` (`packages-js/ui/src/risk/`, Web Component
-`<flowaudit-risk-flags>`, React-Hülle in `@flowaudit/ui-react`) und den
+`@auditcore/ui` (`packages-js/ui/src/risk/`, Web Component
+`<flowaudit-risk-flags>`, React-Hülle in `@auditcore/ui-react`) und den
 REST-Vertrag [risk-rest.md](risk-rest.md). Untersucht wurden die bestehenden
 Oberflächen der drei Anwendungen, deren Regeln `auditcore_risk` als Profile führt.
 
@@ -49,7 +49,7 @@ Profil `audit_designer.flowstat_belegliste` (BL_RF01–BL_RF10).
 ## Paritätsmatrix
 
 Legende: ✔ vorhanden, ◐ teilweise, – fehlt. „Komponente“ nennt den Baustein in
-`@flowaudit/ui`, der die Fähigkeit übernimmt.
+`@auditcore/ui`, der die Fähigkeit übernimmt.
 
 | Fähigkeit | riskanalysis | flowinvoice | FlowStat | Komponente |
 |---|---|---|---|---|

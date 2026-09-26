@@ -82,13 +82,13 @@ Ganze Regeln schaltet nur das Manifest ab, immer mit Begründung.
 ### Katalog der Bibliotheken
 
 `src/auditcore/tools/helpers/data/catalog.json` ordnet Namensmuster den
-auditcore-Bibliotheken zu (z. B. `formatDate` → `@flowaudit/ui formatDate`,
+auditcore-Bibliotheken zu (z. B. `formatDate` → `@auditcore/ui formatDate`,
 `sha256_file` → `auditcore_common.hashing.sha256_file`). Zusätzlich vergleicht
 der Scan die normalisierten Funktionsrümpfe mit allen Funktionen der
-Python-Pakete und `@flowaudit/*`-Pakete des auditcore-Checkouts
+Python-Pakete und `@auditcore/*`-Pakete des auditcore-Checkouts
 (`--library-root`); ein Treffer heißt „wortgleiche Kopie“. Nur Ziele mit Status
 `vorhanden` zählen im Ratchet („existiert schon in Bibliothek X“); `geplant`
-(z. B. `@flowaudit/common parse/number`) erscheint als Hinweis.
+(z. B. `@auditcore/common parse/number`) erscheint als Hinweis.
 
 ## Befehle
 
@@ -186,7 +186,7 @@ Die Einbindung erfolgt mit der jeweiligen App-Migration, nicht zentral.
 5. **Beheben statt anheben:** Wer einen Befund behebt, senkt die Baseline im
    selben PR (`--update-baseline`). Neue Befunde werden behoben oder begründet
    unterdrückt; eine Anhebung der Baseline braucht `ausnahme_begruendung`.
-6. **Umstellung auf die Bibliothek:** Sobald `@flowaudit/common` bzw. die
+6. **Umstellung auf die Bibliothek:** Sobald `@auditcore/common` bzw. die
    Erweiterungen von `auditcore_common` bereitstehen, die lokalen Helfer
    ersetzen und die Bindungen auf die Bibliotheksfunktion (oder ihren
    Wrapper) umstellen; die Baseline sinkt dabei.

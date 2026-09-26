@@ -6,8 +6,8 @@ Framework-freies Kanban-Domänenmodell mit Rang-Schlüsseln, Übergangsregeln, W
 
 Vorbild ist das Workspace-Board aus `audit_designer`; das Auftrags-Kanban aus
 `cockpit` ist als Vorlage mit Statusabbildung und gesperrten Übergängen
-enthalten. Die Oberfläche liefert `@flowaudit/ui`, die gleiche Logik in
-TypeScript `@flowaudit/kanban-core`. Anwendungen behalten Authentifizierung,
+enthalten. Die Oberfläche liefert `@auditcore/ui`, die gleiche Logik in
+TypeScript `@auditcore/kanban-core`. Anwendungen behalten Authentifizierung,
 Benutzerverwaltung und Datenbank.
 
 ## Installation
@@ -224,7 +224,7 @@ audit_designer-Workspace-Boards (Commit `2c726f3c`, 77 Fälle,
 `tests/fixtures/legacy_kanban_observed.json`) und die per Node ausgeführten
 cockpit-Regeln (Commit `df203d4c`, `tests/fixtures/cockpit_rules_observed.json`).
 Grenzwerte, deutsche Meldungen, Standardspalten und Vorlagen sind übernommen,
-der Code neu geschrieben. Python und `@flowaudit/kanban-core` entscheiden
+der Code neu geschrieben. Python und `@auditcore/kanban-core` entscheiden
 identisch; gemeinsame Fälle in `tests/fixtures/parity/`
 ([Format](../../docs/kanban/parity-fixtures.md)). Funktionsinventur:
 [docs/kanban/paritaet-audit-designer.md](../../docs/kanban/paritaet-audit-designer.md).

@@ -5,7 +5,7 @@
 BPMN 2.0 mit der FlowAudit-Erweiterung (Schema 1.1) sicher lesen, prüfen, vergleichen, neutralisieren und berichten – für Prozessdiagramme von Verwaltungs- und Kontrollsystemen aller Fonds mit geteilter Mittelverwaltung.
 
 Für Anwendungen der Prüfbehörden und Programmbehörden (audit_designer,
-FlowStat, künftig der BPMN-Editor `@flowaudit/bpmn-flowaudit`). Framework-frei,
+FlowStat, künftig der BPMN-Editor `@auditcore/bpmn-flowaudit`). Framework-frei,
 ohne Datenbank und ohne Pflichtabhängigkeiten. Nicht enthalten: Editor,
 Oberfläche, Rechteprüfung und Speicherung in einer Datenbank (dafür gibt es den
 Speicher-Port `Storage`).

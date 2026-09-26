@@ -1,4 +1,4 @@
-import { requestJson, type RestOptions } from '@flowaudit/common'
+import { requestJson, type RestOptions } from '@auditcore/common'
 import type { BenfordPort } from './types'
 
 /** Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). */

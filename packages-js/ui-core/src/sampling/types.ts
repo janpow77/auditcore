@@ -1,5 +1,5 @@
 /** Typen des REST-Vertrags `docs/ui/sampling-rest.md` (auditcore_sampling.web). */
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 
 export type MethodKind = 'mus' | 'srs'
 export type MethodStatus = 'RECOMMENDED' | 'SUPERSEDED' | 'LEGACY_CHARACTERIZED'

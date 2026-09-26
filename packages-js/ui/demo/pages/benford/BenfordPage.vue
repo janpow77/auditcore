@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { BenfordPanel, createBenfordRestPort, type BenfordAnalysis } from '@flowaudit/ui'
+import { BenfordPanel, createBenfordRestPort, type BenfordAnalysis } from '@auditcore/ui'
 import { demoBenfordValues } from '../sampling/demo-data'
 
 const port = createBenfordRestPort({ baseUrl: '/api/benford' })

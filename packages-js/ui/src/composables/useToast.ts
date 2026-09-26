@@ -1,4 +1,4 @@
-import { createToastQueue, type Toast, type ToastInput, type ToastQueue } from '@flowaudit/common'
+import { createToastQueue, type Toast, type ToastInput, type ToastQueue } from '@auditcore/common'
 import { getCurrentScope, onScopeDispose, readonly, shallowRef, type Ref } from 'vue'
 
 let sharedQueue: ToastQueue | null = null
@@ -20,7 +20,7 @@ export interface UseToast {
   clear: () => void
 }
 
-/** Toasts als reaktive Liste über der framework-freien Warteschlange aus `@flowaudit/common`. */
+/** Toasts als reaktive Liste über der framework-freien Warteschlange aus `@auditcore/common`. */
 export function useToast(queue: ToastQueue = sharedToastQueue()): UseToast {
   const toasts = shallowRef<readonly Toast[]>(queue.list())
   const stop = queue.subscribe((next) => {

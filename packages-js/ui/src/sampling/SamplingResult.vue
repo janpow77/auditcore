@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useId } from '../composables/useId'
-import { derivationColumns, derivationRows, samplingMessages, sizeTexts, type SizeResult } from '@flowaudit/ui-core'
+import { derivationColumns, derivationRows, samplingMessages, sizeTexts, type SizeResult } from '@auditcore/ui-core'
 import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 

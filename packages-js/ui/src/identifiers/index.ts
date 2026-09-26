@@ -1,7 +1,7 @@
 export { default as IdentifierCheck } from './IdentifierCheck.vue'
 export { identifierCheckElement } from './element'
 export { useIdentifierCheck, type IdentifierCallbacks, type UseIdentifierCheck } from './useIdentifierCheck'
-/** Kern (Vertrag, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag, Zustandsautomat, Anzeige) aus `@auditcore/ui-core`. */
 export {
   identifierMessages,
   createIdentifiersRestPort,
@@ -12,4 +12,4 @@ export {
   type IdentifierCatalogue,
   type IdentifierResult,
   type IdentifierBatchAnswer,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

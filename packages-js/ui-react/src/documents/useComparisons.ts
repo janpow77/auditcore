@@ -12,7 +12,7 @@ import {
   type ComparisonsTranslate,
   type ComparisonsView,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -36,7 +36,7 @@ export interface UseComparisons {
   view: ComparisonsView
 }
 
-/** React-Anbindung der Vergleichsverwaltung aus `@flowaudit/ui-core` (dieselbe Logik wie `useComparisons` in Vue). */
+/** React-Anbindung der Vergleichsverwaltung aus `@auditcore/ui-core` (dieselbe Logik wie `useComparisons` in Vue). */
 export function useComparisons(props: ComparisonsInputs): UseComparisons {
   const { t, locale } = useTranslation(comparisonsMessages, props.locale)
   const latest = useRef({ props, t, locale })

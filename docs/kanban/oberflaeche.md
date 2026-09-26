@@ -1,7 +1,7 @@
-# Kanban-Oberfläche (`@flowaudit/ui`, `@flowaudit/ui-react`)
+# Kanban-Oberfläche (`@auditcore/ui`, `@auditcore/ui-react`)
 
 Die Oberfläche arbeitet ausschließlich über einen **Port** (`BoardPort` aus
-`@flowaudit/kanban-core`): `MemoryBoardPort` (Demo, Tests, lokale Bearbeitung)
+`@auditcore/kanban-core`): `MemoryBoardPort` (Demo, Tests, lokale Bearbeitung)
 oder `RestBoardPort` (REST-Vertrag [`rest-api.md`](rest-api.md)). Regeln
 (Übergänge, WIP, Rechte, Rang) wendet sie mit der Kernlogik sofort an
 (optimistisch) und übernimmt danach den Stand des Ports; Ablehnungen rollen
@@ -56,20 +56,20 @@ Verschieben wird sofort angezeigt und bei einem Fehler des Ports
 zurückgenommen. Bedienung: Ziehen und Ablegen (HTML-Drag-and-Drop) oder
 Strg+Pfeil links/rechts auf der fokussierten Karte (Fokus bleibt auf der Karte,
 Ansage über `aria-live`); Suche über alle Textzellen. Logik:
-`createDbKanbanController` (`@flowaudit/ui-core`), `groupRecords` und
-`RecordPort` (`@flowaudit/kanban-core`). Ein REST-Vertrag für Datensätze
+`createDbKanbanController` (`@auditcore/ui-core`), `groupRecords` und
+`RecordPort` (`@auditcore/kanban-core`). Ein REST-Vertrag für Datensätze
 gehört zur Anwendung; `auditcore_kanban` hat keinen.
 
 ## React (nativ)
 
-`FlowauditKanbanBoard` und `FlowauditKanbanBoards` aus `@flowaudit/ui-react`
+`FlowauditKanbanBoard` und `FlowauditKanbanBoards` aus `@auditcore/ui-react`
 sind echte React-Komponenten (React 18 und 19, ohne Vue, ohne Web
 Components) mit denselben Props, demselben Markup und derselben Kernlogik.
 Ereignisse heißen `onBoardChange`, `onError`, `onFullscreen`,
 `onNavigate(link, card)`, `onAttachment(attachment, card)`, `onCardOpen`
 bzw. `onBoardSelect`, `onCreated`; der Slot `card-extra` heißt
 `renderCardExtra(card)`, `defineExpose` wird zu `ref` (`reload()`, `board`).
-Die früheren Hüllen um die Web Components (`@flowaudit/ui-react/elements`)
+Die früheren Hüllen um die Web Components (`@auditcore/ui-react/elements`)
 sind entfernt.
 
 `FlowauditDbKanban` ist die Datenbankansicht in React (gleiche Kernlogik
@@ -77,7 +77,7 @@ sind entfernt.
 `port` oder `table`, gesteuertes `groupBy` mit `onGroupByChange`, Rückrufe
 `onRecordMove`, `onRecordAdd`, `onTableChange`, `onError`.
 
-## Gemeinsame Ansichtslogik (`@flowaudit/kanban-core`)
+## Gemeinsame Ansichtslogik (`@auditcore/kanban-core`)
 
 Vue und React binden dieselben framework-freien Zustandsautomaten an
 (Vue über `useStore` → `shallowRef`, React über `useStoreState` →

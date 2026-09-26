@@ -1,4 +1,4 @@
-import { formatScreeningDate as formatDate, type RunSummary, type ScreeningTranslate } from '@flowaudit/ui-core'
+import { formatScreeningDate as formatDate, type RunSummary, type ScreeningTranslate } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { codeKey, useScreeningText } from './shared'
 

@@ -4,8 +4,8 @@
  * collection issues.
  */
 
-import { issueMessage, keyRequirements, localized, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
-import { statusLabel } from '@flowaudit/bpmn-flowaudit/ui'
+import { issueMessage, keyRequirements, localized, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@auditcore/bpmn-flowaudit'
+import { statusLabel } from '@auditcore/bpmn-flowaudit/ui'
 import { classes } from '../hooks'
 import { useI18n } from '../i18n'
 

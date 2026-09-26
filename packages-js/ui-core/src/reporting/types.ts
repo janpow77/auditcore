@@ -1,5 +1,5 @@
 /** Typen des REST-Vertrags `reporting_ui/1` (`docs/ui/reporting-rest.md`, auditcore_reporting.web). */
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 
 /** Spaltentyp: `json` übernimmt den JSON-Typ wie gesendet; `date`/`datetime` erwarten ISO-Text. */
 export type ReportColumnType = 'json' | 'text' | 'number' | 'boolean' | 'date' | 'datetime'

@@ -5,8 +5,8 @@
  * reasons, graphical diff in the canvas.
  */
 import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
-import { changeLabel, synopsis, type Comparison, type FlowauditHighlight, type TargetActualCheck } from '@flowaudit/bpmn-flowaudit'
-import { compareClasses, runComparison, type CompareMode, type CompareSource } from '@flowaudit/bpmn-flowaudit/ui'
+import { changeLabel, synopsis, type Comparison, type FlowauditHighlight, type TargetActualCheck } from '@auditcore/bpmn-flowaudit'
+import { compareClasses, runComparison, type CompareMode, type CompareSource } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'

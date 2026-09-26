@@ -1,10 +1,10 @@
 /**
- * @flowaudit/bpmn-vue – Vue 3 UI for the FlowAudit BPMN editor (MIT). The
- * logic lives in the framework-free core `@flowaudit/bpmn-flowaudit/ui`,
- * shared with `@flowaudit/bpmn-react`.
+ * @auditcore/bpmn-vue – Vue 3 UI for the FlowAudit BPMN editor (MIT). The
+ * logic lives in the framework-free core `@auditcore/bpmn-flowaudit/ui`,
+ * shared with `@auditcore/bpmn-react`.
  */
 
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 export { default as FlowauditEditor } from './components/FlowauditEditor.vue'
 export { default as FlowauditWorkbench } from './components/FlowauditWorkbench.vue'
@@ -25,5 +25,5 @@ export { provideEditorContext, useEditorContext, type EditorContext, type Editor
 export { createI18n, provideI18n, useI18n, type I18n, type Locale } from './i18n/useI18n'
 export { useStore } from './composables/useStore'
 export { defaultEditorFactory, type EditorFactory, type EditorLike, type CreateEditorOptions } from './editor/defaultFactory'
-export { MESSAGES_DE, MESSAGES_EN, LISTS, TABS, RestStorage, RestLegalSearch, RestCatalogue, RestProfiles, RestValidation, RestEsi, restPorts } from '@flowaudit/bpmn-flowaudit/ui'
-export type { FieldDescriptor, ListDescriptor, TabDefinition, CompareSource, ToolbarAction, RestOptions } from '@flowaudit/bpmn-flowaudit/ui'
+export { MESSAGES_DE, MESSAGES_EN, LISTS, TABS, RestStorage, RestLegalSearch, RestCatalogue, RestProfiles, RestValidation, RestEsi, restPorts } from '@auditcore/bpmn-flowaudit/ui'
+export type { FieldDescriptor, ListDescriptor, TabDefinition, CompareSource, ToolbarAction, RestOptions } from '@auditcore/bpmn-flowaudit/ui'

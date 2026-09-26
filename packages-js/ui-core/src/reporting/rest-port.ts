@@ -1,4 +1,4 @@
-import { requestFile, requestJson, type RestOptions } from '@flowaudit/common'
+import { requestFile, requestJson, type RestOptions } from '@auditcore/common'
 import type { ReportingPort } from './types'
 
 /** Port auf den REST-Vertrag `reporting_ui/1` von `auditcore_reporting.web` (Starlette oder FastAPI). */

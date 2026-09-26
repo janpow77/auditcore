@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Comparison, ComparisonResult, ExportPayload, RowUpdate, SynopsisLayout, SynopsisPort } from '@flowaudit/ui-core'
+import type { Comparison, ComparisonResult, ExportPayload, RowUpdate, SynopsisLayout, SynopsisPort } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import type { Locale } from '../i18n/i18n'
 import SynopsisCommands from './SynopsisCommands.vue'

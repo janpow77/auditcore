@@ -10,7 +10,7 @@ import {
   type EvaluationResult,
   type ExtrapolationCatalogue,
   type ExtrapolationExportFormat,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'

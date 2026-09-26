@@ -1,4 +1,4 @@
-import type { Board, Card, Column, SharePermission } from '@flowaudit/kanban-core'
+import type { Board, Card, Column, SharePermission } from '@auditcore/kanban-core'
 import type { FlowauditKanbanBoardProps } from './FlowauditKanbanBoard'
 import { KanbanCardDetail } from './KanbanCardDetail'
 import { KanbanSettingsDialog } from './KanbanSettingsDialog'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FaExtraction, createExtractionRestPort, type ExtractionRun } from '@flowaudit/ui'
+import { FaExtraction, createExtractionRestPort, type ExtractionRun } from '@auditcore/ui'
 
 const port = createExtractionRestPort({ baseUrl: '/api/extraction' })
 const last = ref('')

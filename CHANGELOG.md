@@ -2,7 +2,19 @@
 
 ## Unreleased
 
-- npm-Veröffentlichung der `@flowaudit`-Pakete: Workflow `npm-publish`
+- **Breaking – npm-Scope umbenannt:** Alle JS-Pakete unter `packages-js/`
+  heißen jetzt `@auditcore/<paket>` statt `@flowaudit/<paket>` (common,
+  ui-core, ui, ui-react, kanban-core, bpmn-editor, bpmn-flowaudit, bpmn-vue,
+  bpmn-react), einheitlich mit den Python-Paketen `auditcore_*`. Auf npm war
+  unter dem alten Scope nie etwas veröffentlicht. Release-Tarballs heißen
+  `auditcore-<paket>-<version>.tgz`, die npm-Organisation ist `auditcore`,
+  die Registry-Sperre in `.npmrc` lautet `@auditcore:registry=…`.
+  Unverändert bleiben Web-Component-Tags (`<flowaudit-…>`),
+  Komponentennamen (`Flowaudit…`), CSS-Präfixe (`--fa-*`) und Klassennamen.
+  Umstellung der Anwendungen: `docs/ui/umbenennung-auditcore.md`. Keine
+  Versionsanhebung.
+
+- npm-Veröffentlichung der `@auditcore`-Pakete: Workflow `npm-publish`
   veröffentlicht nach einem GitHub-Release (oder von Hand mit Tag, standardmäßig
   als Probelauf) genau die signierten Release-Tarballs auf npmjs.org, nach
   Prüfung von Signatur, SHA-256, Größe und npm-Integrität gegen
@@ -14,7 +26,7 @@
   `NPM_PUBLISH_ENABLED`. Alle `package.json` unter `packages-js/` mit
   `repository` (nötig für Provenance), `homepage`, `bugs` und
   `publishConfig.access=public`. Installationsdoku: `npm install
-  @flowaudit/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
+  @auditcore/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
   Einrichtung in `docs/deployment/npm-veroeffentlichung.md`. Keine
   Versionsanhebung.
 
@@ -26,7 +38,7 @@
   Fehlerobergrenze und Ergebnis, getrennt davon Restfehlerquote (RER) nach
   CPRE_23-0013-01 Annex 3; REST-Vertrag `auditcore_extrapolation.evaluation/1`.
   Oberfläche `ExtrapolationPanel`/`<flowaudit-extrapolation>` (Vue) und
-  `FlowauditExtrapolation` (React nativ) auf dem Kern in `@flowaudit/ui-core`
+  `FlowauditExtrapolation` (React nativ) auf dem Kern in `@auditcore/ui-core`
   mit Paritätsfällen. `EXPECTED_SOURCES`, `packaging/library-extras.json` und
   Baseline ergänzt.
 
@@ -43,7 +55,7 @@
   `packaging/library-extras.json` ergänzt) und Oberfläche
   `<flowaudit-report-export>` (Vue `ReportExportPanel`, React nativ
   `FlowauditReportExport`, Kern `createReportingController` in
-  `@flowaudit/ui-core`): Formatprofil wählen, Vorschau mit Excel-Format je
+  `@auditcore/ui-core`): Formatprofil wählen, Vorschau mit Excel-Format je
   Spalte, ersten Zeilen und Probelauf, XLSX-Export. Das Paket hat keine
   Berichtsvorlagen; „Vorlage“ ist hier das Formatprofil
   (`docs/ui/reporting-rest.md`). Sechs Paritätsfälle plus Interaktionsfolge,
@@ -70,7 +82,7 @@
   `auditcore_identifiers.web` (Extras `web`, `fastapi`) und Oberfläche
   `IdentifierCheck`/`<flowaudit-identifier-check>` (Vue) sowie native
   `FlowauditIdentifierCheck` (React) auf gemeinsamem Kern in
-  `@flowaudit/ui-core` (`createIdentifierController`,
+  `@auditcore/ui-core` (`createIdentifierController`,
   `createIdentifiersRestPort`): Prüfprofil mit sichtbarer Empfehlung,
   Einzelprüfung mit Status, Begründung, Grund, Normalform und Einzelheiten,
   Stapelprüfung aus CSV/TSV über den TableImport-Controller mit
@@ -83,7 +95,7 @@
   Validierungsbefunde; OCR/Donut nur über Ports der Anwendung, ohne Engine
   abgeschaltet) und Oberfläche `<flowaudit-extraction>` (Vue `FaExtraction`,
   React nativ `FlowauditExtraction`, Kern `createExtractionController` in
-  `@flowaudit/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
+  `@auditcore/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
   Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
 
 - Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
@@ -122,7 +134,7 @@
   Konfigurationen auf `build.rolldownOptions`, `oxc`, `codeSplitting: false`
   und `import.meta.dirname` umgestellt. Exporte und Typdeklarationen der Pakete sind
   unverändert (Vue-SFC-Deklarationen im Format von language-core 3).
-  `@flowaudit/bpmn-flowaudit` kennzeichnet `src/index.ts` als
+  `@auditcore/bpmn-flowaudit` kennzeichnet `src/index.ts` als
   seiteneffektbehaftet, damit die Stile der Diagrammschicht (`--fa-hit`,
   Rundgang-/Vergleichsmarkierungen) in Standalone-App und Web Component
   ankommen; die Web Component `<flowaudit-bpmn-editor>` enthielt sie bisher

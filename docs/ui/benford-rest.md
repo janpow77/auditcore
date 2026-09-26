@@ -1,6 +1,6 @@
 # REST-Vertrag Benford (`auditcore_statistics.web`)
 
-Stand: auditcore_statistics 0.3.0. Oberfläche: `<flowaudit-benford>` aus `@flowaudit/ui`.
+Stand: auditcore_statistics 0.3.0. Oberfläche: `<flowaudit-benford>` aus `@auditcore/ui`.
 
 `analyse` und `catalogue` sind framework-frei. `create_app`/`routes` benötigen das Extra
 `web` (Starlette, Debian `python3-starlette`), `create_router` zusätzlich FastAPI.

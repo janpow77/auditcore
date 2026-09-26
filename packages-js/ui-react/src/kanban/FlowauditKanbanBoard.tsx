@@ -1,10 +1,10 @@
 /**
  * Natives React-Kanban-Board wie `KanbanBoard.vue`: gleiche Props, Ereignisse
  * (als `onXyz`), gleiches Markup und dieselbe Kernlogik aus
- * `@flowaudit/kanban-core` (Board-, Verschiebe- und Zeiger-Controller).
+ * `@auditcore/kanban-core` (Board-, Verschiebe- und Zeiger-Controller).
  */
-import { doneColumn, findCard, handleCardKey, type Attachment, type Board, type BoardPort, type Card, type CardLink, type KanbanError, type UserRef } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import { doneColumn, findCard, handleCardKey, type Attachment, type Board, type BoardPort, type Card, type CardLink, type KanbanError, type UserRef } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import { forwardRef, useImperativeHandle, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { Button } from '../base/Button'
 import { Icon } from '../base/Icon'

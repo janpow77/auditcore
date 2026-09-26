@@ -4,8 +4,8 @@
  */
 
 import { useState, type DragEvent } from 'react'
-import { DIAGRAM_STATUS, label } from '@flowaudit/bpmn-flowaudit'
-import { readDrag } from '@flowaudit/bpmn-flowaudit/ui'
+import { DIAGRAM_STATUS, label } from '@auditcore/bpmn-flowaudit'
+import { readDrag } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { PromptDialog } from '../base/PromptDialog'
 import { classes } from '../hooks'

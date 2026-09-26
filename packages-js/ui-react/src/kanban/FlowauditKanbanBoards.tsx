@@ -1,5 +1,5 @@
-import { createBoardListController, relativeTime, selectBoardList, TEMPLATES, type Board, type BoardPort, type BoardSummary } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import { createBoardListController, relativeTime, selectBoardList, TEMPLATES, type Board, type BoardPort, type BoardSummary } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState, type FormEvent, type ReactElement } from 'react'
 import { Button } from '../base/Button'
 import { TextField } from '../base/TextField'

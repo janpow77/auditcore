@@ -1,6 +1,6 @@
 /**
- * `@flowaudit/common`: framework- und DOM-freie Hilfsfunktionen der
- * FlowAudit-Anwendungen. Browser-Helfer liegen unter `@flowaudit/common/browser`.
+ * `@auditcore/common`: framework- und DOM-freie Hilfsfunktionen der
+ * FlowAudit-Anwendungen. Browser-Helfer liegen unter `@auditcore/common/browser`.
  */
 export {
   APP_LOCALES,

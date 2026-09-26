@@ -1,5 +1,5 @@
 import type { KeyboardEvent, ReactNode } from 'react'
-import type { TabItem } from '@flowaudit/ui-core'
+import type { TabItem } from '@auditcore/ui-core'
 import { useElementId } from '../../store'
 
 export interface DsfaTabsProps {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { ChecklistItem } from '@flowaudit/kanban-core'
+import type { ChecklistItem } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'
 import { kanbanDialogMessages } from './messages'

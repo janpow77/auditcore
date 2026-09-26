@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { dbKanbanMessages, type DbColumnView } from '@flowaudit/ui-core'
+import { dbKanbanMessages, type DbColumnView } from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useI18n } from '../i18n'

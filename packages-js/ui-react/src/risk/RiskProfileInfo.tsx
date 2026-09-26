@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { TableColumn, TableRow } from '@flowaudit/common'
+import type { TableColumn, TableRow } from '@auditcore/common'
 import {
   formatValue,
   pairs,
@@ -14,7 +14,7 @@ import {
   type ProfileDetail,
   type RiskTranslate,
   type RuleView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { useTranslation } from '../i18n'
 import { FlowauditTable } from '../table/FlowauditTable'

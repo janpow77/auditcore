@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import { extractionMessages, type ExtractionPort, type ExtractionRun } from '@flowaudit/ui-core'
+import { extractionMessages, type ExtractionPort, type ExtractionRun } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
 import ExtractionForm from './ExtractionForm.vue'

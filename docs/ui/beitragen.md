@@ -1,17 +1,17 @@
-# Beitragen zu @flowaudit/ui
+# Beitragen zu @auditcore/ui
 
-`@flowaudit/ui` (`packages-js/ui`) ist das gemeinsame Oberflächenpaket der
+`@auditcore/ui` (`packages-js/ui`) ist das gemeinsame Oberflächenpaket der
 FlowAudit-Anwendungen. Jede Komponente gibt es
 
-1. als **Vue-3-Komponente** (`import { FaTable } from '@flowaudit/ui'`),
-2. als **Web Component** `<flowaudit-<name>>` (`@flowaudit/ui/elements`),
-3. als **native React-18-Komponente** in `@flowaudit/ui-react`
+1. als **Vue-3-Komponente** (`import { FaTable } from '@auditcore/ui'`),
+2. als **Web Component** `<flowaudit-<name>>` (`@auditcore/ui/elements`),
+3. als **native React-18-Komponente** in `@auditcore/ui-react`
    (`packages-js/ui-react`) – Tabelle, Synopse, VVT, DSFA, Geo-Karte,
    Risiko-Merkmale, Screening, Stichprobe, Benford, Belegerkennung, Dokumentvergleiche,
    Hochrechnung, Kanban und Datenbankansicht (React 18 und 19).
 
 Fachlogik, Texte, Verträge, View-Modelle, Zustandsautomaten und Stile liegen
-framework-frei in **`@flowaudit/ui-core`** (`packages-js/ui-core`); Vue und
+framework-frei in **`@auditcore/ui-core`** (`packages-js/ui-core`); Vue und
 React binden sie nur an (Vue: `useStore`, React: `useStoreState`). Keine
 Fachlogik doppelt in Vue und React.
 

@@ -8,4 +8,4 @@ export {
   type HitView,
   type SettingsView,
   type SourcesView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

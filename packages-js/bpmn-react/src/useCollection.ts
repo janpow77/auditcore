@@ -6,8 +6,8 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import { collectionIssues, collectionOverview, collectionTree, createCollectionCore, type CollectionCore, type CollectionState } from '@flowaudit/bpmn-flowaudit/ui'
-import type { StoragePort } from '@flowaudit/bpmn-flowaudit'
+import { collectionIssues, collectionOverview, collectionTree, createCollectionCore, type CollectionCore, type CollectionState } from '@auditcore/bpmn-flowaudit/ui'
+import type { StoragePort } from '@auditcore/bpmn-flowaudit'
 import { useStoreState } from './hooks'
 
 /** What the collection components (`CollectionTree`, `DiagramInfoColumn`) receive as `store`. */

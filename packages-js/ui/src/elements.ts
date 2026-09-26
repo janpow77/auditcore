@@ -1,7 +1,7 @@
-import '@flowaudit/ui-core/style.css'
+import '@auditcore/ui-core/style.css'
 /**
- * Einstieg für Web Components: `import { defineFlowauditElements } from '@flowaudit/ui/elements'`
- * und zusätzlich `@flowaudit/ui/style.css` laden.
+ * Einstieg für Web Components: `import { defineFlowauditElements } from '@auditcore/ui/elements'`
+ * und zusätzlich `@auditcore/ui/style.css` laden.
  */
 import { defineElements, type ElementDefinition, type ElementTag } from './elements/define'
 import { isLocale, setDefaultLocale, type Locale } from './i18n'

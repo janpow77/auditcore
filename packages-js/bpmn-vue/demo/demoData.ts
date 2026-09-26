@@ -4,7 +4,7 @@
  * synthetic test fixtures. Everything stays in memory.
  */
 
-import { DiagramCollection, InMemoryStorage, loadDefinitions, modelFromDefinitions } from '@flowaudit/bpmn-flowaudit'
+import { DiagramCollection, InMemoryStorage, loadDefinitions, modelFromDefinitions } from '@auditcore/bpmn-flowaudit'
 import legacy from '../../bpmn-flowaudit/test/fixtures/legacy-1.0.bpmn?raw'
 import schema11 from '../../bpmn-flowaudit/test/fixtures/schema-1.1.bpmn?raw'
 import enrichment from '../../bpmn-flowaudit/test/fixtures/enrichment.bpmn?raw'

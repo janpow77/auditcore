@@ -7,7 +7,7 @@ Stand: 25.09.2026 · Gegenstück zur Python-Inventur (`app-helfer-python.*`) · 
 - **18 970 Funktionen in 2 634 Dateien** aus 12 App-Frontends (6 × Vue, 6 × React) wurden per TypeScript-Compiler-API extrahiert, typbereinigt normalisiert und über Rumpf-Hashes sowie 29 Hilfskategorien gruppiert. `e-invoice-preparer` ist dasselbe Repository wie `rechnung` (gleiches Remote, gleicher Commit) und wurde nur einmal gezählt.
 - **Formatierung ist der größte generische Block:** 140 Datums-, 64 Betrags-, 48 Zahl-/Prozent-, 45 Dateigrößen- und 31 Dauer-Formatierer, fast alle als lokale Einzeiler in Komponenten. Allein `audit_designer` hat 92 Datumsformatierer und 37 Dateigrößen-Funktionen.
 - **Fachlich riskant ist die Zahleneingabe:** `1.234,56` wird in `BeleglisteGrid.parseDecimal` (flowinvoice, audit-portal) zu `1.234`, also um den Faktor 1000 zu klein. `1.5` ergibt je nach App `1.5` oder `15`. Die Python-Seite ist genauso uneinheitlich (Ausführungsmatrix in Abschnitt 4). Das ist der wichtigste Grund für gemeinsame Testfälle von Frontend und Backend.
-- **Vieles liegt in `@flowaudit/ui` schon vor, aber am falschen Ort:** `formatDate/formatNumber/formatPercent`, `sortRows/nextSort`, `requestJson/requestFile/saveFile` und `tabular.parseNumber` sind framework-frei, stecken aber im Vue-Paket (`packages-js/ui`, seit #84 in `main`; `tabular.parseNumber` bisher nur in `feat/ui-sampling-benford-js`). React-Apps können sie so nicht ohne Vue nutzen. Vorschlag: diese Module nach **`@flowaudit/common`** verschieben und aus `@flowaudit/ui` weiter exportieren.
+- **Vieles liegt in `@auditcore/ui` schon vor, aber am falschen Ort:** `formatDate/formatNumber/formatPercent`, `sortRows/nextSort`, `requestJson/requestFile/saveFile` und `tabular.parseNumber` sind framework-frei, stecken aber im Vue-Paket (`packages-js/ui`, seit #84 in `main`; `tabular.parseNumber` bisher nur in `feat/ui-sampling-benford-js`). React-Apps können sie so nicht ohne Vue nutzen. Vorschlag: diese Module nach **`@auditcore/common`** verschieben und aus `@auditcore/ui` weiter exportieren.
 - **Drei fachliche Cluster statt Hilfsfunktionen:** (1) `audit-portal` ist in den Modulen fraud-report/company-report/risk-wheel/belegliste ein Fork von `flowinvoice` (576 wortgleiche Funktionen = 59 % der flowinvoice-Funktionen); (2) der FlowStat-Custom-Node-Kern (1 354 Zeilen, framework-frei) steht wortgleich in `audit_designer` und `audit-portal`; (3) `usePdfTools` mit 18 identischen PDF-Operationen in `pdf-editor` und `audit_designer`. Dazu kommt das eGPU-Monitor-Widget in drei React-Apps.
 
 ## 1. Umfang und Methode
@@ -36,32 +36,32 @@ Vergleichsbasis in auditcore: `packages-js/bpmn-editor`, `packages-js/ui`, `ui-r
 3. *Gruppierung:* (a) Rumpf-Hash-Gleichheit über Apps (≥ 30 Token), (b) Namens- und Rumpfmuster je Hilfskategorie, (c) Merkmalsextraktion je Variante (Locale, Ersatzwert, Nachkommastellen, Zeitzone …), (d) für die Zahleneingabe **tatsächliche Ausführung** aller Varianten auf denselben Eingaben.
 4. *Aufrufer:* graphify-Graphen (`<repo>/graphify-out/graph.json`, Stand 25.09.) direkt gelesen, weil der graphify-MCP-Server nicht erreichbar war. `Graph` = eingehende `calls/references/uses`-Kanten. graphify erkennt nur rund 45 % der Hilfsfunktionen (1 688 von 3 763) und keine Aufrufe aus Vue-Templates. Deshalb gibt es zusätzlich `Text` = Vorkommen des Bezeichners im Repo außerhalb der Definition. Das ist eine obere Schranke und bei generischen Namen wie `datum` oder `error` deutlich überhöht.
 
-**Klassen:** (a) existiert in auditcore-JS → nutzen · (b) generisches Duplikat in ≥ 2 Apps → `@flowaudit/common` (+ Composable/Hook) · (c) fachlicher Cluster → eigene Bibliothek · (d) app-spezifisch → bleibt.
+**Klassen:** (a) existiert in auditcore-JS → nutzen · (b) generisches Duplikat in ≥ 2 Apps → `@auditcore/common` (+ Composable/Hook) · (c) fachlicher Cluster → eigene Bibliothek · (d) app-spezifisch → bleibt.
 
 ## 2. Top-20-Gruppen
 
 | Rang | Gruppe | Klasse | Apps | Def. | Var. | Aufrufer Graph / Text | Ziel |
 |---:|---|---|---:|---:|---:|---:|---|
-| 1 | **G01** Datum/Uhrzeit formatieren (de-DE) | (b) @flowaudit/common | 9 | 140 | 98 | 63 / 14795 | @flowaudit/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate) |
-| 2 | **X2** Betrugs-/Firmenbericht-Export (Word/PDF/Text/HTML, Abschnitts-Builder, Kennzahlen) | (c) neue Bibliothek | 2 | 576 | – | – | kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @flowaudit/fraud-report (React) oder eine App als Quelle |
-| 3 | **G02** Währungsbetrag formatieren (EUR) | (b) @flowaudit/common | 8 | 64 | 40 | 64 / 1975 | @flowaudit/common: format/money (formatEur, formatEurCompact) |
-| 4 | **G10** Auth-Token/Sitzung (Speicher, Header, Login/Logout) | (b) @flowaudit/common | 10 | 41 | 37 | 26 / 389 | @flowaudit/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch |
-| 5 | **G09** API-Fehlertext extrahieren | (b) @flowaudit/common | 7 | 51 | 31 | 146 / 4781 | @flowaudit/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown) |
-| 6 | **G03** Zahl/Prozent formatieren | (b) @flowaudit/common | 7 | 48 | 36 | 137 / 3419 | @flowaudit/common: format/number (formatNumber, formatInt, formatFixed, formatPercent) |
-| 7 | **G05** Dateigröße formatieren | (b) @flowaudit/common | 7 | 45 | 24 | 8 / 1298 | @flowaudit/common: format/bytes (formatBytes) |
-| 8 | **G11** HTML-Escaping/Markdown-Rendering | (b) @flowaudit/common | 7 | 27 | 21 | 19 / 351 | @flowaudit/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul |
-| 9 | **G14** Tabellen-Sortierung (Umschalten/Vergleich) | (a) nutzen | 7 | 25 | 20 | 0 / 187 | @flowaudit/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @flowaudit/common/table, Vue-Composable useSort in ui, React-Hook in ui-react |
-| 10 | **G06** Dauer/relative Zeit formatieren | (b) @flowaudit/common | 6 | 31 | 26 | 7 / 218 | @flowaudit/common: format/duration (formatDuration, formatUptime, formatRelativeTime) |
-| 11 | **G15** Theme/Dark-Mode anwenden | (a) nutzen | 7 | 21 | 19 | 22 / 169 | @flowaudit/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @flowaudit/ui-react |
-| 12 | **G26** eGPU-/Systemmonitor-Widgets | (c) neue Bibliothek | 5 | 39 | 17 | 14 / 77 | eGPU-/Systemmonitor-Widget als React-Komponente in @flowaudit/ui-react (oder eigenes Paket @flowaudit/ops-widgets) |
-| 13 | **G19** Benachrichtigung/Toast (success/error/info/warning) | (b) @flowaudit/common | 6 | 25 | 10 | 11 / 7510 | Toast-Store: Vue-Composable useToast in @flowaudit/ui, React-Hook in @flowaudit/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @flowaudit/common |
-| 14 | **G07** Blob-/Datei-Download im Browser | (a) nutzen | 5 | 30 | 28 | 29 / 2014 | @flowaudit/ui rest/download.ts saveFile → nach @flowaudit/common/browser verschieben (framework-frei) und aus ui re-exportieren |
-| 15 | **G08** CSV-Export/-Escaping | (b) @flowaudit/common | 5 | 24 | 20 | 1 / 118 | @flowaudit/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM) |
-| 16 | **X1** FlowStat-Custom-Node-Kern (Parameterschema, Validierung, Export/Import, REST-Client, CodeMirror-Setup, Graphanalyse) | (c) neue Bibliothek | 2 | 49 | – | – | neue Bibliothek @flowaudit/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal) |
-| 17 | **G04** Deutsche Zahleneingabe parsen | (b) @flowaudit/common | 4 | 17 | 13 | 8 / 148 | @flowaudit/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String) |
-| 18 | **G13** Zwischenablage kopieren | (b) @flowaudit/common | 4 | 14 | 12 | 2 / 211 | @flowaudit/common/browser: copyText (Clipboard-API mit textarea-Rückfall) |
-| 19 | **G16** DOM-Hooks: Klick außerhalb, Media-Query, Tastatur | (b) @flowaudit/common | 4 | 14 | 9 | 3 / 101 | @flowaudit/ui (Vue: useClickOutside, useMediaQuery) und @flowaudit/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei |
-| 20 | **G28** PDF-Operationen (Metadaten, Wasserzeichen, Seiten) | (c) neue Bibliothek | 4 | 13 | 7 | 0 / 33 | neue Bibliothek @flowaudit/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable) |
+| 1 | **G01** Datum/Uhrzeit formatieren (de-DE) | (b) @auditcore/common | 9 | 140 | 98 | 63 / 14795 | @auditcore/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate) |
+| 2 | **X2** Betrugs-/Firmenbericht-Export (Word/PDF/Text/HTML, Abschnitts-Builder, Kennzahlen) | (c) neue Bibliothek | 2 | 576 | – | – | kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @auditcore/fraud-report (React) oder eine App als Quelle |
+| 3 | **G02** Währungsbetrag formatieren (EUR) | (b) @auditcore/common | 8 | 64 | 40 | 64 / 1975 | @auditcore/common: format/money (formatEur, formatEurCompact) |
+| 4 | **G10** Auth-Token/Sitzung (Speicher, Header, Login/Logout) | (b) @auditcore/common | 10 | 41 | 37 | 26 / 389 | @auditcore/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch |
+| 5 | **G09** API-Fehlertext extrahieren | (b) @auditcore/common | 7 | 51 | 31 | 146 / 4781 | @auditcore/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown) |
+| 6 | **G03** Zahl/Prozent formatieren | (b) @auditcore/common | 7 | 48 | 36 | 137 / 3419 | @auditcore/common: format/number (formatNumber, formatInt, formatFixed, formatPercent) |
+| 7 | **G05** Dateigröße formatieren | (b) @auditcore/common | 7 | 45 | 24 | 8 / 1298 | @auditcore/common: format/bytes (formatBytes) |
+| 8 | **G11** HTML-Escaping/Markdown-Rendering | (b) @auditcore/common | 7 | 27 | 21 | 19 / 351 | @auditcore/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul |
+| 9 | **G14** Tabellen-Sortierung (Umschalten/Vergleich) | (a) nutzen | 7 | 25 | 20 | 0 / 187 | @auditcore/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @auditcore/common/table, Vue-Composable useSort in ui, React-Hook in ui-react |
+| 10 | **G06** Dauer/relative Zeit formatieren | (b) @auditcore/common | 6 | 31 | 26 | 7 / 218 | @auditcore/common: format/duration (formatDuration, formatUptime, formatRelativeTime) |
+| 11 | **G15** Theme/Dark-Mode anwenden | (a) nutzen | 7 | 21 | 19 | 22 / 169 | @auditcore/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @auditcore/ui-react |
+| 12 | **G26** eGPU-/Systemmonitor-Widgets | (c) neue Bibliothek | 5 | 39 | 17 | 14 / 77 | eGPU-/Systemmonitor-Widget als React-Komponente in @auditcore/ui-react (oder eigenes Paket @auditcore/ops-widgets) |
+| 13 | **G19** Benachrichtigung/Toast (success/error/info/warning) | (b) @auditcore/common | 6 | 25 | 10 | 11 / 7510 | Toast-Store: Vue-Composable useToast in @auditcore/ui, React-Hook in @auditcore/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @auditcore/common |
+| 14 | **G07** Blob-/Datei-Download im Browser | (a) nutzen | 5 | 30 | 28 | 29 / 2014 | @auditcore/ui rest/download.ts saveFile → nach @auditcore/common/browser verschieben (framework-frei) und aus ui re-exportieren |
+| 15 | **G08** CSV-Export/-Escaping | (b) @auditcore/common | 5 | 24 | 20 | 1 / 118 | @auditcore/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM) |
+| 16 | **X1** FlowStat-Custom-Node-Kern (Parameterschema, Validierung, Export/Import, REST-Client, CodeMirror-Setup, Graphanalyse) | (c) neue Bibliothek | 2 | 49 | – | – | neue Bibliothek @auditcore/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal) |
+| 17 | **G04** Deutsche Zahleneingabe parsen | (b) @auditcore/common | 4 | 17 | 13 | 8 / 148 | @auditcore/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String) |
+| 18 | **G13** Zwischenablage kopieren | (b) @auditcore/common | 4 | 14 | 12 | 2 / 211 | @auditcore/common/browser: copyText (Clipboard-API mit textarea-Rückfall) |
+| 19 | **G16** DOM-Hooks: Klick außerhalb, Media-Query, Tastatur | (b) @auditcore/common | 4 | 14 | 9 | 3 / 101 | @auditcore/ui (Vue: useClickOutside, useMediaQuery) und @auditcore/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei |
+| 20 | **G28** PDF-Operationen (Metadaten, Wasserzeichen, Seiten) | (c) neue Bibliothek | 4 | 13 | 7 | 0 / 33 | neue Bibliothek @auditcore/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable) |
 
 Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und Definitionen. Nicht in den Top 20: G22 localStorage-Wrapper, G23 Polling/SSE, G12 Debounce, G17 Initialen, G21 Text kürzen, G29 Validatoren, G25 IDs, X3 Login-Vorlage, G20 mod 97 (b/c); G18 Status-Labels, G27 Nutzerverwaltungs-Client, G24 URL-Bau (d).
 
@@ -69,11 +69,11 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G01 – Datum/Uhrzeit formatieren (de-DE)
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, flowsearch, rechnung, regulierung, versteigerung · *Definitionen:* 140 · *Varianten (Rumpf-Hash):* 98
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, flowsearch, rechnung, regulierung, versteigerung · *Definitionen:* 140 · *Varianten (Rumpf-Hash):* 98
 
-*Ziel:* @flowaudit/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate)
+*Ziel:* @auditcore/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate)
 
-*In auditcore vorhanden:* @flowaudit/ui i18n/format.ts formatDate(value, locale, withTime) – dateStyle „medium“, Ersatzwert „“, Locale de|en; liegt aber im Vue-Paket
+*In auditcore vorhanden:* @auditcore/ui i18n/format.ts formatDate(value, locale, withTime) – dateStyle „medium“, Ersatzwert „“, Locale de|en; liegt aber im Vue-Paket
 
 *Unterschiede:*
 
@@ -102,7 +102,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (c) fachliche Bibliothek · *Apps:* flowinvoice, audit-portal · *Definitionen:* 576
 
-*Ziel:* kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @flowaudit/fraud-report (React) oder eine App als Quelle
+*Ziel:* kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @auditcore/fraud-report (React) oder eine App als Quelle
 
 *Unterschiede:*
 
@@ -110,11 +110,11 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G02 – Währungsbetrag formatieren (EUR)
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice, flowsearch, rechnung, regulierung, riskanalysis, versteigerung · *Definitionen:* 64 · *Varianten (Rumpf-Hash):* 40
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice, flowsearch, rechnung, regulierung, riskanalysis, versteigerung · *Definitionen:* 64 · *Varianten (Rumpf-Hash):* 40
 
-*Ziel:* @flowaudit/common: format/money (formatEur, formatEurCompact)
+*Ziel:* @auditcore/common: format/money (formatEur, formatEurCompact)
 
-*In auditcore vorhanden:* @flowaudit/ui formatNumber(value, locale, options) – kein EUR-Helfer
+*In auditcore vorhanden:* @auditcore/ui formatNumber(value, locale, options) – kein EUR-Helfer
 
 *Unterschiede:*
 
@@ -140,11 +140,11 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G10 – Auth-Token/Sitzung (Speicher, Header, Login/Logout)
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, flowsearch, pdf-editor, qaaudit, regulierung, versteigerung · *Definitionen:* 41 · *Varianten (Rumpf-Hash):* 37
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, flowsearch, pdf-editor, qaaudit, regulierung, versteigerung · *Definitionen:* 41 · *Varianten (Rumpf-Hash):* 37
 
-*Ziel:* @flowaudit/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch
+*Ziel:* @auditcore/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch
 
-*In auditcore vorhanden:* @flowaudit/ui RestOptions.headers/fetch injizierbar (kein Token-Speicher)
+*In auditcore vorhanden:* @auditcore/ui RestOptions.headers/fetch injizierbar (kein Token-Speicher)
 
 *Unterschiede:*
 
@@ -168,18 +168,18 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G09 – API-Fehlertext extrahieren
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, regulierung, riskanalysis · *Definitionen:* 51 · *Varianten (Rumpf-Hash):* 31
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, regulierung, riskanalysis · *Definitionen:* 51 · *Varianten (Rumpf-Hash):* 31
 
-*Ziel:* @flowaudit/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown)
+*Ziel:* @auditcore/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown)
 
-*In auditcore vorhanden:* @flowaudit/ui RestError/toError (nur Envelope {error:{…}})
+*In auditcore vorhanden:* @auditcore/ui RestError/toError (nur Envelope {error:{…}})
 
 *Unterschiede:*
 
 - 37 Definitionen allein in audit_designer (extractError, extractErrorMessage, fehlertext …) mit 6+ Varianten
 - FastAPI-422 (detail als Liste von {loc,msg}) wird nur in 5 von 53 Varianten ausgewertet; die übrigen reichen die Rohliste an die Oberfläche weiter oder zeigen nur den Ersatztext
 - Sonderfälle nur vereinzelt: 503-Text (MyDataSourcesPanel), data.message zusätzlich zu detail
-- @flowaudit/ui RestError erwartet {error:{code,message}} – anderes Fehlerformat als die App-Backends (FastAPI detail)
+- @auditcore/ui RestError erwartet {error:{code,message}} – anderes Fehlerformat als die App-Backends (FastAPI detail)
 
 *Parität zur Python-Seite:* Backend-Fehlerform ist Python-Seite (FastAPI HTTPException/RequestValidationError); auditcore-Router liefern {error:{code,message}} → errorMessage muss beide Formen können
 
@@ -195,15 +195,15 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G03 – Zahl/Prozent formatieren
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, regulierung, versteigerung · *Definitionen:* 48 · *Varianten (Rumpf-Hash):* 36
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, regulierung, versteigerung · *Definitionen:* 48 · *Varianten (Rumpf-Hash):* 36
 
-*Ziel:* @flowaudit/common: format/number (formatNumber, formatInt, formatFixed, formatPercent)
+*Ziel:* @auditcore/common: format/number (formatNumber, formatInt, formatFixed, formatPercent)
 
-*In auditcore vorhanden:* @flowaudit/ui formatNumber/formatPercent (Anteil 0–1)
+*In auditcore vorhanden:* @auditcore/ui formatNumber/formatPercent (Anteil 0–1)
 
 *Unterschiede:*
 
-- Prozent: Intl style percent mit Anteil 0–1 (audit-portal vpFormat, @flowaudit/ui) gegenüber Zahl 0–100 plus „ %“ per toFixed().replace(".", ",") (ai-router, riskanalysis pct) – Faktor 100 Unterschied bei gleichem Namen formatPercent
+- Prozent: Intl style percent mit Anteil 0–1 (audit-portal vpFormat, @auditcore/ui) gegenüber Zahl 0–100 plus „ %“ per toFixed().replace(".", ",") (ai-router, riskanalysis pct) – Faktor 100 Unterschied bei gleichem Namen formatPercent
 - toFixed-Varianten ohne Tausendertrennzeichen (ai-router formatTokens/formatPercent, riskanalysis) gegenüber Intl mit Punkt-Gruppierung
 - regulierung formatFixed und formatNumberDe sind wortgleich (Dublette in derselben Datei)
 
@@ -221,9 +221,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G05 – Dateigröße formatieren
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, pdf-editor, qaaudit, regulierung · *Definitionen:* 45 · *Varianten (Rumpf-Hash):* 24
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, pdf-editor, qaaudit, regulierung · *Definitionen:* 45 · *Varianten (Rumpf-Hash):* 24
 
-*Ziel:* @flowaudit/common: format/bytes (formatBytes)
+*Ziel:* @auditcore/common: format/bytes (formatBytes)
 
 *Unterschiede:*
 
@@ -244,9 +244,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G11 – HTML-Escaping/Markdown-Rendering
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, cockpit, flowinvoice, rechnung, regulierung, versteigerung · *Definitionen:* 27 · *Varianten (Rumpf-Hash):* 21
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, cockpit, flowinvoice, rechnung, regulierung, versteigerung · *Definitionen:* 27 · *Varianten (Rumpf-Hash):* 21
 
-*Ziel:* @flowaudit/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul
+*Ziel:* @auditcore/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul
 
 *Unterschiede:*
 
@@ -269,13 +269,13 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (a) vorhanden – nutzen · *Apps:* ai-router, audit-portal, audit_designer, flowinvoice, flowsearch, regulierung, riskanalysis · *Definitionen:* 25 · *Varianten (Rumpf-Hash):* 20
 
-*Ziel:* @flowaudit/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @flowaudit/common/table, Vue-Composable useSort in ui, React-Hook in ui-react
+*Ziel:* @auditcore/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @auditcore/common/table, Vue-Composable useSort in ui, React-Hook in ui-react
 
-*In auditcore vorhanden:* @flowaudit/ui table/sort.ts
+*In auditcore vorhanden:* @auditcore/ui table/sort.ts
 
 *Unterschiede:*
 
-- Zyklus asc→desc (Apps) gegenüber asc→desc→unsortiert (@flowaudit/ui nextSort)
+- Zyklus asc→desc (Apps) gegenüber asc→desc→unsortiert (@auditcore/ui nextSort)
 - Startrichtung beim Spaltenwechsel: asc (Mehrheit) oder desc (fraud-report DocumentListSection)
 - Vergleich: localeCompare ohne numeric/sensitivity in Apps, leere Werte nicht einheitlich am Ende
 
@@ -291,9 +291,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G06 – Dauer/relative Zeit formatieren
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, regulierung · *Definitionen:* 31 · *Varianten (Rumpf-Hash):* 26
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, regulierung · *Definitionen:* 31 · *Varianten (Rumpf-Hash):* 26
 
-*Ziel:* @flowaudit/common: format/duration (formatDuration, formatUptime, formatRelativeTime)
+*Ziel:* @auditcore/common: format/duration (formatDuration, formatUptime, formatRelativeTime)
 
 *Unterschiede:*
 
@@ -314,13 +314,13 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (a) vorhanden – nutzen · *Apps:* audit-portal, audit_designer, flowinvoice, pdf-editor, regulierung, riskanalysis, versteigerung · *Definitionen:* 21 · *Varianten (Rumpf-Hash):* 19
 
-*Ziel:* @flowaudit/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @flowaudit/ui-react
+*Ziel:* @auditcore/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @auditcore/ui-react
 
-*In auditcore vorhanden:* @flowaudit/ui theme
+*In auditcore vorhanden:* @auditcore/ui theme
 
 *Unterschiede:*
 
-- data-theme-Attribut (@flowaudit/ui) gegenüber class „dark“ (audit_designer, riskanalysis) gegenüber ThemeContext mit Tokens (flowinvoice/audit-portal)
+- data-theme-Attribut (@auditcore/ui) gegenüber class „dark“ (audit_designer, riskanalysis) gegenüber ThemeContext mit Tokens (flowinvoice/audit-portal)
 
 | App | Def. | Aufrufer Graph | Aufrufer Text |
 |---|---:|---:|---:|
@@ -336,7 +336,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (c) fachliche Bibliothek · *Apps:* ai-router, audit-portal, audit_designer, flowinvoice, regulierung · *Definitionen:* 39 · *Varianten (Rumpf-Hash):* 17
 
-*Ziel:* eGPU-/Systemmonitor-Widget als React-Komponente in @flowaudit/ui-react (oder eigenes Paket @flowaudit/ops-widgets)
+*Ziel:* eGPU-/Systemmonitor-Widget als React-Komponente in @auditcore/ui-react (oder eigenes Paket @auditcore/ops-widgets)
 
 *Unterschiede:*
 
@@ -352,9 +352,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G19 – Benachrichtigung/Toast (success/error/info/warning)
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, pdf-editor · *Definitionen:* 25 · *Varianten (Rumpf-Hash):* 10
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, pdf-editor · *Definitionen:* 25 · *Varianten (Rumpf-Hash):* 10
 
-*Ziel:* Toast-Store: Vue-Composable useToast in @flowaudit/ui, React-Hook in @flowaudit/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @flowaudit/common
+*Ziel:* Toast-Store: Vue-Composable useToast in @auditcore/ui, React-Hook in @auditcore/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @auditcore/common
 
 *Unterschiede:*
 
@@ -373,15 +373,15 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (a) vorhanden – nutzen · *Apps:* audit-portal, audit_designer, flowinvoice, pdf-editor, regulierung · *Definitionen:* 30 · *Varianten (Rumpf-Hash):* 28
 
-*Ziel:* @flowaudit/ui rest/download.ts saveFile → nach @flowaudit/common/browser verschieben (framework-frei) und aus ui re-exportieren
+*Ziel:* @auditcore/ui rest/download.ts saveFile → nach @auditcore/common/browser verschieben (framework-frei) und aus ui re-exportieren
 
-*In auditcore vorhanden:* @flowaudit/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)
+*In auditcore vorhanden:* @auditcore/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)
 
 *Unterschiede:*
 
-- revokeObjectURL sofort nach click() (audit-portal, regulierung, audit_designer) gegenüber setTimeout 0 (@flowaudit/ui) – sofortiges Freigeben kann in Safari/Firefox den Download abbrechen
+- revokeObjectURL sofort nach click() (audit-portal, regulierung, audit_designer) gegenüber setTimeout 0 (@auditcore/ui) – sofortiges Freigeben kann in Safari/Firefox den Download abbrechen
 - regulierung setzt automatisch Datumspräfix YYYY-MM-DD_ (mitDatumspraefix, UTC-Datum über toISOString)
-- Dateiname aus Content-Disposition: nur @flowaudit/ui requestFile; Apps setzen ihn fest oder parsen einzeln (filename*=UTF-8 fehlt überall)
+- Dateiname aus Content-Disposition: nur @auditcore/ui requestFile; Apps setzen ihn fest oder parsen einzeln (filename*=UTF-8 fehlt überall)
 - flowinvoice/audit-portal zusätzlich file-saver (Abhängigkeit)
 
 | App | Def. | Aufrufer Graph | Aufrufer Text |
@@ -394,9 +394,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G08 – CSV-Export/-Escaping
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice, pdf-editor, regulierung · *Definitionen:* 24 · *Varianten (Rumpf-Hash):* 20
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice, pdf-editor, regulierung · *Definitionen:* 24 · *Varianten (Rumpf-Hash):* 20
 
-*Ziel:* @flowaudit/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM)
+*Ziel:* @auditcore/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM)
 
 *Unterschiede:*
 
@@ -418,7 +418,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (c) fachliche Bibliothek · *Apps:* audit_designer, audit-portal · *Definitionen:* 49
 
-*Ziel:* neue Bibliothek @flowaudit/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal)
+*Ziel:* neue Bibliothek @auditcore/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal)
 
 *Unterschiede:*
 
@@ -427,17 +427,17 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G04 – Deutsche Zahleneingabe parsen
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice, regulierung · *Definitionen:* 17 · *Varianten (Rumpf-Hash):* 13
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice, regulierung · *Definitionen:* 17 · *Varianten (Rumpf-Hash):* 13
 
-*Ziel:* @flowaudit/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String)
+*Ziel:* @auditcore/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String)
 
-*In auditcore vorhanden:* @flowaudit/ui tabular/parse.ts parseNumber(cell, decimal) (Branch feat/ui-sampling-benford-js) – verhält sich mit decimal="," wie regulierung parseNumberDe
+*In auditcore vorhanden:* @auditcore/ui tabular/parse.ts parseNumber(cell, decimal) (Branch feat/ui-sampling-benford-js) – verhält sich mit decimal="," wie regulierung parseNumberDe
 
 *Unterschiede:*
 
 - Siehe Ausführungsmatrix: „1.5“ ergibt 15 (regulierung parseNumberDe/zuZahl, audit_designer parseRaw) oder 1,5 (parseGermanNumber, parseAmountInput)
 - „1.234,56“ ergibt 1,234 in flowinvoice/audit-portal BeleglisteGrid.parseDecimal (ersetzt nur das Komma) – Betragsfehler um Faktor 1000
-- „12 345,67 €“: nur parseGermanNumber, parseAmountInput, parseNumberDe und @flowaudit/ui tabular.parseNumber entfernen Leerzeichen/Währung
+- „12 345,67 €“: nur parseGermanNumber, parseAmountInput, parseNumberDe und @auditcore/ui tabular.parseNumber entfernen Leerzeichen/Währung
 - Rückgabe: number (meist), Decimal-String (audit-portal parseAmountInput, audit_designer betragFuerDienst – verlustfrei für das Backend), 0 statt null bei Fehler (parseDecimal, parseGermanNumber)
 - regulierung zuZahl lehnt negative Werte ab (null für „-3,2“)
 
@@ -452,9 +452,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G13 – Zwischenablage kopieren
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, cockpit, flowinvoice · *Definitionen:* 14 · *Varianten (Rumpf-Hash):* 12
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, cockpit, flowinvoice · *Definitionen:* 14 · *Varianten (Rumpf-Hash):* 12
 
-*Ziel:* @flowaudit/common/browser: copyText (Clipboard-API mit textarea-Rückfall)
+*Ziel:* @auditcore/common/browser: copyText (Clipboard-API mit textarea-Rückfall)
 
 *Unterschiede:*
 
@@ -470,9 +470,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G16 – DOM-Hooks: Klick außerhalb, Media-Query, Tastatur
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice, regulierung · *Definitionen:* 14 · *Varianten (Rumpf-Hash):* 9
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice, regulierung · *Definitionen:* 14 · *Varianten (Rumpf-Hash):* 9
 
-*Ziel:* @flowaudit/ui (Vue: useClickOutside, useMediaQuery) und @flowaudit/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei
+*Ziel:* @auditcore/ui (Vue: useClickOutside, useMediaQuery) und @auditcore/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei
 
 *Unterschiede:*
 
@@ -489,7 +489,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (c) fachliche Bibliothek · *Apps:* audit-portal, audit_designer, flowinvoice, pdf-editor · *Definitionen:* 13 · *Varianten (Rumpf-Hash):* 7
 
-*Ziel:* neue Bibliothek @flowaudit/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable)
+*Ziel:* neue Bibliothek @auditcore/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable)
 
 *Unterschiede:*
 
@@ -506,9 +506,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G22 – localStorage-JSON-Wrapper
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 12 · *Varianten (Rumpf-Hash):* 9
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 12 · *Varianten (Rumpf-Hash):* 9
 
-*Ziel:* @flowaudit/common/browser: safeStorage (JSON lesen/schreiben mit try/catch, Präfix)
+*Ziel:* @auditcore/common/browser: safeStorage (JSON lesen/schreiben mit try/catch, Präfix)
 
 *Unterschiede:*
 
@@ -523,9 +523,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G23 – Polling/SSE/Stream-Leser
 
-*Klasse:* (b) @flowaudit/common · *Apps:* ai-router, audit_designer, cockpit · *Definitionen:* 11 · *Varianten (Rumpf-Hash):* 11
+*Klasse:* (b) @auditcore/common · *Apps:* ai-router, audit_designer, cockpit · *Definitionen:* 11 · *Varianten (Rumpf-Hash):* 11
 
-*Ziel:* @flowaudit/common: timing/poll (poll mit Abbruchsignal, Backoff); SSE-Leser als eigenes Modul
+*Ziel:* @auditcore/common: timing/poll (poll mit Abbruchsignal, Backoff); SSE-Leser als eigenes Modul
 
 *Unterschiede:*
 
@@ -539,9 +539,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G12 – Debounce/Throttle
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit_designer, flowsearch, riskanalysis · *Definitionen:* 7 · *Varianten (Rumpf-Hash):* 7
+*Klasse:* (b) @auditcore/common · *Apps:* audit_designer, flowsearch, riskanalysis · *Definitionen:* 7 · *Varianten (Rumpf-Hash):* 7
 
-*Ziel:* @flowaudit/common: timing (debounce, throttle, keyedDebounce) + Vue useDebounce in @flowaudit/ui
+*Ziel:* @auditcore/common: timing (debounce, throttle, keyedDebounce) + Vue useDebounce in @auditcore/ui
 
 *Unterschiede:*
 
@@ -556,9 +556,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G17 – Initialen aus Namen
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 7 · *Varianten (Rumpf-Hash):* 3
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 7 · *Varianten (Rumpf-Hash):* 3
 
-*Ziel:* @flowaudit/common: text (initials)
+*Ziel:* @auditcore/common: text (initials)
 
 *Unterschiede:*
 
@@ -572,9 +572,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G21 – Text kürzen
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 4 · *Varianten (Rumpf-Hash):* 3
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 4 · *Varianten (Rumpf-Hash):* 3
 
-*Ziel:* @flowaudit/common: text (truncate mit „…“)
+*Ziel:* @auditcore/common: text (truncate mit „…“)
 
 *Unterschiede:*
 
@@ -588,9 +588,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G29 – Formular-Validatoren (E-Mail, Pflichtfeld, Passwort)
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 4 · *Varianten (Rumpf-Hash):* 2
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, flowinvoice · *Definitionen:* 4 · *Varianten (Rumpf-Hash):* 2
 
-*Ziel:* @flowaudit/common: validate (email, required, passwordPolicy)
+*Ziel:* @auditcore/common: validate (email, required, passwordPolicy)
 
 *Unterschiede:*
 
@@ -606,9 +606,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G25 – ID/UUID erzeugen
 
-*Klasse:* (b) @flowaudit/common · *Apps:* audit-portal, audit_designer, cockpit · *Definitionen:* 3 · *Varianten (Rumpf-Hash):* 4
+*Klasse:* (b) @auditcore/common · *Apps:* audit-portal, audit_designer, cockpit · *Definitionen:* 3 · *Varianten (Rumpf-Hash):* 4
 
-*Ziel:* @flowaudit/common: ids (newId via crypto.randomUUID mit Rückfall)
+*Ziel:* @auditcore/common: ids (newId via crypto.randomUUID mit Rückfall)
 
 *In auditcore vorhanden:* kanban-core (lokal) eigene ID-Erzeugung
 
@@ -628,7 +628,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (c) fachliche Bibliothek · *Apps:* flowinvoice, audit-portal · *Definitionen:* 8
 
-*Ziel:* @flowaudit/ui-react (Login-Formular) – liegt als „Paket“ bereits unter src/packages/login-template mit README
+*Ziel:* @auditcore/ui-react (Login-Formular) – liegt als „Paket“ bereits unter src/packages/login-template mit README
 
 *Unterschiede:*
 
@@ -636,9 +636,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ### G20 – Prüfziffer mod 97 (IBAN/Leitweg-ID)
 
-*Klasse:* (b) @flowaudit/common · *Apps:* rechnung · *Definitionen:* 4 · *Varianten (Rumpf-Hash):* 5
+*Klasse:* (b) @auditcore/common · *Apps:* rechnung · *Definitionen:* 4 · *Varianten (Rumpf-Hash):* 5
 
-*Ziel:* @flowaudit/common: checks/mod97 (mod97, ibanIsValid, leitwegCheckDigits)
+*Ziel:* @auditcore/common: checks/mod97 (mod97, ibanIsValid, leitwegCheckDigits)
 
 *Unterschiede:*
 
@@ -655,9 +655,9 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 *Klasse:* (d) bleibt in der App · *Apps:* ai-router, audit-portal, audit_designer, cockpit, flowinvoice, flowsearch, qaaudit, regulierung, riskanalysis, versteigerung · *Definitionen:* 99 · *Varianten (Rumpf-Hash):* 58
 
-*Ziel:* bleibt in den Apps; nur Risiko-Stufen (hoch/mittel/niedrig) an @flowaudit/ui risk/view/labels.ts angleichen
+*Ziel:* bleibt in den Apps; nur Risiko-Stufen (hoch/mittel/niedrig) an @auditcore/ui risk/view/labels.ts angleichen
 
-*In auditcore vorhanden:* @flowaudit/ui risk/view/labels.ts (nur Risiko-Flags)
+*In auditcore vorhanden:* @auditcore/ui risk/view/labels.ts (nur Risiko-Flags)
 
 *Unterschiede:*
 
@@ -713,7 +713,7 @@ Im Ranking stehen Klasse (a)–(c) vor (d); danach zählen Anzahl der Apps und D
 
 ## 4. Ausführungsmatrix: deutsche Zahleneingabe (G04) im Frontend und in auditcore-Python
 
-Alle TS-Varianten wurden aus dem Quelltext transpiliert und auf dieselben Eingaben angewendet (Werte in JS-Schreibweise, `null` = abgelehnt). `@flowaudit/ui tabular.parseNumber` lief mit `decimal=","`. Die Python-Zeilen stammen aus `origin/main` (Import aus `packages/*/src`). Funktionen wie `toNumber` und `toNumberOrNull` sind keine DE-Parser (reines `Number()`). Sie stehen in der Matrix, weil sie an Stellen mit deutscher Eingabe aufgerufen werden.
+Alle TS-Varianten wurden aus dem Quelltext transpiliert und auf dieselben Eingaben angewendet (Werte in JS-Schreibweise, `null` = abgelehnt). `@auditcore/ui tabular.parseNumber` lief mit `decimal=","`. Die Python-Zeilen stammen aus `origin/main` (Import aus `packages/*/src`). Funktionen wie `toNumber` und `toNumberOrNull` sind keine DE-Parser (reines `Number()`). Sie stehen in der Matrix, weil sie an Stellen mit deutscher Eingabe aufgerufen werden.
 
 | Funktion (App) | `1.234,56` | `1234,56` | `1,5` | `1.5` | `1.234` | `1,234.56` | `12 345,67 €` | `-3,2` | `(leer)` | `abc` |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -743,7 +743,7 @@ Alle TS-Varianten wurden aus dem Quelltext transpiliert und auf dieselben Eingab
 **Befunde**
 
 1. **`BeleglisteGrid.parseDecimal` (flowinvoice, audit-portal)** ersetzt nur das erste Komma: `1.234,56` → `1.234`, `12 345,67 €` → `12`, und `0` statt Ablehnung. In einer Belegliste ist das ein Betragsfehler.
-2. **`1.5` ist mehrdeutig.** Strikt deutsch (regulierung, `@flowaudit/ui`, audit_designer `parseRaw`) liest daraus `15`, heuristisch (`parseGermanNumber`, `parseAmountInput`, Python `flowsearch.parse_amount`) `1.5`. Beides ist vertretbar, muss aber pro Feld festgelegt werden. Vorschlag: Betragsfelder strikt deutsch; Import aus Fremddateien heuristisch mit Warnung.
+2. **`1.5` ist mehrdeutig.** Strikt deutsch (regulierung, `@auditcore/ui`, audit_designer `parseRaw`) liest daraus `15`, heuristisch (`parseGermanNumber`, `parseAmountInput`, Python `flowsearch.parse_amount`) `1.5`. Beides ist vertretbar, muss aber pro Feld festgelegt werden. Vorschlag: Betragsfelder strikt deutsch; Import aus Fremddateien heuristisch mit Warnung.
 3. **Python ist nicht besser:** `auditcore_property_sources.zvg.parse_de_number` ist ein Textsucher („1234,56“ → `123.0`, „1.5“ → `1.0`) und darf nicht als allgemeiner Parser gelten. `auditcore_price_analysis.parse_decimal` akzeptiert nur Punkt-Notation. `funding_sources._parsing.to_decimal` lehnt alles Deutsche ab.
 4. **Rückgabetyp:** Für Beträge, die ans Backend gehen, ist der Decimal-String (`parseAmountInput`, `betragFuerDienst`) richtig, weil er Rundungsfehler von `number` vermeidet. Die gemeinsame API sollte beides anbieten.
 
@@ -761,13 +761,13 @@ Alle TS-Varianten wurden aus dem Quelltext transpiliert und auf dieselben Eingab
 
 Die Python-Inventur (`app-helfer-python.*`) und `auditcore_common` sollten dieselben Falldateien verwenden. Wo Python und TS heute voneinander abweichen, legt die Falldatei die Regel fest, und beide Seiten folgen ihr.
 
-## 6. Vorschlag: Zuschnitt `@flowaudit/common`
+## 6. Vorschlag: Zuschnitt `@auditcore/common`
 
-Framework-frei, TypeScript strict (`noUncheckedIndexedAccess`), ESM, ohne Laufzeitabhängigkeiten, keine DOM-Zugriffe beim Import (SSR-tauglich für Next.js in versteigerung). DOM-abhängige Helfer liegen im Unterpfad `@flowaudit/common/browser`. Die bisher in `@flowaudit/ui` liegenden framework-freien Module wandern hierher; `@flowaudit/ui` exportiert sie weiter, sodass die öffentliche API unverändert bleibt.
+Framework-frei, TypeScript strict (`noUncheckedIndexedAccess`), ESM, ohne Laufzeitabhängigkeiten, keine DOM-Zugriffe beim Import (SSR-tauglich für Next.js in versteigerung). DOM-abhängige Helfer liegen im Unterpfad `@auditcore/common/browser`. Die bisher in `@auditcore/ui` liegenden framework-freien Module wandern hierher; `@auditcore/ui` exportiert sie weiter, sodass die öffentliche API unverändert bleibt.
 
 | Modul | API (Entwurf) | Ersetzt (Gruppen) | Herkunft/Vorbild |
 |---|---|---|---|
-| `format/locale` | `type AppLocale = 'de' \| 'en'`, `localeTag(locale)` | – | `@flowaudit/ui i18n/format.ts`, versteigerung `toIntlLocale` |
+| `format/locale` | `type AppLocale = 'de' \| 'en'`, `localeTag(locale)` | – | `@auditcore/ui i18n/format.ts`, versteigerung `toIntlLocale` |
 | `format/date` | `parseDateInput(v): Date \| null` (Datum-only lokal), `formatDate(v, {locale, empty, timeZone})`, `formatDateTime(v, {seconds})`, `formatTime`, `toIsoDate(date)` | G01 | regulierung `formatDatumDe`, versteigerung `parseDateValue`, ui `formatDate` |
 | `format/number` | `formatNumber(v, {locale, digits, minDigits, maxDigits, empty})`, `formatInt`, `formatPercent(v, {scale: 'ratio' \| 'percent', digits})` | G03 | regulierung `numberFormat.ts`, ui `formatPercent` |
 | `format/money` | `formatEur(v: number \| string \| null, {digits = 2, cents = false, empty = '—'})`, `formatEurCompact(v)` („1,2 Mio. €“, „850 T€“) | G02 | audit-portal `vpFormat.formatEur`, KPIStrip |
@@ -790,7 +790,7 @@ Framework-frei, TypeScript strict (`noUncheckedIndexedAccess`), ESM, ohne Laufze
 
 ## 7. Vue- und React-Anteile
 
-| Baustein | Vue (`@flowaudit/ui`) | React (`@flowaudit/ui-react`) | Kern in `@flowaudit/common` |
+| Baustein | Vue (`@auditcore/ui`) | React (`@auditcore/ui-react`) | Kern in `@auditcore/common` |
 |---|---|---|---|
 | Toast (G19) | `useToast()` | `useToast()` + `ToastProvider` | `toast` |
 | Media-Query / Klick außerhalb (G16) | `useMediaQuery`, `useClickOutside` | `useMediaQuery`, `useClickOutside` (heute wortgleich in 3 React-Apps) | `browser/subscribeMediaQuery`, `onClickOutside` |
@@ -801,18 +801,18 @@ Framework-frei, TypeScript strict (`noUncheckedIndexedAccess`), ESM, ohne Laufze
 | eGPU-Widget (G26) | – | `EgpuPipelineWidget` (aus flowinvoice/audit-portal/regulierung) | `format/duration.formatUptime` |
 | Login-Vorlage (X3) | – | `LoginTemplate` (heute `src/packages/login-template` in flowinvoice und audit-portal) | – |
 
-Die React-Brücke `@flowaudit/ui-react` wickelt heute nur Custom Elements ein (`createElementComponent`). Für echte Hooks braucht sie einen eigenen Hook-Bereich mit `react` als peerDependency.
+Die React-Brücke `@auditcore/ui-react` wickelt heute nur Custom Elements ein (`createElementComponent`). Für echte Hooks braucht sie einen eigenen Hook-Bereich mit `react` als peerDependency.
 
 ## 8. Fachliche Cluster (Klasse c) und Forks
 
 | Paar | Wortgleiche Funktionen | Einordnung |
 |---|---:|---|
 | ai-router ↔ cockpit | 7 | gemeinsames Gerüst `api/auth.ts`, `api/client.ts extractError`, `stores/toast.ts` (G10, G09, G19) |
-| audit-portal ↔ audit_designer | 49 | FlowStat-Custom-Node-Kern (42 von 49), React- und Vue-Port desselben Kerns (X1) → `@flowaudit/flowstat-customnode` |
+| audit-portal ↔ audit_designer | 49 | FlowStat-Custom-Node-Kern (42 von 49), React- und Vue-Port desselben Kerns (X1) → `@auditcore/flowstat-customnode` |
 | audit-portal ↔ flowinvoice | 576 | Fork: fraud-report, company-report, risk-wheel, belegliste, pipeline, settings (X2). Keine Hilfsfunktionen, sondern eine Produktentscheidung: gemeinsames React-Paket oder eine führende App |
 | audit-portal ↔ regulierung | 19 | eGPU-Widget, AuthContext, Hilfs-Toggles (G26) |
 | audit_designer ↔ flowinvoice | 4 | Einzelfunktionen (formatCurrency, Status-Mapping) |
-| audit_designer ↔ pdf-editor | 23 | `usePdfTools` + PDF-Werkzeugkomponenten (G28) → `@flowaudit/pdf-tools` |
+| audit_designer ↔ pdf-editor | 23 | `usePdfTools` + PDF-Werkzeugkomponenten (G28) → `@auditcore/pdf-tools` |
 | audit_designer ↔ regulierung | 3 | Einzelfunktionen |
 | flowinvoice ↔ regulierung | 17 | eGPU-Widget (`EgpuPipelineWidget.tsx` wortgleich), `useAuth`, `LoginError` |
 
@@ -820,7 +820,7 @@ Für X1 und G28 gilt dieselbe Voraussetzung: Eine App wird Quelle (audit_designe
 
 ## 9. Migrationsaufwand je App
 
-Zählung: Definitionen in Gruppen der Klassen (a) und (b), die durch `@flowaudit/common` bzw. `@flowaudit/ui(-react)` ersetzt würden. Aufwand grob in Personentagen: S ≤ 1, M 2–4, L 5–10.
+Zählung: Definitionen in Gruppen der Klassen (a) und (b), die durch `@auditcore/common` bzw. `@auditcore/ui(-react)` ersetzt würden. Aufwand grob in Personentagen: S ≤ 1, M 2–4, L 5–10.
 
 | App | FW | Def. (a+b) | Gruppen | Zentrale Helfer vorhanden | Tests für Helfer | Fachliche Cluster (c) | Aufwand |
 |---|---|---:|---:|---|---|---|---|
@@ -830,18 +830,18 @@ Zählung: Definitionen in Gruppen der Klassen (a) und (b), die durch `@flowaudit
 | regulierung | React | 52 | 14 | `lib/numberFormat.ts`, `lib/dateFormat.ts`, `lib/download.ts` | keine Frontend-Tests | G26 | **M** – zentrale Module erleichtern den Tausch; ohne Tests vorher charakterisieren |
 | cockpit | Vue | 26 | 11 | `utils/format.ts` | 1 Spec | – | **S** |
 | ai-router | Vue | 23 | 9 | `utils/format.ts` | `tests/format.test.ts` | – | **S** – Gerüst mit cockpit teilen |
-| pdf-editor | Vue | 20 | 6 | `lib/safeStorage.ts`, `lib/auth.ts` | keine | G28 (Quelle) | **M** (wegen `@flowaudit/pdf-tools`) |
+| pdf-editor | Vue | 20 | 6 | `lib/safeStorage.ts`, `lib/auth.ts` | keine | G28 (Quelle) | **M** (wegen `@auditcore/pdf-tools`) |
 | riskanalysis | Vue | 9 | 5 | `verwk/format.ts` | 1 Spec | – | **S** |
 | flowsearch | Vue | 8 | 5 | – | keine | – | **S** |
 | versteigerung | React/Next | 8 | 6 | `lib/format.ts` (kommt dem Vorschlag am nächsten) | keine | – | **S** (SSR-Tauglichkeit prüfen) |
 | rechnung | React | 7 | 4 | `utils/leitweg.ts`, `utils/calc.ts` | keine | – | **S** (Quelle für `checks/mod97`) |
 | qaaudit | React | 3 | 2 | – | keine | – | **S** |
 
-**Empfohlene Reihenfolge:** (1) Falldateien `contracts/common-cases/*` für Zahl, Betrag, Datum, mod 97, CSV und Fehlerform anlegen, gemeinsam mit der Python-Inventur. (2) `@flowaudit/common` mit `parse/number`, `format/*`, `http/error` bauen, Baseline 0 im Quality-Gate. (3) framework-freie Module aus `@flowaudit/ui` verschieben und re-exportieren. (4) Sofortkorrektur `BeleglisteGrid.parseDecimal` in flowinvoice/audit-portal, unabhängig von der Paketarbeit. (5) Apps mit zentralen Helfermodulen zuerst umstellen (regulierung, cockpit, ai-router, riskanalysis, versteigerung). (6) Danach audit_designer schrittweise. (7) X1/G28/X2 als eigene Bibliotheksvorhaben.
+**Empfohlene Reihenfolge:** (1) Falldateien `contracts/common-cases/*` für Zahl, Betrag, Datum, mod 97, CSV und Fehlerform anlegen, gemeinsam mit der Python-Inventur. (2) `@auditcore/common` mit `parse/number`, `format/*`, `http/error` bauen, Baseline 0 im Quality-Gate. (3) framework-freie Module aus `@auditcore/ui` verschieben und re-exportieren. (4) Sofortkorrektur `BeleglisteGrid.parseDecimal` in flowinvoice/audit-portal, unabhängig von der Paketarbeit. (5) Apps mit zentralen Helfermodulen zuerst umstellen (regulierung, cockpit, ai-router, riskanalysis, versteigerung). (6) Danach audit_designer schrittweise. (7) X1/G28/X2 als eigene Bibliotheksvorhaben.
 
 ## 10. Grenzen der Auswertung
 
 - Namens- und Rumpfmuster finden nicht jede Hilfsfunktion. Inline-Ausdrücke in Templates (etwa `{{ new Date(x).toLocaleDateString() }}`) sind nicht als Funktionen erfasst, der tatsächliche Duplikatumfang ist also größer.
 - Die Aufruferzahlen aus graphify sind Untergrenzen (Vue-Templates fehlen, nur ~45 % Knotenzuordnung). Die Textzahlen sind Obergrenzen.
-- `@flowaudit/ui`-Fachmodule (risk, sampling/tabular, screening) wurden aus Branches gelesen und können sich bis zu ihrem Merge noch ändern; Basis, i18n, rest, table, theme und `kanban-core` sind seit #84 in `main`.
+- `@auditcore/ui`-Fachmodule (risk, sampling/tabular, screening) wurden aus Branches gelesen und können sich bis zu ihrem Merge noch ändern; Basis, i18n, rest, table, theme und `kanban-core` sind seit #84 in `main`.
 - In den App-Repos wurde nichts geändert (nur `git fetch` und `git archive`).

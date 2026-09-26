@@ -1,4 +1,4 @@
-import { debounce, throttle, type Debounced } from '@flowaudit/common'
+import { debounce, throttle, type Debounced } from '@auditcore/common'
 import { getCurrentScope, onScopeDispose, readonly, ref, watch, type Ref, type WatchSource } from 'vue'
 
 function cancelOnDispose<A extends unknown[]>(fn: Debounced<A>): Debounced<A> {

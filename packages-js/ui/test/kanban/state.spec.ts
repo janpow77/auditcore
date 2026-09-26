@@ -1,6 +1,6 @@
 import { effectScope, nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
-import { KanbanError, type BoardPort } from '@flowaudit/kanban-core'
+import { KanbanError, type BoardPort } from '@auditcore/kanban-core'
 import { useColumnEditor } from '../../src/kanban/useColumnEditor'
 import { useKanbanActions } from '../../src/kanban/useKanbanActions'
 import { useKanbanBoard } from '../../src/kanban/useKanbanBoard'

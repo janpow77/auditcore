@@ -1,4 +1,8 @@
-# Changelog @flowaudit/ui
+# Changelog @auditcore/ui
+
+## Unreleased
+
+- **Breaking:** Paketname `@auditcore/ui` statt `@flowaudit/ui` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 ## 0.3.0 – unveröffentlicht
 
@@ -24,22 +28,22 @@
   „Ohne Wert“, Ziehen und Ablegen oder Strg+Pfeil setzt den Zellwert (bei
   Fehlern zurückgenommen), Eintrag je Spalte anlegen, Suche,
   `v-model:group-by`, Nur-Lese-Modus. Datenquelle als `RecordPort` aus
-  `@flowaudit/kanban-core` oder als Tabelle (`table` + `table-change`).
+  `@auditcore/kanban-core` oder als Tabelle (`table` + `table-change`).
   Logik im Kern (`createDbKanbanController`), Paritätsfälle für React.
 - **Kern ausgelagert:** Texte, Datentypen der REST-Verträge, View-Modelle,
   Zustandsautomaten (Synopse, VVT, DSFA), Ports, Exporte, Symbole und die
   Stile von Basis, Tabelle, Synopse, Datenschutz und Geo-Karte liegen jetzt in
-  `@flowaudit/ui-core` (neue Laufzeitabhängigkeit). Die Vue-Komponenten
+  `@auditcore/ui-core` (neue Laufzeitabhängigkeit). Die Vue-Komponenten
   binden die Controller über `useStore` an; dieselbe Logik nutzt die native
-  React-Fassung `@flowaudit/ui-react` 1.0.0. Öffentliche Namen der
+  React-Fassung `@auditcore/ui-react` 1.0.0. Öffentliche Namen der
   Kernfunktionen werden unverändert weitergereicht; `ui.css` enthält die
   Kernstile weiterhin.
 - **Risiko-Merkmale, Screening, Stichprobe, Benford, Datei-Import:** Kern
   (Verträge, Ports, View-Logik, Zustandsautomaten, Stile) ebenfalls in
-  `@flowaudit/ui-core`; `RiskFlags`, `ScreeningReview`, `SamplingPanel`,
+  `@auditcore/ui-core`; `RiskFlags`, `ScreeningReview`, `SamplingPanel`,
   `BenfordPanel` und `TableImport` sind in Props, Ereignissen und Markup
-  unverändert und haben jetzt native Gegenstücke in `@flowaudit/ui-react`.
-  Die Stildatei `screening.css` liegt jetzt in `@flowaudit/ui-core/styles`.
+  unverändert und haben jetzt native Gegenstücke in `@auditcore/ui-react`.
+  Die Stildatei `screening.css` liegt jetzt in `@auditcore/ui-core/styles`.
 - **Breaking (Composables, Risiko bis Datei-Import):** `useSampling`,
   `useBenford` und `useTableImport` liefern `{ controller, state, … }` statt
   einzelner Refs; `useScreeningReview` hat statt beschreibbarer `filter`/
@@ -59,8 +63,8 @@
   hat der Vorlagencompiler das Leerzeichen entfernt).
 - Kanban: Zustand, Aktionen, Verschieben (Tastatur und Zeiger),
   Boardliste, Spalteneditor und Personensuche kommen aus
-  `@flowaudit/kanban-core` 0.2.0; Texte und `kanban.css` aus
-  `@flowaudit/ui-core`. Die Composables (`useKanbanBoard`,
+  `@auditcore/kanban-core` 0.2.0; Texte und `kanban.css` aus
+  `@auditcore/ui-core`. Die Composables (`useKanbanBoard`,
   `useKanbanActions`, `useKanbanFilter`, `useMoveController`, …) behalten
   ihre Rückgabe (Refs), `usePointerDrag().drag` ist jetzt eine Ref. Props,
   Ereignisse und Markup der Komponenten sind unverändert; Paritätsfälle in
@@ -72,7 +76,7 @@
   (Vertrag `dataprotection_ui/1`, `docs/ui/dataprotection-rest.md`).
   Pflichtangaben nach Art. 30 DSGVO, Vollständigkeitsprüfung der Bibliothek
   beim Tippen, Entwurf/Vier-Augen-Freigabe/Versionen, Druckansicht, Markdown
-  und CSV mit Formelschutz (`csvDocument` aus `@flowaudit/common`);
+  und CSV mit Formelschutz (`csvDocument` aus `@auditcore/common`);
   Schwellwertanalyse, Risikoszenarien mit Vorschau der Bibliothek,
   Entscheidung, DSB-Einholung, Freigabe, Bericht. View-Logik ohne Vue
   (`registerView`, `dsfaView`, `exporters`). Parität:

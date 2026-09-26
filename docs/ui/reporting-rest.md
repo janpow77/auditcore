@@ -1,7 +1,7 @@
 # REST-Vertrag Tabellenexport (`auditcore_reporting.web`, `reporting_ui/1`)
 
 Stand 2026-09-26. Vertrag zwischen `auditcore_reporting.web` und der
-Oberflächenkomponente `<flowaudit-report-export>` aus `@flowaudit/ui` (Vue
+Oberflächenkomponente `<flowaudit-report-export>` aus `@auditcore/ui` (Vue
 `ReportExportPanel`, React `FlowauditReportExport`).
 
 ## Was das Paket kann – und was nicht
@@ -124,8 +124,8 @@ oder Ganzzahl mit mehr als 15 Stellen – Meldung der Bibliothek im Wortlaut),
 ## Oberfläche
 
 ```ts
-import { ReportExportPanel, createReportingRestPort } from '@flowaudit/ui'   // Vue
-import { FlowauditReportExport } from '@flowaudit/ui-react'                   // React
+import { ReportExportPanel, createReportingRestPort } from '@auditcore/ui'   // Vue
+import { FlowauditReportExport } from '@auditcore/ui-react'                   // React
 const port = createReportingRestPort({ baseUrl: '/api/reporting' })
 ```
 

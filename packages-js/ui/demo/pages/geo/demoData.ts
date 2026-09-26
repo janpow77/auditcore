@@ -1,4 +1,4 @@
-import type { GeoArea, GeoPoint } from '@flowaudit/ui'
+import type { GeoArea, GeoPoint } from '@auditcore/ui'
 
 /** Deterministischer Zufall (mulberry32), damit Demo und Bildschirmfotos gleich bleiben. */
 function random(seed: number): () => number {

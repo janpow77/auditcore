@@ -4,8 +4,8 @@
  * per element (legacy `comments` of the audit_designer, kept by the app).
  */
 import { computed, ref } from 'vue'
-import type { Comment } from '@flowaudit/bpmn-flowaudit'
-import { commentsOf, newComment, toggleResolved as toggled } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Comment } from '@auditcore/bpmn-flowaudit'
+import { commentsOf, newComment, toggleResolved as toggled } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'

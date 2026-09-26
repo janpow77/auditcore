@@ -9,7 +9,7 @@ import {
   type ComparisonsTranslate,
   type ProfileOption,
   type RowStatus,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { classes, useElementId } from '../store'
 
 export interface ComparisonOptionsProps {

@@ -1,6 +1,6 @@
 /** Keyboard shortcut help (declarative table). */
 
-import { SHORTCUTS } from '@flowaudit/bpmn-flowaudit/ui'
+import { SHORTCUTS } from '@auditcore/bpmn-flowaudit/ui'
 import { BaseDialog } from '../base/BaseDialog'
 import { useI18n } from '../i18n'
 

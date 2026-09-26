@@ -3,8 +3,8 @@
  * the popover for colour and role choice from the context pad.
  */
 
-import { label, PALETTE_COLORS, rolesFor, type PaletteColor, type ProfileData } from '@flowaudit/bpmn-flowaudit'
-import { choosePopoverColor, choosePopoverRole } from '@flowaudit/bpmn-flowaudit/ui'
+import { label, PALETTE_COLORS, rolesFor, type PaletteColor, type ProfileData } from '@auditcore/bpmn-flowaudit'
+import { choosePopoverColor, choosePopoverRole } from '@auditcore/bpmn-flowaudit/ui'
 import { ColorSwatches } from './base/ColorSwatches'
 import { CanvasPopover, PageGrid } from './canvas/CanvasParts'
 import { classes, useStoreState } from './hooks'

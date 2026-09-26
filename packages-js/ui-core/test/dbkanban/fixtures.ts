@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { vi } from 'vitest'
-import { createMemoryRecordPort, type RecordPort, type RecordTable } from '@flowaudit/kanban-core'
+import { createMemoryRecordPort, type RecordPort, type RecordTable } from '@auditcore/kanban-core'
 import { dbKanbanMessages, type DbKanbanTranslate } from '../../src/dbkanban/messages'
 import { translate } from '../../src/i18n'
 

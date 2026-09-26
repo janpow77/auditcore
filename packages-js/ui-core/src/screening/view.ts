@@ -1,7 +1,7 @@
 // Framework-freie View-Logik der Screening-Trefferprüfung: Filter, Formatierung,
 // Vergleichszeilen, Aufschlüsselung, Entscheidungsregeln. Keine Vue-Abhängigkeit.
 
-import { intlFormatNumber as formatNumber } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber } from '@auditcore/common'
 import type { Locale, MessageParams } from '../i18n'
 import { codeLabel, type ScreeningKey, type ScreeningTranslate } from './messages'
 import type {

@@ -1,6 +1,6 @@
 // Anzeige des Tabellenexports (Vue und React): Texte, Zellen, Zusammenfassungen.
 
-import { EMPTY_VALUE, formatBytes, intlFormatNumber } from '@flowaudit/common'
+import { EMPTY_VALUE, formatBytes, intlFormatNumber } from '@auditcore/common'
 import type { Locale, Translate } from '../i18n'
 import type { ReportingMessageKey } from './messages'
 import type { ReportCell, ReportTableInput, TablePreview, WorkbookPreview } from './types'

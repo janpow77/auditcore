@@ -10,7 +10,7 @@ import {
   type ExtrapolationMetric,
   type ExtrapolationTranslate,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'

@@ -5,7 +5,7 @@
  * key index; the application can also set a key through `FlowauditEditor`.
  */
 import { computed } from 'vue'
-import { KEY_KINDS, type KeyKind } from '@flowaudit/bpmn-flowaudit'
+import { KEY_KINDS, type KeyKind } from '@auditcore/bpmn-flowaudit'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 

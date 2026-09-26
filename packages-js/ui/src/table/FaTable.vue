@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import FaIcon from '../base/FaIcon.vue'
 import { baseMessages, useI18n, type Locale } from '../i18n'
-import { cellAlignClass, cellText, rowKeyOf, sortIcon } from '@flowaudit/ui-core'
+import { cellAlignClass, cellText, rowKeyOf, sortIcon } from '@auditcore/ui-core'
 import { ariaSort, nextSort, sortRows, type SortState, type TableColumn, type TableRow } from './sort'
 
 const props = withDefaults(defineProps<{

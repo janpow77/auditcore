@@ -5,7 +5,7 @@ import {
   reportingSampleNote,
   reportingSheetHeading,
   type TablePreview,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useI18n, type Locale } from '../i18n'
 
 const props = withDefaults(defineProps<{ table: TablePreview; index: number; locale?: Locale }>(), { locale: undefined })

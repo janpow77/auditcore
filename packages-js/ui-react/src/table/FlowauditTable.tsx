@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { ariaSort, nextSort, sortRows, type SortState, type TableColumn, type TableRow } from '@flowaudit/common'
-import { baseMessages, cellAlignClass, cellText, rowKeyOf, sortIcon, type Locale, type Translate } from '@flowaudit/ui-core'
+import { ariaSort, nextSort, sortRows, type SortState, type TableColumn, type TableRow } from '@auditcore/common'
+import { baseMessages, cellAlignClass, cellText, rowKeyOf, sortIcon, type Locale, type Translate } from '@auditcore/ui-core'
 import { Icon } from '../base/Icon'
 import { useTranslation } from '../i18n'
 import { classes } from '../store'

@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useState } from 'react'
-import { headerOf, type Approval, type DiagramInfo, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
-import { cloneInfo, INFO_SECTIONS } from '@flowaudit/bpmn-flowaudit/ui'
+import { headerOf, type Approval, type DiagramInfo, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
+import { cloneInfo, INFO_SECTIONS } from '@auditcore/bpmn-flowaudit/ui'
 import { BaseDialog } from '../base/BaseDialog'
 import { FaIcon } from '../base/FaIcon'
 import { useEditorContext } from '../context'

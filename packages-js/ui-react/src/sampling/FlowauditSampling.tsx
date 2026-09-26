@@ -1,5 +1,5 @@
-import { saveFile } from '@flowaudit/common/browser'
-import { isStratifiedPopulation, type ExportFormat } from '@flowaudit/ui-core'
+import { saveFile } from '@auditcore/common/browser'
+import { isStratifiedPopulation, type ExportFormat } from '@auditcore/ui-core'
 import { SamplingDraw } from './SamplingDraw'
 import { SamplingMethod } from './SamplingMethod'
 import { SamplingParameters } from './SamplingParameters'

@@ -16,7 +16,7 @@ import { synopsisElement } from './synopsis/element'
 import { tableElement } from './table/element'
 
 /**
- * Alle Web Components von @flowaudit/ui. Neue Komponenten tragen hier ihre
+ * Alle Web Components von @auditcore/ui. Neue Komponenten tragen hier ihre
  * `ElementDefinition` ein (siehe docs/ui/beitragen.md).
  */
 export const ELEMENTS: readonly ElementDefinition[] = [tableElement, samplingElement, benfordElement, extrapolationElement, kanbanBoardElement, kanbanBoardListElement, dbKanbanElement, screeningReviewElement, riskFlagsElement, synopsisElement, comparisonsElement, extractionElement, vvtElement, dsfaElement, geoMapElement, identifierCheckElement, reportExportElement]

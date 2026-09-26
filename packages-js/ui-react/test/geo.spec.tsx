@@ -1,12 +1,12 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import type { MapLayers, MapViewOptions, SimplifyResult } from '@flowaudit/ui-core'
+import type { MapLayers, MapViewOptions, SimplifyResult } from '@auditcore/ui-core'
 import { fakeGeoPort, GEO_AREA, GEO_POINTS, GEO_RESULTS } from '../../ui-core/test/parity/cases-geo'
 import { FlowauditGeoMap, type FlowauditGeoMapProps } from '../src'
 
 const view = vi.hoisted(() => ({ options: null as MapViewOptions | null, layers: [] as MapLayers[], fit: 0, tiles: [] as unknown[] }))
-vi.mock('@flowaudit/ui-core', async (original) => ({
-  ...(await original<typeof import('@flowaudit/ui-core')>()),
+vi.mock('@auditcore/ui-core', async (original) => ({
+  ...(await original<typeof import('@auditcore/ui-core')>()),
   createLeafletView: vi.fn(async (_element: HTMLElement, options: MapViewOptions) => {
     view.options = options
     return { update: (layers: MapLayers) => view.layers.push(layers), setTiles: (tiles: unknown) => view.tiles.push(tiles), fit: () => (view.fit += 1), destroy: vi.fn() }

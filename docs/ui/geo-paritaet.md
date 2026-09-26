@@ -6,7 +6,7 @@ Stand 25.09.2026. Vorbilder: audit_designer (`main` @ `fce6b26f`: GIS-Arbeitspla
 (`master` @ `10cb2a3`: `frontend/src/components/NaturaMap.vue`, `api/eu_beneficiaries.py:calculate_distance`,
 `services/natura2000_service.py`), wohnungsmonitor (`main` @ `76571bf`: `index.html`,
 `index-fr.html`, `frankreich_gebiet.py:entfernung`). Ziel: gemeinsame Komponente
-`<flowaudit-geo-map>` in `@flowaudit/ui` auf Basis von `auditcore_geo.web`
+`<flowaudit-geo-map>` in `@auditcore/ui` auf Basis von `auditcore_geo.web`
 ([Vertrag](geo-rest.md)). Alle drei Vorbilder nutzen Leaflet 1.9.
 
 Legende: **übernommen** = gleiche Fachlogik über die Bibliothek; **ergänzt** = neu gegenüber

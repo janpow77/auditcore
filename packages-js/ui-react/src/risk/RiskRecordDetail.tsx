@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { formatValue, pairs, recordLabel, riskMessages, type FlagEntry, type Locale, type ProfileReference, type RecordView } from '@flowaudit/ui-core'
+import { formatValue, pairs, recordLabel, riskMessages, type FlagEntry, type Locale, type ProfileReference, type RecordView } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { RiskFlagCard } from './RiskFlagCard'
 

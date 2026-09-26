@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react'
 import { render } from '@testing-library/react'
-import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
-import type { EditorPorts } from '@flowaudit/bpmn-flowaudit/ui'
+import type { ProfileData } from '@auditcore/bpmn-flowaudit'
+import type { EditorPorts } from '@auditcore/bpmn-flowaudit/ui'
 import { EditorContextProvider, type EditorContext } from '../src/context'
 
 const store = <S extends object>(state: S) => ({ get: () => state, set: () => undefined, subscribe: () => () => undefined })

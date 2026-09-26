@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
-import { createMemoryRecordPort, type RecordPort, type RecordRow, type RecordTable } from '@flowaudit/kanban-core'
-import { dbKanbanMessages, type DbKanbanError, type RecordMove } from '@flowaudit/ui-core'
+import { createMemoryRecordPort, type RecordPort, type RecordRow, type RecordTable } from '@auditcore/kanban-core'
+import { dbKanbanMessages, type DbKanbanError, type RecordMove } from '@auditcore/ui-core'
 import FaTextField from '../base/FaTextField.vue'
 import { useId } from '../composables/useId'
 import { provideLocale, useI18n, type Locale } from '../i18n'

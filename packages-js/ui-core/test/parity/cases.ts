@@ -1,10 +1,10 @@
 /**
- * Gemeinsame Paritätsfälle: Vue-Fassung (`@flowaudit/ui`) und React-Fassung
- * (`@flowaudit/ui-react`) werden mit denselben Eingaben gerendert und gegen
+ * Gemeinsame Paritätsfälle: Vue-Fassung (`@auditcore/ui`) und React-Fassung
+ * (`@auditcore/ui-react`) werden mit denselben Eingaben gerendert und gegen
  * dieselben Erwartungen (Texte, Rollen, Namen) sowie gegeneinander (DOM)
  * geprüft. Daten: Fixtures der echten Python-Backends, keine Personendaten.
  */
-import type { SortState, TableColumn, TableRow } from '@flowaudit/common'
+import type { SortState, TableColumn, TableRow } from '@auditcore/common'
 import type { Comparison, SynopsisPort } from '../../src'
 import { article, checklist, standard } from '../synopsis/fixtures'
 

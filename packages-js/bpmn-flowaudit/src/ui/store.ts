@@ -1,6 +1,6 @@
 /**
  * Smallest shared state container of the UI controllers (same contract as
- * `createStore` of @flowaudit/ui-core). Every state is a new immutable
+ * `createStore` of @auditcore/ui-core). Every state is a new immutable
  * object; React reads it with `useSyncExternalStore`, Vue mirrors it into a
  * `shallowRef`/`reactive`.
  */

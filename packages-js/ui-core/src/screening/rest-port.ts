@@ -1,4 +1,4 @@
-import { requestJson, type RestOptions } from '@flowaudit/common'
+import { requestJson, type RestOptions } from '@auditcore/common'
 import type { RunQuery, ScreeningPort } from './types'
 
 const segment = encodeURIComponent

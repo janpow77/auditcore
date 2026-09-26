@@ -1,4 +1,4 @@
-import type { SynopsisTranslate, SynopsisView } from '@flowaudit/ui-core'
+import type { SynopsisTranslate, SynopsisView } from '@auditcore/ui-core'
 import { Icon } from '../base/Icon'
 
 export interface SynopsisHeaderProps {

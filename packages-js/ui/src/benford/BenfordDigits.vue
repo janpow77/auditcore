@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { benfordDigitColumns, benfordDigitRows, benfordMessages, type Conformity } from '@flowaudit/ui-core'
+import { benfordDigitColumns, benfordDigitRows, benfordMessages, type Conformity } from '@auditcore/ui-core'
 import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 

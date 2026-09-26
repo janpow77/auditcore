@@ -10,7 +10,7 @@ import {
   type DecisionForm,
   type DecisionInput,
   type Proposal,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Button } from '../../base/Button'
 import { classes, useElementId } from '../../store'
 import { useDataProtectionText } from '../shared'

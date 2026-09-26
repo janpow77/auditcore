@@ -1,5 +1,5 @@
 /**
- * Icons of the core palette entries (ids of `@flowaudit/bpmn-editor`). The
+ * Icons of the core palette entries (ids of `@auditcore/bpmn-editor`). The
  * Vue palette shows our own icons and triggers the core entries, so no
  * palette styles of other editors are needed.
  */

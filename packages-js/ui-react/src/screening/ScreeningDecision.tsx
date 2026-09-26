@@ -9,7 +9,7 @@ import {
   type ScreeningTranslate,
   type SettingsView,
   type ViewMessage,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { ScreeningReviewTrail } from './ScreeningReviewTrail'
 import { ErrorList, codeKey, useScreeningText } from './shared'

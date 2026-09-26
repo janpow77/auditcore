@@ -1,10 +1,10 @@
 /**
- * @flowaudit/bpmn-react – native React UI of the FlowAudit BPMN editor (MIT):
+ * @auditcore/bpmn-react – native React UI of the FlowAudit BPMN editor (MIT):
  * no Vue runtime, no web components. The logic comes from the framework-free
- * core `@flowaudit/bpmn-flowaudit/ui`, shared with `@flowaudit/bpmn-vue`.
+ * core `@auditcore/bpmn-flowaudit/ui`, shared with `@auditcore/bpmn-vue`.
  */
 
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 export { FlowauditEditor } from './FlowauditEditor'
 export type { FlowauditEditorHandle, FlowauditEditorProps } from './editorProps'
@@ -25,5 +25,5 @@ export { useEditorSession, type EditorRuntime } from './useEditorSession'
 export { useCollection, useCollectionBinding, type CollectionBinding } from './useCollection'
 export { defaultEditorFactory } from './editorFactory'
 export { ATTRIBUTE_PROPS, EVENT_PROPS } from './element/contract'
-export { MESSAGES_DE, MESSAGES_EN, LISTS, TABS, RestStorage, RestLegalSearch, RestCatalogue, RestProfiles, RestValidation, RestEsi, restPorts } from '@flowaudit/bpmn-flowaudit/ui'
-export type { CompareSource, CreateEditorOptions, EditorFactory, EditorLike, EditorPorts, FieldDescriptor, ListDescriptor, Locale, RestOptions, TabDefinition, ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
+export { MESSAGES_DE, MESSAGES_EN, LISTS, TABS, RestStorage, RestLegalSearch, RestCatalogue, RestProfiles, RestValidation, RestEsi, restPorts } from '@auditcore/bpmn-flowaudit/ui'
+export type { CompareSource, CreateEditorOptions, EditorFactory, EditorLike, EditorPorts, FieldDescriptor, ListDescriptor, Locale, RestOptions, TabDefinition, ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'

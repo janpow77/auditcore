@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 // Einmal je Anwendung: Designtoken (--fa-*), Hell-/Dunkelmodus und Komponentenstile.
-import '@flowaudit/ui-core/style.css'
+import '@auditcore/ui-core/style.css'
 import { App } from './App'
 
 const root = document.getElementById('root')

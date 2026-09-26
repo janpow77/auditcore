@@ -4,8 +4,8 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import { kaOptions, loadCatalogue, optionsResolver, profileCatalogue, roleOptions, type FieldDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
-import type { KeyRequirementEntry } from '@flowaudit/bpmn-flowaudit'
+import { kaOptions, loadCatalogue, optionsResolver, profileCatalogue, roleOptions, type FieldDescriptor, type Option } from '@auditcore/bpmn-flowaudit/ui'
+import type { KeyRequirementEntry } from '@auditcore/bpmn-flowaudit'
 import { useEditorContext } from '../context'
 import { useI18n } from '../i18n'
 

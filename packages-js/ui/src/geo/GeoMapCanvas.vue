@@ -2,9 +2,9 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import { useGeoContext } from './context'
-import { createLeafletView, type MapLayers, type MapView } from '@flowaudit/ui-core'
-import { displayName } from '@flowaudit/ui-core'
-import type { LatLon, TileSource } from '@flowaudit/ui-core'
+import { createLeafletView, type MapLayers, type MapView } from '@auditcore/ui-core'
+import { displayName } from '@auditcore/ui-core'
+import type { LatLon, TileSource } from '@auditcore/ui-core'
 
 const props = defineProps<{ layers: MapLayers; tiles: TileSource | null; center: LatLon; zoom: number }>()
 const emit = defineEmits<{ pick: [point: LatLon] }>()

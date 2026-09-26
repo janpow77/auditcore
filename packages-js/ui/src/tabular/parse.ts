@@ -1,6 +1,6 @@
 /**
  * Einlesen einfacher Tabellendateien (CSV/TSV/Text) – seit 0.2.0 aus
- * `@flowaudit/common` (framework-frei), unverändert weiter exportiert.
+ * `@auditcore/common` (framework-frei), unverändert weiter exportiert.
  */
 export {
   columnCells,
@@ -15,4 +15,4 @@ export {
   type Delimiter,
   type NumberColumn,
   type ParsedTable,
-} from '@flowaudit/common'
+} from '@auditcore/common'

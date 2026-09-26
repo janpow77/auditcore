@@ -3,7 +3,7 @@
 Dieser Vertrag beschreibt die HTTP-Schnittstelle, gegen die die Web Component
 `<flowaudit-bpmn-editor>` (Attribut `api-base`) und die eigenständige App
 (`dist-standalone/`) arbeiten. Die Bibliotheken selbst greifen nie aufs Netz zu;
-die REST-Anbindung liegt ausschließlich in `@flowaudit/bpmn-vue/src/rest/restPorts.ts`
+die REST-Anbindung liegt ausschließlich in `@auditcore/bpmn-vue/src/rest/restPorts.ts`
 (`RestStorage`, `RestLegalSearch`, `RestProfiles`, `RestCatalogue`,
 `RestValidation`, `RestEsi`). Ein Server (z. B. eine spätere FastAPI-Anbindung
 von `auditcore_bpmn`) muss nur diese Endpunkte bereitstellen.
@@ -15,7 +15,7 @@ von `auditcore_bpmn`) muss nur diese Endpunkte bereitstellen.
 - **JSON** folgt dem Datenmodell von `auditcore_bpmn`: englische Feldnamen in
   `snake_case` (`folder_id`, `valid_from`, `key_requirement`, `short_title`).
   Die Umwandlung nach camelCase erledigt `fromWire`/`toWire`
-  (`@flowaudit/bpmn-flowaudit`). Wörterbuchfelder (`keys`, `params`,
+  (`@auditcore/bpmn-flowaudit`). Wörterbuchfelder (`keys`, `params`,
   `status_distribution`, `key_requirement_coverage`, `sha256`) bleiben
   unverändert, ihre Schlüssel sind Daten.
 - **XML** wird als `application/xml; charset=utf-8` übertragen, unverändert

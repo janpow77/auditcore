@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import type { DiffSegment } from '@flowaudit/ui-core'
+import type { DiffSegment } from '@auditcore/ui-core'
 
 export interface SynopsisTextProps {
   segments?: readonly DiffSegment[]

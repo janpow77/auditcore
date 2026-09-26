@@ -1,4 +1,4 @@
-import { reportingWorkbookText } from '@flowaudit/ui-core'
+import { reportingWorkbookText } from '@auditcore/ui-core'
 import { useElementId } from '../store'
 import { ReportForm } from './ReportForm'
 import { ReportPreview } from './ReportPreview'

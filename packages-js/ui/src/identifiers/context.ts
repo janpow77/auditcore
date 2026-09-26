@@ -1,5 +1,5 @@
 import { inject, type InjectionKey } from 'vue'
-import type { IdentifierTranslate } from '@flowaudit/ui-core'
+import type { IdentifierTranslate } from '@auditcore/ui-core'
 import type { UseIdentifierCheck } from './useIdentifierCheck'
 
 /** Gemeinsamer Zustand, Übersetzung und Kennung der Teilkomponenten von „Kennung prüfen“. */

@@ -1,4 +1,4 @@
-import { ANSWER_VALUES, type AnswerInput, type AnswerValue, type BadgeTone, type QuestionView } from '@flowaudit/ui-core'
+import { ANSWER_VALUES, type AnswerInput, type AnswerValue, type BadgeTone, type QuestionView } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { classes, useElementId } from '../../store'
 import { prefixedLabel, useDataProtectionText } from '../shared'

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import { createComparisonsController, type ComparisonsPort } from '../../src/documents/controller'
 import { comparisonsView } from '../../src/documents/view'
 import { created, errors, fakePort, file, imported, summaries, t } from './fake-port'

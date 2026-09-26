@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react'
-import { bandTone, toggleMeasure, type DataProtectionProfile, type LevelView, type ScenarioInput, type ScenarioResult } from '@flowaudit/ui-core'
+import { bandTone, toggleMeasure, type DataProtectionProfile, type LevelView, type ScenarioInput, type ScenarioResult } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { Button } from '../../base/Button'
 import { classes, useElementId } from '../../store'

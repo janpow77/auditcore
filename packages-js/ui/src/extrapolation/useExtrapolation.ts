@@ -9,10 +9,10 @@ import {
   type ExtrapolationPort,
   type StratumInput,
   type UnitInput,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { ExtrapolationCallbacks } from '@flowaudit/ui-core'
+export type { ExtrapolationCallbacks } from '@auditcore/ui-core'
 
 export interface UseExtrapolation {
   controller: ExtrapolationController
@@ -20,7 +20,7 @@ export interface UseExtrapolation {
   method: ComputedRef<ExtrapolationMethod | null>
 }
 
-/** Vue-Anbindung der Hochrechnung aus `@flowaudit/ui-core` (`createExtrapolationController`). */
+/** Vue-Anbindung der Hochrechnung aus `@auditcore/ui-core` (`createExtrapolationController`). */
 export function useExtrapolation(
   port: () => ExtrapolationPort | null,
   strata: () => readonly StratumInput[],

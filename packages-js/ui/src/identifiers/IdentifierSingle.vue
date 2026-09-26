@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { identifierErrorKey, kindNeedsCountry } from '@flowaudit/ui-core'
+import { identifierErrorKey, kindNeedsCountry } from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useIdentifierContext } from './context'
 import IdentifierResultView from './IdentifierResultView.vue'

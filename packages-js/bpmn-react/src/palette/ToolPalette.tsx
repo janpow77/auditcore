@@ -5,7 +5,7 @@
  */
 
 import type { SyntheticEvent } from 'react'
-import { paletteSections, type PaletteItem } from '@flowaudit/bpmn-flowaudit/ui'
+import { paletteSections, type PaletteItem } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { classes } from '../hooks'
 import { useI18n } from '../i18n'

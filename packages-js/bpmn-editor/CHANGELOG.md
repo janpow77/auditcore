@@ -1,4 +1,8 @@
-# Changelog @flowaudit/bpmn-editor
+# Changelog @auditcore/bpmn-editor
+
+## Unreleased
+
+- **Breaking:** Paketname `@auditcore/bpmn-editor` statt `@flowaudit/bpmn-editor` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-bpmn-editor-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 ## 0.1.0 – 2026-09-25
 

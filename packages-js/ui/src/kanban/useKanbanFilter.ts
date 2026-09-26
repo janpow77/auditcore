@@ -1,7 +1,7 @@
 import { computed, reactive } from 'vue'
-import { EMPTY_FILTER, filterCriteria, isFilterActive, type KanbanFilterState } from '@flowaudit/kanban-core'
+import { EMPTY_FILTER, filterCriteria, isFilterActive, type KanbanFilterState } from '@auditcore/kanban-core'
 
-export type { KanbanFilterState } from '@flowaudit/kanban-core'
+export type { KanbanFilterState } from '@auditcore/kanban-core'
 
 /** Such- und Filterzustand des Boards (Toolbar) als CardFilter der Kernlogik. */
 export function useKanbanFilter() {

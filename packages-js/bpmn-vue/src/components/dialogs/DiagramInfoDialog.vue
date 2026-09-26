@@ -6,8 +6,8 @@
  * writes one undo step.
  */
 import { computed, ref, watch } from 'vue'
-import { FUNDS, FUND_SHORT, headerOf, label, type Approval, type DiagramInfo, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
-import { cloneInfo, DIAGRAM_LISTS, INFO_SECTIONS, infoList, LISTS, toggleFund as toggled } from '@flowaudit/bpmn-flowaudit/ui'
+import { FUNDS, FUND_SHORT, headerOf, label, type Approval, type DiagramInfo, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
+import { cloneInfo, DIAGRAM_LISTS, INFO_SECTIONS, infoList, LISTS, toggleFund as toggled } from '@auditcore/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import FaIcon from '../base/FaIcon.vue'
 import FieldForm from '../../panels/FieldForm.vue'

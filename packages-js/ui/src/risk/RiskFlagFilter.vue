@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n, type Locale } from '../i18n'
 import { useId } from '../composables/useId'
-import { riskMessages, type RuleView, STATE_FILTER_KEYS, type RiskFilter, type StateFilter } from '@flowaudit/ui-core'
+import { riskMessages, type RuleView, STATE_FILTER_KEYS, type RiskFilter, type StateFilter } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   rules?: readonly RuleView[]

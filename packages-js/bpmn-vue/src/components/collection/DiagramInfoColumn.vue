@@ -4,8 +4,8 @@
  * keyboard-accessible alternative to drag-and-drop („move to …“).
  */
 import { computed, ref } from 'vue'
-import type { DiagramEntry, Folder } from '@flowaudit/bpmn-flowaudit'
-import { infoRows, toggledTags } from '@flowaudit/bpmn-flowaudit/ui'
+import type { DiagramEntry, Folder } from '@auditcore/bpmn-flowaudit'
+import { infoRows, toggledTags } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import PromptDialog from '../base/PromptDialog.vue'
 import { useI18n } from '../../i18n/useI18n'

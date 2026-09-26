@@ -10,7 +10,7 @@ import {
   type ExtractionRun,
   type ExtractionTranslate,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 import ExtractionFields from './ExtractionFields.vue'
 import ExtractionFindings from './ExtractionFindings.vue'

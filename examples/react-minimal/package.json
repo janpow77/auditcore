@@ -1,18 +1,18 @@
 {
-  "name": "flowaudit-example-react-minimal",
+  "name": "auditcore-example-react-minimal",
   "private": true,
   "version": "0.0.0",
-  "description": "Minimale React-18-Anwendung mit den nativen Komponenten aus @flowaudit/ui-react (ohne Vue)",
+  "description": "Minimale React-18-Anwendung mit den nativen Komponenten aus @auditcore/ui-react (ohne Vue)",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build"
   },
   "dependencies": {
-    "@flowaudit/common": "file:../vendor/flowaudit-common.tgz",
-    "@flowaudit/kanban-core": "file:../vendor/flowaudit-kanban-core.tgz",
-    "@flowaudit/ui-core": "file:../vendor/flowaudit-ui-core.tgz",
-    "@flowaudit/ui-react": "file:../vendor/flowaudit-ui-react.tgz",
+    "@auditcore/common": "file:../vendor/auditcore-common.tgz",
+    "@auditcore/kanban-core": "file:../vendor/auditcore-kanban-core.tgz",
+    "@auditcore/ui-core": "file:../vendor/auditcore-ui-core.tgz",
+    "@auditcore/ui-react": "file:../vendor/auditcore-ui-react.tgz",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

@@ -3,7 +3,7 @@
 // Die Fachlogik liegt im Port; hier werden nur Eingaben geprüft, Anfragen
 // gebildet und Ergebnisse gehalten.
 
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 import { createRunner, createStore, IDLE, type RequestState } from '../store'
 import {
   buildSelectionRequest,

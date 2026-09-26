@@ -1,16 +1,20 @@
-# Changelog @flowaudit/ui-react
+# Changelog @auditcore/ui-react
+
+## Unreleased
+
+- **Breaking:** Paketname `@auditcore/ui-react` statt `@flowaudit/ui-react` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-react-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 ## 1.0.0 – unveröffentlicht (Veröffentlichung nach auditcore v0.4.1)
 
 **Breaking:** Das Paket enthält jetzt echte React-Komponenten statt Hüllen um
-Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
+Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@auditcore/ui`.
 
 - `FlowauditExtrapolation` (nativ, Vertrag `auditcore_extrapolation.web`):
   Hochrechnung mit TER, Fehlerobergrenze, Export und getrennter RER; gleiche
   Props und Ereignisse wie `<flowaudit-extrapolation>` (`onEvaluationCompleted`,
   `onResidualComputed`, `onError`), 4 Paritätsfälle und 2 Interaktionsfolgen.
 - Nativ in React 18 (gleiche Props-/Ereignis-Semantik, Texte, ARIA und
-  REST-Verträge wie die Vue-Fassung; Logik aus `@flowaudit/ui-core`):
+  REST-Verträge wie die Vue-Fassung; Logik aus `@auditcore/ui-core`):
   `FlowauditTable`, `FlowauditSynopsis` (Vertrag `auditcore_documents.web`),
   `FlowauditVvt` und `FlowauditDsfa` (Vertrag `dataprotection_ui/1`),
   `FlowauditGeoMap` (Vertrag `auditcore_geo.web`, Leaflet),
@@ -27,21 +31,21 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `onXxxChange` bzw. `defaultXxx` (`sort`, `layout`), der Slot `cell-<key>`
   zu `renderCell`, `defineExpose` der Synopse zu `ref`
   (`FlowauditSynopsisHandle`).
-- Stile aus `@flowaudit/ui-core/style.css` (statt `@flowaudit/ui/style.css`).
+- Stile aus `@auditcore/ui-core/style.css` (statt `@auditcore/ui/style.css`).
 - Entfernt: die Hüllen `FlowauditTable`, `FlowauditSynopsis`,
   `FlowauditVvt`, `FlowauditDsfa`, `FlowauditGeoMap`, `FlowauditRiskFlags`,
   `FlowauditScreeningReview`, `FlowauditSampling`, `FlowauditBenford`
   (ersetzt durch die nativen Fassungen im Haupteinstieg) und
   das Weiterreichen von `defineFlowauditElements` im Haupteinstieg.
-- **Entfernt:** der Einstieg `@flowaudit/ui-react/elements` mit den letzten
+- **Entfernt:** der Einstieg `@auditcore/ui-react/elements` mit den letzten
   Hüllen (`FlowauditKanbanBoard(s)`, `createElementComponent`,
-  `eventPayload`, `defineFlowauditElements`); `@flowaudit/ui` und `vue` sind
+  `eventPayload`, `defineFlowauditElements`); `@auditcore/ui` und `vue` sind
   keine (optionalen) Peer-Abhängigkeiten mehr. Wer Web Components braucht,
-  nutzt `@flowaudit/ui/elements` direkt.
+  nutzt `@auditcore/ui/elements` direkt.
 - **Datenbankansicht nativ:** `FlowauditDbKanban` mit `DbKanbanColumn`,
   `DbKanbanCard` und `useDbKanban` (Logik `createDbKanbanController` aus
-  `@flowaudit/ui-core`, Gruppierung und `RecordPort` aus
-  `@flowaudit/kanban-core`); `port` oder `table`, gesteuertes `groupBy`,
+  `@auditcore/ui-core`, Gruppierung und `RecordPort` aus
+  `@auditcore/kanban-core`); `port` oder `table`, gesteuertes `groupBy`,
   Rückrufe `onRecordMove`, `onRecordAdd`, `onTableChange`, `onError`.
 - **Kanban nativ:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards`
   (gleiche Props, Ereignisse als `onXxx`, `renderCardExtra`, `ref` mit
@@ -49,7 +53,7 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `KanbanToolbar`, `KanbanCardDetail`, `KanbanSettingsDialog`,
   `KanbanShareDialog`, `CardAppearance`, `CardChecklistEditor`,
   `CardReferences`, `CardTagsEditor`, `ColumnEditorRow`; Logik aus
-  `@flowaudit/kanban-core` (jetzt Laufzeitabhängigkeit).
+  `@auditcore/kanban-core` (jetzt Laufzeitabhängigkeit).
 - `TextField` mit `autoFocus`, `className`, `style`, `inputRef`, `onBlur`;
   `Button` mit `role`, `ariaChecked`, `testId`; `Icon` mit `className`.
 - React 18 und 19: Peer-Bereich `^18.3.0 || ^19.0.0`, Tests unter beiden

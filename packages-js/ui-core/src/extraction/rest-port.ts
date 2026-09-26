@@ -1,4 +1,4 @@
-import { RestError, type RestOptions } from '@flowaudit/common'
+import { RestError, type RestOptions } from '@auditcore/common'
 import type { ExtractionCatalogue, ExtractionPort, ExtractionRun } from './types'
 
 async function parse<T>(response: Response): Promise<T> {

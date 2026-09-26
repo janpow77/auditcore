@@ -8,9 +8,9 @@ import GeoPackageLoader from './GeoPackageLoader.vue'
 import GeoRadius from './GeoRadius.vue'
 import GeoReference from './GeoReference.vue'
 import GeoSimplify from './GeoSimplify.vue'
-import type { MapLayers } from '@flowaudit/ui-core'
-import { geoMessages } from '@flowaudit/ui-core'
-import type { GeoArea, GeoPackageResult, GeoPoint, GeoPort, LatLon, LocateResult, RadiusResult, TileSource } from '@flowaudit/ui-core'
+import type { MapLayers } from '@auditcore/ui-core'
+import { geoMessages } from '@auditcore/ui-core'
+import type { GeoArea, GeoPackageResult, GeoPoint, GeoPort, LatLon, LocateResult, RadiusResult, TileSource } from '@auditcore/ui-core'
 import { useGeoMap } from './useGeoMap'
 
 const props = withDefaults(defineProps<{

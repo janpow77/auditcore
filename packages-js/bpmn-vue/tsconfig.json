@@ -6,14 +6,14 @@
     "types": ["node", "vite/client"],
     "jsx": "preserve",
     "paths": {
-      "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"],
-      "@flowaudit/bpmn-flowaudit/profiles": ["../bpmn-flowaudit/src/profile/bundled.ts"],
-      "@flowaudit/bpmn-flowaudit/ui": ["../bpmn-flowaudit/src/ui/index.ts"],
-      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts"],
-      "@flowaudit/ui-core": ["../ui-core/src/index.ts"],
-      "@flowaudit/kanban-core": ["../kanban-core/src/index.ts"],
-      "@flowaudit/common": ["../common/src/index.ts"],
-      "@flowaudit/common/browser": ["../common/src/browser.ts"]
+      "@auditcore/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"],
+      "@auditcore/bpmn-flowaudit/profiles": ["../bpmn-flowaudit/src/profile/bundled.ts"],
+      "@auditcore/bpmn-flowaudit/ui": ["../bpmn-flowaudit/src/ui/index.ts"],
+      "@auditcore/bpmn-editor": ["../bpmn-editor/src/index.ts"],
+      "@auditcore/ui-core": ["../ui-core/src/index.ts"],
+      "@auditcore/kanban-core": ["../kanban-core/src/index.ts"],
+      "@auditcore/common": ["../common/src/index.ts"],
+      "@auditcore/common/browser": ["../common/src/browser.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts", "demo/**/*.ts", "demo/**/*.vue", "standalone/**/*.ts", "*.ts", "../bpmn-flowaudit/src/types/css.d.ts", "../bpmn-editor/src/types/shims.d.ts"]

@@ -3,7 +3,7 @@
  * Anfragen bilden, Vorschläge aus der Grundgesamtheit, Schichten zählen.
  * Kein Vue, kein DOM – direkt testbar.
  */
-import { detectDecimal, parseNumber } from '@flowaudit/common'
+import { detectDecimal, parseNumber } from '@auditcore/common'
 import type {
   AllocationMethod,
   MethodProfile,

@@ -1,8 +1,8 @@
 /**
  * Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen – ohne Vue und ohne
  * Web Components. Fachlogik, Texte und REST-Verträge kommen aus
- * `@flowaudit/ui-core` (dieselben wie in der Vue-Fassung `@flowaudit/ui`),
- * die Stile aus `@flowaudit/ui-core/style.css`.
+ * `@auditcore/ui-core` (dieselben wie in der Vue-Fassung `@auditcore/ui`),
+ * die Stile aus `@auditcore/ui-core/style.css`.
  */
 export { FlowauditTable, type FlowauditTableProps } from './table/FlowauditTable'
 export { FlowauditSynopsis, type FlowauditSynopsisHandle, type FlowauditSynopsisProps } from './synopsis/FlowauditSynopsis'
@@ -48,6 +48,6 @@ export {
   type SynopsisLayout,
   type SynopsisPort,
   type VvtExport,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 export * from './hooks'
 export * from './common'

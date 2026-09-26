@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /** Validation issues grouped by severity with jump to the element. */
 import { computed, ref } from 'vue'
-import { issueMessage, severityLabel, type Severity, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
-import { countSeverity, filterIssues, ISSUE_ICONS as ICONS, SEVERITIES } from '@flowaudit/bpmn-flowaudit/ui'
+import { issueMessage, severityLabel, type Severity, type ValidationIssue } from '@auditcore/bpmn-flowaudit'
+import { countSeverity, filterIssues, ISSUE_ICONS as ICONS, SEVERITIES } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 

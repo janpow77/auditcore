@@ -9,11 +9,11 @@ import {
   type SynopsisInputs,
   type SynopsisSelection,
   type SynopsisTranslate,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 import { useI18n, type Locale } from '../i18n/i18n'
 
-export type { SynopsisFilterState } from '@flowaudit/ui-core'
+export type { SynopsisFilterState } from '@auditcore/ui-core'
 
 /** Eingaben der Komponente, als Getter übergeben (Props bleiben reaktiv). */
 export interface SynopsisSource {
@@ -29,7 +29,7 @@ export interface UseSynopsis {
   selection: ComputedRef<SynopsisSelection>
 }
 
-/** Vue-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (Laden, Filter, Zeilenänderungen, Navigation). */
+/** Vue-Anbindung des Zustandsautomaten aus `@auditcore/ui-core` (Laden, Filter, Zeilenänderungen, Navigation). */
 export function useSynopsis(source: SynopsisSource): UseSynopsis {
   const { t, locale } = useI18n(synopsisMessages, source.locale)
   const controller = createSynopsisController(() => t)

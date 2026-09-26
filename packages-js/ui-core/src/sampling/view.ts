@@ -3,7 +3,7 @@
  * Einheiten, Fehlermeldungen der Felder, Methodengruppen, Tabellenspalten,
  * Zusammenfassungen. Texte kommen ausschließlich aus `samplingMessages`.
  */
-import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, type TableColumn, type TableRow } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, type TableColumn, type TableRow } from '@auditcore/common'
 import type { BadgeTone } from '../base/types'
 import type { Locale, Translate } from '../i18n'
 import type { SamplingMessageKey } from './messages'

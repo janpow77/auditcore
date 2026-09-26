@@ -3,7 +3,7 @@
 // (TER), getrennt davon die Restfehlerquote (RER) berechnen und exportieren.
 // Gerechnet wird ausschließlich über den Port.
 
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 import { createRunner, createStore, IDLE, type RequestState, type Store } from '../store'
 import {
   buildEvaluationRequest,

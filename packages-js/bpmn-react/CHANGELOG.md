@@ -1,4 +1,8 @@
-# Changelog – @flowaudit/bpmn-react
+# Changelog – @auditcore/bpmn-react
+
+## Unreleased
+
+- **Breaking:** Paketname `@auditcore/bpmn-react` statt `@flowaudit/bpmn-react` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-bpmn-react-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 ## 0.2.0 – 2026-09-26
 

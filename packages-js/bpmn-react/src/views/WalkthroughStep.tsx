@@ -1,6 +1,6 @@
 /** Current step of the walk-through: navigation, key controls and recorded steps. */
 
-import type { walkthroughSteps } from '@flowaudit/bpmn-flowaudit'
+import type { walkthroughSteps } from '@auditcore/bpmn-flowaudit'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'
 

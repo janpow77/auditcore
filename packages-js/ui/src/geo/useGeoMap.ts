@@ -1,4 +1,4 @@
-// Vue-Anbindung des Geo-Zustandsautomaten aus @flowaudit/ui-core. Die Felder
+// Vue-Anbindung des Geo-Zustandsautomaten aus @auditcore/ui-core. Die Felder
 // sind (schreibbare) berechnete Referenzen auf den Controller-Zustand, damit
 // die Teilkomponenten sie wie bisher mit v-model binden.
 
@@ -27,10 +27,10 @@ import {
   type UtmResult,
   type CoordinateError,
   type UtmInputError,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { GeoBusy, GeoHint, GeoMapCallbacks } from '@flowaudit/ui-core'
+export type { GeoBusy, GeoHint, GeoMapCallbacks } from '@auditcore/ui-core'
 
 export interface UseGeoMap {
   controller: GeoController

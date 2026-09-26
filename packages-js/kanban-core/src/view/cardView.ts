@@ -1,7 +1,7 @@
 /** Reine Darstellungshilfen für Karten und Boardliste (ohne DOM, einzeln getestet). */
 import type { Priority } from '../model'
 
-/** Farbton eines Badges (gleiche Namen wie `BadgeTone` in `@flowaudit/ui-core`). */
+/** Farbton eines Badges (gleiche Namen wie `BadgeTone` in `@auditcore/ui-core`). */
 export type PriorityTone = 'danger' | 'warning' | 'success'
 
 /** Badge-Farben je Präfix (WorkspaceTaskCard: VP, SYS/SP, JKB, PRJ), sonst grau. */

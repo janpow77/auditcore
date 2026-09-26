@@ -1,6 +1,6 @@
 /**
- * Shared parity cases of the collection views (Vue `@flowaudit/bpmn-vue`
- * and React `@flowaudit/bpmn-react`): the same synthetic collection, the
+ * Shared parity cases of the collection views (Vue `@auditcore/bpmn-vue`
+ * and React `@auditcore/bpmn-react`): the same synthetic collection, the
  * same filter or folder choice, the same expectations. Fixtures are the
  * synthetic diagrams of this package (no user data).
  */

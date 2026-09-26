@@ -5,7 +5,7 @@
  */
 
 import { useMemo } from 'react'
-import { KEY_KINDS, type KeyKind } from '@flowaudit/bpmn-flowaudit'
+import { KEY_KINDS, type KeyKind } from '@auditcore/bpmn-flowaudit'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'
 

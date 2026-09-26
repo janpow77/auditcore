@@ -1,4 +1,4 @@
-import { benfordMetricTexts, levelTone, type BenfordAnalysis, type BenfordTranslate, type ConformityProfile, type Locale } from '@flowaudit/ui-core'
+import { benfordMetricTexts, levelTone, type BenfordAnalysis, type BenfordTranslate, type ConformityProfile, type Locale } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 
 export interface BenfordMetricsProps {

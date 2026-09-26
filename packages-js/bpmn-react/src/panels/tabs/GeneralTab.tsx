@@ -3,8 +3,8 @@
  * fields of the selected element.
  */
 
-import { FLOWSTAT_FIELDS, isActivity, type FlowstatField } from '@flowaudit/bpmn-flowaudit'
-import { FLOWSTAT_KEYS, flowstatValue } from '@flowaudit/bpmn-flowaudit/ui'
+import { FLOWSTAT_FIELDS, isActivity, type FlowstatField } from '@auditcore/bpmn-flowaudit'
+import { FLOWSTAT_KEYS, flowstatValue } from '@auditcore/bpmn-flowaudit/ui'
 import { useEditorContext, useSelectionState } from '../../context'
 import { useI18n } from '../../i18n'
 import { CommitField } from '../CommitField'

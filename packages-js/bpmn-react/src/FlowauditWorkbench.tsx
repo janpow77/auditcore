@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { Comment, DiagramInfo, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@flowaudit/bpmn-flowaudit'
-import type { EditorFactory, EditorPorts, Locale } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Comment, DiagramInfo, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
+import type { EditorFactory, EditorPorts, Locale } from '@auditcore/bpmn-flowaudit/ui'
 import { CollectionTree } from './collection/CollectionTree'
 import { DiagramInfoColumn } from './collection/DiagramInfoColumn'
 import { GroupOverview } from './collection/GroupOverview'
@@ -14,7 +14,7 @@ import { FlowauditEditor } from './FlowauditEditor'
 import { classes } from './hooks'
 import { I18nProvider, useI18n } from './i18n'
 import { useCollection, type CollectionBinding } from './useCollection'
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 export interface FlowauditWorkbenchProps {
   storage: StoragePort

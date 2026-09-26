@@ -3,8 +3,8 @@ import { nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineFlowauditElements } from '../../src/elements'
 import FaSynopsis from '../../src/synopsis/FaSynopsis.vue'
-import type { SynopsisPort } from '@flowaudit/ui-core'
-import type { ExportPayload, RowUpdate } from '@flowaudit/ui-core'
+import type { SynopsisPort } from '@auditcore/ui-core'
+import type { ExportPayload, RowUpdate } from '@auditcore/ui-core'
 import { article, checklist, standard } from '../../../ui-core/test/synopsis/fixtures'
 
 afterEach(() => {

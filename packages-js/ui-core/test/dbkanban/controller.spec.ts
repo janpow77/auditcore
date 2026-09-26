@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { RecordPort } from '@flowaudit/kanban-core'
+import type { RecordPort } from '@auditcore/kanban-core'
 import { createDbKanbanController, initialGroupBy } from '../../src/dbkanban/controller'
 import { cellText, dbKanbanView } from '../../src/dbkanban/view'
 import { recordPort, recordTable, t } from './fixtures'

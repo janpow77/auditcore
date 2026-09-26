@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { analyseErrorKey, needsShortValues, type BenfordTest, type ShortValues } from '@flowaudit/ui-core'
+import { analyseErrorKey, needsShortValues, type BenfordTest, type ShortValues } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import type { UseBenford } from './useBenford'
 

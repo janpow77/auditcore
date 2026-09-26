@@ -1,6 +1,6 @@
 # REST-Vertrag Stichprobe (`auditcore_sampling.web`)
 
-Stand: auditcore_sampling 0.2.0. Oberfläche: `<flowaudit-sampling>` aus `@flowaudit/ui`.
+Stand: auditcore_sampling 0.2.0. Oberfläche: `<flowaudit-sampling>` aus `@auditcore/ui`.
 
 Der Vertrag ist framework-frei implementiert (`calculate_size`, `allocate`, `select`,
 `export_selection`, `catalogue`). Die Starlette-Routen (`create_app`, `routes`) benötigen das

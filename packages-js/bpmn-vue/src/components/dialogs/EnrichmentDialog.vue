@@ -4,8 +4,8 @@
  * grouped by element; each can be accepted or rejected.
  */
 import { computed, ref, watch } from 'vue'
-import type { Suggestion } from '@flowaudit/bpmn-flowaudit'
-import { describeSuggestion as describe, groupSuggestions, toggleInSet } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Suggestion } from '@auditcore/bpmn-flowaudit'
+import { describeSuggestion as describe, groupSuggestions, toggleInSet } from '@auditcore/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import { useI18n } from '../../i18n/useI18n'
 

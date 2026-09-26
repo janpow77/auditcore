@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { createLeafletView, displayName, type LatLon, type MapLayers, type MapView, type TileSource } from '@flowaudit/ui-core'
+import { createLeafletView, displayName, type LatLon, type MapLayers, type MapView, type TileSource } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useGeo } from './context'
 

@@ -4,8 +4,8 @@
  */
 
 import { useState } from 'react'
-import type { Comment } from '@flowaudit/bpmn-flowaudit'
-import { commentsOf, newComment, toggleResolved } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Comment } from '@auditcore/bpmn-flowaudit'
+import { commentsOf, newComment, toggleResolved } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../../base/FaIcon'
 import { useEditorContext, useSelectionState } from '../../context'
 import { classes } from '../../hooks'

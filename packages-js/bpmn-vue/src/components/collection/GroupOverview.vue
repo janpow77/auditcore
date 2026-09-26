@@ -5,8 +5,8 @@
  * collection issues.
  */
 import { computed } from 'vue'
-import { issueMessage, keyRequirements, localized, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
-import { statusLabel as statusText } from '@flowaudit/bpmn-flowaudit/ui'
+import { issueMessage, keyRequirements, localized, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@auditcore/bpmn-flowaudit'
+import { statusLabel as statusText } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 
 const props = defineProps<{ overview: Overview; profile: ProfileData | null; issues: ValidationIssue[]; title: string }>()

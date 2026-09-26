@@ -3,7 +3,7 @@
  * Komponenten erhalten den Port als Prop und rufen nie selbst `fetch` auf;
  * `createRiskRestPort` ist die mitgelieferte REST-Umsetzung.
  */
-import { requestJson, type RestOptions } from '@flowaudit/common'
+import { requestJson, type RestOptions } from '@auditcore/common'
 import type { Evaluation, JsonObject, ProfileDetail, ProfileReference } from './types'
 
 export interface EvaluateRequest {

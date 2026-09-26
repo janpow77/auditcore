@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { benfordMessages, benfordMetricTexts, levelTone, type BenfordAnalysis, type ConformityProfile } from '@flowaudit/ui-core'
+import { benfordMessages, benfordMetricTexts, levelTone, type BenfordAnalysis, type ConformityProfile } from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 import { useI18n, type Locale } from '../i18n'
 

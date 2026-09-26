@@ -10,7 +10,7 @@ import {
   type ExtractedField,
   type ExtractionTranslate,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 
 defineProps<{

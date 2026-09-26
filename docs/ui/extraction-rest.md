@@ -1,7 +1,7 @@
 # REST-Vertrag Belegerkennung (`documents_extraction/1`, `auditcore_documents.web`)
 
 Stand 2026-09-26. Vertrag zwischen `auditcore_documents.web` (Belegerkennung,
-nach 0.3.3) und der Oberfläche `<flowaudit-extraction>` aus `@flowaudit/ui`
+nach 0.3.3) und der Oberfläche `<flowaudit-extraction>` aus `@auditcore/ui`
 (Vue `FaExtraction`, React `FlowauditExtraction`). Die Oberfläche erkennt
 nichts selbst: Sie lädt ein Dokument hoch, zeigt Extraktionsergebnis,
 Konfidenzen und Validierungsbefunde. Das Ergebnis ist eine Arbeitshilfe,
@@ -123,7 +123,7 @@ erst nach Plausibilitätsprüfung bzw. Bestätigung im Tesseract-Text
 ## Oberfläche
 
 `createExtractionRestPort({ baseUrl: '/api/extraction' })` aus
-`@flowaudit/ui-core` (auch über `@flowaudit/ui` und `@flowaudit/ui-react`).
+`@auditcore/ui-core` (auch über `@auditcore/ui` und `@auditcore/ui-react`).
 Eigenschaften `port`, `result` (vorhandenes Ergebnis anzeigen), `locale`;
 Ereignisse `extraction-completed` und `error` (React: `onExtractionCompleted`,
 `onError`). Paritätsfälle: `packages-js/ui-core/test/parity/cases-extraction.ts`.

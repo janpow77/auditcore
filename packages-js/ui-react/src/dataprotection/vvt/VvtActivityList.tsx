@@ -9,7 +9,7 @@ import {
   type DataProtectionTranslate,
   type RegisterContent,
   type RegisterIssue,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { Button } from '../../base/Button'
 import { TextField } from '../../base/TextField'

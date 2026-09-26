@@ -5,8 +5,8 @@
  */
 
 import type { CSSProperties } from 'react'
-import { label, roleOf, rolesFor, type Actor } from '@flowaudit/bpmn-flowaudit'
-import { actorAfter, inheritedRole, isContainerType } from '@flowaudit/bpmn-flowaudit/ui'
+import { label, roleOf, rolesFor, type Actor } from '@auditcore/bpmn-flowaudit'
+import { actorAfter, inheritedRole, isContainerType } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../../base/FaIcon'
 import { useEditorContext, useEditorState, useSelectionState } from '../../context'
 import { useI18n } from '../../i18n'

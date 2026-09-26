@@ -4,7 +4,7 @@ import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 import type { TableColumn, TableRow } from '../table'
 import RiskFlagState from './RiskFlagState.vue'
-import { riskMessages, type DatasetFinding, formatAmount, formatShare, formatValue, type RiskDistributionRow, type Totals } from '@flowaudit/ui-core'
+import { riskMessages, type DatasetFinding, formatAmount, formatShare, formatValue, type RiskDistributionRow, type Totals } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   rows?: readonly RiskDistributionRow[]

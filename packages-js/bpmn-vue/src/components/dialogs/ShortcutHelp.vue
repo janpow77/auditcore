@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /** Keyboard shortcut help (declarative table). */
 import BaseDialog from '../base/BaseDialog.vue'
-import { SHORTCUTS } from '@flowaudit/bpmn-flowaudit/ui'
+import { SHORTCUTS } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 
 defineProps<{ open: boolean }>()

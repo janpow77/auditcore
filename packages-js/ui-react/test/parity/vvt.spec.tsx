@@ -1,4 +1,4 @@
-import { FaVvt } from '@flowaudit/ui'
+import { FaVvt } from '@auditcore/ui'
 import { fireEvent as domEvent } from '@testing-library/dom'
 import { act, fireEvent } from '@testing-library/react'
 import { flushPromises } from '@vue/test-utils'

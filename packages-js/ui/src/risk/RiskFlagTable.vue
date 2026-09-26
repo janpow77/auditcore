@@ -3,7 +3,7 @@ import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 import type { TableColumn, TableRow } from '../table'
 import RiskFlagState from './RiskFlagState.vue'
-import { riskMessages, type FlagState } from '@flowaudit/ui-core'
+import { riskMessages, type FlagState } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   columns?: readonly TableColumn[]

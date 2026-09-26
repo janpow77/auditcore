@@ -1,7 +1,7 @@
 export { default as BenfordPanel } from './BenfordPanel.vue'
 export { benfordElement } from './element'
 export { useBenford, type BenfordCallbacks, type UseBenford } from './useBenford'
-/** Kern (Vertrag, Diagrammgeometrie, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag, Diagrammgeometrie, Zustandsautomat, Anzeige) aus `@auditcore/ui-core`. */
 export {
   benfordMessages,
   type BenfordMessageKey,
@@ -49,4 +49,4 @@ export {
   type Conformity,
   type BenfordAnalysis,
   type BenfordPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

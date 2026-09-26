@@ -1,4 +1,4 @@
-import { recommendationTone, statusTone, type DataProtectionProfile, type OverviewRow } from '@flowaudit/ui-core'
+import { recommendationTone, statusTone, type DataProtectionProfile, type OverviewRow } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { Button } from '../../base/Button'
 import { statusLabel, useDataProtectionText } from '../shared'

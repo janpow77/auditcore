@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ExtrapolationPanel, createExtrapolationRestPort, type EvaluationResult, type StratumInput, type UnitInput } from '@flowaudit/ui'
+import { ExtrapolationPanel, createExtrapolationRestPort, type EvaluationResult, type StratumInput, type UnitInput } from '@auditcore/ui'
 
 const port = createExtrapolationRestPort({ baseUrl: '/api/extrapolation' })
 // Synthetische Stichprobe: eine Schicht, eine Einheit der Vollerhebung,

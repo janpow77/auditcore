@@ -5,8 +5,8 @@
  */
 
 import { computed, onBeforeUnmount, reactive, watch, type Ref } from 'vue'
-import { createEditorSession, initialUiState, type EditorFactory, type Popover, type UiState } from '@flowaudit/bpmn-flowaudit/ui'
-import type { FlowauditModuleOptions, ProfileData, ValidationPort } from '@flowaudit/bpmn-flowaudit'
+import { createEditorSession, initialUiState, type EditorFactory, type Popover, type UiState } from '@auditcore/bpmn-flowaudit/ui'
+import type { FlowauditModuleOptions, ProfileData, ValidationPort } from '@auditcore/bpmn-flowaudit'
 import { defaultEditorFactory } from '../editor/defaultFactory'
 import { bindEditorCore } from '../stores/editorStore'
 import { bindSelectionCore } from '../stores/selectionStore'
@@ -14,7 +14,7 @@ import { bindValidationCore } from '../stores/validationStore'
 import { provideEditorContext, type EditorPorts } from '../stores/context'
 import { useStore } from './useStore'
 
-export type { DialogId, Popover, SideView } from '@flowaudit/bpmn-flowaudit/ui'
+export type { DialogId, Popover, SideView } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface EditorSetupOptions {
   xml: () => string

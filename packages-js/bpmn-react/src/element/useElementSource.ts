@@ -5,8 +5,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { loadSource, persistSource, sourcePorts, sourceRest, type ElementSourceInput } from '@flowaudit/bpmn-flowaudit/ui'
-import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
+import { loadSource, persistSource, sourcePorts, sourceRest, type ElementSourceInput } from '@auditcore/bpmn-flowaudit/ui'
+import type { ProfileData } from '@auditcore/bpmn-flowaudit'
 
 export function useElementSource(input: ElementSourceInput, onError: (message: string) => void) {
   const [xml, setXml] = useState('')

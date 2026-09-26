@@ -6,8 +6,8 @@
 
 import { defineCustomElement } from 'vue'
 import FlowauditBpmnElement from './FlowauditBpmnElement.vue'
-import { ELEMENT_NAME } from '@flowaudit/bpmn-flowaudit/ui'
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import { ELEMENT_NAME } from '@auditcore/bpmn-flowaudit/ui'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 export const FlowauditBpmnEditorElement = defineCustomElement(FlowauditBpmnElement, { shadowRoot: false })
 
@@ -17,4 +17,4 @@ export function registerFlowauditBpmnEditor(name: string = ELEMENT_NAME): void {
 
 registerFlowauditBpmnEditor()
 
-export { ELEMENT_ATTRIBUTES, ELEMENT_EVENTS, ELEMENT_NAME, type ElementEventMap, type ElementEventName, type ElementObjectProperties, type Theme } from '@flowaudit/bpmn-flowaudit/ui'
+export { ELEMENT_ATTRIBUTES, ELEMENT_EVENTS, ELEMENT_NAME, type ElementEventMap, type ElementEventName, type ElementObjectProperties, type Theme } from '@auditcore/bpmn-flowaudit/ui'

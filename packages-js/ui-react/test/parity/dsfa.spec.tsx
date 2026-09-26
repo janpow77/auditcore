@@ -1,4 +1,4 @@
-import { FaDsfa } from '@flowaudit/ui'
+import { FaDsfa } from '@auditcore/ui'
 import { flushPromises } from '@vue/test-utils'
 import { act, fireEvent } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'

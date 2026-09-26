@@ -2,9 +2,9 @@
 
 Vertrag `dataprotection_ui/1`. Serverseite: `auditcore_dataprotection.web`
 (ab `auditcore_dataprotection` 0.5.0), Oberfläche: `<flowaudit-vvt>` und
-`<flowaudit-dsfa>` aus `@flowaudit/ui` (Vue: `FaVvt`, `FaDsfa`) bzw. die
-native React-Komponenten `FlowauditVvt` und `FlowauditDsfa` aus `@flowaudit/ui-react`
-(beide auf den Zustandsautomaten aus `@flowaudit/ui-core`).
+`<flowaudit-dsfa>` aus `@auditcore/ui` (Vue: `FaVvt`, `FaDsfa`) bzw. die
+native React-Komponenten `FlowauditVvt` und `FlowauditDsfa` aus `@auditcore/ui-react`
+(beide auf den Zustandsautomaten aus `@auditcore/ui-core`).
 
 Alle fachlichen Regeln – Vollständigkeitsprüfung nach Art. 30 Abs. 1 DSGVO,
 Schwellwertanalyse, Brutto-/Nettorisiko, Vorschlag, Vier-Augen-Prinzip,

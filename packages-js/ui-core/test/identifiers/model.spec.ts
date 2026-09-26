@@ -1,4 +1,4 @@
-import { parseTable } from '@flowaudit/common'
+import { parseTable } from '@auditcore/common'
 import { describe, expect, it } from 'vitest'
 import {
   buildIdentifierBatch,

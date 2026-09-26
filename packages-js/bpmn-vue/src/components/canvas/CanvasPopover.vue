@@ -4,7 +4,7 @@
  * from the context pad). Stays inside the canvas and closes on Escape.
  */
 import { computed } from 'vue'
-import { popoverPosition } from '@flowaudit/bpmn-flowaudit/ui'
+import { popoverPosition } from '@auditcore/bpmn-flowaudit/ui'
 
 const props = defineProps<{ x: number; y: number; width: number; height: number; title: string }>()
 const emit = defineEmits<{ (e: 'close'): void }>()

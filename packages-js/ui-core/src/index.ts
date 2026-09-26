@@ -1,5 +1,5 @@
 /**
- * Framework-freier Kern von `@flowaudit/ui` (Vue) und `@flowaudit/ui-react`:
+ * Framework-freier Kern von `@auditcore/ui` (Vue) und `@auditcore/ui-react`:
  * Texte, Datentypen der REST-Verträge, View-Modelle, Zustandsautomaten,
  * Ports und Exporte. Kein Vue, kein React.
  */

@@ -1,4 +1,4 @@
-import { methodGroups, methodStatusKey, methodTone, type MethodProfile, type SamplingCatalogue, type SamplingTranslate } from '@flowaudit/ui-core'
+import { methodGroups, methodStatusKey, methodTone, type MethodProfile, type SamplingCatalogue, type SamplingTranslate } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { useElementId } from '../store'
 

@@ -2,7 +2,7 @@
  * Gemeinsame Paritätsfälle der Datenbankansicht als Kanban (Vue ↔ React).
  * Daten: Tabelle der Python/TS-Paritätsfixture `group.json` (auditcore_kanban).
  */
-import type { RecordPort, RecordTable } from '@flowaudit/kanban-core'
+import type { RecordPort, RecordTable } from '@auditcore/kanban-core'
 import { recordPort, recordTable } from '../dbkanban/fixtures'
 import type { ParityCase } from './cases'
 

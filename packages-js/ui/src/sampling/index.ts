@@ -1,7 +1,7 @@
 export { default as SamplingPanel } from './SamplingPanel.vue'
 export { samplingElement } from './element'
 export { useSampling, type SamplingBusy, type SamplingCallbacks, type SelectionError, type UseSampling } from './useSampling'
-/** Kern (Vertrag, Prüfung der Eingaben, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag, Prüfung der Eingaben, Zustandsautomat, Anzeige) aus `@auditcore/ui-core`. */
 export {
   samplingMessages,
   type SamplingMessageKey,
@@ -73,4 +73,4 @@ export {
   type SelectionResult,
   type ExportFormat,
   type SamplingPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

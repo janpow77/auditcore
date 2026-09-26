@@ -1,4 +1,4 @@
-import { statusTone, type AssessmentView, type DsfaController } from '@flowaudit/ui-core'
+import { statusTone, type AssessmentView, type DsfaController } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { Button } from '../../base/Button'
 import { statusLabel, useDataProtectionText } from '../shared'

@@ -6,7 +6,7 @@ import {
   STRATUM_FIELDS,
   type ExtrapolationController,
   type ExtrapolationData,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'

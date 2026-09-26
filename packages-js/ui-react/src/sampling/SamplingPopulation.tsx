@@ -1,4 +1,4 @@
-import { itemsFromImport, populationText, type Locale, type PopulationItem, type SamplingTranslate } from '@flowaudit/ui-core'
+import { itemsFromImport, populationText, type Locale, type PopulationItem, type SamplingTranslate } from '@auditcore/ui-core'
 import { TableImport } from '../tabular/TableImport'
 import { useElementId } from '../store'
 

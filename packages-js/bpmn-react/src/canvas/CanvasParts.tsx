@@ -4,8 +4,8 @@
  */
 
 import type { ReactNode } from 'react'
-import type { ViewboxLike } from '@flowaudit/bpmn-flowaudit'
-import { pageGrid, popoverPosition } from '@flowaudit/bpmn-flowaudit/ui'
+import type { ViewboxLike } from '@auditcore/bpmn-flowaudit'
+import { pageGrid, popoverPosition } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'
 

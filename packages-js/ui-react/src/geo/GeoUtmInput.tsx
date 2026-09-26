@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { utmErrorKey } from '@flowaudit/ui-core'
+import { utmErrorKey } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { useGeo } from './context'

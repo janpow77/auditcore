@@ -1,8 +1,8 @@
 import { nextTick, onBeforeUnmount, watch, type Ref } from 'vue'
-import { createFocusTrap } from '@flowaudit/ui-core'
+import { createFocusTrap } from '@auditcore/ui-core'
 
-/** Seit 0.3.0 aus `@flowaudit/ui-core` (gemeinsam mit der React-Fassung). */
-export { focusableWithin, wrapTarget } from '@flowaudit/ui-core'
+/** Seit 0.3.0 aus `@auditcore/ui-core` (gemeinsam mit der React-Fassung). */
+export { focusableWithin, wrapTarget } from '@auditcore/ui-core'
 
 /**
  * Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn

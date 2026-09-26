@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import { dsfaReadonly, dsfaTabs } from '@flowaudit/ui-core'
+import { dsfaReadonly, dsfaTabs } from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 import FaButton from '../base/FaButton.vue'
 import { provideLocale, useI18n, type Locale } from '../i18n'

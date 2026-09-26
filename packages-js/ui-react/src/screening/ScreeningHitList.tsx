@@ -1,4 +1,4 @@
-import { codeLabel, formatScore, scorePercent, type BadgeTone, type HitView, type ReviewStatus, type SubjectStatus, type SubjectView } from '@flowaudit/ui-core'
+import { codeLabel, formatScore, scorePercent, type BadgeTone, type HitView, type ReviewStatus, type SubjectStatus, type SubjectView } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { codeKey, useScreeningText } from './shared'
 import { ScreeningSubjectInfo } from './ScreeningSubjectInfo'

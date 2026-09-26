@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FaSynopsis, type Comparison, type ExportPayload, type RowUpdate, type SynopsisLayout } from '@flowaudit/ui'
+import { FaSynopsis, type Comparison, type ExportPayload, type RowUpdate, type SynopsisLayout } from '@auditcore/ui'
 import article from '../../../../ui-core/test/fixtures/synopsis-article.json'
 import checklist from '../../../../ui-core/test/fixtures/synopsis-checklist.json'
 import standard from '../../../../ui-core/test/fixtures/synopsis-standard.json'

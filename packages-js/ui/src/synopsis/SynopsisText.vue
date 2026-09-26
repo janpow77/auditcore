@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DiffSegment } from '@flowaudit/ui-core'
+import type { DiffSegment } from '@auditcore/ui-core'
 
 /**
  * Wortsegmente mit `<del>`/`<ins>`. Streichungen sind durchgestrichen,

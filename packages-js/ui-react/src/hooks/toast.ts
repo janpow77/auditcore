@@ -1,4 +1,4 @@
-import { createToastQueue, type Toast, type ToastInput, type ToastQueue } from '@flowaudit/common'
+import { createToastQueue, type Toast, type ToastInput, type ToastQueue } from '@auditcore/common'
 import { createContext, createElement, useContext, useSyncExternalStore, type ReactNode } from 'react'
 
 let sharedQueue: ToastQueue | null = null
@@ -27,7 +27,7 @@ export interface UseToast {
   clear: () => void
 }
 
-/** Toasts über der framework-freien Warteschlange aus `@flowaudit/common` (Provider, sonst gemeinsame Warteschlange). */
+/** Toasts über der framework-freien Warteschlange aus `@auditcore/common` (Provider, sonst gemeinsame Warteschlange). */
 export function useToast(queue?: ToastQueue): UseToast {
   const context = useContext(ToastContext)
   const active = queue ?? context ?? sharedToastQueue()

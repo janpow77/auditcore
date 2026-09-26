@@ -1,6 +1,6 @@
 /**
- * Framework-freie Ansichtslogik des Kanban-Boards für `@flowaudit/ui` (Vue)
- * und `@flowaudit/ui-react` (React): Zustandsautomaten mit `subscribe`,
+ * Framework-freie Ansichtslogik des Kanban-Boards für `@auditcore/ui` (Vue)
+ * und `@auditcore/ui-react` (React): Zustandsautomaten mit `subscribe`,
  * reine Selektoren, Tastatur- und Zeigerbedienung, Darstellungshilfen.
  */
 export * from './store'

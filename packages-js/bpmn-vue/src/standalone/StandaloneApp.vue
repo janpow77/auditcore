@@ -4,12 +4,12 @@
  * (`docs/bpmn/rest-api.md`). Delivered as static files (`dist-standalone/`).
  */
 import { computed, onMounted, shallowRef } from 'vue'
-import { DEFAULT_PROFILE, type ProfileData, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
-import { bundledProfiles } from '@flowaudit/bpmn-flowaudit/profiles'
+import { DEFAULT_PROFILE, type ProfileData, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
+import { bundledProfiles } from '@auditcore/bpmn-flowaudit/profiles'
 import FlowauditWorkbench from '../components/FlowauditWorkbench.vue'
 import FaIcon from '../components/base/FaIcon.vue'
 import { createI18n, provideI18n } from '../i18n/useI18n'
-import { restPorts, type StandaloneConfig } from '@flowaudit/bpmn-flowaudit/ui'
+import { restPorts, type StandaloneConfig } from '@auditcore/bpmn-flowaudit/ui'
 
 const props = defineProps<{ config: StandaloneConfig }>()
 const { t } = provideI18n(createI18n(props.config.locale))

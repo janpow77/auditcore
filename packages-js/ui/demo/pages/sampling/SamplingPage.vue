@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { SamplingPanel, createSamplingRestPort, type SelectionResult } from '@flowaudit/ui'
+import { SamplingPanel, createSamplingRestPort, type SelectionResult } from '@auditcore/ui'
 import { demoPopulation } from './demo-data'
 
 const port = createSamplingRestPort({ baseUrl: '/api/sampling' })

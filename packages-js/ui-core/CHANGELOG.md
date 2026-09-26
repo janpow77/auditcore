@@ -1,8 +1,12 @@
-# Changelog @flowaudit/ui-core
+# Changelog @auditcore/ui-core
+
+## Unreleased
+
+- **Breaking:** Paketname `@auditcore/ui-core` statt `@flowaudit/ui-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 ## 0.1.0 – unveröffentlicht
 
-Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
+Erste Fassung, herausgelöst aus `@auditcore/ui` 0.2.0.
 
 - Hochrechnung: Vertrag `auditcore_extrapolation.evaluation/1`, REST-Port
   `createExtrapolationRestPort`, Formularlogik (`buildEvaluationRequest`,
@@ -23,7 +27,7 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
 - Datenbankansicht als Kanban: Zustandsautomat `createDbKanbanController`
   (Laden, Gruppierung, Verschieben mit Rücknahme bei Fehlern, Tastatur,
   Anlegen) und `dbKanbanView`; Gruppierung und Port aus
-  `@flowaudit/kanban-core` 0.2.0 (neue Laufzeitabhängigkeit). Stile
+  `@auditcore/kanban-core` 0.2.0 (neue Laufzeitabhängigkeit). Stile
   `styles/dbkanban.css`.
 - `createStore`, `createRunner`, `createDelay` als gemeinsame Grundlage der
   Controller; `downloadText`, `printHtml`, `deliverExport`.
@@ -56,6 +60,6 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
   `importResult` (`POST /comparisons/import`) ergänzt. Stile
   `styles/documents.css`, Fixture aus dem echten Dienst
   (`test/fixtures/documents-comparisons.json`).
-- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz, Geo (mit Leaflet-Grundstilen), Kanban (`kanban.css`, aus `@flowaudit/ui` verschoben).
-- Kanban-Texte `kanbanMessages`, `kanbanDialogMessages` (aus `@flowaudit/ui`
+- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz, Geo (mit Leaflet-Grundstilen), Kanban (`kanban.css`, aus `@auditcore/ui` verschoben).
+- Kanban-Texte `kanbanMessages`, `kanbanDialogMessages` (aus `@auditcore/ui`
   verschoben).

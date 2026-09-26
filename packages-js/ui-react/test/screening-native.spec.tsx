@@ -1,4 +1,4 @@
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fakePort, run, secondHit } from '../../ui-core/test/screening/fake-port'

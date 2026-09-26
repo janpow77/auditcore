@@ -13,7 +13,7 @@ import {
   type SynopsisInputs,
   type SynopsisSelection,
   type SynopsisTranslate,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -27,7 +27,7 @@ export interface UseSynopsis {
   exportAs: (format: ClientExportFormat) => ExportPayload | null
 }
 
-/** React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useSynopsis` in Vue). */
+/** React-Anbindung des Zustandsautomaten aus `@auditcore/ui-core` (dieselbe Logik wie `useSynopsis` in Vue). */
 export function useSynopsis(props: SynopsisInputs & { locale?: Locale }): UseSynopsis {
   const { t, locale } = useTranslation(synopsisMessages, props.locale)
   const translate = useRef(t)

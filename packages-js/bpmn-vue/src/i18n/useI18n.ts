@@ -5,9 +5,9 @@
  */
 
 import { computed, inject, provide, ref, type InjectionKey, type Ref } from 'vue'
-import { createTranslator, type Locale, type MessageTable } from '@flowaudit/bpmn-flowaudit/ui'
+import { createTranslator, type Locale, type MessageTable } from '@auditcore/bpmn-flowaudit/ui'
 
-export type { Locale, MessageTable } from '@flowaudit/bpmn-flowaudit/ui'
+export type { Locale, MessageTable } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface I18n {
   locale: Ref<Locale>

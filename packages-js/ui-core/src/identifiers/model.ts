@@ -1,5 +1,5 @@
 /** Framework-freie Anfrage- und Anzeigelogik von „Kennung prüfen“ (Vue und React). */
-import { recordsToCsv, type ParsedTable } from '@flowaudit/common'
+import { recordsToCsv, type ParsedTable } from '@auditcore/common'
 import type { Translate } from '../i18n'
 import type { IdentifierMessageKey } from './messages'
 import type {

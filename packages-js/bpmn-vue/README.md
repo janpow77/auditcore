@@ -1,4 +1,4 @@
-# @flowaudit/bpmn-vue
+# @auditcore/bpmn-vue
 
 ## Zweck
 
@@ -13,11 +13,11 @@ lokal gebündelt, keine CDN-Abhängigkeit.
 
 ## Installation
 
-Standardweg ist die npm-Registry; npm löst die übrigen `@flowaudit`-Pakete
+Standardweg ist die npm-Registry; npm löst die übrigen `@auditcore`-Pakete
 der Abhängigkeitshülle selbst auf:
 
 ```sh
-npm install @flowaudit/bpmn-vue
+npm install @auditcore/bpmn-vue
 ```
 
 Ohne Registry-Zugang (Intranet, offline) bleibt der signierte Tarball aus
@@ -25,23 +25,23 @@ dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
 ausdrücklich in die `package.json`:
 
 ```sh
-npm install @flowaudit/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-vue-0.2.0.tgz
+npm install @auditcore/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-vue-0.2.0.tgz
 ```
 
 Anleitung für Vue, React und Web Components mit Integritätsprüfung und
 `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
-Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor`, `@flowaudit/bpmn-flowaudit`, `@flowaudit/ui-core` und `@flowaudit/common`; Peer-Abhängigkeit `vue` ^3.5. Stile: `@flowaudit/bpmn-vue/style.css`. Drei Ausgaben: Vue-Bibliothek (`dist/`), Web Component (`dist-wc/`, Import `@flowaudit/bpmn-vue/web-component`, ein einzelnes Modul) und eigenständige App (`dist-standalone/`).
+Abhängigkeitshülle: dazu `@auditcore/bpmn-editor`, `@auditcore/bpmn-flowaudit`, `@auditcore/ui-core` und `@auditcore/common`; Peer-Abhängigkeit `vue` ^3.5. Stile: `@auditcore/bpmn-vue/style.css`. Drei Ausgaben: Vue-Bibliothek (`dist/`), Web Component (`dist-wc/`, Import `@auditcore/bpmn-vue/web-component`, ein einzelnes Modul) und eigenständige App (`dist-standalone/`).
 
 Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
-Stamm, Bau mit `npm run build -w @flowaudit/bpmn-vue`).
+Stamm, Bau mit `npm run build -w @auditcore/bpmn-vue`).
 
 ## Schnellstart
 
 ```ts
-import { restPorts } from '@flowaudit/bpmn-vue'
-import '@flowaudit/bpmn-vue/style.css'
+import { restPorts } from '@auditcore/bpmn-vue'
+import '@auditcore/bpmn-vue/style.css'
 
 // Speicher, Rechtsgrundlagen, KA/BK, Profile, Prüfung und ESI über den REST-Vertrag
 const ports = restPorts({ baseUrl: '/api/bpmn' })
@@ -59,11 +59,11 @@ const storage = ports.storage
 
 ## Einbindung
 
-**Vue:** `FlowauditEditor` und `FlowauditWorkbench` aus `@flowaudit/bpmn-vue`
-(siehe Schnellstart); Profile aus `@flowaudit/bpmn-flowaudit/profiles`,
-Speicher im Browser mit `InMemoryStorage` aus `@flowaudit/bpmn-flowaudit`.
+**Vue:** `FlowauditEditor` und `FlowauditWorkbench` aus `@auditcore/bpmn-vue`
+(siehe Schnellstart); Profile aus `@auditcore/bpmn-flowaudit/profiles`,
+Speicher im Browser mit `InMemoryStorage` aus `@auditcore/bpmn-flowaudit`.
 
-**Web Component:** `@flowaudit/bpmn-vue/web-component` ist ein einzelnes
+**Web Component:** `@auditcore/bpmn-vue/web-component` ist ein einzelnes
 ES-Modul mit Vue, Kern, Fachschicht, gebündelten Profilen und CSS. Das Element
 rendert im Light DOM; der Import registriert es einmal.
 
@@ -79,9 +79,9 @@ Attribute: `src`, `api-base`, `diagram-id`, `name`, `author`, `locale`,
 `diagram-info-change`, `error`. Methoden: `getXml()`, `getSvg()`,
 `select(id)`, `reload()`.
 
-**React:** `@flowaudit/bpmn-react` ist eine native React-Fassung derselben
+**React:** `@auditcore/bpmn-react` ist eine native React-Fassung derselben
 Oberfläche (kein Wrapper um die Web Component). Beide rendern aus dem
-framework-freien Kern `@flowaudit/bpmn-flowaudit/ui`; Stores und Composables
+framework-freien Kern `@auditcore/bpmn-flowaudit/ui`; Stores und Composables
 dieses Pakets binden dessen Controller an Vue.
 
 **Eigenständige App:** `dist-standalone/` spricht den REST-Vertrag
@@ -103,58 +103,58 @@ Exporte der Einstiegspunkte aus `package.json#exports` (52):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
-| `@flowaudit/bpmn-vue` | `BaseDialog` | Vue-Komponente | – | `components/base/BaseDialog.vue` |
-| `@flowaudit/bpmn-vue` | `CollectionStore` | Typ | – | `stores/collectionStore` |
-| `@flowaudit/bpmn-vue` | `CollectionTree` | Vue-Komponente | – | `components/collection/CollectionTree.vue` |
-| `@flowaudit/bpmn-vue` | `CompareSource` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `CreateEditorOptions` | Re-Export | – | `./editor/defaultFactory` |
-| `@flowaudit/bpmn-vue` | `DiagramInfoColumn` | Vue-Komponente | – | `components/collection/DiagramInfoColumn.vue` |
-| `@flowaudit/bpmn-vue` | `EditorContext` | Schnittstelle | – | `stores/context` |
-| `@flowaudit/bpmn-vue` | `EditorFactory` | Re-Export | – | `./editor/defaultFactory` |
-| `@flowaudit/bpmn-vue` | `EditorLike` | Re-Export | – | `./editor/defaultFactory` |
-| `@flowaudit/bpmn-vue` | `EditorPorts` | Re-Export | – | `./stores/context` |
-| `@flowaudit/bpmn-vue` | `EditorStore` | Typ | – | `stores/editorStore` |
-| `@flowaudit/bpmn-vue` | `FaIcon` | Vue-Komponente | – | `components/base/FaIcon.vue` |
-| `@flowaudit/bpmn-vue` | `FieldDescriptor` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `FlowauditEditor` | Vue-Komponente | – | `components/FlowauditEditor.vue` |
-| `@flowaudit/bpmn-vue` | `FlowauditWorkbench` | Vue-Komponente | – | `components/FlowauditWorkbench.vue` |
-| `@flowaudit/bpmn-vue` | `GroupOverview` | Vue-Komponente | – | `components/collection/GroupOverview.vue` |
-| `@flowaudit/bpmn-vue` | `I18n` | Schnittstelle | – | `i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `IssueList` | Vue-Komponente | – | `components/views/IssueList.vue` |
-| `@flowaudit/bpmn-vue` | `LISTS` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `LegalBasisEditor` | Vue-Komponente | – | `panels/legal/LegalBasisEditor.vue` |
-| `@flowaudit/bpmn-vue` | `ListDescriptor` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `Locale` | Re-Export | – | `./i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `MESSAGES_DE` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `MESSAGES_EN` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `PropertiesPanel` | Vue-Komponente | – | `panels/PropertiesPanel.vue` |
-| `@flowaudit/bpmn-vue` | `RestCatalogue` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `RestEsi` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `RestLegalSearch` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `RestOptions` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `RestProfiles` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `RestStorage` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `RestValidation` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `SelectionStore` | Typ | – | `stores/selectionStore` |
-| `@flowaudit/bpmn-vue` | `TABS` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `TabDefinition` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `ToolbarAction` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `ValidationStore` | Typ | – | `stores/validationStore` |
-| `@flowaudit/bpmn-vue` | `bindEditorCore` | Funktion | Vue view of an editor controller: reactive `state` and the instance as computed. | `stores/editorStore` |
-| `@flowaudit/bpmn-vue` | `bindSelectionCore` | Funktion | – | `stores/selectionStore` |
-| `@flowaudit/bpmn-vue` | `bindValidationCore` | Funktion | – | `stores/validationStore` |
-| `@flowaudit/bpmn-vue` | `createCollectionStore` | Funktion | – | `stores/collectionStore` |
-| `@flowaudit/bpmn-vue` | `createEditorStore` | Funktion | – | `stores/editorStore` |
-| `@flowaudit/bpmn-vue` | `createI18n` | Funktion | – | `i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `createSelectionStore` | Funktion | – | `stores/selectionStore` |
-| `@flowaudit/bpmn-vue` | `createValidationStore` | Funktion | – | `stores/validationStore` |
-| `@flowaudit/bpmn-vue` | `defaultEditorFactory` | Konstante | – | `editor/defaultFactory` |
-| `@flowaudit/bpmn-vue` | `provideEditorContext` | Funktion | – | `stores/context` |
-| `@flowaudit/bpmn-vue` | `provideI18n` | Funktion | – | `i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `restPorts` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
-| `@flowaudit/bpmn-vue` | `useEditorContext` | Funktion | – | `stores/context` |
-| `@flowaudit/bpmn-vue` | `useI18n` | Funktion | Injected i18n, or a German default when used standalone. | `i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `useStore` | Funktion | – | `composables/useStore` |
+| `@auditcore/bpmn-vue` | `BaseDialog` | Vue-Komponente | – | `components/base/BaseDialog.vue` |
+| `@auditcore/bpmn-vue` | `CollectionStore` | Typ | – | `stores/collectionStore` |
+| `@auditcore/bpmn-vue` | `CollectionTree` | Vue-Komponente | – | `components/collection/CollectionTree.vue` |
+| `@auditcore/bpmn-vue` | `CompareSource` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `CreateEditorOptions` | Re-Export | – | `./editor/defaultFactory` |
+| `@auditcore/bpmn-vue` | `DiagramInfoColumn` | Vue-Komponente | – | `components/collection/DiagramInfoColumn.vue` |
+| `@auditcore/bpmn-vue` | `EditorContext` | Schnittstelle | – | `stores/context` |
+| `@auditcore/bpmn-vue` | `EditorFactory` | Re-Export | – | `./editor/defaultFactory` |
+| `@auditcore/bpmn-vue` | `EditorLike` | Re-Export | – | `./editor/defaultFactory` |
+| `@auditcore/bpmn-vue` | `EditorPorts` | Re-Export | – | `./stores/context` |
+| `@auditcore/bpmn-vue` | `EditorStore` | Typ | – | `stores/editorStore` |
+| `@auditcore/bpmn-vue` | `FaIcon` | Vue-Komponente | – | `components/base/FaIcon.vue` |
+| `@auditcore/bpmn-vue` | `FieldDescriptor` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `FlowauditEditor` | Vue-Komponente | – | `components/FlowauditEditor.vue` |
+| `@auditcore/bpmn-vue` | `FlowauditWorkbench` | Vue-Komponente | – | `components/FlowauditWorkbench.vue` |
+| `@auditcore/bpmn-vue` | `GroupOverview` | Vue-Komponente | – | `components/collection/GroupOverview.vue` |
+| `@auditcore/bpmn-vue` | `I18n` | Schnittstelle | – | `i18n/useI18n` |
+| `@auditcore/bpmn-vue` | `IssueList` | Vue-Komponente | – | `components/views/IssueList.vue` |
+| `@auditcore/bpmn-vue` | `LISTS` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `LegalBasisEditor` | Vue-Komponente | – | `panels/legal/LegalBasisEditor.vue` |
+| `@auditcore/bpmn-vue` | `ListDescriptor` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `Locale` | Re-Export | – | `./i18n/useI18n` |
+| `@auditcore/bpmn-vue` | `MESSAGES_DE` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `MESSAGES_EN` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `PropertiesPanel` | Vue-Komponente | – | `panels/PropertiesPanel.vue` |
+| `@auditcore/bpmn-vue` | `RestCatalogue` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `RestEsi` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `RestLegalSearch` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `RestOptions` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `RestProfiles` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `RestStorage` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `RestValidation` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `SelectionStore` | Typ | – | `stores/selectionStore` |
+| `@auditcore/bpmn-vue` | `TABS` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `TabDefinition` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `ToolbarAction` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `ValidationStore` | Typ | – | `stores/validationStore` |
+| `@auditcore/bpmn-vue` | `bindEditorCore` | Funktion | Vue view of an editor controller: reactive `state` and the instance as computed. | `stores/editorStore` |
+| `@auditcore/bpmn-vue` | `bindSelectionCore` | Funktion | – | `stores/selectionStore` |
+| `@auditcore/bpmn-vue` | `bindValidationCore` | Funktion | – | `stores/validationStore` |
+| `@auditcore/bpmn-vue` | `createCollectionStore` | Funktion | – | `stores/collectionStore` |
+| `@auditcore/bpmn-vue` | `createEditorStore` | Funktion | – | `stores/editorStore` |
+| `@auditcore/bpmn-vue` | `createI18n` | Funktion | – | `i18n/useI18n` |
+| `@auditcore/bpmn-vue` | `createSelectionStore` | Funktion | – | `stores/selectionStore` |
+| `@auditcore/bpmn-vue` | `createValidationStore` | Funktion | – | `stores/validationStore` |
+| `@auditcore/bpmn-vue` | `defaultEditorFactory` | Konstante | – | `editor/defaultFactory` |
+| `@auditcore/bpmn-vue` | `provideEditorContext` | Funktion | – | `stores/context` |
+| `@auditcore/bpmn-vue` | `provideI18n` | Funktion | – | `i18n/useI18n` |
+| `@auditcore/bpmn-vue` | `restPorts` | Re-Export | – | `@auditcore/bpmn-flowaudit/ui` |
+| `@auditcore/bpmn-vue` | `useEditorContext` | Funktion | – | `stores/context` |
+| `@auditcore/bpmn-vue` | `useI18n` | Funktion | Injected i18n, or a German default when used standalone. | `i18n/useI18n` |
+| `@auditcore/bpmn-vue` | `useStore` | Funktion | – | `composables/useStore` |
 
 ### Props und Ereignisse der Vue-Komponenten
 
@@ -333,7 +333,7 @@ Demo (`npm run test:e2e`). Dokumentation: `docs/bpmn/frontend.md`.
 
 ## Abhängigkeiten
 
-`@flowaudit/bpmn-editor@0.1.0`, `@flowaudit/bpmn-flowaudit@0.2.0` (Fachschicht und UI-Kern `./ui`), `@flowaudit/ui-core@0.1.0` (Fokusfalle der Dialoge); Peer
+`@auditcore/bpmn-editor@0.1.0`, `@auditcore/bpmn-flowaudit@0.2.0` (Fachschicht und UI-Kern `./ui`), `@auditcore/ui-core@0.1.0` (Fokusfalle der Dialoge); Peer
 `vue@^3.5.0`. Die Web Component bündelt Vue mit.
 
 ## Sicherheit und Datenschutz
@@ -349,7 +349,7 @@ schreibgeschützt (`lockApproved`).
 MIT (`LICENSE`). Clean-Room-Erklärung: Dieses Paket enthält keinen Code,
 keine Styles und keine Icons aus bpmn-js, bpmn-js-properties-panel,
 @bpmn-io/properties-panel oder bpmn-font. Genutzt werden nur diagram-js und
-bpmn-moddle (MIT) über den eigenen Kern `@flowaudit/bpmn-editor`. Portiert
+bpmn-moddle (MIT) über den eigenen Kern `@auditcore/bpmn-editor`. Portiert
 wurde ausschließlich FlowAudit-eigener Code aus dem audit_designer
 (Paritätsinventar: `docs/bpmn/paritaet-audit-designer.md`). Die Icons sind
 eigene SVG-Pfade (24 px, `currentColor`).

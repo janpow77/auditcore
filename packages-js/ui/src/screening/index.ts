@@ -1,7 +1,7 @@
 export { default as ScreeningReview } from './ScreeningReview.vue'
 export { screeningReviewElement } from './element'
 export { useScreeningReview, type ReviewEvents, type ScreeningError, type ScreeningReviewState } from './useScreeningReview'
-/** Kern (Vertrag screening_review/1, View-Logik, Zustandsautomat) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag screening_review/1, View-Logik, Zustandsautomat) aus `@auditcore/ui-core`. */
 export {
   codeLabel,
   screeningMessages,
@@ -63,4 +63,4 @@ export {
   type ApiErrorBody,
   type RunQuery,
   type ScreeningPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

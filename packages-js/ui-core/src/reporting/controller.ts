@@ -1,7 +1,7 @@
 // Zustandsautomat des Tabellenexports (Vue und React): Formatprofile laden,
 // Profil wählen, Vorschau und Export über den Port (reporting_ui/1).
 
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 import { createRunner, createStore, IDLE, type RequestState } from '../store'
 import type { FormatProfile, ReportingCatalogue, ReportingPort, ReportTableInput, WorkbookPreview, WorkbookRequest } from './types'
 

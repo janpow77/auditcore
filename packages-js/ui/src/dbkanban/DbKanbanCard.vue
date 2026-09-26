@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { dbKanbanMessages, type DbCardView } from '@flowaudit/ui-core'
+import { dbKanbanMessages, type DbCardView } from '@auditcore/ui-core'
 import { useI18n } from '../i18n'
 
 const props = withDefaults(defineProps<{

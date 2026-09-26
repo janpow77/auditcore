@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
-import { focusRow, navigationDirection, type SynopsisController, type SynopsisSelection } from '@flowaudit/ui-core'
+import { focusRow, navigationDirection, type SynopsisController, type SynopsisSelection } from '@auditcore/ui-core'
 
-export { focusRow } from '@flowaudit/ui-core'
+export { focusRow } from '@auditcore/ui-core'
 
 export interface UseSynopsisNavigation {
   go: (direction: 1 | -1) => string | null

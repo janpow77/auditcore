@@ -4,12 +4,12 @@
  */
 
 import { computed } from 'vue'
-import { createEditorActions, type ActionHandlers, type ActionOptions, type Theme } from '@flowaudit/bpmn-flowaudit/ui'
-import { EMPTY_DIAGRAM } from '@flowaudit/bpmn-flowaudit'
+import { createEditorActions, type ActionHandlers, type ActionOptions, type Theme } from '@auditcore/bpmn-flowaudit/ui'
+import { EMPTY_DIAGRAM } from '@auditcore/bpmn-flowaudit'
 import { useStore } from './useStore'
 import type { useEditorSetup } from './useEditorSetup'
 
-export type { ActionHandlers, ActionOptions, Theme } from '@flowaudit/bpmn-flowaudit/ui'
+export type { ActionHandlers, ActionOptions, Theme } from '@auditcore/bpmn-flowaudit/ui'
 
 export function useEditorActions(setup: ReturnType<typeof useEditorSetup>, handlers: ActionHandlers, options: ActionOptions) {
   const actions = createEditorActions(setup.session, handlers, options)

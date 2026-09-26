@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { createShareSearch, shareName, type Share, type SharePermission, type UserRef } from '@flowaudit/kanban-core'
+import { createShareSearch, shareName, type Share, type SharePermission, type UserRef } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import FaDialog from '../base/FaDialog.vue'
 import FaTextField from '../base/FaTextField.vue'

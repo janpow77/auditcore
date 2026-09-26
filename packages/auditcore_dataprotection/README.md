@@ -325,7 +325,7 @@ Bausteine:
 | `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
 | `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
 | `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.1; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
-| `web` | REST-Schnittstelle `dataprotection_ui/1` für `<flowaudit-vvt>` und `<flowaudit-dsfa>` (`@flowaudit/ui`): `DataProtectionApi` ohne Framework, `routes`/`create_app` (Extra `web`), `create_router` (Extra `fastapi`), Speicher als Protocol `Storage`. |
+| `web` | REST-Schnittstelle `dataprotection_ui/1` für `<flowaudit-vvt>` und `<flowaudit-dsfa>` (`@auditcore/ui`): `DataProtectionApi` ohne Framework, `routes`/`create_app` (Extra `web`), `create_router` (Extra `fastapi`), Speicher als Protocol `Storage`. |
 | `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
 
 Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie

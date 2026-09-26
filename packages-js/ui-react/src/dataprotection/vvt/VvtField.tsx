@@ -1,5 +1,5 @@
 import { useEffect, useState, type ChangeEvent } from 'react'
-import { parseCount, type FieldValue, type RegisterColumn, type RegisterIssue } from '@flowaudit/ui-core'
+import { parseCount, type FieldValue, type RegisterColumn, type RegisterIssue } from '@auditcore/ui-core'
 import { classes, useElementId } from '../../store'
 import { useDataProtectionText } from '../shared'
 

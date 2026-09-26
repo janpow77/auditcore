@@ -126,7 +126,7 @@ export function createIdentifierController(source: IdentifierSource) {
 
   return {
     store,
-    /** Datei-Import (gemeinsamer TableImport-Controller aus `@flowaudit/ui-core`). */
+    /** Datei-Import (gemeinsamer TableImport-Controller aus `@auditcore/ui-core`). */
     table,
     load,
     check,

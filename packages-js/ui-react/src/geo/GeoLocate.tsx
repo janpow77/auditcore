@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { formatDistance, type BadgeTone, type GeoMessageKey, type LocateResult, type Translate, type Locale } from '@flowaudit/ui-core'
+import { formatDistance, type BadgeTone, type GeoMessageKey, type LocateResult, type Translate, type Locale } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'

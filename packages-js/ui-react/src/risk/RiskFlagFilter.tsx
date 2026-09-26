@@ -1,4 +1,4 @@
-import { STATE_FILTER_KEYS, riskMessages, type Locale, type RiskFilter, type RuleView, type StateFilter } from '@flowaudit/ui-core'
+import { STATE_FILTER_KEYS, riskMessages, type Locale, type RiskFilter, type RuleView, type StateFilter } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useElementId } from '../store'
 

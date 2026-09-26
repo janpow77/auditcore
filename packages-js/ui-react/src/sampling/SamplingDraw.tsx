@@ -7,7 +7,7 @@ import {
   type SamplingTranslate,
   type SelectionError,
   type SelectionVariant,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 

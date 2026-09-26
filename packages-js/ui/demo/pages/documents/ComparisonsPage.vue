@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FaComparisons, createSynopsisRestClient } from '@flowaudit/ui'
+import { FaComparisons, createSynopsisRestClient } from '@auditcore/ui'
 
 // Nur Demo: demo/api_server.py ordnet alle Anfragen einer Person zu (single_user).
 const port = createSynopsisRestClient({ baseUrl: '/api/synopsis' })

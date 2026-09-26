@@ -1,5 +1,5 @@
 /** Anzeigeformate und Beschriftungen der Risiko-Merkmale (framework-frei). */
-import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent } from '@auditcore/common'
 import type { Locale } from '../i18n'
 import type { JsonValue } from './types'
 import type { FlagState } from './state'

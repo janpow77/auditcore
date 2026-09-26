@@ -12,11 +12,11 @@ export default defineConfig({
   plugins: [vue({ template: { compilerOptions: { isCustomElement: (tag) => tag.startsWith('flowaudit-') } } })],
   resolve: {
     alias: [
-      { find: /^@flowaudit\/ui\/elements$/, replacement: source('elements.ts') },
-      { find: /^@flowaudit\/ui$/, replacement: source('index.ts') },
-      { find: /^@flowaudit\/kanban-core$/, replacement: fileURLToPath(new URL('../../kanban-core/src/index.ts', import.meta.url)) },
-      { find: /^@flowaudit\/common\/browser$/, replacement: fileURLToPath(new URL('../../common/src/browser.ts', import.meta.url)) },
-      { find: /^@flowaudit\/common$/, replacement: fileURLToPath(new URL('../../common/src/index.ts', import.meta.url)) },
+      { find: /^@auditcore\/ui\/elements$/, replacement: source('elements.ts') },
+      { find: /^@auditcore\/ui$/, replacement: source('index.ts') },
+      { find: /^@auditcore\/kanban-core$/, replacement: fileURLToPath(new URL('../../kanban-core/src/index.ts', import.meta.url)) },
+      { find: /^@auditcore\/common\/browser$/, replacement: fileURLToPath(new URL('../../common/src/browser.ts', import.meta.url)) },
+      { find: /^@auditcore\/common$/, replacement: fileURLToPath(new URL('../../common/src/index.ts', import.meta.url)) },
     ],
   },
   build: { outDir: 'dist', emptyOutDir: true },

@@ -1,5 +1,5 @@
-import { DUE_STATES, PRIORITIES, type BoardStats, type KanbanFilterState } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import { DUE_STATES, PRIORITIES, type BoardStats, type KanbanFilterState } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import { useLayoutEffect, useRef, useState, type KeyboardEvent, type Ref } from 'react'
 import { Button } from '../base/Button'
 import { TextField } from '../base/TextField'

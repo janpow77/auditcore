@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from 'react'
-import { identifierFacts, identifierReasonText, identifierStatusText, identifierStatusTone, type IdentifierResult } from '@flowaudit/ui-core'
+import { identifierFacts, identifierReasonText, identifierStatusText, identifierStatusTone, type IdentifierResult } from '@auditcore/ui-core'
 import type { UseIdentifierCheck } from './useIdentifierCheck'
 
 function Fact({ label, children }: { label: string; children: ReactNode }) {

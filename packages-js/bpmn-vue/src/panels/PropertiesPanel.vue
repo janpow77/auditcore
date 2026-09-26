@@ -5,11 +5,11 @@
  * WAI-ARIA tabs pattern (arrow keys, Home/End).
  */
 import { computed, ref, watch } from 'vue'
-import type { Comment, PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import type { Comment, PaletteColor } from '@auditcore/bpmn-flowaudit'
 import FaIcon from '../components/base/FaIcon.vue'
 import { useI18n } from '../i18n/useI18n'
 import { useEditorContext } from '../stores/context'
-import { listsFor, tabMove, tabsFor, type TabId } from '@flowaudit/bpmn-flowaudit/ui'
+import { listsFor, tabMove, tabsFor, type TabId } from '@auditcore/bpmn-flowaudit/ui'
 import ColorTab from './tabs/ColorTab.vue'
 import GeneralTab from './tabs/GeneralTab.vue'
 import LegalTab from './tabs/LegalTab.vue'

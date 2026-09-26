@@ -1,7 +1,7 @@
 export { default as ReportExportPanel } from './ReportExportPanel.vue'
 export { reportExportElement } from './element'
 export { useReportExport, type ReportingCallbacks, type UseReportExport } from './useReportExport'
-/** Kern (Vertrag, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag, Zustandsautomat, Anzeige) aus `@auditcore/ui-core`. */
 export {
   reportingMessages,
   type ReportingMessageKey,
@@ -32,4 +32,4 @@ export {
   type TablePreview,
   type WorkbookPreview,
   type ReportingPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

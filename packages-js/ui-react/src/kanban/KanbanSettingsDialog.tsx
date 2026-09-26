@@ -1,5 +1,5 @@
-import { createColumnEditor, selectColumnEditor, type Column } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import { createColumnEditor, selectColumnEditor, type Column } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Button } from '../base/Button'
 import { Dialog } from '../base/Dialog'

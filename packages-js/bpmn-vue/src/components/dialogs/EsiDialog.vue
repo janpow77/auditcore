@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /** ESI requirements per element (legacy `EsiRequirementsDialog`), loaded through the ESI port. */
 import { computed, ref, watch } from 'vue'
-import { groupByElement, summarize, type EsiPort, type EsiRequirementResult } from '@flowaudit/bpmn-flowaudit'
-import { ESI_STATUS as STATUS, loadEsi } from '@flowaudit/bpmn-flowaudit/ui'
+import { groupByElement, summarize, type EsiPort, type EsiRequirementResult } from '@auditcore/bpmn-flowaudit'
+import { ESI_STATUS as STATUS, loadEsi } from '@auditcore/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'

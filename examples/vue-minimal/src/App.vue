@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FaButton, FaTable, formatNumber, useTheme, type SortState, type TableColumn, type TableRow } from '@flowaudit/ui'
+import { FaButton, FaTable, formatNumber, useTheme, type SortState, type TableColumn, type TableRow } from '@auditcore/ui'
 import { locale } from './locale'
 
 const columns: TableColumn[] = [

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FaDbKanban, type Locale, type RecordTable } from '@flowaudit/ui'
+import { FaDbKanban, type Locale, type RecordTable } from '@auditcore/ui'
 import { demoLocale } from '../../locale'
 
 // Erfundene Prüfliste in der Form der audit_designer-Datenbank (Eigenschaften und Zeilen).

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { PRIORITIES, type Attachment, type Card, type CardLink, type Column, type Priority } from '@flowaudit/kanban-core'
+import { PRIORITIES, type Attachment, type Card, type CardLink, type Column, type Priority } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import FaDialog from '../base/FaDialog.vue'
 import FaTextField from '../base/FaTextField.vue'

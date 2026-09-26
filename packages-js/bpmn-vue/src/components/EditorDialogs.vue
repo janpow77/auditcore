@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /** All dialogs of the editor, driven by the editor setup and actions. */
 import { computed, ref, shallowRef, watch } from 'vue'
-import { collectExportData, type Approval, type DiagramInfo, type ProcessModel, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
-import { elementNames, EMPTY_EXPORT_DATA } from '@flowaudit/bpmn-flowaudit/ui'
+import { collectExportData, type Approval, type DiagramInfo, type ProcessModel, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
+import { elementNames, EMPTY_EXPORT_DATA } from '@auditcore/bpmn-flowaudit/ui'
 import DiagramInfoDialog from './dialogs/DiagramInfoDialog.vue'
 import ElementSearch from './dialogs/ElementSearch.vue'
 import EnrichmentDialog from './dialogs/EnrichmentDialog.vue'

@@ -1,6 +1,6 @@
 /**
  * Demo-Seite für die lokale Sichtprüfung (nicht Teil des Pakets).
- * Aufruf: `npm run demo -w @flowaudit/bpmn-editor`, dann ?datei=… wählen.
+ * Aufruf: `npm run demo -w @auditcore/bpmn-editor`, dann ?datei=… wählen.
  */
 
 import { BpmnEditor } from '../src'

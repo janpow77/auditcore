@@ -1,5 +1,5 @@
-import { CARD_COLORS, MAX_CARD_IMAGE_BYTES } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import { CARD_COLORS, MAX_CARD_IMAGE_BYTES } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import { useState, type ChangeEvent } from 'react'
 import { Button } from '../base/Button'
 import { useKanbanDialogText } from './text'

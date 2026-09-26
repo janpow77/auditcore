@@ -1,4 +1,4 @@
-import { completeness, type RegisterIssue } from '@flowaudit/ui-core'
+import { completeness, type RegisterIssue } from '@auditcore/ui-core'
 import { useDataProtectionText } from '../shared'
 
 /** Ergebnis der Vollständigkeitsprüfung der Bibliothek (wie VvtIssues.vue). */

@@ -1,4 +1,4 @@
-import '@flowaudit/ui-core/style.css'
+import '@auditcore/ui-core/style.css'
 
 export * from './base'
 export * from './i18n'

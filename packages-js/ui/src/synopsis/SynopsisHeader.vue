@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FaIcon from '../base/FaIcon.vue'
-import type { SynopsisTranslate, SynopsisView } from '@flowaudit/ui-core'
+import type { SynopsisTranslate, SynopsisView } from '@auditcore/ui-core'
 
 defineProps<{ view: SynopsisView; selectedText: string; editable: boolean; headingId: string; t: SynopsisTranslate }>()
 </script>

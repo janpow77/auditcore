@@ -7,22 +7,22 @@
     ],
     "jsx": "react-jsx",
     "paths": {
-      "@flowaudit/ui": [
+      "@auditcore/ui": [
         "../ui/src/index.ts"
       ],
-      "@flowaudit/ui/elements": [
+      "@auditcore/ui/elements": [
         "../ui/src/elements.ts"
       ],
-      "@flowaudit/kanban-core": [
+      "@auditcore/kanban-core": [
         "../kanban-core/src/index.ts"
       ],
-      "@flowaudit/common": [
+      "@auditcore/common": [
         "../common/src/index.ts"
       ],
-      "@flowaudit/common/browser": [
+      "@auditcore/common/browser": [
         "../common/src/browser.ts"
       ],
-      "@flowaudit/ui-core": [
+      "@auditcore/ui-core": [
         "../ui-core/src/index.ts"
       ]
     }

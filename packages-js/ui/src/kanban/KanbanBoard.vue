@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, shallowRef, watch } from 'vue'
-import { doneColumn, findCard, MemoryBoardPort, type Attachment, type Board, type BoardPort, type Card, type CardLink, type KanbanError, type SharePermission, type UserRef } from '@flowaudit/kanban-core'
+import { doneColumn, findCard, MemoryBoardPort, type Attachment, type Board, type BoardPort, type Card, type CardLink, type KanbanError, type SharePermission, type UserRef } from '@auditcore/kanban-core'
 import FaIcon from '../base/FaIcon.vue'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'

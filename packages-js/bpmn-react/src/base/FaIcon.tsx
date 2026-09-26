@@ -4,7 +4,7 @@
  */
 
 import { createElement } from 'react'
-import { iconPrimitives } from '@flowaudit/bpmn-flowaudit'
+import { iconPrimitives } from '@auditcore/bpmn-flowaudit'
 
 const camel = (key: string) => key.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase())
 const reactProps = (attrs: Record<string, string>) => Object.fromEntries(Object.entries(attrs).map(([key, value]) => [camel(key), value]))

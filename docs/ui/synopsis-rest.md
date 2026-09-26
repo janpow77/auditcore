@@ -2,7 +2,7 @@
 
 Stand: 25.09.2026 · Paket `auditcore_documents` ≥ 0.3.0 · Modul `auditcore_documents.web`
 · Oberflächen `<flowaudit-synopsis>` (Anzeige) und `<flowaudit-comparisons>`
-(Hochladen, Liste, Import, Löschen) aus `@flowaudit/ui`
+(Hochladen, Liste, Import, Löschen) aus `@auditcore/ui`
 
 Der Vertrag verbindet die wiederverwendbare Oberfläche mit dem Vergleichskern.
 Die JSON-Formen sind die Ergebnisobjekte von `auditcore_documents`
@@ -173,7 +173,7 @@ angezeigt. Für die Gesetzessynopse sendet sie nur `comparison_type`,
 `highlight_words`, `output_sections`, `title` und `profile`. Importiert werden
 die JSON-Ausgabe (`export?format=json`), ein gespeicherter Vergleich oder
 `{"title"?, "result"}`. Logik und Texte liegen framework-frei in
-`@flowaudit/ui-core` (`createComparisonsController`), damit die React-Fassung
+`@auditcore/ui-core` (`createComparisonsController`), damit die React-Fassung
 dieselben Paritätsfälle (`ui-core/test/parity/cases-documents.ts`) erfüllt.
 
 ## Ausgaben

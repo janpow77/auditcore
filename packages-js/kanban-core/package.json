@@ -1,5 +1,5 @@
 {
-  "name": "@flowaudit/kanban-core",
+  "name": "@auditcore/kanban-core",
   "version": "0.2.0",
   "description": "Framework-freie Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte) und Ansichtslogik für Vue und React – gleiche Regeln wie auditcore_kanban",
   "license": "MIT",

@@ -1,6 +1,6 @@
 /** List of palette colours with meaning plus „remove colour“ (legacy colour menu). */
 
-import type { PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import type { PaletteColor } from '@auditcore/bpmn-flowaudit'
 import { useI18n } from '../i18n'
 
 export interface ColorSwatchesProps {

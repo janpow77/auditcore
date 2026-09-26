@@ -11,7 +11,7 @@ import {
   type BenfordTranslate,
   type ConformityProfile,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -35,7 +35,7 @@ export interface UseBenford {
   profile: ConformityProfile | null
 }
 
-/** React-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (dieselbe Logik wie `useBenford` in Vue). */
+/** React-Anbindung der Benford-Analyse aus `@auditcore/ui-core` (dieselbe Logik wie `useBenford` in Vue). */
 export function useBenford(props: BenfordInputs): UseBenford {
   const { t, locale } = useTranslation(benfordMessages, props.locale)
   const latest = useRef(props)

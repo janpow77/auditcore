@@ -7,8 +7,8 @@
  * ESI).
  */
 import { computed, onMounted, ref, watch } from 'vue'
-import { label, PALETTE_COLORS, profileReference, rolesFor, type Approval, type Comment, type DiagramInfo, type PaletteColor, type ProfileData, type ProfileSummary, type RoleAlias, type ValidationPort } from '@flowaudit/bpmn-flowaudit'
-import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, readImportFile, savePayload, type CompareSource, type EditorFactory, type ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
+import { label, PALETTE_COLORS, profileReference, rolesFor, type Approval, type Comment, type DiagramInfo, type PaletteColor, type ProfileData, type ProfileSummary, type RoleAlias, type ValidationPort } from '@auditcore/bpmn-flowaudit'
+import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, readImportFile, savePayload, type CompareSource, type EditorFactory, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { defaultEditorFactory } from '../editor/defaultFactory'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import type { EditorPorts } from '../stores/context'
@@ -23,7 +23,7 @@ import ColorSwatches from './base/ColorSwatches.vue'
 import KeyFilterBar from './views/KeyFilterBar.vue'
 import EditorSidePanel from './EditorSidePanel.vue'
 import EditorDialogs from './EditorDialogs.vue'
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 const props = withDefaults(
   defineProps<{

@@ -1,7 +1,7 @@
 /** Right column: properties, issue list, walk-through and comparison as tabs. */
 
-import type { Comment, PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { SIDE_VIEWS, type CompareSource, type SideView } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Comment, PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { SIDE_VIEWS, type CompareSource, type SideView } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from './base/FaIcon'
 import { useValidationView } from './context'
 import { useI18n } from './i18n'

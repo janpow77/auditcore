@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { createRef } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { ExportPayload, RowUpdate, SynopsisPort } from '@flowaudit/ui-core'
+import type { ExportPayload, RowUpdate, SynopsisPort } from '@auditcore/ui-core'
 import { article, checklist, standard } from '../../ui-core/test/synopsis/fixtures'
 import { FlowauditSynopsis, type FlowauditSynopsisHandle } from '../src'
 

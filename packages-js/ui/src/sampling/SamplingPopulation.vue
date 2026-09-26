@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { itemsFromImport, populationText, samplingMessages, type ImportedColumns, type PopulationItem } from '@flowaudit/ui-core'
+import { itemsFromImport, populationText, samplingMessages, type ImportedColumns, type PopulationItem } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
 import TableImport from '../tabular/TableImport.vue'

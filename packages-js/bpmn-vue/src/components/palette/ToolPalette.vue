@@ -7,7 +7,7 @@
 import { computed } from 'vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
-import { paletteSections, type PaletteItem } from '@flowaudit/bpmn-flowaudit/ui'
+import { paletteSections, type PaletteItem } from '@auditcore/bpmn-flowaudit/ui'
 
 const props = defineProps<{ items: PaletteItem[]; disabled?: boolean }>()
 const emit = defineEmits<{ (e: 'trigger', id: string, event: Event): void }>()

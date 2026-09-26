@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useI18n, type Locale } from '../i18n'
 import RiskFlagCard from './RiskFlagCard.vue'
-import { riskMessages, type ProfileReference, type RecordView, formatValue, pairs, recordLabel, type FlagEntry } from '@flowaudit/ui-core'
+import { riskMessages, type ProfileReference, type RecordView, formatValue, pairs, recordLabel, type FlagEntry } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   record?: RecordView | null

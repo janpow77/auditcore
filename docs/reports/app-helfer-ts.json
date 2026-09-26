@@ -95,8 +95,8 @@
    "app_count": 9,
    "definitions": 140,
    "variants": 98,
-   "auditcore_existing": "@flowaudit/ui i18n/format.ts formatDate(value, locale, withTime) – dateStyle „medium“, Ersatzwert „“, Locale de|en; liegt aber im Vue-Paket",
-   "target": "@flowaudit/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate)",
+   "auditcore_existing": "@auditcore/ui i18n/format.ts formatDate(value, locale, withTime) – dateStyle „medium“, Ersatzwert „“, Locale de|en; liegt aber im Vue-Paket",
+   "target": "@auditcore/common: format/date (formatDate, formatDateTime, formatTime, parseIsoDate)",
    "differences": [
     "Engine: toLocaleDateString (59), toLocaleString (36), manuell/Template (34), Intl.DateTimeFormat (14), date-fns (1)",
     "Ausgabe: mit Optionen 2-digit „31.01.2026“ (90) gegenüber toLocaleDateString ohne Optionen „31.1.2026“ (u. a. audit_designer utils/format.ts formatDateDe)",
@@ -305,7 +305,7 @@
    "definitions": 576,
    "variants": null,
    "auditcore_existing": "nein",
-   "target": "kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @flowaudit/fraud-report (React) oder eine App als Quelle",
+   "target": "kein Helferpaket: audit-portal ist in diesen Modulen ein Fork von flowinvoice (576 wortgleiche Funktionen = 59 % von flowinvoice). Entscheidung nötig: gemeinsames Paket @auditcore/fraud-report (React) oder eine App als Quelle",
    "differences": [
     "fraud-report/useWordExport.ts, usePdfExport.ts, useTextExport, useHtmlExport, company-report/*, risk-wheel/*, belegliste/* doppelt; bereits erste Abweichungen (Zeilenversatz, formatCurrency-Varianten)"
    ],
@@ -332,8 +332,8 @@
    "app_count": 8,
    "definitions": 64,
    "variants": 40,
-   "auditcore_existing": "@flowaudit/ui formatNumber(value, locale, options) – kein EUR-Helfer",
-   "target": "@flowaudit/common: format/money (formatEur, formatEurCompact)",
+   "auditcore_existing": "@auditcore/ui formatNumber(value, locale, options) – kein EUR-Helfer",
+   "target": "@auditcore/common: format/money (formatEur, formatEurCompact)",
    "differences": [
     "Form: Intl style currency (37), Suffix „ €“ per Hand (11), Suffix „ EUR“ (5), nur Zahl ohne Symbol (12)",
     "Intl setzt ein geschütztes Leerzeichen (U+00A0) vor €, die Handvarianten ein normales – Textvergleiche/Tests/PDF-Umbruch unterscheiden sich",
@@ -539,8 +539,8 @@
    "app_count": 10,
    "definitions": 41,
    "variants": 37,
-   "auditcore_existing": "@flowaudit/ui RestOptions.headers/fetch injizierbar (kein Token-Speicher)",
-   "target": "@flowaudit/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch",
+   "auditcore_existing": "@auditcore/ui RestOptions.headers/fetch injizierbar (kein Token-Speicher)",
+   "target": "@auditcore/common: auth/token (TokenStore-Schnittstelle mit memory/local/session-Umsetzung, bearerHeader, isExpired(jwt)) + Axios/fetch-Adapter; Login/Logout bleiben app-spezifisch",
    "differences": [
     "Speicherschlüssel: „token“ (audit_designer 26×, flowsearch), „flowaudit_token“ (flowinvoice, audit-portal), „hpp_token“ (regulierung), „ecohesion.token“; ai-router/cockpit/pdf-editor Pinia-Store bzw. Konstante",
     "Cookie-Sitzung (withCredentials) in audit_designer (2 Dateien) und qaaudit statt Bearer",
@@ -727,13 +727,13 @@
    "app_count": 7,
    "definitions": 51,
    "variants": 31,
-   "auditcore_existing": "@flowaudit/ui RestError/toError (nur Envelope {error:{…}})",
-   "target": "@flowaudit/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown)",
+   "auditcore_existing": "@auditcore/ui RestError/toError (nur Envelope {error:{…}})",
+   "target": "@auditcore/common: http/error (errorMessage(err, fallback) für FastAPI detail als String und als 422-Liste, {error:{code,message}}, Error, unknown)",
    "differences": [
     "37 Definitionen allein in audit_designer (extractError, extractErrorMessage, fehlertext …) mit 6+ Varianten",
     "FastAPI-422 (detail als Liste von {loc,msg}) wird nur in 5 von 53 Varianten ausgewertet; die übrigen reichen die Rohliste an die Oberfläche weiter oder zeigen nur den Ersatztext",
     "Sonderfälle nur vereinzelt: 503-Text (MyDataSourcesPanel), data.message zusätzlich zu detail",
-    "@flowaudit/ui RestError erwartet {error:{code,message}} – anderes Fehlerformat als die App-Backends (FastAPI detail)"
+    "@auditcore/ui RestError erwartet {error:{code,message}} – anderes Fehlerformat als die App-Backends (FastAPI detail)"
    ],
    "python_parity": "Backend-Fehlerform ist Python-Seite (FastAPI HTTPException/RequestValidationError); auditcore-Router liefern {error:{code,message}} → errorMessage muss beide Formen können",
    "per_app": {
@@ -900,10 +900,10 @@
    "app_count": 7,
    "definitions": 48,
    "variants": 36,
-   "auditcore_existing": "@flowaudit/ui formatNumber/formatPercent (Anteil 0–1)",
-   "target": "@flowaudit/common: format/number (formatNumber, formatInt, formatFixed, formatPercent)",
+   "auditcore_existing": "@auditcore/ui formatNumber/formatPercent (Anteil 0–1)",
+   "target": "@auditcore/common: format/number (formatNumber, formatInt, formatFixed, formatPercent)",
    "differences": [
-    "Prozent: Intl style percent mit Anteil 0–1 (audit-portal vpFormat, @flowaudit/ui) gegenüber Zahl 0–100 plus „ %“ per toFixed().replace(\".\", \",\") (ai-router, riskanalysis pct) – Faktor 100 Unterschied bei gleichem Namen formatPercent",
+    "Prozent: Intl style percent mit Anteil 0–1 (audit-portal vpFormat, @auditcore/ui) gegenüber Zahl 0–100 plus „ %“ per toFixed().replace(\".\", \",\") (ai-router, riskanalysis pct) – Faktor 100 Unterschied bei gleichem Namen formatPercent",
     "toFixed-Varianten ohne Tausendertrennzeichen (ai-router formatTokens/formatPercent, riskanalysis) gegenüber Intl mit Punkt-Gruppierung",
     "regulierung formatFixed und formatNumberDe sind wortgleich (Dublette in derselben Datei)"
    ],
@@ -1084,7 +1084,7 @@
    "definitions": 45,
    "variants": 24,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: format/bytes (formatBytes)",
+   "target": "@auditcore/common: format/bytes (formatBytes)",
    "differences": [
     "Alle 45 rechnen mit 1024, beschriften aber KB/MB statt KiB/MiB",
     "41 von 45 nutzen toFixed → „1.5 MB“ mit Dezimalpunkt in deutscher Oberfläche; nur audit-portal (1) nutzt Locale-Komma, ai-router ersetzt per replace",
@@ -1246,7 +1246,7 @@
    "definitions": 27,
    "variants": 21,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul",
+   "target": "@auditcore/common: text/html (escapeHtml – 5 Zeichen); Markdown-Rendering (marked + DOMPurify) als optionales Modul",
    "differences": [
     "escapeHtml mit 5 Zeichen (&<>\"') gegenüber nur 3 (&<>, jupyter/ansi.ts) – letzteres unsicher in Attributen",
     "renderMarkdown mit DOMPurify (audit_designer) gegenüber eigenem Mini-Renderer (audit-portal help/renderMarkdown.ts)"
@@ -1404,10 +1404,10 @@
    "app_count": 7,
    "definitions": 25,
    "variants": 20,
-   "auditcore_existing": "@flowaudit/ui table/sort.ts",
-   "target": "@flowaudit/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @flowaudit/common/table, Vue-Composable useSort in ui, React-Hook in ui-react",
+   "auditcore_existing": "@auditcore/ui table/sort.ts",
+   "target": "@auditcore/ui table/sort.ts (nextSort, sortRows, compareValues) → Kern nach @auditcore/common/table, Vue-Composable useSort in ui, React-Hook in ui-react",
    "differences": [
-    "Zyklus asc→desc (Apps) gegenüber asc→desc→unsortiert (@flowaudit/ui nextSort)",
+    "Zyklus asc→desc (Apps) gegenüber asc→desc→unsortiert (@auditcore/ui nextSort)",
     "Startrichtung beim Spaltenwechsel: asc (Mehrheit) oder desc (fraud-report DocumentListSection)",
     "Vergleich: localeCompare ohne numeric/sensitivity in Apps, leere Werte nicht einheitlich am Ende"
    ],
@@ -1580,7 +1580,7 @@
    "definitions": 31,
    "variants": 26,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: format/duration (formatDuration, formatUptime, formatRelativeTime)",
+   "target": "@auditcore/common: format/duration (formatDuration, formatUptime, formatRelativeTime)",
    "differences": [
     "relativeTime: ai-router Intl.RelativeTimeFormat („vor 5 Minuten“) gegenüber cockpit Handtext („vor 5 min“, „gerade eben“)",
     "formatDuration: ai-router „1,50 s“ (2 Stellen, Komma) gegenüber cockpit „1.5 s“ (1 Stelle, Punkt) und „m s“ ab 60 s",
@@ -1740,10 +1740,10 @@
    "app_count": 7,
    "definitions": 21,
    "variants": 19,
-   "auditcore_existing": "@flowaudit/ui theme",
-   "target": "@flowaudit/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @flowaudit/ui-react",
+   "auditcore_existing": "@auditcore/ui theme",
+   "target": "@auditcore/ui theme.ts (applyTheme/readTheme/useTheme) für Vue; React-Pendant in @auditcore/ui-react",
    "differences": [
-    "data-theme-Attribut (@flowaudit/ui) gegenüber class „dark“ (audit_designer, riskanalysis) gegenüber ThemeContext mit Tokens (flowinvoice/audit-portal)"
+    "data-theme-Attribut (@auditcore/ui) gegenüber class „dark“ (audit_designer, riskanalysis) gegenüber ThemeContext mit Tokens (flowinvoice/audit-portal)"
    ],
    "python_parity": "—",
    "per_app": {
@@ -1901,7 +1901,7 @@
    "definitions": 39,
    "variants": 17,
    "auditcore_existing": "nein",
-   "target": "eGPU-/Systemmonitor-Widget als React-Komponente in @flowaudit/ui-react (oder eigenes Paket @flowaudit/ops-widgets)",
+   "target": "eGPU-/Systemmonitor-Widget als React-Komponente in @auditcore/ui-react (oder eigenes Paket @auditcore/ops-widgets)",
    "differences": [
     "EgpuPipelineWidget.tsx in flowinvoice, audit-portal, regulierung wortgleich (12–13 Funktionen je App: StatBar, VramBar, SystemPanel, useEgpuData, tempColor, formatUptime …)"
    ],
@@ -2041,7 +2041,7 @@
    "definitions": 25,
    "variants": 10,
    "auditcore_existing": "nein",
-   "target": "Toast-Store: Vue-Composable useToast in @flowaudit/ui, React-Hook in @flowaudit/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @flowaudit/common",
+   "target": "Toast-Store: Vue-Composable useToast in @auditcore/ui, React-Hook in @auditcore/ui-react; gemeinsamer framework-freier Kern (Queue, Dauer, Typen) in @auditcore/common",
    "differences": [
     "success/error/info/warning als Store-Fassade in 6 Apps; Fehlerdauer 6 s (ai-router/cockpit) sonst Standard; pdf-editor mit title+message"
    ],
@@ -2186,12 +2186,12 @@
    "app_count": 5,
    "definitions": 30,
    "variants": 28,
-   "auditcore_existing": "@flowaudit/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)",
-   "target": "@flowaudit/ui rest/download.ts saveFile → nach @flowaudit/common/browser verschieben (framework-frei) und aus ui re-exportieren",
+   "auditcore_existing": "@auditcore/ui saveFile(DownloadFile), requestFile(...) (in main seit #84)",
+   "target": "@auditcore/ui rest/download.ts saveFile → nach @auditcore/common/browser verschieben (framework-frei) und aus ui re-exportieren",
    "differences": [
-    "revokeObjectURL sofort nach click() (audit-portal, regulierung, audit_designer) gegenüber setTimeout 0 (@flowaudit/ui) – sofortiges Freigeben kann in Safari/Firefox den Download abbrechen",
+    "revokeObjectURL sofort nach click() (audit-portal, regulierung, audit_designer) gegenüber setTimeout 0 (@auditcore/ui) – sofortiges Freigeben kann in Safari/Firefox den Download abbrechen",
     "regulierung setzt automatisch Datumspräfix YYYY-MM-DD_ (mitDatumspraefix, UTC-Datum über toISOString)",
-    "Dateiname aus Content-Disposition: nur @flowaudit/ui requestFile; Apps setzen ihn fest oder parsen einzeln (filename*=UTF-8 fehlt überall)",
+    "Dateiname aus Content-Disposition: nur @auditcore/ui requestFile; Apps setzen ihn fest oder parsen einzeln (filename*=UTF-8 fehlt überall)",
     "flowinvoice/audit-portal zusätzlich file-saver (Abhängigkeit)"
    ],
    "python_parity": "—",
@@ -2336,7 +2336,7 @@
    "definitions": 24,
    "variants": 20,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM)",
+   "target": "@auditcore/common: export/csv (toCsv, escapeCsvCell, csvBlob mit BOM)",
    "differences": [
     "Export überwiegend mit „;“ (Excel-DE), DrillDownTable (audit_designer) mit „,“; BOM \\uFEFF nur in GisAttributeTable – übrige Exporte öffnen sich in Excel mit falschen Umlauten",
     "Neben Export auch vier eigene CSV-Parser (parseCsv, parseCsvPreview, csvToArray, parseReportCsv) ohne gemeinsame Quoting-Regeln",
@@ -2479,7 +2479,7 @@
    "definitions": 49,
    "variants": null,
    "auditcore_existing": "nein",
-   "target": "neue Bibliothek @flowaudit/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal)",
+   "target": "neue Bibliothek @auditcore/flowstat-customnode (framework-frei; Vue-Oberfläche bleibt in audit_designer, React in audit-portal)",
    "differences": [
     "customnode/core/*.ts (1354 Zeilen) liegt in beiden Apps; 49 wortgleiche Funktionen (validateParamSpec, schemaBuilder.*, createCustomNodeApi.*, computeTopologicalDepth, findStartNodes …)",
     "Tests nur in audit_designer (customnode/core/__tests__)"
@@ -2503,12 +2503,12 @@
    "app_count": 4,
    "definitions": 17,
    "variants": 13,
-   "auditcore_existing": "@flowaudit/ui tabular/parse.ts parseNumber(cell, decimal) (Branch feat/ui-sampling-benford-js) – verhält sich mit decimal=\",\" wie regulierung parseNumberDe",
-   "target": "@flowaudit/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String)",
+   "auditcore_existing": "@auditcore/ui tabular/parse.ts parseNumber(cell, decimal) (Branch feat/ui-sampling-benford-js) – verhält sich mit decimal=\",\" wie regulierung parseNumberDe",
+   "target": "@auditcore/common: parse/number (parseDecimalDe, parseAmountInput → Decimal-String)",
    "differences": [
     "Siehe Ausführungsmatrix: „1.5“ ergibt 15 (regulierung parseNumberDe/zuZahl, audit_designer parseRaw) oder 1,5 (parseGermanNumber, parseAmountInput)",
     "„1.234,56“ ergibt 1,234 in flowinvoice/audit-portal BeleglisteGrid.parseDecimal (ersetzt nur das Komma) – Betragsfehler um Faktor 1000",
-    "„12 345,67 €“: nur parseGermanNumber, parseAmountInput, parseNumberDe und @flowaudit/ui tabular.parseNumber entfernen Leerzeichen/Währung",
+    "„12 345,67 €“: nur parseGermanNumber, parseAmountInput, parseNumberDe und @auditcore/ui tabular.parseNumber entfernen Leerzeichen/Währung",
     "Rückgabe: number (meist), Decimal-String (audit-portal parseAmountInput, audit_designer betragFuerDienst – verlustfrei für das Backend), 0 statt null bei Fehler (parseDecimal, parseGermanNumber)",
     "regulierung zuZahl lehnt negative Werte ab (null für „-3,2“)"
    ],
@@ -2649,7 +2649,7 @@
    "definitions": 14,
    "variants": 12,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common/browser: copyText (Clipboard-API mit textarea-Rückfall)",
+   "target": "@auditcore/common/browser: copyText (Clipboard-API mit textarea-Rückfall)",
    "differences": [
     "Nur JupyterFileBrowser hat den execCommand-Rückfall (HTTP ohne sicheren Kontext, Intranet!)",
     "Rest: await ohne try/catch oder ohne await"
@@ -2775,7 +2775,7 @@
    "definitions": 14,
    "variants": 9,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/ui (Vue: useClickOutside, useMediaQuery) und @flowaudit/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei",
+   "target": "@auditcore/ui (Vue: useClickOutside, useMediaQuery) und @auditcore/ui-react (Hooks); Kern (matchMedia-Abo) framework-frei",
    "differences": [
     "useMediaQuery wortgleich in flowinvoice, audit-portal, regulierung (eGPU-Widget)"
    ],
@@ -2906,7 +2906,7 @@
    "definitions": 13,
    "variants": 7,
    "auditcore_existing": "nein",
-   "target": "neue Bibliothek @flowaudit/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable)",
+   "target": "neue Bibliothek @auditcore/pdf-tools (pdf-lib-basierte Operationen + Vue-Composable)",
    "differences": [
     "usePdfTools.ts in pdf-editor und audit_designer (vpai/pdf-tools) mit 18 wortgleichen Funktionen (mergePdfs, splitPdf, compressPdf, addWatermark, setMetadata, wordToPdf …); Komponenten PdfRotate/PdfCompare/PageThumbnailGrid doppelt"
    ],
@@ -3029,7 +3029,7 @@
    "definitions": 12,
    "variants": 9,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common/browser: safeStorage (JSON lesen/schreiben mit try/catch, Präfix)",
+   "target": "@auditcore/common/browser: safeStorage (JSON lesen/schreiben mit try/catch, Präfix)",
    "differences": [
     "loadFromStorage/saveToStorage je Präferenz-Store einzeln (audit_designer 7×, flowinvoice/audit-portal useRiskWheelSettings); pdf-editor hat lib/safeStorage.ts als zentrale Lösung",
     "Schlüsselpräfixe und Versionierung der gespeicherten Struktur uneinheitlich"
@@ -3146,7 +3146,7 @@
    "definitions": 11,
    "variants": 11,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: timing/poll (poll mit Abbruchsignal, Backoff); SSE-Leser als eigenes Modul",
+   "target": "@auditcore/common: timing/poll (poll mit Abbruchsignal, Backoff); SSE-Leser als eigenes Modul",
    "differences": [
     "setInterval ohne Abbruch bei Seitenwechsel in einzelnen Views; SSE per EventSource gegenüber fetch-Reader"
    ],
@@ -3261,7 +3261,7 @@
    "definitions": 7,
    "variants": 7,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: timing (debounce, throttle, keyedDebounce) + Vue useDebounce in @flowaudit/ui",
+   "target": "@auditcore/common: timing (debounce, throttle, keyedDebounce) + Vue useDebounce in @auditcore/ui",
    "differences": [
     "Nur Hand-Timer (clearTimeout/setTimeout) mit 400 ms, 600 ms, 1,2 s; keine Abbruch-/flush-Funktion beim Verlassen der Seite (Datenverlust-Risiko bei debouncedSave)",
     "audit_designer/flowsearch haben @vueuse/core (useDebounceFn) bereits als Abhängigkeit, nutzen es aber hier nicht"
@@ -3374,7 +3374,7 @@
    "definitions": 7,
    "variants": 3,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: text (initials)",
+   "target": "@auditcore/common: text (initials)",
    "differences": [
     "3 Varianten (5× audit_designer, je 1× flowinvoice/audit-portal DirectorsSection)"
    ],
@@ -3457,7 +3457,7 @@
    "definitions": 4,
    "variants": 3,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: text (truncate mit „…“)",
+   "target": "@auditcore/common: text (truncate mit „…“)",
    "differences": [
     "„…“ gegenüber „...“; Kürzung nach Zeichen, nicht nach Graphemen"
    ],
@@ -3537,7 +3537,7 @@
    "definitions": 4,
    "variants": 2,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: validate (email, required, passwordPolicy)",
+   "target": "@auditcore/common: validate (email, required, passwordPolicy)",
    "differences": [
     "kaum vorhanden (4 Funktionen); Passwortregeln in audit_designer ActivateView eigen"
    ],
@@ -3607,7 +3607,7 @@
    "definitions": 3,
    "variants": 4,
    "auditcore_existing": "kanban-core (lokal) eigene ID-Erzeugung",
-   "target": "@flowaudit/common: ids (newId via crypto.randomUUID mit Rückfall)",
+   "target": "@auditcore/common: ids (newId via crypto.randomUUID mit Rückfall)",
    "differences": [
     "Math.random().toString(36) gegenüber crypto.randomUUID (ohne sicheren Kontext nicht verfügbar)"
    ],
@@ -3702,7 +3702,7 @@
    "definitions": 8,
    "variants": null,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/ui-react (Login-Formular) – liegt als „Paket“ bereits unter src/packages/login-template mit README",
+   "target": "@auditcore/ui-react (Login-Formular) – liegt als „Paket“ bereits unter src/packages/login-template mit README",
    "differences": [
     "wortgleich in beiden Apps; regulierung hat LoginError identisch in vorgangUi.tsx"
    ],
@@ -3723,7 +3723,7 @@
    "definitions": 4,
    "variants": 5,
    "auditcore_existing": "nein",
-   "target": "@flowaudit/common: checks/mod97 (mod97, ibanIsValid, leitwegCheckDigits)",
+   "target": "@auditcore/common: checks/mod97 (mod97, ibanIsValid, leitwegCheckDigits)",
    "differences": [
     "Im Frontend nur rechnung (leitweg.ts: mod97, computeLeitwegCheckDigits); keine IBAN-Prüfung im Browser – obwohl flowinvoice/regulierung IBAN erfassen",
     "Backend-Seite prüft IBAN (auditcore_documents validate_iban, auditcore_invoicesynth iban_valid)"
@@ -3813,8 +3813,8 @@
    "app_count": 10,
    "definitions": 99,
    "variants": 58,
-   "auditcore_existing": "@flowaudit/ui risk/view/labels.ts (nur Risiko-Flags)",
-   "target": "bleibt in den Apps; nur Risiko-Stufen (hoch/mittel/niedrig) an @flowaudit/ui risk/view/labels.ts angleichen",
+   "auditcore_existing": "@auditcore/ui risk/view/labels.ts (nur Risiko-Flags)",
+   "target": "bleibt in den Apps; nur Risiko-Stufen (hoch/mittel/niedrig) an @auditcore/ui risk/view/labels.ts angleichen",
    "differences": [
     "Fachliche Status-Enums je App; Farben hart kodiert (#ef4444 …) statt Theme-Token"
    ],

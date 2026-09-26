@@ -1,5 +1,5 @@
 import type { ChangeEvent, FormEvent } from 'react'
-import { identifierColumnFields, identifierErrorKey, importOptionalColumn } from '@flowaudit/ui-core'
+import { identifierColumnFields, identifierErrorKey, importOptionalColumn } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { IdentifierBatchResult } from './IdentifierBatchResult'
 import type { UseIdentifierCheck } from './useIdentifierCheck'

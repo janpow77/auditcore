@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
-import { utmErrorKey } from '@flowaudit/ui-core'
+import { utmErrorKey } from '@auditcore/ui-core'
 import { useGeoContext } from './context'
 
 const { state, t } = useGeoContext()

@@ -1,4 +1,4 @@
-"""Typed JSON shapes of contract ``screening_review/1`` (mirrored in ``@flowaudit/ui``)."""
+"""Typed JSON shapes of contract ``screening_review/1`` (mirrored in ``@auditcore/ui``)."""
 
 from __future__ import annotations
 

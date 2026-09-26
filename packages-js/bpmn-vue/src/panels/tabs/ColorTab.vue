@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /** Colour of the selected element: audit palette, removal and colour from markers. */
 import { computed } from 'vue'
-import { PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { colorFromMarkers } from '@flowaudit/bpmn-flowaudit/ui'
+import { PALETTE_COLORS, type PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { colorFromMarkers } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import ColorSwatches from '../../components/base/ColorSwatches.vue'

@@ -5,8 +5,8 @@
  * inherited from the lane or pool.
  */
 import { computed } from 'vue'
-import { label, roleOf, rolesFor, type Actor } from '@flowaudit/bpmn-flowaudit'
-import { actorAfter, inheritedRole, isContainerType } from '@flowaudit/bpmn-flowaudit/ui'
+import { label, roleOf, rolesFor, type Actor } from '@auditcore/bpmn-flowaudit'
+import { actorAfter, inheritedRole, isContainerType } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'

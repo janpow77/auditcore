@@ -1,5 +1,5 @@
-/** Anzeige-Logik von FaTable/FlowauditTable; Sortierung selbst aus `@flowaudit/common`. */
-import { ariaSort, type SortState, type TableColumn, type TableRow } from '@flowaudit/common'
+/** Anzeige-Logik von FaTable/FlowauditTable; Sortierung selbst aus `@auditcore/common`. */
+import { ariaSort, type SortState, type TableColumn, type TableRow } from '@auditcore/common'
 
 export function cellText(column: TableColumn, row: TableRow): string {
   const value = row[column.key]

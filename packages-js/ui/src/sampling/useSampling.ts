@@ -9,10 +9,10 @@ import {
   type SamplingController,
   type SamplingData,
   type SamplingPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { SamplingBusy, SamplingCallbacks, SelectionError } from '@flowaudit/ui-core'
+export type { SamplingBusy, SamplingCallbacks, SelectionError } from '@auditcore/ui-core'
 
 export interface UseSampling {
   controller: SamplingController
@@ -22,7 +22,7 @@ export interface UseSampling {
 }
 
 /**
- * Vue-Anbindung des Stichprobenrechners aus `@flowaudit/ui-core`
+ * Vue-Anbindung des Stichprobenrechners aus `@auditcore/ui-core`
  * (`createSamplingController`); Getter halten Props reaktiv.
  */
 export function useSampling(

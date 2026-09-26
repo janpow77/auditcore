@@ -1,7 +1,7 @@
 /**
  * Framework-freier Kern der Sprachunterstützung: Kataloge, Platzhalter,
- * Rückfall auf Deutsch. Vue (`useI18n` in `@flowaudit/ui`) und React
- * (`useTranslation` in `@flowaudit/ui-react`) setzen darauf auf.
+ * Rückfall auf Deutsch. Vue (`useI18n` in `@auditcore/ui`) und React
+ * (`useTranslation` in `@auditcore/ui-react`) setzen darauf auf.
  */
 export type Locale = 'de' | 'en'
 export const LOCALES: readonly Locale[] = ['de', 'en']

@@ -1,4 +1,4 @@
-import { downloadText, identifierBatchCsv, identifierBatchLines, identifierBatchSummary } from '@flowaudit/ui-core'
+import { downloadText, identifierBatchCsv, identifierBatchLines, identifierBatchSummary } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import type { UseIdentifierCheck } from './useIdentifierCheck'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref } from 'vue'
-import { DUE_STATES, PRIORITIES, type BoardStats } from '@flowaudit/kanban-core'
+import { DUE_STATES, PRIORITIES, type BoardStats } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import FaTextField from '../base/FaTextField.vue'
 import { useI18n, type Locale } from '../i18n'

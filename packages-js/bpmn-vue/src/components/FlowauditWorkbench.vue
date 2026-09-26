@@ -5,16 +5,16 @@
  * Persistence goes through the storage port.
  */
 import { computed, onMounted, ref, toRaw, watch } from 'vue'
-import type { Comment, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@flowaudit/bpmn-flowaudit'
+import type { Comment, ProfileData, ProfileSummary, RoleAlias, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
 import type { EditorPorts } from '../stores/context'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import { createCollectionStore } from '../stores/collectionStore'
-import type { EditorFactory } from '@flowaudit/bpmn-flowaudit/ui'
+import type { EditorFactory } from '@auditcore/bpmn-flowaudit/ui'
 import CollectionTree from './collection/CollectionTree.vue'
 import DiagramInfoColumn from './collection/DiagramInfoColumn.vue'
 import GroupOverview from './collection/GroupOverview.vue'
 import FlowauditEditor from './FlowauditEditor.vue'
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 const props = withDefaults(
   defineProps<{

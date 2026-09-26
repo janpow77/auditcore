@@ -482,7 +482,7 @@
   },
   "web": {
     "version_added": "0.3.0",
-    "origin": "Neuimplementierung: REST-Anbindung für die Oberfläche <flowaudit-synopsis> (@flowaudit/ui). Endpunkte, Grenzen und Meldungen nach dem Vorbild von janpow77/audit_designer backend/app/api/document_comparisons.py und backend/app/modules/ecohesion/comparisons/api.py (janpow77/audit_designer@2c726f3c1481775cd34aeaa83f87137d6ab12ffe); kein Code übernommen, keine Datenbank, kein Celery.",
+    "origin": "Neuimplementierung: REST-Anbindung für die Oberfläche <flowaudit-synopsis> (@auditcore/ui). Endpunkte, Grenzen und Meldungen nach dem Vorbild von janpow77/audit_designer backend/app/api/document_comparisons.py und backend/app/modules/ecohesion/comparisons/api.py (janpow77/audit_designer@2c726f3c1481775cd34aeaa83f87137d6ab12ffe); kein Code übernommen, keine Datenbank, kein Celery.",
     "contract": "docs/ui/synopsis-rest.md",
     "parity": "docs/ui/synopsis-paritaet.md",
     "extras": {

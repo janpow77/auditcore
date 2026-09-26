@@ -3,7 +3,7 @@
  * Diagrammbeschriftungen und Spalten der Zifferntabelle. Texte ausschließlich
  * aus `benfordMessages`.
  */
-import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, type TableColumn, type TableRow } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, type TableColumn, type TableRow } from '@auditcore/common'
 import type { Locale, Translate } from '../i18n'
 import type { BenfordMessageKey } from './messages'
 import type { AnalyseError } from './model'

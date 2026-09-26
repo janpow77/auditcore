@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { deadlineState, type Card } from '@flowaudit/kanban-core'
+import { deadlineState, type Card } from '@auditcore/kanban-core'
 import FaIcon from '../base/FaIcon.vue'
 import { formatDate, useI18n, type Locale } from '../i18n'
 import { badgeStyle, cardAge, cardStyle, preview, PRIORITY_TONES } from './cardView'

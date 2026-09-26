@@ -4,8 +4,8 @@
  * ported from the page view of the audit_designer canvas.
  */
 import { computed } from 'vue'
-import type { ViewboxLike } from '@flowaudit/bpmn-flowaudit'
-import { pageGrid } from '@flowaudit/bpmn-flowaudit/ui'
+import type { ViewboxLike } from '@auditcore/bpmn-flowaudit'
+import { pageGrid } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 
 const props = defineProps<{ view: string; viewbox: ViewboxLike; width: number; height: number }>()

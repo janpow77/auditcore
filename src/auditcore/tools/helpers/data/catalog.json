@@ -12,12 +12,12 @@
       "name": "^(format|fmt|to)(date|datum)(de|only|short|long|str|string|display|local|german)?$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "formatDate",
           "status": "vorhanden"
         },
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "format/date formatDate",
           "status": "geplant"
         }
@@ -33,12 +33,12 @@
       "name": "^(format|fmt)(datetime|datumzeit|datumuhrzeit|timestamp|dateandtime)(de|short|long|local|german)?$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "formatDate(value, locale, true)",
           "status": "vorhanden"
         },
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "format/date formatDateTime",
           "status": "geplant"
         }
@@ -54,12 +54,12 @@
       "name": "^(format|fmt)(number|num|zahl|int|integer|decimal)(de|german|local)?$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "formatNumber",
           "status": "vorhanden"
         },
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "format/number formatNumber",
           "status": "geplant"
         }
@@ -74,7 +74,7 @@
       "name": "^(format|fmt)(percent|percentage|prozent|pct)(de)?$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "formatPercent",
           "status": "vorhanden"
         }
@@ -89,7 +89,7 @@
       "name": "^(sortrows|comparevalues|nextsort|togglesort|sorttable|comparerows)$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "sortRows/nextSort/compareValues",
           "status": "vorhanden"
         }
@@ -104,7 +104,7 @@
       "name": "^(savefile|downloadblob|downloadfile|triggerdownload|saveblob)$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "saveFile",
           "status": "vorhanden"
         }
@@ -119,7 +119,7 @@
       "name": "^(applytheme|toggletheme|toggledarkmode|setdarkmode|applydarkmode)$",
       "targets": [
         {
-          "library": "@flowaudit/ui",
+          "library": "@auditcore/ui",
           "symbol": "applyTheme/useTheme",
           "status": "vorhanden"
         }
@@ -134,7 +134,7 @@
       "name": "^(format|fmt)(currency|money|eur|euro|betrag|amount|preis|price)(de|compact|short)?$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "format/money formatEur",
           "status": "geplant"
         }
@@ -150,7 +150,7 @@
       "name": "^(parse|to|zu)(decimal|number|zahl|betrag|amount|float|germannumber|numberde|decimalde|amountinput)(de|input|german)?$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "parse/number parseDecimal",
           "status": "geplant"
         }
@@ -166,7 +166,7 @@
       "name": "^(format|fmt|human|pretty)(bytes|filesize|size|dateigroesse|dateigröße)$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "format/bytes formatBytes",
           "status": "geplant"
         }
@@ -182,7 +182,7 @@
       "name": "^(tocsv|exportcsv|downloadcsv|escapecsv|escapecsvcell|csvescape|buildcsv|generatecsv|csvcell|exporttocsv)$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "export/csv toCsv",
           "status": "geplant"
         }
@@ -198,7 +198,7 @@
       "name": "^((extract|get|format|parse|to)(api)?(error|err|fehler)(message|msg|text|detail)?|(error|fehler)(message|text))$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "http/error errorMessage",
           "status": "geplant"
         }
@@ -214,7 +214,7 @@
       "name": "^((is)?(valid)?iban(valid|check)?|validateiban|checkiban|mod97)$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "checks/mod97 isValidIban",
           "status": "geplant"
         }
@@ -230,7 +230,7 @@
       "name": "^(debounce|throttle)$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "timing debounce",
           "status": "geplant"
         }
@@ -245,7 +245,7 @@
       "name": "^(escapehtml|htmlescape)$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "text escapeHtml",
           "status": "geplant"
         }
@@ -260,7 +260,7 @@
       "name": "^copy(text|toclipboard|clipboard)$",
       "targets": [
         {
-          "library": "@flowaudit/common",
+          "library": "@auditcore/common",
           "symbol": "browser copyText",
           "status": "geplant"
         }

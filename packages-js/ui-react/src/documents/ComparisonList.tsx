@@ -1,5 +1,5 @@
 import { useRef, type ChangeEvent } from 'react'
-import type { ComparisonsTranslate, SummaryView } from '@flowaudit/ui-core'
+import type { ComparisonsTranslate, SummaryView } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { Button } from '../base/Button'
 import { TextField } from '../base/TextField'

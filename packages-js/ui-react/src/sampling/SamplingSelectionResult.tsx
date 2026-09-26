@@ -9,7 +9,7 @@ import {
   type Locale,
   type SamplingTranslate,
   type SelectionResult,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { Button } from '../base/Button'
 import { FlowauditTable } from '../table/FlowauditTable'

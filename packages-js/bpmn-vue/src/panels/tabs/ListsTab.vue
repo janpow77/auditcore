@@ -4,11 +4,11 @@
  * findings, audit steps, sources, references) – from the descriptors.
  */
 import { computed } from 'vue'
-import type { Extensions, ListExtensionKey } from '@flowaudit/bpmn-flowaudit'
+import type { Extensions, ListExtensionKey } from '@auditcore/bpmn-flowaudit'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import ListEditor from '../ListEditor.vue'
-import { isDescribedList, LISTS } from '@flowaudit/bpmn-flowaudit/ui'
+import { isDescribedList, LISTS } from '@auditcore/bpmn-flowaudit/ui'
 import { useOptions } from '../useOptions'
 
 const props = defineProps<{ lists: ListExtensionKey[] }>()

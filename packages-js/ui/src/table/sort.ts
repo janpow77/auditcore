@@ -1,4 +1,4 @@
-/** Tabellensortierung – seit 0.2.0 aus `@flowaudit/common` (framework-frei), unverändert weiter exportiert. */
+/** Tabellensortierung – seit 0.2.0 aus `@auditcore/common` (framework-frei), unverändert weiter exportiert. */
 export {
   ariaSort,
   compareValues,
@@ -10,4 +10,4 @@ export {
   type SortState,
   type TableColumn,
   type TableRow,
-} from '@flowaudit/common'
+} from '@auditcore/common'

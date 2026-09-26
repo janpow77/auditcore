@@ -1,4 +1,4 @@
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import { dataprotectionMessages, type DataProtectionKey, type DataProtectionTranslate } from './messages'
 
 /** Fehler einer Portanfrage: Code und Meldung des Servers bzw. `network_error` mit Status 0. */

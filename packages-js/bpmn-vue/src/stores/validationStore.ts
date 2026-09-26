@@ -4,7 +4,7 @@
  */
 
 import { computed } from 'vue'
-import { createValidationCore, validationView, type ValidationCore, type ValidationCoreOptions } from '@flowaudit/bpmn-flowaudit/ui'
+import { createValidationCore, validationView, type ValidationCore, type ValidationCoreOptions } from '@auditcore/bpmn-flowaudit/ui'
 import { useStore } from '../composables/useStore'
 import type { EditorStore } from './editorStore'
 

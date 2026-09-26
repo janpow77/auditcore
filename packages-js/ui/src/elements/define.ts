@@ -10,7 +10,7 @@ export interface ElementDefinition {
 
 /**
  * Registriert eine Komponente als Custom Element im Light DOM (kein Shadow
- * DOM): Designtoken und `@flowaudit/ui/style.css` der Seite gelten direkt.
+ * DOM): Designtoken und `@auditcore/ui/style.css` der Seite gelten direkt.
  * Bereits registrierte Namen werden nicht erneut definiert.
  */
 export function defineElement(definition: ElementDefinition): CustomElementConstructor {

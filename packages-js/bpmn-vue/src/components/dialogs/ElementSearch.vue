@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /** Search for elements by name, id, role or domain key; Enter jumps to the first hit. */
 import { computed, ref } from 'vue'
-import { displayName, type ProcessModel } from '@flowaudit/bpmn-flowaudit'
-import { searchElements } from '@flowaudit/bpmn-flowaudit/ui'
+import { displayName, type ProcessModel } from '@auditcore/bpmn-flowaudit'
+import { searchElements } from '@auditcore/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import { useI18n } from '../../i18n/useI18n'
 

@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useSyncExternalStore, type ReactNode } from 'react'
-import { getDefaultLocale, subscribeDefaultLocale, translator, type Catalogs, type Locale, type Translate } from '@flowaudit/ui-core'
+import { getDefaultLocale, subscribeDefaultLocale, translator, type Catalogs, type Locale, type Translate } from '@auditcore/ui-core'
 
 const LocaleContext = createContext<Locale | null>(null)
 
@@ -20,7 +20,7 @@ export interface UseTranslation<K extends string> {
   locale: Locale
 }
 
-/** Übersetzung mit den Katalogen aus `@flowaudit/ui-core` (gleiche Texte wie die Vue-Fassung). */
+/** Übersetzung mit den Katalogen aus `@auditcore/ui-core` (gleiche Texte wie die Vue-Fassung). */
 export function useTranslation<K extends string>(catalogs: Catalogs<K>, override?: Locale): UseTranslation<K> {
   const locale = useLocale(override)
   const t = useMemo(() => translator(catalogs, locale), [catalogs, locale])

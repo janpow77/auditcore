@@ -1,13 +1,13 @@
 /**
- * Vue-Anbindung des Board-Zustandsautomaten aus `@flowaudit/kanban-core`
+ * Vue-Anbindung des Board-Zustandsautomaten aus `@auditcore/kanban-core`
  * (`createBoardController`, `selectBoardView`): gleiche Logik wie die
  * React-Fassung, hier als Refs.
  */
 import { computed, watch } from 'vue'
-import { createBoardController, selectBoardView, type Board, type BoardPort, type CardFilter, type KanbanError } from '@flowaudit/kanban-core'
+import { createBoardController, selectBoardView, type Board, type BoardPort, type CardFilter, type KanbanError } from '@auditcore/kanban-core'
 import { useStore } from '../composables/useStore'
 
-export { columnViews, toKanbanError, uiCapabilities, type ColumnView } from '@flowaudit/kanban-core'
+export { columnViews, toKanbanError, uiCapabilities, type ColumnView } from '@auditcore/kanban-core'
 
 export interface KanbanBoardOptions {
   port: () => BoardPort | null | undefined

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
-import { issue, type DiagramInfo, type ExportChoice, type Suggestion } from '@flowaudit/bpmn-flowaudit'
+import { issue, type DiagramInfo, type ExportChoice, type Suggestion } from '@auditcore/bpmn-flowaudit'
 import { BaseDialog } from '../src/base/BaseDialog'
 import { DiagramInfoDialog } from '../src/dialogs/DiagramInfoDialog'
 import { EnrichmentDialog } from '../src/dialogs/EnrichmentDialog'

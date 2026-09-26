@@ -4,8 +4,8 @@
  */
 
 import { computed } from 'vue'
-import { createSelectionCore, type SelectionCore } from '@flowaudit/bpmn-flowaudit/ui'
-import type { FlowstatField } from '@flowaudit/bpmn-flowaudit'
+import { createSelectionCore, type SelectionCore } from '@auditcore/bpmn-flowaudit/ui'
+import type { FlowstatField } from '@auditcore/bpmn-flowaudit'
 import { useStore } from '../composables/useStore'
 import type { EditorStore } from './editorStore'
 

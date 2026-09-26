@@ -14,7 +14,7 @@ import {
   type ResidualResult,
   type StratumInput,
   type UnitInput,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -40,7 +40,7 @@ export interface UseExtrapolation {
   method: ExtrapolationMethod | null
 }
 
-/** React-Anbindung der Hochrechnung aus `@flowaudit/ui-core` (dieselbe Logik wie `useExtrapolation` in Vue). */
+/** React-Anbindung der Hochrechnung aus `@auditcore/ui-core` (dieselbe Logik wie `useExtrapolation` in Vue). */
 export function useExtrapolation(props: ExtrapolationInputs): UseExtrapolation {
   const { t, locale } = useTranslation(extrapolationMessages, props.locale)
   const latest = useRef({ props, locale })

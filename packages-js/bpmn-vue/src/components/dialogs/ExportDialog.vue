@@ -5,8 +5,8 @@
  * metadata, neutral mode and page format.
  */
 import { reactive, watch } from 'vue'
-import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@flowaudit/bpmn-flowaudit'
-import { EXPORT_FORMATS, FORMAT_ICONS as ICONS, initialExportChoice, ORIENTATIONS } from '@flowaudit/bpmn-flowaudit/ui'
+import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@auditcore/bpmn-flowaudit'
+import { EXPORT_FORMATS, FORMAT_ICONS as ICONS, initialExportChoice, ORIENTATIONS } from '@auditcore/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'

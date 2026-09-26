@@ -5,7 +5,7 @@
 
 Every file is a JSON list of ``{"name", "input", "expected"}``; inputs are pure
 JSON (boards in the ``auditcore_kanban.board/1`` shape). ``expected`` is what
-this Python package decides; ``@flowaudit/kanban-core`` must decide the same.
+this Python package decides; ``@auditcore/kanban-core`` must decide the same.
 Format: docs/kanban/parity-fixtures.md.
 """
 

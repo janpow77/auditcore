@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BadgeTone } from '@flowaudit/ui-core'
+import type { BadgeTone } from '@auditcore/ui-core'
 
 withDefaults(defineProps<{ tone?: BadgeTone; label?: string }>(), { tone: 'neutral', label: '' })
 </script>

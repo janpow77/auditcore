@@ -1,7 +1,7 @@
 /** Colour of the selected element: audit palette, removal and colour from markers. */
 
-import { PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { colorFromMarkers } from '@flowaudit/bpmn-flowaudit/ui'
+import { PALETTE_COLORS, type PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { colorFromMarkers } from '@auditcore/bpmn-flowaudit/ui'
 import { ColorSwatches } from '../../base/ColorSwatches'
 import { useEditorContext, useSelectionState } from '../../context'
 import { useI18n } from '../../i18n'

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 /** Right column: properties, issue list, walk-through and comparison as tabs. */
-import type { Comment, PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import type { Comment, PaletteColor } from '@auditcore/bpmn-flowaudit'
 import FaIcon from './base/FaIcon.vue'
 import IssueList from './views/IssueList.vue'
 import WalkthroughPanel from './views/WalkthroughPanel.vue'
 import ComparePanel from './views/ComparePanel.vue'
-import { SIDE_VIEWS as VIEWS, type CompareSource } from '@flowaudit/bpmn-flowaudit/ui'
+import { SIDE_VIEWS as VIEWS, type CompareSource } from '@auditcore/bpmn-flowaudit/ui'
 import PropertiesPanel from '../panels/PropertiesPanel.vue'
 import { useI18n } from '../i18n/useI18n'
 import { useEditorContext } from '../stores/context'

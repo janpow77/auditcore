@@ -4,8 +4,8 @@
  */
 
 import { useEffect, useMemo, useState } from 'react'
-import type { Suggestion } from '@flowaudit/bpmn-flowaudit'
-import { describeSuggestion, groupSuggestions, toggleInSet } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Suggestion } from '@auditcore/bpmn-flowaudit'
+import { describeSuggestion, groupSuggestions, toggleInSet } from '@auditcore/bpmn-flowaudit/ui'
 import { BaseDialog } from '../base/BaseDialog'
 import { useI18n } from '../i18n'
 

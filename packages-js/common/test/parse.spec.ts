@@ -30,7 +30,7 @@ describe('parseDecimal', () => {
   })
 })
 
-describe('Tabellen-Einlesen (aus @flowaudit/ui tabular, unverändert)', () => {
+describe('Tabellen-Einlesen (aus @auditcore/ui tabular, unverändert)', () => {
   it('liest Zellen mit ausdrücklichem Dezimaltrenner', () => {
     expect(parseNumber('1.234,56', ',')).toBe(1234.56)
     expect(parseNumber('(12,5)', ',')).toBe(-12.5)

@@ -20,8 +20,8 @@ onMounted(() => {
 <template>
   <h1>Web Components</h1>
   <p>Jede Komponente ist auch als <code>&lt;flowaudit-…&gt;</code> nutzbar – ohne Vue in der Host-Anwendung.</p>
-  <pre><code>import { defineFlowauditElements } from '@flowaudit/ui/elements'
-import '@flowaudit/ui/style.css'
+  <pre><code>import { defineFlowauditElements } from '@auditcore/ui/elements'
+import '@auditcore/ui/style.css'
 defineFlowauditElements()</code></pre>
   <div ref="host"><flowaudit-table /></div>
   <p aria-live="polite">{{ last ? `Ereignis row-click: ${last}` : '' }}</p>
