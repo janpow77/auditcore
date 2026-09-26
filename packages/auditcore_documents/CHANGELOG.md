@@ -1,5 +1,16 @@
 # Changelog – auditcore_documents
 
+## Unreleased
+
+- Neu: REST-Vertrag `documents_extraction/1` für die Belegerkennung
+  (`auditcore_documents.web`): `ExtractionService`, `ExtractionEngines`
+  (OCR-Gateway, Chandra, Tesseract, Donut als Ports der Anwendung),
+  `ExtractionSettings`, `Thresholds`; Starlette `create_extraction_app`/
+  `extraction_routes` (Extra `web`), FastAPI `create_extraction_router`
+  (Extra `fastapi`). `GET /profile`, `POST /runs`; ohne Engine 404
+  `extraction_disabled`. Keine Speicherung, keine festen Hosts. Vertrag:
+  `docs/ui/extraction-rest.md`.
+
 ## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage (docs/bibliotheken/readme-vorlage.md).

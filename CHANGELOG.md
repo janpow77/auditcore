@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Belegerkennung: REST-Vertrag `documents_extraction/1` in
+  `auditcore_documents.web` (Upload → Extraktionsergebnis mit Konfidenz →
+  Validierungsbefunde; OCR/Donut nur über Ports der Anwendung, ohne Engine
+  abgeschaltet) und Oberfläche `<flowaudit-extraction>` (Vue `FaExtraction`,
+  React nativ `FlowauditExtraction`, Kern `createExtractionController` in
+  `@flowaudit/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
+  Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

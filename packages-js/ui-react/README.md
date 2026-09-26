@@ -92,7 +92,7 @@ export function Vergleich({ id }: { id: string }) {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (157):
+Exporte der Einstiegspunkte aus `package.json#exports` (165):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -116,11 +116,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `DsfaStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Evaluation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ExtractionInputs` | Schnittstelle | – | `extraction/useExtraction` |
+| `@flowaudit/ui-react` | `ExtractionPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ExtractionRun` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `FetchLike` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `FlowauditBenford` | Funktion | Benford-Analyse als native React-Komponente (Vertrag wie `<flowaudit-benford>`): Werte (Eigenschaft oder Datei), Test, Bewertungsprofil, Kennzahlen mit MAD, Chi² und z je Ziffer, S … | `benford/FlowauditBenford` |
 | `@flowaudit/ui-react` | `FlowauditBenfordProps` | Typ | – | `benford/FlowauditBenford` |
 | `@flowaudit/ui-react` | `FlowauditDsfa` | Funktion | Datenschutz-Folgenabschätzung (Art. 35 DSGVO) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-dsfa>`: Übersicht, Schwellwertanalyse, Risiko, Vorschlag der B … | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
+| `@flowaudit/ui-react` | `FlowauditExtraction` | Funktion | Belegerkennung als native React-Komponente (Vertrag wie `<flowaudit-extraction>`): Dokument hochladen, Profil wählen, erkannte Felder mit Konfidenz und Validierungsbefunde. | `extraction/FlowauditExtraction` |
+| `@flowaudit/ui-react` | `FlowauditExtractionProps` | Typ | – | `extraction/FlowauditExtraction` |
 | `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditRiskFlags` | Funktion | Risiko-Merkmale als native React-Komponente – Vertrag, Texte und Markup wie `<flowaudit-risk-flags>`: Verteilung je Merkmal, Filter, Tabelle je Datensatz, Detailkarten mit Begründu … | `risk/FlowauditRiskFlags` |
@@ -193,6 +198,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `ToastProvider` | Funktion | Stellt eine eigene Warteschlange für den Teilbaum bereit (z. B. je Mandant oder im Test). | `hooks/toast` |
 | `@flowaudit/ui-react` | `UseAuthToken` | Schnittstelle | – | `hooks/state` |
 | `@flowaudit/ui-react` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
+| `@flowaudit/ui-react` | `UseExtraction` | Schnittstelle | – | `extraction/useExtraction` |
 | `@flowaudit/ui-react` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui-react` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui-react` | `UseScreeningReview` | Schnittstelle | – | `screening/useScreeningReview` |
@@ -206,6 +212,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `compareValues` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createExtractionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createSamplingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
@@ -234,6 +241,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente und bei Escape; abgemeldet beim Unmount. | `hooks/dom` |
 | `@flowaudit/ui-react` | `useDebouncedCallback` | Funktion | Entprellte, stabile Funktion; ruft immer die neueste `fn` auf und verwirft einen ausstehenden Aufruf beim Unmount. | `hooks/state` |
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
+| `@flowaudit/ui-react` | `useExtraction` | Funktion | React-Anbindung der Belegerkennung aus `@flowaudit/ui-core` (dieselbe Logik wie `useExtraction` in Vue). | `extraction/useExtraction` |
 | `@flowaudit/ui-react` | `useLocale` | Funktion | Sprache: Prop vor Provider vor Standardsprache (`setDefaultLocale`). | `i18n` |
 | `@flowaudit/ui-react` | `useMediaQuery` | Funktion | Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`; serverseitig `false`. | `hooks/dom` |
 | `@flowaudit/ui-react` | `useRiskFlags` | Funktion | React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useRiskFlags`/`useRiskProfile` in Vue). | `risk/useRiskFlags` |
