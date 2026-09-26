@@ -5,7 +5,7 @@ import { useId } from '../composables/useId'
 import { formatNumber } from '../i18n'
 import GeoAreaSelect from './GeoAreaSelect.vue'
 import { useGeoContext } from './context'
-import { TOLERANCE_STEPS, vertexCount } from './model'
+import { TOLERANCE_STEPS, vertexCount } from '@flowaudit/ui-core'
 
 const { state, t, locale } = useGeoContext()
 const id = useId('fa-geo-simplify')

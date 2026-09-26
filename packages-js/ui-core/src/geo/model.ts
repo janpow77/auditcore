@@ -1,4 +1,5 @@
-import { formatNumber, type Locale } from '../i18n'
+import { intlFormatNumber as formatNumber } from '@flowaudit/common'
+import type { Locale } from '../i18n'
 import type { AreaGeometry, GeoArea, GeoPackageResult, GeoPoint, LatLon } from './types'
 
 /** Stufen des Toleranzreglers der Vereinfachung (Meter bzw. Grad). */

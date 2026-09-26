@@ -82,6 +82,9 @@ export function formState(root: Element): string[] {
   return Array.from(root.querySelectorAll('input, textarea, select')).map((element) => {
     const field = element as HTMLInputElement
     if (field.type === 'checkbox' || field.type === 'radio') return `${field.tagName.toLowerCase()}[${field.type}]:${field.checked}`
+    // Auswahllisten: gewählte Position und sichtbarer Text (eine Option ohne Wert – Vue `:value="null"` –
+    // liefert in Vue ihren Text, in React "" als `value`; sichtbar ist dasselbe).
+    if (element instanceof HTMLSelectElement) return `select:${element.selectedIndex}:${element.options[element.selectedIndex]?.textContent?.trim() ?? ''}`
     return `${field.tagName.toLowerCase()}:${field.value}`
   })
 }

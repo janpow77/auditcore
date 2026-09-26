@@ -1,7 +1,7 @@
 import { nextTick, onBeforeUnmount, watch, type Ref } from 'vue'
-import { trapFocus } from '@flowaudit/ui-core'
+import { createFocusTrap } from '@flowaudit/ui-core'
 
-/** Reine Fokushilfen aus `@flowaudit/ui-core` (auch von der React-Fassung genutzt). */
+/** Seit 0.3.0 aus `@flowaudit/ui-core` (gemeinsam mit der React-Fassung). */
 export { focusableWithin, wrapTarget } from '@flowaudit/ui-core'
 
 /**
@@ -9,19 +9,15 @@ export { focusableWithin, wrapTarget } from '@flowaudit/ui-core'
  * danach an das zuvor fokussierte Element zurück.
  */
 export function useFocusTrap(container: Ref<HTMLElement | null>, active: Ref<boolean>): void {
-  let release: (() => void) | null = null
-
-  async function activate(): Promise<void> {
-    await nextTick()
-    const root = container.value
-    if (root && !release) release = trapFocus(root)
-  }
-
-  function deactivate(): void {
-    release?.()
-    release = null
-  }
-
-  watch(active, (isActive) => (isActive ? void activate() : deactivate()), { immediate: true })
-  onBeforeUnmount(deactivate)
+  const trap = createFocusTrap(() => container.value)
+  watch(
+    active,
+    async (isActive) => {
+      if (!isActive) return trap.deactivate()
+      await nextTick()
+      trap.activate()
+    },
+    { immediate: true },
+  )
+  onBeforeUnmount(trap.deactivate)
 }

@@ -1,6 +1,5 @@
 import '@flowaudit/ui-core/style.css'
 import './screening/screening.css'
-import './geo/geo.css'
 
 export * from './base'
 export * from './i18n'

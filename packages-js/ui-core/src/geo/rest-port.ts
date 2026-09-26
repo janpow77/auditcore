@@ -1,4 +1,4 @@
-import { RestError, requestJson, type RestOptions } from '../rest'
+import { RestError, requestJson, type RestOptions } from '@flowaudit/common'
 import type { GeoPackageResult, GeoPort } from './types'
 
 export interface GeoRestOptions extends RestOptions {

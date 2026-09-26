@@ -1,18 +1,18 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import FaGeoMap from '../../src/geo/FaGeoMap.vue'
-import type { MapLayers, MapViewOptions } from '../../src/geo/mapView'
-import type { GeoCatalogue, GeoPackageResult, GeoPort, LocateResult, RadiusResult, SimplifyResult, UtmResult } from '../../src/geo/types'
-import catalogue from '../fixtures/geo-catalogue.json'
-import gpkg from '../fixtures/geo-gpkg.json'
-import locate from '../fixtures/geo-locate-rand.json'
-import radius from '../fixtures/geo-radius.json'
-import simplify from '../fixtures/geo-simplify.json'
-import utm from '../fixtures/geo-utm.json'
+import type { GeoCatalogue, GeoPackageResult, GeoPort, LocateResult, MapLayers, MapViewOptions, RadiusResult, SimplifyResult, UtmResult } from '@flowaudit/ui-core'
+import catalogue from '../../../ui-core/test/fixtures/geo-catalogue.json'
+import gpkg from '../../../ui-core/test/fixtures/geo-gpkg.json'
+import locate from '../../../ui-core/test/fixtures/geo-locate-rand.json'
+import radius from '../../../ui-core/test/fixtures/geo-radius.json'
+import simplify from '../../../ui-core/test/fixtures/geo-simplify.json'
+import utm from '../../../ui-core/test/fixtures/geo-utm.json'
 
 const view = vi.hoisted(() => ({ options: null as MapViewOptions | null, layers: [] as MapLayers[], fit: 0, tiles: [] as unknown[] }))
 
-vi.mock('../../src/geo/mapView', () => ({
+vi.mock('@flowaudit/ui-core', async (original) => ({
+  ...(await original<typeof import('@flowaudit/ui-core')>()),
   createLeafletView: vi.fn(async (_element: HTMLElement, options: MapViewOptions) => {
     view.options = options
     return {

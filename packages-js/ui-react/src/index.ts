@@ -8,6 +8,7 @@ export { FlowauditTable, type FlowauditTableProps } from './table/FlowauditTable
 export { FlowauditSynopsis, type FlowauditSynopsisHandle, type FlowauditSynopsisProps } from './synopsis/FlowauditSynopsis'
 export { FlowauditVvt, type FlowauditVvtProps } from './dataprotection/FlowauditVvt'
 export { FlowauditDsfa, type FlowauditDsfaProps } from './dataprotection/FlowauditDsfa'
+export { FlowauditGeoMap, type FlowauditGeoMapProps } from './geo/FlowauditGeoMap'
 export * from './kanban'
 export { Badge, type BadgeProps } from './base/Badge'
 export { Button, type ButtonProps } from './base/Button'
@@ -18,6 +19,12 @@ export { LocaleProvider, useLocale, useTranslation, type UseTranslation } from '
 export { useStoreState, useElementId } from './store'
 export {
   createDataProtectionRestPort,
+  createGeoRestPort,
+  type GeoArea,
+  type GeoPoint,
+  type GeoPort,
+  type LatLon,
+  type TileSource,
   createSynopsisRestClient,
   setDefaultLocale,
   type Comparison,

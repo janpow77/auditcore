@@ -1,6 +1,6 @@
 import { inject, type ComputedRef, type InjectionKey } from 'vue'
 import type { Locale, Translate } from '../i18n'
-import type { GeoMessageKey } from './messages'
+import type { GeoMessageKey } from '@flowaudit/ui-core'
 import type { UseGeoMap } from './useGeoMap'
 
 /** Gemeinsamer Zustand und Übersetzung für die Teilkomponenten der Geo-Karte. */

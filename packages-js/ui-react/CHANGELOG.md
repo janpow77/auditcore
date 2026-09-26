@@ -8,8 +8,9 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
 - Nativ in React 18 (gleiche Props-/Ereignis-Semantik, Texte, ARIA und
   REST-Verträge wie die Vue-Fassung; Logik aus `@flowaudit/ui-core`):
   `FlowauditTable`, `FlowauditSynopsis` (Vertrag `auditcore_documents.web`),
-  `FlowauditVvt` und `FlowauditDsfa` (Vertrag `dataprotection_ui/1`), dazu
-  `Button`, `Badge`, `Icon`, `TextField`, `LocaleProvider`, `useTranslation`,
+  `FlowauditVvt` und `FlowauditDsfa` (Vertrag `dataprotection_ui/1`),
+  `FlowauditGeoMap` (Vertrag `auditcore_geo.web`, Leaflet), dazu
+  `Button`, `Badge`, `Icon`, `TextField`, `Dialog` (Fokusfalle aus dem Kern), `LocaleProvider`, `useTranslation`,
   `useStoreState`.
 - Ereignisse heißen wie bisher `onXxx`, erhalten aber direkt die Nutzdaten
   (kein `CustomEvent` mehr). Vue-`v-model` wird zu gesteuerten Props mit
@@ -18,11 +19,11 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   (`FlowauditSynopsisHandle`).
 - Stile aus `@flowaudit/ui-core/style.css` (statt `@flowaudit/ui/style.css`).
 - Entfernt: die Hüllen `FlowauditTable`, `FlowauditSynopsis`,
-  `FlowauditVvt`, `FlowauditDsfa` (ersetzt durch die nativen Fassungen) und
+  `FlowauditVvt`, `FlowauditDsfa`, `FlowauditGeoMap` (ersetzt durch die nativen Fassungen) und
   das Weiterreichen von `defineFlowauditElements` im Haupteinstieg.
 - **Veraltet:** Die übrigen Hüllen (`FlowauditSampling`, `FlowauditBenford`,
   `FlowauditScreeningReview`, `FlowauditRiskFlags`, `FlowauditKanbanBoard(s)`,
-  `FlowauditGeoMap`, `createElementComponent`, `eventPayload`,
+  `createElementComponent`, `eventPayload`,
   `defineFlowauditElements`) stehen nur noch unter `@flowaudit/ui-react/elements`;
   `@flowaudit/ui`, `@flowaudit/kanban-core` und `vue` sind dafür optionale
   Peer-Abhängigkeiten.
@@ -34,8 +35,7 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `CardReferences`, `CardTagsEditor`, `ColumnEditorRow`; Logik aus
   `@flowaudit/kanban-core` (jetzt Laufzeitabhängigkeit). Die Hüllen
   `FlowauditKanbanBoard(s)` unter `/elements` bleiben veraltet bestehen.
-- `Dialog` (wie `FaDialog`: Fokusfalle, Escape, Hintergrundklick, im `body`);
-  `TextField` mit `autoFocus`, `className`, `style`, `inputRef`, `onBlur`;
+- `TextField` mit `autoFocus`, `className`, `style`, `inputRef`, `onBlur`;
   `Button` mit `role`, `ariaChecked`, `testId`; `Icon` mit `className`.
 - React 18 und 19: Peer-Bereich `^18.3.0 || ^19.0.0`, Tests unter beiden
   Versionen (`npm test`, `npm run test:react19`).
