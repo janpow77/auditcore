@@ -16,14 +16,13 @@ def _response(reply: Reply) -> Response:
 
 
 async def read_limited(request: Request, limit: int) -> bytes:
-    """Request body, read at most one chunk beyond ``limit`` (the handler rejects it)."""
-    chunks, size = [], 0
+    """Request body; reading stops once it exceeds ``limit`` (the handler then rejects it)."""
+    body = bytearray()
     async for chunk in request.stream():
-        chunks.append(chunk)
-        size += len(chunk)
-        if size > limit:
+        body += chunk
+        if len(body) > limit:
             break
-    return b"".join(chunks)
+    return bytes(body)
 
 
 def routes(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> list[Route]:

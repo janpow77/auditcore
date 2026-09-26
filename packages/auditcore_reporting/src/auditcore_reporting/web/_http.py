@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass, field
 from urllib.parse import quote
 
@@ -41,9 +42,9 @@ def decode(raw: bytes, limit: int = MAX_BODY_BYTES) -> object:
 
 
 def disposition(filename: str) -> str:
-    """``attachment`` header with ASCII fallback and RFC 5987 UTF-8 name."""
-    fallback = filename.encode("ascii", "replace").decode("ascii").replace("?", "_")
-    return f"attachment; filename=\"{fallback}\"; filename*=UTF-8''{quote(filename)}"
+    """``attachment`` header: ASCII fallback (non-ASCII, ``"`` and ``\\`` replaced) and RFC 5987 name."""
+    fallback = re.sub(r'[^\x20-\x7e]|["\\]', "_", filename)
+    return f"attachment; filename=\"{fallback}\"; filename*=UTF-8''{quote(filename, safe='')}"
 
 
 def profiles() -> Reply:
