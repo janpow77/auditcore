@@ -33,6 +33,15 @@ test('Geo: Karte mit synthetischen Kacheln, Kartenklick, UTM und Umkreissuche', 
   await expect(page.getByTestId('geo-reference')).toContainText('50,330000, 9,010000')
   await expect(page.getByTestId('geo-utm')).toContainText('EPSG:25832')
 
+  await page.getByTestId('geo-utm-input').locator('summary').click()
+  await expect(page.getByTestId('geo-utm-zone')).toHaveValue('32')
+  await page.getByTestId('geo-utm-east').fill('476398,98')
+  await page.getByTestId('geo-utm-north').fill('5549801,40')
+  await page.getByTestId('geo-utm-apply').click()
+  await expect(page.getByTestId('geo-reference')).toContainText('50,100000, 8,670000')
+  if (SCREENSHOTS) await page.screenshot({ path: `${SCREENSHOTS}/geo-utm-eingabe.png`, fullPage: true })
+  await setReference(page, '50,33', '9,01')
+
   await page.getByTestId('geo-radius').fill('8000')
   await page.getByTestId('geo-radius-run').click()
   const result = page.getByTestId('geo-radius-result')

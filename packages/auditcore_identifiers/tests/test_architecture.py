@@ -1,4 +1,4 @@
-"""Standard library only, bounded module size, provenance copies identical."""
+"""Standard library only (web adapters: Starlette/FastAPI), bounded module size, provenance."""
 
 from __future__ import annotations
 
@@ -18,15 +18,19 @@ SOURCES = {
 }
 
 
+WEB_FRAMEWORKS = {"starlette", "fastapi"}
+
+
 def test_only_standard_library_imports() -> None:
     stdlib = set(sys.stdlib_module_names) | {"__future__", "auditcore_identifiers"}
     for path in PACKAGE.rglob("*.py"):
+        allowed = stdlib | (WEB_FRAMEWORKS if path.parent.name == "web" else set())
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
-                assert all(a.name.split(".")[0] in stdlib for a in node.names), path.name
+                assert all(a.name.split(".")[0] in allowed for a in node.names), path.name
             elif isinstance(node, ast.ImportFrom) and node.level == 0:
-                assert (node.module or "").split(".")[0] in stdlib, path.name
+                assert (node.module or "").split(".")[0] in allowed, path.name
             elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 assert node.func.id not in {"eval", "exec", "__import__"}, path.name
 

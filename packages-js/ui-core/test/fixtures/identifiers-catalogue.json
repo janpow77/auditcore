@@ -1,0 +1,213 @@
+{
+  "contract": "identifiers_ui/1",
+  "library": "auditcore_identifiers 0.1.0",
+  "recommended_profile": "strict",
+  "kinds": [
+    {
+      "id": "iban",
+      "label": "IBAN",
+      "description": "Internationale Kontonummer (ISO 13616): Register, Länge, BBAN-Aufbau, Prüfziffer MOD 97-10; nationale Kontoprüfziffern werden nicht geprüft.",
+      "country": false
+    },
+    {
+      "id": "bic",
+      "label": "BIC",
+      "description": "Geschäftskennung von Instituten (ISO 9362): 8 oder 11 Zeichen, Länderkennzeichen.",
+      "country": false
+    },
+    {
+      "id": "vat_id",
+      "label": "USt-IdNr.",
+      "description": "Umsatzsteuer-Identifikationsnummer: Formate aller EU-Staaten, Prüfziffer für DE und AT; ohne Länderpräfix nur mit angegebenem Land.",
+      "country": true
+    },
+    {
+      "id": "tax_id",
+      "label": "Steuer-ID",
+      "description": "Steuerliche Identifikationsnummer (§ 139b AO): 11 Ziffern, Ziffernverteilung, Prüfziffer.",
+      "country": false
+    },
+    {
+      "id": "tax_number",
+      "label": "Steuernummer",
+      "description": "Steuernummer: Landesformat (10/11 Ziffern) oder 13-stelliges Bundesformat; nur grobe Formatprüfung ohne Prüfziffer.",
+      "country": false
+    },
+    {
+      "id": "lei",
+      "label": "LEI",
+      "description": "Legal Entity Identifier (ISO 17442): 20 Zeichen, Prüfziffer MOD 97-10.",
+      "country": false
+    },
+    {
+      "id": "register_number",
+      "label": "Handelsregisternummer",
+      "description": "Registerart (HRA, HRB, GnR, PR, VR) und Nummer; nur Format.",
+      "country": false
+    }
+  ],
+  "profiles": [
+    {
+      "id": "strict",
+      "title": "Streng (Standard)",
+      "rationale": "Fachlich vollständige Prüfung: Register-Längen und BBAN-Aufbau, Prüfziffern (IBAN, LEI, USt-IdNr. DE/AT, Steuer-ID), Formate aller EU-Staaten.",
+      "origin": "auditcore_identifiers",
+      "legacy": false,
+      "kinds": [
+        "iban",
+        "bic",
+        "vat_id",
+        "tax_id",
+        "tax_number",
+        "lei",
+        "register_number"
+      ]
+    },
+    {
+      "id": "flowinvoice.legacy",
+      "title": "flowinvoice validators.py",
+      "rationale": "Ergebnisgleiche Umstellung von flowinvoice: IBAN ohne Modulo-97-Prüfung, USt-IdNr. nur nach Muster, deutsche Meldungen des Originals.",
+      "origin": "janpow77/flowinvoice@fb2d18568d2eaf64574d131ceae51a936b9aac02:backend/app/services/validators.py",
+      "legacy": true,
+      "kinds": [
+        "iban",
+        "bic",
+        "vat_id",
+        "tax_number"
+      ]
+    },
+    {
+      "id": "audit_portal.legacy",
+      "title": "audit-portal validators.py",
+      "rationale": "Fork von flowinvoice; validators.py ist byte-identisch (Blob d3c09fbd), Verhalten wie flowinvoice.legacy.",
+      "origin": "janpow77/audit-portal@d8eefa426826bdecb67036774f3128ae05e7d0d0:backend/app/services/validators.py",
+      "legacy": true,
+      "kinds": [
+        "iban",
+        "bic",
+        "vat_id",
+        "tax_number"
+      ]
+    },
+    {
+      "id": "flowinvoice.pipeline.legacy",
+      "title": "Dokumenten-Pipeline (IbanChecksumRule/VatIdFormatRule)",
+      "rationale": "Ergebnisgleich zur Validierungsstufe der Pipeline (flowinvoice, weitergeführt in auditcore_documents): Modulo 97, Längen für neun Länder, englische Meldungen.",
+      "origin": "janpow77/flowinvoice@fb2d18568d2eaf64574d131ceae51a936b9aac02:backend/app/pipeline/stages/validation.py",
+      "legacy": true,
+      "kinds": [
+        "iban",
+        "vat_id"
+      ]
+    },
+    {
+      "id": "audit_portal.pipeline.legacy",
+      "title": "audit-portal Dokumenten-Pipeline",
+      "rationale": "Gleiche Regeln wie flowinvoice.pipeline.legacy (Regelteil der Datei unverändert).",
+      "origin": "janpow77/audit-portal@d8eefa426826bdecb67036774f3128ae05e7d0d0:backend/app/pipeline/stages/validation.py",
+      "legacy": true,
+      "kinds": [
+        "iban",
+        "vat_id"
+      ]
+    },
+    {
+      "id": "documents.donut",
+      "title": "auditcore_documents Donut-Prüfung",
+      "rationale": "Ergebnisgleich zu auditcore_documents (Donut-Stufe): kompaktieren, IBAN wie Pipeline, USt-IdNr. acht Länder mit Prüfziffer DE/AT.",
+      "origin": "janpow77/auditcore:packages/auditcore_documents",
+      "legacy": true,
+      "kinds": [
+        "iban",
+        "vat_id"
+      ]
+    },
+    {
+      "id": "invoicesynth.legacy",
+      "title": "auditcore_invoicesynth identifiers",
+      "rationale": "Ergebnisgleich zu den Prüfhilfen des Synthesegenerators (nur DE/AT).",
+      "origin": "janpow77/auditcore:packages/auditcore_invoicesynth",
+      "legacy": true,
+      "kinds": [
+        "iban",
+        "vat_id"
+      ]
+    },
+    {
+      "id": "flowworkshop.legacy",
+      "title": "flowworkshop entity_resolution",
+      "rationale": "LEI nur nach Format ohne Prüfziffern, wie is_valid_lei (in auditcore_entity_matching als Legacy weitergeführt).",
+      "origin": "janpow77/flowworkshop@a05bb2143bd96d5e981f9462f05b965e1658be36:auditworkshop/backend/services/entity_resolution.py",
+      "legacy": true,
+      "kinds": [
+        "lei"
+      ]
+    }
+  ],
+  "reasons": [
+    {
+      "id": "missing",
+      "label": "Wert fehlt"
+    },
+    {
+      "id": "invalid_type",
+      "label": "Kein Text"
+    },
+    {
+      "id": "invalid_characters",
+      "label": "Unzulässige Zeichen"
+    },
+    {
+      "id": "invalid_length",
+      "label": "Falsche Länge"
+    },
+    {
+      "id": "invalid_format",
+      "label": "Falsches Format"
+    },
+    {
+      "id": "unknown_country",
+      "label": "Unbekanntes Land"
+    },
+    {
+      "id": "country_mismatch",
+      "label": "Land passt nicht"
+    },
+    {
+      "id": "invalid_checksum",
+      "label": "Prüfziffer falsch"
+    }
+  ],
+  "detail_labels": {
+    "bban": "BBAN",
+    "check_digits": "Prüfziffern",
+    "registry": "Register",
+    "expected_length": "Erwartete Länge",
+    "length": "Länge",
+    "institution": "Institut",
+    "location": "Ort",
+    "branch": "Filiale",
+    "test_bic": "Test-BIC",
+    "eu": "EU-Mitgliedstaat",
+    "checksum": "Prüfziffer",
+    "format": "Format",
+    "land": "Land",
+    "lou_prefix": "LOU-Präfix",
+    "register": "Registerart",
+    "number": "Nummer",
+    "suffix": "Zusatz",
+    "outcome": "Ergebnis (Legacy)",
+    "severity": "Schwere (Legacy)"
+  },
+  "value_labels": {
+    "verified": "geprüft",
+    "not_checked": "nicht geprüft",
+    "land": "Landesformat",
+    "federal": "Bundesformat"
+  },
+  "limits": {
+    "max_items": 10000,
+    "max_value_length": 200,
+    "max_body_bytes": 4194304
+  }
+}

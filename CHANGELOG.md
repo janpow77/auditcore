@@ -10,6 +10,35 @@
   Quote bereits. Das pauschale `testTimeout` von 20 s in
   `ui-react/vitest.config.ts` (aus #159) ist wieder entfernt; nur die
   Paritätsdateien setzen über `test/parity/setup.ts` gezielt 10 s.
+
+- Geo-Karte: UTM-Eingabe des Bezugspunkts (`POST /utm/geographisch` von
+  `auditcore_geo.web`) in Vue (`GeoUtmInput`) und React nativ – Zone,
+  Halbkugel, Ost- und Nordwert mit Feldprüfung im Kern
+  (`parseUtm`, `parseMetres`), Rückrechnung über den neuen optionalen
+  Port-Eintrag `fromUtm` (`createGeoRestPort` bietet ihn an), Felder
+  folgen dem Bezugspunkt; Ellipsoid-Auswahl auch vor dem ersten
+  Bezugspunkt. 5 Paritätsfälle plus 2 Interaktionsfolgen, E2E ergänzt.
+
+- „Kennung prüfen“: REST-Vertrag `identifiers_ui/1` in
+  `auditcore_identifiers.web` (Extras `web`, `fastapi`) und Oberfläche
+  `IdentifierCheck`/`<flowaudit-identifier-check>` (Vue) sowie native
+  `FlowauditIdentifierCheck` (React) auf gemeinsamem Kern in
+  `@flowaudit/ui-core` (`createIdentifierController`,
+  `createIdentifiersRestPort`): Prüfprofil mit sichtbarer Empfehlung,
+  Einzelprüfung mit Status, Begründung, Grund, Normalform und Einzelheiten,
+  Stapelprüfung aus CSV/TSV über den TableImport-Controller mit
+  Spaltenzuordnung, Filter „Nur Auffälligkeiten“ und CSV-Export. 4
+  Paritätsfälle plus 2 Interaktionsfolgen, Demo-Seite und API-E2E
+  (`docs/ui/identifiers-rest.md`).
+
+- Belegerkennung: REST-Vertrag `documents_extraction/1` in
+  `auditcore_documents.web` (Upload → Extraktionsergebnis mit Konfidenz →
+  Validierungsbefunde; OCR/Donut nur über Ports der Anwendung, ohne Engine
+  abgeschaltet) und Oberfläche `<flowaudit-extraction>` (Vue `FaExtraction`,
+  React nativ `FlowauditExtraction`, Kern `createExtractionController` in
+  `@flowaudit/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
+  Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
+
 - Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
   Job-Image `ghcr.io/janpow77/auditcore-donut-train:cu128` (Workflow
   `donut-train-image`, Basis per Digest, torch 2.11.0+cu128, gepinnte

@@ -1,0 +1,867 @@
+{
+ "source": "auditcore_documents.web (Belegerkennung), Attrappen-Ports, synthetische Belege",
+ "catalogue": {
+  "contract": "documents_extraction/1",
+  "library": "auditcore_documents 0.3.3",
+  "enabled": true,
+  "engines": {
+   "router": false,
+   "chandra": false,
+   "tesseract": true,
+   "donut": true
+  },
+  "profiles": [
+   {
+    "id": "flowinvoice.pipeline",
+    "version": "1.0.0",
+    "fingerprint": "aaec1633e2ec3561ed402c8eefa6c6f3a8a914d8e1c08c4e7997c718ab1d5455",
+    "label": "Originalverhalten flowinvoice",
+    "status": "SOURCE_CHARACTERIZED",
+    "ocr_backend": null,
+    "recommended": false,
+    "min_field_confidence": null,
+    "available": true,
+    "retention_categories": [
+     "processing_logs"
+    ]
+   },
+   {
+    "id": "auditcore.pipeline",
+    "version": "2026.09.2",
+    "fingerprint": "4b7edabdc5c34a9410ae27d9a4c409cff470372f8698bb7dee9d68a7091af753",
+    "label": "Empfohlen (korrigiertes Verhalten)",
+    "status": "DECIDED_RECOMMENDED",
+    "ocr_backend": null,
+    "recommended": true,
+    "min_field_confidence": null,
+    "available": true,
+    "retention_categories": [
+     "original_documents",
+     "ocr_raw_output",
+     "structured_extraction",
+     "processing_logs",
+     "audit_events"
+    ]
+   },
+   {
+    "id": "auditcore.pipeline.donut",
+    "version": "2026.09.24",
+    "fingerprint": "a18e629db15c7c7a8ba37b860da2b195b25e4736f49e663773dab3f3837379d7",
+    "label": "Donut-Belegerkennung (erprobend)",
+    "status": "EXPERIMENTAL",
+    "ocr_backend": "donut",
+    "recommended": false,
+    "min_field_confidence": 0.9,
+    "available": true,
+    "retention_categories": [
+     "original_documents",
+     "ocr_raw_output",
+     "structured_extraction",
+     "processing_logs",
+     "audit_events"
+    ]
+   }
+  ],
+  "default_profile": "auditcore.pipeline",
+  "accepted_types": [
+   "application/pdf",
+   "image/jpeg",
+   "image/png",
+   "image/tiff",
+   "image/webp"
+  ],
+  "limits": {
+   "max_upload_bytes": 5242880
+  },
+  "thresholds": {
+   "ok": 0.85,
+   "review": 0.6
+  },
+  "retention": {
+   "stored": false,
+   "days": {
+    "original_documents": 2555,
+    "ocr_raw_output": 365,
+    "structured_extraction": 2555,
+    "processing_logs": 90,
+    "audit_events": 3650
+   }
+  }
+ },
+ "catalogue_disabled": {
+  "contract": "documents_extraction/1",
+  "library": "auditcore_documents 0.3.3",
+  "enabled": false,
+  "engines": {
+   "router": false,
+   "chandra": false,
+   "tesseract": false,
+   "donut": false
+  },
+  "profiles": [
+   {
+    "id": "flowinvoice.pipeline",
+    "version": "1.0.0",
+    "fingerprint": "aaec1633e2ec3561ed402c8eefa6c6f3a8a914d8e1c08c4e7997c718ab1d5455",
+    "label": "Originalverhalten flowinvoice",
+    "status": "SOURCE_CHARACTERIZED",
+    "ocr_backend": null,
+    "recommended": false,
+    "min_field_confidence": null,
+    "available": false,
+    "retention_categories": [
+     "processing_logs"
+    ]
+   },
+   {
+    "id": "auditcore.pipeline",
+    "version": "2026.09.2",
+    "fingerprint": "4b7edabdc5c34a9410ae27d9a4c409cff470372f8698bb7dee9d68a7091af753",
+    "label": "Empfohlen (korrigiertes Verhalten)",
+    "status": "DECIDED_RECOMMENDED",
+    "ocr_backend": null,
+    "recommended": true,
+    "min_field_confidence": null,
+    "available": false,
+    "retention_categories": [
+     "original_documents",
+     "ocr_raw_output",
+     "structured_extraction",
+     "processing_logs",
+     "audit_events"
+    ]
+   },
+   {
+    "id": "auditcore.pipeline.donut",
+    "version": "2026.09.24",
+    "fingerprint": "a18e629db15c7c7a8ba37b860da2b195b25e4736f49e663773dab3f3837379d7",
+    "label": "Donut-Belegerkennung (erprobend)",
+    "status": "EXPERIMENTAL",
+    "ocr_backend": "donut",
+    "recommended": false,
+    "min_field_confidence": 0.9,
+    "available": false,
+    "retention_categories": [
+     "original_documents",
+     "ocr_raw_output",
+     "structured_extraction",
+     "processing_logs",
+     "audit_events"
+    ]
+   }
+  ],
+  "default_profile": null,
+  "accepted_types": [
+   "application/pdf",
+   "image/jpeg",
+   "image/png",
+   "image/tiff",
+   "image/webp"
+  ],
+  "limits": {
+   "max_upload_bytes": 20971520
+  },
+  "thresholds": {
+   "ok": 0.85,
+   "review": 0.6
+  },
+  "retention": {
+   "stored": false,
+   "days": {
+    "original_documents": 2555,
+    "ocr_raw_output": 365,
+    "structured_extraction": 2555,
+    "processing_logs": 90,
+    "audit_events": 3650
+   }
+  }
+ },
+ "run_ok": {
+  "contract": "documents_extraction/1",
+  "library": "auditcore_documents 0.3.3",
+  "profile": {
+   "id": "auditcore.pipeline",
+   "version": "2026.09.2",
+   "fingerprint": "4b7edabdc5c34a9410ae27d9a4c409cff470372f8698bb7dee9d68a7091af753",
+   "status": "DECIDED_RECOMMENDED"
+  },
+  "run": {
+   "run_id": "00000000-0000-4000-8000-000000000001",
+   "status": "ok",
+   "needs_review": false,
+   "error_code": null,
+   "error": null,
+   "retryable": false,
+   "completed_stages": [
+    "ingestion",
+    "preprocess",
+    "ocr",
+    "postprocess",
+    "validation",
+    "persist"
+   ],
+   "hash_chain": [
+    "e205fa8efd525a8babac3f5dcf2af2dc2737112cabc66514df763798a9d91789",
+    "67937ba38d02074ec41d43ee6200ef3f7f71490c4180ff1df324cdd7277e1883",
+    "d06db64ef66dc0326f7b956d50ac5826653cb286bc089e3cf6c209116453b779",
+    "86f94991b02eb6b8359d18874645da444f97668be87e164a09c8717bdfa5696d",
+    "86f94991b02eb6b8359d18874645da444f97668be87e164a09c8717bdfa5696d",
+    "86f94991b02eb6b8359d18874645da444f97668be87e164a09c8717bdfa5696d"
+   ],
+   "duration_ms": 12
+  },
+  "document": {
+   "filename": "beleg.png",
+   "sha256": "2624dc6d6c9f401e58418f64f40541499e6da2d2cf5d8e1a09d07cc699f4d92c",
+   "size_bytes": 34772,
+   "mime_type": "image/png",
+   "page_count": null
+  },
+  "ocr": {
+   "engine": "tesseract",
+   "avg_confidence": 0.93,
+   "min_confidence": 0.93,
+   "max_confidence": 0.93,
+   "pages_processed": 1,
+   "pages_failed": 0,
+   "duration_ms": 0,
+   "retries": 0,
+   "quality": "ok"
+  },
+  "pages": [
+   {
+    "page": 1,
+    "confidence": null,
+    "text": "Rechnungsnummer: RG-2025-0028\nRechnungsdatum: June 11, 2026\nNettobetrag: EUR 11,207.04\nGesamtbetrag: EUR 11,207.04\nIBAN: DE63 9002 0020 2990 6728 89\nUSt-IdNr.: DE407133546"
+   }
+  ],
+  "fields": [
+   {
+    "name": "invoice_number",
+    "value": "RG-2025-0028",
+    "raw": "RG-2025-0028",
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "date",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "net_amount",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "vat_amount",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "total",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "iban",
+    "value": "DE63900200202990672889",
+    "raw": "DE63 9002 0020 2990 6728 89",
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "vat_id",
+    "value": "DE407133546",
+    "raw": "DE407133546",
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   }
+  ],
+  "findings": [
+   {
+    "rule_id": "VAL_IBAN_CHECKSUM",
+    "rule_name": "iban_checksum",
+    "severity": "CRITICAL",
+    "outcome": "PASS",
+    "message": "IBAN checksum valid: DE63...2889",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_VAT_ID_FORMAT",
+    "rule_name": "vat_id_format",
+    "severity": "WARN",
+    "outcome": "PASS",
+    "message": "VAT ID format valid: DE407133546",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_TOTAL_PLAUSIBILITY",
+    "rule_name": "total_sum_plausibility",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "Not all amount fields available for plausibility check",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_OCR_CONFIDENCE",
+    "rule_name": "ocr_confidence",
+    "severity": "WARN",
+    "outcome": "PASS",
+    "message": "OCR confidence OK: 93.00% >= 85.00%",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_FRAUD_DETECTION",
+    "rule_name": "fraud_detection",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_AMOUNT_FORMAT",
+    "rule_name": "amount_format",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "All amounts unambiguous",
+    "evidence": null
+   }
+  ],
+  "flags": [],
+  "stored": false
+ },
+ "run_review": {
+  "contract": "documents_extraction/1",
+  "library": "auditcore_documents 0.3.3",
+  "profile": {
+   "id": "auditcore.pipeline",
+   "version": "2026.09.2",
+   "fingerprint": "4b7edabdc5c34a9410ae27d9a4c409cff470372f8698bb7dee9d68a7091af753",
+   "status": "DECIDED_RECOMMENDED"
+  },
+  "run": {
+   "run_id": "00000000-0000-4000-8000-000000000001",
+   "status": "review_needed",
+   "needs_review": true,
+   "error_code": null,
+   "error": null,
+   "retryable": false,
+   "completed_stages": [
+    "ingestion",
+    "preprocess",
+    "ocr",
+    "postprocess",
+    "validation",
+    "persist"
+   ],
+   "hash_chain": [
+    "47e28d757d92f1029ef12d0193ecd80c06872364ac6affb4c4823f7c03b069f4",
+    "f64d0ddd1e3c969b24eb0d9a8443fcbfe5c46e0458e96f6bb90ef1cebfe145ef",
+    "562707dbfbcc06af9c9ac1d1251ee52c5bf887f78abe18f69e4bfbd3bd098de0",
+    "2753b46289905c48c8d25f5daaa92b24242206bc3644ccd3991c6552f40c19c2",
+    "2753b46289905c48c8d25f5daaa92b24242206bc3644ccd3991c6552f40c19c2",
+    "2753b46289905c48c8d25f5daaa92b24242206bc3644ccd3991c6552f40c19c2"
+   ],
+   "duration_ms": 12
+  },
+  "document": {
+   "filename": "beleg.png",
+   "sha256": "2f6080f5dc71db23e84c647176eeb8e7bc3334f221bef2d862534f040ffaef67",
+   "size_bytes": 50023,
+   "mime_type": "image/png",
+   "page_count": null
+  },
+  "ocr": {
+   "engine": "tesseract",
+   "avg_confidence": 0.72,
+   "min_confidence": 0.72,
+   "max_confidence": 0.72,
+   "pages_processed": 1,
+   "pages_failed": 0,
+   "duration_ms": 0,
+   "retries": 0,
+   "quality": "review"
+  },
+  "pages": [
+   {
+    "page": 1,
+    "confidence": null,
+    "text": "Rechnungsnummer: INV-2025-0033\nRechnungsdatum: 2025-11-12\nNettobetrag: EUR 23.640,62\nGesamtbetrag: EUR 25.295,46\nIBAN: DE25 9003 0030 5810 4216 11\nUSt-IdNr.: DE793599552"
+   }
+  ],
+  "fields": [
+   {
+    "name": "invoice_number",
+    "value": "INV-2025-0033",
+    "raw": "INV-2025-0033",
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "date",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "net_amount",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "vat_amount",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "total",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "iban",
+    "value": "DE25900300305810421611",
+    "raw": "DE25 9003 0030 5810 4216 11",
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   },
+   {
+    "name": "vat_id",
+    "value": "DE793599552",
+    "raw": "DE793599552",
+    "confidence": null,
+    "decision": null,
+    "proposal": null,
+    "text_match": null,
+    "checks": []
+   }
+  ],
+  "findings": [
+   {
+    "rule_id": "VAL_IBAN_CHECKSUM",
+    "rule_name": "iban_checksum",
+    "severity": "CRITICAL",
+    "outcome": "PASS",
+    "message": "IBAN checksum valid: DE25...1611",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_VAT_ID_FORMAT",
+    "rule_name": "vat_id_format",
+    "severity": "WARN",
+    "outcome": "PASS",
+    "message": "VAT ID format valid: DE793599552",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_TOTAL_PLAUSIBILITY",
+    "rule_name": "total_sum_plausibility",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "Not all amount fields available for plausibility check",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_OCR_CONFIDENCE",
+    "rule_name": "ocr_confidence",
+    "severity": "WARN",
+    "outcome": "REVIEW",
+    "message": "OCR confidence low: 72.00% < 85.00%",
+    "evidence": {
+     "avg_confidence": 0.72,
+     "min_confidence": 0.72,
+     "threshold": 0.85
+    }
+   },
+   {
+    "rule_id": "VAL_FRAUD_DETECTION",
+    "rule_name": "fraud_detection",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_AMOUNT_FORMAT",
+    "rule_name": "amount_format",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "All amounts unambiguous",
+    "evidence": null
+   }
+  ],
+  "flags": [
+   "LOW_OCR_CONFIDENCE",
+   "REVIEW_VAL_OCR_CONFIDENCE"
+  ],
+  "stored": false
+ },
+ "run_donut": {
+  "contract": "documents_extraction/1",
+  "library": "auditcore_documents 0.3.3",
+  "profile": {
+   "id": "auditcore.pipeline.donut",
+   "version": "2026.09.24",
+   "fingerprint": "a18e629db15c7c7a8ba37b860da2b195b25e4736f49e663773dab3f3837379d7",
+   "status": "EXPERIMENTAL"
+  },
+  "run": {
+   "run_id": "00000000-0000-4000-8000-000000000001",
+   "status": "review_needed",
+   "needs_review": true,
+   "error_code": null,
+   "error": null,
+   "retryable": false,
+   "completed_stages": [
+    "ingestion",
+    "preprocess",
+    "ocr",
+    "postprocess",
+    "donut_merge",
+    "validation",
+    "persist"
+   ],
+   "hash_chain": [
+    "0bd2672b7264f942cdeaca8f5e215ab5023a1b194a5a3d2ccb3b235b91ac7246",
+    "41700f2ad799d4546464d019ae87100b8ef2578b1db112bf74424e4d26703861",
+    "9649c8d41f3d64987e0de09b495355b8509606cc0b804a6249961562b9266316",
+    "9985238228bb8fad196ac8f993ba8be44cbfbd7853b4410716b2d8e0852c051e",
+    "3c37b9fcb3efac645ca07c27aa9d3c3f4e2ccdf4fcc342fe39c2c999bb0f9264",
+    "3c37b9fcb3efac645ca07c27aa9d3c3f4e2ccdf4fcc342fe39c2c999bb0f9264",
+    "3c37b9fcb3efac645ca07c27aa9d3c3f4e2ccdf4fcc342fe39c2c999bb0f9264"
+   ],
+   "duration_ms": 12
+  },
+  "document": {
+   "filename": "beleg.png",
+   "sha256": "e902af59832d38af993f736217b892a6c6caac2556ba191879fe9e7358080999",
+   "size_bytes": 35143,
+   "mime_type": "image/png",
+   "page_count": null
+  },
+  "ocr": {
+   "engine": "donut",
+   "avg_confidence": 0.938,
+   "min_confidence": 0.81,
+   "max_confidence": 0.97,
+   "pages_processed": 1,
+   "pages_failed": 0,
+   "duration_ms": 0,
+   "retries": 0,
+   "quality": "ok"
+  },
+  "pages": [
+   {
+    "page": 1,
+    "confidence": null,
+    "text": "IT-Service GmbH\nRechnungsnummer: AR-2026-0001\nRechnungsdatum: 1.3.26\nLeistungsdatum: 6.2.26\nFällig am: 31.3.26\nUSt-IdNr.: ATU14426968\nNettobetrag: 760,13 €\nUSt 20,0 %: 110,83 €\nUSt 10,0 %: 20,60 €\nGesamtbetrag: 99.999,99\nIBAN: AT199903032939033813\nBIC: SYNTATG3XXX"
+   }
+  ],
+  "fields": [
+   {
+    "name": "invoice_number",
+    "value": "AR-2026-0001",
+    "raw": "AR-2026-0001",
+    "confidence": 0.97,
+    "decision": "accepted",
+    "proposal": "AR-2026-0001",
+    "text_match": true,
+    "checks": []
+   },
+   {
+    "name": "date",
+    "value": "2026-03-01",
+    "raw": "1.3.26",
+    "confidence": 0.81,
+    "decision": "accepted",
+    "proposal": "1.3.26",
+    "text_match": true,
+    "checks": []
+   },
+   {
+    "name": "supply_date",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": "not_taken",
+    "proposal": "6.2.26",
+    "text_match": false,
+    "checks": []
+   },
+   {
+    "name": "due_date",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": "not_taken",
+    "proposal": "31.3.26",
+    "text_match": false,
+    "checks": []
+   },
+   {
+    "name": "supplier_name",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": "not_taken",
+    "proposal": "IT-Service GmbH",
+    "text_match": false,
+    "checks": []
+   },
+   {
+    "name": "net_amount",
+    "value": 760.13,
+    "raw": "760,13",
+    "confidence": 0.97,
+    "decision": "rejected",
+    "proposal": "760,13 €",
+    "text_match": true,
+    "checks": [
+     "netto + USt ≠ brutto"
+    ]
+   },
+   {
+    "name": "vat_amount",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": "rejected",
+    "proposal": "110,83 € + 20,60 €",
+    "text_match": false,
+    "checks": [
+     "netto + USt ≠ brutto"
+    ]
+   },
+   {
+    "name": "total",
+    "value": 891.56,
+    "raw": "891,56",
+    "confidence": 0.97,
+    "decision": "rejected",
+    "proposal": "99.999,99",
+    "text_match": false,
+    "checks": [
+     "netto + USt ≠ brutto"
+    ]
+   },
+   {
+    "name": "iban",
+    "value": "AT199903032939033813",
+    "raw": "AT199903032939033813",
+    "confidence": 0.97,
+    "decision": "accepted",
+    "proposal": "AT199903032939033813",
+    "text_match": true,
+    "checks": []
+   },
+   {
+    "name": "bic",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": "not_taken",
+    "proposal": "SYNTATG3XXX",
+    "text_match": false,
+    "checks": []
+   },
+   {
+    "name": "vat_id",
+    "value": "ATU14426968",
+    "raw": "ATU14426968",
+    "confidence": 0.97,
+    "decision": "accepted",
+    "proposal": "ATU14426968",
+    "text_match": true,
+    "checks": []
+   },
+   {
+    "name": "vat_rates",
+    "value": null,
+    "raw": null,
+    "confidence": null,
+    "decision": "unconfirmed",
+    "proposal": "20,0 % + 10,0 %",
+    "text_match": false,
+    "checks": []
+   }
+  ],
+  "findings": [
+   {
+    "rule_id": "VAL_IBAN_CHECKSUM",
+    "rule_name": "iban_checksum",
+    "severity": "CRITICAL",
+    "outcome": "PASS",
+    "message": "IBAN checksum valid: AT19...3813",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_VAT_ID_FORMAT",
+    "rule_name": "vat_id_format",
+    "severity": "WARN",
+    "outcome": "PASS",
+    "message": "VAT ID format valid: ATU14426968",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_TOTAL_PLAUSIBILITY",
+    "rule_name": "total_sum_plausibility",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "Not all amount fields available for plausibility check",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_OCR_CONFIDENCE",
+    "rule_name": "ocr_confidence",
+    "severity": "WARN",
+    "outcome": "PASS",
+    "message": "OCR confidence OK: 93.80% >= 85.00%",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_FRAUD_DETECTION",
+    "rule_name": "fraud_detection",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_AMOUNT_FORMAT",
+    "rule_name": "amount_format",
+    "severity": "INFO",
+    "outcome": "PASS",
+    "message": "All amounts unambiguous",
+    "evidence": null
+   },
+   {
+    "rule_id": "VAL_DONUT_PLAUSIBILITY",
+    "rule_name": "donut_plausibility",
+    "severity": "WARN",
+    "outcome": "FAIL",
+    "message": "Donut-Werte unplausibel: net_amount, total, vat_amount",
+    "evidence": {
+     "net_amount": [
+      "netto + USt ≠ brutto"
+     ],
+     "total": [
+      "netto + USt ≠ brutto"
+     ],
+     "vat_amount": [
+      "netto + USt ≠ brutto"
+     ]
+    }
+   },
+   {
+    "rule_id": "VAL_DONUT_DISAGREEMENT",
+    "rule_name": "donut_disagreement",
+    "severity": "WARN",
+    "outcome": "REVIEW",
+    "message": "Donut-Werte unbestätigt oder widersprüchlich: vat_rates",
+    "evidence": {
+     "vat_rates": "unconfirmed"
+    }
+   }
+  ],
+  "flags": [
+   "FAIL_VAL_DONUT_PLAUSIBILITY",
+   "REVIEW_VAL_DONUT_DISAGREEMENT"
+  ],
+  "stored": false
+ },
+ "run_failed": {
+  "contract": "documents_extraction/1",
+  "library": "auditcore_documents 0.3.3",
+  "profile": {
+   "id": "auditcore.pipeline",
+   "version": "2026.09.2",
+   "fingerprint": "4b7edabdc5c34a9410ae27d9a4c409cff470372f8698bb7dee9d68a7091af753",
+   "status": "DECIDED_RECOMMENDED"
+  },
+  "run": {
+   "run_id": "00000000-0000-4000-8000-000000000001",
+   "status": "failed",
+   "needs_review": false,
+   "error_code": "INVALID_MIME_TYPE",
+   "error": "[ingestion] INVALID_MIME_TYPE: Unsupported file type: application/octet-stream",
+   "retryable": false,
+   "completed_stages": [],
+   "hash_chain": [],
+   "duration_ms": 12
+  },
+  "document": {
+   "filename": "notiz.txt",
+   "sha256": "c98f448ecf5cdd1a99e73f20036a6361677ab87974c3bcc482430e7470e8e36e",
+   "size_bytes": null,
+   "mime_type": null,
+   "page_count": null
+  },
+  "ocr": null,
+  "pages": [],
+  "fields": [],
+  "findings": [],
+  "flags": [],
+  "stored": false
+ },
+ "error_profile": {
+  "error": {
+   "code": "unknown_profile",
+   "message": "Unbekanntes Profil: 'unbekannt'."
+  }
+ }
+}

@@ -3,7 +3,7 @@
 // Jede Berechnung läuft über den Port (auditcore_geo.web).
 
 import { createRunner, createStore, type Store } from '../store'
-import { areasFromGeoPackage, parseLatLon, TOLERANCE_STEPS, type CoordinateError } from './model'
+import { areasFromGeoPackage, parseLatLon, parseUtm, TOLERANCE_STEPS, type CoordinateError, type UtmInputError } from './model'
 import type { MapLayers } from './mapView'
 import type {
   GeoArea,
@@ -56,6 +56,12 @@ export interface GeoData {
   lonText: string
   coordinateError: CoordinateError
   utm: UtmResult | null
+  /** Eingabefelder der UTM-Rückrechnung (`POST /utm/geographisch`). */
+  zoneText: string
+  eastText: string
+  northText: string
+  northern: boolean
+  utmError: UtmInputError
   geocodeResult: GeocodeResult | null
 }
 
@@ -72,6 +78,8 @@ export interface GeoSelection {
   simplifyTolerance: number
   hitIds: ReadonlySet<string>
   canGeocode: boolean
+  /** Port bietet die Rückrechnung aus UTM an. */
+  canFromUtm: boolean
   layers: MapLayers
 }
 
@@ -100,22 +108,32 @@ export function selectGeo(state: GeoData, inputs: GeoInputs): GeoSelection {
     simplifyTolerance: TOLERANCE_STEPS[state.simplifyUnit][state.simplifyStep] ?? 0,
     hitIds,
     canGeocode: geocodingAvailable(state, inputs),
+    canFromUtm: Boolean(inputs.port?.fromUtm),
     layers: layersOf(state, inputs, areas, hitIds),
   }
 }
 
 /** Einfache Eingabefelder, die die Oberfläche direkt setzen darf. */
-export type GeoField = 'radiusMetres' | 'earthModel' | 'boundaryInside' | 'toleranceMetres' | 'simplifyStep' | 'ellipsoid' | 'latText' | 'lonText'
+export type GeoField =
+  | 'radiusMetres' | 'earthModel' | 'boundaryInside' | 'toleranceMetres' | 'simplifyStep' | 'ellipsoid' | 'latText' | 'lonText'
+  | 'zoneText' | 'eastText' | 'northText' | 'northern'
 
 const INITIAL: GeoData = {
   busy: null, failure: '', error: null, notice: '', hint: null, catalogue: null, earthModel: null, radiusMetres: 5000,
   radiusResult: null, boundaryInside: true, toleranceMetres: 0, locateResult: null, loadedAreas: [], areaId: null,
   simplifyUnit: 'meter', simplifyStep: 4, simplifyResult: null, gpkgResult: null, ellipsoid: 'GRS80', reference: null,
-  latText: '', lonText: '', coordinateError: null, utm: null, geocodeResult: null,
+  latText: '', lonText: '', coordinateError: null, utm: null, zoneText: '', eastText: '', northText: '', northern: true, utmError: null,
+  geocodeResult: null,
 }
 
-function rounded(value: number): string {
-  return String(Math.round(value * 1e6) / 1e6)
+function rounded(value: number, digits = 6): string {
+  const factor = 10 ** digits
+  return String(Math.round(value * factor) / factor)
+}
+
+/** Eingabefelder der UTM-Rückrechnung aus dem berechneten Rechts-/Hochwert. */
+function utmTexts(result: UtmResult): Partial<GeoData> {
+  return { zoneText: String(result.zone), eastText: rounded(result.ost, 2), northText: rounded(result.nord, 2), northern: result.nordhalbkugel, utmError: null }
 }
 
 function missing(what: string): Promise<never> {
@@ -137,7 +155,7 @@ function referenceActions(store: Store<GeoData>, run: Run, inputs: () => GeoInpu
     const { reference: point, ellipsoid } = store.get()
     if (!point) return
     const result = await run('utm', (active) => active.utm({ punkt: point, ellipsoid }))
-    if (result) store.set({ utm: result })
+    if (result) store.set({ utm: result, ...utmTexts(result) })
   }
 
   async function setReference(point: LatLon | null): Promise<void> {
@@ -163,6 +181,22 @@ function referenceActions(store: Store<GeoData>, run: Run, inputs: () => GeoInpu
   }
 
   return { refreshUtm, setReference, applyTexts, geocode }
+}
+
+function utmActions(store: Store<GeoData>, run: Run, setReference: (point: LatLon | null) => Promise<void>) {
+  /** Bezugspunkt aus Zone, Halbkugel, Ost- und Nordwert (Rückrechnung über den Port). */
+  async function applyUtm(): Promise<void> {
+    const { zoneText, eastText, northText, northern, ellipsoid } = store.get()
+    const parsed = parseUtm(zoneText, eastText, northText)
+    store.set({ utmError: parsed.error })
+    const input = parsed.value
+    if (!input) return
+    const request = { ...input, nordhalbkugel: northern, ellipsoid }
+    const result = await run('utm', (active) => active.fromUtm?.(request) ?? missing('UTM-Rückrechnung'))
+    if (result) await setReference(result.punkt)
+  }
+
+  return { applyUtm }
 }
 
 function areaActions(store: Store<GeoData>, run: Run, inputs: () => GeoInputs, callbacks: GeoMapCallbacks) {
@@ -257,12 +291,14 @@ export function createGeoController(options: GeoControllerOptions) {
     if (error) store.set({ failure: error, error: null })
     return result
   }
+  const references = referenceActions(store, run, options.inputs, options)
   return {
     store,
     /** Einfaches Eingabefeld setzen (Radius, Erdmodell, Rand, Toleranz, Stufe, Ellipsoid, Texte). */
     setField: <K extends GeoField>(key: K, value: GeoData[K]) => store.set({ [key]: value } as Partial<GeoData>),
     ...calculations(store, run, options.inputs, options),
-    ...referenceActions(store, run, options.inputs, options),
+    ...references,
+    ...utmActions(store, run, references.setReference),
     ...areaActions(store, run, options.inputs, options),
   }
 }
