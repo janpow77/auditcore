@@ -198,7 +198,7 @@
   "consolidates": {
     "monorepo": "janpow77/auditcore (intern, keine Fremdquelle)",
     "monorepo_revision": "40ce8f710785b6ca8608512a2e335c14ec9d924f",
-    "method": "AST-Inventur (scripts/inventory_duplicate_functions.py, docs/quality/duplikate.md); je Gruppe Differenztest gegen die wörtliche Kopie in tests/legacy_reference.py",
+    "method": "AST-Inventur (scripts/inventory_duplicate_functions.py, docs/quality/duplikate.md); je Gruppe Differenztest gegen die wörtliche Kopie in tests/legacy_reference.py; REST-Schicht (rest) gegen tests/legacy_rest.py (Stand revision)",
     "files": [
       {
         "path": "packages/auditcore_dataprotection/src/auditcore_dataprotection/report_data.py",
@@ -470,6 +470,55 @@
         "symbols": [
           "canonical_json_bytes"
         ]
+      },
+      {
+        "path": "packages/auditcore_sampling/src/auditcore_sampling/web/_validate.py",
+        "git_blob": "5ec7d56cac60f2fea6175f3660c57a8b4678da61",
+        "symbols": [
+          "ContractError",
+          "choice"
+        ],
+        "revision": "f03aa0e4a1f811b90dd69e9e8846a219937d4289"
+      },
+      {
+        "path": "packages/auditcore_sampling/src/auditcore_sampling/web/_http.py",
+        "git_blob": "3e41696a05b57e0b73a60bb9fc56fa2e9d5569dc",
+        "symbols": [
+          "Reply",
+          "_json",
+          "decode",
+          "handle"
+        ],
+        "revision": "f03aa0e4a1f811b90dd69e9e8846a219937d4289"
+      },
+      {
+        "path": "packages/auditcore_sampling/src/auditcore_sampling/web/draw.py",
+        "git_blob": "9f52eeb1516e06144fa08a8e532df7f3c8e4dda4",
+        "symbols": [
+          "parse_items"
+        ],
+        "revision": "f03aa0e4a1f811b90dd69e9e8846a219937d4289"
+      },
+      {
+        "path": "packages/auditcore_statistics/src/auditcore_statistics/web/analysis.py",
+        "git_blob": "007fb5456e0ebc060cce8675cb88021e9262b3c0",
+        "symbols": [
+          "ContractError",
+          "_field",
+          "_values"
+        ],
+        "revision": "f03aa0e4a1f811b90dd69e9e8846a219937d4289"
+      },
+      {
+        "path": "packages/auditcore_statistics/src/auditcore_statistics/web/_http.py",
+        "git_blob": "7810abc2caa98d4d2dfeae9a9318a5486beb1881",
+        "symbols": [
+          "Reply",
+          "_json",
+          "decode",
+          "handle_analyse"
+        ],
+        "revision": "f03aa0e4a1f811b90dd69e9e8846a219937d4289"
       }
     ]
   },

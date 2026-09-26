@@ -11,23 +11,17 @@ import math
 from collections.abc import Mapping
 from decimal import Decimal
 
+from auditcore_common.rest import ContractError as RestContractError
+from auditcore_common.rest import bounded_list
+
 CONTRACT = "auditcore_extrapolation.evaluation/1"
 MAX_UNITS = 100_000
 MAX_STRATA = 200
 MAX_TEXT = 2_000
 
 
-class ContractError(ValueError):
-    """Request does not satisfy the REST contract."""
-
-    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-
-    def to_dict(self) -> dict[str, object]:
-        """JSON error body (same form as the other auditcore web contracts)."""
-        return {"error": {"code": self.code, "message": str(self)}}
+class ContractError(RestContractError):
+    """Request does not satisfy the extrapolation REST contract."""
 
 
 class Reader:
@@ -101,9 +95,7 @@ class Reader:
 
     def items(self, key: str, limit: int) -> list[Reader]:
         """A non-empty list of objects, at most ``limit`` entries."""
-        value = self.body.get(key)
-        if not isinstance(value, list) or not value:
-            raise ContractError(f"'{self._name(key)}' muss eine nicht leere Liste sein.")
-        if len(value) > limit:
-            raise ContractError(f"Höchstens {limit} Einträge in '{key}'.", status=413)
+        value = bounded_list(
+            self.body.get(key), self._name(key), limit, "Einträge", error=ContractError
+        )
         return [Reader(entry, f"{key}[{index}]") for index, entry in enumerate(value)]

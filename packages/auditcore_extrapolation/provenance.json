@@ -24,6 +24,11 @@
   ],
   "builds_on": [
     {
+      "package": "auditcore_common",
+      "version": "0.1.1",
+      "use": "REST-Schicht auditcore_common.rest (ContractError, Reply, decode_body, guarded, bounded_list) für auditcore_extrapolation.web; unverändert als Abhängigkeit"
+    },
+    {
       "package": "auditcore_sampling",
       "version": "0.2.2",
       "use": "Nur zum Test (Extra dev): Stichprobenplan (SizePlan) für die Trennung der Vollerhebung und Abgleich der Zuverlässigkeitsfaktoren für 0 Fehler; keine Laufzeitabhängigkeit"

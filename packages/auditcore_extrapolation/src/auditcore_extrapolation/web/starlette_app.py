@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 
+from auditcore_common.rest import Reply
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette.routing import Route
 
-from ._http import MAX_BODY_BYTES, Reply, dispatch, profiles
+from ._http import MAX_BODY_BYTES, dispatch, profiles
 
 #: POST paths below the mount point and their handler names.
 POST_PATHS = (
@@ -24,7 +25,7 @@ def to_response(reply: Reply) -> Response:
     return Response(
         content=reply.body,
         status_code=reply.status,
-        headers=reply.headers,
+        headers=dict(reply.headers),
         media_type=reply.media_type,
     )
 

@@ -1,5 +1,5 @@
 /**
- * Native React-18-Komponenten der FlowAudit-Oberflächen – ohne Vue und ohne
+ * Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen – ohne Vue und ohne
  * Web Components. Fachlogik, Texte und REST-Verträge kommen aus
  * `@flowaudit/ui-core` (dieselben wie in der Vue-Fassung `@flowaudit/ui`),
  * die Stile aus `@flowaudit/ui-core/style.css`.
@@ -14,6 +14,7 @@ export * from './screening'
 export * from './sampling'
 export * from './benford'
 export * from './extrapolation'
+export * from './kanban'
 export { Badge, type BadgeProps } from './base/Badge'
 export { Button, type ButtonProps } from './base/Button'
 export { Dialog, type DialogProps } from './base/Dialog'

@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-import json
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import replace
 from decimal import Decimal
+
+from auditcore_common.rest import Reply, decode_body, guarded, json_reply
 
 from ._contract import ContractError
 from .catalogue import catalogue
@@ -13,24 +14,7 @@ from .export import export_evaluation
 from .requests import evaluate, residual
 
 MAX_BODY_BYTES = 16 * 1024 * 1024
-JSON_TYPE = "application/json"
-
-
-@dataclass(frozen=True)
-class Reply:
-    """Status, body, media type and extra headers of one response."""
-
-    status: int
-    body: bytes
-    media_type: str = JSON_TYPE
-    headers: dict[str, str] = field(default_factory=dict)
-
-    @classmethod
-    def of(cls, status: int, data: object) -> Reply:
-        """JSON reply; responses are never cached by intermediaries."""
-        text = json.dumps(data, ensure_ascii=False)
-        return cls(status, text.encode("utf-8"), headers={"Cache-Control": "no-store"})
-
+NO_STORE = {"Cache-Control": "no-store"}
 
 HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
     "evaluate": evaluate,
@@ -40,30 +24,20 @@ HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
 
 def profiles() -> Reply:
     """``GET /profiles``."""
-    return Reply.of(200, catalogue())
+    return replace(json_reply(200, catalogue()), headers=NO_STORE)
 
 
-def _payload(raw: bytes, limit: int) -> object:
-    if len(raw) > limit:
-        raise ContractError("Anfrage zu groß.", status=413, code="too_large")
-    try:
-        text = raw.decode("utf-8")
-        return json.loads(text, parse_float=Decimal)
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ContractError("Kein gültiges JSON.", status=400, code="invalid_json") from exc
+def _run(name: str, raw: bytes, limit: int) -> Reply:
+    payload = decode_body(raw, limit, error=ContractError, parse_float=Decimal)
+    if name != "export":
+        return replace(json_reply(200, HANDLERS[name](payload)), headers=NO_STORE)
+    exported = export_evaluation(payload)
+    disposition = f'attachment; filename="{exported.filename}"'
+    return Reply(
+        200, exported.content, exported.media_type, {"Content-Disposition": disposition, **NO_STORE}
+    )
 
 
 def dispatch(name: str, raw: bytes, limit: int = MAX_BODY_BYTES) -> Reply:
     """Run one POST endpoint; contract errors become JSON error replies."""
-    try:
-        payload = _payload(raw, limit)
-        if name != "export":
-            return Reply.of(200, HANDLERS[name](payload))
-        exported = export_evaluation(payload)
-        headers = {
-            "Content-Disposition": f'attachment; filename="{exported.filename}"',
-            "Cache-Control": "no-store",
-        }
-        return Reply(200, exported.content, exported.media_type, headers)
-    except ContractError as exc:
-        return Reply.of(exc.status, exc.to_dict())
+    return guarded(lambda: _run(name, raw, limit), error=ContractError)

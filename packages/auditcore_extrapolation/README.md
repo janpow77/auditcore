@@ -211,8 +211,10 @@ festgehalten.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Optional
-`starlette>=0.26` über `[web]` (FastAPI nur, wenn der Consumer es installiert).
+Python ≥ 3.11 und `auditcore_common==0.1.1` (gemeinsame REST-Schicht
+`auditcore_common.rest` des Extras `[web]`; selbst nur Standardbibliothek). Der
+Rechenkern nutzt nur die Standardbibliothek. Optional `starlette>=0.26` über
+`[web]` (FastAPI nur, wenn der Consumer es installiert).
 `auditcore_sampling` ist keine Laufzeitabhängigkeit: `split_top_stratum_for_plan`
 nimmt jedes Objekt mit `sample_size` (z. B. dessen `SizePlan`).
 

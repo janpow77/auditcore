@@ -64,7 +64,7 @@
       "metrics": {
         "any_usages": 182,
         "complexity_over_10": 0,
-        "duplicate_functions": 2,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
@@ -141,7 +141,7 @@
       "metrics": {
         "any_usages": 0,
         "complexity_over_10": 0,
-        "duplicate_functions": 2,
+        "duplicate_functions": 0,
         "functions_over_60_lines": 0,
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,

@@ -10,7 +10,7 @@ from pathlib import Path
 import auditcore_invoicesynth
 
 PACKAGE = Path(auditcore_invoicesynth.__file__).parent
-ALLOWED = {"auditcore_invoicesynth", "auditcore_invoicegenerator"}
+ALLOWED = {"auditcore_invoicesynth", "auditcore_invoicegenerator", "auditcore_common"}
 LAZY_PIL = {"render.py", "augment.py", "dataset.py", "torch_backend.py"}
 #: Extra ``train``: nur verzögert und nur im Torch-Adapter.
 TRAIN_ONLY = {"torch", "transformers", "tokenizers", "safetensors", "bitsandbytes"}

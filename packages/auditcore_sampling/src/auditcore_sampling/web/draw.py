@@ -16,6 +16,8 @@ from collections.abc import Hashable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import cast
 
+from auditcore_common.rest import bounded_list
+
 from ..selection import draw_start, simple_random, stratified_allocation, systematic_mus
 from ..sizes import SamplingInputError
 from ._validate import (
@@ -61,11 +63,8 @@ def _item(position: int, raw: object) -> Item:
 
 def parse_items(raw: object) -> list[Item]:
     """Validated population, at most :data:`MAX_ITEMS` elements."""
-    if not isinstance(raw, list) or not raw:
-        raise ContractError("'items' muss eine nicht leere Liste sein.")
-    if len(raw) > MAX_ITEMS:
-        raise ContractError(f"Höchstens {MAX_ITEMS} Elemente je Anfrage.", status=413)
-    return [_item(i, entry) for i, entry in enumerate(raw)]
+    entries = bounded_list(raw, "items", MAX_ITEMS, "Elemente", error=ContractError)
+    return [_item(i, entry) for i, entry in enumerate(entries)]
 
 
 def items_digest(items: Sequence[Item]) -> str:

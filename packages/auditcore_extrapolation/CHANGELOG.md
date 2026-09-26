@@ -18,4 +18,5 @@ Erste Fassung (Neuimplementierung nach EGESIF_16-0014-01 und CPRE_23-0013-01 Ann
   nach 4.12/6.4.6; Restfehlerquote getrennt nach Annex 3 (Decimal, ROUND(K; 4)).
 - Faktorprofile `kom_2017_tables` und `exact`; jede Formel mit Fundstelle.
 - REST-Vertrag `auditcore_extrapolation.evaluation/1` (`[web]`): `/profiles`,
-  `/evaluate`, `/evaluate/export` (CSV/JSON), `/residual`.
+  `/evaluate`, `/evaluate/export` (CSV/JSON), `/residual`; REST-Grundlage aus
+  `auditcore_common.rest` (Pflichtabhängigkeit `auditcore_common==0.1.1`).

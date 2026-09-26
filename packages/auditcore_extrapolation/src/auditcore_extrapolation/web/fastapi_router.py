@@ -17,12 +17,12 @@ def create_router(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> 
 
     async def get_profiles() -> Response:
         reply = profiles()
-        return Response(reply.body, reply.status, reply.headers, reply.media_type)
+        return Response(reply.body, reply.status, dict(reply.headers), reply.media_type)
 
     def post(name: str) -> Callable[[Request], Awaitable[Response]]:
         async def handler(request: Request) -> Response:
             reply = dispatch(name, await request.body(), max_body_bytes)
-            return Response(reply.body, reply.status, reply.headers, reply.media_type)
+            return Response(reply.body, reply.status, dict(reply.headers), reply.media_type)
 
         return handler
 

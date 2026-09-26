@@ -19,7 +19,7 @@ def main() -> None:
     """Guidance example 6.4.7 (non-statistical PPS), a MUS run and the RER template example B."""
     package = distribution("auditcore_extrapolation")
     assert package.version == "0.1.0"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    assert [r for r in package.requires or [] if "extra ==" not in r] == ["auditcore_common==0.1.1"]
     assert find_spec("auditcore") is None
     exhaustive = tuple(
         SampleUnit(f"h{i}", 12_411_965 / 4, e) for i, e in enumerate((50_000.0, 30_028.0, 0, 0))

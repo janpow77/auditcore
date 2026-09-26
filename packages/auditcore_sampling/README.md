@@ -178,8 +178,10 @@ Details: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek; keine Abhängigkeit
-von `auditcore`, `auditcore_statistics` oder NumPy. Optional
+Python ≥ 3.11 und `auditcore_common==0.1.1` (nur Standardbibliothek;
+NumPy-kompatible Summe und Rundung, rahmenwerkfreier Teil der REST-Schicht;
+APT `python3-auditcore-common`); keine Abhängigkeit von `auditcore`,
+`auditcore_statistics` oder NumPy. Optional
 `starlette>=0.26` über `[web]` (FastAPI nur, wenn der Consumer es installiert).
 
 ## Sicherheit und Datenschutz
