@@ -42,7 +42,7 @@ def decode(raw: bytes, limit: int = MAX_BODY_BYTES) -> object:
 
 
 def disposition(filename: str) -> str:
-    """``attachment`` header: ASCII fallback (non-ASCII, ``"`` and ``\\`` replaced) and RFC 5987 name."""
+    """``attachment`` header: ASCII fallback (other characters as ``_``) and RFC 5987 name."""
     fallback = re.sub(r'[^\x20-\x7e]|["\\]', "_", filename)
     return f"attachment; filename=\"{fallback}\"; filename*=UTF-8''{quote(filename, safe='')}"
 
