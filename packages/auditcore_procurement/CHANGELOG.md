@@ -64,3 +64,19 @@ Befund (nicht korrigiert): `inspect_notice` durchläuft die Datumsfelder als
 `frozenset`; bei mehreren unlesbaren Datumsangaben hängt die Reihenfolge der
 `unparsed_date`-Meldungen vom Hash-Seed des Prozesses ab (`PYTHONHASHSEED`).
 Inhalt der Meldungen ist stabil.
+
+## 0.2.0 – 2026-09-23
+
+- EU-Vergabeschwellen je Geltungszeitraum 2014–2027 mit amtlicher Fundstelle
+  (Profil `procurement.hvtg 2026.09.3`, `eu_period`, `ThresholdUnavailable`,
+  `authority_type`); Profil 2026.09.2 bleibt ladbar.
+- Abweichungsschritt und Gesamtstatus der Prechecks ausgelagert.
+
+## 0.1.0 – 2026-09-22
+
+Erstausgabe: Datensatzvertrag `auditcore_procurement.notice/1`,
+verhaltensgleiche TED-Normalisierung und Dateiimport, getrennte Varianten der
+Unternehmenssuche, versioniertes Precheck-Profil aus dem Regelwerk der
+Anwendung (`legacy`/`strict`), TED- und HAD-Adapter auf `auditcore_harvest`
+mit Quellenkatalog. Characterization der Quellanwendungen
+(`tests/fixtures/procurement_legacy_observed.json`).

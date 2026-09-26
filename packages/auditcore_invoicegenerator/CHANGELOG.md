@@ -44,3 +44,17 @@ Abhängige Pakete: `auditcore_invoicesynth` pinnt jetzt
 | mypy --strict | sauber | sauber |
 
 Keine Umbenennungen öffentlicher Namen.
+
+## 0.2.0 – 2026-09-22
+
+- Optionaler deterministischer PDF-Renderer `render_pdf` (Extra `pdf`,
+  ReportLab), `PDFDependencyError` bei fehlendem Extra.
+- Profilversionierung an Paketreleases ausgerichtet (`docs/versioning.md`).
+
+## 0.1.0 – 2026-09-22
+
+Erstausgabe: `InvoiceScenario` mit expliziten Fehlerfällen und
+Duplikaten, JSON-Ausgabe, charakterisiertes Profil
+`flowinvoice-demo-fb2d185` (180 aufgezeichnete Fälle, auch mit nativen
+Summen unter Python 3.11), Profilkennungen an versionierte Provenienz
+gebunden, Abhängigkeit `auditcore_dummygenerator`.
