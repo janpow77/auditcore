@@ -155,7 +155,8 @@ begrenzten, zulässigen Abrufen. Fehlende Konfiguration: NOT_CONFIGURED.
 ## 4. Nutze das vorhandene Framework für jedes Paket
 
 Lies die CLI-Hilfen und bestehenden Implementierungen, statt Befehle zu erfinden:
-`auditcore-quality`, `auditcore-consolidate`, `auditcore-refactor`, `auditcore-deploy`.
+`auditcore-quality`, `auditcore-consolidate`, `auditcore-refactor`, `auditcore-deploy`,
+`auditcore-codegate`.
 
 Pro Paket vollständig durchführen:
 
@@ -165,6 +166,17 @@ Pro Paket vollständig durchführen:
 - ApplicabilityContext vollständig erfassen. UNKNOWN bleibt unbekannt.
 - FrameworkPolicyProvider gegen `janpow77/verwaltung-app-framework` ausführen.
   MUSS/BEDINGT/SOLL und tatsächliche Anwendbarkeit beachten; keine pauschale Maximal-Security.
+- Code-Qualitätsmaßstäbe einhalten (verbindlich, per Ratchet erzwungen, siehe
+  `docs/quality/code-quality.md`): McCabe ≤ 10 je Funktion, Module ≤ 400 Zeilen,
+  Funktionen ≤ 60 Zeilen, `Any` nur sparsam, `mypy --strict` fehlerfrei,
+  Bezeichner Englisch (Deutsch nur in Strings, Daten und festen fachlichen
+  Schlüsseln); TypeScript/Vue: kein `any` ohne begründete Zeilenausnahme,
+  complexity ≤ 12, strict + `noUncheckedIndexedAccess`, Dateien ≤ 400 Zeilen,
+  Vue-SFC ≤ 250 Zeilen, keine dateiweiten `eslint-disable`. Ein **neues Paket**
+  muss alle Maßstäbe vollständig erfüllen (Baseline 0). `auditcore-codegate check`
+  muss grün sein; wer Altbestand verbessert, senkt im selben PR die Baseline mit
+  `--update-baseline`. Ohne grünes Gate kein Release (`verify_domain_packages.py`
+  und `prepare_library_release.py` blockieren).
 - Quality Gates einschließlich konfiguriertem, tatsächlich ausgeführtem
   Regressionsbefehl, API-Stabilität, Security, Dependencies und Supply Chain ausführen.
 - Wheel/sdist und SBOM bauen; Installation über Requirements in einer sauberen
@@ -207,7 +219,29 @@ verbindliche FlowAudit-Prüfung des vollständigen betroffenen Projekts beachten
 bei erzeugten Office-Dateien vorhandene XML-/Schema-Prüfwerkzeuge verwenden.
 Fehler analysieren, beheben und erneut prüfen; nichts allein für PASS unterdrücken.
 
-Arbeite mit kleinen logischen Commits und nutze die vorhandene CI. Liefere einen
+Arbeite mit kleinen logischen Commits und nutze die vorhandene CI. PRs nicht
+pollen, sondern sofort nach dem Öffnen zum Auto-Merge anmelden; GitHub mergt per
+Squash, sobald die Required Checks (`code-quality-gate`, `ci-ok`) grün sind, und
+löscht den Branch:
+
+```bash
+gh pr merge <nr> --auto --squash
+# gleichwertig, falls gh pr merge nicht nutzbar ist (node_id aus gh api repos/…/pulls/<nr>):
+gh api graphql -f id=<node_id> -f query='mutation($id:ID!){enablePullRequestAutoMerge(
+  input:{pullRequestId:$id,mergeMethod:SQUASH}){clientMutationId}}'
+```
+
+Auto-Merge gibt es nur über GraphQL, nicht über REST. Ist das GraphQL-Kontingent
+erschöpft, die Anmeldung nach dem Reset nachholen (`gh api rate_limit`).
+
+Den Status bei Bedarf per REST lesen (`gh api repos/janpow77/auditcore/commits/<sha>/check-runs`).
+Formatierung (ruff, ESLint --fix) und reine Baseline-Absenkungen erledigt der
+Workflow `autofix` mit einem Commit „chore(autofix): …“; ebenso aktualisiert
+`update-pr-branches` den Branch nach jedem Push auf main per Merge. Vor dem
+eigenen Push daher `git pull --no-rebase`. Details:
+`docs/deployment/ci-automatisierung.md`.
+
+Liefere einen
 vollständigen Bericht mit Paketnamen/Versionen, Funktionen, Quell-SHAs, Lizenzen,
 Abhängigkeiten, echten Testzahlen, CI, Consumer-Migrationen, pip-/APT-Installation,
 KIRA/Graphify, offenen fachlichen Entscheidungen und Blockern. Bei Veröffentlichung

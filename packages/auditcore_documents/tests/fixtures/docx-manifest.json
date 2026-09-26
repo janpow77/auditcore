@@ -1,0 +1,55 @@
+{
+  "synthetic": {
+    "al_befehle.docx": "2ce0a62edf1ac959ff1683a1d68494870ac404a011584e3d406f04e8ed9974f3",
+    "al_befehle_letzter_ohne_text.docx": "800d2a5c68359059db804073238472b0da02838a0fede96cf85147178486ffe5",
+    "al_stamm.docx": "f83fd9fe5dd44057d2fe7997c86333dd806b606caa9cc685fc469a2a670be2aa",
+    "al_stamm_ohne_paragrafen.docx": "da142db32260c097a9f273ae36a5c81e6e6a54bd76d2a698ef771d4d26c9de09",
+    "cl_100_alt.docx": "b35be3bdf5a83f2f28069c54f9f620c5edd5abd3cd3611573ed381cec892e79c",
+    "cl_100_neu.docx": "e4425d8a6b0179465c15457359f072d40e7c6d106657edaa954c4b69d8b5a2b9",
+    "cl_basis_alt.docx": "b2fb4051951bde825087a30472680cb394900d870facdf10ea7dd71bae1bbfe0",
+    "cl_basis_neu.docx": "4b77d5912f364e6f7a693b7beada040694e7fae91761f1fe2e5c47def3e20ffe",
+    "cl_leer.docx": "7a0d2af2551d58e99e2f0c28a78492cb24dd4cdd05f4865e0c37217416b44eba",
+    "cl_publizitaet_alt.docx": "47f8681ddd73972b9143da3a3d2dd558703e40a6d93f1a2b881217be42a23010",
+    "cl_publizitaet_neu.docx": "d959e7ec6a2e026ce389593adbe3e440854473a3335fab9e3575b93459ee4b5d",
+    "cl_rich_alt.docx": "7f1365bb1900f2b0993e0b2aa27f879be408af57877a7aa76d509a83236b9852",
+    "cl_rich_neu.docx": "ae1efbc0b4c60a98d25970b149023ce75d32d614178d69821b47d9fc4a6a550b",
+    "cl_symbole_alt.docx": "5c8e1ea57f210f88896ff332698d78aa04124eede2fe1c467ab36e112eb9dace",
+    "cl_symbole_neu.docx": "7ca607582afe0c627147399bcc59452e629d293e20f04aa41c60d05356043f7c",
+    "cl_tracked_alt.docx": "c690ea9d039255b84047f12d68dd50edc3866583da031e50f788f30aa94e7ef8",
+    "cl_tracked_neu.docx": "b68cca474aa5e3a27834f8c50c2e60261f0b1da7a6b13f517241e56dff54d6ec",
+    "mix_tabelle.docx": "ab6250810cdb7e931b6eaa54e2c6eca244566273ee94348a7c46908c0346953b",
+    "tx_block_alt.docx": "ed9c6bcc15d5893e98aa285143d8509b510098f1ae878a4f97fcc153e751538d",
+    "tx_block_neu.docx": "aff3a00df743db4e785fb42df97b388601478fe9745682b1619b6c0949b3d86c",
+    "tx_leer.docx": "b87621be37286b5d8bbb954faae31b46ea315069fe99ae2b37fa892e79619e98",
+    "tx_streichung_alt.docx": "3208e47176bd1233ae81291c42c7e8497ae38579738dde013815b7fc41fa3df6",
+    "tx_streichung_neu.docx": "1ab551b7749a700840e689e568f93b7152387ac5e5ffa59ea2866b31309a256f",
+    "tx_struktur_alt.docx": "124c6ac4af7265895313fe86587daef05b555171bac6833cd1d2e71068986cb4",
+    "tx_struktur_neu.docx": "0de997f059f593df16b39208e6a6de5b040224c4a366102e93dbb24d0d7a5b41",
+    "tx_verschoben_alt.docx": "c42c54d7db69553a1eb5d677b24d8fffecc1c5d9edd199d3e91833c7018cf761",
+    "tx_verschoben_neu.docx": "3185e89ccbbc4e58736dd36b56a5aef3aa77757a6a77f26e100d1f3f31a2e032"
+  },
+  "errors": {
+    "entitaet_extern.docx": "90a6ddcddc8952e09601a93e71c2d167c0030fdf862774b2648f69d5fbe765eb",
+    "entitaet_intern.docx": "8baf9ddef45ce5a6c52ea793d46d040c4983ebf94d290e15377316191c18225a",
+    "kaputt.docx": "00f642f3a46e21375613698398550f13a5445a5912fa0f50c49fbb63ca9be18b",
+    "kaputt.pdf": "32ed5017fce95db1619dfd80fe7ffe1e51ec4dfb98e43e3266d265836f6ae62b",
+    "leer.pdf": "fa40cc61c0be5751ff15b2a026f68c57e8f961981001adf564e044cc5962b3b5",
+    "notiz.txt": "4cffd70d9e9c936fbb4b6b857181b1dcc4597c87c390fe4c4072b971b7a92627",
+    "ohne_document.docx": "34678999c995146480d95f066b2bbb5832ef024c2e2112c517003a6736a8572d",
+    "xml_fehler.docx": "dbd5e70cb4cfe63ba84f9b33ac3cc365ce90fdf50037887f3ad2315a10588ad6"
+  },
+  "public": {
+    "BGBl-2025-I-301-Art15.docx": {
+      "sha256": "5f642dd7116777be0c85ba4ba6dce39f8af4262e27f9965a5b359d04a7cbc034",
+      "derived_from": "bgbl-2025-I-301-seite55.pdf"
+    },
+    "KassenSichV_2025-06-01.docx": {
+      "sha256": "4e2bc15b686cc0bbdeb5ec044b5f39e9717753cc9916b297add2a1fee4a1987f",
+      "derived_from": "sources/kassensichv_gii_2025-06-01.html"
+    },
+    "KassenSichV_2026-05-06.docx": {
+      "sha256": "d233dcc1303d402cb7fbb6f3cc16390fb22644a6712b98d8fd5ae73583aa2827",
+      "derived_from": "sources/kassensichv_gii_2026-05-06.xml"
+    }
+  }
+}

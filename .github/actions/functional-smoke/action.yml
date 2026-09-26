@@ -1,0 +1,33 @@
+name: auditcore functional smoke
+description: >-
+  Pflicht nach jedem Produktions-Deploy: führt die fachlichen Rauchtest-Fälle
+  ('functional_smoke') gegen die laufende Anwendung aus und lässt den Job
+  scheitern, wenn ein Fall nicht besteht. Health-Checks zählen nicht.
+inputs:
+  base-url:
+    description: https-Basisadresse der deployten Anwendung
+    required: true
+  config:
+    description: JSON-Datei mit 'functional_smoke' (z. B. auditcore-deploy.json)
+    required: true
+  output:
+    description: Ergebnisdatei
+    required: false
+    default: functional-smoke.json
+runs:
+  using: composite
+  steps:
+    - name: auditcore aus diesem Action-Stand installieren
+      shell: bash
+      run: |
+        python3 -m venv "$RUNNER_TEMP/auditcore-smoke"
+        "$RUNNER_TEMP/auditcore-smoke/bin/pip" install --quiet "$GITHUB_ACTION_PATH/../../.."
+    - name: Fachlicher Rauchtest
+      shell: bash
+      env:
+        SMOKE_BASE_URL: ${{ inputs.base-url }}
+        SMOKE_CONFIG: ${{ inputs.config }}
+        SMOKE_OUTPUT: ${{ inputs.output }}
+      run: |
+        "$RUNNER_TEMP/auditcore-smoke/bin/auditcore-deploy" smoke "$SMOKE_CONFIG" \
+          --base-url "$SMOKE_BASE_URL" --output "$SMOKE_OUTPUT"

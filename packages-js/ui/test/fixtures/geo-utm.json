@@ -1,0 +1,9 @@
+{
+ "zone": 32,
+ "nordhalbkugel": true,
+ "ellipsoid": "GRS80",
+ "epsg": 25832,
+ "mittelmeridian": 9.0,
+ "ost": 476398.9801629734,
+ "nord": 5549801.397698259
+}

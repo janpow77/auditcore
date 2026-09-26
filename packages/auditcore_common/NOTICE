@@ -1,0 +1,18 @@
+auditcore_common 0.1.1 — attribution and authorization
+
+Consolidation of duplicated helper functions of the auditcore domain packages
+(janpow77/auditcore@40ce8f710785b6ca8608512a2e335c14ec9d924f); no code from
+other repositories. Every merged function was proven equal to each package
+copy by differential tests (tests/legacy_reference.py holds the verbatim
+copies with their git blobs in provenance.json).
+
+Generic application helpers (docs/reports/app-helfer-python.md, class b) were
+taken over from janpow77/audit_designer@4b629dd, audit-portal@72cc4b1,
+flowaudit@d8107f6, flowinvoice@5d5d8c5, regulierung@ce76e48,
+riskanalysis@dace0f6 and versteigerung@729f9a1 (files, symbols and git blobs in
+provenance.json, verbatim copies in tests/legacy_apps.py). The application
+repositories themselves are not relicensed.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.

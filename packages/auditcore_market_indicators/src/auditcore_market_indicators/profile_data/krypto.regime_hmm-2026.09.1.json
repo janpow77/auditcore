@@ -1,0 +1,26 @@
+{
+ "adx": null,
+ "atr": null,
+ "ema": {
+  "gaps": "error",
+  "seed": "first_value"
+ },
+ "id": "krypto.regime_hmm",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche oder methodische Freigabe der Indikatorvariante und keine Anlage- oder Handelsempfehlung.",
+ "macd": null,
+ "rsi": null,
+ "schema": "auditcore_market_indicators.profile/1",
+ "source": {
+  "commit": "34d601726227f913548a118e144de5519eee0f3f",
+  "git_blob": "2ae11f35cd4a87ab74395a0a589dbfcab4f15d4e",
+  "path": "backend/app/services/regime/hmm.py",
+  "repository": "janpow77/krypto",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "_ema"
+  ]
+ },
+ "status": "CHARACTERIZED",
+ "summation": "neumaier",
+ "version": "2026.09.1"
+}

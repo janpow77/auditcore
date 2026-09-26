@@ -3,7 +3,7 @@
 Eigenständig installierbare Testrechnungsbibliothek mit vollständigen Parteien,
 Positionen, numerischen Beträgen, Datumsfeldern und expliziten Fehlerfällen.
 Die Anwendung bleibt ein eigenes Repository. Einzige Paketpflicht:
-`auditcore_dummygenerator==0.1.0`; keine Plattform-, Web- oder DB-Pflichtabhängigkeit. PDF ist ein optionales Extra.
+`auditcore_dummygenerator==0.1.1`; keine Plattform-, Web- oder DB-Pflichtabhängigkeit. PDF ist ein optionales Extra.
 
 ```python
 from datetime import date
@@ -67,7 +67,7 @@ wurde nicht damit gleichgesetzt.
 ### Optionaler PDF-Renderer ab 0.2.0
 
 ```bash
-pip install 'auditcore_invoicegenerator[pdf]==0.2.0'
+pip install 'auditcore_invoicegenerator[pdf]==0.2.1'
 ```
 
 ```python
@@ -117,12 +117,12 @@ Lokale Wheels beziehungsweise freigegebene Paketquelle vorausgesetzt:
 
 ```text
 # requirements.txt
-auditcore_invoicegenerator==0.2.0
+auditcore_invoicegenerator==0.2.1
 ```
 
 `pip install -r requirements.txt` löst die deklarierte Dummy-Abhängigkeit auf.
 Debian-Abbildung: `python3-auditcore-invoicegenerator` mit
-`Depends: python3-auditcore-dummygenerator (= 0.1.0-1)` nach Paketierungsreview.
+`Depends: python3-auditcore-dummygenerator (= 0.1.1-1)` nach Paketierungsreview.
 Eine normale venv sieht APT-Systempakete nicht automatisch.
 
 ```bash

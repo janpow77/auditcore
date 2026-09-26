@@ -393,12 +393,31 @@ Tarife, Gültigkeitsdaten, Rundung und Freigabestatus brauchen eigene Profile.
 Die vorhandene LLM-Extraktion, Plausibilisierung, Reviewqueue und Scheduler
 bleiben zunächst in der Anwendung; keine automatische Preisfreigabe.
 
+**Stand 23.09.2026:** Beide Distributionen sind gebaut (je 0.1.0, MIT,
+Quellbindung `regulierung@853676d2`), siehe
+[Bericht](../reports/PRICE_PACKAGES_REPORT.md). `auditcore_price_analysis`
+(nur Standardbibliothek) enthält `calculator.py` und die reinen Auswahlregeln
+aus `preisauswahl.py` als exakten Legacy-Vertrag (274 Fälle) und als
+korrigierten Decimal-Vertrag mit versionierten Profilen;
+`auditcore_price_sources` (auf `auditcore_harvest==0.1.0`) enthält Bundesbank,
+Destatis (verschoben), EIA, Tankerkönig, Overpass-Tankstellen und den
+EU-Oil-Bulletin-Snapshot. Die Trennung ist belegt: keine gemeinsamen Symbole,
+getrennte Consumer-Module (HPP-Preisvergleich bzw. Marktbeobachtung/KPAnG) und
+Netzwerk-/Datenrechte nur bei den Quellen. Clustering, Flagging, Indexreihen
+und `genesis_sync.py` bleiben vorerst in regulierung (geplant).
+
 Ein kleiner `auditcore_geo`-Kern ist über OSINT `ortsdienst/dienst.py:haversine_km`
 und `werkzeuge/bundeslaender_holen.py:utm_nach_wgs84`, `wkb_polygone`,
 `douglas_peucker` sowie Natura-/Geocodingpfade in Flowsearch/Workshop prüfbar.
 Coordinate Reference System, Achsenfolge, Distanzmaß, Randpunkte und Einheiten
 charakterisieren. HTTP-Dienste, Geocoder-Budgets und PostGIS bleiben Adapter;
 nicht jede Geometriefunktion benötigt eine eigene Distribution.
+
+**Umgesetzt (23.09.2026):** `packages/auditcore_geo` 0.1.0 mit Erdmodell-Profilen,
+Umkreis, Punkt in Fläche mit Rand, UTM, GeoPackage, Douglas-Peucker und
+Nominatim-Adapter (Extra `geocoder` auf `auditcore_harvest`); 290 charakterisierte
+Originalfälle, Consumer geplant (Nutzerentscheidung). Bericht:
+[GEO_PACKAGE_REPORT.md](../reports/GEO_PACKAGE_REPORT.md).
 
 ### H5 — Immobilien- und Finanzmarktdaten bleiben eigene Domänen
 
@@ -410,12 +429,37 @@ Ein `auditcore_property_sources` mit getrennten Quellprofilen ist ein Kandidat;
 Preis-/Flächen-/Adress-Normalisierung und Statuswechsel benötigen Fixtures.
 Ein HTTP-Client allein beweist keine gleiche Fachsemantik der Portale.
 
+**Umsetzung (2026-09-23): `auditcore_property_sources` 0.1.0** unter
+`packages/auditcore_property_sources` – sieben getrennte Quellprofile
+(immobilien.de, inberlinwohnen, Kleinanzeigen, bienici, Citya, ParuVendu,
+ZVG-Portal) mit Harvest-Adaptern (Extra `sources`), reinem ZVG-Lebenszyklus
+(`erfasst`/`terminiert`/`abgehalten`/`aufgehoben`, gegen die Original-SQL auf
+PostgreSQL charakterisiert) und Zugangskatalog. Characterization auf
+synthetischen, strukturabgeleiteten Seiten (in beiden Repos liegen keine
+gespeicherten Portalseiten), 228 Funktionsfälle exakt. Consumer
+wohnungsmonitor und versteigerung: **geplant** (Nutzerentscheidung
+2026-09-23: „der mehrfache Nutzen kommt noch“); je Quelle heute ein Consumer.
+Befunde: robots.txt sperrt die Kleinanzeigen-Suchadresse (`/*/preis:*`) und die
+ZVG-Detail-/Anhangsseiten – HUMAN_DECISION_REQUIRED; Nutzungsbedingungen aller
+Portale REVIEW_REQUIRED. Bericht:
+[PROPERTY_SOURCES_PACKAGE_REPORT](../reports/PROPERTY_SOURCES_PACKAGE_REPORT.md).
+
 `krypto` enthält zahlreiche Provideradapter und einen Polars-basierten
 Indikatorkern `backend/app/services/indicators/base.py` mit `returns`,
 `log_returns`, `sma`, `ema`, `rsi`, `atr`, `adx`. Ein spezifischer
 `auditcore_market_indicators`-Kern ist prüfbar; Datenabruf, Portfolioentscheidungen
 und Trading bleiben getrennt. Finanzmarkt- und Energiepreisadapter werden
 wegen gleicher HTTP-Technik nicht zu einem pauschalen Markt-Harvester vereinigt.
+
+**Umgesetzt (23.09.2026):** `packages/auditcore_market_indicators` 0.1.0 aus
+`krypto@34d6017` – Kern nur mit Standardbibliothek, polars als Extra, vier
+quellengebundene Profile (`indicators_base`, `scoring_rsi_macd`,
+`scoring_confluence`, `regime_hmm`) für EMA-Start, Wilder-/EMA-/SMA-Glättung,
+Lücken und Summationsreihenfolge; 1922 tatsächlich ausgeführte Originalaufrufe
+nachgespielt. Repositoryübergreifender Mehrfachnutzen ist nicht belegt; das
+Paket entsteht auf Nutzerentscheidung („der mehrfache Nutzen kommt noch“),
+Consumer krypto ist **geplant** und in einer Kopie mit 1345/1345 Tests geprüft.
+Bericht: [MARKET_INDICATORS_PACKAGE_REPORT.md](../reports/MARKET_INDICATORS_PACKAGE_REPORT.md).
 
 ### A — Weitere Analysen, Dokumente und Berichte
 

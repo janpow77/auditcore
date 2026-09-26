@@ -22,6 +22,7 @@ from auditcore.tools.deployer.models import (
     DebianPackageBuild,
     DeploymentPlan,
 )
+from auditcore.tools.deployer.smoke import load_cases, smoke_required
 from auditcore.tools.deployer.templating import render_template, template_manifest
 from auditcore.tools.quality.scanners import scan_sensitive
 from auditcore.tools.workflow import DEPLOY_STATES, StateMachine
@@ -246,6 +247,11 @@ class DeploymentBuilder:
                 evidence.get("reference") and evidence.get("reason")
             ):
                 blockers.append(f"Deployment evidence required: {check}")
+        if smoke_required(profile.deployment_target):
+            try:
+                load_cases(profile.functional_smoke)
+            except (TypeError, ValueError) as exc:
+                blockers.append(f"Functional smoke required: {exc}")
         name = profile.application
         return DeploymentPlan(
             profile,

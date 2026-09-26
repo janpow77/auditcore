@@ -1,0 +1,373 @@
+{
+ "assessment": {
+  "cap": 1.0,
+  "divisor": 5.0,
+  "fallback_weight": 0.5,
+  "kind": "severity_weighted_sum",
+  "severity_order": [
+   "CRITICAL",
+   "HIGH",
+   "MEDIUM",
+   "LOW",
+   "INFO"
+  ],
+  "source_version": "1.0.0",
+  "summary": {
+   "level_words": {
+    "CRITICAL": "kritischer",
+    "HIGH": "hoher",
+    "INFO": "informativer",
+    "LOW": "geringer",
+    "MEDIUM": "mittlerer"
+   },
+   "many": "{count} Risiken erkannt, höchste Priorität: {level}",
+   "none": "Keine besonderen Risiken erkannt",
+   "one": "1 Risiko mit {level} Priorität erkannt",
+   "unknown_level": "unbekannter"
+  },
+  "weights": {
+   "CRITICAL": 1.0,
+   "HIGH": 0.7,
+   "INFO": 0.1,
+   "LOW": 0.2,
+   "MEDIUM": 0.4
+  }
+ },
+ "id": "flowinvoice.risk_checker",
+ "kind": "invoice_risk_indicators",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten (didaktische Hinweise für den Seminarbetrieb laut Quelle); keine rechtliche Bewertung. Der Score ist ausschließlich der Legacy-Score dieses Profils.",
+ "open_decisions": [
+  "Nicht aktiviert (K7): kein Laufzeit-Consumer vorgesehen."
+ ],
+ "output": {},
+ "rules": [
+  {
+   "code": "HIGH_AMOUNT",
+   "kind": "amount_or_statistic",
+   "label": "Ungewöhnlich hoher Einzelbetrag",
+   "messages": {
+    "absolute": {
+     "description": "Ungewöhnlich hoher Einzelbetrag: {amount:.2f} EUR",
+     "evidence": "Betrag überschreitet absoluten Schwellenwert von {limit:.2f} EUR",
+     "recommendation": "Prüfung der Wirtschaftlichkeit und Vergleich mit Marktpreisen empfohlen"
+    },
+    "relative": {
+     "description": "Betrag weicht signifikant vom Median ab: {amount:.2f} EUR",
+     "evidence": "Median: {median:.2f} EUR, Schwellenwert (Median + 2σ): {threshold:.2f} EUR",
+     "recommendation": "Statistische Auffälligkeit prüfen"
+    }
+   },
+   "origin": {
+    "lines": "33-34, 119-146",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_high_amount, HIGH_AMOUNT_*"
+   },
+   "params": {
+    "absolute_gt": 50000.0,
+    "amount_field": "net_amount",
+    "median_field": "context.median_amount",
+    "sigma": 2.0,
+    "std_field": "context.std_deviation"
+   },
+   "requires": [
+    "net_amount"
+   ],
+   "severity": "MEDIUM"
+  },
+  {
+   "code": "VENDOR_CLUSTERING",
+   "echo_fields": {
+    "vendor_name": "vendor_name"
+   },
+   "kind": "share_above",
+   "label": "Auffällige Lieferantenhäufung",
+   "messages": {
+    "default": {
+     "description": "Auffällige Häufung von Lieferant '{vendor_name}'",
+     "evidence": "{numerator} von {denominator} Rechnungen ({ratio:.0%})",
+     "recommendation": "Prüfung auf wirtschaftliche Abhängigkeit oder fehlende Ausschreibung"
+    }
+   },
+   "note": "Quelle: total_vendor_count ist laut Schema die Zahl verschiedener Lieferanten, im Text aber 'Rechnungen' (HUMAN_DECISION_REQUIRED).",
+   "origin": {
+    "lines": "35, 148-169",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_vendor_clustering"
+   },
+   "params": {
+    "denominator_field": "context.total_vendor_count",
+    "numerator_field": "context.vendor_frequency",
+    "ratio_gt": 0.3
+   },
+   "severity": "LOW"
+  },
+  {
+   "code": "MISSING_PERIOD",
+   "kind": "all_missing",
+   "label": "Fehlender Leistungszeitraum",
+   "messages": {
+    "default": {
+     "description": "Fehlende Angabe des Leistungszeitraums",
+     "evidence": "Weder Start- noch Enddatum des Leistungszeitraums auf Rechnung",
+     "recommendation": "Leistungszeitraum nachfordern für zeitliche Zuordnung"
+    }
+   },
+   "origin": {
+    "lines": "171-181",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_missing_period"
+   },
+   "params": {
+    "fields": [
+     "service_period_start",
+     "service_period_end"
+    ]
+   },
+   "severity": "LOW"
+  },
+  {
+   "code": "ROUND_AMOUNT",
+   "kind": "round_amount_terms",
+   "label": "Runder Pauschalbetrag",
+   "messages": {
+    "with_terms": {
+     "description": "Runder Pauschalbetrag: {amount:.2f} EUR",
+     "evidence": "Betrag ist ein glatter Hunderter-Betrag mit Pauschal-Hinweis",
+     "recommendation": "Pauschalvereinbarung dokumentieren"
+    },
+    "without_terms": {
+     "description": "Runder Pauschalbetrag: {amount:.2f} EUR",
+     "evidence": "Betrag ist ein glatter Hunderter-Betrag ohne detaillierte Aufschlüsselung",
+     "recommendation": "Kalkulation oder Aufschlüsselung des Betrags anfordern"
+    }
+   },
+   "origin": {
+    "lines": "36, 183-215",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_round_amount, ROUND_AMOUNT_THRESHOLD"
+   },
+   "params": {
+    "amount_field": "net_amount",
+    "min_amount": 1000.0,
+    "multiple": 100,
+    "severity_with_terms": "INFO",
+    "severity_without_terms": "LOW",
+    "terms": [
+     "pauschale",
+     "pauschal",
+     "festpreis",
+     "einmalzahlung"
+    ],
+    "text_field": "description"
+   },
+   "requires": [
+    "net_amount"
+   ]
+  },
+  {
+   "code": "OUTSIDE_PROJECT_PERIOD",
+   "kind": "date_outside_range",
+   "label": "Leistung außerhalb des Projektzeitraums",
+   "messages": {
+    "after_end": {
+     "description": "Leistung endet nach Projektende",
+     "evidence": "Leistungsende: {check_end}, Projektende: {range_end}",
+     "recommendation": "Förderfähigkeit der Leistung prüfen"
+    },
+    "before_start": {
+     "description": "Leistung beginnt vor Projektstart",
+     "evidence": "Leistungsbeginn: {check_start}, Projektstart: {range_start}",
+     "recommendation": "Förderfähigkeit der Leistung prüfen"
+    }
+   },
+   "origin": {
+    "lines": "217-246",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_outside_project_period"
+   },
+   "params": {
+    "end_field": "service_period_end",
+    "fallback_field": "invoice_date",
+    "range_end_field": "context.project_end",
+    "range_start_field": "context.project_start",
+    "start_field": "service_period_start"
+   },
+   "severity": "HIGH"
+  },
+  {
+   "code": "NO_PROJECT_REFERENCE",
+   "kind": "text_patterns",
+   "label": "Leistungsbeschreibung ohne Projektbezug",
+   "messages": {
+    "default": {
+     "description": "Generische Leistungsbeschreibung ohne erkennbaren Projektbezug",
+     "evidence": "Erkanntes Muster: '{pattern_display}' in Beschreibung",
+     "recommendation": "Konkrete Projektbezug in Leistungsbeschreibung anfordern"
+    }
+   },
+   "origin": {
+    "lines": "248-272",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_project_reference"
+   },
+   "params": {
+    "field": "description",
+    "lower": true,
+    "patterns": [
+     "^diverse[rs]?\\s",
+     "^sonstige[rs]?\\s",
+     "^verschiedene\\s",
+     "^allgemeine\\s",
+     "\\bnach aufwand\\b",
+     "\\bpauschale\\s+leistung"
+    ]
+   },
+   "severity": "LOW"
+  },
+  {
+   "code": "RECIPIENT_MISMATCH",
+   "kind": "names_differ",
+   "label": "Rechnungsempfänger weicht vom Begünstigten ab",
+   "messages": {
+    "default": {
+     "description": "Rechnungsempfänger weicht vom Begünstigten ab",
+     "evidence": "Empfänger: '{left}', Begünstigter: '{right}'",
+     "recommendation": "Prüfung ob Rechnung dem richtigen Projekt zugeordnet ist"
+    }
+   },
+   "origin": {
+    "lines": "274-296",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_recipient_mismatch"
+   },
+   "params": {
+    "left_field": "invoice_recipient",
+    "right_field": "beneficiary_name"
+   },
+   "severity": "MEDIUM"
+  },
+  {
+   "code": "SELF_INVOICE",
+   "kind": "identifier_equal",
+   "label": "Selbstrechnung (gleiche USt-IdNr.)",
+   "messages": {
+    "default": {
+     "description": "SELBSTRECHNUNG: Lieferant und Begünstigter haben gleiche USt-IdNr.",
+     "evidence": "Lieferant-USt-ID: '{left}' = Begünstigter-USt-ID: '{right}'",
+     "recommendation": "KRITISCH: Selbstrechnungen sind nicht förderfähig. Sofortige Prüfung erforderlich."
+    }
+   },
+   "origin": {
+    "lines": "298-322, 398-406",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_self_invoice, _normalize_vat_id"
+   },
+   "params": {
+    "left_field": "supplier_vat_id",
+    "remove_chars": [
+     " ",
+     ".",
+     "-",
+     "/",
+     "\\"
+    ],
+    "right_field": "beneficiary_vat_id",
+    "upper": true
+   },
+   "severity": "CRITICAL"
+  },
+  {
+   "code": "SPLIT_INVOICE",
+   "echo_fields": {
+    "vendor_name": "vendor_name"
+   },
+   "kind": "split_window",
+   "label": "Verdacht auf Rechnungssplitting",
+   "messages": {
+    "default": {
+     "description": "Verdacht auf Rechnungssplitting: {count} Rechnungen von '{vendor_name}' im Bereich {lower:.0f}-{threshold:.0f} EUR (Schwelle: {threshold:.0f} EUR)",
+     "evidence": "{count} Rechnungen mit Gesamtvolumen {total:.2f} EUR innerhalb von {window_days} Tagen, alle knapp unterhalb der Vergabeschwelle von {threshold:.0f} EUR",
+     "recommendation": "Prüfung ob eine absichtliche Aufteilung zur Umgehung von Vergabeschwellen vorliegt. Gegebenenfalls zusammengefasste Beauftragung prüfen."
+    }
+   },
+   "note": "Schwellenliste 1.000–50.000 plus EU-Schwelle des Rechnungsjahres aus auditcore_procurement (K9). Fehlt der belegte Zeitraum und trifft keine nationale Schwelle, bleibt die Rechnung unbestimmt.",
+   "origin": {
+    "lines": "38-42, 324-396",
+    "path": "backend/app/services/risk_checker.py",
+    "repository": "janpow77/flowinvoice",
+    "symbol": "RiskChecker._check_split_invoices, SPLIT_INVOICE_*"
+   },
+   "params": {
+    "amount_key": "net_amount",
+    "date_key": "invoice_date",
+    "items_field": "context.vendor_invoices",
+    "min_items": 3,
+    "procurement_eu": {
+     "authority_type": "sub_central",
+     "category": "supply_service",
+     "date_field": "invoice_date",
+     "date_source": "record",
+     "profile": "procurement.hvtg",
+     "version": "2026.09.2"
+    },
+    "proximity": 0.8,
+    "thresholds": [
+     1000.0,
+     5000.0,
+     10000.0,
+     25000.0,
+     50000.0
+    ],
+    "window_days": 30
+   },
+   "severity": "HIGH"
+  }
+ ],
+ "schema": "auditcore_risk.profile/1",
+ "source": {
+  "also_identical_in": {
+   "difference": "nur Formatierung zweier List-Comprehensions",
+   "git_blob": "5e93b2b8c99ace75ccd8592410906e38d77f224f",
+   "path": "backend/app/services/risk_checker.py",
+   "repository": "janpow77/audit-portal"
+  },
+  "characterization": "tests/fixtures/flowinvoice_risk_checker_observed.json",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "decision": {
+   "decided_on": "2026-09-23",
+   "decisions": [
+    "K7",
+    "K9"
+   ],
+   "effect": "Splitting-Schwellen um die EU-Schwelle des Rechnungsjahres ergänzt; RiskChecker wird nicht aktiviert.",
+   "quote": "alle empfehlungen"
+  },
+  "derived_from": {
+   "profile": "flowinvoice.risk_checker",
+   "version": "fb2d18568d2e"
+  },
+  "git_blob": "b799e855c382760d0a84762b2949462692f7be01",
+  "input_contract": "Ein Datensatz je Rechnung wie RiskAssessmentRequest, Kontext flach als context.<feld> (flatten_record).",
+  "path": "backend/app/services/risk_checker.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "RiskChecker",
+   "RiskAssessmentRequest",
+   "RiskAssessmentResult"
+  ]
+ },
+ "status": "APPROVED",
+ "summary": {
+  "format": "none"
+ },
+ "version": "2026.09.2"
+}

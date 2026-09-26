@@ -1,0 +1,2252 @@
+{
+ "cases": [
+  {
+   "exception": null,
+   "inputs": {
+    "text": null
+   },
+   "name": "designer-v2-0",
+   "operation": "designer_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": null
+   },
+   "name": "workshop-v2-0",
+   "operation": "workshop_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": ""
+   },
+   "name": "designer-v2-1",
+   "operation": "designer_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": ""
+   },
+   "name": "workshop-v2-1",
+   "operation": "workshop_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "   "
+   },
+   "name": "designer-v2-2",
+   "operation": "designer_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "   "
+   },
+   "name": "workshop-v2-2",
+   "operation": "workshop_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "designer-v2-3",
+   "operation": "designer_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "workshop-v2-3",
+   "operation": "workshop_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "name": "designer-v2-4",
+   "operation": "designer_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER GMBH"
+   },
+   "name": "workshop-v2-4",
+   "operation": "workshop_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "name": "designer-v2-5",
+   "operation": "designer_normalize_v2",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Muller GmbH"
+   },
+   "name": "workshop-v2-5",
+   "operation": "workshop_normalize_v2",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "name": "designer-v2-6",
+   "operation": "designer_normalize_v2",
+   "output": "strasse soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße & Söhne KG"
+   },
+   "name": "workshop-v2-6",
+   "operation": "workshop_normalize_v2",
+   "output": "strasse soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "name": "designer-v2-7",
+   "operation": "designer_normalize_v2",
+   "output": "strasse soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE & SÖHNE KG"
+   },
+   "name": "workshop-v2-7",
+   "operation": "workshop_normalize_v2",
+   "output": "strasse soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "name": "designer-v2-8",
+   "operation": "designer_normalize_v2",
+   "output": "fraunhofer gesellschaft e v"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer-Gesellschaft e.V."
+   },
+   "name": "workshop-v2-8",
+   "operation": "workshop_normalize_v2",
+   "output": "fraunhofer gesellschaft e v"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "name": "designer-v2-9",
+   "operation": "designer_normalize_v2",
+   "output": "fraunhofer gesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Fraunhofer Gesellschaft"
+   },
+   "name": "workshop-v2-9",
+   "operation": "workshop_normalize_v2",
+   "output": "fraunhofer gesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "name": "designer-v2-10",
+   "operation": "designer_normalize_v2",
+   "output": "societe generale s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Société Générale S.A."
+   },
+   "name": "workshop-v2-10",
+   "operation": "workshop_normalize_v2",
+   "output": "societe generale s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "name": "designer-v2-11",
+   "operation": "designer_normalize_v2",
+   "output": "societe generale"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SOCIÉTÉ GÉNÉRALE SA"
+   },
+   "name": "workshop-v2-11",
+   "operation": "workshop_normalize_v2",
+   "output": "societe generale"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "name": "designer-v2-12",
+   "operation": "designer_normalize_v2",
+   "output": "jose strauss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "José Strauß"
+   },
+   "name": "workshop-v2-12",
+   "operation": "workshop_normalize_v2",
+   "output": "jose strauss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "name": "designer-v2-13",
+   "operation": "designer_normalize_v2",
+   "output": "soren orsted a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Søren Ørsted A/S"
+   },
+   "name": "workshop-v2-13",
+   "operation": "workshop_normalize_v2",
+   "output": "soren orsted a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "name": "designer-v2-14",
+   "operation": "designer_normalize_v2",
+   "output": "lodz sp z o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łódź Sp. z o.o."
+   },
+   "name": "workshop-v2-14",
+   "operation": "workshop_normalize_v2",
+   "output": "lodz sp z o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "name": "designer-v2-15",
+   "operation": "designer_normalize_v2",
+   "output": "brueder weiss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Brüder Weiß GmbH & Co. KG"
+   },
+   "name": "workshop-v2-15",
+   "operation": "workshop_normalize_v2",
+   "output": "brueder weiss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "name": "designer-v2-16",
+   "operation": "designer_normalize_v2",
+   "output": "siemens"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Siemens AG"
+   },
+   "name": "workshop-v2-16",
+   "operation": "workshop_normalize_v2",
+   "output": "siemens"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "name": "designer-v2-17",
+   "operation": "designer_normalize_v2",
+   "output": "siemens aktiengesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "SIEMENS Aktiengesellschaft"
+   },
+   "name": "workshop-v2-17",
+   "operation": "workshop_normalize_v2",
+   "output": "siemens aktiengesellschaft"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "name": "designer-v2-18",
+   "operation": "designer_normalize_v2",
+   "output": "deutsche bank holding group"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Deutsche Bank AG Holding Group"
+   },
+   "name": "workshop-v2-18",
+   "operation": "workshop_normalize_v2",
+   "output": "deutsche bank holding group"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "name": "designer-v2-19",
+   "operation": "designer_normalize_v2",
+   "output": "acme holding deutschland"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ACME Holding GmbH Deutschland"
+   },
+   "name": "workshop-v2-19",
+   "operation": "workshop_normalize_v2",
+   "output": "acme holding deutschland"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "name": "designer-v2-20",
+   "operation": "designer_normalize_v2",
+   "output": "aether oeuvre"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Æther Œuvre Ltd."
+   },
+   "name": "workshop-v2-20",
+   "operation": "workshop_normalize_v2",
+   "output": "aether oeuvre"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "name": "designer-v2-21",
+   "operation": "designer_normalize_v2",
+   "output": "thor dad"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Þór Ðað plc"
+   },
+   "name": "workshop-v2-21",
+   "operation": "workshop_normalize_v2",
+   "output": "thor dad"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "name": "designer-v2-22",
+   "operation": "designer_normalize_v2",
+   "output": "sstrasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ẞtraße GmbH"
+   },
+   "name": "workshop-v2-22",
+   "operation": "workshop_normalize_v2",
+   "output": "sstrasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "name": "designer-v2-23",
+   "operation": "designer_normalize_v2",
+   "output": "cafe creme"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Café Crème SARL"
+   },
+   "name": "workshop-v2-23",
+   "operation": "workshop_normalize_v2",
+   "output": "cafe creme"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "name": "designer-v2-24",
+   "operation": "designer_normalize_v2",
+   "output": "doppelte leerzeichen"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "  Doppelte   Leerzeichen  GmbH  "
+   },
+   "name": "workshop-v2-24",
+   "operation": "workshop_normalize_v2",
+   "output": "doppelte leerzeichen"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "name": "designer-v2-25",
+   "operation": "designer_normalize_v2",
+   "output": "ggmbh stiftung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "gGmbH Stiftung"
+   },
+   "name": "workshop-v2-25",
+   "operation": "workshop_normalize_v2",
+   "output": "ggmbh stiftung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "name": "designer-v2-26",
+   "operation": "designer_normalize_v2",
+   "output": "firma"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Firma co.kg"
+   },
+   "name": "workshop-v2-26",
+   "operation": "workshop_normalize_v2",
+   "output": "firma"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "name": "designer-v2-27",
+   "operation": "designer_normalize_v2",
+   "output": "alpha"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Alpha CO. KG"
+   },
+   "name": "workshop-v2-27",
+   "operation": "workshop_normalize_v2",
+   "output": "alpha"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "name": "designer-v2-28",
+   "operation": "designer_normalize_v2",
+   "output": "omega"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Omega Inc., LLC"
+   },
+   "name": "workshop-v2-28",
+   "operation": "workshop_normalize_v2",
+   "output": "omega"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "name": "designer-v2-29",
+   "operation": "designer_normalize_v2",
+   "output": "o reilly media"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "O'Reilly Media, Inc."
+   },
+   "name": "workshop-v2-29",
+   "operation": "workshop_normalize_v2",
+   "output": "o reilly media"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "name": "designer-v2-30",
+   "operation": "designer_normalize_v2",
+   "output": "name_mit_unterstrich"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Name_mit_Unterstrich GmbH"
+   },
+   "name": "workshop-v2-30",
+   "operation": "workshop_normalize_v2",
+   "output": "name_mit_unterstrich"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "name": "designer-v2-31",
+   "operation": "designer_normalize_v2",
+   "output": "zahl 123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zahl 123 AG"
+   },
+   "name": "workshop-v2-31",
+   "operation": "workshop_normalize_v2",
+   "output": "zahl 123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "name": "designer-v2-32",
+   "operation": "designer_normalize_v2",
+   "output": "пао газпром"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ПАО Газпром"
+   },
+   "name": "workshop-v2-32",
+   "operation": "workshop_normalize_v2",
+   "output": "пао газпром"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "北京公司"
+   },
+   "name": "designer-v2-33",
+   "operation": "designer_normalize_v2",
+   "output": "北京公司"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "北京公司"
+   },
+   "name": "workshop-v2-33",
+   "operation": "workshop_normalize_v2",
+   "output": "北京公司"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "name": "designer-v2-34",
+   "operation": "designer_normalize_v2",
+   "output": "osaka kogyo k k"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ōsaka Kōgyō K.K."
+   },
+   "name": "workshop-v2-34",
+   "operation": "workshop_normalize_v2",
+   "output": "osaka kogyo k k"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "name": "designer-v2-35",
+   "operation": "designer_normalize_v2",
+   "output": "krakow s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Kraków S.A."
+   },
+   "name": "workshop-v2-35",
+   "operation": "workshop_normalize_v2",
+   "output": "krakow s a"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "name": "designer-v2-36",
+   "operation": "designer_normalize_v2",
+   "output": "capek s r o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Čapek s.r.o."
+   },
+   "name": "workshop-v2-36",
+   "operation": "workshop_normalize_v2",
+   "output": "capek s r o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "name": "designer-v2-37",
+   "operation": "designer_normalize_v2",
+   "output": "dordevic d o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Đorđević d.o.o."
+   },
+   "name": "workshop-v2-37",
+   "operation": "workshop_normalize_v2",
+   "output": "dordevic d o o"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "name": "designer-v2-38",
+   "operation": "designer_normalize_v2",
+   "output": "nandu s l"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ñandú S.L."
+   },
+   "name": "workshop-v2-38",
+   "operation": "workshop_normalize_v2",
+   "output": "nandu s l"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "name": "designer-v2-39",
+   "operation": "designer_normalize_v2",
+   "output": "yves emile"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ÿves Ëmile"
+   },
+   "name": "workshop-v2-39",
+   "operation": "workshop_normalize_v2",
+   "output": "yves emile"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "name": "designer-v2-40",
+   "operation": "designer_normalize_v2",
+   "output": "istanbul a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "İstanbul A.Ş."
+   },
+   "name": "workshop-v2-40",
+   "operation": "workshop_normalize_v2",
+   "output": "istanbul a s"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "GmbH"
+   },
+   "name": "designer-v2-41",
+   "operation": "designer_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "GmbH"
+   },
+   "name": "workshop-v2-41",
+   "operation": "workshop_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "name": "designer-v2-42",
+   "operation": "designer_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "AG & Co"
+   },
+   "name": "workshop-v2-42",
+   "operation": "workshop_normalize_v2",
+   "output": ""
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "name": "designer-v2-43",
+   "operation": "designer_normalize_v2",
+   "output": "haftungsbeschraenkt"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "UG (haftungsbeschränkt)"
+   },
+   "name": "workshop-v2-43",
+   "operation": "workshop_normalize_v2",
+   "output": "haftungsbeschraenkt"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "name": "designer-v2-44",
+   "operation": "designer_normalize_v2",
+   "output": "finance flow"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ﬁnance ﬂow GmbH"
+   },
+   "name": "workshop-v2-44",
+   "operation": "workshop_normalize_v2",
+   "output": "finance flow"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "name": "designer-v2-45",
+   "operation": "designer_normalize_v2",
+   "output": "viii holding"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ⅷ Holding"
+   },
+   "name": "workshop-v2-45",
+   "operation": "workshop_normalize_v2",
+   "output": "viii holding"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "①②③"
+   },
+   "name": "designer-v2-46",
+   "operation": "designer_normalize_v2",
+   "output": "123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "①②③"
+   },
+   "name": "workshop-v2-46",
+   "operation": "workshop_normalize_v2",
+   "output": "123"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "name": "designer-v2-47",
+   "operation": "designer_normalize_v2",
+   "output": "tab name line"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "tab\tname\nline"
+   },
+   "name": "workshop-v2-47",
+   "operation": "workshop_normalize_v2",
+   "output": "tab name line"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "name": "designer-v2-48",
+   "operation": "designer_normalize_v2",
+   "output": "emoji"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Emoji 😀 GmbH"
+   },
+   "name": "workshop-v2-48",
+   "operation": "workshop_normalize_v2",
+   "output": "emoji"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "name": "designer-v2-49",
+   "operation": "designer_normalize_v2",
+   "output": "vladimir vladimirovich putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Vladimir Vladimirovich Putin"
+   },
+   "name": "workshop-v2-49",
+   "operation": "workshop_normalize_v2",
+   "output": "vladimir vladimirovich putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "putin"
+   },
+   "name": "designer-v2-50",
+   "operation": "designer_normalize_v2",
+   "output": "putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "putin"
+   },
+   "name": "workshop-v2-50",
+   "operation": "workshop_normalize_v2",
+   "output": "putin"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "designer-v2-51",
+   "operation": "designer_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller GmbH"
+   },
+   "name": "workshop-v2-51",
+   "operation": "workshop_normalize_v2",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER"
+   },
+   "name": "designer-v2-52",
+   "operation": "designer_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "MÜLLER"
+   },
+   "name": "workshop-v2-52",
+   "operation": "workshop_normalize_v2",
+   "output": "muller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Mueller GmbH"
+   },
+   "name": "designer-v2-53",
+   "operation": "designer_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Mueller GmbH"
+   },
+   "name": "workshop-v2-53",
+   "operation": "workshop_normalize_v2",
+   "output": "mueller"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller-Lüdenscheidt Söhne"
+   },
+   "name": "designer-v2-54",
+   "operation": "designer_normalize_v2",
+   "output": "mueller luedenscheidt soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Müller-Lüdenscheidt Söhne"
+   },
+   "name": "workshop-v2-54",
+   "operation": "workshop_normalize_v2",
+   "output": "mueller luedenscheidt soehne"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÄÖÜ äöü ß ẞ"
+   },
+   "name": "designer-v2-55",
+   "operation": "designer_normalize_v2",
+   "output": "aeoeue aeoeue ss ss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÄÖÜ äöü ß ẞ"
+   },
+   "name": "workshop-v2-55",
+   "operation": "workshop_normalize_v2",
+   "output": "aeoeue aeoeue ss ss"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Grüße aus Köln"
+   },
+   "name": "designer-v2-56",
+   "operation": "designer_normalize_v2",
+   "output": "gruesse aus koeln"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Grüße aus Köln"
+   },
+   "name": "workshop-v2-56",
+   "operation": "workshop_normalize_v2",
+   "output": "gruesse aus koeln"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Göteborg Bröd AB"
+   },
+   "name": "designer-v2-57",
+   "operation": "designer_normalize_v2",
+   "output": "goeteborg broed"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Göteborg Bröd AB"
+   },
+   "name": "workshop-v2-57",
+   "operation": "workshop_normalize_v2",
+   "output": "goeteborg broed"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Jørgen Ødegård"
+   },
+   "name": "designer-v2-58",
+   "operation": "designer_normalize_v2",
+   "output": "jorgen odegard"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Jørgen Ødegård"
+   },
+   "name": "workshop-v2-58",
+   "operation": "workshop_normalize_v2",
+   "output": "jorgen odegard"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łukasz Wałęsa"
+   },
+   "name": "designer-v2-59",
+   "operation": "designer_normalize_v2",
+   "output": "lukasz walesa"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Łukasz Wałęsa"
+   },
+   "name": "workshop-v2-59",
+   "operation": "workshop_normalize_v2",
+   "output": "lukasz walesa"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Björk Guðmundsdóttir"
+   },
+   "name": "designer-v2-60",
+   "operation": "designer_normalize_v2",
+   "output": "bjoerk gudmundsdottir"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Björk Guðmundsdóttir"
+   },
+   "name": "workshop-v2-60",
+   "operation": "workshop_normalize_v2",
+   "output": "bjoerk gudmundsdottir"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ærø Œnologie"
+   },
+   "name": "designer-v2-61",
+   "operation": "designer_normalize_v2",
+   "output": "aero oenologie"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ærø Œnologie"
+   },
+   "name": "workshop-v2-61",
+   "operation": "workshop_normalize_v2",
+   "output": "aero oenologie"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zürich Versicherung AG"
+   },
+   "name": "designer-v2-62",
+   "operation": "designer_normalize_v2",
+   "output": "zuerich versicherung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Zürich Versicherung AG"
+   },
+   "name": "workshop-v2-62",
+   "operation": "workshop_normalize_v2",
+   "output": "zuerich versicherung"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Österreichische Post AG"
+   },
+   "name": "designer-v2-63",
+   "operation": "designer_normalize_v2",
+   "output": "oesterreichische post"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Österreichische Post AG"
+   },
+   "name": "workshop-v2-63",
+   "operation": "workshop_normalize_v2",
+   "output": "oesterreichische post"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Übersee-Handel GmbH & Co. KG"
+   },
+   "name": "designer-v2-64",
+   "operation": "designer_normalize_v2",
+   "output": "uebersee handel"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Übersee-Handel GmbH & Co. KG"
+   },
+   "name": "workshop-v2-64",
+   "operation": "workshop_normalize_v2",
+   "output": "uebersee handel"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÂÊÎÔÛ âêîôû"
+   },
+   "name": "designer-v2-65",
+   "operation": "designer_normalize_v2",
+   "output": "aeiou aeiou"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "ÂÊÎÔÛ âêîôû"
+   },
+   "name": "workshop-v2-65",
+   "operation": "workshop_normalize_v2",
+   "output": "aeiou aeiou"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ärger ÄG"
+   },
+   "name": "designer-v2-66",
+   "operation": "designer_normalize_v2",
+   "output": "aerger aeg"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Ärger ÄG"
+   },
+   "name": "workshop-v2-66",
+   "operation": "workshop_normalize_v2",
+   "output": "arger"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "öko"
+   },
+   "name": "designer-v2-67",
+   "operation": "designer_normalize_v2",
+   "output": "oeko"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "öko"
+   },
+   "name": "workshop-v2-67",
+   "operation": "workshop_normalize_v2",
+   "output": "oko"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße"
+   },
+   "name": "designer-v2-68",
+   "operation": "designer_normalize_v2",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "Straße"
+   },
+   "name": "workshop-v2-68",
+   "operation": "workshop_normalize_v2",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE"
+   },
+   "name": "designer-v2-69",
+   "operation": "designer_normalize_v2",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "text": "STRASSE"
+   },
+   "name": "workshop-v2-69",
+   "operation": "workshop_normalize_v2",
+   "output": "strasse"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 100.0
+   },
+   "name": "designer-v2-classify-100.0-None",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 100.0
+   },
+   "name": "workshop-v2-classify-100.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 100.0
+   },
+   "name": "designer-v2-classify-100.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 100.0
+   },
+   "name": "workshop-v2-classify-100.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 100.0
+   },
+   "name": "designer-v2-classify-100.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 100.0
+   },
+   "name": "workshop-v2-classify-100.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 100.0
+   },
+   "name": "designer-v2-classify-100.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 100.0
+   },
+   "name": "workshop-v2-classify-100.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 97.0
+   },
+   "name": "designer-v2-classify-97.0-None",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 97.0
+   },
+   "name": "workshop-v2-classify-97.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 97.0
+   },
+   "name": "designer-v2-classify-97.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 97.0
+   },
+   "name": "workshop-v2-classify-97.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 97.0
+   },
+   "name": "designer-v2-classify-97.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 97.0
+   },
+   "name": "workshop-v2-classify-97.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 97.0
+   },
+   "name": "designer-v2-classify-97.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 97.0
+   },
+   "name": "workshop-v2-classify-97.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 96.99
+   },
+   "name": "designer-v2-classify-96.99-None",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 96.99
+   },
+   "name": "workshop-v2-classify-96.99-None",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 96.99
+   },
+   "name": "designer-v2-classify-96.99-mueller",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 96.99
+   },
+   "name": "workshop-v2-classify-96.99-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 96.99
+   },
+   "name": "designer-v2-classify-96.99-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 96.99
+   },
+   "name": "workshop-v2-classify-96.99-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 96.99
+   },
+   "name": "designer-v2-classify-96.99-muller",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 96.99
+   },
+   "name": "workshop-v2-classify-96.99-muller",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 90.0
+   },
+   "name": "designer-v2-classify-90.0-None",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 90.0
+   },
+   "name": "workshop-v2-classify-90.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 90.0
+   },
+   "name": "designer-v2-classify-90.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 90.0
+   },
+   "name": "workshop-v2-classify-90.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 90.0
+   },
+   "name": "designer-v2-classify-90.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 90.0
+   },
+   "name": "workshop-v2-classify-90.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 90.0
+   },
+   "name": "designer-v2-classify-90.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 90.0
+   },
+   "name": "workshop-v2-classify-90.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "high"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 89.99
+   },
+   "name": "designer-v2-classify-89.99-None",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 89.99
+   },
+   "name": "workshop-v2-classify-89.99-None",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 89.99
+   },
+   "name": "designer-v2-classify-89.99-mueller",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 89.99
+   },
+   "name": "workshop-v2-classify-89.99-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 89.99
+   },
+   "name": "designer-v2-classify-89.99-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 89.99
+   },
+   "name": "workshop-v2-classify-89.99-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 89.99
+   },
+   "name": "designer-v2-classify-89.99-muller",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 89.99
+   },
+   "name": "workshop-v2-classify-89.99-muller",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 80.0
+   },
+   "name": "designer-v2-classify-80.0-None",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 80.0
+   },
+   "name": "workshop-v2-classify-80.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 80.0
+   },
+   "name": "designer-v2-classify-80.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 80.0
+   },
+   "name": "workshop-v2-classify-80.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 80.0
+   },
+   "name": "designer-v2-classify-80.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 80.0
+   },
+   "name": "workshop-v2-classify-80.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 80.0
+   },
+   "name": "designer-v2-classify-80.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 80.0
+   },
+   "name": "workshop-v2-classify-80.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "medium"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 79.99
+   },
+   "name": "designer-v2-classify-79.99-None",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 79.99
+   },
+   "name": "workshop-v2-classify-79.99-None",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 79.99
+   },
+   "name": "designer-v2-classify-79.99-mueller",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 79.99
+   },
+   "name": "workshop-v2-classify-79.99-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 79.99
+   },
+   "name": "designer-v2-classify-79.99-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 79.99
+   },
+   "name": "workshop-v2-classify-79.99-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 79.99
+   },
+   "name": "designer-v2-classify-79.99-muller",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 79.99
+   },
+   "name": "workshop-v2-classify-79.99-muller",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 0.0
+   },
+   "name": "designer-v2-classify-0.0-None",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 0.0
+   },
+   "name": "workshop-v2-classify-0.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 0.0
+   },
+   "name": "designer-v2-classify-0.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 0.0
+   },
+   "name": "workshop-v2-classify-0.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 0.0
+   },
+   "name": "designer-v2-classify-0.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 0.0
+   },
+   "name": "workshop-v2-classify-0.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 0.0
+   },
+   "name": "designer-v2-classify-0.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 0.0
+   },
+   "name": "workshop-v2-classify-0.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": -1.0
+   },
+   "name": "designer-v2-classify--1.0-None",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": -1.0
+   },
+   "name": "workshop-v2-classify--1.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": -1.0
+   },
+   "name": "designer-v2-classify--1.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": -1.0
+   },
+   "name": "workshop-v2-classify--1.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": -1.0
+   },
+   "name": "designer-v2-classify--1.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": -1.0
+   },
+   "name": "workshop-v2-classify--1.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": -1.0
+   },
+   "name": "designer-v2-classify--1.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": -1.0
+   },
+   "name": "workshop-v2-classify--1.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "low"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 101.0
+   },
+   "name": "designer-v2-classify-101.0-None",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": null,
+    "q_norm": null,
+    "score": 101.0
+   },
+   "name": "workshop-v2-classify-101.0-None",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 101.0
+   },
+   "name": "designer-v2-classify-101.0-mueller",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "mueller",
+    "score": 101.0
+   },
+   "name": "workshop-v2-classify-101.0-mueller",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 101.0
+   },
+   "name": "designer-v2-classify-101.0-mueller schmidt",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "schmidt mueller",
+    "q_norm": "mueller schmidt",
+    "score": 101.0
+   },
+   "name": "workshop-v2-classify-101.0-mueller schmidt",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 101.0
+   },
+   "name": "designer-v2-classify-101.0-muller",
+   "operation": "designer_classify_v2",
+   "output": "exact"
+  },
+  {
+   "exception": null,
+   "inputs": {
+    "matched_norm": "mueller",
+    "q_norm": "muller",
+    "score": 101.0
+   },
+   "name": "workshop-v2-classify-101.0-muller",
+   "operation": "workshop_classify_v2",
+   "output": "exact"
+  }
+ ],
+ "constants": {
+  "audit_designer.sanctions.fold_map": {
+   "Ä": "ae",
+   "Æ": "ae",
+   "Ð": "d",
+   "Ö": "oe",
+   "Ø": "o",
+   "Ü": "ue",
+   "Þ": "th",
+   "ß": "ss",
+   "ä": "ae",
+   "æ": "ae",
+   "ð": "d",
+   "ö": "oe",
+   "ø": "o",
+   "ü": "ue",
+   "þ": "th",
+   "Đ": "d",
+   "đ": "d",
+   "Ł": "l",
+   "ł": "l",
+   "Œ": "oe",
+   "œ": "oe"
+  },
+  "audit_designer.sanctions.legal_suffixes": [
+   "ab",
+   "ag",
+   "bv",
+   "co",
+   "company",
+   "corp",
+   "ev",
+   "fz",
+   "fzc",
+   "gmbh",
+   "inc",
+   "jsc",
+   "kg",
+   "limited",
+   "llc",
+   "lp",
+   "ltd",
+   "nv",
+   "ohg",
+   "ojsc",
+   "ooo",
+   "oy",
+   "pjsc",
+   "plc",
+   "sa",
+   "sarl",
+   "sas",
+   "se",
+   "sl",
+   "spa",
+   "srl",
+   "ug",
+   "zao"
+  ],
+  "audit_designer.sanctions.minimum_score": 70.0,
+  "flowworkshop.sanctions.umlaut_translation": {
+   "Ä": "Ae",
+   "Ö": "Oe",
+   "Ü": "Ue",
+   "ß": "ss",
+   "ä": "ae",
+   "ö": "oe",
+   "ü": "ue",
+   "ẞ": "SS"
+  }
+ },
+ "decision": "Nutzerentscheidung 23.09.2026: „mueller wenn es kein umlaut gibt“",
+ "environment": {
+  "auditcore_entity_matching_called_by_workshop": "0.1.0",
+  "python": "3.12.3",
+  "rapidfuzz": "3.10.1",
+  "unicode": "15.0.0"
+ },
+ "scope": "LOCAL_LEGACY_CHARACTERIZATION",
+ "sources": [
+  {
+   "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+   "git_blob": "5c064ddecb473b3f1a4341a0dc6513268d106295",
+   "path": "backend/app/core/shared/research/register/sanctions.py",
+   "repository": "janpow77/audit_designer",
+   "symbols": [
+    "RECHTSFORMZUSAETZE",
+    "_FALTUNG",
+    "_NICHT_WORT",
+    "falte_diakritika",
+    "normalisiere_name",
+    "klassifiziere",
+    "STANDARD_MINDESTWERT"
+   ]
+  },
+  {
+   "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+   "git_blob": "5b9de79484373428f45ddeb879a497b671a29e1c",
+   "path": "auditworkshop/backend/services/sanctions_service.py",
+   "repository": "janpow77/flowworkshop",
+   "symbols": [
+    "UMLAUT_UMSCHRIFT",
+    "normalize_name",
+    "_classify"
+   ]
+  }
+ ],
+ "status": "OBSERVED"
+}

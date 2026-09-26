@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_legal_sources",
+  "version": "0.1.3",
+  "sources": {
+    "auditdatabase": {
+      "repository": "janpow77/auditdatabase",
+      "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+      "files": [
+        {
+          "path": "backend/app/harvester/base.py",
+          "git_blob": "fcefbe13ecdd3d8bb1fff83f04a53c56ad700c4b"
+        },
+        {
+          "path": "backend/app/harvester/dip.py",
+          "git_blob": "de4a26ed623989ef6b84dec92b3d7c1e7eb3af62"
+        },
+        {
+          "path": "backend/app/harvester/eurlex.py",
+          "git_blob": "3bad9865dc13fbc2c21e195741f77864ae3fd4f2"
+        }
+      ]
+    },
+    "designer": {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "files": [
+        {
+          "path": "backend/app/modules/vp_ai/harvester/_funding_period.py",
+          "git_blob": "f67579071cfdb8c03ec249de231675e792c58966"
+        },
+        {
+          "path": "backend/app/modules/vp_ai/harvester/base.py",
+          "git_blob": "7e5b9b652c9db72c8c661e38a8e5f7ce10d7f86e"
+        },
+        {
+          "path": "backend/app/modules/vp_ai/harvester/bundestag_dip.py",
+          "git_blob": "6fa48fc0301f9bc8e92822d2ce1ab9ef515cb344"
+        },
+        {
+          "path": "backend/app/modules/vp_ai/harvester/eurlex.py",
+          "git_blob": "c0cc8d9483f325cb1fd48707d2051fe747985fd3"
+        }
+      ]
+    }
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "github_private": true,
+    "github_license": null,
+    "historical_source_license_status": "UNKNOWN",
+    "contributors": [
+      "janpow77",
+      "claude"
+    ],
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+      "limitation": "Gilt für den in diese Bibliothek extrahierten Code; keine Umlizenzierung der Quell-Repositories."
+    },
+    "data_rights": {
+      "dip_bundestag": "Inhalte nicht im Paket; DIP-API-Nutzungsbedingungen und API-Schlüssel beim Consumer (REVIEW_REQUIRED je Einsatz)",
+      "eurlex": "Inhalte nicht im Paket; Weiterverwendung nach Beschluss 2011/833/EU mit Quellenangabe (REVIEW_REQUIRED je Einsatz)",
+      "fixtures": "synthetisch, keine Drittinhalte"
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_harvesters_observed.json",
+    "tool": "tools/capture_legacy_harvesters.py",
+    "cases": 176,
+    "environment": {
+      "python": "3.12.3",
+      "httpx": "0.28.1",
+      "network": "none (httpx.AsyncClient replaced, SPARQL stubbed)"
+    },
+    "classification": "OBSERVED"
+  },
+  "profiles": [
+    "auditdatabase.esi 2026.09.1",
+    "audit_designer.vp_ai 2026.09.1"
+  ],
+  "excluded": [
+    "DIP DEFAULT_API_KEY (hart kodierter Schlüssel)",
+    "SQLAlchemy-Keyword-Laden aus der Datenbank",
+    "get_vorgang/test_connection (defekt, LS-C06)",
+    "fetch_document_content/_fetch_page_content (HTML-Abruf, noch nicht charakterisiert)"
+  ],
+  "behavior_changes": "docs/behavior-changes.md"
+}

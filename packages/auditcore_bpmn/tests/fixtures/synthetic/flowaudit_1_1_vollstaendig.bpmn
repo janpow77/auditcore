@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:flowaudit="https://flowaudit.de/bpmn/schema/1.0" id="Definitions_V" targetNamespace="http://example.org/vollstaendig">
+  <bpmn:collaboration id="Collaboration_V">
+    <bpmn:extensionElements>
+      <flowaudit:diagrammInfo schemaVersion="1.1" profil="foerderperiode-2021-2027" titel="Verwaltungskontrolle (Beispiel)" untertitel="Beispielprogramm" prozessverantwortlich="Referat Verwaltungskontrolle" prozesstyp="Kernprozess" version="1.2" status="freigegeben" gueltigAb="2026-01-01" gueltigBis="2027-12-31" autor="Erika Musterfrau" freigegebenDurch="Referatsleitung" freigegebenAm="2025-12-15" kopfzeilenfarbe="#1976d2" kopfzeilenTextfarbe="#ffffff" foerderperiode="2021-2027" programm="Beispielprogramm" cci="2021DE00XXX000" vertraulichkeit="intern" variante="soll" vksStichtag="2026-06-30">
+        <flowaudit:beschreibung>Ablauf der VerwK nach Artikel 74 der Verordnung (EU) 2021/1060.</flowaudit:beschreibung>
+        <flowaudit:schlagwort>VerwK</flowaudit:schlagwort>
+        <flowaudit:fonds>efre</flowaudit:fonds>
+        <flowaudit:fonds>jtf</flowaudit:fonds>
+        <flowaudit:rechtsgrundlage norm="Verordnung (EU) 2021/1060" artikel="74">Artikel 74 der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:pruefbezug ka="4" bk="4.1" art="systempruefung"/>
+        <flowaudit:risiko id="R-D1" bezeichnung="Doppelfinanzierung" kategorie="doppelfinanzierung" inhaerent="mittel" kontrollrisiko="niedrig" kontrollen="K1"/>
+        <flowaudit:quelle art="verfahrenshandbuch" fundstelle="Verfahrenshandbuch Muster, Kapitel 4"/>
+        <flowaudit:verweis art="register" schluessel="A1"/>
+      </flowaudit:diagrammInfo>
+    </bpmn:extensionElements>
+    <bpmn:participant id="Pool_V" name="Verwaltungsbehörde" processRef="Process_V">
+      <bpmn:extensionElements><flowaudit:akteur rolle="vb"/></bpmn:extensionElements>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_V" isExecutable="false">
+    <bpmn:laneSet id="LS_V">
+      <bpmn:lane id="Lane_Pruef" name="Prüfung">
+        <bpmn:extensionElements><flowaudit:akteur rolle="vb" anzeigename="Prüfreferat"/></bpmn:extensionElements>
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef><bpmn:flowNodeRef>Pruefen</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Zahl" name="Zahlstelle">
+        <bpmn:extensionElements><flowaudit:akteur rolle="vb" anzeigename="Kasse"/></bpmn:extensionElements>
+        <bpmn:flowNodeRef>Zahlen</bpmn:flowNodeRef><bpmn:flowNodeRef>Ende</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Auszahlungsantrag eingegangen"/>
+    <bpmn:task id="Pruefen" name="Verwaltungsprüfung durchführen">
+      <bpmn:documentation>Fachliche Beschreibung bleibt unverändert.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage id="RG_1" norm="Verordnung (EU) 2021/1060" artikel="74" absatz="1" buchstabe="a" celex="32021R1060" eli="http://data.europa.eu/eli/reg/2021/1060/oj">Artikel 74 Absatz 1 Buchstabe a der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:rechtsgrundlage>§ 44 LHO</flowaudit:rechtsgrundlage>
+        <flowaudit:interneNotiz>Nur intern.</flowaudit:interneNotiz>
+        <flowaudit:kennzeichen typ="pruefpunkt"/>
+        <flowaudit:kennzeichen typ="vier_augen"/>
+        <flowaudit:kennzeichen typ="schluesselkontrolle"/>
+        <flowaudit:pruefbezug ka="4" bk="4.2" art="verwk" anmerkung="Belegprüfung"/>
+        <flowaudit:kontrolle id="K1" bezeichnung="Belegprüfung nach Checkliste" schluesselkontrolle="true" art="praeventiv" durchfuehrung="manuell" haeufigkeit="je Antrag" nachweis="Prüfvermerk" verantwortlich="vb"><flowaudit:beschreibung>Vollständige Prüfung.</flowaudit:beschreibung></flowaudit:kontrolle>
+        <flowaudit:risiko id="R1" bezeichnung="Nicht förderfähige Ausgaben" kategorie="allgemein" inhaerent="hoch" kontrollrisiko="mittel" restrisiko="niedrig" kontrollen="K1"/>
+        <flowaudit:frist wert="10" einheit="arbeitstage" bezug="ab Eingang"><flowaudit:rechtsgrundlage norm="Verordnung (EU) 2021/1060" artikel="74" absatz="1" buchstabe="b">Artikel 74 Absatz 1 Buchstabe b der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage></flowaudit:frist>
+        <flowaudit:verweis art="prueffeld" schluessel="3.21" dokument="Checkliste Muster V 1.0"/>
+        <flowaudit:verweis art="feststellung_ref" schluessel="T01 F1"/>
+        <flowaudit:pruefschritt id="PS1" fall="V-001" beleg="B-7" ergebnis="erfuellt" datum="2026-08-01" pruefer="Max Mustermann" kontrolle="K1" stichprobe="5" grundgesamtheit="40"><flowaudit:bemerkung>ohne Befund</flowaudit:bemerkung></flowaudit:pruefschritt>
+        <flowaudit:feststellung id="FS1" kennung="T01 F1" art="formell" einstufung="gering" ka="4" bk="4.2" frist="2026-12-31" status="offen"><flowaudit:beschreibung>Prüfvermerk unvollständig.</flowaudit:beschreibung><flowaudit:empfehlung>Vermerkvorlage ergänzen.</flowaudit:empfehlung></flowaudit:feststellung>
+        <flowaudit:quelle art="interview" datum="2026-07-01" referenz="AP 3.1">Gespräch mit der Fachebene</flowaudit:quelle>
+      </bpmn:extensionElements>
+    </bpmn:task>
+    <bpmn:task id="Zahlen" name="Auszahlung anweisen">
+      <bpmn:extensionElements>
+        <flowaudit:rechtsgrundlage norm="Verordnung (EU) 2021/1060" artikel="74" absatz="1" buchstabe="b">Artikel 74 Absatz 1 Buchstabe b der Verordnung (EU) 2021/1060</flowaudit:rechtsgrundlage>
+        <flowaudit:kennzeichen typ="zahlung"/>
+      </bpmn:extensionElements>
+    </bpmn:task>
+    <bpmn:endEvent id="Ende" name="Ausgezahlt"/>
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Pruefen"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="Pruefen" targetRef="Zahlen"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="Zahlen" targetRef="Ende"/>
+  </bpmn:process>
+</bpmn:definitions>

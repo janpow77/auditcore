@@ -1,0 +1,16 @@
+{
+ "provenance": "Datei aus tests/fixtures/files (synthetisch im Originalformat)",
+ "exchanges": [
+  {
+   "request": {
+    "method": "GET",
+    "url": "https://daten.example.invalid/efre/liste.csv",
+    "json": null
+   },
+   "response": {
+    "status": 200,
+    "body_b64": "TmFtZSBkZXMgQmVnw7xuc3RpZ3RlbjtHZXNhbXRrb3N0ZW47UExaCkEgR21iSDsxNTAwMDA7MDEwNjcKQiBHbWJIOzszNDExNwpDIEdtYkg7MjUwMDsK"
+   }
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+name: pypi
+# Veröffentlicht eine Distribution per Trusted Publishing (OIDC) auf PyPI.
+# Kein API-Token: PyPI vertraut nur diesem Workflow in janpow77/auditcore.
+# Jede Distribution braucht auf PyPI einen eigenen (vorgemerkten) Publisher
+# mit Workflow "pypiworkflow.yml"; eingerichtet ist bisher nur "auditcore".
+on:
+  workflow_dispatch:
+    inputs:
+      paket:
+        description: "Distribution: auditcore (Plattform) oder packages/<name>"
+        required: true
+        default: auditcore
+      ref:
+        description: "Git-Ref (Tag bevorzugt), aus dem gebaut wird"
+        required: true
+        default: main
+permissions:
+  contents: read
+concurrency:
+  group: pypi-${{ inputs.paket }}
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Verzeichnis bestimmen
+        id: ziel
+        env:
+          PAKET: ${{ inputs.paket }}
+        run: |
+          if [ "$PAKET" = "auditcore" ]; then
+            echo "dir=." >> "$GITHUB_OUTPUT"
+          elif printf '%s' "$PAKET" | grep -Eq '^auditcore_[a-z_]+$' && [ -f "packages/$PAKET/pyproject.toml" ]; then
+            echo "dir=packages/$PAKET" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Unbekannte Distribution: $PAKET"
+            exit 1
+          fi
+      - run: python -m pip install --upgrade pip 'build>=1.2' 'twine>=6'
+      - name: Bauen und prüfen
+        env:
+          DIR: ${{ steps.ziel.outputs.dir }}
+          PAKET: ${{ inputs.paket }}
+        run: |
+          python -m build --outdir dist "$DIR"
+          python -m twine check --strict dist/*
+          # Nur die gewählte Distribution darf im Upload landen.
+          for f in dist/*; do
+            case "$(basename "$f")" in
+              "$PAKET"-[0-9]*) ;;
+              *) echo "::error::Fremde Datei im Build: $f"; exit 1 ;;
+            esac
+          done
+          sha256sum dist/*
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/${{ inputs.paket }}/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33

@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_risk",
+  "version": "0.3.2",
+  "sources": [
+    {
+      "repository": "janpow77/riskanalysis",
+      "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+      "path": "backend/app/pipeline/red_flags.py",
+      "git_blob": "b6196a7dbd3838bd4dd361c71e3cc44c904f4980",
+      "symbols": [
+        "compute_red_flags",
+        "_near_threshold",
+        "red_flag_summary",
+        "_hat_echte_vergabe",
+        "_name_match",
+        "_compute_rf10",
+        "_compute_rf11",
+        "_compute_rf12",
+        "VERGABE_SCHWELLEN",
+        "_PROXIMITY",
+        "RF08_BAGATELLGRENZE",
+        "_PLATZHALTER_VERGABE",
+        "_NICHT_VERGABERELEVANT",
+        "RED_FLAG_LABELS",
+        "RED_FLAG_CODES"
+      ],
+      "profile": "riskanalysis.legacy b5c523bf7eaa",
+      "also_present_in": "janpow77/flowinvoice backend/app/verwk/pipeline/red_flags.py (inhaltsgleich bis auf Importpfad und zip(strict=True))"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+      "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+      "git_blob": "d03738cb7e250e3cd838c88157992e0b4093ef35",
+      "symbols": [
+        "PROCUREMENT_THRESHOLDS",
+        "_red_flags"
+      ],
+      "profile": "audit_designer.flowstat_belegliste 1254591156d3"
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+      "path": "backend/app/modules/flowstat/services/belegliste_analysis_service.py",
+      "git_blob": "d03738cb7e250e3cd838c88157992e0b4093ef35",
+      "symbols": [
+        "PROCUREMENT_THRESHOLDS",
+        "_red_flags"
+      ],
+      "profile": "audit_designer.flowstat_belegliste 1254591156d3 (identischer Blob)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/risk_checker.py",
+      "git_blob": "b799e855c382760d0a84762b2949462692f7be01",
+      "symbols": [
+        "RiskChecker"
+      ],
+      "profile": "flowinvoice.risk_checker fb2d18568d2e",
+      "also_identical_in": "janpow77/audit-portal backend/app/services/risk_checker.py blob 5e93b2b8 (nur Formatierung)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/manager.py",
+      "git_blob": "0a48b36753546c8954604616d4e1028b6c9b9b24",
+      "symbols": [
+        "FraudDetectionManager.analyze_invoice",
+        "_calculate_risk_score",
+        "_determine_risk_level"
+      ],
+      "profile": "flowinvoice.fraud_signals fb2d18568d2e"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/ted_checker.py",
+      "git_blob": "5618a2e0f090550443f5c74c8aaaee2ed188e420",
+      "symbols": [
+        "TedChecker._calculate_statistics",
+        "_detect_red_flags",
+        "_calculate_legitimacy_score",
+        "_load_contracts"
+      ],
+      "profile": "flowinvoice.ted_contractor fb2d18568d2e"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/fraud_detection/duplicate_detector.py",
+      "git_blob": "ad6c7ff993aa2e9bd3afd246811b8a9e942c6b1d",
+      "symbols": [
+        "DuplicateDetector._find_exact_duplicates",
+        "_find_fuzzy_duplicates",
+        "_names_similar",
+        "_parse_date"
+      ],
+      "profile": "flowinvoice.duplicates fb2d18568d2e",
+      "also_identical_in": "janpow77/audit-portal (gleicher Blob)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+      "git_blob": "24e04c04d8d98ae033c5d78508a29d4c900be4d1",
+      "symbols": [
+        "score_mittelabrufe"
+      ],
+      "profile": "flowinvoice.rbvk_wibank fb2d18568d2e",
+      "also_present_in": "janpow77/riskanalysis backend/app/pipeline/rbvk_wibank_scorer.py blob 6ebd3a2 (fachlich gleich)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/verwk/pipeline/exante_score.py",
+      "git_blob": "1f05d3f7a00d65b17ba79c7812fa05b52f8bccba",
+      "symbols": [
+        "_features",
+        "kalibriere_und_score",
+        "heuristik_score"
+      ],
+      "profile": "flowinvoice.exante_basis, flowinvoice.exante_heuristik fb2d18568d2e",
+      "also_present_in": "janpow77/riskanalysis backend/app/pipeline/exante_score.py blob bc1725b (fachlich gleich)"
+    }
+  ],
+  "dependencies": {
+    "auditcore_entity_matching": "0.2.0 (Profil riskanalysis.payee für RF09)",
+    "auditcore_procurement": "0.2.0, Extra procurement (jahresbezogene EU-Schwellen, Profil procurement.hvtg 2026.09.3 in riskanalysis.year_bound 2026.09.4 und 2026.09.5 sowie flowinvoice.risk_checker 2026.09.3; 2026.09.2 in den abgelösten Fassungen)"
+  },
+  "rights": {
+    "license_status": "MIT",
+    "historical_source_license_status": "UNKNOWN",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "github": {
+      "janpow77/riskanalysis": {
+        "private": true,
+        "license": null
+      },
+      "janpow77/audit_designer": {
+        "private": true,
+        "license": null
+      },
+      "janpow77/audit-portal": {
+        "private": true,
+        "license": null
+      },
+      "janpow77/flowinvoice": {
+        "private": true,
+        "license": null
+      }
+    },
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "scope": "Extrahierter Bibliothekscode und Regelprofile in auditcore_risk",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories riskanalysis, audit_designer, audit-portal und flowinvoice; Datenrechte der Consumer separat."
+    }
+  },
+  "excluded": [
+    "KPAnG-Prüfung/Tatbildung aus regulierung (bleibt laut FUNCTIONS_REGULIERUNG_MIGRATION.md in regulierung)",
+    "audit_designer vp_ai scorecard_service.ScorecardService (Bearbeitungsstands-Score über ORM-Abfragen, keine Risikomechanik; blob 385679fa9233aaac2e158928ce8f88b73fe9dbe9)",
+    "audit_designer vp_ai rule_validation_service.RuleValidationService (Checklisten-Konsistenzregeln R01–R16 über ORM; gehört zu einem Checklistenpaket; blob c8e0f76465381a7e10639cefc69786d068f77a4f)",
+    "Flowstat _standard_packages/analyze_belegliste (Kennzahlenpakete, Excelnormalisierung) – nur _red_flags übernommen",
+    "riskanalysis payee_normalizer.add_payee_columns/_fuzzy_merge (Clustering, bleibt Anwendung)",
+    "Gemeinsamer oder vereinheitlichter Risikoscore (HUMAN_DECISION_REQUIRED)",
+    "flowinvoice fraud_detection sanctions_checker/pep_checker/company_verifier (Screening; Ergebnisse werden als Signale konsumiert, Quelle: registry-Bibliotheken)",
+    "flowinvoice fraud_detection benfords_law → auditcore_statistics 0.2.0 legacy_flowinvoice_benford (nicht dupliziert)",
+    "flowinvoice verwk auffaelligkeiten/konzentration/benford/montecarlo/fuzzy_link/eu_typologie/fehlerursachen (Begründung docs/behavior-changes.md; Status geplant bzw. Anwendung)",
+    "WIBANK-Merkmalsaufbereitung _normalise_sources, Vorhistorie _historical_scopes, 'nicht abbildbar' (Anwendung)",
+    "Ex-ante-Kalibrierung (Logit) und erwartete_ma/an_risiko_loo (Anwendung/Modellierung)"
+  ],
+  "characterization": {
+    "riskanalysis": {
+      "fixture": "tests/fixtures/riskanalysis_observed.json",
+      "tool": "tools/capture_riskanalysis.py",
+      "frames": 173,
+      "environment": {
+        "python": "3.12.3",
+        "pandas": "3.0.5",
+        "numpy": "2.5.1",
+        "rapidfuzz": "3.14.5"
+      },
+      "method": "Blob-geprüfte Originalmodule unverändert importiert und ausgeführt; 24 Frames der 26 Originaltests, Grenzfälle je Regel, 120 zufällige Frames (Seed 20260923)"
+    },
+    "flowstat": {
+      "fixture": "tests/fixtures/flowstat_observed.json",
+      "tool": "tools/capture_flowstat.py",
+      "frames": 112,
+      "environment": {
+        "python": "3.12.3",
+        "pandas": "2.1.4",
+        "numpy": "1.26.2"
+      },
+      "method": "AST-Extraktion der Blob-geprüften Definitionen aus audit_designer und audit-portal, beide ausgeführt und verglichen"
+    },
+    "flowinvoice_risk_checker": {
+      "fixture": "tests/fixtures/flowinvoice_risk_checker_observed.json",
+      "tool": "tools/capture_flowinvoice_risk_checker.py",
+      "cases": 338,
+      "environment": {
+        "python": "3.11.16 (Container python:3.11-slim, wie flowinvoice Dockerfile/Dockerfile.production)",
+        "pydantic": "2.13.5",
+        "sqlalchemy": "2.0.54"
+      },
+      "method": "RiskChecker.assess unverändert aus dem Blob-geprüften Checkout ausgeführt"
+    },
+    "flowinvoice_fraud": {
+      "fixture": "tests/fixtures/flowinvoice_fraud_observed.json",
+      "tool": "tools/capture_flowinvoice_fraud.py",
+      "cases": {
+        "manager": 268,
+        "ted": 129,
+        "duplicates": 250
+      },
+      "method": "Manager mit Stellvertretern der Teilprüfungen; TED-Statistik/-Merkmale/-Legitimität und Dublettenlogik unverändert; SQL-Auswahl NOT_EXECUTED",
+      "environment": {
+        "python": "3.11.16 (Container python:3.11-slim, wie flowinvoice Dockerfile/Dockerfile.production)",
+        "pydantic": "2.13.5",
+        "sqlalchemy": "2.0.54"
+      }
+    },
+    "flowinvoice_verwk_scores": {
+      "fixture": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
+      "tool": "tools/capture_flowinvoice_verwk_scores.py",
+      "cases": {
+        "wibank": 777,
+        "exante_features": 125,
+        "exante_runs": 3
+      },
+      "environment": {
+        "python": "3.12.3 (wie Dockerfile.verwk)",
+        "pandas": "3.0.5",
+        "statsmodels": "0.14.6"
+      },
+      "method": "Unveränderte Funktionen auf Demobeständen und synthetischen Rahmen; lokale Variablen am Bewertungsschritt per sys.settrace gelesen"
+    }
+  },
+  "profiles": [
+    {
+      "id": "riskanalysis.legacy",
+      "version": "b5c523bf7eaa",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "riskanalysis.year_bound",
+      "version": "2026.09.1",
+      "status": "CANDIDATE_HUMAN_DECISION_REQUIRED"
+    },
+    {
+      "id": "audit_designer.flowstat_belegliste",
+      "version": "1254591156d3",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.risk_checker",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.fraud_signals",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED",
+      "schema": "auditcore_risk.fraud-profile/1"
+    },
+    {
+      "id": "flowinvoice.ted_contractor",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED",
+      "schema": "auditcore_risk.fraud-profile/1"
+    },
+    {
+      "id": "flowinvoice.duplicates",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED",
+      "schema": "auditcore_risk.fraud-profile/1"
+    },
+    {
+      "id": "flowinvoice.rbvk_wibank",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.exante_basis",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    },
+    {
+      "id": "flowinvoice.exante_heuristik",
+      "version": "fb2d18568d2e",
+      "status": "LEGACY_CHARACTERIZED"
+    }
+  ],
+  "behavior_changes": "docs/behavior-changes.md"
+}

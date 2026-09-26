@@ -1,0 +1,28 @@
+auditcore_geo 0.3.0 — source attribution and authorization
+
+Derived from (unchanged Git blobs, verified against GitHub on 2026-09-23):
+  janpow77/osint@d361ddb9a502bb899065e799d50104f306cfdc89
+    ortsdienst/dienst.py                                   d9e06518385971a45a82a6d796f8dc1356b4e727
+    werkzeuge/bundeslaender_holen.py                       4df5560ac0930c81c5f7397d2236a3190757db42
+    werkzeuge/betroffenheit.py                             2b7a1f63e784e044c3029827eb5a356e6f9b01ef
+    werkzeuge/vorhaben_verorten.py                         1b6057a7555c8a0532b89b3b094ddcd7a3cb5536
+  janpow77/audit_designer@1254591156d3bdf6ccdf4050dec7713a61ad4a20
+    backend/app/api/vpai_notebook/gis/_common.py           54b4f41c35fc51c4d3b1dbf2c84071fdc915270a
+    backend/app/core/shared/research/register/geocoding.py 12056f39a1f6644db5f086410a3028e4a91fd529
+    backend/app/modules/vp_ai/services/company/company_records.py 874901d0414976bbc3f9f9314894c7cf913c043a
+  janpow77/flowsearch@10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4
+    backend/app/api/eu_beneficiaries.py                    b45c67919253c92519989a2842578f2b6fa695f6
+    backend/app/services/natura2000_service.py             33f83f6748eb30fcf9775c159e06c99b7263504f
+  janpow77/flowworkshop@3d1cb40221645935c323392d70d84102d05ac7bb
+    auditworkshop/backend/services/geocoding_service.py    3c6ac686be9bc222749fc06b7271ef94c44c2cc3
+    auditworkshop/backend/services/country_profiles.py     80b7d05a41e6851036dff7d86a2680341a85a419
+
+The source repositories are not relicensed. On 2026-09-22 the rights holder
+decided: "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die
+Bibliotheken kommen nach auditcore". Status: USER_AUTHORIZED_MIT for the
+extracted library code in this package.
+
+No OpenStreetMap data (ODbL) and no BKG geodata are included; Nominatim
+fixtures are synthetic. Consumers of the Nominatim adapter must display
+"© OpenStreetMap contributors" and follow the OSMF Nominatim usage policy
+(https://operations.osmfoundation.org/policies/nominatim/).

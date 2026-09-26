@@ -1,0 +1,532 @@
+{
+ "source": {
+  "repository": "janpow77/riskanalysis",
+  "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+  "path": "backend/app/pipeline/payee_normalizer.py",
+  "git_blob": "fceae5b0d3364c5b20cc638ce4453ac082085aa7",
+  "symbols": [
+   "_LEGAL",
+   "_NONWORD",
+   "_WS",
+   "normalize_name"
+  ]
+ },
+ "constants": {
+  "legal_pattern": "\\b(gmbh|mbh|ggmbh|ag|kg|kgaa|ohg|gbr|ug|se|ek|e\\s?k|e\\s?v|ev|co|kg|partg|mbb|gesellschaft|stiftung|verein|und|the)\\b",
+  "nonword_pattern": "[^a-z0-9äöüß ]",
+  "whitespace_pattern": "\\s+"
+ },
+ "environment": {
+  "python": "3.12.3",
+  "rapidfuzz": "3.14.5",
+  "unicode": "15.0.0"
+ },
+ "normalize": [
+  {
+   "name": "normalize-00",
+   "input": "Müller GmbH",
+   "output": "mu ller"
+  },
+  {
+   "name": "normalize-01",
+   "input": "MÜLLER GMBH",
+   "output": "mu ller"
+  },
+  {
+   "name": "normalize-02",
+   "input": "Mueller GmbH",
+   "output": "mueller"
+  },
+  {
+   "name": "normalize-03",
+   "input": "Müller-Lüdenscheidt KG",
+   "output": "mu ller lu denscheidt"
+  },
+  {
+   "name": "normalize-04",
+   "input": "ÄRZTE e.V.",
+   "output": "a rzte"
+  },
+  {
+   "name": "normalize-05",
+   "input": "Ärztekammer Nord e. V.",
+   "output": "a rztekammer nord e v"
+  },
+  {
+   "name": "normalize-06",
+   "input": "Straße Bau AG",
+   "output": "straße bau"
+  },
+  {
+   "name": "normalize-07",
+   "input": "STRASSE BAU AG",
+   "output": "strasse bau"
+  },
+  {
+   "name": "normalize-08",
+   "input": "Bau & Co. KG",
+   "output": "bau"
+  },
+  {
+   "name": "normalize-09",
+   "input": "Bau und Co KG",
+   "output": "bau"
+  },
+  {
+   "name": "normalize-10",
+   "input": "The Company Ltd.",
+   "output": "company ltd"
+  },
+  {
+   "name": "normalize-11",
+   "input": "Stiftung e k Test",
+   "output": "test"
+  },
+  {
+   "name": "normalize-12",
+   "input": "Handel e.K.",
+   "output": "handel"
+  },
+  {
+   "name": "normalize-13",
+   "input": "Handel e K",
+   "output": "handel"
+  },
+  {
+   "name": "normalize-14",
+   "input": "Handel eK",
+   "output": "handel"
+  },
+  {
+   "name": "normalize-15",
+   "input": "Beispiel gGmbH",
+   "output": "beispiel"
+  },
+  {
+   "name": "normalize-16",
+   "input": "Beispiel GmbH & Co. KGaA",
+   "output": "beispiel"
+  },
+  {
+   "name": "normalize-17",
+   "input": "Beispiel mbH",
+   "output": "beispiel"
+  },
+  {
+   "name": "normalize-18",
+   "input": "Partner PartG mbB",
+   "output": "partner"
+  },
+  {
+   "name": "normalize-19",
+   "input": "Verein für Sport e.V.",
+   "output": "fu r sport"
+  },
+  {
+   "name": "normalize-20",
+   "input": "Gesellschaft für Technik mbH",
+   "output": "fu r technik"
+  },
+  {
+   "name": "normalize-21",
+   "input": "Société Générale S.A.",
+   "output": "socie te ge ne rale s a"
+  },
+  {
+   "name": "normalize-22",
+   "input": "Çelik Yapı A.Ş.",
+   "output": "c elik yap a s"
+  },
+  {
+   "name": "normalize-23",
+   "input": "Øresund ApS",
+   "output": "resund aps"
+  },
+  {
+   "name": "normalize-24",
+   "input": "Łódź Sp. z o.o.",
+   "output": "o dz sp z o o"
+  },
+  {
+   "name": "normalize-25",
+   "input": "ﬁnanz ﬂow GmbH",
+   "output": "finanz flow"
+  },
+  {
+   "name": "normalize-26",
+   "input": "Ｆｕｌｌｗｉｄｔｈ GmbH",
+   "output": "fullwidth"
+  },
+  {
+   "name": "normalize-27",
+   "input": "Straße",
+   "output": "straße"
+  },
+  {
+   "name": "normalize-28",
+   "input": "the und GmbH",
+   "output": ""
+  },
+  {
+   "name": "normalize-29",
+   "input": "  Leer   Zeichen  GmbH  ",
+   "output": "leer zeichen"
+  },
+  {
+   "name": "normalize-30",
+   "input": "GmbH",
+   "output": ""
+  },
+  {
+   "name": "normalize-31",
+   "input": "AG",
+   "output": ""
+  },
+  {
+   "name": "normalize-32",
+   "input": "ag bau",
+   "output": "bau"
+  },
+  {
+   "name": "normalize-33",
+   "input": "Bauag",
+   "output": "bauag"
+  },
+  {
+   "name": "normalize-34",
+   "input": "Sage GmbH",
+   "output": "sage"
+  },
+  {
+   "name": "normalize-35",
+   "input": "Seeger SE",
+   "output": "seeger"
+  },
+  {
+   "name": "normalize-36",
+   "input": "Ugur UG (haftungsbeschränkt)",
+   "output": "ugur haftungsbeschra nkt"
+  },
+  {
+   "name": "normalize-37",
+   "input": "Kg-Handel",
+   "output": "handel"
+  },
+  {
+   "name": "normalize-38",
+   "input": "Co-Working GmbH",
+   "output": "working"
+  },
+  {
+   "name": "normalize-39",
+   "input": "Evangelische Kirche e.V.",
+   "output": "evangelische kirche"
+  },
+  {
+   "name": "normalize-40",
+   "input": "Theater am Markt",
+   "output": "theater am markt"
+  },
+  {
+   "name": "normalize-41",
+   "input": "Undine Werft",
+   "output": "undine werft"
+  },
+  {
+   "name": "normalize-42",
+   "input": "1&1 Telecom GmbH",
+   "output": "1 1 telecom"
+  },
+  {
+   "name": "normalize-43",
+   "input": "3M Deutschland GmbH",
+   "output": "3m deutschland"
+  },
+  {
+   "name": "normalize-44",
+   "input": "A.B.C. Services",
+   "output": "a b c services"
+  },
+  {
+   "name": "normalize-45",
+   "input": "Beispiel\tGmbH\nNord",
+   "output": "beispiel nord"
+  },
+  {
+   "name": "normalize-46",
+   "input": "Ⅳ Consulting",
+   "output": "iv consulting"
+  },
+  {
+   "name": "normalize-47",
+   "input": "",
+   "output": ""
+  },
+  {
+   "name": "normalize-48",
+   "input": "   ",
+   "output": ""
+  },
+  {
+   "name": "normalize-49",
+   "input": null,
+   "output": ""
+  },
+  {
+   "name": "normalize-50",
+   "input": {
+    "$float": "nan"
+   },
+   "output": "nan"
+  },
+  {
+   "name": "normalize-51",
+   "input": 12345,
+   "output": "12345"
+  },
+  {
+   "name": "normalize-52",
+   "input": 12.5,
+   "output": "12 5"
+  },
+  {
+   "name": "normalize-53",
+   "input": "nan",
+   "output": "nan"
+  },
+  {
+   "name": "normalize-54",
+   "input": "None",
+   "output": "none"
+  }
+ ],
+ "pairs": [
+  {
+   "name": "pair-00",
+   "left": "Beispiel GmbH",
+   "right": "Beispiel GmbH",
+   "left_normalized": "beispiel",
+   "right_normalized": "beispiel",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-01",
+   "left": "Alpha GmbH",
+   "right": "Lieferant Müller KG",
+   "left_normalized": "alpha",
+   "right_normalized": "lieferant mu ller",
+   "token_set_ratio": 18.181818181818187,
+   "name_match": 0.18181818181818188
+  },
+  {
+   "name": "pair-02",
+   "left": "Selbst GmbH",
+   "right": "Selbst GmbH",
+   "left_normalized": "selbst",
+   "right_normalized": "selbst",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-03",
+   "left": "Müller GmbH",
+   "right": "Mueller GmbH",
+   "left_normalized": "mu ller",
+   "right_normalized": "mueller",
+   "token_set_ratio": 57.142857142857146,
+   "name_match": 0.5714285714285715
+  },
+  {
+   "name": "pair-04",
+   "left": "Müller Bau GmbH",
+   "right": "Bau Müller KG",
+   "left_normalized": "mu ller bau",
+   "right_normalized": "bau mu ller",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-05",
+   "left": "Stadtwerke Nord GmbH",
+   "right": "Stadtwerke Nord Service GmbH",
+   "left_normalized": "stadtwerke nord",
+   "right_normalized": "stadtwerke nord service",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-06",
+   "left": "Stadtwerke Nord",
+   "right": "Nordstadtwerke",
+   "left_normalized": "stadtwerke nord",
+   "right_normalized": "nordstadtwerke",
+   "token_set_ratio": 96.55172413793103,
+   "name_match": 0.9655172413793103
+  },
+  {
+   "name": "pair-07",
+   "left": "Technik Beispiel AG",
+   "right": "Beispiel Technik",
+   "left_normalized": "technik beispiel",
+   "right_normalized": "beispiel technik",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-08",
+   "left": "Kreis Beispiel",
+   "right": "Landkreis Beispiel",
+   "left_normalized": "kreis beispiel",
+   "right_normalized": "landkreis beispiel",
+   "token_set_ratio": 87.5,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-09",
+   "left": "ABC",
+   "right": "ABC GmbH",
+   "left_normalized": "abc",
+   "right_normalized": "abc",
+   "token_set_ratio": 100.0,
+   "name_match": 0.0
+  },
+  {
+   "name": "pair-10",
+   "left": "Abcd",
+   "right": "Abcd",
+   "left_normalized": "abcd",
+   "right_normalized": "abcd",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-11",
+   "left": "Abcd",
+   "right": "Abce",
+   "left_normalized": "abcd",
+   "right_normalized": "abce",
+   "token_set_ratio": 75.0,
+   "name_match": 0.75
+  },
+  {
+   "name": "pair-12",
+   "left": "Holzbau Schmidt",
+   "right": "Holzbau Schmitt",
+   "left_normalized": "holzbau schmidt",
+   "right_normalized": "holzbau schmitt",
+   "token_set_ratio": 93.33333333333333,
+   "name_match": 0.9333333333333332
+  },
+  {
+   "name": "pair-13",
+   "left": "Holzbau Schmidt",
+   "right": "Metallbau Schmidt",
+   "left_normalized": "holzbau schmidt",
+   "right_normalized": "metallbau schmidt",
+   "token_set_ratio": 75.0,
+   "name_match": 0.75
+  },
+  {
+   "name": "pair-14",
+   "left": "Universität Beispielstadt",
+   "right": "Universitaet Beispielstadt",
+   "left_normalized": "universita t beispielstadt",
+   "right_normalized": "universitaet beispielstadt",
+   "token_set_ratio": 92.3076923076923,
+   "name_match": 0.923076923076923
+  },
+  {
+   "name": "pair-15",
+   "left": "Forschung und Entwicklung GmbH",
+   "right": "Forschung Entwicklung",
+   "left_normalized": "forschung entwicklung",
+   "right_normalized": "forschung entwicklung",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-16",
+   "left": "Innovation Hub",
+   "right": "Innovations Hub GmbH",
+   "left_normalized": "innovation hub",
+   "right_normalized": "innovations hub",
+   "token_set_ratio": 96.55172413793103,
+   "name_match": 0.9655172413793103
+  },
+  {
+   "name": "pair-17",
+   "left": "Innovation Hub",
+   "right": "Hub Innovation",
+   "left_normalized": "innovation hub",
+   "right_normalized": "hub innovation",
+   "token_set_ratio": 100.0,
+   "name_match": 1.0
+  },
+  {
+   "name": "pair-18",
+   "left": "",
+   "right": "Beispiel GmbH",
+   "left_normalized": "",
+   "right_normalized": "beispiel",
+   "token_set_ratio": 0.0,
+   "name_match": 0.0
+  },
+  {
+   "name": "pair-19",
+   "left": null,
+   "right": "Beispiel GmbH",
+   "left_normalized": "",
+   "right_normalized": "beispiel",
+   "token_set_ratio": 0.0,
+   "name_match": 0.0
+  },
+  {
+   "name": "pair-20",
+   "left": "Beispiel GmbH",
+   "right": {
+    "$float": "nan"
+   },
+   "left_normalized": "beispiel",
+   "right_normalized": "nan",
+   "token_set_ratio": 0.0,
+   "name_match": 0.0
+  },
+  {
+   "name": "pair-21",
+   "left": "GmbH",
+   "right": "GmbH",
+   "left_normalized": "",
+   "right_normalized": "",
+   "token_set_ratio": 0.0,
+   "name_match": 0.0
+  },
+  {
+   "name": "pair-22",
+   "left": "Werk 1",
+   "right": "Werk 2",
+   "left_normalized": "werk 1",
+   "right_normalized": "werk 2",
+   "token_set_ratio": 83.33333333333333,
+   "name_match": 0.8333333333333333
+  },
+  {
+   "name": "pair-23",
+   "left": "Planungsbüro Nord",
+   "right": "Planungsbuero Nord",
+   "left_normalized": "planungsbu ro nord",
+   "right_normalized": "planungsbuero nord",
+   "token_set_ratio": 94.44444444444444,
+   "name_match": 0.9444444444444444
+  },
+  {
+   "name": "pair-24",
+   "left": "Planungsbüro Nord",
+   "right": "Planungsbüro Süd",
+   "left_normalized": "planungsbu ro nord",
+   "right_normalized": "planungsbu ro su d",
+   "token_set_ratio": 83.87096774193549,
+   "name_match": 0.8387096774193549
+  }
+ ]
+}

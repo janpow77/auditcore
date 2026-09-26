@@ -1,0 +1,158 @@
+{
+ "note": "Synthetische Antworten im TED-v3-Format (Feldwerte nach dem gegen Live-TED validierten Testbestand von audit-portal); keine echten Bekanntmachungen. Vollständiger Bestand: 3 Zuschläge auf 2 Seiten.",
+ "exchanges": [
+  {
+   "request": {
+    "method": "POST",
+    "url": "https://api.ted.europa.eu/v3/notices/search",
+    "json_page": 1
+   },
+   "response": {
+    "status": 200,
+    "body_json": {
+     "notices": [
+      {
+       "publication-number": "100-2024",
+       "notice-title": {
+        "deu": "Rahmenvertrag IT-Dienstleistungen",
+        "eng": "Framework IT"
+       },
+       "publication-date": "2024-01-15+01:00",
+       "classification-cpv": [
+        "72000000",
+        "72200000"
+       ],
+       "buyer-name": {
+        "deu": [
+         "Bundesamt für Beispiele"
+        ]
+       },
+       "buyer-country": [
+        "DEU"
+       ],
+       "winner-name": {
+        "deu": [
+         "Beispiel GmbH"
+        ]
+       },
+       "winner-country": [
+        "DEU"
+       ],
+       "winner-identifier": [
+        "DE123456789"
+       ],
+       "winner-decision-date": [
+        "2024-02-01+01:00"
+       ],
+       "result-value-notice": "150000.0000",
+       "result-value-cur-notice": "EUR",
+       "procedure-type": "open",
+       "contract-nature": [
+        "services",
+        "services"
+       ]
+      },
+      {
+       "publication-number": "101-2024",
+       "notice-title": {
+        "deu": "Rahmenvertrag IT-Dienstleistungen",
+        "eng": "Framework IT"
+       },
+       "publication-date": "2024-01-15+01:00",
+       "classification-cpv": [
+        "72000000",
+        "72200000"
+       ],
+       "buyer-name": {
+        "deu": [
+         "Bundesamt für Beispiele"
+        ]
+       },
+       "buyer-country": [
+        "DEU"
+       ],
+       "winner-name": {
+        "deu": [
+         "Beispiel GmbH"
+        ]
+       },
+       "winner-country": [
+        "DEU"
+       ],
+       "winner-identifier": [
+        "DE123456789"
+       ],
+       "winner-decision-date": [
+        "2024-02-01+01:00"
+       ],
+       "result-value-notice": "1.234,56",
+       "result-value-cur-notice": "EUR",
+       "procedure-type": "open",
+       "contract-nature": [
+        "services",
+        "services"
+       ]
+      }
+     ],
+     "totalNoticeCount": 3
+    }
+   }
+  },
+  {
+   "request": {
+    "method": "POST",
+    "url": "https://api.ted.europa.eu/v3/notices/search",
+    "json_page": 2
+   },
+   "response": {
+    "status": 200,
+    "body_json": {
+     "notices": [
+      {
+       "publication-number": "102-2024",
+       "notice-title": {
+        "deu": "Rahmenvertrag IT-Dienstleistungen",
+        "eng": "Framework IT"
+       },
+       "publication-date": "2024-01-15+01:00",
+       "classification-cpv": [
+        "72000000",
+        "72200000"
+       ],
+       "buyer-name": {
+        "deu": [
+         "Bundesamt für Beispiele"
+        ]
+       },
+       "buyer-country": [
+        "DEU"
+       ],
+       "winner-name": {
+        "deu": [
+         "Beispiel GmbH"
+        ]
+       },
+       "winner-country": [
+        "DEU"
+       ],
+       "winner-identifier": [
+        "DE123456789"
+       ],
+       "winner-decision-date": [
+        "2024-02-01+01:00"
+       ],
+       "result-value-notice": "150000.0000",
+       "result-value-cur-notice": "EUR",
+       "procedure-type": "open",
+       "contract-nature": [
+        "services",
+        "services"
+       ]
+      }
+     ],
+     "totalNoticeCount": 3
+    }
+   }
+  }
+ ]
+}

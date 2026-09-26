@@ -1,0 +1,494 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_documents",
+  "version": "0.3.2",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/types.py",
+      "git_blob": "295ed31cd6b0bf73af2fe9aa844d9f819c68b7a8",
+      "symbols": [
+        "CompareItem",
+        "CompareRow",
+        "ComparisonResult"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/parsing.py",
+      "git_blob": "bb0904344c0bf77b8587e23f3f8debf43423c810",
+      "symbols": [
+        "HEADING_RE",
+        "PAGE_NUMBER_RE",
+        "ParseError",
+        "normalise_for_match",
+        "normalise_semantic",
+        "normalise_verbatim",
+        "word_diff",
+        "accept_revisions",
+        "visible_text",
+        "_checklist_items",
+        "_text_items_from_paragraphs",
+        "_docx_text_items",
+        "_extract_pdf_pages",
+        "_remove_repeating_margins",
+        "_paragraphs_from_pdf_pages",
+        "pdf_text_items",
+        "detect_mode",
+        "read_document"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/matching.py",
+      "git_blob": "1344667a7b85b809fd9a0477fa7c448b988b3ad1",
+      "symbols": [
+        "similarity",
+        "checklist_matches",
+        "_ordered_fuzzy_block",
+        "text_matches",
+        "erkenne_verschiebungen",
+        "build_rows"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/article_law.py",
+      "git_blob": "9156134ae74a79d65f4c7d161a54fc855b62c240",
+      "symbols": [
+        "LawParagraph",
+        "COMMAND_PATTERNS",
+        "apply_commands",
+        "compare_article_law"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/service.py",
+      "git_blob": "265948ea3ac493c3f754d7ef88c7de4667ee9976",
+      "symbols": [
+        "LEGAL_REFERENCE_RE",
+        "CompareError",
+        "_verify_legal_references",
+        "DocumentCompareService"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/rendering.py",
+      "git_blob": "e706e91e526f48c40bc9f8490700bddb60b7a57a",
+      "symbols": [
+        "render_docx"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/configuration.py",
+      "git_blob": "3c324de7073d2cfbfff370c0624d07c27cd2bca2",
+      "symbols": [
+        "DEFAULT_SETTINGS",
+        "sanitise_settings",
+        "load_settings",
+        "save_settings",
+        "merge_settings"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/cli.py",
+      "git_blob": "ead8b5402f28b6a364841c8396edc12f787df0b1",
+      "symbols": [
+        "read_document",
+        "compare_documents"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/document_compare/tasks.py",
+      "git_blob": "5f7d1b1c54fb30b2366c2d09dc80d8e1fcbeb69e",
+      "symbols": [
+        "run_document_comparison (Begründungsschleife)"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/ecohesion/comparisons/worker.py",
+      "git_blob": "f8300bea36d09ef7964fff4a1e5d8e4a9e04c2a6",
+      "symbols": [
+        "main (Synopse-Datensätze)"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/ecohesion/services/research_pdf.py",
+      "git_blob": "3ca2a3fca8975f8ba7523d84c01e251acbdd7e80",
+      "symbols": [
+        "render_pdf"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/core/shared/research/contracts.py",
+      "git_blob": "1eef9877cd06bc8f5afd32d5077707df9e7abea4",
+      "symbols": [
+        "ResearchResult (genutzte Felder)"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/context.py",
+      "git_blob": "9d3af1d6ed8317e54f7a23285505ce56eebb3b06",
+      "symbols": [
+        "RunStatus",
+        "ComputeProfile",
+        "StageMetrics",
+        "OcrMetrics",
+        "ValidationResult",
+        "PipelineArtifacts",
+        "OcrSettings",
+        "ParserSettings",
+        "LlmSettings",
+        "PostProcessingSettings",
+        "RagConfig",
+        "PipelineProfile",
+        "AnalysisModules",
+        "PipelineContext"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/hashing.py",
+      "git_blob": "f08e18530bb64492ea5b9f3f45ec28760ecd60a9",
+      "symbols": [
+        "HashingService"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/audit.py",
+      "git_blob": "922d061585a1f4b46a323cedcf7d3df285296211",
+      "symbols": [
+        "AuditEventType",
+        "AuditEventCreate (Felder)",
+        "AuditService.log_event (Vertrag)"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/retention.py",
+      "git_blob": "68b7b0e0d4dc5b76432a834b5a9e718b78827ccd",
+      "symbols": [
+        "RetentionPolicyConfig",
+        "RetentionService._process_artifacts",
+        "_anonymize_db_record",
+        "_soft_delete_db_record",
+        "_hard_delete_db_record",
+        "_delete_file_if_exists",
+        "run_sweeper (Jobergebnis)"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/orchestrator.py",
+      "git_blob": "dad63a5e8bffc04b18693331a7446ce868841807",
+      "symbols": [
+        "PipelineOrchestrator",
+        "ComputeProfileEnforcer"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/base.py",
+      "git_blob": "92d6c3c7280c297e7ab4bdfa0ce9bf63e58c1d35",
+      "symbols": [
+        "StageError",
+        "PipelineStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/ingestion.py",
+      "git_blob": "9327abd953df8c6ec94c75318a6c8b52751dd571",
+      "symbols": [
+        "IngestionStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/preprocess.py",
+      "git_blob": "942d411f49906f4368d14b550137cc10e08fa2d4",
+      "symbols": [
+        "PreprocessStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/ocr.py",
+      "git_blob": "5fae527f85f5ac27e17b4b322c7c64fe339b6994",
+      "symbols": [
+        "_should_use_router",
+        "_looks_like_pdf",
+        "_rasterize_pdf",
+        "OcrStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/postprocess.py",
+      "git_blob": "d858e7055d29c1024518f07508fb6fed9823883b",
+      "symbols": [
+        "PostprocessStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/validation.py",
+      "git_blob": "679954a2396984ad4ae05a4244f5e38e11dda2c6",
+      "symbols": [
+        "IbanChecksumRule",
+        "VatIdFormatRule",
+        "TotalSumPlausibilityRule",
+        "OcrConfidenceRule",
+        "FraudDetectionRule",
+        "ValidationStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/persist.py",
+      "git_blob": "7d292b0bf5a35dd05fad83fc64f9afab3ab7779e",
+      "symbols": [
+        "PersistStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/pipeline/stages/export.py",
+      "git_blob": "381dcf647ca44b6c6fd51320268c23faef5f671a",
+      "symbols": [
+        "WebhookExport",
+        "FileExport",
+        "ExportStage"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/extraction_quality_watchdog.py",
+      "git_blob": "16f5e7a071e7e59b6f862d2a1ac1416132cdea76",
+      "symbols": [
+        "EscalationLevel",
+        "FindingCategory",
+        "WatchdogFinding",
+        "ExtractionQualityMetrics",
+        "WatchdogResult",
+        "MANDATORY_FIELDS_USTG_14",
+        "ExtractionQualityWatchdog",
+        "validate_extraction_quality"
+      ],
+      "note": "Meldungstexte mit Umlauten (Entscheidung D8, 2026-09-23); Logging entfernt; Uhr injizierbar"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/tests/test_extraction_quality_watchdog.py",
+      "git_blob": "3606ddc1350949ace2153c0078f0d62df81f95fd",
+      "symbols": [
+        "tests/test_watchdog_original.py"
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "historical_source_license_status": "UNKNOWN",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "github": {
+      "janpow77/audit_designer": {
+        "private": true,
+        "license": null
+      },
+      "janpow77/flowinvoice": {
+        "private": true,
+        "license": null
+      }
+    },
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "scope": "Extrahierter Bibliothekscode in auditcore_documents (audit_designer document_compare, flowinvoice pipeline)",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Dienste separat."
+    },
+    "test_data": {
+      "status": "PUBLIC_DOMAIN_OFFICIAL_WORKS_AND_SYNTHETIC",
+      "basis": "§ 5 Abs. 1 UrhG: Gesetze und Verordnungen sind amtliche Werke ohne urheberrechtlichen Schutz; einzelne Dokumente, kein wesentlicher Datenbankteil (§ 87b UrhG).",
+      "public_fixtures": [
+        {
+          "file": "KassenSichV_2023-06-10.pdf",
+          "origin_url": "https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "retrieved_via": "http://web.archive.org/web/20230610182008id_/https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "state": "Stand: zuletzt geändert durch Art. 2 V v. 30.7.2021"
+        },
+        {
+          "file": "KassenSichV_2026-08-27.pdf",
+          "origin_url": "https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "retrieved_via": "http://web.archive.org/web/20260827161939id_/https://www.gesetze-im-internet.de/kassensichv/KassenSichV.pdf",
+          "state": "Stand: zuletzt geändert durch Art. 3 V v. 14.1.2026 I Nr. 10"
+        },
+        {
+          "file": "bgbl-2025-I-301-seite55.pdf",
+          "origin_url": "https://www.recht.bund.de/bgbl/1/2025/301/regelungstext.pdf?__blob=publicationFile&v=3",
+          "original_sha256": "674d68c367cf719b5af7753526168cce85a8fba1a7bae41b0291b77c3187bf93",
+          "derivation": "pdfseparate -f 55 -l 55 (Seite 55 von 68, Artikel 13–17)"
+        },
+        {
+          "file": "sources/kassensichv_gii_2025-06-01.html",
+          "retrieved_via": "http://web.archive.org/web/20250601051248id_/https://www.gesetze-im-internet.de/kassensichv/BJNR351500017.html"
+        },
+        {
+          "file": "sources/kassensichv_gii_2026-05-06.xml",
+          "origin_url": "https://www.gesetze-im-internet.de/kassensichv/xml.zip",
+          "note": "builddate 20260506175930"
+        },
+        {
+          "file": "KassenSichV_2025-06-01.docx",
+          "derivation": "tools/build_fixtures.py aus sources/kassensichv_gii_2025-06-01.html (ein Word-Absatz je Absatz, juris-Hinweise „(+++ … +++)“ ausgelassen)"
+        },
+        {
+          "file": "KassenSichV_2026-05-06.docx",
+          "derivation": "tools/build_fixtures.py aus sources/kassensichv_gii_2026-05-06.xml"
+        },
+        {
+          "file": "BGBl-2025-I-301-Art15.docx",
+          "derivation": "Wortlaut von Artikel 15 aus bgbl-2025-I-301-seite55.pdf, beim Bau gegen die Seite geprüft"
+        }
+      ],
+      "sha256": {
+        "BGBl-2025-I-301-Art15.docx": "5f642dd7116777be0c85ba4ba6dce39f8af4262e27f9965a5b359d04a7cbc034",
+        "KassenSichV_2023-06-10.pdf": "4127ed75ba182c946678f85ebf58a500d552b4a1c7b4a7b78146c9bbcc2d7fb5",
+        "KassenSichV_2025-06-01.docx": "4e2bc15b686cc0bbdeb5ec044b5f39e9717753cc9916b297add2a1fee4a1987f",
+        "KassenSichV_2026-05-06.docx": "d233dcc1303d402cb7fbb6f3cc16390fb22644a6712b98d8fd5ae73583aa2827",
+        "KassenSichV_2026-08-27.pdf": "e5351ca28768ece983f25c28376c74d06fc2f22d2ed3f5195c97f9074030c303",
+        "bgbl-2025-I-301-seite55.pdf": "4406b4688083d24fc532ab74143ffa72067d9fd614772d28ddbee3a58eb2e047",
+        "sources/kassensichv_gii_2025-06-01.html": "55f601caf612f855a632291cc379b74d48e825d0c2607b8c14a298ffa41d9b03",
+        "sources/kassensichv_gii_2026-05-06.xml": "9ffb459d864c27f639ac1e4e084d06b1122fd13c0d58eb78254dc18e14b91741"
+      },
+      "synthetic": "tests/fixtures/synthetic und tests/fixtures/errors: frei erfunden, keine Echtdaten",
+      "pipeline_fixtures": {
+        "files": "tests/fixtures/pipeline",
+        "origin": "synthetisch (auditcore_invoicegenerator Seed 42, erfundene Texte)",
+        "builder": "tools/build_pipeline_fixtures.py",
+        "sha256": {
+          "invoice_1.pdf": "d4efda7e2229efa6f49ec44c516f214913daa01d44f3f4e638359bda1c1ddab0",
+          "invoice_2.pdf": "ecddc9d2b390104ba9b8af2edc37bcf97de93983a983f29a1d3bb81dc550f3a2",
+          "invoice_3.pdf": "3e90be93bb7b1e600329be5e2946349c28f3e3190d2a3221fd96edec9089fcb4",
+          "notiz.txt": "d58f952c09ccee14d3636d7a8dccd9d03372f4839b689c0e027d1af8f62b90a6",
+          "pixel.png": "e878950f8091ec010cf5cc723bdea027a8539cf7147cfea199c2f666232dcd4e"
+        }
+      }
+    }
+  },
+  "excluded": [
+    "DocumentCompareService.generate_reason: Import von app.modules.standards.mcp_tools (FlowAgent) – ersetzt durch den Port ReasonProvider",
+    "tasks.py: Celery, Datenbanksitzungen, Fortschrittsspeicherung, Aufräumaufgabe, OCR über ai_router_client (bleibt Anwendung; Begründungsschleife als apply_reasons_worker)",
+    "api/document_comparisons.py: Uploads, Rechte, Presets, Downloads, Aufbewahrung (bleibt Anwendung)",
+    "ecohesion worker: resource.setrlimit, Research-PDF-Renderer, Dateiablage (bleibt Anwendung; Datensätze als synopsis_records)",
+    "configuration.default_config_path: Umgebungsvariable/Benutzerverzeichnis nur in auditcore_documents.legacy",
+    "flowinvoice services/parser.py:PDFParser (OCR/torch/transformers) – nicht übernommen",
+    "ecohesion research_pdf: Werkzeug-spezifische Ergebnisquellen (Quellenbefund-Objekte) nur als generische Datensätze übernommen",
+    "flowinvoice pipeline/models.py, AuditEvent-/RetentionPolicy-/RetentionJob-ORM, AuditService-Abfragen, QuotaService (Datenbank; bleiben Anwendung)",
+    "flowinvoice services/chandra_ocr.py (GPU/torch-Engine; Anbindung über ChandraPort), services/parser.py:PDFParser (OCR/torch/transformers)",
+    "flowinvoice Einstellungen (get_settings), httpx-Abruf, ai_router_client (als Ports)"
+  ],
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_observed.json",
+    "tool": "tools/capture_legacy.py",
+    "fixture_builder": "tools/build_fixtures.py",
+    "original_tests": {
+      "file": "backend/tests/test_document_compare_service.py",
+      "passed": 9
+    },
+    "environment": {
+      "python": "3.11.16",
+      "lxml": "5.1.0",
+      "python-docx": "1.1.0",
+      "pypdf": "6.16.2",
+      "rapidfuzz": "3.14.5",
+      "pdftotext": "22.12.0",
+      "timezone": "Europe/Berlin",
+      "image": "python:3.11-slim-bookworm + poppler-utils (Versionen wie audit_designer_backend)",
+      "reportlab": "4.0.8",
+      "fonts": "fonts-dejavu-core (DejaVuSans wie im audit_designer_backend)"
+    },
+    "method": "Unveränderte, Blob-geprüfte Originalmodule importiert und ausgeführt; MCP/FlowAgent, Celery, DB und Research-PDF durch aufzeichnende Stellvertreter ersetzt; zwei Läufe mit unterschiedlichem PYTHONHASHSEED byte-gleich"
+  },
+  "behavior_changes": "docs/behavior-changes.md",
+  "characterization_pipeline": {
+    "fixture": "tests/fixtures/pipeline_observed.json",
+    "tool": "tools/capture_pipeline.py",
+    "scenarios": 30,
+    "original_tests": {
+      "files": "backend/tests/pipeline/*, test_extraction_quality_watchdog.py, test_pipeline_profiles.py",
+      "passed": 164
+    },
+    "environment": {
+      "python": "3.11.16",
+      "pydantic": "2.11.9",
+      "sqlalchemy": "2.0.43",
+      "python-magic": "0.4.27",
+      "pypdf": "6.16.2",
+      "pypdfium2": "4.30.0",
+      "pillow": "11.3.0"
+    },
+    "method": "Unveränderte, Blob-geprüfte Module ausgeführt; Gateway-OCR, Chandra, Tesseract-Parser, Audit-Dienst, Einstellungen und asyncio.sleep durch aufzeichnende Stellvertreter ersetzt"
+  },
+  "behavior_changes_pipeline": "docs/pipeline.md",
+  "donut": {
+    "version_added": "0.2.0",
+    "origin": "Neuimplementierung nach docs/architecture/DONUT_OCR_PLAN.md 2a; kein Code aus clovaai/donut, vision-service oder anderen Repositories übernommen (Tokenfolge <s_feld>…</s_feld> eigenständig umgesetzt).",
+    "decisions": {
+      "status": "DECIDED",
+      "date": "2026-09-24",
+      "confirmation": "Donut alle Empfehlungen"
+    },
+    "profile": "auditcore.pipeline.donut 2026.09.24 (EXPERIMENTAL)",
+    "model": "nicht enthalten; LocalDonut lädt nur lokale Verzeichnisse mit geprüfter SHA-256 (E2: Modell als Release-Asset)",
+    "legacy_pipeline": "unverändert (Fingerabdruck aaec1633…, alle 30 Replays)"
+  },
+  "web": {
+    "version_added": "0.3.0",
+    "origin": "Neuimplementierung: REST-Anbindung für die Oberfläche <flowaudit-synopsis> (@flowaudit/ui). Endpunkte, Grenzen und Meldungen nach dem Vorbild von janpow77/audit_designer backend/app/api/document_comparisons.py und backend/app/modules/ecohesion/comparisons/api.py (janpow77/audit_designer@2c726f3c1481775cd34aeaa83f87137d6ab12ffe); kein Code übernommen, keine Datenbank, kein Celery.",
+    "contract": "docs/ui/synopsis-rest.md",
+    "parity": "docs/ui/synopsis-paritaet.md",
+    "extras": {
+      "web": "starlette, python-multipart",
+      "fastapi": "fastapi, starlette, python-multipart"
+    },
+    "existing_modules": "unverändert; der Dienst nutzt compare_files, ComparisonResult, render_docx_bytes und render_synopsis_pdf"
+  }
+}

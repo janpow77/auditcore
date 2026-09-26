@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_harvest",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "contract": "auditcore_harvest.contract/1",
   "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
   "sources": [
@@ -60,6 +60,7 @@
     "license_status": "MIT",
     "public_release_status": "USER_AUTHORIZED_MIT",
     "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
       "date": "2026-09-22",
       "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
       "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Datenrechte der Dienste separat."

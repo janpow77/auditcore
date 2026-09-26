@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_property_sources"
+version = "0.1.2"
+description = "Property source profiles (Berlin/French rental portals, ZVG forced-auction notices) with harvest adapters, lifecycle and access catalog"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["auditcore_common==0.1.1"]
+
+[project.optional-dependencies]
+sources = ["auditcore_harvest==0.1.1"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_property_sources = ["py.typed", "provenance.json", "catalog.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+# Keine feste python_version: jeder CI-Job prüft gegen seine eigene Laufzeit.
+strict = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]

@@ -1,0 +1,18 @@
+auditcore_sampling 0.2.1 — source attribution and authorization
+
+Derived from private repositories of the same rights holder (janpow77):
+  janpow77/flowstat@d665ac221f50ba1f465b7337bdd4aa218d78ec8a
+    backend/app/services/sampling_service.py (blob c2423b1efab65f1eb1118b97f6eebe83348be706)
+  janpow77/audit-portal@d8eefa426826bdecb67036774f3128ae05e7d0d0
+    backend/app/modules/flowstat/services/sampling_service.py (blob 2358a38fc9c4b0ff414018b54ed7bf31f4f422fe)
+
+The source repositories carry no open-source licence (flowstat: none;
+audit-portal: proprietary). On 2026-09-22 the rights holder decided: "die
+bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen
+ja nach auditcore". Status: USER_AUTHORIZED_MIT for the library code extracted
+into auditcore; the source repositories are not relicensed.
+
+Method profiles are characterized software behavior, not a validated audit
+methodology. Legal or methodological sources named in the original comments
+(for example EU-KOM Guidance Note "Sampling for Audit", ISA 530) are cited by
+name only; no text of them is included.

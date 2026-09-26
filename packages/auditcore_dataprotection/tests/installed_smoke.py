@@ -10,6 +10,7 @@ from auditcore_dataprotection import (
     Permission,
     RegisterService,
     available_profiles,
+    finalize_consultation,
     legacy,
     load_profile,
     propose,
@@ -28,10 +29,17 @@ from auditcore_dataprotection.memory import (
 def main() -> None:
     """Create a register, calculate and release a DPIA, reproduce a legacy result."""
     package = distribution("auditcore_dataprotection")
-    assert package.version == "0.1.0"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    assert package.version == "0.5.0"
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     assert available_profiles() == (
+        ("auditcore.dsgvo", "2026.10.1"),
+        ("auditcore.dsgvo", "2026.10.2"),
+        ("auditcore.dsgvo", "2026.10.3"),
+        ("auditcore.hdsig_ji", "2026.10.1"),
+        ("auditcore.hdsig_ji", "2026.10.2"),
+        ("auditcore.hdsig_ji", "2026.10.3"),
         ("regulierung.dsgvo", "2026.09.1"),
         ("regulierung.hdsig_ji", "2026.09.1"),
     )
@@ -119,6 +127,18 @@ def main() -> None:
     html = render_assessment_html(assessment_report(dsfa, profile))
     assert "Datenschutz-Folgenabschätzung" in html and "regulierung.dsgvo" in html
     assert "assessment.released" in audit.actions()
+
+    # DP-C21: profile 2026.10.2 gives only a preliminary consultation notice.
+    a5 = load_profile("auditcore.dsgvo", "2026.10.2")
+    high = {**scenario, "severity": 4, "likelihood": 4, "measures": []}
+    preliminary = propose(a5, {k: False for k in a5.question_keys} | {"art35_3_a": True}, [high])
+    assert preliminary.recommendation == "konsultation_aufsichtsbehoerde"
+    assert preliminary.consultation_required is False
+    assert preliminary.consultation_notice is not None
+    assert preliminary.consultation_notice["status"] == "voraussichtlich_erforderlich"
+    final = finalize_consultation(a5, preliminary.to_dict(), "konsultation_aufsichtsbehoerde")
+    assert final["consultation_required"] is True
+    assert final["consultation_notice"]["final"] is True
     print("PASS: installed auditcore_dataprotection register, DPIA release and legacy contract")
 
 

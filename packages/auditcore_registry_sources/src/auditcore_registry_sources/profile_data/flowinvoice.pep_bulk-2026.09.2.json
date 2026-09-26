@@ -1,0 +1,62 @@
+{
+ "decisions": [
+  {
+   "date": "2026-09-23",
+   "id": "R3",
+   "quote": "alle empfehlungen",
+   "status": "DECIDED",
+   "text": "PEP-Abgleich nach der mueller-Regel (Umschrift, NFC)."
+  },
+  {
+   "date": "2026-09-23",
+   "id": "A2",
+   "quote": "alle empfehlungen",
+   "status": "DECIDED",
+   "text": "OpenSanctions-Datennutzung: „abgedeckt durch Nutzung“; Lizenz CC BY-NC 4.0 bleibt genannt, Verantwortung beim Betreiber."
+  }
+ ],
+ "derived_from": {
+  "id": "flowinvoice.pep_bulk",
+  "version": "2026.09.1"
+ },
+ "id": "flowinvoice.pep_bulk",
+ "kind": "screening",
+ "legal_status": "Nutzerentscheidung vom 23.09.2026 („alle empfehlungen“), abgeleitet aus dem gebundenen Quellprofil; keine Rechtsauskunft, keine Freigabe einzelner Ergebnisse.",
+ "recommended_for": [
+  "pep_bulk"
+ ],
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "algorithm": "token_f1",
+  "country_bonus": 0.05,
+  "country_rule": "substring_of_countries_field",
+  "data_licence": {
+   "note": "OpenSanctions-Massendaten stehen unter CC BY-NC 4.0 (nicht kommerziell; kommerzielle Nutzung nur mit Lizenz). Geprüft am 2026-09-23 auf opensanctions.org/licensing. Die in der Quellanwendung genannte Lizenz bezieht sich auf die Ursprungsliste, nicht auf den Bezug über OpenSanctions.",
+   "status": "REVIEW_REQUIRED"
+  },
+  "dataset_url": "https://data.opensanctions.org/datasets/latest/peps/targets.simple.csv",
+  "default_min_score": 0.8,
+  "exact_from": 0.99,
+  "max_hits": 20,
+  "normalization": {
+   "id": "flowinvoice.pep",
+   "version": "2026.09.2"
+  },
+  "score_digits": 3,
+  "substring_bonus": 0.1
+ },
+ "source": {
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1",
+  "path": "backend/app/services/fraud_detection/pep_checker.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "PEPChecker.check_entity",
+   "_match_name",
+   "_download_and_parse"
+  ]
+ },
+ "status": "USER_DECIDED",
+ "version": "2026.09.2"
+}

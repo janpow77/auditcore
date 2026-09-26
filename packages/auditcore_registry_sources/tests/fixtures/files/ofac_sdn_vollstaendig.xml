@@ -1,0 +1,49 @@
+<?xml version="1.0" standalone="yes"?>
+<sdnList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/XML">
+  <publshInformation>
+    <Publish_Date>09/22/2026</Publish_Date>
+    <Record_Count>4</Record_Count>
+  </publshInformation>
+  <sdnEntry>
+    <uid>990101</uid>
+    <firstName>Ivan</firstName>
+    <lastName>MUSTEROV</lastName>
+    <sdnType>Individual</sdnType>
+    <programList>
+      <program>DEMO-EO00000</program>
+      <program>BEISPIEL</program>
+    </programList>
+    <idList>
+      <id><uid>1</uid><idType>Passport</idType><idNumber>PASS-DEMO-0001</idNumber><idCountry>Russia</idCountry></id>
+      <id><uid>2</uid><idType>Tax ID No.</idType><idNumber>TIN-1</idNumber></id>
+      <id><uid>3</uid><idType>VAT Number</idType><idNumber>RU0000000000</idNumber></id>
+      <id><uid>4</uid><idType>Registration ID</idType><idNumber>REG-7</idNumber></id>
+      <id><uid>5</uid><idType>Gender</idType><idNumber>Male</idNumber></id>
+      <id><uid>6</uid><idType>Passport</idType></id>
+    </idList>
+    <akaList>
+      <aka><uid>11</uid><type>a.k.a.</type><category>strong</category><lastName>MUSTEROW</lastName><firstName>Iwan</firstName></aka>
+      <aka><uid>12</uid><type>a.k.a.</type><category>weak</category><lastName>MUSTEROV</lastName><firstName>Ivan</firstName></aka>
+      <aka><uid>13</uid><type>a.k.a.</type><category>strong</category><lastName>VANYA</lastName></aka>
+    </akaList>
+    <addressList>
+      <address><uid>21</uid><address1>Musterstraße 1</address1><city>Moscow</city><country>Russia</country></address>
+      <address><uid>22</uid><city>Minsk</city><country>Belarus</country></address>
+    </addressList>
+    <dateOfBirthList>
+      <dateOfBirthItem><uid>31</uid><dateOfBirth>12 Apr 1961</dateOfBirth><mainEntry>true</mainEntry></dateOfBirthItem>
+    </dateOfBirthList>
+    <remarks>Synthetischer Beispieleintrag.</remarks>
+  </sdnEntry>
+  <sdnEntry>
+    <uid>990102</uid>
+    <lastName>BEISPIEL SHIPPING LTD.</lastName>
+    <sdnType>Entity</sdnType>
+    <programList><program>DEMO</program></programList>
+  </sdnEntry>
+  <sdnEntry>
+    <uid>990104</uid>
+    <lastName>DEMO VESSEL</lastName>
+    <sdnType>Vessel</sdnType>
+  </sdnEntry>
+</sdnList>

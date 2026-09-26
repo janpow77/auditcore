@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_funding_sources",
+  "version": "0.1.3",
+  "sources": [
+    {
+      "repository": "janpow77/flowworkshop",
+      "commit": "a05bb2143bd96d5e981f9462f05b965e1658be36",
+      "files": [
+        {
+          "path": "auditworkshop/backend/services/beneficiary_harvester.py",
+          "git_blob": "45c82fd8e7e27a5d9422052266009a6d516e0f92"
+        },
+        {
+          "path": "auditworkshop/backend/services/state_aid_service.py",
+          "git_blob": "e41be2700affb91c2a6436a7e3ce488696b07116"
+        },
+        {
+          "path": "auditworkshop/backend/services/dataframe_service.py",
+          "git_blob": "da75ef92f2ea749f0d184e0e647288ef67f08acf"
+        },
+        {
+          "path": "auditworkshop/backend/services/geocoding_service.py",
+          "git_blob": "3c6ac686be9bc222749fc06b7271ef94c44c2cc3"
+        }
+      ],
+      "github_blobs_verified": "2026-09-22",
+      "cases": 315
+    },
+    {
+      "repository": "janpow77/flowsearch",
+      "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+      "files": [
+        {
+          "path": "backend/app/services/eu_beneficiary_harvester_v2.py",
+          "git_blob": "4cbc58a2057e896808a079808d8f6fa968c2f79f"
+        },
+        {
+          "path": "backend/app/services/harvest_source_manager.py",
+          "git_blob": "9768fc66299f933e643349579d351050c789d101"
+        }
+      ],
+      "github_blobs_verified": "2026-09-22",
+      "cases": 112
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "files": [
+        {
+          "path": "backend/app/core/shared/research/register/beneficiaries.py",
+          "git_blob": "88f8d649c6a43607daaabab93a16cb6fdf82a8b2"
+        },
+        {
+          "path": "backend/app/core/shared/research/register/state_aid.py",
+          "git_blob": "79fb0ab5aa2082a3c080867bec9e8e14d3245b06"
+        },
+        {
+          "path": "backend/app/core/shared/research/register/de_minimis.py",
+          "git_blob": "e0a660aa902933d5c7f6a550b908e8b0b1b0be16"
+        },
+        {
+          "path": "backend/app/core/shared/research/register/de_minimis_ernte.py",
+          "git_blob": "9ad78b1bf491d546caea4e161d8a140d8853e161"
+        },
+        {
+          "path": "backend/app/core/shared/research/register/de_minimis_models.py",
+          "git_blob": "b73451505740935ff201968295ce5b2e2c12b582"
+        },
+        {
+          "path": "backend/app/core/shared/research/register/de_minimis_zuordnung.py",
+          "git_blob": "56e1f5053ba1aa356be64a505b6c62d8a3489d52"
+        }
+      ],
+      "github_blobs_verified": "2026-09-22",
+      "cases": 384
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+      "interpretation": "Der in auditcore extrahierte Bibliothekscode steht unter MIT; die Quell-Repositories werden nicht umlizenziert.",
+      "scope": "Extrahierter Code und Regelprofile dieses Pakets"
+    },
+    "source_repositories_license": "unverändert, keine Lizenz im Repository (privat)",
+    "data_licences": {
+      "status": "REVIEW_REQUIRED",
+      "note": "Nutzungsbedingungen der abgerufenen Daten (Transparenzlisten der Länder, EU-Kohäsionsdaten/FTS, eAidRegister der Kommission) sind je Quelle getrennt zu prüfen; das Paket enthält keine Originaldaten dieser Quellen, nur synthetische Fixtures im Originalformat."
+    }
+  },
+  "characterization": {
+    "tool": "tools/capture_legacy.py",
+    "fixtures": [
+      "tests/fixtures/flowworkshop_observed.json",
+      "tests/fixtures/flowsearch_observed.json",
+      "tests/fixtures/designer_observed.json"
+    ],
+    "database": "flowworkshop-Modi gegen Wegwerf-PostgreSQL 16 (Container, 127.0.0.1, danach verworfen); De-minimis-Ernte gegen In-Memory-SQLite",
+    "network": "keiner (Mock-Transport)",
+    "classification": "OBSERVED"
+  },
+  "profiles": [
+    "flowworkshop.beneficiaries 2026.09.1",
+    "designer.state_aid 2026.09.1",
+    "designer.deminimis.authority_levels 2026.09.1",
+    "designer.deminimis.cumulation 2026.09.1 (REVIEW_REQUIRED)"
+  ],
+  "runtime_dependencies": [
+    "auditcore_harvest==0.1.1"
+  ],
+  "behavior_changes": "docs/behavior-changes.md"
+}

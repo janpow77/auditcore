@@ -1,0 +1,21 @@
+auditcore_property_sources 0.1.2 — source attribution and authorization
+
+Derived from private repositories of the same rights holder (janpow77):
+  janpow77/wohnungsmonitor@76571bfaa3435bfc6858b3cbaae8c4ea3969ef91
+    immobilien_export.py, inberlinwohnen_export.py, kleinanzeigen_export.py,
+    bienici_export.py, citya_export.py, paruvendu_export.py
+  janpow77/versteigerung@e4ad7af0eaee0b151cc5e3358f95b961d7f3a448
+    backend/app/crawler/zvg_crawler.py
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for the library code extracted into auditcore;
+the source repositories are not relicensed.
+
+Portal content, data and terms of use of immobilien.de, inberlinwohnen.de,
+kleinanzeigen.de, bienici.com, citya.com, paruvendu.fr and zvg-portal.de are
+not covered by this licence; their access status is tracked per source in
+catalog.json (terms of use: REVIEW_REQUIRED). The test fixtures are synthetic
+pages derived from the parsers' documented structures; the robots.txt files
+under tests/fixtures/robots are unmodified snapshots taken on 2026-09-23 as
+evidence of the access rules.

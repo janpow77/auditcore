@@ -1,0 +1,165 @@
+{
+ "executed_at": "2026-09-23T11:53:28+00:00",
+ "user_agent": "auditcore-property-sources-smoke/0.1 (einmalige Strukturpruefung, janpow77/auditcore)",
+ "terms_of_use": "REVIEW_REQUIRED",
+ "results": {
+  "immobilien_de": {
+   "source_id": "property.immobilien_de",
+   "requests": [
+    "GET www.immobilien.de",
+    "GET www.immobilien.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 24,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 24,
+    "flaeche_qm": 24,
+    "kaltmiete": 24,
+    "gesamtmiete": 0,
+    "preisart": 24
+   },
+   "total_hint_seen": 24
+  },
+  "inberlinwohnen": {
+   "source_id": "property.inberlinwohnen",
+   "requests": [
+    "GET www.inberlinwohnen.de",
+    "GET www.inberlinwohnen.de"
+   ],
+   "status": "partial",
+   "pages": 1,
+   "records": 10,
+   "issues": 0,
+   "errors": [
+    "limit_reached"
+   ],
+   "field_presence": {
+    "plz": 10,
+    "flaeche_qm": 10,
+    "kaltmiete": 10,
+    "gesamtmiete": 10
+   },
+   "total_hint_seen": 10
+  },
+  "bienici": {
+   "source_id": "property.bienici",
+   "requests": [
+    "GET www.bienici.com",
+    "GET www.bienici.com"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 24,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 24,
+    "flaeche_qm": 24,
+    "kaltmiete": 23,
+    "gesamtmiete": 24,
+    "preisart": 24
+   },
+   "total_hint_seen": 24
+  },
+  "citya": {
+   "source_id": "property.citya",
+   "requests": [
+    "GET www.citya.com",
+    "GET www.citya.com"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 17,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 17,
+    "flaeche_qm": 17,
+    "kaltmiete": 17,
+    "gesamtmiete": 0,
+    "preisart": 17
+   },
+   "total_hint_seen": 17
+  },
+  "paruvendu": {
+   "source_id": "property.paruvendu",
+   "requests": [
+    "GET www.paruvendu.fr",
+    "GET www.paruvendu.fr"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 30,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 0,
+    "flaeche_qm": 29,
+    "kaltmiete": 0,
+    "gesamtmiete": 30,
+    "preisart": 30
+   },
+   "total_hint_seen": 30
+  },
+  "zvg_liste": {
+   "source_id": "property.zvg",
+   "requests": [
+    "GET www.zvg-portal.de",
+    "POST www.zvg-portal.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 8,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "file_number": 8,
+    "court_id": 8
+   },
+   "total_hint_seen": 8
+  },
+  "kleinanzeigen": {
+   "source_id": "property.kleinanzeigen",
+   "requests": [
+    "GET www.kleinanzeigen.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 7,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "plz": 7,
+    "flaeche_qm": 7,
+    "kaltmiete": 7,
+    "gesamtmiete": 0,
+    "preisart": 7
+   },
+   "total_hint_seen": 7
+  },
+  "zvg_detail": {
+   "source_id": "property.zvg_detail",
+   "requests": [
+    "GET www.zvg-portal.de",
+    "GET www.zvg-portal.de"
+   ],
+   "status": "complete",
+   "pages": 1,
+   "records": 1,
+   "issues": 0,
+   "errors": [],
+   "field_presence": {
+    "file_number": 1,
+    "court_id": 1
+   }
+  }
+ },
+ "robots_policy": "ignore (Nutzerentscheidung 2026-09-23, PS-D01)",
+ "addendum_2026_09_23": {
+  "executed_at": "2026-09-23T13:50:47+00:00",
+  "reason": "PS-D01: Kleinanzeigen-Suche und ZVG-Detailseite je einmal nach Nutzerentscheidung"
+ }
+}

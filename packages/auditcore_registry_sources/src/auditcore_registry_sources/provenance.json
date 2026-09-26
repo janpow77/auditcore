@@ -1,0 +1,248 @@
+{
+ "schema_version": 1,
+ "package": "auditcore_registry_sources",
+ "version": "0.2.1",
+ "contract": "auditcore_registry_sources.screening/1",
+ "classification": "EXTRACTED_FROM_CHARACTERIZED_SOURCES",
+ "sources": [
+  {
+   "repository": "janpow77/audit_designer",
+   "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+   "files": [
+    {
+     "path": "backend/app/core/shared/research/register/sanctions.py",
+     "git_blob": "5c064ddecb473b3f1a4341a0dc6513268d106295"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 74
+  },
+  {
+   "repository": "janpow77/flowworkshop",
+   "commit": "3d1cb40221645935c323392d70d84102d05ac7bb",
+   "files": [
+    {
+     "path": "auditworkshop/backend/services/sanctions_service.py",
+     "git_blob": "5b9de79484373428f45ddeb879a497b671a29e1c"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 55
+  },
+  {
+   "repository": "janpow77/audit-portal",
+   "commit": "ac1ccc779db69492db0c2c154b6ec84fdd1794b1",
+   "files": [
+    {
+     "path": "backend/audit_prep/sanctions_xml.py",
+     "git_blob": "1412c58b200e720cc9ca4f3347a2a06300a10c28"
+    },
+    {
+     "path": "backend/audit_prep/sanctions.py",
+     "git_blob": "835824a7123eac5249096cc47a4d8493709307e9"
+    },
+    {
+     "path": "backend/audit_prep/normalization.py",
+     "git_blob": "c9f9c3dbb211cd6c215464293bccc5efebf0fc7d"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 38
+  },
+  {
+   "repository": "janpow77/flowsearch",
+   "commit": "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4",
+   "files": [
+    {
+     "path": "backend/app/services/api_client_base.py",
+     "git_blob": "0344346638e1e24136eb58ea369bd252faa830dc"
+    },
+    {
+     "path": "backend/app/services/api_clients/sanctions.py",
+     "git_blob": "ddb377633153cfa0b936bec7d709d322e079fb2f"
+    },
+    {
+     "path": "backend/app/services/api_clients/pep_screening.py",
+     "git_blob": "2337f4ce14804c4102e9cbf46868e5413e9a4957"
+    },
+    {
+     "path": "backend/app/services/api_clients/openregister.py",
+     "git_blob": "e7b0c9e06868f09c678773a21f4efb4eaac6d03b"
+    },
+    {
+     "path": "backend/app/services/api_clients/handelsregister.py",
+     "git_blob": "54d892297846fcd158ebc5d1831af597cf3ff9bc"
+    },
+    {
+     "path": "backend/app/services/ubo_engine.py",
+     "git_blob": "15de1235fe57088aac874e3b14c4b0f36d6cb431"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 173
+  },
+  {
+   "repository": "janpow77/osint",
+   "commit": "d361ddb9a502bb899065e799d50104f306cfdc89",
+   "files": [
+    {
+     "path": "werkzeuge/traeger_quellen.py",
+     "git_blob": "538c368e3a0de9b1d6db60edbf7007989c54a278"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 7
+  },
+  {
+   "repository": "janpow77/flowinvoice",
+   "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+   "files": [
+    {
+     "path": "backend/app/services/fraud_detection/models.py",
+     "git_blob": "e960f32633874444b9ddc0f323dd54f5b0242e59"
+    },
+    {
+     "path": "backend/app/services/fraud_detection/rate_limiter.py",
+     "git_blob": "c55f90f0ed29ea6e7fae0808ca72a5d16edd5134"
+    },
+    {
+     "path": "backend/app/services/fraud_detection/cache.py",
+     "git_blob": "77446c9735e1581627e4b48dfc86343021e3c21e"
+    },
+    {
+     "path": "backend/app/services/fraud_detection/sanctions_checker.py",
+     "git_blob": "f003318086914f9d8ea53a566f40289e8e278c39"
+    },
+    {
+     "path": "backend/app/services/fraud_detection/sanctions_downloader.py",
+     "git_blob": "54b2bf7352c6bf68ce12cc68e5df57df081ba2d5"
+    },
+    {
+     "path": "backend/app/services/fraud_detection/pep_checker.py",
+     "git_blob": "58d1849a626faa00509718287f7a5b793b0d7da1"
+    },
+    {
+     "path": "backend/app/services/fraud_detection/company_verifier.py",
+     "git_blob": "a34ee1a077afbb1173210ad08bcee91db55498a0"
+    },
+    {
+     "path": "backend/tests/test_pep_checker.py",
+     "git_blob": "9dfb048831855efc80510a7ebf03103d764cb7e4"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 103
+  },
+  {
+   "repository": "janpow77/riskanalysis",
+   "commit": "b5c523bf7eaa326153778d9751f176f03d4d56ed",
+   "files": [
+    {
+     "path": "backend/app/services/sanctions_screening.py",
+     "git_blob": "d21d5ec7b01b1bc9ee5a055cdb2d7621767b3056"
+    }
+   ],
+   "github_blobs_verified": "2026-09-23",
+   "cases": 6
+  }
+ ],
+ "rights": {
+  "license_status": "MIT",
+  "public_release_status": "USER_AUTHORIZED_MIT",
+  "authorization": {
+   "status": "USER_AUTHORIZED_MIT",
+   "date": "2026-09-22",
+   "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+   "interpretation": "Der in auditcore extrahierte Bibliothekscode steht unter MIT; die Quell-Repositories werden nicht umlizenziert.",
+   "scope": "Extrahierter Code und Profile dieses Pakets",
+   "limitation": "Keine Umlizenzierung der Quell-Repositories audit_designer, flowworkshop, audit-portal, flowsearch, osint, riskanalysis und flowinvoice."
+  },
+  "source_repositories_license": {
+   "janpow77/audit_designer": "privat, keine Lizenz",
+   "janpow77/flowworkshop": "öffentlich, keine Lizenz",
+   "janpow77/audit-portal": "privat, proprietäre LICENSE (NOASSERTION)",
+   "janpow77/flowsearch": "privat, keine Lizenz",
+   "janpow77/osint": "privat, keine Lizenz",
+   "janpow77/riskanalysis": "privat, keine Lizenz (nur dokumentiert, kein Code übernommen)",
+   "janpow77/flowinvoice": "privat, keine Lizenz"
+  },
+  "data_licences": {
+   "status": "REVIEW_REQUIRED",
+   "OpenSanctions": "Massendaten und API unter CC BY-NC 4.0 (nicht kommerziell), geprüft 2026-09-23 auf opensanctions.org/licensing; API nur mit Schlüssel; Nutzerentscheidung A2 (23.09.2026): abgedeckt durch Nutzung, Verantwortung beim Betreiber",
+   "EU FSF / OFAC SDN / UN SC": "amtliche Listen; Bedingungen je Herausgeber nicht abschließend geprüft",
+   "VIES / OffeneRegister / ZER / IHK / ZDH": "Nutzungsbedingungen nicht geprüft",
+   "note": "Das Paket enthält keine Originaldaten dieser Quellen. Fixtures sind synthetisch im Originalformat; einzige Ausnahme ist die VIES-Antwort für die nicht vergebene Nummer DE000000000 (keine Personendaten)."
+  }
+ },
+ "characterization": {
+  "tool": "tools/capture_legacy.py",
+  "fixture": "tests/fixtures/legacy_observed.json",
+  "cases": 456,
+  "environment": {
+   "auditcore_entity_matching_called_by_workshop": "0.1.0",
+   "httpx": "0.28.1",
+   "python": "3.12.3",
+   "rapidfuzz": "3.10.1",
+   "unicode": "15.0.0"
+  },
+  "database": "keine; Designer-Dienst mit ersetzten DB-Methoden (aufgezeichnete Kennzahlen)",
+  "network": "keiner (httpx.MockTransport, OSINT-Abrufhelfer ersetzt)",
+  "original_tests": "flowinvoice backend/tests/test_pep_checker.py: 2 PASS",
+  "classification": "OBSERVED"
+ },
+ "profiles": [
+  "audit_designer.sanctions_lists 2026.09.1",
+  "audit_designer.sanctions_screening 2026.09.1",
+  "audit_designer.sanctions_screening 2026.09.2",
+  "flowinvoice.company_verification 2026.09.1",
+  "flowinvoice.company_verification 2026.09.2",
+  "flowinvoice.pep_bulk 2026.09.1",
+  "flowinvoice.pep_bulk 2026.09.2",
+  "flowinvoice.sanctions_local 2026.09.1",
+  "flowinvoice.sanctions_network 2026.09.1",
+  "flowsearch.kmu 2026.09.1",
+  "flowsearch.kmu 2026.09.2",
+  "flowsearch.opensanctions_match 2026.09.1",
+  "flowsearch.pep_risk 2026.09.1",
+  "flowsearch.pep_risk 2026.09.2",
+  "flowsearch.ubo 2026.09.1",
+  "flowsearch.ubo 2026.09.2",
+  "flowworkshop.sanctions_lists 2026.09.1",
+  "flowworkshop.sanctions_screening 2026.09.1",
+  "flowworkshop.sanctions_screening 2026.09.2",
+  "official.sanctions_lists 2026.09.1"
+ ],
+ "runtime_dependencies": [
+  "auditcore_harvest==0.1.1",
+  "auditcore_entity_matching==0.2.0"
+ ],
+ "optional_dependencies": {
+  "fuzzy": "rapidfuzz>=3.10.1,<4",
+  "xml": "defusedxml>=0.7.1",
+  "html": "beautifulsoup4>=4.11.2,<5"
+ },
+ "live_checks": "docs/live-smoke.json",
+ "behavior_changes": "docs/behavior-changes.md",
+ "decisions": [
+  {
+   "status": "DECIDED",
+   "date": "2026-09-23",
+   "quote": "alle empfehlungen, ... A2 abgedeckt durch nutzung, A3 sollte jeder dann selber holen können",
+   "ids": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8",
+    "R9",
+    "R10",
+    "A2",
+    "A3"
+   ],
+   "effect": "Empfohlene Profile 2026.09.2 (USER_DECIDED); Quellprofile 2026.09.1 unverändert; siehe docs/behavior-changes.md"
+  }
+ ]
+}

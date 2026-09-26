@@ -1,0 +1,123 @@
+{
+  "scope": "PUBLIC_RELEASE_ANONYMOUS_INSTALLATION",
+  "release": {
+    "tag": "v0.2.0",
+    "url": "https://github.com/janpow77/auditcore/releases/tag/v0.2.0",
+    "published_at": "2026-09-23T05:41:55Z",
+    "prerelease": true,
+    "target_commit": "c7853e305a2f9656d61447745dbf00332f24fa99",
+    "assets": 78
+  },
+  "signing_key_fingerprint": "E427F95CC37CBFD0876314CA0D1580A6CAE37327",
+  "packages": [
+    {
+      "distribution": "auditcore-dataprotection",
+      "version": "0.1.0",
+      "wheel_sha256": "30c5be48789865074552296e778b9f9ad53d90570ed822b657b8bfa358dd8c7d",
+      "selective_installed_distributions": [
+        "auditcore-dataprotection"
+      ]
+    },
+    {
+      "distribution": "auditcore-dummygenerator",
+      "version": "0.1.0",
+      "wheel_sha256": "43823f2d6a58077bef40106f2c5ac401ee66e86d7f58d4b4a16f5d6e7ac68d51",
+      "selective_installed_distributions": [
+        "auditcore-dummygenerator"
+      ]
+    },
+    {
+      "distribution": "auditcore-entity-matching",
+      "version": "0.1.0",
+      "wheel_sha256": "9682290d4a550efbf82f066607fe424435395e2f63ee5d2c461c110f31e6a9b1",
+      "selective_installed_distributions": [
+        "auditcore-entity-matching"
+      ]
+    },
+    {
+      "distribution": "auditcore-funding-sources",
+      "version": "0.1.0",
+      "wheel_sha256": "b2bdc5a904540a3a729edf80a861635552cd7d21007ae1b2600b2b3a84f92667",
+      "selective_installed_distributions": [
+        "auditcore-funding-sources",
+        "auditcore-harvest"
+      ]
+    },
+    {
+      "distribution": "auditcore-harvest",
+      "version": "0.1.0",
+      "wheel_sha256": "bc6cf59f65826171d81666a28331a609395e2f3cba8ba47f9321d454b378d880",
+      "selective_installed_distributions": [
+        "auditcore-harvest"
+      ]
+    },
+    {
+      "distribution": "auditcore-invoicegenerator",
+      "version": "0.2.0",
+      "wheel_sha256": "a54f4a70b4cb5b48654a2de180b72ee25b6b1a1ebb75922429d042a48cc3c9be",
+      "selective_installed_distributions": [
+        "auditcore-dummygenerator",
+        "auditcore-invoicegenerator"
+      ]
+    },
+    {
+      "distribution": "auditcore-legal-sources",
+      "version": "0.1.0",
+      "wheel_sha256": "b7d82250553b41b445f7d3b137937ecb34929d6b0a1384b7bd3a92e40a408747",
+      "selective_installed_distributions": [
+        "auditcore-harvest",
+        "auditcore-legal-sources"
+      ]
+    },
+    {
+      "distribution": "auditcore-procurement",
+      "version": "0.1.0",
+      "wheel_sha256": "6ad43c8eff3ca08c832cc18ba8551c2044c3e6355840feee792df52a0ee3da32",
+      "selective_installed_distributions": [
+        "auditcore-procurement"
+      ]
+    },
+    {
+      "distribution": "auditcore-reporting",
+      "version": "0.2.0",
+      "wheel_sha256": "acc433853b972dd5bc7f79a1aa56ed04ad59c8d38f583a21488ed6f9d6be22c8",
+      "selective_installed_distributions": [
+        "auditcore-reporting"
+      ]
+    },
+    {
+      "distribution": "auditcore-sampling",
+      "version": "0.1.0",
+      "wheel_sha256": "10a2ec9feb78d3b02b8cf75eed1624efd1ba9af1aff5facdde35a48087991fd7",
+      "selective_installed_distributions": [
+        "auditcore-sampling"
+      ]
+    },
+    {
+      "distribution": "auditcore-statistics",
+      "version": "0.1.0",
+      "wheel_sha256": "468f6810bf471ef5e8b3d018c160cf520542170bbff67accffae55d3d8d24985",
+      "selective_installed_distributions": [
+        "auditcore-statistics"
+      ]
+    }
+  ],
+  "pre_upload_verification": {
+    "domain_packages": "PASS",
+    "optional_renderers": "PASS",
+    "apt_upgrade_scope": "DEBIAN_PACKAGING_REVISION_1_TO_2_SAME_UPSTREAM_WHEEL"
+  },
+  "anonymous_pip": {
+    "status": "PASS",
+    "method": "je Paket frische venv, pip --isolated -r requirements-<paket>.txt vom öffentlichen Release-URL, env -i ohne Zugangsdaten",
+    "smoke": "tests/installed_smoke.py aller 11 Pakete PASS"
+  },
+  "anonymous_apt": {
+    "status": "PASS",
+    "image": "debian:bookworm",
+    "steps": "Keyring vom Release, Fingerprint geprüft, signed-by-Quelle, apt-get install aller 11 Pakete, Smoke-Tests mit /usr/bin/python3 -I, apt-get remove, Importe entfernt",
+    "warning": "apt meldet fehlendes Date-Feld der Release-Datei (bereits bei v0.1.0; Warnung, kein Fehler)"
+  },
+  "checked_at": "2026-09-23T05:44:57+00:00",
+  "application_release": "NOT_EVALUATED"
+}

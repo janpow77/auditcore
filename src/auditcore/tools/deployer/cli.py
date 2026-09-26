@@ -15,6 +15,7 @@ from auditcore.tools.deployer.apt import AptRepository
 from auditcore.tools.deployer.build import ApplicationInspection, DeploymentBuilder
 from auditcore.tools.deployer.library import build_library_deb
 from auditcore.tools.deployer.python_repository import build_pip_index, build_python_package
+from auditcore.tools.deployer.smoke import run_functional_smoke
 from auditcore.tools.deployer.validation import DockerPackageTester
 
 
@@ -56,6 +57,15 @@ def main(argv: list[str] | None = None) -> int:
     index.add_argument("wheels", type=Path, nargs="+")
     index.add_argument("--output", type=Path, required=True)
     index.add_argument("--allow-unreviewed-license", action="store_true")
+    smoke = sub.add_parser(
+        "smoke",
+        help="Pflicht nach jedem Produktions-Deploy: fachliche Rauchtests gegen die laufende App",
+    )
+    smoke.add_argument(
+        "config", type=Path, help="auditcore-deploy.json oder JSON mit 'functional_smoke'"
+    )
+    smoke.add_argument("--base-url", required=True)
+    smoke.add_argument("--output", type=Path, default=Path(".auditcore/functional-smoke.json"))
     sub.add_parser("status")
     args = parser.parse_args(argv)
     result: Any
@@ -92,6 +102,10 @@ def main(argv: list[str] | None = None) -> int:
             result = build_pip_index(
                 args.wheels, args.output, allow_unreviewed_license=args.allow_unreviewed_license
             )
+        elif args.command == "smoke":
+            config = read_json(args.config)
+            result = run_functional_smoke(args.base_url, config.get("functional_smoke"))
+            write_json(args.output, result)
         elif args.command in {"test-package", "test-upgrade"}:
             tester = DockerPackageTester()
             tester.prepare()

@@ -12,9 +12,11 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
 from types import MappingProxyType
-from typing import Any
+from typing import Any, TypeVar
 
-from .calculation import Answer, Scenario
+from .answers import Answer, Scenario
+
+_V = TypeVar("_V")
 
 DEFAULT_REGISTER = "verarbeitungsverzeichnis"
 
@@ -58,7 +60,7 @@ class AssessmentStatus(StrEnum):
     SUPERSEDED = "abgeloest"
 
 
-def frozen_mapping(value: Mapping[str, Any]) -> Mapping[str, Any]:
+def frozen_mapping(value: Mapping[str, _V]) -> Mapping[str, _V]:
     """Read-only shallow view; nested values are validated JSON data."""
     return MappingProxyType(dict(value))
 
@@ -101,6 +103,7 @@ class Consultation:
     consulted_on: str
     recorded_by: str
     recorded_at: datetime
+    ground: str | None = None
 
 
 @dataclass(frozen=True)
@@ -148,6 +151,18 @@ class Assessment:
     released_at: datetime | None = None
     predecessor_id: str | None = None
     changes_to_predecessor: tuple[Mapping[str, Any], ...] = ()
+    # Schema 2 (EDPB template 2026 v1.0); empty for schema 1 profiles.
+    dossier: Mapping[str, str] = field(default_factory=dict)
+    measure_status: Mapping[str, Mapping[str, str]] = field(default_factory=dict)
+    action_plan: tuple[Mapping[str, str], ...] = ()
+    conditions: tuple[str, ...] = ()
+    # Documentation mode (release_mode "dokumentation"): request for the DPO's
+    # advice and the checks that were still open at release.
+    dpo_requested_from: str | None = None
+    dpo_requested_on: str | None = None
+    dpo_requested_by: str | None = None
+    dpo_requested_at: datetime | None = None
+    release_open_points: tuple[str, ...] = ()
 
     @property
     def locked(self) -> bool:

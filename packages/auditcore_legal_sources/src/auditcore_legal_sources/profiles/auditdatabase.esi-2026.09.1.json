@@ -1,0 +1,303 @@
+{
+ "schema": "auditcore_legal_sources.profile/1",
+ "version": "2026.09.1",
+ "status": "SOURCE_CHARACTERIZED",
+ "id": "auditdatabase.esi",
+ "source": {
+  "repository": "janpow77/auditdatabase",
+  "commit": "bba911e918e102426d4ca2f88fd377fe8ca585e4",
+  "files": [
+   {
+    "path": "backend/app/harvester/base.py",
+    "git_blob": "fcefbe13ecdd3d8bb1fff83f04a53c56ad700c4b"
+   },
+   {
+    "path": "backend/app/harvester/dip.py",
+    "git_blob": "de4a26ed623989ef6b84dec92b3d7c1e7eb3af62"
+   },
+   {
+    "path": "backend/app/harvester/eurlex.py",
+    "git_blob": "3bad9865dc13fbc2c21e195741f77864ae3fd4f2"
+   }
+  ]
+ },
+ "keywords": {
+  "de": [
+   "EFRE",
+   "ESF",
+   "ESF+",
+   "EU-Förderung",
+   "Strukturfonds",
+   "Kohäsionspolitik",
+   "Kohäsion",
+   "Kohäsionsfonds",
+   "EU-Mittel",
+   "EU-Fördermittel",
+   "Europafonds",
+   "ESI-Fonds",
+   "geteilte Mittelverwaltung",
+   "Regionalförderung",
+   "Regionalentwicklung",
+   "Strukturpolitik",
+   "Regionalpolitik",
+   "ländliche Entwicklung",
+   "Prüfung",
+   "Finanzkontrolle",
+   "Rechnungsprüfung",
+   "Wirtschaftlichkeit",
+   "Ordnungsmäßigkeit",
+   "Finanzkorrektur",
+   "Fehlerquote",
+   "Internal Audit",
+   "Audit",
+   "Auditmanual",
+   "Prüfstrategie",
+   "Verwaltungskontrolle",
+   "Verwaltungs- und Kontrollsysteme",
+   "Zuwendung",
+   "Fördermittel",
+   "Beihilfe",
+   "Subvention",
+   "Förderung",
+   "Förderprogramm",
+   "Zuschuss",
+   "Beihilferecht",
+   "Zuwendungsrecht",
+   "Mitteilungsverordnung",
+   "Vergabe",
+   "Beschaffung",
+   "Ausschreibung",
+   "Vergaberecht",
+   "öffentliche Auftragsvergabe",
+   "Vergabe öffentlicher Aufträge",
+   "öffentliche Auftraggeber",
+   "Korruption",
+   "Betrug",
+   "Unregelmäßigkeit",
+   "Irregularität",
+   "Betrugsbekämpfung",
+   "Integrität",
+   "Transparenz",
+   "Fraud",
+   "OLAF",
+   "Rechnungshof",
+   "Prüfbehörde",
+   "Verwaltungsbehörde",
+   "Europäische Kommission",
+   "EU-Kommission",
+   "Dachverordnung",
+   "Allgemeine Verordnung",
+   "Haushaltsordnung",
+   "Landeshaushaltsordnung",
+   "Förderperiode 2021-2027",
+   "Förderperiode 2028-2034",
+   "WIBank",
+   "HELABA",
+   "Hessen",
+   "Bundesland"
+  ],
+  "en": [
+   "ERDF",
+   "ESF",
+   "ESF+",
+   "EU funding",
+   "structural funds",
+   "cohesion policy",
+   "cohesion",
+   "cohesion fund",
+   "EU funds",
+   "European funds",
+   "ESI funds",
+   "shared management",
+   "regional development",
+   "regional policy",
+   "structural policy",
+   "rural development",
+   "audit",
+   "financial control",
+   "financial audit",
+   "economy",
+   "efficiency",
+   "effectiveness",
+   "financial correction",
+   "error rate",
+   "internal audit",
+   "audit manual",
+   "audit strategy",
+   "management and control systems",
+   "grant",
+   "subsidy",
+   "state aid",
+   "funding programme",
+   "funding program",
+   "simplified cost options",
+   "SCO",
+   "SCOs",
+   "financing not linked to costs",
+   "FNLC",
+   "lump sum",
+   "flat rate",
+   "unit cost",
+   "procurement",
+   "public procurement",
+   "tendering",
+   "award procedure",
+   "contracting authority",
+   "corruption",
+   "fraud",
+   "irregularity",
+   "anti-fraud",
+   "anti-corruption",
+   "integrity",
+   "transparency",
+   "OLAF",
+   "court of auditors",
+   "audit authority",
+   "managing authority",
+   "European Commission",
+   "common provisions regulation",
+   "CPR",
+   "financial regulation",
+   "multiannual financial framework",
+   "MFF",
+   "programming period 2021-2027",
+   "programming period 2028-2034",
+   "Germany",
+   "German"
+  ]
+ },
+ "dip": {
+  "api_url": "https://search.dip.bundestag.de/api/v1",
+  "portal_url": "https://dip.bundestag.de",
+  "keywords": [
+   "EFRE",
+   "ESF",
+   "ESF+",
+   "Strukturfonds",
+   "Kohäsionspolitik",
+   "EU-Förderung",
+   "Regionalförderung",
+   "Europäischer Fonds",
+   "Strukturfondsförderung",
+   "EU-Mittel",
+   "Fördermittel",
+   "Vergaberecht",
+   "Beihilferecht",
+   "Finanzkontrolle",
+   "Kohäsionsfonds",
+   "Europäischer Sozialfonds",
+   "Interreg",
+   "REACT-EU",
+   "JTF",
+   "Just Transition",
+   "Aufbaufonds",
+   "EU-Haushalt",
+   "Mehrjähriger Finanzrahmen",
+   "MFR",
+   "Dachverordnung",
+   "1060/2021",
+   "1058/2021"
+  ],
+  "page_size": 30,
+  "classification": "auditdatabase.dip"
+ },
+ "eurlex": {
+  "endpoint": "https://publications.europa.eu/webapi/rdf/sparql",
+  "document_url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:",
+  "queries": {
+   "cohesion_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date ?type WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n                OPTIONAL { ?work cdm:resource_legal_type ?type . }\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"2021/1058\") ||\n                    CONTAINS(STR(?title), \"1303/2013\") ||\n                    CONTAINS(STR(?title), \"regionale Entwicklung\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 200\n        ",
+   "delegated_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?celex), \"32021\") ||\n                    CONTAINS(STR(?celex), \"32022\") ||\n                    CONTAINS(STR(?celex), \"32023\") ||\n                    CONTAINS(STR(?celex), \"32024\")\n                )\n                FILTER(\n                    CONTAINS(STR(?title), \"Delegierte\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"Kohäsion\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+   "implementing_regulations": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    CONTAINS(STR(?title), \"Durchführung\") &&\n                    (\n                        CONTAINS(STR(?title), \"1060\") ||\n                        CONTAINS(STR(?title), \"1058\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"EFRE\") ||\n                        CONTAINS(STR(?title), \"ESF\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 100\n        ",
+   "guidance_documents": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(\n                    (CONTAINS(STR(?celex), \"52021\") || CONTAINS(STR(?celex), \"52022\") ||\n                     CONTAINS(STR(?celex), \"52023\") || CONTAINS(STR(?celex), \"52024\")) &&\n                    (\n                        CONTAINS(STR(?title), \"Kohäsion\") ||\n                        CONTAINS(STR(?title), \"Struktur\") ||\n                        CONTAINS(STR(?title), \"EFRE\") ||\n                        CONTAINS(STR(?title), \"ESF\")\n                    )\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        "
+  },
+  "core_documents": [
+   {
+    "celex": "32021R1060",
+    "title": "Dachverordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1058",
+    "title": "EFRE/KF-Verordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1057",
+    "title": "ESF+-Verordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32021R1059",
+    "title": "Interreg-Verordnung 2021-2027",
+    "period": "2021-2027"
+   },
+   {
+    "celex": "32013R1303",
+    "title": "Dachverordnung 2014-2020",
+    "period": "2014-2020"
+   },
+   {
+    "celex": "32013R1301",
+    "title": "EFRE-Verordnung 2014-2020",
+    "period": "2014-2020"
+   },
+   {
+    "celex": "32013R1304",
+    "title": "ESF-Verordnung 2014-2020",
+    "period": "2014-2020"
+   }
+  ],
+  "update_query_template": "\n            PREFIX cdm: <http://publications.europa.eu/ontology/cdm#>\n            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n\n            SELECT DISTINCT ?work ?celex ?title ?date WHERE {\n                ?work cdm:resource_legal_id_celex ?celex .\n                ?work cdm:work_date_document ?date .\n                ?work cdm:work_title ?title .\n\n                FILTER(?date >= \"{since}\"^^xsd:date)\n                FILTER(\n                    CONTAINS(STR(?title), \"Struktur\") ||\n                    CONTAINS(STR(?title), \"Kohäsion\") ||\n                    CONTAINS(STR(?title), \"EFRE\") ||\n                    CONTAINS(STR(?title), \"ESF\") ||\n                    CONTAINS(STR(?title), \"2021/1060\") ||\n                    CONTAINS(STR(?title), \"1303/2013\")\n                )\n                FILTER(LANG(?title) = \"de\")\n            }\n            ORDER BY DESC(?date)\n            LIMIT 50\n        ",
+  "funding_period_rule": "auditdatabase"
+ },
+ "feeds": {
+  "bafin": {
+   "feeds": {
+    "aufsicht": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Aufsicht.xml",
+    "massnahmen": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Massnahmen.xml",
+    "presse": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/RSS_Presse.xml"
+   },
+   "alternative_feeds": {
+    "alle": "https://www.bafin.de/DE/Service/TopNavigation/RSS/_function/rssnewsfeed.xml",
+    "alle_alt": "https://www.bafin.de/rss/rssnewsfeed.xml"
+   },
+   "document_types": {
+    "aufsicht": "BaFin Aufsicht",
+    "massnahmen": "BaFin Massnahmen",
+    "presse": "BaFin Presse"
+   }
+  },
+  "curia": {
+   "feeds": {
+    "gerichtshof": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=de",
+    "gericht": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=de",
+    "pressemitteilungen": "https://curia.europa.eu/jcms/rss.jsp?lang=de&secondLang=en"
+   },
+   "alternative_feeds": {
+    "gerichtshof_en": "https://curia.europa.eu/jcms/rssJur.jsp?jur=C&lang=en",
+    "gericht_en": "https://curia.europa.eu/jcms/rssJur.jsp?jur=T&lang=en"
+   },
+   "document_types": {
+    "gerichtshof": "Rechtsprechung Gerichtshof",
+    "gericht": "Rechtsprechung Gericht",
+    "pressemitteilungen": "Pressemitteilung"
+   },
+   "case_patterns": [
+    "[CT]-\\d+/\\d+"
+   ]
+  },
+  "eca": {
+   "publication_urls": [
+    "https://www.eca.europa.eu/de/publications",
+    "https://www.eca.europa.eu/en/publications",
+    "https://www.eca.europa.eu/Lists/ECADocuments"
+   ],
+   "base_url": "https://www.eca.europa.eu",
+   "link_markers": [
+    "report",
+    "publication"
+   ],
+   "min_title_length": 11
+  }
+ }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_invoicesynth",
+  "version": "0.1.1",
+  "contract": "auditcore_invoicesynth.dataset/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "builds_on": [
+    {
+      "package": "auditcore_invoicegenerator",
+      "version": "0.2.0",
+      "use": "InvoiceScenario (Parteien, Rechnungsnummer, Positionen); unverändert als Abhängigkeit"
+    }
+  ],
+  "origin": "Neu in auditcore geschrieben nach docs/architecture/DONUT_OCR_PLAN.md (2b, 2d); kein Code aus anderen Repositories und kein Donut-Code (clovaai/donut) übernommen.",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung anderer Repositories. Schriften werden nicht verteilt (Systempakete, jeweils eigene freie Lizenz); erzeugte Datensätze sind rein synthetisch."
+    }
+  },
+  "decisions": {
+    "status": "DECIDED",
+    "date": "2026-09-24",
+    "confirmation": "Donut alle Empfehlungen",
+    "applied": {
+      "E1": "eigene Distribution auditcore_invoicesynth",
+      "E2": "Modell MIT + öffentliches Release-Asset, nur synthetische Daten",
+      "E3": "kein CORD",
+      "E4": "keine echten Belege",
+      "E5": "prüfziffer-gültige fiktive IBAN/USt-IdNr., jede Seite sichtbar SYNTHETISCH",
+      "E6": "Abnahmeschwellen evaluation.ACCEPTANCE_THRESHOLDS",
+      "E8": "Ziel-JSON nur Kopf-/Summenfelder"
+    }
+  },
+  "fonts": {
+    "embedded": false,
+    "catalog": "fonts.FONT_CATALOG (DejaVu: Bitstream-Vera; Liberation, Noto: OFL-1.1)",
+    "evidence": "Name, Datei, Lizenz und SHA-256 je verwendeter Schrift im Datensatz-Manifest"
+  },
+  "training": {
+    "status": "PREPARED_NOT_EXECUTED",
+    "plan": "DONUT_OCR_PLAN.md 2c/2c-bis",
+    "base_model": {
+      "id": "naver-clova-ix/donut-base",
+      "revision": "a959cf33c20e09215873e338299c900f57047c61",
+      "license": "MIT",
+      "distributed": false
+    },
+    "note": "Nur Werkzeug; Gewichte und Datensätze werden nicht mit dem Paket verteilt."
+  }
+}

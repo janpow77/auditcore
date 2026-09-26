@@ -1,0 +1,12 @@
+User-Agent: *
+Allow: /api/docs
+Disallow: /api/
+Disallow: /v$
+Disallow: /m$
+Disallow: /*_rsc=
+Disallow: /*?*gui=
+Disallow: /*?*args.
+Disallow: /*?*_secret=
+Disallow: /*?*name=finder_template
+
+Sitemap: https://www.immobilien.de/sitemap.xml

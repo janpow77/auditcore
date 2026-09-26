@@ -1,0 +1,68 @@
+{
+ "decisions": [],
+ "id": "official.sanctions_lists",
+ "kind": "list_catalog",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "lists": [
+   {
+    "data_licence": {
+     "note": "Weiterverwendung von Kommissionsdokumenten (Beschluss 2011/833/EU); Bedingungen der FSF-Datei und des Abruf-Tokens nicht geprüft.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "eu_fsf_xml",
+    "issuer": "Europäische Kommission (FPI)",
+    "key": "eu_fsf",
+    "licence_claimed_in_source": null,
+    "name": "Konsolidierte Finanzsanktionsliste der Union (FSF), XML 1.1",
+    "provider": "Europäische Kommission",
+    "source_key": "eu_fsf",
+    "url": "https://webgate.ec.europa.eu/fsd/fsf/public/files/xmlFullSanctionsList_1_1/content?token=dG9rZW4tMjAxNw"
+   },
+   {
+    "data_licence": {
+     "note": "Werk einer US-Bundesbehörde, in den USA gemeinfrei; nicht geprüft.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "ofac_sdn_xml",
+    "issuer": "US-Finanzministerium, OFAC",
+    "key": "ofac_sdn",
+    "licence_claimed_in_source": null,
+    "name": "Specially Designated Nationals List (SDN), XML",
+    "provider": "OFAC Sanctions List Service",
+    "source_key": "ofac_sdn",
+    "url": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML"
+   },
+   {
+    "data_licence": {
+     "note": "Nutzungsbedingungen der Vereinten Nationen nicht geprüft.",
+     "status": "REVIEW_REQUIRED"
+    },
+    "format": "un_sc_xml",
+    "issuer": "Sicherheitsrat der Vereinten Nationen",
+    "key": "un_sc",
+    "licence_claimed_in_source": null,
+    "name": "Konsolidierte Liste des UN-Sicherheitsrats, XML",
+    "provider": "Vereinte Nationen",
+    "source_key": "un_sc",
+    "url": "https://scsanctions.un.org/resources/xml/en/consolidated.xml"
+   }
+  ]
+ },
+ "source": {
+  "also": "audit-portal@ac1ccc7 app/services/fraud_detection/sanctions_downloader.py (gleiche Adressen, Parser nach audit_prep/sanctions_xml.py ausgelagert)",
+  "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+  "git_blob": "54b2bf7352c6bf68ce12cc68e5df57df081ba2d5",
+  "path": "backend/app/services/fraud_detection/sanctions_downloader.py",
+  "repository": "janpow77/flowinvoice",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "SanctionsDownloader.EU_FSF_URL",
+   "OFAC_SDN_URL",
+   "UN_SC_URL"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

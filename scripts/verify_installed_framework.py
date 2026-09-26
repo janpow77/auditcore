@@ -114,8 +114,11 @@ def main() -> int:
         "auditcore-consolidate",
         "auditcore-refactor",
         "auditcore-deploy",
+        "auditcore-codegate",
+        "auditcore-helpers",
     ):
         check(name + "-help", [str(binary / name), "--help"])
+    check("helpers_rules_packaged", [str(binary / "auditcore-helpers"), "rules"])
     check(
         "package_inventory",
         [

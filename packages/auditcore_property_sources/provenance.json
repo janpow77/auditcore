@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_property_sources",
+  "version": "0.1.2",
+  "classification": "EXTRACTED_FROM_CHARACTERIZED_SOURCES",
+  "sources": [
+    {
+      "repository": "janpow77/wohnungsmonitor",
+      "commit": "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91",
+      "github_head_verified_on": "2026-09-23",
+      "files": [
+        {
+          "path": "immobilien_export.py",
+          "git_blob": "44233aea7651855d51b26c3d173f624ca96a389b"
+        },
+        {
+          "path": "inberlinwohnen_export.py",
+          "git_blob": "c044ed39271412c20978c41ec51e7f382def7336"
+        },
+        {
+          "path": "kleinanzeigen_export.py",
+          "git_blob": "8a7c8cba46e15b424f48ae95be43989a10c1b39f"
+        },
+        {
+          "path": "bienici_export.py",
+          "git_blob": "5a8cc85e222193c505b6fd4dec43394ffd5fb015"
+        },
+        {
+          "path": "citya_export.py",
+          "git_blob": "d5cc5d625bf19dca6f1c6a918069df6f35ae8509"
+        },
+        {
+          "path": "paruvendu_export.py",
+          "git_blob": "22f98c9f36d0299fe220743f40234b7119c7e62d"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/versteigerung",
+      "commit": "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448",
+      "github_head_verified_on": "2026-09-23",
+      "files": [
+        {
+          "path": "backend/app/crawler/zvg_crawler.py",
+          "git_blob": "b10ad2a63725246d3867bf9dd66329fc71e986cb"
+        }
+      ]
+    }
+  ],
+  "consumers": {
+    "status": "GEPLANT",
+    "decision": {
+      "date": "2026-09-23",
+      "statement": "beide Pakete werden gebaut, auch ohne bereits belegten Mehrfachnutzen – „der mehrfache Nutzen kommt noch“"
+    },
+    "existing": [
+      {
+        "repository": "janpow77/wohnungsmonitor",
+        "files": [
+          "wohnungsmonitor.py",
+          "details.py"
+        ],
+        "uses": [
+          "inberlinwohnen_export",
+          "kleinanzeigen_export",
+          "immobilien_export",
+          "bienici_export",
+          "citya_export",
+          "paruvendu_export"
+        ]
+      },
+      {
+        "repository": "janpow77/versteigerung",
+        "files": [
+          "backend/app/crawler/zvg_crawler.py",
+          "backend/app/crawler/repair_market_values.py",
+          "backend/app/crawler/reparse_addresses.py",
+          "backend/app/crawler/regeocode.py",
+          "backend/app/worker.py"
+        ],
+        "uses": [
+          "ZvgPortal",
+          "parse_detail",
+          "extract_address",
+          "extract_market_value",
+          "Ingest"
+        ]
+      }
+    ],
+    "multi_use": "Jede Quelle hat heute genau einen Consumer; die beiden Anwendungen teilen keine Fachsemantik (Mietangebote vs. Verkehrswert)."
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "source_repositories": [
+      {
+        "repository": "janpow77/wohnungsmonitor",
+        "github_private": true,
+        "github_license": null
+      },
+      {
+        "repository": "janpow77/versteigerung",
+        "github_private": true,
+        "github_license": null
+      }
+    ],
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Daten- und Nutzungsrechte der Portale separat (Katalog, REVIEW_REQUIRED)."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/legacy_observed.json",
+    "tool": "tools/capture_property_sources.py",
+    "inputs": "tools/synthetic_pages.py (synthetisch, strukturabgeleitet, ohne Personendaten)",
+    "cases": 238,
+    "lifecycle": "Original-SQL (Ingest.mark_seen/close_vanished/upsert) auf wegwerfbarer PostgreSQL 16/PostGIS-Datenbank mit den Original-Alembic-Migrationen",
+    "environment": {
+      "python": "3.12.3",
+      "beautifulsoup4": "4.12.3",
+      "httpx": "0.28.1",
+      "psycopg": "3.2.3"
+    },
+    "classification": "OBSERVED"
+  },
+  "catalog": {
+    "file": "src/auditcore_property_sources/catalog.json",
+    "robots_snapshots": "tests/fixtures/robots (abgerufen 2026-09-23)"
+  },
+  "behavior_changes": "docs/behavior-changes.md",
+  "decisions": {
+    "date": "2026-09-23",
+    "by": "Nutzer",
+    "quotes": [
+      "1-4 bitte ignoriere die robots.txt. das klappt gerade gut",
+      "A1 erlauben",
+      "A1 ok"
+    ],
+    "items": {
+      "PS-D01": "robots_policy=\"ignore\" als Standard (Kleinanzeigen-Suche, ZVG-Detailseiten wie im Original)",
+      "PS-D02": "bienici mit Browser-Kennung des Originals",
+      "PS-D03": "advertiser_names=\"legacy\" als Standard"
+    }
+  }
+}

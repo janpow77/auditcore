@@ -10,13 +10,17 @@ from __future__ import annotations
 
 import io
 from collections.abc import Mapping, Sequence
-from datetime import date, datetime
+from datetime import datetime
 from typing import Any
 
-from .legacy import REGIME_DSGVO, legacy_profile
-from .register import group_by_department
+from auditcore_common.optional import require_module
 
-MAX_ROWS = 100_000
+from .legacy_report import format_datetime_de
+from .legacy_scoring import REGIME_DSGVO, legacy_profile
+from .register_content import group_by_department
+from .rules import RuleProfile
+from .workbook_tables import MAX_ROWS, Table, cell_value, overview_tables, register_tables, yes_no
+
 MAX_TEXT = 32_767
 
 
@@ -25,13 +29,11 @@ class ExportDependencyError(ImportError):
 
 
 def _openpyxl() -> Any:
-    try:
-        import openpyxl
-    except ImportError as exc:  # pragma: no cover - exercised without the extra
-        raise ExportDependencyError(
-            "Excel-Ausgabe benötigt openpyxl: pip install 'auditcore_dataprotection[excel]'"
-        ) from exc
-    return openpyxl
+    return require_module(
+        "openpyxl",
+        ExportDependencyError,
+        "Excel-Ausgabe benötigt openpyxl: pip install 'auditcore_dataprotection[excel]'",
+    )
 
 
 def _put(ws: Any, row: int, column: int, value: Any) -> Any:
@@ -42,14 +44,6 @@ def _put(ws: Any, row: int, column: int, value: Any) -> Any:
     if isinstance(value, str) and cell.data_type == "f":
         cell.data_type = "s"
     return cell
-
-
-def _yes_no(value: Any) -> str:
-    if value is True:
-        return "Ja"
-    if value is False:
-        return "Nein"
-    return ""
 
 
 def _to_bytes(workbook: Any) -> bytes:
@@ -189,7 +183,7 @@ def _legacy_activity_sheet(wb: Any, groups: Any) -> None:
             for c, (name, _) in enumerate(columns, start=1):
                 value = activity.get(name)
                 if isinstance(value, bool):
-                    value = _yes_no(value)
+                    value = yes_no(value)
                 cell = _put(ws2, r, c, value or "")
                 cell.alignment = Alignment(wrap_text=True, vertical="top")
             r += 1
@@ -198,45 +192,44 @@ def _legacy_activity_sheet(wb: Any, groups: Any) -> None:
     ws2.freeze_panes = "A2"
 
 
-def _date(value: Any) -> str:
-    if isinstance(value, datetime):
-        return value.strftime("%d.%m.%Y %H:%M")
-    return "–"
+_OVERVIEW_COLUMNS = (
+    ("Nr.", 6),
+    ("Verarbeitungstätigkeit", 42),
+    ("Referat", 16),
+    ("Zweck", 46),
+    ("Fassung des Verzeichnisses", 12),
+    ("Folgenabschätzung", 18),
+    ("Fassung", 8),
+    ("Entscheidung", 30),
+    ("Freigegeben am", 18),
+)
 
 
-def legacy_overview_workbook(
-    rows: Sequence[Mapping[str, Any]], tenant_label: str, generated_at: datetime
-) -> Any:
-    """Layout of ``baue_uebersicht_workbook``; ``generated_at`` replaces ``datetime.now()``."""
-    openpyxl = _openpyxl()
+def _legacy_overview_values(entry: Mapping[str, Any], status_texts: Mapping[str, str]) -> list[Any]:
+    dsfa = entry.get("dsfa") or {}
+    released = dsfa.get("freigegeben_am")
+    return [
+        entry.get("position"),
+        entry.get("name"),
+        entry.get("referat"),
+        entry.get("zweck"),
+        entry.get("vvt_version"),
+        status_texts.get(dsfa.get("status", ""), "noch nicht begonnen"),
+        dsfa.get("version"),
+        dsfa.get("entscheidung"),
+        format_datetime_de(released) if released else "",
+    ]
+
+
+def _legacy_overview_sheet(
+    ws: Any, rows: Sequence[Mapping[str, Any]], profile: RuleProfile
+) -> None:
+    """Header row with widths and one row per activity (bounded)."""
     from openpyxl.styles import Alignment, Font, PatternFill
     from openpyxl.utils import get_column_letter
 
-    profile = legacy_profile(REGIME_DSGVO)
-    status_texts = profile.status_texts
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "Folgenabschätzungen"
-    _put(ws, 1, 1, "Datenschutz-Folgenabschätzungen je Verarbeitungstätigkeit").font = Font(
-        bold=True, size=14
-    )
-    _put(ws, 2, 1, tenant_label or "")
-    _put(ws, 3, 1, f"Stand: {generated_at.strftime('%d.%m.%Y %H:%M')}").font = Font(
-        size=9, italic=True
-    )
-    columns = [
-        ("Nr.", 6),
-        ("Verarbeitungstätigkeit", 42),
-        ("Referat", 16),
-        ("Zweck", 46),
-        ("Fassung des Verzeichnisses", 12),
-        ("Folgenabschätzung", 18),
-        ("Fassung", 8),
-        ("Entscheidung", 30),
-        ("Freigegeben am", 18),
-    ]
     head = 5
-    for i, (title, width) in enumerate(columns, start=1):
+    for i, (title, width) in enumerate(_OVERVIEW_COLUMNS, start=1):
         cell = _put(ws, head, i, title)
         cell.font = Font(bold=True)
         cell.fill = PatternFill("solid", start_color="D9E1F2", end_color="D9E1F2")
@@ -245,22 +238,16 @@ def legacy_overview_workbook(
     for line, entry in enumerate(rows, start=head + 1):
         if line - head > MAX_ROWS:
             raise ValueError("Zu viele Zeilen für die Übersicht.")
-        dsfa = entry.get("dsfa") or {}
-        released = dsfa.get("freigegeben_am")
-        values = [
-            entry.get("position"),
-            entry.get("name"),
-            entry.get("referat"),
-            entry.get("zweck"),
-            entry.get("vvt_version"),
-            status_texts.get(dsfa.get("status", ""), "noch nicht begonnen"),
-            dsfa.get("version"),
-            dsfa.get("entscheidung"),
-            _date(released) if released else "",
-        ]
+        values = _legacy_overview_values(entry, profile.status_texts)
         for column, value in enumerate(values, start=1):
             _put(ws, line, column, value).alignment = Alignment(wrap_text=True, vertical="top")
     ws.freeze_panes = ws.cell(row=head + 1, column=1)
+
+
+def _legacy_scale_sheet(wb: Any, profile: RuleProfile) -> None:
+    """Severity and likelihood levels and the catalogue measures."""
+    from openpyxl.styles import Font
+
     ws2 = wb.create_sheet("Bewertungsmaßstab")
     _put(ws2, 1, 1, "Maßstab der Risikobewertung").font = Font(bold=True, size=12)
     r = 3
@@ -283,23 +270,32 @@ def legacy_overview_workbook(
         r += 1
     ws2.column_dimensions["A"].width = 30
     ws2.column_dimensions["B"].width = 80
+
+
+def legacy_overview_workbook(
+    rows: Sequence[Mapping[str, Any]], tenant_label: str, generated_at: datetime
+) -> Any:
+    """Layout of ``baue_uebersicht_workbook``; ``generated_at`` replaces ``datetime.now()``."""
+    openpyxl = _openpyxl()
+    from openpyxl.styles import Font
+
+    profile = legacy_profile(REGIME_DSGVO)
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Folgenabschätzungen"
+    _put(ws, 1, 1, "Datenschutz-Folgenabschätzungen je Verarbeitungstätigkeit").font = Font(
+        bold=True, size=14
+    )
+    _put(ws, 2, 1, tenant_label or "")
+    _put(ws, 3, 1, f"Stand: {generated_at.strftime('%d.%m.%Y %H:%M')}").font = Font(
+        size=9, italic=True
+    )
+    _legacy_overview_sheet(ws, rows, profile)
+    _legacy_scale_sheet(wb, profile)
     return wb
 
 
-def _cell_value(value: Any) -> Any:
-    """Plain cell value for the reporting renderer; lists joined, flags as Ja/Nein."""
-    if isinstance(value, datetime) and value.tzinfo is not None:
-        return value.isoformat()  # Excel kennt keine Zeitzonen; Angabe bleibt eindeutig
-    if isinstance(value, bool):
-        return _yes_no(value)
-    if value is None or isinstance(value, (str, int, float, datetime, date)):
-        return value
-    if isinstance(value, (list, tuple)):
-        return ", ".join(str(v) for v in value)
-    return str(value)
-
-
-def _render(tables: Sequence[tuple[str, Sequence[str], Sequence[Sequence[Any]]]]) -> bytes:
+def _render(tables: Sequence[Table]) -> bytes:
     """Render flat tables with ``auditcore_reporting`` (formula-safe, bounded)."""
     try:
         from auditcore_reporting import ReportTable, render_workbook
@@ -313,7 +309,7 @@ def _render(tables: Sequence[tuple[str, Sequence[str], Sequence[Sequence[Any]]]]
             ReportTable(
                 name[:31],
                 list(header),
-                [[_cell_value(v) for v in row] for row in rows],
+                [[cell_value(v) for v in row] for row in rows],
                 profile="plain-v1",
             )
             for name, header, rows in tables
@@ -324,82 +320,13 @@ def _render(tables: Sequence[tuple[str, Sequence[str], Sequence[Sequence[Any]]]]
 def render_register_xlsx(report: Mapping[str, Any]) -> bytes:
     """Register report (see :func:`~auditcore_dataprotection.export.register_report`) as XLSX.
 
-    Uses the generic workbook renderer of ``auditcore_reporting`` 0.2.0.
+    Uses the generic workbook renderer of ``auditcore_reporting`` 0.2.1.
     """
-    meta = report["meta"]
-    cover = report.get("cover") or {}
-    info: list[list[Any]] = [
-        ["Verzeichnis", meta.get("register_id")],
-        ["Fassung", meta.get("version")],
-        ["Status", meta.get("status")],
-        ["Inhaltsprüfsumme (SHA-256)", meta.get("content_hash")],
-        ["Erstellt von", meta.get("created_by")],
-        ["Bearbeitet von", ", ".join(meta.get("editors") or [])],
-        ["Freigegeben von", meta.get("released_by") or ""],
-        ["Profil", f"{meta.get('profile_id')} {meta.get('profile_version')}"],
-    ]
-    for part in ("verantwortlicher", "dsb"):
-        for key, value in (cover.get(part) or {}).items():
-            info.append([f"{part}.{key}", value])
-    columns = report["columns"]
-    header = ["Referat", "Kennung", *[c["title"] for c in columns]]
-    rows = [
-        [group["name"], activity.get("id"), *[activity.get(c["key"]) for c in columns]]
-        for group in report["departments"]
-        for activity in group["activities"]
-    ]
-    if len(rows) > MAX_ROWS:
-        raise ValueError("Zu viele Zeilen für die Arbeitsmappe.")
-    issues = [[i["code"], i["message"], i["blocking"], i["subject"]] for i in report["issues"]]
-    return _render(
-        [
-            ("Vorblatt", ["Angabe", "Wert"], info),
-            ("Verarbeitungstätigkeiten", header, rows),
-            ("Prüfhinweise", ["Code", "Hinweis", "Blockiert Freigabe", "Bezug"], issues),
-        ]
-    )
+    return _render(register_tables(report))
 
 
 def render_overview_xlsx(
     rows: Sequence[Mapping[str, Any]], tenant_label: str, generated_at: datetime
 ) -> bytes:
     """Overview of activities and their newest assessment as XLSX (``auditcore_reporting``)."""
-    header = [
-        "Nr.",
-        "Kennung",
-        "Verarbeitungstätigkeit",
-        "Referat",
-        "Zweck",
-        "Fassung des Verzeichnisses",
-        "Folgenabschätzung",
-        "Fassung",
-        "Entscheidung",
-        "Freigegeben am",
-        "Überprüfung erforderlich",
-    ]
-    lines = []
-    for row in rows:
-        dsfa = row.get("dsfa") or {}
-        lines.append(
-            [
-                row.get("position"),
-                row.get("id"),
-                row.get("name"),
-                row.get("referat"),
-                row.get("zweck"),
-                row.get("vvt_version"),
-                dsfa.get("status") or "noch nicht begonnen",
-                dsfa.get("version"),
-                dsfa.get("entscheidung"),
-                dsfa.get("freigegeben_am"),
-                dsfa.get("pruefung_erforderlich"),
-            ]
-        )
-    if len(lines) > MAX_ROWS:
-        raise ValueError("Zu viele Zeilen für die Arbeitsmappe.")
-    return _render(
-        [
-            ("Folgenabschätzungen", header, lines),
-            ("Stand", ["Angabe", "Wert"], [["Mandant", tenant_label], ["Stand", generated_at]]),
-        ]
-    )
+    return _render(overview_tables(rows, tenant_label, generated_at))

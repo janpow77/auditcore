@@ -1,0 +1,23 @@
+auditcore_price_analysis 0.1.2 — source attribution and authorization
+
+The calculation, tier, comparison and selection rules derive from the
+executed and characterized code of this private repository (Git blobs
+verified against GitHub HEAD on 2026-09-23):
+
+  janpow77/regulierung@853676d2b1ab792395d63c62c9f96d5edcca8c2d
+    backend/app/services/calculator.py    1d40c9ef739e8933b4ec8195226f5eef117389ba
+    backend/app/services/preisauswahl.py  89b5cec43867794918cfcb851878eb6dfddf1abc
+Observed contributors of the sources: janpow77, claude.
+
+The module auditcore_price_analysis.legacy reproduces the original behavior
+for consumer migration; the new contract corrects documented findings
+(docs/behavior-changes.md).
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library. The source repository keeps
+its own (unlicensed, private) status; this is no relicensing of it.
+No tariff data of real providers is included; all fixtures use synthetic
+values. The legal switch date of the levy (2025-07-01) is taken from the
+source as stated there; it is no legal opinion. Results are algorithmic
+comparisons, never a release of a price or a legal decision.

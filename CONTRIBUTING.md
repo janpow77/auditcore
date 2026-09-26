@@ -13,6 +13,13 @@ Run `pytest`, `ruff check .`, `mypy src` and the five quality self-checks docume
 in README.md. Tests use synthetic data and fake providers; real integrations are
 explicit separate runs. Never run repository code merely to inventory it.
 
+Every package README under `packages/` and `packages-js/` follows
+`docs/bibliotheken/readme-vorlage.md`; `tests/test_readmes.py` enforces the
+sections, runs the quick start and compares the generated blocks. After changing
+exports, docstrings, a version or the „Zweck“ paragraph run
+`python scripts/docs/api_overview.py --write <package>` and
+`python scripts/docs/catalog.py --write`.
+
 Before extraction capture legacy outputs and exceptions, preserve source revision
 and licensing, assess framework applicability, and generate a reviewable plan.
 Before merging changes to shared APIs compare the API snapshot and run consumer
@@ -24,3 +31,21 @@ the changed semantics is not acceptable. Offline snapshots remain STALE.
 
 Small logical commits; no force push, history rewrite or automatic production
 migration. A green CI is not a policy, privacy or operating authorization.
+
+## Pflicht: fachlicher Rauchtest nach Produktions-Deploys
+
+Nach jedem Deploy außerhalb von `internal_test` ist ein fachlicher Rauchtest
+über die echte API Pflicht; ein Health-Check reicht nicht. Durchgesetzt durch
+`auditcore-deploy plan` (Blocker ohne `functional_smoke`-Fälle) und
+`auditcore-deploy smoke` (Exitcode 1 bei Fehlschlag). Details:
+[docs/deployment/functional-smoke.md](docs/deployment/functional-smoke.md).
+
+## Helfer-Verträge in den Apps
+
+App-Repositorys prüfen ihre Hilfsfunktionen (Zahl, Datum, Betrag, CSV,
+Fehlertext) mit `auditcore-helpers check` bzw. der Action
+`.github/actions/helper-contracts` gegen die gemeinsamen Vertragsfälle in
+`contracts/common-cases` und eine Ratchet-Baseline. Neue Regeln brauchen
+Positiv- und Negativbeispiele, neue Fälle eine Referenzumsetzung in beiden
+Sprachen. Details: [docs/quality/helper-contracts.md](docs/quality/helper-contracts.md).
+

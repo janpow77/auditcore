@@ -1,0 +1,40 @@
+[
+ {
+  "label": "Beispielverein e. V.",
+  "plz": "60311",
+  "ort": "Frankfurt am Main",
+  "strasse": "Vereinsweg",
+  "hausnummer": "3a",
+  "bundesland": "Hessen",
+  "zwecke": [
+   "Sport"
+  ],
+  "finanzamt": "Beispiel"
+ },
+ {
+  "label": "  Förderkreis Muster gGmbH ",
+  "plz": " 01067 ",
+  "ort": "Dresden",
+  "strasse": "Musterstraße",
+  "hausnummer": "12",
+  "bundesland": "Sachsen"
+ },
+ {
+  "label": "Ohne Postleitzahl e. V.",
+  "plz": "",
+  "ort": "Irgendwo"
+ },
+ {
+  "label": "",
+  "plz": "12345",
+  "ort": "Namenlos"
+ },
+ {
+  "label": "Nur Pflichtfelder e. V.",
+  "plz": "99999"
+ },
+ {
+  "label": null,
+  "plz": null
+ }
+]

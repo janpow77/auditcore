@@ -1,4 +1,5 @@
-"""Framework T-38: the installed runtime is stdlib-only and cannot bypass the consumer.
+"""Framework T-38: the installed runtime uses only the standard library and the
+stdlib-only ``auditcore_common`` and cannot bypass the consumer.
 
 Optional renderers may import their third-party dependency only lazily inside
 a function, so importing the package never requires openpyxl or WeasyPrint.
@@ -13,7 +14,13 @@ from pathlib import Path
 import auditcore_dataprotection
 
 PACKAGE = Path(auditcore_dataprotection.__file__).parent
-OPTIONAL = {"excel.py": {"openpyxl", "auditcore_reporting"}, "pdf.py": {"weasyprint"}}
+OPTIONAL = {
+    "excel.py": {"openpyxl", "auditcore_reporting"},
+    "pdf.py": {"weasyprint"},
+    # REST interface (extras ``web``/``fastapi``): frameworks only inside functions.
+    "http.py": {"starlette"},
+    "fastapi_router.py": {"fastapi"},
+}
 FORBIDDEN_CALLS = {"open", "eval", "exec", "compile", "__import__"}
 FORBIDDEN_MODULES = {
     "subprocess",
@@ -63,7 +70,7 @@ def test_runtime_imports_are_stdlib_or_own_package() -> None:
             elif isinstance(node, ast.ImportFrom):
                 names = ["auditcore_dataprotection"] if node.level else [_root(node.module)]
             for name in names:
-                if name == "auditcore_dataprotection":
+                if name in {"auditcore_dataprotection", "auditcore_common"}:
                     continue
                 if name in allowed_lazy:
                     assert id(node) not in top_level, f"{path.name}: {name} must be lazy"
@@ -77,6 +84,12 @@ def test_runtime_imports_are_stdlib_or_own_package() -> None:
 def test_profiles_are_packaged_data_not_code() -> None:
     profiles = PACKAGE / "profiles"
     assert sorted(p.name for p in profiles.glob("*.json")) == [
+        "auditcore.dsgvo-2026.10.1.json",
+        "auditcore.dsgvo-2026.10.2.json",
+        "auditcore.dsgvo-2026.10.3.json",
+        "auditcore.hdsig_ji-2026.10.1.json",
+        "auditcore.hdsig_ji-2026.10.2.json",
+        "auditcore.hdsig_ji-2026.10.3.json",
         "regulierung.dsgvo-2026.09.1.json",
         "regulierung.hdsig_ji-2026.09.1.json",
     ]

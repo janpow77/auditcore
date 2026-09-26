@@ -1,0 +1,86 @@
+{
+ "decisions": [
+  {
+   "status": "HUMAN_DECISION_REQUIRED",
+   "subject": "Methodenbeschreibung",
+   "text": "Der Werkzeugeintrag (registry.py) beschreibt „phonetische und unscharfe Varianten“, der Dienst selbst sagt „Ein phonetisches Verfahren ist nicht im Einsatz“. Diese Bibliothek übernimmt nur die zweite, zutreffende Aussage."
+  }
+ ],
+ "id": "audit_designer.sanctions_screening",
+ "kind": "screening",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten; keine fachliche Freigabe der Schwellen, Gewichte oder Urteile.",
+ "schema": "auditcore_registry_sources.profile/1",
+ "settings": {
+  "algorithm": "rapidfuzz_token_set",
+  "alias_output_cap": 8,
+  "country": {
+   "bonus": 4.0,
+   "malus": 10.0
+  },
+  "date_of_birth": {
+   "bonus": 6.0,
+   "compare": "year",
+   "malus": 18.0
+  },
+  "default_min_score": 70.0,
+  "empty_list": "not_searched",
+  "entity_schemas": [
+   "Person",
+   "Organization"
+  ],
+  "extract_limit": {
+   "factor": 8,
+   "floor": 5
+  },
+  "limitations": [
+   "Ein phonetisches Verfahren ist nicht im Einsatz. Kyrillische, arabische und chinesische Namen werden nur gefunden, wenn die Liste selbst eine lateinische Schreibweise als Alias führt; Transliterationsvarianten bleiben sonst unerkannt. Umgekehrt erzeugen häufige Namen Treffer ohne jeden Bezug. Der Abgleich ist damit in beide Richtungen unvollständig — ein Treffer ist zu verifizieren, ein Nullbefund belegt keine Unbedenklichkeit.",
+   "Der Abgleich erfasst nur die geführten Listen. Ausfuhr- und Embargohinweise anderer Stellen sowie das Ausschlusssystem der EU-Haushaltsordnung sind gesondert zu recherchieren.",
+   "Das Bereitstellungsverbot greift auch mittelbar über beherrschte Unternehmen. Ohne Prüfung der Eigentümerstruktur bleibt der Abgleich unvollständig."
+  ],
+  "lists": {
+   "id": "audit_designer.sanctions_lists",
+   "version": "2026.09.1"
+  },
+  "method_title": "Wie der Abgleich arbeitet",
+  "min_query_length": 3,
+  "min_score_range": [
+   50.0,
+   100.0
+  ],
+  "normalization": {
+   "id": "audit_designer.sanctions",
+   "version": "2026.09.2"
+  },
+  "notice": "Ein Treffer ist ein Prüfhinweis, keine Feststellung. Namensgleichheit ist kein Nachweis der Identität; Geburtsdatum, Land und Kennungen sind gegen den Vorgang abzugleichen.",
+  "per_list_limit": {
+   "factor": 1,
+   "floor": null
+  },
+  "rows_without_id_or_name": "skip",
+  "score_range": [
+   0.0,
+   100.0
+  ],
+  "stored_comparison_form": "recompute"
+ },
+ "source": {
+  "commit": "1254591156d3bdf6ccdf4050dec7713a61ad4a20",
+  "git_blob": "5c064ddecb473b3f1a4341a0dc6513268d106295",
+  "path": "backend/app/core/shared/research/register/sanctions.py",
+  "repository": "janpow77/audit_designer",
+  "rights": "USER_AUTHORIZED_MIT",
+  "symbols": [
+   "STANDARD_MINDESTWERT",
+   "_BONUS_GEBURTSJAHR",
+   "_MALUS_GEBURTSJAHR",
+   "_BONUS_LAND",
+   "_MALUS_LAND",
+   "_beruecksichtige_geburtsdatum_und_land",
+   "Listenindex.suche",
+   "SanktionslistenDienst.suche",
+   "SanctionsScreeningProvider._name/_mindestwert/_entity_schema"
+  ]
+ },
+ "status": "SOURCE_CHARACTERIZED",
+ "version": "2026.09.1"
+}

@@ -1,0 +1,20 @@
+auditcore_invoicesynth 0.1.1 — attribution and authorization
+
+New implementation in auditcore (docs/architecture/DONUT_OCR_PLAN.md,
+sections 2b and 2d). No code was copied from other repositories; the Donut
+token convention (<s_field>value</s_field>, <sep/>) is reimplemented, no
+clovaai/donut code is included. Invoice base data comes from the dependency
+auditcore_invoicegenerator 0.2.1 (MIT), which is used unchanged.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.
+
+Fonts are NOT distributed with this package. Rendering uses system fonts
+from the free-license catalogue (DejaVu: Bitstream Vera license; Liberation
+and Noto: SIL Open Font License 1.1) or downloads verified by SHA-256; each
+used font file is recorded with its hash in the dataset manifest.
+
+Generated datasets are entirely synthetic. IBAN, BIC and VAT IDs have valid
+check digits but use a fictional bank code list; every rendered page is
+visibly marked "SYNTHETISCH" (decision E5, 2026-09-24).

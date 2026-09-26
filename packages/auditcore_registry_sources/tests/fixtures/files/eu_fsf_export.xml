@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export xmlns="http://eu.europa.ec/fpi/fsd/export" generationDate="2026-09-22T18:00:00.000+02:00" globalFileId="999999">
+  <sanctionEntity logicalId="990001" designationDate="2022-03-01">
+    <regulation programme="DEMO" regulationType="regulation" publicationDate="2022-03-01"/>
+    <regulation programme="DEMO" regulationType="amendment" publicationDate="2023-03-01"/>
+    <regulation programme="BEISPIEL" regulationType="regulation" publicationDate="2024-03-01"/>
+    <subjectType code="person" classificationCode="P"/>
+    <nameAlias firstName="Iwan" lastName="Musterow" wholeName="Iwan Petrowitsch Musterow" nameLanguage="DE"/>
+    <nameAlias wholeName="Ivan Petrovich Musterov" nameLanguage="EN"/>
+    <nameAlias wholeName="Иван Петрович Мустеров" nameLanguage="RU"/>
+    <nameAlias wholeName="Iwan Petrowitsch Musterow"/>
+    <nameAlias firstName="Wanja" lastName="Musterow" wholeName=""/>
+    <citizenship countryIso2Code="RU" countryDescription="RUSSIAN FEDERATION"/>
+    <birthdate birthdate="1961-04-12" city="Beispielsk" countryIso2Code="RU"/>
+    <identification identificationTypeCode="passport" identificationTypeDescription="National passport" number="PASS-DEMO-0001"/>
+    <identification identificationTypeCode="id" identificationTypeDescription="Tax identification number" number="TIN-DEMO-1"/>
+    <identification identificationTypeCode="other" identificationTypeDescription="VAT number" number="RU0000000000"/>
+    <identification identificationTypeCode="regnumber" identificationTypeDescription="Registration Number" number="REG-1"/>
+    <identification identificationTypeCode="other" identificationTypeDescription="Leer" number=""/>
+    <address city="Moskau" street="Musterstraße 1" zipCode="101000" countryIso2Code="RU"/>
+    <address city="Zweitort" countryIso2Code="BY"/>
+  </sanctionEntity>
+  <sanctionEntity logicalId="990002" designationDate="2023-05-10">
+    <regulation programme="BEISPIEL" regulationType="regulation"/>
+    <subjectType code="enterprise" classificationCode="E"/>
+    <nameAlias wholeName="Müller-Lüdenscheidt Handels GmbH"/>
+    <nameAlias wholeName="MLH GmbH"/>
+    <address street="Beispielweg 7" zipCode="12345" city="Musterstadt" country="GERMANY"/>
+  </sanctionEntity>
+  <sanctionEntity logicalId="990003">
+    <subjectType code="person" classificationCode="P"/>
+    <nameAlias firstName="Jørgen" lastName="Ødegård"/>
+    <birthdate year="1975"/>
+  </sanctionEntity>
+  <sanctionEntity logicalId="990004">
+    <subjectType code="person" classificationCode="P"/>
+    <nameAlias firstName="Anna" lastName="Beispiel" wholeName=""/>
+    <birthdate year="1980" monthOfYear="7" city="Wien" countryIso2Code="AT"/>
+    <birthdate birthdate="1981-01-01"/>
+  </sanctionEntity>
+  <sanctionEntity logicalId="990005">
+    <subjectType code="person" classificationCode="P"/>
+    <nameAlias wholeName=""/>
+  </sanctionEntity>
+  <sanctionEntity logicalId="990006">
+    <nameAlias wholeName="Ohne Subjekttyp Beispiel"/>
+    <birthdate birthdate="unbekannt"/>
+    <birthdate/>
+  </sanctionEntity>
+</export>

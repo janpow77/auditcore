@@ -15,7 +15,195 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGES = {"auditcore_dummygenerator", "auditcore_invoicegenerator", "auditcore_reporting"}
+#: Exactly reviewed source bindings of the extracted packages released under the
+#: rights holder's MIT authorization of 2026-09-22 ("die bibliotheken sollen mit
+#: sein, die anderen repos nicht"). The provenance of each wheel must list exactly
+#: these repository/commit pairs; any other or missing binding fails the release.
+EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
+    "auditcore_bpmn": frozenset(
+        {("janpow77/audit_designer", "eff41a4ccedab12b9a73bafff41468712459cb2b")}
+    ),
+    "auditcore_auth": frozenset(
+        {
+            ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
+            ("janpow77/audit_designer", "ccd65245182982af3ef885a7a6d43583f4f72cbb"),
+            ("janpow77/flowinvoice", "5d5d8c5aded2b7eee82c0813994e9efd549277b3"),
+            ("janpow77/flowlib", "aca2dc6aad25aea0720312dbcc6da00b0bcba330"),
+            ("janpow77/flownavigator", "9dff858d3772e59533886dfbae70c672d574a1d4"),
+            ("janpow77/flowsearch", "9ac5e0dd0c2b7363b5a077551e4fb7103f32c697"),
+            ("janpow77/qaaudit", "c78be5c86454d457e5c66d0c65b5117a8528d462"),
+            ("janpow77/regulierung", "ce76e48c8ad7f1cbe430948158a4e7001a02ba99"),
+            ("janpow77/versteigerung", "729f9a10bc5478bd724ef40c1f4cd572e5a3dada"),
+        }
+    ),
+    # Zusammengeführte Hilfsfunktionen: auditcore-Pakete (keine Fremdquelle) und die
+    # generischen App-Hilfen aus docs/reports/app-helfer-python.md (Commits unten).
+    "auditcore_common": frozenset(
+        {
+            ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
+            ("janpow77/audit_designer", "4b629dd970e5242d6d5d6c74863132b70ce85216"),
+            ("janpow77/flowaudit", "d8107f6b4287228974bc3b0f405bdd95182a66d5"),
+            ("janpow77/flowinvoice", "5d5d8c5aded2b7eee82c0813994e9efd549277b3"),
+            ("janpow77/regulierung", "ce76e48c8ad7f1cbe430948158a4e7001a02ba99"),
+            ("janpow77/riskanalysis", "dace0f66abde171ab91685483092ad7c3550ce55"),
+            ("janpow77/versteigerung", "729f9a10bc5478bd724ef40c1f4cd572e5a3dada"),
+        }
+    ),
+    "auditcore_dataprotection": frozenset(
+        {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
+    ),
+    "auditcore_documents": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+        }
+    ),
+    "auditcore_entity_matching": frozenset(
+        {
+            ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+            ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
+        }
+    ),
+    "auditcore_funding_sources": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
+            ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+        }
+    ),
+    "auditcore_geo": frozenset(
+        {
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
+            ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
+            ("janpow77/osint", "d361ddb9a502bb899065e799d50104f306cfdc89"),
+        }
+    ),
+    "auditcore_harvest": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
+            ("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743"),
+        }
+    ),
+    "auditcore_identifiers": frozenset(
+        {
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/auditcore", "99788a18c28bf683ada62bb3ab9d4aeb36f2c5b2"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
+        }
+    ),
+    # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
+    "auditcore_invoicesynth": frozenset(),
+    "auditcore_kanban": frozenset(
+        {
+            ("janpow77/audit_designer", "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"),
+            ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
+        }
+    ),
+    "auditcore_legal_sources": frozenset(
+        {
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
+        }
+    ),
+    "auditcore_llm_client": frozenset(
+        {
+            ("janpow77/ai-router", "426cd78e86df9f822452af035b8d58a19f7aa820"),
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/audit_designer", "ccd65245182982af3ef885a7a6d43583f4f72cbb"),
+            ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
+            ("janpow77/flow-agent", "873636a4868f554b8e603e4b7c4c897909762b9a"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+        }
+    ),
+    "auditcore_market_indicators": frozenset(
+        {("janpow77/krypto", "34d601726227f913548a118e144de5519eee0f3f")}
+    ),
+    "auditcore_price_analysis": frozenset(
+        {("janpow77/regulierung", "853676d2b1ab792395d63c62c9f96d5edcca8c2d")}
+    ),
+    "auditcore_price_sources": frozenset(
+        {("janpow77/regulierung", "853676d2b1ab792395d63c62c9f96d5edcca8c2d")}
+    ),
+    "auditcore_procurement": frozenset(
+        {
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+        }
+    ),
+    "auditcore_registry_sources": frozenset(
+        {
+            ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowsearch", "10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4"),
+            ("janpow77/flowworkshop", "3d1cb40221645935c323392d70d84102d05ac7bb"),
+            ("janpow77/osint", "d361ddb9a502bb899065e799d50104f306cfdc89"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
+        }
+    ),
+    "auditcore_property_sources": frozenset(
+        {
+            ("janpow77/versteigerung", "e4ad7af0eaee0b151cc5e3358f95b961d7f3a448"),
+            ("janpow77/wohnungsmonitor", "76571bfaa3435bfc6858b3cbaae8c4ea3969ef91"),
+        }
+    ),
+    "auditcore_risk": frozenset(
+        {
+            ("janpow77/audit-portal", "ac1ccc779db69492db0c2c154b6ec84fdd1794b1"),
+            ("janpow77/audit_designer", "1254591156d3bdf6ccdf4050dec7713a61ad4a20"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/riskanalysis", "b5c523bf7eaa326153778d9751f176f03d4d56ed"),
+        }
+    ),
+    "auditcore_sampling": frozenset(
+        {
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a"),
+        }
+    ),
+    "auditcore_statistics": frozenset(
+        {
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            ("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a"),
+        }
+    ),
+}
+#: Renderer extras with published, hash-locked requirement files and their owner.
+#: Other packages may declare extras of the same name; those stay ordinary extras.
+RENDERER_OWNERS = {"pdf": "auditcore_invoicegenerator", "excel": "auditcore_reporting"}
+PACKAGES = {
+    "auditcore_dummygenerator",
+    "auditcore_invoicegenerator",
+    "auditcore_reporting",
+    *EXPECTED_SOURCES,
+}
+
+
+#: Checks every release evidence must contain as executed PASS (plus per-package checks).
+REQUIRED_CHECKS = frozenset(
+    {
+        "installed-platform",
+        # Release blocker: the code-quality ratchet must have passed for these packages.
+        "code-quality-gate",
+        "requirements-install",
+        "pip-check",
+        "isolated-origins",
+        "pip-remove",
+        "pip-removed-imports",
+        "apt-lifecycle",
+        "sign-apt-1",
+        "sign-apt-2",
+    }
+)
 
 
 def digest(data: bytes) -> str:
@@ -36,6 +224,36 @@ def bound_bytes(path: Path, root: Path, expected: str) -> bytes:
     return data
 
 
+def _source_bindings(value: Any) -> set[tuple[str, str]]:
+    """All repository/commit pairs recorded anywhere in a provenance document."""
+    found: set[tuple[str, str]] = set()
+    if isinstance(value, dict):
+        repository = value.get("repository")
+        commit = value.get("commit") or value.get("commit_sha")
+        if isinstance(repository, str) and isinstance(commit, str):
+            found.add((repository, commit))
+        for item in value.values():
+            found |= _source_bindings(item)
+    elif isinstance(value, list):
+        for item in value:
+            found |= _source_bindings(item)
+    return found
+
+
+def check_extracted_authorization(name: str, provenance: dict[str, Any]) -> None:
+    """Dated USER_AUTHORIZED_MIT statement and exactly the reviewed source commits."""
+    authorization = provenance.get("rights", {}).get("authorization", {})
+    statement = authorization.get("confirmation")
+    if (
+        authorization.get("status") != "USER_AUTHORIZED_MIT"
+        or authorization.get("date") != "2026-09-22"
+        or not isinstance(statement, str)
+        or "mit" not in statement.casefold()
+        or _source_bindings(provenance) != EXPECTED_SOURCES[name]
+    ):
+        raise ValueError(f"Source-scoped user MIT authorization missing: {name}")
+
+
 def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
     """Fail closed before creating assets or signing keys."""
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", release_version):
@@ -45,19 +263,9 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
         raise ValueError("Successful real-domain installation report required")
     packages = report.get("packages", [])
     if {p["name"] for p in packages} != PACKAGES or len(packages) != len(PACKAGES):
-        raise ValueError("Exactly the three reviewed preview distributions are required")
+        raise ValueError("Exactly the reviewed release distributions are required")
     checks = report["checks"]
-    required = {
-        "installed-platform",
-        "requirements-install",
-        "pip-check",
-        "isolated-origins",
-        "pip-remove",
-        "pip-removed-imports",
-        "apt-lifecycle",
-        "sign-apt-1",
-        "sign-apt-2",
-    }
+    required = set(REQUIRED_CHECKS)
     for package in packages:
         name = package["name"]
         distribution = name.replace("_", "-")
@@ -111,7 +319,11 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
             license_text = archive.read(f"{name}-{version}.dist-info/licenses/LICENSE")
             if b"Permission is hereby granted, free of charge" not in license_text:
                 raise ValueError("Actual MIT license text is missing")
-            if name != "auditcore_reporting":
+            if name in EXPECTED_SOURCES:
+                check_extracted_authorization(
+                    name, json.loads(archive.read(f"{name}/provenance.json"))
+                )
+            elif name != "auditcore_reporting":
                 provenance = json.loads(archive.read(f"{name}/provenance.json"))
                 authorization = provenance.get("license_authorization") or provenance.get(
                     "rights", {}
@@ -208,7 +420,9 @@ def optional_assets(
                     "all_requires": metadata.get_all("Requires-Dist", []),
                     "requires": [r for r in metadata.get_all("Requires-Dist", []) if ";" not in r],
                 }
-                for extra in set(metadata.get_all("Provides-Extra", [])) & {"pdf", "excel"}:
+                for extra in set(metadata.get_all("Provides-Extra", [])) & set(RENDERER_OWNERS):
+                    if RENDERER_OWNERS[extra] != package:
+                        continue  # same extra name, ordinary extra without a published lock
                     if extra in features:
                         raise ValueError("Renderer extra has ambiguous package ownership")
                     features[extra] = package

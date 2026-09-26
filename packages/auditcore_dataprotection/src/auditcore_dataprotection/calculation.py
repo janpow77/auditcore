@@ -8,20 +8,44 @@ duplicate criteria or measures are rejected instead of being skipped.
 
 The proposal is a recommendation for a human decision. It never releases
 anything and always names the profile id, version and fingerprint it used.
+
+The parts live in :mod:`.answers` (input), :mod:`.screening`, :mod:`.risk`,
+:mod:`.results` and :mod:`.prefill`; this module combines them and keeps
+every name importable from its original place.
 """
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass, field
-from enum import StrEnum
+from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
 from typing import Any
 
+from .answers import (
+    EDPB_SCENARIO_FIELDS,
+    Answer,
+    AnswerValue,
+    Scenario,
+    parse_answer_list,
+    parse_answers,
+    parse_scenarios,
+)
 from .errors import ValidationError
+from .prefill import PrefillSuggestion, prefill_from_activity
+from .results import (
+    CALCULATION_VERSION,
+    Issue,
+    Proposal,
+    RiskResult,
+    ScenarioResult,
+    ScreeningResult,
+)
+from .risk import assess_risk
 from .rules import (
-    EFFECT_FRIA,
-    EFFECT_HARD,
-    EFFECT_POINT,
+    DECISION_REJECTED,
+    NOTICE_NONE,
+    NOTICE_NOT_REQUIRED,
+    NOTICE_PRELIMINARY,
+    NOTICE_REQUIRED,
     RECOMMENDATION_CONSULTATION,
     RECOMMENDATION_INCOMPLETE,
     RECOMMENDATION_RELEASE,
@@ -29,592 +53,42 @@ from .rules import (
     RECOMMENDATION_SCREENING_ONLY,
     RuleProfile,
 )
-
-CALCULATION_VERSION = "auditcore_dataprotection.calculation/1"
-
-SCREENING_REQUIRED = "pflicht"
-SCREENING_NOT_REQUIRED = "keine_pflicht"
-SCREENING_INCOMPLETE = "unvollstaendig"
-
-
-class AnswerValue(StrEnum):
-    """Explicit three-valued answer; ``UNKNOWN`` is never treated as ``NO``."""
-
-    YES = "ja"
-    NO = "nein"
-    UNKNOWN = "unbekannt"
-
-
-@dataclass(frozen=True)
-class Answer:
-    """Answer of the responsible department with its justification."""
-
-    value: AnswerValue
-    justification: str = ""
-
-    def to_dict(self) -> dict[str, Any]:
-        """JSON-serialisable form of the answer."""
-        return {"value": self.value.value, "justification": self.justification}
-
-
-@dataclass(frozen=True)
-class Scenario:
-    """Risk scenario of one protection dimension, gross and optionally explicit net."""
-
-    dimension: str
-    description: str
-    severity: int
-    likelihood: int
-    measures: tuple[str, ...] = ()
-    residual_severity: int | None = None
-    residual_likelihood: int | None = None
-    residual_justification: str = ""
-
-    def to_dict(self) -> dict[str, Any]:
-        """JSON-serialisable form of the scenario."""
-        return {
-            "dimension": self.dimension,
-            "description": self.description,
-            "severity": self.severity,
-            "likelihood": self.likelihood,
-            "measures": list(self.measures),
-            "residual_severity": self.residual_severity,
-            "residual_likelihood": self.residual_likelihood,
-            "residual_justification": self.residual_justification,
-        }
-
-
-@dataclass(frozen=True)
-class Issue:
-    """Completeness or plausibility note; ``blocking`` issues prevent a release."""
-
-    code: str
-    message: str
-    blocking: bool
-    subject: str = ""
-
-    def to_dict(self) -> dict[str, Any]:
-        """JSON-serialisable form of the issue."""
-        return {
-            "code": self.code,
-            "message": self.message,
-            "blocking": self.blocking,
-            "subject": self.subject,
-        }
-
-
-@dataclass(frozen=True)
-class ScreeningResult:
-    """Result of the threshold analysis with open questions and trace."""
-
-    outcome: str
-    points: int
-    points_threshold: int
-    hard_triggers: tuple[str, ...]
-    point_criteria: tuple[str, ...]
-    fria_required: bool | None
-    unanswered: tuple[str, ...]
-    unknown: tuple[str, ...]
-    reasoning: str
-    trace: tuple[Mapping[str, Any], ...]
-
-    @property
-    def complete(self) -> bool:
-        """True if every question has an explicit yes or no answer."""
-        return not self.unanswered and not self.unknown
-
-
-@dataclass(frozen=True)
-class ScenarioResult:
-    """Gross and net risk of one scenario with measure effects."""
-
-    index: int
-    dimension: str
-    dimension_title: str
-    sdm: bool
-    description: str
-    gross_severity: int
-    gross_likelihood: int
-    gross: int
-    gross_band: str
-    measures: tuple[str, ...]
-    measure_titles: tuple[str, ...]
-    reduction_severity: int
-    reduction_likelihood: int
-    net_severity: int
-    net_likelihood: int
-    net: int
-    net_band: str
-    explicit_residual: tuple[str, ...]
-    residual_justification: str
-
-
-@dataclass(frozen=True)
-class RiskResult:
-    """Risk of all scenarios with maxima and plausibility issues."""
-
-    scenarios: tuple[ScenarioResult, ...]
-    gross_maximum: int
-    net_maximum: int
-    net_band: str
-    issues: tuple[Issue, ...]
-
-    @property
-    def assessed(self) -> bool:
-        """True if at least one scenario was assessed."""
-        return bool(self.scenarios)
-
-
-@dataclass(frozen=True)
-class Proposal:
-    """Reasoned recommendation; ``recommendation`` is one of the profile decisions
-    or ``unvollstaendig``."""
-
-    profile: Mapping[str, str]
-    regime: str
-    screening: ScreeningResult
-    risk: RiskResult | None
-    recommendation: str
-    recommendation_text: str
-    reasoning: str
-    consultation_required: bool
-    consultation_reference: str
-    issues: tuple[Issue, ...]
-    calculation: str = CALCULATION_VERSION
-    trace: tuple[Mapping[str, Any], ...] = field(default_factory=tuple)
-
-    @property
-    def blocking_issues(self) -> tuple[Issue, ...]:
-        """Issues that prevent a release."""
-        return tuple(i for i in self.issues if i.blocking)
-
-    def to_dict(self) -> dict[str, Any]:
-        """JSON-serialisable proposal including trace and profile identity."""
-        return {
-            "calculation": self.calculation,
-            "profile": dict(self.profile),
-            "regime": self.regime,
-            "recommendation": self.recommendation,
-            "recommendation_text": self.recommendation_text,
-            "reasoning": self.reasoning,
-            "consultation_required": self.consultation_required,
-            "consultation_reference": self.consultation_reference,
-            "issues": [i.to_dict() for i in self.issues],
-            "screening": {
-                "outcome": self.screening.outcome,
-                "points": self.screening.points,
-                "points_threshold": self.screening.points_threshold,
-                "hard_triggers": list(self.screening.hard_triggers),
-                "point_criteria": list(self.screening.point_criteria),
-                "fria_required": self.screening.fria_required,
-                "unanswered": list(self.screening.unanswered),
-                "unknown": list(self.screening.unknown),
-                "complete": self.screening.complete,
-                "reasoning": self.screening.reasoning,
-            },
-            "risk": None
-            if self.risk is None
-            else {
-                "gross_maximum": self.risk.gross_maximum,
-                "net_maximum": self.risk.net_maximum,
-                "net_band": self.risk.net_band,
-                "scenarios": [
-                    {
-                        "index": s.index,
-                        "dimension": s.dimension,
-                        "dimension_title": s.dimension_title,
-                        "sdm": s.sdm,
-                        "description": s.description,
-                        "gross_severity": s.gross_severity,
-                        "gross_likelihood": s.gross_likelihood,
-                        "gross": s.gross,
-                        "gross_band": s.gross_band,
-                        "measures": list(s.measures),
-                        "measure_titles": list(s.measure_titles),
-                        "reduction_severity": s.reduction_severity,
-                        "reduction_likelihood": s.reduction_likelihood,
-                        "net_severity": s.net_severity,
-                        "net_likelihood": s.net_likelihood,
-                        "net": s.net,
-                        "net_band": s.net_band,
-                        "explicit_residual": list(s.explicit_residual),
-                        "residual_justification": s.residual_justification,
-                    }
-                    for s in self.risk.scenarios
-                ],
-            },
-            "trace": [dict(t) for t in self.trace],
-        }
-
-
-# ---------------------------------------------------------------------------
-# Input boundary
-# ---------------------------------------------------------------------------
-
-
-def _answer(key: str, raw: Any) -> Answer:
-    if isinstance(raw, Answer):
-        return raw
-    if isinstance(raw, AnswerValue):
-        return Answer(raw)
-    if raw is None:
-        return Answer(AnswerValue.UNKNOWN)
-    if isinstance(raw, bool):
-        return Answer(AnswerValue.YES if raw else AnswerValue.NO)
-    if isinstance(raw, str) and raw in {v.value for v in AnswerValue}:
-        return Answer(AnswerValue(raw))
-    if isinstance(raw, Mapping):
-        unexpected = set(raw) - {"ja", "value", "begruendung", "justification"}
-        if unexpected:
-            raise ValidationError(
-                f"Antwort zu '{key}' enthält unbekannte Felder: {', '.join(sorted(unexpected))}."
-            )
-        justification = raw.get("justification", raw.get("begruendung", "")) or ""
-        if not isinstance(justification, str):
-            raise ValidationError(f"Die Begründung zu '{key}' muss Text sein.")
-        inner = _answer(key, raw["value"] if "value" in raw else raw.get("ja"))
-        return Answer(inner.value, justification)
-    raise ValidationError(
-        f"Antwort zu '{key}' muss ja/nein (True/False) oder ausdrücklich unbekannt sein, "
-        f"war: {raw!r}. Zeichenketten wie 'false' werden nicht umgedeutet."
-    )
-
-
-def parse_answers(raw: Mapping[str, Any], profile: RuleProfile) -> dict[str, Answer]:
-    """Validate answers keyed by question.
-
-    Accepted values: ``True``/``False``, ``None``/``"unbekannt"`` (explicit
-    unknown), ``"ja"``/``"nein"``, :class:`Answer`, or a mapping with ``ja`` or
-    ``value`` and an optional ``begruendung``/``justification``.
-
-    Raises:
-        ValidationError: not a mapping, unknown question keys or non-boolean values.
-    """
-    if not isinstance(raw, Mapping):
-        raise ValidationError("Antworten sind als Zuordnung Frage → Antwort zu übergeben.")
-    known = set(profile.question_keys)
-    unknown_keys = sorted(str(k) for k in raw if k not in known)
-    if unknown_keys:
-        raise ValidationError(
-            f"Unbekannte Fragen für Profil {profile.id} {profile.version}: "
-            f"{', '.join(unknown_keys)}."
-        )
-    return {key: _answer(key, value) for key, value in raw.items()}
-
-
-def parse_answer_list(items: Iterable[tuple[str, Any]], profile: RuleProfile) -> dict[str, Answer]:
-    """Validate ``(key, answer)`` pairs; a criterion given twice is an error."""
-    collected: dict[str, Any] = {}
-    duplicates: list[str] = []
-    for key, value in items:
-        if key in collected:
-            duplicates.append(key)
-        collected[key] = value
-    if duplicates:
-        raise ValidationError(
-            f"Kriterien sind mehrfach beantwortet: {', '.join(sorted(set(duplicates)))}. "
-            "Jede Frage darf genau einmal beantwortet werden."
-        )
-    return parse_answers(collected, profile)
-
-
-def _level(value: Any, label: str, profile: RuleProfile, *, optional: bool) -> int | None:
-    if value is None and optional:
-        return None
-    if isinstance(value, bool) or not isinstance(value, int):
-        raise ValidationError(
-            f"{label} muss eine ganze Zahl von {profile.scale_min} bis {profile.scale_max} sein, "
-            f"war: {value!r}."
-        )
-    if not profile.scale_min <= value <= profile.scale_max:
-        raise ValidationError(
-            f"{label} ist auf einer Skala von {profile.scale_min} bis {profile.scale_max} "
-            f"einzustufen, war: {value}."
-        )
-    return value
-
-
-def _scenario(index: int, raw: Any, profile: RuleProfile) -> Scenario:
-    if isinstance(raw, Scenario):
-        raw = raw.to_dict()
-    if not isinstance(raw, Mapping):
-        raise ValidationError(f"Risikoszenario {index} ist keine Zuordnung.")
-    allowed = {
-        "dimension",
-        "description",
-        "severity",
-        "likelihood",
-        "measures",
-        "residual_severity",
-        "residual_likelihood",
-        "residual_justification",
-    }
-    unexpected = set(raw) - allowed
-    if unexpected:
-        raise ValidationError(
-            f"Risikoszenario {index} enthält unbekannte Felder: {', '.join(sorted(unexpected))}."
-        )
-    dimension = raw.get("dimension")
-    if dimension not in profile.dimensions:
-        raise ValidationError(f"Risikoszenario {index}: unbekanntes Schutzziel {dimension!r}.")
-    description = raw.get("description")
-    if not isinstance(description, str) or not description.strip():
-        raise ValidationError(f"Risikoszenario {index} braucht eine Beschreibung.")
-    measures = raw.get("measures") or ()
-    if isinstance(measures, str) or not isinstance(measures, Sequence):
-        raise ValidationError(f"Risikoszenario {index}: Maßnahmen sind als Liste anzugeben.")
-    known = {m.key for m in profile.measures}
-    unknown = sorted({str(m) for m in measures if m not in known})
-    if unknown:
-        raise ValidationError(f"Risikoszenario {index}: unbekannte Maßnahmen {', '.join(unknown)}.")
-    if len(set(measures)) != len(measures):
-        raise ValidationError(
-            f"Risikoszenario {index}: eine Maßnahme ist mehrfach angegeben; sie wirkt nur einmal."
-        )
-    justification = raw.get("residual_justification") or ""
-    if not isinstance(justification, str):
-        raise ValidationError(f"Risikoszenario {index}: Begründung des Restwerts muss Text sein.")
-    severity = _level(raw.get("severity"), "Schwere", profile, optional=False)
-    likelihood = _level(
-        raw.get("likelihood"), "Eintrittswahrscheinlichkeit", profile, optional=False
-    )
-    assert severity is not None and likelihood is not None
-    return Scenario(
-        dimension=str(dimension),
-        description=description.strip(),
-        severity=severity,
-        likelihood=likelihood,
-        measures=tuple(str(m) for m in measures),
-        residual_severity=_level(
-            raw.get("residual_severity"), "Rest-Schwere", profile, optional=True
-        ),
-        residual_likelihood=_level(
-            raw.get("residual_likelihood"), "Rest-Wahrscheinlichkeit", profile, optional=True
-        ),
-        residual_justification=justification.strip(),
-    )
-
-
-def parse_scenarios(raw: Iterable[Any], profile: RuleProfile) -> tuple[Scenario, ...]:
-    """Validate risk scenarios strictly against the profile scale and catalogues."""
-    if isinstance(raw, (str, bytes, Mapping)):
-        raise ValidationError("Risikoszenarien sind als Liste zu übergeben.")
-    return tuple(_scenario(i, item, profile) for i, item in enumerate(raw, start=1))
-
-
-# ---------------------------------------------------------------------------
-# Threshold analysis
-# ---------------------------------------------------------------------------
-
-
-def _hard_trigger_reasoning(profile: RuleProfile, hard: Sequence[str]) -> str:
-    """Reasoning when at least one hard trigger was answered with yes."""
-    references = "; ".join(profile.question(k).reference for k in hard)
-    if profile.regime == "hdsig_ji":
-        return (
-            f"Die Datenschutz-Folgenabschätzung ist durchzuführen "
-            f"({profile.norm('pflicht')}). Erfüllt ist: {references}. "
-            "Der Dritte Teil des HDSIG kennt die Regelbeispiele des Art. 35 "
-            "Abs. 3 DSGVO und die Liste nach Abs. 4 nicht; sie werden hier "
-            "als strengerer Maßstab angewandt, weil die Abgrenzung beider "
-            "Rechtsakte auf europäischer Ebene nicht geklärt ist."
-        )
-    if len(hard) == 1:
-        return (
-            "Die Datenschutz-Folgenabschätzung ist durchzuführen, weil "
-            f"1 Muss-Kriterium bejaht wurde: {references}."
-        )
-    return (
-        "Die Datenschutz-Folgenabschätzung ist durchzuführen, weil "
-        f"{len(hard)} Muss-Kriterien bejaht wurden: {references}."
-    )
-
-
-def _screening_outcome(
-    profile: RuleProfile, hard: Sequence[str], score: int, unanswered: int, unknown: int
-) -> tuple[str, str]:
-    """Outcome and reasoning of the threshold analysis; open answers never count as no."""
-    threshold = profile.points_threshold
-    if hard:
-        return SCREENING_REQUIRED, _hard_trigger_reasoning(profile, hard)
-    if score >= threshold:
-        return SCREENING_REQUIRED, (
-            f"Es sind {score} der neun Kriterien des Europäischen "
-            f"Datenschutzausschusses erfüllt. Ab {threshold} Kriterien ist "
-            "regelmäßig von einem voraussichtlich hohen Risiko auszugehen "
-            "(WP 248 rev.01); die Folgenabschätzung ist durchzuführen."
-        )
-    if unanswered or unknown:
-        return SCREENING_INCOMPLETE, (
-            f"Die Schwellwertanalyse ist unvollständig: {unanswered} Fragen sind "
-            f"unbeantwortet und {unknown} als unbekannt gekennzeichnet. Bisher sind "
-            f"{score} der neun Kriterien bejaht. Ein Ergebnis wird erst nach vollständiger "
-            "Erhebung vorgeschlagen; eine fehlende Angabe gilt nicht als Nein."
-        )
-    return SCREENING_NOT_REQUIRED, (
-        f"Kein Muss-Kriterium ist erfüllt und es sind {score} der neun "
-        f"Kriterien des Europäischen Datenschutzausschusses bejaht, also "
-        f"weniger als {threshold}. Eine Folgenabschätzung ist damit "
-        "nicht erforderlich; das Ergebnis ist gleichwohl zu dokumentieren "
-        f"({profile.norm('nachweis')})."
-    )
-
-
-def screen(profile: RuleProfile, answers: Mapping[str, Answer | Any]) -> ScreeningResult:
-    """Evaluate hard triggers, EDSA points and the FRIA marker in profile order."""
-    parsed = parse_answers(answers, profile)
-    hard: list[str] = []
-    points: list[str] = []
-    unanswered: list[str] = []
-    unknown: list[str] = []
-    fria_yes = False
-    fria_open = False
-    trace: list[dict[str, Any]] = []
-    for question in profile.questions:
-        answer = parsed.get(question.key)
-        if answer is None or answer.value is AnswerValue.UNKNOWN:
-            (unanswered if answer is None else unknown).append(question.key)
-            fria_open = fria_open or question.effect == EFFECT_FRIA
-            continue
-        if answer.value is not AnswerValue.YES:
-            continue
-        trace.append(
-            {
-                "step": "criterion",
-                "question": question.key,
-                "effect": question.effect,
-                "reference": question.reference,
-            }
-        )
-        if question.effect == EFFECT_HARD:
-            hard.append(question.key)
-        elif question.effect == EFFECT_POINT:
-            points.append(question.key)
-        elif question.effect == EFFECT_FRIA:
-            fria_yes = True
-
-    score = len(points)
-    threshold = profile.points_threshold
-    open_count = len(unanswered) + len(unknown)
-    outcome, reasoning = _screening_outcome(profile, hard, score, len(unanswered), len(unknown))
-    fria: bool | None = True if fria_yes else (None if fria_open else False)
-    if fria_yes:
-        reasoning += (
-            " Zusätzlich handelt es sich um ein Hochrisiko-KI-System; die "
-            "Grundrechte-Folgenabschätzung nach Art. 27 der Verordnung (EU) "
-            "2024/1689 ist zu erstellen und darf mit dieser Abschätzung "
-            "verbunden werden (Art. 27 Abs. 4)."
-        )
-    trace.append(
-        {
-            "step": "screening",
-            "outcome": outcome,
-            "points": score,
-            "threshold": threshold,
-            "open": open_count,
-        }
-    )
-    return ScreeningResult(
-        outcome=outcome,
-        points=score,
-        points_threshold=threshold,
-        hard_triggers=tuple(hard),
-        point_criteria=tuple(points),
-        fria_required=fria,
-        unanswered=tuple(unanswered),
-        unknown=tuple(unknown),
-        reasoning=reasoning,
-        trace=tuple(trace),
-    )
-
-
-# ---------------------------------------------------------------------------
-# Risk assessment
-# ---------------------------------------------------------------------------
-
-
-def assess_risk(profile: RuleProfile, scenarios: Iterable[Scenario | Any]) -> RiskResult:
-    """Gross = severity × likelihood; net after capped measure reductions or explicit values.
-
-    Each distinct measure reduces an axis by its catalogue value; the sum per
-    axis is capped by the profile and never goes below its floor. An explicit
-    residual value replaces the computed value of that axis and is flagged.
-    """
-    parsed = parse_scenarios(scenarios, profile)
-    results: list[ScenarioResult] = []
-    issues: list[Issue] = []
-    for index, scenario in enumerate(parsed, start=1):
-        reduction_s = sum(profile.measure(m).reduces_severity for m in scenario.measures)
-        reduction_l = sum(profile.measure(m).reduces_likelihood for m in scenario.measures)
-        cap, floor = profile.mitigation_cap, profile.mitigation_floor
-        computed_s = max(floor, scenario.severity - min(cap, reduction_s))
-        computed_l = max(floor, scenario.likelihood - min(cap, reduction_l))
-        explicit: list[str] = []
-        net_s = computed_s
-        net_l = computed_l
-        if scenario.residual_severity is not None:
-            net_s = scenario.residual_severity
-            explicit.append("severity")
-        if scenario.residual_likelihood is not None:
-            net_l = scenario.residual_likelihood
-            explicit.append("likelihood")
-        if explicit and not scenario.residual_justification:
-            issues.append(
-                Issue(
-                    "residual_without_justification",
-                    f"Szenario {index}: Der ausdrücklich gesetzte Restwert ist nicht begründet.",
-                    blocking=True,
-                    subject=str(index),
-                )
-            )
-        if net_s > scenario.severity or net_l > scenario.likelihood:
-            issues.append(
-                Issue(
-                    "residual_above_gross",
-                    f"Szenario {index}: Der Restwert liegt über dem Wert vor Maßnahmen.",
-                    blocking=False,
-                    subject=str(index),
-                )
-            )
-        gross = scenario.severity * scenario.likelihood
-        net = net_s * net_l
-        results.append(
-            ScenarioResult(
-                index=index,
-                dimension=scenario.dimension,
-                dimension_title=profile.dimensions[scenario.dimension],
-                sdm=scenario.dimension in profile.sdm_dimensions,
-                description=scenario.description,
-                gross_severity=scenario.severity,
-                gross_likelihood=scenario.likelihood,
-                gross=gross,
-                gross_band=profile.band(gross),
-                measures=scenario.measures,
-                measure_titles=tuple(profile.measure(m).title for m in scenario.measures),
-                reduction_severity=min(cap, reduction_s),
-                reduction_likelihood=min(cap, reduction_l),
-                net_severity=net_s,
-                net_likelihood=net_l,
-                net=net,
-                net_band=profile.band(net),
-                explicit_residual=tuple(explicit),
-                residual_justification=scenario.residual_justification,
-            )
-        )
-    gross_max = max((r.gross for r in results), default=0)
-    net_max = max((r.net for r in results), default=0)
-    return RiskResult(
-        scenarios=tuple(results),
-        gross_maximum=gross_max,
-        net_maximum=net_max,
-        net_band=profile.band(net_max),
-        issues=tuple(issues),
-    )
-
-
-# ---------------------------------------------------------------------------
-# Proposal
-# ---------------------------------------------------------------------------
+from .screening import (
+    SCREENING_INCOMPLETE,
+    SCREENING_NOT_REQUIRED,
+    SCREENING_REQUIRED,
+    screen,
+)
+
+__all__ = [
+    "CALCULATION_VERSION",
+    "EDPB_SCENARIO_FIELDS",
+    "SCREENING_INCOMPLETE",
+    "SCREENING_NOT_REQUIRED",
+    "SCREENING_REQUIRED",
+    "Answer",
+    "AnswerValue",
+    "Issue",
+    "PrefillSuggestion",
+    "Proposal",
+    "RiskResult",
+    "Scenario",
+    "ScenarioResult",
+    "ScreeningResult",
+    "assess_risk",
+    "finalize_consultation",
+    "parse_answer_list",
+    "parse_answers",
+    "parse_scenarios",
+    "prefill_from_activity",
+    "propose",
+    "screen",
+]
+
+_INCOMPLETE_SCREENING_TEXT = (
+    "Die Schwellwertanalyse ist nicht vollständig. Bevor ein Ergebnis "
+    "vorgeschlagen werden kann, sind alle Fragen mit Ja oder Nein zu beantworten."
+)
 
 
 def _screening_issues(screening: ScreeningResult) -> list[Issue]:
@@ -650,87 +124,165 @@ def _risk_recommendation(profile: RuleProfile, net_maximum: int) -> str:
     return RECOMMENDATION_RELEASE
 
 
-def propose(
-    profile: RuleProfile,
-    answers: Mapping[str, Answer | Any],
-    scenarios: Iterable[Scenario | Any] = (),
-) -> Proposal:
-    """Combine screening and risk into a reasoned, traceable recommendation."""
-    screening = screen(profile, answers)
-    issues = _screening_issues(screening)
-    trace = list(screening.trace)
-    consultation_reference = profile.norm("konsultation")
-
-    def result(
-        recommendation: str, text: str, reasoning: str, risk: RiskResult | None, consultation: bool
-    ) -> Proposal:
-        """Build the proposal for one recommendation."""
-        trace.append({"step": "recommendation", "value": recommendation})
-        return Proposal(
-            profile=profile.reference,
-            regime=profile.regime,
-            screening=screening,
-            risk=risk,
-            recommendation=recommendation,
-            recommendation_text=text,
-            reasoning=reasoning,
-            consultation_required=consultation,
-            consultation_reference=consultation_reference,
-            issues=tuple(issues),
-            trace=tuple(trace),
-        )
-
-    risk = assess_risk(profile, scenarios)
-    issues.extend(risk.issues)
-    if screening.outcome in (SCREENING_NOT_REQUIRED, SCREENING_INCOMPLETE):
-        if screening.outcome == SCREENING_NOT_REQUIRED:
-            recommendation = RECOMMENDATION_SCREENING_ONLY
-            text = profile.recommendation_texts[RECOMMENDATION_SCREENING_ONLY]
-        else:
-            recommendation = RECOMMENDATION_INCOMPLETE
-            text = (
-                "Die Schwellwertanalyse ist nicht vollständig. Bevor ein Ergebnis "
-                "vorgeschlagen werden kann, sind alle Fragen mit Ja oder Nein zu beantworten."
-            )
-        return result(
-            recommendation, text, screening.reasoning, risk if risk.assessed else None, False
-        )
-
-    if not risk.assessed:
-        issues.append(
-            Issue(
-                "risk_assessment_missing",
-                "Die Folgenabschätzung ist durchzuführen, es ist aber noch kein "
-                "Risikoszenario erfasst.",
-                blocking=True,
-            )
-        )
-        return result(
-            RECOMMENDATION_INCOMPLETE,
-            "Die Folgenabschätzung ist durchzuführen, es sind aber noch keine "
-            "Risikoszenarien erfasst. Ohne Risikobetrachtung lässt sich das "
-            f"verbleibende Risiko nicht beurteilen ({profile.norm('risiko')}).",
-            screening.reasoning,
-            risk,
-            False,
-        )
-    recommendation = _risk_recommendation(profile, risk.net_maximum)
-    trace.append(
-        {
-            "step": "risk",
-            "gross_maximum": risk.gross_maximum,
-            "net_maximum": risk.net_maximum,
-            "consult_from": profile.consult_from,
-            "conditions_from": profile.conditions_from,
-        }
+def _matrix_assessment(
+    profile: RuleProfile, screening: ScreeningResult, risk: RiskResult
+) -> tuple[str, dict[str, object], str]:
+    """Recommendation, trace step and reasoning from the risk matrix (schema 2)."""
+    step: dict[str, object] = {
+        "step": "risk",
+        "method": risk.method,
+        "gross_band": risk.gross_band,
+        "net_band": risk.net_band,
+        "gross_maximum": risk.gross_maximum,
+        "net_maximum": risk.net_maximum,
+        "floored": list(risk.floored),
+    }
+    reasoning = (
+        f"{screening.reasoning} Nach der Risikomatrix des Regelprofils liegt das höchste "
+        f"Risiko vor Maßnahmen in der Stufe {risk.gross_band}, nach den vorgesehenen "
+        f"Maßnahmen in der Stufe {risk.net_band}."
     )
+    if risk.floored:
+        numbers = ", ".join(str(i) for i in risk.floored)
+        reasoning += (
+            f" Für Szenario {numbers} gilt wegen der Schwere vor Maßnahmen mindestens "
+            "diese Stufe, auch wenn der Eintritt unwahrscheinlich ist oder Maßnahmen die "
+            "Schwere mindern (Mindeststufe des Regelprofils)."
+        )
+    return profile.band_recommendations[risk.net_band], step, reasoning
+
+
+def _product_assessment(
+    profile: RuleProfile, screening: ScreeningResult, risk: RiskResult
+) -> tuple[str, dict[str, object], str]:
+    """Recommendation, trace step and reasoning from the risk product (schema 1)."""
+    step: dict[str, object] = {
+        "step": "risk",
+        "gross_maximum": risk.gross_maximum,
+        "net_maximum": risk.net_maximum,
+        "consult_from": profile.consult_from,
+        "conditions_from": profile.conditions_from,
+    }
     reasoning = (
         f"{screening.reasoning} Das höchste Risiko vor Maßnahmen beträgt "
         f"{risk.gross_maximum} von {profile.maximum_product}, nach den vorgesehenen "
         f"Maßnahmen {risk.net_maximum} von {profile.maximum_product} und ist damit als "
         f"{risk.net_band} einzustufen."
     )
-    return result(
+    return _risk_recommendation(profile, risk.net_maximum), step, reasoning
+
+
+@dataclass
+class _ProposalBuilder:
+    """Collects issues and trace steps and builds the proposal for one recommendation."""
+
+    profile: RuleProfile
+    screening: ScreeningResult
+    issues: list[Issue]
+    trace: list[Mapping[str, object]]
+    consultation_reference: str
+
+    def build(
+        self,
+        recommendation: str,
+        text: str,
+        reasoning: str,
+        risk: RiskResult | None,
+        consultation: bool,
+    ) -> Proposal:
+        """Build the proposal for one recommendation."""
+        self.trace.append({"step": "recommendation", "value": recommendation})
+        notice: dict[str, object] | None = None
+        rule = self.profile.consultation_notice
+        if rule is not None:
+            # DP-C21: before the final assessment at most a preliminary notice.
+            preliminary = recommendation == RECOMMENDATION_CONSULTATION
+            notice = {
+                "timing": rule.timing,
+                "final": False,
+                "status": NOTICE_PRELIMINARY if preliminary else NOTICE_NONE,
+                "text": rule.preliminary_text if preliminary else "",
+                "legal_basis": rule.legal_basis,
+            }
+            if preliminary:
+                text = rule.preliminary_text
+            consultation = False
+            self.trace.append({"step": "consultation_notice", "status": notice["status"]})
+        return Proposal(
+            profile=self.profile.reference,
+            regime=self.profile.regime,
+            screening=self.screening,
+            risk=risk,
+            recommendation=recommendation,
+            recommendation_text=text,
+            reasoning=reasoning,
+            consultation_required=consultation,
+            consultation_reference=self.consultation_reference,
+            issues=tuple(self.issues),
+            trace=tuple(self.trace),
+            consultation_notice=notice,
+        )
+
+
+def _without_risk_assessment(builder: _ProposalBuilder, risk: RiskResult) -> Proposal:
+    """A DPIA is required but no risk scenario has been recorded yet."""
+    builder.issues.append(
+        Issue(
+            "risk_assessment_missing",
+            "Die Folgenabschätzung ist durchzuführen, es ist aber noch kein "
+            "Risikoszenario erfasst.",
+            blocking=True,
+        )
+    )
+    return builder.build(
+        RECOMMENDATION_INCOMPLETE,
+        "Die Folgenabschätzung ist durchzuführen, es sind aber noch keine "
+        "Risikoszenarien erfasst. Ohne Risikobetrachtung lässt sich das "
+        f"verbleibende Risiko nicht beurteilen ({builder.profile.norm('risiko')}).",
+        builder.screening.reasoning,
+        risk,
+        False,
+    )
+
+
+def propose(
+    profile: RuleProfile,
+    answers: Mapping[str, object],
+    scenarios: Iterable[object] = (),
+) -> Proposal:
+    """Combine screening and risk into a reasoned, traceable recommendation."""
+    screening = screen(profile, answers)
+    builder = _ProposalBuilder(
+        profile,
+        screening,
+        _screening_issues(screening),
+        list(screening.trace),
+        profile.norm("konsultation"),
+    )
+    risk = assess_risk(profile, scenarios)
+    builder.issues.extend(risk.issues)
+    if screening.outcome == SCREENING_NOT_REQUIRED:
+        return builder.build(
+            RECOMMENDATION_SCREENING_ONLY,
+            profile.recommendation_texts[RECOMMENDATION_SCREENING_ONLY],
+            screening.reasoning,
+            risk if risk.assessed else None,
+            False,
+        )
+    if screening.outcome == SCREENING_INCOMPLETE:
+        return builder.build(
+            RECOMMENDATION_INCOMPLETE,
+            _INCOMPLETE_SCREENING_TEXT,
+            screening.reasoning,
+            risk if risk.assessed else None,
+            False,
+        )
+    if not risk.assessed:
+        return _without_risk_assessment(builder, risk)
+    assessment = _matrix_assessment if profile.edpb else _product_assessment
+    recommendation, step, reasoning = assessment(profile, screening, risk)
+    builder.trace.append(step)
+    return builder.build(
         recommendation,
         profile.recommendation_texts[recommendation],
         reasoning,
@@ -739,81 +291,46 @@ def propose(
     )
 
 
-# ---------------------------------------------------------------------------
-# Prefill from the register
-# ---------------------------------------------------------------------------
+def finalize_consultation(
+    profile: RuleProfile, proposal: Mapping[str, Any], decision: str
+) -> dict[str, Any]:
+    """Final consultation notice after the final assessment (DP-C21).
 
-
-@dataclass(frozen=True)
-class PrefillSuggestion:
-    """A suggestion only; it never becomes an answer without confirmation."""
-
-    question: str
-    value: bool
-    reason: str
-
-
-def _count(value: Any) -> int | None:
-    if isinstance(value, bool) or value is None:
-        return None
-    if isinstance(value, int):
-        return value
-    if isinstance(value, str) and value.strip().isdigit():
-        return int(value.strip())
-    return None
-
-
-def _number(value: int) -> str:
-    return f"{value:,}".replace(",", ".")
-
-
-def prefill_from_activity(
-    profile: RuleProfile, activity: Mapping[str, Any]
-) -> dict[str, PrefillSuggestion]:
-    """Suggest answers from register data (Art. 9/10 data, number of persons, transfers).
-
-    Only explicit ``True`` flags and integer counts are used; anything else is
-    ignored rather than reinterpreted.
+    Called with the decision of the controller on a complete proposal. The
+    notice is final and says "erforderlich" only if the net risk after
+    measures is still high (the proposal recommends the consultation) and the
+    processing is not abandoned. Profiles without a ``consultation_notice``
+    section return the proposal unchanged.
     """
-    special = activity.get("besondere_kategorien") is True
-    criminal = activity.get("daten_art10") is True
-    count = _count(activity.get("anzahl_betroffene"))
-    large = count is not None and count >= profile.large_scale_threshold
-    known = set(profile.question_keys)
-    suggestions: dict[str, PrefillSuggestion] = {}
-
-    def add(key: str, value: bool, reason: str) -> None:
-        """Record a suggestion if the profile knows the question."""
-        if key in known:
-            suggestions[key] = PrefillSuggestion(key, value, reason)
-
-    if special or criminal:
-        source = "Artikel 9" if special else "Artikel 10"
-        add(
-            "edsa_04_sensible_daten",
-            True,
-            f"Das Verarbeitungsverzeichnis weist Daten nach {source} DSGVO aus.",
+    rule = profile.consultation_notice
+    result = dict(proposal)
+    if rule is None:
+        return result
+    if proposal.get("recommendation") in (None, RECOMMENDATION_INCOMPLETE):
+        raise ValidationError(
+            "Ein endgültiger Konsultationshinweis setzt eine vollständige Bewertung voraus."
         )
-        if large and count is not None:
-            add(
-                "art35_3_b",
-                True,
-                f"Das Verzeichnis weist Daten nach {source} DSGVO und {_number(count)} "
-                "betroffene Personen aus; das spricht für eine umfangreiche Verarbeitung.",
-            )
-    if large and count is not None:
-        add(
-            "edsa_05_umfang",
-            True,
-            f"Das Verzeichnis nennt {_number(count)} betroffene Personen und erreicht damit "
-            f"den Anhaltswert von {_number(profile.large_scale_threshold)} oder liegt darüber.",
-        )
-    if activity.get("drittlandtransfer") is True:
-        add(
-            "edsa_06_abgleich",
-            False,
-            "Das Verzeichnis weist eine Übermittlung in ein Drittland aus. Das ist für sich "
-            "kein Kriterium der Liste, erhöht aber das Risiko und ist bei den Szenarien zu "
-            "berücksichtigen (Kapitel V DSGVO).",
-        )
-    return suggestions
+    high = proposal.get("recommendation") == RECOMMENDATION_CONSULTATION
+    required = high and decision != DECISION_REJECTED
+    if required:
+        status, text = NOTICE_REQUIRED, rule.final_text
+        result["recommendation_text"] = rule.final_text
+    elif high:
+        status, text = NOTICE_NOT_REQUIRED, rule.rejected_text
+    else:
+        status, text = NOTICE_NOT_REQUIRED, rule.not_required_text
+    result["consultation_required"] = required
+    result["consultation_notice"] = {
+        "timing": rule.timing,
+        "final": True,
+        "status": status,
+        "text": text,
+        "legal_basis": rule.legal_basis,
+        "net_risk_high": high,
+        "decision": decision,
+    }
+    result["trace"] = [
+        *(proposal.get("trace") or ()),
+        {"step": "consultation_notice", "status": status, "final": True},
+    ]
+    return result

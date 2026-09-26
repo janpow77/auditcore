@@ -1,0 +1,487 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_common",
+  "version": "0.1.1",
+  "classification": "CONSOLIDATION",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/modules/ecohesion/community/metrics.py",
+      "git_blob": "4f85768d49d383741bc173939e19c00fbc19f195",
+      "symbols": [
+        "_anteil"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "path": "backend/app/verwk/pipeline/datenqualitaet.py",
+      "git_blob": "faa01910bbf5fadc79b652694d41e1fefe018e61",
+      "symbols": [
+        "_anteil"
+      ]
+    },
+    {
+      "repository": "janpow77/riskanalysis",
+      "commit": "dace0f66abde171ab91685483092ad7c3550ce55",
+      "path": "backend/app/pipeline/datenqualitaet.py",
+      "git_blob": "9aff9f6515db94324b0cb433b2f9f45c2b4b0ffc",
+      "symbols": [
+        "_anteil"
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "path": "backend/app/api/kpang/monitoring.py",
+      "git_blob": "e559f8d64acdd9b1259e26ae78973dfb7c583c59",
+      "symbols": [
+        "_quote_pct"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/core/shared/research/register/state_aid.py",
+      "git_blob": "79fb0ab5aa2082a3c080867bec9e8e14d3245b06",
+      "symbols": [
+        "_als_float",
+        "_als_zahl"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/modules/vp_ai/services/pdb_import_service.py",
+      "git_blob": "5ef1dd04840f9e80f960d5ad9f9080985737a2a5",
+      "symbols": [
+        "_float"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/core/shared/research/register/beneficiaries.py",
+      "git_blob": "88f8d649c6a43607daaabab93a16cb6fdf82a8b2",
+      "symbols": [
+        "_als_float"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "path": "backend/app/modules/company_research/read_model_service.py",
+      "git_blob": "ee88dc63dbd8311adc60b6df79ca8ac37f0896cd",
+      "symbols": [
+        "_to_float"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "path": "backend/app/verwk/services/modellguete.py",
+      "git_blob": "456508b990aceab65ea9c63c155d9853aeef1704",
+      "symbols": [
+        "_zahl"
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "path": "backend/scripts/import_tankerkoenig_history.py",
+      "git_blob": "4739557b0e5f23cda4305d627e265c9de030a542",
+      "symbols": [
+        "_safe_float"
+      ]
+    },
+    {
+      "repository": "janpow77/versteigerung",
+      "commit": "729f9a10bc5478bd724ef40c1f4cd572e5a3dada",
+      "path": "backend/app/api/routers/auctions.py",
+      "git_blob": "68699eea1ce5e753079ed6eec990af0095e68f00",
+      "symbols": [
+        "_money_float"
+      ]
+    },
+    {
+      "repository": "janpow77/versteigerung",
+      "commit": "729f9a10bc5478bd724ef40c1f4cd572e5a3dada",
+      "path": "backend/app/services/data_quality.py",
+      "git_blob": "17f40c420cc7b061cecff6b63eee2cf3857240ff",
+      "symbols": [
+        "_to_float"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/api/document_comparisons.py",
+      "git_blob": "f8d06f5a630bf047131b4fe9bb1bf74bf1b16d32",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/api/vpai_notebook/jupyter.py",
+      "git_blob": "3787cb344bed2bed9207c3b927cddf36c679dbe6",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/services/presentation_export_service.py",
+      "git_blob": "586b5cfef0562d055ff1990ec772e954a9584b58",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "path": "backend/app/api/vvt_templates.py",
+      "git_blob": "70ed662b0e271911b58f3a37116e66319bdcff04",
+      "symbols": [
+        "_safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "path": "backend/app/services/help_export_service.py",
+      "git_blob": "ad6a57af2ab08fa350b124cde705585278ed6b90",
+      "symbols": [
+        "safe_filename"
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "path": "backend/app/api/kpang/vollzug.py",
+      "git_blob": "03ea056449d245587d3a7ff97082c8468af50fd9",
+      "symbols": [
+        "_safe_filename_part"
+      ]
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "4b629dd970e5242d6d5d6c74863132b70ce85216",
+      "path": "backend/app/modules/vp_ai/api/runs.py",
+      "git_blob": "fa14e6f3c870b881d84c787b727539fa2d5cb2ea",
+      "symbols": [
+        "_run_async_in_thread"
+      ]
+    },
+    {
+      "repository": "janpow77/flowaudit",
+      "commit": "d8107f6b4287228974bc3b0f405bdd95182a66d5",
+      "path": "backend/flowaudit/modules/module_converter/api/protocol.py",
+      "git_blob": "d0ad3099e9a39fe98e14ab72e233dc73f75512cc",
+      "symbols": [
+        "run_async"
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "path": "backend/app/worker/tasks.py",
+      "git_blob": "9c634e9d9876e6704e8362d1a686cafbdc29a2ef",
+      "symbols": [
+        "run_async"
+      ]
+    }
+  ],
+  "consolidates": {
+    "monorepo": "janpow77/auditcore (intern, keine Fremdquelle)",
+    "monorepo_revision": "40ce8f710785b6ca8608512a2e335c14ec9d924f",
+    "method": "AST-Inventur (scripts/inventory_duplicate_functions.py, docs/quality/duplikate.md); je Gruppe Differenztest gegen die wörtliche Kopie in tests/legacy_reference.py",
+    "files": [
+      {
+        "path": "packages/auditcore_dataprotection/src/auditcore_dataprotection/report_data.py",
+        "git_blob": "e0a945103dfed956697c7de6e3a7dad313cd047c",
+        "symbols": [
+          "plain"
+        ]
+      },
+      {
+        "path": "packages/auditcore_risk/src/auditcore_risk/results.py",
+        "git_blob": "7c2bc03b3269414680828791a0cadab3b48e1cf3",
+        "symbols": [
+          "plain"
+        ]
+      },
+      {
+        "path": "packages/auditcore_funding_sources/src/auditcore_funding_sources/_jsonsafe.py",
+        "git_blob": "d3e964569cfe244cfb5b0305b8e5205e85f7c6c8",
+        "symbols": [
+          "json_safe",
+          "json_safe_mapping"
+        ]
+      },
+      {
+        "path": "packages/auditcore_legal_sources/src/auditcore_legal_sources/_adapter_support.py",
+        "git_blob": "eccc3a91fa1ace8e139b4c34f479623417a0b6b5",
+        "symbols": [
+          "_json"
+        ]
+      },
+      {
+        "path": "packages/auditcore_registry_sources/src/auditcore_registry_sources/chambers.py",
+        "git_blob": "8e7e7621345b89bf01de1ed8863add9acab6a298",
+        "symbols": [
+          "_json"
+        ]
+      },
+      {
+        "path": "packages/auditcore_dataprotection/src/auditcore_dataprotection/hashing.py",
+        "git_blob": "092cebc6f4c22741901c371cec326a0b650797fc",
+        "symbols": [
+          "canonical_sha256"
+        ]
+      },
+      {
+        "path": "packages/auditcore_entity_matching/src/auditcore_entity_matching/profiles.py",
+        "git_blob": "b89678074b2956233e8cee264e680f1ca4a36322",
+        "symbols": [
+          "fingerprint",
+          "load_profile",
+          "recommended_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_harvest/src/auditcore_harvest/model.py",
+        "git_blob": "1a6d3278f02d25d72737139f14fbdac44ce2971b",
+        "symbols": [
+          "canonical_hash",
+          "iso"
+        ]
+      },
+      {
+        "path": "packages/auditcore_documents/src/auditcore_documents/profiles.py",
+        "git_blob": "3c65fb6ea2608669f432be24357461b9c806fff8",
+        "symbols": [
+          "fingerprint"
+        ]
+      },
+      {
+        "path": "packages/auditcore_documents/src/auditcore_documents/pipeline/hashing.py",
+        "git_blob": "e48856afb4c6daa201bc202ac13b9075a510a9e6",
+        "symbols": [
+          "hash_json",
+          "hash_string",
+          "hash_file"
+        ]
+      },
+      {
+        "path": "packages/auditcore_documents/src/auditcore_documents/compare.py",
+        "git_blob": "ebf178b2d5db3544f1f9877a3390ae4fe9b9324b",
+        "symbols": [
+          "sha256_file"
+        ]
+      },
+      {
+        "path": "packages/auditcore_invoicesynth/src/auditcore_invoicesynth/fonts.py",
+        "git_blob": "db423c9e2a2c9dcb5dfe00af66f088a483dcc198",
+        "symbols": [
+          "sha256_file"
+        ]
+      },
+      {
+        "path": "packages/auditcore_invoicesynth/src/auditcore_invoicesynth/dataset.py",
+        "git_blob": "89cb11d0a0b95521cc692aa0711dd71dba542f8a",
+        "symbols": [
+          "_sha256"
+        ]
+      },
+      {
+        "path": "packages/auditcore_dataprotection/src/auditcore_dataprotection/profile_loader.py",
+        "git_blob": "9aa21b35ad6231c4734afb55907fc111cf2f4282",
+        "symbols": [
+          "available_profiles",
+          "load_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_funding_sources/src/auditcore_funding_sources/profiles.py",
+        "git_blob": "20d42b16c3732ce6d4902c9d111562ea581a506e",
+        "symbols": [
+          "load_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_legal_sources/src/auditcore_legal_sources/profile.py",
+        "git_blob": "de626b181a554bfb8fa186e8be64f1082c32a916",
+        "symbols": [
+          "load_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_market_indicators/src/auditcore_market_indicators/profiles.py",
+        "git_blob": "8f98ca48aac9c45022d485cba9c59db8dfbf296c",
+        "symbols": [
+          "load_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_procurement/src/auditcore_procurement/precheck_profile.py",
+        "git_blob": "5bc735c28d69b9c155a3bbec105d0d99305fe8d0",
+        "symbols": [
+          "load_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_registry_sources/src/auditcore_registry_sources/profiles.py",
+        "git_blob": "8d3f1d036c92ffc260dbb4fdf14bb04638e3bd7c",
+        "symbols": [
+          "load_profile"
+        ]
+      },
+      {
+        "path": "packages/auditcore_risk/src/auditcore_risk/profiles.py",
+        "git_blob": "70fefb96f0e88f16de4a6f3487d91b838131d044",
+        "symbols": [
+          "_packaged"
+        ]
+      },
+      {
+        "path": "packages/auditcore_documents/src/auditcore_documents/pipeline/audit.py",
+        "git_blob": "0aa7799e6bf723676be1679244b338f6188cfb12",
+        "symbols": [
+          "_freeze",
+          "thaw"
+        ]
+      },
+      {
+        "path": "packages/auditcore_registry_sources/src/auditcore_registry_sources/_xml_support.py",
+        "git_blob": "1f0a5b010153f9555441d01b5409b9f0b7756f77",
+        "symbols": [
+          "_fromstring"
+        ]
+      },
+      {
+        "path": "packages/auditcore_legal_sources/src/auditcore_legal_sources/feeds.py",
+        "git_blob": "35c6d6a566b8f20b51b6dd0e07afe705af14e704",
+        "symbols": [
+          "_Links"
+        ]
+      },
+      {
+        "path": "packages/auditcore_statistics/src/auditcore_statistics/numeric.py",
+        "git_blob": "8a494b1ca5fd18137280c8b318bd09344a5afccc",
+        "symbols": [
+          "numpy_pairwise_sum",
+          "numpy_round"
+        ]
+      },
+      {
+        "path": "packages/auditcore_sampling/src/auditcore_sampling/_numeric.py",
+        "git_blob": "06d410033ab86daa2f99e0f7f009c277603b8198",
+        "symbols": [
+          "pairwise_sum",
+          "numpy_round"
+        ]
+      },
+      {
+        "path": "packages/auditcore_market_indicators/src/auditcore_market_indicators/_numeric.py",
+        "git_blob": "d460d7a47b773e6cbb0933a1257177270ba26838",
+        "symbols": [
+          "numpy_pairwise_sum"
+        ]
+      },
+      {
+        "path": "packages/auditcore_geo/src/auditcore_geo/koordinaten.py",
+        "git_blob": "b3f7cf8cdfbb306830d88a9b67c03fe0abda2110",
+        "symbols": [
+          "_endlich"
+        ]
+      },
+      {
+        "path": "packages/auditcore_market_indicators/src/auditcore_market_indicators/indicators.py",
+        "git_blob": "1364072d965f3fb780965a0ca924e2d74392b488",
+        "symbols": [
+          "_finite"
+        ]
+      },
+      {
+        "path": "packages/auditcore_documents/src/auditcore_documents/pipeline/stages/donut_values.py",
+        "git_blob": "9200477cad216cb6d187f126e6da2e100361c9d4",
+        "symbols": [
+          "rate",
+          "compact"
+        ]
+      },
+      {
+        "path": "packages/auditcore_invoicesynth/src/auditcore_invoicesynth/formats.py",
+        "git_blob": "43dd3a6b3e7800e6a0227e8a368533d98c562281",
+        "symbols": [
+          "parse_rate",
+          "normalize_identifier"
+        ]
+      },
+      {
+        "path": "packages/auditcore_property_sources/src/auditcore_property_sources/zvg_lifecycle.py",
+        "git_blob": "b7b15b66f5e642b5041c6687d9314c66c5232625",
+        "symbols": [
+          "_aware"
+        ]
+      },
+      {
+        "path": "packages/auditcore_dataprotection/src/auditcore_dataprotection/prefill.py",
+        "git_blob": "4e6cc12f11b9bf913b9ee1db01963205572dccd0",
+        "symbols": [
+          "_number"
+        ]
+      },
+      {
+        "path": "packages/auditcore_registry_sources/src/auditcore_registry_sources/_legacy_osint.py",
+        "git_blob": "1eeb42d1e7466b0aca64ef4f5bad840c717f338a",
+        "symbols": [
+          "_count"
+        ]
+      },
+      {
+        "path": "packages/auditcore_dataprotection/src/auditcore_dataprotection/excel.py",
+        "git_blob": "9cbca8c222556650a93b444899dcf93e1c619e45",
+        "symbols": [
+          "_openpyxl"
+        ]
+      },
+      {
+        "path": "packages/auditcore_funding_sources/src/auditcore_funding_sources/tables.py",
+        "git_blob": "fd2f5266a47512a73dc9f7afb76753a3c2736db4",
+        "symbols": [
+          "_openpyxl"
+        ]
+      },
+      {
+        "path": "packages/auditcore_entity_matching/src/auditcore_entity_matching/matching.py",
+        "git_blob": "f64f54e289498c65d07ae1859e25d3628d40de9c",
+        "symbols": [
+          "_rapidfuzz"
+        ]
+      },
+      {
+        "path": "packages/auditcore_price_sources/src/auditcore_price_sources/snapshots.py",
+        "git_blob": "5f402dbc1cad59a9cbb6546e98820a2921c4f6a9",
+        "symbols": [
+          "canonical_json_bytes"
+        ]
+      }
+    ]
+  },
+  "origin": "Zusammenführung doppelter Hilfsfunktionen der auditcore-Fachpakete und – nach der App-Inventur docs/reports/app-helfer-python.md – generischer Hilfsfunktionen mehrerer Anwendungen (Quellen unter sources). 0.1.1: numbers_de ist eine Neuumsetzung des Vertrags contracts/common-cases/parse-number (Regeln aus flowinvoice amount_parsing.py und german-decimal.ts, Festlegungen des Nutzers vom 25.09.2026); es wird kein Code übernommen.",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; die Anwendungsrepositories selbst werden nicht umlizenziert. Übernommen sind nur die unter sources genannten Hilfsfunktionen."
+    }
+  }
+}

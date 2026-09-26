@@ -1,0 +1,31 @@
+auditcore_funding_sources 0.1.2 — source attribution and authorization
+
+Parsers, identities, snapshot semantics, the de-minimis register profile and
+the cumulation derive from these private repositories (pinned revisions,
+Git blobs verified against GitHub on 2026-09-22):
+
+  janpow77/flowworkshop@a05bb2143bd96d5e981f9462f05b965e1658be36
+    auditworkshop/backend/services/beneficiary_harvester.py  45c82fd8e7e27a5d9422052266009a6d516e0f92
+    auditworkshop/backend/services/state_aid_service.py      e41be2700affb91c2a6436a7e3ce488696b07116
+    auditworkshop/backend/services/dataframe_service.py      da75ef92f2ea749f0d184e0e647288ef67f08acf
+    auditworkshop/backend/services/geocoding_service.py      3c6ac686be9bc222749fc06b7271ef94c44c2cc3
+  janpow77/flowsearch@10cb2a3ead3892cbf9fa94f2ed18763187d3e0e4
+    backend/app/services/eu_beneficiary_harvester_v2.py      4cbc58a2057e896808a079808d8f6fa968c2f79f
+    backend/app/services/harvest_source_manager.py           9768fc66299f933e643349579d351050c789d101
+  janpow77/audit_designer@030a71e083ef0feddc14545b095a4945bc0bbd7a
+    backend/app/core/shared/research/register/{beneficiaries,state_aid,de_minimis,
+      de_minimis_ernte,de_minimis_models,de_minimis_zuordnung}.py (blobs in provenance.json)
+
+The source repositories carry no licence and are not relicensed. On
+2026-09-22 the rights holder decided that the libraries extracted into
+auditcore are MIT-licensed while the other repositories are not ("die
+Bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken
+kommen ja nach auditcore"). Status: USER_AUTHORIZED_MIT for the code and
+rule profiles of this package.
+
+Data of the harvested sources (state transparency lists, EU cohesion data,
+eAidRegister of the European Commission) is not part of this package; its
+terms of use must be reviewed per source (REVIEW_REQUIRED). All fixtures are
+synthetic files in the original formats. Rule profiles, in particular the
+de-minimis cumulation profile, are characterized software behavior, not a
+confirmed legal interpretation; results are no approval or decision.

@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "tool_versions": {
+    "mypy": "2.3.1",
+    "ruff": "0.16.8"
+  },
+  "packages": {
+    "auditcore": {
+      "metrics": {
+        "any_usages": 123,
+        "complexity_over_10": 23,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 33,
+        "modules_over_400_lines": 3,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_auth": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_bpmn": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0,
+        "duplicate_functions": 0
+      }
+    },
+    "auditcore_common": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_dataprotection": {
+      "metrics": {
+        "any_usages": 145,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 1
+      }
+    },
+    "auditcore_documents": {
+      "metrics": {
+        "any_usages": 182,
+        "complexity_over_10": 0,
+        "duplicate_functions": 2,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_dummygenerator": {
+      "metrics": {
+        "any_usages": 7,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_entity_matching": {
+      "metrics": {
+        "any_usages": 2,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_funding_sources": {
+      "metrics": {
+        "any_usages": 66,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 2,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_geo": {
+      "metrics": {
+        "any_usages": 12,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 20
+      }
+    },
+    "auditcore_harvest": {
+      "metrics": {
+        "any_usages": 3,
+        "complexity_over_10": 0,
+        "duplicate_functions": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_identifiers": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 2,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_invoicegenerator": {
+      "metrics": {
+        "any_usages": 14,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_invoicesynth": {
+      "metrics": {
+        "any_usages": 41,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_kanban": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_legal_sources": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 1
+      }
+    },
+    "auditcore_llm_client": {
+      "metrics": {
+        "any_usages": 0,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_market_indicators": {
+      "metrics": {
+        "any_usages": 4,
+        "complexity_over_10": 0,
+        "duplicate_functions": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_price_analysis": {
+      "metrics": {
+        "any_usages": 42,
+        "complexity_over_10": 0,
+        "duplicate_functions": 1,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_price_sources": {
+      "metrics": {
+        "any_usages": 2,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 1
+      }
+    },
+    "auditcore_procurement": {
+      "metrics": {
+        "any_usages": 34,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_property_sources": {
+      "metrics": {
+        "any_usages": 1,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_registry_sources": {
+      "metrics": {
+        "any_usages": 45,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_reporting": {
+      "metrics": {
+        "any_usages": 4,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_risk": {
+      "metrics": {
+        "any_usages": 27,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_sampling": {
+      "metrics": {
+        "any_usages": 8,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "auditcore_statistics": {
+      "metrics": {
+        "any_usages": 6,
+        "complexity_over_10": 0,
+        "duplicate_functions": 0,
+        "functions_over_60_lines": 0,
+        "modules_over_400_lines": 0,
+        "mypy_strict_errors": 0,
+        "non_english_identifiers": 0
+      }
+    },
+    "js:common": {
+      "metrics": {
+        "eslint_file_disables": 0,
+        "eslint_unjustified_line_disables": 0,
+        "explicit_any": 0,
+        "files_over_400_lines": 0,
+        "vue_sfc_over_250_lines": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_procurement",
+  "version": "0.2.2",
+  "sources": [
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "path": "backend/app/services/ted_harvester_service.py",
+      "git_blob": "1f8b43677a794b8b2fdb6787c8e533c08a78a2cb",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "path": "backend/audit_prep/ted_normalize.py",
+      "git_blob": "600c9dd9909b147c253ef72d5d8e27e80af0d002",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "path": "backend/app/services/procurement_analyzer.py",
+      "git_blob": "e76961b1bdab273f8c2441a4bfe2108a2c71f9eb",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "path": "backend/app/seeds/procurement_ruleset.py",
+      "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "company_records.py",
+      "git_blob": "b19d308f2e0cf3d9e99e91f8f325f89183ee4f84",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/services/procurement_analyzer.py",
+      "git_blob": "a3fa3be4d0c486f2cf0d161a94b3795e6f46455b",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/seeds/procurement_ruleset.py",
+      "git_blob": "fde338f32489a7f7ebd334d53d96568aed76fdb1",
+      "github_blob_verified": "2026-09-22"
+    },
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "030a71e083ef0feddc14545b095a4945bc0bbd7a",
+      "path": "backend/app/modules/vp_ai/services/company/company_records.py",
+      "git_blob": "874901d0414976bbc3f9f9314894c7cf913c043a",
+      "github_blob_verified": "2026-09-22"
+    }
+  ],
+  "symbols": {
+    "audit-portal backend/audit_prep/ted_normalize.py": [
+      "_FIELD_ALIASES",
+      "_first_present",
+      "_extract_text",
+      "_extract_list",
+      "_extract_amount",
+      "_to_iso_date",
+      "normalize_notice",
+      "normalize_notices",
+      "parse_ted_file",
+      "write_ted_json"
+    ],
+    "audit-portal backend/app/services/ted_harvester_service.py": [
+      "_DEFAULT_FIELDS",
+      "build_ted_query",
+      "_to_ted_date",
+      "fetch_ted_notices (Ablauf über auditcore_harvest ersetzt)"
+    ],
+    "flowinvoice/audit-portal backend/app/services/procurement_analyzer.py": [
+      "ProcurementPreChecker.run_prechecks und fünf Teilprüfungen (AST-identisch)"
+    ],
+    "backend/app/seeds/procurement_ruleset.py": [
+      "threshold_rules",
+      "required_documents_by_procedure (Blob identisch in beiden Repositories)"
+    ],
+    "flowinvoice company_records.py": [
+      "TEDNotice",
+      "HADNotice",
+      "_TEDClient.search",
+      "_HADClient.search"
+    ],
+    "audit_designer .../company/company_records.py": [
+      "TEDNotice",
+      "HADNotice",
+      "_TEDClient.search",
+      "_TEDClient._extract_title",
+      "_HADClient.search"
+    ]
+  },
+  "reuse_decision": {
+    "audit_prep": "Nicht als Abhängigkeit nutzbar: audit_prep ist kein eigenständig installierbares Paket, sondern wird im audit-portal-Wheel (hatch packages=['app','audit_prep']) mit ausgeliefert. Sein reiner TED-Kern wird verhaltensgleich übernommen; audit-portal re-exportiert ihn danach aus auditcore_procurement (Shim), damit genau eine Implementierung bleibt.",
+    "ProcurementAnalyzer": "LLM-Stufen, Prompting und Datenbankzugriffe bleiben in den Anwendungen; nur die deterministischen Prechecks sind übernommen."
+  },
+  "excluded": [
+    "ProcurementAnalyzer (LLM), procurement_import.py, procurement_generator.py, TED-Upload-/Import-Jobs, Datenbankmodelle, Feature-Flag ted_online_harvest_enabled und Zugriffsrechte (Consumer)",
+    "übrige Quellen aus company_records (TAM, Handelsregister, Natura, Kohesio) — andere Familien"
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "ich verstehe die frage nicht, die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+      "scope": "Nur der in auditcore_procurement extrahierte Bibliothekscode; keine Umlizenzierung der Quell-Repositories.",
+      "source_repository_status": {
+        "janpow77/audit-portal": "privat, proprietäre LICENSE (NOASSERTION)",
+        "janpow77/flowinvoice": "privat, keine Lizenz",
+        "janpow77/audit_designer": "privat, keine Lizenz"
+      }
+    },
+    "data_rights": {
+      "TED": "Daten und Nutzungsbedingungen der TED-API (Amt für Veröffentlichungen der EU) — REVIEW_REQUIRED, in dieser Bibliothek nicht geprüft; Fixtures sind synthetisch im Originalformat.",
+      "HAD": "Hessische Ausschreibungsdatenbank (had.de): Web-Scraping der Suchseite; Nutzungsbedingungen/Zulässigkeit automatisierter Abrufe NICHT geprüft — REVIEW_REQUIRED; Fixtures synthetisch."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/procurement_legacy_observed.json",
+    "tool": "tools/capture_procurement_legacy.py",
+    "cases": 57,
+    "fetch_scenarios": 13,
+    "prechecks": 27,
+    "company_client_cases": 30,
+    "original_tests": "audit-portal tests/test_ted_harvest.py + test_audit_prep_ted_normalize.py: 28 PASS am fixierten Commit",
+    "legal_validation": "NOT_PERFORMED"
+  },
+  "profiles": [
+    "procurement.hvtg-legacy 2026.09.1",
+    "procurement.hvtg 2026.09.2",
+    "procurement.hvtg 2026.09.3"
+  ],
+  "behavior_changes": "docs/behavior-changes.md",
+  "eu_thresholds": {
+    "periods": [
+      {
+        "valid_from": "2014-01-01",
+        "valid_to": "2015-12-31",
+        "source": "Verordnung (EU) Nr. 1336/2013, ABl. L 335 vom 14.12.2013, S. 17",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32013R1336"
+      },
+      {
+        "valid_from": "2016-01-01",
+        "valid_to": "2017-12-31",
+        "source": "Delegierte Verordnung (EU) 2015/2170, ABl. L 307 vom 25.11.2015, S. 5; zugleich Verordnung (EU) 2015/2342, ABl. L 330 vom 16.12.2015, S. 18",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32015R2170"
+      },
+      {
+        "valid_from": "2018-01-01",
+        "valid_to": "2019-12-31",
+        "source": "Delegierte Verordnung (EU) 2017/2365, ABl. L 337 vom 19.12.2017, S. 19",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32017R2365"
+      },
+      {
+        "valid_from": "2020-01-01",
+        "valid_to": "2021-12-31",
+        "source": "Delegierte Verordnung (EU) 2019/1828, ABl. L 279 vom 31.10.2019, S. 25",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32019R1828"
+      },
+      {
+        "valid_from": "2022-01-01",
+        "valid_to": "2023-12-31",
+        "source": "Delegierte Verordnung (EU) 2021/1952, ABl. L 398 vom 11.11.2021, S. 23",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=CELEX:32021R1952"
+      },
+      {
+        "valid_from": "2024-01-01",
+        "valid_to": "2025-12-31",
+        "source": "Delegierte Verordnung (EU) 2023/2495, ABl. L, 2023/2495, 16.11.2023",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202302495"
+      },
+      {
+        "valid_from": "2026-01-01",
+        "valid_to": "2027-12-31",
+        "source": "Delegierte Verordnung (EU) 2025/2152, ABl. L, 2025/2152, 23.10.2025; BAnz AT 18.12.2025 B4",
+        "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/HTML/?uri=OJ:L_202502152"
+      }
+    ],
+    "verified_on": "2026-09-23",
+    "national_tiers": "REVIEW_REQUIRED (Regelwerk der Anwendungen)",
+    "decisions": [
+      {
+        "date": "2026-09-23",
+        "text": "vergabeschwellen sollen pro jahr hinterlegt sein"
+      },
+      {
+        "date": "2026-09-23",
+        "text": "c2. ja",
+        "effect": "EU-Schwellenwerte 2014–2023 aus den amtlichen (Delegierten) Verordnungen nachgetragen (Profil procurement.hvtg 2026.09.3)"
+      }
+    ],
+    "retrieval": "Amtlicher deutscher Text über Cellar des Amts für Veröffentlichungen (publications.europa.eu/resource/celex/<CELEX>); SHA-256 je Dokument im Profil (retrieved_sha256)"
+  }
+}

@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=83", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auditcore_risk"
+version = "0.3.2"
+description = "Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["auditcore_common==0.1.1", "auditcore_entity_matching==0.2.2"]
+
+[project.optional-dependencies]
+fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.2"]
+pandas = ["pandas>=2.1"]
+procurement = ["auditcore_procurement==0.2.2"]
+web = ["starlette>=0.26.1"]
+fastapi = ["fastapi>=0.92"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "pandas>=2.1",
+    "auditcore_entity_matching[fuzzy]==0.2.2",
+    "auditcore_procurement==0.2.2",
+    "starlette>=0.26.1",
+    "fastapi>=0.92",
+    "httpx>=0.23.3",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+auditcore_risk = ["py.typed", "provenance.json", "profile_data/*.json", "fraud_profiles/*.json", "web/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+# Keine feste python_version: jeder CI-Job (3.11, 3.12, 3.13) prüft gegen seine Laufzeit.
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["pandas.*", "rapidfuzz.*"]
+ignore_missing_imports = true
+
+[tool.auditcore-bibquality]
+strict = true
+regression-command = ["python", "-m", "pytest", "tests", "-q"]

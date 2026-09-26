@@ -1,0 +1,702 @@
+{
+  "schema": "auditcore_bpmn.profile/1",
+  "id": "foerderperiode-2014-2020",
+  "version": "2026.09.1",
+  "title": {
+    "de": "Förderperiode 2014-2020 (geteilte Mittelverwaltung)",
+    "en": "Programming period 2014-2020 (shared management)"
+  },
+  "programming_period": "2014-2020",
+  "roles": [
+    "vb",
+    "zgs",
+    "bb",
+    "pb",
+    "pbs",
+    "kom",
+    "beg",
+    "bga",
+    "gs",
+    "gdp",
+    "fb",
+    "ftd",
+    "gut",
+    "gre",
+    "fr",
+    "ds",
+    "it",
+    "sonstige"
+  ],
+  "funds": [
+    "efre",
+    "esf",
+    "kf",
+    "eler",
+    "emff",
+    "interreg"
+  ],
+  "key_requirements": {
+    "source": {
+      "celex": "32014R0480",
+      "eli": "http://data.europa.eu/eli/reg_del/2014/480/oj",
+      "title": "Delegierte Verordnung (EU) Nr. 480/2014",
+      "publication": "ABl. L 138 vom 13.5.2014, S. 5",
+      "part": "Anhang IV Tabelle 1",
+      "retrieved": "2026-09-25",
+      "retrieval": "https://publications.europa.eu/resource/celex/32014R0480 (application/xhtml+xml)",
+      "sha256": {
+        "deu": "35c39c302dbb80fcf3b87fb1005c543486031c5f9cecb71cfffee782321f1412",
+        "eng": "8235630d44b96223be2ff16537f3557209a72a59c8d5eb4df6f2d81b4dd2393c"
+      }
+    },
+    "entries": [
+      {
+        "number": 1,
+        "title": {
+          "de": "Angemessene Aufgabentrennung und angemessene Systeme für die Berichterstattung und Begleitung in Fällen, in denen die zuständige Behörde die Ausführung von Aufgaben einer anderen Stelle überträgt",
+          "en": "Adequate separation of functions and adequate systems for reporting and monitoring in cases where the responsible authority entrusts execution of tasks to another body"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Internes Kontrollwesen",
+          "en": "Internal control environment"
+        }
+      },
+      {
+        "number": 2,
+        "title": {
+          "de": "Angemessene Auswahl von Vorhaben",
+          "en": "Appropriate selection of operations"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 3,
+        "title": {
+          "de": "Angemessene Information der Begünstigten zu den anwendbaren Bedingungen für die ausgewählten Vorhaben",
+          "en": "Adequate information to beneficiaries on applicable conditions for the selected operations"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 4,
+        "title": {
+          "de": "Angemessene Verwaltungsüberprüfungen",
+          "en": "Adequate management verifications"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 5,
+        "title": {
+          "de": "Vorhandensein eines wirksamen Systems, durch das gewährleistet ist, dass alle für einen hinreichenden Prüfpfad erforderlichen Dokumente zu Ausgaben und Prüfungen aufbewahrt werden",
+          "en": "Effective system in place to ensure that all documents regarding expenditure and audits are held to ensure an adequate audit trail"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten/Überwachung",
+          "en": "Management and control activities/Monitoring"
+        }
+      },
+      {
+        "number": 6,
+        "title": {
+          "de": "Zuverlässiges System, mit dessen Hilfe Daten zu Überwachungs-, Bewertungs-, Finanzmanagement-, Überprüfungs- und Prüfungszwecken erfasst, aufgezeichnet und gespeichert werden, einschließlich Verknüpfungen mit elektronischen Systemen zum Datenaustausch mit Begünstigten",
+          "en": "Reliable system for collecting, recording and storing data for monitoring, evaluation, financial management, verification and audit purposes, including links with electronic data exchange systems with beneficiaries"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten/Überwachung",
+          "en": "Management and control activities/Monitoring"
+        }
+      },
+      {
+        "number": 7,
+        "title": {
+          "de": "Wirksame Umsetzung angemessener Vorbeugungsmaßnahmen gegen Betrug",
+          "en": "Effective implementation of proportionate anti-fraud measures"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 8,
+        "title": {
+          "de": "Geeignete Verfahren für die Erstellung der Verwaltungserklärung und des zusammenfassenden Jahresberichts über durchgeführte abschließende Prüfungen und Kontrollen",
+          "en": "Appropriate procedures for drawing up the management declaration and annual summary of final audit reports and of controls carried out"
+        },
+        "bodies": {
+          "de": "Verwaltungsbehörde",
+          "en": "Managing authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 9,
+        "title": {
+          "de": "Angemessene Aufgabentrennung und angemessene Systeme für die Berichterstattung und Begleitung in Fällen, in denen die zuständige Behörde die Ausführung von Aufgaben einer anderen Stelle überträgt",
+          "en": "Adequate separation of functions and adequate systems for reporting and monitoring in cases where the responsible authority entrusts execution of tasks to another body"
+        },
+        "bodies": {
+          "de": "Bescheinigungsbehörde",
+          "en": "Certifying authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Internes Kontrollwesen",
+          "en": "Internal control environment"
+        }
+      },
+      {
+        "number": 10,
+        "title": {
+          "de": "Angemessene Verfahren zur Erstellung und Einreichung von Zahlungsanträgen",
+          "en": "Appropriate procedures for drawing up and submitting payment applications"
+        },
+        "bodies": {
+          "de": "Bescheinigungsbehörde",
+          "en": "Certifying authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten/Überwachung",
+          "en": "Management and control activities/Monitoring"
+        }
+      },
+      {
+        "number": 11,
+        "title": {
+          "de": "Angemessene Buchführung über die geltend gemachten Ausgaben und die entsprechende öffentliche Unterstützung in elektronischer Form",
+          "en": "Appropriate computerised records of expenditure declared and of the corresponding public contribution are maintained"
+        },
+        "bodies": {
+          "de": "Bescheinigungsbehörde",
+          "en": "Certifying authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 12,
+        "title": {
+          "de": "Angemessene und vollständige Buchführung über die wiedereinzuziehenden, wiedereingezogenen und einbehaltenen Beträge",
+          "en": "Appropriate and complete account of amounts recoverable, recovered and withdrawn"
+        },
+        "bodies": {
+          "de": "Bescheinigungsbehörde",
+          "en": "Certifying authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 13,
+        "title": {
+          "de": "Angemessene Verfahren für die Erstellung der jährlichen Rechnungslegung und die Bescheinigung, dass diese vollständig, genau und sachlich richtig ist",
+          "en": "Appropriate procedures for drawing up and certifying the completeness, accuracy and veracity of the annual accounts"
+        },
+        "bodies": {
+          "de": "Bescheinigungsbehörde",
+          "en": "Certifying authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Verwaltungs- und Kontrolltätigkeiten",
+          "en": "Management and control activities"
+        }
+      },
+      {
+        "number": 14,
+        "title": {
+          "de": "Angemessene Aufgabentrennung und angemessene Systeme zur Gewährleistung, dass jede andere Stelle, die Prüfungen gemäß der Prüfstrategie für das Programm durchführt, über die notwendige funktionelle Unabhängigkeit verfügt und die international anerkannten Prüfungsstandards berücksichtigt",
+          "en": "Adequate separation of functions and adequate systems for ensuring that any other body that carries out audits in accordance with the programme audit strategy has the necessary functional independence and takes account of internationally accepted audit standards"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Internes Kontrollwesen",
+          "en": "Internal control environment"
+        }
+      },
+      {
+        "number": 15,
+        "title": {
+          "de": "Angemessene Systemprüfungen",
+          "en": "Adequate systems audits"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Kontrolltätigkeiten",
+          "en": "Control activities"
+        }
+      },
+      {
+        "number": 16,
+        "title": {
+          "de": "Angemessene Prüfungen von Vorhaben",
+          "en": "Adequate audits of operations"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Kontrolltätigkeiten",
+          "en": "Control activities"
+        }
+      },
+      {
+        "number": 17,
+        "title": {
+          "de": "Angemessene Rechnungsprüfungen",
+          "en": "Adequate audits of accounts"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Kontrolltätigkeiten",
+          "en": "Control activities"
+        }
+      },
+      {
+        "number": 18,
+        "title": {
+          "de": "Angemessene Verfahren für die Erteilung eines zuverlässigen Bestätigungsvermerks und die Erstellung des jährlichen Kontrollberichts",
+          "en": "Adequate procedures for providing a reliable audit opinion and for preparing the annual control report"
+        },
+        "bodies": {
+          "de": "Prüfbehörde",
+          "en": "Audit authority"
+        },
+        "assessment_criteria": [],
+        "scope": {
+          "de": "Kontrolltätigkeiten",
+          "en": "Control activities"
+        }
+      }
+    ],
+    "assessment_criteria_note": {
+      "de": "Der Rechtstext enthält keine Bewertungskriterien; sie stammen aus Leitlinien der Kommission und werden von der Anwendung eingespeist.",
+      "en": "The legal text contains no assessment criteria; they stem from Commission guidance and are supplied by the application."
+    }
+  },
+  "role_aliases": [
+    {
+      "pattern": "Bescheinigungsbehörde",
+      "role": "bb"
+    },
+    {
+      "pattern": "Verwaltungsbehörde",
+      "role": "vb"
+    },
+    {
+      "pattern": "zwischengeschaltete Stelle",
+      "role": "zgs"
+    },
+    {
+      "pattern": "ZGS",
+      "role": "zgs"
+    },
+    {
+      "pattern": "Prüfbehörde",
+      "role": "pb"
+    },
+    {
+      "pattern": "Gruppe von Prüfern",
+      "role": "gdp"
+    },
+    {
+      "pattern": "Gemeinsames Sekretariat",
+      "role": "gs"
+    },
+    {
+      "pattern": "Kommission",
+      "role": "kom"
+    },
+    {
+      "pattern": "Begleitausschuss",
+      "role": "bga"
+    },
+    {
+      "pattern": "Begünstigte",
+      "role": "beg"
+    },
+    {
+      "pattern": "Antragstell",
+      "role": "beg"
+    },
+    {
+      "pattern": "fachtechnische",
+      "role": "ftd"
+    },
+    {
+      "pattern": "Gutachter",
+      "role": "gut"
+    },
+    {
+      "pattern": "Sachverständig",
+      "role": "gut"
+    },
+    {
+      "pattern": "Expertinnen",
+      "role": "gut"
+    },
+    {
+      "pattern": "Gremium",
+      "role": "gre"
+    },
+    {
+      "pattern": "Ausschuss",
+      "role": "gre"
+    },
+    {
+      "pattern": "Fachreferat",
+      "role": "fr"
+    },
+    {
+      "pattern": "Bewilligungsstelle",
+      "role": "fb"
+    },
+    {
+      "pattern": "Fachbehörde",
+      "role": "fb"
+    },
+    {
+      "pattern": "Datenschutz",
+      "role": "ds"
+    },
+    {
+      "pattern": "IT-System",
+      "role": "it"
+    },
+    {
+      "pattern": "Fachanwendung",
+      "role": "it"
+    }
+  ],
+  "segregation_rules": [
+    {
+      "id": "FT01",
+      "kind": "separate_bodies",
+      "severity": "warnung",
+      "a": {
+        "markers": [
+          "bewilligung"
+        ]
+      },
+      "b": {
+        "markers": [
+          "zahlung"
+        ]
+      },
+      "title": {
+        "de": "Bewilligung und Auszahlung in derselben Stelle",
+        "en": "Approval and payment in the same body"
+      }
+    },
+    {
+      "id": "FT02",
+      "kind": "separate_bodies",
+      "severity": "fehler",
+      "a": {
+        "audit_types": [
+          "verwk"
+        ]
+      },
+      "b": {
+        "audit_types": [
+          "systempruefung",
+          "vorhabenpruefung",
+          "rechnungslegungspruefung"
+        ]
+      },
+      "title": {
+        "de": "Verwaltungskontrolle und Prüfung in derselben Stelle",
+        "en": "Management verification and audit in the same body"
+      }
+    },
+    {
+      "id": "FT03",
+      "kind": "excluded_role",
+      "severity": "fehler",
+      "selection": {
+        "audit_types": [
+          "verwk"
+        ]
+      },
+      "roles": [
+        "pb",
+        "gdp"
+      ],
+      "title": {
+        "de": "Verwaltungskontrolle durch die Prüfbehörde",
+        "en": "Management verification by the audit authority"
+      }
+    },
+    {
+      "id": "FT04",
+      "kind": "excluded_role",
+      "severity": "fehler",
+      "selection": {
+        "audit_types": [
+          "systempruefung",
+          "vorhabenpruefung",
+          "rechnungslegungspruefung"
+        ]
+      },
+      "roles": [
+        "vb",
+        "zgs",
+        "fb",
+        "rfs",
+        "bb",
+        "beg"
+      ],
+      "title": {
+        "de": "Prüfung durch eine Stelle der Programmverwaltung",
+        "en": "Audit by a programme management body"
+      }
+    },
+    {
+      "id": "FT05",
+      "kind": "four_eyes",
+      "severity": "warnung",
+      "title": {
+        "de": "Vier-Augen-Prinzip ohne zweite Stelle oder Rolle",
+        "en": "Four-eyes principle without a second body or role"
+      }
+    }
+  ],
+  "templates": [],
+  "legal_bases": {
+    "source": {
+      "celex": "32013R1303",
+      "eli": "http://data.europa.eu/eli/reg/2013/1303/oj",
+      "title": "Verordnung (EU) Nr. 1303/2013 (Dachverordnung 2014-2020)",
+      "publication": "ABl. L 347 vom 20.12.2013, S. 320",
+      "part": "Artikelüberschriften",
+      "retrieved": "2026-09-25",
+      "retrieval": "https://publications.europa.eu/resource/celex/32013R1303 (application/xhtml+xml)",
+      "sha256": {
+        "deu": "89a2a7304dc47b804cda1f1f7cb22a815b0be2b3673c4a39043ec696c7b304ea",
+        "eng": "2ecb388c66abf149901a1e953c47c4a0bf9c83f635ec43a2f05f27af97ff7123"
+      }
+    },
+    "entries": [
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "65",
+        "short_title": {
+          "de": "Förderfähigkeit",
+          "en": "Eligibility"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "71",
+        "short_title": {
+          "de": "Dauerhaftigkeit der Vorhaben",
+          "en": "Durability of operations"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "72",
+        "short_title": {
+          "de": "Allgemeine Grundsätze zu den Verwaltungs- und Kontrollsystemen",
+          "en": "General principles of management and control systems"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "74",
+        "short_title": {
+          "de": "Zuständigkeiten der Mitgliedstaaten",
+          "en": "Responsibilities of Member States"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "122",
+        "short_title": {
+          "de": "Aufgaben der Mitgliedstaaten",
+          "en": "Responsibilities of Member States"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "123",
+        "short_title": {
+          "de": "Benennung der Behörden",
+          "en": "Designation of authorities"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "124",
+        "short_title": {
+          "de": "Verfahren für die Benennung der Verwaltungsbehörde und der Bescheinigungsbehörde",
+          "en": "Procedure for the designation of the managing authority and the certifying authority"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "125",
+        "short_title": {
+          "de": "Aufgaben der Verwaltungsbehörde",
+          "en": "Functions of the managing authority"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "126",
+        "short_title": {
+          "de": "Aufgaben der Bescheinigungsbehörde",
+          "en": "Functions of the certifying authority"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "127",
+        "short_title": {
+          "de": "Aufgaben der Prüfbehörde",
+          "en": "Functions of the audit authority"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "137",
+        "short_title": {
+          "de": "Rechnungslegung",
+          "en": "Preparation of the accounts"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "140",
+        "short_title": {
+          "de": "Verfügbarkeit von Dokumenten",
+          "en": "Availability of documents"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "143",
+        "short_title": {
+          "de": "Finanzielle Berichtigungen durch die Mitgliedstaaten",
+          "en": "Financial corrections by Member States"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "article": "144",
+        "short_title": {
+          "de": "Kriterien für finanzielle Berichtigungen",
+          "en": "Criteria for financial corrections"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      },
+      {
+        "act": "Verordnung (EU) Nr. 1303/2013",
+        "annex": "XIII",
+        "short_title": {
+          "de": "KRITERIEN FÜR DIE BENENNUNG DER VERWALTUNGSBEHÖRDE UND DER BESCHEINIGUNGSBEHÖRDE",
+          "en": "DESIGNATION CRITERIA FOR THE MANAGING AUTHORITY AND THE CERTIFYING AUTHORITY"
+        },
+        "celex": "32013R1303",
+        "eli": "http://data.europa.eu/eli/reg/2013/1303/oj"
+      }
+    ]
+  }
+}

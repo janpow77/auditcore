@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_price_analysis",
+  "version": "0.1.2",
+  "contract": "auditcore_price_analysis.contract/1",
+  "classification": "EXTRACTED_AND_CORRECTED_FROM_CHARACTERIZED_SOURCE",
+  "sources": [
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+      "github_head_verified": "2026-09-23",
+      "files": [
+        {
+          "path": "backend/app/services/calculator.py",
+          "git_blob": "1d40c9ef739e8933b4ec8195226f5eef117389ba",
+          "symbols": [
+            "calculate_nahwaerme",
+            "calculate_wasser",
+            "_calculate_staffel",
+            "calculate_delta",
+            "determine_compliance",
+            "calculate_cluster_statistics",
+            "UMLAGEN_STICHTAG"
+          ]
+        },
+        {
+          "path": "backend/app/services/preisauswahl.py",
+          "git_blob": "89b5cec43867794918cfcb851878eb6dfddf1abc",
+          "symbols": [
+            "waehle_preis_deterministisch",
+            "waehle_wasser_preis"
+          ]
+        }
+      ],
+      "cases": 274
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Tarifdaten der Versorger sind nicht enthalten (synthetische Werte)."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/regulierung_calculator_observed.json",
+    "tool": "tools/capture_regulierung_calculator.py",
+    "cases": 274,
+    "legacy_replay": "exact"
+  },
+  "profiles": [
+    "regulierung.hpp.nahwaerme@2026.09.1",
+    "regulierung.hpp.wasser@2026.09.1",
+    "regulierung.hpp.vergleich@2026.09.1",
+    "regulierung.hpp.nahwaerme@2026.09.2",
+    "regulierung.hpp.wasser@2026.09.2",
+    "regulierung.hpp.vergleich@2026.09.2"
+  ],
+  "recommended_profiles": [
+    "regulierung.hpp.nahwaerme@2026.09.2",
+    "regulierung.hpp.wasser@2026.09.2",
+    "regulierung.hpp.vergleich@2026.09.2"
+  ],
+  "decisions": {
+    "date": "2026-09-23",
+    "quote": "alle empfehlungen … p3 180",
+    "decided": [
+      "PA-H01",
+      "PA-H02",
+      "PA-H03",
+      "PA-H04"
+    ],
+    "review_required": [
+      "Umlagenstichtag 01.07.2025 (Rechtsgrundlage)"
+    ]
+  }
+}

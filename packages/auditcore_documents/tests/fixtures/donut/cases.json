@@ -1,0 +1,270 @@
+{
+  "generator": {
+    "auditcore_invoicesynth": "0.1.0",
+    "auditcore_invoicegenerator": "0.2.0",
+    "auditcore_dummygenerator": "0.1.0"
+  },
+  "config_seed": 2026,
+  "dataset_hash": "eb1b0025b6885bcf3f6de11625e9b021296531fd18781f8e911dd9f5dd18dc7b",
+  "fonts": [
+    {
+      "family": "DejaVu Sans",
+      "style": "regular",
+      "file": "DejaVuSans.ttf",
+      "sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+      "license": "Bitstream-Vera",
+      "debian_packages": "fonts-dejavu-core"
+    },
+    {
+      "family": "DejaVu Sans",
+      "style": "bold",
+      "file": "DejaVuSans-Bold.ttf",
+      "sha256": "5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895",
+      "license": "Bitstream-Vera",
+      "debian_packages": "fonts-dejavu-core"
+    },
+    {
+      "family": "DejaVu Serif",
+      "style": "regular",
+      "file": "DejaVuSerif.ttf",
+      "sha256": "8f2c103bfa3fd5de71f1b92b18f21906b5a26871fb7e19a9a4c9af539c3cc7ab",
+      "license": "Bitstream-Vera",
+      "debian_packages": "fonts-dejavu-core"
+    },
+    {
+      "family": "DejaVu Serif",
+      "style": "bold",
+      "file": "DejaVuSerif-Bold.ttf",
+      "sha256": "847b33e13925f19ff87e4d934d6b3cf7cac35ce16424f6f670e40c2f377cf2df",
+      "license": "Bitstream-Vera",
+      "debian_packages": "fonts-dejavu-core"
+    }
+  ],
+  "cases": [
+    {
+      "file_name": "train-000032.png",
+      "gt_parse": {
+        "document_type": "invoice",
+        "invoice_number": "RG-2025-0028",
+        "invoice_date": "June 11, 2026",
+        "supply_date": "May 12, 2026",
+        "due_date": "June 18, 2026",
+        "supplier": {
+          "name": "WebTech AG",
+          "vat_id": "DE407133546"
+        },
+        "currency": "EUR",
+        "net_amount": "EUR 11,207.04",
+        "total": "EUR 11,207.04",
+        "iban": "DE63 9002 0020 2990 6728 89",
+        "bic": "SYNTDEM2XXX"
+      },
+      "meta": {
+        "sample_id": "train-000032",
+        "page": 1,
+        "pages": 1,
+        "layout": "kopf_links",
+        "font_family": "DejaVu Sans",
+        "dpi": 72,
+        "language": "en",
+        "country": "DE",
+        "vat_scheme": "de_reverse_charge",
+        "kind": "invoice",
+        "errors": [],
+        "augmented": false,
+        "correct_total": "11207.04",
+        "synthetic": true
+      }
+    },
+    {
+      "file_name": "train-000003.png",
+      "gt_parse": {
+        "document_type": "invoice",
+        "invoice_number": "AR-2026-0001",
+        "invoice_date": "1.3.26",
+        "supply_date": "6.2.26",
+        "due_date": "31.3.26",
+        "supplier": {
+          "name": "IT-Service GmbH",
+          "vat_id": "ATU14426968"
+        },
+        "currency": "EUR",
+        "net_amount": "760,13 €",
+        "vat_lines": [
+          {
+            "rate": "20,0 %",
+            "base": "554,15 €",
+            "amount": "110,83 €"
+          },
+          {
+            "rate": "10,0 %",
+            "base": "205,98 €",
+            "amount": "20,60 €"
+          }
+        ],
+        "total": "891,56 €",
+        "iban": "AT199903032939033813",
+        "bic": "SYNTATG3XXX"
+      },
+      "meta": {
+        "sample_id": "train-000003",
+        "page": 1,
+        "pages": 1,
+        "layout": "summen_unten",
+        "font_family": "DejaVu Sans",
+        "dpi": 72,
+        "language": "de",
+        "country": "AT",
+        "vat_scheme": "at_mixed",
+        "kind": "invoice",
+        "errors": [],
+        "augmented": false,
+        "correct_total": "891.56",
+        "synthetic": true
+      }
+    },
+    {
+      "file_name": "train-000006.png",
+      "gt_parse": {
+        "document_type": "invoice",
+        "invoice_number": "RE/2025/1808-C",
+        "invoice_date": "2025-08-06",
+        "supply_date": "2025-08-03",
+        "due_date": "2025-08-13",
+        "supplier": {
+          "name": "IT-Service GmbH",
+          "vat_id": "DE583825112"
+        },
+        "currency": "EUR",
+        "total": "EUR 1 835,24",
+        "iban": "DE60900300308887217040",
+        "bic": "SYNTDEF3XXX"
+      },
+      "meta": {
+        "sample_id": "train-000006",
+        "page": 1,
+        "pages": 1,
+        "layout": "kleinunternehmer",
+        "font_family": "DejaVu Sans",
+        "dpi": 72,
+        "language": "de",
+        "country": "DE",
+        "vat_scheme": "de_kleinunternehmer",
+        "kind": "invoice",
+        "errors": [],
+        "augmented": false,
+        "correct_total": "1835.24",
+        "synthetic": true
+      }
+    },
+    {
+      "file_name": "train-000008-p1.png",
+      "gt_parse": {
+        "document_type": "invoice",
+        "invoice_number": "RE906095",
+        "invoice_date": "2025-12-15",
+        "supply_date": "2025-12-02",
+        "due_date": "2026-01-14",
+        "supplier": {
+          "name": "CloudSys AG"
+        },
+        "currency": "EUR"
+      },
+      "meta": {
+        "sample_id": "train-000008",
+        "page": 1,
+        "pages": 2,
+        "layout": "mehrseitig",
+        "font_family": "DejaVu Sans",
+        "dpi": 72,
+        "language": "en",
+        "country": "DE",
+        "vat_scheme": "de_19",
+        "kind": "invoice",
+        "errors": [],
+        "augmented": false,
+        "correct_total": "4296.92",
+        "synthetic": true
+      }
+    },
+    {
+      "file_name": "train-000008-p2.png",
+      "gt_parse": {
+        "invoice_number": "RE906095",
+        "supplier": {
+          "name": "CloudSys AG",
+          "vat_id": "DE611850950"
+        },
+        "currency": "EUR",
+        "net_amount": "3,610.86 €",
+        "vat_lines": [
+          {
+            "rate": "19 %",
+            "amount": "686.06 €"
+          }
+        ],
+        "total": "4,296.92 €",
+        "iban": "DE31 9004 0040 5564 9532 45",
+        "bic": "SYNTDEF4XXX"
+      },
+      "meta": {
+        "sample_id": "train-000008",
+        "page": 2,
+        "pages": 2,
+        "layout": "mehrseitig",
+        "font_family": "DejaVu Sans",
+        "dpi": 72,
+        "language": "en",
+        "country": "DE",
+        "vat_scheme": "de_19",
+        "kind": "invoice",
+        "errors": [],
+        "augmented": false,
+        "correct_total": "4296.92",
+        "synthetic": true
+      }
+    },
+    {
+      "file_name": "test_layout_holdout-000001.png",
+      "gt_parse": {
+        "document_type": "invoice",
+        "invoice_number": "INV-2025-0033",
+        "invoice_date": "2025-11-12",
+        "supply_date": "2025-10-16",
+        "due_date": "2025-12-27",
+        "supplier": {
+          "name": "AppFactory GmbH",
+          "vat_id": "DE793599552"
+        },
+        "currency": "EUR",
+        "net_amount": "EUR 23.640,62",
+        "vat_lines": [
+          {
+            "rate": "7,0 %",
+            "base": "EUR 23.640,62",
+            "amount": "EUR 1.654,84"
+          }
+        ],
+        "total": "EUR 25.295,46",
+        "iban": "DE25 9003 0030 5810 4216 11",
+        "bic": "SYNTDEF3XXX"
+      },
+      "meta": {
+        "sample_id": "test_layout_holdout-000001",
+        "page": 1,
+        "pages": 1,
+        "layout": "holdout_briefkopf",
+        "font_family": "DejaVu Serif",
+        "dpi": 72,
+        "language": "de",
+        "country": "DE",
+        "vat_scheme": "de_7",
+        "kind": "invoice",
+        "errors": [],
+        "augmented": false,
+        "correct_total": "25295.46",
+        "synthetic": true
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-auditcore_dataprotection 0.1.0 — source attribution and authorization
+auditcore_dataprotection 0.4.2 — source attribution and authorization
 
 Calculation, catalogue texts, workflow rules and report layouts derive from:
 Repository: janpow77/regulierung (private)
@@ -23,6 +23,15 @@ Not included: backend/app/data/dsgvo_vorbelegung.json, which the source marks
 as based on a BfDI template under CC-BY-SA 4.0. Legal references cite public
 norms (DSGVO, HDSIG, KI-VO), EDSA WP 248 rev.01, the DSK list under
 Art. 35 Abs. 4 DSGVO and the Standard-Datenschutzmodell by name only.
+
+The neutral library profiles auditcore.dsgvo and auditcore.hdsig_ji,
+version 2026.10.1 (schema 2), derive from the regulierung profiles and follow the structure of
+the EDPB "Template for Data Protection Impact Assessment" 2026, version 1.0,
+with explainer (adopted 10 March 2026 for public consultation). The template
+is cited by name, version and section; no template text is reproduced. EDPB
+documents may be reused with acknowledgement of the source. WP 243 rev.01,
+DSK-Kurzpapier Nr. 18 and the Standard-Datenschutzmodell 3.1 are cited by name
+only.
 
 The rule profiles are characterized software behavior, not legal advice or a
 confirmed interpretation. Assessment results are proposals for a human

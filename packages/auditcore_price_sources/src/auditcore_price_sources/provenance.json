@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_price_sources",
+  "version": "0.1.1",
+  "contract": "auditcore_price_sources.contract/1",
+  "harvest_contract": "auditcore_harvest.contract/1",
+  "classification": "NEW_ADAPTERS_FROM_CHARACTERIZED_CONNECTORS; DESTATIS_ADAPTER_MOVED",
+  "sources": [
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "853676d2b1ab792395d63c62c9f96d5edcca8c2d",
+      "github_head_verified": "2026-09-23",
+      "files": [
+        {
+          "git_blob": "cf67c20cb1fb8d76108258c0f776ebf3d120d9a3",
+          "path": "backend/app/services/external_apis/__init__.py"
+        },
+        {
+          "git_blob": "dc180b95bae211e8cf6add23bdb3c01d6805200a",
+          "path": "backend/app/services/external_apis/base.py"
+        },
+        {
+          "git_blob": "3c25597a220a3826e45462bd371f0cb8e62edc82",
+          "path": "backend/app/services/external_apis/harvest_kern.py"
+        },
+        {
+          "git_blob": "5cc335bac17c31d8c2fe79e058753f3f864d6dc7",
+          "path": "backend/app/services/external_apis/bundesbank.py"
+        },
+        {
+          "git_blob": "f3463f6cad07e9d31a58f17468f90dcdf645b5c4",
+          "path": "backend/app/services/external_apis/destatis_genesis.py"
+        },
+        {
+          "git_blob": "2b457beefc576d70124695b57fb98241a5694031",
+          "path": "backend/app/services/external_apis/eia_brent.py"
+        },
+        {
+          "git_blob": "f21bbe053dffb81f4346e8fda519bbbd141835ee",
+          "path": "backend/app/services/external_apis/eu_oil_bulletin.py"
+        },
+        {
+          "git_blob": "fd615381e0a278b19f47110c50284994715886e6",
+          "path": "backend/app/services/external_apis/mtsk.py"
+        },
+        {
+          "git_blob": "d687fbdddb520cdf2cb962edf14aa0fb244d5c0f",
+          "path": "backend/app/services/external_apis/overpass.py"
+        },
+        {
+          "git_blob": "ebd3472e8fdaef86f25d9d72e6fe897d20f9ddbe",
+          "path": "backend/app/services/external_apis/tankerkoenig.py"
+        },
+        {
+          "git_blob": "5777f1b3266106cfa9fb3bb3c860869f5a439776",
+          "path": "backend/app/api/admin/external_apis.py"
+        }
+      ],
+      "scenarios": 30
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore, keine Umlizenzierung der Quellrepositories; Daten- und Nutzungsrechte der Dienste separat (Katalog licence_access REVIEW_REQUIRED)."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/regulierung_connectors_observed.json",
+    "tool": "tools/capture_regulierung_connectors.py",
+    "scenarios": 30,
+    "payloads": "tests/fixtures/payloads (synthetisch)"
+  },
+  "catalog": {
+    "file": "src/auditcore_price_sources/catalog.json"
+  },
+  "live_smoke": {
+    "tool": "tools/live_smoke.py",
+    "date": "2026-09-23"
+  }
+}

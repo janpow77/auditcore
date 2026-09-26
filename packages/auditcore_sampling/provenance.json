@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_sampling",
+  "version": "0.2.1",
+  "sources": [
+    {
+      "repository": "janpow77/flowstat",
+      "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",
+      "path": "backend/app/services/sampling_service.py",
+      "git_blob": "c2423b1efab65f1eb1118b97f6eebe83348be706",
+      "symbols": [
+        "_calculate_mus_sample_size",
+        "_calculate_srs_sample_size",
+        "run_mus_standard",
+        "run_mus_conservative",
+        "run_mus_stratified",
+        "run_srs_standard",
+        "run_srs_stratified"
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "d8eefa426826bdecb67036774f3128ae05e7d0d0",
+      "path": "backend/app/modules/flowstat/services/sampling_service.py",
+      "git_blob": "2358a38fc9c4b0ff414018b54ed7bf31f4f422fe",
+      "symbols": [
+        "POISSON_RELIABILITY_FACTORS",
+        "Z_SCORES_TWO_SIDED",
+        "_calculate_mus_sample_size",
+        "_calculate_mus_sample_size_legacy",
+        "_calculate_srs_sample_size",
+        "_split_positive_for_mus",
+        "_dedupe_indices",
+        "run_mus_standard",
+        "run_mus_conservative"
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "source_repositories": [
+      {
+        "repository": "janpow77/flowstat",
+        "github_private": true,
+        "github_license": null
+      },
+      {
+        "repository": "janpow77/audit-portal",
+        "github_private": true,
+        "github_license": "NOASSERTION (proprietäre LICENSE des Rechteinhabers)"
+      }
+    ],
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die bibliotheken sollen mit sein, die anderen repos nicht. die bibliotheken kommen ja nach auditcore",
+      "limitation": "MIT gilt für den in auditcore extrahierten Bibliothekscode; die Quell-Repositories werden nicht umlizenziert."
+    }
+  },
+  "characterization": {
+    "fixture": "tests/fixtures/sampling_legacy_observed.json.gz",
+    "tool": "tools/capture_sampling_legacy.py",
+    "cases": 8883,
+    "environment": {
+      "numpy": "1.26.2",
+      "pandas": "2.1.3",
+      "scipy": "1.11.4"
+    },
+    "classification": "OBSERVED",
+    "method_validation": "NOT_PERFORMED"
+  },
+  "not_extracted": [
+    "zwei Perioden, Differenzschätzung, Fehlerprojektion, nicht-statistische Verfahren (weitere Characterization nötig)",
+    "NumPy-Zufallsziehung (bleibt beim Consumer)"
+  ],
+  "human_decisions": [
+    {
+      "topic": "Wahl der MUS-Methode",
+      "status": "DECIDED",
+      "decided_on": "2026-09-23",
+      "decided_by": "Nutzer/Rechteinhaber (janpow77)",
+      "statement": "mus 30",
+      "result": "portal.mus_poisson maßgeblich; flowstat.mus_z_attribute SUPERSEDED (bleibt für Replay)"
+    }
+  ],
+  "behavior_changes": "docs/behavior-changes.md",
+  "own_additions": [
+    {
+      "module": "auditcore_sampling.web",
+      "added_in": "0.2.0",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "REST-Vertrag (docs/ui/sampling-rest.md), Herleitung, reproduzierbare Auswahl mit Seed, Export; Starlette-Routen und optionaler FastAPI-Router (Extra web). Keine neue Stichprobenmethode."
+    }
+  ]
+}

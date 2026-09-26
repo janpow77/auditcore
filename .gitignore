@@ -13,3 +13,11 @@ dist/
 .env
 *.deb
 graphify-out/
+
+# JavaScript-Pakete (packages-js)
+node_modules/
+coverage/
+*.tsbuildinfo
+
+# Manifeste der Testrepos für auditcore-helpers
+!tests/fixtures/helpers/*/.auditcore/

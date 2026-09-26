@@ -1,0 +1,24 @@
+auditcore_llm_client 0.1.0 — attribution and authorization
+
+New implementation in auditcore. The behaviour was taken from the executed
+ai-router clients of janpow77/audit_designer (commit
+ccd65245182982af3ef885a7a6d43583f4f72cbb, backend/app/utils/ai_router_client.py),
+janpow77/flowinvoice (commit fb2d18568d2eaf64574d131ceae51a936b9aac02,
+backend/app/clients/ai_router_client.py, backend/app/llm/ollama.py),
+janpow77/audit-portal (commit d8eefa426826bdecb67036774f3128ae05e7d0d0,
+backend/app/clients/ai_router_client.py) and janpow77/cockpit (commit
+df203d4c33e786eb8a8ad3fe53b3b7eb9241d406, src/cockpit/services/ai_router_client.py).
+Routes and request/response contracts were read from janpow77/ai-router (commit
+426cd78e86df9f822452af035b8d58a19f7aa820) and janpow77/flow-agent (commit
+873636a4868f554b8e603e4b7c4c897909762b9a). Timeouts, health thresholds, route
+fallbacks, field mappings and redaction patterns were adopted; the code was
+rewritten. Blob SHAs of every source file are listed in provenance.json.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore". On
+2026-09-25 the rights holder asked to build this library from the app clients.
+Status: USER_AUTHORIZED_MIT for this library only; the source repositories
+keep their own licensing.
+
+No third-party code is included. The optional extra "http" uses httpx
+(BSD-3-Clause) as an ordinary dependency.
