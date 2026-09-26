@@ -172,7 +172,7 @@ unbeabsichtigte globale Katalogänderungen.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_dummygenerator==0.1.1`. Optional
+Python ≥ 3.11. Pflicht: `auditcore_dummygenerator==0.1.2`. Optional
 `reportlab>=4.5.1,<6` über `[pdf]` – eine getestete Versionslinie, keine
 pauschale CVE-Grenze; Debian Bookworm führt die gepatchte Linie
 `3.6.12-1+deb12u1` (Fix für CVE-2023-33733 laut
