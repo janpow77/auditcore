@@ -5,7 +5,7 @@
   "detail_template": null,
   "kind": "points_stages",
   "points_override": "forbidden",
-  "source_version": "WIBANK-RBVK V1.21 (Profildatei)",
+  "source_version": "RBVK Zwischengeschaltete Stelle V1.21 (Code)",
   "stages": [
    {
     "min": 19,
@@ -17,12 +17,14 @@
    }
   ]
  },
- "id": "flowinvoice.rbvk_wibank",
+ "id": "flowinvoice.rbvk_intermediate_body",
  "kind": "points_score",
- "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten der Verwaltungskontrolle (VerwK); Punkte und Stufen ausschließlich dieses Profils, keine Vereinheitlichung mit anderen Scores. Nach Profildatei RBVK WIBANK V1.21 korrigiert (Entscheidung K11 vom 23.09.2026).",
+ "legal_status": "Aus der Quellanwendung übernommenes, charakterisiertes Softwareverhalten der Verwaltungskontrolle (VerwK); Punkte und Stufen ausschließlich dieses Profils, keine Vereinheitlichung mit anderen Scores. Bildet das Codeverhalten ab, nicht die RBVK-Profildatei der Anwendung (V1.21), die die Quelle nicht liest.",
  "open_decisions": [
-  "Eingaben: offene_auflagen_anzahl (Zahl), externe_kuerzung (Prüfungsfeststellungen KOM/ERH/PB), vorherige_verwk_quote (eigene frühere Verwaltungskontrollen), vorherige_kuerzungsgruende (Codes wie '1.3', '13.1', auch aus eigenen früheren Mittelabrufen – prior_familie korrekt setzen). Aufbereitung beim Consumer.",
-  "K8/K9 und K17/K18 wie im Code (1,5–5 Mio bzw. 25–50 % ohne Überlappung)."
+  "Code weicht von der RBVK-Profildatei ab: K10 +1 statt score_max 2; 13.* zählt als Beihilfe (K21) statt Sonstige (K22); K12 und K16 greifen praktisch gleich.",
+  "K22 greift für jeden Begünstigten mit früherem Mittelabruf (Familie '').",
+  "Merkmalsaufbereitung (_normalise_sources), Vorhistorie (CSV, MA-Versionen) und 'nicht abbildbar' bleiben in der Anwendung; Eingaben sind aufbereitete Merkmale.",
+  "Stufengrenzen 8/19 (Anwendungsparameter für Teil- und Vollprüfung); andere Werte = eigene Profilversion."
  ],
  "output": {},
  "rules": [
@@ -237,39 +239,31 @@
   },
   {
    "code": "K10",
-   "kind": "number_range",
-   "label": "Bewilligte offene Auflagen (1. Auflage)",
+   "kind": "truthy_all",
+   "label": "Offene Auflagen",
    "origin": {
-    "lines": "nr 10",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "246",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe, _bool"
    },
    "params": {
-    "field": "offene_auflagen_anzahl",
-    "lower": 1,
-    "lower_inclusive": true,
-    "missing_value": 0,
-    "upper": null,
-    "upper_inclusive": false
-   },
-   "points": 1
-  },
-  {
-   "code": "K10b",
-   "kind": "number_range",
-   "label": "Bewilligte offene Auflagen (2. Auflage, score_max 2)",
-   "origin": {
-    "lines": "nr 10",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
-   },
-   "params": {
-    "field": "offene_auflagen_anzahl",
-    "lower": 2,
-    "lower_inclusive": true,
-    "missing_value": 0,
-    "upper": null,
-    "upper_inclusive": false
+    "fields": [
+     "offene_auflagen"
+    ],
+    "truthy_values": [
+     "1",
+     "true",
+     "ja",
+     "j",
+     "x",
+     "yes",
+     "y",
+     "eu",
+     "eu-weit",
+     "europaweit",
+     "hochschule",
+     "forschung"
+    ]
    },
    "points": 1
   },
@@ -306,14 +300,14 @@
   {
    "code": "K12",
    "kind": "number_range",
-   "label": "Kürzung aufgrund von Feststellungen der KOM, Rechnungshöfe oder Prüfbehörde",
+   "label": "Frühere Kürzung > 0",
    "origin": {
-    "lines": "nr 12",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "224, 248",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "externe_kuerzung",
+    "field": "prior_k",
     "lower": 0,
     "lower_inclusive": false,
     "missing_value": 0,
@@ -385,14 +379,14 @@
   {
    "code": "K16",
    "kind": "number_range",
-   "label": "Schlechte Ergebnisse vorheriger Verwaltungskontrollen",
+   "label": "Frühere Quote > 0",
    "origin": {
-    "lines": "nr 16",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "225, 251",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_verwk_quote",
+    "field": "prior_q",
     "lower": 0,
     "lower_inclusive": false,
     "missing_value": 0,
@@ -404,14 +398,14 @@
   {
    "code": "K17",
    "kind": "number_range",
-   "label": "Historische Differenz über 25 Prozent",
+   "label": "Frühere Quote 25–50",
    "origin": {
-    "lines": "nr 17",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "252",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_verwk_quote",
+    "field": "prior_q",
     "lower": 25,
     "lower_inclusive": false,
     "missing_value": 0,
@@ -423,14 +417,14 @@
   {
    "code": "K18",
    "kind": "number_range",
-   "label": "Historische Differenz über 50 Prozent",
+   "label": "Frühere Quote > 50",
    "origin": {
-    "lines": "nr 18",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "253",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_verwk_quote",
+    "field": "prior_q",
     "lower": 50,
     "lower_inclusive": false,
     "missing_value": 0,
@@ -442,14 +436,14 @@
   {
    "code": "K19",
    "kind": "number_range",
-   "label": "Historische Differenz unter 5 Prozent",
+   "label": "Frühere Quote unter 5",
    "origin": {
-    "lines": "nr 19",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "254",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_verwk_quote",
+    "field": "prior_q",
     "lower": 0,
     "lower_inclusive": false,
     "missing_value": 0,
@@ -461,40 +455,18 @@
   {
    "code": "K20",
    "kind": "set_overlap",
-   "label": "Vorherige Kürzungsgründe 1.1 bis 1.24",
+   "label": "Frühere Familie Vergabe",
    "origin": {
-    "lines": "nr 20",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "255",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_kuerzungsgruende",
+    "field": "prior_families",
     "mode": "any",
     "values": [
-     "1.1",
-     "1.2",
-     "1.3",
-     "1.4",
-     "1.5",
-     "1.6",
-     "1.7",
-     "1.8",
-     "1.9",
-     "1.10",
-     "1.11",
-     "1.12",
-     "1.13",
-     "1.14",
-     "1.15",
-     "1.16",
-     "1.17",
-     "1.18",
-     "1.19",
-     "1.20",
-     "1.21",
-     "1.22",
-     "1.23",
-     "1.24"
+     "Vergaberecht",
+     "Vergabe"
     ]
    },
    "points": 1
@@ -502,18 +474,18 @@
   {
    "code": "K21",
    "kind": "set_overlap",
-   "label": "Vorherige Kürzungsgründe 5.1 oder 5.2",
+   "label": "Frühere Familie Beihilfe",
    "origin": {
-    "lines": "nr 21",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "256",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_kuerzungsgruende",
+    "field": "prior_families",
     "mode": "any",
     "values": [
-     "5.1",
-     "5.2"
+     "Beihilferecht",
+     "Beihilfe"
     ]
    },
    "points": 1
@@ -521,21 +493,21 @@
   {
    "code": "K22",
    "kind": "set_overlap",
-   "label": "Vorherige Kürzungsgründe 8.1–8.3, 8.8 oder 13.1",
+   "label": "Sonstige frühere Familie",
+   "note": "Eigene frühere Mittelabrufe tragen die Familie '' (prior_familie wird nie gesetzt) und lösen K22 aus (HUMAN_DECISION_REQUIRED).",
    "origin": {
-    "lines": "nr 22",
-    "path": "backend/app/verwk/data/rbvk_wibank.json",
-    "symbol": "scoring.kriterien"
+    "lines": "257",
+    "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
+    "symbol": "score_mittelabrufe"
    },
    "params": {
-    "field": "vorherige_kuerzungsgruende",
-    "mode": "any",
+    "field": "prior_families",
+    "mode": "outside",
     "values": [
-     "8.1",
-     "8.2",
-     "8.3",
-     "8.8",
-     "13.1"
+     "Vergaberecht",
+     "Vergabe",
+     "Beihilferecht",
+     "Beihilfe"
     ]
    },
    "points": 1
@@ -680,35 +652,17 @@
   },
   "characterization": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
   "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
-  "decision": {
-   "decided_on": "2026-09-23",
-   "decisions": [
-    "K11"
-   ],
-   "effect": "K10 je offene Auflage bis 2 Punkte, K12 externe Prüfungsfeststellungen getrennt von K16 Verwaltungskontrolle, K20–K22 nach Kürzungsgrund-Codes.",
-   "quote": "alle empfehlungen"
-  },
-  "derived_from": {
-   "profile": "flowinvoice.rbvk_wibank",
-   "version": "fb2d18568d2e"
-  },
   "git_blob": "24e04c04d8d98ae033c5d78508a29d4c900be4d1",
   "path": "backend/app/verwk/pipeline/rbvk_wibank_scorer.py",
-  "profile_file": {
-   "git_blob": "f1434e6eeaa6b257cc3b6ed11623cb118af3ffd9",
-   "path": "backend/app/verwk/data/rbvk_wibank.json",
-   "stand": "2025-01-07",
-   "version": "1.21"
-  },
   "repository": "janpow77/flowinvoice",
   "rights": "USER_AUTHORIZED_MIT",
   "symbols": [
    "score_mittelabrufe"
   ]
  },
- "status": "APPROVED",
+ "status": "LEGACY_CHARACTERIZED",
  "summary": {
   "format": "none"
  },
- "version": "2026.09.2"
+ "version": "fb2d18568d2e"
 }

@@ -1474,7 +1474,10 @@ def capture_designer(root: Path, fixtures: Path, rec: Recorder) -> dict[str, Any
         },
         "iso2_to_iso3": dm._ISO2_ZU_ISO3,
         "hash_fields_beneficiaries": list(bn._HASH_FELDER),
-        "authority_rules": [[target, list(patterns)] for target, patterns in dz.REGELN],
+        "authority_rules": [
+            [target, [p for p in patterns if not _names_institution(p)]]
+            for target, patterns in dz.REGELN
+        ],
         "sa_legal_suffixes": sorted(sa._RECHTSFORMEN),
         "sa_filler_words": sorted(sa._FUELLWOERTER),
         "sa_transliteration": {chr(k): v for k, v in sa._UMSCHRIFT.items()},
@@ -1482,6 +1485,24 @@ def capture_designer(root: Path, fixtures: Path, rec: Recorder) -> dict[str, Any
         "requests": request_log,
         "harvest": harvest_steps,
     }
+
+
+NEUTRALIZED = (
+    "Erkennungsmuster mit Institutsnamen (quality/institutsnamen-denylist.txt) aus "
+    "authority_rules entfernt; sonst unverändert beobachtet."
+)
+
+
+def _names_institution(text: str) -> bool:
+    """True if ``text`` contains a name of the repository denylist."""
+    import importlib.util
+
+    script = Path(__file__).resolve().parents[3] / "scripts" / "check_institution_names.py"
+    spec = importlib.util.spec_from_file_location("check_institution_names", script)
+    assert spec is not None and spec.loader is not None
+    module = sys.modules[spec.name] = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return bool(module.name_pattern(module.load_denylist()).search(text))
 
 
 def main() -> None:
@@ -1565,6 +1586,7 @@ def main() -> None:
         },
         "constants": jsonable(constants),
         "cases": rec.cases,
+        **({"neutralized": NEUTRALIZED} if args.variant == "designer" else {}),
     }
     args.fixtures.mkdir(parents=True, exist_ok=True)
     out = args.fixtures / f"{args.variant}_observed.json"

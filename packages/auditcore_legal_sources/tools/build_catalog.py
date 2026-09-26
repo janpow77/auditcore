@@ -29,7 +29,7 @@ PROFILE_SCHEMA = {
     "properties": {
         "profile": {
             "type": "object",
-            "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1",
+            "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.2",
         },
     },
 }
@@ -75,7 +75,7 @@ def supported(
         "target_package": "auditcore_legal_sources",
         "origins": origins,
         "consumers": [CONSUMER_ADB, CONSUMER_DES],
-        "profile": ["auditdatabase.esi@2026.09.1", "audit_designer.vp_ai@2026.09.1"],
+        "profile": ["auditdatabase.esi@2026.09.2", "audit_designer.vp_ai@2026.09.2"],
         "auth": auth,
         "licence_access": {"status": "REVIEW_REQUIRED", "note": licence},
         "config_schema": schema,
@@ -232,7 +232,7 @@ def main() -> None:
         )
     catalog = {
         "schema": "auditcore_harvest.catalog/1",
-        "version": "2026.09.1",
+        "version": "2026.09.2",
         "package": "auditcore_legal_sources",
         "sources": sources,
     }

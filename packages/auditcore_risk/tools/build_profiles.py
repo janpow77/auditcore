@@ -1131,7 +1131,7 @@ def _range(
 
 
 def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
-    """flowinvoice VerwK: WIBANK-RBVK points, ex-ante heuristic and ex-ante basis weights."""
+    """flowinvoice VerwK: RBVK points of the intermediate body, ex-ante heuristic and basis."""
     fx = json.loads((FIXTURES / "flowinvoice_verwk_scores_observed.json").read_text())
     commit = fx["source"]["commit"]
     files = fx["source"]["files"]
@@ -1255,14 +1255,14 @@ def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
         _truthy("K26", "Sachkosten", ["hat_sach"], 1, "261"),
         _range("K28", "Abrufanteil > 0,5", "abruf_anteil", 0.5, None, 2, {**wb, "lines": "262"}),
     ]
-    wibank = {
+    rbvk = {
         "schema": "auditcore_risk.profile/1",
-        "id": "flowinvoice.rbvk_wibank",
+        "id": "flowinvoice.rbvk_intermediate_body",
         "version": commit[:12],
         "kind": "points_score",
         "status": "LEGACY_CHARACTERIZED",
-        "legal_status": legal + " Bildet das Codeverhalten ab, nicht die Profildatei "
-        "rbvk_wibank.json (V1.21), die die Quelle nicht liest.",
+        "legal_status": legal + " Bildet das Codeverhalten ab, nicht die RBVK-Profildatei "
+        "der Anwendung (V1.21), die die Quelle nicht liest.",
         "source": src("rbvk_wibank_scorer.py", ["score_mittelabrufe"]),
         "rules": rules,
         "output": {},
@@ -1274,22 +1274,22 @@ def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
             "cap": None,
             "detail_template": None,
             "points_override": "forbidden",
-            "source_version": "WIBANK-RBVK V1.21 (Code)",
+            "source_version": "RBVK Zwischengeschaltete Stelle V1.21 (Code)",
         },
         "open_decisions": [
-            "Code weicht von rbvk_wibank.json ab: K10 +1 statt score_max 2; 13.* zählt als "
+            "Code weicht von der RBVK-Profildatei ab: K10 +1 statt score_max 2; 13.* zählt als "
             "Beihilfe (K21) statt Sonstige (K22); K12 und K16 greifen praktisch gleich.",
             "K22 greift für jeden Begünstigten mit früherem Mittelabruf (Familie '').",
             "Merkmalsaufbereitung (_normalise_sources), Vorhistorie (CSV, MA-Versionen) und "
             "'nicht abbildbar' bleiben in der Anwendung; Eingaben sind aufbereitete Merkmale.",
-            "Stufengrenzen 8/19 (Parameter wibank_score_teil_ab/voll_ab); andere Werte = eigene "
-            "Profilversion.",
+            "Stufengrenzen 8/19 (Anwendungsparameter für Teil- und Vollprüfung); andere Werte = "
+            "eigene Profilversion.",
         ],
     }
     ex = {"path": VK + "exante_score.py"}
     heur_origin = {**ex, "symbol": "heuristik_score"}
     heuristik = {
-        **{k: v for k, v in wibank.items() if k not in ("rules", "assessment", "open_decisions")},
+        **{k: v for k, v in rbvk.items() if k not in ("rules", "assessment", "open_decisions")},
         "id": "flowinvoice.exante_heuristik",
         "legal_status": legal + " Bisherige gesetzte Vergleichsheuristik (nur Validierung).",
         "source": src("exante_score.py", ["heuristik_score"]),
@@ -1430,7 +1430,7 @@ def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
     }
     feat = {**ex, "symbol": "_features, kalibriere_und_score"}
     basis = {
-        **{k: v for k, v in wibank.items() if k not in ("rules", "assessment", "open_decisions")},
+        **{k: v for k, v in rbvk.items() if k not in ("rules", "assessment", "open_decisions")},
         "id": "flowinvoice.exante_basis",
         "legal_status": legal + " Sieben ex-ante-Indikatoren mit den dokumentierten "
         "Basisgewichten (Fallback); kalibrierte Gewichte kann der Consumer ausdrücklich übergeben.",
@@ -1521,7 +1521,7 @@ def verwk_profiles() -> list[tuple[str, dict[str, Any]]]:
             "berechnet der Consumer.",
         ],
     }
-    return [(f"{d['id']}-{d['version']}.json", d) for d in (wibank, heuristik, basis)]
+    return [(f"{d['id']}-{d['version']}.json", d) for d in (rbvk, heuristik, basis)]
 
 
 DECIDED_ON = "2026-09-23"
@@ -1624,14 +1624,15 @@ def decided_profiles(
             )
     rc["open_decisions"] = ["Nicht aktiviert (K7): kein Laufzeit-Consumer vorgesehen."]
 
-    wb_legacy = built["flowinvoice.rbvk_wibank"]
+    wb_legacy = built["flowinvoice.rbvk_intermediate_body"]
     wb = clone(wb_legacy)
     wb.update(
         {
             "version": "2026.09.2",
             "status": "APPROVED",
-            "legal_status": wb_legacy["legal_status"].split(" Bildet")[0] + " Nach Profildatei "
-            "RBVK WIBANK V1.21 korrigiert (Entscheidung K11 vom 23.09.2026).",
+            "legal_status": wb_legacy["legal_status"].split(" Bildet")[0]
+            + " Nach RBVK-Profildatei "
+            "V1.21 der Zwischengeschalteten Stelle korrigiert (Entscheidung K11 vom 23.09.2026).",
         }
     )
     wb["source"]["derived_from"] = {"profile": wb_legacy["id"], "version": wb_legacy["version"]}
@@ -1753,7 +1754,7 @@ def decided_profiles(
     for rule in wb["rules"]:
         rules.extend(replaced.get(rule["code"], [rule]))
     wb["rules"] = rules
-    wb["assessment"]["source_version"] = "WIBANK-RBVK V1.21 (Profildatei)"
+    wb["assessment"]["source_version"] = "RBVK Zwischengeschaltete Stelle V1.21 (Profildatei)"
     wb["open_decisions"] = [
         "Eingaben: offene_auflagen_anzahl (Zahl), externe_kuerzung (Prüfungsfeststellungen "
         "KOM/ERH/PB), vorherige_verwk_quote (eigene frühere Verwaltungskontrollen), "

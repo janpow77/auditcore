@@ -13,7 +13,7 @@ from auditcore_funding_sources.errors import ProfileError
 
 def test_available_profiles() -> None:
     assert profiles.available_profiles() == (
-        ("designer.deminimis.authority_levels", "2026.09.1"),
+        ("designer.deminimis.authority_levels", "2026.09.2"),
         ("designer.deminimis.cumulation", "2026.09.1"),
         ("designer.state_aid", "2026.09.1"),
         ("flowworkshop.beneficiaries", "2026.09.1"),
@@ -32,7 +32,7 @@ def test_workshop_profile_equals_recorded_constants() -> None:
 
 def test_designer_profiles_equal_recorded_constants() -> None:
     constants = revive(load("designer")["constants"])
-    rules = profiles.load_profile("designer.deminimis.authority_levels")["rules"]
+    rules = profiles.load_profile("designer.deminimis.authority_levels", "2026.09.2")["rules"]
     assert rules == constants["authority_rules"]
     cumulation = profiles.load_profile("designer.deminimis.cumulation")
     assert cumulation["ceiling_eur"] == constants["ceiling_general"]

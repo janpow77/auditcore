@@ -1,7 +1,7 @@
 {
  "schema": "auditcore_funding_sources.authority_levels/1",
  "id": "designer.deminimis.authority_levels",
- "version": "2026.09.1",
+ "version": "2026.09.2",
  "status": "SOURCE_CHARACTERIZED",
  "source": {
   "repository": "janpow77/audit_designer",
@@ -196,7 +196,6 @@
     "\\(Hessen\\)",
     "\\[HE\\]",
     "Hessisch",
-    "\\bWIBank\\b",
     "Hessen",
     "Regierungspräsidium (Darmstadt|Gießen|Kassel)"
    ]

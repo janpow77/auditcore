@@ -128,10 +128,13 @@ engine.run(registry.create("funding.de_minimis_eaid"),
 
 Profile (versioniert, mit Fingerprint): `flowworkshop.beneficiaries`
 2026.09.1, `designer.state_aid` 2026.09.1,
-`designer.deminimis.authority_levels` 2026.09.1 und
+`designer.deminimis.authority_levels` 2026.09.2 und
 `designer.deminimis.cumulation` 2026.09.1 – letzteres `REVIEW_REQUIRED`,
 keine bestätigte Rechtslage (Höchstbetrag 300 000 EUR nur bei ausschließlich
 `GENERAL`, Fenster drei Kalenderjahre mit beiden Randtagen).
+`authority_levels` 2026.09.2 löst 2026.09.1 ab: Erkennungsmuster, die ein
+konkretes Institut nennen, sind entfallen; die Zuordnung zum Land erfolgt
+über Landesnamen und Landesbehörden.
 
 Wählbare Leseoptionen: `typing="legacy"` (pandas-Typinferenz wie das Original,
 PLZ `01067` wird `1067`) oder `"text"`; `header_detection="legacy"` oder

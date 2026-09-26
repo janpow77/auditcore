@@ -15,6 +15,9 @@ sys.path.insert(0, str(HERE / "tests"))
 from conftest import load, revive  # noqa: E402
 
 VERSION = "2026.09.1"
+#: 2026.09.2: detection patterns naming a concrete institution removed (see
+#: ``neutralized`` in ``tests/fixtures/designer_observed.json``).
+AUTHORITY_VERSION = "2026.09.2"
 
 
 def source(variant: str, data: dict[str, Any]) -> dict[str, Any]:
@@ -56,7 +59,7 @@ def main() -> None:
     authority = {
         "schema": "auditcore_funding_sources.authority_levels/1",
         "id": "designer.deminimis.authority_levels",
-        "version": VERSION,
+        "version": AUTHORITY_VERSION,
         "status": "SOURCE_CHARACTERIZED",
         "source": source("designer", designer),
         "rules": dconst["authority_rules"],
@@ -64,7 +67,7 @@ def main() -> None:
         "federal": "Bund",
         "undetermined": "unbestimmt",
     }
-    (target / f"designer.deminimis.authority_levels-{VERSION}.json").write_text(
+    (target / f"designer.deminimis.authority_levels-{AUTHORITY_VERSION}.json").write_text(
         json.dumps(authority, indent=1, ensure_ascii=False) + "\n"
     )
     cumulation = {

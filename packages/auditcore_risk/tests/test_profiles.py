@@ -10,7 +10,7 @@ import pytest
 from conftest import fixture
 
 from auditcore_risk import ProfileError, available_profiles, load_profile, profile_from_dict
-from auditcore_risk.profiles import fingerprint
+from auditcore_risk.profiles import DEPRECATED_ALIASES, fingerprint
 
 DATA = Path(__file__).parents[1] / "src" / "auditcore_risk" / "profile_data"
 LEGACY = ("riskanalysis.legacy", "b5c523bf7eaa")
@@ -19,7 +19,11 @@ FLOWSTAT = ("audit_designer.flowstat_belegliste", "1254591156d3")
 RISK_CHECKER = ("flowinvoice.risk_checker", "fb2d18568d2e")
 VERWK = [
     (p, "fb2d18568d2e")
-    for p in ("flowinvoice.rbvk_wibank", "flowinvoice.exante_basis", "flowinvoice.exante_heuristik")
+    for p in (
+        "flowinvoice.rbvk_intermediate_body",
+        "flowinvoice.exante_basis",
+        "flowinvoice.exante_heuristik",
+    )
 ]
 
 
@@ -31,7 +35,11 @@ def raw(profile_id: str, version: str) -> dict[str, Any]:
 def test_packaged_profiles_and_status() -> None:
     decided = [
         (p, "2026.09.2")
-        for p in ("riskanalysis.year_bound", "flowinvoice.risk_checker", "flowinvoice.rbvk_wibank")
+        for p in (
+            "riskanalysis.year_bound",
+            "flowinvoice.risk_checker",
+            "flowinvoice.rbvk_intermediate_body",
+        )
     ]
     decided.append(("riskanalysis.year_bound", "2026.09.3"))
     decided.append(("riskanalysis.year_bound", "2026.09.4"))
@@ -175,3 +183,13 @@ def test_lookup_requires_explicit_known_profile() -> None:
         load_profile(None, "1")  # type: ignore[arg-type]
     with pytest.raises(ProfileError):
         load_profile(*LEGACY).rule("RF99")
+
+
+def test_deprecated_alias_loads_the_canonical_profile() -> None:
+    assert DEPRECATED_ALIASES
+    for alias, canonical in DEPRECATED_ALIASES.items():
+        assert (alias, "2026.09.2") not in available_profiles()
+        with pytest.warns(DeprecationWarning, match=canonical):
+            profile = load_profile(alias, "2026.09.2")
+        assert profile.id == canonical
+        assert profile.fingerprint == load_profile(canonical, "2026.09.2").fingerprint

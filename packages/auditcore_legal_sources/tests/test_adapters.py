@@ -32,7 +32,7 @@ from auditcore_legal_sources.adapters import (
 )
 
 REPLAY = Path(__file__).parent / "fixtures" / "replay"
-PROFILE = {"id": "auditdatabase.esi", "version": "2026.09.1"}
+PROFILE = {"id": "auditdatabase.esi", "version": "2026.09.2"}
 DIP_KEY = {("legal.dip_bundestag", "api_key"): "fixture-key-nicht-echt"}
 
 

@@ -432,7 +432,6 @@
        "\\(Hessen\\)",
        "\\[HE\\]",
        "Hessisch",
-       "\\bWIBank\\b",
        "Hessen",
        "Regierungspräsidium (Darmstadt|Gießen|Kassel)"
       ]
@@ -13296,5 +13295,6 @@
     "message": "Das De-minimis-Register ist nicht erreichbar."
    }
   }
- ]
+ ],
+ "neutralized": "Erkennungsmuster mit Institutsnamen (quality/institutsnamen-denylist.txt) aus authority_rules entfernt; sonst unverändert beobachtet."
 }

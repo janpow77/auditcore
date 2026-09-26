@@ -12,6 +12,8 @@ from auditcore_common.profiles import load_packaged_profile, packaged_profile_id
 from .errors import ProfileError
 
 PROFILE_VERSION = "2026.09.1"
+#: ``designer.deminimis.authority_levels`` without institution-specific patterns.
+AUTHORITY_LEVELS_VERSION = "2026.09.2"
 _RESOURCES = "auditcore_funding_sources.data"
 
 

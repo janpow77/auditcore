@@ -1,6 +1,6 @@
 {
  "schema": "auditcore_legal_sources.profile/1",
- "version": "2026.09.1",
+ "version": "2026.09.2",
  "status": "SOURCE_CHARACTERIZED",
  "id": "auditdatabase.esi",
  "source": {
@@ -91,8 +91,8 @@
    "Landeshaushaltsordnung",
    "Förderperiode 2021-2027",
    "Förderperiode 2028-2034",
-   "WIBank",
-   "HELABA",
+   "Zwischengeschaltete Stelle",
+   "Landesförderinstitut",
    "Hessen",
    "Bundesland"
   ],

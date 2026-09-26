@@ -49,9 +49,9 @@ FILES = {
     BASE + "rbvk_wibank_scorer.py": "24e04c04d8d98ae033c5d78508a29d4c900be4d1",
     BASE + "exante_score.py": "1f05d3f7a00d65b17ba79c7812fa05b52f8bccba",
 }
-RA_WIBANK = "backend/app/pipeline/rbvk_wibank_scorer.py"
+RA_RBVK = "backend/app/pipeline/rbvk_wibank_scorer.py"
 RA_EXANTE = "backend/app/pipeline/exante_score.py"
-WIBANK_FIELDS = [
+RBVK_FIELDS = [
     "verbundvorhaben",
     "fpg",
     "hat_bau",
@@ -226,16 +226,16 @@ def main() -> None:
     for path, blob in FILES.items():
         if git_blob((checkout / path).read_bytes()) != blob:
             raise SystemExit(f"{path} does not match the pinned blob")
-    wibank = importlib.import_module("app.verwk.pipeline.rbvk_wibank_scorer")
+    rbvk = importlib.import_module("app.verwk.pipeline.rbvk_wibank_scorer")
     exante = importlib.import_module("app.verwk.pipeline.exante_score")
     settings = importlib.import_module("app.verwk.core.config").settings
-    wibank_rows: list[dict[str, Any]] = []
+    rbvk_rows: list[dict[str, Any]] = []
     exante_runs: list[dict[str, Any]] = []
     features: list[dict[str, Any]] = []
 
-    def on_wibank(loc: dict[str, Any]) -> None:
+    def on_rbvk(loc: dict[str, Any]) -> None:
         r = loc["r"]
-        record = {k: plain(r.get(k)) for k in WIBANK_FIELDS if k in r.index}
+        record = {k: plain(r.get(k)) for k in RBVK_FIELDS if k in r.index}
         record.update(
             {
                 "prior_k": plain(loc["prior_k"]),
@@ -244,7 +244,7 @@ def main() -> None:
                 "erstes_vorhaben": len(loc["vh"]) == 0,
             }
         )
-        wibank_rows.append(
+        rbvk_rows.append(
             {
                 "record": record,
                 "score": int(loc["score"]),
@@ -293,7 +293,7 @@ def main() -> None:
 
     tracer = Tracer(
         {
-            wibank.score_mittelabrufe: (line_of(wibank.score_mittelabrufe, "stage = "), on_wibank),
+            rbvk.score_mittelabrufe: (line_of(rbvk.score_mittelabrufe, "stage = "), on_rbvk),
             exante._features: (line_of(exante._features, "return f"), on_features),
             exante.kalibriere_und_score: (
                 line_of(exante.kalibriere_und_score, "yv = "),
@@ -321,7 +321,7 @@ def main() -> None:
             sys.settrace(tracer)
             try:
                 levels = build_levels(add_payee_columns(load_raw(), fuzzy=False))
-                wibank.score_mittelabrufe(levels["df_ma"], levels["df_belege"], {})
+                rbvk.score_mittelabrufe(levels["df_ma"], levels["df_belege"], {})
             finally:
                 sys.settrace(None)
             demo_runs.append({"seed": seed, "vorhaben": vorhaben})
@@ -329,7 +329,7 @@ def main() -> None:
         for ma, bel in synthetic_ma_frames(20260923, 60):
             sys.settrace(tracer)
             try:
-                wibank.score_mittelabrufe(ma, bel, {})
+                rbvk.score_mittelabrufe(ma, bel, {})
             finally:
                 sys.settrace(None)
     import numpy
@@ -341,7 +341,7 @@ def main() -> None:
         "source": {"repository": "janpow77/flowinvoice", "commit": COMMIT, "files": FILES},
         "also_present_in": {
             "janpow77/riskanalysis@b5c523b": {
-                RA_WIBANK: "6ebd3a2ce56db09228ea770fe681089dc0c4391f",
+                RA_RBVK: "6ebd3a2ce56db09228ea770fe681089dc0c4391f",
                 RA_EXANTE: "bc1725b5fdbca689275e9890e707eb4d90953023",
                 "difference": "Importpfade/Closure bzw. eine ungenutzte Zeile; fachlich gleich",
             }
@@ -353,14 +353,14 @@ def main() -> None:
             "statsmodels": statsmodels.__version__,
         },
         "demo_runs": demo_runs,
-        "wibank": wibank_rows,
+        "rbvk": rbvk_rows,
         "exante_features": features,
         "exante": exante_runs,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(document, ensure_ascii=False) + "\n")
     print(
-        f"{len(wibank_rows)} WIBANK rows, {len(features)} ex-ante feature rows, "
+        f"{len(rbvk_rows)} RBVK rows, {len(features)} ex-ante feature rows, "
         f"{len(exante_runs)} calibration runs -> {args.output}"
     )
 

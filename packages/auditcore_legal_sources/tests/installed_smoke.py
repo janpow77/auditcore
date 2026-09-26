@@ -25,10 +25,10 @@ def main() -> None:
     assert runtime == ["auditcore_common==0.2.0", "auditcore_harvest==0.1.3"], runtime
     assert find_spec("auditcore") is None
     assert available_profiles() == (
-        ("audit_designer.vp_ai", "2026.09.1"),
-        ("auditdatabase.esi", "2026.09.1"),
+        ("audit_designer.vp_ai", "2026.09.2"),
+        ("auditdatabase.esi", "2026.09.2"),
     )
-    profile = load_profile("auditdatabase.esi", "2026.09.1")
+    profile = load_profile("auditdatabase.esi", "2026.09.2")
     item = {
         "id": "1",
         "titel": "EFRE-Drucksache",

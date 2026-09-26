@@ -118,8 +118,8 @@
    "Landeshaushaltsordnung",
    "Förderperiode 2021-2027",
    "Förderperiode 2028-2034",
-   "WIBank",
-   "HELABA",
+   "Zwischengeschaltete Stelle",
+   "Landesförderinstitut",
    "Hessen",
    "Bundesland"
   ],
@@ -408,8 +408,8 @@
    "Landeshaushaltsordnung",
    "Förderperiode 2021-2027",
    "Förderperiode 2028-2034",
-   "WIBank",
-   "HELABA",
+   "Zwischengeschaltete Stelle",
+   "Landesförderinstitut",
    "Hessen",
    "Bundesland"
   ],
@@ -4123,5 +4123,6 @@
    },
    "exception": null
   }
- ]
+ ],
+ "neutralized": "Institutsnamen der Quelle durch neutrale Begriffe ersetzt (quality/institutsnamen-denylist.txt); sonst unverändert beobachtet."
 }

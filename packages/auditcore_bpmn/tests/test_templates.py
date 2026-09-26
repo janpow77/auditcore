@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import pytest
-from helpers import STICHTAG
+from helpers import STICHTAG, institution_names
 
 from auditcore_bpmn import validate
 from auditcore_bpmn.model import parse_bpmn
 from auditcore_bpmn.profiles import load_profile, load_template
 
 PROFILE = load_profile()
-FORBIDDEN = ("hessen", "hmwvw", "wibank", "gmbh", "@", " eur ", "€")
+FORBIDDEN = ("hessen", "gmbh", "@", " eur ", "€", *institution_names())
 
 
 @pytest.mark.parametrize("template", PROFILE.templates, ids=lambda t: t.id)

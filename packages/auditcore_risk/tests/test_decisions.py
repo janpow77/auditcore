@@ -43,7 +43,7 @@ def test_decided_profiles_are_approved_and_name_the_decision() -> None:
     for profile in (
         RA,
         load_profile("flowinvoice.risk_checker", D),
-        load_profile("flowinvoice.rbvk_wibank", D),
+        load_profile("flowinvoice.rbvk_intermediate_body", D),
     ):
         assert profile.status == "APPROVED"
         assert profile.source["decision"]["decided_on"] == "2026-09-23"
@@ -115,8 +115,8 @@ def test_k9_splitting_includes_the_year_bound_eu_threshold() -> None:
     assert national.flags["SPLIT_INVOICE"] is True
 
 
-def test_k11_wibank_follows_profile_file_v121() -> None:
-    decided = load_profile("flowinvoice.rbvk_wibank", D)
+def test_k11_rbvk_follows_profile_file_v121() -> None:
+    decided = load_profile("flowinvoice.rbvk_intermediate_body", D)
 
     def score(**kw: Any) -> dict[str, Any]:
         assessment = evaluate([kw], decided).records[0].assessment

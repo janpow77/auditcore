@@ -136,7 +136,7 @@ Betrag 40.000,00 über 25.000,00; Vergabekennung fehlt; Kostenart vergaberelevan
 | `auditcore_risk.results` | Result types of an evaluation: flag hits, record results, dataset findings. |
 | `auditcore_risk.rule_checks` | Parameter value checks of the rule kinds that have no own ``Kind.validate``. |
 | `auditcore_risk.rules` | Rule kinds: the reusable mechanics behind every profile rule. |
-| `auditcore_risk.score_rules` | Predicate kinds for point scores (WIBANK-RBVK criteria, ex-ante indicators). |
+| `auditcore_risk.score_rules` | Predicate kinds for point scores (RBVK criteria of the intermediate body, ex-ante indicators). |
 | `auditcore_risk.summary` | Overview of an evaluation in the summary format the profile names. |
 | `auditcore_risk.templates` | Message templates of profiles: only plain placeholders, no attribute or index access. |
 | `auditcore_risk.values` | Value semantics of the characterized sources, expressed without pandas. |
@@ -171,11 +171,17 @@ Module und Regelarten:
 | `riskanalysis.year_bound` | `2026.09.5` | `APPROVED` (empfohlen) | Entscheidungen 23.09.2026: netto, EU-Schwelle des Jahres (2014–2027, `procurement.hvtg 2026.09.3`), RF12 gruppenintern, RF09 mit Umschrift „mueller“; 24.09.2026: ohne Nettobetrag RF02/RF08 je Beleg unbestimmt („Nettobetrag fehlt in der Quelle“), kein Rückfall auf brutto |
 | `flowinvoice.risk_checker` | `2026.09.2` | `APPROVED` | abgelöst durch 2026.09.3 (EU-Schwellen nur 2024–2027) |
 | `flowinvoice.risk_checker` | `2026.09.3` | `APPROVED` (nicht aktiviert) | Splitting mit EU-Schwelle des Jahres (2014–2027) |
-| `flowinvoice.rbvk_wibank` | `2026.09.2` | `APPROVED` (empfohlen) | nach Profildatei V1.21 |
+| `flowinvoice.rbvk_intermediate_body` | `2026.09.2` | `APPROVED` (empfohlen) | nach Profildatei V1.21 |
 | `flowinvoice.risk_checker` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | flowinvoice/audit-portal `RiskChecker` (9 Rechnungsindikatoren, Texte und Legacy-Score dieses Profils) |
-| `flowinvoice.rbvk_wibank` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | WIBANK-RBVK-Punkte je Mittelabruf (Codeverhalten), Stufen 8/19 |
+| `flowinvoice.rbvk_intermediate_body` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | RBVK-Punkte der Zwischengeschalteten Stelle je Mittelabruf (Codeverhalten), Stufen 8/19 |
 | `flowinvoice.exante_basis` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 7 Ex-ante-Indikatoren, Basisgewichte, Klassen 30/55; kalibrierte Gewichte ausdrücklich über `points` |
 | `flowinvoice.exante_heuristik` | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | Vergleichsheuristik des Ex-ante-Scores (Deckel 100) |
+
+`flowinvoice.rbvk_intermediate_body` hieß bis 0.3.4 nach dem Institut, dessen
+RBVK-Kriterien es abbildet. Die alte Kennung lädt `load_profile` übergangsweise
+noch (`DeprecationWarning`, Liste `profiles.DEPRECATED_ALIASES`) und liefert das
+Profil unter der neuen Kennung; der Alias entfällt mit dem ersten Release nach
+dem 31.12.2026.
 
 Betrugsprüfungen aus flowinvoice `fraud_detection` haben eigene Profile
 (Schema `auditcore_risk.fraud-profile/1`, `load_fraud_profile`):
@@ -242,7 +248,7 @@ ausgeführt und aufgezeichnet: riskanalysis 173 Frames
 Betrugsprüfungen (Manager 268, TED 129, Dubletten 250 Fälle). Die Profile mit
 Status `LEGACY_CHARACTERIZED` reproduzieren die Originale **legacy-exakt**;
 die Profile `riskanalysis.year_bound` ab 2026.09.2, `flowinvoice.risk_checker` 2026.09.x und
-`flowinvoice.rbvk_wibank` 2026.09.2 setzen Nutzerentscheidungen um
+`flowinvoice.rbvk_intermediate_body` 2026.09.2 setzen Nutzerentscheidungen um
 (`APPROVED`). Umstellung der Consumer:
 [docs/consumer-integration.md](docs/consumer-integration.md).
 

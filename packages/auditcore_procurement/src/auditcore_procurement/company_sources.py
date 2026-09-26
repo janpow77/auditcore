@@ -250,7 +250,7 @@ def had_request(company_name: str, include_archived: bool, variant: str) -> dict
         "params": {"q": company_name, "archiv": "1" if include_archived else "0"},
         "headers": {
             "Accept": "text/html,application/xhtml+xml",
-            "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)",
+            "User-Agent": "EFRE-AuditTool/2.0",
         },
         "timeout": 20,
     }
