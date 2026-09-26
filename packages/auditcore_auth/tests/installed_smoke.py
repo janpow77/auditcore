@@ -55,8 +55,9 @@ def main() -> None:
     assert identify_hash("$2b$12$short") is None
     assert constant_time_equals("Prüfung", "Prüfung") and not constant_time_equals("a", "b")
     try:
-        TokenProfile("bad", lifetime=timedelta(minutes=5), algorithm="none",
-                     accepted_algorithms=("none",))
+        TokenProfile(
+            "bad", lifetime=timedelta(minutes=5), algorithm="none", accepted_algorithms=("none",)
+        )
     except ConfigurationError:
         pass
     else:
