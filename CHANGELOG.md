@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Belegerkennung: REST-Vertrag `documents_extraction/1` in
+  `auditcore_documents.web` (Upload → Extraktionsergebnis mit Konfidenz →
+  Validierungsbefunde; OCR/Donut nur über Ports der Anwendung, ohne Engine
+  abgeschaltet) und Oberfläche `<flowaudit-extraction>` (Vue `FaExtraction`,
+  React nativ `FlowauditExtraction`, Kern `createExtractionController` in
+  `@flowaudit/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
+  Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
+
 - Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
   Job-Image `ghcr.io/janpow77/auditcore-donut-train:cu128` (Workflow
   `donut-train-image`, Basis per Digest, torch 2.11.0+cu128, gepinnte
