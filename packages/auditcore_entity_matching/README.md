@@ -20,12 +20,12 @@ python -m pip install 'auditcore_entity_matching[fuzzy]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.3 im
+Release v0.4.1; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-entity-matching/`):
 
 ```text
-auditcore_entity_matching @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_entity_matching-0.2.0-py3-none-any.whl#sha256=60c6ebec0c45ad48eac1bcd80fa306c49222827e8a36745bac61329be41f3e30
+auditcore_entity_matching @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_entity_matching-0.2.3-py3-none-any.whl#sha256=8865ffc99778f76770f1550b5ea2fc57a47af24d47d2fdc9ed4a9e283ebc7e43
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
