@@ -73,6 +73,15 @@ def guarded(action: Callable[[], Reply], *, error: type[ContractError] = Contrac
         return json_reply(exc.status, exc.to_dict())
 
 
+def json_object(
+    value: object, path: str, *, error: type[ContractError] = ContractError
+) -> Mapping[str, object]:
+    """``value`` if it is a JSON object with string keys, else ``error`` naming ``path``."""
+    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
+        raise error(f"'{path}' muss ein JSON-Objekt sein.")
+    return value
+
+
 def choice(
     value: object,
     name: str,

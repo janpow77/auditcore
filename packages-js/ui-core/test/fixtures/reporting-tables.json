@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Vorhaben",
+    "columns": [
+      "Vorhaben",
+      "Betrag",
+      "Quote %",
+      "Datum",
+      "Kennung"
+    ],
+    "rows": [
+      [
+        "V-001",
+        1234.5,
+        0.25,
+        "2026-01-31",
+        "000123"
+      ],
+      [
+        "V-002",
+        17,
+        null,
+        null,
+        "=1+1"
+      ],
+      [
+        "V-003",
+        980000,
+        0.8,
+        "2026-03-15",
+        "004711"
+      ]
+    ],
+    "types": {
+      "Datum": "date",
+      "Kennung": "text"
+    },
+    "formats": {
+      "Kennung": "@"
+    }
+  }
+]

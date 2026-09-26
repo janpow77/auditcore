@@ -16,6 +16,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'stichprobe', title: 'Stichprobe', group: 'Komponenten', load: () => import('./pages/sampling/SamplingPage.vue') },
   { id: 'benford', title: 'Benford-Analyse', group: 'Komponenten', load: () => import('./pages/benford/BenfordPage.vue') },
   { id: 'hochrechnung', title: 'Hochrechnung (TER/RER)', group: 'Komponenten', load: () => import('./pages/extrapolation/ExtrapolationPage.vue') },
+  { id: 'tabellenexport', title: 'Tabellenexport (Excel)', group: 'Komponenten', load: () => import('./pages/reporting/ReportExportPage.vue') },
   { id: 'kennung', title: 'Kennung prüfen', group: 'Komponenten', load: () => import('./pages/identifiers/IdentifierPage.vue') },
   { id: 'screening', title: 'Screening-Trefferprüfung', group: 'Komponenten', load: () => import('./pages/screening/ScreeningPage.vue') },
   { id: 'kanban', title: 'Kanban', group: 'Komponenten', load: () => import('./pages/kanban/KanbanPage.vue') },

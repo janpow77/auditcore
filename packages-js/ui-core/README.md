@@ -72,7 +72,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (819):
+Exporte der Einstiegspunkte aus `package.json#exports` (849):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -128,6 +128,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
 | `@flowaudit/ui-core` | `ClientExportFormat` | Typ | – | `synopsis/types` |
 | `@flowaudit/ui-core` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
+| `@flowaudit/ui-core` | `ColumnPreview` | Schnittstelle | – | `reporting/types` |
 | `@flowaudit/ui-core` | `CompareFields` | Schnittstelle | – | `synopsis/port` |
 | `@flowaudit/ui-core` | `CompareForm` | Schnittstelle | – | `documents/form` |
 | `@flowaudit/ui-core` | `CompareRow` | Schnittstelle | – | `synopsis/types` |
@@ -273,6 +274,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `FlagState` | Typ | Zustand einer Regel für einen Datensatz. | `risk/state` |
 | `@flowaudit/ui-core` | `FocusTrap` | Schnittstelle | – | `focus` |
 | `@flowaudit/ui-core` | `FormProblem` | Schnittstelle | Ein Befund der Formularprüfung: Textschlüssel und Platzhalter. | `documents/form` |
+| `@flowaudit/ui-core` | `FormatProfile` | Schnittstelle | – | `reporting/types` |
 | `@flowaudit/ui-core` | `FreshnessStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui-core` | `FreshnessView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `GeoArea` | Schnittstelle | Fläche auf der Karte (z. B. Schutzgebiet); `notes` sind Hinweise zur Geometrie. | `geo/types` |
@@ -304,6 +306,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `INITIAL_EXTRACTION` | Konstante | – | `extraction/controller` |
 | `@flowaudit/ui-core` | `INITIAL_EXTRAPOLATION` | Konstante | – | `extrapolation/controller` |
 | `@flowaudit/ui-core` | `INITIAL_IDENTIFIERS` | Konstante | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `INITIAL_REPORTING` | Konstante | – | `reporting/controller` |
 | `@flowaudit/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
 | `@flowaudit/ui-core` | `IdentifierBatchAnswer` | Schnittstelle | – | `identifiers/types` |
@@ -399,6 +402,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `RegisterIssue` | Schnittstelle | Hinweis der Vollständigkeitsprüfung; `subject` = `<Tätigkeits-ID>:<Feld>` oder `deckblatt:<Teil>`. | `dataprotection/types` |
 | `@flowaudit/ui-core` | `RegisterState` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `RegisterStatus` | Typ | – | `dataprotection/types` |
+| `@flowaudit/ui-core` | `ReportCell` | Typ | – | `reporting/types` |
+| `@flowaudit/ui-core` | `ReportColumnType` | Typ | Spaltentyp: `json` übernimmt den JSON-Typ wie gesendet; `date`/`datetime` erwarten ISO-Text. | `reporting/types` |
+| `@flowaudit/ui-core` | `ReportTableInput` | Schnittstelle | Eine Tabelle (ein Blatt) der Anwendung; Zeilen in Spaltenreihenfolge. | `reporting/types` |
+| `@flowaudit/ui-core` | `ReportingBusy` | Typ | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `ReportingCallbacks` | Schnittstelle | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `ReportingCatalogue` | Schnittstelle | – | `reporting/types` |
+| `@flowaudit/ui-core` | `ReportingController` | Typ | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `ReportingData` | Schnittstelle | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `ReportingError` | Typ | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `ReportingMessageKey` | Typ | – | `reporting/messages` |
+| `@flowaudit/ui-core` | `ReportingPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createReportingRestPort`. | `reporting/types` |
+| `@flowaudit/ui-core` | `ReportingSource` | Schnittstelle | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `ReportingTranslate` | Typ | – | `reporting/view` |
 | `@flowaudit/ui-core` | `RequestState` | Schnittstelle | Beschäftigt-Status, Fehler und Erfolgsmeldung einer Portanfrage (gemeinsam für alle Controller). | `store` |
 | `@flowaudit/ui-core` | `ResidualErrorRate` | Schnittstelle | – | `extrapolation/types` |
 | `@flowaudit/ui-core` | `ResidualForm` | Schnittstelle | – | `extrapolation/model` |
@@ -509,6 +525,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `TabItem` | Schnittstelle | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `TableImportController` | Typ | – | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `TableImportData` | Schnittstelle | – | `tabular/tableImport` |
+| `@flowaudit/ui-core` | `TablePreview` | Schnittstelle | – | `reporting/types` |
 | `@flowaudit/ui-core` | `TabularMessageKey` | Typ | – | `tabular/messages` |
 | `@flowaudit/ui-core` | `TileSource` | Schnittstelle | Kachelquelle der Anwendung; ohne Quelle zeigt die Karte keinen Hintergrund. | `geo/types` |
 | `@flowaudit/ui-core` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/format` |
@@ -539,6 +556,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `VvtView` | Schnittstelle | Abgeleitete Werte eines Stands (reine Funktion, von beiden Oberflächen genutzt). | `dataprotection/vvt` |
 | `@flowaudit/ui-core` | `WORD_LIMIT` | Konstante | Oberhalb dieser Wortzahl je Seite wird nicht wortweise verglichen. | `synopsis/wordDiff` |
 | `@flowaudit/ui-core` | `WhenMissingColumns` | Typ | – | `risk/types` |
+| `@flowaudit/ui-core` | `WorkbookPreview` | Schnittstelle | – | `reporting/types` |
+| `@flowaudit/ui-core` | `WorkbookRequest` | Schnittstelle | – | `reporting/types` |
 | `@flowaudit/ui-core` | `acceptsHit` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `activityKey` | Funktion | Schlüssel einer Tätigkeit für die Zuordnung der Hinweise (Kennung, sonst Name wie in der Bibliothek). | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `addScenario` | Funktion | – | `dataprotection/dsfaView` |
@@ -577,6 +596,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `buildSynopsisExport` | Funktion | Export der sichtbaren Zeilen (HTML, Markdown, Druckansicht). | `synopsis/controller` |
 | `@flowaudit/ui-core` | `buildSynopsisView` | Funktion | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `buildVvtExport` | Funktion | – | `dataprotection/vvt` |
+| `@flowaudit/ui-core` | `buildWorkbookRequest` | Funktion | Anfrage aus Zustand und Tabellen oder der erste fehlende Punkt. | `reporting/controller` |
 | `@flowaudit/ui-core` | `canDecide` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `canReleaseAssessment` | Funktion | Freigabe möglich: Vier-Augen-Vorprüfung, keine ungespeicherten Eingaben, keine Sperrgründe. | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `cellAlignClass` | Funktion | – | `table` |
@@ -613,6 +633,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `createIdentifierController` | Funktion | – | `identifiers/controller` |
 | `@flowaudit/ui-core` | `createIdentifiersRestPort` | Funktion | Port auf den REST-Vertrag `identifiers_ui/1` von `auditcore_identifiers.web` (Starlette oder FastAPI). | `identifiers/rest-port` |
 | `@flowaudit/ui-core` | `createLeafletView` | Funktion | Legt die Leaflet-Karte im Element an. | `geo/mapView` |
+| `@flowaudit/ui-core` | `createReportingController` | Funktion | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `createReportingRestPort` | Funktion | Port auf den REST-Vertrag `reporting_ui/1` von `auditcore_reporting.web` (Starlette oder FastAPI). | `reporting/rest-port` |
 | `@flowaudit/ui-core` | `createRiskController` | Funktion | – | `risk/controller` |
 | `@flowaudit/ui-core` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@flowaudit/ui-core` | `createRunner` | Funktion | Führt eine Portanfrage aus: setzt `busy`, fängt Fehler (über `toError`) und meldet sie an `onError`. Ohne Port geschieht nichts (`null`). | `store` |
@@ -809,6 +831,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (819):
 | `@flowaudit/ui-core` | `registerMarkdown` | Funktion | – | `dataprotection/exporters` |
 | `@flowaudit/ui-core` | `removeScenario` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `replaceHit` | Funktion | Replace one hit (after a decision) without reloading the whole run. | `screening/view` |
+| `@flowaudit/ui-core` | `reportCellText` | Funktion | Zelle der Vorschau: Werte wie gesendet (Zahlen sprachabhängig), leer als „—“. | `reporting/view` |
+| `@flowaudit/ui-core` | `reportingErrorKey` | Funktion | – | `reporting/view` |
+| `@flowaudit/ui-core` | `reportingMessages` | Konstante | Texte des Tabellenexports (Berichtsexport nach Excel). | `reporting/messages` |
+| `@flowaudit/ui-core` | `reportingProfile` | Funktion | – | `reporting/controller` |
+| `@flowaudit/ui-core` | `reportingSampleNote` | Funktion | Hinweis, wenn die Vorschau nur einen Teil der Zeilen zeigt; sonst leer. | `reporting/view` |
+| `@flowaudit/ui-core` | `reportingSheetHeading` | Funktion | – | `reporting/view` |
+| `@flowaudit/ui-core` | `reportingTablesText` | Funktion | – | `reporting/view` |
+| `@flowaudit/ui-core` | `reportingWorkbookText` | Funktion | – | `reporting/view` |
 | `@flowaudit/ui-core` | `requirementKey` | Funktion | – | `risk/labels` |
 | `@flowaudit/ui-core` | `requiresFourEyes` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `residualColumns` | Funktion | – | `extrapolation/view` |

@@ -6,7 +6,8 @@ Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahl
 
 Für Anwendungen, die tabellarische Berichte als Excel-Datei ausgeben –
 etwa `auditcore_dataprotection` für seine tabellarischen XLSX-Exporte. Der Kern
-benötigt nur die Standardbibliothek; der Renderer übernimmt ausschließlich
+benötigt nur die Standardbibliothek (die REST-Schicht zusätzlich
+`auditcore_common`); der Renderer übernimmt ausschließlich
 übergebene Daten und fragt weder HTTP, Datenbanken noch Dateisysteme ab.
 
 ## Installation
@@ -35,7 +36,8 @@ sudo apt-get install python3-auditcore-reporting
 ```
 
 Extras: `[excel]` – openpyxl (≥ 3.0.9, < 4) und defusedxml für
-`render_workbook`; `[dev]` – Test- und Prüfwerkzeuge (einschließlich pandas nur
+`render_workbook`; `[web]` – Starlette für den REST-Vertrag `reporting_ui/1`
+(`auditcore_reporting.web`), `[fastapi]` – zusätzlich FastAPI-Router; `[dev]` – Test- und Prüfwerkzeuge (einschließlich pandas nur
 für die Charakterisierung).
 
 ## Schnellstart
@@ -84,6 +86,7 @@ assert get_profile_format("plain-v1", "Betrag") == "General"
 |---|---|
 | `auditcore_reporting.formats` | Excel-Zahlenformate / Excel format selection preserving Flowlib behavior. |
 | `auditcore_reporting.profiles` | Explicit format profiles; the original Flowlib selector remains unchanged. |
+| `auditcore_reporting.web` | REST contract ``reporting_ui/1`` for the table export UI (extras ``web``, ``fastapi``). |
 | `auditcore_reporting.workbook` | Standard-library-only workbook contracts with an optional Excel adapter. |
 <!-- api-overview:end -->
 
@@ -148,6 +151,24 @@ Die Datei ist ein neu erzeugter Datenexport. Vorlagen, Charts, Makros und
 Formeln aus existierenden Arbeitsmappen werden nicht importiert. Für native
 Excel-Darstellung, Formelberechnung oder PDF-Ausgabe wird kein Test behauptet.
 
+## REST-Vertrag und Oberfläche
+
+`auditcore_reporting.web` (Extras `web`/`fastapi`, Export zusätzlich `excel`)
+stellt `GET /profiles`, `POST /preview` und `POST /export` bereit
+(Vertrag `reporting_ui/1`, [docs/ui/reporting-rest.md](../../docs/ui/reporting-rest.md)).
+Die Oberfläche dazu ist `<flowaudit-report-export>` aus `@flowaudit/ui`
+(React: `FlowauditReportExport`). Formatregeln und Export laufen
+ausschließlich in dieser Bibliothek.
+
+```python
+from auditcore_reporting.web import catalogue, preview
+
+assert [p["id"] for p in catalogue()["profiles"]] == ["flowlib-legacy-v1", "plain-v1"]
+table = {"name": "Liste", "columns": ["Betrag"], "rows": [[12.5]]}
+result = preview({"profile": "flowlib-legacy-v1", "tables": [table]})
+assert result["tables"][0]["columns"][0]["format"] == '#,##0.00 "EUR"'
+```
+
 ## Herkunft und Charakterisierung
 
 Wiederverwendung aus `janpow77/flowlib` am Commit `aca2dc6a`
@@ -175,7 +196,9 @@ Schemafehler der openpyxl-Ausgabe; Werte unverändert).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Optional
+Python ≥ 3.11 und `auditcore_common==0.1.1` (selbst nur Standardbibliothek;
+rahmenwerkfreier Teil der REST-Schicht für `web`, APT
+`python3-auditcore-common`), sonst nur die Standardbibliothek. Optional
 `openpyxl>=3.0.9,<4` und `defusedxml>=0.7.1` über `[excel]`; ohne Extra meldet
 `render_workbook` `ExcelDependencyError`, Formatfunktionen und Datenmodelle
 bleiben nutzbar. pandas ist keine Laufzeitabhängigkeit.

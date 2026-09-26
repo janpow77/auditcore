@@ -10,6 +10,11 @@
   `bounded_list` mit paketeigener Fehlerklasse (`error`). Meldungen und
   Statuscodes unverändert; Differenztests gegen die wörtlichen Kopien
   (`tests/legacy_rest.py`, `tests/test_rest.py`).
+- `rest.json_object(value, path, *, error=...)`: JSON-Objekt mit Text-Schlüsseln
+  oder `422` „'<path>' muss ein JSON-Objekt sein.“ – ersetzt die wörtlich
+  gleichen `_object`-Prüfungen in `auditcore_identifiers.web` und
+  `auditcore_reporting.web` (Differenztest gegen beide Kopien in
+  `tests/legacy_rest.py`, `tests/test_rest.py`). Keine Versionsanhebung.
 - Eigenschaftstests mit Hypothesis (`tests/test_properties.py`, Extra `dev`):
   paarweise Summe, `numpy_round`, `require_finite`, `canonical_sha256`,
   `decode_body` und `choice` gegen die früheren Kopien aus sampling,
