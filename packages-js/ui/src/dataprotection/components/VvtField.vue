@@ -2,9 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import { useId } from '../../composables/useId'
 import { useI18n } from '../../i18n'
-import { dataprotectionMessages } from '../messages'
-import { parseCount } from '../registerView'
-import type { RegisterColumn, FieldValue, Issue } from '../types'
+import { dataprotectionMessages } from '../core'
+import { parseCount } from '../core'
+import type { RegisterColumn, FieldValue, Issue } from '../core'
 
 const props = withDefaults(defineProps<{
   column: RegisterColumn

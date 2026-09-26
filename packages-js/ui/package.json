@@ -1,6 +1,6 @@
 {
   "name": "@flowaudit/ui",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Gemeinsame FlowAudit-Oberflächenkomponenten: Vue 3, Web Components, Theming und i18n",
   "license": "MIT",
   "type": "module",
@@ -40,6 +40,7 @@
   "dependencies": {
     "@flowaudit/common": "0.1.0",
     "@flowaudit/kanban-core": "0.1.0",
+    "@flowaudit/ui-core": "0.1.0",
     "leaflet": "^1.9.4"
   },
   "peerDependencies": {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import FaBadge from '../base/FaBadge.vue'
-import type { BadgeTone } from '../base/types'
+import type { BadgeTone } from '@flowaudit/ui-core'
 import { useId } from '../composables/useId'
 import SynopsisText from './SynopsisText.vue'
-import type { RowUpdate, SynopsisLayout } from './types'
-import type { RowView, SynopsisTranslate } from './viewModel'
+import type { RowUpdate, SynopsisLayout } from '@flowaudit/ui-core'
+import type { RowView, SynopsisTranslate } from '@flowaudit/ui-core'
 
 const props = defineProps<{
   row: RowView
@@ -87,33 +87,3 @@ function onReason(event: Event): void {
     </footer>
   </article>
 </template>
-
-<style>
-.fa-synopsis-row { border: 1px solid var(--fa-color-border); border-left: 4px solid var(--fa-color-border-strong); border-radius: var(--fa-radius); background: var(--fa-color-surface); scroll-margin: var(--fa-space-6); }
-.fa-synopsis-row:focus-visible, .fa-synopsis-row--active { outline: none; box-shadow: var(--fa-focus-ring); }
-.fa-synopsis-row--changed { border-left-color: var(--fa-color-accent); }
-.fa-synopsis-row--added { border-left-color: var(--fa-color-success); }
-.fa-synopsis-row--removed { border-left-color: var(--fa-color-danger); }
-.fa-synopsis-row--moved { border-left-color: var(--fa-color-warning); }
-.fa-synopsis-row--muted { opacity: 0.6; }
-.fa-synopsis-row__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-3); padding: var(--fa-space-2) var(--fa-space-4); border-bottom: 1px solid var(--fa-color-border); background: var(--fa-color-surface-raised); border-radius: var(--fa-radius) var(--fa-radius) 0 0; }
-.fa-synopsis-row__title { flex: 1; margin: 0; font-size: var(--fa-font-size-sm); font-weight: 600; }
-.fa-synopsis-row__include { display: inline-flex; align-items: center; gap: var(--fa-space-2); font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
-.fa-synopsis-row__sides { display: grid; grid-template-columns: 1fr 1fr; }
-.fa-synopsis-row__side, .fa-synopsis-row__inline { padding: var(--fa-space-3) var(--fa-space-4); min-width: 0; }
-.fa-synopsis-row__side + .fa-synopsis-row__side { border-left: 1px solid var(--fa-color-border); }
-.fa-synopsis-row__side-title { margin: 0 0 var(--fa-space-2); font-size: var(--fa-font-size-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--fa-color-text-muted); }
-.fa-synopsis-row__field { margin-top: var(--fa-space-3); font-size: var(--fa-font-size-sm); }
-.fa-synopsis-row__field strong { display: block; font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
-.fa-synopsis-row__reason { padding: var(--fa-space-2) var(--fa-space-4) var(--fa-space-3); border-top: 1px dashed var(--fa-color-border); font-size: var(--fa-font-size-sm); }
-.fa-synopsis-row__reason p { margin: 0; white-space: pre-wrap; }
-.fa-synopsis-row__reason-edit { display: flex; flex-direction: column; gap: var(--fa-space-1); font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
-.fa-synopsis-row__reason-edit textarea { font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); background: var(--fa-color-surface); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-sm); padding: var(--fa-space-2); resize: vertical; }
-.fa-synopsis-row__reason-edit textarea:focus-visible, .fa-synopsis-row__include input:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
-.fa-synopsis-row__hint { margin-top: var(--fa-space-1) !important; font-size: var(--fa-font-size-xs); color: var(--fa-color-warning); }
-.fa-synopsis-row__hint--ok { color: var(--fa-color-success); }
-@media (max-width: 720px) {
-  .fa-synopsis-row__sides { grid-template-columns: 1fr; }
-  .fa-synopsis-row__side + .fa-synopsis-row__side { border-left: 0; border-top: 1px solid var(--fa-color-border); }
-}
-</style>

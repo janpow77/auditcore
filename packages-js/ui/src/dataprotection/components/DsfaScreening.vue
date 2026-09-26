@@ -2,10 +2,10 @@
 import { computed } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { blockProgress, screeningTone, withAnswer, withJustification } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import { prefixedLabel } from '../requests'
-import type { DataProtectionProfile, Proposal, SurveyInput } from '../types'
+import { blockProgress, screeningTone, withAnswer, withJustification } from '../core'
+import { dataprotectionMessages } from '../core'
+import { prefixedLabel } from '../core'
+import type { DataProtectionProfile, Proposal, SurveyInput } from '../core'
 import DsfaQuestion from './DsfaQuestion.vue'
 
 const props = withDefaults(defineProps<{

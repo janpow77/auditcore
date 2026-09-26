@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createDataProtectionRestPort } from '../../src/dataprotection/rest-port'
-import { RestError } from '../../src/rest'
+import { RestError } from '@flowaudit/common'
 
 function fakeFetch(status: number, body: unknown, headers: Record<string, string> = { 'Content-Type': 'application/json' }) {
   return vi.fn(async (_url: string, _init?: RequestInit) => new Response(typeof body === 'string' ? body : JSON.stringify(body), { status, headers }))

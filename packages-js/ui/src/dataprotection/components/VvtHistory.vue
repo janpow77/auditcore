@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { formatDate, useI18n } from '../../i18n'
-import { dataprotectionMessages } from '../messages'
-import { statusLabel } from '../requests'
-import type { VersionSummary } from '../types'
+import { dataprotectionMessages } from '../core'
+import { statusLabel } from '../core'
+import type { VersionSummary } from '../core'
 
 withDefaults(defineProps<{ versions?: VersionSummary[] }>(), { versions: () => [] })
 const { t, locale } = useI18n(dataprotectionMessages)

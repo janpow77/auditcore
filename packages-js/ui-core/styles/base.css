@@ -1,0 +1,116 @@
+/* Basiskomponenten (Symbol, Kennzeichen, Schaltfläche, Eingabefeld, Dialog) – gemeinsam für Vue und React. */
+
+/* FaIcon */
+.fa-icon {
+  flex: none;
+  stroke-width: var(--fa-icon-stroke, 1.75);
+  vertical-align: middle;
+}
+
+/* FaBadge */
+.fa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fa-space-1);
+  padding: 0.125rem var(--fa-space-2);
+  border-radius: 999px;
+  font: 600 var(--fa-font-size-xs) / 1.3 var(--fa-font-sans);
+  background: var(--fa-color-surface-sunken);
+  color: var(--fa-color-text-muted);
+}
+.fa-badge--accent { background: var(--fa-color-accent-soft); color: var(--fa-color-accent); }
+.fa-badge--success { background: var(--fa-color-success-soft); color: var(--fa-color-success); }
+.fa-badge--warning { background: var(--fa-color-warning-soft); color: var(--fa-color-warning); }
+.fa-badge--danger { background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+
+/* FaButton */
+.fa-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fa-space-2);
+  min-height: 2.25rem;
+  padding: 0 var(--fa-space-4);
+  border: 1px solid transparent;
+  border-radius: var(--fa-radius);
+  font: 500 var(--fa-font-size-sm) / 1 var(--fa-font-sans);
+  cursor: pointer;
+  transition: background var(--fa-transition), border-color var(--fa-transition), color var(--fa-transition);
+}
+.fa-button:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-button:disabled { cursor: not-allowed; opacity: 0.55; }
+.fa-button--sm { min-height: 1.75rem; padding: 0 var(--fa-space-3); font-size: var(--fa-font-size-xs); }
+.fa-button--icon-only { padding: 0; width: 2.25rem; }
+.fa-button--sm.fa-button--icon-only { width: 1.75rem; }
+.fa-button--primary { background: var(--fa-color-accent); color: var(--fa-color-accent-contrast); }
+.fa-button--primary:hover:not(:disabled) { background: var(--fa-color-accent-hover); }
+.fa-button--secondary { background: var(--fa-color-surface); border-color: var(--fa-color-border); color: var(--fa-color-text); }
+.fa-button--secondary:hover:not(:disabled) { border-color: var(--fa-color-border-strong); }
+.fa-button--ghost { background: transparent; color: var(--fa-color-text-muted); }
+.fa-button--ghost:hover:not(:disabled), .fa-button--ghost[aria-pressed='true'] { background: var(--fa-color-surface-sunken); color: var(--fa-color-text); }
+.fa-button--danger { background: var(--fa-color-danger); color: #fff; }
+.fa-button--loading { cursor: progress; }
+
+/* FaTextField */
+.fa-field { display: flex; flex-direction: column; gap: var(--fa-space-1); font-family: var(--fa-font-sans); }
+.fa-field__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-field__input {
+  min-height: 2.25rem;
+  padding: 0 var(--fa-space-3);
+  border: 1px solid var(--fa-color-border);
+  border-radius: var(--fa-radius);
+  background: var(--fa-color-surface);
+  color: var(--fa-color-text);
+  font: var(--fa-font-size-sm) var(--fa-font-sans);
+}
+.fa-field__input:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-field__note { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-field--error .fa-field__input { border-color: var(--fa-color-danger); }
+.fa-field--error .fa-field__note { color: var(--fa-color-danger); }
+
+/* FaDialog */
+.fa-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--fa-space-4);
+  background: var(--fa-color-overlay);
+  font-family: var(--fa-font-sans);
+}
+.fa-dialog--side { justify-content: flex-end; align-items: stretch; padding: 0; }
+.fa-dialog__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - 2 * var(--fa-space-4));
+  background: var(--fa-color-surface);
+  color: var(--fa-color-text);
+  border-radius: var(--fa-radius-lg);
+  box-shadow: var(--fa-shadow-lg);
+  outline: none;
+}
+.fa-dialog__panel--sm { max-width: 24rem; }
+.fa-dialog__panel--md { max-width: 34rem; }
+.fa-dialog__panel--lg { max-width: 52rem; }
+.fa-dialog--side .fa-dialog__panel { max-height: none; height: 100%; border-radius: 0; max-width: 30rem; }
+.fa-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--fa-space-3);
+  padding: var(--fa-space-4) var(--fa-space-4) var(--fa-space-3) var(--fa-space-5);
+  border-bottom: 1px solid var(--fa-color-border);
+}
+.fa-dialog__title { margin: 0; font-size: var(--fa-font-size-lg); font-weight: 600; }
+.fa-dialog__description { margin: var(--fa-space-1) 0 0; font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+.fa-dialog__body { flex: 1; overflow-y: auto; padding: var(--fa-space-4) var(--fa-space-5); }
+.fa-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--fa-space-2);
+  padding: var(--fa-space-3) var(--fa-space-5);
+  border-top: 1px solid var(--fa-color-border);
+}

@@ -3,9 +3,9 @@ import { computed, ref, watch } from 'vue'
 import FaButton from '../../base/FaButton.vue'
 import { useId } from '../../composables/useId'
 import { formatDate, useI18n } from '../../i18n'
-import { decisionTitle, isDeviation, mayRelease, parseConditions } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import type { AssessmentView, DecisionInput, DataProtectionProfile, Proposal } from '../types'
+import { canReleaseAssessment, decisionForm, decisionTitle, isDeviation, parseConditions } from '../core'
+import { dataprotectionMessages } from '../core'
+import type { AssessmentView, DecisionInput, DataProtectionProfile, Proposal } from '../core'
 
 const props = withDefaults(defineProps<{
   profile: DataProtectionProfile
@@ -25,13 +25,14 @@ const conditions = ref('')
 const dpoFrom = ref('')
 const dpoOn = ref('')
 const deviation = computed(() => isDeviation(props.proposal, decision.value))
-const canRelease = computed(() => mayRelease(props.view, props.actor) && !props.dirty && !props.view.release_blockers.length)
+const canRelease = computed(() => canReleaseAssessment(props.view, props.actor, props.dirty))
 const when = (value: string | null): string => formatDate(value, locale.value, true)
 
 watch(() => props.view, (view) => {
-  decision.value = view.decision ?? (props.proposal.recommendation === 'unvollstaendig' ? '' : props.proposal.recommendation)
-  justification.value = view.deviation_justification ?? ''
-  conditions.value = view.conditions.join('\n')
+  const form = decisionForm(view, props.proposal)
+  decision.value = form.decision
+  justification.value = form.justification
+  conditions.value = form.conditions
 }, { immediate: true })
 
 function submit(): void {

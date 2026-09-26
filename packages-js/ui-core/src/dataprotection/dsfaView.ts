@@ -157,3 +157,23 @@ export function parseConditions(text: string): string[] {
 export function mayRelease(view: AssessmentView, actor: string): boolean {
   return !view.locked && !(actor && view.editors.includes(actor))
 }
+
+/** Eingabefelder der Entscheidung, vorbelegt aus der Fassung bzw. dem Vorschlag. */
+export interface DecisionForm {
+  decision: string
+  justification: string
+  conditions: string
+}
+
+export function decisionForm(view: AssessmentView, proposal: Proposal): DecisionForm {
+  return {
+    decision: view.decision ?? (proposal.recommendation === 'unvollstaendig' ? '' : proposal.recommendation),
+    justification: view.deviation_justification ?? '',
+    conditions: view.conditions.join('\n'),
+  }
+}
+
+/** Freigabe möglich: Vier-Augen-Vorprüfung, keine ungespeicherten Eingaben, keine Sperrgründe. */
+export function canReleaseAssessment(view: AssessmentView, actor: string, dirty: boolean): boolean {
+  return mayRelease(view, actor) && !dirty && !view.release_blockers.length
+}

@@ -3,9 +3,9 @@ import { computed, ref } from 'vue'
 import FaButton from '../../base/FaButton.vue'
 import FaTextField from '../../base/FaTextField.vue'
 import { useI18n } from '../../i18n'
-import { dataprotectionMessages } from '../messages'
-import { coverIssues } from '../registerView'
-import type { Issue, Person, RegisterContent } from '../types'
+import { dataprotectionMessages } from '../core'
+import { coverIssues } from '../core'
+import type { Issue, Person, RegisterContent } from '../core'
 
 const props = withDefaults(defineProps<{
   content: RegisterContent

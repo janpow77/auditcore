@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DiffSegment } from './wordDiff'
+import type { DiffSegment } from '@flowaudit/ui-core'
 
 /**
  * Wortsegmente mit `<del>`/`<ins>`. Streichungen sind durchgestrichen,
@@ -28,10 +28,3 @@ withDefaults(
     </template>
   </p>
 </template>
-
-<style>
-.fa-synopsis__text { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; }
-.fa-synopsis__empty { color: var(--fa-color-text-muted); font-style: italic; }
-.fa-synopsis__del { background: var(--fa-color-danger-soft); color: var(--fa-color-danger); text-decoration: line-through; text-decoration-thickness: 1.5px; border-radius: 2px; }
-.fa-synopsis__ins { background: var(--fa-color-success-soft); color: var(--fa-color-success); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 2px; border-radius: 2px; }
-</style>

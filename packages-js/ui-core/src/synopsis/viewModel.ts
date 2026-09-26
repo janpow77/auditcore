@@ -3,7 +3,7 @@
  * entsteht ein View-Model mit Beschriftungen, Wortsegmenten je Seite,
  * Filter und Navigation. Vue-Komponenten und Exporte nutzen nur dieses Modell.
  */
-import type { MessageParams } from '../i18n/i18n'
+import type { MessageParams } from '../i18n'
 import type { SynopsisMessageKey } from './messages'
 import { CHANGE_STATUSES, type CompareRow, type ComparisonResult, type ConsolidatedParagraph, type DiffField, type RowStatus } from './types'
 import { diffSegments, plainSegments, wholeSegments, type DiffSegment } from './wordDiff'

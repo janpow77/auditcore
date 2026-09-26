@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import FaButton from '../../base/FaButton.vue'
 import { formatDate, useI18n } from '../../i18n'
-import { decisionTitle } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import { statusLabel } from '../requests'
-import type { AssessmentSummary, DataProtectionProfile } from '../types'
+import { decisionTitle } from '../core'
+import { dataprotectionMessages } from '../core'
+import { statusLabel } from '../core'
+import type { AssessmentSummary, DataProtectionProfile } from '../core'
 
 withDefaults(defineProps<{ versions?: AssessmentSummary[]; profile: DataProtectionProfile; current?: string }>(), { versions: () => [], current: '' })
 const emit = defineEmits<{ open: [id: string] }>()

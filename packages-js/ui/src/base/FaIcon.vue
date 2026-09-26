@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ICONS, type IconName } from './icons'
+import { ICONS, type IconName } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   name: IconName
@@ -31,11 +31,3 @@ const dimension = computed(() => (typeof props.size === 'number' ? `${props.size
     <path v-for="(d, index) in paths" :key="index" :d="d" />
   </svg>
 </template>
-
-<style>
-.fa-icon {
-  flex: none;
-  stroke-width: var(--fa-icon-stroke, 1.75);
-  vertical-align: middle;
-}
-</style>

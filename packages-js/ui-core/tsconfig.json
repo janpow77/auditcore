@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@flowaudit/common": [
+        "../common/src/index.ts"
+      ],
+      "@flowaudit/common/browser": [
+        "../common/src/browser.ts"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "vite.config.ts",
+    "vitest.config.ts"
+  ]
+}

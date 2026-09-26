@@ -1,4 +1,4 @@
-import { defineMessages } from '../i18n/i18n'
+import { defineMessages } from '../i18n'
 
 /** Sichtbare Texte der Synopse; Begriffe wie im audit_designer und in ecohesion. */
 export const synopsisMessages = defineMessages({

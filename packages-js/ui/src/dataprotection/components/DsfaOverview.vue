@@ -2,11 +2,11 @@
 import FaBadge from '../../base/FaBadge.vue'
 import FaButton from '../../base/FaButton.vue'
 import { useI18n } from '../../i18n'
-import { recommendationTone } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import { statusTone } from '../registerView'
-import { statusLabel } from '../requests'
-import type { OverviewRow, DataProtectionProfile } from '../types'
+import { recommendationTone } from '../core'
+import { dataprotectionMessages } from '../core'
+import { statusTone } from '../core'
+import { statusLabel } from '../core'
+import type { OverviewRow, DataProtectionProfile } from '../core'
 
 withDefaults(defineProps<{
   rows?: OverviewRow[]

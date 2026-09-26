@@ -3,7 +3,7 @@ import { nextTick } from 'vue'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import FaDsfa from '../../src/dataprotection/FaDsfa.vue'
 import { defineFlowauditElements } from '../../src/elements'
-import { draftAssessment, fakePort } from './fake-port'
+import { draftAssessment, fakePort } from '../../../ui-core/test/dataprotection/fake-port'
 
 afterEach(() => {
   vi.useRealTimers()

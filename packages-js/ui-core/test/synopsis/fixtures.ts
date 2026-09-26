@@ -1,10 +1,10 @@
-import { translate } from '../../src/i18n/i18n'
+import { translate } from '../../src/i18n'
 import { synopsisMessages } from '../../src/synopsis/messages'
 import type { Comparison } from '../../src/synopsis/types'
 import type { SynopsisTranslate } from '../../src/synopsis/viewModel'
-import articleJson from '../../demo/pages/synopsis/article.json'
-import checklistJson from '../../demo/pages/synopsis/checklist.json'
-import standardJson from '../../demo/pages/synopsis/standard.json'
+import articleJson from '../fixtures/synopsis-article.json'
+import checklistJson from '../fixtures/synopsis-checklist.json'
+import standardJson from '../fixtures/synopsis-standard.json'
 
 /** Echte Ergebnisse von auditcore_documents.web (Demo-Daten, siehe demo/pages/synopsis). */
 export const standard = standardJson as unknown as Comparison

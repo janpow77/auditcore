@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { RestError, type FetchLike } from '../../src/rest/client'
+import { RestError, type FetchLike } from '@flowaudit/common'
 import { createSynopsisRestClient } from '../../src/synopsis/port'
 import { standard } from './fixtures'
 

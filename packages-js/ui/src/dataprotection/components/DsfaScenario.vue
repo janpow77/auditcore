@@ -4,9 +4,9 @@ import FaBadge from '../../base/FaBadge.vue'
 import FaButton from '../../base/FaButton.vue'
 import { useId } from '../../composables/useId'
 import { useI18n } from '../../i18n'
-import { bandTone, toggleMeasure } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import type { DataProtectionProfile, ScenarioInput, ScenarioResult } from '../types'
+import { bandTone, toggleMeasure } from '../core'
+import { dataprotectionMessages } from '../core'
+import type { DataProtectionProfile, ScenarioInput, ScenarioResult } from '../core'
 
 const props = withDefaults(defineProps<{
   profile: DataProtectionProfile

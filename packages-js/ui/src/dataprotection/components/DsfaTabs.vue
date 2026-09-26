@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useId } from '../../composables/useId'
-import type { TabItem } from '../dsfaView'
+import type { TabItem } from '../core'
 
 const props = defineProps<{ tabs: TabItem[]; active: string; label: string }>()
 const emit = defineEmits<{ 'tab-change': [key: string] }>()

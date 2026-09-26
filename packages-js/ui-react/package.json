@@ -1,7 +1,7 @@
 {
   "name": "@flowaudit/ui-react",
-  "version": "0.2.0",
-  "description": "React-18-Hüllen für die Web Components von @flowaudit/ui",
+  "version": "1.0.0",
+  "description": "Native React-18-Komponenten der FlowAudit-Oberflächen (Tabelle, Synopse, VVT, DSFA) auf Basis von @flowaudit/ui-core, ohne Vue",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -12,6 +12,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./elements": {
+      "types": "./dist/elements.d.ts",
+      "import": "./dist/elements.js"
     },
     "./package.json": "./package.json"
   },
@@ -26,21 +30,37 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@flowaudit/common": "^0.1.0",
-    "@flowaudit/kanban-core": "^0.1.0",
-    "@flowaudit/ui": "^0.2.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
+    "@flowaudit/ui": "^0.3.0",
+    "@flowaudit/kanban-core": "^0.1.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@flowaudit/common": "0.1.0",
     "@flowaudit/kanban-core": "0.1.0",
-    "@flowaudit/ui": "0.2.0",
+    "@flowaudit/ui": "0.3.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
     "@types/react": "^18.3.31",
     "@types/react-dom": "^18.3.7",
+    "@vue/test-utils": "^2.5.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "vue": "^3.5.43"
+  },
+  "dependencies": {
+    "@flowaudit/common": "0.1.0",
+    "@flowaudit/ui-core": "0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@flowaudit/ui": {
+      "optional": true
+    },
+    "@flowaudit/kanban-core": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
   }
 }

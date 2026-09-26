@@ -1,0 +1,17 @@
+/* Tabelle (FaTable / FlowauditTable) – gemeinsam für Vue und React. */
+
+/* FaTable */
+.fa-table-wrap { overflow-x: auto; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); }
+.fa-table { width: 100%; border-collapse: collapse; font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-table__caption { caption-side: top; text-align: start; padding: var(--fa-space-3) var(--fa-space-4); font-weight: 600; }
+.fa-table th, .fa-table td { padding: var(--fa-space-2) var(--fa-space-4); border-bottom: 1px solid var(--fa-color-border); }
+.fa-table th { background: var(--fa-color-surface-raised); font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.fa-table tbody tr:last-child td { border-bottom: none; }
+.fa-table--clickable tbody tr { cursor: pointer; }
+.fa-table--clickable tbody tr:hover { background: var(--fa-color-surface-sunken); }
+.fa-table tbody tr:focus-visible { outline: none; box-shadow: inset var(--fa-focus-ring); }
+.fa-table__cell--end { text-align: end; font-variant-numeric: tabular-nums; }
+.fa-table__cell--center { text-align: center; }
+.fa-table__sort { display: inline-flex; align-items: center; gap: var(--fa-space-1); padding: 0; border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+.fa-table__sort:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); border-radius: var(--fa-radius-sm); }
+.fa-table__empty { text-align: center; color: var(--fa-color-text-muted); padding: var(--fa-space-5); }

@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
+import { deliverExport, vvtFourEyes, type VvtExportFormat } from '@flowaudit/ui-core'
 import { provideLocale, useI18n, type Locale } from '../i18n'
-import { downloadText, printHtml } from '../synopsis/useSynopsisExport'
 import VvtActivityDetail from './components/VvtActivityDetail.vue'
 import VvtActivityList from './components/VvtActivityList.vue'
 import VvtCover from './components/VvtCover.vue'
 import VvtHistory from './components/VvtHistory.vue'
 import VvtIssues from './components/VvtIssues.vue'
 import VvtStatusBar from './components/VvtStatusBar.vue'
-import { dataprotectionMessages } from './messages'
-import { editedBy, emptyActivity, withActivity, withDepartments, withField, withoutActivity, withPerson } from './registerView'
-import { statusLabel, type DataProtectionError } from './requests'
-import type { DataProtectionPort, FieldValue, Person, VersionView } from './types'
-import { useVvt, type VvtExport, type VvtExportFormat } from './useVvt'
+import { dataprotectionMessages, type DataProtectionError, type DataProtectionPort } from './core'
+import { useVvt, type VvtExport } from './useVvt'
 
 const props = withDefaults(defineProps<{
   /** Datenzugang (Vertrag dataprotection_ui/1), z. B. `createDataProtectionRestPort({ baseUrl: '/api/dataprotection' })`. */
@@ -33,114 +30,77 @@ const emit = defineEmits<{
 
 const { t, locale: active } = useI18n(dataprotectionMessages, () => props.locale)
 provideLocale(active)
-const state = useVvt(() => props.port, {
-  onSaved: (version: VersionView) => {
-    state.notice.value = t('saved', { version: version.version, revision: version.revision })
-    emit('draft-saved', { version: version.version, revision: version.revision })
-  },
-  onReleased: (version: VersionView) => {
-    state.notice.value = t('released', { version: version.version })
-    emit('released', { version: version.version })
-  },
+const { controller, state, view } = useVvt(() => props.port, () => t, {
+  onSaved: (version) => emit('draft-saved', { version: version.version, revision: version.revision }),
+  onReleased: (version) => emit('released', { version: version.version }),
   onError: (error) => emit('error', error),
-  networkMessage: (message) => t('networkError', { message }),
 })
-const { profile, register, showing, version, content, issues, editing, dirty, busy, error, notice } = state
-const selected = ref<number | null>(null)
-const history = ref(false)
-const columns = computed(() => profile.value?.register.columns ?? [])
+const columns = computed(() => state.value.profile?.register.columns ?? [])
+const content = computed(() => view.value.content)
+const selected = computed(() => state.value.selected)
 const activity = computed(() => (selected.value === null ? null : content.value.taetigkeiten[selected.value] ?? null))
-const fourEyes = computed(() => editedBy(register.value?.draft ?? null, props.actor))
+const fourEyes = computed(() => vvtFourEyes(state.value, props.actor))
 
 watch(() => props.port, async (port) => {
-  if (port) await state.load(props.editable)
-  if (selected.value === null && content.value.taetigkeiten.length) selected.value = 0
+  if (port) await controller.load(props.editable)
 }, { immediate: true })
 
-function changeField(key: string, value: FieldValue): void {
-  if (selected.value !== null) state.update(withField(content.value, selected.value, key, value))
-}
-
-function addActivity(department: string): void {
-  state.update(withActivity(content.value, emptyActivity(columns.value, department)))
-  selected.value = content.value.taetigkeiten.length - 1
-}
-
-function removeActivity(): void {
-  if (selected.value === null) return
-  state.update(withoutActivity(content.value, selected.value))
-  selected.value = content.value.taetigkeiten.length ? 0 : null
-}
-
-function changePerson(part: 'verantwortlicher' | 'dsb', person: Person): void {
-  state.update(withPerson(content.value, part, person))
-}
-
 function runExport(format: VvtExportFormat): void {
-  const label = version.value ? t('versionLabel', { version: version.value.version, status: statusLabel(t, version.value.status) }) : t('noVersion')
-  const texts = {
-    yes: t('yes'), no: t('no'), empty: t('empty'), title: t('vvtTitle'), department: t('colDepartment'),
-    withoutDepartment: t('withoutDepartment'), controller: t('controller'), dpo: t('dpo'), version: t('colVersion'),
-    issues: t('issuesExport'), noIssues: t('noIssues'), required: t('blockingLabel'), hint: t('hintLabel'),
-    field: t('field'), content: t('content'), generated: t('generated'),
-  }
-  const payload = state.build(format, texts, label, active.value)
-  if (format === 'print') printHtml(payload.content)
-  else downloadText(payload.content, payload.filename, payload.mimeType)
-  notice.value = t('exported', { filename: payload.filename })
+  const payload = controller.exportAs(format, active.value)
+  deliverExport(payload)
   emit('exported', payload)
 }
 </script>
 
 <template>
-  <section class="fa-dataprotection fa-vvt" :aria-busy="!!busy" data-testid="vvt">
+  <section class="fa-dataprotection fa-vvt" :aria-busy="!!state.busy" data-testid="vvt">
     <header class="fa-dataprotection__header">
       <h2>{{ t('vvtTitle') }} <span class="fa-dataprotection__muted">{{ t('vvtNorm') }}</span></h2>
-      <span v-if="profile" class="fa-dataprotection__muted">{{ t('profile', { id: profile.profile.id, version: profile.profile.version }) }}</span>
+      <span v-if="state.profile" class="fa-dataprotection__muted">{{ t('profile', { id: state.profile.profile.id, version: state.profile.profile.version }) }}</span>
     </header>
     <p v-if="!port" class="fa-dataprotection__alert" role="alert">{{ t('noPort') }}</p>
-    <p v-if="error" class="fa-dataprotection__alert" role="alert">{{ error.message }}</p>
-    <p class="fa-dataprotection__live" aria-live="polite">{{ busy === 'load' ? t('loading') : notice }}</p>
+    <p v-if="state.error" class="fa-dataprotection__alert" role="alert">{{ state.error.message }}</p>
+    <p class="fa-dataprotection__live" aria-live="polite">{{ state.busy === 'load' ? t('loading') : state.notice }}</p>
     <VvtStatusBar
-      :state="register"
-      :version="version"
-      :showing="showing"
-      :editing="editing"
+      :state="state.register"
+      :version="view.version"
+      :showing="state.showing"
+      :editing="view.editing"
       :editable="editable"
-      :dirty="dirty"
+      :dirty="view.dirty"
       :four-eyes="fourEyes"
-      :busy="busy"
-      :history="history"
-      @save="state.save"
-      @discard="state.discard"
-      @release="state.release"
-      @new-draft="state.startDraft"
-      @show="state.show"
-      @toggle-history="history = !history"
+      :busy="state.busy"
+      :history="state.history"
+      @save="controller.save"
+      @discard="controller.discard"
+      @release="controller.release"
+      @new-draft="controller.startDraft"
+      @show="controller.show"
+      @toggle-history="controller.toggleHistory"
       @export="runExport"
     />
-    <VvtHistory v-if="history" :versions="register?.versions ?? []" />
+    <VvtHistory v-if="state.history" :versions="state.register?.versions ?? []" />
     <VvtCover
       :content="content"
-      :issues="issues"
-      :editing="editing"
-      @person-change="changePerson"
-      @departments-change="state.update(withDepartments(content, $event))"
+      :issues="view.issues"
+      :editing="view.editing"
+      @person-change="controller.changePerson"
+      @departments-change="controller.changeDepartments"
     />
     <div class="fa-vvt__layout">
-      <VvtActivityList :content="content" :issues="issues" :selected="selected" :editing="editing" @activity-select="selected = $event" @add="addActivity" />
+      <VvtActivityList :content="content" :issues="view.issues" :selected="selected" :editing="view.editing" @activity-select="controller.select" @add="controller.addActivity" />
       <VvtActivityDetail
         v-if="activity"
         :activity="activity"
         :columns="columns"
-        :issues="issues"
+        :issues="view.issues"
         :departments="content.referate"
-        :editing="editing"
-        @field-change="changeField"
-        @remove="removeActivity"
+        :editing="view.editing"
+        @field-change="controller.changeField"
+        @remove="controller.removeActivity"
       />
       <p v-else class="fa-dataprotection__panel fa-dataprotection__muted">{{ t('selectActivity') }}</p>
     </div>
-    <VvtIssues :issues="issues" />
+    <VvtIssues :issues="view.issues" />
   </section>
 </template>

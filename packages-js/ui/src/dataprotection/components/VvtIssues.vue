@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '../../i18n'
-import { dataprotectionMessages } from '../messages'
-import { completeness } from '../registerView'
-import type { Issue } from '../types'
+import { dataprotectionMessages } from '../core'
+import { completeness } from '../core'
+import type { Issue } from '../core'
 
 const props = withDefaults(defineProps<{ issues?: Issue[] }>(), { issues: () => [] })
 const { t } = useI18n(dataprotectionMessages)

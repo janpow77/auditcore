@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { FaSynopsis, type Comparison, type ExportPayload, type RowUpdate, type SynopsisLayout } from '@flowaudit/ui'
-import article from './article.json'
-import checklist from './checklist.json'
-import standard from './standard.json'
+import article from '../../../../ui-core/test/fixtures/synopsis-article.json'
+import checklist from '../../../../ui-core/test/fixtures/synopsis-checklist.json'
+import standard from '../../../../ui-core/test/fixtures/synopsis-standard.json'
 
 // Echte Ergebnisse von auditcore_documents.web (synthetische Dokumente, keine Echtdaten).
 const samples = {
