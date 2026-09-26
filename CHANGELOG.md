@@ -21,6 +21,18 @@
   Neue Pins `auditcore_common==0.1.1` für geo, invoicesynth und price_sources.
   Paritätstests alt ↔ neu je Paket; Code-Gate `duplicate_functions` 4 → 0
   (documents 2 → 0, identifiers 2 → 0). Keine Versionsanhebung (Release v0.4.2).
+- JS-Bauwerkzeuge: Vite 7 → 8 (Rolldown statt Rollup, Oxc statt esbuild,
+  CSS-Minifizierung mit Lightning CSS) und vite-plugin-dts 4 → 5
+  (unplugin-dts, `@vue/language-core` 3 als eigene Entwicklungsabhängigkeit).
+  Konfigurationen auf `build.rolldownOptions`, `oxc`, `codeSplitting: false`
+  und `import.meta.dirname` umgestellt. Exporte und Typdeklarationen der Pakete sind
+  unverändert (Vue-SFC-Deklarationen im Format von language-core 3).
+  `@flowaudit/bpmn-flowaudit` kennzeichnet `src/index.ts` als
+  seiteneffektbehaftet, damit die Stile der Diagrammschicht (`--fa-hit`,
+  Rundgang-/Vergleichsmarkierungen) in Standalone-App und Web Component
+  ankommen; die Web Component `<flowaudit-bpmn-editor>` enthielt sie bisher
+  nicht. Lizenzprüfung: Einzelfreigabe für `lightningcss` (MPL-2.0, nur
+  Entwicklungsabhängigkeit von Vite 8).
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

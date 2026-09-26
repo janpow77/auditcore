@@ -6,15 +6,15 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { sourceAliases } from './aliases'
+import { sourceAliases } from './aliases.ts'
 
 export default defineConfig({
-  root: resolve(__dirname, 'standalone'),
+  root: resolve(import.meta.dirname, 'standalone'),
   base: './',
   plugins: [vue()],
   resolve: { alias: sourceAliases() },
   build: {
-    outDir: resolve(__dirname, 'dist-standalone'),
+    outDir: resolve(import.meta.dirname, 'dist-standalone'),
     emptyOutDir: true,
     sourcemap: false,
     chunkSizeWarningLimit: 2000,

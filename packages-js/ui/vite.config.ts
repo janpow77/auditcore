@@ -9,13 +9,13 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        index: resolve(__dirname, 'src/index.ts'),
-        elements: resolve(__dirname, 'src/elements.ts'),
+        index: resolve(import.meta.dirname, 'src/index.ts'),
+        elements: resolve(import.meta.dirname, 'src/elements.ts'),
       },
       formats: ['es'],
       cssFileName: 'ui',
     },
-    rollupOptions: {
+    rolldownOptions: {
       // Stile des Kerns (@flowaudit/ui-core/style.css) werden in ui.css gebündelt, nur der JS-Einstieg bleibt extern.
       external: ['vue', '@flowaudit/kanban-core', '@flowaudit/ui-core', /^@flowaudit\/common(\/.*)?$/, 'leaflet'],
     },
