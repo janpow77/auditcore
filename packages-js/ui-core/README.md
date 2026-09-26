@@ -72,7 +72,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (667):
+Exporte der Einstiegspunkte aus `package.json#exports` (774):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -214,6 +214,26 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `ExportPayload` | Schnittstelle | Ergebnis eines Exports in der Oberfläche (Ereignis `export`). | `synopsis/types` |
 | `@flowaudit/ui-core` | `ExportTexts` | Schnittstelle | – | `dataprotection/exporters` |
 | `@flowaudit/ui-core` | `ExportedFile` | Schnittstelle | – | `dataprotection/types` |
+| `@flowaudit/ui-core` | `ExtractedField` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionBusy` | Typ | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionCallbacks` | Schnittstelle | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionCatalogue` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionController` | Typ | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionData` | Schnittstelle | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionFieldDecision` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionFinding` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionJson` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionMessageKey` | Typ | – | `extraction/messages` |
+| `@flowaudit/ui-core` | `ExtractionOcrQuality` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionOcrSummary` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createExtractionRestPort`. Die Oberfläche erkennt nichts selbst. | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionProfile` | Schnittstelle | Typen des REST-Vertrags `documents_extraction/1` (`docs/ui/extraction-rest.md`, auditcore_documents.web). | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionRun` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionRunStatus` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionSource` | Schnittstelle | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionTone` | Typ | – | `extraction/view` |
+| `@flowaudit/ui-core` | `ExtractionTranslate` | Typ | – | `extraction/view` |
+| `@flowaudit/ui-core` | `ExtractionValidation` | Typ | – | `extraction/controller` |
 | `@flowaudit/ui-core` | `FLAG_STATES` | Konstante | – | `risk/state` |
 | `@flowaudit/ui-core` | `FieldEntry` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui-core` | `FieldError` | Schnittstelle | – | `sampling/model` |
@@ -258,9 +278,41 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@flowaudit/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
 | `@flowaudit/ui-core` | `INITIAL_DB_KANBAN` | Konstante | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `INITIAL_EXTRACTION` | Konstante | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `INITIAL_IDENTIFIERS` | Konstante | – | `identifiers/controller` |
 | `@flowaudit/ui-core` | `INITIAL_REPORTING` | Konstante | – | `reporting/controller` |
 | `@flowaudit/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
+| `@flowaudit/ui-core` | `IdentifierBatchAnswer` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierBatchItem` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierBatchLine` | Schnittstelle | Anzeigezeile der Stapelprüfung (Tabelle und CSV). | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierBatchMapping` | Schnittstelle | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierBatchRequest` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierBatchRow` | Typ | Zeile der Stapelprüfung: Ergebnisfelder oder `error` (Art unbekannt bzw. vom Profil nicht geprüft). | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierBatchSummary` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierBusy` | Typ | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `IdentifierCallbacks` | Schnittstelle | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `IdentifierCatalogue` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierCheckAnswer` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierCheckInput` | Schnittstelle | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierCheckRequest` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierColumn` | Typ | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierColumnField` | Schnittstelle | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierController` | Typ | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `IdentifierData` | Schnittstelle | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `IdentifierDetailValue` | Typ | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierError` | Typ | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierField` | Typ | Einfache Eingabefelder, die die Oberfläche direkt setzen darf. | `identifiers/controller` |
+| `@flowaudit/ui-core` | `IdentifierKindInfo` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierMessageKey` | Typ | – | `identifiers/messages` |
+| `@flowaudit/ui-core` | `IdentifierProfileInfo` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierResult` | Schnittstelle | – | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierSource` | Schnittstelle | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `IdentifierStatus` | Typ | Typen des REST-Vertrags `identifiers_ui/1` (`docs/ui/identifiers-rest.md`, auditcore_identifiers.web). | `identifiers/types` |
+| `@flowaudit/ui-core` | `IdentifierTone` | Typ | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierTranslate` | Typ | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifierValidation` | Typ | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `IdentifiersPort` | Schnittstelle | Schnittstelle zur Fachlogik; Standardumsetzung `createIdentifiersRestPort`. | `identifiers/types` |
 | `@flowaudit/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
 | `@flowaudit/ui-core` | `ImportRequest` | Schnittstelle | Anfrage von `POST /comparisons/import`: ein fertiges Ergebnis aus der Auftragssteuerung ablegen. | `synopsis/port` |
 | `@flowaudit/ui-core` | `ImportedColumns` | Schnittstelle | Übernommene Spalten einer Datei. | `tabular/tableImport` |
@@ -442,6 +494,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `Totals` | Schnittstelle | – | `risk/state` |
 | `@flowaudit/ui-core` | `Translate` | Typ | – | `i18n` |
 | `@flowaudit/ui-core` | `UploadFile` | Schnittstelle | Datei aus einem Eingabefeld (im Browser `File`). | `documents/form` |
+| `@flowaudit/ui-core` | `UtmInput` | Schnittstelle | – | `geo/model` |
+| `@flowaudit/ui-core` | `UtmInputError` | Typ | – | `geo/model` |
+| `@flowaudit/ui-core` | `UtmPointRequest` | Schnittstelle | `POST /utm/geographisch`: Punkt aus Rechts-/Hochwert, Zone und Halbkugel. | `geo/types` |
+| `@flowaudit/ui-core` | `UtmPointResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `UtmRequest` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `UtmResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `VersionSummary` | Schnittstelle | – | `dataprotection/types` |
@@ -486,6 +542,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `blockProgress` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `breakdownRows` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `buildAnalyseRequest` | Funktion | Anfrage für `POST /analyze`; Test, Profil und ggf. Regel für kurze Werte sind Pflicht. | `benford/model` |
+| `@flowaudit/ui-core` | `buildIdentifierBatch` | Funktion | Anfrage für `POST /check/batch` aus der geladenen Tabelle und der Spaltenzuordnung. | `identifiers/model` |
+| `@flowaudit/ui-core` | `buildIdentifierCheck` | Funktion | Anfrage für `POST /check`; Profil und Kennungsart sind Pflicht, ein leerer Wert ergibt „fehlt“. | `identifiers/model` |
 | `@flowaudit/ui-core` | `buildRowView` | Funktion | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `buildRunRequest` | Funktion | Anfrage aus dem Formular; bei Fehlern `request: null` und die Meldungen als Katalogschlüssel. | `screening/runForm` |
 | `@flowaudit/ui-core` | `buildSelectionRequest` | Funktion | Anfrage für `POST /selection`; ein leerer Seed überlässt dem Server die Erzeugung. | `sampling/model` |
@@ -517,9 +575,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `createDbKanbanController` | Funktion | – | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `createDelay` | Funktion | Verzögerter Aufruf, der bei jeder neuen Eingabe neu startet (Vorschau, Vollständigkeitsprüfung). | `store` |
 | `@flowaudit/ui-core` | `createDsfaController` | Funktion | – | `dataprotection/dsfa` |
+| `@flowaudit/ui-core` | `createExtractionController` | Funktion | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `createExtractionRestPort` | Funktion | Port auf den REST-Vertrag `documents_extraction/1` von `auditcore_documents.web` (Starlette oder FastAPI). | `extraction/rest-port` |
 | `@flowaudit/ui-core` | `createFocusTrap` | Funktion | – | `focus` |
 | `@flowaudit/ui-core` | `createGeoController` | Funktion | – | `geo/controller` |
 | `@flowaudit/ui-core` | `createGeoRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_geo.web` (Starlette oder FastAPI). | `geo/rest-port` |
+| `@flowaudit/ui-core` | `createIdentifierController` | Funktion | – | `identifiers/controller` |
+| `@flowaudit/ui-core` | `createIdentifiersRestPort` | Funktion | Port auf den REST-Vertrag `identifiers_ui/1` von `auditcore_identifiers.web` (Starlette oder FastAPI). | `identifiers/rest-port` |
 | `@flowaudit/ui-core` | `createLeafletView` | Funktion | Legt die Leaflet-Karte im Element an. | `geo/mapView` |
 | `@flowaudit/ui-core` | `createReportingController` | Funktion | – | `reporting/controller` |
 | `@flowaudit/ui-core` | `createReportingRestPort` | Funktion | Port auf den REST-Vertrag `reporting_ui/1` von `auditcore_reporting.web` (Starlette oder FastAPI). | `reporting/rest-port` |
@@ -569,6 +631,26 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `evaluationRules` | Funktion | Regeln der Auswertung; ohne `rules` aus den Codes der Datensätze abgeleitet. | `risk/state` |
 | `@flowaudit/ui-core` | `excludedLines` | Funktion | Hinweise auf Elemente außerhalb der Auswahlbasis. | `sampling/view` |
 | `@flowaudit/ui-core` | `exportFilename` | Funktion | – | `synopsis/exporters` |
+| `@flowaudit/ui-core` | `extractionAccept` | Funktion | Dateiauswahl der Oberfläche (`accept`) aus den zulässigen Typen. | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionConfidenceText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionConfidenceTone` | Funktion | Ton einer Feldkonfidenz gegen den Schwellwert des Profils. | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionDecisionText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionDecisionTone` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionDocumentText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionFieldLabel` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionFieldThreshold` | Funktion | Schwellwert der Feldkonfidenz des gelaufenen Profils (nur Donut). | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionMessages` | Konstante | Texte der Belegerkennung (`<flowaudit-extraction>`). | `extraction/messages` |
+| `@flowaudit/ui-core` | `extractionOcrText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionOutcomeTone` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionProfileText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionProposalText` | Funktion | Donut-Vorschlag, wenn er nicht übernommen wurde (sonst leer). | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionRuleLabel` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionSizeText` | Funktion | Dateigröße in MiB (bzw. KiB unter 1 MiB). | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionStatusText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionStatusTone` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionValidation` | Funktion | Prüfung vor dem Senden (reine Funktion). | `extraction/controller` |
+| `@flowaudit/ui-core` | `extractionValidationText` | Funktion | Meldung zur Prüfung vor dem Senden. | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionValueText` | Funktion | Wert eines Feldes als Text (Zahlen sprachabhängig, Listen mit Komma). | `extraction/view` |
 | `@flowaudit/ui-core` | `fieldIssues` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `fieldValue` | Funktion | Prüft ein Eingabefeld und liefert den Vertragswert (Prozent → Anteil). | `sampling/model` |
 | `@flowaudit/ui-core` | `filterOptions` | Funktion | – | `screening/view` |
@@ -577,6 +659,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `filterSubjects` | Funktion | Subjects with only the hits passing the filter; subjects themselves stay visible. | `screening/view` |
 | `@flowaudit/ui-core` | `filterSummaries` | Funktion | Suche in Titel und Dateinamen, ohne Groß-/Kleinschreibung; neueste zuerst wie der Server. | `documents/list` |
 | `@flowaudit/ui-core` | `findHit` | Funktion | – | `screening/view` |
+| `@flowaudit/ui-core` | `findIdentifierProfile` | Funktion | – | `identifiers/model` |
 | `@flowaudit/ui-core` | `flagState` | Funktion | – | `risk/state` |
 | `@flowaudit/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
 | `@flowaudit/ui-core` | `focusableWithin` | Funktion | – | `focus` |
@@ -599,6 +682,23 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `groupByDepartment` | Funktion | Referate wie in der Quelle: konfigurierte zuerst, dann unbekannte; leere entfallen. | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `hasAcceptedExtension` | Funktion | – | `documents/form` |
 | `@flowaudit/ui-core` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
+| `@flowaudit/ui-core` | `identifierBatchCsv` | Funktion | CSV (Excel-DE) der Stapelprüfung mit denselben Spalten wie die Tabelle (alle Zeilen). | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierBatchLines` | Funktion | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierBatchMapping` | Funktion | Zuordnung aus beiden Zuständen (Tabelle und Kennungsprüfung). | `identifiers/controller` |
+| `@flowaudit/ui-core` | `identifierBatchSummary` | Funktion | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierColumnFields` | Funktion | Spaltenauswahl der Stapelprüfung; die Spalte mit Kennungsart nur ohne feste Art. | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierErrorKey` | Funktion | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierFacts` | Funktion | Einzelheiten (`details`) mit deutschen Bezeichnungen aus dem Katalog. | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierMessages` | Konstante | Texte von „Kennung prüfen“. | `identifiers/messages` |
+| `@flowaudit/ui-core` | `identifierProfileKinds` | Funktion | Kennungsarten, die das gewählte Profil prüft (ohne Profil: keine). | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierProfileLabel` | Funktion | Anzeige eines Profils in der Auswahl: Empfehlung und Altverhalten sichtbar. | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierReasonText` | Funktion | Begründung eines Ergebnisses: Meldung der Bibliothek, bei „gültig“ der Satz zum Profil. | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierRowKind` | Funktion | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierRowReason` | Funktion | Begründung einer Stapelzeile; gültige Zeilen nur mit eigener Meldung der Bibliothek (Tabelle bleibt knapp). | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierRowStatus` | Funktion | Status einer Stapelzeile; `null` = nicht prüfbar. | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierRowValue` | Funktion | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierStatusText` | Funktion | – | `identifiers/model` |
+| `@flowaudit/ui-core` | `identifierStatusTone` | Funktion | – | `identifiers/model` |
 | `@flowaudit/ui-core` | `importDelimiterText` | Funktion | Anzeige des Trennzeichens („Tabulator“ für `\t`). | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `importOptionalColumn` | Funktion | Optionale Spalte aus einem Auswahlwert (`''` = keine). | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `importPreview` | Funktion | Vorschau der übernommenen Werte (reine Funktion). | `tabular/tableImport` |
@@ -617,6 +717,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `itemsFromImport` | Funktion | Übernommene Dateispalten → Elemente der Grundgesamtheit (Kennung sonst laufende Nummer). | `sampling/model` |
 | `@flowaudit/ui-core` | `kanbanDialogMessages` | Konstante | Texte von Detailansicht, Einstellungen, Teilen und Boardliste. | `kanban/messages` |
 | `@flowaudit/ui-core` | `kanbanMessages` | Konstante | Texte der Kanban-Komponenten; Englisch vorbereitet. | `kanban/messages` |
+| `@flowaudit/ui-core` | `kindNeedsCountry` | Funktion | – | `identifiers/model` |
 | `@flowaudit/ui-core` | `kindProfiles` | Funktion | – | `screening/runForm` |
 | `@flowaudit/ui-core` | `kindSources` | Funktion | – | `screening/runForm` |
 | `@flowaudit/ui-core` | `lcsOperations` | Funktion | Längste gemeinsame Teilfolge über Wörter; `null` oberhalb von {@link WORD_LIMIT}. | `synopsis/wordDiff` |
@@ -640,7 +741,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `parseImport` | Funktion | – | `documents/importing` |
 | `@flowaudit/ui-core` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
 | `@flowaudit/ui-core` | `parseLatLon` | Funktion | Punkt aus zwei Texteingaben mit Wertebereichsprüfung. | `geo/model` |
+| `@flowaudit/ui-core` | `parseMetres` | Funktion | Meter aus Texteingabe (Komma oder Punkt, keine Tausendertrennung); Ungültiges ergibt `null`. | `geo/model` |
 | `@flowaudit/ui-core` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
+| `@flowaudit/ui-core` | `parseUtm` | Funktion | UTM-Eingabe mit Wertebereichsprüfung: Zone 1–60, Ostwert 0–1 000 000 m, Nordwert 0–10 000 000 m. | `geo/model` |
 | `@flowaudit/ui-core` | `plainSegments` | Funktion | – | `synopsis/wordDiff` |
 | `@flowaudit/ui-core` | `populationSuggestions` | Funktion | Vorschlagswerte aus der Grundgesamtheit (Summe positiver Werte bzw. Anzahl). | `sampling/model` |
 | `@flowaudit/ui-core` | `populationText` | Funktion | Zusammenfassung der Grundgesamtheit; leer, wenn keine Elemente vorliegen. | `sampling/view` |
@@ -670,6 +773,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `reportingWorkbookText` | Funktion | – | `reporting/view` |
 | `@flowaudit/ui-core` | `requirementKey` | Funktion | – | `risk/labels` |
 | `@flowaudit/ui-core` | `requiresFourEyes` | Funktion | – | `screening/view` |
+| `@flowaudit/ui-core` | `resolveIdentifierKind` | Funktion | Kennungsart aus einer Tabellenzelle: Kennung oder Bezeichnung des Katalogs, sonst unverändert (Server meldet sie). | `identifiers/model` |
 | `@flowaudit/ui-core` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
 | `@flowaudit/ui-core` | `riskTableColumns` | Funktion | – | `risk/controller` |
 | `@flowaudit/ui-core` | `riskTableRows` | Funktion | – | `risk/controller` |
@@ -698,6 +802,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `severityTone` | Funktion | – | `risk/format` |
 | `@flowaudit/ui-core` | `sizeTexts` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `sortIcon` | Funktion | – | `table` |
+| `@flowaudit/ui-core` | `splitExtractionFindings` | Funktion | Auffällige Befunde (nicht bestanden, prüfen) zuerst nach Gewicht; bestandene getrennt. | `extraction/view` |
 | `@flowaudit/ui-core` | `stateTone` | Funktion | – | `risk/format` |
 | `@flowaudit/ui-core` | `statusHintKey` | Funktion | Hinweis für nicht freigegebene Profile, sonst `null`. | `risk/labels` |
 | `@flowaudit/ui-core` | `statusKey` | Funktion | – | `risk/labels` |
@@ -726,8 +831,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui-core` | `translate` | Funktion | Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. | `i18n` |
 | `@flowaudit/ui-core` | `translator` | Funktion | Übersetzungsfunktion für eine feste Sprache. | `i18n` |
 | `@flowaudit/ui-core` | `triggeredDataset` | Funktion | – | `risk/state` |
+| `@flowaudit/ui-core` | `utmErrorKey` | Funktion | Text der Fehlermeldung einer UTM-Eingabe. | `geo/model` |
 | `@flowaudit/ui-core` | `validateDecision` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `vertexCount` | Funktion | Anzahl der Stützpunkte einer Fläche (Schlusspunkte mitgezählt). | `geo/model` |
+| `@flowaudit/ui-core` | `visibleIdentifierRows` | Funktion | Zeilen der Ergebnistabelle; wahlweise nur ungültige, fehlende und nicht prüfbare. | `identifiers/model` |
 | `@flowaudit/ui-core` | `vvtExportTexts` | Funktion | Beschriftungen der Exporte (Druckansicht, Markdown, CSV). | `dataprotection/vvt` |
 | `@flowaudit/ui-core` | `vvtFourEyes` | Funktion | Vier-Augen-Hinweis: die angemeldete Person hat den offenen Entwurf bearbeitet. | `dataprotection/vvt` |
 | `@flowaudit/ui-core` | `vvtVersionLabel` | Funktion | – | `dataprotection/vvt` |

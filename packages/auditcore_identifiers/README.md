@@ -34,7 +34,9 @@ Debian/Ubuntu über die signierte APT-Quelle eines Releases
 sudo apt-get install python3-auditcore-identifiers
 ```
 
-Extras: nur `[dev]` (Test- und Prüfwerkzeuge).
+Extras: `[web]` (Starlette) und `[fastapi]` für den REST-Vertrag
+`identifiers_ui/1` der Oberfläche „Kennung prüfen“, `[dev]` (Test- und
+Prüfwerkzeuge). Ohne Extras nur Standardbibliothek.
 
 ## Schnellstart
 
@@ -136,7 +138,26 @@ Hilfen: `format_iban`, `iban_check_digits`, `lei_check_digits`,
 | `auditcore_identifiers.result` | Result objects: every check returns a :class:`CheckResult`, never raises for bad input. |
 | `auditcore_identifiers.tax_de` | German tax identifiers: Steuer-IdNr. (§ 139b AO), Steuernummer, Handelsregisternummer. |
 | `auditcore_identifiers.vat` | VAT identification numbers (USt-IdNr.): formats of all EU member states. |
+| `auditcore_identifiers.web` | REST contract ``identifiers_ui/1`` for "Kennung prüfen" (extras ``web``, ``fastapi``). |
 <!-- api-overview:end -->
+
+### REST-Vertrag für Oberflächen (`auditcore_identifiers.web`)
+
+`catalogue()`, `check_one(body)` und `check_batch(body)` bilden den Vertrag
+`identifiers_ui/1` framework-frei ab; `create_app`/`routes` (Extra `web`)
+und `create_router` (Extra `fastapi`) hängen ihn unter `GET /catalogue`,
+`POST /check` und `POST /check/batch` ein. Das Profil ist in jeder Anfrage
+Pflicht; ungültige Kennungen sind Ergebnisse, keine Fehler. Die Oberfläche
+ist `<flowaudit-identifier-check>` aus `@flowaudit/ui` (React:
+`FlowauditIdentifierCheck`). Vertrag:
+[`docs/ui/identifiers-rest.md`](../../docs/ui/identifiers-rest.md).
+
+```python
+from auditcore_identifiers.web import check_one
+
+answer = check_one({"kind": "iban", "value": "DE89370400440532013001", "profile": "strict"})
+assert answer["result"]["reason_label"] == "Prüfziffer falsch"
+```
 
 ## Profile und Konfiguration
 

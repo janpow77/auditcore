@@ -1,5 +1,6 @@
 import { intlFormatNumber as formatNumber } from '@flowaudit/common'
 import type { Locale } from '../i18n'
+import type { GeoMessageKey } from './messages'
 import type { AreaGeometry, GeoArea, GeoPackageResult, GeoPoint, LatLon } from './types'
 
 /** Stufen des Toleranzreglers der Vereinfachung (Meter bzw. Grad). */
@@ -28,6 +29,38 @@ export function parseLatLon(lat: string, lon: string): { point: LatLon | null; e
   const lo = parseDegrees(lon)
   if (lo === null || lo < -180 || lo > 180) return { point: null, error: 'lon' }
   return { point: { lat: la, lon: lo }, error: null }
+}
+
+/** Meter aus Texteingabe (Komma oder Punkt, keine Tausendertrennung); Ungültiges ergibt `null`. */
+export function parseMetres(text: string): number | null {
+  const trimmed = text.trim().replace(',', '.')
+  if (!/^[+-]?\d+(\.\d+)?$/.test(trimmed)) return null
+  const value = Number(trimmed)
+  return Number.isFinite(value) ? value : null
+}
+
+export type UtmInputError = 'zone' | 'east' | 'north' | null
+
+export interface UtmInput {
+  zone: number
+  ost: number
+  nord: number
+}
+
+/** UTM-Eingabe mit Wertebereichsprüfung: Zone 1–60, Ostwert 0–1 000 000 m, Nordwert 0–10 000 000 m. */
+export function parseUtm(zone: string, east: string, north: string): { value: UtmInput | null; error: UtmInputError } {
+  const number = /^\s*\d{1,2}\s*$/.test(zone) ? Number(zone) : NaN
+  if (!(number >= 1 && number <= 60)) return { value: null, error: 'zone' }
+  const ost = parseMetres(east)
+  if (ost === null || ost <= 0 || ost >= 1_000_000) return { value: null, error: 'east' }
+  const nord = parseMetres(north)
+  if (nord === null || nord < 0 || nord > 10_000_000) return { value: null, error: 'north' }
+  return { value: { zone: number, ost, nord }, error: null }
+}
+
+/** Text der Fehlermeldung einer UTM-Eingabe. */
+export function utmErrorKey(error: Exclude<UtmInputError, null>): GeoMessageKey {
+  return `utmerror${error}`
 }
 
 /** Entfernung sprachabhängig: unter 1 km in Metern, sonst in Kilometern mit zwei Stellen. */

@@ -1,0 +1,25 @@
+/* Belegerkennung – FaExtraction (Vue) und FlowauditExtraction (React). */
+.fa-extraction { display: flex; flex-direction: column; gap: var(--fa-space-4); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-extraction__card { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); box-shadow: var(--fa-shadow-sm); min-width: 0; }
+.fa-extraction__heading { margin: 0; font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-extraction__form { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: var(--fa-space-3); align-items: end; }
+.fa-extraction__field { display: flex; flex-direction: column; gap: var(--fa-space-1); min-width: 0; }
+.fa-extraction__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-extraction__input { min-height: 2.25rem; padding: 0 var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-extraction__file { font: inherit; color: var(--fa-color-text); }
+.fa-extraction__input:focus-visible, .fa-extraction__file:focus-visible, .fa-extraction__passed summary:focus-visible, .fa-extraction__pages summary:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-extraction__muted { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-extraction__error { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-danger); }
+.fa-extraction__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-extraction__notice { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-left: 3px solid var(--fa-color-accent); background: var(--fa-color-accent-soft); border-radius: var(--fa-radius-sm); }
+.fa-extraction__summary { display: grid; grid-template-columns: max-content 1fr; gap: var(--fa-space-1) var(--fa-space-3); margin: 0; }
+.fa-extraction__summary dt { font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-extraction__summary dd { margin: 0; overflow-wrap: anywhere; }
+.fa-extraction__table { width: 100%; border-collapse: collapse; }
+.fa-extraction__table th, .fa-extraction__table td { padding: var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: left; vertical-align: top; }
+.fa-extraction__table th { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); font-weight: 600; }
+.fa-extraction__table td.fa-extraction__number { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fa-extraction__scroll { overflow-x: auto; }
+.fa-extraction__flags { display: flex; flex-wrap: wrap; gap: var(--fa-space-1); margin: 0; padding: 0; list-style: none; }
+.fa-extraction__passed summary, .fa-extraction__pages summary { cursor: pointer; font-weight: 600; }
+.fa-extraction__text { margin: var(--fa-space-1) 0 0; padding: var(--fa-space-2); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--fa-color-surface-raised); border-radius: var(--fa-radius); font: var(--fa-font-size-xs) / 1.5 var(--fa-font-mono, monospace); }

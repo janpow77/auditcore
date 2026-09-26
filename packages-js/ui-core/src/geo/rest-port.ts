@@ -38,6 +38,7 @@ export function createGeoRestPort(options: GeoRestOptions): GeoPort {
     radius: (request) => requestJson(options, '/umkreis', request),
     locate: (request) => requestJson(options, '/lage', request),
     utm: (request) => requestJson(options, '/utm', request),
+    fromUtm: (request) => requestJson(options, '/utm/geographisch', request),
     simplify: (request) => requestJson(options, '/vereinfachung', request),
     loadGeoPackage: (file, table) => upload(options, file, table),
     loadSource: (name, table) => requestJson(options, `/gpkg/quellen/${encodeURIComponent(name)}${query(table)}`),

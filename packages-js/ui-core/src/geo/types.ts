@@ -125,6 +125,20 @@ export interface UtmResult {
   nord: number
 }
 
+/** `POST /utm/geographisch`: Punkt aus Rechts-/Hochwert, Zone und Halbkugel. */
+export interface UtmPointRequest {
+  ost: number
+  nord: number
+  zone: number
+  nordhalbkugel: boolean
+  ellipsoid: string
+}
+
+export interface UtmPointResult {
+  punkt: LatLon
+  zone: number
+}
+
 export type SimplifyUnit = 'meter' | 'grad'
 
 export interface SimplifyRequest {
@@ -183,6 +197,8 @@ export interface GeoPort {
   radius(request: RadiusRequest): Promise<RadiusResult>
   locate(request: LocateRequest): Promise<LocateResult>
   utm(request: UtmRequest): Promise<UtmResult>
+  /** Rückrechnung aus UTM; ohne sie blendet die Oberfläche die UTM-Eingabe aus. */
+  fromUtm?(request: UtmPointRequest): Promise<UtmPointResult>
   simplify(request: SimplifyRequest): Promise<SimplifyResult>
   loadGeoPackage?(file: Blob, table?: string): Promise<GeoPackageResult>
   loadSource?(name: string, table?: string): Promise<GeoPackageResult>

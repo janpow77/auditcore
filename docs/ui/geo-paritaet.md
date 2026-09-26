@@ -29,6 +29,7 @@ den Vorbildern; **abweichend** = bewusst anders (Begründung); **offen** = nicht
 | GeoPackage laden | audit_designer: Datei-Explorer erkennt `.gpkg`, Lesen im Backend (Fiona/GDAL) | `POST /gpkg` (Upload) und benannte Serverquellen; nur Polygone; stdlib `sqlite3` | übernommen (ohne GDAL); Punkte/Linien offen |
 | Bezugssysteme GeoPackage | audit_designer: beliebig über GDAL/PROJ | 4326/4258 direkt, ETRS89- und WGS-84-UTM zurückgerechnet, sonst Fehler | abweichend (kein PROJ; unbekanntes SRS nie still) |
 | UTM-Anzeige | audit_designer Statusleiste: nur Grad | Zone, Rechts-/Hochwert, EPSG für den Bezugspunkt, Ellipsoid wählbar | ergänzt |
+| UTM-Eingabe | – | Bezugspunkt aus Zone, Halbkugel, Ost- und Nordwert über `POST /utm/geographisch` (Komma oder Punkt, Wertebereich je Feld geprüft); nur wenn der Port `fromUtm` anbietet | ergänzt |
 | Douglas-Peucker | osint `bundeslaender_holen.py` (Skript, Grad) | `POST /vereinfachung`, Toleranzregler in Metern (über UTM) oder Grad, Vorher/Nachher-Zahl, Überlagerung gestrichelt | ergänzt (Oberfläche), Grad ergebnisgleich |
 | Adresssuche | audit_designer `_geocode_address` (Nominatim direkt, immer an); flowsearch `geocoding_service`; wohnungsmonitor Offline-Koordinaten | nur serverseitig über `Geocoder` (`NominatimGeocoder` auf auditcore_harvest), abschaltbar (Standard aus), clientseitig nur mit `geocoding: true` | abweichend (Datenschutz, OSMF-Bedingungen, D5) |
 | Koordinateneingabe | audit_designer Omnibar (Suche) | Breite/Länge mit Komma oder Punkt, Punkt aus Liste übernehmen | ergänzt (Tastaturbedienung) |

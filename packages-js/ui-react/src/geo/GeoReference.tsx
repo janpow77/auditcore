@@ -3,6 +3,7 @@ import { displayName, formatDegrees, formatMetres, type LatLon } from '@flowaudi
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { useGeo } from './context'
+import { GeoUtmInput } from './GeoUtmInput'
 
 const submit = (action: () => void) => (event: FormEvent) => {
   event.preventDefault()
@@ -102,8 +103,8 @@ function Facts() {
 }
 
 function Ellipsoid() {
-  const { state, controller, t } = useGeo()
-  if (!state.catalogue || !state.reference) return null
+  const { state, selection, controller, t } = useGeo()
+  if (!state.catalogue || !(state.reference || selection.canFromUtm)) return null
   return (
     <label className="fa-geo__field">
       <span className="fa-geo__label">{t('ellipsoid')}</span>
@@ -131,6 +132,7 @@ export function GeoReference() {
       <h3 id={`${id}-h`} className="fa-geo__heading">{t('reference')}</h3>
       <p className="fa-geo__muted">{t('referenceHelp')}</p>
       <Coordinates />
+      <GeoUtmInput />
       <FromPoint />
       <Geocode />
       <Facts />

@@ -86,12 +86,14 @@ document.body.append(table)
   `<flowaudit-db-kanban>`, `<flowaudit-sampling>`, `<flowaudit-benford>`,
   `<flowaudit-screening-review>`, `<flowaudit-risk-flags>`,
   `<flowaudit-synopsis>`, `<flowaudit-comparisons>`, `<flowaudit-vvt>`,
-  `<flowaudit-dsfa>` und `<flowaudit-geo-map>` im Light DOM
+  `<flowaudit-dsfa>`, `<flowaudit-geo-map>` und
+  `<flowaudit-identifier-check>` im Light DOM
   (kein Shadow DOM, Designtoken der Seite gelten). Objekte und Listen werden
   als JS-Eigenschaften gesetzt, Ereignisse sind `CustomEvent`s in kebab-case
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
 - **React:** Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening,
+  Stichprobe, Benford und „Kennung prüfen“ nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Stichprobe, Benford und Dokumentvergleiche nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
   Geo-Karte, Kanban und die Datenbankansicht.
@@ -106,6 +108,7 @@ Fachkomponenten und ihre REST-Verträge:
 | `FaDbKanban` | `<flowaudit-db-kanban>` | Datenbankansicht als Kanban (useDbKanban): Datensätze einer Tabelle nach einer Auswahl-Eigenschaft gruppiert, Spalte „Ohne Wert“, Ablegen oder Strg+Pfeil setzt den Zellwert, Eintrag je Spalte anlegen; Datenquelle als `RecordPort` (`load`, `updateCell`, `addRow`) oder Tabelle mit `table-change` | [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md) |
 | `SamplingPanel` | `<flowaudit-sampling>` | Stichprobenumfang und -ziehung über `auditcore_sampling.web` | [`docs/ui/sampling-rest.md`](../../docs/ui/sampling-rest.md) |
 | `BenfordPanel` | `<flowaudit-benford>` | Benford-Analyse über `auditcore_statistics.web` | [`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md) |
+| `IdentifierCheck` | `<flowaudit-identifier-check>` | Kennung prüfen über `auditcore_identifiers.web`: IBAN, BIC, USt-IdNr., Steuer-ID, Steuernummer, LEI, Handelsregisternummer mit Prüfprofil, Begründung und Einzelheiten; Stapelprüfung aus CSV/TSV mit Spaltenzuordnung und CSV-Export | [`docs/ui/identifiers-rest.md`](../../docs/ui/identifiers-rest.md) |
 | `ScreeningReview` | `<flowaudit-screening-review>` | Trefferprüfung beim Sanktions-/PEP-Screening | [`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md) |
 | `FaVvt` | `<flowaudit-vvt>` | Verzeichnis von Verarbeitungstätigkeiten (Art. 30 DSGVO) über `auditcore_dataprotection.web`: Pflichtangaben, Vollständigkeitsprüfung der Bibliothek, Entwurf, Vier-Augen-Freigabe, Versionen, Druckansicht/Markdown/CSV | [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md) |
 | `FaDsfa` | `<flowaudit-dsfa>` | Datenschutz-Folgenabschätzung (Art. 35 DSGVO): Schwellwertanalyse mit Muss-Liste, Risikoszenarien mit Berechnung der Bibliothek, Entscheidung, DSB, Freigabe, Bericht | [`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md) |
@@ -119,7 +122,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (726):
+Exporte der Einstiegspunkte aus `package.json#exports` (770):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -259,6 +262,20 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportedFile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractedField` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionBusy` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionCallbacks` | Re-Export | – | `./useExtraction` |
+| `@flowaudit/ui` | `ExtractionCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionFinding` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionOcrSummary` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionProfile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionRun` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionSource` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionValidation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FLAG_STATES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
@@ -266,6 +283,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `FaDbKanban` | Vue-Komponente | – | `dbkanban/FaDbKanban.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
 | `@flowaudit/ui` | `FaDsfa` | Vue-Komponente | – | `dataprotection/FaDsfa.vue` |
+| `@flowaudit/ui` | `FaExtraction` | Vue-Komponente | – | `extraction/FaExtraction.vue` |
 | `@flowaudit/ui` | `FaGeoMap` | Vue-Komponente | – | `geo/FaGeoMap.vue` |
 | `@flowaudit/ui` | `FaIcon` | Vue-Komponente | – | `base/FaIcon.vue` |
 | `@flowaudit/ui` | `FaSynopsis` | Vue-Komponente | – | `synopsis/FaSynopsis.vue` |
@@ -305,9 +323,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `HitView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ICONS` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_BENFORD` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_REPORTING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IconName` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `IdentifierBatchAnswer` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `IdentifierCallbacks` | Re-Export | – | `./useIdentifierCheck` |
+| `@flowaudit/ui` | `IdentifierCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `IdentifierCheck` | Vue-Komponente | – | `identifiers/IdentifierCheck.vue` |
+| `@flowaudit/ui` | `IdentifierController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `IdentifierData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `IdentifierResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `IdentifiersPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ImportRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ImportedColumns` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `JsonObject` | Re-Export | – | `@flowaudit/ui-core` |
@@ -513,8 +540,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@flowaudit/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@flowaudit/ui` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
+| `@flowaudit/ui` | `UseExtraction` | Schnittstelle | – | `extraction/useExtraction` |
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
+| `@flowaudit/ui` | `UseIdentifierCheck` | Schnittstelle | – | `identifiers/useIdentifierCheck` |
 | `@flowaudit/ui` | `UseReportExport` | Schnittstelle | – | `reporting/useReportExport` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
@@ -526,6 +555,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `UseTableImport` | Schnittstelle | – | `tabular/useTableImport` |
 | `@flowaudit/ui` | `UseTheme` | Schnittstelle | – | `theme/theme` |
 | `@flowaudit/ui` | `UseToast` | Schnittstelle | – | `composables/useToast` |
+| `@flowaudit/ui` | `UtmInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmInputError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmPointRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmPointResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UtmRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UtmResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VersionSummary` | Re-Export | – | `@flowaudit/ui-core` |
@@ -596,8 +629,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `createComparisonsController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDbKanbanController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createExtractionController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createExtractionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
 | `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createIdentifierController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createIdentifiersRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `createReportingController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createReportingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
@@ -639,6 +676,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `evaluationRules` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `excludedLines` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `exportFilename` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `extractionElement` | Konstante | `<flowaudit-extraction>`: Eigenschaften `port` (ExtractionPort), `result`, `locale`; Ereignisse `extraction-completed`, `error`. | `extraction/element` |
+| `@flowaudit/ui` | `extractionMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `extractionValidation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldIssues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fileSize` | Re-Export | – | `@flowaudit/kanban-core` |
@@ -666,6 +706,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `groupRecords` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `guessNumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `hasPartialStrata` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `identifierCheckElement` | Konstante | `<flowaudit-identifier-check>`: Eigenschaften `port` (IdentifiersPort), `locale`; Ereignisse `identifier-checked`, `batch-checked`, `error`. | `identifiers/element` |
+| `@flowaudit/ui` | `identifierMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `importDelimiterText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `importOptionalColumn` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `importPreview` | Re-Export | – | `@flowaudit/ui-core` |
@@ -706,9 +748,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `parseImport` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseLatLon` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `parseMetres` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseNumber` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `parseSubjects` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseTable` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui` | `parseUtm` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `placementFor` | Re-Export | – | `./movePreview` |
 | `@flowaudit/ui` | `plainSegments` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `populationSuggestions` | Re-Export | – | `@flowaudit/ui-core` |
@@ -804,10 +848,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `useDebouncedFn` | Funktion | Entprellte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDsfa` | Funktion | – | `dataprotection/useDsfa` |
+| `@flowaudit/ui` | `useExtraction` | Funktion | Vue-Anbindung der Belegerkennung aus `@flowaudit/ui-core` (`createExtractionController`). | `extraction/useExtraction` |
 | `@flowaudit/ui` | `useFocusTrap` | Funktion | Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn danach an das zuvor fokussierte Element zurück. | `composables/useFocusTrap` |
 | `@flowaudit/ui` | `useGeoMap` | Funktion | Zustand und Abläufe der Geo-Karte; jede Berechnung läuft über den Port. | `geo/useGeoMap` |
 | `@flowaudit/ui` | `useI18n` | Funktion | Composable für Komponenten. `override` (z. B. eine Prop `locale`) hat Vorrang vor der bereitgestellten Sprache. | `i18n/i18n` |
 | `@flowaudit/ui` | `useId` | Funktion | Eindeutige, stabile ID je Komponenteninstanz für aria-Verknüpfungen. | `composables/useId` |
+| `@flowaudit/ui` | `useIdentifierCheck` | Funktion | Vue-Anbindung von „Kennung prüfen“ aus `@flowaudit/ui-core` (`createIdentifierController`). | `identifiers/useIdentifierCheck` |
 | `@flowaudit/ui` | `useKanbanActions` | Funktion | – | `kanban/useKanbanActions` |
 | `@flowaudit/ui` | `useKanbanBoard` | Funktion | – | `kanban/useKanbanBoard` |
 | `@flowaudit/ui` | `useKanbanFilter` | Funktion | Such- und Filterzustand des Boards (Toolbar) als CardFilter der Kernlogik. | `kanban/useKanbanFilter` |
@@ -829,6 +875,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (726):
 | `@flowaudit/ui` | `useThrottledFn` | Funktion | Gedrosselte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useToast` | Funktion | Toasts als reaktive Liste über der framework-freien Warteschlange aus `@flowaudit/common`. | `composables/useToast` |
 | `@flowaudit/ui` | `useVvt` | Funktion | – | `dataprotection/useVvt` |
+| `@flowaudit/ui` | `utmErrorKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `validateDecision` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vertexCount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vvtElement` | Konstante | `<flowaudit-vvt>`: Eigenschaften `port` (DataProtectionPort), `actor`, `editable`, `locale`; Ereignisse `draft-saved`, `released`, `exported`, `error`. | `dataprotection/element` |
@@ -858,7 +905,9 @@ Web Components:
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
 | `<flowaudit-dsfa>` | `FaDsfa` | `dataprotection/element.ts` |
+| `<flowaudit-extraction>` | `FaExtraction` | `extraction/element.ts` |
 | `<flowaudit-geo-map>` | `FaGeoMap` | `geo/element.ts` |
+| `<flowaudit-identifier-check>` | `IdentifierCheck` | `identifiers/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
 | `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
@@ -1009,6 +1058,19 @@ Web Components:
 | `assessment-change` | `[detail: { step: DsfaStep; id: string; version: number; status: string }]` | – |
 | `error` | `[detail: DataProtectionError]` | – |
 
+#### `FaExtraction`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `ExtractionPort \| null` | nein | `null` | Fachlogik, z. B. `createExtractionRestPort({ baseUrl: '/api/extraction' })`. |
+| `result` | `ExtractionRun \| null` | nein | `null` | Vorhandenes Ergebnis anzeigen (z. B. aus der Ablage der Anwendung). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `extraction-completed` | `[result: ExtractionRun]` | – |
+| `error` | `[message: string]` | – |
+
 #### `FaGeoMap`
 
 | Prop | Typ | Pflicht | Standard | Beschreibung |
@@ -1103,6 +1165,19 @@ Web Components:
 | `released` | `[detail: { version: number }]` | – |
 | `exported` | `[detail: VvtExport]` | – |
 | `error` | `[detail: DataProtectionError]` | – |
+
+#### `IdentifierCheck`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `IdentifiersPort \| null` | nein | `null` | Fachlogik, z. B. `createIdentifiersRestPort({ baseUrl: '/api/kennungen' })`. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `identifier-checked` | `[result: IdentifierResult]` | – |
+| `batch-checked` | `[answer: IdentifierBatchAnswer]` | – |
+| `error` | `[message: string]` | – |
 
 #### `KanbanBoard`
 

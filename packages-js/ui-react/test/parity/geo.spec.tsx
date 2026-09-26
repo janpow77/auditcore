@@ -72,3 +72,28 @@ describe('Parität Geo-Karte nach Interaktion', () => {
     expect(rendered.react.querySelector('[data-testid="geo-gpkg-result"]')?.textContent).toContain('1 Flächen aus Tabelle')
   })
 })
+
+const type = (value: string) => (element: HTMLElement, react: boolean) =>
+  react ? fireEvent.change(element, { target: { value } }) : domEvent.input(element, { target: { value } })
+
+describe('Parität Geo-Karte: UTM-Eingabe', () => {
+  it('Fehler je Feld, Halbkugel, Rückrechnung setzt den Bezugspunkt und füllt die Felder', async () => {
+    views.length = 0
+    const ports = [fakeGeoPort(), fakeGeoPort()]
+    const rendered = await renderBoth(FaGeoMap, { port: ports[0], points: GEO_POINTS }, <FlowauditGeoMap port={ports[1]} points={GEO_POINTS} />)
+    await both(rendered, '[data-testid="geo-utm-zone"]', type('61'))
+    await both(rendered, '[data-testid="geo-utm-apply"]', submit)
+    expect(rendered.react.querySelector('.fa-geo__utm [role="alert"]')?.textContent).toBe('Zone muss eine ganze Zahl von 1 bis 60 sein.')
+    await both(rendered, '[data-testid="geo-utm-zone"]', type('32'))
+    await both(rendered, '[data-testid="geo-utm-east"]', type('476398,98'))
+    await both(rendered, '[data-testid="geo-utm-north"]', type('5549801,4'))
+    await both(rendered, '[data-testid="geo-utm-hemisphere"]', select('S'))
+    await both(rendered, '[data-testid="geo-utm-hemisphere"]', select('N'))
+    await both(rendered, '[data-testid="geo-utm-apply"]', submit)
+    for (const port of ports) {
+      expect(port.fromUtm).toHaveBeenCalledWith({ zone: 32, ost: 476398.98, nord: 5549801.4, nordhalbkugel: true, ellipsoid: 'GRS80' })
+    }
+    expect(rendered.react.querySelector('[data-testid="geo-reference"]')?.textContent).toContain('50,100000')
+    expect((rendered.react.querySelector('[data-testid="geo-utm-east"]') as HTMLInputElement).value).toBe('476398.98')
+  })
+})

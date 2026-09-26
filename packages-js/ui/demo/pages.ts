@@ -16,11 +16,13 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'stichprobe', title: 'Stichprobe', group: 'Komponenten', load: () => import('./pages/sampling/SamplingPage.vue') },
   { id: 'benford', title: 'Benford-Analyse', group: 'Komponenten', load: () => import('./pages/benford/BenfordPage.vue') },
   { id: 'tabellenexport', title: 'Tabellenexport (Excel)', group: 'Komponenten', load: () => import('./pages/reporting/ReportExportPage.vue') },
+  { id: 'kennung', title: 'Kennung prüfen', group: 'Komponenten', load: () => import('./pages/identifiers/IdentifierPage.vue') },
   { id: 'screening', title: 'Screening-Trefferprüfung', group: 'Komponenten', load: () => import('./pages/screening/ScreeningPage.vue') },
   { id: 'kanban', title: 'Kanban', group: 'Komponenten', load: () => import('./pages/kanban/KanbanPage.vue') },
   { id: 'datenbank-kanban', title: 'Datenbankansicht (Kanban)', group: 'Komponenten', load: () => import('./pages/dbkanban/DbKanbanPage.vue') },
   { id: 'datenschutz', title: 'Datenschutz: VVT und DSFA', group: 'Komponenten', load: () => import('./pages/dataprotection/DataProtectionPage.vue') },
   { id: 'geo-karte', title: 'Geo-Karte', group: 'Komponenten', load: () => import('./pages/geo/GeoPage.vue') },
+  { id: 'belegerkennung', title: 'Belegerkennung', group: 'Komponenten', load: () => import('./pages/extraction/ExtractionPage.vue') },
   { id: 'dokumentvergleiche', title: 'Dokumentvergleiche', group: 'Komponenten', load: () => import('./pages/documents/ComparisonsPage.vue') },
   { id: 'synopse', title: 'Synopse / Versionsvergleich', group: 'Komponenten', load: () => import('./pages/synopsis/SynopsisPage.vue') },
 ]

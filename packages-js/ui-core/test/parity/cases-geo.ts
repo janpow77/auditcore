@@ -1,12 +1,13 @@
 /** Gemeinsame Paritätsfälle der Geo-Karte (Vue ↔ React); Antworten des echten auditcore_geo.web. */
 import { vi } from 'vitest'
-import type { GeoArea, GeoCatalogue, GeoPackageResult, GeoPoint, GeoPort, LocateResult, RadiusResult, SimplifyResult, TileSource, UtmResult } from '../../src'
+import type { GeoArea, GeoCatalogue, GeoPackageResult, GeoPoint, GeoPort, LocateResult, RadiusResult, SimplifyResult, TileSource, UtmPointResult, UtmResult } from '../../src'
 import catalogue from '../fixtures/geo-catalogue.json'
 import gpkg from '../fixtures/geo-gpkg.json'
 import locate from '../fixtures/geo-locate-rand.json'
 import radius from '../fixtures/geo-radius.json'
 import simplify from '../fixtures/geo-simplify.json'
 import utm from '../fixtures/geo-utm.json'
+import utmPoint from '../fixtures/geo-utm-point.json'
 import type { ParityCase } from './cases'
 
 export const GEO_POINTS: GeoPoint[] = [
@@ -15,7 +16,7 @@ export const GEO_POINTS: GeoPoint[] = [
   { id: 'V-3', label: 'Vorhaben Berlin', lat: 52.52, lon: 13.405 },
 ]
 export const GEO_AREA: GeoArea = { id: 'G-1', label: 'Gebiet A', geometry: { type: 'Polygon', coordinates: [[[8.66, 50.1], [8.68, 50.1], [8.68, 50.11], [8.66, 50.11], [8.66, 50.1]]] } }
-export const GEO_RESULTS = { catalogue, gpkg, locate, radius, simplify, utm }
+export const GEO_RESULTS = { catalogue, gpkg, locate, radius, simplify, utm, utmPoint }
 
 export function fakeGeoPort(extra: Partial<GeoPort> = {}): GeoPort & Record<string, ReturnType<typeof vi.fn>> {
   return {
@@ -23,6 +24,7 @@ export function fakeGeoPort(extra: Partial<GeoPort> = {}): GeoPort & Record<stri
     radius: vi.fn(async () => radius as unknown as RadiusResult),
     locate: vi.fn(async () => locate as unknown as LocateResult),
     utm: vi.fn(async () => utm as unknown as UtmResult),
+    fromUtm: vi.fn(async () => utmPoint as unknown as UtmPointResult),
     simplify: vi.fn(async () => simplify as unknown as SimplifyResult),
     loadGeoPackage: vi.fn(async () => gpkg as unknown as GeoPackageResult),
     ...extra,
@@ -41,7 +43,11 @@ export const geoCases: ReadonlyArray<ParityCase<GeoCaseProps>> = [
   {
     name: 'Punkte und Fläche ohne Kachelquelle',
     props: () => ({ port: fakeGeoPort(), points: GEO_POINTS, areas: [GEO_AREA] }),
-    expect: { texts: ['Keine Kachelquelle'], roles: [['application', /3 Punkten und 1 Flächen/]], counts: { '[data-testid="geo-gpkg-file"]': 1 } },
+    expect: {
+      texts: ['Keine Kachelquelle', 'UTM-Koordinaten eingeben'],
+      roles: [['application', /3 Punkten und 1 Flächen/], ['combobox', 'Ellipsoid']],
+      counts: { '[data-testid="geo-gpkg-file"]': 1, '[data-testid="geo-utm-input"]': 1 },
+    },
   },
   {
     name: 'mit Kachelquelle',
@@ -49,5 +55,10 @@ export const geoCases: ReadonlyArray<ParityCase<GeoCaseProps>> = [
     expect: { texts: ['Kartendaten: Synthetische Kacheln'] },
   },
   { name: 'ohne Port', props: () => ({}), expect: { texts: ['Kein Port übergeben'] } },
+  {
+    name: 'Port ohne UTM-Rückrechnung',
+    props: () => ({ port: fakeGeoPort({ fromUtm: undefined }), points: GEO_POINTS }),
+    expect: { counts: { '[data-testid="geo-utm-input"]': 0, '[data-testid="geo-ellipsoid"]': 0 } },
+  },
   { name: 'englisch', props: () => ({ port: fakeGeoPort(), points: GEO_POINTS, locale: 'en' }), expect: { texts: ['Radius search'] } },
 ]
