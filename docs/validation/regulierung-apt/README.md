@@ -15,39 +15,42 @@ von `/opt`; Installation führt weder Downloads noch automatische DB-Migrationen
 
 ## Tatsächlich ausgeführte Prüfungen
 
-Stand 26.09.2026: regulierung `cc6bf9a` (PR janpow77/regulierung#9) mit den
-auditcore-Bibliotheken aus Release v0.4.0 (dataprotection 0.4.3, reporting 0.2.1,
-harvest 0.1.1, price_analysis 0.1.1, price_sources 0.1.1, common 0.1.0, auth 0.1.0),
-im Lock als Release-Wheels mit SHA-256; Frontend mit `@flowaudit/common` 0.1.0
-(npm-pack-Tarball aus auditcore `483cd0a`).
+Stand 26.09.2026: regulierung `5458d2e` (main nach PR #12 und #11) mit den
+auditcore-Bibliotheken aus Release v0.4.1 (dataprotection 0.5.0, reporting 0.2.2,
+harvest 0.1.2, price_analysis 0.1.2, price_sources 0.1.2, common 0.1.1, auth 0.1.0),
+im Lock als Release-Wheels mit SHA-256; Frontend mit `@flowaudit/common`,
+`@flowaudit/ui-core` und `@flowaudit/ui-react` als npm-pack-Tarballs aus auditcore.
+Alembic-Head `owi049`.
 
-- Anwendung: 1803 Tests bestanden, 1 übersprungen (benötigt `pg_dump` auf dem
+- Anwendung: 1839 Tests bestanden, 1 übersprungen (benötigt `pg_dump` auf dem
   Testrechner; im Paket über `postgresql-client-16` vorhanden und im Lebenszyklus
-  mit Sicherung/Wiederherstellung ausgeführt). Wegwerf-PostgreSQL 16 mit
+  mit Sicherung/Wiederherstellung ausgeführt). Wegwerf-PostgreSQL 16.15 mit
   TimescaleDB 2.30.1/PostGIS 3.6.4; alle 88 gelockten Distributionen geprüft;
   Offline-Installation und `pip check` erfolgreich. Enthalten sind die
-  Paritätstests alt ↔ Bibliothek für auditcore_auth und auditcore_common.
-  Details: `application-tests.json`.
+  Paritätstests alt ↔ Bibliothek (auditcore_auth, auditcore_common) und die
+  Ausschlusstests für unlesbare Preiszeilen. Details: `application-tests.json`.
 - Native Administrationslogik: 24 Tests bestanden; native Runtime/Readiness:
   19 Tests bestanden (letztere zusätzlich im Anwendungstestlauf enthalten).
-- Vollständige Alembic-Neuinstallation bis `owi048` mit
+- Vollständige Alembic-Neuinstallation bis `owi049` mit
   `NOSUPERUSER`-Anwendungsrolle erfolgreich ausgeführt; Extensions zuvor
   administrativ eingerichtet (PostgreSQL 16, TimescaleDB 2.30.1, PostGIS 3.6.4).
   `role-migration-proof.txt`.
 - Paket-Lebenszyklus in QEMU (echtes systemd, offline, `-cpu max`): Installation,
-  Upgrade (`-1` → `-2`), Entfernen und Neuinstallation mit signiertem lokalen
+  Upgrade (`-21` → `-22`), Entfernen und Neuinstallation mit signiertem lokalen
   APT-Feed; 31 Prüfpunkte PASS, darunter Anmeldung eines echten Administrators,
   Readiness (DB, Redis, Schema), Sicherung und Wiederherstellung vor dem Upgrade,
-  Erhalt von Konfiguration und Daten, nativer PDF-Export. `lifecycle.json`.
+  Erhalt von Konfiguration und Daten, nativer PDF-Export. Gast mit TimescaleDB
+  `2.30.1~ubuntu24.04-1615` und PostGIS `3.6.4+dfsg-2.pgdg24.04+1`; dieselben
+  Versionen pinnt der Intranet-Installer (regulierung PR #13) und das
+  Docker-Image `infra/postgres`. `lifecycle.json`.
 - Frontend: Typprüfung, ESLint, Prettier, Vite-Build, Vitest in Europe/Berlin
-  und America/New_York (107 Tests, inklusive Parität zu `@flowaudit/common`),
-  Helfer-Verträge (Ratchet PASS) und Chromium-Kartentest bestanden. Auth/API und
+  und America/New_York (113 Tests) und Chromium-Kartentest bestanden. Auth/API und
   Kartendaten waren im Browsertest Fixtures, keine Backend-Anmeldeprüfung.
   MapLibre 6.11.0 erfordert WebGL2/ES2022. Details: `frontend-tests.json`.
 - Dependency-Audit: npm 2 moderate Befunde nur in der Testabhängigkeit vitest
   (nicht ausgeliefert); Python 81 öffentliche Pakete geprüft, ein verbleibendes
   ECDSA-Advisory betrifft ungenutzte Signier-/Keygen-Pfade. Die direkten Pins in
-  `requirements.txt` (Docker-Pfad) sind jetzt deckungsgleich mit dem Lock.
+  `requirements.txt` (Docker-Pfad) sind deckungsgleich mit dem Lock.
   Anwendbarkeit und verbleibende Grenzen: `dependency-review.json` und
   `dependency-applicability.json`.
 - CI-Build lokal in Ubuntu 24.04/CPython 3.12 tatsächlich ausgeführt
@@ -69,9 +72,9 @@ Produktionsdaten, externe Identitätsprovider, Live-Harvesting, öffentliche
 TLS-/Proxy-Konfiguration und schemaändernde Datenbank-Upgrades benötigen einen
 konkreten Betriebs-/Migrationsnachweis. `regulierung-admin migrate` verweigert
 unbewertete Schemaänderungen und prüft bei kompatiblen Updates zuvor Backup/Restore.
-Das betrifft ausdrücklich ein Upgrade der Kandidaten vom 23.09. (`owi047`) auf den
-aktuellen Stand (`owi048`, additive Spalte `mandant_dsfa.vertrag` und erweiterte
-Prüfbedingung); eine Erstinstallation führt alle Migrationen über `init-local` aus.
+Der Zielserver des Ministeriums ist leer: ausgeliefert wird eine
+Erstinstallation (`bootstrap-intranet`, alle Migrationen bis `owi049`); ein
+Upgrade älterer Kandidaten (`owi047`/`owi048`) ist nicht Teil der Auslieferung.
 
 ## Reproduzierbarer Pakettest
 
