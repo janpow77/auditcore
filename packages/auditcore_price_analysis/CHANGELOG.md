@@ -1,5 +1,22 @@
 # Changelog – auditcore_price_analysis
 
+## 0.1.2 – 2026-09-25
+
+Verhaltensänderung PA-C01 (Nutzerauftrag vom 25.09.2026).
+
+- `parse_decimal` (und damit `non_negative`, `calculate`, `delta_pct`,
+  `traffic_light`, `group_statistics`) liest deutsche Zahlentexte nach dem
+  gemeinsamen Vertrag `contracts/common-cases/parse-number` (Modus `de`) über
+  `auditcore_common.numbers_de`: „1.234,56 €“ → 1234.56, „10,82“ → 10.82,
+  „1.000.000“ → 1000000. Bisher `invalid_number`.
+- Mehrdeutige deutsche Texte („1,234“, „0,125“, „1.234 €“) ergeben den neuen
+  Fehlercode `ambiguous_number` mit Hinweis statt einer geratenen Zahl.
+- Einfacher Punkttext („2.5“, „1.234“) sowie `Decimal`/`int`/`float`
+  unverändert.
+- Neu `legacy_parse_decimal`: das Verhalten von 0.1.1 (nur Punkt, jedes Komma
+  `invalid_number`).
+- Pflichtabhängigkeit `auditcore_common==0.1.1`.
+
 ## 0.1.1 – Refaktorierung ohne Verhaltensänderung
 
 - `profiles` nach Verantwortung geschnitten: die eingefrorenen Regelobjekte

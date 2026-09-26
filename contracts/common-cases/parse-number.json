@@ -2,7 +2,7 @@
   "$schema": "./schema.json",
   "contract": "parse-number",
   "version": "1.1.0",
-  "status": "vorläufig",
+  "status": "verbindlich",
   "title": "Zahl bzw. Betrag aus Texteingabe parsen",
   "description": "Parser für Benutzereingaben und Importwerte. Ergebnis als Dezimalwert (Zahl, Decimal oder Dezimal-String); ungültig heißt null/None/undefined/NaN oder Ausnahme. Modus 'de' = Betragsfelder (Komma dezimal, Punkt nur als Tausendertrenner in Dreiergruppen), 'en' = englische Schreibweise, 'auto' = Import aus Fremddateien (letzter Trenner entscheidet, mehrdeutige Einzeltrenner werden abgelehnt). Währungszeichen (€, EUR) und Leerraum (auch U+00A0) werden entfernt. Modus 'de' folgt der strikten Betragsauslegung von flowinvoice (frontend/src/lib/german-decimal.ts, backend/app/services/amount_parsing.py, Fälle german-amount-cases.json): höchstens zwei Nachkommastellen, eine einzelne Dreiergruppe ohne Komma ist mehrdeutig, Eingaben nur aus Trennzeichen/Währung gelten als leer.",
   "languages": [
@@ -113,7 +113,7 @@
       "tags": [
         "mehrdeutig"
       ],
-      "note": "vorläufige Festlegung: in Betragsfeldern ungültig, Oberfläche zeigt Hinweis (weder 1,5 noch 15 raten)"
+      "note": "Festlegung des Nutzers vom 25.09.2026: in Betragsfeldern ungültig, Oberfläche zeigt Hinweis (weder 1,5 noch 15 raten)"
     },
     {
       "id": "de-englisches-format",

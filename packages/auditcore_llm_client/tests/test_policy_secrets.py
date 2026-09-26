@@ -22,6 +22,7 @@ from auditcore_llm_client import (
     EgressDeniedError,
     ErrorKind,
     LlmClient,
+    LlmClientError,
     Mode,
     RetryPolicy,
     RouterHealth,
@@ -152,3 +153,39 @@ def test_resolver_failures_do_not_leak() -> None:
 def test_cockpit_profile_is_deprecated_but_kept() -> None:
     assert COCKPIT.deprecated and "flow-agent #50" in COCKPIT.deprecated
     assert [p.name for p in PROFILES.values() if p.deprecated] == ["cockpit"]
+
+
+HEADER_CASES = [
+    # (status, header, detail, expected type)
+    (403, "egress-denied", "irgendein Text", EgressDeniedError),
+    (400, "invalid-sensitivity", "irgendein Text", SensitivityRejectedError),
+    (403, "EGRESS-DENIED ", "x", EgressDeniedError),
+    (400, "egress-denied", "Ungültige Sensitivität", RouterHttpError),
+    (403, "invalid-sensitivity", "Egress: kein Modell", RouterHttpError),
+    (500, "egress-denied", "Egress", RouterHttpError),
+    (403, "unbekannt", "Egress: kein Modell", RouterHttpError),
+    (403, None, "Egress: Sensitivität restricted", EgressDeniedError),
+    (400, None, "Ungültige Sensitivität.", SensitivityRejectedError),
+    (403, None, "Capability chat ist nicht freigegeben.", RouterHttpError),
+]
+
+
+@pytest.mark.parametrize(("status", "header", "detail", "expected"), HEADER_CASES)
+def test_error_header_is_primary_and_text_is_fallback(
+    status: int, header: str | None, detail: str, expected: type
+) -> None:
+    headers = {"X-Flow-Agent-Error": header} if header is not None else {}
+    gateway = Gateway([{"status": status, "json": {"detail": detail}, "headers": headers}])
+    with LlmClient(FLOW, transport=gateway.transport(), sleep=lambda _: None) as client, \
+            pytest.raises(LlmClientError) as info:
+        client.chat([])
+    assert type(info.value) is expected
+
+
+def test_error_header_is_ignored_in_router_mode() -> None:
+    gateway = Gateway([{"status": 403, "json": {"detail": "x"},
+                        "headers": {"X-Flow-Agent-Error": "egress-denied"}}])
+    router = ClientConfig(base_url="http://r.test", app_id="a")
+    with LlmClient(router, transport=gateway.transport()) as client, \
+            pytest.raises(RouterHttpError):
+        client.chat([])

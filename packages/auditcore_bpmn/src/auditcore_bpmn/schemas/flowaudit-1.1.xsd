@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FlowAudit-BPMN-Erweiterung, Schema 1.1 (verbindlich; Beschreibung in docs/bpmn/flowaudit-schema-1.1.md).
+  Namensraum unverändert seit 1.0; die Elemente stehen in bpmn:extensionElements.
+  Offene Wertelisten (Rollen, Kennzeichen, Fonds, Prüfarten eigener Profile) sind xs:string;
+  ihre Prüfung übernehmen die Prüfregeln von auditcore_bpmn.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:fa="https://flowaudit.de/bpmn/schema/1.0"
+           targetNamespace="https://flowaudit.de/bpmn/schema/1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <xs:simpleType name="Datum"><xs:restriction base="xs:date"/></xs:simpleType>
+  <xs:simpleType name="Farbe"><xs:restriction base="xs:string"><xs:pattern value="#[0-9A-Fa-f]{6}"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="Status">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="entwurf"/><xs:enumeration value="in_pruefung"/>
+      <xs:enumeration value="freigegeben"/><xs:enumeration value="archiviert"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Vertraulichkeit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="offen"/><xs:enumeration value="intern"/><xs:enumeration value="vs_nfd"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Variante">
+    <xs:restriction base="xs:string"><xs:enumeration value="soll"/><xs:enumeration value="ist"/></xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Stufe">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="niedrig"/><xs:enumeration value="mittel"/><xs:enumeration value="hoch"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Kontrollart">
+    <xs:restriction base="xs:string"><xs:enumeration value="praeventiv"/><xs:enumeration value="aufdeckend"/></xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Durchfuehrung">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="manuell"/><xs:enumeration value="it_gestuetzt"/><xs:enumeration value="automatisiert"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Ergebnis">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="erfuellt"/><xs:enumeration value="nicht_erfuellt"/>
+      <xs:enumeration value="nicht_anwendbar"/><xs:enumeration value="offen"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Feststellungsart">
+    <xs:restriction base="xs:string"><xs:enumeration value="formell"/><xs:enumeration value="finanziell"/></xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Einstufung">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="gering"/><xs:enumeration value="mittel"/><xs:enumeration value="schwerwiegend"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Folgestatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="offen"/><xs:enumeration value="in_umsetzung"/><xs:enumeration value="umgesetzt"/>
+      <xs:enumeration value="nicht_umgesetzt"/><xs:enumeration value="entfallen"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Verweisart">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="prueffeld"/><xs:enumeration value="feststellung_ref"/><xs:enumeration value="register"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Wahrheitswert">
+    <xs:restriction base="xs:string"><xs:enumeration value="true"/><xs:enumeration value="false"/></xs:restriction>
+  </xs:simpleType>
+
+  <xs:attributeGroup name="Vertraulich">
+    <xs:attribute name="vertraulich" type="fa:Wahrheitswert"/>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:attributeGroup>
+
+  <xs:complexType name="Text">
+    <xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="value" type="xs:string"/></xs:extension></xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="Rechtsgrundlage">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="norm" type="xs:string"/>
+        <xs:attribute name="artikel" type="xs:string"/>
+        <xs:attribute name="paragraph" type="xs:string"/>
+        <xs:attribute name="anhang" type="xs:string"/>
+        <xs:attribute name="absatz" type="xs:string"/>
+        <xs:attribute name="unterabsatz" type="xs:string"/>
+        <xs:attribute name="satz" type="xs:string"/>
+        <xs:attribute name="buchstabe" type="xs:string"/>
+        <xs:attribute name="nummer" type="xs:string"/>
+        <xs:attribute name="fassung" type="xs:string"/>
+        <xs:attribute name="eli" type="xs:anyURI"/>
+        <xs:attribute name="celex" type="xs:string"/>
+        <xs:attribute name="url" type="xs:anyURI"/>
+        <xs:attribute name="kurzbezeichnung" type="xs:string"/>
+        <xs:attribute name="anmerkung" type="xs:string"/>
+        <xs:attributeGroup ref="fa:Vertraulich"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="Kennzeichen">
+    <xs:attribute name="typ" type="xs:string" use="required"/>
+    <xs:attribute name="text" type="xs:string"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Pruefbezug">
+    <xs:attribute name="ka" type="xs:positiveInteger" use="required"/>
+    <xs:attribute name="bk" type="xs:string"/>
+    <xs:attribute name="art" type="xs:string"/>
+    <xs:attribute name="anmerkung" type="xs:string"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Akteur">
+    <xs:attribute name="rolle" type="xs:string" use="required"/>
+    <xs:attribute name="anzeigename" type="xs:string"/>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+
+  <xs:complexType name="Kontrolle">
+    <xs:sequence><xs:element name="beschreibung" type="xs:string" minOccurs="0"/></xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="bezeichnung" type="xs:string"/>
+    <xs:attribute name="schluesselkontrolle" type="fa:Wahrheitswert"/>
+    <xs:attribute name="art" type="fa:Kontrollart"/>
+    <xs:attribute name="durchfuehrung" type="fa:Durchfuehrung"/>
+    <xs:attribute name="haeufigkeit" type="xs:string"/>
+    <xs:attribute name="nachweis" type="xs:string"/>
+    <xs:attribute name="verantwortlich" type="xs:string"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Risiko">
+    <xs:sequence><xs:element name="beschreibung" type="xs:string" minOccurs="0"/></xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="bezeichnung" type="xs:string"/>
+    <xs:attribute name="kategorie" type="xs:string"/>
+    <xs:attribute name="inhaerent" type="fa:Stufe"/>
+    <xs:attribute name="kontrollrisiko" type="fa:Stufe"/>
+    <xs:attribute name="restrisiko" type="fa:Stufe"/>
+    <xs:attribute name="kontrollen" type="xs:string"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Nachweis">
+    <xs:attribute name="dokumentart" type="xs:string"/>
+    <xs:attribute name="aufbewahrungsort" type="xs:string"/>
+    <xs:attribute name="itSystem" type="xs:string"/>
+    <xs:attribute name="aufbewahrungsfrist" type="xs:string"/>
+    <xs:attribute name="anmerkung" type="xs:string"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Frist">
+    <xs:sequence><xs:element name="rechtsgrundlage" type="fa:Rechtsgrundlage" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
+    <xs:attribute name="wert" type="xs:string"/>
+    <xs:attribute name="einheit" type="xs:string"/>
+    <xs:attribute name="bezug" type="xs:string"/>
+    <xs:attribute name="anmerkung" type="xs:string"/>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+
+  <xs:complexType name="Verweis">
+    <xs:attribute name="art" type="fa:Verweisart" use="required"/>
+    <xs:attribute name="schluessel" type="xs:string" use="required"/>
+    <xs:attribute name="dokument" type="xs:string"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Pruefschritt">
+    <xs:sequence><xs:element name="bemerkung" type="xs:string" minOccurs="0"/></xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="fall" type="xs:string"/>
+    <xs:attribute name="beleg" type="xs:string"/>
+    <xs:attribute name="ergebnis" type="fa:Ergebnis"/>
+    <xs:attribute name="datum" type="fa:Datum"/>
+    <xs:attribute name="pruefer" type="xs:string"/>
+    <xs:attribute name="kontrolle" type="xs:string"/>
+    <xs:attribute name="stichprobe" type="xs:nonNegativeInteger"/>
+    <xs:attribute name="grundgesamtheit" type="xs:nonNegativeInteger"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Feststellung">
+    <xs:sequence>
+      <xs:element name="beschreibung" type="xs:string" minOccurs="0"/>
+      <xs:element name="empfehlung" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="kennung" type="xs:string"/>
+    <xs:attribute name="art" type="fa:Feststellungsart"/>
+    <xs:attribute name="einstufung" type="fa:Einstufung"/>
+    <xs:attribute name="ka" type="xs:positiveInteger"/>
+    <xs:attribute name="bk" type="xs:string"/>
+    <xs:attribute name="frist" type="fa:Datum"/>
+    <xs:attribute name="status" type="fa:Folgestatus"/>
+    <xs:attributeGroup ref="fa:Vertraulich"/>
+  </xs:complexType>
+
+  <xs:complexType name="Quelle">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="art" type="xs:string"/>
+        <xs:attribute name="fundstelle" type="xs:string"/>
+        <xs:attribute name="datum" type="fa:Datum"/>
+        <xs:attribute name="referenz" type="xs:string"/>
+        <xs:attributeGroup ref="fa:Vertraulich"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="EsiAnforderung">
+    <xs:sequence><xs:element name="kriterium" type="xs:string" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
+    <xs:attribute name="code" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="EsiAnforderungen">
+    <xs:sequence><xs:element name="esiAnforderung" type="fa:EsiAnforderung" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
+    <xs:attribute name="profil" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="DiagrammInfo">
+    <xs:sequence>
+      <xs:element name="beschreibung" type="xs:string" minOccurs="0"/>
+      <xs:element name="schlagwort" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="fonds" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="rechtsgrundlage" type="fa:Rechtsgrundlage" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="pruefbezug" type="fa:Pruefbezug" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="risiko" type="fa:Risiko" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="feststellung" type="fa:Feststellung" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="quelle" type="fa:Quelle" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="verweis" type="fa:Verweis" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="schemaVersion" type="xs:string"/>
+    <xs:attribute name="profil" type="xs:string"/>
+    <xs:attribute name="titel" type="xs:string"/>
+    <xs:attribute name="untertitel" type="xs:string"/>
+    <xs:attribute name="prozessverantwortlich" type="xs:string"/>
+    <xs:attribute name="prozesstyp" type="xs:string"/>
+    <xs:attribute name="version" type="xs:string"/>
+    <xs:attribute name="status" type="fa:Status"/>
+    <xs:attribute name="gueltigAb" type="fa:Datum"/>
+    <xs:attribute name="gueltigBis" type="fa:Datum"/>
+    <xs:attribute name="autor" type="xs:string"/>
+    <xs:attribute name="freigegebenDurch" type="xs:string"/>
+    <xs:attribute name="freigegebenAm" type="fa:Datum"/>
+    <xs:attribute name="kopfzeilenfarbe" type="fa:Farbe"/>
+    <xs:attribute name="kopfzeilenTextfarbe" type="fa:Farbe"/>
+    <xs:attribute name="foerderperiode" type="xs:string"/>
+    <xs:attribute name="programm" type="xs:string"/>
+    <xs:attribute name="cci" type="xs:string"/>
+    <xs:attribute name="vertraulichkeit" type="fa:Vertraulichkeit"/>
+    <xs:attribute name="variante" type="fa:Variante"/>
+    <xs:attribute name="bezugDiagramm" type="xs:string"/>
+    <xs:attribute name="vksStichtag" type="fa:Datum"/>
+    <xs:anyAttribute namespace="##other" processContents="lax"/>
+  </xs:complexType>
+
+  <xs:element name="rechtsgrundlage" type="fa:Rechtsgrundlage"/>
+  <xs:element name="interneNotiz" type="fa:Text"/>
+  <xs:element name="notiz" type="fa:Text"/>
+  <xs:element name="kennzeichen" type="fa:Kennzeichen"/>
+  <xs:element name="pruefbezug" type="fa:Pruefbezug"/>
+  <xs:element name="akteur" type="fa:Akteur"/>
+  <xs:element name="kontrolle" type="fa:Kontrolle"/>
+  <xs:element name="risiko" type="fa:Risiko"/>
+  <xs:element name="nachweis" type="fa:Nachweis"/>
+  <xs:element name="frist" type="fa:Frist"/>
+  <xs:element name="verweis" type="fa:Verweis"/>
+  <xs:element name="pruefschritt" type="fa:Pruefschritt"/>
+  <xs:element name="feststellung" type="fa:Feststellung"/>
+  <xs:element name="quelle" type="fa:Quelle"/>
+  <xs:element name="esiAnforderungen" type="fa:EsiAnforderungen"/>
+  <xs:element name="diagrammInfo" type="fa:DiagrammInfo"/>
+</xs:schema>

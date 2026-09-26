@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowaudit="https://flowaudit.de/bpmn/schema/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_Typen" targetNamespace="http://example.org/typen">
+  <!-- Typabdeckung: Pools, Nachrichtenfluss, Unterprozess, Aufruf, Rand-, Zwischen- und Link-Ereignisse, Daten -->
+  <bpmn:collaboration id="Collaboration_T">
+    <bpmn:extensionElements>
+      <flowaudit:diagrammInfo schemaVersion="1.1" profil="foerderperiode-2021-2027" titel="Typabdeckung" status="in_pruefung" foerderperiode="2021-2027" gueltigAb="2026-01-01" gueltigBis="2027-12-31"/>
+    </bpmn:extensionElements>
+    <bpmn:participant id="Pool_Stelle" name="Bearbeitende Stelle" processRef="Process_Stelle">
+      <bpmn:extensionElements><flowaudit:akteur rolle="fb"/></bpmn:extensionElements>
+    </bpmn:participant>
+    <bpmn:participant id="Pool_System" name="Fachanwendung" processRef="Process_System">
+      <bpmn:extensionElements><flowaudit:akteur rolle="it"/></bpmn:extensionElements>
+    </bpmn:participant>
+    <bpmn:messageFlow id="MF_1" sourceRef="Senden" targetRef="Empfang"/>
+    <bpmn:messageFlow id="MF_2" sourceRef="Antwort" targetRef="Warten"/>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_Stelle" isExecutable="false">
+    <bpmn:laneSet id="LS_S">
+      <bpmn:lane id="Lane_Sach" name="Sachbearbeitung">
+        <bpmn:extensionElements><flowaudit:akteur rolle="fb" anzeigename="Beispielstelle"/></bpmn:extensionElements>
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef><bpmn:flowNodeRef>Erfassen</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Senden</bpmn:flowNodeRef><bpmn:flowNodeRef>Warten</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Frist</bpmn:flowNodeRef><bpmn:flowNodeRef>Unter</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Aufruf</bpmn:flowNodeRef><bpmn:flowNodeRef>LinkWurf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>LinkFang</bpmn:flowNodeRef><bpmn:flowNodeRef>Ende</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Zeitueberschreitung</bpmn:flowNodeRef><bpmn:flowNodeRef>Eskalation</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Eingang"/>
+    <bpmn:userTask id="Erfassen" name="Daten erfassen" camunda:assignee="nicht-auswerten">
+      <bpmn:extensionElements><camunda:properties><camunda:property name="x" value="y"/></camunda:properties></bpmn:extensionElements>
+      <bpmn:dataOutputAssociation id="DOA_1"><bpmn:targetRef>Akte</bpmn:targetRef></bpmn:dataOutputAssociation>
+    </bpmn:userTask>
+    <bpmn:sendTask id="Senden" name="Anfrage senden"/>
+    <bpmn:intermediateCatchEvent id="Warten" name="Antwort erhalten"><bpmn:messageEventDefinition id="MED_1"/></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Frist" name="Zwei Wochen"><bpmn:timerEventDefinition id="TED_1"/></bpmn:intermediateCatchEvent>
+    <bpmn:subProcess id="Unter" name="Prüfen">
+      <bpmn:startEvent id="U_Start"/>
+      <bpmn:serviceTask id="U_Pruefen" name="Automatische Prüfung"/>
+      <bpmn:endEvent id="U_Ende"/>
+      <bpmn:sequenceFlow id="UF1" sourceRef="U_Start" targetRef="U_Pruefen"/>
+      <bpmn:sequenceFlow id="UF2" sourceRef="U_Pruefen" targetRef="U_Ende"/>
+    </bpmn:subProcess>
+    <bpmn:boundaryEvent id="Zeitueberschreitung" name="Zeitüberschreitung" attachedToRef="Unter" cancelActivity="false"><bpmn:timerEventDefinition id="TED_2"/></bpmn:boundaryEvent>
+    <bpmn:task id="Eskalation" name="Eskalieren"/>
+    <bpmn:callActivity id="Aufruf" name="Auszahlung" calledElement="Process_Auszahlung"/>
+    <bpmn:intermediateThrowEvent id="LinkWurf" name="Weiter"><bpmn:linkEventDefinition id="LED_1" name="weiter"/></bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="LinkFang" name="Weiter"><bpmn:linkEventDefinition id="LED_2" name="weiter"/></bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="Ende" name="Erledigt"/>
+    <bpmn:dataObjectReference id="Akte" name="Vorgangsakte" dataObjectRef="Akte_Objekt">
+      <bpmn:extensionElements><flowaudit:nachweis dokumentart="Akte" aufbewahrungsort="elektronische Akte" itSystem="Fachanwendung"/></bpmn:extensionElements>
+    </bpmn:dataObjectReference>
+    <bpmn:dataObject id="Akte_Objekt"/>
+    <bpmn:dataStoreReference id="Register" name="Register"/>
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Erfassen"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="Erfassen" targetRef="Senden"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="Senden" targetRef="Warten"/>
+    <bpmn:sequenceFlow id="F4" sourceRef="Warten" targetRef="Frist"/>
+    <bpmn:sequenceFlow id="F5" sourceRef="Frist" targetRef="Unter"/>
+    <bpmn:sequenceFlow id="F6" sourceRef="Unter" targetRef="Aufruf"/>
+    <bpmn:sequenceFlow id="F7" sourceRef="Aufruf" targetRef="LinkWurf"/>
+    <bpmn:sequenceFlow id="F8" sourceRef="LinkFang" targetRef="Ende"/>
+    <bpmn:sequenceFlow id="F9" sourceRef="Zeitueberschreitung" targetRef="Eskalation"/>
+    <bpmn:sequenceFlow id="F10" sourceRef="Eskalation" targetRef="Ende"/>
+  </bpmn:process>
+  <bpmn:process id="Process_System" isExecutable="false">
+    <bpmn:startEvent id="Empfang" name="Anfrage erhalten"><bpmn:messageEventDefinition id="MED_2"/></bpmn:startEvent>
+    <bpmn:scriptTask id="Berechnen" name="Berechnen"/>
+    <bpmn:endEvent id="Antwort" name="Antwort gesendet"><bpmn:messageEventDefinition id="MED_3"/></bpmn:endEvent>
+    <bpmn:sequenceFlow id="S1" sourceRef="Empfang" targetRef="Berechnen"/>
+    <bpmn:sequenceFlow id="S2" sourceRef="Berechnen" targetRef="Antwort"/>
+  </bpmn:process>
+</bpmn:definitions>

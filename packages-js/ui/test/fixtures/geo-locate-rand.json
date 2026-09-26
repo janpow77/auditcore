@@ -1,0 +1,11 @@
+{
+ "lage": "rand",
+ "lage_mit_toleranz": "rand",
+ "rand_toleranz_m": 0.0,
+ "rand_gilt_als_innen": true,
+ "enthaelt": true,
+ "abstand_m": 0.0,
+ "erdmodell": "kugel.r1_6371008_8m",
+ "entarteter_ring": null,
+ "hinweise": []
+}

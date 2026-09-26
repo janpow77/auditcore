@@ -105,7 +105,7 @@ def _call(group: str, function: str, args: dict[str, Any]) -> Any:
     if group == "zvg":
         simple = {
             "parse_money_amount": zvg.parse_money_amount,
-            "parse_de_number": zvg.parse_de_number,
+            "parse_de_number": zvg.legacy_parse_de_number,
             "extract_market_value": zvg.extract_market_value,
             "extract_address": zvg.extract_address,
             "classify_type": zvg.classify_type,

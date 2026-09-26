@@ -81,7 +81,7 @@ Vertrag `auditcore_price_analysis.contract/1`:
   für die schrittweise Umstellung des Consumers.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_price_analysis.__all__` (44):
+Öffentliche Namen aus `auditcore_price_analysis.__all__` (45):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -116,13 +116,14 @@ Vertrag `auditcore_price_analysis.contract/1`:
 | `delta_pct` | Funktion | Percentage deviation ``(value - reference) / reference × 100``, rounded by profile. | `comparison` |
 | `group_statistics` | Funktion | Median, mean, standard deviation (population or sample per profile), min and max. | `comparison` |
 | `ignored_tier_keys` | Funktion | Keys inside tiers that the calculation does not use (reported, not dropped silently). | `tariff` |
+| `legacy_parse_decimal` | Funktion | Characterized 0.1.1 behaviour: point text only, every comma is rejected. | `numbers` |
 | `load_calculation_profile` | Funktion | Shipped calculation profile; the version must be named explicitly. | `profiles` |
 | `load_comparison_profile` | Funktion | Shipped comparison profile; the version must be named explicitly. | `profiles` |
 | `load_recommended_calculation_profile` | Funktion | The recommended (decided) calculation profile, e.g. ``regulierung.hpp.wasser``. | `profiles` |
 | `load_recommended_comparison_profile` | Funktion | The recommended (decided) comparison profile. | `profiles` |
 | `non_negative` | Funktion | Like :func:`parse_decimal` but rejects negative values. | `numbers` |
 | `parse_day` | Funktion | A calendar day from ``date`` or ISO text ``YYYY-MM-DD``; datetimes are rejected. | `numbers` |
-| `parse_decimal` | Funktion | Exact decimal from ``int``, ``Decimal``, finite ``float`` or plain decimal text. | `numbers` |
+| `parse_decimal` | Funktion | Exact decimal from ``int``, ``Decimal``, finite ``float`` or number text. | `numbers` |
 | `parse_tiers` | Funktion | Validate tiers; ``None`` or an empty list means "no tiers". | `tariff` |
 | `recommended_version` | Funktion | Version of ``profile_id`` marked as recommended (decided rules); exactly one must exist. | `profiles` |
 | `select_tariff` | Funktion | Select one tariff for ``stichtag`` (and meter size ``q3`` for water). | `selection` |
@@ -180,21 +181,26 @@ anderem: fehlender Verbrauch und fehlende Staffelpreise sind Fehler statt 0,
 fehlende optionale Bestandteile machen die Summe zur Untergrenze, exakte
 Dezimalrundung (ROUND_HALF_UP) statt `round` auf Binärwerten, unbekannte
 Preisschlüssel und Staffelformen sind Fehler, Stichtag nur als Kalendertag.
+Seit 0.1.2 liest `parse_decimal` deutsche Schreibweise („1.234,56 €“,
+„1234,56“) nach dem gemeinsamen Vertrag `parse-number` (Modus `de`);
+Mehrdeutiges („1,234“) ist `ambiguous_number`, Punkttext bleibt unverändert,
+das bisherige Verhalten steht als `legacy_parse_decimal` bereit (PA-C01).
 Offen (`REVIEW_REQUIRED`): die Rechtsgrundlage des Umlagenstichtags
 01.07.2025. Umstellung von regulierung:
 [docs/consumer-migration.md](docs/consumer-migration.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Keine Netzwerk- oder
+Python ≥ 3.11, zur Laufzeit die Standardbibliothek und
+`auditcore_common==0.1.1` (Zahleneingabe `numbers_de`, ab 0.1.2). Keine Netzwerk- oder
 Datenbankabhängigkeit, keine Abhängigkeit von der Plattform `auditcore`.
 Preisquellen liefert bei Bedarf `auditcore_price_sources`.
 
 ## Sicherheit und Datenschutz
 
 Reine Berechnung ohne Netzwerk, Dateien oder personenbezogene Daten. Eingaben
-werden streng geprüft (nur einfache Dezimalschreibweise, kein Exponent, kein
-umgedeutetes Dezimalkomma). Keine Tarifdaten realer Versorger im Paket; alle
+werden streng geprüft (Punktschreibweise oder eindeutige deutsche
+Schreibweise, kein Exponent, Mehrdeutiges wird abgelehnt statt geraten). Keine Tarifdaten realer Versorger im Paket; alle
 Fixtures sind synthetisch. Ergebnisse sind Rechenwerte, keine Preisfreigabe
 oder rechtliche Bewertung.
 

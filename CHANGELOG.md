@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- Festlegungen der gemeinsamen Vertragsfälle entschieden (Nutzer, 25.09.2026):
+  Ersatzwert „—“, Dateigröße Basis 1024 mit KB/MB und Dezimalkomma, „1.5“ und
+  „1.234“ in Beträgen ungültig bzw. mehrdeutig mit Hinweis, höchstens zwei
+  Nachkommastellen bei Beträgen (de), Anzeige-Zeitzone Europe/Berlin
+  (`contracts/common-cases/decisions.json`: Status „festgelegt (Nutzer
+  2026-09-25)“, `DECISIONS.md`). Verträge `parse-number`, `empty-value`,
+  `format-date`, `format-filesize` jetzt `verbindlich`; Rundung von Beträgen
+  und Trenner Datum/Zeit bleiben vorläufig.
+- Neues Paket `auditcore_bpmn` 0.1.0: BPMN 2.0 mit FlowAudit-Erweiterung
+  Schema 1.1 (verbindlich in `docs/bpmn/flowaudit-schema-1.1.md`, XSD im
+  Paket), gehärtetes Parsen, Elementmodell, Prüfregeln mit stabilen IDs
+  (de/en), Profile je Förderperiode (KA nach Anhang XI VO (EU) 2021/1060 und
+  Anhang IV Delegierte VO (EU) Nr. 480/2014 aus den amtlichen Texten),
+  Diagrammsammlung mit Speicher-Port, Versions- und Soll/Ist-Vergleich,
+  Neutralisieren, Anreichern von Altbeständen, Berichte (Prozesstabelle,
+  RCM, Feststellungen, KA-Kategorievorschlag) sowie die legacy-treue
+  Übernahme von `bpmn_analyzer.py`, `validate_bpmn_bva` und
+  `bpmn_export.py` aus audit_designer (charakterisiert, eine dokumentierte
+  Abweichung). `EXPECTED_SOURCES` und `packaging/library-extras.json`
+  ergänzt.
 - CI-Automatisierung (Rechteinhaber, 25.09.2026): Sammel-Check `ci-ok` als
   Required Check neben `code-quality-gate`, Workflows `autofix` (ruff, ESLint,
   reine Baseline-Absenkungen; Hilfsskript `scripts/ci_baseline_lower_only.py`),

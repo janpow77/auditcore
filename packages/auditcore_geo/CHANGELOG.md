@@ -2,6 +2,17 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #13, #16, #38, #54, #73).
 
+## 0.3.0 – 2026-09-25 – REST-Vertrag für Geo-Oberflächen
+
+- Neues Unterpaket `auditcore_geo.web` (Extras `web`, `fastapi`): Katalog
+  (`GET /profile`), Umkreis, Lage mit Randregel und Toleranz, UTM hin und
+  zurück, Douglas-Peucker in Metern (über UTM) oder Grad, GeoPackage-Dateien
+  als SQLite lesen (Upload oder benannte Serverquelle; EPSG:4326/4258,
+  ETRS89- und WGS-84-UTM-Zonen), Adresssuche nur mit angeschlossenem
+  `Geocoder` (`NominatimGeocoder` auf `auditcore_harvest`). Starlette-Routen
+  und FastAPI-Router mit byteidentischen Antworten.
+- Bestehende Module unverändert (nur Versionskennung).
+
 ## 0.2.1 – 2026-09-25 – Refaktorierung ohne Verhaltensänderung
 
 - `flaeche` nach Verantwortung geschnitten: Flächenmodell und Leser

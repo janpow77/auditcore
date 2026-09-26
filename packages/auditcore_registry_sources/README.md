@@ -19,12 +19,12 @@ python -m pip install auditcore_registry_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.0; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.1 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-registry-sources/`):
 
 ```text
-auditcore_registry_sources @ https://github.com/janpow77/auditcore/releases/download/v0.3.0/auditcore_registry_sources-0.1.0-py3-none-any.whl#sha256=c7006dbeba4b6904ee54bad2d319324618e0f3e40a06ff16b797f841c2a3d46d
+auditcore_registry_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_registry_sources-0.2.1-py3-none-any.whl#sha256=dd958343bf84ad6c58be68a1f1f41823ec047d4bf986ad64d74b176b97b2ec89
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -241,9 +241,10 @@ R1–R10, A2, A3: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.1` (Abrufvertrag der Adapter)
-und `auditcore_entity_matching==0.2.1` (Namensnormalisierung, Score-
-Aufschlüsselung). Extras: rapidfuzz ≥ 3.10.1 < 4 (`fuzzy`, `web`),
+Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.1` (Abrufvertrag der Adapter),
+`auditcore_entity_matching==0.2.2` (Namensnormalisierung, Score-
+Aufschlüsselung) und `auditcore_common==0.1.1` (Profile, JSON-Typen,
+sicheres XML; nur Standardbibliothek). Extras: rapidfuzz ≥ 3.10.1 < 4 (`fuzzy`, `web`),
 defusedxml ≥ 0.7.1 (`xml`), beautifulsoup4 ≥ 4.11.2 < 5 (`html`),
 starlette ≥ 0.26.1 < 2 (`web`), fastapi ≥ 0.95.2 (`fastapi`). Keine
 Abhängigkeit von der Plattform `auditcore`, Datenbanken oder HTTP-Clients –

@@ -1,0 +1,863 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://flowaudit.de/schemas/auditcore-bpmn/diagram-collection-1.schema.json",
+  "title": "Diagrammsammlung",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "name",
+    "folders",
+    "tags",
+    "diagrams"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "auditcore_bpmn.diagram-collection/1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "folders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "diagrams": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "tags",
+          "position",
+          "excerpt",
+          "approvals"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "folder_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "position": {
+            "type": "integer"
+          },
+          "info": {
+            "$ref": "#/$defs/DiagramInfo"
+          },
+          "excerpt": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "process_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "calls": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "link_throws": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "link_catches": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "activities": {
+                "type": "integer"
+              },
+              "activities_with_legal_basis": {
+                "type": "integer"
+              },
+              "keys": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "approvals": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "version",
+                "sha256"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "version": {
+                  "type": "string"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "cutoff_date": {
+                  "type": "string"
+                },
+                "approved_on": {
+                  "type": "string"
+                },
+                "approved_by": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "LegalBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "XML: (Textinhalt)"
+        },
+        "id": {
+          "type": "string",
+          "description": "XML: id"
+        },
+        "act": {
+          "type": "string",
+          "description": "XML: norm"
+        },
+        "article": {
+          "type": "string",
+          "description": "XML: artikel"
+        },
+        "section": {
+          "type": "string",
+          "description": "XML: paragraph"
+        },
+        "annex": {
+          "type": "string",
+          "description": "XML: anhang"
+        },
+        "paragraph": {
+          "type": "string",
+          "description": "XML: absatz"
+        },
+        "subparagraph": {
+          "type": "string",
+          "description": "XML: unterabsatz"
+        },
+        "sentence": {
+          "type": "string",
+          "description": "XML: satz"
+        },
+        "point": {
+          "type": "string",
+          "description": "XML: buchstabe"
+        },
+        "number": {
+          "type": "string",
+          "description": "XML: nummer"
+        },
+        "version": {
+          "type": "string",
+          "description": "XML: fassung"
+        },
+        "eli": {
+          "type": "string",
+          "description": "XML: eli"
+        },
+        "celex": {
+          "type": "string",
+          "description": "XML: celex"
+        },
+        "url": {
+          "type": "string",
+          "description": "XML: url"
+        },
+        "short_title": {
+          "type": "string",
+          "description": "XML: kurzbezeichnung"
+        },
+        "note": {
+          "type": "string",
+          "description": "XML: anmerkung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "Rechtsgrundlage; ``article``/``section``/``annex`` enthalten nur die Kennung."
+    },
+    "Marker": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "XML: typ"
+        },
+        "text": {
+          "type": "string",
+          "description": "XML: text"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:kennzeichen``: fachliches Kennzeichen (Overlay-Symbol)."
+    },
+    "AuditReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "key_requirement": {
+          "type": "string",
+          "description": "XML: ka"
+        },
+        "assessment_criterion": {
+          "type": "string",
+          "description": "XML: bk"
+        },
+        "audit_type": {
+          "type": "string",
+          "description": "XML: art"
+        },
+        "note": {
+          "type": "string",
+          "description": "XML: anmerkung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "XML-Element `flowaudit:pruefbezug`: Kernanforderung (KA) und Bewertungskriterium (BK)."
+    },
+    "Actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "XML: rolle"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "XML: anzeigename"
+        }
+      },
+      "description": "``flowaudit:akteur`` an Pool oder Lane."
+    },
+    "Control": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "XML: id"
+        },
+        "label": {
+          "type": "string",
+          "description": "XML: bezeichnung"
+        },
+        "key_control": {
+          "type": "boolean",
+          "description": "XML: schluesselkontrolle"
+        },
+        "control_type": {
+          "type": "string",
+          "description": "XML: art"
+        },
+        "execution": {
+          "type": "string",
+          "description": "XML: durchfuehrung"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "XML: haeufigkeit"
+        },
+        "evidence": {
+          "type": "string",
+          "description": "XML: nachweis"
+        },
+        "responsible": {
+          "type": "string",
+          "description": "XML: verantwortlich"
+        },
+        "description": {
+          "type": "string",
+          "description": "XML: beschreibung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:kontrolle`` an Aktivitäten und Gateways."
+    },
+    "Risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "XML: id"
+        },
+        "label": {
+          "type": "string",
+          "description": "XML: bezeichnung"
+        },
+        "category": {
+          "type": "string",
+          "description": "XML: kategorie"
+        },
+        "inherent": {
+          "type": "string",
+          "description": "XML: inhaerent"
+        },
+        "control_risk": {
+          "type": "string",
+          "description": "XML: kontrollrisiko"
+        },
+        "residual": {
+          "type": "string",
+          "description": "XML: restrisiko"
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "XML: kontrollen"
+        },
+        "description": {
+          "type": "string",
+          "description": "XML: beschreibung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:risiko``; ``controls`` verweist auf ``flowaudit:kontrolle/@id``."
+    },
+    "Evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "document_type": {
+          "type": "string",
+          "description": "XML: dokumentart"
+        },
+        "storage_location": {
+          "type": "string",
+          "description": "XML: aufbewahrungsort"
+        },
+        "it_system": {
+          "type": "string",
+          "description": "XML: itSystem"
+        },
+        "retention_period": {
+          "type": "string",
+          "description": "XML: aufbewahrungsfrist"
+        },
+        "note": {
+          "type": "string",
+          "description": "XML: anmerkung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:nachweis`` an Datenobjekten und Datenspeichern (Prüfpfad)."
+    },
+    "AuditStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "XML: id"
+        },
+        "case": {
+          "type": "string",
+          "description": "XML: fall"
+        },
+        "document": {
+          "type": "string",
+          "description": "XML: beleg"
+        },
+        "result": {
+          "type": "string",
+          "description": "XML: ergebnis"
+        },
+        "date": {
+          "type": "string",
+          "description": "XML: datum"
+        },
+        "tester": {
+          "type": "string",
+          "description": "XML: pruefer"
+        },
+        "control": {
+          "type": "string",
+          "description": "XML: kontrolle"
+        },
+        "sample_size": {
+          "type": "string",
+          "description": "XML: stichprobe"
+        },
+        "population": {
+          "type": "string",
+          "description": "XML: grundgesamtheit"
+        },
+        "remark": {
+          "type": "string",
+          "description": "XML: bemerkung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "XML-Element `flowaudit:pruefschritt`: Durchlauf- oder Kontrolltest an einem Element."
+    },
+    "AuditFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "XML: id"
+        },
+        "reference": {
+          "type": "string",
+          "description": "XML: kennung"
+        },
+        "finding_type": {
+          "type": "string",
+          "description": "XML: art"
+        },
+        "severity": {
+          "type": "string",
+          "description": "XML: einstufung"
+        },
+        "key_requirement": {
+          "type": "string",
+          "description": "XML: ka"
+        },
+        "assessment_criterion": {
+          "type": "string",
+          "description": "XML: bk"
+        },
+        "deadline": {
+          "type": "string",
+          "description": "XML: frist"
+        },
+        "status": {
+          "type": "string",
+          "description": "XML: status"
+        },
+        "description": {
+          "type": "string",
+          "description": "XML: beschreibung"
+        },
+        "recommendation": {
+          "type": "string",
+          "description": "XML: empfehlung"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:feststellung``: Prüffeststellung (formell oder finanziell)."
+    },
+    "Source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "description": "XML: art"
+        },
+        "location": {
+          "type": "string",
+          "description": "XML: fundstelle"
+        },
+        "date": {
+          "type": "string",
+          "description": "XML: datum"
+        },
+        "reference": {
+          "type": "string",
+          "description": "XML: referenz"
+        },
+        "text": {
+          "type": "string",
+          "description": "XML: (Textinhalt)"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:quelle``: Beleg der Darstellung (Handbuch, Interview, Durchlauftest …)."
+    },
+    "CrossReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "description": "XML: art"
+        },
+        "key": {
+          "type": "string",
+          "description": "XML: schluessel"
+        },
+        "document": {
+          "type": "string",
+          "description": "XML: dokument"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "XML: vertraulich"
+        }
+      },
+      "description": "``flowaudit:verweis``: stabiler fachlicher Schlüssel (Prüffeld, Feststellungsbezug, Register)."
+    },
+    "Deadline": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "XML: wert"
+        },
+        "unit": {
+          "type": "string",
+          "description": "XML: einheit"
+        },
+        "basis": {
+          "type": "string",
+          "description": "XML: bezug"
+        },
+        "note": {
+          "type": "string",
+          "description": "XML: anmerkung"
+        },
+        "legal_bases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LegalBasis"
+          },
+          "description": "XML: rechtsgrundlage"
+        }
+      },
+      "description": "``flowaudit:frist`` an Zeitgeber-Ereignissen und Aufgaben."
+    },
+    "EsiRequirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "XML: code"
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "XML: kriterium"
+        }
+      },
+      "description": "Eine ESI-Anforderung mit Kriterien."
+    },
+    "EsiRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "type": "string",
+          "description": "XML: profil"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EsiRequirement"
+          },
+          "description": "XML: esiAnforderung"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "flowaudit-1.1",
+            "legacy-attribute"
+          ]
+        }
+      },
+      "description": "``flowaudit:esiAnforderungen`` bzw. Altattribute ``esiProfile``/``esiCoreRequirements``."
+    },
+    "DiagramInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "description": "XML: schemaVersion"
+        },
+        "profile": {
+          "type": "string",
+          "description": "XML: profil"
+        },
+        "title": {
+          "type": "string",
+          "description": "XML: titel"
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "XML: untertitel"
+        },
+        "process_owner": {
+          "type": "string",
+          "description": "XML: prozessverantwortlich"
+        },
+        "process_type": {
+          "type": "string",
+          "description": "XML: prozesstyp"
+        },
+        "version": {
+          "type": "string",
+          "description": "XML: version"
+        },
+        "status": {
+          "type": "string",
+          "description": "XML: status"
+        },
+        "valid_from": {
+          "type": "string",
+          "description": "XML: gueltigAb"
+        },
+        "valid_until": {
+          "type": "string",
+          "description": "XML: gueltigBis"
+        },
+        "author": {
+          "type": "string",
+          "description": "XML: autor"
+        },
+        "approved_by": {
+          "type": "string",
+          "description": "XML: freigegebenDurch"
+        },
+        "approved_on": {
+          "type": "string",
+          "description": "XML: freigegebenAm"
+        },
+        "header_color": {
+          "type": "string",
+          "description": "XML: kopfzeilenfarbe"
+        },
+        "header_text_color": {
+          "type": "string",
+          "description": "XML: kopfzeilenTextfarbe"
+        },
+        "programming_period": {
+          "type": "string",
+          "description": "XML: foerderperiode"
+        },
+        "programme": {
+          "type": "string",
+          "description": "XML: programm"
+        },
+        "cci": {
+          "type": "string",
+          "description": "XML: cci"
+        },
+        "confidentiality": {
+          "type": "string",
+          "description": "XML: vertraulichkeit"
+        },
+        "variant": {
+          "type": "string",
+          "description": "XML: variante"
+        },
+        "reference_diagram": {
+          "type": "string",
+          "description": "XML: bezugDiagramm"
+        },
+        "system_cutoff_date": {
+          "type": "string",
+          "description": "XML: vksStichtag"
+        },
+        "description": {
+          "type": "string",
+          "description": "XML: beschreibung"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "XML: schlagwort"
+        },
+        "funds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "XML: fonds"
+        },
+        "legal_bases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LegalBasis"
+          },
+          "description": "XML: rechtsgrundlage"
+        },
+        "audit_references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuditReference"
+          },
+          "description": "XML: pruefbezug"
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Risk"
+          },
+          "description": "XML: risiko"
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AuditFinding"
+          },
+          "description": "XML: feststellung"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "description": "XML: quelle"
+        },
+        "cross_references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CrossReference"
+          },
+          "description": "XML: verweis"
+        }
+      },
+      "description": "``flowaudit:diagrammInfo`` am Hauptelement (Kollaboration oder erster Prozess)."
+    }
+  }
+}

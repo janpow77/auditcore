@@ -71,8 +71,23 @@ def retry_after_seconds(value: str) -> float | None:
     return max(0.0, seconds)
 
 
+#: ``X-Flow-Agent-Error`` codes (flow-agent #56) and the status they must come with.
+POLICY_ERROR_CODES: dict[str, tuple[int, type[LlmClientError]]] = {
+    "invalid-sensitivity": (400, SensitivityRejectedError),
+    "egress-denied": (403, EgressDeniedError),
+}
+
+
 def _policy_error_type(received: ReceivedResponse) -> type[LlmClientError] | None:
-    """Flow-Agent policy answers (flow-agent ``ai_gateway``: 400 sensitivity, 403 egress)."""
+    """Flow-Agent policy answers: stable header code first, detail text as fallback.
+
+    A header code only counts together with its status; a present but
+    non-matching header disables the text fallback (newer gateway, other error).
+    """
+    code = received.header("x-flow-agent-error").strip().lower()
+    if code:
+        status, error_type = POLICY_ERROR_CODES.get(code, (0, LlmClientError))
+        return error_type if received.status == status else None
     detail = received.text
     if received.status == 400 and "Sensitivit" in detail:
         return SensitivityRejectedError

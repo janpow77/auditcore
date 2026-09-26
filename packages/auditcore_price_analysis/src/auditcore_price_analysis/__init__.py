@@ -26,7 +26,7 @@ from .comparison import (
     traffic_light,
 )
 from .errors import PriceAnalysisError, ProfileError
-from .numbers import Rounding, non_negative, parse_day, parse_decimal
+from .numbers import Rounding, legacy_parse_decimal, non_negative, parse_day, parse_decimal
 from .profiles import (
     CalculationProfile,
     ComparisonProfile,
@@ -46,7 +46,7 @@ from .profiles import (
 from .selection import STATUS_NONE, STATUS_OK, STATUS_Q3_FALLBACK, Selection, select_tariff
 from .tariff import ReleaseStatus, Tariff, Tier, ignored_tier_keys, parse_tiers
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 CONTRACT_VERSION = "auditcore_price_analysis.contract/1"
 
 __all__ = [
@@ -81,6 +81,7 @@ __all__ = [
     "delta_pct",
     "group_statistics",
     "ignored_tier_keys",
+    "legacy_parse_decimal",
     "load_calculation_profile",
     "load_comparison_profile",
     "load_recommended_calculation_profile",

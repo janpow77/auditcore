@@ -2,7 +2,7 @@
 
 ## Zweck
 
-Gemeinsame Hilfsfunktionen der auditcore-Fachpakete und Anwendungen (JSON, Hashing, Profile, sicheres XML, HTML-Links, Numerik, Dateinamen, Event-Loop), nur zusammengeführt, wenn die Gleichheit mit jeder Paketkopie bewiesen ist.
+Gemeinsame Hilfsfunktionen der auditcore-Fachpakete und Anwendungen (JSON, Hashing, Profile, sicheres XML, HTML-Links, Numerik, Zahleneingabe, Dateinamen, Event-Loop), zusammengeführt nur mit Gleichheitsbeweis gegen jede Paketkopie.
 
 Für die Fachpakete dieses Repositorys und – mit den App-Hilfen – für die
 Anwendungen, aus denen die Kopien stammen; keine allgemeine Werkzeugkiste. Unterschiede zwischen den früheren Paketkopien sind benannte
@@ -18,13 +18,13 @@ python -m pip install auditcore_common \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Version 0.1.0 ist noch nicht veröffentlicht; nach dem nächsten Release steht
+Version 0.1.1 ist noch nicht veröffentlicht; nach dem nächsten Release steht
 sie mit Direkt-URL und Hash unter
 `https://janpow77.github.io/auditcore/simple/auditcore-common/`. Muster für eine
 hashgebundene `requirements.txt`:
 
 ```text
-auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_common-0.1.0-py3-none-any.whl#sha256=<sha256 aus dem Index>
+auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_common-0.1.1-py3-none-any.whl#sha256=<sha256 aus dem Index>
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -54,6 +54,11 @@ assert jsonable({"am": date(2026, 9, 25)}) == {"am": "2026-09-25"}
 ```pycon
 >>> group_thousands_de(1234567)
 '1.234.567'
+>>> from auditcore_common.numbers_de import parse_de_number, parse_number_result
+>>> parse_de_number("1.234,56 €")
+Decimal('1234.56')
+>>> parse_number_result("1.5").hint
+'mehrdeutig'
 ```
 
 ## API-Überblick
@@ -73,6 +78,7 @@ das Modul:
 | `filenames` | `path_component`, `unicode_filename`, `replace_reserved`, `underscore_slug`, `dashed_slug`, `export_filename` | je Funktion eine charakterisierte App-Variante; Fallback und Länge als Parameter |
 | `aio` | `ThreadLoopRunner`, `run_sync`, `run_on_current_loop` | ein Loop je Thread und Runner (fork-sicher) bzw. Legacy-Variante |
 | `clock`, `ids` | `utc_now`, `require_aware`, `new_uuid` | – |
+| `numbers_de` | `parse_number`, `parse_de_number`, `parse_number_result` (`ParsedNumber` mit Hinweis `leer`/`mehrdeutig`/`ungültig`) nach dem Vertrag `parse-number` | `mode` = `de`/`en`/`auto`; `max_fraction_digits` (Standard 2 für Beträge, `None` für Mengen und Sätze) |
 | `text` | `group_thousands_de`, `compact_upper` | – |
 | `optional` | `require_module` – verzögerter Import eines Extras mit paketeigenem Fehler | – |
 
@@ -95,6 +101,7 @@ das Modul:
 | `auditcore_common.html_text` | Anchor links of HTML pages and HTML marker detection (standard library only). |
 | `auditcore_common.ids` | Random identifiers. |
 | `auditcore_common.json_values` | JSON value types and conversions to JSON-compatible values. |
+| `auditcore_common.numbers_de` | Number input after the shared contract ``parse-number`` (``contracts/common-cases``). |
 | `auditcore_common.numeric` | Floating-point helpers with documented, NumPy-compatible results without NumPy. |
 | `auditcore_common.optional` | Lazy import of optional extras with the caller's own error type and message. |
 | `auditcore_common.profiles` | Packaged, versioned JSON profiles: list, recommend and load them explicitly. |
@@ -131,11 +138,24 @@ versteigerung, flowaudit) und sind gegen die wörtlichen App-Kopien in
 `tests/legacy_apps.py` differenziell geprüft (Quellcommits in
 `provenance.json`, `sources`).
 
+`numbers_de` (ab 0.1.1) ist keine Zusammenführung, sondern die
+Python-Umsetzung des gemeinsamen Vertrags
+[`contracts/common-cases/parse-number.json`](../../contracts/common-cases/parse-number.json)
+mit den Festlegungen des Nutzers vom 25.09.2026
+([DECISIONS.md](../../contracts/common-cases/DECISIONS.md)): Modus `de` liest
+Beträge mit Dezimalkomma und Tausenderpunkten in Dreiergruppen, höchstens
+zwei Nachkommastellen; „1.5“ und „1.234“ sind mehrdeutig und werden mit
+Hinweis abgelehnt, nichts wird geraten. `tests/test_numbers_de.py` führt alle
+Python-Fälle des Vertrags aus.
+
 ## Bewusste Verhaltensabweichungen
 
-Keine. Jede Funktion verhält sich wie die jeweilige Paketkopie; wo sich die
-Kopien unterschieden, wählt der Aufrufer die Variante über einen benannten
-Parameter.
+Keine. Jede zusammengeführte Funktion verhält sich wie die jeweilige
+Paketkopie; wo sich die Kopien unterschieden, wählt der Aufrufer die Variante
+über einen benannten Parameter. `numbers_de` ersetzt fehlerhafte Paketkopien
+(`auditcore_property_sources` `parse_de_number`, `auditcore_price_analysis`
+`parse_decimal`); deren charakterisiertes Altverhalten bleibt dort als
+`legacy_…`-Variante erhalten.
 
 ## Abhängigkeiten
 
