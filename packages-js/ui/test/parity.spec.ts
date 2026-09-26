@@ -4,9 +4,10 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, it } from 'vitest'
 import type { Component } from 'vue'
 import { synopsisCases, tableCases, type ParityCase } from '../../ui-core/test/parity/cases'
+import { buttonCases, textFieldCases } from '../../ui-core/test/parity/cases-base'
 import { vvtCases } from '../../ui-core/test/parity/cases-vvt'
 import { checkExpectation } from '../../ui-core/test/parity/expect'
-import { FaSynopsis, FaTable, FaVvt } from '../src'
+import { FaButton, FaSynopsis, FaTable, FaTextField, FaVvt } from '../src'
 
 afterEach(() => {
   document.body.innerHTML = ''
@@ -28,3 +29,5 @@ function suite<P extends object>(title: string, component: Component, cases: Rea
 suite('Paritätsfälle Synopse (Vue)', FaSynopsis, synopsisCases)
 suite('Paritätsfälle Tabelle (Vue)', FaTable, tableCases)
 suite('Paritätsfälle VVT (Vue)', FaVvt, vvtCases)
+suite('Paritätsfälle Schaltfläche (Vue)', FaButton, buttonCases)
+suite('Paritätsfälle Eingabefeld (Vue)', FaTextField, textFieldCases)

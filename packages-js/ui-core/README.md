@@ -69,7 +69,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (223):
+Exporte der Einstiegspunkte aus `package.json#exports` (227):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -129,6 +129,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `FieldKind` | Typ | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `FieldValue` | Typ | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `FieldView` | Schnittstelle | – | `synopsis/viewModel` |
+| `@flowaudit/ui-core` | `FocusTrap` | Schnittstelle | – | `focus` |
 | `@flowaudit/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@flowaudit/ui-core` | `IDLE` | Konstante | – | `store` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
@@ -210,6 +211,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `createDataProtectionRestPort` | Funktion | Port auf den REST-Vertrag `dataprotection_ui/1` von `auditcore_dataprotection.web`. | `dataprotection/rest-port` |
 | `@flowaudit/ui-core` | `createDelay` | Funktion | Verzögerter Aufruf, der bei jeder neuen Eingabe neu startet (Vorschau, Vollständigkeitsprüfung). | `store` |
 | `@flowaudit/ui-core` | `createDsfaController` | Funktion | – | `dataprotection/dsfa` |
+| `@flowaudit/ui-core` | `createFocusTrap` | Funktion | – | `focus` |
 | `@flowaudit/ui-core` | `createRunner` | Funktion | Führt eine Portanfrage aus: setzt `busy`, fängt Fehler (über `toError`) und meldet sie an `onError`. Ohne Port geschieht nichts (`null`). | `store` |
 | `@flowaudit/ui-core` | `createStore` | Funktion | – | `store` |
 | `@flowaudit/ui-core` | `createSynopsisController` | Funktion | – | `synopsis/controller` |
@@ -240,6 +242,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `fieldIssues` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `filterRows` | Funktion | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
+| `@flowaudit/ui-core` | `focusableWithin` | Funktion | – | `focus` |
 | `@flowaudit/ui-core` | `getDefaultLocale` | Funktion | – | `i18n` |
 | `@flowaudit/ui-core` | `groupByDepartment` | Funktion | Referate wie in der Quelle: konfigurierte zuerst, dann unbekannte; leere entfallen. | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `interpolate` | Funktion | Ersetzt {name}-Platzhalter; unbekannte Platzhalter bleiben sichtbar stehen. | `i18n` |
@@ -296,6 +299,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `withPerson` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `withScenario` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `withoutActivity` | Funktion | – | `dataprotection/registerView` |
+| `@flowaudit/ui-core` | `wrapTarget` | Funktion | Nächstes Fokusziel beim Tabben am Rand des Containers, sonst null (Browser übernimmt). | `focus` |
 <!-- api-overview:end -->
 
 ## Konfiguration

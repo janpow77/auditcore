@@ -526,7 +526,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `filterSubjects` | Funktion | Subjects with only the hits passing the filter; subjects themselves stay visible. | `screening/view` |
 | `@flowaudit/ui` | `flagState` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `focusRow` | Re-Export | – | `./useSynopsisNavigation` |
-| `@flowaudit/ui` | `focusableWithin` | Funktion | – | `composables/useFocusTrap` |
+| `@flowaudit/ui` | `focusableWithin` | Re-Export | – | `./useFocusTrap` |
 | `@flowaudit/ui` | `formatAmount` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatDate` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatDegrees` | Funktion | Grad mit sechs Nachkommastellen (≈ 0,1 m). | `geo/model` |

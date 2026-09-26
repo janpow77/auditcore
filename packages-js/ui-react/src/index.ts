@@ -10,6 +10,7 @@ export { FlowauditVvt, type FlowauditVvtProps } from './dataprotection/Flowaudit
 export { FlowauditDsfa, type FlowauditDsfaProps } from './dataprotection/FlowauditDsfa'
 export { Badge, type BadgeProps } from './base/Badge'
 export { Button, type ButtonProps } from './base/Button'
+export { Dialog, type DialogProps } from './base/Dialog'
 export { Icon, type IconProps } from './base/Icon'
 export { TextField, type TextFieldProps } from './base/TextField'
 export { LocaleProvider, useLocale, useTranslation, type UseTranslation } from './i18n'

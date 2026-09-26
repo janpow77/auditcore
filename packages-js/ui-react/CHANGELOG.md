@@ -9,7 +9,7 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   REST-Verträge wie die Vue-Fassung; Logik aus `@flowaudit/ui-core`):
   `FlowauditTable`, `FlowauditSynopsis` (Vertrag `auditcore_documents.web`),
   `FlowauditVvt` und `FlowauditDsfa` (Vertrag `dataprotection_ui/1`), dazu
-  `Button`, `Badge`, `Icon`, `TextField`, `LocaleProvider`, `useTranslation`,
+  `Button`, `Badge`, `Icon`, `TextField`, `Dialog` (Fokusfalle aus dem Kern), `LocaleProvider`, `useTranslation`,
   `useStoreState`.
 - Ereignisse heißen wie bisher `onXxx`, erhalten aber direkt die Nutzdaten
   (kein `CustomEvent` mehr). Vue-`v-model` wird zu gesteuerten Props mit

@@ -75,10 +75,25 @@ export function Vergleich({ id }: { id: string }) {
   (`defineFlowauditElements()` aufrufen, `@flowaudit/ui/style.css` laden,
   `@flowaudit/ui`, `@flowaudit/kanban-core` und Vue installieren).
 
+- **Muster für weitere native Komponenten** (verbindlich, Einzelheiten in
+  [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md)):
+  1. Kernlogik framework-frei in `packages-js/ui-core/src/<komponente>/`:
+     `messages.ts`, Datentypen, Port, View-Funktionen und ein Controller
+     (`createStore` + reine Selektoren, Vorlage `synopsis/controller.ts`,
+     `dataprotection/vvt.ts`); Stile in `ui-core/styles/<komponente>.css`.
+  2. Vue (`packages-js/ui`) bindet den Controller mit `useStore` an; React hier
+     unter `src/<komponente>/` mit `useStoreState`, `useElementId`,
+     `useTranslation`, gleichem Markup (Klassen, ARIA, Texte) wie die SFC.
+  3. Paritätsfälle in `ui-core/test/parity/cases-<komponente>.ts`; Vue prüft
+     sie in `ui/test/parity*.spec.ts`, React in
+     `test/parity/<komponente>.spec.tsx` mit `renderBoth` und `expectParity`
+     (Erwartungen, normalisiertes DOM, Formularzustand, auch nach Interaktionen).
+  4. Export in `src/index.ts`; eine abgelöste Hülle aus `src/elements.ts` entfernen.
+
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (103):
+Exporte der Einstiegspunkte aus `package.json#exports` (105):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -93,6 +108,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `DataProtectionPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DecimalSeparator` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `Delimiter` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `Dialog` | Funktion | Modaler Dialog wie `FaDialog`: Fokusfalle, Escape, Rückgabe des Fokus, beschriftet über Titel und Beschreibung. | `base/Dialog` |
+| `@flowaudit/ui-react` | `DialogProps` | Schnittstelle | – | `base/Dialog` |
 | `@flowaudit/ui-react` | `DownloadFile` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `DsfaStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
