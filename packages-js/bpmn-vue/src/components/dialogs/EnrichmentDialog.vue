@@ -4,7 +4,8 @@
  * grouped by element; each can be accepted or rejected.
  */
 import { computed, ref, watch } from 'vue'
-import { citation, shortCitation, type LegalBasis, type Suggestion } from '@flowaudit/bpmn-flowaudit'
+import type { Suggestion } from '@flowaudit/bpmn-flowaudit'
+import { describeSuggestion as describe, groupSuggestions, toggleInSet } from '@flowaudit/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import { useI18n } from '../../i18n/useI18n'
 
@@ -22,25 +23,8 @@ watch(
   { immediate: true },
 )
 
-const groups = computed(() => {
-  const map = new Map<string, Suggestion[]>()
-  for (const item of props.suggestions) map.set(item.elementId, [...(map.get(item.elementId) ?? []), item])
-  return [...map.entries()]
-})
-
-function describe(item: Suggestion): string {
-  const value = item.value
-  if (typeof value === 'string') return value
-  if (item.kind === 'legalBasis') return `${shortCitation(value as LegalBasis)} – ${citation(value as LegalBasis)}`
-  return Object.values(value).filter(Boolean).join(' · ')
-}
-
-function toggle(id: string): void {
-  const next = new Set(accepted.value)
-  if (next.has(id)) next.delete(id)
-  else next.add(id)
-  accepted.value = next
-}
+const groups = computed(() => groupSuggestions(props.suggestions))
+const toggle = (id: string) => (accepted.value = toggleInSet(accepted.value, id))
 
 function apply(): void {
   emit('apply', props.suggestions.filter((s) => accepted.value.has(s.id)), removePrefixes.value)
@@ -75,39 +59,3 @@ function apply(): void {
     </template>
   </BaseDialog>
 </template>
-
-<style>
-.fa-enrich__bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.fa-enrich__group + .fa-enrich__group {
-  margin-top: 12px;
-}
-
-.fa-enrich__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-enrich__item {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  gap: 4px 8px;
-  align-items: center;
-  padding: 6px 4px;
-  border-bottom: 1px solid var(--fa-border);
-}
-
-.fa-enrich__item .fa-help {
-  grid-column: 2 / -1;
-}
-
-.fa-enrich__value {
-  overflow-wrap: anywhere;
-}
-</style>

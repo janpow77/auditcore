@@ -9,8 +9,7 @@ import { bundledProfiles } from '@flowaudit/bpmn-flowaudit/profiles'
 import FlowauditWorkbench from '../components/FlowauditWorkbench.vue'
 import FaIcon from '../components/base/FaIcon.vue'
 import { createI18n, provideI18n } from '../i18n/useI18n'
-import { restPorts } from '../rest/restPorts'
-import type { StandaloneConfig } from './config'
+import { restPorts, type StandaloneConfig } from '@flowaudit/bpmn-flowaudit/ui'
 
 const props = defineProps<{ config: StandaloneConfig }>()
 const { t } = provideI18n(createI18n(props.config.locale))
@@ -55,40 +54,3 @@ onMounted(loadProfile)
     />
   </div>
 </template>
-
-<style>
-html,
-body,
-#app {
-  height: 100%;
-  margin: 0;
-}
-
-.fa-standalone {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: var(--fa-bg);
-}
-
-.fa-standalone__bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--fa-border);
-  background: var(--fa-surface);
-  color: var(--fa-primary);
-}
-
-.fa-standalone__bar h1 {
-  margin: 0;
-  font-size: 16px;
-  color: var(--fa-text);
-}
-
-.fa-standalone__main {
-  flex: 1;
-  min-height: 0;
-}
-</style>

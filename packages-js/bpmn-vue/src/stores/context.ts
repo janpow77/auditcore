@@ -3,16 +3,13 @@
  */
 
 import { inject, provide, type InjectionKey } from 'vue'
-import type { CataloguePort, EsiPort, LegalSearchPort, ProfileData } from '@flowaudit/bpmn-flowaudit'
+import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
+import type { EditorPorts } from '@flowaudit/bpmn-flowaudit/ui'
 import type { EditorStore } from './editorStore'
 import type { SelectionStore } from './selectionStore'
 import type { ValidationStore } from './validationStore'
 
-export interface EditorPorts {
-  legalSearch?: LegalSearchPort
-  catalogue?: CataloguePort
-  esi?: EsiPort
-}
+export type { EditorPorts } from '@flowaudit/bpmn-flowaudit/ui'
 
 export interface EditorContext {
   editor: EditorStore

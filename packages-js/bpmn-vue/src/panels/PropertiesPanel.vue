@@ -9,7 +9,7 @@ import type { Comment, PaletteColor } from '@flowaudit/bpmn-flowaudit'
 import FaIcon from '../components/base/FaIcon.vue'
 import { useI18n } from '../i18n/useI18n'
 import { useEditorContext } from '../stores/context'
-import { listsFor, tabsFor, type TabId } from './tabs'
+import { listsFor, tabMove, tabsFor, type TabId } from '@flowaudit/bpmn-flowaudit/ui'
 import ColorTab from './tabs/ColorTab.vue'
 import GeneralTab from './tabs/GeneralTab.vue'
 import LegalTab from './tabs/LegalTab.vue'
@@ -33,11 +33,9 @@ watch(tabs, (list) => {
 })
 
 function onKey(event: KeyboardEvent, index: number): void {
-  const moves: Record<string, number> = { ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: tabs.value.length - 1 }
-  const move = moves[event.key]
-  if (move === undefined) return
+  const next = tabMove(event.key, index, tabs.value.length)
+  if (next === null) return
   event.preventDefault()
-  const next = (move + tabs.value.length) % tabs.value.length
   const tab = tabs.value[next]
   if (tab) active.value = tab.id
   tabRefs.value[next]?.focus()
@@ -80,68 +78,3 @@ function onKey(event: KeyboardEvent, index: number): void {
     </template>
   </aside>
 </template>
-
-<style>
-.fa-props {
-  display: flex;
-  height: 100%;
-  min-height: 0;
-  background: var(--fa-surface);
-}
-
-.fa-props__empty {
-  margin: 16px;
-  color: var(--fa-text-muted);
-}
-
-.fa-props__tabs {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  width: 44px;
-  padding: 6px 4px;
-  border-right: 1px solid var(--fa-border);
-  background: var(--fa-surface-2);
-}
-
-.fa-props__tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid transparent;
-  border-radius: var(--fa-radius-sm);
-  background: transparent;
-  color: var(--fa-text-muted);
-  cursor: pointer;
-}
-
-.fa-props__tab[aria-selected='true'] {
-  background: var(--fa-surface);
-  border-color: var(--fa-border);
-  color: var(--fa-primary);
-  box-shadow: var(--fa-shadow-sm);
-}
-
-.fa-props__tab-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-}
-
-.fa-props__panel {
-  flex: 1;
-  min-width: 0;
-  padding: 12px 14px 24px;
-  overflow: auto;
-}
-
-.fa-props__title {
-  margin: 0 0 10px;
-  font-size: 15px;
-  font-weight: 650;
-}
-</style>

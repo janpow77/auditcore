@@ -889,6 +889,6 @@
       "reason": "{\"constant\": \"TRUE\"}"
     }
   },
-  "regulierung_commit": "cc6bf9a6feeb92d8aaff77f287c8a1864eb881e7",
-  "reevaluation_2026_09_26": "Framework unver\u00e4ndert (15f5338); Auswertung mit dem aktuellen Kontext (protection_need normal) ergibt dieselben Anforderungen wie policy-evaluation-final-context.json"
+  "regulierung_commit": "5458d2e8161d33015fd6222917735eb55ca8cecf",
+  "reevaluation_2026_09_26": "Framework unver\u00e4ndert (15f5338); Auswertung f\u00fcr regulierung 5458d2e (v0.4.1, owi049) ergibt dieselben Anforderungen wie policy-evaluation-final-context.json"
 }

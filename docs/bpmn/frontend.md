@@ -1,4 +1,4 @@
-# BPMN-Frontend: FlowAudit-Fachschicht, Vue-Oberfläche, Web Component, React
+# BPMN-Frontend: FlowAudit-Fachschicht, UI-Kern, Vue, Web Component, React
 
 Drei Pakete bauen auf dem eigenen Editorkern `@flowaudit/bpmn-editor` auf
 (alle MIT, Clean-Room – kein Code, keine Styles, keine Icons aus bpmn-js,
@@ -6,16 +6,16 @@ bpmn-js-properties-panel, @bpmn-io/properties-panel oder bpmn-font):
 
 | Paket | Inhalt | Abhängigkeiten |
 |---|---|---|
-| `@flowaudit/bpmn-flowaudit` (`packages-js/bpmn-flowaudit`) | Fachschicht ohne Framework: moddle-Deskriptor flowaudit 1.0/1.1, Lesen/Schreiben der Erweiterungen, Rollen, Kennzeichen, Prüfbezüge, Prüfpfad, Prüfregeln, Anreicherung, Neutralisierung, Versions- und Soll/Ist-Vergleich, Berichte, Sammlung, Export, diagram-js-Module, Icons, Ports | `bpmn-moddle`; Kern optional |
+| `@flowaudit/bpmn-flowaudit` (`packages-js/bpmn-flowaudit`) | Fachschicht ohne Framework: moddle-Deskriptor flowaudit 1.0/1.1, Lesen/Schreiben der Erweiterungen, Rollen, Kennzeichen, Prüfbezüge, Prüfpfad, Prüfregeln, Anreicherung, Neutralisierung, Versions- und Soll/Ist-Vergleich, Berichte, Sammlung, Export, diagram-js-Module, Icons, Ports; unter `./ui` der framework-freie Kern der Oberfläche (Controller, Deskriptoren, Texte, REST-Ports, Stile) | `bpmn-moddle`; Kern optional |
 | `@flowaudit/bpmn-vue` (`packages-js/bpmn-vue`) | Vue-3-Oberfläche, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5, Kern, Fachschicht |
-| `@flowaudit/bpmn-react` (`packages-js/bpmn-react`) | dünner React-Wrapper um die Web Component | React 18.3 oder 19 |
+| `@flowaudit/bpmn-react` (`packages-js/bpmn-react`) | native React-Oberfläche (gleiches Markup und XML wie Vue), einbettbarer Editor mit dem Vertrag der Web Component | React 18.3 oder 19, Kern, Fachschicht |
 
 Die Fachschicht greift nie aufs Netz oder eine Datenbank zu. Alles
 Anwendungsspezifische kommt über **Ports** herein (`StoragePort`,
 `LegalSearchPort`, `CataloguePort`, `ProfilePort`, `ValidationPort`,
 `EsiPort`); für Demo und Tests gibt es Implementierungen im Speicher
 (`InMemoryStorage`, `StaticProfilePort`, `ProfileCataloguePort`,
-`ProfileLegalSearch`), für Server die REST-Ports aus `@flowaudit/bpmn-vue`
+`ProfileLegalSearch`), für Server die REST-Ports aus `@flowaudit/bpmn-flowaudit/ui` (auch von `@flowaudit/bpmn-vue` und `@flowaudit/bpmn-react` exportiert)
 (Vertrag: [`rest-api.md`](rest-api.md)). Programmspezifisches (Namen von
 Stellen, Förderprogramme) ist nicht eingebaut: Rollen-Aliasse, Profile und
 Ersetzungen für die Neutralisierung liefert die Anwendung.
@@ -146,16 +146,21 @@ Python-Paket mitzuliefern.
 
 ## Nutzung in React-Projekten
 
-`@flowaudit/bpmn-react` baut keine Oberfläche nach, sondern kapselt die Web
-Component typisiert. Zeichenketten werden Attribute, Objekte werden per `ref`
-als Eigenschaften gesetzt, Ereignisse per `addEventListener` an die
-`onXyz`-Props gebunden. Dadurch verhält sich der Wrapper unter React 18.3 und
-19 gleich. Die Tests laufen mit React 18.3; mit `REACT_DIR=<Ordner mit React 19>`
-laufen dieselben Tests gegen React 19 (lokal beide geprüft).
+`@flowaudit/bpmn-react` ist eine native React-Oberfläche – keine Vue-Laufzeit,
+keine Web Component. Die Logik (Controller auf `createStore`, Deskriptoren,
+Texte, REST-Ports, Export) kommt aus `@flowaudit/bpmn-flowaudit/ui`, denselben
+Quellen wie die Vue-Fassung; React liest die Controller über
+`useSyncExternalStore`. Getestet wird unter React 19 (`npm test`) und React
+18.3 (`npm run test:react18`, installiert React 18 außerhalb des Workspace).
+
+`FlowauditBpmnEditor` hat den Vertrag der Web Component (gleiche Props,
+Ereignisse mit denselben Nutzdaten wie `CustomEvent.detail`, Ref mit
+`element`, `getXml()`, `getSvg()`, `select(id)`, `reload()`):
 
 ```tsx
 import { useRef } from 'react'
 import { FlowauditBpmnEditor, type FlowauditBpmnEditorHandle } from '@flowaudit/bpmn-react'
+import '@flowaudit/bpmn-react/style.css'
 
 export function Prozess({ xml }: { xml: string }) {
   const editor = useRef<FlowauditBpmnEditorHandle>(null)
@@ -174,13 +179,12 @@ export function Prozess({ xml }: { xml: string }) {
 }
 ```
 
-Props: `src`, `apiBase`, `diagramId`, `name`, `locale`, `theme`, `readonly`,
-`profile`, `author` (Attribute); `xml`, `storage`, `ports`, `profileData`,
-`comments` (Eigenschaften); `onReady`, `onChange`, `onSave`,
-`onSelectionChange`, `onDiagramInfoChange`, `onError`; `className`, `style`.
-Die Referenz bietet `element`, `getXml()`, `getSvg()`, `select(id)`. Der
-Import von `@flowaudit/bpmn-react` registriert das Element; wer das Bündel
-selbst lädt, importiert nur `@flowaudit/bpmn-react/component`.
+`FlowauditEditor` und `FlowauditWorkbench` entsprechen den gleichnamigen
+Vue-Komponenten: `v-model:xml` wird zu `xml` + `onXmlChange`,
+`update:name`/`update:comments` zu `onNameChange`/`onCommentsChange`, die
+übrigen Ereignisse zu `onXyz`, der Slot `editor` des XML-Dialogs zu
+`renderEditor`. Textfelder übernehmen wie Vues `@change` beim Verlassen oder
+mit Enter. Parität: [`../ui/react-paritaet.md`](../ui/react-paritaet.md).
 
 ## Entwicklung
 
@@ -188,7 +192,8 @@ selbst lädt, importiert nur `@flowaudit/bpmn-react/component`.
 npm ci
 npm run test -w packages-js/bpmn-flowaudit      # Vitest (happy-dom)
 npm run test -w packages-js/bpmn-vue            # Komponenten, Stores, Web Component
-npm run test -w packages-js/bpmn-react          # @testing-library/react
+npm run test -w packages-js/bpmn-react          # Testing Library, Parität mit Vue (React 19)
+npm run test:react18 -w packages-js/bpmn-react  # dieselben Tests unter React 18.3
 npm run demo -w packages-js/bpmn-vue            # Demo mit synthetischen Diagrammen
 npm run test:e2e -w packages-js/bpmn-vue        # Playwright gegen die Demo
 BPMN_LOCAL_FIXTURES=/pfad/zu/diagrammen npm run test -w packages-js/bpmn-flowaudit

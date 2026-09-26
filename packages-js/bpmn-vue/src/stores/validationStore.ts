@@ -1,70 +1,33 @@
 /**
- * Validation store: runs the rules in the browser after changes (debounced)
- * and optionally a server validation through the `ValidationPort`.
+ * Validation store: local rules after changes (debounced) and optionally a
+ * server validation (framework-free `createValidationCore`, mirrored into Vue).
  */
 
-import { computed, ref, shallowRef } from 'vue'
-import {
-  countIssues,
-  sortIssues,
-  validateModel,
-  type ProfileData,
-  type ValidationIssue,
-  type ValidationPort,
-} from '@flowaudit/bpmn-flowaudit'
+import { computed } from 'vue'
+import { createValidationCore, validationView, type ValidationCore, type ValidationCoreOptions } from '@flowaudit/bpmn-flowaudit/ui'
+import { useStore } from '../composables/useStore'
 import type { EditorStore } from './editorStore'
 
-export interface ValidationStoreOptions {
-  profile: () => ProfileData | null
-  port?: ValidationPort
-  delay?: number
+export type ValidationStoreOptions = ValidationCoreOptions
+export type ValidationStore = ReturnType<typeof bindValidationCore>
+
+export function bindValidationCore(core: ValidationCore) {
+  const state = useStore(core.store)
+  const view = computed(() => validationView(state.value))
+  return {
+    core,
+    issues: computed(() => view.value.issues),
+    count: computed(() => view.value.count),
+    byElement: computed(() => view.value.byElement),
+    running: computed(() => state.value.running),
+    error: computed(() => state.value.error),
+    runLocal: core.runLocal,
+    runServer: core.runServer,
+    schedule: core.schedule,
+    hasServer: core.hasServer,
+  }
 }
 
-export type ValidationStore = ReturnType<typeof createValidationStore>
-
-export function createValidationStore(editorStore: EditorStore, options: ValidationStoreOptions) {
-  const issues = shallowRef<ValidationIssue[]>([])
-  const serverIssues = shallowRef<ValidationIssue[]>([])
-  const running = ref(false)
-  const error = ref<string | null>(null)
-  let timer: ReturnType<typeof setTimeout> | undefined
-
-  function runLocal(): void {
-    if (!editorStore.state.ready) return
-    try {
-      issues.value = sortIssues(validateModel(editorStore.model(), { profile: options.profile() }).issues)
-    } catch (caught) {
-      error.value = (caught as Error).message
-    }
-  }
-
-  async function runServer(): Promise<void> {
-    if (!options.port) return
-    running.value = true
-    error.value = null
-    try {
-      serverIssues.value = sortIssues(await options.port.validate(await editorStore.exportXml(), { profile: options.profile()?.id }))
-    } catch (caught) {
-      error.value = (caught as Error).message
-    } finally {
-      running.value = false
-    }
-  }
-
-  function schedule(): void {
-    clearTimeout(timer)
-    timer = setTimeout(runLocal, options.delay ?? 400)
-  }
-
-  editorStore.onChange(schedule)
-
-  const all = computed(() => (serverIssues.value.length ? serverIssues.value : issues.value))
-  const count = computed(() => countIssues(all.value))
-  const byElement = computed(() => {
-    const map = new Map<string, ValidationIssue[]>()
-    for (const item of all.value) if (item.elementId) map.set(item.elementId, [...(map.get(item.elementId) ?? []), item])
-    return map
-  })
-
-  return { issues: all, count, byElement, running, error, runLocal, runServer, schedule, hasServer: Boolean(options.port) }
+export function createValidationStore(editorStore: EditorStore, options: ValidationStoreOptions): ValidationStore {
+  return bindValidationCore(createValidationCore(editorStore.core, options))
 }

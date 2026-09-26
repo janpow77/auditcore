@@ -13,6 +13,9 @@ from datetime import date
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from typing import Literal
 
+from auditcore_common.numeric import parse_percent_rate
+from auditcore_common.text import compact_upper
+
 AmountStyle = Literal["de_grouped", "de_plain", "de_space", "en_grouped"]
 CurrencyStyle = Literal["suffix_code", "suffix_symbol", "prefix_symbol", "prefix_code", "none"]
 DateStyle = Literal["de_numeric", "de_short", "de_long", "iso", "en_long"]
@@ -26,6 +29,11 @@ CURRENCY_STYLES: tuple[CurrencyStyle, ...] = (
     "none",
 )
 DATE_STYLES: tuple[DateStyle, ...] = ("de_numeric", "de_short", "de_long", "iso", "en_long")
+
+#: Rücklesung von Steuersatz und Kennung (dieselben Objekte wie in ``auditcore_common``):
+#: ``19 %``/``19%``/``19,0 %`` → ``Decimal('19')``; IBAN/USt-IdNr./BIC groß ohne Leerzeichen.
+parse_rate = parse_percent_rate
+normalize_identifier = compact_upper
 
 MONTHS_DE = (
     "Januar",
@@ -206,17 +214,3 @@ def parse_money(text: str) -> Decimal | None:
     except InvalidOperation:
         return None
     return cents(-value if negative else value)
-
-
-def parse_rate(text: str) -> Decimal | None:
-    """``19 %``/``19%``/``19,0 %`` → ``Decimal('19')``."""
-    match = re.fullmatch(r"(\d{1,2})(?:[.,](\d))?\s*%?", text.strip())
-    if not match:
-        return None
-    value = Decimal(match[1] + ("." + match[2] if match[2] else ""))
-    return value.quantize(Decimal(1)) if value == value.to_integral() else value
-
-
-def normalize_identifier(text: str) -> str:
-    """IBAN/USt-IdNr./BIC: Großbuchstaben ohne Leerzeichen."""
-    return "".join(text.split()).upper()

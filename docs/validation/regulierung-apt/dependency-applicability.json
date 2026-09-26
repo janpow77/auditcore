@@ -1,7 +1,7 @@
 {
   "status": "REVIEW_REQUIRED",
   "source_hashes": {
-    "backend/app/main.py": "9033a99d9b6aedd6de15260aba97ac9e3f51c64fbac3221e39090688d3cb77d2",
+    "backend/app/main.py": "3e7fe6d9a03d565ae929e891b14729867c4d6ff59875d87ca68ab0034958aecb",
     "backend/app/core/security.py": "15c1b3a75481404edaa2d40e528159e1f4490f76d50effd225e44dd11cdd6e77",
     "backend/app/core/auth/jwt_backend.py": "aeac2fde3811052a7b9e71786d87dc7c81a54130de31db9ac5d0ba11ed5e640f",
     "backend/app/core/auth/oidc_backend.py": "1760a5d2091050e409d4f3e4cd93541ddfbcd1eb5e63e8d58e32442eba6ae2c3",
@@ -96,5 +96,5 @@
     }
   },
   "limits": "Static source reachability assessment, not exploit test. No production secrets read. Public advisory databases do not cover local auditcore distributions; those have separate unit/static/provenance checks.",
-  "regulierung_commit": "cc6bf9a6feeb92d8aaff77f287c8a1864eb881e7"
+  "regulierung_commit": "5458d2e8161d33015fd6222917735eb55ca8cecf"
 }

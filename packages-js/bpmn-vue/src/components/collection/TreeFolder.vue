@@ -4,10 +4,10 @@
  * for diagrams and folders, rows draggable (tree pattern with ARIA).
  */
 import { ref } from 'vue'
-import { DIAGRAM_STATUS, label, type DiagramEntry, type FolderNode } from '@flowaudit/bpmn-flowaudit'
+import type { FolderNode } from '@flowaudit/bpmn-flowaudit'
+import { readDrag, setDrag, statusBadge, statusText, type DropTarget } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
-import { readDrag, setDrag, type DropTarget } from './dragData'
 
 const props = defineProps<{ node: FolderNode; depth: number; selectedDiagram: string | null; selectedFolder: string | null; openDiagram: string | null }>()
 const emit = defineEmits<{
@@ -28,10 +28,6 @@ function onDrop(event: DragEvent, position?: number): void {
   if (payload && payload.id !== folderId()) emit('drop', { ...payload, target: { folderId: folderId(), position } })
 }
 
-function statusBadge(entry: DiagramEntry): string {
-  const status = entry.info?.status
-  return status === 'freigegeben' ? 'fa-badge--success' : status === 'in_pruefung' ? 'fa-badge--info' : status === 'archiviert' ? '' : 'fa-badge--warning'
-}
 </script>
 
 <template>
@@ -84,72 +80,9 @@ function statusBadge(entry: DiagramEntry): string {
             <FaIcon name="diagram" :size="16" />
             <span class="fa-tree__name">{{ entry.name }}</span>
           </button>
-          <span class="fa-badge" :class="statusBadge(entry)">{{ entry.info?.status ? label(DIAGRAM_STATUS[entry.info.status], locale) || entry.info.status : t('collection.status.ohne_status') }}</span>
+          <span class="fa-badge" :class="statusBadge(entry)">{{ statusText(entry, t, locale) }}</span>
         </div>
       </li>
     </ul>
   </li>
 </template>
-
-<style>
-.fa-tree__children {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-tree__row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 32px;
-  padding-right: 6px;
-  border-radius: var(--fa-radius-sm);
-}
-
-.fa-tree__row:hover {
-  background: var(--fa-surface-2);
-}
-
-.fa-tree__row--selected {
-  background: var(--fa-primary-soft);
-}
-
-.fa-tree__row--open .fa-tree__name {
-  font-weight: 650;
-}
-
-.fa-tree__row--over {
-  outline: 2px dashed var(--fa-primary);
-}
-
-.fa-tree__toggle,
-.fa-tree__label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.fa-tree__label {
-  flex: 1;
-  min-width: 0;
-  padding: 4px 2px;
-  text-align: left;
-}
-
-.fa-tree__name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.fa-tree__grip {
-  color: var(--fa-text-muted);
-  cursor: grab;
-}
-</style>

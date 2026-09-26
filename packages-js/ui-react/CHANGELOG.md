@@ -29,11 +29,22 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `FlowauditScreeningReview`, `FlowauditSampling`, `FlowauditBenford`
   (ersetzt durch die nativen Fassungen im Haupteinstieg) und
   das Weiterreichen von `defineFlowauditElements` im Haupteinstieg.
-- **Veraltet:** Die übrigen Hüllen (`FlowauditKanbanBoard(s)`,
-  `createElementComponent`, `eventPayload`,
-  `defineFlowauditElements`) stehen nur noch unter `@flowaudit/ui-react/elements`;
-  `@flowaudit/ui`, `@flowaudit/kanban-core` und `vue` sind dafür optionale
-  Peer-Abhängigkeiten.
+- **Entfernt:** der Einstieg `@flowaudit/ui-react/elements` mit den letzten
+  Hüllen (`FlowauditKanbanBoard(s)`, `createElementComponent`,
+  `eventPayload`, `defineFlowauditElements`); `@flowaudit/ui` und `vue` sind
+  keine (optionalen) Peer-Abhängigkeiten mehr. Wer Web Components braucht,
+  nutzt `@flowaudit/ui/elements` direkt.
+- **Kanban nativ:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards`
+  (gleiche Props, Ereignisse als `onXxx`, `renderCardExtra`, `ref` mit
+  `reload()`) sowie die Bausteine `KanbanCard`, `KanbanColumn`,
+  `KanbanToolbar`, `KanbanCardDetail`, `KanbanSettingsDialog`,
+  `KanbanShareDialog`, `CardAppearance`, `CardChecklistEditor`,
+  `CardReferences`, `CardTagsEditor`, `ColumnEditorRow`; Logik aus
+  `@flowaudit/kanban-core` (jetzt Laufzeitabhängigkeit).
+- `TextField` mit `autoFocus`, `className`, `style`, `inputRef`, `onBlur`;
+  `Button` mit `role`, `ariaChecked`, `testId`; `Icon` mit `className`.
+- React 18 und 19: Peer-Bereich `^18.3.0 || ^19.0.0`, Tests unter beiden
+  Versionen (`npm test`, `npm run test:react19`).
 - Paritätsnachweis: dieselben Fälle wie die Vue-Fassung
   (`ui-core/test/parity`), zusätzlich DOM-Vergleich Vue ↔ React nach
   Normalisierung und nach Interaktionen (`test/parity`).

@@ -2,13 +2,10 @@ import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { hasIcon } from '@flowaudit/bpmn-flowaudit'
 import EditorToolbar from '../src/components/toolbar/EditorToolbar.vue'
-import { EDIT_ACTIONS, FILE_ACTIONS, VIEW_ACTIONS } from '../src/components/toolbar/toolbarActions'
+import { CORE_ENTRY_ICONS, EDIT_ACTIONS, FILE_ACTIONS, handleShortcut, readPaletteEntries, TABS, VIEW_ACTIONS } from '@flowaudit/bpmn-flowaudit/ui'
 import ToolPalette from '../src/components/palette/ToolPalette.vue'
-import { CORE_ENTRY_ICONS, readPaletteEntries } from '../src/components/palette/paletteEntries'
 import FaIcon from '../src/components/base/FaIcon.vue'
 import ColorSwatches from '../src/components/base/ColorSwatches.vue'
-import { handleShortcut } from '../src/composables/useShortcuts'
-import { TABS } from '../src/panels/tabs'
 
 const toolbarProps = { name: 'Muster', dirty: true, saving: false, readonly: false, canUndo: true, canRedo: false, direction: 'waagerecht' as const, pageView: 'aus', active: {} }
 
