@@ -18,6 +18,10 @@ export interface ButtonProps {
   title?: string
   ariaLabel?: string
   ariaKeyshortcuts?: string
+  /** Durchgereichte Attribute wie in Vue (z. B. Optionsgruppe aus Schaltflächen, Testkennung). */
+  role?: string
+  ariaChecked?: boolean
+  testId?: string
   children?: ReactNode
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void
 }
@@ -45,6 +49,9 @@ export function Button(props: ButtonProps) {
       aria-pressed={props.pressed}
       aria-label={name.ariaLabel}
       aria-keyshortcuts={props.ariaKeyshortcuts}
+      role={props.role}
+      aria-checked={props.ariaChecked}
+      data-testid={props.testId}
       title={name.title}
       onClick={props.onClick}
     >

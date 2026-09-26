@@ -26,6 +26,19 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `defineFlowauditElements`) stehen nur noch unter `@flowaudit/ui-react/elements`;
   `@flowaudit/ui`, `@flowaudit/kanban-core` und `vue` sind dafür optionale
   Peer-Abhängigkeiten.
+- **Kanban nativ:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards`
+  (gleiche Props, Ereignisse als `onXxx`, `renderCardExtra`, `ref` mit
+  `reload()`) sowie die Bausteine `KanbanCard`, `KanbanColumn`,
+  `KanbanToolbar`, `KanbanCardDetail`, `KanbanSettingsDialog`,
+  `KanbanShareDialog`, `CardAppearance`, `CardChecklistEditor`,
+  `CardReferences`, `CardTagsEditor`, `ColumnEditorRow`; Logik aus
+  `@flowaudit/kanban-core` (jetzt Laufzeitabhängigkeit). Die Hüllen
+  `FlowauditKanbanBoard(s)` unter `/elements` bleiben veraltet bestehen.
+- `Dialog` (wie `FaDialog`: Fokusfalle, Escape, Hintergrundklick, im `body`);
+  `TextField` mit `autoFocus`, `className`, `style`, `inputRef`, `onBlur`;
+  `Button` mit `role`, `ariaChecked`, `testId`; `Icon` mit `className`.
+- React 18 und 19: Peer-Bereich `^18.3.0 || ^19.0.0`, Tests unter beiden
+  Versionen (`npm test`, `npm run test:react19`).
 - Paritätsnachweis: dieselben Fälle wie die Vue-Fassung
   (`ui-core/test/parity`), zusätzlich DOM-Vergleich Vue ↔ React nach
   Normalisierung und nach Interaktionen (`test/parity`).

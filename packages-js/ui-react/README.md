@@ -2,13 +2,13 @@
 
 ## Zweck
 
-Native React-18-Komponenten der FlowAudit-Oberflächen (Tabelle, Synopse, VVT, DSFA) ohne Vue und ohne Web Components, auf dem gemeinsamen Kern `@flowaudit/ui-core`.
+Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen (Tabelle, Synopse, VVT, DSFA, Kanban) ohne Vue und ohne Web Components, auf den gemeinsamen Kernen `@flowaudit/ui-core` und `@flowaudit/kanban-core`.
 
 Für React-Anwendungen wie regulierung. Die Komponenten erfüllen dieselben
 Verträge wie die Vue-Fassung `@flowaudit/ui`: gleiche Props- und
 Ereignis-Semantik, gleiche REST-Verträge, gleiche Texte, gleiches Markup
 und gleiche Barrierefreiheit (Tastatur, ARIA). Fachlogik, Texte und
-Zustandsautomaten kommen aus `@flowaudit/ui-core`; dieses Paket enthält nur
+Zustandsautomaten kommen aus `@flowaudit/ui-core` (Kanban: `@flowaudit/kanban-core`); dieses Paket enthält nur
 die React-Darstellung. Dazu kommen React-Hooks auf Basis von
 `@flowaudit/common` (Toasts, Media-Query, Klick außerhalb, Sortierung,
 Entprellen, Token).
@@ -25,12 +25,12 @@ npm run build -w @flowaudit/ui-react   # dist/: ESM und Typen
 Im Anwendungsrepository:
 
 ```sh
-npm install @flowaudit/ui-react @flowaudit/ui-core @flowaudit/common react react-dom
+npm install @flowaudit/ui-react @flowaudit/ui-core @flowaudit/kanban-core @flowaudit/common react react-dom
 ```
 
 Das Paket ist nicht in einer npm-Registry veröffentlicht; Bezug über den
 Workspace oder mit `npm pack` erzeugte Tarballs von `@flowaudit/ui-react`,
-`@flowaudit/ui-core` und `@flowaudit/common`. Vue wird nur für den
+`@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`. Vue wird nur für den
 veralteten Einstieg `@flowaudit/ui-react/elements` gebraucht.
 
 ## Schnellstart
@@ -56,6 +56,27 @@ export function Vergleich({ id }: { id: string }) {
 }
 ```
 
+Kanban-Board über den REST-Vertrag von `auditcore_kanban` (`docs/kanban/rest-api.md`):
+
+```tsx
+import { RestBoardPort } from '@flowaudit/kanban-core'
+import { FlowauditKanbanBoard, FlowauditKanbanBoards } from '@flowaudit/ui-react'
+import { useState } from 'react'
+import '@flowaudit/ui-core/style.css'
+
+const port = new RestBoardPort({ baseUrl: '/api/kanban', userId: 'anna.becker' })
+
+export function Aufgaben() {
+  const [boardId, setBoardId] = useState('')
+  return (
+    <>
+      <FlowauditKanbanBoards port={port} activeId={boardId} onBoardSelect={setBoardId} />
+      {boardId ? <FlowauditKanbanBoard port={port} boardId={boardId} onCardOpen={(card) => console.info(card.id)} /> : null}
+    </>
+  )
+}
+```
+
 ## Einbindung
 
 - **React:** Komponenten wie gewohnt einsetzen und einmal
@@ -69,8 +90,15 @@ export function Vergleich({ id }: { id: string }) {
 - **Ports:** Datenzugriffe laufen über Ports aus `@flowaudit/ui-core`
   (`createSynopsisRestClient`, `createDataProtectionRestPort`), `fetch` und
   Kopfzeilen sind injizierbar (Anmeldetoken der Anwendung).
+- **Kanban:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards` sind nativ
+  (Zustandsautomaten aus `@flowaudit/kanban-core`: `createBoardController`,
+  `createMoveController`, `createPointerDrag`, `createBoardListController`,
+  `createColumnEditor`, `createShareSearch`). Ohne `port` bearbeitet das
+  Board ein übergebenes `board` lokal (In-Memory). Tastatur: Leertaste nimmt
+  eine Karte auf, Pfeiltasten verschieben, Leertaste legt ab, Escape bricht ab,
+  Strg+Pfeil verschiebt direkt; Board-Kürzel N, F und /.
 - **Web Component (veraltet):** Stichprobe, Benford, Screening,
-  Risiko-Merkmale, Kanban und Geo-Karte gibt es noch nicht nativ; ihre Hüllen
+  Risiko-Merkmale und Geo-Karte gibt es noch nicht nativ; ihre Hüllen
   um die Vue-Web-Components stehen unter `@flowaudit/ui-react/elements`
   (`defineFlowauditElements()` aufrufen, `@flowaudit/ui/style.css` laden,
   `@flowaudit/ui`, `@flowaudit/kanban-core` und Vue installieren).
@@ -78,7 +106,7 @@ export function Vergleich({ id }: { id: string }) {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (103):
+Exporte der Einstiegspunkte aus `package.json#exports` (136):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -86,19 +114,37 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `BadgeProps` | Schnittstelle | – | `base/Badge` |
 | `@flowaudit/ui-react` | `Button` | Funktion | Schaltfläche wie `FaButton` (gleiche Klassen, ARIA und Zustände). | `base/Button` |
 | `@flowaudit/ui-react` | `ButtonProps` | Schnittstelle | – | `base/Button` |
+| `@flowaudit/ui-react` | `CardAppearance` | Funktion | Kartendesign wie `CardAppearance.vue`: Farbe, eigene Farbe, Hintergrundbild (höchstens 2 MB). | `kanban/CardAppearance` |
+| `@flowaudit/ui-react` | `CardAppearanceProps` | Schnittstelle | – | `kanban/CardAppearance` |
+| `@flowaudit/ui-react` | `CardChecklistEditor` | Funktion | Checkliste einer Karte wie `CardChecklistEditor.vue`. | `kanban/CardChecklistEditor` |
+| `@flowaudit/ui-react` | `CardChecklistEditorProps` | Schnittstelle | – | `kanban/CardChecklistEditor` |
+| `@flowaudit/ui-react` | `CardReferences` | Funktion | Verknüpfungen und Anhänge einer Karte wie `CardReferences.vue`. | `kanban/CardReferences` |
+| `@flowaudit/ui-react` | `CardReferencesProps` | Schnittstelle | – | `kanban/CardReferences` |
+| `@flowaudit/ui-react` | `CardTagsEditor` | Funktion | Tags einer Karte wie `CardTagsEditor.vue` (Enter fügt hinzu, Schaltfläche entfernt). | `kanban/CardTagsEditor` |
+| `@flowaudit/ui-react` | `CardTagsEditorProps` | Schnittstelle | – | `kanban/CardTagsEditor` |
 | `@flowaudit/ui-react` | `CellValue` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `ColumnEditorRow` | Funktion | Zeile des Spalteneditors wie `ColumnEditorRow.vue`. | `kanban/ColumnEditorRow` |
+| `@flowaudit/ui-react` | `ColumnEditorRowProps` | Schnittstelle | – | `kanban/ColumnEditorRow` |
 | `@flowaudit/ui-react` | `Comparison` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ComparisonResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DataProtectionError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DataProtectionPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DecimalSeparator` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `Delimiter` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `Dialog` | Funktion | Dialog wie `FaDialog` (gleiche Klassen, ARIA, Fokusfalle, Escape, Klick auf den Hintergrund), im `body`. | `base/Dialog` |
+| `@flowaudit/ui-react` | `DialogProps` | Schnittstelle | – | `base/Dialog` |
 | `@flowaudit/ui-react` | `DownloadFile` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `DsfaStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `FetchLike` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `FlowauditDsfa` | Funktion | Datenschutz-Folgenabschätzung (Art. 35 DSGVO) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-dsfa>`: Übersicht, Schwellwertanalyse, Risiko, Vorschlag der B … | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
+| `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | – | `kanban/FlowauditKanbanBoard` |
+| `@flowaudit/ui-react` | `FlowauditKanbanBoardHandle` | Schnittstelle | Methoden über `ref` (wie `defineExpose` der Vue-Fassung). | `kanban/FlowauditKanbanBoard` |
+| `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban/FlowauditKanbanBoard` |
+| `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | Boardliste wie `KanbanBoardList.vue` (eigene und geteilte Boards, Anheften, Löschen, Anlegen). | `kanban/FlowauditKanbanBoards` |
+| `@flowaudit/ui-react` | `FlowauditKanbanBoardsHandle` | Schnittstelle | – | `kanban/FlowauditKanbanBoards` |
+| `@flowaudit/ui-react` | `FlowauditKanbanBoardsProps` | Schnittstelle | – | `kanban/FlowauditKanbanBoards` |
 | `@flowaudit/ui-react` | `FlowauditSynopsis` | Konstante | Synopse / Versionsvergleich als native React-Komponente (Vertrag wie `<flowaudit-synopsis>`): Seiten- oder Inline-Ansicht, Wortdifferenz, Filter, Navigation mit N/J und P/K, Export … | `synopsis/FlowauditSynopsis` |
 | `@flowaudit/ui-react` | `FlowauditSynopsisHandle` | Schnittstelle | Methoden über `ref` (wie `defineExpose` der Vue-Fassung). | `synopsis/FlowauditSynopsis` |
 | `@flowaudit/ui-react` | `FlowauditSynopsisProps` | Schnittstelle | – | `synopsis/FlowauditSynopsis` |
@@ -108,6 +154,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `FlowauditVvtProps` | Schnittstelle | – | `dataprotection/FlowauditVvt` |
 | `@flowaudit/ui-react` | `Icon` | Funktion | – | `base/Icon` |
 | `@flowaudit/ui-react` | `IconProps` | Schnittstelle | – | `base/Icon` |
+| `@flowaudit/ui-react` | `KanbanCard` | Funktion | Karte wie `KanbanCard.vue` (gleiches Markup, Tastatur und Zeiger über das Board). | `kanban/KanbanCard` |
+| `@flowaudit/ui-react` | `KanbanCardDetail` | Funktion | Detailansicht einer Karte wie `KanbanCardDetail.vue` (seitlicher Dialog). | `kanban/KanbanCardDetail` |
+| `@flowaudit/ui-react` | `KanbanCardDetailProps` | Schnittstelle | – | `kanban/KanbanCardDetail` |
+| `@flowaudit/ui-react` | `KanbanCardProps` | Schnittstelle | – | `kanban/KanbanCard` |
+| `@flowaudit/ui-react` | `KanbanColumn` | Funktion | Spalte wie `KanbanColumn.vue` (Kopf mit WIP-Anzeige, Kartenliste, Hinzufügen). | `kanban/KanbanColumn` |
+| `@flowaudit/ui-react` | `KanbanColumnProps` | Schnittstelle | – | `kanban/KanbanColumn` |
+| `@flowaudit/ui-react` | `KanbanSettingsDialog` | Funktion | Spalten, Farben und WIP-Limits wie `KanbanSettingsDialog.vue` (Prüfung über die Kernlogik). | `kanban/KanbanSettingsDialog` |
+| `@flowaudit/ui-react` | `KanbanSettingsDialogProps` | Schnittstelle | – | `kanban/KanbanSettingsDialog` |
+| `@flowaudit/ui-react` | `KanbanShareDialog` | Funktion | Freigaben eines Boards wie `KanbanShareDialog.vue` (Personensuche, Rechte, Entfernen mit Bestätigung). | `kanban/KanbanShareDialog` |
+| `@flowaudit/ui-react` | `KanbanShareDialogProps` | Schnittstelle | – | `kanban/KanbanShareDialog` |
+| `@flowaudit/ui-react` | `KanbanToolbar` | Funktion | Werkzeugleiste wie `KanbanToolbar.vue` (Titel, Fortschritt, Suche, Filter, Aktionen). | `kanban/KanbanToolbar` |
+| `@flowaudit/ui-react` | `KanbanToolbarProps` | Schnittstelle | – | `kanban/KanbanToolbar` |
 | `@flowaudit/ui-react` | `Locale` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `LocaleProvider` | Funktion | Sprache für alle Komponenten im Teilbaum (Gegenstück zu `provideLocale` in Vue). | `i18n` |
 | `@flowaudit/ui-react` | `NextSortOptions` | Re-Export | – | `@flowaudit/common` |
@@ -158,6 +216,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente und bei Escape; abgemeldet beim Unmount. | `hooks/dom` |
 | `@flowaudit/ui-react` | `useDebouncedCallback` | Funktion | Entprellte, stabile Funktion; ruft immer die neueste `fn` auf und verwirft einen ausstehenden Aufruf beim Unmount. | `hooks/state` |
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
+| `@flowaudit/ui-react` | `useKanbanBoard` | Funktion | – | `kanban/useKanbanBoard` |
+| `@flowaudit/ui-react` | `useKanbanMover` | Funktion | Verschieben per Tastatur und Zeiger über dem Board-Controller. | `kanban/useKanbanBoard` |
+| `@flowaudit/ui-react` | `useKanbanShortcuts` | Funktion | Tastenkürzel N, F und /, solange das Board angezeigt wird. | `kanban/useKanbanBoard` |
 | `@flowaudit/ui-react` | `useLocale` | Funktion | Sprache: Prop vor Provider vor Standardsprache (`setDefaultLocale`). | `i18n` |
 | `@flowaudit/ui-react` | `useMediaQuery` | Funktion | Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`; serverseitig `false`. | `hooks/dom` |
 | `@flowaudit/ui-react` | `useSort` | Funktion | Sortierzustand und sortierte Zeilen (Kern `table/sort` aus `@flowaudit/common`). | `hooks/state` |
@@ -202,6 +263,17 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
   `activityId`, `actor`, `editable`, `locale`; `onAssessmentChange`,
   `onError`), Vertrag `dataprotection_ui/1`
   ([`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md)).
+- `FlowauditKanbanBoard`: `port` + `boardId` oder `board` (+ `userId`,
+  `users`), `readOnly`, `sharedByName`, `showFullscreen`, `today`, `locale`,
+  `renderCardExtra`; `onBoardChange`, `onError`, `onFullscreen`,
+  `onNavigate(link, card)`, `onAttachment(attachment, card)`, `onCardOpen`;
+  über `ref` `reload()` und `board`. `FlowauditKanbanBoards`: `port`,
+  `activeId`, `now`, `locale`; `onBoardSelect`, `onCreated`; über `ref`
+  `reload()`. Vertrag: [`docs/kanban/rest-api.md`](../../docs/kanban/rest-api.md).
+- Bausteine wie in Vue: `KanbanCard`, `KanbanColumn`, `KanbanToolbar`,
+  `KanbanCardDetail`, `KanbanSettingsDialog`, `KanbanShareDialog`,
+  `CardAppearance`, `CardChecklistEditor`, `CardReferences`,
+  `CardTagsEditor`, `ColumnEditorRow`, dazu `Dialog`.
 - Hooks: `useSort`, `useToast` (mit `ToastProvider`), `useMediaQuery`,
   `useClickOutside`, `useDebouncedCallback`, `useAuthToken`,
   `useTranslation`, `useStoreState`.

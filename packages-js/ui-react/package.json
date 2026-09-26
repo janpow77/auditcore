@@ -1,7 +1,7 @@
 {
   "name": "@flowaudit/ui-react",
   "version": "1.0.0",
-  "description": "Native React-18-Komponenten der FlowAudit-Oberflächen (Tabelle, Synopse, VVT, DSFA) auf Basis von @flowaudit/ui-core, ohne Vue",
+  "description": "Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen (Tabelle, Synopse, VVT, DSFA, Kanban) auf Basis von @flowaudit/ui-core und @flowaudit/kanban-core, ohne Vue",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -27,17 +27,16 @@
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:react19": "node ../../scripts/js/react19-test.mjs"
   },
   "peerDependencies": {
-    "react": "^18.3.0",
-    "react-dom": "^18.3.0",
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0",
     "@flowaudit/ui": "^0.3.0",
-    "@flowaudit/kanban-core": "^0.1.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@flowaudit/kanban-core": "0.1.0",
     "@flowaudit/ui": "0.3.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
@@ -50,13 +49,11 @@
   },
   "dependencies": {
     "@flowaudit/common": "0.1.0",
-    "@flowaudit/ui-core": "0.1.0"
+    "@flowaudit/ui-core": "0.1.0",
+    "@flowaudit/kanban-core": "0.2.0"
   },
   "peerDependenciesMeta": {
     "@flowaudit/ui": {
-      "optional": true
-    },
-    "@flowaudit/kanban-core": {
       "optional": true
     },
     "vue": {
