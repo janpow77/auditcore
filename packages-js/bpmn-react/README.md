@@ -13,18 +13,20 @@ React-Fassung rendern dasselbe Markup und schreiben dasselbe XML.
 
 ## Installation
 
-Im Repository gehört das Paket zum npm-Workspace (`npm ci` im
-Repository-Stamm, Bau mit `npm run build -w @flowaudit/bpmn-react`). In einer Anwendung:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
-```bash
-npm install @flowaudit/bpmn-react
+```sh
+npm install @flowaudit/bpmn-react@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-react-0.2.0.tgz
 ```
 
-Das Paket ist noch in keiner npm-Registry veröffentlicht; bis dahin Bezug über
-den Workspace oder ein mit `npm pack -w @flowaudit/bpmn-react` erzeugtes Tarball.
+Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor`, `@flowaudit/bpmn-flowaudit`, `@flowaudit/ui-core` und `@flowaudit/common`; Peer-Abhängigkeiten `react` und `react-dom` (18.3 oder 19), kein Vue. Stile: `@flowaudit/bpmn-react/style.css`.
 
-Peer-Abhängigkeiten: `react` und `react-dom` (18.3 oder 19). Styles:
-`@flowaudit/bpmn-react/style.css`.
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/bpmn-react`).
 
 ## Schnellstart
 

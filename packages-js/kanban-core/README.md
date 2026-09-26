@@ -16,22 +16,20 @@ Datenbankansicht als Kanban `groupRecords` und den Port `RecordPort` mit
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                                    # im Repository-Stamm
-npm run build -w @flowaudit/kanban-core   # dist/: ESM und Typen
+npm install @flowaudit/kanban-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.0.tgz
 ```
 
-Im Anwendungsrepository:
+Keine Peer-Abhängigkeiten, kein CSS, keine weiteren `@flowaudit`-Pakete.
 
-```sh
-npm install @flowaudit/kanban-core
-```
-
-Das Paket ist noch nicht in einer npm-Registry veröffentlicht; bis dahin
-Bezug über den Workspace oder ein mit `npm pack -w @flowaudit/kanban-core`
-erzeugtes Tarball (`npm install ./flowaudit-kanban-core-0.1.0.tgz`).
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/kanban-core`).
 
 ## Schnellstart
 
