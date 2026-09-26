@@ -19,14 +19,15 @@ describe('REST-Port Geo', () => {
     await port.radius({ zentrum: { lat: 1, lon: 2 }, punkte: [], radius_m: 5, erdmodell: 'x' })
     await port.locate({ punkt: { lat: 1, lon: 2 }, flaeche: { type: 'Polygon', coordinates: [] }, erdmodell: 'x', rand_gilt_als_innen: true })
     await port.utm({ punkt: { lat: 1, lon: 2 }, ellipsoid: 'GRS80' })
+    await port.fromUtm?.({ ost: 476398.98, nord: 5549801.4, zone: 32, nordhalbkugel: true, ellipsoid: 'GRS80' })
     await port.simplify({ flaeche: { type: 'Polygon', coordinates: [] }, toleranz: 1, einheit: 'meter' })
     await port.loadGeoPackage?.(new Blob(['x']), 'gebiete')
     await port.loadSource?.('Schutz gebiete')
     expect(calls.map(([url]) => url)).toEqual([
-      '/api/geo/profile', '/api/geo/umkreis', '/api/geo/lage', '/api/geo/utm', '/api/geo/vereinfachung',
+      '/api/geo/profile', '/api/geo/umkreis', '/api/geo/lage', '/api/geo/utm', '/api/geo/utm/geographisch', '/api/geo/vereinfachung',
       '/api/geo/gpkg?tabelle=gebiete', '/api/geo/gpkg/quellen/Schutz%20gebiete',
     ])
-    const upload = calls[5]?.[1]
+    const upload = calls[6]?.[1]
     expect(upload?.method).toBe('POST')
     expect((upload?.headers as Record<string, string>)['Content-Type']).toBe('application/geopackage+sqlite3')
     expect(upload?.body).toBeInstanceOf(Blob)

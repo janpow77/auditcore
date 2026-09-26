@@ -103,7 +103,12 @@ Norwegen/Spitzbergen). Antwort: `zone`, `nordhalbkugel`, `ellipsoid`,
 `epsg` (258zz für ETRS89 Zonen 28–38 Nord, 326zz/327zz für WGS 84, sonst
 `null`), `mittelmeridian`, `ost`, `nord`. `/utm/geographisch`: `ost`,
 `nord`, `zone`, `nordhalbkugel`, `ellipsoid` → `{"punkt": {...}, "zone"}`.
-Keine Datumstransformation.
+Keine Datumstransformation. Die Oberfläche nutzt `/utm/geographisch` für
+die UTM-Eingabe des Bezugspunkts („UTM-Koordinaten eingeben“: Zone 1–60,
+Halbkugel, Ostwert über 0 und unter 1 000 000 m, Nordwert 0–10 000 000 m,
+Ellipsoid aus der Auswahl); der Port-Eintrag `fromUtm` ist optional, ohne
+ihn blendet die Karte die Eingabe aus. Nach jeder Umrechnung füllt die
+Karte die Felder mit dem Rechts-/Hochwert des Bezugspunkts.
 
 ### `POST /vereinfachung`
 
