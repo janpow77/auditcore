@@ -2,8 +2,8 @@
   "status": "REVIEW_REQUIRED",
   "source_hashes": {
     "backend/app/main.py": "9033a99d9b6aedd6de15260aba97ac9e3f51c64fbac3221e39090688d3cb77d2",
-    "backend/app/core/security.py": "d4933e84df63d1b757d7eb3eceddb05c3746f95ed8c5042f5d6791b1ed78f16f",
-    "backend/app/core/auth/jwt_backend.py": "205f4d9af67b40ad91e8f7a8aca1fc27e6e4d3b2ae053acc6bdcef9dc1bde05a",
+    "backend/app/core/security.py": "15c1b3a75481404edaa2d40e528159e1f4490f76d50effd225e44dd11cdd6e77",
+    "backend/app/core/auth/jwt_backend.py": "aeac2fde3811052a7b9e71786d87dc7c81a54130de31db9ac5d0ba11ed5e640f",
     "backend/app/core/auth/oidc_backend.py": "1760a5d2091050e409d4f3e4cd93541ddfbcd1eb5e63e8d58e32442eba6ae2c3",
     "backend/app/config.py": "3dbd7d7bfa2bc047658f257d7157e48c35d37c8be6ebf5bce897787ba3cf00e4"
   },
@@ -13,23 +13,8 @@
       "reason": "Scanned all backend/app Python AST call sites; no presentational_hints argument. All identified write_pdf invocations use default false. Applies only to current direct application call paths, not arbitrary future runtime options.",
       "call_sites": [
         {
-          "file": "backend/app/services/report_generator.py",
-          "line": 757,
-          "keywords": []
-        },
-        {
-          "file": "backend/app/services/report_generator.py",
-          "line": 1303,
-          "keywords": []
-        },
-        {
           "file": "backend/app/api/kpang/plausiprotokoll.py",
           "line": 619,
-          "keywords": []
-        },
-        {
-          "file": "backend/app/api/kpang/vollzug.py",
-          "line": 1857,
           "keywords": []
         },
         {
@@ -43,33 +28,33 @@
           "keywords": []
         },
         {
-          "file": "backend/app/services/harvesting/pipeline.py",
-          "line": 2290,
-          "keywords": []
-        },
-        {
-          "file": "backend/app/services/harvesting/pipeline.py",
-          "line": 2298,
+          "file": "backend/app/api/kpang/vollzug.py",
+          "line": 1854,
           "keywords": []
         },
         {
           "file": "backend/app/services/dsfa/export.py",
-          "line": 59,
+          "line": 70,
           "keywords": []
         },
         {
-          "file": "backend/app/services/schnittstellen/katalog.py",
-          "line": 370,
+          "file": "backend/app/services/harvesting/pipeline.py",
+          "line": 2291,
           "keywords": []
         },
         {
-          "file": "backend/app/services/kraftstoff/vollzug/gesamtakte_pdf.py",
-          "line": 531,
+          "file": "backend/app/services/harvesting/pipeline.py",
+          "line": 2299,
           "keywords": []
         },
         {
           "file": "backend/app/services/kraftstoff/vollzug/aktenexport.py",
           "line": 1142,
+          "keywords": []
+        },
+        {
+          "file": "backend/app/services/kraftstoff/vollzug/gesamtakte_pdf.py",
+          "line": 531,
           "keywords": []
         },
         {
@@ -81,19 +66,35 @@
           "file": "backend/app/services/kraftstoff/vollzug/verfahrens_checkliste.py",
           "line": 687,
           "keywords": []
+        },
+        {
+          "file": "backend/app/services/report_generator.py",
+          "line": 758,
+          "keywords": []
+        },
+        {
+          "file": "backend/app/services/report_generator.py",
+          "line": 1304,
+          "keywords": []
+        },
+        {
+          "file": "backend/app/services/schnittstellen/katalog.py",
+          "line": 370,
+          "keywords": []
         }
       ],
       "explicit_hint_calls": []
     },
     "ecdsa_minerva": {
       "status": "NOT_APPLICABLE_WITH_REASON",
-      "reason": "Application uses python-jose for verification only. OIDC accepts RS256/384/512 and ES256/384 (not RS256 only); verification is explicitly unaffected by advisory. No application SigningKey/sign_digest/ECDH call found. Local JWT signing uses HS256 via PyJWT.",
+      "reason": "Application uses python-jose for OIDC verification only (RS256/384/512, ES256/384); verification is unaffected by the advisory. No application SigningKey/sign_digest/ECDH call found. Local JWT signing/verification uses HS256 via auditcore_auth 0.1.0 (profile regulierung) over PyJWT.",
       "affected_api_calls": []
     },
     "pyjwt_weak_key_disputed": {
       "status": "REVIEW_REQUIRED",
-      "reason": "Non-debug startup rejects default SECRET_KEY and lengths below32 characters; length is not entropy. Concrete operator-generated secret and debug=false need deployment proof. Do not mark disputed advisory globally suppressed."
+      "reason": "Local tokens are issued by auditcore_auth 0.1.0 with the legacy-compatible profile regulierung (no library key-length floor, min_key_bytes=0). Non-debug startup rejects the default SECRET_KEY and lengths below 32 characters; length is not entropy. Concrete operator-generated secret and debug=false need deployment proof. Do not mark disputed advisory globally suppressed."
     }
   },
-  "limits": "Static source reachability assessment, not exploit test. No production secrets read. Public advisory databases do not cover local auditcore distributions; those have separate unit/static/provenance checks."
+  "limits": "Static source reachability assessment, not exploit test. No production secrets read. Public advisory databases do not cover local auditcore distributions; those have separate unit/static/provenance checks.",
+  "regulierung_commit": "cc6bf9a6feeb92d8aaff77f287c8a1864eb881e7"
 }

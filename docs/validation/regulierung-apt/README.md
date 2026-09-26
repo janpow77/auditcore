@@ -1,7 +1,7 @@
 # Regulierung: native APT-Auslieferung
 
 Regulierung bleibt im eigenen privaten Repository. Die Paketimplementierung liegt
-im Branch `feat/native-apt-deployment` unter `deploy/apt/`. Auditcore stellt die
+auf `main` unter `deploy/apt/` (zuvor Branch `feat/native-apt-deployment`). Auditcore stellt die
 Fachbibliotheken, SBOM-Erzeugung und den isolierten Paket-Lifecycle-Test bereit.
 Anwendungsquellcode und Anwendungspakete werden nicht im öffentlichen Auditcore
 veröffentlicht.
@@ -15,27 +15,46 @@ von `/opt`; Installation führt weder Downloads noch automatische DB-Migrationen
 
 ## Tatsächlich ausgeführte Prüfungen
 
-- Anwendung: 1702 Tests bestanden, keine übersprungen. Disposable PostgreSQL mit
-  TimescaleDB/PostGIS; alle 84 Runtime-Versionen gegen den Hashlock geprüft;
-  Offline-Installation und `pip check` erfolgreich. Details: `application-tests.json`.
-- Native Administrationslogik: 22 Tests bestanden; native Runtime/Readiness:
+Stand 26.09.2026: regulierung `cc6bf9a` (PR janpow77/regulierung#9) mit den
+auditcore-Bibliotheken aus Release v0.4.0 (dataprotection 0.4.3, reporting 0.2.1,
+harvest 0.1.1, price_analysis 0.1.1, price_sources 0.1.1, common 0.1.0, auth 0.1.0),
+im Lock als Release-Wheels mit SHA-256; Frontend mit `@flowaudit/common` 0.1.0
+(npm-pack-Tarball aus auditcore `483cd0a`).
+
+- Anwendung: 1803 Tests bestanden, 1 übersprungen (benötigt `pg_dump` auf dem
+  Testrechner; im Paket über `postgresql-client-16` vorhanden und im Lebenszyklus
+  mit Sicherung/Wiederherstellung ausgeführt). Wegwerf-PostgreSQL 16 mit
+  TimescaleDB 2.30.1/PostGIS 3.6.4; alle 88 gelockten Distributionen geprüft;
+  Offline-Installation und `pip check` erfolgreich. Enthalten sind die
+  Paritätstests alt ↔ Bibliothek für auditcore_auth und auditcore_common.
+  Details: `application-tests.json`.
+- Native Administrationslogik: 24 Tests bestanden; native Runtime/Readiness:
   19 Tests bestanden (letztere zusätzlich im Anwendungstestlauf enthalten).
-- Vollständige Alembic-Neuinstallation bis `owi047` zusätzlich mit
+- Vollständige Alembic-Neuinstallation bis `owi048` mit
   `NOSUPERUSER`-Anwendungsrolle erfolgreich ausgeführt; Extensions zuvor
-  administrativ eingerichtet (PostgreSQL 16, TimescaleDB 2.30.0, PostGIS 3.6.4).
-- Neue Bibliotheken: Datenschutz 413, Harvest 57 Tests bestanden; Ruff/Mypy bestanden.
-- Auditcore-Plattform: 263 Tests; Ruff und Mypy bestanden.
-- Frontend: TypeScript/Vite-Build und Chromium-Kartentest bestanden. Auth/API und
+  administrativ eingerichtet (PostgreSQL 16, TimescaleDB 2.30.1, PostGIS 3.6.4).
+  `role-migration-proof.txt`.
+- Paket-Lebenszyklus in QEMU (echtes systemd, offline, `-cpu max`): Installation,
+  Upgrade (`-1` → `-2`), Entfernen und Neuinstallation mit signiertem lokalen
+  APT-Feed; 31 Prüfpunkte PASS, darunter Anmeldung eines echten Administrators,
+  Readiness (DB, Redis, Schema), Sicherung und Wiederherstellung vor dem Upgrade,
+  Erhalt von Konfiguration und Daten, nativer PDF-Export. `lifecycle.json`.
+- Frontend: Typprüfung, ESLint, Prettier, Vite-Build, Vitest in Europe/Berlin
+  und America/New_York (107 Tests, inklusive Parität zu `@flowaudit/common`),
+  Helfer-Verträge (Ratchet PASS) und Chromium-Kartentest bestanden. Auth/API und
   Kartendaten waren im Browsertest Fixtures, keine Backend-Anmeldeprüfung.
   MapLibre 6.11.0 erfordert WebGL2/ES2022. Details: `frontend-tests.json`.
-- Dependency-Audit: npm 0 Befunde; Python 81 öffentliche Pakete geprüft, ein
-  verbleibendes ECDSA-Advisory betrifft ungenutzte Signier-/Keygen-Pfade.
+- Dependency-Audit: npm 2 moderate Befunde nur in der Testabhängigkeit vitest
+  (nicht ausgeliefert); Python 81 öffentliche Pakete geprüft, ein verbleibendes
+  ECDSA-Advisory betrifft ungenutzte Signier-/Keygen-Pfade. Die direkten Pins in
+  `requirements.txt` (Docker-Pfad) sind jetzt deckungsgleich mit dem Lock.
   Anwendbarkeit und verbleibende Grenzen: `dependency-review.json` und
   `dependency-applicability.json`.
-- Manueller CI-Build lokal in Ubuntu 24.04/CPython 3.12 tatsächlich ausgeführt:
-  Wheels erstellt, Inhalte gegen getestete Wheels verglichen, Offline-Runtime
-  installiert und vollständiges `.deb` gebaut. `ci-rehearsal.json`.
-  GitHub-Actions-Ausführung selbst: `NOT_EXECUTED`.
+- CI-Build lokal in Ubuntu 24.04/CPython 3.12 tatsächlich ausgeführt
+  (`ci_build.py`): öffentliche Wheels gegen feste Hashes, auditcore-Bibliotheken
+  als Release-Wheels (kein Neubau aus dem Quellstand), Offline-Runtime und
+  vollständiges `.deb`. `ci-rehearsal.json`. GitHub-Actions-Ausführung selbst:
+  `NOT_EXECUTED`.
 
 ## Freigabegrenze
 
@@ -50,6 +69,9 @@ Produktionsdaten, externe Identitätsprovider, Live-Harvesting, öffentliche
 TLS-/Proxy-Konfiguration und schemaändernde Datenbank-Upgrades benötigen einen
 konkreten Betriebs-/Migrationsnachweis. `regulierung-admin migrate` verweigert
 unbewertete Schemaänderungen und prüft bei kompatiblen Updates zuvor Backup/Restore.
+Das betrifft ausdrücklich ein Upgrade der Kandidaten vom 23.09. (`owi047`) auf den
+aktuellen Stand (`owi048`, additive Spalte `mandant_dsfa.vertrag` und erweiterte
+Prüfbedingung); eine Erstinstallation führt alle Migrationen über `init-local` aus.
 
 ## Reproduzierbarer Pakettest
 

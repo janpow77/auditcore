@@ -5,6 +5,13 @@ Codequelle: `janpow77/regulierung`, Commit
 Analyse: 22.09.2026. Auftrag ist die Vorbereitung des **nächsten** Umsetzungsschritts;
 Anwendungscode, Datenbank, Deployment und Produktionsserver wurden nicht verändert.
 
+> **Stand 26.09.2026:** Die hier als offen beschriebene Consumer-Umstellung ist
+> umgesetzt (regulierung PR #9): Datenschutz, Preisanalyse/-quellen, Harvest,
+> Reporting, common und auth kommen als hashgebundene Release-Wheels v0.4.0;
+> Parität alt ↔ Bibliothek ist getestet, das native Paket ist gebaut und im
+> QEMU-Lebenszyklus geprüft. Nachweise: `docs/validation/regulierung-apt/`.
+> Die Inventur unten beschreibt den Ausgangsstand vom 22.09.2026.
+
 ## Aussage und Umfang
 
 Regulierung bleibt eine eigene Anwendung und soll echte versionierte Libraries aus

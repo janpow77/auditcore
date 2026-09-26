@@ -6,7 +6,7 @@
   "basis": {
     "multi_tenant": "backend/app/api/admin/mandant_dsgvo.py tenant-specific routes and ownership tests",
     "uploads": "backend/app/api/admin/mtsk_import.py and datenquellen.py",
-    "authentication": "backend/app/core/auth/jwt_backend.py default local authentication; optional OIDC must be reevaluated when configured",
+    "authentication": "backend/app/core/security.py \u00fcber auditcore_auth 0.1.0 (Profil regulierung, bcrypt/HS256) und backend/app/core/auth/jwt_backend.py als lokale Standardanmeldung; optionales OIDC muss bei Konfiguration neu bewertet werden",
     "binding_decisions_workflow": "backend/app/services/kraftstoff/vollzug and DSFA release workflow",
     "ai_usage": "UNKNOWN: ollama and claude_cli selectable, operator mode not supplied",
     "protection_need": "UNKNOWN: no operator protection assessment supplied",
@@ -888,5 +888,7 @@
       "status": "NOT_EXECUTED",
       "reason": "{\"constant\": \"TRUE\"}"
     }
-  }
+  },
+  "regulierung_commit": "cc6bf9a6feeb92d8aaff77f287c8a1864eb881e7",
+  "reevaluation_2026_09_26": "Framework unver\u00e4ndert (15f5338); Auswertung mit dem aktuellen Kontext (protection_need normal) ergibt dieselben Anforderungen wie policy-evaluation-final-context.json"
 }

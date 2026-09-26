@@ -15,7 +15,7 @@
     "external_interfaces": true,
     "ai_usage": "none",
     "deployment_target": "pilot",
-    "protection_need": "UNKNOWN",
+    "protection_need": "normal",
     "interactive_workspace": false,
     "real_data_for_test_generation": false,
     "graphical_ui": true,
@@ -38,8 +38,8 @@
     "documents": true,
     "document_storage": true,
     "delegation": true,
-    "dsfa_required": "UNKNOWN",
-    "protection_need_source": "UNKNOWN"
+    "dsfa_required": true,
+    "protection_need_source": "project_configuration"
   },
   "profiles": [
     "INTERNAL_APP",
@@ -371,11 +371,13 @@
           }
         ]
       },
-      "applicable": "UNKNOWN",
-      "applicability_reason": "Unknown context or framework adapter drift: {\"all\": [{\"field\": \"protection_need\", \"known\": true}, {\"field\": \"authentication\", \"known\": true}, {\"field\": \"uploads\", \"known\": true}, {\"field\": \"external_interfaces\", \"known\": true}, {\"field\": \"ai_usage\", \"known\": true}]}",
-      "status": "OPEN",
-      "gate_status": "REVIEW_REQUIRED",
-      "evidence": [],
+      "applicable": "TRUE",
+      "applicability_reason": "Required scoping facts supplied; no technical implementation inferred",
+      "status": "IMPLEMENTED",
+      "gate_status": "PASS",
+      "evidence": [
+        "applicability_context"
+      ],
       "derived_checks": [
         "T-07",
         "T-13",
@@ -1062,7 +1064,6 @@
     "F-04",
     "F-05",
     "F-06",
-    "F-07.ASSESS",
     "F-07",
     "F-08",
     "F-09",
@@ -1071,8 +1072,7 @@
     "F-13",
     "F-15",
     "F-16",
-    "F-17",
-    "T-12"
+    "F-17"
   ],
   "approved_deviations": [],
   "tests": {
@@ -1332,8 +1332,8 @@
         ]
       },
       "adapter_current": true,
-      "applicable": "UNKNOWN",
-      "status": "REVIEW_REQUIRED",
+      "applicable": "TRUE",
+      "status": "NOT_EXECUTED",
       "reason": "{\"field\": \"dsfa_required\", \"in\": [true]}"
     },
     "T-13": {
