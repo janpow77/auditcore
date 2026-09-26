@@ -1,0 +1,25 @@
+{
+  "name": "flowaudit-example-react-minimal",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Minimale React-18-Anwendung mit den nativen Komponenten aus @flowaudit/ui-react (ohne Vue)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "@flowaudit/common": "file:../vendor/flowaudit-common.tgz",
+    "@flowaudit/ui-core": "file:../vendor/flowaudit-ui-core.tgz",
+    "@flowaudit/ui-react": "file:../vendor/flowaudit-ui-react.tgz",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.0"
+  }
+}

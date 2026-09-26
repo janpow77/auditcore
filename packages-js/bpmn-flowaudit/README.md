@@ -11,19 +11,20 @@ KA/BK-Texte, Profile und Serverprüfung kommen über Ports herein.
 
 ## Installation
 
-Im Repository gehört das Paket zum npm-Workspace (`npm ci` im
-Repository-Stamm, Bau mit `npm run build -w @flowaudit/bpmn-flowaudit`). In einer Anwendung:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
-```bash
-npm install @flowaudit/bpmn-flowaudit
+```sh
+npm install @flowaudit/bpmn-flowaudit@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-flowaudit-0.1.0.tgz
 ```
 
-Das Paket ist noch in keiner npm-Registry veröffentlicht; bis dahin Bezug über
-den Workspace oder ein mit `npm pack -w @flowaudit/bpmn-flowaudit` erzeugtes Tarball.
+Für die Editor-Module (`flowauditEditorOptions()`) zusätzlich `@flowaudit/bpmn-editor` (optionale Peer-Abhängigkeit). Stile: `@flowaudit/bpmn-flowaudit/style.css`.
 
-Für die Editor-Module (`flowauditEditorOptions()`) wird zusätzlich
-`@flowaudit/bpmn-editor` gebraucht; die Styles liegen in
-`@flowaudit/bpmn-flowaudit/style.css`.
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/bpmn-flowaudit`).
 
 ## Schnellstart
 
