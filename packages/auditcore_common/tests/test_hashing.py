@@ -93,9 +93,7 @@ def test_sha256_file_equals_every_copy(tmp_path: Path) -> None:
 
 def test_sha256_file_errors_match(tmp_path: Path) -> None:
     missing = tmp_path / "missing"
-    assert_same_outcome(
-        lambda: legacy.documents_sha256_file(missing), lambda: sha256_file(missing)
-    )
+    assert_same_outcome(lambda: legacy.documents_sha256_file(missing), lambda: sha256_file(missing))
     assert_same_outcome(
         lambda: legacy.documents_sha256_file(tmp_path), lambda: sha256_file(tmp_path)
     )

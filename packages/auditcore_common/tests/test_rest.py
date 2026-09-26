@@ -30,6 +30,15 @@ class ReportingError(rest.ContractError):
     """Package subclass as the reporting package defines it."""
 
 
+class GeoError(rest.ContractError):
+    """Package subclass as the geo package defines it (own default code)."""
+
+    def __init__(
+        self, message: str, *, status: int = 422, code: str = "ungueltige_eingabe"
+    ) -> None:
+        super().__init__(message, status=status, code=code)
+
+
 Outcome = tuple[str, object]
 
 
@@ -43,6 +52,7 @@ def _outcome(function: Callable[[], object]) -> Outcome:
         legacy.StatisticsContractError,
         legacy.IdentifiersContractError,
         legacy.ReportingContractError,
+        legacy.GeoContractError,
     ) as exc:
         cause = type(exc.__cause__).__name__ if exc.__cause__ else None
         return ("error", (exc.status, exc.code, str(exc), exc.to_dict(), cause))
@@ -244,3 +254,50 @@ def test_json_object_returns_the_same_mapping() -> None:
     assert rest.json_object(body, "Anfrage") is body
     with pytest.raises(rest.ContractError, match="'x' muss ein JSON-Objekt sein."):
         rest.json_object([], "x")
+
+
+def test_json_object_matches_sampling_geo_and_extrapolation() -> None:
+    r = rng(77)
+    shapes: list[object] = [None, [], {}, "x", 0, 1.5, True, {1: "a"}, {"a": 1, 2: "b"}, {"ä": []}]
+    for _ in range(SAMPLES):
+        value = r.choice(shapes) if r.random() < 0.5 else random_json(r)
+        path = r.choice(("Anfrage", "items[0]", "strata", "punkte[2].lage", "Ä", ""))
+        _assert_same(
+            lambda: legacy.sampling_as_object(value, path),
+            lambda: rest.json_object(value, path, error=SamplingError),
+        )
+        _assert_same(
+            lambda: legacy.extrapolation_reader_body(value, path),
+            lambda: rest.json_object(value, path, error=SamplingError),
+        )
+        _assert_same(
+            lambda: legacy.geo_body_of(value, path),
+            lambda: rest.json_object(value, path, error=GeoError),
+        )
+
+
+def test_geo_decode_and_reply_match_the_former_copy() -> None:
+    r = rng(78)
+    limit = 64
+    bodies = [b"", b"{", b"\xff\xfe", b"[1, 2]", b'{"a": 1.5}', b"x" * (limit + 1), b"1" * limit]
+    for _ in range(SAMPLES // 4):
+        raw = r.choice(bodies) if r.random() < 0.5 else json.dumps(random_json(r)).encode()
+        _assert_same(
+            lambda: legacy.geo_decode(raw, limit),
+            lambda: rest.decode_body(
+                raw,
+                limit,
+                error=GeoError,
+                too_large_code="zu_gross",
+                invalid_json_code="ungueltiges_json",
+            ),
+        )
+        data = random_json(r)
+        old, new = legacy.geo_json(200, data), rest.json_reply(200, legacy.geo_clean(data))
+        assert (old.status, old.body) == (new.status, new.body)
+        assert new.media_type == "application/json" and dict(new.headers) == {}
+
+
+def test_geo_error_keeps_its_default_code() -> None:
+    old, new = legacy.GeoContractError("x"), GeoError("x")
+    assert (old.status, old.code, old.to_dict()) == (new.status, new.code, new.to_dict())
