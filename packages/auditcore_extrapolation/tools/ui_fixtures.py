@@ -24,10 +24,21 @@ EVALUATION_REQUEST: dict[str, object] = {
         {"id": "V-01", "stratum": "Programm", "book_value": 20_000, "random_error": 1_000},
         {"id": "V-02", "stratum": "Programm", "book_value": 10_000, "systemic_error": 500},
         {"id": "V-03", "stratum": "Programm", "book_value": 5_000},
-        {"id": "V-04", "stratum": "Programm", "book_value": 8_000, "anomalous_error": 800,
-         "anomalous_reason": "Einmaliger Übertragungsfehler", "anomalous_corrected": True},
-        {"id": "V-05", "stratum": "Programm", "book_value": 200_000, "random_error": 4_000,
-         "exhaustive": True},
+        {
+            "id": "V-04",
+            "stratum": "Programm",
+            "book_value": 8_000,
+            "anomalous_error": 800,
+            "anomalous_reason": "Einmaliger Übertragungsfehler",
+            "anomalous_corrected": True,
+        },
+        {
+            "id": "V-05",
+            "stratum": "Programm",
+            "book_value": 200_000,
+            "random_error": 4_000,
+            "exhaustive": True,
+        },
     ],
 }
 RESIDUAL_REQUEST: dict[str, object] = {
