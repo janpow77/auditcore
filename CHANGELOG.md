@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Geo-Karte: UTM-Eingabe des Bezugspunkts (`POST /utm/geographisch` von
+  `auditcore_geo.web`) in Vue (`GeoUtmInput`) und React nativ – Zone,
+  Halbkugel, Ost- und Nordwert mit Feldprüfung im Kern
+  (`parseUtm`, `parseMetres`), Rückrechnung über den neuen optionalen
+  Port-Eintrag `fromUtm` (`createGeoRestPort` bietet ihn an), Felder
+  folgen dem Bezugspunkt; Ellipsoid-Auswahl auch vor dem ersten
+  Bezugspunkt. 5 Paritätsfälle plus 2 Interaktionsfolgen, E2E ergänzt.
+
 - „Kennung prüfen“: REST-Vertrag `identifiers_ui/1` in
   `auditcore_identifiers.web` (Extras `web`, `fastapi`) und Oberfläche
   `IdentifierCheck`/`<flowaudit-identifier-check>` (Vue) sowie native
