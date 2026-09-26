@@ -66,4 +66,13 @@ describe('REST-Client', () => {
     await expect(client.load('x')).rejects.toEqual(new RestError('Vergleich nicht gefunden.', 404, 'http_error'))
     await expect(client.list()).rejects.toMatchObject({ status: 500, message: 'HTTP 500' })
   })
+
+  it('importiert ein fertiges Ergebnis als JSON (POST /comparisons/import)', async () => {
+    const { request, calls } = fakeRequest([json(standard, 201)])
+    const client = createSynopsisRestClient({ baseUrl: '/api/synopsis', fetch: request })
+    expect((await client.importResult({ title: 'Import', result: standard.result })).id).toBe(standard.id)
+    expect(calls[0]?.url).toBe('/api/synopsis/comparisons/import')
+    expect(calls[0]?.init?.method).toBe('POST')
+    expect(JSON.parse(String(calls[0]?.init?.body))).toEqual({ title: 'Import', result: standard.result })
+  })
 })
