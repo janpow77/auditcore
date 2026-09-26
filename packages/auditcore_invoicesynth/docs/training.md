@@ -79,7 +79,7 @@ Verzeichnisse auf janpow-ai (Host → Container):
 | Host | Container | Inhalt |
 |---|---|---|
 | `/home/janpow/donut/datasets/pilot-192e329e531ba160` | `/data/192e329e…` (ro) | Pilot 2 000 Belege (1 600/150/150/100) |
-| `/home/janpow/donut/datasets/full-<hash16>` | `/data/<hash>` (ro) | Vollsatz 20 000/1 000/1 000/500 |
+| `/home/janpow/donut/datasets/full-34581be2880d00f4` | `/data/34581be2…005d` (ro) | Vollsatz 20 000/1 000/1 000/500 (22 487 Trainingsbilder, 8,1 GB) |
 | `/home/janpow/donut/base/donut-base` | `/srv/auditcore/donut/base/donut-base` (ro) | Startmodell, Revision a959cf33…, `SOURCE.json`, `SHA256SUMS` |
 | `/home/janpow/donut/base/donut-cord-v2` | `/srv/auditcore/donut/base/donut-cord-v2` (ro) | nur Vergleich (Revision 8003d433…) |
 | `/home/janpow/donut/runs` | `/srv/auditcore/donut/runs` (rw) | Läufe `<lauf-id>-0` (GPU 0) und `<lauf-id>-1` (GPU 1) |
@@ -89,10 +89,12 @@ Verzeichnisse auf janpow-ai (Host → Container):
 | Schritt | Stand |
 |---|---|
 | janpow-ai als Spoke, Telemetrie beider GPUs | RTX 5070 Ti (GPU 0) und RTX 5060 Ti (GPU 1), je 16 GB, Treiber 595.84 → `choose_topology`: **parallel** (zwei Läufe) |
-| Job-Image | Workflow `donut-train-image`, Digest im Job (`image`) |
+| Job-Image | `ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466` (Pilot-Stand `0.1.2+g54007a1606fc`, öffentlich, anonym ziehbar); spätere Builds verschieben nur den Tag `cu128`, der Job nennt den Digest (`--image`) |
 | Startmodell | `pytorch_model.bin` SHA-256 `749f6e487d0cdbd7362d8b6a909174b93506d8631da0d15a6108bb6512ad5f48` (gleich dem Git-LFS-Objekt auf Hugging Face; `donut-base@a959cf33` hat keine safetensors-Datei) |
 | Pilot-Datensatz | Hash `192e329e531ba16028c314f36007737637fdaaf59e0eb66095fb84a4056174f3`; zweimal unabhängig gebaut, gleicher Hash; `verify` ok |
-| Vollsatz | Seed 42, 20 000/1 000/1 000/500, Hash im Verzeichnisnamen und `manifest.json` |
+| Vollsatz | Seed 42, Hash `34581be2880d00f4bb293fb0fc368770c2af61c7a748cdb55cf4c74a8324005d`, `verify` ok, Bauzeit 96 min (ein CPU-Kern) |
+| FlowAgent-Jobs | `~/donut/job-pilot.json` (Lauf-ID `6cb8d70e0befc10e`, 3 Epochen, 675 Schritte je Lauf) und `~/donut/job-voll.json` (Lauf-ID `2835be42bd3c1e1a`, 6 Epochen, 16 866 Schritte je Lauf); Topologie jeweils `parallel`; Varianten `*-gpus-live.json` mit der Live-Telemetrie |
+| Bewertung | `~/donut/tools/pilot-bewerten.sh [job.json]` (CPU; beide Läufe gegen T1/T2, Donut-CORD einmal; `LIMIT`/`MAXLEN`/`THREADS` optional) |
 | FlowAgent-Seite (`train:donut`, GPU-Freigabe, Spiegel) | Session `flow-agent-f1`; Auftragsdateien `~/.config/flow-agent/gpu-auftraege/{donut-pilot,donut-voll}.json` |
 | Morgenprüfung | `/home/janpow/donut/tools/morgen-pruefung.sh` (nur lesend: Zustand, Loss-Verlauf, Tempo, Restzeit, Stillstand, verworfene Checkpoints, GPUs, Dienste) |
 
@@ -116,14 +118,15 @@ Job planen (echte Telemetrie, nur lesend; im Image, ohne GPU):
 ```bash
 nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader,nounits \
   | python3 -c 'import json,sys; print(json.dumps([dict(index=int(i), name=n.strip(), memory_total_mib=int(t), memory_free_mib=int(f), host="janpow-ai") for i,n,t,f in (l.split(",") for l in sys.stdin)]))' \
-  > ~/donut/gpus.json
+  > ~/donut/gpus-live.json   # frei = gesamt − 512 MiB → gpus-nach-freigabe.json
 docker run --rm --user 1000:1000 -v /home/janpow/donut:/home/janpow/donut \
-  ghcr.io/janpow77/auditcore-donut-train@sha256:<digest> \
+  ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 \
   python -m auditcore_invoicesynth.train.cli --profile donut_train_janpow_ai \
   --dataset /home/janpow/donut/datasets/pilot-192e329e531ba160 --epochs 3 \
   --base-model-dir /home/janpow/donut/base/donut-base --run-dir /home/janpow/donut/runs \
   --base-model-sha256 749f6e487d0cdbd7362d8b6a909174b93506d8631da0d15a6108bb6512ad5f48 \
-  --plan --gpus-json /home/janpow/donut/gpus.json > ~/donut/job-pilot.json
+  --image ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 \\
+  --plan --gpus-json /home/janpow/donut/gpus-nach-freigabe.json > ~/donut/job-pilot.json
 ```
 
 Die Telemetrie zeigt belegte Karten (Ollama/Whisper); der Plan wird deshalb mit
@@ -138,7 +141,7 @@ docker run --rm --gpus device=1 --user 1000:1000 --ipc=host --stop-timeout 120 \
   -v /home/janpow/donut/datasets/pilot-192e329e531ba160:/data/<hash>:ro \
   -v /home/janpow/donut/base/donut-base:/srv/auditcore/donut/base/donut-base:ro \
   -v /home/janpow/donut/runs:/srv/auditcore/donut/runs \
-  ghcr.io/janpow77/auditcore-donut-train@sha256:<digest> <runs[1].command aus dem Job>
+  ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 <runs[1].command aus dem Job>
 ```
 
 Bewertung nach dem Pilot (ein Befehl je Lauf; GPU-Nutzung ebenfalls nur über
@@ -147,7 +150,7 @@ den FlowAgent, auf der CPU langsam, aber zulässig):
 ```bash
 docker run --rm --gpus device=0 --user 1000:1000 \
   -v /home/janpow/donut:/home/janpow/donut \
-  ghcr.io/janpow77/auditcore-donut-train@sha256:<digest> \
+  ghcr.io/janpow77/auditcore-donut-train@sha256:fe43cb907c53cd6eedac1e0a167aceb283aaf00f3bf2d3cd411be5f15880d466 \
   python -m auditcore_invoicesynth.train.evaluate \
   --dataset /home/janpow/donut/datasets/pilot-192e329e531ba160 \
   --run-dir /home/janpow/donut/runs/<lauf-id>-0 \
@@ -159,6 +162,13 @@ Ausgabe: Kurzfassung je Modell und Satz (Belegquote, Feldgenauigkeit, Abnahme E6
 Sekunden je Seite); vollständiger Bericht und Vorhersagen (`*.jsonl`) neben
 `--out`. Donut-CORD wird nur auf Gesamt-, Netto- und Steuerbetrag abgebildet
 (CORD kennt Rechnungsnummer, Datum, IBAN und USt-IdNr. nicht).
+
+Rauchtest im Image auf janpow-ai (CPU, 26.09.2026): echtes `donut-base`,
+je ein Schritt bei 1280×960 und 1536×1152 (Loss ≈ 12,6 bzw. 12,1, ≈ 15 s),
+Checkpoint geschrieben, `progress.json` `fertig`; `train.evaluate` mit
+Kandidat und Donut-CORD läuft durch (CPU ≈ 3,5 s je Seite bei 128 Token).
+Sehr kleine Bildgrößen (z. B. 320×240) scheitern an der Fenstergröße 10 des
+Swin-Encoders; die beiden Profilgrößen sind geprüft.
 
 ## Was für E3 noch offen ist
 

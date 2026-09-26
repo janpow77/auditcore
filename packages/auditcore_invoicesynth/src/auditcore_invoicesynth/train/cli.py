@@ -40,6 +40,7 @@ from auditcore_invoicesynth.train.guard import (
 )
 from auditcore_invoicesynth.train.loop import MockBackend, TrainBackend, run_training
 from auditcore_invoicesynth.train.ops import (
+    TRAIN_IMAGE,
     GpuTemperature,
     InsufficientVram,
     check_free_vram,
@@ -82,6 +83,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--check-vram", action="store_true")
     parser.add_argument("--plan", action="store_true", help="Topologie + FlowAgent-Job")
     parser.add_argument("--gpus-json", help="Telemetrie [{index,name,memory_total_mib,...}]")
+    parser.add_argument("--image", default=TRAIN_IMAGE, help="Job-Image, am besten per Digest")
     parser.add_argument("--systemd-unit", action="store_true")
     parser.add_argument("--python", default=sys.executable)
     return parser
@@ -181,6 +183,7 @@ def _plan(
         run_id=run_id,
         base_model_sha256=args.base_model_sha256,
         host_mounts=hosts,
+        image=args.image,
     )
 
 
