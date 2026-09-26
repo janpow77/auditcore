@@ -8,7 +8,8 @@ Beide rendern aus demselben framework-freien Kern `@flowaudit/ui-core`.
 
 | Schicht | Paket | Inhalt |
 |---|---|---|
-| Kern | `@flowaudit/ui-core` | Texte (`messages`), Datentypen der REST-Verträge, Ports, View-Modelle (`viewModel`, `registerView`, `dsfaView`), Zustandsautomaten (`createSynopsisController`, `createVvtController`, `createDsfaController`), Exporte, Symbole, Stile |
+| Kern | `@flowaudit/ui-core` | Texte (`messages`, auch Kanban), Datentypen der REST-Verträge, Ports, View-Modelle (`viewModel`, `registerView`, `dsfaView`), Zustandsautomaten (`createSynopsisController`, `createVvtController`, `createDsfaController`), Fokusfalle (`trapFocus`), Exporte, Symbole, Stile (auch `kanban.css`) |
+| Kanban-Kern | `@flowaudit/kanban-core` | Fachregeln wie `auditcore_kanban` und Ansichtslogik (`createBoardController`, `selectBoardView`, `createMoveController`, `createPointerDrag`, `createBoardListController`, `createColumnEditor`, `createShareSearch`) |
 | Vue | `@flowaudit/ui` | SFC-Vorlagen; `useStore` spiegelt den Controller-Zustand in ein `shallowRef` |
 | React | `@flowaudit/ui-react` | JSX mit demselben Markup; `useStoreState` liest den Zustand über `useSyncExternalStore` |
 
@@ -27,13 +28,13 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Verzeichnis von Verarbeitungstätigkeiten | `FaVvt` | `FlowauditVvt` | `dataprotection_ui/1` ([dataprotection-rest.md](dataprotection-rest.md)) | 5 + Interaktionsfolge |
 | Datenschutz-Folgenabschätzung | `FaDsfa` | `FlowauditDsfa` | `dataprotection_ui/1` | 6 + 3 Interaktionsfolgen |
 | Geo-Karte | `FaGeoMap` | `FlowauditGeoMap` | `auditcore_geo.web` ([geo-rest.md](geo-rest.md)) | 4 + Interaktionsfolge |
+| Kanban-Board und Boardliste | `KanbanBoard`, `KanbanBoardList` | `FlowauditKanbanBoard`, `FlowauditKanbanBoards` | `auditcore_kanban` ([rest-api.md](../kanban/rest-api.md)) | 6 + 2 + 6 Interaktionsfolgen |
 | Basis (Schaltfläche, Eingabefeld, Dialog) | `FaButton`, `FaTextField`, `FaDialog` | `Button`, `TextField`, `Dialog` | – | 9 |
 | Risiko-Merkmale | `RiskFlags` | `FlowauditRiskFlags` | `auditcore_risk.web` ([risk-rest.md](risk-rest.md)) | 7 + Interaktionsfolge |
 | Screening-Trefferprüfung | `ScreeningReview` | `FlowauditScreeningReview` | `screening_review/1` ([screening-rest.md](screening-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Stichprobe | `SamplingPanel` | `FlowauditSampling` | `auditcore_sampling.web` ([sampling-rest.md](sampling-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Benford-Analyse | `BenfordPanel` | `FlowauditBenford` | `auditcore_statistics.web` ([benford-rest.md](benford-rest.md)) | 4 + Interaktionsfolge |
 | Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
-| Kanban | ja | nur veraltete Hüllen (`@flowaudit/ui-react/elements`) | – | – |
 
 ## Nachweis
 
@@ -66,6 +67,16 @@ Vorlagenformatierung, leeres `class`, und Formularwerte, die ein Framework als
 Attribut, das andere nur als Eigenschaft setzt (verglichen über den
 Formularzustand).
 
+Kanban: Die Fälle stehen in `packages-js/kanban-core/test/parity/cases.ts`
+(synthetische Boards). `ui/test/parity-kanban.spec.ts` prüft sie mit Vue,
+`ui-react/test/parity/kanban.spec.tsx` mit React samt DOM-Vergleich,
+`ui-react/test/parity/kanban-interaction.spec.tsx` vergleicht DOM,
+Formularzustand und die im `body` liegenden Dialoge nach denselben
+Bedienfolgen (Tastatur: aufnehmen, verschieben, ablegen, abbrechen,
+Strg+Pfeil; Detailansicht mit Priorität, Tag, Checkliste, Farbe, Löschen;
+Suche und Filter; Einstellungen; Teilen; Boardliste). Die React-Tests laufen
+unter React 18 (`npm test`) und React 19 (`npm run test:react19`).
+
 ## Abweichungen und Korrekturen
 
 | Punkt | Entscheidung |
@@ -75,6 +86,9 @@ Formularzustand).
 | Slot `cell-<key>` der Tabelle | React: `renderCell(column, row, value)`. |
 | `defineExpose` der Synopse | React: `ref` mit `next()`, `previous()`, `exportAs()`. |
 | Ereignisse | Gleiche Nutzdaten; React übergibt sie direkt statt als `CustomEvent`. |
+| Kanban: Slot `card-extra`, `defineExpose` | React: `renderCardExtra(card)`; `ref` mit `reload()` und `board`. |
+| Kanban: Fokus nach dem Verschieben | Vue setzt ihn nach `nextTick`, React nach dem nächsten Rendern (`setTimeout 0`); gleiche Zielkarte. |
+| `autofocus` in Dialogen | React setzt das Attribut selbst (`TextField` mit `autoFocus`), damit die Fokusfalle beider Fassungen dasselbe Feld wählt. |
 | Grund einer Synopse-Zeile | Vue sendet bei `change`, React beim Verlassen des Feldes nur bei geändertem Text – dieselbe Auslösung. |
 | Filter der Risiko-Merkmale (`v-model` an `RiskFlagFilter`) | React: gesteuert `filter`/`onFilterChange`; `FlowauditRiskFlags` meldet jede Änderung wie Vues `filter-change`. |
 | Leerer Mindestwert im Screening-Laufformular | Vue (`v-model.number`) liefert `''`, React `null`; beides heißt „kein Mindestwert“. |

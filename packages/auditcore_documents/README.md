@@ -394,8 +394,10 @@ dokumentiert.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und seit 0.3.1 `auditcore_common==0.1.0` (Hashing, Uhr,
-Kennungen, eingefrorene Audit-Details; APT `python3-auditcore-common`). Die
+Python ≥ 3.11, `auditcore_common==0.1.1` (Hashing, Uhr, Kennungen,
+eingefrorene Audit-Details; APT `python3-auditcore-common`) und
+`auditcore_identifiers==0.1.0` (Prüfziffern der USt-IdNr. für DE und AT; APT
+`python3-auditcore-identifiers`); beide nur Standardbibliothek. Die
 Extras und ihre Drittpakete stehen in der Tabelle unter „Installation“. Keine
 Abhängigkeit von der Plattform `auditcore`; für XLSX liefert
 `synopsis_records` Datensätze für `auditcore_reporting`.

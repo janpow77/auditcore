@@ -9,6 +9,15 @@
   React nativ `FlowauditExtraction`, Kern `createExtractionController` in
   `@flowaudit/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
   Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
+- Offene `auditcore_common`-Migrationen (Teil B): `auditcore_price_sources`
+  (kanonisches JSON, Paketbytes bytegleich), `auditcore_geo` (Endlichkeit),
+  `auditcore_property_sources` (HTML-Erkennung, Zeitzonenprüfung) und
+  `auditcore_invoicesynth` (SHA-256, Steuersatz, Kennungen) nutzen
+  `auditcore_common`; `auditcore_documents` nutzt die Prüfziffern aus
+  `auditcore_identifiers` (neue Pflichtabhängigkeit `auditcore_identifiers==0.1.0`).
+  Neue Pins `auditcore_common==0.1.1` für geo, invoicesynth und price_sources.
+  Paritätstests alt ↔ neu je Paket; Code-Gate `duplicate_functions` 4 → 0
+  (documents 2 → 0, identifiers 2 → 0). Keine Versionsanhebung (Release v0.4.2).
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

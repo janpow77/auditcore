@@ -246,7 +246,8 @@ der Fläche.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Optional
+Python ≥ 3.11 und `auditcore_common==0.1.1` (Endlichkeitsprüfung; APT
+`python3-auditcore-common`), sonst zur Laufzeit nur die Standardbibliothek. Optional
 `auditcore_harvest==0.1.2` über `[geocoder]`; `auditcore_geo` importiert den
 Adapter nicht selbst. pyproj, shapely und PostGIS sind keine Abhängigkeiten.
 

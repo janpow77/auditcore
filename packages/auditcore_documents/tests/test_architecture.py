@@ -113,7 +113,7 @@ def test_runtime_imports() -> None:
                 if optional & DONUT_ONLY:
                     assert path.name == "donut.py", (path.name, optional)
                 continue
-            own = {"auditcore_documents", "auditcore_common", "importlib"}
+            own = {"auditcore_documents", "auditcore_common", "auditcore_identifiers", "importlib"}
             assert roots <= STDLIB | own | adapter, (
                 path.name,
                 roots,

@@ -2,6 +2,7 @@
 import type { Attachment, CardLink } from '@flowaudit/kanban-core'
 import FaIcon from '../base/FaIcon.vue'
 import { formatNumber, useI18n, type Locale } from '../i18n'
+import { fileSize } from './cardView'
 import { kanbanDialogMessages } from './messages'
 
 const props = withDefaults(defineProps<{ links: readonly CardLink[]; attachments: readonly Attachment[]; locale?: Locale }>(), { locale: undefined })
@@ -9,15 +10,8 @@ const emit = defineEmits<{ navigate: [link: CardLink]; attachment: [attachment: 
 const { t, locale: active } = useI18n(kanbanDialogMessages, () => props.locale)
 
 function size(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  const units = ['KB', 'MB', 'GB']
-  let value = bytes / 1024
-  let unit = 0
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024
-    unit += 1
-  }
-  return `${formatNumber(value, active.value, { maximumFractionDigits: 1 })} ${units[unit]}`
+  const { value, unit } = fileSize(bytes)
+  return unit === 'B' ? `${value} B` : `${formatNumber(value, active.value, { maximumFractionDigits: 1 })} ${unit}`
 }
 </script>
 
