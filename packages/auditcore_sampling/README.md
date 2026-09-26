@@ -21,12 +21,12 @@ python -m pip install auditcore_sampling \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.2 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.3 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-sampling/`):
 
 ```text
-auditcore_sampling @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_sampling-0.2.2-py3-none-any.whl#sha256=c735af5fea79f0b47506f789c0df8b6e21d5391a41e537659cc68d48b9d0a6b1
+auditcore_sampling @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_sampling-0.2.3-py3-none-any.whl#sha256=30391db774421c955a200e590efeb22766a1fb1b947dc009df2891d4bc3ae63c
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

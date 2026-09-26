@@ -19,12 +19,12 @@ python -m pip install auditcore_dummygenerator \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.3 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-dummygenerator/`):
 
 ```text
-auditcore_dummygenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_dummygenerator-0.1.2-py3-none-any.whl#sha256=cd90f739551af590f560a167f2e2a70f71aed79f8972500e672265d97ad3bf90
+auditcore_dummygenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_dummygenerator-0.1.3-py3-none-any.whl#sha256=854afcdf7a14765ddca2acb33226099c223e464c244e6fc05969b3223b8fd457
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

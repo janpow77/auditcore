@@ -19,12 +19,12 @@ python -m pip install 'auditcore_auth[bcrypt,argon2,jwt]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-auth/`):
 
 ```text
-auditcore_auth @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_auth-0.1.0-py3-none-any.whl#sha256=e5fa62b78c06d51527ba3fe208a52fd0c0345c38076fb673f63a40ded769f4e6
+auditcore_auth @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_auth-0.1.1-py3-none-any.whl#sha256=0af1a2a8c27dd4d2847cfb4e90fe4a46c7f0dd2ca96fd5a1bd7e832b77c20f9b
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

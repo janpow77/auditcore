@@ -18,12 +18,12 @@ python -m pip install auditcore_procurement \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.3 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.4 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-procurement/`):
 
 ```text
-auditcore_procurement @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_procurement-0.2.3-py3-none-any.whl#sha256=aaee40807b3284f6f4f3302e4f19ee8ceafabba221ffd1b6dd07138b6e97c12e
+auditcore_procurement @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_procurement-0.2.4-py3-none-any.whl#sha256=4b2271bf17bdd39955d56091b6cb77e8db275e56f1c8b1bbccd2769b117917e7
 ```
 
 Ab 0.2.2 gehört `auditcore_common` als eigene Zeile dazu. Debian/Ubuntu über

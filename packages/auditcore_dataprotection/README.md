@@ -19,12 +19,12 @@ python -m pip install auditcore_dataprotection \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.5.0 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.5.1 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-dataprotection/`):
 
 ```text
-auditcore_dataprotection @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_dataprotection-0.5.0-py3-none-any.whl#sha256=8120e2f5a54edd57b0277acb18cbe5dd2be5477d6cbfbfc15c8df1ad91a5b407
+auditcore_dataprotection @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_dataprotection-0.5.1-py3-none-any.whl#sha256=9fd7a540b53ee28a44a1edc5093f434a64469697c71f83f9ba577c0bcf10e1da
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

@@ -19,12 +19,12 @@ python -m pip install auditcore_funding_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.4 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.5 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-funding-sources/`):
 
 ```text
-auditcore_funding_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_funding_sources-0.1.4-py3-none-any.whl#sha256=30eef49841af00ed791855d40d608d7122fc9cf0a471c428f546b300b0ece919
+auditcore_funding_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_funding_sources-0.1.5-py3-none-any.whl#sha256=1b8cdbda142afbf2a1dd9a3bf02f304d7016b2afe9205c3355391a0534c145bc
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

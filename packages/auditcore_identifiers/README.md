@@ -19,12 +19,12 @@ python -m pip install auditcore_identifiers \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.0 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-identifiers/`):
 
 ```text
-auditcore_identifiers @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_identifiers-0.1.0-py3-none-any.whl#sha256=fb4f0217fd80f7290f799dc1ac12e0717eb770a99d34644082e0b71e084693bb
+auditcore_identifiers @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_identifiers-0.2.0-py3-none-any.whl#sha256=ee7e4df7a64ceb6b047c015bbc7ede2ae6e696cb59bd50f3c3e7ac880be28631
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
