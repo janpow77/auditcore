@@ -1,5 +1,18 @@
 # Changelog auditcore_statistics
 
+## Unreleased – REST-Schicht aus auditcore_common
+
+Keine Verhaltensänderung: alle 184 bestehenden Tests laufen unverändert grün;
+die gemeinsamen Funktionen sind in `auditcore_common` gegen die wörtlichen
+Kopien differenziell und mit Hypothesis geprüft.
+
+- `web.ContractError` ist eine Unterklasse von
+  `auditcore_common.rest.ContractError` (gleiche Attribute, Meldungen und
+  `to_dict`); `Reply`, JSON-Antwort, Dekodierung (weiter mit
+  `parse_float=Decimal`), Fehlerabbildung, `_field` (über `rest.choice`) und
+  die Listenprüfung von `values` kommen aus `auditcore_common.rest`. Der
+  FastAPI-Router nutzt die Antwortumwandlung des Starlette-Moduls.
+
 ## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage.

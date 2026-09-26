@@ -11,6 +11,8 @@ from collections.abc import Mapping
 from decimal import Decimal
 from typing import cast
 
+from auditcore_common import rest
+
 from .. import __version__
 from ..benford import METHOD, ShortValues, StatisticsInputError, benford_test
 from ..conformity import PROFILES, TESTS, Test, assess
@@ -29,17 +31,8 @@ SHORT_VALUES = (
 )
 
 
-class ContractError(ValueError):
-    """Request does not satisfy the REST contract."""
-
-    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-
-    def to_dict(self) -> dict[str, object]:
-        """JSON error body."""
-        return {"error": {"code": self.code, "message": str(self)}}
+class ContractError(rest.ContractError):
+    """Request does not satisfy the Benford REST contract (status, code, ``to_dict``)."""
 
 
 def catalogue() -> dict[str, object]:
@@ -65,18 +58,12 @@ def _value(raw: object, index: int) -> int | float | Decimal | None:
 
 
 def _values(raw: object) -> list[int | float | Decimal | None]:
-    if not isinstance(raw, list) or not raw:
-        raise ContractError("'values' muss eine nicht leere Liste sein.")
-    if len(raw) > MAX_VALUES:
-        raise ContractError(f"Höchstens {MAX_VALUES} Werte je Anfrage.", status=413)
-    return [_value(v, i) for i, v in enumerate(raw)]
+    entries = rest.bounded_list(raw, "values", MAX_VALUES, "Werte", error=ContractError)
+    return [_value(v, i) for i, v in enumerate(entries)]
 
 
 def _field(body: Mapping[str, object], key: str, allowed: tuple[str, ...]) -> str:
-    value = body.get(key)
-    if value not in allowed:
-        raise ContractError(f"'{key}' muss einer der Werte {', '.join(allowed)} sein.")
-    return str(value)
+    return rest.choice(body.get(key), key, allowed, error=ContractError)
 
 
 def analyse(payload: object) -> dict[str, object]:
