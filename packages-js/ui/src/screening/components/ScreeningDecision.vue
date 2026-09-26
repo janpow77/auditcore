@@ -2,9 +2,9 @@
 import { computed, ref, watch } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { Outcome, ReviewView, SettingsView } from '../types'
-import { awaitsSecondReview, canDecide, formatDate, requiresFourEyes, validateDecision, type ViewMessage } from '../view'
+import { screeningMessages } from '../core'
+import type { Outcome, ReviewView, SettingsView } from '../core'
+import { awaitsSecondReview, canDecide, formatDate, requiresFourEyes, validateDecision, type ViewMessage } from '../core'
 import ScreeningReviewTrail from './ScreeningReviewTrail.vue'
 
 const props = defineProps<{ review: ReviewView; settings: SettingsView | null; busy: boolean; hitId: string }>()

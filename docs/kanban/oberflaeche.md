@@ -41,8 +41,8 @@ Ereignisse heißen `onBoardChange`, `onError`, `onFullscreen`,
 `onNavigate(link, card)`, `onAttachment(attachment, card)`, `onCardOpen`
 bzw. `onBoardSelect`, `onCreated`; der Slot `card-extra` heißt
 `renderCardExtra(card)`, `defineExpose` wird zu `ref` (`reload()`, `board`).
-Die bisherigen Hüllen um die Web Components stehen nur noch veraltet unter
-`@flowaudit/ui-react/elements`.
+Die früheren Hüllen um die Web Components (`@flowaudit/ui-react/elements`)
+sind entfernt.
 
 ## Gemeinsame Ansichtslogik (`@flowaudit/kanban-core`)
 

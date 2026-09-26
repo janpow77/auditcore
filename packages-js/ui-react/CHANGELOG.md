@@ -9,7 +9,11 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   REST-Verträge wie die Vue-Fassung; Logik aus `@flowaudit/ui-core`):
   `FlowauditTable`, `FlowauditSynopsis` (Vertrag `auditcore_documents.web`),
   `FlowauditVvt` und `FlowauditDsfa` (Vertrag `dataprotection_ui/1`),
-  `FlowauditGeoMap` (Vertrag `auditcore_geo.web`, Leaflet), dazu
+  `FlowauditGeoMap` (Vertrag `auditcore_geo.web`, Leaflet),
+  `FlowauditRiskFlags` mit Teilkomponenten (`auditcore_risk.web`),
+  `FlowauditScreeningReview` (`screening_review/1`), `FlowauditSampling`
+  (`auditcore_sampling.web`) und `FlowauditBenford`
+  (`auditcore_statistics.web`), dazu
   `Button`, `Badge`, `Icon`, `TextField`, `Dialog` (Fokusfalle aus dem Kern), `LocaleProvider`, `useTranslation`,
   `useStoreState`.
 - Ereignisse heißen wie bisher `onXxx`, erhalten aber direkt die Nutzdaten
@@ -19,22 +23,22 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   (`FlowauditSynopsisHandle`).
 - Stile aus `@flowaudit/ui-core/style.css` (statt `@flowaudit/ui/style.css`).
 - Entfernt: die Hüllen `FlowauditTable`, `FlowauditSynopsis`,
-  `FlowauditVvt`, `FlowauditDsfa`, `FlowauditGeoMap` (ersetzt durch die nativen Fassungen) und
+  `FlowauditVvt`, `FlowauditDsfa`, `FlowauditGeoMap`, `FlowauditRiskFlags`,
+  `FlowauditScreeningReview`, `FlowauditSampling`, `FlowauditBenford`
+  (ersetzt durch die nativen Fassungen im Haupteinstieg) und
   das Weiterreichen von `defineFlowauditElements` im Haupteinstieg.
-- **Veraltet:** Die übrigen Hüllen (`FlowauditSampling`, `FlowauditBenford`,
-  `FlowauditScreeningReview`, `FlowauditRiskFlags`, `FlowauditKanbanBoard(s)`,
-  `createElementComponent`, `eventPayload`,
-  `defineFlowauditElements`) stehen nur noch unter `@flowaudit/ui-react/elements`;
-  `@flowaudit/ui`, `@flowaudit/kanban-core` und `vue` sind dafür optionale
-  Peer-Abhängigkeiten.
+- **Entfernt:** der Einstieg `@flowaudit/ui-react/elements` mit den letzten
+  Hüllen (`FlowauditKanbanBoard(s)`, `createElementComponent`,
+  `eventPayload`, `defineFlowauditElements`); `@flowaudit/ui` und `vue` sind
+  keine (optionalen) Peer-Abhängigkeiten mehr. Wer Web Components braucht,
+  nutzt `@flowaudit/ui/elements` direkt.
 - **Kanban nativ:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards`
   (gleiche Props, Ereignisse als `onXxx`, `renderCardExtra`, `ref` mit
   `reload()`) sowie die Bausteine `KanbanCard`, `KanbanColumn`,
   `KanbanToolbar`, `KanbanCardDetail`, `KanbanSettingsDialog`,
   `KanbanShareDialog`, `CardAppearance`, `CardChecklistEditor`,
   `CardReferences`, `CardTagsEditor`, `ColumnEditorRow`; Logik aus
-  `@flowaudit/kanban-core` (jetzt Laufzeitabhängigkeit). Die Hüllen
-  `FlowauditKanbanBoard(s)` unter `/elements` bleiben veraltet bestehen.
+  `@flowaudit/kanban-core` (jetzt Laufzeitabhängigkeit).
 - `TextField` mit `autoFocus`, `className`, `style`, `inputRef`, `onBlur`;
   `Button` mit `role`, `ariaChecked`, `testId`; `Icon` mit `className`.
 - React 18 und 19: Peer-Bereich `^18.3.0 || ^19.0.0`, Tests unter beiden

@@ -2,7 +2,7 @@
 
 ## Zweck
 
-Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen (Basis, Tabelle, Synopse, VVT, DSFA, Geo-Karte, Kanban) ohne Vue und ohne Web Components, auf den gemeinsamen Kernen `@flowaudit/ui-core` und `@flowaudit/kanban-core`.
+Native React-Komponenten (React 18/19) der FlowAudit-Oberflächen von Tabelle bis Kanban – ohne Vue, auf den Kernen `@flowaudit/ui-core` und `@flowaudit/kanban-core`.
 
 Für React-Anwendungen wie regulierung. Die Komponenten erfüllen dieselben
 Verträge wie die Vue-Fassung `@flowaudit/ui`: gleiche Props- und
@@ -30,8 +30,8 @@ npm install @flowaudit/ui-react @flowaudit/ui-core @flowaudit/kanban-core @flowa
 
 Das Paket ist nicht in einer npm-Registry veröffentlicht; Bezug über den
 Workspace oder mit `npm pack` erzeugte Tarballs von `@flowaudit/ui-react`,
-`@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`. Vue wird nur für den
-veralteten Einstieg `@flowaudit/ui-react/elements` gebraucht.
+`@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`. Vue wird nicht
+gebraucht; den früheren Einstieg `@flowaudit/ui-react/elements` gibt es nicht mehr.
 
 ## Schnellstart
 
@@ -97,9 +97,6 @@ export function Aufgaben() {
   Board ein übergebenes `board` lokal (In-Memory). Tastatur: Leertaste nimmt
   eine Karte auf, Pfeiltasten verschieben, Leertaste legt ab, Escape bricht ab,
   Strg+Pfeil verschiebt direkt; Board-Kürzel N, F und /.
-- **Web Component (veraltet):** Stichprobe, Benford, Screening,
-  Risiko-Merkmale gibt es noch nicht nativ; ihre Hüllen
-  um die Vue-Web-Components stehen unter `@flowaudit/ui-react/elements`
   (`defineFlowauditElements()` aufrufen, `@flowaudit/ui/style.css` laden,
   `@flowaudit/ui` und Vue installieren).
 
@@ -116,17 +113,20 @@ export function Aufgaben() {
      sie in `ui/test/parity*.spec.ts`, React in
      `test/parity/<komponente>.spec.tsx` mit `renderBoth` und `expectParity`
      (Erwartungen, normalisiertes DOM, Formularzustand, auch nach Interaktionen).
-  4. Export in `src/index.ts`; eine abgelöste Hülle aus `src/elements.ts` entfernen.
+  4. Export in `src/index.ts`.
 
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (142):
+Exporte der Einstiegspunkte aus `package.json#exports` (178):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@flowaudit/ui-react` | `Badge` | Funktion | – | `base/Badge` |
 | `@flowaudit/ui-react` | `BadgeProps` | Schnittstelle | – | `base/Badge` |
+| `@flowaudit/ui-react` | `BenfordAnalysis` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `BenfordInputs` | Schnittstelle | – | `benford/useBenford` |
+| `@flowaudit/ui-react` | `BenfordPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Button` | Funktion | Schaltfläche wie `FaButton` (gleiche Klassen, ARIA und Zustände). | `base/Button` |
 | `@flowaudit/ui-react` | `ButtonProps` | Schnittstelle | – | `base/Button` |
 | `@flowaudit/ui-react` | `CardAppearance` | Funktion | Kartendesign wie `CardAppearance.vue`: Farbe, eigene Farbe, Hintergrundbild (höchstens 2 MB). | `kanban/CardAppearance` |
@@ -150,8 +150,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `DialogProps` | Schnittstelle | – | `base/Dialog` |
 | `@flowaudit/ui-react` | `DownloadFile` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `DsfaStep` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `Evaluation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `FetchLike` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `FlowauditBenford` | Funktion | Benford-Analyse als native React-Komponente (Vertrag wie `<flowaudit-benford>`): Werte (Eigenschaft oder Datei), Test, Bewertungsprofil, Kennzahlen mit MAD, Chi² und z je Ziffer, S … | `benford/FlowauditBenford` |
+| `@flowaudit/ui-react` | `FlowauditBenfordProps` | Typ | – | `benford/FlowauditBenford` |
 | `@flowaudit/ui-react` | `FlowauditDsfa` | Funktion | Datenschutz-Folgenabschätzung (Art. 35 DSGVO) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-dsfa>`: Übersicht, Schwellwertanalyse, Risiko, Vorschlag der B … | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
@@ -162,6 +165,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `FlowauditKanbanBoards` | Konstante | Boardliste wie `KanbanBoardList.vue` (eigene und geteilte Boards, Anheften, Löschen, Anlegen). | `kanban/FlowauditKanbanBoards` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardsHandle` | Schnittstelle | – | `kanban/FlowauditKanbanBoards` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardsProps` | Schnittstelle | – | `kanban/FlowauditKanbanBoards` |
+| `@flowaudit/ui-react` | `FlowauditRiskFlags` | Funktion | Risiko-Merkmale als native React-Komponente – Vertrag, Texte und Markup wie `<flowaudit-risk-flags>`: Verteilung je Merkmal, Filter, Tabelle je Datensatz, Detailkarten mit Begründu … | `risk/FlowauditRiskFlags` |
+| `@flowaudit/ui-react` | `FlowauditRiskFlagsProps` | Schnittstelle | – | `risk/FlowauditRiskFlags` |
+| `@flowaudit/ui-react` | `FlowauditSampling` | Funktion | Stichprobenrechner als native React-Komponente (Vertrag wie `<flowaudit-sampling>`): Methodenprofil, Stichprobenumfang mit Herleitung, Grundgesamtheit (Eigenschaft oder Datei), Aus … | `sampling/FlowauditSampling` |
+| `@flowaudit/ui-react` | `FlowauditSamplingProps` | Typ | – | `sampling/FlowauditSampling` |
+| `@flowaudit/ui-react` | `FlowauditScreeningReview` | Funktion | Screening-Trefferprüfung (Sanktionslisten, PEP) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-screening-review>`: Prüflauf anlegen, Treffer filtern, vergl … | `screening/FlowauditScreeningReview` |
+| `@flowaudit/ui-react` | `FlowauditScreeningReviewProps` | Schnittstelle | – | `screening/FlowauditScreeningReview` |
 | `@flowaudit/ui-react` | `FlowauditSynopsis` | Konstante | Synopse / Versionsvergleich als native React-Komponente (Vertrag wie `<flowaudit-synopsis>`): Seiten- oder Inline-Ansicht, Wortdifferenz, Filter, Navigation mit N/J und P/K, Export … | `synopsis/FlowauditSynopsis` |
 | `@flowaudit/ui-react` | `FlowauditSynopsisHandle` | Schnittstelle | Methoden über `ref` (wie `defineExpose` der Vue-Fassung). | `synopsis/FlowauditSynopsis` |
 | `@flowaudit/ui-react` | `FlowauditSynopsisProps` | Schnittstelle | – | `synopsis/FlowauditSynopsis` |
@@ -172,8 +181,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `GeoArea` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `GeoPoint` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `GeoPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `HitView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Icon` | Funktion | – | `base/Icon` |
 | `@flowaudit/ui-react` | `IconProps` | Schnittstelle | – | `base/Icon` |
+| `@flowaudit/ui-react` | `ImportedColumns` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `KanbanCard` | Funktion | Karte wie `KanbanCard.vue` (gleiches Markup, Tastatur und Zeiger über das Board). | `kanban/KanbanCard` |
 | `@flowaudit/ui-react` | `KanbanCardDetail` | Funktion | Detailansicht einer Karte wie `KanbanCardDetail.vue` (seitlicher Dialog). | `kanban/KanbanCardDetail` |
 | `@flowaudit/ui-react` | `KanbanCardDetailProps` | Schnittstelle | – | `kanban/KanbanCardDetail` |
@@ -192,20 +203,53 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `NextSortOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `NumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `PopulationItem` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ProfileDetail` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `RestError` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RestOptions` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `RiskFilter` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `RiskFlagCard` | Funktion | Treffer oder unbestimmtes Merkmal eines Datensatzes mit Begründung, Eingabewerten und Schwellen, wie `RiskFlagCard`. | `risk/RiskFlagCard` |
+| `@flowaudit/ui-react` | `RiskFlagCardProps` | Schnittstelle | – | `risk/RiskFlagCard` |
+| `@flowaudit/ui-react` | `RiskFlagFilter` | Funktion | Filter nach Merkmal, Zustand und Suchtext, wie `RiskFlagFilter`. | `risk/RiskFlagFilter` |
+| `@flowaudit/ui-react` | `RiskFlagFilterProps` | Schnittstelle | – | `risk/RiskFlagFilter` |
+| `@flowaudit/ui-react` | `RiskFlagState` | Funktion | Zustand eines Merkmals mit Symbol (Farbe ist nie der einzige Bedeutungsträger), wie `RiskFlagState`. | `risk/RiskFlagState` |
+| `@flowaudit/ui-react` | `RiskFlagStateProps` | Schnittstelle | – | `risk/RiskFlagState` |
+| `@flowaudit/ui-react` | `RiskFlagSummary` | Funktion | Verteilung je Merkmal mit Summen und Befunden über alle Datensätze, wie `RiskFlagSummary`. | `risk/RiskFlagSummary` |
+| `@flowaudit/ui-react` | `RiskFlagSummaryProps` | Schnittstelle | – | `risk/RiskFlagSummary` |
+| `@flowaudit/ui-react` | `RiskFlagTable` | Funktion | Merkmale je Datensatz; Zeilen per Maus und Enter wählbar, wie `RiskFlagTable`. | `risk/RiskFlagTable` |
+| `@flowaudit/ui-react` | `RiskFlagTableProps` | Schnittstelle | – | `risk/RiskFlagTable` |
+| `@flowaudit/ui-react` | `RiskPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `RiskProfileInfo` | Funktion | Profil, Regeln und Eingabefelder (Pflicht/optional, Folge bei Fehlen), wie `RiskProfileInfo`. | `risk/RiskProfileInfo` |
+| `@flowaudit/ui-react` | `RiskProfileInfoProps` | Schnittstelle | – | `risk/RiskProfileInfo` |
+| `@flowaudit/ui-react` | `RiskRecordDetail` | Funktion | Detailansicht eines Datensatzes (Karten je Treffer/unbestimmtem Merkmal, Bewertung), wie `RiskRecordDetail`. | `risk/RiskRecordDetail` |
+| `@flowaudit/ui-react` | `RiskRecordDetailProps` | Schnittstelle | – | `risk/RiskRecordDetail` |
 | `@flowaudit/ui-react` | `RowUpdate` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `RunView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `SamplingInputs` | Schnittstelle | – | `sampling/useSampling` |
+| `@flowaudit/ui-react` | `SamplingPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ScreeningError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ScreeningPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `SelectionResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `SettingsView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `SizeResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `SortDirection` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `SortState` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `SourcesView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `SynopsisLayout` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `SynopsisPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `TableColumn` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `TableImport` | Funktion | Datei-Import wie `TableImport` (Vue): CSV/TSV/Text lesen, Spalten zuordnen, Werte übernehmen. | `tabular/TableImport` |
+| `@flowaudit/ui-react` | `TableImportProps` | Schnittstelle | – | `tabular/TableImport` |
 | `@flowaudit/ui-react` | `TableRow` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `TextField` | Funktion | Eingabefeld wie `FaTextField` (Beschriftung, Hinweis, Fehler mit aria-describedby). | `base/TextField` |
 | `@flowaudit/ui-react` | `TextFieldProps` | Schnittstelle | – | `base/TextField` |
 | `@flowaudit/ui-react` | `TileSource` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ToastProvider` | Funktion | Stellt eine eigene Warteschlange für den Teilbaum bereit (z. B. je Mandant oder im Test). | `hooks/toast` |
 | `@flowaudit/ui-react` | `UseAuthToken` | Schnittstelle | – | `hooks/state` |
+| `@flowaudit/ui-react` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
+| `@flowaudit/ui-react` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
+| `@flowaudit/ui-react` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
+| `@flowaudit/ui-react` | `UseScreeningReview` | Schnittstelle | – | `screening/useScreeningReview` |
 | `@flowaudit/ui-react` | `UseSort` | Schnittstelle | – | `hooks/state` |
 | `@flowaudit/ui-react` | `UseSortOptions` | Schnittstelle | – | `hooks/state` |
 | `@flowaudit/ui-react` | `UseToast` | Schnittstelle | – | `hooks/toast` |
@@ -214,8 +258,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `ariaSort` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `columnCells` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `compareValues` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createSamplingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createScreeningRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createSynopsisRestClient` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `detectDecimal` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `detectDelimiter` | Re-Export | – | `@flowaudit/common` |
@@ -236,6 +284,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `sortRows` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `splitLine` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `useAuthToken` | Funktion | Zugangstoken aus einem `TokenStore` (`@flowaudit/common`), neu gerendert bei jeder Änderung. | `hooks/state` |
+| `@flowaudit/ui-react` | `useBenford` | Funktion | React-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (dieselbe Logik wie `useBenford` in Vue). | `benford/useBenford` |
 | `@flowaudit/ui-react` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente und bei Escape; abgemeldet beim Unmount. | `hooks/dom` |
 | `@flowaudit/ui-react` | `useDebouncedCallback` | Funktion | Entprellte, stabile Funktion; ruft immer die neueste `fn` auf und verwirft einen ausstehenden Aufruf beim Unmount. | `hooks/state` |
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
@@ -244,29 +293,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 | `@flowaudit/ui-react` | `useKanbanShortcuts` | Funktion | Tastenkürzel N, F und /, solange das Board angezeigt wird. | `kanban/useKanbanBoard` |
 | `@flowaudit/ui-react` | `useLocale` | Funktion | Sprache: Prop vor Provider vor Standardsprache (`setDefaultLocale`). | `i18n` |
 | `@flowaudit/ui-react` | `useMediaQuery` | Funktion | Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`; serverseitig `false`. | `hooks/dom` |
+| `@flowaudit/ui-react` | `useRiskFlags` | Funktion | React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useRiskFlags`/`useRiskProfile` in Vue). | `risk/useRiskFlags` |
+| `@flowaudit/ui-react` | `useSampling` | Funktion | React-Anbindung des Stichprobenrechners aus `@flowaudit/ui-core` (dieselbe Logik wie `useSampling` in Vue). | `sampling/useSampling` |
+| `@flowaudit/ui-react` | `useScreeningReview` | Funktion | React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useScreeningReview` in Vue). | `screening/useScreeningReview` |
 | `@flowaudit/ui-react` | `useSort` | Funktion | Sortierzustand und sortierte Zeilen (Kern `table/sort` aus `@flowaudit/common`). | `hooks/state` |
 | `@flowaudit/ui-react` | `useStoreState` | Funktion | Stand eines Kern-Controllers (`@flowaudit/ui-core`) als React-Zustand. | `store` |
 | `@flowaudit/ui-react` | `useToast` | Funktion | Toasts über der framework-freien Warteschlange aus `@flowaudit/common` (Provider, sonst gemeinsame Warteschlange). | `hooks/toast` |
 | `@flowaudit/ui-react` | `useTranslation` | Funktion | Übersetzung mit den Katalogen aus `@flowaudit/ui-core` (gleiche Texte wie die Vue-Fassung). | `i18n` |
-| `@flowaudit/ui-react/elements` | `BaseElementProps` | Schnittstelle | – | `legacy/createElementComponent` |
-| `@flowaudit/ui-react/elements` | `ElementComponentOptions` | Schnittstelle | – | `legacy/createElementComponent` |
-| `@flowaudit/ui-react/elements` | `EventHandlers` | Typ | Ereignis-Handler einer Hülle erhalten das erste Argument des Vue-emit (CustomEvent.detail[0]). | `legacy/createElementComponent` |
-| `@flowaudit/ui-react/elements` | `FlowauditBenford` | Konstante | `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditBenfordProps` | Schnittstelle | – | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `legacy/kanban` |
-| `@flowaudit/ui-react/elements` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `legacy/kanban` |
-| `@flowaudit/ui-react/elements` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `legacy/kanban` |
-| `@flowaudit/ui-react/elements` | `FlowauditKanbanBoardsProps` | Schnittstelle | – | `legacy/kanban` |
-| `@flowaudit/ui-react/elements` | `FlowauditRiskFlags` | Konstante | `<flowaudit-risk-flags>` als React-Komponente; `onRecordSelect` erhält den Index oder `null`. | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditRiskFlagsProps` | Schnittstelle | – | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditSampling` | Konstante | `<flowaudit-sampling>` als React-Komponente: Stichprobenumfang, Auswahl mit Seed, Export. | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditSamplingProps` | Schnittstelle | – | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditScreeningError` | Typ | Nutzdaten des Ereignisses `error` der Screening-Trefferprüfung. | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditScreeningReview` | Konstante | `<flowaudit-screening-review>` als React-Komponente: Sanktionslisten-/PEP-Treffer prüfen und entscheiden. | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditScreeningReviewProps` | Schnittstelle | – | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `createElementComponent` | Funktion | Erzeugt eine React-18-Komponente für ein Custom Element. | `legacy/createElementComponent` |
-| `@flowaudit/ui-react/elements` | `defineFlowauditElements` | Re-Export | – | `@flowaudit/ui/elements` |
-| `@flowaudit/ui-react/elements` | `eventPayload` | Funktion | Liest das erste emit-Argument aus Vue-CustomEvents (detail ist ein Argument-Array). | `legacy/createElementComponent` |
 <!-- api-overview:end -->
 
 ## Konfiguration
@@ -288,6 +321,23 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
   `locale`; `onRadiusCompleted`, `onLocationChecked`, `onAreasLoaded`,
   `onReferenceChange`, `onError`), Vertrag `auditcore_geo.web`
   ([`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md)); Leaflet lädt erst beim Anzeigen.
+- `FlowauditRiskFlags` (`evaluation`, `profile`, `port`, `heading`,
+  `locale`; `onRecordSelect(index | null)`, `onFilterChange(filter)`),
+  Vertrag `auditcore_risk.web` ([`docs/ui/risk-rest.md`](../../docs/ui/risk-rest.md));
+  Teilkomponenten `RiskFlagSummary`, `RiskFlagFilter` (gesteuert:
+  `filter`/`onFilterChange`), `RiskFlagTable`, `RiskFlagCard`,
+  `RiskFlagState`, `RiskRecordDetail`, `RiskProfileInfo`.
+- `FlowauditScreeningReview` (`port`, `runId`, `locale`;
+  `onRunCreated({ runId })`, `onDecided({ runId, hitId, status })`,
+  `onError(error)`), Vertrag `screening_review/1`
+  ([`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md)).
+- `FlowauditSampling` (`port`, `items`, `locale`; `onSizeCalculated`,
+  `onSelectionDrawn`, `onError`), Vertrag `auditcore_sampling.web`
+  ([`docs/ui/sampling-rest.md`](../../docs/ui/sampling-rest.md)), und
+  `FlowauditBenford` (`port`, `values`, `locale`; `onAnalysisCompleted`,
+  `onError`), Vertrag `auditcore_statistics.web`
+  ([`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md)); beide mit
+  Datei-Import `TableImport`.
 - `FlowauditKanbanBoard`: `port` + `boardId` oder `board` (+ `userId`,
   `users`), `readOnly`, `sharedByName`, `showFullscreen`, `today`, `locale`,
   `renderCardExtra`; `onBoardChange`, `onError`, `onFullscreen`,
@@ -308,7 +358,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (142):
 
 Neu in auditcore entwickelt. Bis 0.2.0 enthielt das Paket nur Hüllen um die
 Web Components aus `@flowaudit/ui` (PR #80, #84, #83, #111, #88, #146,
-Geo-Karte); ab 1.0.0 sind Basis, Tabelle, Synopse, VVT, DSFA und Geo-Karte eigenständige
+Geo-Karte); ab 1.0.0 sind Basis, Tabelle, Synopse, VVT, DSFA, Geo-Karte,
+Risiko-Merkmale, Screening, Stichprobe und Benford eigenständige
 React-Implementierungen desselben Vertrags. Parität zur Vue-Fassung: dieselben
 Fälle (`ui-core/test/parity`) gegen beide Fassungen, dazu ein Vergleich des
 normalisierten DOM und des Formularzustands Vue ↔ React, auch nach
@@ -318,10 +369,8 @@ Die Hooks (0.2.0) folgen [`docs/reports/app-helfer-ts.md`](../../docs/reports/ap
 
 ## Abhängigkeiten
 
-- `@flowaudit/ui-core` 0.1.0 und `@flowaudit/common` 0.1.0 (Laufzeit)
-- `react` ^18.3.0 und `react-dom` ^18.3.0 (Peer-Abhängigkeiten)
-- nur für `@flowaudit/ui-react/elements` (optional): `@flowaudit/ui` ^0.3.0,
-  `@flowaudit/kanban-core` ^0.1.0 und `vue` ^3.5.0
+- `@flowaudit/ui-core` 0.1.0, `@flowaudit/kanban-core` 0.2.0 und `@flowaudit/common` 0.1.0 (Laufzeit)
+- `react` und `react-dom` `^18.3.0 || ^19.0.0` (Peer-Abhängigkeiten)
 
 Node ≥ 20.19 für Bau und Tests.
 

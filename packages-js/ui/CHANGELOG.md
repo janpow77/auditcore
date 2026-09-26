@@ -2,6 +2,13 @@
 
 ## 0.3.0 – unveröffentlicht
 
+- **Dokumentvergleiche:** `FaComparisons` (`<flowaudit-comparisons>`) mit
+  `ComparisonForm` und `ComparisonList` verwaltet Vergleiche über
+  `auditcore_documents.web`: Hochladen zweier Fassungen (DOCX, DOCM, PDF) mit
+  Vergleichsart, Dokumentart, Schwelle, Einbeziehen, Ausgabeabschnitten und
+  Profil, Prüfung vor dem Hochladen, Suche, Öffnen mit eingebetteter Synopse,
+  Löschen mit Bestätigung und Import fertiger Ergebnisse (JSON). Logik im
+  Kern (`createComparisonsController`), Paritätsfälle für die React-Fassung.
 - **Kern ausgelagert:** Texte, Datentypen der REST-Verträge, View-Modelle,
   Zustandsautomaten (Synopse, VVT, DSFA), Ports, Exporte, Symbole und die
   Stile von Basis, Tabelle, Synopse, Datenschutz und Geo-Karte liegen jetzt in
@@ -10,6 +17,18 @@
   React-Fassung `@flowaudit/ui-react` 1.0.0. Öffentliche Namen der
   Kernfunktionen werden unverändert weitergereicht; `ui.css` enthält die
   Kernstile weiterhin.
+- **Risiko-Merkmale, Screening, Stichprobe, Benford, Datei-Import:** Kern
+  (Verträge, Ports, View-Logik, Zustandsautomaten, Stile) ebenfalls in
+  `@flowaudit/ui-core`; `RiskFlags`, `ScreeningReview`, `SamplingPanel`,
+  `BenfordPanel` und `TableImport` sind in Props, Ereignissen und Markup
+  unverändert und haben jetzt native Gegenstücke in `@flowaudit/ui-react`.
+  Die Stildatei `screening.css` liegt jetzt in `@flowaudit/ui-core/styles`.
+- **Breaking (Composables, Risiko bis Datei-Import):** `useSampling`,
+  `useBenford` und `useTableImport` liefern `{ controller, state, … }` statt
+  einzelner Refs; `useScreeningReview` hat statt beschreibbarer `filter`/
+  `selectedHitId` die Aktionen `setFilter` und `select`; `useRiskFlags`
+  liefert `filter` als beschreibbares `computed` und `selectedIndex` nur
+  lesbar (Auswahl über `select`), zusätzlich `controller`.
 - **Breaking (Composables):** `useSynopsis`, `useSynopsisNavigation`,
   `useSynopsisExport`, `useVvt` und `useDsfa` liefern jetzt Controller und
   Zustand des Kerns (`controller`, `state`, `view`/`selection`/`derived`)

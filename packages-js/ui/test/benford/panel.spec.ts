@@ -1,9 +1,9 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import BenfordPanel from '../../src/benford/BenfordPanel.vue'
-import type { BenfordAnalysis, BenfordCatalogue, BenfordPort } from '../../src/benford/types'
-import analysis from '../fixtures/benford-analysis.json'
-import profiles from '../fixtures/benford-profiles.json'
+import type { BenfordAnalysis, BenfordCatalogue, BenfordPort } from '../../src'
+import analysis from '../../../ui-core/test/fixtures/benford-analysis.json'
+import profiles from '../../../ui-core/test/fixtures/benford-profiles.json'
 
 function fakePort(): BenfordPort {
   return {

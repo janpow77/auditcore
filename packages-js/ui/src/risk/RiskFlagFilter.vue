@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { useI18n, type Locale } from '../i18n'
 import { useId } from '../composables/useId'
-import { riskMessages } from './messages'
-import type { RuleView } from './types'
-import { STATE_FILTER_KEYS } from './view/labels'
-import type { RiskFilter, StateFilter } from './view/state'
+import { riskMessages, type RuleView, STATE_FILTER_KEYS, type RiskFilter, type StateFilter } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   rules?: readonly RuleView[]
@@ -52,12 +49,3 @@ function onQuery(event: Event): void {
     <output class="fa-risk-filter__result" aria-live="polite">{{ t('filterResult', { shown, total }) }}</output>
   </form>
 </template>
-
-<style>
-.fa-risk-filter { display: grid; grid-template-columns: auto minmax(10rem, 1fr); gap: var(--fa-space-2) var(--fa-space-3); align-items: center; font-size: var(--fa-font-size-sm); color: var(--fa-color-text); }
-.fa-risk-filter label { color: var(--fa-color-text-muted); font-weight: 600; }
-.fa-risk-filter select, .fa-risk-filter input { min-width: 0; padding: var(--fa-space-1) var(--fa-space-2); border: 1px solid var(--fa-color-border-strong); border-radius: var(--fa-radius-sm); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
-.fa-risk-filter select:focus-visible, .fa-risk-filter input:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
-.fa-risk-filter__result { grid-column: 1 / -1; color: var(--fa-color-text-muted); }
-@media (min-width: 60rem) { .fa-risk-filter { grid-template-columns: auto minmax(12rem, 1fr) auto minmax(10rem, 14rem) auto minmax(10rem, 1fr); } }
-</style>

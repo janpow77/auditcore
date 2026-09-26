@@ -4,10 +4,7 @@ import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 import type { TableColumn, TableRow } from '../table'
 import RiskFlagState from './RiskFlagState.vue'
-import { riskMessages } from './messages'
-import type { DatasetFinding } from './types'
-import { formatAmount, formatShare, formatValue } from './view/format'
-import type { RiskDistributionRow, Totals } from './view/state'
+import { riskMessages, type DatasetFinding, formatAmount, formatShare, formatValue, type RiskDistributionRow, type Totals } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   rows?: readonly RiskDistributionRow[]
@@ -83,19 +80,3 @@ function row(value: TableRow): RiskDistributionRow {
     </div>
   </section>
 </template>
-
-<style>
-.fa-risk-summary { display: grid; gap: var(--fa-space-3); }
-.fa-risk-summary__totals { display: flex; flex-wrap: wrap; gap: var(--fa-space-4); margin: 0; padding: 0; list-style: none; font-size: var(--fa-font-size-sm); color: var(--fa-color-text); }
-.fa-risk-summary__totals li { display: inline-flex; align-items: center; gap: var(--fa-space-1); }
-.fa-risk-summary__code { padding: 0; border: 0; background: none; color: var(--fa-color-accent); font: 600 var(--fa-font-size-sm) var(--fa-font-mono); cursor: pointer; text-decoration: underline dotted; }
-.fa-risk-summary__code:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); border-radius: var(--fa-radius-sm); }
-.fa-risk-summary__skipped { display: block; margin-top: var(--fa-space-1); font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
-.fa-risk-summary__count { display: inline-flex; align-items: center; gap: var(--fa-space-1); white-space: nowrap; }
-.fa-risk-summary__bar { display: inline-block; width: 4rem; height: 0.4rem; margin-inline-end: var(--fa-space-2); border-radius: 999px; background: var(--fa-color-surface-sunken); vertical-align: middle; overflow: hidden; }
-.fa-risk-summary__bar span { display: block; height: 100%; background: var(--fa-color-danger); }
-.fa-risk-summary__undetermined { display: inline-grid; justify-items: end; gap: 2px; }
-.fa-risk-summary__undetermined small { font-size: var(--fa-font-size-xs); color: var(--fa-color-warning); }
-.fa-risk-summary__dataset h3 { margin: 0 0 var(--fa-space-2); font-size: var(--fa-font-size-md); }
-.fa-risk-summary__dataset p { margin: 0; font-size: var(--fa-font-size-sm); }
-</style>

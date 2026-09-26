@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { LogEntry } from '../types'
-import { formatDate } from '../view'
+import { screeningMessages } from '../core'
+import type { LogEntry } from '../core'
+import { formatDate } from '../core'
 
 defineProps<{ events: LogEntry[] }>()
 const { t } = useI18n(screeningMessages)

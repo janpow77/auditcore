@@ -1,9 +1,9 @@
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineFlowauditElements } from '../src/elements'
-import analysis from './fixtures/benford-analysis.json'
-import benfordProfiles from './fixtures/benford-profiles.json'
-import samplingProfiles from './fixtures/sampling-profiles.json'
+import analysis from '../../ui-core/test/fixtures/benford-analysis.json'
+import benfordProfiles from '../../ui-core/test/fixtures/benford-profiles.json'
+import samplingProfiles from '../../ui-core/test/fixtures/sampling-profiles.json'
 
 afterEach(() => {
   document.body.innerHTML = ''

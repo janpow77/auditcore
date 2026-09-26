@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
-import { formatNumber, formatPercent, useI18n, type Locale } from '../i18n'
-import { samplingMessages } from './messages'
-import { isPercent, type FieldError } from './model'
-import type { MethodProfile, ParameterSpec } from './types'
+import { useI18n, type Locale } from '../i18n'
+import { confidenceText, parameterUnit as unit, samplingFieldError, samplingMessages, type FieldError, type MethodProfile } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   profile: MethodProfile
@@ -20,23 +18,8 @@ const emit = defineEmits<{ calculate: []; suggest: [] }>()
 const { t, locale: active } = useI18n(samplingMessages, () => props.locale)
 const id = useId('fa-sampling-param')
 
-function unit(spec: ParameterSpec): string {
-  if (isPercent(spec)) return '%'
-  return spec.unit === 'EUR' ? '€' : ''
-}
-
-function rangeText(error: FieldError): string {
-  const fmt = (value: number): string => formatNumber(value, active.value, { maximumFractionDigits: 4 })
-  if (error.min !== undefined && error.max !== undefined) return t('rangeBetween', { min: fmt(error.min), max: fmt(error.max) })
-  if (error.min !== undefined) return t('rangeFrom', { min: fmt(error.min) })
-  return t('rangeTo', { max: fmt(error.max ?? 0) })
-}
-
 function errorText(key: string): string {
-  const error = props.errors[key]
-  if (!error) return ''
-  if (error.code === 'range') return t('errorRange', { range: rangeText(error) })
-  return error.code === 'required' ? t('errorRequired') : t('errorInvalid')
+  return samplingFieldError(props.errors[key], t, active.value)
 }
 
 function setText(key: string, value: string): void {
@@ -59,7 +42,7 @@ function onConfidence(event: Event): void {
           <select class="fa-sampling__select" data-testid="sampling-confidence" :value="confidence ?? ''" :aria-invalid="errorText('confidence_level') ? 'true' : undefined" @change="onConfidence">
             <option value="">{{ t('choose') }}</option>
             <option v-for="level in profile.confidence_levels" :key="level.level" :value="level.level">
-              {{ t('confidenceOption', { level: formatPercent(level.level, active, 0), factor: formatNumber(level.factor, active, { maximumFractionDigits: 3 }) }) }}
+              {{ confidenceText(level, t, active) }}
             </option>
           </select>
           <span v-if="errorText('confidence_level')" class="fa-sampling__error" role="alert">{{ errorText('confidence_level') }}</span>

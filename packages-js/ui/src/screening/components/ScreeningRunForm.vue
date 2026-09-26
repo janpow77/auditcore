@@ -2,15 +2,14 @@
 import { computed, ref, watch } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { RunRequest, ScreeningKind, SettingsView, SourceView } from '../types'
-import { parseSubjects, type ViewMessage } from '../view'
+import { screeningMessages } from '../core'
+import type { RunRequest, ScreeningKind, SettingsView, SourceView } from '../core'
+import { SCREENING_KINDS as kinds, buildRunRequest, kindProfiles, kindSources, runFormDefaults, selectedProfile, type ViewMessage } from '../core'
 
 const props = defineProps<{ settings: SettingsView; sources: SourceView[]; busy: boolean }>()
 const emit = defineEmits<{ submit: [request: RunRequest] }>()
 const { t } = useI18n(screeningMessages)
 
-const kinds: ScreeningKind[] = ['sanctions', 'pep']
 const kind = ref<ScreeningKind>('sanctions')
 const profileKey = ref('')
 const lists = ref<string[]>([])
@@ -19,33 +18,23 @@ const minScore = ref<number | null>(null)
 const caseReference = ref('')
 const errors = ref<ViewMessage[]>([])
 
-const profiles = computed(() => props.settings.profiles.filter((p) => p.kind === kind.value))
-const profile = computed(() => profiles.value.find((p) => `${p.id}@${p.version}` === profileKey.value))
-const kindSources = computed(() => props.sources.filter((s) => s.kind === kind.value))
+const profiles = computed(() => kindProfiles(props.settings, kind.value))
+const profile = computed(() => selectedProfile(props.settings, { kind: kind.value, profileKey: profileKey.value }))
+const sourcesOfKind = computed(() => kindSources(props.sources, kind.value))
 const errorTexts = computed(() => errors.value.map((error) => t(error.key, error.params)))
 
 watch([kind, () => props.settings, () => props.sources], () => {
-  const preferred = profiles.value.find((p) => p.recommended) ?? profiles.value[0]
-  profileKey.value = preferred ? `${preferred.id}@${preferred.version}` : ''
-  lists.value = kindSources.value.map((s) => s.list.key)
-  minScore.value = preferred ? preferred.default_min_score : null
+  const defaults = runFormDefaults(props.settings, props.sources, kind.value)
+  profileKey.value = defaults.profileKey
+  lists.value = defaults.lists
+  minScore.value = defaults.minScore
 }, { immediate: true })
 
 function submit(): void {
-  const parsed = parseSubjects(subjectsText.value)
-  errors.value = [...parsed.errors]
-  if (!profile.value) errors.value.push({ key: 'errorProfile' })
-  if (!lists.value.length) errors.value.push({ key: 'errorLists' })
-  if (errors.value.length || !profile.value) return
-  const request: RunRequest = {
-    kind: kind.value,
-    profile: { id: profile.value.id, version: profile.value.version },
-    subjects: parsed.subjects,
-    lists: lists.value,
-  }
-  if (minScore.value !== null) request.min_score = minScore.value
-  if (caseReference.value.trim()) request.case_reference = caseReference.value.trim()
-  emit('submit', request)
+  const form = { kind: kind.value, profileKey: profileKey.value, lists: lists.value, subjectsText: subjectsText.value, minScore: minScore.value, caseReference: caseReference.value }
+  const result = buildRunRequest(props.settings, form)
+  errors.value = result.errors
+  if (result.request) emit('submit', result.request)
 }
 </script>
 
@@ -69,7 +58,7 @@ function submit(): void {
       </label>
       <fieldset class="fa-screening__field">
         <legend>{{ t('lists') }}</legend>
-        <label v-for="s in kindSources" :key="s.list.key" class="fa-screening__check">
+        <label v-for="s in sourcesOfKind" :key="s.list.key" class="fa-screening__check">
           <input v-model="lists" type="checkbox" :value="s.list.key" />
           <span>
             {{ s.list.name }}

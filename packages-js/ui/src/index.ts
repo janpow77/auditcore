@@ -1,10 +1,10 @@
 import '@flowaudit/ui-core/style.css'
-import './screening/screening.css'
 
 export * from './base'
 export * from './i18n'
 export * from './table'
 export * from './synopsis'
+export * from './documents'
 export * from './rest'
 export * from './tabular'
 export * from './sampling'
