@@ -20,6 +20,9 @@ catch-all ``utils``:
 ``numeric``
     NumPy-compatible pairwise sum and rounding without NumPy, finite checks,
     percent rates, percentage shares and tolerant float coercion.
+``rest``
+    Framework-neutral parts of the JSON REST contracts: contract errors,
+    replies, body decoding with size limit, error mapping, field checks.
 ``filenames``
     Characterized file-name variants for downloads and exports.
 ``aio``

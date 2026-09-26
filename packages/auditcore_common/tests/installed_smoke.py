@@ -21,6 +21,7 @@ def main() -> None:
     from auditcore_common.numeric import numpy_pairwise_sum, numpy_round, parse_percent_rate
     from auditcore_common.optional import require_module
     from auditcore_common.profiles import packaged_profile_ids
+    from auditcore_common.rest import ContractError, decode_body, guarded, json_reply
     from auditcore_common.text import compact_upper, group_thousands_de
 
     assert str(parse_de_number("1.234,56 €")) == "1234.56"
@@ -38,6 +39,9 @@ def main() -> None:
     assert numpy_round(2.5, 0) == 2.0 and numpy_round(2.675, 2) == 2.68
     assert str(parse_percent_rate("19,0 %")) == "19"
     assert group_thousands_de(1234567) == "1.234.567"
+    assert json_reply(200, {"ä": 1}).body == '{"ä": 1}'.encode()
+    too_large = guarded(lambda: json_reply(200, decode_body(b"[1]", 2)), error=ContractError)
+    assert too_large.status == 413 and b"too_large" in too_large.body
     assert compact_upper("de 123") == "DE123"
     assert require_aware(utc_now()).tzinfo is not None
     assert len(new_uuid()) == 36

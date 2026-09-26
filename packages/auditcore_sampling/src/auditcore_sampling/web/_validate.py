@@ -10,23 +10,16 @@ import math
 from collections.abc import Mapping
 from typing import TypeVar
 
+from auditcore_common import rest
+
 MAX_ITEMS = 200_000
 MAX_SEED = 2**63 - 1
 
 T = TypeVar("T")
 
 
-class ContractError(ValueError):
-    """Request does not satisfy the REST contract."""
-
-    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-
-    def to_dict(self) -> dict[str, object]:
-        """JSON error body."""
-        return {"error": {"code": self.code, "message": str(self)}}
+class ContractError(rest.ContractError):
+    """Request does not satisfy the sampling REST contract (status, code, ``to_dict``)."""
 
 
 def as_object(value: object, name: str = "Anfrage") -> Mapping[str, object]:
@@ -68,9 +61,7 @@ def text(value: object, name: str) -> str:
 
 def choice(value: object, name: str, allowed: tuple[str, ...]) -> str:
     """One of the explicitly allowed values."""
-    if value not in allowed:
-        raise ContractError(f"'{name}' muss einer der Werte {', '.join(allowed)} sein.")
-    return str(value)
+    return rest.choice(value, name, allowed, error=ContractError)
 
 
 def optional_seed(value: object) -> int | None:
