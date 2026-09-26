@@ -74,7 +74,7 @@ das Modul:
 | `safe_xml` | `parse_xml`, `defused_fromstring` (Extra `xml`) | `forbid_dtd` |
 | `html_text` | `LinkCollector`, `anchor_links`, `has_html_marker` | `markers`, `window` |
 | `numeric` | `numpy_pairwise_sum`, `numpy_round`, `require_finite`, `parse_percent_rate`, `share_percent`, `as_float`, `as_float_comma` | Fehlermeldungen als Fabriken; `digits`, `multiply_first`; `blank_as_none`, `bool_as_none`, `catch_type_error` |
-| `rest` | `ContractError`, `Reply`, `json_reply`, `decode_body`, `guarded`, `choice`, `bounded_list` – rahmenwerkfreier Teil der JSON-REST-Verträge (Starlette/FastAPI-Adapter bleiben im Paket) | `error` = paketeigene `ContractError`-Unterklasse; `parse_float` (statistics: `Decimal`) |
+| `rest` | `ContractError`, `Reply`, `json_reply`, `decode_body`, `guarded`, `choice`, `bounded_list`, `json_object` – rahmenwerkfreier Teil der JSON-REST-Verträge (Starlette/FastAPI-Adapter bleiben im Paket) | `error` = paketeigene `ContractError`-Unterklasse; `parse_float` (statistics: `Decimal`) |
 | `filenames` | `path_component`, `unicode_filename`, `replace_reserved`, `underscore_slug`, `dashed_slug`, `export_filename` | je Funktion eine charakterisierte App-Variante; Fallback und Länge als Parameter |
 | `aio` | `ThreadLoopRunner`, `run_sync`, `run_on_current_loop` | ein Loop je Thread und Runner (fork-sicher) bzw. Legacy-Variante |
 | `clock`, `ids` | `utc_now`, `require_aware`, `new_uuid` | – |

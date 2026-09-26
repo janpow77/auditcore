@@ -36,7 +36,7 @@ sudo apt-get install python3-auditcore-identifiers
 
 Extras: `[web]` (Starlette) und `[fastapi]` für den REST-Vertrag
 `identifiers_ui/1` der Oberfläche „Kennung prüfen“, `[dev]` (Test- und
-Prüfwerkzeuge). Ohne Extras nur Standardbibliothek.
+Prüfwerkzeuge). Ohne Extras nur Standardbibliothek und `auditcore_common`.
 
 ## Schnellstart
 
@@ -203,7 +203,9 @@ Anwendung auf `strict` ist eine eigene fachliche Entscheidung.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. python-stdnum dient
+Python ≥ 3.11 und `auditcore_common==0.1.1` (selbst nur Standardbibliothek;
+rahmenwerkfreier Teil der REST-Schicht für `web`, APT
+`python3-auditcore-common`), sonst nur die Standardbibliothek. python-stdnum dient
 nur der Gegenprüfung (offline, als Daten im Repository) und ist keine
 Abhängigkeit.
 

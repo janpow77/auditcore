@@ -10,11 +10,13 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = []
+dependencies = ["auditcore_common==0.1.1"]
 
 [project.optional-dependencies]
 excel = ["openpyxl>=3.0.9,<4", "defusedxml>=0.7.1"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "openpyxl>=3.0.9,<4", "types-openpyxl>=3.1", "pandas>=2", "build>=1.2", "defusedxml>=0.7.1", "types-defusedxml>=0.7"]
+web = ["starlette>=0.26.1,<2"]
+fastapi = ["fastapi>=0.92", "starlette>=0.26.1,<2"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "openpyxl>=3.0.9,<4", "types-openpyxl>=3.1", "pandas>=2", "build>=1.2", "defusedxml>=0.7.1", "types-defusedxml>=0.7", "starlette>=0.26.1,<2", "fastapi>=0.92", "httpx>=0.24"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

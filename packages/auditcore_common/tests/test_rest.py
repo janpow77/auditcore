@@ -1,4 +1,4 @@
-"""REST contract helpers equal the sampling/statistics copies (differential)."""
+"""REST contract helpers equal the former package copies (differential)."""
 
 from __future__ import annotations
 
@@ -22,6 +22,14 @@ class StatisticsError(rest.ContractError):
     """Package subclass as the statistics package defines it."""
 
 
+class IdentifiersError(rest.ContractError):
+    """Package subclass as the identifiers package defines it."""
+
+
+class ReportingError(rest.ContractError):
+    """Package subclass as the reporting package defines it."""
+
+
 Outcome = tuple[str, object]
 
 
@@ -33,6 +41,8 @@ def _outcome(function: Callable[[], object]) -> Outcome:
         rest.ContractError,
         legacy.SamplingContractError,
         legacy.StatisticsContractError,
+        legacy.IdentifiersContractError,
+        legacy.ReportingContractError,
     ) as exc:
         cause = type(exc.__cause__).__name__ if exc.__cause__ else None
         return ("error", (exc.status, exc.code, str(exc), exc.to_dict(), cause))
@@ -211,3 +221,26 @@ def test_bounded_list_limit_edges(size: int) -> None:
         lambda: legacy.sampling_parse_items(raw),
         lambda: rest.bounded_list(raw, "items", legacy.MAX_ITEMS, "Elemente", error=SamplingError),
     )
+
+
+def test_json_object_matches_both_copies() -> None:
+    r = rng(76)
+    shapes: list[object] = [None, [], {}, "x", 0, 1.5, True, {1: "a"}, {"a": 1, 2: "b"}, {"ä": []}]
+    for _ in range(SAMPLES):
+        value = r.choice(shapes) if r.random() < 0.5 else random_json(r)
+        path = r.choice(("Anfrage", "items[0]", "sheets[3].labels", "Ä", ""))
+        _assert_same(
+            lambda: legacy.identifiers_object(value, path),
+            lambda: rest.json_object(value, path, error=IdentifiersError),
+        )
+        _assert_same(
+            lambda: legacy.reporting_object(value, path),
+            lambda: rest.json_object(value, path, error=ReportingError),
+        )
+
+
+def test_json_object_returns_the_same_mapping() -> None:
+    body = {"a": 1}
+    assert rest.json_object(body, "Anfrage") is body
+    with pytest.raises(rest.ContractError, match="'x' muss ein JSON-Objekt sein."):
+        rest.json_object([], "x")

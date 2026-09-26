@@ -9,9 +9,8 @@ def main() -> None:
     """Exercise real formatting behavior and the independent distribution contract."""
     package = distribution("auditcore_reporting")
     assert package.version == "0.2.2"
-    assert not [
-        requirement for requirement in package.requires or [] if "extra ==" not in requirement
-    ]
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert get_number_format("Betrag", 123.45) == '#,##0.00 "EUR"'
     assert get_number_format("Quote", 0.25) == "0.00%"
     assert get_number_format("Datum") == "DD.MM.YYYY"
