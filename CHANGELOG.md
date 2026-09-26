@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
+  angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
+  `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml
+  (`auditcore_common.safe_xml`, neues Extra `xml`), `canonical_hash` und der
+  Profil-Fingerprint von `auditcore_price_analysis` nutzen
+  `auditcore_common.hashing` (duplicate_functions 7 → 4). Die signierte
+  APT-Release-Datei trägt ein `Date`-Feld (RFC 2822, `SOURCE_DATE_EPOCH`
+  beachtet); apt meldet nicht mehr „Invalid 'Date' entry“.
 - Festlegungen der gemeinsamen Vertragsfälle entschieden (Nutzer, 25.09.2026):
   Ersatzwert „—“, Dateigröße Basis 1024 mit KB/MB und Dezimalkomma, „1.5“ und
   „1.234“ in Beträgen ungültig bzw. mehrdeutig mit Hinweis, höchstens zwei

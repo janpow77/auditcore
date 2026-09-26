@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Sicherheit: `FeedAdapter` parst RSS/Atom nur noch über `defusedxml`
+(`auditcore_common.safe_xml.parse_xml` mit `forbid_dtd=True`) statt über
+`xml.etree.ElementTree.fromstring`. Die Vorprüfung auf DOCTYPE/ENTITY bleibt.
+Ohne das neue Extra `xml` (`defusedxml>=0.7.1`, Debian: python3-defusedxml)
+meldet der Feed-Adapter einen `ConfigError`, es gibt keinen Rückfall auf den
+Standardparser. `JsonApiAdapter` braucht das Extra nicht.
+
+- Neue Pflichtabhängigkeit `auditcore_common==0.1.1` (APT
+  `python3-auditcore-common`).
+- `canonical_hash` rechnet über `auditcore_common.hashing.canonical_sha256`;
+  Hashwerte unverändert (Test gegen die bisherige Formel).
+- README nach der Vorlage.
+
 ## 0.1.1 – 2026-09-25
 
 Refaktorierung ohne Verhaltensänderung; Vertrag `auditcore_harvest.contract/1`

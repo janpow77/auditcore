@@ -1,5 +1,9 @@
 # Changelog – auditcore_risk
 
+## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pins `auditcore_common==0.1.1`, `auditcore_entity_matching==0.2.3` (auch Extra `fuzzy`) und Extra `procurement` `auditcore_procurement==0.2.3`; README nach der Vorlage.
+
 ## 0.3.2 – Hilfsfunktionen aus auditcore_common
 
 Keine fachliche Änderung außer der Bibliothekskennung `LIBRARY`

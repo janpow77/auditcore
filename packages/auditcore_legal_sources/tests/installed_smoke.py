@@ -20,9 +20,9 @@ from auditcore_legal_sources.adapters import DipDrucksachenAdapter
 def main() -> None:
     """Parse, normalize and harvest DIP pages through the installed engine."""
     package = distribution("auditcore_legal_sources")
-    assert package.version == "0.1.3"
+    assert package.version == "0.1.4"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.1.1", "auditcore_harvest==0.1.1"], runtime
+    assert runtime == ["auditcore_common==0.1.1", "auditcore_harvest==0.1.2"], runtime
     assert find_spec("auditcore") is None
     assert available_profiles() == (
         ("audit_designer.vp_ai", "2026.09.1"),

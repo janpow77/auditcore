@@ -35,7 +35,7 @@ from .fraud import (
 from .profiles import RiskProfile, Rule, available_profiles, load_profile, profile_from_dict
 from .rules import KINDS
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 __all__ = [
     "DuplicateMatch",

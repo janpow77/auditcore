@@ -14,7 +14,7 @@ from auditcore_invoicegenerator import FlowInvoiceDemoProfile, InvoiceScenario, 
 origin = Path(auditcore_invoicegenerator.__file__).resolve()
 assert "site-packages" in origin.parts or "dist-packages" in origin.parts
 assert "/src/" not in str(origin)
-assert importlib.metadata.version("auditcore_invoicegenerator") == "0.2.1"
+assert importlib.metadata.version("auditcore_invoicegenerator") == "0.2.2"
 assert importlib.metadata.version("auditcore_dummygenerator") == "0.1.1"
 legacy = FlowInvoiceDemoProfile(42).generate_invoice(1, suppliers()[0])
 assert legacy["line_items"] and legacy["supplier"]["name"] and legacy["beneficiary"]["name"]

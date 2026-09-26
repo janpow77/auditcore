@@ -1,5 +1,9 @@
 # Changelog auditcore_funding_sources
 
+## 0.1.4 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeiten `auditcore_common==0.1.1` und `auditcore_harvest==0.1.2`; README-Installationshinweis auf v0.4.0.
+
 ## 0.1.3 – Hilfsfunktionen aus auditcore_common
 
 Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`

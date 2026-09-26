@@ -1,5 +1,9 @@
 # Changelog auditcore_entity_matching
 
+## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage.
+
 ## 0.2.2 – Hilfsfunktionen aus auditcore_common
 
 Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`

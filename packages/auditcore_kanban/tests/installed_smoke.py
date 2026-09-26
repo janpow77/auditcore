@@ -19,7 +19,7 @@ from auditcore_kanban.rest import KanbanApi
 
 def main() -> None:
     package = distribution("auditcore_kanban")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
     assert rank_between(None, None) == "V" and spread_ranks(3) == ["F", "V", "k"]

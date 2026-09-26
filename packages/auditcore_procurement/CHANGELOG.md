@@ -1,5 +1,9 @@
 # Changelog auditcore_procurement
 
+## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`, Extra `sources` pinnt `auditcore_harvest==0.1.2`; README nach der Vorlage.
+
 ## 0.2.2 – Hilfsfunktionen aus auditcore_common
 
 Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`

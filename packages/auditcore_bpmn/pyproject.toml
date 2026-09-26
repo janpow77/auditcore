@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_bpmn"
-version = "0.1.0"
+version = "0.1.1"
 description = "BPMN 2.0 with the FlowAudit extension (schema 1.1) for audit authorities: safe parsing, element model, validation rules, legacy-exact process figures, diagram collections, comparison, neutralisation and reports"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -16,7 +16,7 @@ dependencies = []
 xml = ["defusedxml>=0.7.1"]
 excel = ["openpyxl>=3.0.9,<4"]
 pdf = ["reportlab>=3.6.12,<6"]
-legal = ["auditcore_legal_sources==0.1.3"]
+legal = ["auditcore_legal_sources==0.1.4"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
@@ -29,7 +29,7 @@ dev = [
     "pypdf>=4,<7",
     "lxml>=6.1.0,<7",
     "jsonschema>=4.10",
-    "auditcore_legal_sources==0.1.3",
+    "auditcore_legal_sources==0.1.4",
 ]
 
 [tool.setuptools.packages.find]

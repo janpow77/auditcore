@@ -2,6 +2,10 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
+## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. README-Installationshinweis auf v0.4.0.
+
 ## 0.2.1 – 2026-09-25 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle 88 bestehenden Tests (Flowlib-Goldens für
