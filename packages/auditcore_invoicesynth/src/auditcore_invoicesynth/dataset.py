@@ -15,7 +15,6 @@ Versionen stehen deshalb im Manifest.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
@@ -26,6 +25,7 @@ from random import Random
 from types import ModuleType
 from typing import Any, cast
 
+from auditcore_common.hashing import canonical_sha256, sha256_file, sha256_text
 from auditcore_invoicegenerator import InvoiceScenario
 
 from auditcore_invoicesynth.enrich import SynthInvoice, enrich
@@ -99,12 +99,7 @@ def prepare_samples(config: SynthConfig, specs: list[SampleSpec]) -> list[Prepar
 
 
 def dataset_hash(files: dict[str, str]) -> str:
-    lines = "".join(f"{path}\t{digest}\n" for path, digest in sorted(files.items()))
-    return hashlib.sha256(lines.encode("utf-8")).hexdigest()
-
-
-def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_text("".join(f"{path}\t{digest}\n" for path, digest in sorted(files.items())))
 
 
 def _runtime() -> dict[str, str]:
@@ -236,7 +231,7 @@ def _manifest(
 ) -> dict[str, Any]:
     """Manifest mit Versionen, Plan, Schriften und SHA-256 aller geschriebenen Dateien."""
     files = {
-        path.relative_to(output).as_posix(): _sha256(path)
+        path.relative_to(output).as_posix(): sha256_file(path)
         for path in sorted(output.rglob("*"))
         if path.is_file() and path.name != MANIFEST
     }
@@ -293,7 +288,7 @@ def verify_dataset(directory: Path) -> Verification:
         raise DatasetError("Unbekanntes Datensatzformat")
     expected: dict[str, str] = manifest["files"]
     actual = {
-        path.relative_to(directory).as_posix(): _sha256(path)
+        path.relative_to(directory).as_posix(): sha256_file(path)
         for path in sorted(directory.rglob("*"))
         if path.is_file() and path.name != MANIFEST and not path.is_symlink()
     }
@@ -335,9 +330,7 @@ def plan_summary(config: SynthConfig, families: tuple[str, ...]) -> dict[str, An
     layouts: dict[str, int] = {}
     for spec in specs:
         layouts[spec.layout] = layouts.get(spec.layout, 0) + 1
-    plan_hash = hashlib.sha256(
-        json.dumps([s.to_dict() for s in specs], sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    plan_hash = canonical_sha256([s.to_dict() for s in specs], compact=False, ensure_ascii=True)
     return {
         "samples": len(specs),
         "splits": {split: sum(1 for s in specs if s.split == split) for split in SPLITS},

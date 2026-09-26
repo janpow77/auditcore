@@ -138,6 +138,21 @@ Reihenfolge und Stand stehen im PR-Verlauf; Grundsätze:
   Fehlerklasse des Pakets binden.
 - Pakete in laufender Refaktorierung werden erst nach deren Merge migriert.
 
+Stand v0.4.2 (Teil B, 26.09.2026): `auditcore_price_sources` (A1c,
+Paketbytes bytegleich, SHA-256 fester Fixtures festgeschrieben),
+`auditcore_geo` (A13 `_endlich`), `auditcore_property_sources` (A12
+HTML-Erkennung 3×, A14 `_aware`) und `auditcore_invoicesynth` (A2
+Datei-SHA-256 4×, A13 `parse_rate`, A14 `normalize_identifier`, dazu
+Text-SHA-256 und kanonisches JSON für Datensatz-, Plan- und Konfigurations-Hash)
+nutzen `auditcore_common`. Die Prüfziffern `de_vat_check_digit`/
+`at_uid_check_digit` von `auditcore_documents` (Code-Gate: 2 Paare mit
+`auditcore_identifiers`) sind jetzt die Funktionen aus `auditcore_identifiers`
+(Pflichtabhängigkeit `auditcore_identifiers==0.1.0`). Paritätstests je Paket
+(`tests/test_common_parity.py`, documents `tests/test_identifiers_parity.py`);
+`duplicate_functions` documents und identifiers 2 → 0. Offen aus B2 bleiben die
+Prüfziffern von `auditcore_invoicesynth` (prüfen zusätzlich die Eingabe, keine
+gleiche Normalform).
+
 ## Dauerhafte Absicherung
 
 Das Code-Gate zählt paketübergreifende Duplikate als Metrik

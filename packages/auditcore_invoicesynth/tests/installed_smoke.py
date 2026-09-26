@@ -27,7 +27,8 @@ def main() -> None:
     package = distribution("auditcore_invoicesynth")
     assert package.version == "0.1.2"
     assert [r for r in package.requires or [] if "extra ==" not in r] == [
-        "auditcore_invoicegenerator==0.2.2"
+        "auditcore_common==0.1.1",
+        "auditcore_invoicegenerator==0.2.2",
     ]
     assert find_spec("auditcore") is None
     rng = Random(3)
