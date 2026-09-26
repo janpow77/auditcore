@@ -185,8 +185,13 @@ def check_batch(payload: object, limits: Limits | None = None) -> Json:
     if len(items) > limits.max_items:
         raise ContractError(
             f"'items' hat {len(items)} Einträge; höchstens {limits.max_items} je Anfrage.",
-            status=413, code="too_large",
+            status=413,
+            code="too_large",
         )
     results = [_batch_entry(profile, raw, i, limits) for i, raw in enumerate(items)]
-    return {"contract": CONTRACT, "profile": profile.name, "results": results,
-            "summary": _summary(results)}
+    return {
+        "contract": CONTRACT,
+        "profile": profile.name,
+        "results": results,
+        "summary": _summary(results),
+    }

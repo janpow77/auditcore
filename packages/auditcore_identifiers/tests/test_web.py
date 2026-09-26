@@ -26,7 +26,14 @@ def test_catalogue_lists_kinds_profiles_reasons_and_limits() -> None:
     assert data["contract"] == CONTRACT == "identifiers_ui/1"
     assert data["recommended_profile"] == "strict"
     assert [k["id"] for k in data["kinds"]] == [
-        "iban", "bic", "vat_id", "tax_id", "tax_number", "lei", "register_number"]
+        "iban",
+        "bic",
+        "vat_id",
+        "tax_id",
+        "tax_number",
+        "lei",
+        "register_number",
+    ]
     assert [k["id"] for k in data["kinds"] if k["country"]] == ["vat_id"]
     strict = data["profiles"][0]
     assert strict["id"] == "strict" and not strict["legacy"] and len(strict["kinds"]) == 7
@@ -71,8 +78,7 @@ def test_missing_value_is_a_result_not_an_error() -> None:
         ({"kind": "isin", "value": "x", "profile": "strict"}, "unknown_kind"),
         ({"kind": "iban", "value": 5, "profile": "strict"}, "invalid_input"),
         ({"kind": "iban", "value": "D" * 201, "profile": "strict"}, "invalid_input"),
-        ({"kind": "vat_id", "value": "x", "country": "DEU1", "profile": "strict"},
-         "invalid_input"),
+        ({"kind": "vat_id", "value": "x", "country": "DEU1", "profile": "strict"}, "invalid_input"),
         ({"kind": "lei", "value": "x", "profile": "flowinvoice.legacy"}, "unsupported_kind"),
         ([], "invalid_input"),
     ],
@@ -84,19 +90,29 @@ def test_single_check_rejects_contract_violations(body: object, code: str) -> No
 
 
 def test_batch_reports_each_row_and_a_summary() -> None:
-    answer: dict[str, Any] = check_batch({"profile": "flowworkshop.legacy", "items": [
-        {"ref": "Zeile 2", "kind": "lei", "value": "7LTWFZYICNSX8D621K86"},
-        {"kind": "iban", "value": VALID_IBAN},
-        {"ref": 7, "kind": "unbekannt", "value": "x"},
-        {"kind": "lei", "value": ""},
-    ]})
+    answer: dict[str, Any] = check_batch(
+        {
+            "profile": "flowworkshop.legacy",
+            "items": [
+                {"ref": "Zeile 2", "kind": "lei", "value": "7LTWFZYICNSX8D621K86"},
+                {"kind": "iban", "value": VALID_IBAN},
+                {"ref": 7, "kind": "unbekannt", "value": "x"},
+                {"kind": "lei", "value": ""},
+            ],
+        }
+    )
     rows = answer["results"]
     assert [r["ref"] for r in rows] == ["Zeile 2", "2", "7", "4"]
     assert rows[0]["status"] == "VALID" and rows[0]["error"] is None
     assert rows[1]["error"]["code"] == "unsupported_kind" and "status" not in rows[1]
     assert rows[2]["error"]["code"] == "unknown_kind"
     assert answer["summary"] == {
-        "total": 4, "valid": 1, "invalid": 0, "missing": 1, "not_checked": 2}
+        "total": 4,
+        "valid": 1,
+        "invalid": 0,
+        "missing": 1,
+        "not_checked": 2,
+    }
 
 
 def test_batch_limits_and_structure() -> None:
@@ -133,9 +149,11 @@ def test_starlette_and_fastapi_give_identical_answers() -> None:
     item = {"kind": "iban", "value": WRONG_IBAN}
     body = {"profile": "strict", "items": [item]}
     answers = [
-        (c.get("/api/kennungen/catalogue").content,
-         c.post("/api/kennungen/check", json={**item, "profile": "strict"}).content,
-         c.post("/api/kennungen/check/batch", json=body).content)
+        (
+            c.get("/api/kennungen/catalogue").content,
+            c.post("/api/kennungen/check", json={**item, "profile": "strict"}).content,
+            c.post("/api/kennungen/check/batch", json=body).content,
+        )
         for c in clients
     ]
     assert answers[0] == answers[1]
