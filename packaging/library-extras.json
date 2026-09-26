@@ -8,7 +8,7 @@
   },
   "auditcore_dataprotection": {
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
-    "auditcore_reporting[excel]==0.2.1; extra == \"excel\"": "python3-auditcore-reporting (>= 0.2.1)",
+    "auditcore_reporting[excel]==0.2.2; extra == \"excel\"": "python3-auditcore-reporting (>= 0.2.2)",
     "starlette<2,>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)",
     "starlette<2,>=0.26.1; extra == \"fastapi\"": "python3-starlette (>= 0.26.1)"
@@ -18,7 +18,7 @@
   },
   "auditcore_procurement": {
     "lxml>=4.9.2; extra == \"html\"": "python3-lxml (>= 4.9.2)",
-    "auditcore_harvest==0.1.1; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.1)"
+    "auditcore_harvest==0.1.2; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.2)"
   },
   "auditcore_funding_sources": {
     "openpyxl<4,>=3.0.9; extra == \"xlsx\"": "python3-openpyxl (>= 3.0.9)",
@@ -30,16 +30,16 @@
     "starlette<2,>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)"
   },
   "auditcore_property_sources": {
-    "auditcore_harvest==0.1.1; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.1)"
+    "auditcore_harvest==0.1.2; extra == \"sources\"": "python3-auditcore-harvest (>= 0.1.2)"
   },
   "auditcore_geo": {
-    "auditcore_harvest==0.1.1; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.1)",
+    "auditcore_harvest==0.1.2; extra == \"geocoder\"": "python3-auditcore-harvest (>= 0.1.2)",
     "starlette>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92.0)"
   },
   "auditcore_risk": {
     "pandas>=2.1; extra == \"pandas\"": "python3-pandas (>= 2.1)",
-    "auditcore_procurement==0.2.2; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.2)",
+    "auditcore_procurement==0.2.3; extra == \"procurement\"": "python3-auditcore-procurement (>= 0.2.3)",
     "starlette>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92.0)"
   },
@@ -50,7 +50,7 @@
     "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)",
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
     "reportlab<6,>=3.6.12; extra == \"pdf\"": "python3-reportlab (>= 3.6.12)",
-    "auditcore_legal_sources==0.1.3; extra == \"legal\"": "python3-auditcore-legal-sources (>= 0.1.3)"
+    "auditcore_legal_sources==0.1.4; extra == \"legal\"": "python3-auditcore-legal-sources (>= 0.1.4)"
   },
   "auditcore_documents": {
     "starlette<2,>=0.47.2; extra == \"web\"": "python3-starlette (>= 0.47.2)",
@@ -81,5 +81,8 @@
   },
   "auditcore_llm_client": {
     "httpx>=0.23; extra == \"http\"": "python3-httpx (>= 0.23)"
+  },
+  "auditcore_harvest": {
+    "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)"
   }
 }

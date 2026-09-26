@@ -19,7 +19,7 @@ from auditcore_entity_matching import (
 def main() -> None:
     """Exercise normalisation, LEI checks and the optional fuzzy boundary."""
     package = distribution("auditcore_entity_matching")
-    assert package.version == "0.2.2"
+    assert package.version == "0.2.3"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None

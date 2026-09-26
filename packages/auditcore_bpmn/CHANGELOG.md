@@ -1,5 +1,9 @@
 # Changelog – auditcore_bpmn
 
+## 0.1.1 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Codeänderung. Extra `legal` pinnt `auditcore_legal_sources==0.1.4`.
+
 ## 0.1.0 – Erste Fassung
 
 - BPMN 2.0 sicher lesen (defusedxml oder gehärteter Expat) und rundlauftreu

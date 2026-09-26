@@ -1,16 +1,20 @@
 """Executable reference adapters used by the adapter guide and the contract tests.
 
 * :class:`JsonApiAdapter` – paged JSON API with a continuation token.
-* :class:`FeedAdapter` – RSS 2.0 or Atom feed, one page, no DTDs accepted.
+* :class:`FeedAdapter` – RSS 2.0 or Atom feed, one page, no DTDs accepted;
+  parsed only through ``defusedxml`` (extra ``xml``).
 
-Both use only the standard library and the injected transport.
+Both use the injected transport; the JSON adapter needs only the standard library.
 """
 
 from __future__ import annotations
 
-import xml.etree.ElementTree as ElementTree
+# Types and ParseError only; parsing goes through defusedxml (auditcore_common.safe_xml).
+import xml.etree.ElementTree as ElementTree  # nosec B405
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+
+from auditcore_common.safe_xml import parse_xml
 
 from .adapter import FetchContext, require
 from .errors import ConfigError, ParserError
@@ -132,15 +136,26 @@ def _text(element: ElementTree.Element | None) -> str:
     return "" if element is None or element.text is None else element.text.strip()
 
 
+_XML_EXTRA = (
+    "Der Feed-Adapter braucht defusedxml: pip install 'auditcore_harvest[xml]' "
+    "(Debian: python3-defusedxml)."
+)
+
+
 def _parse_feed(text: str) -> ElementTree.Element:
-    """Well-formed XML without DOCTYPE/ENTITY, else a :class:`ParserError`."""
+    """Well-formed XML without DOCTYPE/ENTITY, else a :class:`ParserError`.
+
+    Parsed with ``defusedxml`` and ``forbid_dtd``; without the extra ``xml`` a
+    :class:`ConfigError` names the missing dependency (never a stdlib fallback).
+    """
     if "<!DOCTYPE" in text.upper() or "<!ENTITY" in text.upper():
         raise ParserError("Feed mit DOCTYPE/ENTITY wird aus Sicherheitsgründen abgelehnt.")
     try:
-        # DOCTYPE/ENTITY are rejected above (tested); no DTD or entity expansion occurs.
-        return ElementTree.fromstring(text)  # nosec B314
+        return parse_xml(text, error=ConfigError, message=_XML_EXTRA, forbid_dtd=True)
     except ElementTree.ParseError as exc:
         raise ParserError(f"Feed ist kein wohlgeformtes XML: {exc}") from exc
+    except ValueError as exc:  # defusedxml: DTD, entity or external reference forbidden
+        raise ParserError("Feed mit DOCTYPE/ENTITY wird aus Sicherheitsgründen abgelehnt.") from exc
 
 
 def _rss_items(root: ElementTree.Element) -> list[FeedItem]:

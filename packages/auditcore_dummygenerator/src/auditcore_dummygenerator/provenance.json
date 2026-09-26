@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_dummygenerator",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "source": {
     "repository": "janpow77/flowaudit_testdatengenerator_frontend",
     "commit": "05bc5ac560dfff3bc7181323240745215492d09a",

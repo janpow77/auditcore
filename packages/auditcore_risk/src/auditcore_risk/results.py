@@ -12,7 +12,7 @@ from auditcore_common.json_values import jsonable
 from .base import JsonObject
 
 #: Library identity recorded in every evaluation (T-31).
-LIBRARY = "auditcore_risk 0.3.2"
+LIBRARY = "auditcore_risk 0.3.3"
 
 
 @dataclass(frozen=True)

@@ -2,6 +2,10 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #14, #23, #59).
 
+## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. README-Installationshinweis auf v0.4.0.
+
 ## 0.1.1 – 2026-09-25 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle bestehenden Tests (bitgenauer Replay gegen die

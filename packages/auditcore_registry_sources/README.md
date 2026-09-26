@@ -241,8 +241,8 @@ R1–R10, A2, A3: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.1` (Abrufvertrag der Adapter),
-`auditcore_entity_matching==0.2.2` (Namensnormalisierung, Score-
+Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.2` (Abrufvertrag der Adapter),
+`auditcore_entity_matching==0.2.3` (Namensnormalisierung, Score-
 Aufschlüsselung) und `auditcore_common==0.1.1` (Profile, JSON-Typen,
 sicheres XML; nur Standardbibliothek). Extras: rapidfuzz ≥ 3.10.1 < 4 (`fuzzy`, `web`),
 defusedxml ≥ 0.7.1 (`xml`), beautifulsoup4 ≥ 4.11.2 < 5 (`html`),

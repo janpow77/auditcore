@@ -4,7 +4,14 @@ import json
 from importlib.metadata import distribution
 from importlib.util import find_spec
 
-from auditcore_harvest import CONTRACT_VERSION, HarvestEngine, HarvestRequest, ReplayTransport
+from auditcore_harvest import (
+    CONTRACT_VERSION,
+    ConfigError,
+    FetchContext,
+    HarvestEngine,
+    HarvestRequest,
+    ReplayTransport,
+)
 from auditcore_harvest.catalog import load_catalog, summary
 from auditcore_harvest.memory import (
     ClockSleeper,
@@ -24,8 +31,9 @@ FEED = """<?xml version="1.0"?><rss version="2.0"><channel><title>t</title>
 def main() -> None:
     """Catalogue, engine run and contract suite from the installed package."""
     package = distribution("auditcore_harvest")
-    assert package.version == "0.1.1"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    assert package.version == "0.1.2"
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     assert CONTRACT_VERSION == "auditcore_harvest.contract/1"
     entries = load_catalog()
@@ -45,6 +53,27 @@ def main() -> None:
         clock,
         ClockSleeper(clock),
     )
+    if find_spec("defusedxml") is None:
+        # Without the extra "xml" the feed adapter refuses to parse (no stdlib fallback).
+        try:
+            FeedAdapter(example_feed_source()).fetch_page(
+                FetchContext(
+                    HarvestRequest("example.feed", "smoke"),
+                    {"url": "https://feed.invalid/rss"},
+                    ReplayTransport(exchanges),
+                    StaticCredentials(),
+                    clock,
+                    5.0,
+                    1,
+                ),
+                None,
+            )
+        except ConfigError as exc:
+            assert "auditcore_harvest[xml]" in str(exc)
+        else:
+            raise AssertionError("Feed parsing must require the optional extra 'xml'")
+        print(json.dumps({"status": "PASS", "records": 0, "xml": "extra missing"}))
+        return
     sink = ListSink()
     result = engine.run(
         FeedAdapter(example_feed_source()),

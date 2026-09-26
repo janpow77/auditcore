@@ -3,12 +3,26 @@
 from __future__ import annotations
 
 import gzip
+import os
 import shutil
 import subprocess
+from datetime import UTC, datetime
+from email.utils import format_datetime
 from pathlib import Path
 
 from auditcore.tools.common import digest, run, safe_path
 from auditcore.tools.deployer.models import AptRepositoryBuild
+
+
+def release_date() -> str:
+    """RFC 2822 UTC date for the ``Date`` field of a Release file.
+
+    apt rejects a missing or malformed ``Date`` ("Invalid 'Date' entry"). A set
+    ``SOURCE_DATE_EPOCH`` makes the value reproducible; otherwise the build time.
+    """
+    epoch = os.environ.get("SOURCE_DATE_EPOCH")
+    moment = datetime.fromtimestamp(int(epoch), UTC) if epoch else datetime.now(UTC)
+    return format_datetime(moment, usegmt=True)
 
 
 class AptRepository:
@@ -30,7 +44,11 @@ class AptRepository:
         content = ("\n".join(records) + "\n").encode()
         (directory / "Packages").write_bytes(content)
         (directory / "Packages.gz").write_bytes(gzip.compress(content, mtime=0))
-        release = "Origin: auditcore\nLabel: auditcore\nArchitectures: all amd64 arm64\nSHA256:\n"
+        release = (
+            "Origin: auditcore\nLabel: auditcore\n"
+            f"Date: {release_date()}\n"
+            "Architectures: all amd64 arm64\nSHA256:\n"
+        )
         for name in ("Packages", "Packages.gz"):
             data = (directory / name).read_bytes()
             release += f" {digest(data)} {len(data)} {name}\n"

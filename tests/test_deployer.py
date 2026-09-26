@@ -134,6 +134,22 @@ def test_unsigned_apt_not_publishable(package_project, tmp_path):
         repository.publish(dist, tmp_path / "publish")
 
 
+def test_apt_release_has_rfc2822_date(package_project, tmp_path, monkeypatch):
+    """apt warns „Invalid 'Date' entry in Release file“ without the field."""
+    root, _ = package_project
+    dist = tmp_path / "dist"
+    DeploymentBuilder().build_application(root, dist)
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "1790380800")
+    AptRepository().build(dist)
+    fields = dict(
+        line.split(": ", 1) for line in (dist / "Release").read_text().splitlines() if ": " in line
+    )
+    assert fields["Date"] == "Sat, 26 Sep 2026 00:00:00 GMT"
+    monkeypatch.delenv("SOURCE_DATE_EPOCH")
+    AptRepository().build(dist)
+    assert (dist / "Release").read_text().count("\nDate: ") == 1
+
+
 def test_cyclonedx_invalid_schema_rejected():
     from auditcore.tools.quality.supplychain import validate_schema
 

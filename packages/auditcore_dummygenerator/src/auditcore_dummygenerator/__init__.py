@@ -8,7 +8,7 @@ from auditcore_dummygenerator.generator import (
 )
 from auditcore_dummygenerator.profiles import list_profiles, profile_reference
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     "JOBLIB_AVAILABLE",

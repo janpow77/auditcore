@@ -13,8 +13,8 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = ["auditcore_common==0.1.1"]
 
 [project.optional-dependencies]
-sources = ["auditcore_harvest==0.1.1"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.1"]
+sources = ["auditcore_harvest==0.1.2"]
+dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

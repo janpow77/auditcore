@@ -10,13 +10,14 @@ package; there is no silent default profile.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections.abc import Mapping
 from datetime import date
 from decimal import Decimal
 from importlib import resources
 from typing import Any
+
+from auditcore_common.hashing import canonical_sha256
 
 from ._profile_model import (
     CalculationProfile,
@@ -49,11 +50,6 @@ __all__ = [
 ]
 
 SCHEMA = "auditcore_price_analysis.profile/1"
-
-
-def _fingerprint(data: Mapping[str, object]) -> str:
-    raw = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _dec(data: Mapping[str, object], key: str, where: str) -> Decimal:
@@ -193,7 +189,7 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
         mixed_rounding=_rounding(rounding.get("mixed_price"), "rounding.mixed_price"),
         optional_missing_blocks_comparison=bool(missing.get("optional_missing_blocks_comparison")),
         require_released_for_comparison=bool(release.get("require_released_for_comparison", True)),
-        fingerprint=_fingerprint(data),
+        fingerprint=canonical_sha256(data),
         raw=data,
         recommended=bool(data.get("recommended", False)),
     )
@@ -227,7 +223,7 @@ def comparison_profile_from_dict(data: Mapping[str, Any]) -> ComparisonProfile:
         respect_valid_to=bool(selection["respect_valid_to"]),
         q3_tolerance=_dec(selection, "q3_tolerance", "selection"),
         prefer_standard_variants=bool(selection["prefer_standard_variants"]),
-        fingerprint=_fingerprint(data),
+        fingerprint=canonical_sha256(data),
         raw=data,
         recommended=bool(data.get("recommended", False)),
     )
@@ -253,7 +249,7 @@ def available_profiles() -> list[dict[str, Any]]:
                 "type": str(data["type"]),
                 "status": str(data.get("status", "UNKNOWN")),
                 "recommended": bool(data.get("recommended", False)),
-                "fingerprint": _fingerprint(data),
+                "fingerprint": canonical_sha256(data),
             }
             for (pid, version), data in _shipped().items()
         ),

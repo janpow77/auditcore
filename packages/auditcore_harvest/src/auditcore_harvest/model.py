@@ -6,13 +6,13 @@ source does not state stay ``None``/``UNKNOWN``; the core never guesses them.
 
 from __future__ import annotations
 
-import hashlib
-import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import StrEnum
 from typing import Any
+
+from auditcore_common.hashing import canonical_sha256
 
 CONTRACT_VERSION = "auditcore_harvest.contract/1"
 
@@ -135,9 +135,12 @@ class Provenance:
 
 
 def canonical_hash(value: JSON) -> str:
-    """SHA-256 over canonical JSON; the stable content hash of a record."""
-    data = json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(data.encode("utf-8")).hexdigest()
+    """SHA-256 over canonical JSON; the stable content hash of a record.
+
+    Canonical form (sorted keys, ``ensure_ascii=False``, compact separators) as
+    :func:`auditcore_common.hashing.canonical_sha256`; digests are unchanged.
+    """
+    return canonical_sha256(value)
 
 
 @dataclass(frozen=True)
