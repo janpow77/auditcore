@@ -36,4 +36,3 @@ def pandas_cumsum(values: Sequence[float | int | None]) -> list[float | None]:
         running += value  # type: ignore[operator]
         result.append(running)
     return result
-

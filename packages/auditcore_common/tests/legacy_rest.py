@@ -101,7 +101,9 @@ def statistics_decode(raw: bytes, limit: int = STATISTICS_MAX_BODY_BYTES) -> obj
     try:
         return json.loads(raw, parse_float=Decimal)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise StatisticsContractError("Kein gültiges JSON.", status=400, code="invalid_json") from exc
+        raise StatisticsContractError(
+            "Kein gültiges JSON.", status=400, code="invalid_json"
+        ) from exc
 
 
 # packages/auditcore_sampling/src/auditcore_sampling/web/_http.py :: handle
