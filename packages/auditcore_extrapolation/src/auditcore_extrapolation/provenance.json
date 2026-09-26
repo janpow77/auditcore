@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_extrapolation",
+  "version": "0.1.0",
+  "contract": "auditcore_extrapolation.evaluation/1",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [],
+  "methodology": [
+    {
+      "document": "Europäische Kommission, Guidance on sampling methods for audit authorities, EGESIF_16-0014-01 (20.01.2017)",
+      "use": "Formeln für Hochrechnung, Präzision und Fehlerobergrenze (Abschn. 4.12, 5.3, 6.1–6.4, Anhang 1, 3, 6); Referenzfälle aus den Beispielen der Abschnitte 6.1.1.6, 6.1.2.6, 6.2.1.6, 6.3.1.7, 6.3.2.7, 6.3.5.7 und 6.4.7",
+      "text_included": false
+    },
+    {
+      "document": "Europäische Kommission, CPRE_23-0013-01, Methodological note ACR/AO, Annex 3 (RER calculation template)",
+      "use": "Zeilen A–M der Restfehlerquote; Referenzfälle aus den Blättern Examples und Negative units example",
+      "text_included": false
+    },
+    {
+      "document": "Verordnung (EU) 2021/1060, Art. 2 Nr. 35 und 36, Art. 79 Abs. 2",
+      "use": "Begriffe Gesamt- und Restfehlerquote; Grenzen des nicht-statistischen Verfahrens",
+      "text_included": false
+    }
+  ],
+  "builds_on": [
+    {
+      "package": "auditcore_sampling",
+      "version": "0.2.2",
+      "use": "Nur zum Test (Extra dev): Stichprobenplan (SizePlan) für die Trennung der Vollerhebung und Abgleich der Zuverlässigkeitsfaktoren für 0 Fehler; keine Laufzeitabhängigkeit"
+    }
+  ],
+  "origin": "Neu in auditcore geschrieben nach den genannten Leitfäden; kein Code aus anderen Repositories übernommen. Die Hochrechnungen in audit_designer (flowstat-Modul) und die Annex-3-Berechnung in audit-portal wurden nicht übernommen und nicht charakterisiert (siehe docs/abgrenzung.md).",
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore. Texte der Leitfäden sind nicht enthalten, nur Quellenangaben und die daraus abgeleiteten Formeln und Tabellenwerte."
+    }
+  },
+  "method_validation": "REFERENCE_CASES_RECOMPUTED"
+}

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Neues Paket `auditcore_extrapolation` 0.1.0: Hochrechnung von
+  Stichprobenfehlern für Prüfbehörden nach dem KOM-Leitfaden EGESIF_16-0014-01
+  (Mittelwert-, Verhältnis- und Differenzenschätzung, MUS Standard/geschichtet/
+  konservativ mit Hochwertschicht, nicht-statistische Stichproben),
+  Gesamtfehlerquote (TER) mit systemischen und anomalen Fehlern,
+  Fehlerobergrenze und Ergebnis, getrennt davon Restfehlerquote (RER) nach
+  CPRE_23-0013-01 Annex 3; REST-Vertrag `auditcore_extrapolation.evaluation/1`.
+  Oberfläche `ExtrapolationPanel`/`<flowaudit-extrapolation>` (Vue) und
+  `FlowauditExtrapolation` (React nativ) auf dem Kern in `@flowaudit/ui-core`
+  mit Paritätsfällen. `EXPECTED_SOURCES`, `packaging/library-extras.json` und
+  Baseline ergänzt.
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

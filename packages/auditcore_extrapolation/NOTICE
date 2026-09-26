@@ -1,0 +1,17 @@
+auditcore_extrapolation 0.1.0 — attribution and authorization
+
+New implementation in auditcore. No code was copied from other repositories.
+The formulas and printed tables (z values, reliability factors) follow the
+European Commission guidance "Guidance on sampling methods for audit
+authorities" (EGESIF_16-0014-01, 20/01/2017) and the RER calculation template
+CPRE_23-0013-01 Annex 3; both documents are cited by name and section only,
+no text of them is included. The reliability factors of Appendix 3 are
+factual table values and are verified against the exact Poisson limits.
+
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for this library.
+
+The library computes; it does not decide. Conclusions ("material",
+"inconclusive") restate the decision rules of the guidance and do not replace
+the professional judgement of the audit authority.

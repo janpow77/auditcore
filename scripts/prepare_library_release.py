@@ -99,6 +99,9 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
             ("janpow77/flowworkshop", "a05bb2143bd96d5e981f9462f05b965e1658be36"),
         }
     ),
+    # Neuimplementierung nach KOM-Leitfaden EGESIF_16-0014-01 und CPRE_23-0013-01 Annex 3:
+    # kein Quellrepository, keine Bindung.
+    "auditcore_extrapolation": frozenset(),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
     "auditcore_kanban": frozenset(
