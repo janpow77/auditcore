@@ -5,7 +5,7 @@ import FaIcon from './base/FaIcon.vue'
 import IssueList from './views/IssueList.vue'
 import WalkthroughPanel from './views/WalkthroughPanel.vue'
 import ComparePanel from './views/ComparePanel.vue'
-import type { CompareSource } from './views/compareSource'
+import { SIDE_VIEWS as VIEWS, type CompareSource } from '@flowaudit/bpmn-flowaudit/ui'
 import PropertiesPanel from '../panels/PropertiesPanel.vue'
 import { useI18n } from '../i18n/useI18n'
 import { useEditorContext } from '../stores/context'
@@ -16,12 +16,6 @@ const emit = defineEmits<{ (e: 'update:view', value: SideView): void; (e: 'updat
 const { validation } = useEditorContext()
 const { t } = useI18n()
 
-const VIEWS: { id: SideView; label: string; icon: string }[] = [
-  { id: 'properties', label: 'props.label', icon: 'info' },
-  { id: 'issues', label: 'issues.label', icon: 'validate' },
-  { id: 'walkthrough', label: 'walk.title', icon: 'play' },
-  { id: 'compare', label: 'compare.title', icon: 'compare' },
-]
 </script>
 
 <template>
@@ -51,62 +45,3 @@ const VIEWS: { id: SideView; label: string; icon: string }[] = [
     </div>
   </div>
 </template>
-
-<style>
-.fa-side {
-  display: flex;
-  flex-direction: column;
-  width: 420px;
-  min-width: 320px;
-  height: 100%;
-  border-left: 1px solid var(--fa-border);
-  background: var(--fa-surface);
-}
-
-.fa-side__tabs {
-  display: flex;
-  gap: 2px;
-  padding: 4px 6px 0;
-  border-bottom: 1px solid var(--fa-border);
-  overflow-x: auto;
-}
-
-.fa-side__tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 10px;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  background: transparent;
-  color: var(--fa-text-muted);
-  font: inherit;
-  font-size: 13px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.fa-side__tab:not([aria-selected='true']) .fa-side__tab-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-}
-
-.fa-side__tab[aria-selected='true'] {
-  border-bottom-color: var(--fa-primary);
-  color: var(--fa-text);
-  font-weight: 600;
-}
-
-.fa-side__body {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-}
-
-.fa-side__pad {
-  padding: 12px 14px;
-}
-</style>

@@ -31,12 +31,3 @@ watch(
     </template>
   </BaseDialog>
 </template>
-
-<style>
-.fa-xml {
-  min-height: 60vh;
-  font-family: var(--fa-mono);
-  font-size: 12px;
-  white-space: pre;
-}
-</style>

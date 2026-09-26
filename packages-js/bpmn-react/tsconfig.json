@@ -2,11 +2,18 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "../..",
-    "types": ["node"],
+    "types": ["node", "vite/client"],
     "jsx": "react-jsx",
     "paths": {
-      "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"]
+      "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"],
+      "@flowaudit/bpmn-flowaudit/profiles": ["../bpmn-flowaudit/src/profile/bundled.ts"],
+      "@flowaudit/bpmn-flowaudit/ui": ["../bpmn-flowaudit/src/ui/index.ts"],
+      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts"],
+      "@flowaudit/bpmn-vue": ["../bpmn-vue/src/index.ts"],
+      "@flowaudit/ui-core": ["../ui-core/src/index.ts"],
+      "@flowaudit/common": ["../common/src/index.ts"],
+      "@flowaudit/common/browser": ["../common/src/browser.ts"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "test/**/*.tsx", "*.ts", "../bpmn-flowaudit/src/types/*.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "test/**/*.tsx", "*.ts", "../bpmn-flowaudit/src/types/css.d.ts", "../bpmn-editor/src/types/shims.d.ts", "../bpmn-vue/src/types/shims.d.ts"]
 }

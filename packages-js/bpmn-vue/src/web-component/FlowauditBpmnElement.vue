@@ -8,7 +8,7 @@ import { ref, useHost } from 'vue'
 import type { Comment, DiagramInfo, ProfileData, StoragePort, ValidationPort } from '@flowaudit/bpmn-flowaudit'
 import FlowauditEditor from '../components/FlowauditEditor.vue'
 import type { EditorPorts } from '../stores/context'
-import type { ElementEventMap, ElementEventName, Theme } from './elementContract'
+import type { ElementEventMap, ElementEventName, Theme } from '@flowaudit/bpmn-flowaudit/ui'
 import { useElementSource } from './useElementSource'
 
 const props = withDefaults(

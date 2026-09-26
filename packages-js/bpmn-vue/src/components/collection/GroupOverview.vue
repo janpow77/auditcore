@@ -5,7 +5,8 @@
  * collection issues.
  */
 import { computed } from 'vue'
-import { DIAGRAM_STATUS, issueMessage, keyRequirements, label, localized, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
+import { issueMessage, keyRequirements, localized, type GroupOverview as Overview, type ProfileData, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
+import { statusLabel as statusText } from '@flowaudit/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 
 const props = defineProps<{ overview: Overview; profile: ProfileData | null; issues: ValidationIssue[]; title: string }>()
@@ -16,7 +17,7 @@ const percent = computed(() => Math.round((props.overview.legalBasisCoverage ?? 
 const statuses = computed(() => Object.entries(props.overview.statusDistribution))
 const requirements = computed(() => keyRequirements(props.profile))
 const covered = (number: number) => props.overview.keyRequirementCoverage[number] ?? []
-const statusLabel = (code: string) => (DIAGRAM_STATUS[code] ? label(DIAGRAM_STATUS[code], locale.value) : t(`collection.status.${code}`))
+const statusLabel = (code: string) => statusText(code, t, locale.value)
 </script>
 
 <template>
@@ -59,82 +60,3 @@ const statusLabel = (code: string) => (DIAGRAM_STATUS[code] ? label(DIAGRAM_STAT
     </template>
   </section>
 </template>
-
-<style>
-.fa-overview {
-  padding: 20px 24px;
-  overflow: auto;
-}
-
-.fa-overview h2 {
-  margin: 0 0 14px;
-  font-size: 18px;
-}
-
-.fa-overview__cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-}
-
-.fa-overview__card {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px;
-}
-
-.fa-overview__number {
-  font-size: 26px;
-  font-weight: 700;
-}
-
-.fa-meter {
-  height: 8px;
-  border-radius: 4px;
-  background: var(--fa-surface-3);
-  overflow: hidden;
-}
-
-.fa-meter span {
-  display: block;
-  height: 100%;
-  background: var(--fa-success);
-}
-
-.fa-overview__status {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-overview__ka {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-  gap: 6px;
-}
-
-.fa-overview__ka-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 4px;
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius-sm);
-  background: var(--fa-surface);
-  color: var(--fa-text-muted);
-}
-
-.fa-overview__ka-cell--covered {
-  border-color: var(--fa-success);
-  background: var(--fa-success-soft);
-  color: var(--fa-text);
-}
-
-.fa-overview__issues {
-  padding-left: 18px;
-}
-</style>

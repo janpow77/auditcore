@@ -8,7 +8,7 @@ import type { Extensions, ListExtensionKey } from '@flowaudit/bpmn-flowaudit'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import ListEditor from '../ListEditor.vue'
-import { isDescribedList, LISTS } from '../descriptors'
+import { isDescribedList, LISTS } from '@flowaudit/bpmn-flowaudit/ui'
 import { useOptions } from '../useOptions'
 
 const props = defineProps<{ lists: ListExtensionKey[] }>()

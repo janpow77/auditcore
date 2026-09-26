@@ -7,14 +7,13 @@
  * ESI).
  */
 import { computed, onMounted, ref, watch } from 'vue'
-import { excerptFromModel, label, PALETTE_COLORS, profileReference, rolesFor, type Approval, type Comment, type DiagramInfo, type PaletteColor, type ProfileData, type ProfileSummary, type RoleAlias, type RolePaletteProvider, type ValidationPort } from '@flowaudit/bpmn-flowaudit'
-import { defaultEditorFactory, type EditorFactory } from '../editor/createEditor'
+import { label, PALETTE_COLORS, profileReference, rolesFor, type Approval, type Comment, type DiagramInfo, type PaletteColor, type ProfileData, type ProfileSummary, type RoleAlias, type ValidationPort } from '@flowaudit/bpmn-flowaudit'
+import { activeActions, choosePopoverColor, choosePopoverRole, createExporter, dialogPatch, filterKeys as keyIndex, handleShortcut, isLocked, readImportFile, savePayload, type CompareSource, type EditorFactory, type ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
+import { defaultEditorFactory } from '../editor/defaultFactory'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import type { EditorPorts } from '../stores/context'
 import { useEditorActions } from '../composables/useEditorActions'
 import { useEditorSetup } from '../composables/useEditorSetup'
-import { useExport } from '../composables/useExport'
-import { handleShortcut } from '../composables/useShortcuts'
 import EditorToolbar from './toolbar/EditorToolbar.vue'
 import ToolPalette from './palette/ToolPalette.vue'
 import PageGrid from './canvas/PageGrid.vue'
@@ -24,9 +23,7 @@ import ColorSwatches from './base/ColorSwatches.vue'
 import KeyFilterBar from './views/KeyFilterBar.vue'
 import EditorSidePanel from './EditorSidePanel.vue'
 import EditorDialogs from './EditorDialogs.vue'
-import type { CompareSource } from './views/compareSource'
-import type { ToolbarAction } from './toolbar/toolbarActions'
-import '../styles/theme.css'
+import '@flowaudit/bpmn-flowaudit/ui.css'
 
 const props = withDefaults(
   defineProps<{
@@ -73,7 +70,7 @@ const i18n = provideI18n(createI18n(props.locale))
 const { t } = i18n
 const host = ref<HTMLElement | null>(null)
 const factory = props.editorFactory ?? defaultEditorFactory
-const isReadonly = () => props.readonly || (props.lockApproved && setup.editor.state.info?.status === 'freigegeben')
+const isReadonly = () => isLocked(props.readonly, props.lockApproved, setup.editor.state.info as DiagramInfo | null)
 
 const setup = useEditorSetup(host, {
   xml: () => props.xml,
@@ -86,12 +83,10 @@ const setup = useEditorSetup(host, {
   onError: (message) => ((setup.ui.message = t('editor.importError', { message })), emit('error', message)),
 })
 const { editor, selection, validation, ui } = setup
-const exporter = useExport({ editor, factory, name: () => props.name, diagramId: () => props.diagramId, profile: () => props.profile, author: () => props.author, replacements: () => props.replacements, palette: props.palette })
+const exporter = createExporter({ editor, factory, name: () => props.name, diagramId: () => props.diagramId, profile: () => props.profile, author: () => props.author, replacements: () => props.replacements, palette: props.palette })
 
 async function save(): Promise<void> {
-  if (isReadonly()) return
-  emit('save', { xml: await editor.exportXml(), info: editor.state.info as DiagramInfo | null })
-  editor.markSaved()
+  if (!isReadonly()) emit('save', await savePayload(setup.session))
 }
 
 const actions = useEditorActions(
@@ -109,36 +104,19 @@ const actions = useEditorActions(
 )
 
 const roles = computed(() => rolesFor(props.profile))
-const filterKeys = computed(() => {
-  void editor.state.changes
-  return ui.filterOpen && editor.state.ready ? excerptFromModel(editor.model()).keys : {}
-})
-const active = computed(() => ({ 'left-panel': ui.leftOpen, 'right-panel': ui.rightOpen, walkthrough: ui.side === 'walkthrough', compare: ui.side === 'compare', 'key-filter': ui.filterOpen, decorations: ui.decorations, minimap: ui.minimap }))
-
-function chooseRole(code: string): void {
-  const popover = setup.popover.value
-  const provider = editor.editor.value?.get<RolePaletteProvider>('flowauditRolePalette', false)
-  const role = roles.value.find((entry) => entry.code === code)
-  if (popover && provider && role) {
-    if (popover.mode === 'add-lane') provider.addLaneWithRole(popover.element, role)
-    else provider.assignRole(popover.element, role)
-  }
-  setup.popover.value = null
-}
-
-function chooseColor(color: PaletteColor | null): void {
-  const popover = setup.popover.value
-  if (popover) editor.services().modeling.setColor([popover.element], { fill: color?.fill ?? null, stroke: color?.stroke ?? null })
-  setup.popover.value = null
-}
+const filterKeys = computed(() => (void editor.state.changes, keyIndex(setup.session, ui.filterOpen)))
+const active = computed(() => activeActions(ui))
+const chooseRole = (code: string) => choosePopoverRole(setup.session, props.profile, code)
+const chooseColor = (color: PaletteColor | null) => choosePopoverColor(setup.session, color)
 
 async function importFile(file: File): Promise<void> {
-  emit('update:xml', await file.text())
-  if (!props.name) emit('update:name', file.name.replace(/\.(bpmn|xml)$/i, ''))
+  const imported = await readImportFile(file)
+  emit('update:xml', imported.xml)
+  if (!props.name) emit('update:name', imported.name)
 }
 
 function onKeydown(event: KeyboardEvent): void {
-  handleShortcut(event, { save, search: () => (ui.dialogs.search = true), help: () => (ui.dialogs.shortcuts = true) })
+  handleShortcut(event, { save, search: () => Object.assign(ui, dialogPatch(ui, 'search', true)), help: () => Object.assign(ui, dialogPatch(ui, 'shortcuts', true)) })
 }
 
 watch(() => selection.element.value, (element) => emit('selection-change', element?.id ?? null))
@@ -180,8 +158,8 @@ defineExpose({ getXml: () => editor.exportXml(), getSvg: () => editor.exportSvg(
       <main class="fa-editor__main">
         <KeyFilterBar v-if="ui.filterOpen" v-model:kind="ui.filterKind" v-model:value="ui.filterValue" :keys="filterKeys" :hits="ui.filterHits" @clear="(ui.filterValue = ''), (ui.filterOpen = false)" />
         <div ref="host" class="fa-canvas-host" tabindex="0" :aria-label="t('editor.label')" :class="{ 'fa-canvas-host--readonly': isReadonly() }">
-          <PageGrid :view="ui.pageView" :viewbox="setup.viewbox.value" :width="setup.size.width" :height="setup.size.height" />
-          <CanvasPopover v-if="setup.popover.value" :x="setup.popover.value.x" :y="setup.popover.value.y" :width="setup.size.width" :height="setup.size.height" :title="setup.popover.value.kind === 'color' ? t('color.title') : t('role.choose')" @close="setup.popover.value = null">
+          <PageGrid :view="ui.pageView" :viewbox="setup.viewbox.value" :width="setup.size.value.width" :height="setup.size.value.height" />
+          <CanvasPopover v-if="setup.popover.value" :x="setup.popover.value.x" :y="setup.popover.value.y" :width="setup.size.value.width" :height="setup.size.value.height" :title="setup.popover.value.kind === 'color' ? t('color.title') : t('role.choose')" @close="setup.popover.value = null">
             <ColorSwatches v-if="setup.popover.value.kind === 'color'" :colors="palette ?? PALETTE_COLORS" @choose="chooseColor" />
             <template v-else>
               <button v-for="role in roles" :key="role.code" type="button" class="fa-menu-item" @click="chooseRole(role.code)">{{ role.short }} – {{ label(role.label, locale) }}</button>
@@ -204,31 +182,3 @@ defineExpose({ getXml: () => editor.exportXml(), getSvg: () => editor.exportSvg(
     <EditorDialogs :setup="setup" :actions="actions" :name="name" :diagram-id="diagramId" :profiles="profiles" :approvals="approvals" :ports="ports" @apply-xml="emit('update:xml', $event)" />
   </div>
 </template>
-
-<style>
-.fa-editor {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 480px;
-  overflow: hidden;
-}
-
-.fa-editor__body {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-}
-
-.fa-editor__main {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  flex-direction: column;
-}
-
-.fa-editor .djs-palette,
-.fa-canvas-host--readonly .djs-context-pad {
-  display: none;
-}
-</style>
