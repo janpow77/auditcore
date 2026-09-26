@@ -35,8 +35,12 @@ PINNED = {
     "bundesbank_fx.json": "2a8cd8f9f22dccfebfe59de60521ce25dca38907da285c8a5d50ca5d5706f6b1",
     "bundesbank_fx_clean.json": "22c9b8a95d4373f138013ee3e6c732b2cf052cfe8d8e1b62f869d7ad30d29b86",
     "eia_brent.json": "9e861ba865ece28f21352668db958b6c3ea6beb84553588656269004fac522d0",
-    "eia_brent_clean_page1.json": "3d007252df5b6e7d872c179d49f1eececc0ff91a00654560ddb1c2e3fc43291a",
-    "eia_brent_clean_page2.json": "c669baff86f03b7567ed4d0d9d7355d5d4b091eec5b6543ebfa582cb9928ff58",
+    "eia_brent_clean_page1.json": (
+        "3d007252df5b6e7d872c179d49f1eececc0ff91a00654560ddb1c2e3fc43291a"
+    ),
+    "eia_brent_clean_page2.json": (
+        "c669baff86f03b7567ed4d0d9d7355d5d4b091eec5b6543ebfa582cb9928ff58"
+    ),
     "eia_brent_page1.json": "f34d999622fe8f4ece0347615dfef8e98e20819963c8fdf78d4b6606bd132fa0",
     "eia_brent_page2.json": "9c8b01d97e7d879cb4d8b919527d40f937bf14e50e25690190043b899d5111db",
     "overpass_fuel.json": "a219f8ab55a43a486a52a7ae3ca18356b6c78190ec0b5764e1b6b3a31d3e70d1",
