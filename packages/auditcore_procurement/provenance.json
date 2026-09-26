@@ -202,5 +202,31 @@
       }
     ],
     "retrieval": "Amtlicher deutscher Text über Cellar des Amts für Veröffentlichungen (publications.europa.eu/resource/celex/<CELEX>); SHA-256 je Dokument im Profil (retrieved_sha256)"
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11",
+      "I12"
+    ],
+    "legacy_variants": [
+      "mode=\"legacy\"",
+      "procurement.hvtg-legacy",
+      "ted_values.extract_amount",
+      "require_contractor=True"
+    ]
   }
 }

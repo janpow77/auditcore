@@ -10,6 +10,14 @@
   `--guest-image ubuntu:26.04`. Nachweise der regulierung-Build-Matrix
   Ubuntu 26.04 (Python 3.14) und 24.04 unter
   `docs/validation/regulierung-apt/ubuntu-26.04/`.
+- Paketkatalog: neuer Status **„spezifiziert“** für charakterisierte Pakete
+  mit fachlicher Spezifikation (`docs/spezifikation.md` je Paket: Zweck,
+  Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+  Altverhalten), Invarianten als Hypothesis-Eigenschaftstests und benannten
+  Legacy-Varianten. `scripts/docs/specification.py` prüft den
+  `specification`-Block in `provenance.json`; `catalog.py` setzt den Status
+  nur, wenn er hält (Vorlage `docs/bibliotheken/spezifikation-vorlage.md`).
+  Welche Pakete umgestellt sind, steht in den Paket-CHANGELOGs.
 
 Noch keine Änderungen.
 
