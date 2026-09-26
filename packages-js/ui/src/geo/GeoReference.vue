@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useGeoContext } from './context'
-import { displayName, formatDegrees, formatMetres } from './model'
+import { displayName, formatDegrees, formatMetres } from '@flowaudit/ui-core'
 
 const { state, t, locale } = useGeoContext()
 const id = useId('fa-geo-ref')

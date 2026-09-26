@@ -2,7 +2,7 @@
 
 ## Zweck
 
-Native React-18-Komponenten der FlowAudit-Oberflächen (Tabelle, Synopse, VVT, DSFA) ohne Vue und ohne Web Components, auf dem gemeinsamen Kern `@flowaudit/ui-core`.
+Native React-18-Komponenten der FlowAudit-Oberflächen (Basis, Tabelle, Synopse, VVT, DSFA, Geo-Karte) ohne Vue und ohne Web Components, auf dem gemeinsamen Kern `@flowaudit/ui-core`.
 
 Für React-Anwendungen wie regulierung. Die Komponenten erfüllen dieselben
 Verträge wie die Vue-Fassung `@flowaudit/ui`: gleiche Props- und
@@ -70,15 +70,30 @@ export function Vergleich({ id }: { id: string }) {
   (`createSynopsisRestClient`, `createDataProtectionRestPort`), `fetch` und
   Kopfzeilen sind injizierbar (Anmeldetoken der Anwendung).
 - **Web Component (veraltet):** Stichprobe, Benford, Screening,
-  Risiko-Merkmale, Kanban und Geo-Karte gibt es noch nicht nativ; ihre Hüllen
+  Risiko-Merkmale und Kanban gibt es noch nicht nativ; ihre Hüllen
   um die Vue-Web-Components stehen unter `@flowaudit/ui-react/elements`
   (`defineFlowauditElements()` aufrufen, `@flowaudit/ui/style.css` laden,
   `@flowaudit/ui`, `@flowaudit/kanban-core` und Vue installieren).
 
+- **Muster für weitere native Komponenten** (verbindlich, Einzelheiten in
+  [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md)):
+  1. Kernlogik framework-frei in `packages-js/ui-core/src/<komponente>/`:
+     `messages.ts`, Datentypen, Port, View-Funktionen und ein Controller
+     (`createStore` + reine Selektoren, Vorlage `synopsis/controller.ts`,
+     `dataprotection/vvt.ts`); Stile in `ui-core/styles/<komponente>.css`.
+  2. Vue (`packages-js/ui`) bindet den Controller mit `useStore` an; React hier
+     unter `src/<komponente>/` mit `useStoreState`, `useElementId`,
+     `useTranslation`, gleichem Markup (Klassen, ARIA, Texte) wie die SFC.
+  3. Paritätsfälle in `ui-core/test/parity/cases-<komponente>.ts`; Vue prüft
+     sie in `ui/test/parity*.spec.ts`, React in
+     `test/parity/<komponente>.spec.tsx` mit `renderBoth` und `expectParity`
+     (Erwartungen, normalisiertes DOM, Formularzustand, auch nach Interaktionen).
+  4. Export in `src/index.ts`; eine abgelöste Hülle aus `src/elements.ts` entfernen.
+
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (103):
+Exporte der Einstiegspunkte aus `package.json#exports` (111):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -93,12 +108,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `DataProtectionPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DecimalSeparator` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `Delimiter` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui-react` | `Dialog` | Funktion | Modaler Dialog wie `FaDialog`: Fokusfalle, Escape, Rückgabe des Fokus, beschriftet über Titel und Beschreibung. | `base/Dialog` |
+| `@flowaudit/ui-react` | `DialogProps` | Schnittstelle | – | `base/Dialog` |
 | `@flowaudit/ui-react` | `DownloadFile` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `DsfaStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `FetchLike` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `FlowauditDsfa` | Funktion | Datenschutz-Folgenabschätzung (Art. 35 DSGVO) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-dsfa>`: Übersicht, Schwellwertanalyse, Risiko, Vorschlag der B … | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
+| `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
+| `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditSynopsis` | Konstante | Synopse / Versionsvergleich als native React-Komponente (Vertrag wie `<flowaudit-synopsis>`): Seiten- oder Inline-Ansicht, Wortdifferenz, Filter, Navigation mit N/J und P/K, Export … | `synopsis/FlowauditSynopsis` |
 | `@flowaudit/ui-react` | `FlowauditSynopsisHandle` | Schnittstelle | Methoden über `ref` (wie `defineExpose` der Vue-Fassung). | `synopsis/FlowauditSynopsis` |
 | `@flowaudit/ui-react` | `FlowauditSynopsisProps` | Schnittstelle | – | `synopsis/FlowauditSynopsis` |
@@ -106,8 +125,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `FlowauditTableProps` | Schnittstelle | – | `table/FlowauditTable` |
 | `@flowaudit/ui-react` | `FlowauditVvt` | Funktion | Verzeichnis von Verarbeitungstätigkeiten (Art. | `dataprotection/FlowauditVvt` |
 | `@flowaudit/ui-react` | `FlowauditVvtProps` | Schnittstelle | – | `dataprotection/FlowauditVvt` |
+| `@flowaudit/ui-react` | `GeoArea` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `GeoPoint` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `GeoPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Icon` | Funktion | – | `base/Icon` |
 | `@flowaudit/ui-react` | `IconProps` | Schnittstelle | – | `base/Icon` |
+| `@flowaudit/ui-react` | `LatLon` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Locale` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `LocaleProvider` | Funktion | Sprache für alle Komponenten im Teilbaum (Gegenstück zu `provideLocale` in Vue). | `i18n` |
 | `@flowaudit/ui-react` | `NextSortOptions` | Re-Export | – | `@flowaudit/common` |
@@ -124,6 +147,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `TableRow` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `TextField` | Funktion | Eingabefeld wie `FaTextField` (Beschriftung, Hinweis, Fehler mit aria-describedby). | `base/TextField` |
 | `@flowaudit/ui-react` | `TextFieldProps` | Schnittstelle | – | `base/TextField` |
+| `@flowaudit/ui-react` | `TileSource` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ToastProvider` | Funktion | Stellt eine eigene Warteschlange für den Teilbaum bereit (z. B. je Mandant oder im Test). | `hooks/toast` |
 | `@flowaudit/ui-react` | `UseAuthToken` | Schnittstelle | – | `hooks/state` |
 | `@flowaudit/ui-react` | `UseSort` | Schnittstelle | – | `hooks/state` |
@@ -135,6 +159,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react` | `columnCells` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `compareValues` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createSynopsisRestClient` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `detectDecimal` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `detectDelimiter` | Re-Export | – | `@flowaudit/common` |
@@ -169,8 +194,6 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 | `@flowaudit/ui-react/elements` | `EventHandlers` | Typ | Ereignis-Handler einer Hülle erhalten das erste Argument des Vue-emit (CustomEvent.detail[0]). | `legacy/createElementComponent` |
 | `@flowaudit/ui-react/elements` | `FlowauditBenford` | Konstante | `<flowaudit-benford>` als React-Komponente: Verteilung, MAD, Chi², z je Ziffer. | `legacy/wrappers` |
 | `@flowaudit/ui-react/elements` | `FlowauditBenfordProps` | Schnittstelle | – | `legacy/wrappers` |
-| `@flowaudit/ui-react/elements` | `FlowauditGeoMap` | Konstante | `<flowaudit-geo-map>` als React-Komponente: Karte, Umkreis, Punkt in Fläche, UTM, Vereinfachung, GeoPackage. | `legacy/geo` |
-| `@flowaudit/ui-react/elements` | `FlowauditGeoMapProps` | Schnittstelle | – | `legacy/geo` |
 | `@flowaudit/ui-react/elements` | `FlowauditKanbanBoard` | Konstante | `<flowaudit-kanban-board>` als React-Komponente. | `legacy/kanban` |
 | `@flowaudit/ui-react/elements` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `legacy/kanban` |
 | `@flowaudit/ui-react/elements` | `FlowauditKanbanBoards` | Konstante | `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. | `legacy/kanban` |
@@ -202,6 +225,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
   `activityId`, `actor`, `editable`, `locale`; `onAssessmentChange`,
   `onError`), Vertrag `dataprotection_ui/1`
   ([`docs/ui/dataprotection-rest.md`](../../docs/ui/dataprotection-rest.md)).
+- `FlowauditGeoMap` (`port`, `points`, `areas`, `tiles`, `center`, `zoom`,
+  `locale`; `onRadiusCompleted`, `onLocationChecked`, `onAreasLoaded`,
+  `onReferenceChange`, `onError`), Vertrag `auditcore_geo.web`
+  ([`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md)); Leaflet lädt erst beim Anzeigen.
 - Hooks: `useSort`, `useToast` (mit `ToastProvider`), `useMediaQuery`,
   `useClickOutside`, `useDebouncedCallback`, `useAuthToken`,
   `useTranslation`, `useStoreState`.
@@ -211,7 +238,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (103):
 
 Neu in auditcore entwickelt. Bis 0.2.0 enthielt das Paket nur Hüllen um die
 Web Components aus `@flowaudit/ui` (PR #80, #84, #83, #111, #88, #146,
-Geo-Karte); ab 1.0.0 sind Tabelle, Synopse, VVT und DSFA eigenständige
+Geo-Karte); ab 1.0.0 sind Basis, Tabelle, Synopse, VVT, DSFA und Geo-Karte eigenständige
 React-Implementierungen desselben Vertrags. Parität zur Vue-Fassung: dieselben
 Fälle (`ui-core/test/parity`) gegen beide Fassungen, dazu ein Vergleich des
 normalisierten DOM und des Formularzustands Vue ↔ React, auch nach

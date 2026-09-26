@@ -18,12 +18,12 @@ python -m pip install auditcore_price_analysis \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
+Release v0.4.1; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-price-analysis/`):
 
 ```text
-auditcore_price_analysis @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_price_analysis-0.1.0-py3-none-any.whl#sha256=2546571f2e4f9bb0e273d9aa91e15e58aca5a3a550ae7022a162c9b42b4d0d16
+auditcore_price_analysis @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_price_analysis-0.1.2-py3-none-any.whl#sha256=43e225c80c6be00b3c1a511bccbbe6a7d41f188048f18748885c375bb5290100
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

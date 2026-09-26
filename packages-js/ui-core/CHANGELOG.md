@@ -12,6 +12,9 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
 - Datenschutz: Vertrag `dataprotection_ui/1`, REST-Port, `registerView`,
   `dsfaView`, Exporte, Zustandsautomaten `createVvtController` und
   `createDsfaController`.
+- Geo-Karte: Vertrag `auditcore_geo.web`, Modell, REST-Port, Leaflet-Kartenansicht
+  (`createLeafletView`, dynamisch geladen) und `createGeoController`/`selectGeo`.
+- Fokusfalle `createFocusTrap` für Dialoge.
 - Dokumentvergleiche: Formularmodell mit Prüfung wie `POST /comparisons`
   (`formProblems`, `toCompareFields`), Liste (`summaryView`,
   `filterSummaries`), Import (`parseImport`), Zustandsautomat
@@ -21,4 +24,4 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
   (`test/fixtures/documents-comparisons.json`).
 - `createStore`, `createRunner`, `createDelay` als gemeinsame Grundlage der
   Controller; `downloadText`, `printHtml`, `deliverExport`.
-- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Dokumentvergleiche, Datenschutz.
+- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Dokumentvergleiche, Datenschutz, Geo (mit Leaflet-Grundstilen).

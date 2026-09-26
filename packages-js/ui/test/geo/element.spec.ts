@@ -1,8 +1,8 @@
 import { flushPromises } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineFlowauditElements } from '../../src/elements'
-import catalogue from '../fixtures/geo-catalogue.json'
-import utm from '../fixtures/geo-utm.json'
+import catalogue from '../../../ui-core/test/fixtures/geo-catalogue.json'
+import utm from '../../../ui-core/test/fixtures/geo-utm.json'
 
 afterEach(() => {
   document.body.innerHTML = ''

@@ -11,7 +11,7 @@
   Kern (`createComparisonsController`), Paritätsfälle für die React-Fassung.
 - **Kern ausgelagert:** Texte, Datentypen der REST-Verträge, View-Modelle,
   Zustandsautomaten (Synopse, VVT, DSFA), Ports, Exporte, Symbole und die
-  Stile von Basis, Tabelle, Synopse und Datenschutz liegen jetzt in
+  Stile von Basis, Tabelle, Synopse, Datenschutz und Geo-Karte liegen jetzt in
   `@flowaudit/ui-core` (neue Laufzeitabhängigkeit). Die Vue-Komponenten
   binden die Controller über `useStore` an; dieselbe Logik nutzt die native
   React-Fassung `@flowaudit/ui-react` 1.0.0. Öffentliche Namen der
@@ -22,7 +22,9 @@
   Zustand des Kerns (`controller`, `state`, `view`/`selection`/`derived`)
   statt einzelner Refs; `useVvt`/`useDsfa` erwarten zusätzlich die
   Übersetzungsfunktion. Die Komponenten selbst (Props, Ereignisse, Markup)
-  sind unverändert.
+  sind unverändert. `useGeoAreas` und `useGeoReference` entfallen; `useGeoMap`
+  behält seine Felder (schreibbare berechnete Referenzen auf den Kern-Controller
+  `createGeoController`). `focusableWithin`/`wrapTarget` kommen aus dem Kern.
 - Synopse: Die unsichtbaren Vorlesetexte „gestrichen:“/„eingefügt:“ und
   „Ende“ sind jetzt durch Leerzeichen vom markierten Text getrennt (vorher
   hat der Vorlagencompiler das Leerzeichen entfernt).
