@@ -76,7 +76,7 @@ from auditcore_documents.settings import (
 )
 from auditcore_documents.synopsis import synopsis_extra, synopsis_records
 
-__version__ = "0.3.1"
+__version__ = "0.3.3"
 
 __all__ = [
     "ALLOWED_EXTENSIONS",

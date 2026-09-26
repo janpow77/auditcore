@@ -39,7 +39,7 @@ NEW_ERROR_LEGACY_OK = {
     "nw-ungueltig-010": ("invalid_number", "PA-L15"),
     "nw-ungueltig-015": ("unknown_component", "PA-L16"),
 }
-#: legacy rejects, the new contract accepts an open last tier (PA-L04)
+#: legacy rejects, the new contract accepts an open last tier (PA-L04) or German text (PA-C01)
 NEW_OK_LEGACY_ERROR = {
     "wa-staffelform-011": "PA-L04",
     "wa-staffelform-012": "PA-L04",
@@ -47,6 +47,13 @@ NEW_OK_LEGACY_ERROR = {
     "wa-staffelform-014": "PA-L04",
     "wa-staffelform-019": "PA-L04",
     "wa-staffelform-020": "PA-L04",
+    # German decimal comma is read since 0.1.2 (PA-C01)
+    "nw-verbrauch-013": "PA-C01",
+    "nw-ungueltig-001": "PA-C01",
+    "wa-verbrauch-011": "PA-C01",
+    "wa-ungueltig-001": "PA-C01",
+    "wa-staffelform-025": "PA-C01",
+    "wa-staffelform-026": "PA-C01",
 }
 
 

@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_geo"
-version = "0.2.1"
-description = "Characterized geo core: great-circle distances with explicit earth profiles, radius search, point in polygon with boundary, UTM, GeoPackage polygons, Douglas-Peucker and a Nominatim harvest adapter"
+version = "0.3.0"
+description = "Characterized geo core: great-circle distances with explicit earth profiles, radius search, point in polygon with boundary, UTM, GeoPackage polygons, Douglas-Peucker, a Nominatim harvest adapter and a REST contract for map user interfaces"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -13,8 +13,19 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
-geocoder = ["auditcore_harvest==0.1.1"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.1"]
+geocoder = ["auditcore_harvest==0.1.2"]
+web = ["starlette>=0.26.1"]
+fastapi = ["fastapi>=0.92"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "auditcore_harvest==0.1.2",
+    "starlette>=0.26.1",
+    "fastapi>=0.92",
+    "httpx>=0.24",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

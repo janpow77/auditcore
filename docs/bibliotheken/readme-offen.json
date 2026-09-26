@@ -1,31 +1,4 @@
 {
-  "hinweis": "Bestandspakete, deren README noch nicht nach docs/bibliotheken/readme-vorlage.md überarbeitet ist. Die Liste darf nur kürzer werden; tests/test_readmes.py verlangt die Entfernung, sobald ein Paket die Vorlage erfüllt. Neue Pakete werden nicht eingetragen.",
-  "pakete": [
-    "auditcore_common",
-    "auditcore_dataprotection",
-    "auditcore_documents",
-    "auditcore_dummygenerator",
-    "auditcore_entity_matching",
-    "auditcore_funding_sources",
-    "auditcore_geo",
-    "auditcore_harvest",
-    "auditcore_invoicegenerator",
-    "auditcore_invoicesynth",
-    "auditcore_kanban",
-    "auditcore_legal_sources",
-    "auditcore_market_indicators",
-    "auditcore_price_analysis",
-    "auditcore_price_sources",
-    "auditcore_procurement",
-    "auditcore_property_sources",
-    "auditcore_registry_sources",
-    "auditcore_reporting",
-    "auditcore_risk",
-    "auditcore_sampling",
-    "auditcore_statistics",
-    "bpmn-editor",
-    "kanban-core",
-    "ui",
-    "ui-react"
-  ]
+  "hinweis": "Bestandspakete, deren README noch nicht nach docs/bibliotheken/readme-vorlage.md überarbeitet ist. Die Liste darf nur kürzer werden; tests/test_readmes.py verlangt die Entfernung, sobald ein Paket die Vorlage erfüllt. Neue Pakete werden nicht eingetragen. Ausnahme: bpmn-flowaudit, bpmn-vue und bpmn-react kamen vor der Prüfung in main und stehen nur vorübergehend auf der Liste (README-Überarbeitung folgt).",
+  "pakete": []
 }

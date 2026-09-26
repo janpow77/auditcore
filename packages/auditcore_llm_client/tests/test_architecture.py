@@ -67,5 +67,5 @@ def test_provenance_copies_match() -> None:
         ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
         ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
         ("janpow77/ai-router", "426cd78e86df9f822452af035b8d58a19f7aa820"),
-        ("janpow77/flow-agent", "149e14be8952fddacb7601753dd2bf133fca51cb"),
+        ("janpow77/flow-agent", "873636a4868f554b8e603e4b7c4c897909762b9a"),
     }

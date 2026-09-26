@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_entity_matching",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "sources": [
     {
       "repository": "janpow77/flowworkshop",
@@ -244,6 +244,11 @@
       "version": "0.2.1",
       "profiles": 15,
       "change": "Refaktorierung ohne Verhaltensänderung: normalize je Algorithmus zerlegt, profile_from_dict je Abschnitt; Profile, Fingerprints und Ergebnisse unverändert"
+    },
+    {
+      "version": "0.2.2",
+      "profiles": 15,
+      "change": "Hilfsfunktionen aus auditcore_common 0.1.0 (Fingerprint, Profile auflisten/laden/empfehlen, verzögerter rapidfuzz-Import); Profile, Fingerprints, Meldungen und Ergebnisse unverändert"
     }
   ],
   "characterization_flowinvoice": {

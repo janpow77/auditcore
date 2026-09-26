@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_statistics"
-version = "0.3.1"
+version = "0.3.3"
 description = "Descriptive audit statistics (Benford) with named method profiles"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = []
+dependencies = ["auditcore_common==0.1.1"]
 
 [project.optional-dependencies]
 web = ["starlette>=0.26"]

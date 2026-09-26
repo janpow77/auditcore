@@ -1,0 +1,116 @@
+{
+  "$schema": "./schema.json",
+  "contract": "format-date",
+  "version": "1.0.0",
+  "status": "verbindlich",
+  "title": "Datum formatieren (TT.MM.JJJJ)",
+  "description": "Anzeige in der festen Zeitzone Europe/Berlin, unabhängig von der Zeitzone des Rechners (der Läufer setzt eine Prüfzeitzone westlich von UTC). Reine Datumswerte „JJJJ-MM-TT“ sind Kalendertage und werden ohne Zeitzonenumrechnung angezeigt. Zeitstempel mit Zone werden nach Europe/Berlin umgerechnet.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "value"
+  ],
+  "result": "text",
+  "cases": [
+    {
+      "id": "reines-datum",
+      "input": {
+        "value": "2026-01-31"
+      },
+      "expect": {
+        "value": "31.01.2026"
+      },
+      "tags": [
+        "probe"
+      ],
+      "note": "new Date('2026-01-31') ist UTC-Mitternacht und zeigt westlich von UTC den Vortag"
+    },
+    {
+      "id": "reines-datum-fuehrende-null",
+      "input": {
+        "value": "2026-03-05"
+      },
+      "expect": {
+        "value": "05.03.2026"
+      }
+    },
+    {
+      "id": "utc-abend-winter",
+      "input": {
+        "value": "2026-01-31T23:30:00Z"
+      },
+      "expect": {
+        "value": "01.02.2026"
+      },
+      "note": "23:30 UTC ist in Berlin bereits der Folgetag",
+      "tags": [
+        "probe"
+      ]
+    },
+    {
+      "id": "utc-abend-sommer",
+      "input": {
+        "value": "2026-06-30T22:30:00Z"
+      },
+      "expect": {
+        "value": "01.07.2026"
+      }
+    },
+    {
+      "id": "offset-berlin",
+      "input": {
+        "value": "2026-07-15T10:05:00+02:00"
+      },
+      "expect": {
+        "value": "15.07.2026"
+      }
+    },
+    {
+      "id": "date-objekt",
+      "input": {
+        "value": {
+          "$date": "2026-01-31T12:00:00Z"
+        }
+      },
+      "expect": {
+        "value": "31.01.2026"
+      }
+    },
+    {
+      "id": "leer-null",
+      "input": {
+        "value": null
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "leer-string",
+      "input": {
+        "value": ""
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "ungueltig",
+      "input": {
+        "value": "kein Datum"
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      },
+      "note": "„Invalid Date“ darf nicht angezeigt werden"
+    }
+  ]
+}

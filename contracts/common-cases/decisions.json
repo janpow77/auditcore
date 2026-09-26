@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "festgelegt (Nutzer 2026-09-25)",
+  "stand": "2026-09-25",
+  "festgelegt": [
+    "empty_value",
+    "filesize_base",
+    "filesize_units",
+    "ambiguous_single_dot_de",
+    "amount_max_fraction_digits_de",
+    "display_timezone"
+  ],
+  "vorläufig": [
+    "money_rounding",
+    "datetime_separator"
+  ],
+  "technisch": [
+    "probe_timezone",
+    "csv_delimiter",
+    "csv_bom",
+    "csv_formula_prefix"
+  ],
+  "decisions": {
+    "empty_value": "—",
+    "display_timezone": "Europe/Berlin",
+    "probe_timezone": "America/New_York",
+    "ambiguous_single_dot_de": "invalid",
+    "filesize_base": 1024,
+    "filesize_units": [
+      "B",
+      "KB",
+      "MB",
+      "GB",
+      "TB"
+    ],
+    "money_rounding": "half-up",
+    "datetime_separator": ", ",
+    "csv_delimiter": ";",
+    "csv_bom": true,
+    "csv_formula_prefix": "'",
+    "amount_max_fraction_digits_de": 2
+  }
+}

@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "stand": "2026-09-25",
+  "note": "Katalog der auditcore-Bibliotheken für die Klassifizierung. Namensmuster gelten für den normalisierten Namen (letztes Segment, ohne Unterstriche, klein). Status 'vorhanden' zählt als Duplikat einer Bibliotheksfunktion (Ratchet), 'geplant' nur als Hinweis.",
+  "topics": [
+    {
+      "id": "format-date",
+      "title": "Datum formatieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(format|fmt|to)(date|datum)(de|only|short|long|str|string|display|local|german)?$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "formatDate",
+          "status": "vorhanden"
+        },
+        {
+          "library": "@flowaudit/common",
+          "symbol": "format/date formatDate",
+          "status": "geplant"
+        }
+      ],
+      "contract": "format-date"
+    },
+    {
+      "id": "format-datetime",
+      "title": "Datum mit Uhrzeit formatieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(format|fmt)(datetime|datumzeit|datumuhrzeit|timestamp|dateandtime)(de|short|long|local|german)?$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "formatDate(value, locale, true)",
+          "status": "vorhanden"
+        },
+        {
+          "library": "@flowaudit/common",
+          "symbol": "format/date formatDateTime",
+          "status": "geplant"
+        }
+      ],
+      "contract": "format-datetime"
+    },
+    {
+      "id": "format-number",
+      "title": "Zahl formatieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(format|fmt)(number|num|zahl|int|integer|decimal)(de|german|local)?$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "formatNumber",
+          "status": "vorhanden"
+        },
+        {
+          "library": "@flowaudit/common",
+          "symbol": "format/number formatNumber",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
+      "id": "format-percent",
+      "title": "Prozent formatieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(format|fmt)(percent|percentage|prozent|pct)(de)?$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "formatPercent",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "table-sort",
+      "title": "Tabellen sortieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(sortrows|comparevalues|nextsort|togglesort|sorttable|comparerows)$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "sortRows/nextSort/compareValues",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "download",
+      "title": "Datei-Download im Browser",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(savefile|downloadblob|downloadfile|triggerdownload|saveblob)$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "saveFile",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "theme",
+      "title": "Theme/Dark-Mode anwenden",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(applytheme|toggletheme|toggledarkmode|setdarkmode|applydarkmode)$",
+      "targets": [
+        {
+          "library": "@flowaudit/ui",
+          "symbol": "applyTheme/useTheme",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "format-money",
+      "title": "Betrag formatieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(format|fmt)(currency|money|eur|euro|betrag|amount|preis|price)(de|compact|short)?$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "format/money formatEur",
+          "status": "geplant"
+        }
+      ],
+      "contract": "format-money"
+    },
+    {
+      "id": "parse-number",
+      "title": "Zahleneingabe parsen",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(parse|to|zu)(decimal|number|zahl|betrag|amount|float|germannumber|numberde|decimalde|amountinput)(de|input|german)?$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "parse/number parseDecimal",
+          "status": "geplant"
+        }
+      ],
+      "contract": "parse-number"
+    },
+    {
+      "id": "format-filesize",
+      "title": "Dateigröße formatieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(format|fmt|human|pretty)(bytes|filesize|size|dateigroesse|dateigröße)$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "format/bytes formatBytes",
+          "status": "geplant"
+        }
+      ],
+      "contract": "format-filesize"
+    },
+    {
+      "id": "csv-export",
+      "title": "CSV-Export",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(tocsv|exportcsv|downloadcsv|escapecsv|escapecsvcell|csvescape|buildcsv|generatecsv|csvcell|exporttocsv)$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "export/csv toCsv",
+          "status": "geplant"
+        }
+      ],
+      "contract": "csv-document"
+    },
+    {
+      "id": "api-error",
+      "title": "API-Fehlertext bilden",
+      "languages": [
+        "ts"
+      ],
+      "name": "^((extract|get|format|parse|to)(api)?(error|err|fehler)(message|msg|text|detail)?|(error|fehler)(message|text))$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "http/error errorMessage",
+          "status": "geplant"
+        }
+      ],
+      "contract": "api-error-message"
+    },
+    {
+      "id": "iban",
+      "title": "IBAN prüfen",
+      "languages": [
+        "ts"
+      ],
+      "name": "^((is)?(valid)?iban(valid|check)?|validateiban|checkiban|mod97)$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "checks/mod97 isValidIban",
+          "status": "geplant"
+        }
+      ],
+      "contract": "iban-valid"
+    },
+    {
+      "id": "debounce",
+      "title": "Debounce/Throttle",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(debounce|throttle)$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "timing debounce",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
+      "id": "escape-html",
+      "title": "HTML maskieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^(escapehtml|htmlescape)$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "text escapeHtml",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
+      "id": "copy-text",
+      "title": "In Zwischenablage kopieren",
+      "languages": [
+        "ts"
+      ],
+      "name": "^copy(text|toclipboard|clipboard)$",
+      "targets": [
+        {
+          "library": "@flowaudit/common",
+          "symbol": "browser copyText",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
+      "id": "py-sha256-file",
+      "title": "SHA-256 einer Datei",
+      "languages": [
+        "python"
+      ],
+      "name": "^(sha256file|filesha256|hashfile|computefilehash|filehash)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "hashing.sha256_file",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-canonical-hash",
+      "title": "Kanonischer JSON-Hash",
+      "languages": [
+        "python"
+      ],
+      "name": "^(canonicalsha|canonicalsha256|canonicaljson|hashjson|jsonhash|stablehash)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "hashing.canonical_sha256",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-utc-now",
+      "title": "Zeitzonenbewusstes Jetzt",
+      "languages": [
+        "python"
+      ],
+      "name": "^(utcnow|nowutc)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "clock.utc_now",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-new-uuid",
+      "title": "Zufällige ID",
+      "languages": [
+        "python"
+      ],
+      "name": "^(newuuid|genuuid|generateuuid|uuid4str)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "ids.new_uuid",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-thousands-de",
+      "title": "Tausendergruppen (deutsch)",
+      "languages": [
+        "python"
+      ],
+      "name": "^(groupthousands|groupthousandsde|formatthousands)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "text.group_thousands_de",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-percent-rate",
+      "title": "Prozentsatz parsen",
+      "languages": [
+        "python"
+      ],
+      "name": "^(parsepercent|parsepercentrate|parseprozent)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "numeric.parse_percent_rate",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-haversine",
+      "title": "Entfernung (Haversine)",
+      "languages": [
+        "python"
+      ],
+      "name": "^(haversine|haversinem|haversinekm|entfernungkm|distancekm|calculatedistance)$",
+      "targets": [
+        {
+          "library": "auditcore_geo",
+          "symbol": "Haversine-Varianten (legacy)",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-iban",
+      "title": "IBAN prüfen",
+      "languages": [
+        "python"
+      ],
+      "name": "^(validateiban|ibanvalid|isvalidiban|checkiban)$",
+      "targets": [
+        {
+          "library": "auditcore_invoicesynth",
+          "symbol": "identifiers.iban_valid",
+          "status": "vorhanden"
+        }
+      ],
+      "contract": "iban-valid"
+    },
+    {
+      "id": "py-mus-size",
+      "title": "MUS-Stichprobenumfang",
+      "languages": [
+        "python"
+      ],
+      "name": "^(mussamplesize|calculatemussamplesize|mussize)$",
+      "targets": [
+        {
+          "library": "auditcore_sampling",
+          "symbol": "sizes.mus_size",
+          "status": "vorhanden"
+        }
+      ]
+    },
+    {
+      "id": "py-parse-de-number",
+      "title": "Deutsche Zahl parsen",
+      "languages": [
+        "python"
+      ],
+      "name": "^(parse)?(denumber|germannumber|numberde|zahl|betrag|decimalde)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "numbers_de.parse_de_number",
+          "status": "vorhanden"
+        }
+      ],
+      "contract": "parse-number"
+    },
+    {
+      "id": "py-format-eur",
+      "title": "Deutsche Zahl/Euro formatieren",
+      "languages": [
+        "python"
+      ],
+      "name": "^((format|fmt)(eur|euro|money|betrag|currency|numberde|denum)(de)?|de|denum|eur)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "format_de.format_eur",
+          "status": "geplant"
+        }
+      ],
+      "contract": "format-money"
+    },
+    {
+      "id": "py-safe-filename",
+      "title": "Dateinamen säubern",
+      "languages": [
+        "python"
+      ],
+      "name": "^(safefilename|sanitizefilename|cleanfilename|securefilename)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "filenames.safe_filename",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
+      "id": "py-client-ip",
+      "title": "Client-IP ermitteln",
+      "languages": [
+        "python"
+      ],
+      "name": "^(clientip|getclientip|remoteip)$",
+      "targets": [
+        {
+          "library": "auditcore_common",
+          "symbol": "web.client_ip",
+          "status": "geplant"
+        }
+      ]
+    },
+    {
+      "id": "py-auth",
+      "title": "JWT/Passwort-Hashing",
+      "languages": [
+        "python"
+      ],
+      "name": "^(createaccesstoken|verifypassword|getpasswordhash|hashpassword|decodeaccesstoken)$",
+      "targets": [
+        {
+          "library": "auditcore_auth",
+          "symbol": "JWT und Passwort-Hashing",
+          "status": "geplant"
+        }
+      ]
+    }
+  ]
+}

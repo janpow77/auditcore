@@ -13,6 +13,8 @@ import math
 from datetime import date
 from typing import Any
 
+from auditcore_common.optional import require_module
+
 from .engine import Evaluation, evaluate
 from .errors import DependencyError, InputError, ProfileError
 from .profiles import RiskProfile
@@ -22,13 +24,9 @@ from .values import is_missing, strict_amount
 
 def _pandas() -> Any:
     """The pandas module (extra ``pandas``); typed ``Any`` because it is imported lazily."""
-    try:
-        import pandas
-    except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
-        raise DependencyError(
-            "Für DataFrames ist 'auditcore_risk[pandas]' zu installieren."
-        ) from exc
-    return pandas
+    return require_module(
+        "pandas", DependencyError, "Für DataFrames ist 'auditcore_risk[pandas]' zu installieren."
+    )
 
 
 def evaluate_frame(

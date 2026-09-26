@@ -1,6 +1,12 @@
 # Changelog auditcore_reporting
 
-## 0.2.1 – Refaktorierung ohne Verhaltensänderung
+Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
+
+## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. README-Installationshinweis auf v0.4.0.
+
+## 0.2.1 – 2026-09-25 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle 88 bestehenden Tests (Flowlib-Goldens für
 Zahlenformate und Arbeitsmappen, Profil-Fingerprints, Ressourcengrenzen) laufen
@@ -30,3 +36,20 @@ Keine Umbenennungen öffentlicher Namen. Die `Any` stehen ausschließlich
 in `formats.py` und `profiles.py`; beide Dateien sind per SHA-256 im
 Profilregister verankert. Eine Verengung auf `object` würde die Fingerprints und
 damit die Profilmetadaten ändern und ist deshalb bewusst unterblieben.
+
+## 0.2.0 – 2026-09-22
+
+- Optionaler, validierter XLSX-Export (`render_workbook`, `ReportTable`,
+  `ExcelOptions`, `WorkbookLimits`) im Extra `[excel]` (openpyxl, defusedxml);
+  fünf Workbook-Fälle am Flowlib-Original charakterisiert; Texte als
+  XML-String gegen Formel-Injektion; Schriftreihenfolge in `styles.xml` nach
+  Open-XML-SDK-Schema (Commit `05c0d24`).
+- Benannte Formatprofile `flowlib-legacy-v1` und `plain-v1` mit
+  `get_profile_format` und `get_profile_metadata`.
+- `get_number_format` und die 34 beobachteten Fälle unverändert.
+
+## 0.1.0 – 2026-09-22
+
+- Eigenständig installierbare MIT-Bibliothek mit den charakterisierten
+  Flowlib-Zahlenformaten `get_number_format` (34 Fälle, Commit `c4cc9e7`).
+- Anwendbarkeitskontext für die Paketquelle ergänzt (Commit `ae737e2`).

@@ -1,0 +1,24 @@
+auditcore_bpmn 0.1.0 — source attribution and authorization
+
+Derived from (unchanged Git blobs, verified against GitHub on 2026-09-25):
+  janpow77/audit_designer@eff41a4ccedab12b9a73bafff41468712459cb2b
+    backend/app/modules/flowstat/services/bpmn_analyzer.py  0cfaf87afca87a379ee8a68edbca6fceea3ab944
+    backend/app/modules/flowstat/services/bpmn_export.py    ebc5b0ab2f6df964a44727e5b585c827c6ab891c
+    backend/app/modules/flowstat/api/bpmn.py                e7853d7b0356d54fd796071062ea640d506e14a8
+    backend/app/modules/flowstat/schemas/bpmn.py            95aad5ca3adccd87c20539c2e433336929ee58ec
+    backend/app/modules/flowstat/models/bpmn_diagram.py     b5c31a11f5a29c242575f769ec57a2418f71b66c
+    backend/app/core/safe_xml.py                            1e3ef65342a6fc3c5392e3519ce1fc6d441c634b
+    frontend/src/modules/flowstat/bpmn/flowauditModdle.ts   526f408cb87dd970c4a218003de306249d492348
+
+The source repository has no license file (historical status UNKNOWN).
+On 2026-09-22 the rights holder decided: "die Bibliotheken sollen MIT sein,
+die anderen Repos nicht; die Bibliotheken kommen nach auditcore".
+Status: USER_AUTHORIZED_MIT for the extracted library code in this package.
+The source repository itself is not relicensed.
+
+The key-requirement catalogues and article headings in the programming-period
+profiles are taken from the official texts of Regulation (EU) 2021/1060,
+Delegated Regulation (EU) No 480/2014 and Regulation (EU) No 1303/2013
+(EUR-Lex / Publications Office, reuse under Commission Decision 2011/833/EU).
+Templates are synthetic and contain no names of authorities, programmes or
+persons. Test data are synthetic.

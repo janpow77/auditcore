@@ -391,3 +391,16 @@ def test_first_fraud_validation_error_is_unchanged(case: str) -> None:
     with pytest.raises(ProfileError) as info:
         fraud_profile_from_dict(data)
     assert str(info.value) == FRAUD_EXPECTED[case]
+
+
+def test_plain_is_a_deprecated_alias_of_jsonable() -> None:
+    import datetime
+
+    import pytest
+    from auditcore_common.json_values import jsonable
+
+    from auditcore_risk.results import plain
+
+    value = {"a": (1, datetime.date(2026, 9, 25)), 2: [{"x": None}]}
+    with pytest.warns(DeprecationWarning, match="jsonable"):
+        assert plain(value) == jsonable(value) == {"a": [1, "2026-09-25"], "2": [{"x": None}]}

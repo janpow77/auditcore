@@ -43,7 +43,7 @@ from .model import (
 from .register import RegisterService, check_activity, check_register, normalize_content
 from .rules import RuleProfile, available_profiles, load_profile
 
-__version__ = "0.4.2"
+__version__ = "0.5.0"
 
 __all__ = [
     "Actor",

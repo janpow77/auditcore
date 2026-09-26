@@ -10,7 +10,7 @@ backend/app/clients/ai_router_client.py) and janpow77/cockpit (commit
 df203d4c33e786eb8a8ad3fe53b3b7eb9241d406, src/cockpit/services/ai_router_client.py).
 Routes and request/response contracts were read from janpow77/ai-router (commit
 426cd78e86df9f822452af035b8d58a19f7aa820) and janpow77/flow-agent (commit
-149e14be8952fddacb7601753dd2bf133fca51cb). Timeouts, health thresholds, route
+873636a4868f554b8e603e4b7c4c897909762b9a). Timeouts, health thresholds, route
 fallbacks, field mappings and redaction patterns were adopted; the code was
 rewritten. Blob SHAs of every source file are listed in provenance.json.
 

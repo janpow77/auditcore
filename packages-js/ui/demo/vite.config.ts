@@ -15,6 +15,8 @@ export default defineConfig({
       { find: /^@flowaudit\/ui\/elements$/, replacement: source('elements.ts') },
       { find: /^@flowaudit\/ui$/, replacement: source('index.ts') },
       { find: /^@flowaudit\/kanban-core$/, replacement: fileURLToPath(new URL('../../kanban-core/src/index.ts', import.meta.url)) },
+      { find: /^@flowaudit\/common\/browser$/, replacement: fileURLToPath(new URL('../../common/src/browser.ts', import.meta.url)) },
+      { find: /^@flowaudit\/common$/, replacement: fileURLToPath(new URL('../../common/src/index.ts', import.meta.url)) },
     ],
   },
   build: { outDir: 'dist', emptyOutDir: true },

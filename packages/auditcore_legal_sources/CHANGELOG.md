@@ -1,5 +1,21 @@
 # Changelog – auditcore_legal_sources
 
+## 0.1.4 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeiten `auditcore_common==0.1.1` und `auditcore_harvest==0.1.2`; README-Installationshinweis auf v0.4.0.
+
+## 0.1.3 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- `fingerprint` → `hashing.canonical_sha256`; `available_profiles`/
+  `load_profile` → `auditcore_common.profiles` (`invalid_name="invalid_or_hidden"`,
+  ohne Typprüfung wie bisher).
+- Linksammler der ECA-Seite → `html_text.anchor_links`; HTML-Erkennung →
+  `has_html_marker(text, ("<a", "<html"), window=None)`.
+- Meldungen und Ergebnisse unverändert.
+
 ## 0.1.2 – Harvest-Hilfen, Typen
 
 Refaktorierung ohne Verhaltensänderung; benötigt `auditcore_harvest==0.1.1`.

@@ -1,0 +1,214 @@
+{
+ "id": "demo-artikelgesetz",
+ "title": "Zuwendungsgesetz – Synopse zum Änderungsgesetz",
+ "created_at": "2026-09-25T10:00:00+00:00",
+ "result": {
+  "version": "1.1.0+auditcore.2026.09.2",
+  "mode": "text",
+  "old_filename": "Zuwendungsgesetz.docx",
+  "new_filename": "Änderungsgesetz_Art1.docx",
+  "old_sha256": "f83fd9fe5dd44057d2fe7997c86333dd806b606caa9cc685fc469a2a670be2aa",
+  "new_sha256": "2ce0a62edf1ac959ff1683a1d68494870ac404a011584e3d406f04e8ed9974f3",
+  "old_count": 8,
+  "new_count": 8,
+  "matched_count": 5,
+  "changed_count": 3,
+  "removed_count": 1,
+  "added_count": 1,
+  "rows": [
+   {
+    "row_id": "law-0",
+    "status": "changed",
+    "location": "§ 1 Absatz 2",
+    "old_text": "(2) Es gilt für Zuwendungen des Landes.",
+    "new_text": "(2) Es gilt für Zuwendungen des Landes und des Bundes.",
+    "old_answer": "",
+    "new_answer": "",
+    "old_comment": "",
+    "new_comment": "",
+    "old_note": "",
+    "new_note": "",
+    "reason": "In § 1 Absatz 2 werden die Wörter „des Landes“ durch die Wörter „des Landes und des Bundes“ ersetzt.",
+    "reason_source": "article_law",
+    "reason_verified": null,
+    "reason_warning": "",
+    "selected": true,
+    "diff": {}
+   },
+   {
+    "row_id": "law-1",
+    "status": "changed",
+    "location": "§ 2 Absatz 3",
+    "old_text": "(3) Ausgaben sind Zahlungen des Zuwendungsempfängers.",
+    "new_text": "(3) Ausgaben sind tatsächlich getätigte Zahlungen des Zuwendungsempfängers.",
+    "old_answer": "",
+    "new_answer": "",
+    "old_comment": "",
+    "new_comment": "",
+    "old_note": "",
+    "new_note": "",
+    "reason": "§ 2 Absatz 3 wird wie folgt gefasst:",
+    "reason_source": "article_law",
+    "reason_verified": null,
+    "reason_warning": "",
+    "selected": true,
+    "diff": {}
+   },
+   {
+    "row_id": "law-2",
+    "status": "added",
+    "location": "§ 3, neuer Absatz 2",
+    "old_text": "",
+    "new_text": "(2) Der Antrag kann elektronisch gestellt werden.",
+    "old_answer": "",
+    "new_answer": "",
+    "old_comment": "",
+    "new_comment": "",
+    "old_note": "",
+    "new_note": "",
+    "reason": "Nach § 3 Absatz 1 wird folgender Absatz 2 eingefügt:",
+    "reason_source": "article_law",
+    "reason_verified": null,
+    "reason_warning": "",
+    "selected": true,
+    "diff": {}
+   },
+   {
+    "row_id": "law-3",
+    "status": "changed",
+    "location": "§ 3 Absatz 3",
+    "old_text": "(2) Die Frist beträgt drei Monate.",
+    "new_text": "(2) Die Frist beträgt sechs Monate.",
+    "old_answer": "",
+    "new_answer": "",
+    "old_comment": "",
+    "new_comment": "",
+    "old_note": "",
+    "new_note": "",
+    "reason": "In § 3 Absatz 2 wird die Angabe „drei Monate“ durch die Angabe „sechs Monate“ ersetzt.",
+    "reason_source": "article_law",
+    "reason_verified": null,
+    "reason_warning": "",
+    "selected": true,
+    "diff": {}
+   },
+   {
+    "row_id": "law-4",
+    "status": "removed",
+    "location": "§ 4 Absatz 1",
+    "old_text": "(1) Für laufende Vorhaben gilt das bisherige Recht.",
+    "new_text": "",
+    "old_answer": "",
+    "new_answer": "",
+    "old_comment": "",
+    "new_comment": "",
+    "old_note": "",
+    "new_note": "",
+    "reason": "§ 4 wird aufgehoben.",
+    "reason_source": "article_law",
+    "reason_verified": null,
+    "reason_warning": "",
+    "selected": true,
+    "diff": {}
+   }
+  ],
+  "created_at": "2026-09-25T12:23:59.373625+00:00",
+  "moved_count": 0,
+  "metadata": {
+   "comparison_type": "article_law",
+   "old_label": "Geltende Fassung",
+   "new_label": "Fassung nach dem Entwurf",
+   "reason_label": "Änderungsbefehl",
+   "recognised_commands": 5,
+   "open_commands": [
+    "In § 9 Absatz 1 werden die Wörter „alt“ durch die Wörter „neu“ ersetzt. [Zielstelle nicht gefunden]",
+    "In § 2 Absatz 1 werden die Wörter „nicht vorhanden“ durch die Wörter „egal“ ersetzt. [zu ersetzender Wortlaut nicht gefunden]",
+    "In § 1 Satz 1 wird das Wort „regelt“ durch das Wort „ordnet“ ersetzt. [Befehlsart nicht unterstützt]",
+    "Nach § 2 wird folgender § 2a eingefügt: [Befehlsart nicht unterstützt]",
+    "§ 3 Absatz 7 wird aufgehoben. [Zielstelle nicht gefunden]",
+    "§ 5 wird wie folgt gefasst: [Befehlsart nicht unterstützt]"
+   ],
+   "open_command_count": 6,
+   "consolidated_text": [
+    {
+     "section": "§ 1",
+     "paragraph": 1,
+     "text": "(1) Dieses Gesetz regelt die Förderung von Mustervorhaben.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 1",
+     "paragraph": 2,
+     "text": "(2) Es gilt für Zuwendungen des Landes und des Bundes.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 2",
+     "paragraph": 1,
+     "text": "(1) Zuwendungsempfänger ist, wer eine Zuwendung erhält.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 2",
+     "paragraph": 2,
+     "text": "(2) Vorhaben ist jede abgrenzbare Maßnahme.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 2",
+     "paragraph": 3,
+     "text": "(3) Ausgaben sind tatsächlich getätigte Zahlungen des Zuwendungsempfängers.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 3",
+     "paragraph": 1,
+     "text": "(1) Der Antrag ist bei der Bewilligungsbehörde zu stellen.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 3",
+     "paragraph": 2,
+     "text": "(2) Der Antrag kann elektronisch gestellt werden.",
+     "repealed": false,
+     "inserted": true
+    },
+    {
+     "section": "§ 3",
+     "paragraph": 3,
+     "text": "(2) Die Frist beträgt sechs Monate.",
+     "repealed": false,
+     "inserted": false
+    },
+    {
+     "section": "§ 4",
+     "paragraph": 1,
+     "text": "",
+     "repealed": true,
+     "inserted": false
+    }
+   ],
+   "work_aid_notice": "Arbeitshilfe ohne amtlichen Charakter; jede Zuordnung ist fachlich zu prüfen.",
+   "profile": {
+    "id": "auditcore.document_compare",
+    "version": "2026.09.2",
+    "fingerprint": "5395c41978c0ed037de6be693316f33dc8d703869f7aac9fce7f2513a56a92d0"
+   },
+   "output_sections": [
+    "changed",
+    "removed",
+    "added",
+    "moved"
+   ],
+   "highlight_words": true,
+   "include_answers": false,
+   "include_notes": false
+  }
+ }
+}

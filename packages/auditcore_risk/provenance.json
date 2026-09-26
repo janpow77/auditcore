@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_risk",
-  "version": "0.3.1",
+  "version": "0.3.3",
   "sources": [
     {
       "repository": "janpow77/riskanalysis",

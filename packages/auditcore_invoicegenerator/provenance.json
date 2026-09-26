@@ -9,7 +9,7 @@
   "uuid": "NOT_APPLICABLE: selected source contains no UUID generation",
   "rng": "Python random.seed(case.seed), full post-call RNG state SHA256 recorded",
   "package": "auditcore_invoicegenerator",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "source_git_blob": "8f1596a711b228194b58ffc5db6a6e7d0ed049a3",
   "github_blob_verification": "PASS",
   "characterization_cases": 180,
