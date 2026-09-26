@@ -26,8 +26,9 @@ BLOCK = {
 }
 
 
-def _package(tmp_path: Path, block: object | None, document: str = DOCUMENT,
-             tests: str = TESTS) -> Path:
+def _package(
+    tmp_path: Path, block: object | None, document: str = DOCUMENT, tests: str = TESTS
+) -> Path:
     (tmp_path / "docs").mkdir()
     (tmp_path / "tests").mkdir()
     (tmp_path / "docs" / "spezifikation.md").write_text(document, "utf-8")
