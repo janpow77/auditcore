@@ -1,4 +1,4 @@
-"""Runtime modules: standard library, own package and auditcore_harvest only."""
+"""Runtime modules: standard library, own package, auditcore_harvest and auditcore_common."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ ALLOWED = {
     "json",
     "typing",
     "urllib",
+    "auditcore_common",
     "auditcore_harvest",
     "auditcore_price_sources",
 }

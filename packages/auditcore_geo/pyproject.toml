@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = []
+dependencies = ["auditcore_common==0.1.1"]
 
 [project.optional-dependencies]
 geocoder = ["auditcore_harvest==0.1.2"]

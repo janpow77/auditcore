@@ -1,5 +1,14 @@
 # Changelog auditcore_price_sources
 
+## Unreleased
+
+Keine Verhaltensänderung. `canonical_json_bytes` nutzt
+`auditcore_common.hashing.canonical_json(…, compact=False, ensure_ascii=True)`;
+die Paketbytes und damit die von regulierung protokollierten Paket-Hashes sind
+bytegleich (feste Fixtures mit festgeschriebenen SHA-256 in
+`tests/test_common_parity.py`). Neue Pflichtabhängigkeit
+`auditcore_common==0.1.1`.
+
 ## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. Pin `auditcore_harvest==0.1.2`; README und Migrationshinweis auf v0.4.0.

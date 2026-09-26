@@ -30,6 +30,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 
+from auditcore_common.clock import require_aware
+
 OPEN = frozenset({"erfasst", "terminiert"})
 CLOSED = frozenset({"abgehalten", "aufgehoben"})
 STATUSES = OPEN | CLOSED
@@ -50,21 +52,15 @@ class CaseState:
         if self.status not in STATUSES:
             raise ValueError(f"Unbekannter Status {self.status!r}.")
         for moment in (self.last_seen_at, self.closed_at, *self.dates):
-            if moment is not None and moment.tzinfo is None:
-                raise ValueError("Zeitangaben müssen eine Zeitzone tragen.")
-
-
-def _aware(now: datetime) -> datetime:
-    if now.tzinfo is None:
-        raise ValueError("Zeitangaben müssen eine Zeitzone tragen.")
-    return now
+            if moment is not None:
+                require_aware(moment)
 
 
 def mark_seen(
     cases: Iterable[CaseState], listed_file_numbers: Iterable[str], now: datetime
 ) -> list[CaseState]:
     """Bump ``last_seen_at`` of every listed case (deleted or closed ones included)."""
-    now = _aware(now)
+    now = require_aware(now)
     listed = {n for n in listed_file_numbers if n}
     out = []
     for case in cases:
@@ -83,7 +79,7 @@ def close_vanished(
     cases: Iterable[CaseState], now: datetime, grace_days: int = 3
 ) -> tuple[list[CaseState], int]:
     """Close vanished open cases after the grace period; returns cases and count."""
-    now = _aware(now)
+    now = require_aware(now)
     if isinstance(grace_days, bool) or not isinstance(grace_days, int) or grace_days < 0:
         raise ValueError("grace_days muss eine ganze Zahl ≥ 0 sein.")
     limit = now - timedelta(days=grace_days)
@@ -105,13 +101,13 @@ def close_vanished(
 
 def status_for_date(termin: datetime | None, now: datetime) -> str:
     """Open status of a listed notice: ``terminiert`` for a date at or after ``now``."""
-    now = _aware(now)
+    now = require_aware(now)
     return "terminiert" if (termin is not None and termin >= now) else "erfasst"
 
 
 def reappear(case: CaseState, termin: datetime | None, now: datetime) -> CaseState:
     """Original upsert of a listed case: reopen, set last seen, replace the dates."""
-    now = _aware(now)
+    now = require_aware(now)
     return replace(
         case,
         status=status_for_date(termin, now),

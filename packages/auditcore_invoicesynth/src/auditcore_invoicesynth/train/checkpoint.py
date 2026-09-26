@@ -11,7 +11,6 @@ Konfigurations-Hash müssen beim Wiederaufnehmen übereinstimmen.
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import re
@@ -21,6 +20,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from auditcore_common.hashing import sha256_file
 
 CHECKSUMS = "CHECKSUMS.sha256"
 META = "meta.json"
@@ -49,14 +50,6 @@ def _fsync_dir(path: Path) -> None:
         os.fsync(descriptor)
     finally:
         os.close(descriptor)
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1 << 20), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def _files(directory: Path) -> list[Path]:
@@ -132,7 +125,7 @@ class CheckpointManager:
         lines = []
         for path in _files(temporary):
             _fsync_file(path)
-            lines.append(f"{_sha256(path)}  {path.relative_to(temporary).as_posix()}\n")
+            lines.append(f"{sha256_file(path)}  {path.relative_to(temporary).as_posix()}\n")
         (temporary / CHECKSUMS).write_text("".join(lines), encoding="utf-8")
         _fsync_file(temporary / CHECKSUMS)
         _fsync_dir(temporary)
@@ -166,7 +159,7 @@ class CheckpointManager:
         for line in listing.read_text(encoding="utf-8").splitlines():
             digest, _, name = line.partition("  ")
             expected[name] = digest
-        actual = {p.relative_to(path).as_posix(): _sha256(p) for p in _files(path)}
+        actual = {p.relative_to(path).as_posix(): sha256_file(p) for p in _files(path)}
         if expected != actual:
             return "Prüfsummen stimmen nicht"
         return None
