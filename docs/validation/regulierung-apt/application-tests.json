@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "regulierung_commit": "cc6bf9a6feeb92d8aaff77f287c8a1864eb881e7",
+  "auditcore_release": "v0.4.0",
+  "passed": 1803,
+  "skipped": 1,
+  "skipped_reason": "tests/test_frontend_betrieb_2026_09.py:310 benötigt pg_dump (PostgreSQL-16-Client) auf dem Testrechner; im nativen Paket als Depends postgresql-client-16 vorhanden und im QEMU-Lebenszyklus (Sicherung/Wiederherstellung) ausgeführt",
+  "duration_seconds": 72.88,
+  "exact_locked_versions_verified": 88,
+  "mismatches": {},
+  "lock_sha256": "1457f0d0f44c9dd528fef8ed7f4efb986db8ad29cf6154aa672aef49b33234c4",
+  "test_log_sha256": "11fb3252536e8393e770469ab3e5ce54a17834559c91013f7d774e12dcba8587",
+  "pip_check": "PASS",
+  "installation": "--no-index --only-binary=:all: --require-hashes --find-links=runtime/wheels -r runtime/requirements.lock (Wheelhouse aus ci_build.py)",
+  "additional_suites": {
+    "deploy/apt/tests (Administration)": {
+      "passed": 24
+    },
+    "backend/tests/native_runtime (Runtime/Readiness)": {
+      "passed": 19,
+      "included_in_main_run": true
+    }
+  },
+  "parity_tests": [
+    "test_auditcore_auth_paritaet.py",
+    "test_auditcore_common_paritaet.py",
+    "frontend src/lib/__tests__/paritaet.test.ts (TZ Berlin und America/New_York)"
+  ],
+  "scope": "Gesamte regulierung-Backend-Suite gegen die gelockte Laufzeit (CPython 3.12 venv); Wegwerf-PostgreSQL 16 mit TimescaleDB 2.30.1/PostGIS 3.6.4 und Redis 7 in Containern; keine Produktionsdaten; keine native Debian-Installation (siehe lifecycle.json)"
+}

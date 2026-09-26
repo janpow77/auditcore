@@ -369,6 +369,11 @@ class GitFrameworkPolicyProvider:
 def context_from_project(root: Path) -> ApplicabilityContext:
     """Load declared applicability; do not guess security facts from imports."""
     path = root / "auditcore-context.json"
+    if not path.exists():
+        # Deployment-specific contexts live next to the deployment manifest.
+        # Keep the root location as the canonical option and use this fallback
+        # only when a project intentionally scopes its context to a package.
+        path = root / "deploy" / "apt" / "auditcore-context.json"
     return (
         ApplicabilityContext.from_dict(read_json(path)) if path.exists() else ApplicabilityContext()
     )
