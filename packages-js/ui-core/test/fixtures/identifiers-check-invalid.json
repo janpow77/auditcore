@@ -1,0 +1,16 @@
+{
+  "contract": "identifiers_ui/1",
+  "result": {
+    "kind": "iban",
+    "status": "INVALID",
+    "raw": "DE89370400440532013001",
+    "normalized": null,
+    "reason": "invalid_checksum",
+    "message": "IBAN-Prüfziffer ist falsch",
+    "country": "DE",
+    "profile": "strict",
+    "details": {},
+    "kind_label": "IBAN",
+    "reason_label": "Prüfziffer falsch"
+  }
+}

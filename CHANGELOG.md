@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- „Kennung prüfen“: REST-Vertrag `identifiers_ui/1` in
+  `auditcore_identifiers.web` (Extras `web`, `fastapi`) und Oberfläche
+  `IdentifierCheck`/`<flowaudit-identifier-check>` (Vue) sowie native
+  `FlowauditIdentifierCheck` (React) auf gemeinsamem Kern in
+  `@flowaudit/ui-core` (`createIdentifierController`,
+  `createIdentifiersRestPort`): Prüfprofil mit sichtbarer Empfehlung,
+  Einzelprüfung mit Status, Begründung, Grund, Normalform und Einzelheiten,
+  Stapelprüfung aus CSV/TSV über den TableImport-Controller mit
+  Spaltenzuordnung, Filter „Nur Auffälligkeiten“ und CSV-Export. 4
+  Paritätsfälle plus 2 Interaktionsfolgen, Demo-Seite und API-E2E
+  (`docs/ui/identifiers-rest.md`).
+
 - Belegerkennung: REST-Vertrag `documents_extraction/1` in
   `auditcore_documents.web` (Upload → Extraktionsergebnis mit Konfidenz →
   Validierungsbefunde; OCR/Donut nur über Ports der Anwendung, ohne Engine
