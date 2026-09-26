@@ -1,7 +1,7 @@
 # Paritätsinventur „Synopse / Versionsvergleich“
 
 Stand: 25.09.2026. Gegenstand: wiederverwendbare Oberfläche `<flowaudit-synopsis>`
-(`@flowaudit/ui`, Vue 3 + Web Component, React-Wrapper in `@flowaudit/ui-react`)
+(`@flowaudit/ui`, Vue 3 + Web Component; native React-Fassung in `@flowaudit/ui-react`, Parität in [`react-paritaet.md`](react-paritaet.md))
 und REST-Anbindung `auditcore_documents.web` (0.3.0). Vertrag:
 [`synopsis-rest.md`](synopsis-rest.md).
 
