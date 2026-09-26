@@ -2,9 +2,7 @@
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
-import { samplingMessages, type SamplingMessageKey } from './messages'
-import type { SelectionError } from './useSampling'
-import type { AllocationMethod, MethodProfile, NamedOption, SelectionVariant } from './types'
+import { samplingMessages, selectionErrorKey as errorKey, type AllocationMethod, type MethodProfile, type NamedOption, type SelectionError, type SelectionVariant } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   profile: MethodProfile
@@ -24,10 +22,6 @@ const allocation = defineModel<AllocationMethod | null>('allocation', { required
 const emit = defineEmits<{ draw: [fresh: boolean] }>()
 const { t } = useI18n(samplingMessages, () => props.locale)
 const id = useId('fa-sampling-draw')
-
-function errorKey(error: SelectionError): SamplingMessageKey {
-  return `selectionError${error}`
-}
 
 function onAllocation(event: Event): void {
   const value = (event.target as HTMLSelectElement).value

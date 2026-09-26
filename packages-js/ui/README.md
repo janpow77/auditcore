@@ -94,9 +94,10 @@ document.body.append(table)
   als JS-Eigenschaften gesetzt, Ereignisse sind `CustomEvent`s in kebab-case
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
-- **React:** Tabelle, Synopse, VVT und DSFA nativ in `@flowaudit/ui-react`
-  (ohne Vue, gleiche Texte und Verträge, Paritätstests gegen diese Fassung).
-  Die übrigen Komponenten stehen dort nur noch als veraltete Hüllen unter
+- **React:** Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening,
+  Stichprobe und Benford nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
+  Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
+  Geo-Karte. Nur Kanban steht dort noch als veraltete Hülle unter
   `@flowaudit/ui-react/elements` (brauchen Vue).
 
 Fachkomponenten und ihre REST-Verträge:
@@ -119,25 +120,25 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (556):
+Exporte der Einstiegspunkte aus `package.json#exports` (630):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@flowaudit/ui` | `ANSWER_VALUES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Activity` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ActivityGroup` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ActorView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `ActorView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AgeKey` | Typ | – | `kanban/cardView` |
-| `@flowaudit/ui` | `AllocationMethod` | Typ | – | `sampling/types` |
-| `@flowaudit/ui` | `AllocationRequest` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `AllocationResult` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `AnalyseError` | Typ | – | `benford/model` |
-| `@flowaudit/ui` | `AnalyseInput` | Schnittstelle | – | `benford/model` |
-| `@flowaudit/ui` | `AnalyseRequest` | Schnittstelle | – | `benford/types` |
-| `@flowaudit/ui` | `AnalyseValidation` | Typ | – | `benford/model` |
+| `@flowaudit/ui` | `AllocationMethod` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `AllocationRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `AllocationResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `AnalyseError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `AnalyseInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `AnalyseRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `AnalyseValidation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AnswerInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AnswerValue` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ApiErrorBody` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `ApiErrorBody` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AreaGeometry` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentStatus` | Re-Export | – | `@flowaudit/ui-core` |
@@ -145,31 +146,37 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `AssessmentView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `BADGE_COLORS` | Konstante | Badge-Farben je Präfix (WorkspaceTaskCard: VP, SYS/SP, JKB, PRJ), sonst grau. | `kanban/cardView` |
 | `@flowaudit/ui` | `BadgeTone` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
-| `@flowaudit/ui` | `BenfordCallbacks` | Schnittstelle | – | `benford/useBenford` |
-| `@flowaudit/ui` | `BenfordCatalogue` | Schnittstelle | – | `benford/types` |
-| `@flowaudit/ui` | `BenfordDistribution` | Schnittstelle | – | `benford/types` |
+| `@flowaudit/ui` | `BenfordAnalysis` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordBusy` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordCallbacks` | Re-Export | – | `./useBenford` |
+| `@flowaudit/ui` | `BenfordCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordDistribution` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordMetricTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `BenfordPanel` | Vue-Komponente | – | `benford/BenfordPanel.vue` |
-| `@flowaudit/ui` | `BenfordPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createBenfordRestPort`. | `benford/types` |
-| `@flowaudit/ui` | `BenfordTest` | Typ | Typen des REST-Vertrags `docs/ui/benford-rest.md` (auditcore_statistics.web). | `benford/types` |
+| `@flowaudit/ui` | `BenfordPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordSource` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordTest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BenfordTranslate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `BlockProgress` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `BlockView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `Breakdown` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `BreakdownRow` | Schnittstelle | – | `screening/view` |
-| `@flowaudit/ui` | `BreakdownStep` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `Breakdown` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BreakdownRow` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `BreakdownStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ButtonSize` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ButtonVariant` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CARD_COLORS` | Konstante | Kartenfarben zur Auswahl (TaskDetail colorPresets). | `kanban/cardView` |
 | `@flowaudit/ui` | `CHANGE_STATUSES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `COLUMN_COLORS` | Konstante | Spaltenfarben (BoardSettingsDialog PRESET_COLORS). | `kanban/cardView` |
-| `@flowaudit/ui` | `CONTRACT` | Konstante | – | `screening/types` |
 | `@flowaudit/ui` | `Catalogs` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CellValue` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `ChartBar` | Schnittstelle | – | `benford/chart` |
-| `@flowaudit/ui` | `ChartBox` | Schnittstelle | – | `benford/chart` |
-| `@flowaudit/ui` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
+| `@flowaudit/ui` | `ChartBar` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ChartBox` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ChartGeometry` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ClientExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
+| `@flowaudit/ui` | `ColumnCheck` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ColumnView` | Schnittstelle | – | `kanban/useKanbanBoard` |
 | `@flowaudit/ui` | `CompareFields` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CompareRow` | Re-Export | – | `@flowaudit/ui-core` |
@@ -177,18 +184,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `ComparisonMetadata` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonProfile` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonResult` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ComparisonRow` | Schnittstelle | – | `screening/view` |
+| `@flowaudit/ui` | `ComparisonRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonSummary` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Completeness` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ConfidenceLevel` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `Conformity` | Schnittstelle | – | `benford/types` |
-| `@flowaudit/ui` | `ConformityProfile` | Schnittstelle | – | `benford/types` |
-| `@flowaudit/ui` | `ConformityRow` | Schnittstelle | – | `benford/types` |
+| `@flowaudit/ui` | `ConfidenceLevel` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `Conformity` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ConformityProfile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ConformityRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ConsolidatedParagraph` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CoordinateError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DATAPROTECTION_CONTRACT` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `DEFAULT_BOX` | Konstante | – | `benford/chart` |
-| `@flowaudit/ui` | `DEFAULT_FILTER` | Konstante | – | `risk/view/state` |
+| `@flowaudit/ui` | `DEFAULT_BOX` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DEFAULT_FILTER` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_LOCALE` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_SYNOPSIS_FILTER` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DataProtectionError` | Re-Export | – | `@flowaudit/ui-core` |
@@ -196,35 +203,36 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `DataProtectionPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DataProtectionProfile` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DataProtectionTranslate` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `DatasetFinding` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui` | `DatasetFinding` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DecimalSeparator` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `DecisionInput` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `DecisionRequest` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `DecisionView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `DecisionRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DecisionView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DegenerateRing` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Delimiter` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `DerivationStep` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `DerivationStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DiffField` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DiffSegment` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DiffSide` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `DistributionRow` | Schnittstelle | – | `benford/types` |
+| `@flowaudit/ui` | `DistributionRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DossierFieldView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DownloadFile` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `DsfaHooks` | Re-Export | – | `./useDsfa` |
 | `@flowaudit/ui` | `DsfaState` | Schnittstelle | – | `dataprotection/useDsfa` |
 | `@flowaudit/ui` | `DsfaStep` | Re-Export | – | `./useDsfa` |
+| `@flowaudit/ui` | `EMPTY_EVALUATION` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `EarthModel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ElementDefinition` | Schnittstelle | Eine Komponente, die als Web Component `flowaudit-<name>` bereitgestellt wird. | `elements/define` |
 | `@flowaudit/ui` | `ElementTag` | Typ | – | `elements/define` |
-| `@flowaudit/ui` | `EntryView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `EvaluateRequest` | Schnittstelle | – | `risk/port` |
-| `@flowaudit/ui` | `Evaluation` | Schnittstelle | – | `risk/types` |
-| `@flowaudit/ui` | `ExportFormat` | Typ | – | `sampling/types` |
+| `@flowaudit/ui` | `EntryView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `EvaluateRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `Evaluation` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportedFile` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `FLAG_STATES` | Konstante | – | `risk/view/state` |
+| `@flowaudit/ui` | `FLAG_STATES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
@@ -236,21 +244,21 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `FaTextField` | Vue-Komponente | – | `base/FaTextField.vue` |
 | `@flowaudit/ui` | `FaVvt` | Vue-Komponente | – | `dataprotection/FaVvt.vue` |
 | `@flowaudit/ui` | `FetchLike` | Re-Export | – | `./client` |
-| `@flowaudit/ui` | `FieldEntry` | Schnittstelle | – | `risk/types` |
-| `@flowaudit/ui` | `FieldError` | Schnittstelle | – | `sampling/model` |
-| `@flowaudit/ui` | `FieldErrorCode` | Typ | – | `sampling/model` |
+| `@flowaudit/ui` | `FieldEntry` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FieldError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FieldErrorCode` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FieldKind` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `FieldUse` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui` | `FieldUse` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FieldValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FieldView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `FilterOptions` | Schnittstelle | – | `screening/view` |
-| `@flowaudit/ui` | `FindingView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `FlagEntry` | Schnittstelle | Ein Eintrag der Detailansicht: Treffer oder unbestimmtes Merkmal eines Datensatzes. | `risk/view/state` |
-| `@flowaudit/ui` | `FlagHit` | Schnittstelle | – | `risk/types` |
-| `@flowaudit/ui` | `FlagState` | Typ | Zustand einer Regel für einen Datensatz. | `risk/view/state` |
+| `@flowaudit/ui` | `FilterOptions` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FindingView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FlagEntry` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FlagHit` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FlagState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FlowauditUiOptions` | Schnittstelle | – | `plugin` |
-| `@flowaudit/ui` | `FreshnessStatus` | Typ | – | `screening/types` |
-| `@flowaudit/ui` | `FreshnessView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `FreshnessStatus` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `FreshnessView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `GeoArea` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `GeoBusy` | Re-Export | – | `./useGeoMap` |
 | `@flowaudit/ui` | `GeoCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
@@ -263,13 +271,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `GeoRestOptions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `GeocodeHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `GeocodeResult` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `HitFilter` | Schnittstelle | – | `screening/view` |
-| `@flowaudit/ui` | `HitView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `HitFilter` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `HitView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ICONS` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `INITIAL_BENFORD` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IconName` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ImportedColumns` | Schnittstelle | Übernommene Spalten einer Datei. | `tabular/useTableImport` |
-| `@flowaudit/ui` | `JsonObject` | Typ | – | `risk/types` |
-| `@flowaudit/ui` | `JsonValue` | Typ | Datentypen des REST-Vertrags `auditcore_risk.web` (docs/ui/risk-rest.md). Die Komponenten lesen nur diese Felder; unbekannte Felder werden ignoriert. | `risk/types` |
+| `@flowaudit/ui` | `ImportedColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `JsonObject` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `JsonValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `KanbanBoard` | Vue-Komponente | – | `kanban/KanbanBoard.vue` |
 | `@flowaudit/ui` | `KanbanBoardList` | Vue-Komponente | – | `kanban/KanbanBoardList.vue` |
 | `@flowaudit/ui` | `KanbanBoardOptions` | Schnittstelle | – | `kanban/useKanbanBoard` |
@@ -282,43 +292,44 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `LOCALES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LOCALE_KEY` | Konstante | – | `i18n/i18n` |
 | `@flowaudit/ui` | `LatLon` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `LevelTone` | Typ | – | `benford/model` |
+| `@flowaudit/ui` | `LevelTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LevelView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ListInfo` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `ListInfo` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Locale` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LocateRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LocateResult` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `LogEntry` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `LogView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `LogEntry` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `LogView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `MeasureView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `MessageParams` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `MethodKind` | Typ | – | `sampling/types` |
-| `@flowaudit/ui` | `MethodProfile` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `MethodStatus` | Typ | – | `sampling/types` |
+| `@flowaudit/ui` | `MethodGroup` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `MethodKind` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `MethodProfile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `MethodStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `MovePreview` | Schnittstelle | – | `kanban/movePreview` |
-| `@flowaudit/ui` | `NamedOption` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `NamedOption` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `NextSortOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `NumberColumn` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `Outcome` | Typ | – | `screening/types` |
+| `@flowaudit/ui` | `Outcome` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `OverviewRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `PRIORITY_TONES` | Konstante | – | `kanban/cardView` |
-| `@flowaudit/ui` | `ParameterSpec` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `ParameterSpec` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `Person` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `PopulationItem` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Position` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ProfileDetail` | Schnittstelle | – | `risk/types` |
-| `@flowaudit/ui` | `ProfileReference` | Schnittstelle | – | `risk/types` |
-| `@flowaudit/ui` | `ProfileStatus` | Typ | – | `risk/types` |
-| `@flowaudit/ui` | `ProfileSummary` | Schnittstelle | – | `risk/port` |
-| `@flowaudit/ui` | `ProfileView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `ProfileDetail` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ProfileReference` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ProfileStatus` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ProfileSummary` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ProfileView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Proposal` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `QuestionView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ROW_STATUSES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RadiusHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RadiusRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RadiusResult` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `RecordView` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui` | `RecordView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterColumn` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterContent` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
@@ -330,80 +341,95 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `RestClientOptions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RestError` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `RestOptions` | Re-Export | – | `./client` |
-| `@flowaudit/ui` | `ReviewEvents` | Schnittstelle | – | `screening/useScreeningReview` |
-| `@flowaudit/ui` | `ReviewStatus` | Typ | – | `screening/types` |
-| `@flowaudit/ui` | `ReviewView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `RiskDistributionRow` | Schnittstelle | – | `risk/view/state` |
-| `@flowaudit/ui` | `RiskFilter` | Schnittstelle | – | `risk/view/state` |
+| `@flowaudit/ui` | `ReviewEvents` | Re-Export | – | `./useScreeningReview` |
+| `@flowaudit/ui` | `ReviewStatus` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReviewView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskDistributionRow` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskFilter` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RiskFlagCard` | Vue-Komponente | – | `risk/RiskFlagCard.vue` |
 | `@flowaudit/ui` | `RiskFlagFilter` | Vue-Komponente | – | `risk/RiskFlagFilter.vue` |
 | `@flowaudit/ui` | `RiskFlagState` | Vue-Komponente | – | `risk/RiskFlagState.vue` |
 | `@flowaudit/ui` | `RiskFlagSummary` | Vue-Komponente | – | `risk/RiskFlagSummary.vue` |
 | `@flowaudit/ui` | `RiskFlagTable` | Vue-Komponente | – | `risk/RiskFlagTable.vue` |
 | `@flowaudit/ui` | `RiskFlags` | Vue-Komponente | – | `risk/RiskFlags.vue` |
-| `@flowaudit/ui` | `RiskMessageKey` | Typ | – | `risk/messages` |
-| `@flowaudit/ui` | `RiskPort` | Schnittstelle | – | `risk/port` |
+| `@flowaudit/ui` | `RiskInputs` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RiskProfileInfo` | Vue-Komponente | – | `risk/RiskProfileInfo.vue` |
 | `@flowaudit/ui` | `RiskRecordDetail` | Vue-Komponente | – | `risk/RiskRecordDetail.vue` |
+| `@flowaudit/ui` | `RiskSelection` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RiskTranslate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RowStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RowUpdate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RowView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `RuleView` | Schnittstelle | – | `risk/types` |
-| `@flowaudit/ui` | `RunQuery` | Typ | – | `screening/types` |
-| `@flowaudit/ui` | `RunRequest` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `RunRequestRecord` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `RunSummary` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `RunView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `RuleView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RunQuery` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RunRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RunRequestRecord` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RunSummary` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RunView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Runner` | Schnittstelle | – | `rest/runner` |
-| `@flowaudit/ui` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
-| `@flowaudit/ui` | `STATE_FILTER_KEYS` | Konstante | – | `risk/view/labels` |
-| `@flowaudit/ui` | `STATE_ICONS` | Konstante | Symbol je Zustand: Farbe ist nie der einzige Träger der Bedeutung. | `risk/view/format` |
-| `@flowaudit/ui` | `STATE_KEYS` | Konstante | – | `risk/view/labels` |
-| `@flowaudit/ui` | `SamplingCallbacks` | Schnittstelle | – | `sampling/useSampling` |
-| `@flowaudit/ui` | `SamplingCatalogue` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui` | `SCREENING_CONTRACT` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `STATE_FILTER_KEYS` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `STATE_ICONS` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `STATE_KEYS` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SamplingBusy` | Re-Export | – | `./useSampling` |
+| `@flowaudit/ui` | `SamplingCallbacks` | Re-Export | – | `./useSampling` |
+| `@flowaudit/ui` | `SamplingCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SamplingController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SamplingData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SamplingMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SamplingPanel` | Vue-Komponente | – | `sampling/SamplingPanel.vue` |
-| `@flowaudit/ui` | `SamplingPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createSamplingRestPort`. | `sampling/types` |
+| `@flowaudit/ui` | `SamplingPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SamplingSource` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SamplingTranslate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ScenarioInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ScenarioResult` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ScoreClass` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `ScreeningError` | Schnittstelle | Fehler einer Portanfrage: Meldung des Servers bzw. `network_error` mit Status 0. | `screening/useScreeningReview` |
-| `@flowaudit/ui` | `ScreeningKey` | Typ | – | `screening/messages` |
-| `@flowaudit/ui` | `ScreeningKind` | Typ | – | `screening/types` |
-| `@flowaudit/ui` | `ScreeningPort` | Schnittstelle | Port der Screening-Trefferprüfung. Die Komponente ruft nie selbst `fetch` auf; `createScreeningRestPort` ist die mitgelieferte REST-Umsetzung. | `screening/types` |
+| `@flowaudit/ui` | `ScoreClass` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ScreeningController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ScreeningData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ScreeningError` | Re-Export | – | `./useScreeningReview` |
+| `@flowaudit/ui` | `ScreeningKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ScreeningKind` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ScreeningPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ScreeningReview` | Vue-Komponente | – | `screening/ScreeningReview.vue` |
-| `@flowaudit/ui` | `ScreeningReviewState` | Typ | – | `screening/useScreeningReview` |
-| `@flowaudit/ui` | `ScreeningTranslate` | Typ | – | `screening/messages` |
-| `@flowaudit/ui` | `SecondReviewRequest` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `SecondReviewView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `ScreeningReviewState` | Schnittstelle | – | `screening/useScreeningReview` |
+| `@flowaudit/ui` | `ScreeningSelection` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ScreeningTranslate` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SecondReviewRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SecondReviewView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SegmentKind` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `SelectionError` | Typ | – | `sampling/useSampling` |
-| `@flowaudit/ui` | `SelectionInput` | Schnittstelle | – | `sampling/model` |
-| `@flowaudit/ui` | `SelectionRequest` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `SelectionResult` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `SelectionRow` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `SelectionValidation` | Typ | – | `sampling/model` |
-| `@flowaudit/ui` | `SelectionVariant` | Typ | – | `sampling/types` |
+| `@flowaudit/ui` | `SelectionError` | Re-Export | – | `./useSampling` |
+| `@flowaudit/ui` | `SelectionInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SelectionRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SelectionResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SelectionRow` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SelectionTexts` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SelectionValidation` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SelectionVariant` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ServerExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `SettingsView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `Severity` | Typ | – | `risk/types` |
-| `@flowaudit/ui` | `ShortValues` | Typ | – | `benford/types` |
+| `@flowaudit/ui` | `SettingsView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `Severity` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ShortValues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SimplifyRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SimplifyResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SimplifyUnit` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `SizeRequest` | Typ | – | `sampling/types` |
-| `@flowaudit/ui` | `SizeResult` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `SizeValidation` | Typ | – | `sampling/model` |
+| `@flowaudit/ui` | `SizeRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SizeResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SizeValidation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SortDirection` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `SortState` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `SourceView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `SourcesView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `StateFilter` | Typ | Filter: `affected` = Treffer oder unbestimmt; `all` = jeder Datensatz. | `risk/view/state` |
-| `@flowaudit/ui` | `StratumCount` | Schnittstelle | – | `sampling/model` |
-| `@flowaudit/ui` | `StratumResult` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `SubjectInput` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `SubjectRequest` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `SubjectStatus` | Typ | – | `screening/types` |
-| `@flowaudit/ui` | `SubjectView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `SourceView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SourcesView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `StateFilter` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `StratumCount` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `StratumResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SubjectInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SubjectRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SubjectStatus` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SubjectView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SurveyInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SynopsisFilterState` | Re-Export | – | `./useSynopsis` |
 | `@flowaudit/ui` | `SynopsisLayout` | Re-Export | – | `@flowaudit/ui-core` |
@@ -418,11 +444,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `TabItem` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `TableColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `TableImport` | Vue-Komponente | – | `tabular/TableImport.vue` |
+| `@flowaudit/ui` | `TableImportController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `TableImportData` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `TableRow` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui` | `TabularMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ThemeMode` | Typ | – | `theme/theme` |
 | `@flowaudit/ui` | `TileSource` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/view/format` |
-| `@flowaudit/ui` | `Totals` | Schnittstelle | – | `risk/view/state` |
+| `@flowaudit/ui` | `Tone` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `Totals` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Translate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
@@ -442,149 +471,180 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `UtmResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VersionSummary` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VersionView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `ViewMessage` | Schnittstelle | Meldung als Katalogschlüssel mit Platzhaltern; die Komponente übersetzt sie. | `screening/view` |
+| `@flowaudit/ui` | `ViewMessage` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ViewOptions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VvtExport` | Re-Export | – | `./useVvt` |
 | `@flowaudit/ui` | `VvtExportFormat` | Re-Export | – | `./useVvt` |
 | `@flowaudit/ui` | `VvtHooks` | Re-Export | – | `./useVvt` |
 | `@flowaudit/ui` | `VvtState` | Schnittstelle | – | `dataprotection/useVvt` |
 | `@flowaudit/ui` | `WORD_LIMIT` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `WhenMissingColumns` | Typ | – | `risk/types` |
-| `@flowaudit/ui` | `acceptsHit` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `WhenMissingColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `acceptsHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `activityKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `addScenario` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `analyseErrorKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `answerOf` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `applyPreview` | Funktion | Spaltenansicht mit der bewegten Karte an der Vorschauposition. | `kanban/movePreview` |
 | `@flowaudit/ui` | `applyRowOverrides` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
 | `@flowaudit/ui` | `areasFromGeoPackage` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ariaSort` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
+| `@flowaudit/ui` | `axisMaximum` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `badgePrefix` | Funktion | – | `kanban/cardView` |
 | `@flowaudit/ui` | `badgeStyle` | Funktion | – | `kanban/cardView` |
 | `@flowaudit/ui` | `bandTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `baseMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordBarTitle` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordChartTitle` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordDigitColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordDigitRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `benfordElement` | Konstante | `<flowaudit-benford>`: Eigenschaften `port` (BenfordPort), `values`, `locale`; Ereignisse `analysis-completed`, `error`. | `benford/element` |
-| `@flowaudit/ui` | `benfordMessages` | Konstante | Texte der Benford-Analyse. | `benford/messages` |
+| `@flowaudit/ui` | `benfordMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordMetricTexts` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordProfile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordTickText` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordValues` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `benfordValuesText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `blockProgress` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `breakdownRows` | Funktion | – | `screening/view` |
-| `@flowaudit/ui` | `buildAnalyseRequest` | Funktion | Anfrage für `POST /analyze`; Test, Profil und ggf. Regel für kurze Werte sind Pflicht. | `benford/model` |
+| `@flowaudit/ui` | `breakdownRows` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `buildAnalyseRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildRowView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `buildSelectionRequest` | Funktion | Anfrage für `POST /selection`; ein leerer Seed überlässt dem Server die Erzeugung. | `sampling/model` |
-| `@flowaudit/ui` | `buildSizeRequest` | Funktion | Anfrage für `POST /size`; jedes Feld ist Pflicht, nichts wird still ergänzt. | `sampling/model` |
+| `@flowaudit/ui` | `buildSelectionRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `buildSizeRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildSynopsisView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `cardAge` | Funktion | Alter einer Karte in Stufen wie WorkspaceTaskCard (neu, Stunden, Tage, Wochen, Monate). | `kanban/cardView` |
 | `@flowaudit/ui` | `changeIds` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `chartGeometry` | Funktion | – | `benford/chart` |
+| `@flowaudit/ui` | `chartGeometry` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `cloneContent` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `codeLabel` | Funktion | Beschriftung eines Codes aus dem Vertrag (Status, Stufe, Hinweis); unbekannte Codes bleiben stehen. | `screening/messages` |
+| `@flowaudit/ui` | `codeLabel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `columnCells` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `compareValues` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `comparisonRows` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `comparisonRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `completeness` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `completenessTone` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `confidenceText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `coverIssues` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
+| `@flowaudit/ui` | `createBenfordController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
 | `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
+| `@flowaudit/ui` | `createRiskController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
-| `@flowaudit/ui` | `createSamplingRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_sampling.web` (Starlette oder FastAPI). | `sampling/rest-port` |
-| `@flowaudit/ui` | `createScreeningRestPort` | Funktion | Port auf den REST-Vertrag `screening_review/1` von `auditcore_registry_sources.web`. | `screening/rest-port` |
+| `@flowaudit/ui` | `createSamplingController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createSamplingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createScreeningController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createScreeningRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createSynopsisRestClient` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createTableImportController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `currentVersion` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `dataprotectionError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `dataprotectionMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `decisionTitle` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `defineMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `derivationColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `derivationRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `detectDecimal` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `detectDelimiter` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `diffSegments` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `digitLabel` | Funktion | Anzeige einer Ziffer: zweite Ziffer 0–9, sonst Zahl. | `benford/model` |
+| `@flowaudit/ui` | `digitLabel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `displayName` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `displayValue` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `distribution` | Funktion | Verteilung je Regel in Profilreihenfolge (nur Datensatzregeln). | `risk/view/state` |
+| `@flowaudit/ui` | `distribution` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `downloadText` | Re-Export | – | `./useSynopsisExport` |
 | `@flowaudit/ui` | `dsfaElement` | Konstante | `<flowaudit-dsfa>`: Eigenschaften `port`, `activityId`, `actor`, `editable`, `locale`; Ereignisse `assessment-change`, `error`. | `dataprotection/element` |
 | `@flowaudit/ui` | `editedBy` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `emptyActivity` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `emptyContent` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `emptyFilter` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `emptyFilter` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `emptyScenario` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `escapeHtml` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `escapeMarkdown` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `evaluationRules` | Funktion | Regeln der Auswertung; ohne `rules` aus den Codes der Datensätze abgeleitet. | `risk/view/state` |
+| `@flowaudit/ui` | `evaluationRules` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `excludedLines` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `exportFilename` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldIssues` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `fieldValue` | Funktion | Prüft ein Eingabefeld und liefert den Vertragswert (Prozent → Anteil). | `sampling/model` |
-| `@flowaudit/ui` | `filterOptions` | Funktion | – | `screening/view` |
-| `@flowaudit/ui` | `filterRecords` | Funktion | – | `risk/view/state` |
+| `@flowaudit/ui` | `fieldValue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `filterOptions` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `filterRecords` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `filterRows` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `filterSubjects` | Funktion | Subjects with only the hits passing the filter; subjects themselves stay visible. | `screening/view` |
-| `@flowaudit/ui` | `flagState` | Funktion | – | `risk/view/state` |
+| `@flowaudit/ui` | `filterSubjects` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `flagState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `focusRow` | Re-Export | – | `./useSynopsisNavigation` |
 | `@flowaudit/ui` | `focusableWithin` | Re-Export | – | `./useFocusTrap` |
-| `@flowaudit/ui` | `formatAmount` | Funktion | – | `risk/view/format` |
+| `@flowaudit/ui` | `formatAmount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatDate` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatDegrees` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatDistance` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatMetres` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatNumber` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatPercent` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `formatShare` | Funktion | – | `risk/view/format` |
-| `@flowaudit/ui` | `formatValue` | Funktion | Wert eines Eingabefelds: leer ausdrücklich, Zahlen im Sprachformat. | `risk/view/format` |
+| `@flowaudit/ui` | `formatShare` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `formatValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `geoMapElement` | Konstante | `<flowaudit-geo-map>`: Eigenschaften `port` (GeoPort), `points`, `areas`, `tiles` (TileSource), `center`, `zoom`, `locale`; Ereignisse `radius-completed`, `location-checked`, `area … | `geo/element` |
 | `@flowaudit/ui` | `geoMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `groupByDepartment` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `guessNumberColumn` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
-| `@flowaudit/ui` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
+| `@flowaudit/ui` | `hasPartialStrata` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `importDelimiterText` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `importOptionalColumn` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `importPreview` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `importRejectedLines` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `initialTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `initials` | Funktion | Initialen aus einem Namen: erster und letzter Namensteil. | `kanban/cardView` |
 | `@flowaudit/ui` | `interpolate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `isDeviation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `isIconName` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `isLocale` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `isPercent` | Funktion | Anteile werden in Prozent eingegeben und angezeigt. | `sampling/model` |
+| `@flowaudit/ui` | `isPercent` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `isStratifiedPopulation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `issuesFor` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `itemsFromImport` | Funktion | Übernommene Dateispalten → Elemente der Grundgesamtheit (Kennung sonst laufende Nummer). | `sampling/model` |
+| `@flowaudit/ui` | `itemsFromImport` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `kanbanBoardElement` | Konstante | `<flowaudit-kanban-board>`: Eigenschaften `port` (BoardPort) und `boardId` oder `board` (+ `userId`) für lokale Bearbeitung; Ereignisse `board-change`, `error`, `fullscreen`, `navi … | `kanban/element` |
 | `@flowaudit/ui` | `kanbanBoardListElement` | Konstante | `<flowaudit-kanban-boards>`: Boardliste mit Eigenschaft `port`; Ereignisse `board-select`, `created`. | `kanban/element` |
 | `@flowaudit/ui` | `kanbanDialogMessages` | Konstante | Texte von Detailansicht, Einstellungen, Teilen und Boardliste. | `kanban/messages` |
 | `@flowaudit/ui` | `kanbanMessages` | Konstante | Texte der Kanban-Komponenten; Englisch vorbereitet. | `kanban/messages` |
 | `@flowaudit/ui` | `lcsOperations` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `levelLabel` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `levelTone` | Funktion | Farbton der MAD-Stufe 0–3 (enge … keine Übereinstimmung). | `benford/model` |
+| `@flowaudit/ui` | `levelTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `localeTag` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `mayRelease` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `methodGroups` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `methodStatusKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `methodTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ndiffOperations` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `needsShortValues` | Funktion | Zweistellige Tests (erste zwei Ziffern, zweite Ziffer) verlangen eine Regel für kurze Werte. | `benford/model` |
-| `@flowaudit/ui` | `nextOpenHit` | Funktion | The next hit still needing work after ``currentId`` (open, deferred or pending). | `screening/view` |
+| `@flowaudit/ui` | `needsShortValues` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `nextOpenHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `nextSort` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `numberColumn` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `pairs` | Funktion | Objekt als Liste `[Schlüssel, Wert]` in Einfügereihenfolge (für deklarative Tabellen). | `risk/view/state` |
-| `@flowaudit/ui` | `parameterLabel` | Funktion | – | `risk/view/format` |
+| `@flowaudit/ui` | `pairs` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `parameterLabel` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `parameterUnit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseConditions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseCount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseDegrees` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
+| `@flowaudit/ui` | `parseInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseLatLon` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseNumber` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
+| `@flowaudit/ui` | `parseSubjects` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseTable` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `placementFor` | Funktion | Platzierung für den Port aus der sichtbaren Nachbarschaft: vor der Karte an `index`, sonst hinter der letzten sichtbaren Karte, sonst ans Ende. | `kanban/movePreview` |
 | `@flowaudit/ui` | `plainSegments` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `populationSuggestions` | Funktion | Vorschlagswerte aus der Grundgesamtheit (Summe positiver Werte bzw. Anzahl). | `sampling/model` |
+| `@flowaudit/ui` | `populationSuggestions` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `populationText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `positionText` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `positiveSum` | Funktion | Summe der positiven Werte (Auswahlbasis der Variante „portal“). | `sampling/model` |
+| `@flowaudit/ui` | `positiveSum` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `preview` | Funktion | – | `kanban/cardView` |
 | `@flowaudit/ui` | `printHtml` | Re-Export | – | `./useSynopsisExport` |
+| `@flowaudit/ui` | `profileHintText` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `profileStatusText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `provideLocale` | Funktion | Stellt die Sprache für alle Nachfahren bereit (App-Ebene oder Teilbaum). | `i18n/i18n` |
 | `@flowaudit/ui` | `readTheme` | Funktion | Liest das explizit gesetzte Farbschema; ohne Attribut 'system'. | `theme/theme` |
 | `@flowaudit/ui` | `recommendationTone` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `recordEntries` | Funktion | Treffer und unbestimmte Merkmale eines Datensatzes in Profilreihenfolge. | `risk/view/state` |
-| `@flowaudit/ui` | `recordLabel` | Funktion | – | `risk/view/state` |
-| `@flowaudit/ui` | `recordRules` | Funktion | – | `risk/view/state` |
+| `@flowaudit/ui` | `recordEntries` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `recordLabel` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `recordRules` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `registerCsv` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `registerFilename` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `registerHtml` | Re-Export | – | `@flowaudit/ui-core` |
@@ -593,44 +653,59 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `removeScenario` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `requestFile` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `requestJson` | Re-Export | – | `./client` |
-| `@flowaudit/ui` | `requirementKey` | Funktion | – | `risk/view/labels` |
+| `@flowaudit/ui` | `requirementKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `resolvedTheme` | Funktion | Tatsächlich wirksames Schema, auch wenn 'system' gewählt ist. | `theme/theme` |
 | `@flowaudit/ui` | `riskFlagsElement` | Konstante | `<flowaudit-risk-flags>`: Eigenschaften `evaluation` (Antwort von `POST /evaluate`) und `profile` (Antwort von `GET /profiles/{id}/{version}`) als JS-Objekte; Ereignisse `record-se … | `risk/element` |
-| `@flowaudit/ui` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
+| `@flowaudit/ui` | `riskMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `riskTableColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `riskTableRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `sameSurvey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `samplingElement` | Konstante | `<flowaudit-sampling>`: Eigenschaften `port` (SamplingPort), `items` (Grundgesamtheit), `locale`; Ereignisse `size-calculated`, `selection-drawn`, `error`. | `sampling/element` |
-| `@flowaudit/ui` | `samplingMessages` | Konstante | Texte des Stichprobenrechners. | `sampling/messages` |
+| `@flowaudit/ui` | `samplingFieldError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `samplingInputNumber` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `samplingMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `samplingPopulation` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `samplingProfile` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `saveFile` | Re-Export | – | `./download` |
-| `@flowaudit/ui` | `screeningMessages` | Konstante | Texte der Screening-Trefferprüfung (Sanktionslisten, PEP). | `screening/messages` |
+| `@flowaudit/ui` | `screeningMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `screeningReviewElement` | Konstante | `<flowaudit-screening-review>`: Eigenschaften `port` (ScreeningPort), `runId`, `locale`; Ereignisse `run-created`, `decided`, `error`. | `screening/element` |
 | `@flowaudit/ui` | `screeningTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `segmentsText` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `selectRisk` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `selectScreening` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `selectionColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `selectionErrorKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `selectionRows` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `selectionTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `setDefaultLocale` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `severityTone` | Funktion | – | `risk/view/format` |
+| `@flowaudit/ui` | `severityTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `sharedToastQueue` | Funktion | Anwendungsweite Warteschlange (einmal je Seite). | `composables/useToast` |
+| `@flowaudit/ui` | `sizeTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `sortRows` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `splitLine` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `stateTone` | Funktion | – | `risk/view/format` |
-| `@flowaudit/ui` | `statusHintKey` | Funktion | Hinweis für nicht freigegebene Profile, sonst `null`. | `risk/view/labels` |
-| `@flowaudit/ui` | `statusKey` | Funktion | – | `risk/view/labels` |
+| `@flowaudit/ui` | `stateTone` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `statusHintKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `statusKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `statusLabel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `statusTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `stepChange` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `strataOf` | Funktion | Schichten in Reihenfolge ihres ersten Auftretens; leer, wenn kein Element geschichtet ist. | `sampling/model` |
+| `@flowaudit/ui` | `strataColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `strataOf` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `strataRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `surveyFrom` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `synopsisElement` | Konstante | `<flowaudit-synopsis>`: `comparison`/`result` und `port` als JS-Eigenschaften; Ereignisse `row-update`, `export`, `navigate`, `update:layout`. | `synopsis/element` |
 | `@flowaudit/ui` | `synopsisMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `tableElement` | Konstante | `<flowaudit-table>`: Spalten und Zeilen als JS-Eigenschaften, Ereignisse `row-click`, `sort-change`. | `table/element` |
-| `@flowaudit/ui` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
+| `@flowaudit/ui` | `tabularMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `textOn` | Funktion | Lesbare Schriftfarbe auf einer Kartenfarbe (Luminanzschwelle wie im Original). | `kanban/cardView` |
 | `@flowaudit/ui` | `toHtml` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toMarkdown` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toggleMeasure` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `totals` | Funktion | – | `risk/view/state` |
+| `@flowaudit/ui` | `totals` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `translate` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `triggeredDataset` | Funktion | – | `risk/view/state` |
+| `@flowaudit/ui` | `triggeredDataset` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@flowaudit/common`. | `composables/useAuthToken` |
-| `@flowaudit/ui` | `useBenford` | Funktion | Zustand und Ablauf der Benford-Analyse; Berechnung ausschließlich über den Port. | `benford/useBenford` |
+| `@flowaudit/ui` | `useBenford` | Funktion | Vue-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (`createBenfordController`). | `benford/useBenford` |
 | `@flowaudit/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
 | `@flowaudit/ui` | `useDebouncedFn` | Funktion | Entprellte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
@@ -645,24 +720,24 @@ Exporte der Einstiegspunkte aus `package.json#exports` (556):
 | `@flowaudit/ui` | `useLocale` | Funktion | – | `i18n/i18n` |
 | `@flowaudit/ui` | `useMediaQuery` | Funktion | Reaktiver Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`. | `composables/useDom` |
 | `@flowaudit/ui` | `useMoveController` | Funktion | – | `kanban/useMoveController` |
-| `@flowaudit/ui` | `useRiskFlags` | Funktion | Zustand und abgeleitete Daten der Gesamtansicht; ohne DOM testbar. | `risk/useRiskFlags` |
+| `@flowaudit/ui` | `useRiskFlags` | Funktion | Vue-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (Filter, Auswahl, abgeleitete Daten). | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `useRiskProfile` | Funktion | Profilbeschreibung zur Auswertung: die übergebene, sonst über den Port nachgeladen (Profil und Version der Auswertung, nie ein Standardprofil). | `risk/useRiskProfile` |
-| `@flowaudit/ui` | `useSampling` | Funktion | Zustand und Abläufe des Stichprobenrechners. Die Fachlogik liegt im Port; hier werden nur Eingaben geprüft, Anfragen gebildet und Ergebnisse gehalten. | `sampling/useSampling` |
-| `@flowaudit/ui` | `useScreeningReview` | Funktion | – | `screening/useScreeningReview` |
+| `@flowaudit/ui` | `useSampling` | Funktion | Vue-Anbindung des Stichprobenrechners aus `@flowaudit/ui-core` (`createSamplingController`); Getter halten Props reaktiv. | `sampling/useSampling` |
+| `@flowaudit/ui` | `useScreeningReview` | Funktion | Stand, Auswahl und Aktionen der Trefferprüfung; die Logik liegt im Kern (`createScreeningController`). | `screening/useScreeningReview` |
 | `@flowaudit/ui` | `useSort` | Funktion | Sortierzustand und sortierte Zeilen für eigene Tabellen (FaTable sortiert selbst). | `composables/useSort` |
 | `@flowaudit/ui` | `useStore` | Funktion | Stand eines Kern-Controllers (`@flowaudit/ui-core`) als reaktive Vue-Referenz. | `composables/useStore` |
 | `@flowaudit/ui` | `useSynopsis` | Funktion | Vue-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (Laden, Filter, Zeilenänderungen, Navigation). | `synopsis/useSynopsis` |
 | `@flowaudit/ui` | `useSynopsisExport` | Funktion | Exporte der sichtbaren, ausgewählten Zeilen; `onExport` erhält jedes Ergebnis. | `synopsis/useSynopsisExport` |
 | `@flowaudit/ui` | `useSynopsisNavigation` | Funktion | Navigation zwischen Änderungen mit Schaltflächen und Tasten N/J bzw. P/K. | `synopsis/useSynopsisNavigation` |
-| `@flowaudit/ui` | `useTableImport` | Funktion | Datei lesen, Spalten zuordnen und eine Vorschau der übernommenen Werte bilden. | `tabular/useTableImport` |
+| `@flowaudit/ui` | `useTableImport` | Funktion | Vue-Anbindung des Datei-Imports aus `@flowaudit/ui-core` (Datei lesen, Spalten zuordnen, Vorschau). | `tabular/useTableImport` |
 | `@flowaudit/ui` | `useTheme` | Funktion | Composable: reaktives Farbschema, synchron mit dem Attribut am Element. | `theme/theme` |
 | `@flowaudit/ui` | `useThrottledFn` | Funktion | Gedrosselte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useToast` | Funktion | Toasts als reaktive Liste über der framework-freien Warteschlange aus `@flowaudit/common`. | `composables/useToast` |
 | `@flowaudit/ui` | `useVvt` | Funktion | – | `dataprotection/useVvt` |
-| `@flowaudit/ui` | `validateDecision` | Funktion | – | `screening/view` |
+| `@flowaudit/ui` | `validateDecision` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vertexCount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vvtElement` | Konstante | `<flowaudit-vvt>`: Eigenschaften `port` (DataProtectionPort), `actor`, `editable`, `locale`; Ereignisse `draft-saved`, `released`, `exported`, `error`. | `dataprotection/element` |
-| `@flowaudit/ui` | `whenMissingKey` | Funktion | – | `risk/view/labels` |
+| `@flowaudit/ui` | `whenMissingKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `wholeSegments` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `withActivity` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `withAnswer` | Re-Export | – | `@flowaudit/ui-core` |

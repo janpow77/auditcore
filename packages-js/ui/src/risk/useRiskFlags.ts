@@ -1,25 +1,22 @@
-import { computed, ref, watch, type ComputedRef, type Ref } from 'vue'
-import type { TableColumn, TableRow } from '../table'
-import type { Evaluation, RecordView, RuleView } from './types'
+import { computed, watch, type ComputedRef, type Ref, type WritableComputedRef } from 'vue'
 import {
-  DEFAULT_FILTER,
-  distribution,
-  filterRecords,
-  flagState,
-  recordEntries,
-  recordLabel,
-  recordRules,
-  totals,
-  triggeredDataset,
-  type RiskDistributionRow,
+  createRiskController,
+  selectRisk,
+  type Evaluation,
   type FlagEntry,
+  type RecordView,
+  type RiskController,
+  type RiskDistributionRow,
   type RiskFilter,
+  type RuleView,
   type Totals,
-} from './view/state'
+} from '@flowaudit/ui-core'
+import type { TableColumn, TableRow } from '../table'
+import { useStore } from '../composables/useStore'
 
 export interface UseRiskFlags {
-  filter: Ref<RiskFilter>
-  selectedIndex: Ref<number | null>
+  filter: WritableComputedRef<RiskFilter>
+  selectedIndex: Readonly<Ref<number | null>>
   rules: ComputedRef<RuleView[]>
   rows: ComputedRef<RiskDistributionRow[]>
   totals: ComputedRef<Totals>
@@ -30,48 +27,29 @@ export interface UseRiskFlags {
   selected: ComputedRef<RecordView | null>
   entries: ComputedRef<FlagEntry[]>
   select: (index: number | null) => void
+  controller: RiskController
 }
 
-const EMPTY: Evaluation = {
-  library: '', profile: { id: '', version: '', fingerprint: '', status: '' }, records: [], dataset: [], skipped: {}, summary: [],
-}
-
-/** Zustand und abgeleitete Daten der Gesamtansicht; ohne DOM testbar. */
+/** Vue-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (Filter, Auswahl, abgeleitete Daten). */
 export function useRiskFlags(evaluation: () => Evaluation | null | undefined, recordLabelText: string): UseRiskFlags {
-  const current = computed(() => evaluation() ?? EMPTY)
-  const filter = ref<RiskFilter>({ ...DEFAULT_FILTER })
-  const selectedIndex = ref<number | null>(null)
-  const rules = computed(() => recordRules(current.value))
-  const records = computed(() => filterRecords(current.value, filter.value))
-
-  const tableColumns = computed<TableColumn[]>(() => [
-    { key: 'record', label: recordLabelText, sortable: true },
-    ...rules.value.map((rule) => ({ key: rule.code, label: rule.code, sortable: true, align: 'center' as const })),
-  ])
-
-  const tableRows = computed<TableRow[]>(() => records.value.map((record) => {
-    const row: Record<string, unknown> = { id: record.index, record: recordLabel(record) }
-    for (const rule of rules.value) row[rule.code] = flagState(record, rule.code, current.value.skipped)
-    return row
-  }))
-
-  const selected = computed(() => current.value.records.find((record) => record.index === selectedIndex.value) ?? null)
-  const entries = computed(() => (selected.value ? recordEntries(selected.value, rules.value) : []))
-
-  watch(current, () => { selectedIndex.value = null })
-
+  const controller = createRiskController()
+  const state = useStore(controller.store)
+  const selection = computed(() => selectRisk(state.value, evaluation(), recordLabelText))
+  watch(evaluation, () => controller.resetSelection())
+  const pick = <K extends keyof ReturnType<typeof selectRisk>>(key: K) => computed(() => selection.value[key])
   return {
-    filter,
-    selectedIndex,
-    rules,
-    rows: computed(() => distribution(current.value)),
-    totals: computed(() => totals(current.value)),
-    dataset: computed(() => triggeredDataset(current.value)),
-    records,
-    tableColumns,
-    tableRows,
-    selected,
-    entries,
-    select: (index) => { selectedIndex.value = index },
+    filter: computed({ get: () => state.value.filter, set: (value) => controller.setFilter(value) }),
+    selectedIndex: computed(() => state.value.selectedIndex),
+    rules: pick('rules'),
+    rows: pick('rows'),
+    totals: pick('totals'),
+    dataset: pick('dataset'),
+    records: pick('records'),
+    tableColumns: pick('tableColumns'),
+    tableRows: pick('tableRows'),
+    selected: pick('selected'),
+    entries: pick('entries'),
+    select: controller.select,
+    controller,
   }
 }

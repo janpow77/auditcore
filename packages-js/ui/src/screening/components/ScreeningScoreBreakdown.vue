@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { Breakdown } from '../types'
-import { breakdownRows, formatScore } from '../view'
+import { screeningMessages } from '../core'
+import type { Breakdown } from '../core'
+import { breakdownRows, formatScore } from '../core'
 
 const props = defineProps<{ breakdown: Breakdown }>()
 const { t, locale } = useI18n(screeningMessages)

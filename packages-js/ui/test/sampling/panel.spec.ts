@@ -1,10 +1,10 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import SamplingPanel from '../../src/sampling/SamplingPanel.vue'
-import type { SamplingCatalogue, SamplingPort, SelectionResult, SizeResult } from '../../src/sampling/types'
-import profiles from '../fixtures/sampling-profiles.json'
-import selection from '../fixtures/sampling-selection.json'
-import size from '../fixtures/sampling-size.json'
+import type { SamplingCatalogue, SamplingPort, SelectionResult, SizeResult } from '../../src'
+import profiles from '../../../ui-core/test/fixtures/sampling-profiles.json'
+import selection from '../../../ui-core/test/fixtures/sampling-selection.json'
+import size from '../../../ui-core/test/fixtures/sampling-size.json'
 
 const items = Array.from({ length: 30 }, (_, i) => ({ id: `B-${i + 1}`, value: ((i * 37) % 900) + 10, stratum: i % 3 ? 'Los 1' : 'Los 2' }))
 

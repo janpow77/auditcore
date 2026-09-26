@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '../../i18n'
-import { codeLabel, screeningMessages } from '../messages'
-import type { ReviewStatus } from '../types'
-import type { FilterOptions, HitFilter } from '../view'
+import { codeLabel, screeningMessages } from '../core'
+import type { ReviewStatus } from '../core'
+import type { FilterOptions, HitFilter } from '../core'
 
 const props = defineProps<{ modelValue: HitFilter; options: FilterOptions }>()
 const emit = defineEmits<{ 'update:modelValue': [value: HitFilter] }>()

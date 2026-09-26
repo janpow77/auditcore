@@ -2,9 +2,9 @@
 import FaBadge from '../../base/FaBadge.vue'
 import type { BadgeTone } from '../../base/types'
 import { formatNumber, useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { FreshnessStatus, SourceView } from '../types'
-import { formatAge, formatDate, freshnessTone } from '../view'
+import { screeningMessages } from '../core'
+import type { FreshnessStatus, SourceView } from '../core'
+import { formatAge, formatDate, freshnessTone } from '../core'
 
 const props = defineProps<{ sources: SourceView[]; checkedAt?: string | null; title?: string; compact?: boolean }>()
 const { t, locale } = useI18n(screeningMessages)

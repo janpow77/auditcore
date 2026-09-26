@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { HitView, LogEntry, Outcome, ReviewStatus, RunView, SettingsView, SubjectView } from '../types'
-import { filterOptions, formatDate, type HitFilter } from '../view'
+import { screeningMessages } from '../core'
+import type { HitView, LogEntry, Outcome, ReviewStatus, RunView, SettingsView, SubjectView } from '../core'
+import { filterOptions, formatDate, type HitFilter } from '../core'
 import ScreeningComparison from './ScreeningComparison.vue'
 import ScreeningDecision from './ScreeningDecision.vue'
 import ScreeningFilters from './ScreeningFilters.vue'

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RiskFlags, type Evaluation, type ProfileDetail } from '@flowaudit/ui'
-import flowstatJson from '../../../test/risk/fixtures/evaluation-flowstat.json'
-import profileJson from '../../../test/risk/fixtures/profile-year-bound.json'
-import yearBoundJson from '../../../test/risk/fixtures/evaluation-year-bound.json'
+import flowstatJson from '../../../../ui-core/test/fixtures/risk/evaluation-flowstat.json'
+import profileJson from '../../../../ui-core/test/fixtures/risk/profile-year-bound.json'
+import yearBoundJson from '../../../../ui-core/test/fixtures/risk/evaluation-year-bound.json'
 
 // Echte Antworten von auditcore_risk.web mit synthetischen Belegen.
 const SAMPLES = {

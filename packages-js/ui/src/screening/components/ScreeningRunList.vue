@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { RunSummary } from '../types'
-import { formatDate } from '../view'
+import { screeningMessages } from '../core'
+import type { RunSummary } from '../core'
+import { formatDate } from '../core'
 
 defineProps<{ runs: RunSummary[]; activeId: string | null }>()
 const emit = defineEmits<{ open: [runId: string] }>()

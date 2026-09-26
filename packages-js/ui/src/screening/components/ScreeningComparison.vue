@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages, type ScreeningKey } from '../messages'
-import type { HitView, SubjectView } from '../types'
-import { comparisonRows, indicatorLabels, type MatchState } from '../view'
+import { screeningMessages, type ScreeningKey } from '../core'
+import type { HitView, SubjectView } from '../core'
+import { comparisonRows, indicatorLabels, type MatchState } from '../core'
 
 const props = defineProps<{ subject: SubjectView; hit: HitView }>()
 const { t } = useI18n(screeningMessages)

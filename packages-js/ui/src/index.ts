@@ -1,6 +1,5 @@
 import '@flowaudit/ui-core/style.css'
 import './kanban/kanban.css'
-import './screening/screening.css'
 
 export * from './base'
 export * from './i18n'

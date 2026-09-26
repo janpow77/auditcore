@@ -3,8 +3,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { defineFlowauditElements } from '../../src/elements'
 import { RestError } from '../../src/rest'
 import ScreeningReview from '../../src/screening/ScreeningReview.vue'
-import type { HitView, LogView, RunView, ScreeningPort, SettingsView, SourcesView } from '../../src/screening/types'
-import fixture from '../fixtures/screening-contract.json'
+import type { HitView, LogView, RunView, ScreeningPort, SettingsView, SourcesView } from '../../src'
+import fixture from '../../../ui-core/test/fixtures/screening-contract.json'
 
 const run = fixture.run as unknown as RunView
 const firstSubject = run.subjects[0]!

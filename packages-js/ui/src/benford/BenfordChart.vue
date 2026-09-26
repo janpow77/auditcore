@@ -1,27 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { benfordBarTitle, benfordChartTitle, benfordMessages, benfordTickText, chartGeometry, type Conformity } from '@flowaudit/ui-core'
 import { useId } from '../composables/useId'
-import { formatNumber, formatPercent, useI18n, type Locale } from '../i18n'
-import { chartGeometry } from './chart'
-import { benfordMessages } from './messages'
-import type { Conformity } from './types'
+import { useI18n, type Locale } from '../i18n'
 
 const props = withDefaults(defineProps<{ conformity: Conformity; testLabel: string; locale?: Locale }>(), { locale: undefined })
 const { t, locale: active } = useI18n(benfordMessages, () => props.locale)
 const id = useId('fa-benford-chart')
 const geometry = computed(() => chartGeometry(props.conformity.rows))
-const percent = (value: number, digits = 1): string => formatPercent(value, active.value, digits)
-
-function barTitle(index: number): string {
-  const row = props.conformity.rows[index]
-  if (!row) return ''
-  return t('barTitle', {
-    digit: row.digit,
-    observed: percent(row.observed_share, 2),
-    expected: percent(row.expected_share, 2),
-    z: formatNumber(row.z, active.value, { maximumFractionDigits: 2 }),
-  })
-}
 </script>
 
 <template>
@@ -33,11 +19,11 @@ function barTitle(index: number): string {
       :aria-labelledby="`${id}-title`"
       data-testid="benford-chart"
     >
-      <title :id="`${id}-title`">{{ t('chartLabel', { test: testLabel, count: conformity.exceeding_digits.length }) }}</title>
+      <title :id="`${id}-title`">{{ benfordChartTitle(conformity, testLabel, t) }}</title>
       <g class="fa-benford__grid">
         <g v-for="tick in geometry.yTicks" :key="tick.value">
           <line :x1="geometry.plot.x" :x2="geometry.plot.x + geometry.plot.width" :y1="tick.y" :y2="tick.y" />
-          <text :x="geometry.plot.x - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle">{{ percent(tick.value, geometry.tickDigits) }}</text>
+          <text :x="geometry.plot.x - 8" :y="tick.y" text-anchor="end" dominant-baseline="middle">{{ benfordTickText(tick.value, geometry.tickDigits, active) }}</text>
         </g>
       </g>
       <g>
@@ -53,7 +39,7 @@ function barTitle(index: number): string {
           :height="bar.height"
           rx="2"
         >
-          <title>{{ barTitle(index) }}</title>
+          <title>{{ benfordBarTitle(conformity, index, t, active) }}</title>
         </rect>
       </g>
       <path class="fa-benford__expected" :d="geometry.expectedPath" />

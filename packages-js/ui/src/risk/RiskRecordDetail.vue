@@ -2,10 +2,7 @@
 import { computed } from 'vue'
 import { useI18n, type Locale } from '../i18n'
 import RiskFlagCard from './RiskFlagCard.vue'
-import { riskMessages } from './messages'
-import type { ProfileReference, RecordView } from './types'
-import { formatValue } from './view/format'
-import { pairs, recordLabel, type FlagEntry } from './view/state'
+import { riskMessages, type ProfileReference, type RecordView, formatValue, pairs, recordLabel, type FlagEntry } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   record?: RecordView | null
@@ -33,12 +30,3 @@ const assessment = computed(() => pairs(props.record?.assessment).filter(([, val
     </template>
   </section>
 </template>
-
-<style>
-.fa-risk-detail { display: grid; gap: var(--fa-space-3); align-content: start; }
-.fa-risk-detail h3 { margin: 0; font-size: var(--fa-font-size-lg); color: var(--fa-color-text); }
-.fa-risk-detail__empty { margin: 0; padding: var(--fa-space-4); border: 1px dashed var(--fa-color-border-strong); border-radius: var(--fa-radius); color: var(--fa-color-text-muted); font-size: var(--fa-font-size-sm); }
-.fa-risk-detail__assessment { display: grid; grid-template-columns: max-content 1fr; gap: 2px var(--fa-space-3); margin: 0; font-size: var(--fa-font-size-sm); }
-.fa-risk-detail__assessment dt { color: var(--fa-color-text-muted); }
-.fa-risk-detail__assessment dd { margin: 0; }
-</style>

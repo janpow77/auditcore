@@ -3,8 +3,7 @@ import { computed } from 'vue'
 import FaBadge from '../base/FaBadge.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
-import { samplingMessages } from './messages'
-import type { MethodProfile, SamplingCatalogue } from './types'
+import { methodGroups, methodStatusKey, methodTone, samplingMessages, type MethodProfile, type SamplingCatalogue } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{
   catalogue: SamplingCatalogue
@@ -15,14 +14,8 @@ const props = withDefaults(defineProps<{
 const methodId = defineModel<string>({ required: true })
 const { t } = useI18n(samplingMessages, () => props.locale)
 const id = useId('fa-sampling-method')
-const groups = computed(() => [
-  { kind: 'mus', label: 'MUS', methods: props.catalogue.methods.filter((m) => m.kind === 'mus') },
-  { kind: 'srs', label: 'SRS', methods: props.catalogue.methods.filter((m) => m.kind === 'srs') },
-])
-const tone = computed(() => {
-  const status = props.profile?.status
-  return status === 'RECOMMENDED' ? 'success' : status === 'SUPERSEDED' ? 'warning' : 'neutral'
-})
+const groups = computed(() => methodGroups(props.catalogue))
+const tone = computed(() => methodTone(props.profile))
 </script>
 
 <template>
@@ -38,7 +31,7 @@ const tone = computed(() => {
     </label>
     <p :id="`${id}-hint`" class="fa-sampling__hint">{{ t('methodHint') }}</p>
     <div v-if="profile" class="fa-sampling__profile">
-      <p><FaBadge :tone="tone">{{ t(`status${profile.status}`) }}</FaBadge> <code class="fa-sampling__id">{{ profile.id }}</code></p>
+      <p><FaBadge :tone="tone">{{ t(methodStatusKey(profile)) }}</FaBadge> <code class="fa-sampling__id">{{ profile.id }}</code></p>
       <p><span class="fa-sampling__label">{{ t('formula') }}</span><br /><span class="fa-sampling__formula">{{ profile.formula }}</span></p>
       <p class="fa-sampling__note">{{ profile.note }}</p>
       <details class="fa-sampling__source">

@@ -4,23 +4,13 @@ import FaBadge from '../base/FaBadge.vue'
 import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 import type { TableColumn, TableRow } from '../table'
-import { riskMessages } from './messages'
-import type { FieldEntry, ProfileDetail, RuleView } from './types'
-import { formatValue, parameterLabel } from './view/format'
-import { requirementKey, statusHintKey, statusKey, whenMissingKey } from './view/labels'
-import { pairs } from './view/state'
+import { riskMessages, type FieldEntry, type ProfileDetail, type RuleView, formatValue, parameterLabel, requirementKey, profileHintText, profileStatusText, whenMissingKey, pairs } from '@flowaudit/ui-core'
 
 const props = withDefaults(defineProps<{ profile?: ProfileDetail | null; locale?: Locale }>(), { profile: null, locale: undefined })
 const { t, locale: active } = useI18n(riskMessages, () => props.locale)
 
-const status = computed(() => {
-  const key = props.profile ? statusKey(props.profile.status) : null
-  return key ? t(key) : (props.profile?.status ?? '')
-})
-const hint = computed(() => {
-  const key = props.profile ? statusHintKey(props.profile.status) : null
-  return key ? t(key) : ''
-})
+const status = computed(() => profileStatusText(props.profile, t))
+const hint = computed(() => profileHintText(props.profile, t))
 const ruleColumns = computed<TableColumn[]>(() => [
   { key: 'code', label: t('colCode') },
   { key: 'label', label: t('colLabel') },
@@ -86,16 +76,3 @@ const asField = (row: TableRow): FieldEntry => row as unknown as FieldEntry
     </FaTable>
   </section>
 </template>
-
-<style>
-.fa-risk-profile { display: grid; gap: var(--fa-space-3); font-size: var(--fa-font-size-sm); color: var(--fa-color-text); }
-.fa-risk-profile__identity { display: grid; grid-template-columns: max-content 1fr; gap: var(--fa-space-1) var(--fa-space-3); margin: 0; }
-.fa-risk-profile__identity dt { color: var(--fa-color-text-muted); font-weight: 600; }
-.fa-risk-profile__identity dd { margin: 0; min-width: 0; }
-.fa-risk-profile__hash { word-break: break-all; font-size: var(--fa-font-size-xs); }
-.fa-risk-profile__hint { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius-sm); background: var(--fa-color-warning-soft); color: var(--fa-color-warning); font-weight: 600; }
-.fa-risk-profile__legal { margin: 0; color: var(--fa-color-text-muted); }
-.fa-risk-profile h4 { margin: 0 0 var(--fa-space-1); }
-.fa-risk-profile__chip { display: inline-block; margin: 0 var(--fa-space-1) 2px 0; padding: 0 var(--fa-space-1); border-radius: var(--fa-radius-sm); background: var(--fa-color-surface-sunken); font-family: var(--fa-font-mono); font-size: var(--fa-font-size-xs); }
-.fa-risk-profile__param, .fa-risk-profile__use { display: block; font-size: var(--fa-font-size-xs); }
-</style>

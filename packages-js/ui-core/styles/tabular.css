@@ -1,0 +1,11 @@
+/* Datei-Import (Stichprobe, Benford) – TableImport (Vue) und TableImport (React). */
+.fa-import { display: flex; flex-direction: column; gap: var(--fa-space-2); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-import__label, .fa-import__field > span { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-import__file { font: inherit; }
+.fa-import__file:focus-visible, .fa-import select:focus-visible, .fa-import input[type='checkbox']:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-import__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: var(--fa-space-3); align-items: end; }
+.fa-import__field { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-import select { min-height: 2.25rem; padding: 0 var(--fa-space-2); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-import__check { display: inline-flex; gap: var(--fa-space-2); align-items: center; }
+.fa-import__note { margin: 0; color: var(--fa-color-text-muted); }
+.fa-import__warning { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-warning-soft); color: var(--fa-color-warning); }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from '../../i18n'
-import { screeningMessages } from '../messages'
-import type { ReviewView } from '../types'
+import { screeningMessages } from '../core'
+import type { ReviewView } from '../core'
 
 const props = defineProps<{ review: ReviewView; formatDate: (value: string | null | undefined) => string }>()
 const { t } = useI18n(screeningMessages)

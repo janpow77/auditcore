@@ -1,0 +1,92 @@
+/* Risiko-Merkmale (<flowaudit-risk-flags>): Vue und React. */
+
+/* RiskFlags */
+.fa-risk { display: grid; gap: var(--fa-space-4); font-family: var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-risk__head h2 { margin: 0; font-size: var(--fa-font-size-lg); }
+.fa-risk__profile { margin: var(--fa-space-1) 0 0; font-size: var(--fa-font-size-sm); color: var(--fa-color-text-muted); }
+.fa-risk__hint { margin: var(--fa-space-2) 0 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius-sm); background: var(--fa-color-warning-soft); color: var(--fa-color-warning); font-size: var(--fa-font-size-sm); font-weight: 600; }
+.fa-risk__body { display: grid; gap: var(--fa-space-4); align-items: start; }
+@media (min-width: 72rem) { .fa-risk__body { grid-template-columns: minmax(0, 1fr) minmax(22rem, 30rem); } }
+.fa-risk__profile-info summary { cursor: pointer; font-weight: 600; color: var(--fa-color-accent); padding: var(--fa-space-2) 0; }
+.fa-risk__profile-info summary:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); border-radius: var(--fa-radius-sm); }
+@media (prefers-reduced-motion: reduce) { .fa-risk * { transition: none !important; } }
+
+/* RiskFlagSummary */
+.fa-risk-summary { display: grid; gap: var(--fa-space-3); }
+.fa-risk-summary__totals { display: flex; flex-wrap: wrap; gap: var(--fa-space-4); margin: 0; padding: 0; list-style: none; font-size: var(--fa-font-size-sm); color: var(--fa-color-text); }
+.fa-risk-summary__totals li { display: inline-flex; align-items: center; gap: var(--fa-space-1); }
+.fa-risk-summary__code { padding: 0; border: 0; background: none; color: var(--fa-color-accent); font: 600 var(--fa-font-size-sm) var(--fa-font-mono); cursor: pointer; text-decoration: underline dotted; }
+.fa-risk-summary__code:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); border-radius: var(--fa-radius-sm); }
+.fa-risk-summary__skipped { display: block; margin-top: var(--fa-space-1); font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-risk-summary__count { display: inline-flex; align-items: center; gap: var(--fa-space-1); white-space: nowrap; }
+.fa-risk-summary__bar { display: inline-block; width: 4rem; height: 0.4rem; margin-inline-end: var(--fa-space-2); border-radius: 999px; background: var(--fa-color-surface-sunken); vertical-align: middle; overflow: hidden; }
+.fa-risk-summary__bar span { display: block; height: 100%; background: var(--fa-color-danger); }
+.fa-risk-summary__undetermined { display: inline-grid; justify-items: end; gap: 2px; }
+.fa-risk-summary__undetermined small { font-size: var(--fa-font-size-xs); color: var(--fa-color-warning); }
+.fa-risk-summary__dataset h3 { margin: 0 0 var(--fa-space-2); font-size: var(--fa-font-size-md); }
+.fa-risk-summary__dataset p { margin: 0; font-size: var(--fa-font-size-sm); }
+
+/* RiskFlagFilter */
+.fa-risk-filter { display: grid; grid-template-columns: auto minmax(10rem, 1fr); gap: var(--fa-space-2) var(--fa-space-3); align-items: center; font-size: var(--fa-font-size-sm); color: var(--fa-color-text); }
+.fa-risk-filter label { color: var(--fa-color-text-muted); font-weight: 600; }
+.fa-risk-filter select, .fa-risk-filter input { min-width: 0; padding: var(--fa-space-1) var(--fa-space-2); border: 1px solid var(--fa-color-border-strong); border-radius: var(--fa-radius-sm); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-risk-filter select:focus-visible, .fa-risk-filter input:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-risk-filter__result { grid-column: 1 / -1; color: var(--fa-color-text-muted); }
+@media (min-width: 60rem) { .fa-risk-filter { grid-template-columns: auto minmax(12rem, 1fr) auto minmax(10rem, 14rem) auto minmax(10rem, 1fr); } }
+
+/* RiskFlagTable */
+.fa-risk-table .fa-table td { padding-block: var(--fa-space-1); }
+.fa-risk-table__record { font-family: var(--fa-font-mono); font-size: var(--fa-font-size-sm); }
+.fa-risk-table__record[aria-current='true'] { font-weight: 700; color: var(--fa-color-accent); }
+.fa-risk-table__record[aria-current='true']::before { content: '▸ '; }
+
+/* RiskFlagState */
+.fa-risk-state { display: inline-flex; align-items: center; gap: var(--fa-space-1); padding: 0.0625rem var(--fa-space-2); border-radius: 999px; border: 1px solid transparent; font: 600 var(--fa-font-size-xs) / 1.3 var(--fa-font-sans); white-space: nowrap; }
+.fa-risk-state__icon { display: inline-grid; place-items: center; width: 1.1em; height: 1.1em; font-weight: 700; }
+.fa-risk-state--compact { padding: 0.0625rem; min-width: 1.6em; justify-content: center; }
+.fa-risk-state--danger { background: var(--fa-color-danger-soft); color: var(--fa-color-danger); border-color: var(--fa-color-danger); }
+.fa-risk-state--warning { background: var(--fa-color-warning-soft); color: var(--fa-color-warning); border: 1px dashed var(--fa-color-warning); }
+.fa-risk-state--neutral { color: var(--fa-color-text-muted); }
+.fa-risk-state--skipped { border: 1px dotted var(--fa-color-border-strong); }
+
+/* RiskRecordDetail */
+.fa-risk-detail { display: grid; gap: var(--fa-space-3); align-content: start; }
+.fa-risk-detail h3 { margin: 0; font-size: var(--fa-font-size-lg); color: var(--fa-color-text); }
+.fa-risk-detail__empty { margin: 0; padding: var(--fa-space-4); border: 1px dashed var(--fa-color-border-strong); border-radius: var(--fa-radius); color: var(--fa-color-text-muted); font-size: var(--fa-font-size-sm); }
+.fa-risk-detail__assessment { display: grid; grid-template-columns: max-content 1fr; gap: 2px var(--fa-space-3); margin: 0; font-size: var(--fa-font-size-sm); }
+.fa-risk-detail__assessment dt { color: var(--fa-color-text-muted); }
+.fa-risk-detail__assessment dd { margin: 0; }
+
+/* RiskFlagCard */
+.fa-risk-card { display: grid; gap: var(--fa-space-2); padding: var(--fa-space-3) var(--fa-space-4); border: 1px solid var(--fa-color-border); border-inline-start: 4px solid var(--fa-color-danger); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); }
+.fa-risk-card--undetermined { border-style: dashed; border-inline-start: 4px dashed var(--fa-color-warning); background: var(--fa-color-surface-raised); }
+.fa-risk-card__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2); }
+.fa-risk-card__head h4 { flex: 1 1 16rem; margin: 0; font-size: var(--fa-font-size-md); }
+.fa-risk-card code { font-family: var(--fa-font-mono); font-size: 0.95em; }
+.fa-risk-card__profile { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-risk-card__reason, .fa-risk-card__note { margin: 0; }
+.fa-risk-card__note { color: var(--fa-color-text-muted); }
+.fa-risk-card__grid { display: grid; gap: var(--fa-space-3); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.fa-risk-card__pairs { border-collapse: collapse; width: 100%; }
+.fa-risk-card__pairs caption { text-align: start; font-weight: 600; padding-bottom: var(--fa-space-1); }
+.fa-risk-card__pairs th, .fa-risk-card__pairs td { padding: 2px var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: start; vertical-align: top; }
+.fa-risk-card__pairs thead th { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-risk-card__pairs tbody th { font-weight: 400; color: var(--fa-color-text-muted); }
+.fa-risk-card__empty { color: var(--fa-color-warning); font-style: italic; font-weight: 600; }
+.fa-risk-card__more summary { cursor: pointer; color: var(--fa-color-accent); }
+.fa-risk-card__more summary:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); border-radius: var(--fa-radius-sm); }
+.fa-risk-card__more dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px var(--fa-space-3); margin: var(--fa-space-2) 0 0; }
+.fa-risk-card__more dt { color: var(--fa-color-text-muted); }
+.fa-risk-card__more dd { margin: 0; word-break: break-word; }
+
+/* RiskProfileInfo */
+.fa-risk-profile { display: grid; gap: var(--fa-space-3); font-size: var(--fa-font-size-sm); color: var(--fa-color-text); }
+.fa-risk-profile__identity { display: grid; grid-template-columns: max-content 1fr; gap: var(--fa-space-1) var(--fa-space-3); margin: 0; }
+.fa-risk-profile__identity dt { color: var(--fa-color-text-muted); font-weight: 600; }
+.fa-risk-profile__identity dd { margin: 0; min-width: 0; }
+.fa-risk-profile__hash { word-break: break-all; font-size: var(--fa-font-size-xs); }
+.fa-risk-profile__hint { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius-sm); background: var(--fa-color-warning-soft); color: var(--fa-color-warning); font-weight: 600; }
+.fa-risk-profile__legal { margin: 0; color: var(--fa-color-text-muted); }
+.fa-risk-profile h4 { margin: 0 0 var(--fa-space-1); }
+.fa-risk-profile__chip { display: inline-block; margin: 0 var(--fa-space-1) 2px 0; padding: 0 var(--fa-space-1); border-radius: var(--fa-radius-sm); background: var(--fa-color-surface-sunken); font-family: var(--fa-font-mono); font-size: var(--fa-font-size-xs); }
+.fa-risk-profile__param, .fa-risk-profile__use { display: block; font-size: var(--fa-font-size-xs); }
