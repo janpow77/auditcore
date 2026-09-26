@@ -80,6 +80,11 @@ const SERVER_FORMATS: ReadonlyArray<[ServerExportFormat, 'serverDocx' | 'serverP
   ['json', 'serverJson'],
 ]
 
+/** Kennung des angezeigten Vergleichs (für Speichern und Server-Exporte). */
+export function synopsisId(state: SynopsisData, inputs: SynopsisInputs): string | undefined {
+  return (inputs.comparison ?? state.loaded)?.id ?? inputs.comparisonId
+}
+
 /** Ergebnisobjekt vor lokalen Änderungen: Prop `result`, sonst gespeicherter oder geladener Vergleich. */
 export function synopsisBase(state: SynopsisData, inputs: SynopsisInputs): ComparisonResult | null {
   return inputs.result ?? (inputs.comparison ?? state.loaded)?.result ?? null
@@ -99,28 +104,50 @@ function buildView(state: SynopsisData, inputs: SynopsisInputs, result: Comparis
   })
 }
 
+interface Navigation {
+  activeId: string | null
+  position: string
+  canPrev: boolean
+  canNext: boolean
+}
+
+/** Position unter den sichtbaren Änderungen; eine ausgeblendete aktive Zeile gilt als keine. */
+function navigation(rows: readonly RowView[], active: string | null, t: SynopsisTranslate): Navigation {
+  const ids = changeIds(rows)
+  const activeId = active !== null && ids.includes(active) ? active : null
+  const index = activeId === null ? -1 : ids.indexOf(activeId)
+  return {
+    activeId,
+    position: positionText(ids, activeId, t),
+    canPrev: ids.length > 0 && index !== 0,
+    canNext: ids.length > 0 && index !== ids.length - 1,
+  }
+}
+
+function selectedText(view: SynopsisView | null, t: SynopsisTranslate): string {
+  const all = view?.rows ?? []
+  return t('selectedCount', { count: all.filter((row) => row.selected).length, total: all.length })
+}
+
+/** Wortweise Hervorhebung: Auswahl der Werkzeugleiste, sonst Vorgabe des Ergebnisses, sonst an. */
+function highlightOf(state: SynopsisData, result: ComparisonResult | null): boolean {
+  return state.filter.highlight ?? result?.metadata?.highlight_words ?? true
+}
+
 export function selectSynopsis(state: SynopsisData, inputs: SynopsisInputs, t: SynopsisTranslate): SynopsisSelection {
-  const comparison = inputs.comparison ?? state.loaded
-  const currentId = comparison?.id ?? inputs.comparisonId
+  const currentId = synopsisId(state, inputs)
   const base = synopsisBase(state, inputs)
   const result = base ? { ...base, rows: applyRowOverrides(base.rows, state.overrides) } : null
   const view = result ? buildView(state, inputs, result, t) : null
   const rows = view ? filterRows(view.rows, state.filter) : []
-  const all = view?.rows ?? []
-  const ids = changeIds(rows)
-  const activeId = state.activeId !== null && ids.includes(state.activeId) ? state.activeId : null
-  const index = activeId === null ? -1 : ids.indexOf(activeId)
   return {
     currentId,
     result,
     view,
     rows,
-    selectedText: t('selectedCount', { count: all.filter((row) => row.selected).length, total: all.length }),
-    highlight: state.filter.highlight ?? result?.metadata?.highlight_words ?? true,
-    activeId,
-    position: positionText(ids, activeId, t),
-    canPrev: ids.length > 0 && index !== 0,
-    canNext: ids.length > 0 && index !== ids.length - 1,
+    selectedText: selectedText(view, t),
+    highlight: highlightOf(state, result),
+    ...navigation(rows, state.activeId, t),
     serverExports: serverExports(inputs.port, currentId, t),
   }
 }
@@ -170,7 +197,7 @@ export function createSynopsisController(t: () => SynopsisTranslate) {
       return { overrides }
     })
     const update: RowUpdate = { row_id: id, ...patch }
-    const target = (inputs.comparison ?? store.get().loaded)?.id ?? inputs.comparisonId
+    const target = synopsisId(store.get(), inputs)
     if (inputs.port?.updateRows && target) {
       try {
         await inputs.port.updateRows(target, [update])
@@ -208,7 +235,9 @@ export function createSynopsisController(t: () => SynopsisTranslate) {
     setHighlight: (highlight: boolean) => setFilter({ highlight }),
     activate: (id: string | null) => store.set({ activeId: id }),
     /** Neues Ergebnisobjekt: lokale Zeilenänderungen verwerfen. */
-    resetOverrides: () => store.set({ overrides: new Map() }),
+    resetOverrides: () => {
+      if (store.get().overrides.size) store.set({ overrides: new Map() })
+    },
   }
 }
 

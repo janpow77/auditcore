@@ -32,5 +32,8 @@
   },
   "dependencies": {
     "@flowaudit/common": "0.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.2"
   }
 }

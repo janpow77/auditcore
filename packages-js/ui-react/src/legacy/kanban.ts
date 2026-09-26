@@ -16,7 +16,10 @@ export interface FlowauditKanbanBoardProps {
   locale?: Locale
 }
 
-/** `<flowaudit-kanban-board>` als React-Komponente. */
+/**
+ * `<flowaudit-kanban-board>` als React-Komponente.
+ * @deprecated Hülle um eine Vue-Web-Component (braucht Vue); nur bis zur nativen React-Fassung.
+ */
 export const FlowauditKanbanBoard = createElementComponent<
   FlowauditKanbanBoardProps,
   { onBoardChange: string; onError: string; onFullscreen: string; onNavigate: string; onAttachment: string; onCardOpen: string }
@@ -31,7 +34,10 @@ export interface FlowauditKanbanBoardsProps {
   locale?: Locale
 }
 
-/** `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente. */
+/**
+ * `<flowaudit-kanban-boards>` (Boardliste) als React-Komponente.
+ * @deprecated Hülle um eine Vue-Web-Component (braucht Vue); nur bis zur nativen React-Fassung.
+ */
 export const FlowauditKanbanBoards = createElementComponent<FlowauditKanbanBoardsProps, { onBoardSelect: string; onCreated: string }>('flowaudit-kanban-boards', {
   properties: ['port', 'activeId', 'locale'],
   events: { onBoardSelect: 'board-select', onCreated: 'created' },

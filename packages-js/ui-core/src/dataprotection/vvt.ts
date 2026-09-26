@@ -55,14 +55,30 @@ export interface VvtView {
   issues: Issue[]
 }
 
+function editingOf(state: VvtData): boolean {
+  return state.working !== null && state.showing === 'draft'
+}
+
+/** Inhalt als Grundlage des Bearbeitens: offener Entwurf, sonst freigegebene Fassung. */
+function editBase(register: RegisterState | null): RegisterContent {
+  return register?.draft?.content ?? register?.released?.content ?? emptyContent()
+}
+
+function shownContent(state: VvtData, version: VersionView | null, editing: boolean): RegisterContent {
+  if (editing && state.working) return state.working
+  return version?.content ?? emptyContent()
+}
+
+function shownIssues(state: VvtData, version: VersionView | null, editing: boolean): Issue[] {
+  if (editing && state.checked) return state.checked
+  return version?.issues ?? []
+}
+
 export function vvtView(state: VvtData): VvtView {
   const version = currentVersion(state.register, state.showing)
-  const editing = state.working !== null && state.showing === 'draft'
-  const content = (editing ? state.working : null) ?? version?.content ?? emptyContent()
-  const base = state.register?.draft?.content ?? state.register?.released?.content ?? emptyContent()
-  const dirty = state.working !== null && JSON.stringify(state.working) !== JSON.stringify(base)
-  const issues = (editing ? state.checked : null) ?? version?.issues ?? []
-  return { version, editing, content, dirty, issues }
+  const editing = editingOf(state)
+  const dirty = state.working !== null && JSON.stringify(state.working) !== JSON.stringify(editBase(state.register))
+  return { version, editing, content: shownContent(state, version, editing), dirty, issues: shownIssues(state, version, editing) }
 }
 
 /** Vier-Augen-Hinweis: die angemeldete Person hat den offenen Entwurf bearbeitet. */

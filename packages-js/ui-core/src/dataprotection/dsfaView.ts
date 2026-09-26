@@ -29,6 +29,14 @@ export interface BlockProgress {
   yes: number
 }
 
+function residualFrom(raw: Partial<ScenarioInput>): Pick<ScenarioInput, 'residual_severity' | 'residual_likelihood' | 'residual_justification'> {
+  return {
+    residual_severity: raw.residual_severity ?? null,
+    residual_likelihood: raw.residual_likelihood ?? null,
+    residual_justification: raw.residual_justification ?? '',
+  }
+}
+
 function scenarioFrom(raw: Partial<ScenarioInput>, profile: DataProtectionProfile): ScenarioInput {
   const middle = Math.ceil((profile.risk.scale_min + profile.risk.scale_max) / 2)
   return {
@@ -37,9 +45,7 @@ function scenarioFrom(raw: Partial<ScenarioInput>, profile: DataProtectionProfil
     severity: raw.severity ?? middle,
     likelihood: raw.likelihood ?? middle,
     measures: [...(raw.measures ?? [])],
-    residual_severity: raw.residual_severity ?? null,
-    residual_likelihood: raw.residual_likelihood ?? null,
-    residual_justification: raw.residual_justification ?? '',
+    ...residualFrom(raw),
   }
 }
 

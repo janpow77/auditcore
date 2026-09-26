@@ -1,7 +1,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { FlowauditScreeningReview, defineFlowauditElements } from '../src'
+import { FlowauditScreeningReview, defineFlowauditElements } from '../src/elements'
 import fixture from '../../ui/test/fixtures/screening-contract.json'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true

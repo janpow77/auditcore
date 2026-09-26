@@ -1,7 +1,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { FlowauditGeoMap, defineFlowauditElements } from '../src'
+import { FlowauditGeoMap, defineFlowauditElements } from '../src/elements'
 import catalogue from '../../ui/test/fixtures/geo-catalogue.json'
 import radius from '../../ui/test/fixtures/geo-radius.json'
 import utm from '../../ui/test/fixtures/geo-utm.json'

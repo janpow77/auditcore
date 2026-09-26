@@ -16,12 +16,13 @@ export function useClickOutside(
 ): void {
   const latest = useRef(handler)
   latest.current = handler
-  const list = Array.isArray(refs) ? refs : [refs]
+  const targets = useRef(Array.isArray(refs) ? refs : [refs])
+  targets.current = Array.isArray(refs) ? refs : [refs]
   const { escape, enabled = true } = options
   useEffect(() => {
     if (!enabled) return undefined
     return onClickOutside(
-      list.map((ref) => () => ref.current),
+      targets.current.map((ref) => () => ref.current),
       (event) => latest.current(event),
       { escape },
     )

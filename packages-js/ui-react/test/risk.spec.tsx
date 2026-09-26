@@ -2,7 +2,7 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { Evaluation } from '@flowaudit/ui'
-import { FlowauditRiskFlags, defineFlowauditElements } from '../src'
+import { FlowauditRiskFlags, defineFlowauditElements } from '../src/elements'
 import evaluationJson from '../../ui/test/risk/fixtures/evaluation-year-bound.json'
 
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true

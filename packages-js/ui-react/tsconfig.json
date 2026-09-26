@@ -21,6 +21,9 @@
       ],
       "@flowaudit/common/browser": [
         "../common/src/browser.ts"
+      ],
+      "@flowaudit/ui-core": [
+        "../ui-core/src/index.ts"
       ]
     }
   },

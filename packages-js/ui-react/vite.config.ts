@@ -5,9 +5,9 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [dts({ include: ['src'], tsconfigPath: './tsconfig.json', entryRoot: 'src', pathsToAliases: false })],
   build: {
-    lib: { entry: resolve(__dirname, 'src/index.ts'), formats: ['es'], fileName: 'index' },
+    lib: { entry: { index: resolve(__dirname, 'src/index.ts'), elements: resolve(__dirname, 'src/elements.ts') }, formats: ['es'] },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'vue', /^@flowaudit\/ui(\/.*)?$/, '@flowaudit/kanban-core', /^@flowaudit\/common(\/.*)?$/],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'vue', /^@flowaudit\/ui(-core)?(\/.*)?$/, '@flowaudit/kanban-core', /^@flowaudit\/common(\/.*)?$/],
     },
     sourcemap: true,
   },

@@ -81,29 +81,45 @@ table{border-collapse:collapse;width:100%;margin-bottom:.75rem}th,td{border:1px 
 th{width:32%;background:#f0f0f0}.issues li.required{color:#8a1c12}footer{margin-top:2rem;font-size:9pt;color:#555}
 @media print{h3{break-after:avoid}table{break-inside:auto}tr{break-inside:avoid}}`
 
-export function registerHtml(input: RegisterExportInput): string {
-  const { content, columns, issues, texts } = input
-  const e = (value: string): string => escapeHtml(value)
-  const parts = [`<h1>${e(texts.title)}</h1>`, `<p>${e(input.versionLabel)}</p>`, '<table>']
-  parts.push(`<tr><th scope="row">${e(texts.controller)}</th><td>${e(content.deckblatt.verantwortlicher?.name || texts.empty)}</td></tr>`)
-  parts.push(`<tr><th scope="row">${e(texts.dpo)}</th><td>${e(content.deckblatt.dsb?.name || texts.empty)}</td></tr></table>`)
+const escape = (value: string): string => escapeHtml(value)
+
+function coverHtml(input: RegisterExportInput): string[] {
+  const { content, texts } = input
+  return [
+    `<h1>${escape(texts.title)}</h1>`, `<p>${escape(input.versionLabel)}</p>`, '<table>',
+    `<tr><th scope="row">${escape(texts.controller)}</th><td>${escape(content.deckblatt.verantwortlicher?.name || texts.empty)}</td></tr>`,
+    `<tr><th scope="row">${escape(texts.dpo)}</th><td>${escape(content.deckblatt.dsb?.name || texts.empty)}</td></tr></table>`,
+  ]
+}
+
+function activitiesHtml(input: RegisterExportInput): string[] {
+  const { content, columns, texts } = input
+  const parts: string[] = []
   for (const group of groupByDepartment(content)) {
-    parts.push(`<h2>${e(group.department || texts.withoutDepartment)}</h2>`)
+    parts.push(`<h2>${escape(group.department || texts.withoutDepartment)}</h2>`)
     for (const { activity } of group.items) {
-      parts.push(`<h3>${e(cell(activity.name, texts))}</h3><table>`)
+      parts.push(`<h3>${escape(cell(activity.name, texts))}</h3><table>`)
       for (const column of columns) {
-        parts.push(`<tr><th scope="row">${e(column.title)}</th><td>${e(cell(activity[column.key], texts))}</td></tr>`)
+        parts.push(`<tr><th scope="row">${escape(column.title)}</th><td>${escape(cell(activity[column.key], texts))}</td></tr>`)
       }
       parts.push('</table>')
     }
   }
-  parts.push(`<h2>${e(texts.issues)}</h2><ul class="issues">`)
-  parts.push(...(issues.length
-    ? issues.map((issue) => `<li class="${issue.blocking ? 'required' : 'hint'}">${e(issueLine(issue, texts))}</li>`)
-    : [`<li>${e(texts.noIssues)}</li>`]))
-  parts.push('</ul>')
-  if (input.generatedAt) parts.push(`<footer>${e(texts.generated)} ${e(input.generatedAt)}</footer>`)
-  return `<!DOCTYPE html><html lang="${e(input.lang ?? 'de')}"><head><meta charset="utf-8"><title>${e(texts.title)}</title>` +
+  return parts
+}
+
+function issuesHtml({ issues, texts }: RegisterExportInput): string[] {
+  const items = issues.length
+    ? issues.map((issue) => `<li class="${issue.blocking ? 'required' : 'hint'}">${escape(issueLine(issue, texts))}</li>`)
+    : [`<li>${escape(texts.noIssues)}</li>`]
+  return [`<h2>${escape(texts.issues)}</h2><ul class="issues">`, ...items, '</ul>']
+}
+
+export function registerHtml(input: RegisterExportInput): string {
+  const { texts } = input
+  const parts = [...coverHtml(input), ...activitiesHtml(input), ...issuesHtml(input)]
+  if (input.generatedAt) parts.push(`<footer>${escape(texts.generated)} ${escape(input.generatedAt)}</footer>`)
+  return `<!DOCTYPE html><html lang="${escape(input.lang ?? 'de')}"><head><meta charset="utf-8"><title>${escape(texts.title)}</title>` +
     `<style>${PRINT_CSS}</style></head><body>${parts.join('')}</body></html>`
 }
 

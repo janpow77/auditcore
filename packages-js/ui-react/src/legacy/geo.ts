@@ -13,7 +13,10 @@ export interface FlowauditGeoMapProps {
   locale?: Locale
 }
 
-/** `<flowaudit-geo-map>` als React-Komponente: Karte, Umkreis, Punkt in Fläche, UTM, Vereinfachung, GeoPackage. */
+/**
+ * `<flowaudit-geo-map>` als React-Komponente: Karte, Umkreis, Punkt in Fläche, UTM, Vereinfachung, GeoPackage.
+ * @deprecated Hülle um eine Vue-Web-Component (braucht Vue); nur bis zur nativen React-Fassung.
+ */
 export const FlowauditGeoMap = createElementComponent<
   FlowauditGeoMapProps,
   { onRadiusCompleted: string; onLocationChecked: string; onAreasLoaded: string; onReferenceChange: string; onError: string }
