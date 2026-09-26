@@ -4,14 +4,18 @@
  * Ports gilt, sobald keine weitere Änderung aussteht; ein Fehler rollt zurück
  * bzw. lädt nach allen ausstehenden Änderungen neu (auch bei Versionskonflikt).
  */
-import type { ShallowRef } from 'vue'
-import type { Board, BoardPort, CommandContext, CommandResult, KanbanError, MutationResult } from '@flowaudit/kanban-core'
+import type { CommandContext, CommandResult } from '../commands'
+import type { KanbanError } from '../errors'
+import type { Board } from '../model'
+import type { BoardPort, MutationResult } from '../port'
 
 export type LocalChange = ((current: Board, ctx: CommandContext) => CommandResult) | null
 export type RemoteChange = (port: BoardPort, boardId: string) => Promise<MutationResult>
+export type Mutate = (local: LocalChange, remote: RemoteChange) => Promise<MutationResult | null>
 
 export interface MutatorHooks {
-  board: ShallowRef<Board | null>
+  getBoard: () => Board | null
+  setBoard: (board: Board) => void
   port: () => BoardPort | null | undefined
   context: () => CommandContext
   fail: (caught: unknown) => KanbanError
@@ -19,14 +23,14 @@ export interface MutatorHooks {
   reload: () => void
 }
 
-export function createMutator(hooks: MutatorHooks) {
+export function createMutator(hooks: MutatorHooks): Mutate {
   let queue: Promise<unknown> = Promise.resolve()
   let pending = 0
   let resync = false
 
   function rollback(before: Board, caught: unknown): void {
     const failure = hooks.fail(caught)
-    if (pending === 1 && failure.code !== 'VERSION_CONFLICT') hooks.board.value = before
+    if (pending === 1 && failure.code !== 'VERSION_CONFLICT') hooks.setBoard(before)
     else resync = true
   }
 
@@ -41,7 +45,7 @@ export function createMutator(hooks: MutatorHooks) {
   async function send(port: BoardPort, before: Board, remote: RemoteChange): Promise<MutationResult | null> {
     try {
       const result = await remote(port, before.id)
-      if (pending === 1) hooks.board.value = result.board
+      if (pending === 1) hooks.setBoard(result.board)
       hooks.settled(result)
       return result
     } catch (caught) {
@@ -52,12 +56,12 @@ export function createMutator(hooks: MutatorHooks) {
     }
   }
 
-  return function mutate(local: LocalChange, remote: RemoteChange): Promise<MutationResult | null> {
+  return function mutate(local, remote) {
     const port = hooks.port()
-    const before = hooks.board.value
+    const before = hooks.getBoard()
     if (!port || !before) return Promise.resolve(null)
     try {
-      if (local) hooks.board.value = local(before, hooks.context()).board
+      if (local) hooks.setBoard(local(before, hooks.context()).board)
     } catch (caught) {
       hooks.fail(caught)
       return Promise.resolve(null)

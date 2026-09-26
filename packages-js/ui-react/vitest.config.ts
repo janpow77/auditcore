@@ -4,10 +4,22 @@ import { defineConfig } from 'vitest/config'
 
 const ui = (path: string): string => fileURLToPath(new URL(`../ui/src/${path}`, import.meta.url))
 
+// Andere React-Version (scripts/js/react19-test.mjs bzw. react18-test.mjs): react, react-dom und
+// Testing Library aus `REACT_DIR` statt aus dem Workspace.
+const reactDir = process.env.REACT_DIR
+const reactAliases = reactDir
+  ? [
+      { find: /^react-dom(\/.*)?$/, replacement: `${reactDir}/node_modules/react-dom$1` },
+      { find: /^react(\/.*)?$/, replacement: `${reactDir}/node_modules/react$1` },
+      { find: /^@testing-library\/react$/, replacement: `${reactDir}/node_modules/@testing-library/react` },
+    ]
+  : []
+
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: [
+      ...reactAliases,
       { find: /^@flowaudit\/ui-core\/style\.css$/, replacement: fileURLToPath(new URL('../ui-core/styles/index.css', import.meta.url)) },
       { find: /^@flowaudit\/ui-core$/, replacement: fileURLToPath(new URL('../ui-core/src/index.ts', import.meta.url)) },
       { find: /^@flowaudit\/ui\/elements$/, replacement: ui('elements.ts') },

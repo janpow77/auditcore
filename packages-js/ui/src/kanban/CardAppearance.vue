@@ -2,10 +2,8 @@
 import { ref } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'
-import { CARD_COLORS } from './cardView'
+import { CARD_COLORS, MAX_CARD_IMAGE_BYTES } from './cardView'
 import { kanbanDialogMessages } from './messages'
-
-const MAX_IMAGE_BYTES = 2 * 1024 * 1024
 
 const props = withDefaults(defineProps<{ color: string | null; image: string | null; readOnly?: boolean; locale?: Locale }>(), { readOnly: false, locale: undefined })
 const emit = defineEmits<{ change: [patch: { color?: string; image?: string }] }>()
@@ -19,7 +17,7 @@ function pickImage(event: Event): void {
   input.value = ''
   problem.value = ''
   if (!file) return
-  if (file.size > MAX_IMAGE_BYTES) {
+  if (file.size > MAX_CARD_IMAGE_BYTES) {
     problem.value = t('imageTooLarge')
     return
   }

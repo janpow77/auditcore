@@ -1,25 +1,15 @@
 import { computed, reactive } from 'vue'
-import { isFilterActive, type CardFilter, type DueState, type Priority } from '@flowaudit/kanban-core'
+import { EMPTY_FILTER, filterCriteria, isFilterActive, type KanbanFilterState } from '@flowaudit/kanban-core'
 
-export interface KanbanFilterState {
-  query: string
-  priority: Priority | ''
-  due: DueState | ''
-  tag: string
-}
+export type { KanbanFilterState } from '@flowaudit/kanban-core'
 
 /** Such- und Filterzustand des Boards (Toolbar) als CardFilter der Kernlogik. */
 export function useKanbanFilter() {
-  const state = reactive<KanbanFilterState>({ query: '', priority: '', due: '', tag: '' })
-  const criteria = computed<CardFilter>(() => ({
-    query: state.query,
-    priorities: state.priority ? [state.priority] : [],
-    due_states: state.due ? [state.due] : [],
-    tags: state.tag ? [state.tag] : [],
-  }))
+  const state = reactive<KanbanFilterState>({ ...EMPTY_FILTER })
+  const criteria = computed(() => filterCriteria(state))
   const active = computed(() => isFilterActive(criteria.value))
   function reset(): void {
-    Object.assign(state, { query: '', priority: '', due: '', tag: '' })
+    Object.assign(state, EMPTY_FILTER)
   }
   return { state, criteria, active, reset }
 }
