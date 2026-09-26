@@ -232,11 +232,13 @@ def _run(
     profile_id: str | None,
     sample_size: int | None,
 ) -> _Outcome:
+    if chosen.id in ("mus.conservative", "mus.ratio") and level is not None and profile_id:
+        return _run_statistical_mus(chosen, strata, level, profile_id, sample_size or 0)
+    # z only for the methods with a normal-approximation precision: the conservative
+    # approach needs reliability factors only (Table 4 has levels without z in Table 3)
     statistical = chosen.statistical and level is not None and profile_id is not None
     z = z_value(level, profile_id) if statistical and level is not None and profile_id else None
     kind = chosen.id.split(".")[-1]
-    if chosen.id in ("mus.conservative", "mus.ratio") and level is not None and profile_id:
-        return _run_statistical_mus(chosen, strata, level, profile_id, sample_size or 0)
     if chosen.selection == "pps":
         res, ee, se_mus, steps = mus.project_standard(strata, z)
         return _Outcome(res, ee, se_mus, steps, [], {})
