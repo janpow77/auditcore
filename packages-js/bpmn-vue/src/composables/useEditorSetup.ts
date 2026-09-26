@@ -1,34 +1,20 @@
 /**
- * Setup of one editor: stores, context, mounting, two-way XML sync, palette
- * entries, context-pad popovers and view state (panels, modes, page view).
+ * Setup of one editor in Vue: the framework-free editor session
+ * (`createEditorSession`) with a reactive view state, the stores bound to
+ * Vue and provided as context, and watchers for props and view state.
  */
 
-import { computed, onBeforeUnmount, reactive, ref, shallowRef, watch, type Ref } from 'vue'
-import {
-  applyDirection,
-  COLOR_PICKER_EVENT,
-  keepDirection,
-  rolesFor,
-  type DiagramElement,
-  type Direction,
-  type FlowauditDecorations,
-  type FlowauditModuleOptions,
-  type KeyKind,
-  type Palette,
-  type ProfileData,
-  type RolePaletteProvider,
-  type ValidationPort,
-  type Viewbox,
-} from '@flowaudit/bpmn-flowaudit'
-import type { EditorFactory } from '../editor/createEditor'
-import { readPaletteEntries, type PaletteItem } from '../components/palette/paletteEntries'
-import { createEditorStore, type EditorStore } from '../stores/editorStore'
-import { createSelectionStore } from '../stores/selectionStore'
-import { createValidationStore, type ValidationStore } from '../stores/validationStore'
+import { computed, onBeforeUnmount, reactive, watch, type Ref } from 'vue'
+import { createEditorSession, initialUiState, type EditorFactory, type Popover, type UiState } from '@flowaudit/bpmn-flowaudit/ui'
+import type { FlowauditModuleOptions, ProfileData, ValidationPort } from '@flowaudit/bpmn-flowaudit'
+import { defaultEditorFactory } from '../editor/defaultFactory'
+import { bindEditorCore } from '../stores/editorStore'
+import { bindSelectionCore } from '../stores/selectionStore'
+import { bindValidationCore } from '../stores/validationStore'
 import { provideEditorContext, type EditorPorts } from '../stores/context'
+import { useStore } from './useStore'
 
-export type SideView = 'properties' | 'issues' | 'walkthrough' | 'compare'
-export type DialogId = 'info' | 'export' | 'enrich' | 'esi' | 'search' | 'shortcuts' | 'xml'
+export type { DialogId, Popover, SideView } from '@flowaudit/bpmn-flowaudit/ui'
 
 export interface EditorSetupOptions {
   xml: () => string
@@ -42,140 +28,37 @@ export interface EditorSetupOptions {
   onError: (message: string) => void
 }
 
-export interface Popover {
-  kind: 'color' | 'role'
-  x: number
-  y: number
-  element: DiagramElement
-  mode?: 'assign' | 'add-lane'
-}
-
-/** View state of the editor: panels, side view, dialogs, key filter, modes. */
-function createUiState() {
-  return reactive({
-    leftOpen: true,
-    rightOpen: true,
-    side: 'properties' as SideView,
-    dialogs: { info: false, export: false, enrich: false, esi: false, search: false, shortcuts: false, xml: false } as Record<DialogId, boolean>,
-    filterOpen: false,
-    filterKind: 'ka' as KeyKind,
-    filterValue: '',
-    filterHits: 0,
-    pageView: 'aus',
-    direction: 'waagerecht' as Direction,
-    message: '',
-    decorations: true,
-    minimap: false,
-  })
-}
-
-/** Palette entries of the running editor and triggering them from the Vue palette. */
-function usePaletteItems(editor: EditorStore, profile: () => ProfileData | null) {
-  const palette = shallowRef<PaletteItem[]>([])
-  const instance = () => editor.editor.value
-
-  function readPalette(): void {
-    const service = instance()?.get<Palette>('palette', false)
-    palette.value = service?.getEntries ? readPaletteEntries(service.getEntries() as never, rolesFor(profile())) : []
-  }
-
-  function trigger(id: string, event: Event): void {
-    instance()?.get<Palette>('palette', false)?.triggerEntry?.(id, event.type === 'dragstart' ? 'dragstart' : 'click', event, true)
-  }
-
-  return { palette, readPalette, trigger }
-}
-
-/** Two-way XML sync: import on prop changes, emit after commands (no echo). */
-function useXmlSync(editor: EditorStore, validation: ValidationStore, host: Ref<HTMLElement | null>, options: EditorSetupOptions) {
-  let lastXml = ''
-
-  async function load(xml: string): Promise<void> {
-    if (!xml || xml === lastXml) return
-    lastXml = xml
-    try {
-      await editor.importXml(xml)
-    } catch (error) {
-      options.onError((error as Error).message)
-      return
-    }
-    // A hidden container has no size; fitting would produce an invalid viewbox.
-    if (host.value?.clientWidth) editor.zoom('fit')
-    validation.runLocal()
-  }
-
-  async function emitXml(): Promise<void> {
-    try {
-      lastXml = await editor.exportXml()
-      options.onXml(lastXml)
-    } catch {
-      // Temporarily invalid states during editing are not reported.
-    }
-  }
-
-  editor.onChange(emitXml)
-  watch(options.xml, load)
-  return load
-}
-
 export function useEditorSetup(host: Ref<HTMLElement | null>, options: EditorSetupOptions) {
-  const editor = createEditorStore({ factory: options.factory, locale: options.locale, flowaudit: { profile: options.profile(), locale: options.locale, ...options.flowaudit } })
-  const selection = createSelectionStore(editor)
-  const validation = createValidationStore(editor, { profile: options.profile, port: options.ports.validation })
+  const ui = reactive<UiState>(initialUiState())
+  const session = createEditorSession({ ...options, factory: options.factory ?? defaultEditorFactory, host: () => host.value, ui: { get: () => ui, set: (patch) => Object.assign(ui, patch) } })
+  const editor = bindEditorCore(session.editor)
+  const selection = bindSelectionCore(session.selection)
+  const validation = bindValidationCore(session.validation)
   provideEditorContext({ editor, selection, validation, ports: options.ports, profile: options.profile, readonly: options.readonly })
 
-  const ui = createUiState()
-  const viewbox = ref<Viewbox>({ x: 0, y: 0, width: 0, height: 0, scale: 1 })
-  const size = reactive({ width: 0, height: 0 })
-  const { palette, readPalette, trigger } = usePaletteItems(editor, options.profile)
-  const popover = shallowRef<Popover | null>(null)
-  let stopDirection: (() => void) | null = null
-  let resize: ResizeObserver | null = null
+  const canvas = useStore(session.canvas)
+  const popover = computed<Popover | null>({ get: () => canvas.value.popover, set: (value) => session.canvas.set({ popover: value }) })
 
-  const instance = () => editor.editor.value
+  watch(options.xml, session.load)
+  watch(() => ui.decorations, session.applyDecorations)
+  watch(() => [ui.filterOpen, ui.filterKind, ui.filterValue], session.refreshKeyFilter)
+  watch(options.profile, session.applyProfile)
+  onBeforeUnmount(session.dispose)
 
-  function toPopover(event: unknown, kind: Popover['kind']): void {
-    const payload = event as { element: DiagramElement; event?: MouseEvent; mode?: Popover['mode'] }
-    const box = host.value?.getBoundingClientRect()
-    popover.value = { kind, element: payload.element, mode: payload.mode, x: (payload.event?.clientX ?? 0) - (box?.left ?? 0), y: (payload.event?.clientY ?? 0) - (box?.top ?? 0) }
+  return {
+    session,
+    editor,
+    selection,
+    validation,
+    ui,
+    viewbox: computed(() => canvas.value.viewbox),
+    size: computed(() => canvas.value.size),
+    palette: computed(() => canvas.value.palette),
+    popover,
+    mount: session.mount,
+    load: session.load,
+    setDirection: session.setDirection,
+    trigger: session.trigger,
+    readonlyNow: computed(options.readonly),
   }
-
-  function mount(): void {
-    if (!host.value) return
-    const created = editor.mount(host.value, host.value)
-    created.on('canvas.viewbox.changed', (event) => (viewbox.value = (event as { viewbox: Viewbox }).viewbox))
-    created.on(COLOR_PICKER_EVENT, (event) => toPopover(event, 'color'))
-    created.on('flowaudit.role.choose', (event) => toPopover(event, 'role'))
-    created.on('element.click', () => (popover.value = null))
-    stopDirection = keepDirection(created, () => ui.direction)
-    readPalette()
-    resize = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => Object.assign(size, { width: host.value?.clientWidth ?? 0, height: host.value?.clientHeight ?? 0 }))
-    resize?.observe(host.value)
-  }
-
-  const load = useXmlSync(editor, validation, host, options)
-  watch(
-    () => ui.decorations,
-    (show) => instance()?.get<FlowauditDecorations>('flowauditDecorations', false)?.setVisibility({ actors: show, markers: show, auditReferences: show }),
-  )
-  watch(options.profile, (profile) => {
-    instance()?.get<FlowauditDecorations>('flowauditDecorations', false)?.setProfile(profile)
-    instance()?.get<RolePaletteProvider>('flowauditRolePalette', false)?.setProfile(profile)
-    readPalette()
-    validation.runLocal()
-  })
-
-  function setDirection(direction: Direction): void {
-    ui.direction = direction
-    const created = instance()
-    if (created && applyDirection(created, direction) === 0) ui.message = 'toolbar.directionHint'
-  }
-
-  onBeforeUnmount(() => {
-    stopDirection?.()
-    resize?.disconnect()
-    editor.destroy()
-  })
-
-  return { editor, selection, validation, ui, viewbox, size, palette, popover, mount, load, setDirection, trigger, readonlyNow: computed(options.readonly) }
 }

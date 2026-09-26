@@ -9,6 +9,7 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, 'src/index.ts'),
         profiles: resolve(__dirname, 'src/profile/bundled.ts'),
+        ui: resolve(__dirname, 'src/ui/index.ts'),
       },
       formats: ['es'],
     },

@@ -1,0 +1,42 @@
+/**
+ * @flowaudit/bpmn-flowaudit/ui – framework-free core of the editor UI (MIT):
+ * controllers with stores, view logic, declarative descriptors, texts, REST
+ * ports and export. `@flowaudit/bpmn-vue` and `@flowaudit/bpmn-react` both
+ * render from it; the styles are `@flowaudit/bpmn-flowaudit/ui.css`.
+ */
+
+export * from './store'
+export * from './ports'
+export * from './i18n/translator'
+export { MESSAGES_DE } from './i18n/messages.de'
+export { MESSAGES_EN } from './i18n/messages.en'
+export * from './editorFactory'
+export * from './editorCore'
+export * from './selectionCore'
+export * from './validationCore'
+export * from './collectionCore'
+export * from './uiState'
+export * from './sessionCanvas'
+export * from './session'
+export * from './actions'
+export * from './editorHelpers'
+export * from './exporter'
+export * from './descriptors'
+export * from './tabs'
+export * from './infoFields'
+export * from './toolbarActions'
+export * from './paletteEntries'
+export * from './dragData'
+export * from './compareSource'
+export * from './shortcuts'
+export * from './forms'
+export * from './options'
+export * from './legalEditing'
+export * from './panelHelpers'
+export * from './dialogHelpers'
+export * from './viewHelpers'
+export * from './collectionView'
+export * from './elementContract'
+export * from './elementSource'
+export * from './standaloneConfig'
+export * from './rest/restPorts'

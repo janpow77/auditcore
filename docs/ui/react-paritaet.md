@@ -92,3 +92,35 @@ unter React 18 (`npm test`) und React 19 (`npm run test:react19`).
 | Filter der Risiko-Merkmale (`v-model` an `RiskFlagFilter`) | React: gesteuert `filter`/`onFilterChange`; `FlowauditRiskFlags` meldet jede Änderung wie Vues `filter-change`. |
 | Leerer Mindestwert im Screening-Laufformular | Vue (`v-model.number`) liefert `''`, React `null`; beides heißt „kein Mindestwert“. |
 | Profilauswahl der Benford-Analyse | Leere Auswahl in beiden Fassungen `<option value="">` (Vue vorher `:value="null"`, nicht sichtbar). |
+
+## BPMN-Editor (`@flowaudit/bpmn-vue` ↔ `@flowaudit/bpmn-react`)
+
+Eigene Paketfamilie mit demselben Aufbau: Kern `@flowaudit/bpmn-flowaudit/ui`
+(Controller auf `createStore` für Editor, Auswahl, Prüfung, Sammlung,
+Sitzung und Werkzeugleisten-Aktionen; Deskriptoren, Texte, REST-Ports,
+Export, Stile), Vue bindet über `useStore`/`reactive`, React über
+`useSyncExternalStore`. Die Dialoge beider Fassungen nutzen
+`createFocusTrap` aus `@flowaudit/ui-core`.
+
+| Bereich | Vue | React (nativ) | Paritätsfälle |
+|---|---|---|---|
+| Editor als Ganzes (Werkzeugleiste, Palette, Statusleiste, Seitenleiste, Dialoge) | `FlowauditEditor` | `FlowauditEditor` | 11 Fälle mit Schrittfolgen + XML-Rundlauf + gleiche Bearbeitung |
+| Einbettbarer Editor | Web Component `<flowaudit-bpmn-editor>` | `FlowauditBpmnEditor` (gleiche Props, Ereignisse, Ref) | Verhaltenstests je Fassung |
+| Formulare, Listen, Rechtsgrundlagen, Kennzeichen | `FieldForm`, `ListEditor`, `LegalBasisEditor`, `LegalSearch`, `MarkerPicker` | gleichnamig | 9 + Interaktionsfolgen |
+| Dialoge und Ansichten | Export, Anreicherung, XML, Tastenkürzel, Elementsuche, Diagramm-Infos, Hinweisliste, Schlüsselfilter | gleichnamig | 8 + Interaktionen |
+| Sammlung | `CollectionTree`, `GroupOverview`, `DiagramInfoColumn` | gleichnamig | 8 (Filter, Ordner) |
+
+Fälle: `packages-js/bpmn-flowaudit/test/parity/cases-*.ts`; Prüfung in
+`packages-js/bpmn-react/test/parity/*.spec.tsx` (Vue und React mit denselben
+Eingaben, gleiche Erwartungen, gleiches normalisiertes DOM und gleicher
+Formularzustand). Der XML-Rundlauf vergleicht `getXml()` nach dem Laden, die
+Nutzdaten von Strg+S, den erneuten Import des exportierten XML und das XML
+nach derselben Eigenschaftsänderung. Tests laufen unter React 19 und 18.3.
+
+| Punkt | Entscheidung |
+|---|---|
+| Zeichenfläche | Die Kindknoten des Canvas-Hosts (Seitenraster, Popover) fügt React hinter, Vue vor dem Container des Kerns ein; verglichen werden die Bereiche außerhalb der Zeichenfläche und das XML. Das Seitenraster liegt in beiden Fassungen per `z-index` über der Zeichenfläche (vorher in Vue verdeckt). |
+| Textfelder (`@change`) | React übernimmt beim Verlassen oder mit Enter und nur bei geändertem Text; Vue sendet auch unveränderten Text. |
+| Slot `editor` des XML-Dialogs | React: `renderEditor(xml, update)`. |
+| `class` am Wurzelelement | React: Prop `className` (Vue reicht sie automatisch durch). |
+| `LegalSearch` | `aria-controls` nur bei sichtbarer Trefferliste (korrigiert in Vue). |

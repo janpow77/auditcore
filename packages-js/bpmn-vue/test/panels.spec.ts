@@ -5,8 +5,7 @@ import FieldForm from '../src/panels/FieldForm.vue'
 import ListEditor from '../src/panels/ListEditor.vue'
 import LegalBasisEditor from '../src/panels/legal/LegalBasisEditor.vue'
 import LegalSearch from '../src/panels/legal/LegalSearch.vue'
-import { CONTROL_LIST, LISTS, type FieldDescriptor } from '../src/panels/descriptors'
-import { listsFor, TABS, tabsFor } from '../src/panels/tabs'
+import { CONTROL_LIST, LISTS, listsFor, TABS, tabsFor, type FieldDescriptor } from '@flowaudit/bpmn-flowaudit/ui'
 import { until } from './helpers'
 
 const noOptions = () => []

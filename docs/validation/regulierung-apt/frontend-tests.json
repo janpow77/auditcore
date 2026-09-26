@@ -1,14 +1,13 @@
 {
   "status": "PASS",
-  "regulierung_commit": "b212c914f1383103e720e393e5f8654e46fdd051",
+  "regulierung_commit": "5458d2e8161d33015fd6222917735eb55ca8cecf",
   "build": "PASS tsc -b && vite build Node 20.19.6",
   "checks": {
     "type-check": "PASS",
     "eslint": "PASS",
     "prettier": "PASS",
-    "vitest_europe_berlin": "PASS 107",
-    "vitest_america_new_york": "PASS 107",
-    "helper_contracts_ratchet": "PASS (auditcore c78067844340389b8b1b91f70d1294d3a9d964cd, 6 Bindungen, 0 Verletzungen)"
+    "vitest_europe_berlin": "PASS 113",
+    "vitest_america_new_york": "PASS 113"
   },
   "npm_audit_final": {
     "info": 0,
@@ -29,7 +28,7 @@
       "/api/kpang/vollzug/karte/preisentwicklung"
     ],
     "workers": [
-      "http://127.0.0.1:34853/assets/maplibre-gl-worker-FTGB28Rp.js"
+      "http://127.0.0.1:44993/assets/maplibre-gl-worker-FTGB28Rp.js"
     ],
     "webgl2": true,
     "synthetic_markers": 1,
@@ -39,33 +38,31 @@
   "build_warning": "Vite chunk >500kB informational performance warning retained",
   "maplibre_version": "6.11.0",
   "browser_requirement": "WebGL2 and ES2022",
-  "flowaudit_common": {
-    "package": "@flowaudit/common",
-    "version": "0.1.0",
-    "file": "flowaudit-common-0.1.0.tgz",
-    "source_repository": "https://github.com/janpow77/auditcore",
-    "source_commit": "483cd0a69ce75e450de5d18986a09f291013df71",
-    "source_path": "packages-js/common",
-    "license": "MIT",
-    "build": [
-      "npm ci",
-      "npm run build -w @flowaudit/common",
-      "npm test -w @flowaudit/common (215 Tests, TZ Berlin und America/New_York)",
-      "npm pack -w @flowaudit/common"
-    ],
-    "sha256": "b082307effdd0d0b75b101af08582c8e3408db85c1214b0228ef62b06eb35e1e",
-    "npm_integrity": "sha512-zdrzBvWO77evKDe7TZKoHRjgx28YjS5Rh3ICezYIDHNiUE/IaxYYf+Q+e/SsN1TA029Dm1zaNcROBgD0Q1MCUg==",
-    "hinweis": "Keine npm-Registry-Veröffentlichung (auditcore docs/deployment/package-feed.md: npm-Pakete werden nicht auf npm veröffentlicht; Bezug als npm-pack-Tarball laut packages-js/common/README.md). Bei neuer auditcore-Version Tarball neu packen, diese Datei und package-lock.json aktualisieren."
-  },
-  "package_lock_sha256": "59fe924d07950ee999ec9406aa571aa8e729a8956ee124fd372c7d37f166039f",
+  "package_lock_sha256": "a7b731c453f884d008b7ec7887a9e745eb64f4c2177df82fdee785c37540ca23",
   "source_files": {
-    "package.json": "70861fda1b2b27be2dc087f103ac4eab1458a4ca69bdc201fcb1f80d12f75192",
-    "package-lock.json": "59fe924d07950ee999ec9406aa571aa8e729a8956ee124fd372c7d37f166039f",
-    "vendor/flowaudit-common-0.1.0.tgz": "b082307effdd0d0b75b101af08582c8e3408db85c1214b0228ef62b06eb35e1e",
+    "package.json": "f85cff3a4fdc52e46692ec508f393aabec6417d45a511272483ee432eb23de03",
+    "package-lock.json": "a7b731c453f884d008b7ec7887a9e745eb64f4c2177df82fdee785c37540ca23",
     "src/lib/numberFormat.ts": "6fba8d7a60e8a503756ffe025c8200e6a3ee5a36f30b72887b16d6595deee333",
     "src/lib/dateFormat.ts": "aae8cfc61fc918bd413b595afab952ebe9c42a127f81533ef73286a4f92f4343",
     "src/lib/fehler.ts": "64f209198f31e9ae76954d98eed975a6157bc2feb9a3fec201662a38c3595cb4",
     "src/pages/kraftstoff/TankstellenListe.tsx": "c8ed9693bf2457a9fe51c6e309f1475b3a8765581a78854ff5a31167824d427a",
     "src/pages/kraftstoff/KartePreisentwicklungView.tsx": "39f2841da58c6ed827eb6ffe11c291ef8a255e731626e05e97b980a546939ad1"
+  },
+  "vendored_packages": {
+    "@flowaudit/common": {
+      "version": "0.1.0",
+      "source_commit": "483cd0a69ce75e450de5d18986a09f291013df71",
+      "sha256": "b082307effdd0d0b75b101af08582c8e3408db85c1214b0228ef62b06eb35e1e"
+    },
+    "@flowaudit/ui-core": {
+      "version": "0.1.0",
+      "source_commit": "7067b9a8bb11f8767d590d65502227830347b694",
+      "sha256": "683cc22f3881874487c6bb754f095cb88de7cf21e1e69279886e8748d6a1d2fd"
+    },
+    "@flowaudit/ui-react": {
+      "version": "1.0.0",
+      "source_commit": "7067b9a8bb11f8767d590d65502227830347b694",
+      "sha256": "58c929daa17fc99e790afc498ba9921e6f6ec38d974553a8adfc2e8f789f7f95"
+    }
   }
 }

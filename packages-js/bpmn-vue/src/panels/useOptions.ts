@@ -1,26 +1,15 @@
 /**
  * Option lists for select fields: schema vocabularies, roles of the profile
  * and the KA catalogue (from the catalogue port if present, else profile).
+ * The lists come from the framework-free UI core.
  */
 
 import { computed, ref, watchEffect, type Ref } from 'vue'
-import {
-  VOCABULARIES,
-  keyRequirements,
-  label,
-  localized,
-  rolesFor,
-  type CataloguePort,
-  type KeyRequirementEntry,
-  type ProfileData,
-  type VocabularyName,
-} from '@flowaudit/bpmn-flowaudit'
-import type { FieldDescriptor } from './descriptors'
+import { kaOptions, loadCatalogue, optionsResolver, profileCatalogue, roleOptions, type Option } from '@flowaudit/bpmn-flowaudit/ui'
+import type { CataloguePort, KeyRequirementEntry, ProfileData } from '@flowaudit/bpmn-flowaudit'
+import type { FieldDescriptor } from '@flowaudit/bpmn-flowaudit/ui'
 
-export interface Option {
-  value: string
-  label: string
-}
+export type { Option } from '@flowaudit/bpmn-flowaudit/ui'
 
 export interface OptionSources {
   profile: () => ProfileData | null
@@ -32,34 +21,18 @@ export function useKeyRequirementCatalogue(sources: OptionSources): Ref<KeyRequi
   const entries = ref<KeyRequirementEntry[]>([])
   watchEffect(async () => {
     const profile = sources.profile()
-    const fallback = keyRequirements(profile).map((entry) => ({
-      number: entry.number,
-      title: localized(entry.title, sources.locale.value),
-      criteria: (entry.assessment_criteria ?? []).map((criterion) => ({ code: criterion.code, title: localized(criterion.title, sources.locale.value) })),
-    }))
-    entries.value = fallback
-    if (sources.catalogue && profile) {
-      try {
-        entries.value = await sources.catalogue.keyRequirements(profile.id, sources.locale.value)
-      } catch {
-        entries.value = fallback
-      }
-    }
+    const locale = sources.locale.value
+    entries.value = profileCatalogue(profile, locale)
+    if (sources.catalogue && profile) entries.value = await loadCatalogue(profile, locale, sources.catalogue)
   })
   return entries
 }
 
 export function useOptions(sources: OptionSources) {
   const catalogue = useKeyRequirementCatalogue(sources)
-  const roleOptions = computed<Option[]>(() => rolesFor(sources.profile()).map((role) => ({ value: role.code, label: `${role.short} – ${label(role.label, sources.locale.value)}` })))
-  const kaOptions = computed<Option[]>(() => catalogue.value.map((entry) => ({ value: String(entry.number), label: `KA ${entry.number} – ${entry.title}` })))
-
-  function optionsFor(field: FieldDescriptor): Option[] {
-    if (field.options === 'roles') return roleOptions.value
-    if (field.options === 'keyRequirements') return kaOptions.value
-    const vocabulary = field.options ? VOCABULARIES[field.options as VocabularyName] : undefined
-    return Object.entries(vocabulary ?? {}).map(([value, text]) => ({ value, label: label(text, sources.locale.value) }))
-  }
-
-  return { optionsFor, roleOptions, kaOptions, catalogue }
+  const roles = computed<Option[]>(() => roleOptions(sources.profile(), sources.locale.value))
+  const ka = computed<Option[]>(() => kaOptions(catalogue.value))
+  const resolver = computed(() => optionsResolver(roles.value, ka.value, sources.locale.value))
+  const optionsFor = (field: FieldDescriptor): Option[] => resolver.value(field)
+  return { optionsFor, roleOptions: roles, kaOptions: ka, catalogue }
 }

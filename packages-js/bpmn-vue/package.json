@@ -1,6 +1,6 @@
 {
   "name": "@flowaudit/bpmn-vue",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vue-3-Oberfläche für den FlowAudit-BPMN-Editor: Editor, Eigenschaften, Sammlung, Prüfbehörden-Ansichten, Web Component und eigenständige App (MIT)",
   "license": "MIT",
   "type": "module",
@@ -40,7 +40,8 @@
   },
   "dependencies": {
     "@flowaudit/bpmn-editor": "0.1.0",
-    "@flowaudit/bpmn-flowaudit": "0.1.0"
+    "@flowaudit/bpmn-flowaudit": "0.2.0",
+    "@flowaudit/ui-core": "0.1.0"
   },
   "peerDependencies": {
     "vue": "^3.5.0"

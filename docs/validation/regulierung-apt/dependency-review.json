@@ -10,7 +10,7 @@
     }
   ],
   "scanner_exit_code": 1,
-  "lock_sha256": "1457f0d0f44c9dd528fef8ed7f4efb986db8ad29cf6154aa672aef49b33234c4",
+  "lock_sha256": "542a5c1661987a9285682591b4c96dfaa0a1ca162ac72ce2fcc3554177fe90f0",
   "raw_report": "privat (Scratch), nicht veröffentlicht",
   "applicability": {
     "ecdsa/PYSEC-2026-1325": "NOT_APPLICABLE_WITH_REASON: static application paths perform OIDC signature verification only; affected signing/keygen/ECDH unused. See dependency-applicability.json."
@@ -19,16 +19,16 @@
     "operator configuration and protection assessment",
     "native OS dependency vulnerabilities not covered by pip-audit"
   ],
-  "consumer_verification": "PASS: 1803 Tests; exakt 88 gelockte Distributionen verifiziert",
+  "consumer_verification": "PASS: 1839 Tests; exakt 88 gelockte Distributionen verifiziert",
   "scanner": "pip-audit -r deploy/apt/requirements.lock --disable-pip --no-deps (26.09.2026)",
   "auditcore_release_distributions": {
-    "auditcore_auth==0.1.0": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
-    "auditcore_common==0.1.0": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
-    "auditcore_dataprotection==0.4.3": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
-    "auditcore_harvest==0.1.1": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
-    "auditcore_price_analysis==0.1.1": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
-    "auditcore_price_sources==0.1.1": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
-    "auditcore_reporting==0.2.1": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.0 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore"
+    "auditcore_auth==0.1.0": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
+    "auditcore_common==0.1.1": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
+    "auditcore_dataprotection==0.5.0": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
+    "auditcore_harvest==0.1.2": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
+    "auditcore_price_analysis==0.1.2": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
+    "auditcore_price_sources==0.1.2": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore",
+    "auditcore_reporting==0.2.2": "NOT_EXECUTED: nicht in öffentlicher Advisory-Datenbank; Release v0.4.1 per SHA-256 gebunden, paketeigene Tests und Code-Gate in janpow77/auditcore"
   },
   "docker_path_requirements": "requirements.txt war vor regulierung cc6bf9a nicht deckungsgleich mit dem Lock (u. a. PyJWT 2.9.0, python-multipart 0.0.20, weasyprint 60.2, lxml 5.3.0, pypdf 5.1.0 mit bekannten Advisories); jetzt angeglichen und per Test gesichert"
 }

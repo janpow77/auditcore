@@ -50,6 +50,9 @@ jobs:
         run: npm run lint:exceptions
       - run: npm run typecheck
       - run: npm test
+      - name: React-Pakete zusätzlich gegen React 18.3 testen (Peer-Bereich 18 || 19; Lockfile auf 19)
+        if: matrix.node == '22'
+        run: npm run test:react18 --workspaces --if-present
       - run: npm run build
       - name: README-Schnellstart typprüfen und ausführen (docs/bibliotheken/readme-vorlage.md)
         run: node scripts/js/check-readme-snippets.mjs
