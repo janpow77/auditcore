@@ -2,6 +2,14 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #13, #16, #38, #54, #73).
 
+## Unreleased
+
+Keine Verhaltensänderung. Die Endlichkeitsprüfung der Koordinaten nutzt
+`auditcore_common.numeric.require_finite`; Fehlerklasse `KoordinatenFehler`
+und Meldungen unverändert (`tests/test_common_parity.py`). Neue
+Pflichtabhängigkeit `auditcore_common==0.1.1` (APT `python3-auditcore-common`,
+nur Standardbibliothek).
+
 ## 0.3.0 – 2026-09-25 – REST-Vertrag für Geo-Oberflächen
 
 - Neues Unterpaket `auditcore_geo.web` (Extras `web`, `fastapi`): Katalog

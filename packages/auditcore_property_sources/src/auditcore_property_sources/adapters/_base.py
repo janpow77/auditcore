@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+from auditcore_common.html_text import has_html_marker
+
 from .._types import JSON
 from ..robots import RobotsRules, is_allowed, parse_robots, robots_url
 from ._harvest import (
@@ -107,7 +109,7 @@ class _Portal:
         self._check(rules, url)
         response = raise_for_status(context.transport.request("GET", url, timeout=context.timeout))
         body = response.body.decode("utf-8", errors="replace")
-        if "<html" not in body[:4096].lower() and "<!doctype" not in body[:4096].lower():
+        if not has_html_marker(body):
             raise ParserError(f"Antwort von {url} ist kein HTML-Dokument.")
         return body
 

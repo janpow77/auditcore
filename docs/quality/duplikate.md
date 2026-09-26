@@ -65,7 +65,7 @@ Verhaltensunterschied, der als benannter Parameter abgebildet ist.
 
 | # | Gruppe | Fundstellen | Befund | Warum wartend |
 |---|---|---|---|---|
-| B1 | REST-Schicht Stichprobe/Statistik | sampling/statistics `create_app` (identisch), `create_router`, `response`, `run`/`_analyse`, `get_profiles` | nach A15 verbleiben nur die Starlette-/FastAPI-Adapter (je eine Anweisung bzw. Routentabelle, unter der Gate-Schwelle) | bleibt im Paket: gebunden an Starlette/FastAPI, `auditcore_common` bleibt reine Standardbibliothek. Kandidat für dieselbe Umstellung: geo `web.decode`/`create_app` (Agent „common B“) |
+| B1 | REST-Schicht Stichprobe/Statistik | sampling/statistics `create_app` (identisch), `create_router`, `response`, `run`/`_analyse`, `get_profiles` | nach A15 verbleiben nur die Starlette-/FastAPI-Adapter (je eine Anweisung bzw. Routentabelle, unter der Gate-Schwelle) | bleibt im Paket: gebunden an Starlette/FastAPI, `auditcore_common` bleibt reine Standardbibliothek. Folgekandidat für dieselbe Umstellung: geo `web.decode`/`create_app` |
 | B2 | Donut-Tokenformat | documents `donut._decode`, `parse_donut_sequence`; invoicesynth `schema._decode`, `from_sequence`; Prüfziffern `de_vat_check_digit`/`at_uid_check_digit` (0,72/0,79: invoicesynth prüft zusätzlich die Eingabe) | fachlich Donut/Rechnung, nicht allgemein | invoicesynth-PR #58 offen; Frage, ob invoicesynth von documents abhängen darf (E1: eigene Distribution) |
 | B3 | Seitenergebnis bauen | legal `_adapter_support._page`, property `adapters._page` | `PageResult`-Aufbau, legal kopiert den Cursor (`dict(next_cursor)`), property nicht | gehört zu **harvest** (Paging-Vertrag), nicht nach `auditcore_common`; harvest-PR #73 („Hilfen für Quellenpakete“) abwarten |
 | B4 | harvest `JSON = Any`, unsicheres XML | harvest `model.JSON`, `reference.py` (`xml.etree.ElementTree.fromstring`, `nosec B314`) | Befund: harvest parst XML ohne `defusedxml` | harvest-PR #73 offen; danach auf `JsonValue` und `safe_xml` umstellen |
@@ -138,6 +138,21 @@ Reihenfolge und Stand stehen im PR-Verlauf; Grundsätze:
   dünne, nicht veraltete Funktionen, weil sie das Ressourcenpaket und die
   Fehlerklasse des Pakets binden.
 - Pakete in laufender Refaktorierung werden erst nach deren Merge migriert.
+
+Stand v0.4.2 (Teil B, 26.09.2026): `auditcore_price_sources` (A1c,
+Paketbytes bytegleich, SHA-256 fester Fixtures festgeschrieben),
+`auditcore_geo` (A13 `_endlich`), `auditcore_property_sources` (A12
+HTML-Erkennung 3×, A14 `_aware`) und `auditcore_invoicesynth` (A2
+Datei-SHA-256 4×, A13 `parse_rate`, A14 `normalize_identifier`, dazu
+Text-SHA-256 und kanonisches JSON für Datensatz-, Plan- und Konfigurations-Hash)
+nutzen `auditcore_common`. Die Prüfziffern `de_vat_check_digit`/
+`at_uid_check_digit` von `auditcore_documents` (Code-Gate: 2 Paare mit
+`auditcore_identifiers`) sind jetzt die Funktionen aus `auditcore_identifiers`
+(Pflichtabhängigkeit `auditcore_identifiers==0.1.0`). Paritätstests je Paket
+(`tests/test_common_parity.py`, documents `tests/test_identifiers_parity.py`);
+`duplicate_functions` documents und identifiers 2 → 0. Offen aus B2 bleiben die
+Prüfziffern von `auditcore_invoicesynth` (prüfen zusätzlich die Eingabe, keine
+gleiche Normalform).
 
 Stand Teil A (v0.4.2): `auditcore_statistics` (A13, A15),
 `auditcore_sampling` (A13, A15) und `auditcore_market_indicators` (A1, A4, A5,
