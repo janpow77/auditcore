@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "rootDir": "../..",
+    "allowImportingTsExtensions": true,
     "types": ["node", "vite/client"],
     "jsx": "react-jsx",
     "paths": {

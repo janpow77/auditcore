@@ -2,13 +2,13 @@ import { createRequire } from 'node:module'
 import { dirname } from 'node:path'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
-import { sourceAliases } from './aliases'
+import { sourceAliases } from './aliases.ts'
 
 // One React for the components and @testing-library/react: the version this
 // package resolves (devDependency 19). `REACT_DIR` points to another
 // installation for the run against React 18 (`npm run test:react18`).
 const require = createRequire(import.meta.url)
-const packageDir = (name: string) => dirname(require.resolve(`${name}/package.json`, { paths: [process.env.REACT_DIR ?? __dirname] }))
+const packageDir = (name: string) => dirname(require.resolve(`${name}/package.json`, { paths: [process.env.REACT_DIR ?? import.meta.dirname] }))
 const sources = Object.entries(sourceAliases()).map(([find, replacement]) => ({ find: new RegExp(`^${find.replace(/[/.]/g, '\\$&')}$`), replacement }))
 
 export default defineConfig({
@@ -22,7 +22,7 @@ export default defineConfig({
       { find: /^react(\/.*)?$/, replacement: `${packageDir('react')}$1` },
     ],
   },
-  esbuild: { jsx: 'automatic' },
+  oxc: { jsx: { runtime: 'automatic' } },
   test: {
     environment: 'happy-dom',
     include: ['test/**/*.spec.tsx', 'test/**/*.spec.ts'],
