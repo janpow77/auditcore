@@ -17,6 +17,7 @@ Zeichen-Tokenizer für den CPU-Rauchtest (kein Download, kein echtes Training).
 from __future__ import annotations
 
 import io
+import math
 import os
 import random
 from pathlib import Path
@@ -27,10 +28,15 @@ from auditcore_common.hashing import sha256_file
 
 from auditcore_invoicesynth.dataset import load_split
 from auditcore_invoicesynth.schema import TASK_TOKEN, special_tokens, to_sequence
+from auditcore_invoicesynth.train.guard import NonFiniteLoss, OutOfMemory, TooManyBadSamples
 from auditcore_invoicesynth.train.loop import total_steps
 from auditcore_invoicesynth.train.profiles import TrainConfig
 
 WEIGHTS = "model.safetensors"
+#: Gewichtsdateien in Prüfreihenfolge (donut-base@a959cf33 liefert nur ``pytorch_model.bin``).
+WEIGHT_FILES = (WEIGHTS, "pytorch_model.bin")
+#: Höchstanteil unlesbarer Beispiele, bevor der Lauf mit ``TooManyBadSamples`` endet.
+MAX_BAD_SAMPLE_SHARE = 0.01
 TINY_CHARS = (
     "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ .,:;-/#()%€&+äöüÄÖÜßéè'\"_"
 )
@@ -47,6 +53,14 @@ def _modules() -> tuple[ModuleType, ModuleType]:
     except ImportError as exc:  # pragma: no cover - abhängig von der Installation
         raise TrainDependencyError("Bitte auditcore_invoicesynth[train] installieren") from exc
     return torch, transformers
+
+
+def weights_file(directory: Path) -> Path:
+    """Gewichtsdatei eines lokalen Modellverzeichnisses (safetensors bevorzugt)."""
+    for name in WEIGHT_FILES:
+        if (directory / name).is_file():
+            return directory / name
+    raise FileNotFoundError(f"Keine Gewichtsdatei ({', '.join(WEIGHT_FILES)}) in {directory}")
 
 
 def build_tiny_base(target: Path, image_size: tuple[int, int] = (64, 48)) -> Path:
@@ -124,6 +138,8 @@ class TorchDonutBackend:
         self.world_size = int(os.environ.get("WORLD_SIZE", "1"))
         self.rank = int(os.environ.get("RANK", "0"))
         self.rows = load_split(self.dataset_dir, split)
+        self.skipped_samples = 0
+        self.bad_files: set[str] = set()
 
     # -- Aufbau --------------------------------------------------------------
     def setup(self, config: TrainConfig, samples: int) -> None:
@@ -156,7 +172,7 @@ class TorchDonutBackend:
 
     def _verify_base_model(self) -> None:
         if self.base_model_sha256 is not None:
-            actual = sha256_file(self.base_model_dir / WEIGHTS)
+            actual = sha256_file(weights_file(self.base_model_dir))
             if actual != self.base_model_sha256:
                 raise ValueError("SHA-256 des Startmodells weicht ab")
 
@@ -200,16 +216,31 @@ class TorchDonutBackend:
         return model
 
     # -- Schritt -------------------------------------------------------------
-    def _batch(self, indices: list[int]) -> tuple[Any, Any, Any]:
+    def _skip(self, name: str) -> None:
+        """Unlesbares Beispiel überspringen und zählen; zu viele → Abbruch statt Hänger."""
+        self.skipped_samples += 1
+        self.bad_files.add(name)
+        if len(self.bad_files) > max(1, int(len(self.rows) * MAX_BAD_SAMPLE_SHARE)):
+            raise TooManyBadSamples(
+                f"{len(self.bad_files)} unlesbare Beispiele (z. B. {sorted(self.bad_files)[:3]})"
+            )
+
+    def _batch(self, indices: list[int]) -> tuple[Any, Any, Any] | None:
         from PIL import Image
 
         images = []
         texts = []
         for index in indices:
             row = self.rows[index]
-            with Image.open(self.dataset_dir / self.split / row["file_name"]) as image:
-                images.append(image.convert("RGB"))
+            try:
+                with Image.open(self.dataset_dir / self.split / row["file_name"]) as image:
+                    images.append(image.convert("RGB"))
+            except (OSError, ValueError, SyntaxError):
+                self._skip(row["file_name"])
+                continue
             texts.append(to_sequence(row["gt_parse"]) + self.tokenizer.eos_token)
+        if not images:
+            return None
         pixel_values = self.processor(images, return_tensors="pt").pixel_values
         encoded = self.tokenizer(
             texts,
@@ -225,22 +256,17 @@ class TorchDonutBackend:
         return pixel_values.to(self.device), ids[:, :-1].to(self.device), labels.to(self.device)
 
     def train_step(self, microbatches: list[list[int]]) -> float:
+        """Ein Optimiererschritt; NaN/Inf und OOM verwerfen ihn **vor** ``optimizer.step``."""
         torch = self.torch
-        mine = microbatches[self.rank :: self.world_size]
-        self.model.train()
-        total = 0.0
-        use_bf16 = self.config.precision == "bf16" and self.device.startswith("cuda")
-        for number, batch in enumerate(mine):
-            pixel_values, decoder_ids, labels = self._batch(batch)
-            last = number == len(mine) - 1
-            context = self.model.no_sync() if self.world_size > 1 and not last else _nullcontext()
-            with context, torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_bf16):
-                output = self.model(
-                    pixel_values=pixel_values, decoder_input_ids=decoder_ids, labels=labels
-                )
-                loss = output.loss / len(mine)
-            loss.backward()
-            total += float(loss.detach().item())
+        try:
+            total = self._accumulate(microbatches[self.rank :: self.world_size])
+        except torch.cuda.OutOfMemoryError as exc:
+            self.optimizer.zero_grad(set_to_none=True)
+            torch.cuda.empty_cache()
+            raise OutOfMemory(f"CUDA-Speicher erschöpft: {str(exc).splitlines()[0]}") from exc
+        if not math.isfinite(total):
+            self.optimizer.zero_grad(set_to_none=True)
+            raise NonFiniteLoss(f"Loss {total} – Schritt verworfen, Gewichte unverändert")
         torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.config.max_grad_norm)
         self.optimizer.step()
         self.scheduler.step()
@@ -250,6 +276,31 @@ class TorchDonutBackend:
             torch.distributed.all_reduce(value)
             total = float(value.item()) / self.world_size
         return total
+
+    def _accumulate(self, mine: list[list[int]]) -> float:
+        """Vorwärts/Rückwärts über die eigenen Mikrobatches (Gradient Accumulation)."""
+        torch = self.torch
+        self.model.train()
+        total = 0.0
+        use_bf16 = self.config.precision == "bf16" and self.device.startswith("cuda")
+        for number, batch in enumerate(mine):
+            tensors = self._batch(batch)
+            if tensors is None:
+                continue
+            pixel_values, decoder_ids, labels = tensors
+            last = number == len(mine) - 1
+            context = self.model.no_sync() if self.world_size > 1 and not last else _nullcontext()
+            with context, torch.autocast("cuda", dtype=torch.bfloat16, enabled=use_bf16):
+                output = self.model(
+                    pixel_values=pixel_values, decoder_input_ids=decoder_ids, labels=labels
+                )
+                loss = output.loss / len(mine)
+            loss.backward()
+            total += float(loss.detach().item())
+        return total
+
+    def current_lr(self) -> float:
+        return float(self.scheduler.get_last_lr()[0])
 
     # -- Zustand -------------------------------------------------------------
     def save(self, directory: Path) -> None:
