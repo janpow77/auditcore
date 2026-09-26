@@ -1,5 +1,14 @@
 # Changelog auditcore_dataprotection
 
+## Unreleased
+
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 10 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+`legacy.*` und Profile `regulierung.dsgvo`/`regulierung.hdsig_ji` 2026.09.1. Keine Befunde. Keine Verhaltensänderung.
+
 ## 0.5.1 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`, `auditcore_reporting==0.3.0`.
