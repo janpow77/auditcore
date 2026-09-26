@@ -1,7 +1,7 @@
 {
   "name": "@flowaudit/ui-react",
   "version": "1.0.0",
-  "description": "Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen (Basis, Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening, Stichprobe, Benford, Geo-Karte, Kanban) auf Basis von @flowaudit/ui-core und @flowaudit/kanban-core, ohne Vue",
+  "description": "Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen (Basis, Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening, Stichprobe, Benford, Dokumentvergleiche, Geo-Karte, Kanban) auf Basis von @flowaudit/ui-core und @flowaudit/kanban-core, ohne Vue",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
