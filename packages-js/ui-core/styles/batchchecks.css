@@ -1,0 +1,8 @@
+/* BatchChecks – BatchChecks (Vue) und FlowauditBatchChecks (React). Farben nur aus --fa-*-Variablen. */
+.fa-batchchecks { display: flex; flex-direction: column; gap: var(--fa-space-3); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-batchchecks__list { display: flex; flex-direction: column; gap: var(--fa-space-1); margin: 0; padding: 0; list-style: none; }
+.fa-batchchecks__item { width: 100%; padding: var(--fa-space-2) var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.fa-batchchecks__item:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-batchchecks__item--selected { border-color: var(--fa-color-accent); }
+.fa-batchchecks__muted { margin: 0; color: var(--fa-color-text-muted); }
+.fa-batchchecks__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }

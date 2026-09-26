@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (804):
+Exporte der Einstiegspunkte aus `package.json#exports` (814):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -158,6 +158,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (804):
 | `@auditcore/ui` | `AssessmentView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BADGE_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `BadgeTone` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchChecks` | Vue-Komponente | – | `batchchecks/BatchChecks.vue` |
+| `@auditcore/ui` | `BatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksItem` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordBusy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordCallbacks` | Re-Export | – | `./useBenford` |
@@ -346,6 +351,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (804):
 | `@auditcore/ui` | `HitFilter` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `HitView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ICONS` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_BATCHCHECKS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_BENFORD` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
@@ -619,6 +625,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (804):
 | `@auditcore/ui` | `badgeStyle` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `bandTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `baseMessages` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `batchChecksElement` | Konstante | `<flowaudit-batch-checks>`: Eigenschaften `port`, `locale`; Ereignisse `item-select`, `error`. | `batchchecks/element` |
+| `@auditcore/ui` | `batchchecksMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordBarTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChartTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordDigitColumns` | Re-Export | – | `@auditcore/ui-core` |
@@ -659,6 +667,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (804):
 | `@auditcore/ui` | `conclusionTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `confidenceText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `coverIssues` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createComparisonsController` | Re-Export | – | `@auditcore/ui-core` |
@@ -944,6 +954,7 @@ Web Components:
 
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
+| `<flowaudit-batch-checks>` | `BatchChecks` | `batchchecks/element.ts` |
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
@@ -963,6 +974,20 @@ Web Components:
 | `<flowaudit-vvt>` | `FaVvt` | `dataprotection/element.ts` |
 
 ### Props und Ereignisse der Vue-Komponenten
+
+#### `BatchChecks`
+
+BatchChecks: Liste mit Auswahl; Logik im Kern (createBatchchecksController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `BatchchecksPort \| null` | nein | `null` | Fachlogik, z. B. `createBatchchecksMemoryPort([...])`. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `item-select` | `[item: BatchchecksItem]` | – |
+| `error` | `[message: string]` | – |
 
 #### `BenfordPanel`
 

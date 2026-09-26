@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (849):
+Exporte der Einstiegspunkte aus `package.json#exports` (864):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -106,6 +106,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `AssessmentSummary` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentView` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `BadgeTone` | Typ | – | `base/types` |
+| `@auditcore/ui-core` | `BatchchecksCallbacks` | Schnittstelle | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksController` | Schnittstelle | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksItem` | Schnittstelle | Eintrag der Liste (Vertrag des Ports; an den REST-Vertrag des Backends anpassen). | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksMessageKey` | Typ | – | `batchchecks/messages` |
+| `@auditcore/ui-core` | `BatchchecksPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRow` | Schnittstelle | Zeile der Liste, wie Vue und React sie darstellen. | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksSource` | Schnittstelle | – | `batchchecks/controller` |
 | `@auditcore/ui-core` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordBusy` | Typ | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordCallbacks` | Schnittstelle | – | `benford/controller` |
@@ -309,6 +317,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `HitView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@auditcore/ui-core` | `IDLE` | Konstante | – | `store` |
+| `@auditcore/ui-core` | `INITIAL_BATCHCHECKS` | Konstante | – | `batchchecks/controller` |
 | `@auditcore/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@auditcore/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
 | `@auditcore/ui-core` | `INITIAL_DB_KANBAN` | Konstante | – | `dbkanban/controller` |
@@ -581,6 +590,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
 | `@auditcore/ui-core` | `bandTone` | Funktion | Stufe eines Risikos nach Rang im Profil: höchste Stufe rot, zweithöchste gelb. | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `baseMessages` | Konstante | Texte der Basiskomponenten. | `messages` |
+| `@auditcore/ui-core` | `batchchecksIsEmpty` | Funktion | Hinweis „keine Einträge“ nur nach abgeschlossener, fehlerfreier Anfrage. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksMessages` | Konstante | Texte von BatchChecks (Vue) und FlowauditBatchChecks (React); sichtbare Texte nur hier. | `batchchecks/messages` |
+| `@auditcore/ui-core` | `batchchecksRows` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksSelection` | Funktion | – | `batchchecks/view` |
 | `@auditcore/ui-core` | `benfordBarTitle` | Funktion | Titel eines Balkens (Tooltip und Vorlesetext). | `benford/view` |
 | `@auditcore/ui-core` | `benfordChartTitle` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordDigitColumns` | Funktion | – | `benford/view` |
@@ -625,6 +638,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `confidenceChoices` | Funktion | Konfidenzniveaus, die die gewählte Methode mit Tabellenwerten erlaubt. | `extrapolation/model` |
 | `@auditcore/ui-core` | `confidenceText` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `coverIssues` | Funktion | Hinweise zum Deckblatt (Verantwortlicher, DSB). | `dataprotection/registerView` |
+| `@auditcore/ui-core` | `createBatchchecksController` | Funktion | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `createBatchchecksMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests). Eine REST-Umsetzung baut auf `requestJson` aus `@auditcore/common` auf (Vorbild: `extrapolation/rest-port.ts`). | `batchchecks/port` |
 | `@auditcore/ui-core` | `createBenfordController` | Funktion | – | `benford/controller` |
 | `@auditcore/ui-core` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@auditcore/ui-core` | `createComparisonsController` | Funktion | – | `documents/controller` |
