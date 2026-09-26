@@ -1,21 +1,46 @@
 # auditcore_dataprotection
 
-Eigenständig installierbare, frameworkunabhängige Bibliothek, mit der
-Anwendungen **eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und
-Datenschutz-Folgenabschätzungen (DSFA) anlegen, bearbeiten, berechnen,
-versionieren, freigeben und ausgeben** können. Laufzeit: nur die
-Standardbibliothek. Optional: `[excel]` (openpyxl und `auditcore_reporting[excel]==0.2.1`),
-`[pdf]` (WeasyPrint), `[web]` (Starlette) und `[fastapi]` (FastAPI) für die
-REST-Schnittstelle der Oberflächen `<flowaudit-vvt>`/`<flowaudit-dsfa>`.
-Die Plattform `auditcore` ist keine Laufzeitabhängigkeit.
+## Zweck
+
+Frameworkunabhängige Bibliothek, mit der Anwendungen eigene Verzeichnisse von Verarbeitungstätigkeiten (VVT) und Datenschutz-Folgenabschätzungen (DSFA) anlegen, berechnen, versionieren, freigeben und ausgeben.
+
+Für Fachanwendungen der Verwaltung (Quelle: regulierung), die VVT und DSFA
+mit Vier-Augen-Prinzip, Revisionen und Audit-Ereignissen führen. Datenbank,
+Sitzung, HTTP und Benutzerverwaltung bleiben in der Anwendung; die
+Regelprofile sind charakterisiertes Softwareverhalten, keine rechtliche
+Prüfung.
+
+## Installation
+
+Aus dem Paketindex von auditcore (PEP 503, jede Datei mit SHA-256 verlinkt):
 
 ```bash
-pip install auditcore_dataprotection==0.5.0            # Kern
-pip install 'auditcore_dataprotection[excel]==0.5.0'    # zusätzlich XLSX
-pip install 'auditcore_dataprotection[web]==0.5.0'      # REST für die Oberfläche
+python -m pip install auditcore_dataprotection \
+  --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-## Schnellstart in Python
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.4.3 im
+Release v0.4.0; weitere Versionen und Hashes unter
+`https://janpow77.github.io/auditcore/simple/auditcore-dataprotection/`):
+
+```text
+auditcore_dataprotection @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_dataprotection-0.4.3-py3-none-any.whl#sha256=25f5478b1007ddbfadbc0212136032af3650db0a92f77ca5f7a0d3b8136da18a
+```
+
+Debian/Ubuntu über die signierte APT-Quelle eines Releases
+([Einrichtung](../../docs/deployment/package-feed.md)):
+
+```bash
+sudo apt-get install python3-auditcore-dataprotection
+```
+
+Extras: `[excel]` – XLSX-Ausgabe (openpyxl und
+`auditcore_reporting[excel]==0.2.2`); `[pdf]` – PDF-Bericht über WeasyPrint;
+`[web]` – REST-Schnittstelle mit Starlette, `[fastapi]` – derselbe Vertrag als
+FastAPI-Router (beide für die Oberflächen `<flowaudit-vvt>`/`<flowaudit-dsfa>`);
+`[dev]` – Test- und Prüfwerkzeuge.
+
+## Schnellstart
 
 Eine Anwendung wählt ein Regelprofil ausdrücklich, übergibt ihre Speicher,
 Rollenprüfung, Protokoll, Uhr und Kennungsvergabe als Schnittstellen und ruft
@@ -145,28 +170,7 @@ ansicht = render_register_html(
 )
 ```
 
-## Bausteine
-
-| Modul | Aufgabe |
-|---|---|
-| `rules` | Versionierte, quellengebundene Regelprofile (`load_profile(id, version)`) mit Fingerprint. Kein stilles Standardprofil. |
-| `calculation` | Schwellwertanalyse, Brutto-/Nettorisiko, Maßnahmenwirkung, begründeter Vorschlag mit Konsultationshinweis, Vorbelegung aus dem VVT. Strikte Eingaben: ja/nein/unbekannt. |
-| `register` | VVT-Inhalt prüfen (Art. 30 Abs. 1 DSGVO), stabile Tätigkeitskennungen, Entwurf, Freigabe und Ablösung mit Vier-Augen-Prinzip und Revisionen. |
-| `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
-| `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
-| `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.0; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
-| `web` | REST-Schnittstelle `dataprotection_ui/1` für `<flowaudit-vvt>` und `<flowaudit-dsfa>` (`@flowaudit/ui`): `DataProtectionApi` ohne Framework, `routes`/`create_app` (Extra `web`), `create_router` (Extra `fastapi`), Speicher als Protocol `Storage`. |
-| `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
-
-Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie
-nach Verantwortung in kleinere Module geschnitten (etwa `answers`, `screening`,
-`risk`, `results`, `prefill` hinter `calculation`; `profile_model`,
-`profile_loader`, `profile_sections` hinter `rules`; `register_content` hinter
-`register`; `assessment_core`, `assessment_input`, `assessment_checks`,
-`assessment_involvement`, `assessment_review` hinter `assessment`;
-`report_data`, `assessment_html`, `assessment_html_outcome`, `register_html` hinter `export`;
-`legacy_scoring`, `legacy_admin`, `legacy_report` hinter `legacy`). Alle bisher
-importierbaren Namen bleiben unter ihrem alten Modulpfad erreichbar.
+Einzelne Berechnung ohne Dienste und Ablage:
 
 ```python
 from auditcore_dataprotection.rules import load_profile
@@ -202,9 +206,9 @@ die Web Components `<flowaudit-vvt>` und `<flowaudit-dsfa>` bereit. Die
 Handler rufen nur die Dienste der Bibliothek; Persistenz kommt über das
 Protocol `Storage` (Register- und Abschätzungs-Repository plus Audit-Senke),
 Mandant und Person über `identify`. Vertrag, Fehlercodes und Endpunkte:
-`docs/ui/dataprotection-rest.md` im Monorepo.
+[docs/ui/dataprotection-rest.md](../../docs/ui/dataprotection-rest.md).
 
-```python
+```python no-run
 from starlette.routing import Mount
 
 from auditcore_dataprotection import load_profile
@@ -220,34 +224,128 @@ anwendung_routes = [Mount("/api/dataprotection", routes=routes(api, identify))]
 der Anwendung oder `None` (401). Exporte: Druckansicht (HTML der Bibliothek),
 Markdown und CSV mit Formelschutz.
 
-## Verantwortung der Anwendung
+## API-Überblick
 
-Die Bibliothek enthält keine Datenbank, keine Sitzung und keine
-Benutzerverwaltung; HTTP nur im optionalen Modul `web`. Die Anwendung implementiert `RegisterRepository`,
-`AssessmentRepository`, `Authorizer`, `AuditSink`, `Clock` und `IdFactory`
-(`ports`), ruft jede Operation innerhalb ihrer eigenen Transaktion auf und
-erzwingt die Unveränderlichkeit freigegebener Fassungen zusätzlich in der
-Datenbank. Die Dienste prüfen bei jeder Operation Berechtigung, Mandant und
-Revision und erzeugen Audit-Ereignisse; sie ersetzen weder die serverseitige
-Autorisierung noch die Oberfläche der Anwendung.
+<!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
+Öffentliche Namen aus `auditcore_dataprotection.__all__` (38):
 
-## Herkunft, Lizenz, Grenzen
+| Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
+|---|---|---|---|
+| `Actor` | Datenklasse | Authenticated person as established by the consumer application. | `model` |
+| `Answer` | Datenklasse | Answer of the responsible department with its justification. | `answers` |
+| `AnswerValue` | Aufzählung | Explicit three-valued answer; ``UNKNOWN`` is never treated as ``NO``. | `answers` |
+| `Assessment` | Datenklasse | One version of a DPIA for exactly one activity version of a register. | `model` |
+| `AssessmentService` | Datenklasse | Operations on DPIAs of one register; persistence and identity via ports. | `assessment` |
+| `AssessmentStatus` | Aufzählung | Status of an assessment version. | `model` |
+| `AuditEvent` | Datenklasse | Attributable change; persisted by the consumer's audit trail. | `model` |
+| `AuthorizationError` | Ausnahme | The authorizer port denied the operation (403). | `errors` |
+| `ConflictError` | Ausnahme | The requested transition is not allowed in the current state (409). | `errors` |
+| `DataProtectionError` | Ausnahme | Base class; ``code`` is stable and machine readable. | `errors` |
+| `FourEyesViolation` | Ausnahme | The releasing person also edited the version or gave the DPO statement (403). | `errors` |
+| `LockedVersionError` | Ausnahme | A released version is immutable; a new version must be created. | `errors` |
+| `NotFoundError` | Ausnahme | The entity does not exist within the given tenant (maps to 404). | `errors` |
+| `Permission` | Aufzählung | Operations the authorizer port must allow for an actor and tenant. | `model` |
+| `ProfileError` | Ausnahme | A rule profile is missing, malformed or does not contain a key. | `errors` |
+| `Proposal` | Datenklasse | Reasoned recommendation; ``recommendation`` is one of the profile decisions or ``unvollstaendig``. | `results` |
+| `RegisterService` | Datenklasse | Create, edit, version and release registers inside a tenant. | `register` |
+| `RegisterStatus` | Aufzählung | Status of a register version. | `model` |
+| `RegisterVersion` | Datenklasse | One version of a record of processing activities (Art. 30 GDPR). | `model` |
+| `ReviewItem` | Datenklasse | A released assessment whose activity changed or disappeared (Art. 35 Abs. 11). | `model` |
+| `RuleProfile` | Datenklasse | Immutable, explicitly selected rule profile. | `profile_model` |
+| `Scenario` | Datenklasse | Risk scenario of one protection dimension, gross and optionally explicit net. | `answers` |
+| `StaleRevisionError` | Ausnahme | Optimistic concurrency check failed; reload and retry. | `errors` |
+| `TenantMismatchError` | Ausnahme | An object of another tenant was presented; treated like not found by consumers. | `errors` |
+| `ValidationError` | Ausnahme | Input does not satisfy the contract (maps to 400/422). | `errors` |
+| `__version__` | Wert | – | `(Paketstamm)` |
+| `assess_risk` | Funktion | Gross = severity × likelihood; net after capped measure reductions or explicit values. | `risk` |
+| `available_profiles` | Funktion | Packaged ``(id, version)`` pairs, sorted; no profile is a hidden default. | `profile_loader` |
+| `check_activity` | Funktion | Content check of one activity against Art. 30 Abs. 1 GDPR fields. | `register_content` |
+| `check_register` | Funktion | Cover sheet (Art. 30 Abs. 1 lit. a) plus every activity. | `register_content` |
+| `finalize_consultation` | Funktion | Final consultation notice after the final assessment (DP-C21). | `calculation` |
+| `load_profile` | Funktion | Load an explicitly named packaged profile version. | `profile_loader` |
+| `normalize_content` | Funktion | Validate structure and types and persist a stable identifier per activity. | `register_content` |
+| `parse_answers` | Funktion | Validate answers keyed by question. | `answers` |
+| `parse_scenarios` | Funktion | Validate risk scenarios strictly against the profile scale and catalogues. | `answers` |
+| `prefill_from_activity` | Funktion | Suggest answers from register data (Art. 9/10 data, number of persons, transfers). | `prefill` |
+| `propose` | Funktion | Combine screening and risk into a reasoned, traceable recommendation. | `calculation` |
+| `screen` | Funktion | Evaluate hard triggers, EDSA points and the FRIA marker in profile order. | `screening` |
 
-Quelle: `janpow77/regulierung@a5d48ea4b90a410210ec25e707781ef9e21ad743`
-(`services/dsfa/*`, `mandant_dsgvo_service.py`). MIT-Freigabe durch den
-Rechteinhaber am 22.09.2026, siehe `NOTICE` und `provenance.json`. Die
-BfDI-Mustervorlage (CC-BY-SA 4.0) ist nicht enthalten.
+Öffentliche Module:
 
-Das Verhalten des Originals wurde vor der Extraktion tatsächlich ausgeführt und
-aufgezeichnet (`tools/capture_regulierung_legacy.py`). `legacy` reproduziert es
-exakt; der neue Vertrag korrigiert begründet unter anderem unvollständige
-Antworten, Wahrheitswerte aus Zeichenketten, ungeprüfte Restwerte, fehlende
-Mandantenbindung und Formel-Injektion in Excel. Vollständige Liste und offene
-fachliche Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
+| Modul | Kurzbeschreibung |
+|---|---|
+| `auditcore_dataprotection.answers` | Survey input of a DPIA: answers and risk scenarios, validated at the boundary. |
+| `auditcore_dataprotection.assessment` | DPIA workflow: create from an activity version, edit, decide, involve the DPO, release. |
+| `auditcore_dataprotection.assessment_checks` | Release checks of a DPIA version, in checking order. |
+| `auditcore_dataprotection.assessment_core` | Ports, guards and read access shared by all DPIA operations. |
+| `auditcore_dataprotection.assessment_html` | Self-contained, escaped HTML report of assessment report data. |
+| `auditcore_dataprotection.assessment_html_outcome` | Outcome sections of the HTML assessment report: decision, notes, sources. |
+| `auditcore_dataprotection.assessment_input` | Input handling of DPIA edits: omitted fields, change detection, review reset. |
+| `auditcore_dataprotection.assessment_involvement` | DPO involvement and prior consultation of a DPIA version. |
+| `auditcore_dataprotection.assessment_review` | Review after register changes, reassessment and the overview of a register. |
+| `auditcore_dataprotection.calculation` | DSFA calculation: threshold analysis, gross/net risk and a reasoned proposal. |
+| `auditcore_dataprotection.edpb` | DPIA documentation aligned with the EDPB template (2026, version 1.0). |
+| `auditcore_dataprotection.errors` | Error contract. Consumers map ``code`` to their own HTTP or UI responses. |
+| `auditcore_dataprotection.excel` | Optional Excel output (``pip install 'auditcore_dataprotection[excel]'``). |
+| `auditcore_dataprotection.export` | Report data and dependency-free renderers (JSON, HTML). |
+| `auditcore_dataprotection.hashing` | Canonical JSON digests that bind results to exact profile and register content. |
+| `auditcore_dataprotection.html_common` | Escaping and styles shared by the HTML views of reports. |
+| `auditcore_dataprotection.legacy` | Behavior-compatible adapter for the source application ``regulierung``. |
+| `auditcore_dataprotection.legacy_admin` | Legacy-exact administration helpers of ``regulierung@a5d48ea``. |
+| `auditcore_dataprotection.legacy_report` | Legacy-exact HTML report of ``regulierung@a5d48ea`` (``export.baue_bericht_html``). |
+| `auditcore_dataprotection.legacy_scoring` | Legacy-exact screening, risk, proposal and prefill of ``regulierung@a5d48ea``. |
+| `auditcore_dataprotection.memory` | In-memory reference adapters for tests and simple single-process consumers. |
+| `auditcore_dataprotection.model` | Immutable records, actors, permissions and audit events. |
+| `auditcore_dataprotection.pdf` | Optional PDF output via WeasyPrint (``pip install 'auditcore_dataprotection[pdf]'``). |
+| `auditcore_dataprotection.ports` | Interfaces the consumer application implements. |
+| `auditcore_dataprotection.prefill` | Suggested screening answers from register data; never stored automatically. |
+| `auditcore_dataprotection.profile_loader` | Loading and validating rule profile documents (packaged JSON, schema 1 and 2). |
+| `auditcore_dataprotection.profile_model` | Rule profile model: schema constants, catalogue records and :class:`RuleProfile`. |
+| `auditcore_dataprotection.profile_sections` | Sections of rule profile documents: primitives and the schema 2 (EDPB) parts. |
+| `auditcore_dataprotection.profiles` | – |
+| `auditcore_dataprotection.register` | Records of processing activities: versions, drafts and four-eyes release. |
+| `auditcore_dataprotection.register_content` | Content of a register version: structure, identifiers, content checks, changes. |
+| `auditcore_dataprotection.register_html` | Self-contained, escaped HTML view of register report data. |
+| `auditcore_dataprotection.report_data` | Report data of assessments and registers as JSON-compatible documents. |
+| `auditcore_dataprotection.results` | Results of the DSFA calculation: issues, screening, risk and the proposal. |
+| `auditcore_dataprotection.risk` | Risk assessment: gross risk, capped measure effects, explicit residual values. |
+| `auditcore_dataprotection.rules` | Versioned, source-bound rule profiles for screening, risk and workflow. |
+| `auditcore_dataprotection.screening` | Threshold analysis: hard triggers, EDPB points and the FRIA marker. |
+| `auditcore_dataprotection.web` | REST interface of the VVT and DSFA UI (``<flowaudit-vvt>``, ``<flowaudit-dsfa>``). |
+| `auditcore_dataprotection.workbook_tables` | Flat tables of register and overview workbooks (no spreadsheet dependency). |
+<!-- api-overview:end -->
 
-Die Regelprofile sind charakterisiertes Softwareverhalten
-(`SOURCE_CHARACTERIZED`), keine rechtliche Prüfung. Rechtsregime (DSGVO,
-Dritter Teil HDSIG) bleiben getrennte Profile.
+Bausteine:
+
+| Modul | Aufgabe |
+|---|---|
+| `rules` | Versionierte, quellengebundene Regelprofile (`load_profile(id, version)`) mit Fingerprint. Kein stilles Standardprofil. |
+| `calculation` | Schwellwertanalyse, Brutto-/Nettorisiko, Maßnahmenwirkung, begründeter Vorschlag mit Konsultationshinweis, Vorbelegung aus dem VVT. Strikte Eingaben: ja/nein/unbekannt. |
+| `register` | VVT-Inhalt prüfen (Art. 30 Abs. 1 DSGVO), stabile Tätigkeitskennungen, Entwurf, Freigabe und Ablösung mit Vier-Augen-Prinzip und Revisionen. |
+| `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
+| `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
+| `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.1; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
+| `web` | REST-Schnittstelle `dataprotection_ui/1` für `<flowaudit-vvt>` und `<flowaudit-dsfa>` (`@flowaudit/ui`): `DataProtectionApi` ohne Framework, `routes`/`create_app` (Extra `web`), `create_router` (Extra `fastapi`), Speicher als Protocol `Storage`. |
+| `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
+
+Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie
+nach Verantwortung in kleinere Module geschnitten (etwa `answers`, `screening`,
+`risk`, `results`, `prefill` hinter `calculation`; `profile_model`,
+`profile_loader`, `profile_sections` hinter `rules`; `register_content` hinter
+`register`; `assessment_core`, `assessment_input`, `assessment_checks`,
+`assessment_involvement`, `assessment_review` hinter `assessment`;
+`report_data`, `assessment_html`, `assessment_html_outcome`, `register_html` hinter `export`;
+`legacy_scoring`, `legacy_admin`, `legacy_report` hinter `legacy`). Alle bisher
+importierbaren Namen bleiben unter ihrem alten Modulpfad erreichbar.
+
+## Profile und Konfiguration
+
+Profile werden immer ausdrücklich gewählt (`load_profile(id, version)`), es
+gibt kein Standardprofil. Verfügbar: `regulierung.dsgvo` und
+`regulierung.hdsig_ji` 2026.09.1 (Legacy-Fassung der Quelle) sowie die
+Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji` in den Fassungen
+2026.10.1, 2026.10.2 und 2026.10.3 (empfohlen für neue Abschätzungen).
+Rechtsregime (DSGVO, Dritter Teil HDSIG) bleiben getrennte Profile.
 
 ### Bibliotheksprofile `auditcore.dsgvo` und `auditcore.hdsig_ji` (2026.10.1)
 
@@ -256,7 +354,7 @@ Seit 0.2.0 hat die Bibliothek eigene, neutrale Regelprofile
 (Schema `auditcore_dataprotection.profile/2`), ohne Textbausteine der
 Ursprungsanwendung. Die Profile `regulierung.*` 2026.09.1 bleiben
 unverändert zur Nachvollziehbarkeit und für den `legacy`-Vertrag.
-Die neuen Profile Sie richtet die Dokumentation an
+Die neuen Profile richten die Dokumentation an
 der Vorlage des Europäischen Datenschutzausschusses für
 Datenschutz-Folgenabschätzungen aus (2026, Version 1.0, Konsultationsfassung)
 und bildet die Risikostufen Feld für Feld aus der Matrix des
@@ -300,11 +398,61 @@ mit dem Text „Vorläufiger Hinweis: …“ und nie `consultation_required=True
 `finalize_consultation(profil, vorschlag, entscheidung)` bildet den endgültigen
 Hinweis. Empfohlen für neue Abschätzungen; ältere Fassungen bleiben unverändert.
 
-```bash
-python -m pip install -e '.[dev]'
-python -m pytest
-python -m ruff check .
-python -m mypy src
-```
+### Verantwortung der Anwendung
 
-Debian-Paket: `python3-auditcore-dataprotection`.
+Die Bibliothek enthält keine Datenbank, keine Sitzung und keine
+Benutzerverwaltung; HTTP nur im optionalen Modul `web`. Die Anwendung implementiert `RegisterRepository`,
+`AssessmentRepository`, `Authorizer`, `AuditSink`, `Clock` und `IdFactory`
+(`ports`), ruft jede Operation innerhalb ihrer eigenen Transaktion auf und
+erzwingt die Unveränderlichkeit freigegebener Fassungen zusätzlich in der
+Datenbank. Die Dienste prüfen bei jeder Operation Berechtigung, Mandant und
+Revision und erzeugen Audit-Ereignisse; sie ersetzen weder die serverseitige
+Autorisierung noch die Oberfläche der Anwendung.
+
+## Herkunft und Charakterisierung
+
+Quelle: `janpow77/regulierung@a5d48ea4` (`services/dsfa/*`,
+`mandant_dsgvo_service.py`). Das Verhalten des Originals wurde vor der
+Extraktion tatsächlich ausgeführt und aufgezeichnet
+(`tools/capture_regulierung_legacy.py`, 241 Einzelfälle, 65 Ablaufschritte,
+Exporte als HTML, PDF und XLSX). `legacy` und die Profile `regulierung.*`
+2026.09.1 reproduzieren es **legacy-exakt**; die Profile `auditcore.*` sind
+eine eigene Weiterentwicklung nach der EDSA-Vorlage und dem DSK-Kurzpapier
+Nr. 18.
+
+## Bewusste Verhaltensabweichungen
+
+Der neue Vertrag korrigiert begründet unter anderem unvollständige Antworten
+(DP-C01), Wahrheitswerte aus Zeichenketten (DP-C03), ungeprüfte Restwerte
+(DP-C06), fehlende Mandantenbindung (DP-C12), das Vier-Augen-Prinzip
+(DP-C13/DP-C14), Formel-Injektion in Excel (DP-C15) und den Zeitpunkt des
+Konsultationshinweises (DP-C21). Vollständige Liste und offene fachliche
+Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
+
+## Abhängigkeiten
+
+Python ≥ 3.11, zur Laufzeit `auditcore_common==0.1.1` (gemeinsame
+Hilfsfunktionen, nur Standardbibliothek); die Plattform `auditcore` ist keine
+Abhängigkeit. Optional über `[excel]`
+`openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.2`, über `[pdf]`
+`weasyprint>=60.2`, über `[web]` Starlette und über `[fastapi]` FastAPI.
+
+## Sicherheit und Datenschutz
+
+Die Dienste prüfen bei jeder Operation Berechtigung, Mandant und Revision und
+erzeugen Audit-Ereignisse; freigegebene Fassungen sind gesperrt, die
+Anwendung erzwingt das zusätzlich in ihrer Datenbank. Die Bibliothek speichert
+selbst nichts und nutzt kein Netzwerk. Tabellentexte werden in XLSX immer als
+Literal geschrieben (keine Formeln). Der Vorschlag ist eine Empfehlung:
+Entscheidung und Freigabe bleiben menschliche, zurechenbare Schritte, und
+eine fehlende Angabe wird nie zu „Nein“ oder zu einer Freigabe.
+
+## Lizenz und Herkunftsnachweis
+
+MIT (`LICENSE`). Freigabe des extrahierten Codes durch den Rechteinhaber am
+22.09.2026, siehe `NOTICE` und `provenance.json`. Die BfDI-Mustervorlage
+(CC-BY-SA 4.0) ist nicht enthalten.
+
+## Änderungen
+
+Siehe [CHANGELOG.md](CHANGELOG.md).
