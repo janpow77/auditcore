@@ -15,6 +15,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'web-components', title: 'Web Components', group: 'Grundlagen', load: () => import('./pages/base/ElementsPage.vue') },
   { id: 'stichprobe', title: 'Stichprobe', group: 'Komponenten', load: () => import('./pages/sampling/SamplingPage.vue') },
   { id: 'benford', title: 'Benford-Analyse', group: 'Komponenten', load: () => import('./pages/benford/BenfordPage.vue') },
+  { id: 'kennung', title: 'Kennung prüfen', group: 'Komponenten', load: () => import('./pages/identifiers/IdentifierPage.vue') },
   { id: 'screening', title: 'Screening-Trefferprüfung', group: 'Komponenten', load: () => import('./pages/screening/ScreeningPage.vue') },
   { id: 'kanban', title: 'Kanban', group: 'Komponenten', load: () => import('./pages/kanban/KanbanPage.vue') },
   { id: 'datenschutz', title: 'Datenschutz: VVT und DSFA', group: 'Komponenten', load: () => import('./pages/dataprotection/DataProtectionPage.vue') },

@@ -6,7 +6,8 @@ auditcore_statistics.web (/api/benford) und auditcore_registry_sources.web
 auditcore_dataprotection.web (/api/dataprotection, dataprotection_demo.py),
 auditcore_documents.web (/api/synopsis, synthetische Dokumente aus
 documents_demo.py) und auditcore_geo.web (/api/geo, synthetische Kacheln und
-GeoPackage-Dateien aus geo_demo.py unter /api/geo-demo). Erforderlich: Extra ``web`` der Pakete
+GeoPackage-Dateien aus geo_demo.py unter /api/geo-demo) sowie auditcore_identifiers.web
+(/api/identifiers). Erforderlich: Extra ``web`` der Pakete
 und uvicorn. Nur für Demo und Browserprüfung.
 
     python demo/api_server.py            # Port 18765, sonst FA_DEMO_API_PORT
@@ -17,6 +18,7 @@ from __future__ import annotations
 import os
 
 import uvicorn
+from auditcore_identifiers.web import routes as identifier_routes
 from auditcore_sampling.web import routes as sampling_routes
 from auditcore_statistics.web import routes as benford_routes
 from dataprotection_demo import dataprotection_routes
@@ -32,6 +34,7 @@ app = Starlette(
     routes=[
         Mount("/api/sampling", routes=sampling_routes()),
         Mount("/api/benford", routes=benford_routes()),
+        Mount("/api/identifiers", routes=identifier_routes()),
         Mount("/api/screening", routes=screening_routes()),
         Mount("/api/dataprotection", routes=dataprotection_routes()),
         Mount("/api/synopsis", routes=comparison_routes()),

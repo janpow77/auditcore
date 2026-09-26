@@ -1,5 +1,14 @@
 # Changelog – auditcore_identifiers
 
+## Unreleased
+
+- REST-Vertrag `identifiers_ui/1` (`auditcore_identifiers.web`) für die
+  Oberfläche „Kennung prüfen“: `GET /catalogue` (Kennungsarten, Profile mit
+  ihren Arten, deutsche Bezeichnungen für Gründe und Einzelheiten, Grenzen),
+  `POST /check` und `POST /check/batch` (Zeilenfehler für unbekannte oder
+  vom Profil nicht geprüfte Arten statt Ablehnung der Tabelle). Neue Extras
+  `web` (Starlette) und `fastapi`; der Kern bleibt ohne Abhängigkeiten.
+
 ## 0.1.0 – Erste Fassung
 
 - Prüfen und Normalisieren von IBAN (ISO 13616: 89 Registerländer, BBAN-Aufbau,

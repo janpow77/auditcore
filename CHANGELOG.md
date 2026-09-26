@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- „Kennung prüfen“: REST-Vertrag `identifiers_ui/1` in
+  `auditcore_identifiers.web` (Extras `web`, `fastapi`) und Oberfläche
+  `IdentifierCheck`/`<flowaudit-identifier-check>` (Vue) sowie native
+  `FlowauditIdentifierCheck` (React) auf gemeinsamem Kern in
+  `@flowaudit/ui-core` (`createIdentifierController`,
+  `createIdentifiersRestPort`): Prüfprofil mit sichtbarer Empfehlung,
+  Einzelprüfung mit Status, Begründung, Grund, Normalform und Einzelheiten,
+  Stapelprüfung aus CSV/TSV über den TableImport-Controller mit
+  Spaltenzuordnung, Filter „Nur Auffälligkeiten“ und CSV-Export. 4
+  Paritätsfälle plus 2 Interaktionsfolgen, Demo-Seite und API-E2E
+  (`docs/ui/identifiers-rest.md`).
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

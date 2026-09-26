@@ -4,6 +4,7 @@ from importlib.metadata import distribution
 from importlib.util import find_spec
 
 import auditcore_identifiers as ai
+from auditcore_identifiers.web import check_one
 
 
 def main() -> None:
@@ -19,6 +20,8 @@ def main() -> None:
     assert ai.check_tax_number("2893081508152").details["land"] == "Baden-Württemberg"
     assert ai.check_register_number("HRB 12345").valid
     assert len(ai.profile_names()) == 8
+    answer = check_one({"kind": "iban", "value": "DE89370400440532013001", "profile": "strict"})
+    assert answer["result"]["reason_label"] == "Prüfziffer falsch"  # type: ignore[index]
     print("auditcore_identifiers installed smoke PASS", ai.__version__)
 
 
