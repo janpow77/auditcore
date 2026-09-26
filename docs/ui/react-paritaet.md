@@ -38,10 +38,15 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Kennung prüfen | `IdentifierCheck` | `FlowauditIdentifierCheck` | `identifiers_ui/1` ([identifiers-rest.md](identifiers-rest.md)) | 4 + 2 Interaktionsfolgen |
 | Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
 | Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 4 + 2 Interaktionsfolgen |
+| Datei-Import (CSV/TSV) | `TableImport` | `TableImport` | – | 3 + Interaktionsfolge |
+
+Vollständigkeit erzwingt `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`,
+Regeln in [beitragen.md](beitragen.md)); neue Komponenten entstehen mit
+`npm run ui:neu -- <gruppe> <Komponente>`.
 
 ## Nachweis
 
-Die Fälle stehen einmal in `packages-js/ui-core/test/parity/cases*.ts` und
+Die Fälle stehen einmal in `packages-js/ui-core/test/parity/cases-<gruppe>.ts` und
 nutzen die gemeinsamen Fixtures (`ui-core/test/fixtures`: Ergebnisse der
 echten Python-Backends, keine Personendaten).
 
@@ -116,8 +121,9 @@ Export, Stile), Vue bindet über `useStore`/`reactive`, React über
 | Formulare, Listen, Rechtsgrundlagen, Kennzeichen | `FieldForm`, `ListEditor`, `LegalBasisEditor`, `LegalSearch`, `MarkerPicker` | gleichnamig | 9 + Interaktionsfolgen |
 | Dialoge und Ansichten | Export, Anreicherung, XML, Tastenkürzel, Elementsuche, Diagramm-Infos, Hinweisliste, Schlüsselfilter | gleichnamig | 8 + Interaktionen |
 | Sammlung | `CollectionTree`, `GroupOverview`, `DiagramInfoColumn` | gleichnamig | 8 (Filter, Ordner) |
+| Basis (Symbol, Dialog) | `FaIcon`, `BaseDialog` | gleichnamig | 3 |
 
-Fälle: `packages-js/bpmn-flowaudit/test/parity/cases-*.ts`; Prüfung in
+Fälle: `packages-js/bpmn-flowaudit/test/parity/cases-<gruppe>.ts` (`editor`, `collection`, `panels`, `dialogs`, `views`, `base`); Prüfung in
 `packages-js/bpmn-react/test/parity/*.spec.tsx` (Vue und React mit denselben
 Eingaben, gleiche Erwartungen, gleiches normalisiertes DOM und gleicher
 Formularzustand). Der XML-Rundlauf vergleicht `getXml()` nach dem Laden, die
