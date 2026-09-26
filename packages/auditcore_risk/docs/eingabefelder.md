@@ -30,8 +30,8 @@ Stand (Commit wie angegeben), dem Profil selbst oder der Paketdokumentation.
 | [`audit_designer.flowstat_belegliste`](#audit_designerflowstat_belegliste-1254591156d3) | `1254591156d3` | `LEGACY_CHARACTERIZED` | 10 | 10 |
 | [`flowinvoice.exante_basis`](#flowinvoiceexante_basis-fb2d18568d2e) | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 6 | 7 |
 | [`flowinvoice.exante_heuristik`](#flowinvoiceexante_heuristik-fb2d18568d2e) | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 8 | 14 |
-| [`flowinvoice.rbvk_wibank`](#flowinvoicerbvk_wibank-2026092) | `2026.09.2` | `APPROVED` | 20 | 26 |
-| [`flowinvoice.rbvk_wibank`](#flowinvoicerbvk_wibank-fb2d18568d2e) | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 20 | 25 |
+| [`flowinvoice.rbvk_intermediate_body`](#flowinvoicerbvk_intermediate_body-2026092) | `2026.09.2` | `APPROVED` | 20 | 26 |
+| [`flowinvoice.rbvk_intermediate_body`](#flowinvoicerbvk_intermediate_body-fb2d18568d2e) | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 20 | 25 |
 | [`flowinvoice.risk_checker`](#flowinvoicerisk_checker-2026092) | `2026.09.2` | `APPROVED` | 17 | 9 |
 | [`flowinvoice.risk_checker`](#flowinvoicerisk_checker-2026093) | `2026.09.3` | `APPROVED` | 17 | 9 |
 | [`flowinvoice.risk_checker`](#flowinvoicerisk_checker-fb2d18568d2e) | `fb2d18568d2e` | `LEGACY_CHARACTERIZED` | 17 | 9 |
@@ -88,9 +88,9 @@ Status `LEGACY_CHARACTERIZED`, Fingerabdruck `5985e36487b147b09ef372ad963ce2f150
 | `laufzeit_monate` | H5 – Laufzeit > 36 Monate (Zahl)<br>H6 – Laufzeit 24–36 Monate (Zahl) | Geplante Laufzeit des Vorhabens in Monaten. Beleg: flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`erwartete_ma`) | optional | H5: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)<br>H6: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`) |
 | `ma` | H7 – Mittelabrufe > 5 (Zahl) | Realisierte Anzahl Mittelabrufe des Vorhabens. Beleg: flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py` (`erwartete_ma`) | optional | H7: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`) |
 
-## flowinvoice.rbvk_wibank 2026.09.2
+## flowinvoice.rbvk_intermediate_body 2026.09.2
 
-Status `APPROVED`, Fingerabdruck `9f800f4e59b1c50641c4ca8074d1d24f3b10ce1916cc382c934390339535492b`.
+Status `APPROVED`, Fingerabdruck `3b80761a25d68128268e8ff98fc53be399d05ce530db2f14b2eb331da8b700d1`.
 
 | Feld | Regeln (Code – Bezeichnung, Rolle) | Bedeutung | Pflicht/optional | Verhalten bei fehlender Spalte / leerem Wert |
 |---|---|---|---|---|
@@ -115,9 +115,9 @@ Status `APPROVED`, Fingerabdruck `9f800f4e59b1c50641c4ca8074d1d24f3b10ce1916cc38
 | `vorherige_kuerzungsgruende` | K20 – Vorherige Kürzungsgründe 1.1 bis 1.24 (Codeliste)<br>K21 – Vorherige Kürzungsgründe 5.1 oder 5.2 (Codeliste)<br>K22 – Vorherige Kürzungsgründe 8.1–8.3, 8.8 oder 13.1 (Codeliste) | Kürzungsgrund-Codes früherer Kürzungen (z. B. „1.3“, „13.1“), auch aus eigenen früheren Mittelabrufen; Aufbereitung beim Consumer. Beleg: Profil `open_decisions`; `docs/behavior-changes.md` (K11) | optional | K20: Spalte fehlt → wie leerer Wert; leer → leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)<br>K21: Spalte fehlt → wie leerer Wert; leer → leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`)<br>K22: Spalte fehlt → wie leerer Wert; leer → leere Menge (kein Treffer); keine Liste → Abbruch (`InputError`) |
 | `vorherige_verwk_quote` | K16 – Schlechte Ergebnisse vorheriger Verwaltungskontrollen (Zahl)<br>K17 – Historische Differenz über 25 Prozent (Zahl)<br>K18 – Historische Differenz über 50 Prozent (Zahl)<br>K19 – Historische Differenz unter 5 Prozent (Zahl) | Quote aus eigenen früheren Verwaltungskontrollen (VerwK); Aufbereitung beim Consumer. Beleg: Profil `open_decisions`; `docs/behavior-changes.md` (K11) | optional | K16: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)<br>K17: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)<br>K18: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`)<br>K19: Spalte fehlt → wie leerer Wert; leer → Ersatzwert `0`, kein Treffer (ebenso bei `""` oder 0); NaN → kein Treffer; nicht numerischer Text → Abbruch (`InputError`) |
 
-## flowinvoice.rbvk_wibank fb2d18568d2e
+## flowinvoice.rbvk_intermediate_body fb2d18568d2e
 
-Status `LEGACY_CHARACTERIZED`, Fingerabdruck `72b8cce180b2d94eac9d528815e900028b8c67621e567a4373286576f66ec482`.
+Status `LEGACY_CHARACTERIZED`, Fingerabdruck `54f37c396f21f2500c1388abc7b272780eee83b020e58e892d4794682c17f828`.
 
 | Feld | Regeln (Code – Bezeichnung, Rolle) | Bedeutung | Pflicht/optional | Verhalten bei fehlender Spalte / leerem Wert |
 |---|---|---|---|---|

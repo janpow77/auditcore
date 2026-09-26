@@ -47,7 +47,7 @@ from datetime import date
 from auditcore_legal_sources import load_profile
 from auditcore_legal_sources import dip
 
-profile = load_profile("auditdatabase.esi", "2026.09.1")
+profile = load_profile("auditdatabase.esi", "2026.09.2")
 params = dip.drucksache_query(profile, "EFRE")  # enthält keinen API-Schlüssel
 assert params == {"format": "json", "num": "30", "f.titel": "EFRE"}
 
@@ -120,12 +120,17 @@ assert document.classification["heuristic"] is True
 ## Profile und Konfiguration
 
 `available_profiles()` liefert `auditdatabase.esi` und `audit_designer.vp_ai`
-(je 2026.09.1). Beide sind aus den ausgeführten Quellanwendungen aufgezeichnet
+(je 2026.09.2). Beide sind aus den ausgeführten Quellanwendungen aufgezeichnet
 und bewusst getrennt: unterschiedliche DIP-Suchbegriffe (27 bzw. 10),
 DIP-Klassifikation nur bei auditdatabase (als `heuristic: true` markiert),
 eigene EUR-Lex-Abfragen und Kerndokumente, eigene Förderperiodenregeln. Ein
 Profil wird mit `load_profile(id, version)` ausdrücklich gewählt; jedes
 `LegalDocument` trägt die Profilreferenz.
+
+Version 2026.09.2 löst 2026.09.1 ab: Die Relevanz-Schlagwörter nennen keine
+konkreten Institute mehr, sondern neutral „Zwischengeschaltete Stelle“ und
+„Landesförderinstitut“ (das Paket gilt für alle Prüfbehörden und ESI-Fonds).
+Sonst sind die Profile unverändert; 2026.09.1 ist nicht mehr enthalten.
 
 Zugangsdaten: der DIP-API-Schlüssel kommt ausschließlich aus dem
 Credential-Provider des Consumers; ohne Schlüssel ist die Quelle

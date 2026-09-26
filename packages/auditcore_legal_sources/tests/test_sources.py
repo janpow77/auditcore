@@ -28,10 +28,10 @@ from auditcore_legal_sources.profile import (
     profile_from_dict,
 )
 
-ADB = load_profile("auditdatabase.esi", "2026.09.1")
-DES = load_profile("audit_designer.vp_ai", "2026.09.1")
+ADB = load_profile("auditdatabase.esi", "2026.09.2")
+DES = load_profile("audit_designer.vp_ai", "2026.09.2")
 PROFILE_FILE = (
-    Path(auditcore_legal_sources.__file__).parent / "profiles" / "auditdatabase.esi-2026.09.1.json"
+    Path(auditcore_legal_sources.__file__).parent / "profiles" / "auditdatabase.esi-2026.09.2.json"
 )
 
 
@@ -248,8 +248,8 @@ def test_relevance_uses_explicit_keywords() -> None:
 
 def test_profiles_are_explicit_versioned_and_tamper_evident() -> None:
     assert available_profiles() == (
-        ("audit_designer.vp_ai", "2026.09.1"),
-        ("auditdatabase.esi", "2026.09.1"),
+        ("audit_designer.vp_ai", "2026.09.2"),
+        ("auditdatabase.esi", "2026.09.2"),
     )
     data = json.loads(PROFILE_FILE.read_text(encoding="utf-8"))
     assert fingerprint(data) == ADB.fingerprint
@@ -269,7 +269,7 @@ def test_profiles_are_explicit_versioned_and_tamper_evident() -> None:
             profile_from_dict(broken)
     for name in ("unknown", "../auditdatabase.esi"):
         with pytest.raises(ProfileError):
-            load_profile(name, "2026.09.1")
+            load_profile(name, "2026.09.2")
 
 
 def test_profile_content_equals_executed_sources(legacy: dict[str, object]) -> None:

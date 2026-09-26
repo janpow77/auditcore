@@ -191,7 +191,7 @@
     "defusedxml": "Extra xml; ohne Extra gleichwertig gehärteter Expat-Parser der Standardbibliothek",
     "openpyxl": "Extra excel (Legacy-Excelbericht, RCM/Berichte als xlsx)",
     "reportlab": "Extra pdf (Legacy-PDF-Bericht)",
-    "auditcore_legal_sources": "0.1.1, Extra legal (Kerndokumente des Profils auditdatabase.esi 2026.09.1)"
+    "auditcore_legal_sources": "0.1.1, Extra legal (Kerndokumente des Profils auditdatabase.esi 2026.09.2)"
   },
   "rights": {
     "license_status": "MIT",

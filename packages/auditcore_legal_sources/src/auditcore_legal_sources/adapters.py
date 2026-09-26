@@ -50,7 +50,7 @@ class DipDrucksachenAdapter:
         title="Bundestag DIP – Drucksachen",
         family=FAMILY,
         adapter_version=ADAPTER_VERSION,
-        profile_version="2026.09.1",
+        profile_version="2026.09.2",
         data_format="application/json",
         auth=AuthKind.API_KEY,
         capabilities=Capabilities(
@@ -135,7 +135,7 @@ class EurLexAdapter:
         title="EUR-Lex (Cellar SPARQL)",
         family=FAMILY,
         adapter_version=ADAPTER_VERSION,
-        profile_version="2026.09.1",
+        profile_version="2026.09.2",
         data_format="application/sparql-results+json",
         auth=AuthKind.NONE,
         capabilities=Capabilities(
@@ -246,7 +246,7 @@ class FeedAdapter:
             title=f"{self.key.upper()} RSS",
             family=FAMILY,
             adapter_version=ADAPTER_VERSION,
-            profile_version="2026.09.1",
+            profile_version="2026.09.2",
             data_format="application/rss+xml",
             auth=AuthKind.NONE,
             capabilities=Capabilities(
@@ -318,7 +318,7 @@ class EcaPublicationsAdapter:
         title="Europäischer Rechnungshof – Publikationen",
         family=FAMILY,
         adapter_version=ADAPTER_VERSION,
-        profile_version="2026.09.1",
+        profile_version="2026.09.2",
         data_format="text/html",
         auth=AuthKind.NONE,
         capabilities=Capabilities(

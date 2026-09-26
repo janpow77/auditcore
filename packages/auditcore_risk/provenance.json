@@ -108,7 +108,7 @@
       "symbols": [
         "score_mittelabrufe"
       ],
-      "profile": "flowinvoice.rbvk_wibank fb2d18568d2e",
+      "profile": "flowinvoice.rbvk_intermediate_body fb2d18568d2e",
       "also_present_in": "janpow77/riskanalysis backend/app/pipeline/rbvk_wibank_scorer.py blob 6ebd3a2 (fachlich gleich)"
     },
     {
@@ -169,7 +169,7 @@
     "flowinvoice fraud_detection sanctions_checker/pep_checker/company_verifier (Screening; Ergebnisse werden als Signale konsumiert, Quelle: registry-Bibliotheken)",
     "flowinvoice fraud_detection benfords_law → auditcore_statistics 0.2.0 legacy_flowinvoice_benford (nicht dupliziert)",
     "flowinvoice verwk auffaelligkeiten/konzentration/benford/montecarlo/fuzzy_link/eu_typologie/fehlerursachen (Begründung docs/behavior-changes.md; Status geplant bzw. Anwendung)",
-    "WIBANK-Merkmalsaufbereitung _normalise_sources, Vorhistorie _historical_scopes, 'nicht abbildbar' (Anwendung)",
+    "RBVK-Merkmalsaufbereitung _normalise_sources, Vorhistorie _historical_scopes, 'nicht abbildbar' (Anwendung)",
     "Ex-ante-Kalibrierung (Logit) und erwartete_ma/an_risiko_loo (Anwendung/Modellierung)"
   ],
   "characterization": {
@@ -226,7 +226,7 @@
       "fixture": "tests/fixtures/flowinvoice_verwk_scores_observed.json",
       "tool": "tools/capture_flowinvoice_verwk_scores.py",
       "cases": {
-        "wibank": 777,
+        "rbvk": 777,
         "exante_features": 125,
         "exante_runs": 3
       },
@@ -278,7 +278,7 @@
       "schema": "auditcore_risk.fraud-profile/1"
     },
     {
-      "id": "flowinvoice.rbvk_wibank",
+      "id": "flowinvoice.rbvk_intermediate_body",
       "version": "fb2d18568d2e",
       "status": "LEGACY_CHARACTERIZED"
     },

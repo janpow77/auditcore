@@ -23,7 +23,7 @@ from auditcore_legal_sources import eurlex  # noqa: E402
 from auditcore_legal_sources.profile import load_profile  # noqa: E402
 
 DIP_URL = "https://search.dip.bundestag.de/api/v1/drucksache"
-PROFILE = load_profile("auditdatabase.esi", "2026.09.1")
+PROFILE = load_profile("auditdatabase.esi", "2026.09.2")
 
 
 def dip_page(term: str, cursor: str | None, docs: list[dict[str, Any]], nxt: str) -> dict[str, Any]:

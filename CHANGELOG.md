@@ -11,7 +11,34 @@
   Ubuntu 26.04 (Python 3.14) und 24.04 unter
   `docs/validation/regulierung-apt/ubuntu-26.04/`.
 
-Noch keine Änderungen.
+- **Institutsneutrale Pakete:** Die Pakete nennen keine konkreten Institute
+  mehr, sondern fachlich neutrale Rollen (z. B. „Zwischengeschaltete Stelle“,
+  Art. 71 Abs. 3 VO (EU) 2021/1060; Code `intermediate_body`). Neuer Wächter
+  `scripts/check_institution_names.py` im Job `code-quality-gate`: Namen aus
+  `quality/institutsnamen-denylist.txt` sind in `packages/`, `packages-js/`,
+  `docs/ui/` u. a. verboten, Ausnahmen nur mit Begründung in
+  `quality/institutsnamen-ausnahmen.txt`. Umbenannte bzw. neu versionierte
+  Profile:
+  - `auditcore_risk`: `flowinvoice.rbvk_wibank` heißt jetzt
+    `flowinvoice.rbvk_intermediate_body` (Versionen `fb2d18568d2e` und
+    `2026.09.2`, fachlich unverändert, neue Fingerprints). Die alte Kennung
+    lädt übergangsweise mit `DeprecationWarning` das neue Profil
+    (`profiles.DEPRECATED_ALIASES`, entfällt mit dem ersten Release nach dem
+    31.12.2026). Charakterisierungs-Fixture: Schlüssel `rbvk` statt des
+    Institutsnamens.
+  - `auditcore_legal_sources`: `auditdatabase.esi` und `audit_designer.vp_ai`
+    2026.09.2 ersetzen 2026.09.1 (Relevanz-Schlagwörter „Zwischengeschaltete
+    Stelle“ und „Landesförderinstitut“ statt Institutsnamen);
+    `auditcore_bpmn` nutzt `auditdatabase.esi` 2026.09.2, der Quellkatalog
+    von `auditcore_harvest` ist nachgezogen.
+  - `auditcore_funding_sources`: `designer.deminimis.authority_levels`
+    2026.09.2 ersetzt 2026.09.1 (Erkennungsmuster mit Institutsnamen
+    entfallen; Zuordnung über Landesnamen und Landesbehörden).
+  - `auditcore_procurement`: Der User-Agent der HAD-Suche lautet
+    `EFRE-AuditTool/2.0` (ohne Behördenzusatz).
+  Beobachtete Fixtures sind entsprechend neutralisiert und tragen den Hinweis
+  `neutralized`; die Aufzeichnungswerkzeuge neutralisieren künftig selbst.
+  Die BPMN-Neutralitätstests lesen die Namen aus der Denylist.
 
 ## 0.4.2 – 2026-09-26
 

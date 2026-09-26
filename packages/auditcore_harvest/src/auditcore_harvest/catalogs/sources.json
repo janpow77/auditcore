@@ -1149,8 +1149,8 @@
     }
    ],
    "profile": [
-    "auditdatabase.esi@2026.09.1",
-    "audit_designer.vp_ai@2026.09.1"
+    "auditdatabase.esi@2026.09.2",
+    "audit_designer.vp_ai@2026.09.2"
    ],
    "auth": "api_key",
    "licence_access": {
@@ -1165,7 +1165,7 @@
     "properties": {
      "profile": {
       "type": "object",
-      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.2"
      },
      "keywords": {
       "type": "array",
@@ -1236,8 +1236,8 @@
     }
    ],
    "profile": [
-    "auditdatabase.esi@2026.09.1",
-    "audit_designer.vp_ai@2026.09.1"
+    "auditdatabase.esi@2026.09.2",
+    "audit_designer.vp_ai@2026.09.2"
    ],
    "auth": "none",
    "licence_access": {
@@ -1252,7 +1252,7 @@
     "properties": {
      "profile": {
       "type": "object",
-      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.2"
      }
     }
    },
@@ -1303,8 +1303,8 @@
     }
    ],
    "profile": [
-    "auditdatabase.esi@2026.09.1",
-    "audit_designer.vp_ai@2026.09.1"
+    "auditdatabase.esi@2026.09.2",
+    "audit_designer.vp_ai@2026.09.2"
    ],
    "auth": "none",
    "licence_access": {
@@ -1319,7 +1319,7 @@
     "properties": {
      "profile": {
       "type": "object",
-      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.2"
      },
      "relevant_only": {
       "type": "boolean"
@@ -1372,8 +1372,8 @@
     }
    ],
    "profile": [
-    "auditdatabase.esi@2026.09.1",
-    "audit_designer.vp_ai@2026.09.1"
+    "auditdatabase.esi@2026.09.2",
+    "audit_designer.vp_ai@2026.09.2"
    ],
    "auth": "none",
    "licence_access": {
@@ -1388,7 +1388,7 @@
     "properties": {
      "profile": {
       "type": "object",
-      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.2"
      },
      "relevant_only": {
       "type": "boolean"
@@ -1441,8 +1441,8 @@
     }
    ],
    "profile": [
-    "auditdatabase.esi@2026.09.1",
-    "audit_designer.vp_ai@2026.09.1"
+    "auditdatabase.esi@2026.09.2",
+    "audit_designer.vp_ai@2026.09.2"
    ],
    "auth": "none",
    "licence_access": {
@@ -1457,7 +1457,7 @@
     "properties": {
      "profile": {
       "type": "object",
-      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.1"
+      "description": "Profil-ID und -Version, z. B. auditdatabase.esi / 2026.09.2"
      }
     }
    },

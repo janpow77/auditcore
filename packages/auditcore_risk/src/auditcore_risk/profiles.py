@@ -10,8 +10,10 @@ profiles, and no profile is an implicit default.
 from __future__ import annotations
 
 import json
+import warnings
 from collections.abc import Mapping
 from dataclasses import dataclass
+from types import MappingProxyType
 from typing import Any
 
 from auditcore_common.frozen import freeze
@@ -345,6 +347,14 @@ def profile_from_dict(data: JsonObject) -> RiskProfile:
 
 _RESOURCES = "auditcore_risk.profile_data"
 
+#: Renamed profile ids that are still accepted (``DeprecationWarning``); the
+#: canonical profile is returned with its own id and fingerprint. The old key
+#: named a concrete institution; it expires with the first release after
+#: 2026-12-31 (flowinvoice switches to the canonical id before that).
+DEPRECATED_ALIASES: Mapping[str, str] = MappingProxyType(
+    {"flowinvoice.rbvk_wibank": "flowinvoice.rbvk_intermediate_body"}
+)
+
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
     """Packaged ``(id, version)`` pairs; none of them is an implicit default."""
@@ -355,6 +365,14 @@ def load_profile(profile_id: str, version: str) -> RiskProfile:
     """Load an explicitly named packaged profile version."""
     if not isinstance(profile_id, str) or not isinstance(version, str):
         raise ProfileError("Profilkennung und Version sind als Text anzugeben.")
+    if profile_id in DEPRECATED_ALIASES:
+        canonical = DEPRECATED_ALIASES[profile_id]
+        warnings.warn(
+            f"Profilkennung {profile_id} ist veraltet; {canonical} verwenden.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        profile_id = canonical
     entry = packaged_profile_entries(_RESOURCES).get((profile_id, version))
     if entry is None:
         raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
