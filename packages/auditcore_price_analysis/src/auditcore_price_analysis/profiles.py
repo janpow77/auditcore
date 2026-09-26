@@ -52,8 +52,6 @@ __all__ = [
 SCHEMA = "auditcore_price_analysis.profile/1"
 
 
-
-
 def _dec(data: Mapping[str, object], key: str, where: str) -> Decimal:
     value = data.get(key)
     if not isinstance(value, str):
