@@ -15,7 +15,9 @@ Das vollständige, ausführbare Beispiel steht in
 [`examples/eigener_adapter.py`](examples/eigener_adapter.py) und läuft ohne
 Netz gegen eine aufgezeichnete Fixture (`python docs/examples/eigener_adapter.py`).
 Die Referenzadapter `JsonApiAdapter` und `FeedAdapter` stehen in
-`auditcore_harvest.reference`.
+`auditcore_harvest.reference`. XML-Quellen parsen nur über defusedxml
+(`auditcore_common.safe_xml.parse_xml`, Extra `xml`), nie über
+`xml.etree.ElementTree.fromstring`; `FeedAdapter` zeigt das Muster.
 
 ## 1. Quelle deklarieren
 
