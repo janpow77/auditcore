@@ -1,44 +1,39 @@
-<!-- BatchChecks: Liste mit Auswahl; Logik im Kern (createBatchchecksController). -->
+<!-- Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im Kern (createBatchchecksController). -->
 <script setup lang="ts">
-import { computed, watch } from 'vue'
-import { createBatchchecksController, batchchecksMessages, batchchecksIsEmpty, batchchecksRows, type BatchchecksItem, type BatchchecksPort } from '@auditcore/ui-core'
-import { useStore } from '../composables/useStore'
+import { watch } from 'vue'
+import { batchchecksMessages, type BatchchecksAnswer, type BatchchecksPort } from '@auditcore/ui-core'
+import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
+import BatchChecksInput from './BatchChecksInput.vue'
+import BatchChecksResult from './BatchChecksResult.vue'
+import { useBatchChecks } from './useBatchChecks'
 
 const props = withDefaults(defineProps<{
-  /** Fachlogik, z. B. `createBatchchecksMemoryPort([...])`. */
+  /** Fachlogik, z. B. `createBatchchecksRestPort({ baseUrl: '/api/batch-checks' })`. */
   port?: BatchchecksPort | null
+  /** Vorhandenes Ergebnis anzeigen (z. B. aus der Ablage der Anwendung). */
+  result?: BatchchecksAnswer | null
   locale?: Locale
-}>(), { port: null, locale: undefined })
+}>(), { port: null, result: null, locale: undefined })
 
-const emit = defineEmits<{
-  'item-select': [item: BatchchecksItem]
-  error: [message: string]
-}>()
+const emit = defineEmits<{ 'checks-completed': [answer: BatchchecksAnswer]; error: [message: string] }>()
 const { t, locale: active } = useI18n(batchchecksMessages, () => props.locale)
-const controller = createBatchchecksController({
-  port: () => props.port,
-  callbacks: () => ({
-    selected: (item) => emit('item-select', item),
-    failed: (message) => emit('error', message),
-  }),
+const id = useId('fa-batchchecks')
+const { controller, state, table } = useBatchChecks(() => props.port, {
+  completed: (answer) => emit('checks-completed', answer),
+  failed: (message) => emit('error', message),
 })
-const state = useStore(controller.store)
-const rows = computed(() => batchchecksRows(state.value))
-const empty = computed(() => batchchecksIsEmpty(state.value))
 
 watch(() => props.port, () => void controller.load(), { immediate: true })
+watch(() => props.result, (result) => controller.showAnswer(result), { immediate: true })
 </script>
 
 <template>
-  <section class="fa-batchchecks" :lang="active" :aria-label="t('title')">
+  <section class="fa-batchchecks" :lang="active" :aria-label="t('title')" data-testid="batchchecks">
+    <p v-if="!port" class="fa-batchchecks__muted">{{ t('noPort') }}</p>
     <p v-if="state.busy === 'load'" class="fa-batchchecks__muted" role="status">{{ t('loading') }}</p>
     <p v-if="state.error" class="fa-batchchecks__failure" role="alert">{{ t('failed', { message: state.error }) }}</p>
-    <p v-if="empty" class="fa-batchchecks__muted">{{ t('empty') }}</p>
-    <ul v-if="rows.length" class="fa-batchchecks__list">
-      <li v-for="row in rows" :key="row.id">
-        <button type="button" :class="['fa-batchchecks__item', row.selected && 'fa-batchchecks__item--selected']" :aria-pressed="row.selected" @click="controller.select(row.id)">{{ row.label }}</button>
-      </li>
-    </ul>
+    <BatchChecksInput v-if="state.catalogue" :id="id" :controller="controller" :state="state" :table="table" :t="t" />
+    <BatchChecksResult v-if="state.answer" :id="id" :controller="controller" :state="state" :answer="state.answer" :t="t" :locale="active" />
   </section>
 </template>

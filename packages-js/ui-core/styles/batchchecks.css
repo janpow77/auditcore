@@ -1,8 +1,26 @@
-/* BatchChecks – BatchChecks (Vue) und FlowauditBatchChecks (React). Farben nur aus --fa-*-Variablen. */
-.fa-batchchecks { display: flex; flex-direction: column; gap: var(--fa-space-3); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
-.fa-batchchecks__list { display: flex; flex-direction: column; gap: var(--fa-space-1); margin: 0; padding: 0; list-style: none; }
-.fa-batchchecks__item { width: 100%; padding: var(--fa-space-2) var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: inherit; font: inherit; text-align: start; cursor: pointer; }
-.fa-batchchecks__item:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
-.fa-batchchecks__item--selected { border-color: var(--fa-color-accent); }
-.fa-batchchecks__muted { margin: 0; color: var(--fa-color-text-muted); }
+/* Bestandsprüfung – BatchChecks (Vue) und FlowauditBatchChecks (React). Farben nur aus --fa-*-Variablen. */
+.fa-batchchecks { display: flex; flex-direction: column; gap: var(--fa-space-4); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-batchchecks__card { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); box-shadow: var(--fa-shadow-sm); min-width: 0; }
+.fa-batchchecks__heading { margin: 0; font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-batchchecks__subheading { margin: 0; font-size: var(--fa-font-size-sm); font-weight: 600; }
+.fa-batchchecks__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--fa-space-3); align-items: end; }
+.fa-batchchecks__field { display: flex; flex-direction: column; gap: var(--fa-space-1); min-width: 0; }
+.fa-batchchecks__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-batchchecks__input { min-height: 2.25rem; padding: 0 var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-batchchecks__file { font: inherit; color: var(--fa-color-text); }
+.fa-batchchecks__check { display: flex; gap: var(--fa-space-2); align-items: center; }
+.fa-batchchecks__input:focus-visible, .fa-batchchecks__file:focus-visible, .fa-batchchecks__check input:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-batchchecks__muted { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-batchchecks__error { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-danger); }
 .fa-batchchecks__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-batchchecks__notice { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-left: 3px solid var(--fa-color-accent); background: var(--fa-color-accent-soft); border-radius: var(--fa-radius-sm); }
+.fa-batchchecks__summary { display: grid; grid-template-columns: max-content 1fr; gap: var(--fa-space-1) var(--fa-space-3); margin: 0; }
+.fa-batchchecks__summary dt { font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-batchchecks__summary dd { margin: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.fa-batchchecks__actions { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); }
+.fa-batchchecks__scroll { overflow-x: auto; }
+.fa-batchchecks__table { width: 100%; border-collapse: collapse; }
+.fa-batchchecks__table th, .fa-batchchecks__table td { padding: var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: left; vertical-align: top; }
+.fa-batchchecks__table thead th { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); font-weight: 600; }
+.fa-batchchecks__table tbody th { font-weight: 600; white-space: nowrap; }
+.fa-batchchecks__note { display: block; margin-top: var(--fa-space-1); color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }

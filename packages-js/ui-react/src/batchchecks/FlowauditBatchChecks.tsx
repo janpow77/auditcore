@@ -1,51 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
-import { createBatchchecksController, batchchecksMessages, batchchecksIsEmpty, batchchecksRows, type BatchchecksItem, type BatchchecksPort, type Locale } from '@auditcore/ui-core'
-import { useTranslation } from '../i18n'
-import { classes, useStoreState } from '../store'
+import { useElementId } from '../store'
+import { BatchChecksInput } from './BatchChecksInput'
+import { BatchChecksResult } from './BatchChecksResult'
+import { useBatchChecks, type BatchChecksInputs } from './useBatchChecks'
 
-export interface FlowauditBatchChecksProps {
-  port?: BatchchecksPort | null
-  locale?: Locale
-  onItemSelect?: (item: BatchchecksItem) => void
-  onError?: (message: string) => void
-}
+export type FlowauditBatchChecksProps = BatchChecksInputs
 
 /**
- * BatchChecks als native React-Komponente (Vertrag wie `<flowaudit-batch-checks>`):
- * Liste mit Auswahl. Ereignisse: `onItemSelect`, `onError`.
+ * Bestandsprüfung als native React-Komponente (Vertrag wie `<flowaudit-batch-checks>`):
+ * Bestand als CSV oder JSON einlesen, Spalten zuordnen, Prüflauf mit Befunden je
+ * Regel und betroffenen Belegen, Export. Ereignisse: `onChecksCompleted`, `onError`.
  */
 export function FlowauditBatchChecks(props: FlowauditBatchChecksProps) {
-  const { t, locale } = useTranslation(batchchecksMessages, props.locale)
-  const latest = useRef(props)
-  latest.current = props
-  const [controller] = useState(() =>
-    createBatchchecksController({
-      port: () => latest.current.port ?? null,
-      callbacks: () => ({
-        selected: (item) => latest.current.onItemSelect?.(item),
-        failed: (message) => latest.current.onError?.(message),
-      }),
-    }),
-  )
-  const state = useStoreState(controller.store)
-  useEffect(() => {
-    void controller.load()
-  }, [controller, props.port])
-  const rows = batchchecksRows(state)
+  const view = useBatchChecks(props)
+  const { state, t } = view
+  const id = useElementId('fa-batchchecks')
   return (
-    <section className="fa-batchchecks" lang={locale} aria-label={t('title')}>
+    <section className="fa-batchchecks" lang={view.locale} aria-label={t('title')} data-testid="batchchecks">
+      {!props.port ? <p className="fa-batchchecks__muted">{t('noPort')}</p> : null}
       {state.busy === 'load' ? <p className="fa-batchchecks__muted" role="status">{t('loading')}</p> : null}
       {state.error ? <p className="fa-batchchecks__failure" role="alert">{t('failed', { message: state.error })}</p> : null}
-      {batchchecksIsEmpty(state) ? <p className="fa-batchchecks__muted">{t('empty')}</p> : null}
-      {rows.length ? (
-        <ul className="fa-batchchecks__list">
-          {rows.map((row) => (
-            <li key={row.id}>
-              <button type="button" className={classes('fa-batchchecks__item', row.selected && 'fa-batchchecks__item--selected')} aria-pressed={row.selected} onClick={() => controller.select(row.id)}>{row.label}</button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      {state.catalogue ? <BatchChecksInput view={view} id={id} /> : null}
+      {state.answer ? <BatchChecksResult view={view} answer={state.answer} id={id} /> : null}
     </section>
   )
 }

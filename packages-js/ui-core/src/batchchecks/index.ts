@@ -1,5 +1,7 @@
 export { batchchecksMessages, type BatchchecksMessageKey } from './messages'
 export type * from './types'
 export { createBatchchecksMemoryPort } from './port'
+export { createBatchchecksRestPort } from './rest-port'
+export * from './model'
 export * from './controller'
 export * from './view'
