@@ -23,16 +23,29 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN printf '#!/bin/sh\\nexit 101\\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d
 RUN apt-get update && apt-get install -y --no-install-recommends \\
  python3 systemd systemd-sysv linux-image-virtual ca-certificates gnupg apt-utils curl
-RUN curl -fsSL https://packagecloud.io/timescale/timescaledb/gpgkey \
- | gpg --dearmor -o /usr/share/keyrings/timescaledb.gpg \
- && echo 'deb [signed-by=/usr/share/keyrings/timescaledb.gpg] \
-https://packagecloud.io/timescale/timescaledb/ubuntu/ noble main' \
- > /etc/apt/sources.list.d/timescaledb.list \
- && apt-get update && apt-get install -y --no-install-recommends \
- postgresql-16 postgresql-16-postgis-3 timescaledb-2-postgresql-16 redis-server \
- && echo "shared_preload_libraries='timescaledb'" \
- >> /etc/postgresql/16/main/postgresql.conf
 COPY old.deb new.deb /packages/
+# Target platform and reviewed database pins come from the package control fields
+# (Regulierung-*); packages without them fall back to PostgreSQL 16, unpinned.
+RUN . /etc/os-release \
+ && field() { dpkg-deb -f /packages/new.deb "$1"; } \
+ && pg=$(field Regulierung-PostgreSQL) && pg=${pg:-16} \
+ && tsdb=$(field Regulierung-TimescaleDB) && postgis=$(field Regulierung-PostGIS) \
+ && curl -fsSL https://packagecloud.io/timescale/timescaledb/gpgkey \
+ | gpg --dearmor -o /usr/share/keyrings/timescaledb.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/timescaledb.gpg] \
+https://packagecloud.io/timescale/timescaledb/ubuntu/ $VERSION_CODENAME main" \
+ > /etc/apt/sources.list.d/timescaledb.list \
+ && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+ | gpg --dearmor -o /usr/share/keyrings/pgdg.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/pgdg.gpg] \
+https://apt.postgresql.org/pub/repos/apt $VERSION_CODENAME-pgdg main" \
+ > /etc/apt/sources.list.d/pgdg.list \
+ && apt-get update && apt-get install -y --no-install-recommends redis-server \
+ postgresql-$pg postgresql-$pg-postgis-3${postgis:+=$postgis} \
+ postgresql-$pg-postgis-3-scripts${postgis:+=$postgis} \
+ timescaledb-2-postgresql-$pg${tsdb:+=$tsdb} timescaledb-2-loader-postgresql-$pg${tsdb:+=$tsdb} \
+ && echo "shared_preload_libraries='timescaledb'" \
+ >> /etc/postgresql/$pg/main/postgresql.conf
 RUN apt-get satisfy -y "$(dpkg-deb -f /packages/old.deb Depends)" \\
  && apt-get satisfy -y "$(dpkg-deb -f /packages/new.deb Depends)"
 RUN apt-get install -y --no-install-recommends initramfs-tools \

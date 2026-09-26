@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "date": "2026-09-26",
+  "regulierung_commit": "6984218",
+  "auditcore_release": "v0.4.1",
+  "dependency_changes": {
+    "pydantic": "2.10.4 -> 2.12.5",
+    "pydantic_core": "2.27.2 -> 2.41.5",
+    "SQLAlchemy": "2.0.36 -> 2.0.45",
+    "asyncpg": "0.30.0 -> 0.31.0",
+    "psycopg2-binary": "2.9.10 -> 2.9.11",
+    "shapely": "2.0.6 -> 2.1.2",
+    "reason": "Keine cp314-Wheels für die bisherigen Pins; pydantic-core 2.27 ist wegen PyO3 auch aus dem sdist nicht für 3.14 baubar. Gleicher Versionsstand für beide Ziele und das Docker-Image."
+  },
+  "runs": {
+    "ubuntu-26.04": {
+      "python": "3.14.4",
+      "image": "ubuntu:26.04, Laufzeit aus runtime/wheels (ci_build.py) mit --no-index --only-binary=:all: --require-hashes, pip check PASS",
+      "lock_sha256": "bbf8aafc9e47968f51a8fee4057a40af2031136f1cd877ed8dfb730edd4389e3",
+      "passed": 1857,
+      "skipped": 1,
+      "duration_seconds": 78.82,
+      "test_log_sha256": "22dd3ac7e0c102ece410755a8e8c2c52872c6400e200c32fa7848cec541fb57e",
+      "warnings": "Nur aus Drittpaketen: pytest-asyncio 0.25.0 (asyncio.get/set_event_loop_policy, nur Tests) und slowapi 0.1.9 (asyncio.iscoroutinefunction); beide erst mit Python 3.16 entfernt. Anwendungscode: Import von app.main und Übersetzen aller Module in app/, alembic/ und deploy/apt unter -W error ohne Warnung (352 Dateien).",
+      "deploy_apt_tests": {"passed": 29, "log_sha256": "1242416ec14751ec0d853c340103f38dfbcf730b6991d139dc3032ca777e2ccd"},
+      "numpy_cpu_baseline": ["X86_V2"]
+    },
+    "ubuntu-24.04": {
+      "python": "3.12.3",
+      "lock_sha256": "558625b5351abebefb7e3fa2e2fd0c4506269fa9df0fe2d2486c27aeb78c3e31",
+      "passed": 1857,
+      "skipped": 1,
+      "duration_seconds": 84.57,
+      "test_log_sha256": "d1e4a96e458f35661ae715a984e8cd508fa0122083569ca752d28dd6b3916f0b",
+      "deploy_apt_tests": {"passed": 29, "log_sha256": "ee4ab521d6f3a1ec4c87ab9797a409081182688cfdeb81772456c6a37dee59ce"},
+      "numpy_cpu_baseline": ["X86_V2"]
+    }
+  },
+  "skipped_reason": "tests/test_frontend_betrieb_2026_09.py benötigt pg_dump auf dem Testrechner; im Paket über postgresql-client-16 vorhanden und im Lebenszyklus (Sicherung/Wiederherstellung) ausgeführt",
+  "database": "Wegwerf-PostgreSQL 16.15 mit TimescaleDB 2.30.1/PostGIS 3.6.4 (Image infra/postgres) und Redis 7 in Containern; keine Produktionsdaten",
+  "role_migration": "Alembic-Neuinstallation bis owi049 unter Python 3.14.4 mit Rolle regmig (NOSUPERUSER, NOCREATEDB, NOCREATEROLE), Erweiterungen vorher administrativ angelegt wie init-local: role-migration-proof.txt"
+}

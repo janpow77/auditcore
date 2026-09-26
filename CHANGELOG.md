@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
+  Timescale-Repository für den Codename des Gast-Images ein und installiert
+  PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
+  Kontrollfeldern des Pakets (`Regulierung-PostgreSQL`, `-TimescaleDB`,
+  `-PostGIS`); damit läuft die Lebenszyklusprüfung auch mit
+  `--guest-image ubuntu:26.04`. Nachweise der regulierung-Build-Matrix
+  Ubuntu 26.04 (Python 3.14) und 24.04 unter
+  `docs/validation/regulierung-apt/ubuntu-26.04/`.
+
 Noch keine Änderungen.
 
 ## 0.4.2 – 2026-09-26
