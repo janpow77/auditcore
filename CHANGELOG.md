@@ -7,7 +7,9 @@
   `VITEST_MAX_WORKERS`). Node 20 (libuv 1.46) ignoriert die cgroup-Quote von
   2 CPUs und meldet 20, Vitest startete daher 19 Worker; die Paritätstests in
   `ui-react` liefen sporadisch in das 5-s-Zeitlimit. Node 22 beachtete die
-  Quote bereits.
+  Quote bereits. Das pauschale `testTimeout` von 20 s in
+  `ui-react/vitest.config.ts` (aus #159) ist wieder entfernt; nur die
+  Paritätsdateien setzen über `test/parity/setup.ts` gezielt 10 s.
 - Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
   Job-Image `ghcr.io/janpow77/auditcore-donut-train:cu128` (Workflow
   `donut-train-image`, Basis per Digest, torch 2.11.0+cu128, gepinnte
