@@ -1,5 +1,4 @@
 import '@flowaudit/ui-core/style.css'
-import './kanban/kanban.css'
 import './screening/screening.css'
 import './geo/geo.css'
 

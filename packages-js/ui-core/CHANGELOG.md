@@ -14,4 +14,7 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
   `createDsfaController`.
 - `createStore`, `createRunner`, `createDelay` als gemeinsame Grundlage der
   Controller; `downloadText`, `printHtml`, `deliverExport`.
-- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz.
+- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz,
+  Kanban (`kanban.css`, aus `@flowaudit/ui` verschoben).
+- Kanban-Texte `kanbanMessages`, `kanbanDialogMessages` (aus `@flowaudit/ui`
+  verschoben); Fokusfalle `trapFocus`, `focusableWithin`, `wrapTarget`.

@@ -69,7 +69,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (223):
+Exporte der Einstiegspunkte aus `package.json#exports` (230):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -132,6 +132,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@flowaudit/ui-core` | `IDLE` | Konstante | – | `store` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
+| `@flowaudit/ui-core` | `KanbanDialogMessageKey` | Typ | – | `kanban/messages` |
+| `@flowaudit/ui-core` | `KanbanMessageKey` | Typ | – | `kanban/messages` |
 | `@flowaudit/ui-core` | `KeyTitle` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `LOCALES` | Konstante | – | `i18n` |
 | `@flowaudit/ui-core` | `LevelView` | Schnittstelle | – | `dataprotection/types` |
@@ -240,6 +242,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `fieldIssues` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `filterRows` | Funktion | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
+| `@flowaudit/ui-core` | `focusableWithin` | Funktion | – | `base/focus` |
 | `@flowaudit/ui-core` | `getDefaultLocale` | Funktion | – | `i18n` |
 | `@flowaudit/ui-core` | `groupByDepartment` | Funktion | Referate wie in der Quelle: konfigurierte zuerst, dann unbekannte; leere entfallen. | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `interpolate` | Funktion | Ersetzt {name}-Platzhalter; unbekannte Platzhalter bleiben sichtbar stehen. | `i18n` |
@@ -247,6 +250,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `isIconName` | Funktion | – | `base/icons` |
 | `@flowaudit/ui-core` | `isLocale` | Funktion | – | `i18n` |
 | `@flowaudit/ui-core` | `issuesFor` | Funktion | – | `dataprotection/registerView` |
+| `@flowaudit/ui-core` | `kanbanDialogMessages` | Konstante | Texte von Detailansicht, Einstellungen, Teilen und Boardliste. | `kanban/messages` |
+| `@flowaudit/ui-core` | `kanbanMessages` | Konstante | Texte der Kanban-Komponenten; Englisch vorbereitet. | `kanban/messages` |
 | `@flowaudit/ui-core` | `lcsOperations` | Funktion | Längste gemeinsame Teilfolge über Wörter; `null` oberhalb von {@link WORD_LIMIT}. | `synopsis/wordDiff` |
 | `@flowaudit/ui-core` | `levelLabel` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `mayRelease` | Funktion | Vier-Augen-Prinzip vorab anzeigen; maßgeblich bleibt die Prüfung des Servers. | `dataprotection/dsfaView` |
@@ -283,6 +288,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `toggleMeasure` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `translate` | Funktion | Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. | `i18n` |
 | `@flowaudit/ui-core` | `translator` | Funktion | Übersetzungsfunktion für eine feste Sprache. | `i18n` |
+| `@flowaudit/ui-core` | `trapFocus` | Funktion | Hält den Tastaturfokus im Container, fokussiert beim Start `[autofocus]` bzw. das erste Fokusziel und gibt den Fokus beim Beenden an das zuvor fokussierte Element zurück. | `base/focus` |
 | `@flowaudit/ui-core` | `vvtExportTexts` | Funktion | Beschriftungen der Exporte (Druckansicht, Markdown, CSV). | `dataprotection/vvt` |
 | `@flowaudit/ui-core` | `vvtFourEyes` | Funktion | Vier-Augen-Hinweis: die angemeldete Person hat den offenen Entwurf bearbeitet. | `dataprotection/vvt` |
 | `@flowaudit/ui-core` | `vvtVersionLabel` | Funktion | – | `dataprotection/vvt` |
@@ -296,6 +302,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (223):
 | `@flowaudit/ui-core` | `withPerson` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `withScenario` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `withoutActivity` | Funktion | – | `dataprotection/registerView` |
+| `@flowaudit/ui-core` | `wrapTarget` | Funktion | Nächstes Fokusziel beim Tabben am Rand des Containers, sonst null (Browser übernimmt). | `base/focus` |
 <!-- api-overview:end -->
 
 ## Konfiguration

@@ -19,6 +19,14 @@
 - Synopse: Die unsichtbaren Vorlesetexte „gestrichen:“/„eingefügt:“ und
   „Ende“ sind jetzt durch Leerzeichen vom markierten Text getrennt (vorher
   hat der Vorlagencompiler das Leerzeichen entfernt).
+- Kanban: Zustand, Aktionen, Verschieben (Tastatur und Zeiger),
+  Boardliste, Spalteneditor und Personensuche kommen aus
+  `@flowaudit/kanban-core` 0.2.0; Texte und `kanban.css` aus
+  `@flowaudit/ui-core`. Die Composables (`useKanbanBoard`,
+  `useKanbanActions`, `useKanbanFilter`, `useMoveController`, …) behalten
+  ihre Rückgabe (Refs), `usePointerDrag().drag` ist jetzt eine Ref. Props,
+  Ereignisse und Markup der Komponenten sind unverändert; Paritätsfälle in
+  `kanban-core/test/parity` (Vue ↔ React).
 - Gemeinsame Paritätsfälle (`ui-core/test/parity`) prüfen Synopse, Tabelle,
   VVT und DSFA gegen dieselben Erwartungen wie die React-Fassung.
 - VVT und DSFA: `FaVvt` (`<flowaudit-vvt>`) und `FaDsfa` (`<flowaudit-dsfa>`)

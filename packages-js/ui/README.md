@@ -119,7 +119,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (560):
+Exporte der Einstiegspunkte aus `package.json#exports` (564):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -127,7 +127,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `Activity` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ActivityGroup` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ActorView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `AgeKey` | Typ | – | `kanban/cardView` |
+| `@flowaudit/ui` | `AgeKey` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `AllocationMethod` | Typ | – | `sampling/types` |
 | `@flowaudit/ui` | `AllocationRequest` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `AllocationResult` | Schnittstelle | – | `sampling/types` |
@@ -143,7 +143,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `AssessmentStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentSummary` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `BADGE_COLORS` | Konstante | Badge-Farben je Präfix (WorkspaceTaskCard: VP, SYS/SP, JKB, PRJ), sonst grau. | `kanban/cardView` |
+| `@flowaudit/ui` | `BADGE_COLORS` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `BadgeTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `BenfordCallbacks` | Schnittstelle | – | `benford/useBenford` |
@@ -159,9 +159,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `BreakdownStep` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `ButtonSize` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ButtonVariant` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `CARD_COLORS` | Konstante | Kartenfarben zur Auswahl (TaskDetail colorPresets). | `kanban/cardView` |
+| `@flowaudit/ui` | `CARD_COLORS` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `CHANGE_STATUSES` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `COLUMN_COLORS` | Konstante | Spaltenfarben (BoardSettingsDialog PRESET_COLORS). | `kanban/cardView` |
+| `@flowaudit/ui` | `COLUMN_COLORS` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `CONTRACT` | Konstante | – | `screening/types` |
 | `@flowaudit/ui` | `Catalogs` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CellValue` | Re-Export | – | `@flowaudit/common` |
@@ -170,7 +170,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
 | `@flowaudit/ui` | `ClientExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
-| `@flowaudit/ui` | `ColumnView` | Schnittstelle | – | `kanban/useKanbanBoard` |
+| `@flowaudit/ui` | `ColumnView` | Re-Export | – | `./useKanbanBoard` |
 | `@flowaudit/ui` | `CompareFields` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CompareRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Comparison` | Re-Export | – | `@flowaudit/ui-core` |
@@ -290,23 +290,25 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `LocateResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui` | `LogEntry` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `LogView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui` | `MAX_CARD_IMAGE_BYTES` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `MeasureView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `MessageParams` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `MethodKind` | Typ | – | `sampling/types` |
 | `@flowaudit/ui` | `MethodProfile` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `MethodStatus` | Typ | – | `sampling/types` |
-| `@flowaudit/ui` | `MovePreview` | Schnittstelle | – | `kanban/movePreview` |
+| `@flowaudit/ui` | `MovePreview` | Re-Export | – | `./movePreview` |
 | `@flowaudit/ui` | `NamedOption` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `NextSortOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `NumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `Outcome` | Typ | – | `screening/types` |
 | `@flowaudit/ui` | `OverviewRow` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `PRIORITY_TONES` | Konstante | – | `kanban/cardView` |
+| `@flowaudit/ui` | `PRIORITY_TONES` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `ParameterSpec` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `Person` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `Position` | Typ | – | `geo/types` |
+| `@flowaudit/ui` | `PriorityTone` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `ProfileDetail` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileReference` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileStatus` | Typ | – | `risk/types` |
@@ -326,7 +328,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `RegisterIssue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterStatus` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `RelativeKey` | Typ | – | `kanban/cardView` |
+| `@flowaudit/ui` | `RelativeKey` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `RestClientOptions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RestError` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `RestOptions` | Re-Export | – | `./client` |
@@ -456,14 +458,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `activityKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `addScenario` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `answerOf` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `applyPreview` | Funktion | Spaltenansicht mit der bewegten Karte an der Vorschauposition. | `kanban/movePreview` |
+| `@flowaudit/ui` | `applyPreview` | Re-Export | – | `./movePreview` |
 | `@flowaudit/ui` | `applyRowOverrides` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
 | `@flowaudit/ui` | `areasFromGeoPackage` | Funktion | Flächen aus einer GeoPackage-Antwort; Kennungen erhalten die Herkunft als Präfix. | `geo/model` |
 | `@flowaudit/ui` | `ariaSort` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
-| `@flowaudit/ui` | `badgePrefix` | Funktion | – | `kanban/cardView` |
-| `@flowaudit/ui` | `badgeStyle` | Funktion | – | `kanban/cardView` |
+| `@flowaudit/ui` | `badgePrefix` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `badgeStyle` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `bandTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `baseMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `benfordElement` | Konstante | `<flowaudit-benford>`: Eigenschaften `port` (BenfordPort), `values`, `locale`; Ereignisse `analysis-completed`, `error`. | `benford/element` |
@@ -475,7 +477,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `buildSelectionRequest` | Funktion | Anfrage für `POST /selection`; ein leerer Seed überlässt dem Server die Erzeugung. | `sampling/model` |
 | `@flowaudit/ui` | `buildSizeRequest` | Funktion | Anfrage für `POST /size`; jedes Feld ist Pflicht, nichts wird still ergänzt. | `sampling/model` |
 | `@flowaudit/ui` | `buildSynopsisView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `cardAge` | Funktion | Alter einer Karte in Stufen wie WorkspaceTaskCard (neu, Stunden, Tage, Wochen, Monate). | `kanban/cardView` |
+| `@flowaudit/ui` | `cardAge` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `cardStyle` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `changeIds` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `chartGeometry` | Funktion | – | `benford/chart` |
 | `@flowaudit/ui` | `cloneContent` | Re-Export | – | `@flowaudit/ui-core` |
@@ -520,13 +523,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `exportFilename` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldIssues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldValue` | Funktion | Prüft ein Eingabefeld und liefert den Vertragswert (Prozent → Anteil). | `sampling/model` |
+| `@flowaudit/ui` | `fileSize` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `filterOptions` | Funktion | – | `screening/view` |
 | `@flowaudit/ui` | `filterRecords` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `filterRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `filterSubjects` | Funktion | Subjects with only the hits passing the filter; subjects themselves stay visible. | `screening/view` |
 | `@flowaudit/ui` | `flagState` | Funktion | – | `risk/view/state` |
 | `@flowaudit/ui` | `focusRow` | Re-Export | – | `./useSynopsisNavigation` |
-| `@flowaudit/ui` | `focusableWithin` | Funktion | – | `composables/useFocusTrap` |
+| `@flowaudit/ui` | `focusableWithin` | Re-Export | – | `./useFocusTrap` |
 | `@flowaudit/ui` | `formatAmount` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatDate` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatDegrees` | Funktion | Grad mit sechs Nachkommastellen (≈ 0,1 m). | `geo/model` |
@@ -542,7 +546,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `guessNumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
 | `@flowaudit/ui` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
-| `@flowaudit/ui` | `initials` | Funktion | Initialen aus einem Namen: erster und letzter Namensteil. | `kanban/cardView` |
+| `@flowaudit/ui` | `initials` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `interpolate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `isDeviation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `isIconName` | Re-Export | – | `@flowaudit/ui-core` |
@@ -552,8 +556,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `itemsFromImport` | Funktion | Übernommene Dateispalten → Elemente der Grundgesamtheit (Kennung sonst laufende Nummer). | `sampling/model` |
 | `@flowaudit/ui` | `kanbanBoardElement` | Konstante | `<flowaudit-kanban-board>`: Eigenschaften `port` (BoardPort) und `boardId` oder `board` (+ `userId`) für lokale Bearbeitung; Ereignisse `board-change`, `error`, `fullscreen`, `navi … | `kanban/element` |
 | `@flowaudit/ui` | `kanbanBoardListElement` | Konstante | `<flowaudit-kanban-boards>`: Boardliste mit Eigenschaft `port`; Ereignisse `board-select`, `created`. | `kanban/element` |
-| `@flowaudit/ui` | `kanbanDialogMessages` | Konstante | Texte von Detailansicht, Einstellungen, Teilen und Boardliste. | `kanban/messages` |
-| `@flowaudit/ui` | `kanbanMessages` | Konstante | Texte der Kanban-Komponenten; Englisch vorbereitet. | `kanban/messages` |
+| `@flowaudit/ui` | `kanbanDialogMessages` | Re-Export | – | `./messages` |
+| `@flowaudit/ui` | `kanbanMessages` | Re-Export | – | `./messages` |
 | `@flowaudit/ui` | `lcsOperations` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `levelLabel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `levelTone` | Funktion | Farbton der MAD-Stufe 0–3 (enge … keine Übereinstimmung). | `benford/model` |
@@ -574,12 +578,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `parseNumber` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
 | `@flowaudit/ui` | `parseTable` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `placementFor` | Funktion | Platzierung für den Port aus der sichtbaren Nachbarschaft: vor der Karte an `index`, sonst hinter der letzten sichtbaren Karte, sonst ans Ende. | `kanban/movePreview` |
+| `@flowaudit/ui` | `placementFor` | Re-Export | – | `./movePreview` |
 | `@flowaudit/ui` | `plainSegments` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `populationSuggestions` | Funktion | Vorschlagswerte aus der Grundgesamtheit (Summe positiver Werte bzw. Anzahl). | `sampling/model` |
 | `@flowaudit/ui` | `positionText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `positiveSum` | Funktion | Summe der positiven Werte (Auswahlbasis der Variante „portal“). | `sampling/model` |
-| `@flowaudit/ui` | `preview` | Funktion | – | `kanban/cardView` |
+| `@flowaudit/ui` | `preview` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `printHtml` | Re-Export | – | `./useSynopsisExport` |
 | `@flowaudit/ui` | `provideLocale` | Funktion | Stellt die Sprache für alle Nachfahren bereit (App-Ebene oder Teilbaum). | `i18n/i18n` |
 | `@flowaudit/ui` | `readTheme` | Funktion | Liest das explizit gesetzte Farbschema; ohne Attribut 'system'. | `theme/theme` |
@@ -591,7 +595,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `registerFilename` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `registerHtml` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `registerMarkdown` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `relativeTime` | Funktion | Relative Zeit für die Boardliste (WorkspaceSidebar.relativeTime). | `kanban/cardView` |
+| `@flowaudit/ui` | `relativeTime` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `removeScenario` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `requestFile` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `requestJson` | Re-Export | – | `./client` |
@@ -624,7 +628,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `synopsisMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `tableElement` | Konstante | `<flowaudit-table>`: Spalten und Zeilen als JS-Eigenschaften, Ereignisse `row-click`, `sort-change`. | `table/element` |
 | `@flowaudit/ui` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
-| `@flowaudit/ui` | `textOn` | Funktion | Lesbare Schriftfarbe auf einer Kartenfarbe (Luminanzschwelle wie im Original). | `kanban/cardView` |
+| `@flowaudit/ui` | `textOn` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `toHtml` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toMarkdown` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toggleMeasure` | Re-Export | – | `@flowaudit/ui-core` |
