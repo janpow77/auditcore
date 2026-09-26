@@ -64,7 +64,7 @@ jobs:
             -t "$IMAGE:cu128" -t "$IMAGE:cu128-g$SHORT" .
       - name: Rauchtest im Image (CPU)
         run: |
-          docker run --rm "$IMAGE:cu128" python -c "import torch, transformers, auditcore_invoicesynth as a; print(torch.__version__, torch.version.cuda, transformers.__version__, a.__version__); assert torch.version.cuda.startswith('12.8'); assert 'sm_120' in torch.cuda.get_arch_list()"
+          docker run --rm "$IMAGE:cu128" python -c "import torch, transformers, auditcore_invoicesynth as a; import importlib.metadata as m; print(torch.__version__, torch.version.cuda, transformers.__version__, m.version('auditcore_invoicesynth')); assert torch.version.cuda.startswith('12.8'); assert 'sm_120' in torch._C._cuda_getArchFlags()"
           docker run --rm "$IMAGE:cu128" python -m auditcore_invoicesynth.train.cli --help >/dev/null
           docker run --rm "$IMAGE:cu128" python -m auditcore_invoicesynth.train.evaluate --help >/dev/null
           docker run --rm "$IMAGE:cu128" auditcore-invoicesynth fonts | python -c "import json,sys; f=json.load(sys.stdin)['families']; print(f); assert len(f) >= 6"
