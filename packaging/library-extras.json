@@ -84,5 +84,10 @@
   },
   "auditcore_harvest": {
     "defusedxml>=0.7.1; extra == \"xml\"": "python3-defusedxml (>= 0.7.1)"
+  },
+  "auditcore_identifiers": {
+    "starlette<2,>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)",
+    "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)",
+    "starlette<2,>=0.26.1; extra == \"fastapi\"": "python3-starlette (>= 0.26.1)"
   }
 }

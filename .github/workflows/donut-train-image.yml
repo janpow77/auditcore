@@ -19,7 +19,7 @@ permissions:
   contents: read
 concurrency:
   group: donut-train-image-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false  # update-pr-branches mergt main laufend; Builds nicht abbrechen
 env:
   IMAGE: ghcr.io/janpow77/auditcore-donut-train
 jobs:

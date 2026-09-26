@@ -13,12 +13,17 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
+web = ["starlette>=0.26.1,<2"]
+fastapi = ["fastapi>=0.92", "starlette>=0.26.1,<2"]
 dev = [
     "pytest>=8",
     "ruff>=0.11",
     "mypy>=1.15",
     "build>=1.2",
     "bandit>=1.7",
+    "starlette>=0.26.1,<2",
+    "fastapi>=0.92",
+    "httpx>=0.24",
 ]
 
 [tool.setuptools.packages.find]
