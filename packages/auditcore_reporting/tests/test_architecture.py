@@ -25,6 +25,23 @@ def test_reporting_dependency_boundary():
                 assert node.func.id not in {"open", "eval", "exec", "__import__"}
 
 
+def test_web_layer_dependency_boundary():
+    package = Path(auditcore_reporting.__file__).parent / "web"
+    allowed = set(sys.stdlib_module_names) | {
+        "__future__",
+        "auditcore_common",
+        "auditcore_reporting",
+        "fastapi",
+        "starlette",
+    }
+    for path in package.glob("*.py"):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if isinstance(node, ast.Import):
+                assert {alias.name.split(".")[0] for alias in node.names} <= allowed, path.name
+            elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                assert (node.module or "").split(".")[0] in allowed, path.name
+
+
 def test_core_import_and_formats_work_with_excel_import_forbidden():
     script = """
 import importlib.abc, sys

@@ -122,7 +122,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (736):
+Exporte der Einstiegspunkte aus `package.json#exports` (770):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -182,6 +182,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `ChartGeometry` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ClientExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ColumnCheck` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ColumnPreview` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ColumnView` | Re-Export | – | `./useKanbanBoard` |
 | `@flowaudit/ui` | `CompareFields` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CompareForm` | Re-Export | – | `@flowaudit/ui-core` |
@@ -303,6 +304,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `FlagHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FlagState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FlowauditUiOptions` | Schnittstelle | – | `plugin` |
+| `@flowaudit/ui` | `FormatProfile` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FreshnessStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FreshnessView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `GeoArea` | Re-Export | – | `@flowaudit/ui-core` |
@@ -322,6 +324,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `ICONS` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_BENFORD` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `INITIAL_REPORTING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IconName` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IdentifierBatchAnswer` | Re-Export | – | `@flowaudit/ui-core` |
@@ -402,6 +405,20 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `RegisterState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RelativeKey` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `ReportCell` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportColumnType` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportExportPanel` | Vue-Komponente | – | `reporting/ReportExportPanel.vue` |
+| `@flowaudit/ui` | `ReportTableInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingBusy` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingCallbacks` | Re-Export | – | `./useReportExport` |
+| `@flowaudit/ui` | `ReportingCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingSource` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ReportingTranslate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RestClientOptions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RestError` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `RestOptions` | Re-Export | – | `./client` |
@@ -511,6 +528,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `TableImport` | Vue-Komponente | – | `tabular/TableImport.vue` |
 | `@flowaudit/ui` | `TableImportController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `TableImportData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `TablePreview` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `TableRow` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `TabularMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ThemeMode` | Typ | – | `theme/theme` |
@@ -526,6 +544,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseIdentifierCheck` | Schnittstelle | – | `identifiers/useIdentifierCheck` |
+| `@flowaudit/ui` | `UseReportExport` | Schnittstelle | – | `reporting/useReportExport` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui` | `UseSort` | Schnittstelle | – | `composables/useSort` |
@@ -552,6 +571,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `VvtState` | Schnittstelle | – | `dataprotection/useVvt` |
 | `@flowaudit/ui` | `WORD_LIMIT` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `WhenMissingColumns` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `WorkbookPreview` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `WorkbookRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `acceptsHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `activityKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `addScenario` | Re-Export | – | `@flowaudit/ui-core` |
@@ -585,6 +606,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `buildSelectionRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildSizeRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildSynopsisView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `buildWorkbookRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `cardAge` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `cardStyle` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `cellText` | Re-Export | – | `@flowaudit/ui-core` |
@@ -614,6 +636,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `createIdentifierController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createIdentifiersRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `createReportingController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createReportingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRiskController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
@@ -751,6 +775,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `registerMarkdown` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `relativeTime` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `removeScenario` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportCellText` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportExportElement` | Konstante | `<flowaudit-report-export>`: Eigenschaften `port` (ReportingPort), `tables`, `filename`, `locale`; Ereignisse `preview-completed`, `export-completed`, `error`. | `reporting/element` |
+| `@flowaudit/ui` | `reportingErrorKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportingMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportingProfile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportingSampleNote` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportingSheetHeading` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportingTablesText` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `reportingWorkbookText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `requestFile` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `requestJson` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `requirementKey` | Re-Export | – | `@flowaudit/ui-core` |
@@ -827,6 +860,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (736):
 | `@flowaudit/ui` | `useLocale` | Funktion | – | `i18n/i18n` |
 | `@flowaudit/ui` | `useMediaQuery` | Funktion | Reaktiver Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`. | `composables/useDom` |
 | `@flowaudit/ui` | `useMoveController` | Funktion | – | `kanban/useMoveController` |
+| `@flowaudit/ui` | `useReportExport` | Funktion | Vue-Anbindung des Tabellenexports aus `@flowaudit/ui-core` (`createReportingController`). | `reporting/useReportExport` |
 | `@flowaudit/ui` | `useRiskFlags` | Funktion | Vue-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (Filter, Auswahl, abgeleitete Daten). | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `useRiskProfile` | Funktion | Profilbeschreibung zur Auswertung: die übergebene, sonst über den Port nachgeladen (Profil und Version der Auswertung, nie ein Standardprofil). | `risk/useRiskProfile` |
 | `@flowaudit/ui` | `useSampling` | Funktion | Vue-Anbindung des Stichprobenrechners aus `@flowaudit/ui-core` (`createSamplingController`); Getter halten Props reaktiv. | `sampling/useSampling` |
@@ -876,6 +910,7 @@ Web Components:
 | `<flowaudit-identifier-check>` | `IdentifierCheck` | `identifiers/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
+| `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
 | `<flowaudit-sampling>` | `SamplingPanel` | `sampling/element.ts` |
 | `<flowaudit-screening-review>` | `ScreeningReview` | `screening/element.ts` |
@@ -1269,6 +1304,21 @@ Web Components:
 | `close` | `[]` | – |
 | `share` | `[userId: string, permission: SharePermission]` | – |
 | `revoke` | `[userId: string]` | – |
+
+#### `ReportExportPanel`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `ReportingPort \| null` | nein | `null` | Fachlogik, z. B. `createReportingRestPort({ baseUrl: '/api/reporting' })`. |
+| `tables` | `readonly ReportTableInput[]` | nein | `() => []` | Tabellen der Anwendung (je Tabelle ein Blatt). |
+| `filename` | `string` | nein | `''` | Vorschlag für den Dateinamen (ohne oder mit `.xlsx`). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `preview-completed` | `[result: WorkbookPreview]` | – |
+| `export-completed` | `[file: DownloadFile]` | – |
+| `error` | `[message: string]` | – |
 
 #### `RiskFlagCard`
 

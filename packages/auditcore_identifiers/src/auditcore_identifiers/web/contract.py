@@ -10,6 +10,8 @@ from __future__ import annotations
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from auditcore_common import rest
+
 from .. import __version__
 from ..profiles import PROFILES, STRICT, Profile, UnsupportedKindError
 from ..result import CheckResult, IdentifierKind, Status
@@ -29,17 +31,8 @@ class Limits:
     max_body_bytes: int = 4 * 1024 * 1024
 
 
-class ContractError(ValueError):
-    """Request does not satisfy the contract (status, code, German message)."""
-
-    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-
-    def to_dict(self) -> Json:
-        """JSON error body ``{"error": {"code", "message"}}``."""
-        return {"error": {"code": self.code, "message": str(self)}}
+class ContractError(rest.ContractError):
+    """Request does not satisfy the ``identifiers_ui/1`` contract (status, code, ``to_dict``)."""
 
 
 def catalogue(limits: Limits | None = None) -> Json:
@@ -74,12 +67,6 @@ def _profile(profile: Profile) -> Json:
         "legacy": profile.legacy,
         "kinds": [kind.value for kind in IdentifierKind if kind in profile.checkers],
     }
-
-
-def _object(value: object, path: str) -> Mapping[str, object]:
-    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
-        raise ContractError(f"'{path}' muss ein JSON-Objekt sein.")
-    return value
 
 
 def _profile_of(body: Mapping[str, object]) -> Profile:
@@ -133,7 +120,7 @@ def _run(profile: Profile, body: Mapping[str, object], path: str, limits: Limits
 
 def check_one(payload: object, limits: Limits | None = None) -> Json:
     """``POST /check``: one value of one kind under the named profile."""
-    body = _object(payload, "Anfrage")
+    body = rest.json_object(payload, "Anfrage", error=ContractError)
     profile = _profile_of(body)
     return {"contract": CONTRACT, "result": _run(profile, body, "Anfrage", limits or Limits())}
 
@@ -149,7 +136,7 @@ def _reference(entry: Mapping[str, object], index: int) -> str:
 
 def _batch_entry(profile: Profile, raw: object, index: int, limits: Limits) -> Json:
     path = f"items[{index}]"
-    entry = _object(raw, path)
+    entry = rest.json_object(raw, path, error=ContractError)
     ref = _reference(entry, index)
     try:
         return {"index": index, "ref": ref, "error": None, **_run(profile, entry, path, limits)}
@@ -177,7 +164,7 @@ def check_batch(payload: object, limits: Limits | None = None) -> Json:
     row (``error``) instead of rejecting the whole table.
     """
     limits = limits or Limits()
-    body = _object(payload, "Anfrage")
+    body = rest.json_object(payload, "Anfrage", error=ContractError)
     profile = _profile_of(body)
     items = body.get("items")
     if not isinstance(items, list) or not items:

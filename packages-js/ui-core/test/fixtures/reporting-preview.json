@@ -1,0 +1,69 @@
+{
+  "contract": "reporting_ui/1",
+  "profile": "flowlib-legacy-v1",
+  "tables": [
+    {
+      "name": "Vorhaben",
+      "rows": 3,
+      "columns": [
+        {
+          "name": "Vorhaben",
+          "type": "json",
+          "format": "General",
+          "source": "profile"
+        },
+        {
+          "name": "Betrag",
+          "type": "json",
+          "format": "#,##0.00 \"EUR\"",
+          "source": "profile"
+        },
+        {
+          "name": "Quote %",
+          "type": "json",
+          "format": "0.00%",
+          "source": "profile"
+        },
+        {
+          "name": "Datum",
+          "type": "date",
+          "format": "DD.MM.YYYY",
+          "source": "profile"
+        },
+        {
+          "name": "Kennung",
+          "type": "text",
+          "format": "@",
+          "source": "override"
+        }
+      ],
+      "sample": [
+        [
+          "V-001",
+          1234.5,
+          0.25,
+          "2026-01-31",
+          "000123"
+        ],
+        [
+          "V-002",
+          17,
+          null,
+          null,
+          "=1+1"
+        ],
+        [
+          "V-003",
+          980000,
+          0.8,
+          "2026-03-15",
+          "004711"
+        ]
+      ]
+    }
+  ],
+  "workbook": {
+    "bytes": 5497,
+    "filename": "Vorhabenliste.xlsx"
+  }
+}

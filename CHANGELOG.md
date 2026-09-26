@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- `auditcore_common.rest.json_object`: gemeinsame JSON-Objekt-Prüfung der
+  REST-Verträge `identifiers_ui/1` und `reporting_ui/1` (vorher wörtlich
+  gleiche `_object`-Kopien, `duplicate_functions` wieder 0); beide Pakete
+  hängen neu von `auditcore_common==0.1.1` ab, ihre `ContractError` sind
+  Unterklassen von `rest.ContractError`. Differenztest gegen beide Kopien,
+  Duplikatgruppe A16 in `docs/quality/duplikate.md`. Keine Versionsanhebung.
+
+- Tabellenexport nach Excel: `auditcore_reporting.web` mit versioniertem
+  REST-Vertrag `reporting_ui/1` (`GET /profiles`, `POST /preview`,
+  `POST /export`; Starlette und FastAPI, neue Extras `web` und `fastapi`,
+  `packaging/library-extras.json` ergänzt) und Oberfläche
+  `<flowaudit-report-export>` (Vue `ReportExportPanel`, React nativ
+  `FlowauditReportExport`, Kern `createReportingController` in
+  `@flowaudit/ui-core`): Formatprofil wählen, Vorschau mit Excel-Format je
+  Spalte, ersten Zeilen und Probelauf, XLSX-Export. Das Paket hat keine
+  Berichtsvorlagen; „Vorlage“ ist hier das Formatprofil
+  (`docs/ui/reporting-rest.md`). Sechs Paritätsfälle plus Interaktionsfolge,
+  Demo-Seite „Tabellenexport (Excel)“ und API-E2E-Test.
+
 - CI (`js-packages`, `nightly`): Vitest-Worker an die CPU-Quote der
   selbst gehosteten Runner angepasst (`scripts/js/vitest-workers.sh` setzt
   `VITEST_MAX_WORKERS`). Node 20 (libuv 1.46) ignoriert die cgroup-Quote von

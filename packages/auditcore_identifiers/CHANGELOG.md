@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Neue Laufzeitabhängigkeit `auditcore_common==0.1.1` (selbst nur
+  Standardbibliothek): `web.ContractError` ist Unterklasse von
+  `auditcore_common.rest.ContractError`, die JSON-Objekt-Prüfung nutzt
+  `rest.json_object`. Meldungen, Statuscodes und Vertrag unverändert.
 - REST-Vertrag `identifiers_ui/1` (`auditcore_identifiers.web`) für die
   Oberfläche „Kennung prüfen“: `GET /catalogue` (Kennungsarten, Profile mit
   ihren Arten, deutsche Bezeichnungen für Gründe und Einzelheiten, Grenzen),
