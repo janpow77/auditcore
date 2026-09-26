@@ -32,6 +32,34 @@ Props `port`, `activeId`, `locale`; Ereignisse `board-select`, `created`.
 Eigene und geteilte Boards, Fortschritt, relative Zeit, Anheften, Löschen mit
 Bestätigung, Anlegen aus den Vorlagen.
 
+## `FaDbKanban` / `<flowaudit-db-kanban>` (Datenbankansicht)
+
+Kanban-Sicht auf die Datensätze einer Tabelle (audit_designer: `useDbKanban`
+in der Notizbuch-Datenbank). Gruppiert wird nach einer Auswahl-Eigenschaft
+(`type: "select"` mit `options`); Datensätze mit leerem oder unbekanntem Wert
+stehen in der führenden Spalte „Ohne Wert“, die nur erscheint, wenn sie nicht
+leer ist. Ablegen in einer Spalte setzt den Zellwert (in „Ohne Wert“: `null`).
+Gleiche Gruppierung wie `auditcore_kanban.group_by_value` (Paritätsfixture
+`group.json`).
+
+| Prop / Eigenschaft | Typ | Bedeutung |
+|---|---|---|
+| `port` | `RecordPort \| null` | Datenquelle der Anwendung (Datenbank, REST): `load()`, `updateCell(rowId, propertyId, value)`, optional `addRow(cells)` |
+| `table` | `RecordTable \| null` | ohne Port: Tabelle `{properties, rows}` direkt; Änderungen als Ereignis `table-change` |
+| `groupBy` | `string` | `v-model:group-by`; leer: erste Auswahl-Eigenschaft |
+| `editable` | `boolean` | `false`: kein Verschieben und Anlegen |
+| `locale` | `de \| en` | Sprache |
+
+Ereignisse: `record-move` (`{rowId, propertyId, value}`), `record-add`
+(neuer Datensatz), `table-change` (nur mit `table`), `update:groupBy`, `error`.
+Verschieben wird sofort angezeigt und bei einem Fehler des Ports
+zurückgenommen. Bedienung: Ziehen und Ablegen (HTML-Drag-and-Drop) oder
+Strg+Pfeil links/rechts auf der fokussierten Karte (Fokus bleibt auf der Karte,
+Ansage über `aria-live`); Suche über alle Textzellen. Logik:
+`createDbKanbanController` (`@flowaudit/ui-core`), `groupRecords` und
+`RecordPort` (`@flowaudit/kanban-core`). Ein REST-Vertrag für Datensätze
+gehört zur Anwendung; `auditcore_kanban` hat keinen.
+
 ## React
 
 `FlowauditKanbanBoard` (`onBoardChange`, `onError`, `onFullscreen`,

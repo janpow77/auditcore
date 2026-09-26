@@ -7,7 +7,9 @@ Framework-freie Kanban-Logik in TypeScript mit denselben Regeln wie das Python-P
 Für Oberflächen und Dienste, die Kanban-Boards anzeigen oder ändern – allen
 voran die Kanban-Komponenten in `@flowaudit/ui`. Die Logik läuft ohne DOM und
 ohne Framework; Speicherung und Nutzerverwaltung liegen hinter einem Port
-(`BoardPort`) beim Consumer.
+(`BoardPort`) beim Consumer. Für die Datenbankansicht als Kanban (Datensätze
+einer Tabelle nach einer Auswahl-Eigenschaft gruppiert) gibt es `groupRecords`
+und den Port `RecordPort` mit `createMemoryRecordPort`.
 
 ## Installation
 
@@ -87,7 +89,7 @@ fließen ohne Abbildung durch), Rang (`rankBetween`, `spreadRanks`), Regeln
 (`boardStats`), Ports.
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (139):
+Exporte der Einstiegspunkte aus `package.json#exports` (156):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -131,6 +133,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (139):
 | `@flowaudit/kanban-core` | `Limits` | Schnittstelle | – | `validation` |
 | `@flowaudit/kanban-core` | `MemoryBoardPort` | Klasse | – | `memoryPort` |
 | `@flowaudit/kanban-core` | `MemoryPortOptions` | Schnittstelle | – | `memoryPort` |
+| `@flowaudit/kanban-core` | `MemoryRecordPortOptions` | Schnittstelle | – | `recordPort` |
 | `@flowaudit/kanban-core` | `MutationResult` | Schnittstelle | – | `port` |
 | `@flowaudit/kanban-core` | `PERMISSIONS` | Konstante | – | `permissions` |
 | `@flowaudit/kanban-core` | `PRIORITIES` | Konstante | – | `model` |
@@ -139,6 +142,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (139):
 | `@flowaudit/kanban-core` | `RANK_DIGITS` | Konstante | Rang-Schlüssel für die Reihenfolge in einer Spalte (fraktionale Indizes). Zwischen zwei Karten entsteht immer ein neuer Schlüssel, ohne die übrigen umzunummerieren. | `rank` |
 | `@flowaudit/kanban-core` | `ROLE_ACTIONS` | Konstante | Deklarative Rollentabelle; configure, share, delete_board und pin nur für den Eigentümer. | `permissions` |
 | `@flowaudit/kanban-core` | `RankError` | Klasse | – | `rank` |
+| `@flowaudit/kanban-core` | `RecordGroup` | Schnittstelle | – | `records` |
+| `@flowaudit/kanban-core` | `RecordPort` | Schnittstelle | Datenzugang der Datenbankansicht; `addRow` ist optional (sonst keine neue Karte). | `records` |
+| `@flowaudit/kanban-core` | `RecordProperty` | Schnittstelle | – | `records` |
+| `@flowaudit/kanban-core` | `RecordPropertyType` | Typ | – | `records` |
+| `@flowaudit/kanban-core` | `RecordRow` | Schnittstelle | – | `records` |
+| `@flowaudit/kanban-core` | `RecordTable` | Schnittstelle | – | `records` |
+| `@flowaudit/kanban-core` | `RecordValue` | Typ | – | `records` |
 | `@flowaudit/kanban-core` | `RestBoardPort` | Klasse | – | `restPort` |
 | `@flowaudit/kanban-core` | `RestPortOptions` | Schnittstelle | – | `restPort` |
 | `@flowaudit/kanban-core` | `Role` | Typ | – | `model` |
@@ -176,11 +186,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (139):
 | `@flowaudit/kanban-core` | `configureColumns` | Funktion | Ersetzt den Spaltensatz (nur Eigentümer); Karten entfernter Spalten wandern in die erste Spalte. | `boardCommands` |
 | `@flowaudit/kanban-core` | `createBoard` | Funktion | – | `boardCommands` |
 | `@flowaudit/kanban-core` | `createCard` | Funktion | Neue Karte in `column_id` (Standard: erste Spalte), angehängt, sofern keine Position angegeben ist. | `commands` |
+| `@flowaudit/kanban-core` | `createMemoryRecordPort` | Funktion | – | `recordPort` |
 | `@flowaudit/kanban-core` | `deadlineState` | Funktion | `none`, `overdue`, `due_soon` (≤ 3 Tage) oder `later` – `today` als ISO-Datum. | `filtering` |
 | `@flowaudit/kanban-core` | `decisionToJson` | Funktion | JSON-Form der Paritätsfixtures. | `errors` |
 | `@flowaudit/kanban-core` | `deleteCard` | Funktion | – | `commands` |
 | `@flowaudit/kanban-core` | `deny` | Funktion | – | `errors` |
 | `@flowaudit/kanban-core` | `doneColumn` | Funktion | Erste als erledigt markierte Spalte, sonst die letzte (audit_designer). | `model` |
+| `@flowaudit/kanban-core` | `dropValue` | Funktion | Zellwert für das Ablegen in einer Spalte: `""` wird `null` (wie `updateCell(…, value \|\| null)`). | `records` |
 | `@flowaudit/kanban-core` | `filterCards` | Funktion | Passende Karten in Board-Reihenfolge. | `filtering` |
 | `@flowaudit/kanban-core` | `findCard` | Funktion | – | `model` |
 | `@flowaudit/kanban-core` | `findColumn` | Funktion | – | `model` |
@@ -188,6 +200,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (139):
 | `@flowaudit/kanban-core` | `firstColumn` | Funktion | – | `model` |
 | `@flowaudit/kanban-core` | `getCard` | Funktion | – | `commands` |
 | `@flowaudit/kanban-core` | `groupByValue` | Funktion | Gruppiert Einträge je Option (useDbKanban). Leere oder unbekannte Werte landen in einem führenden Eimer `""`, der nur existiert, wenn er nicht leer ist. | `filtering` |
+| `@flowaudit/kanban-core` | `groupOf` | Funktion | Aktueller Spaltenwert eines Datensatzes (`""` für leer oder unbekannt). | `records` |
+| `@flowaudit/kanban-core` | `groupRecords` | Funktion | Spalten je Option; ohne gültige Gruppierung keine Spalten (wie das Original). | `records` |
+| `@flowaudit/kanban-core` | `groupableProperties` | Funktion | Eigenschaften, nach denen gruppiert werden kann (nur `select` mit Optionen). | `records` |
 | `@flowaudit/kanban-core` | `invalidField` | Funktion | – | `fields` |
 | `@flowaudit/kanban-core` | `isFilterActive` | Funktion | – | `filtering` |
 | `@flowaudit/kanban-core` | `isJson` | Funktion | – | `fields` |
@@ -196,8 +211,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (139):
 | `@flowaudit/kanban-core` | `isValidRank` | Funktion | Gültig: nicht leer, nur Base-62-Zeichen, letzte Stelle nicht '0'. | `rank` |
 | `@flowaudit/kanban-core` | `matches` | Funktion | – | `filtering` |
 | `@flowaudit/kanban-core` | `matchesQuery` | Funktion | Groß-/Kleinschreibung ignorierende Teilzeichenkettensuche in Titel, Beschreibung, Badge und Tags. | `filtering` |
+| `@flowaudit/kanban-core` | `matchesRecord` | Funktion | Suche über Text-, Zahl- und Auswahlzellen, ohne Groß-/Kleinschreibung. | `records` |
 | `@flowaudit/kanban-core` | `movableTargets` | Funktion | Spalten, in die die Karte derzeit verschoben werden darf (Tastatur, Menü). | `rules` |
 | `@flowaudit/kanban-core` | `moveCard` | Funktion | Verschiebt vor/hinter eine Karte oder an `index` (Standard: Ende). | `commands` |
+| `@flowaudit/kanban-core` | `neighbourGroup` | Funktion | Nachbarspalte für Tastaturbedienung; `null`, wenn es keine gibt. | `records` |
 | `@flowaudit/kanban-core` | `normalizeDue` | Funktion | Datum bleibt Datum, Datum-Zeit wird wie Pythons `datetime.isoformat()` normalisiert (`Z` → `+00:00`); leer löscht, Ungültiges wird abgelehnt. | `validation` |
 | `@flowaudit/kanban-core` | `orderedCards` | Funktion | Alle Karten: Spaltenreihenfolge, dann Rang; Karten unbekannter Spalten zuletzt. | `model` |
 | `@flowaudit/kanban-core` | `parseCardFields` | Funktion | – | `fields` |
@@ -230,6 +247,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (139):
 | `@flowaudit/kanban-core` | `validateTags` | Funktion | – | `validation` |
 | `@flowaudit/kanban-core` | `validateTitle` | Funktion | – | `validation` |
 | `@flowaudit/kanban-core` | `wipStates` | Funktion | – | `rules` |
+| `@flowaudit/kanban-core` | `withCell` | Funktion | Neue Tabelle mit geändertem Zellwert (unveränderlich). | `records` |
+| `@flowaudit/kanban-core` | `withRow` | Funktion | Neue Tabelle mit ersetztem oder angehängtem Datensatz. | `records` |
 <!-- api-overview:end -->
 
 ## Konfiguration

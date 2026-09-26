@@ -39,6 +39,7 @@ from auditcore_kanban import (
     create_card,
     deadline_state,
     filter_cards,
+    group_by_value,
     is_valid_rank,
     move_card,
     rank_between,
@@ -197,6 +198,52 @@ def filter_cases() -> list[Case]:
         ids = [c.id for c in filter_cards(board, criteria, date(2026, 9, 25))]
         cases.append(case(name, {"board": bj(board), "filter": raw, "today": "2026-09-25"}, ids))
     return cases
+
+
+STATUS = ["offen", "in Prüfung", "erledigt"]
+RECORD_PROPERTIES: list[dict[str, Any]] = [
+    {"id": "titel", "name": "Titel", "type": "text"},
+    {"id": "status", "name": "Status", "type": "select", "options": STATUS},
+    {"id": "fonds", "name": "Fonds", "type": "select", "options": ["EFRE", "ESF+", "JTF"]},
+    {"id": "betrag", "name": "Betrag", "type": "number"},
+]
+
+
+def _row(rid: str, title: str, status: Any, fonds: Any, **cells: Any) -> dict[str, Any]:
+    return {"id": rid, "cells": {"titel": title, "status": status, "fonds": fonds, **cells}}
+
+
+RECORD_ROWS: list[dict[str, Any]] = [
+    _row("r1", "Vorhaben A", "offen", "EFRE", betrag=1200),
+    _row("r2", "Vorhaben B", "erledigt", "ESF+", betrag=80),
+    _row("r3", "Vorhaben C", None, "EFRE", betrag=0),
+    _row("r4", "Vorhaben D", "in Prüfung", "unbekannt"),
+    _row("r5", "Vorhaben E", "", 7),
+    _row("r6", "Vorhaben F", "offen", ["EFRE"]),
+]
+
+
+def _record_key(row: dict[str, Any], prop: str) -> str | None:
+    value = row["cells"].get(prop)
+    return str(value) if isinstance(value, (str, int)) and not isinstance(value, bool) else None
+
+
+def _group_case(name: str, rows: list[dict[str, Any]], prop: str) -> Case:
+    options = next(p["options"] for p in RECORD_PROPERTIES if p["id"] == prop)
+    groups = group_by_value(rows, lambda r: _record_key(r, prop), options)
+    table = {"properties": RECORD_PROPERTIES, "rows": rows}
+    expected = [[value, [r["id"] for r in items]] for value, items in groups]
+    return case(name, {"table": table, "group_by": prop}, expected)
+
+
+def group_cases() -> list[Case]:
+    """Datenbankansicht (useDbKanban): Gruppierung nach einer Auswahl-Eigenschaft."""
+    complete = [r for r in RECORD_ROWS if r["cells"].get("status") in ("offen", "erledigt")]
+    return [
+        _group_case("status", RECORD_ROWS, "status"),
+        _group_case("fonds unbekannt und kein Text", RECORD_ROWS, "fonds"),
+        _group_case("ohne leere Spalte", complete, "status"),
+    ]
 
 
 def deadline_cases() -> list[Case]:
@@ -370,7 +417,7 @@ def _replace_card(c: Card, rank: str) -> Card:
 BUILDERS: dict[str, Callable[[], list[Case]]] = {
     "rank": rank_cases, "transitions": transition_cases, "wip": wip_cases,
     "filter": filter_cases, "deadline": deadline_cases, "permissions": permission_cases,
-    "validation": validation_cases, "commands": command_cases,
+    "validation": validation_cases, "commands": command_cases, "group": group_cases,
 }
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@flowaudit/kanban-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Framework-freie Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte) – gleiche Regeln wie auditcore_kanban",
   "license": "MIT",
   "type": "module",

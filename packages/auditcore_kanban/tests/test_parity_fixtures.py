@@ -23,7 +23,7 @@ def _builder():  # type: ignore[no-untyped-def]
 
 
 @pytest.mark.parametrize("name", ["rank", "transitions", "wip", "filter", "deadline",
-                                  "permissions", "validation", "commands"])
+                                  "permissions", "validation", "commands", "group"])
 def test_fixture_is_current(name: str) -> None:
     builder = _builder()
     stored = (FIXTURES / "parity" / f"{name}.json").read_text(encoding="utf-8")

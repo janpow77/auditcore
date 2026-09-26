@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@flowaudit/common": "0.1.0",
-    "@flowaudit/kanban-core": "0.1.0",
+    "@flowaudit/kanban-core": "0.2.0",
     "@flowaudit/ui-core": "0.1.0"
   },
   "peerDependencies": {
