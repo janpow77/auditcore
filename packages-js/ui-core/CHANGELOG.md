@@ -20,11 +20,16 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
 - Geo-Karte: Vertrag `auditcore_geo.web`, Modell, REST-Port, Leaflet-Kartenansicht
   (`createLeafletView`, dynamisch geladen) und `createGeoController`/`selectGeo`.
 - Fokusfalle `createFocusTrap` für Dialoge.
+- Datenbankansicht als Kanban: Zustandsautomat `createDbKanbanController`
+  (Laden, Gruppierung, Verschieben mit Rücknahme bei Fehlern, Tastatur,
+  Anlegen) und `dbKanbanView`; Gruppierung und Port aus
+  `@flowaudit/kanban-core` 0.2.0 (neue Laufzeitabhängigkeit). Stile
+  `styles/dbkanban.css`.
 - `createStore`, `createRunner`, `createDelay` als gemeinsame Grundlage der
   Controller; `downloadText`, `printHtml`, `deliverExport`.
 - Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz, Geo
   (mit Leaflet-Grundstilen), Risiko-Merkmale, Screening, Datei-Import,
-  Stichprobe, Benford, Dokumentvergleiche.
+  Stichprobe, Benford, Dokumentvergleiche, Datenbankansicht.
 - Risiko-Merkmale: Vertrag `auditcore_risk.web`, REST-Port, View-Logik
   (Zustand je Datensatz, Verteilung, Filter, Detaileinträge), Formate und
   Textschlüssel, Zustandsautomat `createRiskController` mit `selectRisk`
