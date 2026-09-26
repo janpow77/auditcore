@@ -1,5 +1,23 @@
 # Changelog auditcore_sampling
 
+## Unreleased – Hilfsfunktionen aus auditcore_common
+
+Keine Verhaltensänderung: alle 61 bestehenden Tests (Replay gegen flowstat und
+audit-portal, REST-Vertrag über Starlette und FastAPI, Reproduzierbarkeit)
+laufen unverändert grün; die neuen gemeinsamen Funktionen sind in
+`auditcore_common` gegen die wörtlichen Kopien dieses Pakets differenziell
+und mit Hypothesis geprüft. Neue Laufzeitabhängigkeit `auditcore_common==0.1.1`
+(APT `python3-auditcore-common`).
+
+- `_numeric.pairwise_sum` und `numpy_round` entfallen; genutzt werden
+  `auditcore_common.numeric.numpy_pairwise_sum` und `numpy_round` (bitgleich).
+- REST-Schicht: `ContractError` ist eine Unterklasse von
+  `auditcore_common.rest.ContractError` (gleiche Attribute, Meldungen und
+  `to_dict`), `Reply`, JSON-Antwort, Dekodierung mit Größengrenze,
+  Fehlerabbildung, `choice` und die Listenprüfung von `parse_items` kommen aus
+  `auditcore_common.rest`. Der FastAPI-Router nutzt die Antwortumwandlung des
+  Starlette-Moduls.
+
 ## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. README nach der Vorlage.

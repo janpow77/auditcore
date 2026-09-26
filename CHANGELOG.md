@@ -9,6 +9,17 @@
   Port-Eintrag `fromUtm` (`createGeoRestPort` bietet ihn an), Felder
   folgen dem Bezugspunkt; Ellipsoid-Auswahl auch vor dem ersten
   Bezugspunkt. 5 Paritätsfälle plus 2 Interaktionsfolgen, E2E ergänzt.
+
+- `auditcore_common`-Migrationen Teil A: neues Modul `auditcore_common.rest`
+  (rahmenwerkfreier Teil der REST-Schicht, Duplikatgruppe B1);
+  `auditcore_sampling` und `auditcore_statistics` nutzen es,
+  `auditcore_sampling` zusätzlich `numeric.numpy_pairwise_sum`/`numpy_round`,
+  `auditcore_market_indicators` `numpy_pairwise_sum`, `require_finite`,
+  `canonical_sha256` und die Profil-Lader. sampling und market_indicators
+  hängen neu von `auditcore_common==0.1.1` ab. Paritätstests alt ↔ neu
+  (Differenz- und Hypothesis-Tests in `auditcore_common`); keine
+  Verhaltensänderung.
+
 - Offene `auditcore_common`-Migrationen (Teil B): `auditcore_price_sources`
   (kanonisches JSON, Paketbytes bytegleich), `auditcore_geo` (Endlichkeit),
   `auditcore_property_sources` (HTML-Erkennung, Zeitzonenprüfung) und

@@ -5,7 +5,9 @@ from __future__ import annotations
 import math
 from collections.abc import Callable, Sequence
 
-from ._numeric import neumaier_sum, numpy_pairwise_sum
+from auditcore_common.numeric import numpy_pairwise_sum, require_finite
+
+from ._numeric import neumaier_sum
 from .errors import IndicatorInputError
 from .profiles import IndicatorProfile, Summation
 
@@ -49,12 +51,11 @@ def _window(n: object, minimum: int, name: str = "n") -> int:
 
 
 def _finite(value: object, name: str) -> float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise IndicatorInputError(f"{name} muss eine Zahl sein.")
-    number = float(value)
-    if not math.isfinite(number):
-        raise IndicatorInputError(f"{name} muss endlich sein.")
-    return number
+    return require_finite(
+        value,
+        not_number=lambda: IndicatorInputError(f"{name} muss eine Zahl sein."),
+        not_finite=lambda: IndicatorInputError(f"{name} muss endlich sein."),
+    )
 
 
 def _summer(summation: Summation) -> Callable[[Sequence[float]], float]:

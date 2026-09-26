@@ -14,7 +14,14 @@ dependencies = []
 
 [project.optional-dependencies]
 xml = ["defusedxml>=0.7.1"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "defusedxml>=0.7.1"]
+dev = [
+    "pytest>=8",
+    "ruff>=0.11",
+    "mypy>=1.15",
+    "build>=1.2",
+    "defusedxml>=0.7.1",
+    "hypothesis>=6.100",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
