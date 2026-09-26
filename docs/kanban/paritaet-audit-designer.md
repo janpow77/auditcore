@@ -82,7 +82,7 @@ fertig, TS-Spiegel in `@flowaudit/kanban-core`), **UI übernommen** (Oberfläche
 | Seitenleisten-Statistik nur offen/in_arbeit/erledigt | Py `board_stats` je Spalte | geändert B10 |
 | Vollbild (Route `/workspace/{id}/fullscreen`) | UI-Ereignis `fullscreen` | UI übernommen (Ereignis) / Port (Routing) |
 | Lade- und Fehleranzeige, Nur-Lese-Banner „Geteilt von … – Nur Lesezugriff“ | UI | UI übernommen |
-| Datenbankansicht `useDbKanban`: Gruppieren nach Select-Eigenschaft, führende Spalte „ohne Wert“, Ablegen setzt den Wert | Py `group_by_value`; Core `groupByValue`; UI-Variante mit `status_aliases` | Py/Core übernommen, eigene UI-Variante offen |
+| Datenbankansicht `useDbKanban`: Gruppieren nach Select-Eigenschaft, führende Spalte „ohne Wert“, Ablegen setzt den Wert | Py `group_by_value`; Core `groupByValue`, `groupRecords`, `RecordPort`; UI `FaDbKanban` (`<flowaudit-db-kanban>`) | übernommen (Parität `group.json`) |
 
 ## 5. Tastatur und Barrierefreiheit
 
@@ -133,8 +133,10 @@ fertig, TS-Spiegel in `@flowaudit/kanban-core`), **UI übernommen** (Oberfläche
   `@flowaudit/ui` Kanban-Komponenten, `<flowaudit-kanban-board>`,
   React-Hüllen; Parität 312 Fixturefälle, REST-Vertrag gegen den
   Python-Server geprüft, 12 Playwright-Abläufe).
-- Offen: eigene UI-Variante der Datenbankansicht (`useDbKanban`),
-  zeitgesteuertes Nachladen über `events()`, Auslieferung der gebauten
+- Datenbankansicht (`useDbKanban`): `FaDbKanban` / `<flowaudit-db-kanban>`
+  mit Kern in `@flowaudit/kanban-core` (`groupRecords`, `RecordPort`) und
+  `@flowaudit/ui-core` (`createDbKanbanController`).
+- Offen: zeitgesteuertes Nachladen über `events()`, Auslieferung der gebauten
   Oberfläche über `create_app(ui_directory=…)`.
 - Umstellung von audit_designer und cockpit (Migration über
   `legacy.import_workspace`, Einbindung des Routers) übernimmt der Hauptagent.

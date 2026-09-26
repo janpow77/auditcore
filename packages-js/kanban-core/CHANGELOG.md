@@ -16,6 +16,14 @@
 - Jeder Automat hat einen `store` (`get`/`set`/`subscribe`, gleiche Form wie
   `Store` in `@flowaudit/ui-core`).
 - Gemeinsame Paritätsfälle Vue ↔ React unter `test/parity/cases.ts`.
+- Datenbankansicht als Kanban (useDbKanban aus audit_designer): Datentypen
+  `RecordTable`/`RecordProperty`/`RecordRow`/`RecordValue`, Port `RecordPort`
+  (`load`, `updateCell`, optional `addRow`), `createMemoryRecordPort`,
+  `groupRecords` (auf `groupByValue`), `groupableProperties`, `groupOf`,
+  `dropValue` (Spalte „ohne Wert“ setzt `null`), `neighbourGroup`,
+  `withCell`, `withRow`, `matchesRecord`.
+- Paritätsfixture `group.json` aus `auditcore_kanban.group_by_value`
+  (Python erzeugt, TypeScript prüft).
 
 ## 0.1.0 – 2026-09-25
 
