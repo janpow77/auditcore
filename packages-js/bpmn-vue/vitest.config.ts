@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
-import { sourceAliases } from './aliases'
+import { sourceAliases } from './aliases.ts'
 
 export default defineConfig({
   plugins: [vue()],

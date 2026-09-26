@@ -3,12 +3,12 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { sourceAliases } from '../aliases'
+import { sourceAliases } from '../aliases.ts'
 
 export default defineConfig({
-  root: __dirname,
+  root: import.meta.dirname,
   plugins: [vue()],
   resolve: { alias: sourceAliases() },
-  server: { port: 5199, fs: { allow: [resolve(__dirname, '../../..')] } },
-  build: { outDir: resolve(__dirname, '../dist-demo'), emptyOutDir: true, chunkSizeWarningLimit: 2000 },
+  server: { port: 5199, fs: { allow: [resolve(import.meta.dirname, '../../..')] } },
+  build: { outDir: resolve(import.meta.dirname, '../dist-demo'), emptyOutDir: true, chunkSizeWarningLimit: 2000 },
 })

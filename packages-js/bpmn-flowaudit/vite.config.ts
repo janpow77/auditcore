@@ -7,13 +7,13 @@ export default defineConfig({
   build: {
     lib: {
       entry: {
-        index: resolve(__dirname, 'src/index.ts'),
-        profiles: resolve(__dirname, 'src/profile/bundled.ts'),
-        ui: resolve(__dirname, 'src/ui/index.ts'),
+        index: resolve(import.meta.dirname, 'src/index.ts'),
+        profiles: resolve(import.meta.dirname, 'src/profile/bundled.ts'),
+        ui: resolve(import.meta.dirname, 'src/ui/index.ts'),
       },
       formats: ['es'],
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: [/^bpmn-moddle/, /^diagram-js/, /^@flowaudit\/bpmn-editor/],
     },
     sourcemap: true,

@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [dts({ include: ['src'], tsconfigPath: './tsconfig.json', entryRoot: 'src' })],
   build: {
     lib: {
-      entry: { index: resolve(__dirname, 'src/index.ts'), browser: resolve(__dirname, 'src/browser.ts') },
+      entry: { index: resolve(import.meta.dirname, 'src/index.ts'), browser: resolve(import.meta.dirname, 'src/browser.ts') },
       formats: ['es'],
     },
     sourcemap: true,

@@ -13,7 +13,7 @@ export default defineConfig({
       fileName: 'index',
       cssFileName: 'bpmn-editor',
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: [/^diagram-js(\/.*)?$/, /^bpmn-moddle(\/.*)?$/, 'didi', 'min-dash', 'min-dom', 'tiny-svg'],
     },
   },
