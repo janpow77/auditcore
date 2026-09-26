@@ -12,6 +12,13 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
 - Datenschutz: Vertrag `dataprotection_ui/1`, REST-Port, `registerView`,
   `dsfaView`, Exporte, Zustandsautomaten `createVvtController` und
   `createDsfaController`.
+- Dokumentvergleiche: Formularmodell mit Prüfung wie `POST /comparisons`
+  (`formProblems`, `toCompareFields`), Liste (`summaryView`,
+  `filterSummaries`), Import (`parseImport`), Zustandsautomat
+  `createComparisonsController` mit `comparisonsView`; REST-Client um
+  `importResult` (`POST /comparisons/import`) ergänzt. Stile
+  `styles/documents.css`, Fixture aus dem echten Dienst
+  (`test/fixtures/documents-comparisons.json`).
 - `createStore`, `createRunner`, `createDelay` als gemeinsame Grundlage der
   Controller; `downloadText`, `printHtml`, `deliverExport`.
-- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz.
+- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Dokumentvergleiche, Datenschutz.

@@ -2,6 +2,13 @@
 
 ## 0.3.0 – unveröffentlicht
 
+- **Dokumentvergleiche:** `FaComparisons` (`<flowaudit-comparisons>`) mit
+  `ComparisonForm` und `ComparisonList` verwaltet Vergleiche über
+  `auditcore_documents.web`: Hochladen zweier Fassungen (DOCX, DOCM, PDF) mit
+  Vergleichsart, Dokumentart, Schwelle, Einbeziehen, Ausgabeabschnitten und
+  Profil, Prüfung vor dem Hochladen, Suche, Öffnen mit eingebetteter Synopse,
+  Löschen mit Bestätigung und Import fertiger Ergebnisse (JSON). Logik im
+  Kern (`createComparisonsController`), Paritätsfälle für die React-Fassung.
 - **Kern ausgelagert:** Texte, Datentypen der REST-Verträge, View-Modelle,
   Zustandsautomaten (Synopse, VVT, DSFA), Ports, Exporte, Symbole und die
   Stile von Basis, Tabelle, Synopse und Datenschutz liegen jetzt in
