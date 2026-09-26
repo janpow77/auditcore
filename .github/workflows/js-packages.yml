@@ -11,6 +11,7 @@ on:
       - 'scripts/js/**'
       - 'scripts/docs/**'
       - 'docs/bibliotheken/readme-offen.json'
+      - 'examples/**'
       - '.github/workflows/js-packages.yml'
   pull_request:
     paths:
@@ -22,6 +23,7 @@ on:
       - 'scripts/js/**'
       - 'scripts/docs/**'
       - 'docs/bibliotheken/readme-offen.json'
+      - 'examples/**'
       - '.github/workflows/js-packages.yml'
 permissions:
   contents: read
@@ -58,3 +60,5 @@ jobs:
         run: node scripts/js/check-readme-snippets.mjs
       - name: README-API-Überblick aktuell
         run: python3 scripts/docs/api_overview.py --check --js
+      - name: Beispiele (Vue, React, Web Components) aus npm-pack-Tarballs installieren und bauen
+        run: node scripts/js/verify-examples.mjs --report examples-report.json
