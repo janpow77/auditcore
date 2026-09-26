@@ -12,7 +12,8 @@ def main() -> None:
     """Sample sizes of both named methods, a seeded MUS draw and the legacy formula."""
     package = distribution("auditcore_sampling")
     assert package.version == "0.2.2"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     values = [random.Random(3).uniform(100, 10000) for _ in range(300)]
     total = sum(values)

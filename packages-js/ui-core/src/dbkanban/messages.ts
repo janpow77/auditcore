@@ -1,0 +1,58 @@
+import { defineMessages, type Translate } from '../i18n'
+
+/** Texte der Datenbankansicht als Kanban (`<flowaudit-db-kanban>`). */
+export const dbKanbanMessages = defineMessages({
+  de: {
+    title: 'Kanban-Ansicht',
+    groupByLabel: 'Gruppieren nach',
+    searchLabel: 'Einträge durchsuchen',
+    noGroupable: 'Die Tabelle hat keine Auswahl-Eigenschaft, nach der gruppiert werden kann.',
+    noGroupBy: 'Bitte eine Eigenschaft zum Gruppieren wählen.',
+    noMatches: 'Kein Eintrag passt zur Suche.',
+    withoutValue: 'Ohne Wert',
+    columnCount: '{count} Einträge',
+    columnCountOne: '1 Eintrag',
+    columnEmpty: 'Keine Einträge',
+    untitled: 'Ohne Titel',
+    yes: 'Ja',
+    no: 'Nein',
+    addCard: 'Eintrag hinzufügen',
+    addCardIn: 'Eintrag in „{label}“ hinzufügen',
+    cardLabel: '{title} – {label}',
+    moveHint: 'Mit Strg und Pfeil links/rechts in die Nachbarspalte verschieben.',
+    moved: '„{title}“ nach „{label}“ verschoben.',
+    added: 'Eintrag in „{label}“ angelegt.',
+    readOnly: 'Nur Lesezugriff',
+    noPort: 'Keine Datenquelle übergeben – bitte einen Port oder eine Tabelle setzen.',
+    networkError: 'Keine Verbindung zur Datenquelle ({message}).',
+    busy_load: 'Wird geladen …',
+    busy_move: 'Änderung wird gespeichert …',
+    busy_add: 'Eintrag wird angelegt …',
+  },
+  en: {
+    title: 'Kanban view',
+    groupByLabel: 'Group by',
+    searchLabel: 'Search entries',
+    noGroupable: 'The table has no select property to group by.',
+    noGroupBy: 'Please choose a property to group by.',
+    noMatches: 'No entry matches the search.',
+    withoutValue: 'No value',
+    columnCount: '{count} entries',
+    columnCountOne: '1 entry',
+    columnEmpty: 'No entries',
+    untitled: 'Untitled',
+    yes: 'Yes',
+    no: 'No',
+    addCard: 'Add entry',
+    addCardIn: 'Add entry to “{label}”',
+    moveHint: 'Use Ctrl and arrow left/right to move to the neighbouring column.',
+    moved: '“{title}” moved to “{label}”.',
+    added: 'Entry added to “{label}”.',
+    readOnly: 'Read-only',
+    noPort: 'No data source given – please set a port or a table.',
+    networkError: 'No connection to the data source ({message}).',
+  },
+})
+
+export type DbKanbanMessageKey = keyof typeof dbKanbanMessages.de
+export type DbKanbanTranslate = Translate<DbKanbanMessageKey>

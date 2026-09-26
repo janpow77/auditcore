@@ -13,7 +13,9 @@ import math
 from collections.abc import Sequence
 from typing import Any
 
-from ._numeric import numpy_round, pandas_sum
+from auditcore_common.numeric import numpy_round
+
+from ._numeric import pandas_sum
 from .selection import stratified_allocation, systematic_mus
 from .sizes import MUS_POISSON, SRS_FLOWSTAT, SRS_PORTAL
 

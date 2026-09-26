@@ -1,7 +1,8 @@
 # Paritätsfixtures Python ↔ TypeScript
 
 `auditcore_kanban` (Python) und `@flowaudit/kanban-core` (TypeScript) müssen bei
-Rang, Übergängen, WIP, Filter, Fristen, Rechten, Validierung und Befehlen
+Rang, Übergängen, WIP, Filter, Fristen, Rechten, Validierung, Befehlen und
+der Gruppierung der Datenbankansicht
 identisch entscheiden. Die gemeinsame Referenz sind die JSON-Dateien unter
 `packages/auditcore_kanban/tests/fixtures/parity/`. Python erzeugt sie
 (`tools/build_parity_fixtures.py`), ein Python-Test prüft, dass die Neuerzeugung
@@ -31,6 +32,7 @@ Entscheidungen haben die Form `{"allowed": bool, "code": str|null, "warnings": [
 | `validation.json` | `{"op":"card_fields","fields":{…}}` | `{"ok":true,"value":{…}}` oder `{"ok":false,"code","message"}` |
 | | `{"op":"columns","columns":[…]}` | `{"ok":true,"value":[Spalten]}` oder Fehler |
 | `commands.json` | `{"board","actor","now","new_id"?,"op":"move"\|"toggle_done"\|"create"\|"configure",…}` | `{"orders":{column_id:[[card_id,rank],…]},"version":int}` |
+| `group.json` | `{"table":{"properties":[…],"rows":[{"id","cells"}]},"group_by":str}` (Datenbankansicht) | `[[option, [row_id, …]], …]` – führende Spalte `""` nur, wenn nicht leer (`group_by_value` / `groupRecords`) |
 
 Regeln, die beide Seiten exakt gleich umsetzen:
 
