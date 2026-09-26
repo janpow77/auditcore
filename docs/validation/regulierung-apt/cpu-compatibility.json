@@ -1,0 +1,12 @@
+{
+  "numpy_version": "2.5.3",
+  "wheel_cpu_baseline": [
+    "X86_V2"
+  ],
+  "verification": "Actual import of numpy._core._multiarray_umath.__cpu_baseline__ in Ubuntu24.04 builder",
+  "old_qemu_cpu": "qemu64",
+  "old_qemu_alembic_exit": -4,
+  "old_qemu_status": "FAIL",
+  "final_qemu_cpu": "max",
+  "required_target": "Ubuntu24.04 amd64 x86-64-v2"
+}
