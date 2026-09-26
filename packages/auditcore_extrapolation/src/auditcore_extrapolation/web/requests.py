@@ -13,13 +13,16 @@ import hashlib
 import json
 from decimal import Decimal
 
-from ..design import Stratum
+from ..attributes import evaluate_attributes
+from ..confidence import recalculate_confidence, system_confidence_level
 from ..errors import ExtrapolationInputError
-from ..evaluation import MATERIALITY_RATE, assess
+from ..evaluation import MATERIALITY_RATE, Assessment, assess
+from ..groups import GroupsAssessment, assess_groups
 from ..methods import METHODS
+from ..periods import assess_periods
 from ..residual import ResidualInputs, residual_error_rate
-from ..units import SampleUnit
-from ._contract import CONTRACT, MAX_STRATA, MAX_UNITS, ContractError, Reader
+from ._contract import CONTRACT, ContractError, Reader
+from ._design import Design, read_design
 from .catalogue import LIBRARY
 
 
@@ -29,56 +32,68 @@ def fingerprint(payload: object) -> str:
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
-def _unit(entry: Reader) -> tuple[str, bool, SampleUnit]:
-    unit = SampleUnit(
-        id=entry.text("id"),
-        book_value=entry.number("book_value"),
-        random_error=entry.number("random_error", 0.0),
-        systemic_error=entry.number("systemic_error", 0.0),
-        anomalous_error=entry.number("anomalous_error", 0.0),
-        anomalous_reason=entry.text("anomalous_reason", required=False),
-        anomalous_corrected=entry.flag("anomalous_corrected"),
-    )
-    return entry.text("stratum"), entry.flag("exhaustive"), unit
-
-
-def _strata(body: Reader) -> list[Stratum]:
-    units = [_unit(entry) for entry in body.items("units", MAX_UNITS)]
-    strata = []
-    for entry in body.items("strata", MAX_STRATA):
-        name = entry.text("name")
-        members = [(exhaustive, unit) for stratum, exhaustive, unit in units if stratum == name]
-        strata.append(
-            Stratum(
-                name=name,
-                book_value=entry.number("book_value"),
-                units=tuple(u for exhaustive, u in members if not exhaustive),
-                exhaustive_units=tuple(u for exhaustive, u in members if exhaustive),
-                population_size=entry.optional_whole("population_size", minimum=1),
-                systemic_error=entry.number("systemic_error", 0.0),
-            )
+def _required_level(body: Reader) -> float | None:
+    if body.has("system_assessment") and body.has("required_confidence_level"):
+        raise ContractError(
+            "'system_assessment' und 'required_confidence_level' schließen sich aus."
         )
-    known = {s.name for s in strata}
-    unknown = sorted({stratum for stratum, _, _ in units} - known)
-    if unknown:
-        raise ContractError(f"Einheiten verweisen auf unbekannte Schichten: {', '.join(unknown)}.")
-    return strata
+    if body.has("system_assessment"):
+        return system_confidence_level(body.whole("system_assessment", minimum=1))
+    return body.optional_number("required_confidence_level")
+
+
+def _assess(
+    method_id: str, body: Reader, design: Design
+) -> tuple[Assessment, GroupsAssessment | None]:
+    level = body.optional_number("confidence_level")
+    profile = body.text("factor_profile") if body.has("factor_profile") else None
+    materiality = body.number("materiality_rate", MATERIALITY_RATE)
+    if design.periods is not None:
+        return assess_periods(
+            method_id,
+            design.periods,
+            confidence_level=level,
+            factor_profile=profile,
+            population_units=design.population_units,
+            materiality_rate=materiality,
+        ), None
+    if design.groups is not None:
+        grouped = assess_groups(
+            method_id,
+            design.groups,
+            confidence_level=level,
+            factor_profile=profile,
+            materiality_rate=materiality,
+        )
+        return grouped.overall, grouped
+    single = assess(
+        method_id,
+        design.strata,
+        confidence_level=level,
+        factor_profile=profile,
+        sample_size=body.optional_whole("sample_size", minimum=1),
+        materiality_rate=materiality,
+    )
+    return single, None
 
 
 def evaluate(payload: object) -> dict[str, object]:
-    """``POST /evaluate``: projection, precision, TER, upper limit and conclusion."""
+    """``POST /evaluate``: projection, precision, TER, upper limit and conclusion.
+
+    Optional: several periods (guidance 7.3), groups of programmes (7.8),
+    sub-samples of units (7.6, 6.5.3) and the recalculation of the
+    confidence level for inconclusive results (7.7).
+    """
     body = Reader(payload)
     method_id = body.text("method")
     if method_id not in METHODS:
         raise ContractError(f"Unbekannte Methode '{method_id}'. Zulässig: {', '.join(METHODS)}.")
+    design = read_design(body)
     try:
-        assessment = assess(
-            method_id,
-            _strata(body),
-            confidence_level=body.optional_number("confidence_level"),
-            factor_profile=body.text("factor_profile") if body.has("factor_profile") else None,
-            sample_size=body.optional_whole("sample_size", minimum=1),
-            materiality_rate=body.number("materiality_rate", MATERIALITY_RATE),
+        required = _required_level(body)
+        assessment, grouped = _assess(method_id, body, design)
+        recalculation = recalculate_confidence(
+            assessment.projection, assessment.total_error_rate, required_level=required
         )
     except ExtrapolationInputError as exc:
         raise ContractError(str(exc)) from exc
@@ -87,7 +102,32 @@ def evaluate(payload: object) -> dict[str, object]:
         "library": LIBRARY,
         "fingerprint": fingerprint(payload),
         "method": METHODS[method_id].to_dict(),
+        "design": design.kind,
         **assessment.to_dict(),
+        "confidence_recalculation": recalculation.to_dict(),
+        "subsamples": [s.to_dict() for s in design.subsamples],
+        "groups": [] if grouped is None else [g.to_dict() for g in grouped.groups],
+    }
+
+
+def attributes(payload: object) -> dict[str, object]:
+    """``POST /attributes``: attribute sampling of a test of controls (guidance 7.9)."""
+    body = Reader(payload)
+    try:
+        result = evaluate_attributes(
+            body.whole("deviations"),
+            body.whole("sample_size", minimum=1),
+            confidence_level=body.number("confidence_level"),
+            factor_profile=body.text("factor_profile"),
+            tolerable_rate=body.number("tolerable_rate"),
+        )
+    except ExtrapolationInputError as exc:
+        raise ContractError(str(exc)) from exc
+    return {
+        "contract": CONTRACT,
+        "library": LIBRARY,
+        "fingerprint": fingerprint(payload),
+        "attributes": result.to_dict(),
     }
 
 

@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 from .. import __version__, _rf_table
+from ..confidence import SYSTEM_ASSESSMENT_LABELS, SYSTEM_ASSESSMENT_LEVELS
 from ..evaluation import MATERIALITY_RATE
 from ..factors import PROFILES, RECOMMENDED_PROFILE, RF_ZERO_TABLE, Z_TABLE
 from ..methods import METHODS
-from ..sources import GUIDANCE, RER_TEMPLATE, cpr
+from ..sources import GUIDANCE, RER_TEMPLATE, cpr, guidance
+from ..subsampling import SUBSAMPLE_ESTIMATORS
 from ._contract import CONTRACT, MAX_STRATA, MAX_UNITS
+from ._design import MAX_PERIODS
 
 LIBRARY = f"auditcore_extrapolation {__version__}"
 
@@ -39,6 +42,28 @@ CONCLUSIONS: tuple[dict[str, str], ...] = (
 )
 
 
+DESIGNS: tuple[dict[str, str], ...] = (
+    {"id": "single", "label": "Ein Zeitraum", "source": guidance("6.1–6.4")},
+    {
+        "id": "periods",
+        "label": "Mehrere Zeiträume des Geschäftsjahres",
+        "source": guidance("6.1.3, 6.2.3, 6.3.3, 6.3.4, 6.4.9, 7.3; Anhang 2"),
+    },
+    {"id": "groups", "label": "Gruppe von Programmen", "source": guidance("7.8")},
+)
+
+
+def _system_assessment() -> list[dict[str, object]]:
+    return [
+        {
+            "category": category,
+            "label": SYSTEM_ASSESSMENT_LABELS[category],
+            "confidence_level": level,
+        }
+        for category, level in SYSTEM_ASSESSMENT_LEVELS.items()
+    ]
+
+
 def _levels() -> dict[str, list[float]]:
     return {
         "z": sorted(Z_TABLE),
@@ -57,6 +82,12 @@ def catalogue() -> dict[str, object]:
             "ter": cpr("2 Nr. 35"),
             "rer": cpr("2 Nr. 36"),
             "non_statistical": cpr("79 Abs. 2"),
+            "periods": guidance("7.3"),
+            "subsampling": guidance("7.6, 6.5.3"),
+            "recalculation": guidance("7.7"),
+            "system_assessment": guidance("3.2.1"),
+            "groups": guidance("7.8"),
+            "attributes": guidance("7.9"),
         },
         "methods": [m.to_dict() for m in METHODS.values()],
         "factor_profiles": [p.to_dict() for p in PROFILES.values()],
@@ -65,5 +96,10 @@ def catalogue() -> dict[str, object]:
         "materiality": {"default": MATERIALITY_RATE, "maximum": MATERIALITY_RATE},
         "error_classes": [dict(c) for c in ERROR_CLASSES],
         "conclusions": [dict(c) for c in CONCLUSIONS],
-        "limits": {"max_units": MAX_UNITS, "max_strata": MAX_STRATA},
+        "designs": [dict(d) for d in DESIGNS],
+        "subsample_estimators": [
+            {"id": key, "label": label} for key, label in SUBSAMPLE_ESTIMATORS.items()
+        ],
+        "system_assessment": _system_assessment(),
+        "limits": {"max_units": MAX_UNITS, "max_strata": MAX_STRATA, "max_periods": MAX_PERIODS},
     }

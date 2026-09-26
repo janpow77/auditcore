@@ -1,7 +1,7 @@
 """REST contract ``auditcore_extrapolation.evaluation/1`` (extra ``web``).
 
 The contract functions (:func:`catalogue`, :func:`evaluate`, :func:`residual`,
-:func:`export_evaluation`) are framework-free. :func:`create_app` and
+:func:`attributes`, :func:`export_evaluation`) are framework-free. :func:`create_app` and
 :func:`routes` need Starlette (``pip install auditcore_extrapolation[web]``);
 :func:`create_router` additionally needs FastAPI. Contract:
 ``docs/ui/extrapolation-rest.md``.
@@ -15,7 +15,7 @@ from ._contract import CONTRACT, ContractError
 from ._http import MAX_BODY_BYTES
 from .catalogue import catalogue
 from .export import ExportFile, export_evaluation
-from .requests import evaluate, fingerprint, residual
+from .requests import attributes, evaluate, fingerprint, residual
 
 if TYPE_CHECKING:
     from fastapi import APIRouter
@@ -26,6 +26,7 @@ __all__ = [
     "CONTRACT",
     "ContractError",
     "ExportFile",
+    "attributes",
     "catalogue",
     "create_app",
     "create_router",
