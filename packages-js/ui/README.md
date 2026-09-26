@@ -88,8 +88,9 @@ document.body.append(table)
   `@flowaudit/ui/elements` registriert `<flowaudit-table>`,
   `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>`,
   `<flowaudit-sampling>`, `<flowaudit-benford>`,
-  `<flowaudit-screening-review>`, `<flowaudit-risk-flags>` und
-  `<flowaudit-geo-map>` im Light DOM
+  `<flowaudit-screening-review>`, `<flowaudit-risk-flags>`,
+  `<flowaudit-synopsis>`, `<flowaudit-comparisons>`, `<flowaudit-vvt>`,
+  `<flowaudit-dsfa>` und `<flowaudit-geo-map>` im Light DOM
   (kein Shadow DOM, Designtoken der Seite gelten). Objekte und Listen werden
   als JS-Eigenschaften gesetzt, Ereignisse sind `CustomEvent`s in kebab-case
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
@@ -105,6 +106,8 @@ Fachkomponenten und ihre REST-Verträge:
 | Komponente | Element | Zweck | Vertrag |
 |---|---|---|---|
 | `KanbanBoard`, `KanbanBoardList` | `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>` | Kanban-Boards über einen `BoardPort` | [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md) |
+| `FaSynopsis` | `<flowaudit-synopsis>` | Synopse eines Dokumentvergleichs (Seite an Seite oder fortlaufend, Wortdifferenz, Auswahl und Grund je Zeile, Ausgaben) | [`docs/ui/synopsis-rest.md`](../../docs/ui/synopsis-rest.md) |
+| `FaComparisons` | `<flowaudit-comparisons>` | Dokumentvergleiche über `auditcore_documents.web` verwalten: zwei Fassungen (DOCX, DOCM, PDF) hochladen, Standardvergleich oder Gesetzessynopse mit Optionen und Profil, gespeicherte Vergleiche suchen, öffnen (eingebettete Synopse), löschen, fertige Ergebnisse als JSON importieren | [`docs/ui/synopsis-rest.md`](../../docs/ui/synopsis-rest.md) |
 | `SamplingPanel` | `<flowaudit-sampling>` | Stichprobenumfang und -ziehung über `auditcore_sampling.web` | [`docs/ui/sampling-rest.md`](../../docs/ui/sampling-rest.md) |
 | `BenfordPanel` | `<flowaudit-benford>` | Benford-Analyse über `auditcore_statistics.web` | [`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md) |
 | `ScreeningReview` | `<flowaudit-screening-review>` | Trefferprüfung beim Sanktions-/PEP-Screening | [`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md) |
@@ -120,10 +123,11 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (630):
+Exporte der Einstiegspunkte aus `package.json#exports` (663):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
+| `@flowaudit/ui` | `ACCEPTED_EXTENSIONS` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ANSWER_VALUES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Activity` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ActivityGroup` | Re-Export | – | `@flowaudit/ui-core` |
@@ -170,6 +174,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `CARD_COLORS` | Konstante | Kartenfarben zur Auswahl (TaskDetail colorPresets). | `kanban/cardView` |
 | `@flowaudit/ui` | `CHANGE_STATUSES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `COLUMN_COLORS` | Konstante | Spaltenfarben (BoardSettingsDialog PRESET_COLORS). | `kanban/cardView` |
+| `@flowaudit/ui` | `COMPARISON_KINDS` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `COMPARISON_MODES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Catalogs` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CellValue` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `ChartBar` | Re-Export | – | `@flowaudit/ui-core` |
@@ -179,13 +185,26 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `ColumnCheck` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ColumnView` | Schnittstelle | – | `kanban/useKanbanBoard` |
 | `@flowaudit/ui` | `CompareFields` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `CompareForm` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `CompareRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Comparison` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonForm` | Vue-Komponente | – | `documents/ComparisonForm.vue` |
+| `@flowaudit/ui` | `ComparisonKind` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonList` | Vue-Komponente | – | `documents/ComparisonList.vue` |
 | `@flowaudit/ui` | `ComparisonMetadata` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonMode` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonProfile` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonRow` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ComparisonSummary` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsSource` | Schnittstelle | – | `documents/useComparisons` |
+| `@flowaudit/ui` | `ComparisonsTranslate` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ComparisonsView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Completeness` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ConfidenceLevel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Conformity` | Re-Export | – | `@flowaudit/ui-core` |
@@ -196,7 +215,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `DATAPROTECTION_CONTRACT` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_BOX` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_FILTER` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DEFAULT_FORM` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_LOCALE` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DEFAULT_MAX_UPLOAD_BYTES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_SYNOPSIS_FILTER` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DataProtectionError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DataProtectionKey` | Re-Export | – | `@flowaudit/ui-core` |
@@ -235,6 +256,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `FLAG_STATES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
+| `@flowaudit/ui` | `FaComparisons` | Vue-Komponente | – | `documents/FaComparisons.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
 | `@flowaudit/ui` | `FaDsfa` | Vue-Komponente | – | `dataprotection/FaDsfa.vue` |
 | `@flowaudit/ui` | `FaGeoMap` | Vue-Komponente | – | `geo/FaGeoMap.vue` |
@@ -277,6 +299,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `INITIAL_BENFORD` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IconName` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ImportRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ImportedColumns` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `JsonObject` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `JsonValue` | Re-Export | – | `@flowaudit/ui-core` |
@@ -430,6 +453,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `SubjectRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SubjectStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SubjectView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SummaryView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SurveyInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SynopsisFilterState` | Re-Export | – | `./useSynopsis` |
 | `@flowaudit/ui` | `SynopsisLayout` | Re-Export | – | `@flowaudit/ui-core` |
@@ -455,6 +479,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `Translate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
+| `@flowaudit/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
@@ -520,12 +545,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `columnCells` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `compareValues` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `comparisonRows` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `comparisonsElement` | Konstante | `<flowaudit-comparisons>`: `port` als JS-Eigenschaft (z. B. | `documents/element` |
+| `@flowaudit/ui` | `comparisonsMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `comparisonsView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `completeness` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `completenessTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `confidenceText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `coverIssues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createBenfordController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createComparisonsController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
 | `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
@@ -570,9 +599,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `filterRecords` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `filterRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `filterSubjects` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `filterSummaries` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `flagState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `focusRow` | Re-Export | – | `./useSynopsisNavigation` |
 | `@flowaudit/ui` | `focusableWithin` | Re-Export | – | `./useFocusTrap` |
+| `@flowaudit/ui` | `formProblems` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatAmount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatDate` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatDegrees` | Re-Export | – | `@flowaudit/ui-core` |
@@ -624,6 +655,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `parseConditions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseCount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseDegrees` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `parseImport` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseLatLon` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseNumber` | Re-Export | – | `@flowaudit/common` |
@@ -692,12 +724,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `strataColumns` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `strataOf` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `strataRows` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `summaryView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `surveyFrom` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `synopsisElement` | Konstante | `<flowaudit-synopsis>`: `comparison`/`result` und `port` als JS-Eigenschaften; Ereignisse `row-update`, `export`, `navigate`, `update:layout`. | `synopsis/element` |
 | `@flowaudit/ui` | `synopsisMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `synopsisPortOf` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `tableElement` | Konstante | `<flowaudit-table>`: Spalten und Zeilen als JS-Eigenschaften, Ereignisse `row-click`, `sort-change`. | `table/element` |
 | `@flowaudit/ui` | `tabularMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `textOn` | Funktion | Lesbare Schriftfarbe auf einer Kartenfarbe (Luminanzschwelle wie im Original). | `kanban/cardView` |
+| `@flowaudit/ui` | `toCompareFields` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toHtml` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toMarkdown` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toggleMeasure` | Re-Export | – | `@flowaudit/ui-core` |
@@ -707,6 +742,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (630):
 | `@flowaudit/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@flowaudit/common`. | `composables/useAuthToken` |
 | `@flowaudit/ui` | `useBenford` | Funktion | Vue-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (`createBenfordController`). | `benford/useBenford` |
 | `@flowaudit/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
+| `@flowaudit/ui` | `useComparisons` | Funktion | – | `documents/useComparisons` |
 | `@flowaudit/ui` | `useDebouncedFn` | Funktion | Entprellte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDsfa` | Funktion | – | `dataprotection/useDsfa` |
@@ -760,6 +796,7 @@ Web Components:
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
+| `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-dsfa>` | `FaDsfa` | `dataprotection/element.ts` |
 | `<flowaudit-geo-map>` | `FaGeoMap` | `geo/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
@@ -786,6 +823,40 @@ Web Components:
 | `analysis-completed` | `[result: BenfordAnalysis]` | – |
 | `error` | `[message: string]` | – |
 
+#### `ComparisonForm`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `form` | `CompareForm` | ja | – | – |
+| `view` | `ComparisonsView` | ja | – | – |
+| `busy` | `boolean` | nein | `false` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `form-update` | `[patch: Partial<CompareForm>]` | – |
+| `section-toggle` | `[status: RowStatus, enabled: boolean]` | – |
+| `form-submit` | `[]` | – |
+| `form-reset` | `[]` | – |
+
+#### `ComparisonList`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `rows` | `SummaryView[]` | nein | `() => []` | – |
+| `query` | `string` | nein | `''` | – |
+| `countText` | `string` | nein | `''` | – |
+| `emptyText` | `string \| null` | nein | `null` | – |
+| `busy` | `boolean` | nein | `false` | – |
+| `editable` | `boolean` | nein | `true` | Löschen und Import anbieten. |
+| `canImport` | `boolean` | nein | `false` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `update:query` | `[query: string]` | – |
+| `comparison-open` | `[id: string]` | – |
+| `comparison-remove` | `[id: string]` | – |
+| `result-import` | `[text: string]` | – |
+
 #### `FaBadge`
 
 | Prop | Typ | Pflicht | Standard | Beschreibung |
@@ -810,6 +881,24 @@ Web Components:
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `click` | `[event: MouseEvent]` | – |
+
+#### `FaComparisons`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `ComparisonsPort \| null` | nein | `null` | Datenzugang, z. B. `createSynopsisRestClient({ baseUrl: '/api/synopsis' })` (auditcore_documents.web). |
+| `maxUploadBytes` | `number` | nein | `DEFAULT_MAX_UPLOAD_BYTES` | Größte Datei je Seite in Byte; wie `ServiceSettings.max_upload_bytes` des Servers. |
+| `editable` | `boolean` | nein | `true` | `false`: nur Liste und Ansicht, kein Hochladen, Import oder Löschen. |
+| `showSynopsis` | `boolean` | nein | `true` | Geöffneten Vergleich als Synopse einbetten (braucht `port.load`); sonst nur Ereignis `comparison-open`. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `comparison-created` | `[comparison: Comparison]` | – |
+| `comparison-imported` | `[comparison: Comparison]` | – |
+| `comparison-removed` | `[id: string]` | – |
+| `comparison-open` | `[id: string]` | – |
+| `error` | `[error: ComparisonsError]` | – |
 
 #### `FaDialog`
 
