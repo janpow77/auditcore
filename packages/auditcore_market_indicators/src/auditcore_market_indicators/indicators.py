@@ -34,7 +34,7 @@ from .errors import IndicatorInputError
 from .profiles import IndicatorProfile
 
 METHOD = "auditcore_market_indicators.indicators/1"
-_VERSION = "0.1.2"
+_VERSION = "0.1.3"
 _PROFILED = frozenset({"ema", "rsi", "atr", "adx", "macd"})
 _INDICATORS = _PROFILED | frozenset(
     {

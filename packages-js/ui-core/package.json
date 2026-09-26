@@ -1,8 +1,17 @@
 {
   "name": "@flowaudit/ui-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Framework-freier Kern der FlowAudit-Oberflächen: Texte, REST-Verträge, View-Modelle, Zustandsautomaten und Stile für Vue und React",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/ui-core"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/ui-core#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": [
     "**/*.css"
@@ -31,12 +40,16 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@flowaudit/common": "0.1.0",
-    "@flowaudit/kanban-core": "0.2.0",
+    "@flowaudit/common": "0.1.1",
+    "@flowaudit/kanban-core": "0.2.1",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.2",
     "@types/leaflet": "^1.9.22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

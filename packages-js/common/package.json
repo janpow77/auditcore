@@ -1,8 +1,17 @@
 {
   "name": "@flowaudit/common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-freie Hilfsfunktionen der FlowAudit-Anwendungen: Formatierung, Zahleneingabe, Fehlertexte, REST, Token, CSV, Zeitsteuerung, Sortierung, Prüfziffern",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/common"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/common#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -29,5 +38,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run && npm run test:tz",
     "test:tz": "TZ=America/New_York vitest run"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

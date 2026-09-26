@@ -151,7 +151,7 @@ durchgeführt. Die abweichende Benford-Implementierung in audit-portal
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_common==0.1.1` (Summe und Rundung, seit
+Python ≥ 3.11 und `auditcore_common==0.2.0` (Summe und Rundung, seit
 Unreleased auch der rahmenwerkfreie Teil der REST-Schicht aus
 `auditcore_common.rest`; APT `python3-auditcore-common`); keine Abhängigkeit von `auditcore`, NumPy
 oder SciPy. Optional `starlette>=0.26` über `[web]`.

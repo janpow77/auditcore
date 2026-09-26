@@ -196,7 +196,7 @@ Schemafehler der openpyxl-Ausgabe; Werte unverändert).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_common==0.1.1` (selbst nur Standardbibliothek;
+Python ≥ 3.11 und `auditcore_common==0.2.0` (selbst nur Standardbibliothek;
 rahmenwerkfreier Teil der REST-Schicht für `web`, APT
 `python3-auditcore-common`), sonst nur die Standardbibliothek. Optional
 `openpyxl>=3.0.9,<4` und `defusedxml>=0.7.1` über `[excel]`; ohne Extra meldet

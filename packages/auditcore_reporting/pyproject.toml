@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_reporting"
-version = "0.2.2"
+version = "0.3.0"
 description = "Characterized reporting format rules preserving Flowlib behavior"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.1"]
+dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 excel = ["openpyxl>=3.0.9,<4", "defusedxml>=0.7.1"]

@@ -11,6 +11,65 @@
   Ubuntu 26.04 (Python 3.14) und 24.04 unter
   `docs/validation/regulierung-apt/ubuntu-26.04/`.
 
+Noch keine Änderungen.
+
+## 0.4.2 – 2026-09-26
+
+- Vorbereitung Release v0.4.2: Versionen aller seit v0.4.1 geänderten Pakete
+  angehoben. Python: `auditcore_common` 0.2.0 (neues Modul `rest` mit
+  `json_object`), documents 0.4.0, identifiers 0.2.0, invoicesynth 0.2.0,
+  reporting 0.3.0, neues Paket `auditcore_extrapolation` 0.1.0; alle übrigen
+  als Patch (README im Wheel geändert, Pins auf `auditcore_common==0.2.0` und
+  die neuen Paketstände). npm: `@flowaudit/ui-core` 0.2.0,
+  `@flowaudit/ui-react` 1.1.0, `@flowaudit/common` 0.1.1,
+  `@flowaudit/kanban-core` 0.2.1, `@flowaudit/bpmn-editor` 0.1.1,
+  `@flowaudit/bpmn-flowaudit`/`-vue`/`-react` 0.2.1; `@flowaudit/ui` 0.3.0
+  erstmals als Release-Datei. Die npm-Pakete liegen ab diesem Release als
+  `npm pack`-Tarballs mit `npm-packages.json` bei.
+- Code-Gate: `codegate_js` zählt Build-Ausgaben `dist-*` (z. B. `dist-wc`,
+  `dist-standalone` von bpmn-vue) nicht mehr als Quelltext.
+- Donut-Job-Image (`donut-train-image`): Verlangt das Rad von
+  `auditcore_invoicesynth` auditcore-Stände, die noch nicht veröffentlicht
+  sind, baut der Workflow genau diese Abhängigkeiten aus demselben
+  Repository-Stand (`docker/train/deps_source.py`, Label `auditcore.deps=repo`).
+  Sonst bleiben sie hashgebunden aus dem Release.
+- Vue ↔ React per Code erzwungen statt nur dokumentiert:
+  `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`, fail closed in
+  `js-packages` und im Pflicht-Job `code-quality-gate`) leitet die
+  öffentlichen Komponenten aus den Quellen ab (Exporte, `ELEMENTS`,
+  `defineCustomElement`; TypeScript-Compiler-API) und prüft je Komponente die
+  native React-Fassung und umgekehrt, je Gruppe Kernmodul mit Controller und
+  Stil sowie `cases-<gruppe>.ts`, die ein Vue- und ein React-Paritätstest
+  importieren, und dass das React-Paket kein Vue lädt. Ausnahmen nur
+  befristet in `quality/ui-parity-exceptions.json` (Ratchet: nur Abbau).
+  Generator `npm run ui:neu -- <gruppe> <Komponente>` erzeugt Kern,
+  Stil, Vue-SFC, Web Component, React-Komponente, Exporte, Paritätsfälle,
+  beide Paritätstests und Doku-Stub; das Gerüst besteht Lint, Typprüfung,
+  Tests und Gate (`npm run test:scripts`). Bestand: Vue exportiert jetzt auch
+  `KanbanToolbar`, `CardAppearance`, `CardChecklistEditor`, `CardReferences`,
+  `CardTagsEditor`, `ColumnEditorRow`, `DbKanbanColumn`, `DbKanbanCard` (wie
+  React); neue Paritätsfälle für den Datei-Import (`TableImport`) und die
+  BPMN-Basis (`FaIcon`, `BaseDialog`); `cases.ts` aufgeteilt in
+  `cases-synopsis.ts`/`cases-table.ts`, BPMN-Seitenansichten in
+  `cases-views.ts`; Kern `ui-core/src/table/` und `ui-core/src/base/index.ts`.
+  Drei befristete Ausnahmen (Controller für Basis und Tabelle,
+  Paritätsfälle der BPMN-Web-Component).
+- npm-Veröffentlichung der `@flowaudit`-Pakete: Workflow `npm-publish`
+  veröffentlicht nach einem GitHub-Release (oder von Hand mit Tag, standardmäßig
+  als Probelauf) genau die signierten Release-Tarballs auf npmjs.org, nach
+  Prüfung von Signatur, SHA-256, Größe und npm-Integrität gegen
+  `npm-packages.json` (`scripts/npm_publish.py`), in Abhängigkeitsreihenfolge,
+  idempotent (gleiche Version mit gleicher Integrität wird übersprungen, mit
+  anderem Inhalt nie überschrieben und als Fehler gemeldet), `--provenance`, dist-tag `next` für
+  Vorabversionen. Anmeldung per Trusted Publishing, für die Erstveröffentlichung
+  per Secret `NPM_TOKEN`; Automatik erst mit der Variable
+  `NPM_PUBLISH_ENABLED`. Alle `package.json` unter `packages-js/` mit
+  `repository` (nötig für Provenance), `homepage`, `bugs` und
+  `publishConfig.access=public`. Installationsdoku: `npm install
+  @flowaudit/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
+  Einrichtung in `docs/deployment/npm-veroeffentlichung.md`. Keine
+  Versionsanhebung (Paketstände kommen mit v0.4.2).
+
 - Neues Paket `auditcore_extrapolation` 0.1.0: Hochrechnung von
   Stichprobenfehlern für Prüfbehörden nach dem KOM-Leitfaden EGESIF_16-0014-01
   (Mittelwert-, Verhältnis- und Differenzenschätzung, MUS Standard/geschichtet/
@@ -121,6 +180,9 @@
   ankommen; die Web Component `<flowaudit-bpmn-editor>` enthielt sie bisher
   nicht. Lizenzprüfung: Einzelfreigabe für `lightningcss` (MPL-2.0, nur
   Entwicklungsabhängigkeit von Vite 8).
+
+## 0.4.1 – 2026-09-26 (einschließlich 0.4.0 und der Vorschauen seit 0.3.0)
+
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

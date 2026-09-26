@@ -1,6 +1,6 @@
 # Changelog auditcore_common
 
-## Unreleased
+## 0.2.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neues Modul `rest`: rahmenwerkfreier Teil der JSON-REST-Verträge von
   `auditcore_sampling` und `auditcore_statistics` (Duplikatgruppe B1) –
@@ -14,7 +14,7 @@
   oder `422` „'<path>' muss ein JSON-Objekt sein.“ – ersetzt die wörtlich
   gleichen `_object`-Prüfungen in `auditcore_identifiers.web` und
   `auditcore_reporting.web` (Differenztest gegen beide Kopien in
-  `tests/legacy_rest.py`, `tests/test_rest.py`). Keine Versionsanhebung.
+  `tests/legacy_rest.py`, `tests/test_rest.py`).
 - Eigenschaftstests mit Hypothesis (`tests/test_properties.py`, Extra `dev`):
   paarweise Summe, `numpy_round`, `require_finite`, `canonical_sha256`,
   `decode_body` und `choice` gegen die früheren Kopien aus sampling,

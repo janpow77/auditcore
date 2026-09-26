@@ -18,15 +18,24 @@ eigener Netzwerkzugriff außer über die Ports.
 
 ## Installation
 
-Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
-auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
-`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
-Web Components mit Integritätsprüfung und `vendor/`-Ablage:
-[frontend-installation.md](../../docs/deployment/frontend-installation.md).
+Standardweg ist die npm-Registry; npm löst die übrigen `@flowaudit`-Pakete
+der Abhängigkeitshülle selbst auf:
 
 ```sh
-npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz
+npm install @flowaudit/ui-core
 ```
+
+Ohne Registry-Zugang (Intranet, offline) bleibt der signierte Tarball aus
+dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
+ausdrücklich in die `package.json`:
+
+```sh
+npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.2.0.tgz
+```
+
+Anleitung für Vue, React und Web Components mit Integritätsprüfung und
+`vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 Abhängigkeitshülle: dazu `@flowaudit/common`. Stile: `@flowaudit/ui-core/style.css` (Designtoken `--fa-*` und Komponentenstile).
 
@@ -599,8 +608,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@flowaudit/ui-core` | `buildWorkbookRequest` | Funktion | Anfrage aus Zustand und Tabellen oder der erste fehlende Punkt. | `reporting/controller` |
 | `@flowaudit/ui-core` | `canDecide` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `canReleaseAssessment` | Funktion | Freigabe möglich: Vier-Augen-Vorprüfung, keine ungespeicherten Eingaben, keine Sperrgründe. | `dataprotection/dsfaView` |
-| `@flowaudit/ui-core` | `cellAlignClass` | Funktion | – | `table` |
-| `@flowaudit/ui-core` | `cellText` | Funktion | – | `table` |
+| `@flowaudit/ui-core` | `cellAlignClass` | Funktion | – | `table/index` |
+| `@flowaudit/ui-core` | `cellText` | Funktion | – | `table/index` |
 | `@flowaudit/ui-core` | `changeIds` | Funktion | Kennungen der Änderungszeilen in Anzeigereihenfolge (Ziel der Navigation). | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `chartGeometry` | Funktion | – | `benford/chart` |
 | `@flowaudit/ui-core` | `cloneContent` | Funktion | Tiefe Kopie (JSON-Daten), damit Eingaben den gelesenen Stand nie verändern. | `dataprotection/registerView` |
@@ -849,7 +858,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@flowaudit/ui-core` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
 | `@flowaudit/ui-core` | `riskTableColumns` | Funktion | – | `risk/controller` |
 | `@flowaudit/ui-core` | `riskTableRows` | Funktion | – | `risk/controller` |
-| `@flowaudit/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table` |
+| `@flowaudit/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table/index` |
 | `@flowaudit/ui-core` | `runFormDefaults` | Funktion | Vorbelegung bei Wechsel der Prüfart oder neuen Einstellungen: empfohlenes Profil, alle Listen, Standard-Mindestwert. | `screening/runForm` |
 | `@flowaudit/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `samplingFieldError` | Funktion | Fehlermeldung eines Eingabefelds, leer ohne Fehler. | `sampling/view` |
@@ -873,7 +882,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@flowaudit/ui-core` | `setDefaultLocale` | Funktion | Sprache ohne Provider (Web Components, React ohne `LocaleProvider`). | `i18n` |
 | `@flowaudit/ui-core` | `severityTone` | Funktion | – | `risk/format` |
 | `@flowaudit/ui-core` | `sizeTexts` | Funktion | – | `sampling/view` |
-| `@flowaudit/ui-core` | `sortIcon` | Funktion | – | `table` |
+| `@flowaudit/ui-core` | `sortIcon` | Funktion | – | `table/index` |
 | `@flowaudit/ui-core` | `splitExtractionFindings` | Funktion | Auffällige Befunde (nicht bestanden, prüfen) zuerst nach Gewicht; bestandene getrennt. | `extraction/view` |
 | `@flowaudit/ui-core` | `stateTone` | Funktion | – | `risk/format` |
 | `@flowaudit/ui-core` | `statusHintKey` | Funktion | Hinweis für nicht freigegebene Profile, sonst `null`. | `risk/labels` |

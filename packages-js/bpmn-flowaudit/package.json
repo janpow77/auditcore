@@ -1,8 +1,17 @@
 {
   "name": "@flowaudit/bpmn-flowaudit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "FlowAudit-Fachschicht für den BPMN-Editor: Schema flowaudit 1.0/1.1, Akteure, Kennzeichen, Prüfbezüge, Prüfpfad, Durchlauftest, Soll/Ist, Neutralisieren, Berichte und framework-freier Kern der Editor-Oberfläche (framework-frei, MIT)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/bpmn-flowaudit"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/bpmn-flowaudit#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": [
     "*.css",
@@ -42,7 +51,7 @@
     "bpmn-moddle": "^10.3.1"
   },
   "peerDependencies": {
-    "@flowaudit/bpmn-editor": "^0.1.0"
+    "@flowaudit/bpmn-editor": "^0.1.1"
   },
   "peerDependenciesMeta": {
     "@flowaudit/bpmn-editor": {
@@ -52,5 +61,9 @@
   "devDependencies": {
     "ajv": "^8.20.0",
     "diagram-js": "^15.27.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

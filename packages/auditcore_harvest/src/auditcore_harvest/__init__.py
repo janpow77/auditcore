@@ -51,7 +51,7 @@ from .ports import (
 )
 from .transport import FileTransport, ReplayTransport, decode_json, raise_for_status
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 __all__ = [
     "CONTRACT_VERSION",

@@ -33,7 +33,7 @@ def test_installed_profile_metadata_binds_exact_content_and_fork():
     renderer = metadata["renderer"]
     # The unchanged PDF template keeps its version; package and profile versions may differ
     # (docs/versioning.md).
-    assert renderer["version"] == "0.2.0" and metadata["version"] == "0.2.2"
+    assert renderer["version"] == "0.2.0" and metadata["version"] == "0.2.3"
     assert hashlib.sha256(package.joinpath("pdf.py").read_bytes()).hexdigest() == renderer["sha256"]
 
 

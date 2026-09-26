@@ -74,7 +74,7 @@ Ratenbegrenzung sind Sache der Anwendung.
 ### `GET /profiles`
 
 ```json
-{"contract": "reporting_ui/1", "library": "auditcore_reporting 0.2.2", "excel_available": true,
+{"contract": "reporting_ui/1", "library": "auditcore_reporting 0.3.0", "excel_available": true,
  "profiles": [{"id": "flowlib-legacy-v1", "label": "Flowlib-Formate nach Spaltennamen",
                "description": "…", "version": "1.0.0", "status": "Draft",
                "source": "janpow77/flowlib@aca2dc6a…"},

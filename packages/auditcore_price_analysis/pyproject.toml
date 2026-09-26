@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_price_analysis"
-version = "0.1.2"
+version = "0.1.3"
 description = "Exact tariff calculation (district heating, water, tiers), tariff selection and comparison rules with versioned profiles"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.1"]
+dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2"]

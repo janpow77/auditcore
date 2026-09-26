@@ -3,6 +3,15 @@
   "version": "0.3.0",
   "description": "Gemeinsame FlowAudit-Oberflächenkomponenten: Vue 3, Web Components, Theming und i18n",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/ui"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/ui#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": [
     "**/*.css",
@@ -38,9 +47,9 @@
     "e2e:api": "playwright test -c e2e/playwright.api.config.ts"
   },
   "dependencies": {
-    "@flowaudit/common": "0.1.0",
-    "@flowaudit/kanban-core": "0.2.0",
-    "@flowaudit/ui-core": "0.1.0"
+    "@flowaudit/common": "0.1.1",
+    "@flowaudit/kanban-core": "0.2.1",
+    "@flowaudit/ui-core": "0.2.0"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
@@ -53,5 +62,9 @@
     "@vue/test-utils": "^2.5.1",
     "vue": "^3.5.43",
     "vue-tsc": "^3.3.11"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

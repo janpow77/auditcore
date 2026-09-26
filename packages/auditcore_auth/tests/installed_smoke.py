@@ -45,7 +45,7 @@ def expect_backend(call: object, module: str) -> None:
 
 def main() -> None:
     package = distribution("auditcore_auth")
-    assert package.version == "0.1.0"
+    assert package.version == "0.1.1"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
     assert len(APP_PROFILES) == 9
@@ -55,8 +55,9 @@ def main() -> None:
     assert identify_hash("$2b$12$short") is None
     assert constant_time_equals("Prüfung", "Prüfung") and not constant_time_equals("a", "b")
     try:
-        TokenProfile("bad", lifetime=timedelta(minutes=5), algorithm="none",
-                     accepted_algorithms=("none",))
+        TokenProfile(
+            "bad", lifetime=timedelta(minutes=5), algorithm="none", accepted_algorithms=("none",)
+        )
     except ConfigurationError:
         pass
     else:

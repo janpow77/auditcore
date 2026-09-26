@@ -1,5 +1,9 @@
 # Changelog @flowaudit/bpmn-editor
 
+## 0.1.1 – 2026-09-26 – Release v0.4.2
+
+Keine Verhaltensänderung. Build mit Vite 8 und vite-plugin-dts 5 (#169); README: Installation als Tarball aus dem GitHub-Release (#157). Erstmals als Release-Datei (`npm pack`-Tarball).
+
 ## 0.1.0 – 2026-09-25
 
 Erste Fassung (PR #76).

@@ -211,7 +211,7 @@ festgehalten.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_common==0.1.1` (gemeinsame REST-Schicht
+Python ≥ 3.11 und `auditcore_common==0.2.0` (gemeinsame REST-Schicht
 `auditcore_common.rest` des Extras `[web]`; selbst nur Standardbibliothek). Der
 Rechenkern nutzt nur die Standardbibliothek. Optional `starlette>=0.26` über
 `[web]` (FastAPI nur, wenn der Consumer es installiert).
