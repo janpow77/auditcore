@@ -12,6 +12,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime
 
+from auditcore_common import rest
+
 from ..profiles import PROFILE_IDS
 from ..workbook import CellValue, ReportTable
 
@@ -21,17 +23,8 @@ MAX_SHEETS_PER_REQUEST = 32
 _FILENAME = re.compile(r"[^\w .()-]", re.UNICODE)
 
 
-class ContractError(ValueError):
-    """Request does not satisfy the REST contract (status, code, German message)."""
-
-    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-
-    def to_dict(self) -> dict[str, object]:
-        """JSON error body ``{"error": {"code", "message"}}``."""
-        return {"error": {"code": self.code, "message": str(self)}}
+class ContractError(rest.ContractError):
+    """Request does not satisfy the ``reporting_ui/1`` contract (status, code, ``to_dict``)."""
 
 
 @dataclass(frozen=True)
@@ -52,16 +45,10 @@ class WorkbookRequest:
     filename: str
 
 
-def _object(value: object, path: str) -> Mapping[str, object]:
-    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
-        raise ContractError(f"'{path}' muss ein JSON-Objekt sein.")
-    return value
-
-
 def _text_map(value: object, path: str) -> dict[str, str]:
     if value is None:
         return {}
-    data = _object(value, path)
+    data = rest.json_object(value, path, error=ContractError)
     if not all(isinstance(v, str) for v in data.values()):
         raise ContractError(f"'{path}' darf nur Texte enthalten.")
     return {k: str(v) for k, v in data.items()}
@@ -140,7 +127,7 @@ def _rows(
 
 
 def _table(value: object, profile: str, path: str) -> TableRequest:
-    data = _object(value, path)
+    data = rest.json_object(value, path, error=ContractError)
     name = data.get("name")
     if not isinstance(name, str) or not name.strip():
         raise ContractError(f"'{path}.name' muss ein nicht leerer Blattname sein.")
@@ -165,7 +152,7 @@ def filename_of(value: object) -> str:
 
 def parse_request(payload: object) -> WorkbookRequest:
     """Validate ``{"profile", "tables", "filename"?}``; the profile is always explicit."""
-    body = _object(payload, "Anfrage")
+    body = rest.json_object(payload, "Anfrage", error=ContractError)
     profile = body.get("profile")
     if profile not in PROFILE_IDS:
         raise ContractError(

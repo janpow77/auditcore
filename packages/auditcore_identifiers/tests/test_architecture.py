@@ -1,4 +1,4 @@
-"""Standard library only (web adapters: Starlette/FastAPI), bounded module size, provenance."""
+"""Standard library only (web: Starlette/FastAPI, auditcore_common), module size, provenance."""
 
 from __future__ import annotations
 
@@ -19,12 +19,14 @@ SOURCES = {
 
 
 WEB_FRAMEWORKS = {"starlette", "fastapi"}
+#: The web layer also uses the stdlib-only REST helpers of ``auditcore_common``.
+WEB_IMPORTS = WEB_FRAMEWORKS | {"auditcore_common"}
 
 
 def test_only_standard_library_imports() -> None:
     stdlib = set(sys.stdlib_module_names) | {"__future__", "auditcore_identifiers"}
     for path in PACKAGE.rglob("*.py"):
-        allowed = stdlib | (WEB_FRAMEWORKS if path.parent.name == "web" else set())
+        allowed = stdlib | (WEB_IMPORTS if path.parent.name == "web" else set())
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):

@@ -10,7 +10,8 @@ from auditcore_identifiers.web import check_one
 def main() -> None:
     package = distribution("auditcore_identifiers")
     assert package.version == "0.1.0"
-    assert [r for r in package.requires or [] if "extra ==" not in r] == []
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     assert ai.check_iban("DE89 3704 0044 0532 0130 00").normalized == "DE89370400440532013000"
     assert ai.check_iban("DE89370400440532013001").reason is ai.Reason.INVALID_CHECKSUM

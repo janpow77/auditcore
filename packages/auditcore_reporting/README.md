@@ -6,7 +6,8 @@ Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahl
 
 Für Anwendungen, die tabellarische Berichte als Excel-Datei ausgeben –
 etwa `auditcore_dataprotection` für seine tabellarischen XLSX-Exporte. Der Kern
-benötigt nur die Standardbibliothek; der Renderer übernimmt ausschließlich
+benötigt nur die Standardbibliothek (die REST-Schicht zusätzlich
+`auditcore_common`); der Renderer übernimmt ausschließlich
 übergebene Daten und fragt weder HTTP, Datenbanken noch Dateisysteme ab.
 
 ## Installation
@@ -195,7 +196,9 @@ Schemafehler der openpyxl-Ausgabe; Werte unverändert).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Optional
+Python ≥ 3.11 und `auditcore_common==0.1.1` (selbst nur Standardbibliothek;
+rahmenwerkfreier Teil der REST-Schicht für `web`, APT
+`python3-auditcore-common`), sonst nur die Standardbibliothek. Optional
 `openpyxl>=3.0.9,<4` und `defusedxml>=0.7.1` über `[excel]`; ohne Extra meldet
 `render_workbook` `ExcelDependencyError`, Formatfunktionen und Datenmodelle
 bleiben nutzbar. pandas ist keine Laufzeitabhängigkeit.

@@ -2,6 +2,9 @@
 
 Copied from janpow77/auditcore@f03aa0e4a1f811b90dd69e9e8846a219937d4289
 (``packages/auditcore_sampling`` and ``packages/auditcore_statistics``, ``web``);
+the ``_object`` checks from janpow77/auditcore@e5698cfd49ec2d918a7b8fb44e77f8000c607783
+(``auditcore_identifiers``) and @2025d08f82663a2a85c1c6ed5325042a3c9012b5
+(``auditcore_reporting``, branch of PR #162);
 each block names its source file and symbol, ``provenance.json`` lists the git
 blobs. Only lines marked ``[adapted]`` differ: class and function names carry a
 package prefix, and the per-item parsers ``_item``/``_value`` are the identity,
@@ -166,3 +169,45 @@ def statistics_values(raw: object) -> list[object]:
     if len(raw) > MAX_VALUES:
         raise StatisticsContractError(f"Höchstens {MAX_VALUES} Werte je Anfrage.", status=413)
     return list(raw)  # [adapted] _value is the identity
+
+
+# packages/auditcore_identifiers/src/auditcore_identifiers/web/contract.py :: ContractError
+class IdentifiersContractError(ValueError):  # [adapted] name
+    """Request does not satisfy the contract (status, code, German message)."""
+
+    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+
+    def to_dict(self) -> dict[str, object]:
+        """JSON error body ``{"error": {"code", "message"}}``."""
+        return {"error": {"code": self.code, "message": str(self)}}
+
+
+# packages/auditcore_reporting/src/auditcore_reporting/web/contract.py :: ContractError
+class ReportingContractError(ValueError):  # [adapted] name
+    """Request does not satisfy the REST contract (status, code, German message)."""
+
+    def __init__(self, message: str, *, status: int = 422, code: str = "invalid_input") -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+
+    def to_dict(self) -> dict[str, object]:
+        """JSON error body ``{"error": {"code", "message"}}``."""
+        return {"error": {"code": self.code, "message": str(self)}}
+
+
+# packages/auditcore_identifiers/src/auditcore_identifiers/web/contract.py :: _object
+def identifiers_object(value: object, path: str) -> Mapping[str, object]:  # [adapted] name
+    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
+        raise IdentifiersContractError(f"'{path}' muss ein JSON-Objekt sein.")  # [adapted] name
+    return value
+
+
+# packages/auditcore_reporting/src/auditcore_reporting/web/contract.py :: _object
+def reporting_object(value: object, path: str) -> Mapping[str, object]:  # [adapted] name
+    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
+        raise ReportingContractError(f"'{path}' muss ein JSON-Objekt sein.")  # [adapted] name
+    return value

@@ -4,6 +4,10 @@ Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
 ## Unreleased
 
+- Neue Laufzeitabhängigkeit `auditcore_common==0.1.1` (selbst nur
+  Standardbibliothek): `web.ContractError` ist Unterklasse von
+  `auditcore_common.rest.ContractError`, die JSON-Objekt-Prüfung nutzt
+  `rest.json_object`. Meldungen, Statuscodes und Vertrag unverändert.
 - Neues Modul `auditcore_reporting.web` (Extras `web`, `fastapi`): REST-Vertrag
   `reporting_ui/1` für Formatprofile, Vorschau und XLSX-Export übergebener
   Tabellen (`docs/ui/reporting-rest.md`). Formatregeln, Profile und

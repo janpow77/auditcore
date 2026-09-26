@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `auditcore_common.rest.json_object`: gemeinsame JSON-Objekt-Prüfung der
+  REST-Verträge `identifiers_ui/1` und `reporting_ui/1` (vorher wörtlich
+  gleiche `_object`-Kopien, `duplicate_functions` wieder 0); beide Pakete
+  hängen neu von `auditcore_common==0.1.1` ab, ihre `ContractError` sind
+  Unterklassen von `rest.ContractError`. Differenztest gegen beide Kopien,
+  Duplikatgruppe A16 in `docs/quality/duplikate.md`. Keine Versionsanhebung.
+
 - Tabellenexport nach Excel: `auditcore_reporting.web` mit versioniertem
   REST-Vertrag `reporting_ui/1` (`GET /profiles`, `POST /preview`,
   `POST /export`; Starlette und FastAPI, neue Extras `web` und `fastapi`,
