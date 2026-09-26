@@ -1,7 +1,14 @@
 import { act, createRef } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { FlowauditTable, createElementComponent, defineFlowauditElements, eventPayload } from '../src'
+import type { TableColumn, TableRow } from '@flowaudit/common'
+import { createElementComponent, defineFlowauditElements, eventPayload } from '../src/elements'
+
+// Allgemeiner Mechanismus der (veralteten) Hüllen, geprüft an <flowaudit-table>.
+const FlowauditTable = createElementComponent<{ columns: readonly TableColumn[]; rows: readonly TableRow[]; clickable?: boolean }, { onRowClick: string; onSortChange: string }>(
+  'flowaudit-table',
+  { properties: ['columns', 'rows', 'clickable'], events: { onRowClick: 'row-click', onSortChange: 'sort-change' } },
+)
 
 // React 18: act() braucht diese Kennzeichnung außerhalb von Testbibliotheken.
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true

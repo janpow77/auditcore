@@ -4,9 +4,9 @@ import FaBadge from '../../base/FaBadge.vue'
 import FaButton from '../../base/FaButton.vue'
 import { useId } from '../../composables/useId'
 import { useI18n } from '../../i18n'
-import { addScenario, bandTone, removeScenario, withScenario } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import type { DataProtectionProfile, Proposal, SurveyInput } from '../types'
+import { addScenario, bandTone, removeScenario, withScenario } from '../core'
+import { dataprotectionMessages } from '../core'
+import type { DataProtectionProfile, Proposal, SurveyInput } from '../core'
 import DsfaScenario from './DsfaScenario.vue'
 
 const props = withDefaults(defineProps<{

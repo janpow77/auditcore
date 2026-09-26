@@ -37,21 +37,3 @@ const id = useId('fa-field')
     </p>
   </div>
 </template>
-
-<style>
-.fa-field { display: flex; flex-direction: column; gap: var(--fa-space-1); font-family: var(--fa-font-sans); }
-.fa-field__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
-.fa-field__input {
-  min-height: 2.25rem;
-  padding: 0 var(--fa-space-3);
-  border: 1px solid var(--fa-color-border);
-  border-radius: var(--fa-radius);
-  background: var(--fa-color-surface);
-  color: var(--fa-color-text);
-  font: var(--fa-font-size-sm) var(--fa-font-sans);
-}
-.fa-field__input:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
-.fa-field__note { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
-.fa-field--error .fa-field__input { border-color: var(--fa-color-danger); }
-.fa-field--error .fa-field__note { color: var(--fa-color-danger); }
-</style>

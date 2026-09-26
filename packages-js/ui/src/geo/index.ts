@@ -1,9 +1,45 @@
 export { default as FaGeoMap } from './FaGeoMap.vue'
 export { geoMapElement } from './element'
-export { geoMessages } from './messages'
-export * from './model'
-export { createGeoRestPort, type GeoRestOptions } from './rest-port'
-export type * from './types'
-export { useGeoAreas, type UseGeoAreas } from './useGeoAreas'
-export { useGeoReference, type UseGeoReference } from './useGeoReference'
 export { useGeoMap, type GeoBusy, type GeoHint, type GeoMapCallbacks, type UseGeoMap } from './useGeoMap'
+/** Kern (Vertrag auditcore_geo.web, Modell, Port, Kartenansicht, Zustandsautomat) aus `@flowaudit/ui-core`. */
+export {
+  geoMessages,
+  TOLERANCE_STEPS,
+  parseDegrees,
+  parseLatLon,
+  formatDistance,
+  formatDegrees,
+  formatMetres,
+  vertexCount,
+  areasFromGeoPackage,
+  displayName,
+  type CoordinateError,
+  createGeoRestPort,
+  type GeoRestOptions,
+} from '@flowaudit/ui-core'
+export type {
+  LatLon,
+  AreaGeometry,
+  GeoPoint,
+  GeoArea,
+  TileSource,
+  EarthModel,
+  GeoCatalogue,
+  RadiusRequest,
+  RadiusHit,
+  RadiusResult,
+  Position,
+  LocateRequest,
+  DegenerateRing,
+  LocateResult,
+  UtmRequest,
+  UtmResult,
+  SimplifyUnit,
+  SimplifyRequest,
+  SimplifyResult,
+  GeoPackageArea,
+  GeoPackageResult,
+  GeocodeHit,
+  GeocodeResult,
+  GeoPort,
+} from '@flowaudit/ui-core'

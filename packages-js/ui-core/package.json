@@ -1,0 +1,41 @@
+{
+  "name": "@flowaudit/ui-core",
+  "version": "0.1.0",
+  "description": "Framework-freier Kern der FlowAudit-Oberflächen: Texte, REST-Verträge, View-Modelle, Zustandsautomaten und Stile für Vue und React",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./style.css": "./styles/index.css",
+    "./styles/*": "./styles/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "styles",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flowaudit/common": "0.1.0",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@types/leaflet": "^1.9.22"
+  }
+}

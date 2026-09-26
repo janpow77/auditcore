@@ -1,7 +1,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { FlowauditBenford, FlowauditSampling, defineFlowauditElements } from '../src'
+import { FlowauditBenford, FlowauditSampling, defineFlowauditElements } from '../src/elements'
 import analysis from '../../ui/test/fixtures/benford-analysis.json'
 import benfordProfiles from '../../ui/test/fixtures/benford-profiles.json'
 import samplingProfiles from '../../ui/test/fixtures/sampling-profiles.json'

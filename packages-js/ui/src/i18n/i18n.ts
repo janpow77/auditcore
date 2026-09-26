@@ -1,59 +1,30 @@
 import { computed, inject, provide, ref, type ComputedRef, type InjectionKey, type Ref } from 'vue'
+import { getDefaultLocale, subscribeDefaultLocale, translate, type Catalogs, type Locale, type Translate } from '@flowaudit/ui-core'
 
-export type Locale = 'de' | 'en'
-export const LOCALES: readonly Locale[] = ['de', 'en']
-export const DEFAULT_LOCALE: Locale = 'de'
-
-export type MessageParams = Readonly<Record<string, string | number>>
-
-/** Kataloge je Sprache; Deutsch ist vollständig, Englisch darf (noch) lückenhaft sein. */
-export interface Catalogs<K extends string> {
-  de: Readonly<Record<K, string>>
-  en: Readonly<Partial<Record<K, string>>>
-}
-
-export type Translate<K extends string> = (key: K, params?: MessageParams) => string
-
-/** Typisiert Kataloge einer Komponente; die Schlüssel ergeben sich aus dem deutschen Katalog. */
-export function defineMessages<K extends string>(catalogs: Catalogs<K>): Catalogs<K> {
-  return catalogs
-}
-
-/** Ersetzt {name}-Platzhalter; unbekannte Platzhalter bleiben sichtbar stehen. */
-export function interpolate(template: string, params?: MessageParams): string {
-  if (!params) return template
-  return template.replace(/\{(\w+)\}/g, (match, name: string) => {
-    const value = params[name]
-    return value === undefined ? match : String(value)
-  })
-}
-
-/** Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. */
-export function translate<K extends string>(
-  catalogs: Catalogs<K>,
-  locale: Locale,
-  key: K,
-  params?: MessageParams,
-): string {
-  const template = (locale === 'en' ? catalogs.en[key] : undefined) ?? catalogs.de[key] ?? key
-  return interpolate(template, params)
-}
-
-export function isLocale(value: unknown): value is Locale {
-  return typeof value === 'string' && (LOCALES as readonly string[]).includes(value)
-}
+/** Sprachkern (Kataloge, Platzhalter, Rückfall) aus `@flowaudit/ui-core`; hier nur die Vue-Anbindung. */
+export {
+  DEFAULT_LOCALE,
+  LOCALES,
+  defineMessages,
+  interpolate,
+  isLocale,
+  setDefaultLocale,
+  translate,
+  type Catalogs,
+  type Locale,
+  type MessageParams,
+  type Translate,
+} from '@flowaudit/ui-core'
 
 export const LOCALE_KEY: InjectionKey<Ref<Locale>> = Symbol('flowaudit-locale')
-const fallbackLocale = ref<Locale>(DEFAULT_LOCALE)
+const fallbackLocale = ref<Locale>(getDefaultLocale())
+subscribeDefaultLocale(() => {
+  fallbackLocale.value = getDefaultLocale()
+})
 
 /** Stellt die Sprache für alle Nachfahren bereit (App-Ebene oder Teilbaum). */
 export function provideLocale(locale: Ref<Locale>): void {
   provide(LOCALE_KEY, locale)
-}
-
-/** Sprache ohne Provider, z. B. für Web Components ohne umgebende Vue-App. */
-export function setDefaultLocale(locale: Locale): void {
-  fallbackLocale.value = locale
 }
 
 export function useLocale(): Ref<Locale> {

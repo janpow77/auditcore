@@ -3,13 +3,7 @@ import { computed } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import FaTextField from '../base/FaTextField.vue'
 import { useId } from '../composables/useId'
-import { CHANGE_STATUSES, ROW_STATUSES, type ClientExportFormat, type SynopsisLayout } from './types'
-import { statusLabel, type SynopsisTranslate } from './viewModel'
-
-export interface ServerExportLink {
-  label: string
-  href: string
-}
+import { CHANGE_STATUSES, ROW_STATUSES, statusLabel, type ClientExportFormat, type ServerExportLink, type SynopsisLayout, type SynopsisTranslate } from '@flowaudit/ui-core'
 
 const props = defineProps<{
   layout: SynopsisLayout
@@ -89,20 +83,3 @@ function checked(event: Event): boolean {
     </div>
   </div>
 </template>
-
-<style>
-.fa-synopsis-toolbar { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-3) var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface-raised); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); }
-.fa-synopsis-toolbar__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-3) var(--fa-space-5); }
-.fa-synopsis-toolbar__group, .fa-synopsis-toolbar__nav, .fa-synopsis-toolbar__export { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2); }
-.fa-synopsis-toolbar__search { flex: 1 1 14rem; min-width: 12rem; }
-.fa-synopsis-toolbar__position { display: inline-block; width: 16rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--fa-color-text-muted); font-variant-numeric: tabular-nums; }
-.fa-synopsis-toolbar__filters { display: flex; flex-wrap: wrap; gap: var(--fa-space-2) var(--fa-space-4); margin: 0; padding: 0; border: 0; }
-.fa-synopsis-toolbar__filters legend { float: left; margin-right: var(--fa-space-3); font-weight: 600; color: var(--fa-color-text-muted); }
-.fa-synopsis-toolbar label { display: inline-flex; align-items: center; gap: var(--fa-space-1); cursor: pointer; }
-.fa-synopsis-toolbar input[type='checkbox'] { accent-color: var(--fa-color-accent); width: 1rem; height: 1rem; }
-.fa-synopsis-toolbar input[type='checkbox']:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
-.fa-synopsis-toolbar__options { display: inline-flex; flex-wrap: wrap; gap: var(--fa-space-4); }
-.fa-synopsis-toolbar__label { font-weight: 600; color: var(--fa-color-text-muted); }
-.fa-synopsis-toolbar__export a { text-decoration: none; }
-.fa-synopsis-toolbar__export a:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
-</style>

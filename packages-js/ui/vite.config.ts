@@ -16,7 +16,8 @@ export default defineConfig({
       cssFileName: 'ui',
     },
     rollupOptions: {
-      external: ['vue', '@flowaudit/kanban-core', /^@flowaudit\/common(\/.*)?$/, 'leaflet'],
+      // Stile des Kerns (@flowaudit/ui-core/style.css) werden in ui.css gebündelt, nur der JS-Einstieg bleibt extern.
+      external: ['vue', '@flowaudit/kanban-core', '@flowaudit/ui-core', /^@flowaudit\/common(\/.*)?$/, 'leaflet'],
     },
     sourcemap: true,
   },

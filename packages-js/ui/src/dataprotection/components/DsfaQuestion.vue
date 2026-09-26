@@ -3,10 +3,10 @@ import { computed } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useId } from '../../composables/useId'
 import { useI18n } from '../../i18n'
-import { ANSWER_VALUES } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import { prefixedLabel } from '../requests'
-import type { AnswerInput, AnswerValue, QuestionView } from '../types'
+import { ANSWER_VALUES } from '../core'
+import { dataprotectionMessages } from '../core'
+import { prefixedLabel } from '../core'
+import type { AnswerInput, AnswerValue, QuestionView } from '../core'
 
 const props = withDefaults(defineProps<{
   question: QuestionView

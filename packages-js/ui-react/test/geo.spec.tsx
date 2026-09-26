@@ -1,63 +1,94 @@
-import { act } from 'react'
-import { createRoot, type Root } from 'react-dom/client'
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { FlowauditGeoMap, defineFlowauditElements } from '../src'
-import catalogue from '../../ui/test/fixtures/geo-catalogue.json'
-import radius from '../../ui/test/fixtures/geo-radius.json'
-import utm from '../../ui/test/fixtures/geo-utm.json'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { MapLayers, MapViewOptions, SimplifyResult } from '@flowaudit/ui-core'
+import { fakeGeoPort, GEO_AREA, GEO_POINTS, GEO_RESULTS } from '../../ui-core/test/parity/cases-geo'
+import { FlowauditGeoMap, type FlowauditGeoMapProps } from '../src'
 
-;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
+const view = vi.hoisted(() => ({ options: null as MapViewOptions | null, layers: [] as MapLayers[], fit: 0, tiles: [] as unknown[] }))
+vi.mock('@flowaudit/ui-core', async (original) => ({
+  ...(await original<typeof import('@flowaudit/ui-core')>()),
+  createLeafletView: vi.fn(async (_element: HTMLElement, options: MapViewOptions) => {
+    view.options = options
+    return { update: (layers: MapLayers) => view.layers.push(layers), setTiles: (tiles: unknown) => view.tiles.push(tiles), fit: () => (view.fit += 1), destroy: vi.fn() }
+  }),
+}))
 
-let root: Root | null = null
-let host: HTMLElement
+const flush = () => act(() => new Promise<void>((resolve) => setTimeout(resolve, 0)))
+const byTestId = (id: string) => screen.getByTestId(id)
+const submit = (id: string) => fireEvent.submit(byTestId(id).closest('form') as HTMLFormElement)
 
-beforeAll(() => {
-  defineFlowauditElements()
+async function renderMap(props: Partial<FlowauditGeoMapProps> = {}) {
+  const port = fakeGeoPort()
+  const result = render(<FlowauditGeoMap port={port} points={GEO_POINTS} areas={[GEO_AREA]} {...props} />)
+  await flush()
+  await flush()
+  return { port, ...result }
+}
+
+beforeEach(() => {
+  view.options = null
+  view.layers = []
+  view.fit = 0
+  view.tiles = []
 })
+afterEach(cleanup)
 
-afterEach(() => {
-  act(() => root?.unmount())
-  root = null
-  document.body.innerHTML = ''
-})
+describe('FlowauditGeoMap (nativ)', () => {
+  it('zeichnet Punkte und Flächen ohne Fremdserver und wechselt die Kachelquelle', async () => {
+    const { rerender, port } = await renderMap()
+    expect(view.options?.tiles).toBeNull()
+    expect(byTestId('geo-no-tiles').textContent).toContain('Keine Kachelquelle')
+    expect(view.layers.at(-1)?.points).toHaveLength(3)
+    expect(view.fit).toBeGreaterThanOrEqual(1)
+    expect(byTestId('geo-map').getAttribute('aria-label')).toContain('3 Punkten und 1 Flächen')
+    const tiles = { url: '/kacheln/{z}/{x}/{y}.png', attribution: 'Synthetische Kacheln' }
+    rerender(<FlowauditGeoMap port={port} points={GEO_POINTS} areas={[GEO_AREA]} tiles={tiles} />)
+    await flush()
+    expect(view.tiles.at(-1)).toEqual(tiles)
+    expect(byTestId('geo-attribution').textContent).toBe('Kartendaten: Synthetische Kacheln')
+  })
 
-const flush = () => new Promise((resolve) => setTimeout(resolve, 0))
-
-describe('React-Hülle Geo-Karte', () => {
-  it('übergibt Port, Punkte und Kachelquelle und reicht radius-completed weiter', async () => {
-    const port = { catalogue: vi.fn(async () => catalogue), utm: vi.fn(async () => utm), radius: vi.fn(async () => radius), locate: vi.fn(), simplify: vi.fn() }
-    const onRadiusCompleted = vi.fn()
+  it('übernimmt einen Kartenklick als Bezugspunkt, zeigt UTM und sucht im Umkreis', async () => {
     const onReferenceChange = vi.fn()
-    host = document.createElement('div')
-    document.body.append(host)
-    root = createRoot(host)
-    act(() =>
-      root?.render(
-        <FlowauditGeoMap
-          port={port as never}
-          points={[{ id: 'V-1', lat: 50.105, lon: 8.67 }]}
-          tiles={{ url: '/kacheln/{z}/{x}/{y}.png', attribution: 'Synthetische Kacheln' }}
-          onRadiusCompleted={onRadiusCompleted}
-          onReferenceChange={onReferenceChange}
-        />,
-      ),
-    )
-    await act(flush)
-    await act(flush)
-    expect(port.catalogue).toHaveBeenCalled()
-    expect(host.querySelector('[data-testid="geo-attribution"]')?.textContent).toContain('Synthetische Kacheln')
-    const select = host.querySelector<HTMLSelectElement>('[data-testid="geo-point-select"]')
-    if (!select) throw new Error('Auswahl fehlt')
-    select.value = 'V-1'
-    select.dispatchEvent(new Event('change'))
-    await act(flush)
-    host.querySelector<HTMLButtonElement>('[data-testid="geo-point-take"]')?.click()
-    await act(flush)
-    expect(onReferenceChange.mock.calls[0]?.[0]).toEqual({ lat: 50.105, lon: 8.67 })
-    host.querySelector('[data-testid="geo-radius-run"]')?.closest('form')?.dispatchEvent(new Event('submit'))
-    await act(flush)
-    await act(flush)
-    expect(port.radius).toHaveBeenCalled()
-    expect(onRadiusCompleted.mock.calls[0]?.[0]).toEqual(radius)
+    const onRadiusCompleted = vi.fn()
+    const { port } = await renderMap({ onReferenceChange, onRadiusCompleted })
+    submit('geo-radius-run')
+    await flush()
+    expect(byTestId('geo-hint').textContent).toBe('Zuerst einen Bezugspunkt setzen.')
+    act(() => view.options?.onPick({ lat: 50.105, lon: 8.67 }))
+    await flush()
+    expect(port.utm).toHaveBeenCalledWith({ punkt: { lat: 50.105, lon: 8.67 }, ellipsoid: 'GRS80' })
+    expect(byTestId('geo-utm').textContent).toContain('EPSG:25832')
+    expect(onReferenceChange).toHaveBeenCalledWith({ lat: 50.105, lon: 8.67 })
+    submit('geo-radius-run')
+    await flush()
+    expect(port.radius).toHaveBeenCalledWith(expect.objectContaining({ radius_m: 5000, erdmodell: 'kugel.r1_6371008_8m' }))
+    expect(byTestId('geo-radius-result').textContent).toContain('2 von 3 Punkten im Umkreis von 5,00 km')
+    expect([...(view.layers.at(-1)?.hits ?? [])]).toEqual(['V-1', 'V-2'])
+    expect(onRadiusCompleted).toHaveBeenCalledWith(GEO_RESULTS.radius)
+  })
+
+  it('prüft Punkt in Fläche, vereinfacht beim Loslassen des Reglers und meldet Portfehler', async () => {
+    const onError = vi.fn()
+    const { port } = await renderMap({ onError })
+    act(() => view.options?.onPick({ lat: 50.1, lon: 8.67 }))
+    await flush()
+    fireEvent.change(byTestId('geo-locate-area'), { target: { value: 'G-1' } })
+    submit('geo-locate-run')
+    await flush()
+    expect(byTestId('geo-position').textContent).toBe('auf dem Rand')
+    expect(byTestId('geo-boundary-case').textContent).toContain('nach der gewählten Randregel zählt er als innen')
+    const slider = byTestId('geo-simplify-tolerance') as HTMLInputElement
+    expect(slider.getAttribute('aria-valuetext')).toBe('10 m')
+    fireEvent.input(slider, { target: { value: '6' } })
+    slider.dispatchEvent(new Event('change'))
+    await flush()
+    expect(port.simplify).toHaveBeenCalledWith({ flaeche: GEO_AREA.geometry, toleranz: 50, einheit: 'meter' })
+    expect(view.layers.at(-1)?.simplified).toEqual((GEO_RESULTS.simplify as unknown as SimplifyResult).geometrie)
+    vi.mocked(port.utm).mockRejectedValueOnce(new Error('Dienst aus'))
+    act(() => view.options?.onPick({ lat: 1, lon: 2 }))
+    await flush()
+    expect(document.querySelector('.fa-geo__failure')?.textContent).toBe('Anfrage abgelehnt: Dienst aus')
+    expect(onError).toHaveBeenCalledWith('Dienst aus')
   })
 })

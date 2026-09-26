@@ -8,9 +8,9 @@ import GeoPackageLoader from './GeoPackageLoader.vue'
 import GeoRadius from './GeoRadius.vue'
 import GeoReference from './GeoReference.vue'
 import GeoSimplify from './GeoSimplify.vue'
-import type { MapLayers } from './mapView'
-import { geoMessages } from './messages'
-import type { GeoArea, GeoPackageResult, GeoPoint, GeoPort, LatLon, LocateResult, RadiusResult, TileSource } from './types'
+import type { MapLayers } from '@flowaudit/ui-core'
+import { geoMessages } from '@flowaudit/ui-core'
+import type { GeoArea, GeoPackageResult, GeoPoint, GeoPort, LatLon, LocateResult, RadiusResult, TileSource } from '@flowaudit/ui-core'
 import { useGeoMap } from './useGeoMap'
 
 const props = withDefaults(defineProps<{
@@ -54,15 +54,7 @@ const state = useGeoMap(() => props.port, () => props.points, () => props.areas,
 })
 provide(GEO_CONTEXT, { state, t, locale: active })
 
-const layers = computed<MapLayers>(() => ({
-  points: state.points.value,
-  areas: state.areas.value,
-  reference: state.reference.value,
-  radiusMetres: state.radiusResult.value ? state.radiusResult.value.radius_m : null,
-  hits: state.hitIds.value,
-  selectedArea: state.areaId.value,
-  simplified: state.simplifyResult.value?.geometrie ?? null,
-}))
+const layers = computed<MapLayers>(() => state.selection.value.layers)
 const upload = computed(() => Boolean(props.port?.loadGeoPackage))
 const sources = computed(() => Boolean(props.port?.loadSource))
 const hint = computed(() => state.hint.value)

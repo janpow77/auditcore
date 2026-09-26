@@ -1,8 +1,6 @@
-import './theme/tokens.css'
+import '@flowaudit/ui-core/style.css'
 import './kanban/kanban.css'
 import './screening/screening.css'
-import './dataprotection/dataprotection.css'
-import './geo/geo.css'
 
 export * from './base'
 export * from './i18n'

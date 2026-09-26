@@ -1,11 +1,62 @@
 export { default as FaSynopsis } from './FaSynopsis.vue'
 export { synopsisElement } from './element'
-export { synopsisMessages, type SynopsisMessageKey } from './messages'
-export * from './types'
-export * from './wordDiff'
-export * from './viewModel'
-export * from './exporters'
-export * from './port'
 export { useSynopsis, type SynopsisSource, type SynopsisFilterState, type UseSynopsis } from './useSynopsis'
 export { useSynopsisNavigation, focusRow, type UseSynopsisNavigation } from './useSynopsisNavigation'
 export { useSynopsisExport, downloadText, printHtml, type UseSynopsisExport } from './useSynopsisExport'
+/** Kern (Datentypen, View-Model, Wortvergleich, Exporte, Port) aus `@flowaudit/ui-core`. */
+export {
+  synopsisMessages,
+  type SynopsisMessageKey,
+  ROW_STATUSES,
+  CHANGE_STATUSES,
+  type RowStatus,
+  type DiffField,
+  type CompareRow,
+  type ConsolidatedParagraph,
+  type ComparisonMetadata,
+  type ComparisonResult,
+  type Comparison,
+  type ComparisonSummary,
+  type ComparisonProfile,
+  type RowUpdate,
+  type SynopsisLayout,
+  type ClientExportFormat,
+  type ServerExportFormat,
+  type ExportPayload,
+  WORD_LIMIT,
+  ndiffOperations,
+  lcsOperations,
+  diffSegments,
+  wholeSegments,
+  plainSegments,
+  segmentsText,
+  type SegmentKind,
+  type DiffSide,
+  type DiffSegment,
+  statusLabel,
+  buildRowView,
+  buildSynopsisView,
+  DEFAULT_SYNOPSIS_FILTER,
+  filterRows,
+  changeIds,
+  stepChange,
+  positionText,
+  applyRowOverrides,
+  type SynopsisTranslate,
+  type FieldView,
+  type RowView,
+  type SynopsisView,
+  type ViewOptions,
+  type SynopsisRowFilter,
+  escapeHtml,
+  escapeMarkdown,
+  exportFilename,
+  toHtml,
+  toMarkdown,
+  type ExportInput,
+  createSynopsisRestClient,
+  type SynopsisPort,
+  type RestClientOptions,
+  type CompareFields,
+  type SynopsisRestClient,
+} from '@flowaudit/ui-core'

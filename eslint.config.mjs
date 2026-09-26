@@ -3,6 +3,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
+import reactHooks from 'eslint-plugin-react-hooks'
 
 export default tseslint.config(
   { ignores: ['**/dist/**', '**/dist-*/**', '**/e2e-results/**', '**/node_modules/**', '**/coverage/**'] },
@@ -47,8 +48,26 @@ export default tseslint.config(
       'vue/multi-word-component-names': 'off',
     },
   },
+  // Native React-Komponenten und framework-freier Kern: strengere Grenzen (McCabe ≤ 10,
+  // Funktionen ≤ 60 Zeilen, Komponentendateien ≤ 250 Zeilen wie Vue-SFC).
   {
-    files: ['packages-js/**/test/**/*.ts'],
+    files: ['packages-js/ui-react/src/**/*.{ts,tsx}', 'packages-js/ui-core/src/**/*.ts'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
+      complexity: ['error', 10],
+      'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
+    },
+  },
+  {
+    files: ['packages-js/**/src/**/*.tsx'],
+    rules: {
+      'max-lines': ['error', { max: 250, skipBlankLines: false, skipComments: false }],
+    },
+  },
+  {
+    files: ['packages-js/**/test/**/*.{ts,tsx}'],
     rules: {
       'max-lines-per-function': 'off',
       'max-lines': 'off',

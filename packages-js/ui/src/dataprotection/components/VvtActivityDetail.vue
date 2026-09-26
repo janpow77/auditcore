@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import FaButton from '../../base/FaButton.vue'
 import { useI18n } from '../../i18n'
-import { dataprotectionMessages } from '../messages'
-import { displayValue, fieldIssues } from '../registerView'
-import type { Activity, RegisterColumn, FieldValue, Issue } from '../types'
+import { dataprotectionMessages } from '../core'
+import { displayValue, fieldIssues } from '../core'
+import type { Activity, RegisterColumn, FieldValue, Issue } from '../core'
 import VvtField from './VvtField.vue'
 
 const props = withDefaults(defineProps<{

@@ -1,3 +1,2 @@
-export type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger'
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-export type ButtonSize = 'sm' | 'md'
+/** Seit 0.3.0 aus `@flowaudit/ui-core`. */
+export type { BadgeTone, ButtonSize, ButtonVariant } from '@flowaudit/ui-core'

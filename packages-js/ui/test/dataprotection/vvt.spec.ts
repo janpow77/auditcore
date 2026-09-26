@@ -2,7 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import FaVvt from '../../src/dataprotection/FaVvt.vue'
 import { RestError } from '../../src/rest'
-import { fakePort, register } from './fake-port'
+import { fakePort, register } from '../../../ui-core/test/dataprotection/fake-port'
 
 afterEach(() => {
   vi.useRealTimers()

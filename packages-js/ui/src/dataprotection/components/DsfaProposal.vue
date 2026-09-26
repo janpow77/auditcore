@@ -2,10 +2,10 @@
 import { computed } from 'vue'
 import FaBadge from '../../base/FaBadge.vue'
 import { useI18n } from '../../i18n'
-import { decisionTitle, recommendationTone } from '../dsfaView'
-import { dataprotectionMessages } from '../messages'
-import { prefixedLabel } from '../requests'
-import type { DataProtectionProfile, Proposal } from '../types'
+import { decisionTitle, recommendationTone } from '../core'
+import { dataprotectionMessages } from '../core'
+import { prefixedLabel } from '../core'
+import type { DataProtectionProfile, Proposal } from '../core'
 
 const props = withDefaults(defineProps<{
   profile: DataProtectionProfile

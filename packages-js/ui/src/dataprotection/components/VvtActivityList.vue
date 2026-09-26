@@ -5,9 +5,9 @@ import FaButton from '../../base/FaButton.vue'
 import FaTextField from '../../base/FaTextField.vue'
 import { useId } from '../../composables/useId'
 import { useI18n } from '../../i18n'
-import { dataprotectionMessages } from '../messages'
-import { completeness, completenessTone, groupByDepartment, issuesFor, type Completeness } from '../registerView'
-import type { Activity, Issue, RegisterContent } from '../types'
+import { dataprotectionMessages } from '../core'
+import { completeness, completenessTone, groupByDepartment, issuesFor, type Completeness } from '../core'
+import type { Activity, Issue, RegisterContent } from '../core'
 
 const props = withDefaults(defineProps<{
   content: RegisterContent
