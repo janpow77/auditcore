@@ -1,0 +1,336 @@
+[
+ {
+  "name": "status",
+  "input": {
+   "table": {
+    "properties": [
+     {
+      "id": "titel",
+      "name": "Titel",
+      "type": "text"
+     },
+     {
+      "id": "status",
+      "name": "Status",
+      "type": "select",
+      "options": [
+       "offen",
+       "in Prüfung",
+       "erledigt"
+      ]
+     },
+     {
+      "id": "fonds",
+      "name": "Fonds",
+      "type": "select",
+      "options": [
+       "EFRE",
+       "ESF+",
+       "JTF"
+      ]
+     },
+     {
+      "id": "betrag",
+      "name": "Betrag",
+      "type": "number"
+     }
+    ],
+    "rows": [
+     {
+      "id": "r1",
+      "cells": {
+       "titel": "Vorhaben A",
+       "status": "offen",
+       "fonds": "EFRE",
+       "betrag": 1200
+      }
+     },
+     {
+      "id": "r2",
+      "cells": {
+       "titel": "Vorhaben B",
+       "status": "erledigt",
+       "fonds": "ESF+",
+       "betrag": 80
+      }
+     },
+     {
+      "id": "r3",
+      "cells": {
+       "titel": "Vorhaben C",
+       "status": null,
+       "fonds": "EFRE",
+       "betrag": 0
+      }
+     },
+     {
+      "id": "r4",
+      "cells": {
+       "titel": "Vorhaben D",
+       "status": "in Prüfung",
+       "fonds": "unbekannt"
+      }
+     },
+     {
+      "id": "r5",
+      "cells": {
+       "titel": "Vorhaben E",
+       "status": "",
+       "fonds": 7
+      }
+     },
+     {
+      "id": "r6",
+      "cells": {
+       "titel": "Vorhaben F",
+       "status": "offen",
+       "fonds": [
+        "EFRE"
+       ]
+      }
+     }
+    ]
+   },
+   "group_by": "status"
+  },
+  "expected": [
+   [
+    "",
+    [
+     "r3",
+     "r5"
+    ]
+   ],
+   [
+    "offen",
+    [
+     "r1",
+     "r6"
+    ]
+   ],
+   [
+    "in Prüfung",
+    [
+     "r4"
+    ]
+   ],
+   [
+    "erledigt",
+    [
+     "r2"
+    ]
+   ]
+  ]
+ },
+ {
+  "name": "fonds unbekannt und kein Text",
+  "input": {
+   "table": {
+    "properties": [
+     {
+      "id": "titel",
+      "name": "Titel",
+      "type": "text"
+     },
+     {
+      "id": "status",
+      "name": "Status",
+      "type": "select",
+      "options": [
+       "offen",
+       "in Prüfung",
+       "erledigt"
+      ]
+     },
+     {
+      "id": "fonds",
+      "name": "Fonds",
+      "type": "select",
+      "options": [
+       "EFRE",
+       "ESF+",
+       "JTF"
+      ]
+     },
+     {
+      "id": "betrag",
+      "name": "Betrag",
+      "type": "number"
+     }
+    ],
+    "rows": [
+     {
+      "id": "r1",
+      "cells": {
+       "titel": "Vorhaben A",
+       "status": "offen",
+       "fonds": "EFRE",
+       "betrag": 1200
+      }
+     },
+     {
+      "id": "r2",
+      "cells": {
+       "titel": "Vorhaben B",
+       "status": "erledigt",
+       "fonds": "ESF+",
+       "betrag": 80
+      }
+     },
+     {
+      "id": "r3",
+      "cells": {
+       "titel": "Vorhaben C",
+       "status": null,
+       "fonds": "EFRE",
+       "betrag": 0
+      }
+     },
+     {
+      "id": "r4",
+      "cells": {
+       "titel": "Vorhaben D",
+       "status": "in Prüfung",
+       "fonds": "unbekannt"
+      }
+     },
+     {
+      "id": "r5",
+      "cells": {
+       "titel": "Vorhaben E",
+       "status": "",
+       "fonds": 7
+      }
+     },
+     {
+      "id": "r6",
+      "cells": {
+       "titel": "Vorhaben F",
+       "status": "offen",
+       "fonds": [
+        "EFRE"
+       ]
+      }
+     }
+    ]
+   },
+   "group_by": "fonds"
+  },
+  "expected": [
+   [
+    "",
+    [
+     "r4",
+     "r5",
+     "r6"
+    ]
+   ],
+   [
+    "EFRE",
+    [
+     "r1",
+     "r3"
+    ]
+   ],
+   [
+    "ESF+",
+    [
+     "r2"
+    ]
+   ],
+   [
+    "JTF",
+    []
+   ]
+  ]
+ },
+ {
+  "name": "ohne leere Spalte",
+  "input": {
+   "table": {
+    "properties": [
+     {
+      "id": "titel",
+      "name": "Titel",
+      "type": "text"
+     },
+     {
+      "id": "status",
+      "name": "Status",
+      "type": "select",
+      "options": [
+       "offen",
+       "in Prüfung",
+       "erledigt"
+      ]
+     },
+     {
+      "id": "fonds",
+      "name": "Fonds",
+      "type": "select",
+      "options": [
+       "EFRE",
+       "ESF+",
+       "JTF"
+      ]
+     },
+     {
+      "id": "betrag",
+      "name": "Betrag",
+      "type": "number"
+     }
+    ],
+    "rows": [
+     {
+      "id": "r1",
+      "cells": {
+       "titel": "Vorhaben A",
+       "status": "offen",
+       "fonds": "EFRE",
+       "betrag": 1200
+      }
+     },
+     {
+      "id": "r2",
+      "cells": {
+       "titel": "Vorhaben B",
+       "status": "erledigt",
+       "fonds": "ESF+",
+       "betrag": 80
+      }
+     },
+     {
+      "id": "r6",
+      "cells": {
+       "titel": "Vorhaben F",
+       "status": "offen",
+       "fonds": [
+        "EFRE"
+       ]
+      }
+     }
+    ]
+   },
+   "group_by": "status"
+  },
+  "expected": [
+   [
+    "offen",
+    [
+     "r1",
+     "r6"
+    ]
+   ],
+   [
+    "in Prüfung",
+    []
+   ],
+   [
+    "erledigt",
+    [
+     "r2"
+    ]
+   ]
+  ]
+ }
+]
