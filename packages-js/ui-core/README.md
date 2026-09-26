@@ -72,7 +72,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (737):
+Exporte der Einstiegspunkte aus `package.json#exports` (744):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -477,6 +477,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (737):
 | `@flowaudit/ui-core` | `Totals` | Schnittstelle | – | `risk/state` |
 | `@flowaudit/ui-core` | `Translate` | Typ | – | `i18n` |
 | `@flowaudit/ui-core` | `UploadFile` | Schnittstelle | Datei aus einem Eingabefeld (im Browser `File`). | `documents/form` |
+| `@flowaudit/ui-core` | `UtmInput` | Schnittstelle | – | `geo/model` |
+| `@flowaudit/ui-core` | `UtmInputError` | Typ | – | `geo/model` |
+| `@flowaudit/ui-core` | `UtmPointRequest` | Schnittstelle | `POST /utm/geographisch`: Punkt aus Rechts-/Hochwert, Zone und Halbkugel. | `geo/types` |
+| `@flowaudit/ui-core` | `UtmPointResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `UtmRequest` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `UtmResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `VersionSummary` | Schnittstelle | – | `dataprotection/types` |
@@ -715,7 +719,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (737):
 | `@flowaudit/ui-core` | `parseImport` | Funktion | – | `documents/importing` |
 | `@flowaudit/ui-core` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
 | `@flowaudit/ui-core` | `parseLatLon` | Funktion | Punkt aus zwei Texteingaben mit Wertebereichsprüfung. | `geo/model` |
+| `@flowaudit/ui-core` | `parseMetres` | Funktion | Meter aus Texteingabe (Komma oder Punkt, keine Tausendertrennung); Ungültiges ergibt `null`. | `geo/model` |
 | `@flowaudit/ui-core` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
+| `@flowaudit/ui-core` | `parseUtm` | Funktion | UTM-Eingabe mit Wertebereichsprüfung: Zone 1–60, Ostwert 0–1 000 000 m, Nordwert 0–10 000 000 m. | `geo/model` |
 | `@flowaudit/ui-core` | `plainSegments` | Funktion | – | `synopsis/wordDiff` |
 | `@flowaudit/ui-core` | `populationSuggestions` | Funktion | Vorschlagswerte aus der Grundgesamtheit (Summe positiver Werte bzw. Anzahl). | `sampling/model` |
 | `@flowaudit/ui-core` | `populationText` | Funktion | Zusammenfassung der Grundgesamtheit; leer, wenn keine Elemente vorliegen. | `sampling/view` |
@@ -795,6 +801,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (737):
 | `@flowaudit/ui-core` | `translate` | Funktion | Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. | `i18n` |
 | `@flowaudit/ui-core` | `translator` | Funktion | Übersetzungsfunktion für eine feste Sprache. | `i18n` |
 | `@flowaudit/ui-core` | `triggeredDataset` | Funktion | – | `risk/state` |
+| `@flowaudit/ui-core` | `utmErrorKey` | Funktion | Text der Fehlermeldung einer UTM-Eingabe. | `geo/model` |
 | `@flowaudit/ui-core` | `validateDecision` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `vertexCount` | Funktion | Anzahl der Stützpunkte einer Fläche (Schlusspunkte mitgezählt). | `geo/model` |
 | `@flowaudit/ui-core` | `visibleIdentifierRows` | Funktion | Zeilen der Ergebnistabelle; wahlweise nur ungültige, fehlende und nicht prüfbare. | `identifiers/model` |
