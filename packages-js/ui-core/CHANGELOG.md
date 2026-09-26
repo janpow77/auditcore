@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## Unreleased
+
+- Neu: Bestandsprüfung – Kern `batchchecks`: `createBatchchecksController`, `buildBatchchecksRequest`, `createBatchchecksRestPort`, Anzeige, Stil `batchchecks.css`; Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).
+
 ## 0.2.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui-core` statt `@flowaudit/ui-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- auditcore_documents: Bestandsprüfung `documents_batch_checks/1` (C-01 bis
+  C-13, A-07, B-12, Ergänzungen ERG-01/ERG-02) mit Oberfläche `BatchChecks` /
+  `<flowaudit-batch-checks>` / `FlowauditBatchChecks`; Regelmeldungen der
+  Pipeline deutsch (D9). Siehe `docs/ui/batch-checks-rest.md`.
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den

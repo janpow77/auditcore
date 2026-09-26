@@ -1,5 +1,23 @@
 # Changelog – auditcore_documents
 
+## Unreleased
+
+- Neu: Bestandsprüfung über viele Belege als REST-Vertrag
+  `documents_batch_checks/1` (`auditcore_documents.web`): `BatchCheckService`,
+  `BatchCheckSettings`, `BatchCheckError`; Starlette `create_batch_check_app`/
+  `batch_check_routes`, FastAPI `create_batch_check_router`. `GET /catalogue`,
+  `POST /runs`, `POST /export` (JSON = C-11, CSV = Befundliste). Belege als
+  Tabellenzeilen oder Läufe der Belegerkennung; Befunde je Regel mit
+  Begründung und betroffenen Belegen, Status aller Regeln, Kennzahlen (C-12),
+  Eskalation (C-10). Vertrag: `docs/ui/batch-checks-rest.md`.
+- Neu: Ergänzungsprüfungen `pipeline.watchdog.inventory_checks` – ERG-01
+  Lücken in Rechnungsnummern je Lieferant/Nummernkreis, ERG-02
+  USt-IdNr.-Konsistenz. Der Watchdog selbst bleibt unverändert.
+- Verhaltensänderung (D9): Die Validierungsregeln `VAL_*` und `validate_iban`
+  melden deutsch mit echten Umlauten; Regelkennungen, Schweregrade,
+  Ergebnisse, Kennzeichen und Belege unverändert. Englischer Wortlaut über
+  `pipeline.stages.rule_messages.original_message`.
+
 ## 0.4.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neu: REST-Vertrag `documents_extraction/1` für die Belegerkennung
