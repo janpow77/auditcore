@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_kanban"
-version = "0.1.1"
+version = "0.1.2"
 description = "Framework-free Kanban domain: boards, rank keys, transitions, WIP limits, rights, events and a REST contract"
 readme = "README.md"
 requires-python = ">=3.11"

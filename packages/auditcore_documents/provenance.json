@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_documents",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "sources": [
     {
       "repository": "janpow77/audit_designer",

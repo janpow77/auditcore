@@ -89,4 +89,4 @@ ergebnis = calculate(tarif, profil, consumption=verbrauch, stichtag=stichtag)
 regulierung übergibt Preise aus der Datenbank als Zahl und ist deshalb nicht
 betroffen; wer Eingaben aus Formularen oder CSV durchreicht, sollte
 `ambiguous_number` wie `invalid_number` als Eingabefehler anzeigen (Meldung
-enthält den Hinweis). Pflichtabhängigkeit `auditcore_common==0.1.1`.
+enthält den Hinweis). Pflichtabhängigkeit `auditcore_common==0.2.0`.

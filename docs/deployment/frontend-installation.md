@@ -73,7 +73,7 @@ die jeden Frontend-Baustein als Datei im eigenen Repository führen.
 
 Die letzte Spalte ist beim Tarball-Weg entscheidend: **Jedes Paket der
 Hülle muss in der Anwendung ausdrücklich mit seiner Tarball-URL stehen.**
-npm prüft die internen Versionsangaben (z. B. `"@auditcore/common": "0.1.0"`
+npm prüft die internen Versionsangaben (z. B. `"@auditcore/common": "0.1.1"`
 in `@auditcore/ui`) dann gegen diese Einträge und fragt die Registry nicht. Fehlt ein Eintrag,
 sucht npm das Paket auf registry.npmjs.org und mischt so Registry- und
 Tarball-Stand oder scheitert ohne Netz. Deshalb gehört beim Tarball-Weg
@@ -152,10 +152,10 @@ Das ergibt in `package.json` (Versionen je nach Release):
 ```json
 {
   "dependencies": {
-    "@auditcore/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-common-0.1.0.tgz",
-    "@auditcore/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-kanban-core-0.2.0.tgz",
+    "@auditcore/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-common-0.1.1.tgz",
+    "@auditcore/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-kanban-core-0.2.1.tgz",
     "@auditcore/ui": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-0.3.0.tgz",
-    "@auditcore/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-core-0.1.0.tgz",
+    "@auditcore/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-core-0.2.0.tgz",
     "vue": "^3.5.0"
   }
 }

@@ -60,7 +60,7 @@ from .storage import BoardStore, FileSystemBoardStore, InMemoryBoardStore
 from .templates import TEMPLATES, BoardTemplate, template
 from .validation import DEFAULT_LIMITS, Limits, validate_columns
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     "ALLOWED",

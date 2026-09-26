@@ -47,7 +47,7 @@ Sache der Anwendung.
 ### `GET /catalogue`
 
 ```json
-{"contract": "identifiers_ui/1", "library": "auditcore_identifiers 0.1.0",
+{"contract": "identifiers_ui/1", "library": "auditcore_identifiers 0.2.0",
  "recommended_profile": "strict",
  "kinds": [{"id": "iban", "label": "IBAN", "description": "…", "country": false},
            {"id": "vat_id", "label": "USt-IdNr.", "description": "…", "country": true}, "…"],

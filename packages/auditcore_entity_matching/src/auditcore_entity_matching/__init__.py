@@ -6,7 +6,7 @@ from .matching import PAIR_SCORERS, Candidate, MatchResult, best_match, classify
 from .normalize import normalize
 from .profiles import Profile, available_profiles, load_profile, recommended_profile
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 __all__ = [
     "Candidate",

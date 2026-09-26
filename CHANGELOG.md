@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Noch keine Änderungen.
+
+## 0.4.2 – 2026-09-26
+
 - **Breaking – npm-Scope umbenannt:** Alle JS-Pakete unter `packages-js/`
   heißen jetzt `@auditcore/<paket>` statt `@flowaudit/<paket>` (common,
   ui-core, ui, ui-react, kanban-core, bpmn-editor, bpmn-flowaudit, bpmn-vue,
@@ -11,9 +15,26 @@
   die Registry-Sperre in `.npmrc` lautet `@auditcore:registry=…`.
   Unverändert bleiben Web-Component-Tags (`<flowaudit-…>`),
   Komponentennamen (`Flowaudit…`), CSS-Präfixe (`--fa-*`) und Klassennamen.
-  Umstellung der Anwendungen: `docs/ui/umbenennung-auditcore.md`. Keine
-  Versionsanhebung.
+  Umstellung der Anwendungen: `docs/ui/umbenennung-auditcore.md`.
 
+- Vorbereitung Release v0.4.2: Versionen aller seit v0.4.1 geänderten Pakete
+  angehoben. Python: `auditcore_common` 0.2.0 (neues Modul `rest` mit
+  `json_object`), documents 0.4.0, identifiers 0.2.0, invoicesynth 0.2.0,
+  reporting 0.3.0, neues Paket `auditcore_extrapolation` 0.1.0; alle übrigen
+  als Patch (README im Wheel geändert, Pins auf `auditcore_common==0.2.0` und
+  die neuen Paketstände). npm: `@auditcore/ui-core` 0.2.0,
+  `@auditcore/ui-react` 1.1.0, `@auditcore/common` 0.1.1,
+  `@auditcore/kanban-core` 0.2.1, `@auditcore/bpmn-editor` 0.1.1,
+  `@auditcore/bpmn-flowaudit`/`-vue`/`-react` 0.2.1; `@auditcore/ui` 0.3.0
+  erstmals als Release-Datei. Die npm-Pakete liegen ab diesem Release als
+  `npm pack`-Tarballs mit `npm-packages.json` bei.
+- Code-Gate: `codegate_js` zählt Build-Ausgaben `dist-*` (z. B. `dist-wc`,
+  `dist-standalone` von bpmn-vue) nicht mehr als Quelltext.
+- Donut-Job-Image (`donut-train-image`): Verlangt das Rad von
+  `auditcore_invoicesynth` auditcore-Stände, die noch nicht veröffentlicht
+  sind, baut der Workflow genau diese Abhängigkeiten aus demselben
+  Repository-Stand (`docker/train/deps_source.py`, Label `auditcore.deps=repo`).
+  Sonst bleiben sie hashgebunden aus dem Release.
 - npm-Veröffentlichung der `@auditcore`-Pakete: Workflow `npm-publish`
   veröffentlicht nach einem GitHub-Release (oder von Hand mit Tag, standardmäßig
   als Probelauf) genau die signierten Release-Tarballs auf npmjs.org, nach
@@ -28,7 +49,7 @@
   `publishConfig.access=public`. Installationsdoku: `npm install
   @auditcore/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
   Einrichtung in `docs/deployment/npm-veroeffentlichung.md`. Keine
-  Versionsanhebung.
+  Versionsanhebung (Paketstände kommen mit v0.4.2).
 
 - Neues Paket `auditcore_extrapolation` 0.1.0: Hochrechnung von
   Stichprobenfehlern für Prüfbehörden nach dem KOM-Leitfaden EGESIF_16-0014-01
@@ -140,6 +161,9 @@
   ankommen; die Web Component `<flowaudit-bpmn-editor>` enthielt sie bisher
   nicht. Lizenzprüfung: Einzelfreigabe für `lightningcss` (MPL-2.0, nur
   Entwicklungsabhängigkeit von Vite 8).
+
+## 0.4.1 – 2026-09-26 (einschließlich 0.4.0 und der Vorschauen seit 0.3.0)
+
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

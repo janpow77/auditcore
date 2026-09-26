@@ -25,7 +25,7 @@ dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
 ausdrücklich in die `package.json`:
 
 ```sh
-npm install @auditcore/bpmn-react@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-react-0.2.0.tgz
+npm install @auditcore/bpmn-react@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-react-0.2.1.tgz
 ```
 
 Anleitung für Vue, React und Web Components mit Integritätsprüfung und
@@ -180,8 +180,8 @@ React 19 (`npm test`) und mit React 18.3 (`npm run test:react18`).
 
 ## Abhängigkeiten
 
-`@auditcore/bpmn-editor@0.1.0`, `@auditcore/bpmn-flowaudit@0.2.0`,
-`@auditcore/ui-core@0.1.0` (Fokusfalle der Dialoge); Peers `react` und
+`@auditcore/bpmn-editor@0.1.1`, `@auditcore/bpmn-flowaudit@0.2.1`,
+`@auditcore/ui-core@0.2.0` (Fokusfalle der Dialoge); Peers `react` und
 `react-dom` (`^18.3.0 || ^19.0.0`).
 
 ## Sicherheit und Datenschutz

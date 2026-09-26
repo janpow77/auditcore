@@ -189,7 +189,7 @@ gespeichert. Vollständig: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, `auditcore_harvest==0.1.2` und `auditcore_common==0.1.1`
+Python ≥ 3.11, `auditcore_harvest==0.1.3` und `auditcore_common==0.2.0`
 (kanonisches JSON der Paketbytes; APT `python3-auditcore-common`); sonst nur die
 Standardbibliothek. Das im Release v0.3.0 veröffentlichte Wheel 0.1.0 verlangt
 noch `auditcore_harvest==0.1.0` (siehe CHANGELOG). Keine Abhängigkeit von

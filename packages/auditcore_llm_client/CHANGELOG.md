@@ -1,5 +1,9 @@
 # Changelog – auditcore_llm_client
 
+## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.2
+
+Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1.
+
 ## 0.1.1 – Stabiler Fehlercode des Flow-Agents
 
 - `SensitivityRejectedError`/`EgressDeniedError` werden primär am Response-Header

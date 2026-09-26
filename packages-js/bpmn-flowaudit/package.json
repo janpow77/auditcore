@@ -1,6 +1,6 @@
 {
   "name": "@auditcore/bpmn-flowaudit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "FlowAudit-Fachschicht für den BPMN-Editor: Schema flowaudit 1.0/1.1, Akteure, Kennzeichen, Prüfbezüge, Prüfpfad, Durchlauftest, Soll/Ist, Neutralisieren, Berichte und framework-freier Kern der Editor-Oberfläche (framework-frei, MIT)",
   "license": "MIT",
   "repository": {
@@ -51,7 +51,7 @@
     "bpmn-moddle": "^10.3.1"
   },
   "peerDependencies": {
-    "@auditcore/bpmn-editor": "^0.1.0"
+    "@auditcore/bpmn-editor": "^0.1.1"
   },
   "peerDependenciesMeta": {
     "@auditcore/bpmn-editor": {

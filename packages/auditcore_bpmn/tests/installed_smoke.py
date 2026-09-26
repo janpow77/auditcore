@@ -31,7 +31,7 @@ XML = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 def main() -> None:
-    assert distribution("auditcore_bpmn").version == ab.__version__ == "0.1.1"
+    assert distribution("auditcore_bpmn").version == ab.__version__ == "0.1.2"
     document = ab.parse_bpmn(XML)
     assert document.elements["T"].extensions.legal_bases[0].text == "Art. 74 VO (EU) 2021/1060"
     report = ab.validate(document)

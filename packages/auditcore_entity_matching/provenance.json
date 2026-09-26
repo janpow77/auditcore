@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_entity_matching",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "sources": [
     {
       "repository": "janpow77/flowworkshop",

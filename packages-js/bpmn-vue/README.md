@@ -25,7 +25,7 @@ dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
 ausdrücklich in die `package.json`:
 
 ```sh
-npm install @auditcore/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-vue-0.2.0.tgz
+npm install @auditcore/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-vue-0.2.1.tgz
 ```
 
 Anleitung für Vue, React und Web Components mit Integritätsprüfung und
@@ -333,7 +333,7 @@ Demo (`npm run test:e2e`). Dokumentation: `docs/bpmn/frontend.md`.
 
 ## Abhängigkeiten
 
-`@auditcore/bpmn-editor@0.1.0`, `@auditcore/bpmn-flowaudit@0.2.0` (Fachschicht und UI-Kern `./ui`), `@auditcore/ui-core@0.1.0` (Fokusfalle der Dialoge); Peer
+`@auditcore/bpmn-editor@0.1.1`, `@auditcore/bpmn-flowaudit@0.2.1` (Fachschicht und UI-Kern `./ui`), `@auditcore/ui-core@0.2.0` (Fokusfalle der Dialoge); Peer
 `vue@^3.5.0`. Die Web Component bündelt Vue mit.
 
 ## Sicherheit und Datenschutz

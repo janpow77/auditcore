@@ -1,4 +1,4 @@
-auditcore_auth 0.1.0 — attribution and authorization
+auditcore_auth 0.1.1 — attribution and authorization
 
 New implementation in auditcore. The behaviour was characterised by executing
 the password and JWT helpers of nine applications at pinned commits (listed

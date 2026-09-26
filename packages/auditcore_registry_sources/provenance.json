@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
  "package": "auditcore_registry_sources",
- "version": "0.2.2",
+ "version": "0.2.3",
  "contract": "auditcore_registry_sources.screening/1",
  "classification": "EXTRACTED_FROM_CHARACTERIZED_SOURCES",
  "sources": [

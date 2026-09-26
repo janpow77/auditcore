@@ -165,8 +165,8 @@ führende Variante, Kumulierungsprofil, Datenlizenzen) sind als
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.2` (Adaptervertrag) und
-`auditcore_common==0.1.1` (Hashing, Profilladen, JSON-Sicherung, optionale
+Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.3` (Adaptervertrag) und
+`auditcore_common==0.2.0` (Hashing, Profilladen, JSON-Sicherung, optionale
 Module; seit 0.1.3). Extra
 `xlsx`: openpyxl und defusedxml. Keine Abhängigkeit von pandas, der Plattform
 `auditcore`, Datenbanken oder HTTP-Clients.

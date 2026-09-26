@@ -1,6 +1,6 @@
 {
   "contract": "reporting_ui/1",
-  "library": "auditcore_reporting 0.2.2",
+  "library": "auditcore_reporting 0.3.0",
   "excel_available": true,
   "profiles": [
     {

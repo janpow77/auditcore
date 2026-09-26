@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_entity_matching"
-version = "0.2.3"
+version = "0.2.4"
 description = "Characterized entity name normalisation, LEI checks and transparent fuzzy matching"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.1"]
+dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 fuzzy = ["rapidfuzz>=3.10.1,<4"]

@@ -27,15 +27,17 @@ KEY = "k3y-Geheim-4711"
 
 
 def _core() -> None:
-    config = config_from_env(AUDIT_DESIGNER, {"LLM_ROUTER_URL": "http://router.test:7842",
-                                              "LLM_ROUTER_API_KEY": KEY})
+    config = config_from_env(
+        AUDIT_DESIGNER, {"LLM_ROUTER_URL": "http://router.test:7842", "LLM_ROUTER_API_KEY": KEY}
+    )
     request = build_generate(config, "Frage", "System", Sampling())
     assert request.path == "/api/chat" and request.fallback_on_404 is not None
     assert request.json_body is not None and request.json_body["think"] is False
     assert request_headers(config, request.headers)["X-Api-Key"] == KEY
     assert KEY not in repr(config)
-    flow = config_from_env(FLOWINVOICE, {"FLOW_AGENT_URL": "https://agent.test",
-                                         "FLOW_AGENT_APP_KEY": KEY})
+    flow = config_from_env(
+        FLOWINVOICE, {"FLOW_AGENT_URL": "https://agent.test", "FLOW_AGENT_APP_KEY": KEY}
+    )
     assert flow.mode is Mode.FLOW_AGENT and flow.app_prefix == "/api/v1/ai/apps/flowinvoice"
     try:
         config_from_env(AUDIT_DESIGNER, {"LLM_ROUTER_URL": "http://gpu.test:11434"})
@@ -70,7 +72,7 @@ def _http() -> None:
 
 def main() -> None:
     package = distribution("auditcore_llm_client")
-    assert package.version == "0.1.1"
+    assert package.version == "0.1.2"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
     _core()

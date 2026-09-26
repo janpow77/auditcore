@@ -63,7 +63,7 @@ RFC-7946-Folge (Länge, Breite).
 ### `GET /profile`
 
 ```json
-{"bibliothek": "auditcore_geo 0.3.0",
+{"bibliothek": "auditcore_geo 0.3.1",
  "erdmodelle": [{"id": "kugel.r1_6371008_8m", "radius_m": 6371008.8, "beschreibung": "…", "empfohlen": true},
                 {"id": "kugel.6371000m", "radius_m": 6371000.0, "beschreibung": "…", "empfohlen": false}],
  "empfohlenes_erdmodell": "kugel.r1_6371008_8m", "rand_gilt_als_innen_empfohlen": true,

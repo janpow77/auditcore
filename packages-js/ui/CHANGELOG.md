@@ -1,10 +1,10 @@
 # Changelog @auditcore/ui
 
-## Unreleased
+## 0.3.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui` statt `@flowaudit/ui` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
-## 0.3.0 – unveröffentlicht
+Erste Veröffentlichung als Release-Datei. Build mit Vite 8 (#169); Abhängigkeiten `@auditcore/common` 0.1.1, `@auditcore/kanban-core` 0.2.1, `@auditcore/ui-core` 0.2.0.
 
 - **Hochrechnung und Fehlerquoten:** `ExtrapolationPanel`
   (`<flowaudit-extrapolation>`) für `auditcore_extrapolation.web`: Methode,

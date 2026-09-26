@@ -1,8 +1,10 @@
 # Changelog – @auditcore/bpmn-flowaudit
 
-## Unreleased
+## 0.2.1 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/bpmn-flowaudit` statt `@flowaudit/bpmn-flowaudit` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-bpmn-flowaudit-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
+
+Keine Verhaltensänderung. Build mit Vite 8 und vite-plugin-dts 5 (#169); README: Installation als Tarball aus dem GitHub-Release (#157). Abhängigkeit `@auditcore/bpmn-editor` ^0.1.1.
 
 ## 0.2.0 – 2026-09-26
 

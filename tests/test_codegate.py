@@ -165,6 +165,9 @@ def test_js_packages_are_measured(tmp_path: Path) -> None:
     (package / "src/View.vue").write_text("<template></template>\n" * 260)
     (package / "node_modules").mkdir()
     (package / "node_modules/huge.js").write_text("x\n" * 900)
+    for output in ("dist-wc", "dist-standalone"):
+        (package / output).mkdir()
+        (package / output / "bundle.js").write_text("const c: any = 3\n" * 900)
     metrics = measure_js_package(package, tmp_path).metrics
     assert metrics == {
         "files_over_400_lines": 1,

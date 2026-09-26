@@ -23,7 +23,7 @@ dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
 ausdrücklich in die `package.json`:
 
 ```sh
-npm install @auditcore/bpmn-flowaudit@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-flowaudit-0.2.0.tgz
+npm install @auditcore/bpmn-flowaudit@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-flowaudit-0.2.1.tgz
 ```
 
 Anleitung für Vue, React und Web Components mit Integritätsprüfung und

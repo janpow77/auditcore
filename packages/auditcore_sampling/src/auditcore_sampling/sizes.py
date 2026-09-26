@@ -117,7 +117,7 @@ class SizePlan:
     def to_dict(self) -> dict[str, Any]:
         """JSON-compatible plan."""
         return {
-            "library": "auditcore_sampling 0.2.2",
+            "library": "auditcore_sampling 0.2.3",
             "method": self.method,
             "sample_size": self.sample_size,
             "interval": self.interval,

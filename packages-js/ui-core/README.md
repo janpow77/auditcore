@@ -30,7 +30,7 @@ dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
 ausdrücklich in die `package.json`:
 
 ```sh
-npm install @auditcore/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-core-0.1.0.tgz
+npm install @auditcore/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-core-0.2.0.tgz
 ```
 
 Anleitung für Vue, React und Web Components mit Integritätsprüfung und

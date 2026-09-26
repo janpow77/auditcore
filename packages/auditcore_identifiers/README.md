@@ -203,7 +203,7 @@ Anwendung auf `strict` ist eine eigene fachliche Entscheidung.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_common==0.1.1` (selbst nur Standardbibliothek;
+Python ≥ 3.11 und `auditcore_common==0.2.0` (selbst nur Standardbibliothek;
 rahmenwerkfreier Teil der REST-Schicht für `web`, APT
 `python3-auditcore-common`), sonst nur die Standardbibliothek. python-stdnum dient
 nur der Gegenprüfung (offline, als Daten im Repository) und ist keine
