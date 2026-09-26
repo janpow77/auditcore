@@ -4,18 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_risk"
-version = "0.3.2"
+version = "0.3.3"
 description = "Risk flags from explicit, versioned, source-bound rule profiles (legacy-exact riskanalysis and Flowstat red flags)"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.1", "auditcore_entity_matching==0.2.2"]
+dependencies = ["auditcore_common==0.1.1", "auditcore_entity_matching==0.2.3"]
 
 [project.optional-dependencies]
-fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.2"]
+fuzzy = ["auditcore_entity_matching[fuzzy]==0.2.3"]
 pandas = ["pandas>=2.1"]
-procurement = ["auditcore_procurement==0.2.2"]
+procurement = ["auditcore_procurement==0.2.3"]
 web = ["starlette>=0.26.1"]
 fastapi = ["fastapi>=0.92"]
 dev = [
@@ -24,8 +24,8 @@ dev = [
     "mypy>=1.15",
     "build>=1.2",
     "pandas>=2.1",
-    "auditcore_entity_matching[fuzzy]==0.2.2",
-    "auditcore_procurement==0.2.2",
+    "auditcore_entity_matching[fuzzy]==0.2.3",
+    "auditcore_procurement==0.2.3",
     "starlette>=0.26.1",
     "fastapi>=0.92",
     "httpx>=0.23.3",

@@ -1,5 +1,9 @@
 # Changelog – auditcore_documents
 
+## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage (docs/bibliotheken/readme-vorlage.md).
+
 ## 0.3.2 – Mehrdeutige Beträge als Befund statt still verworfen
 
 Im Modus `locale-aware` (`CORRECTED_PIPELINE`) setzte `normalize_fields`

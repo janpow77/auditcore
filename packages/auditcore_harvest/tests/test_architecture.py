@@ -1,4 +1,8 @@
-"""Runtime modules use only the standard library and the own package; no app bindings."""
+"""Runtime modules use only the standard library, the own package and auditcore_common.
+
+No app bindings; ``auditcore_common`` is the shared stdlib-only helper package
+(safe XML parsing, canonical hashing) and pulls in defusedxml only via the extra.
+"""
 
 from __future__ import annotations
 
@@ -11,7 +15,7 @@ import auditcore_harvest
 FORBIDDEN_CALLS = {"eval", "exec", "__import__", "open"}
 
 
-def test_runtime_imports_are_stdlib_only() -> None:
+def test_runtime_imports_are_stdlib_or_common_only() -> None:
     package = Path(auditcore_harvest.__file__).parent
     stdlib = set(sys.stdlib_module_names) | {"__future__"}
     for path in package.rglob("*.py"):
@@ -24,7 +28,9 @@ def test_runtime_imports_are_stdlib_only() -> None:
                 names = [node.module or ""]
             for name in names:
                 root = name.split(".")[0]
-                assert root in stdlib or root == "auditcore_harvest", f"{path.name}: {name}"
+                assert root in stdlib or root in {"auditcore_harvest", "auditcore_common"}, (
+                    f"{path.name}: {name}"
+                )
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 assert node.func.id not in FORBIDDEN_CALLS, f"{path.name}: {node.func.id}"
 

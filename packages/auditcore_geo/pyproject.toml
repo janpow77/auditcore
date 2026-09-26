@@ -13,7 +13,7 @@ license-files = ["LICENSE", "NOTICE"]
 dependencies = []
 
 [project.optional-dependencies]
-geocoder = ["auditcore_harvest==0.1.1"]
+geocoder = ["auditcore_harvest==0.1.2"]
 web = ["starlette>=0.26.1"]
 fastapi = ["fastapi>=0.92"]
 dev = [
@@ -21,7 +21,7 @@ dev = [
     "ruff>=0.11",
     "mypy>=1.15",
     "build>=1.2",
-    "auditcore_harvest==0.1.1",
+    "auditcore_harvest==0.1.2",
     "starlette>=0.26.1",
     "fastapi>=0.92",
     "httpx>=0.24",

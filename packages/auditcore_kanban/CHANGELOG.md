@@ -1,5 +1,9 @@
 # Changelog – auditcore_kanban
 
+## 0.1.1 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. README nach der Vorlage.
+
 ## 0.1.0 – Erste Fassung
 
 - Framework-freies Domänenmodell (Board, Spalte, Karte, Label, Freigabe,

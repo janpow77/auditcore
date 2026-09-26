@@ -1,5 +1,9 @@
 # Changelog auditcore_sampling
 
+## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. README nach der Vorlage.
+
 ## 0.2.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle 61 bestehenden Tests (Replay gegen die

@@ -17,7 +17,7 @@
   "excluded_variants": [
     "auswertungjkb.get_number_format"
   ],
-  "version": "0.2.1",
+  "version": "0.2.2",
   "previous_package_version": "0.2.0",
   "workbook_sources": [
     {

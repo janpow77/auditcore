@@ -1,5 +1,9 @@
 # Changelog auditcore_statistics
 
+## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage.
+
 ## 0.3.2 – Hilfsfunktionen aus auditcore_common
 
 Keine fachliche Änderung außer der Bibliothekskennung in den Ergebnissen

@@ -72,7 +72,7 @@ def test_import_loads_no_optional_dependency() -> None:
 
 
 def test_public_api_is_curated() -> None:
-    assert auditcore_bpmn.__version__ == "0.1.0"
+    assert auditcore_bpmn.__version__ == "0.1.1"
     for name in auditcore_bpmn.__all__:
         assert hasattr(auditcore_bpmn, name), name
     assert "ValidationIssue" in auditcore_bpmn.__all__ and "AuditFinding" in auditcore_bpmn.__all__

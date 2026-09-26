@@ -1,5 +1,9 @@
 # Changelog auditcore_invoicegenerator
 
+## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pin `auditcore_dummygenerator==0.1.2`; README nach der Vorlage.
+
 ## 0.2.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: Die 180 beobachteten Legacyfälle

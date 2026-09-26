@@ -1,5 +1,9 @@
 # Changelog auditcore_price_sources
 
+## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pin `auditcore_harvest==0.1.2`; README und Migrationshinweis auf v0.4.0.
+
 ## 0.1.1 – 2026-09-25
 
 Refaktorierung ohne Verhaltensänderung; Datensätze, Issues, Cursor, Fehlertexte

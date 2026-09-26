@@ -182,7 +182,7 @@ Vollständig: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 Python ≥ 3.11, Parser nur Standardbibliothek und `auditcore_common==0.1.1`
 (Zahleneingabe `numbers_de`, ab 0.1.2 einzige Pflichtabhängigkeit);
-Extra `sources`: `auditcore_harvest==0.1.1` (das im Release v0.3.0
+Extra `sources`: `auditcore_harvest==0.1.2` (das im Release v0.3.0
 veröffentlichte Wheel 0.1.0 verlangt noch 0.1.0). Kein beautifulsoup4, kein
 HTTP-Client, keine Datenbank.
 
