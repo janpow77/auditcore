@@ -1,5 +1,9 @@
 # Changelog auditcore_entity_matching
 
+## Unreleased
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 11 Invarianten (I1–I11) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`. Befunde (dokumentiert, Code unverändert): `translate_then_casefold` ist nicht idempotent (`É → é → e`), `best_match` rundet den Wert und kann dadurch bis 0,05 unter einer ungerundeten Schwelle liegen. `hypothesis` im Extra `dev`.
+
 ## 0.2.4 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`.
