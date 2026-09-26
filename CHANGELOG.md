@@ -19,6 +19,11 @@ Noch keine Änderungen.
   `npm pack`-Tarballs mit `npm-packages.json` bei.
 - Code-Gate: `codegate_js` zählt Build-Ausgaben `dist-*` (z. B. `dist-wc`,
   `dist-standalone` von bpmn-vue) nicht mehr als Quelltext.
+- Donut-Job-Image (`donut-train-image`): Verlangt das Rad von
+  `auditcore_invoicesynth` auditcore-Stände, die noch nicht veröffentlicht
+  sind, baut der Workflow genau diese Abhängigkeiten aus demselben
+  Repository-Stand (`docker/train/deps_source.py`, Label `auditcore.deps=repo`).
+  Sonst bleiben sie hashgebunden aus dem Release.
 
 - Neues Paket `auditcore_extrapolation` 0.1.0: Hochrechnung von
   Stichprobenfehlern für Prüfbehörden nach dem KOM-Leitfaden EGESIF_16-0014-01
