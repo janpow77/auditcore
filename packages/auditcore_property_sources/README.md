@@ -19,12 +19,12 @@ python -m pip install auditcore_property_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
-Release v0.4.0; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
+Release v0.4.1; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-property-sources/`):
 
 ```text
-auditcore_property_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_property_sources-0.1.1-py3-none-any.whl#sha256=76f5877d8f5efba1cb8ff49ef9ef712d75e0c7e8d2634622c80542e682c202aa
+auditcore_property_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_property_sources-0.1.2-py3-none-any.whl#sha256=91059653c498aaa9c7bd14d57ad6bcb6b47f11d122320c17ec5d895515c811cb
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
