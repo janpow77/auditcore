@@ -10,12 +10,21 @@ Belegerkennung (Vertrag ``documents_extraction/1``, ``docs/ui/extraction-rest.md
 :class:`ExtractionService` mit den OCR-/Donut-Ports der Anwendung
 (:class:`ExtractionEngines`); ``create_extraction_app``/``extraction_routes``
 (Extra ``web``) und ``create_extraction_router`` (Extra ``fastapi``).
+
+Bestandsprüfung über viele Belege (Vertrag ``documents_batch_checks/1``,
+``docs/ui/batch-checks-rest.md``): :class:`BatchCheckService` mit den Regeln
+C-01 bis C-13, A-07, B-12 und den Ergänzungen ERG-01/ERG-02;
+``create_batch_check_app``/``batch_check_routes`` (Extra ``web``) und
+``create_batch_check_router`` (Extra ``fastapi``).
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from auditcore_documents.web.batch_checks import CONTRACT as BATCH_CHECKS_CONTRACT
+from auditcore_documents.web.batch_checks import BatchCheckService, BatchCheckSettings
+from auditcore_documents.web.batch_input import BatchCheckError
 from auditcore_documents.web.export import (
     EXPORT_FORMATS,
     ExportFile,
@@ -49,6 +58,11 @@ from auditcore_documents.web.store import (
 
 if TYPE_CHECKING:
     from auditcore_documents.web.asgi import create_app, single_user
+    from auditcore_documents.web.batch_checks_asgi import (
+        batch_check_routes,
+        create_batch_check_app,
+    )
+    from auditcore_documents.web.batch_checks_fastapi import create_batch_check_router
     from auditcore_documents.web.extraction_asgi import create_extraction_app, extraction_routes
     from auditcore_documents.web.extraction_fastapi import create_extraction_router
     from auditcore_documents.web.fastapi_router import create_router
@@ -60,6 +74,9 @@ _LAZY = {
     "create_extraction_app": ("auditcore_documents.web.extraction_asgi", "web"),
     "extraction_routes": ("auditcore_documents.web.extraction_asgi", "web"),
     "create_extraction_router": ("auditcore_documents.web.extraction_fastapi", "fastapi"),
+    "create_batch_check_app": ("auditcore_documents.web.batch_checks_asgi", "web"),
+    "batch_check_routes": ("auditcore_documents.web.batch_checks_asgi", "web"),
+    "create_batch_check_router": ("auditcore_documents.web.batch_checks_fastapi", "fastapi"),
 }
 
 
@@ -81,6 +98,13 @@ def __getattr__(name: str) -> object:
 
 
 __all__ = [
+    "BATCH_CHECKS_CONTRACT",
+    "BatchCheckError",
+    "BatchCheckService",
+    "BatchCheckSettings",
+    "batch_check_routes",
+    "create_batch_check_app",
+    "create_batch_check_router",
     "EXPORT_FORMATS",
     "EXTRACTION_CONTRACT",
     "ExtractionEngines",
