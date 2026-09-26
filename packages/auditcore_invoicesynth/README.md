@@ -218,8 +218,9 @@ genutzt, nicht verändert.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_invoicegenerator==0.2.2` (bringt
-`auditcore_dummygenerator` mit). Rendern (`[render]`) und Nachtraining
+Python ≥ 3.11, `auditcore_invoicegenerator==0.2.2` (bringt
+`auditcore_dummygenerator` mit) und `auditcore_common==0.1.1` (SHA-256,
+kanonisches JSON, Steuersatz- und Kennungs-Rücklesung; nur Standardbibliothek). Rendern (`[render]`) und Nachtraining
 (`[train]`) nur mit den Extras. Schriften sind keine Paketabhängigkeit: es
 werden freie Systemschriften (DejaVu, Liberation, Noto) gesucht oder mit
 `fetch_font` und SHA-256 geladen.

@@ -5,6 +5,8 @@ from __future__ import annotations
 import urllib.parse
 from collections.abc import Mapping
 
+from auditcore_common.html_text import has_html_marker
+
 from .. import zvg
 from .._types import JSON
 from ._base import (
@@ -109,7 +111,7 @@ class ZvgListingAdapter(_Portal):
             self._check(rules, _zvg_url(params))
         body = self._search(context, session, search, land, court)
         doc = zvg.decode_portal_bytes(body)
-        if "<html" not in doc[:4096].lower() and "<!doctype" not in doc[:4096].lower():
+        if not has_html_marker(doc):
             raise ParserError("ZVG-Trefferliste ist kein HTML-Dokument.")
         files = zvg.parse_listing_akten(doc, land)
         issues = [
@@ -210,8 +212,7 @@ class ZvgDetailAdapter(_Portal):
             context.transport.request("GET", url, headers=headers, timeout=context.timeout)
         )
         doc = zvg.decode_portal_bytes(response.body)
-        head = doc[:4096].lower()
-        if "<html" not in head and "<!doctype" not in head:
+        if not has_html_marker(doc):
             raise ParserError(f"Detailseite {url} ist kein HTML-Dokument.")
         parsed = zvg.parse_detail(
             doc,

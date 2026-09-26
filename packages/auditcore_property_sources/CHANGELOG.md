@@ -2,6 +2,13 @@
 
 Aus der Git-Historie rekonstruiert (`git log -- packages/auditcore_property_sources`).
 
+## Unreleased
+
+Keine Verhaltensänderung. HTML-Erkennung der Adapter über
+`auditcore_common.html_text.has_html_marker`, Zeitzonenprüfung des
+ZVG-Lebenszyklus über `auditcore_common.clock.require_aware`; Meldungen
+unverändert (`tests/test_common_parity.py`).
+
 ## 0.1.2 – 2026-09-25
 
 Verhaltensänderung (PS-C10, Nutzerauftrag vom 25.09.2026).

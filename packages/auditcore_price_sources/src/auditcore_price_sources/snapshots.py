@@ -13,6 +13,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 
+from auditcore_common.hashing import canonical_json
 from auditcore_harvest import JSON, Response, Transport, TransportError
 
 SECRET_PARAMS = frozenset({"apikey", "api_key", "key", "token", "password"})
@@ -84,9 +85,12 @@ class RecordingTransport:
 def canonical_json_bytes(body: bytes) -> bytes:
     """``json.dumps(payload, sort_keys=True)`` of a JSON body (regulierung's package bytes).
 
-    Raises ``ValueError`` if the body is not JSON.
+    Default separators and ASCII escapes, i.e. the ``compact=False,
+    ensure_ascii=True`` form of :func:`auditcore_common.hashing.canonical_json`;
+    the bytes (and thus regulierung's package hashes) are unchanged. Raises
+    ``ValueError`` if the body is not JSON.
     """
-    return json.dumps(json.loads(body), sort_keys=True).encode()
+    return canonical_json(json.loads(body), compact=False, ensure_ascii=True).encode()
 
 
 def package_sha256(body: bytes, *, canonical_json: bool) -> str:

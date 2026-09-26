@@ -10,6 +10,8 @@ from typing import Any
 
 from auditcore_common.numeric import parse_percent_rate
 from auditcore_common.text import compact_upper
+from auditcore_identifiers import at_uid_check_digit as at_uid_check_digit
+from auditcore_identifiers import de_vat_check_digit as de_vat_check_digit
 
 from auditcore_documents.pipeline.stages.postprocess import parse_amount
 from auditcore_documents.pipeline.stages.validation import VAT_ID_PATTERNS
@@ -17,6 +19,8 @@ from auditcore_documents.pipeline.stages.validation import VAT_ID_PATTERNS
 #: Donut names of the shared helpers (same objects as in ``auditcore_common``).
 rate = parse_percent_rate
 compact = compact_upper
+# ``de_vat_check_digit``/``at_uid_check_digit`` are the ``auditcore_identifiers`` functions
+# (ISO 7064 MOD 11,10 for DE, BMF procedure for AT) and stay importable from here.
 
 ALLOWED_VAT_RATES = {
     "DE": frozenset({Decimal(19), Decimal(7), Decimal(0)}),
@@ -100,21 +104,6 @@ def iso_date(raw: str) -> str | None:
             except ValueError:
                 return None
     return None
-
-
-def de_vat_check_digit(first_eight: str) -> int:
-    product = 10
-    for char in first_eight:
-        total = (int(char) + product) % 10 or 10
-        product = (2 * total) % 11
-    check = 11 - product
-    return 0 if check == 10 else check
-
-
-def at_uid_check_digit(first_seven: str) -> int:
-    digits = [int(c) for c in first_seven]
-    total = sum(d if i % 2 == 0 else (2 * d) // 10 + (2 * d) % 10 for i, d in enumerate(digits))
-    return (10 - (total + 4) % 10) % 10
 
 
 def vat_id_check(vat_id: str) -> str | None:
