@@ -1,9 +1,20 @@
 import { describe, expect, it } from 'vitest'
-import { areasFromGeoPackage, displayName, formatDegrees, formatDistance, formatMetres, parseDegrees, parseLatLon, TOLERANCE_STEPS, vertexCount } from '../../src/geo/model'
+import { areasFromGeoPackage, displayName, formatDegrees, formatDistance, formatMetres, parseDegrees, parseLatLon, parseMetres, parseUtm, TOLERANCE_STEPS, utmErrorKey, vertexCount } from '../../src/geo/model'
 import type { GeoPackageResult } from '../../src/geo/types'
 import gpkg from '../fixtures/geo-gpkg.json'
 
 describe('Geo-Modell', () => {
+  it('liest UTM-Eingaben mit Wertebereich und benennt das fehlerhafte Feld', () => {
+    expect(parseMetres('476398,98')).toBe(476398.98)
+    expect(parseMetres('476.398,98')).toBeNull()
+    expect(parseUtm('32', '476398,98', '5549801.4')).toEqual({ value: { zone: 32, ost: 476398.98, nord: 5549801.4 }, error: null })
+    expect(parseUtm('61', '476398', '5549801').error).toBe('zone')
+    expect(parseUtm('3a', '476398', '5549801').error).toBe('zone')
+    expect(parseUtm('32', '1000000', '5549801').error).toBe('east')
+    expect(parseUtm('32', '476398', '-1').error).toBe('north')
+    expect(utmErrorKey('east')).toBe('utmerroreast')
+  })
+
   it('liest Dezimalgrad mit Komma oder Punkt und weist Tausendertrennung ab', () => {
     expect(parseDegrees('50,1106')).toBe(50.1106)
     expect(parseDegrees(' -8.5 ')).toBe(-8.5)

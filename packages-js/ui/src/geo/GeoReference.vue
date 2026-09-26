@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useGeoContext } from './context'
+import GeoUtmInput from './GeoUtmInput.vue'
 import { displayName, formatDegrees, formatMetres } from '@flowaudit/ui-core'
 
 const { state, t, locale } = useGeoContext()
@@ -42,6 +43,7 @@ function takePoint(): void {
       <FaButton type="submit" data-testid="geo-apply">{{ t('apply') }}</FaButton>
     </form>
     <p v-if="state.coordinateError.value" class="fa-geo__error" role="alert">{{ t(state.coordinateError.value === 'lat' ? 'errorlat' : 'errorlon') }}</p>
+    <GeoUtmInput />
     <div v-if="state.points.value.length" class="fa-geo__row">
       <label class="fa-geo__field fa-geo__grow">
         <span class="fa-geo__label">{{ t('fromPoint') }}</span>
@@ -76,7 +78,7 @@ function takePoint(): void {
         <span v-if="state.utm.value?.epsg" class="fa-geo__muted">({{ t('utmEpsg', { epsg: state.utm.value.epsg }) }})</span>
       </dd>
     </dl>
-    <label v-if="state.catalogue.value && state.reference.value" class="fa-geo__field">
+    <label v-if="state.catalogue.value && (state.reference.value || state.canFromUtm.value)" class="fa-geo__field">
       <span class="fa-geo__label">{{ t('ellipsoid') }}</span>
       <select v-model="state.ellipsoid.value" class="fa-geo__input" data-testid="geo-ellipsoid" @change="state.refreshUtm">
         <option v-for="entry in state.catalogue.value.ellipsoide" :key="entry" :value="entry">{{ entry }}</option>

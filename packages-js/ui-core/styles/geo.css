@@ -17,6 +17,9 @@
 .fa-geo__field { display: flex; flex-direction: column; gap: var(--fa-space-1); min-width: 0; }
 .fa-geo__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
 .fa-geo__input { min-height: 2.25rem; width: 100%; min-width: 6.5rem; padding: 0 var(--fa-space-2); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; box-sizing: border-box; }
+.fa-geo__input--short { width: 4.5rem; min-width: 4rem; }
+.fa-geo__utm summary { cursor: pointer; font-weight: 600; }
+.fa-geo__utm[open] summary { margin-bottom: var(--fa-space-2); }
 .fa-geo__input[aria-invalid='true'] { border-color: var(--fa-color-danger); }
 .fa-geo__input:focus-visible, .fa-geo__range:focus-visible, .fa-geo__check input:focus-visible, .fa-geo__file:focus-visible, .fa-geo__link:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
 .fa-geo__range { width: 100%; accent-color: var(--fa-color-accent); }

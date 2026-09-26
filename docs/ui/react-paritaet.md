@@ -27,7 +27,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Synopse / Versionsvergleich | `FaSynopsis` | `FlowauditSynopsis` | `auditcore_documents.web` ([synopsis-rest.md](synopsis-rest.md)) | 6 |
 | Verzeichnis von Verarbeitungstätigkeiten | `FaVvt` | `FlowauditVvt` | `dataprotection_ui/1` ([dataprotection-rest.md](dataprotection-rest.md)) | 5 + Interaktionsfolge |
 | Datenschutz-Folgenabschätzung | `FaDsfa` | `FlowauditDsfa` | `dataprotection_ui/1` | 6 + 3 Interaktionsfolgen |
-| Geo-Karte | `FaGeoMap` | `FlowauditGeoMap` | `auditcore_geo.web` ([geo-rest.md](geo-rest.md)) | 4 + Interaktionsfolge |
+| Geo-Karte | `FaGeoMap` | `FlowauditGeoMap` | `auditcore_geo.web` ([geo-rest.md](geo-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Kanban-Board und Boardliste | `KanbanBoard`, `KanbanBoardList` | `FlowauditKanbanBoard`, `FlowauditKanbanBoards` | `auditcore_kanban` ([rest-api.md](../kanban/rest-api.md)) | 6 + 2 + 6 Interaktionsfolgen |
 | Basis (Schaltfläche, Eingabefeld, Dialog) | `FaButton`, `FaTextField`, `FaDialog` | `Button`, `TextField`, `Dialog` | – | 9 |
 | Risiko-Merkmale | `RiskFlags` | `FlowauditRiskFlags` | `auditcore_risk.web` ([risk-rest.md](risk-rest.md)) | 7 + Interaktionsfolge |
@@ -52,7 +52,8 @@ echten Python-Backends, keine Personendaten).
    ändern, Historie, Referat anlegen, verwerfen, Freigabe anzeigen; Tabwechsel
    per Pfeiltaste und Ende, Antwort mit Vorschau, Entscheidung; Geo: Hinweis ohne
    Bezugspunkt, Punkt übernehmen, Umkreis, Kartenklick, Punkt in Fläche,
-   Vereinfachung, Einheit, GeoPackage). Die Leaflet-Ansicht ist in beiden
+   Vereinfachung, Einheit, GeoPackage, UTM-Eingabe mit Feldfehlern und
+   Halbkugel). Die Leaflet-Ansicht ist in beiden
    Fassungen dieselbe Attrappe; gezeichnet wird mit dem gemeinsamen
    `createLeafletView` aus dem Kern.
 3. **Verhalten:** je Komponente eigene Tests mit Testing Library, die den

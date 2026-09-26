@@ -26,6 +26,7 @@ import {
   type SimplifyUnit,
   type UtmResult,
   type CoordinateError,
+  type UtmInputError,
 } from '@flowaudit/ui-core'
 import { useStore } from '../composables/useStore'
 
@@ -60,6 +61,12 @@ export interface UseGeoMap {
   lonText: WritableComputedRef<string>
   coordinateError: ComputedRef<CoordinateError>
   utm: ComputedRef<UtmResult | null>
+  zoneText: WritableComputedRef<string>
+  eastText: WritableComputedRef<string>
+  northText: WritableComputedRef<string>
+  northern: WritableComputedRef<boolean>
+  utmError: ComputedRef<UtmInputError>
+  canFromUtm: ComputedRef<boolean>
   geocodeResult: ComputedRef<GeocodeResult | null>
   canGeocode: ComputedRef<boolean>
   load: () => Promise<void>
@@ -68,6 +75,7 @@ export interface UseGeoMap {
   setReference: (point: LatLon | null) => Promise<void>
   applyTexts: () => Promise<void>
   refreshUtm: () => Promise<void>
+  applyUtm: () => Promise<void>
   geocode: (query: string) => Promise<void>
   simplifyArea: () => Promise<void>
   loadFile: (file: Blob) => Promise<void>
@@ -96,7 +104,7 @@ export function useGeoMap(
   const state = useStore(controller.store)
   const selection = computed(() => selectGeo(state.value, { port: port(), points: givenPoints(), areas: givenAreas() }))
   const read = readers(state)
-  const fields = (['radiusMetres', 'earthModel', 'boundaryInside', 'toleranceMetres', 'simplifyStep', 'ellipsoid', 'latText', 'lonText'] as const)
+  const fields = (['radiusMetres', 'earthModel', 'boundaryInside', 'toleranceMetres', 'simplifyStep', 'ellipsoid', 'latText', 'lonText', 'zoneText', 'eastText', 'northText', 'northern'] as const)
     .map((key) => [key, field(controller, state, key)])
   return {
     ...read,
@@ -111,12 +119,14 @@ export function useGeoMap(
     simplifyTolerance: computed(() => selection.value.simplifyTolerance),
     hitIds: computed(() => selection.value.hitIds),
     canGeocode: computed(() => selection.value.canGeocode),
+    canFromUtm: computed(() => selection.value.canFromUtm),
     load: controller.load,
     searchRadius: controller.searchRadius,
     checkLocation: controller.checkLocation,
     setReference: controller.setReference,
     applyTexts: controller.applyTexts,
     refreshUtm: controller.refreshUtm,
+    applyUtm: controller.applyUtm,
     geocode: controller.geocode,
     simplifyArea: controller.simplifyArea,
     loadFile: controller.loadFile,

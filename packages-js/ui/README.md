@@ -122,7 +122,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (667):
+Exporte der Einstiegspunkte aus `package.json#exports` (674):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -493,6 +493,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `UseTableImport` | Schnittstelle | – | `tabular/useTableImport` |
 | `@flowaudit/ui` | `UseTheme` | Schnittstelle | – | `theme/theme` |
 | `@flowaudit/ui` | `UseToast` | Schnittstelle | – | `composables/useToast` |
+| `@flowaudit/ui` | `UtmInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmInputError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmPointRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmPointResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UtmRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UtmResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VersionSummary` | Re-Export | – | `@flowaudit/ui-core` |
@@ -661,9 +665,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `parseImport` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseLatLon` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `parseMetres` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseNumber` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `parseSubjects` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseTable` | Re-Export | – | `@flowaudit/common` |
+| `@flowaudit/ui` | `parseUtm` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `placementFor` | Re-Export | – | `./movePreview` |
 | `@flowaudit/ui` | `plainSegments` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `populationSuggestions` | Re-Export | – | `@flowaudit/ui-core` |
@@ -773,6 +779,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `useThrottledFn` | Funktion | Gedrosselte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useToast` | Funktion | Toasts als reaktive Liste über der framework-freien Warteschlange aus `@flowaudit/common`. | `composables/useToast` |
 | `@flowaudit/ui` | `useVvt` | Funktion | – | `dataprotection/useVvt` |
+| `@flowaudit/ui` | `utmErrorKey` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `validateDecision` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vertexCount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vvtElement` | Konstante | `<flowaudit-vvt>`: Eigenschaften `port` (DataProtectionPort), `actor`, `editable`, `locale`; Ereignisse `draft-saved`, `released`, `exported`, `error`. | `dataprotection/element` |

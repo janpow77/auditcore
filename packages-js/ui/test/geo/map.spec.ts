@@ -8,6 +8,7 @@ import locate from '../../../ui-core/test/fixtures/geo-locate-rand.json'
 import radius from '../../../ui-core/test/fixtures/geo-radius.json'
 import simplify from '../../../ui-core/test/fixtures/geo-simplify.json'
 import utm from '../../../ui-core/test/fixtures/geo-utm.json'
+import utmPoint from '../../../ui-core/test/fixtures/geo-utm-point.json'
 
 const view = vi.hoisted(() => ({ options: null as MapViewOptions | null, layers: [] as MapLayers[], fit: 0, tiles: [] as unknown[] }))
 
@@ -94,6 +95,29 @@ describe('FaGeoMap', () => {
     expect((wrapper.get('[data-testid="geo-lat"]').element as HTMLInputElement).value).toBe('50.1')
     expect(wrapper.emitted('reference-change')?.[0]).toEqual([{ lat: 50.1, lon: 8.67 }])
     expect(view.layers.at(-1)?.reference).toEqual({ lat: 50.1, lon: 8.67 })
+  })
+
+  it('setzt den Bezugspunkt aus UTM-Koordinaten und prüft die Eingaben', async () => {
+    const hidden = await mountMap()
+    expect(hidden.find('[data-testid="geo-utm-input"]').exists()).toBe(false)
+    hidden.unmount()
+    const fromUtm = vi.fn(async () => utmPoint)
+    const wrapper = await mountMap(fakePort({ fromUtm }))
+    await wrapper.get('[data-testid="geo-utm-zone"]').setValue('32')
+    await wrapper.get('[data-testid="geo-utm-east"]').setValue('476.398,5')
+    await wrapper.get('[data-testid="geo-utm-apply"]').trigger('submit')
+    expect(wrapper.get('.fa-geo__utm [role="alert"]').text()).toContain('Ostwert')
+    expect(wrapper.get('[data-testid="geo-utm-east"]').attributes('aria-invalid')).toBe('true')
+    expect(fromUtm).not.toHaveBeenCalled()
+    await wrapper.get('[data-testid="geo-utm-east"]').setValue('476398,98')
+    await wrapper.get('[data-testid="geo-utm-north"]').setValue('5549801,4')
+    await wrapper.get('[data-testid="geo-utm-hemisphere"]').setValue('S')
+    await wrapper.get('[data-testid="geo-utm-apply"]').trigger('submit')
+    await flushPromises()
+    expect(fromUtm).toHaveBeenCalledWith({ zone: 32, ost: 476398.98, nord: 5549801.4, nordhalbkugel: false, ellipsoid: 'GRS80' })
+    expect(wrapper.get('[data-testid="geo-reference"]').text()).toContain('50,100000')
+    expect(wrapper.emitted('reference-change')?.at(-1)).toEqual([utmPoint.punkt])
+    wrapper.unmount()
   })
 
   it('setzt den Bezugspunkt per Tastatur und meldet ungültige Eingaben', async () => {
