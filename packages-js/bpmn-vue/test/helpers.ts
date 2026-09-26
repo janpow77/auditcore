@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { flushPromises } from '@vue/test-utils'
 
-/** Synthetic fixtures of @flowaudit/bpmn-flowaudit (no user diagrams). */
+/** Synthetic fixtures of @auditcore/bpmn-flowaudit (no user diagrams). */
 export function fixture(name: string): string {
   return readFileSync(join(process.cwd(), '../bpmn-flowaudit/test/fixtures', name), 'utf-8')
 }

@@ -5,11 +5,11 @@
  */
 
 import { computed, ref, watchEffect, type Ref } from 'vue'
-import { kaOptions, loadCatalogue, optionsResolver, profileCatalogue, roleOptions, type Option } from '@flowaudit/bpmn-flowaudit/ui'
-import type { CataloguePort, KeyRequirementEntry, ProfileData } from '@flowaudit/bpmn-flowaudit'
-import type { FieldDescriptor } from '@flowaudit/bpmn-flowaudit/ui'
+import { kaOptions, loadCatalogue, optionsResolver, profileCatalogue, roleOptions, type Option } from '@auditcore/bpmn-flowaudit/ui'
+import type { CataloguePort, KeyRequirementEntry, ProfileData } from '@auditcore/bpmn-flowaudit'
+import type { FieldDescriptor } from '@auditcore/bpmn-flowaudit/ui'
 
-export type { Option } from '@flowaudit/bpmn-flowaudit/ui'
+export type { Option } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface OptionSources {
   profile: () => ProfileData | null

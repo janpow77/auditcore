@@ -1,4 +1,4 @@
-import { matchesMediaQuery, onClickOutside, subscribeMediaQuery } from '@flowaudit/common/browser'
+import { matchesMediaQuery, onClickOutside, subscribeMediaQuery } from '@auditcore/common/browser'
 import { useCallback, useEffect, useRef, useSyncExternalStore, type RefObject } from 'react'
 
 /** Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`; serverseitig `false`. */

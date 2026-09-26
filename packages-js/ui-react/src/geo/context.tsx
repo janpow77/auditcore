@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import type { GeoController, GeoData, GeoMessageKey, GeoPoint, GeoSelection, Locale, Translate } from '@flowaudit/ui-core'
+import type { GeoController, GeoData, GeoMessageKey, GeoPoint, GeoSelection, Locale, Translate } from '@auditcore/ui-core'
 
 /** Gemeinsamer Zustand und Übersetzung der Teilkomponenten (Gegenstück zu `GEO_CONTEXT` in Vue). */
 export interface GeoContextValue {

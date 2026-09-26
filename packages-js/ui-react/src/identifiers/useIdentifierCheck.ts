@@ -16,7 +16,7 @@ import {
   type IdentifierTranslate,
   type Locale,
   type TableImportData,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -39,7 +39,7 @@ export interface UseIdentifierCheck {
   mapping: IdentifierBatchMapping
 }
 
-/** React-Anbindung von „Kennung prüfen“ aus `@flowaudit/ui-core` (dieselbe Logik wie `useIdentifierCheck` in Vue). */
+/** React-Anbindung von „Kennung prüfen“ aus `@auditcore/ui-core` (dieselbe Logik wie `useIdentifierCheck` in Vue). */
 export function useIdentifierCheck(props: IdentifierInputs): UseIdentifierCheck {
   const { t, locale } = useTranslation(identifierMessages, props.locale)
   const latest = useRef(props)

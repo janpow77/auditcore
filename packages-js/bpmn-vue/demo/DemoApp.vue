@@ -1,8 +1,8 @@
 <script setup lang="ts">
-/** Demo of @flowaudit/bpmn-vue: workbench with in-memory storage and synthetic data. */
+/** Demo of @auditcore/bpmn-vue: workbench with in-memory storage and synthetic data. */
 import { onMounted, shallowRef } from 'vue'
-import { InMemoryStorage, localized, ProfileCataloguePort, ProfileLegalSearch, StaticProfilePort, type ProfileData } from '@flowaudit/bpmn-flowaudit'
-import { bundledProfiles, defaultProfile } from '@flowaudit/bpmn-flowaudit/profiles'
+import { InMemoryStorage, localized, ProfileCataloguePort, ProfileLegalSearch, StaticProfilePort, type ProfileData } from '@auditcore/bpmn-flowaudit'
+import { bundledProfiles, defaultProfile } from '@auditcore/bpmn-flowaudit/profiles'
 import { FlowauditWorkbench } from '../src'
 import { demoStorage } from './demoData'
 

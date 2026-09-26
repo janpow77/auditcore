@@ -1,4 +1,4 @@
-import { filterOptions, formatScreeningDate as formatDate, type HitFilter, type HitView, type LogEntry, type Outcome, type ReviewStatus, type RunView, type SettingsView, type SubjectView } from '@flowaudit/ui-core'
+import { filterOptions, formatScreeningDate as formatDate, type HitFilter, type HitView, type LogEntry, type Outcome, type ReviewStatus, type RunView, type SettingsView, type SubjectView } from '@auditcore/ui-core'
 import { ScreeningComparison } from './ScreeningComparison'
 import { ScreeningDecision } from './ScreeningDecision'
 import { ScreeningFilters } from './ScreeningFilters'

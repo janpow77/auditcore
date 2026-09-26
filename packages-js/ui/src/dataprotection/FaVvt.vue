@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import { deliverExport, vvtFourEyes, type VvtExportFormat } from '@flowaudit/ui-core'
+import { deliverExport, vvtFourEyes, type VvtExportFormat } from '@auditcore/ui-core'
 import { provideLocale, useI18n, type Locale } from '../i18n'
 import VvtActivityDetail from './components/VvtActivityDetail.vue'
 import VvtActivityList from './components/VvtActivityList.vue'

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { displayName, formatDegrees, formatMetres, type LatLon } from '@flowaudit/ui-core'
+import { displayName, formatDegrees, formatMetres, type LatLon } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { useGeo } from './context'

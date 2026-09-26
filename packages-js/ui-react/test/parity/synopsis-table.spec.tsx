@@ -1,4 +1,4 @@
-import { FaSynopsis, FaTable } from '@flowaudit/ui'
+import { FaSynopsis, FaTable } from '@auditcore/ui'
 import { describe, it } from 'vitest'
 import { synopsisCases } from '../../../ui-core/test/parity/cases-synopsis'
 import { tableCases } from '../../../ui-core/test/parity/cases-table'

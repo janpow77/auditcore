@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import FaTextField from '../base/FaTextField.vue'
 import { useId } from '../composables/useId'
-import { CHANGE_STATUSES, ROW_STATUSES, statusLabel, type ClientExportFormat, type ServerExportLink, type SynopsisLayout, type SynopsisTranslate } from '@flowaudit/ui-core'
+import { CHANGE_STATUSES, ROW_STATUSES, statusLabel, type ClientExportFormat, type ServerExportLink, type SynopsisLayout, type SynopsisTranslate } from '@auditcore/ui-core'
 
 const props = defineProps<{
   layout: SynopsisLayout

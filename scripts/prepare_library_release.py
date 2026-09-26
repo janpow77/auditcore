@@ -532,7 +532,7 @@ def optional_assets(
 
 
 #: npm scope of the frontend packages under packages-js/ (tarball assets, no registry).
-NPM_SCOPE = "@flowaudit/"
+NPM_SCOPE = "@auditcore/"
 NPM_MANIFEST = "npm-packages.json"
 
 
@@ -542,7 +542,7 @@ def npm_integrity(data: bytes) -> str:
 
 
 def _npm_version_satisfies(version: str, spec: str) -> bool:
-    """Exact ``x.y.z`` or caret ``^x.y.z`` (the only forms used between @flowaudit packages)."""
+    """Exact ``x.y.z`` or caret ``^x.y.z`` (the only forms used between @auditcore packages)."""
     if re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", spec):
         return version == spec
     match = re.fullmatch(r"\^([0-9]+)\.([0-9]+)\.([0-9]+)", spec)
@@ -567,7 +567,7 @@ def _export_targets(value: Any) -> set[str]:
 
 
 def _internal_requirements(manifest: dict[str, Any]) -> dict[str, str]:
-    """Runtime dependencies and required peers inside the @flowaudit scope."""
+    """Runtime dependencies and required peers inside the @auditcore scope."""
     optional = {
         name
         for name, meta in (manifest.get("peerDependenciesMeta") or {}).items()
@@ -663,7 +663,7 @@ def verify_npm_tarballs(
                     closure.add(dependency)
                     pending.append(dependency)
         closure.add(package["name"])
-        # Every @flowaudit package of the closure must be named explicitly: npm resolves
+        # Every @auditcore package of the closure must be named explicitly: npm resolves
         # the internal ranges against these tarball URLs instead of the npm registry.
         package["install_closure"] = sorted(closure)
         package["package_json_dependencies"] = {

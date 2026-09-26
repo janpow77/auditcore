@@ -16,7 +16,7 @@ import {
   type Locale,
   type Proposal,
   type SurveyInput,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { LocaleProvider, useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 import { DsfaDecision } from './dsfa/DsfaDecision'

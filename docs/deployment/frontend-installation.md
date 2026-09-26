@@ -3,16 +3,18 @@
 Diese Anleitung beschreibt, wie eine Anwendung außerhalb dieses Repositorys die
 npm-Pakete unter `packages-js/` einbindet. Für die Python-Pakete gelten
 [package-feed.md](package-feed.md) und [library-installation.md](library-installation.md).
+Die Pakete hießen bis v0.4.1 anders; Umstellung bestehender Anwendungen:
+[umbenennung-auditcore.md](../ui/umbenennung-auditcore.md).
 
 **Bezugswege:**
 
-1. **npm-Registry (Standard):** `npm install @flowaudit/<paket>`. Der
+1. **npm-Registry (Standard):** `npm install @auditcore/<paket>`. Der
    Workflow `npm-publish` veröffentlicht nach jedem GitHub-Release genau die
    signierten Tarballs dieses Releases auf npmjs.org, mit Herkunftsnachweis
    (npm provenance). Die erste Veröffentlichung folgt mit dem ersten Release
-   nach v0.4.1, sobald die Organisation `@flowaudit` auf npm eingerichtet ist
+   nach v0.4.1, sobald die Organisation `@auditcore` auf npm eingerichtet ist
    ([npm-veroeffentlichung.md](npm-veroeffentlichung.md)); bis dahin liefert
-   `npm view @flowaudit/ui` noch 404.
+   `npm view @auditcore/ui` noch 404.
 2. **Tarball aus dem GitHub-Release (Intranet, offline, ohne Registry):**
    dieselben Dateien als `npm pack`-Tarballs, SHA-256-gebunden und signiert,
    beginnend mit dem ersten Release nach v0.4.1; v0.4.1 und ältere Releases
@@ -27,13 +29,13 @@ ist die `integrity` aus `npm-packages.json`.
 ## Installation aus der npm-Registry
 
 ```bash
-npm install @flowaudit/ui vue                     # Vue-Komponenten und Web Components
-npm install @flowaudit/ui-react react react-dom   # React 18.3 oder 19, ohne Vue
-npm install @flowaudit/bpmn-vue vue               # BPMN-Editor (Vue, Web Component)
-npm install @flowaudit/bpmn-react react react-dom # BPMN-Editor (React)
+npm install @auditcore/ui vue                     # Vue-Komponenten und Web Components
+npm install @auditcore/ui-react react react-dom   # React 18.3 oder 19, ohne Vue
+npm install @auditcore/bpmn-vue vue               # BPMN-Editor (Vue, Web Component)
+npm install @auditcore/bpmn-react react react-dom # BPMN-Editor (React)
 ```
 
-npm löst die übrigen `@flowaudit`-Pakete der Hülle (Tabelle unten) selbst auf
+npm löst die übrigen `@auditcore`-Pakete der Hülle (Tabelle unten) selbst auf
 und schreibt `resolved` und `integrity` in `package-lock.json`; im Build und in
 der CI dann nur `npm ci`. Die internen Abhängigkeiten sind auf genaue
 Versionen festgelegt, gemischte Stände entstehen nicht.
@@ -43,26 +45,26 @@ auf Workflow und Commit in `janpow77/auditcore` verweist):
 
 ```bash
 npm audit signatures
-npm view @flowaudit/ui dist.integrity   # gleich der integrity aus npm-packages.json
+npm view @auditcore/ui dist.integrity   # gleich der integrity aus npm-packages.json
 ```
 
 Vorabversionen (`x.y.z-rc.1` usw.) tragen den dist-tag `next` und kommen nur
-mit `npm install @flowaudit/ui@next`; `latest` bleibt die letzte stabile
+mit `npm install @auditcore/ui@next`; `latest` bleibt die letzte stabile
 Version.
 
 ## Überblick
 
 | Paket | Wofür | Framework | Laufzeitabhängigkeiten im Scope |
 |---|---|---|---|
-| `@flowaudit/common` | Hilfsfunktionen: deutsche Formatierung, Zahleneingabe, Fehlertexte, REST, Token, CSV, Sortierung, Prüfziffern | keines | – |
-| `@flowaudit/ui-core` | Gemeinsamer Kern der Oberflächen: Texte, REST-Verträge, Zustandsautomaten, Ports, Designtoken und Stile (`style.css`) | keines | `common` |
-| `@flowaudit/ui` | Oberflächenkomponenten als Vue-3-Komponenten und als Web Components (`@flowaudit/ui/elements`) | Vue 3.5 | `common`, `ui-core`, `kanban-core` |
-| `@flowaudit/ui-react` | Native React-Komponenten (Tabelle, Synopse, VVT, DSFA, Geo-Karte, Risiko-Merkmale, Screening, Stichprobe, Benford, Kanban, Grundbausteine, Hooks) ohne Vue-Laufzeit | React 18.3/19 | `common`, `ui-core`, `kanban-core` |
-| `@flowaudit/kanban-core` | Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte), gleiche Regeln wie `auditcore_kanban` | keines | – |
-| `@flowaudit/bpmn-editor` | BPMN-2.0-Zeicheneditor auf Basis von diagram-js | keines | – |
-| `@flowaudit/bpmn-flowaudit` | FlowAudit-Fachschicht für BPMN (Schema flowaudit 1.0/1.1, Prüfpfad, Berichte) | keines | (`bpmn-editor` als optionale Peer-Abhängigkeit) |
-| `@flowaudit/bpmn-vue` | BPMN-Oberfläche: Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
-| `@flowaudit/bpmn-react` | Native React-Oberfläche des BPMN-Editors ohne Vue-Laufzeit | React 18.3/19 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
+| `@auditcore/common` | Hilfsfunktionen: deutsche Formatierung, Zahleneingabe, Fehlertexte, REST, Token, CSV, Sortierung, Prüfziffern | keines | – |
+| `@auditcore/ui-core` | Gemeinsamer Kern der Oberflächen: Texte, REST-Verträge, Zustandsautomaten, Ports, Designtoken und Stile (`style.css`) | keines | `common` |
+| `@auditcore/ui` | Oberflächenkomponenten als Vue-3-Komponenten und als Web Components (`@auditcore/ui/elements`) | Vue 3.5 | `common`, `ui-core`, `kanban-core` |
+| `@auditcore/ui-react` | Native React-Komponenten (Tabelle, Synopse, VVT, DSFA, Geo-Karte, Risiko-Merkmale, Screening, Stichprobe, Benford, Kanban, Grundbausteine, Hooks) ohne Vue-Laufzeit | React 18.3/19 | `common`, `ui-core`, `kanban-core` |
+| `@auditcore/kanban-core` | Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte), gleiche Regeln wie `auditcore_kanban` | keines | – |
+| `@auditcore/bpmn-editor` | BPMN-2.0-Zeicheneditor auf Basis von diagram-js | keines | – |
+| `@auditcore/bpmn-flowaudit` | FlowAudit-Fachschicht für BPMN (Schema flowaudit 1.0/1.1, Prüfpfad, Berichte) | keines | (`bpmn-editor` als optionale Peer-Abhängigkeit) |
+| `@auditcore/bpmn-vue` | BPMN-Oberfläche: Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
+| `@auditcore/bpmn-react` | Native React-Oberfläche des BPMN-Editors ohne Vue-Laufzeit | React 18.3/19 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
 
 ### Ohne Registry: Tarballs aus dem Release
 
@@ -71,16 +73,16 @@ die jeden Frontend-Baustein als Datei im eigenen Repository führen.
 
 Die letzte Spalte ist beim Tarball-Weg entscheidend: **Jedes Paket der
 Hülle muss in der Anwendung ausdrücklich mit seiner Tarball-URL stehen.**
-npm prüft die internen Versionsangaben (z. B. `"@flowaudit/common": "0.1.1"`
-in `@flowaudit/ui`) dann gegen diese Einträge und fragt die Registry nicht. Fehlt ein Eintrag,
+npm prüft die internen Versionsangaben (z. B. `"@auditcore/common": "0.1.1"`
+in `@auditcore/ui`) dann gegen diese Einträge und fragt die Registry nicht. Fehlt ein Eintrag,
 sucht npm das Paket auf registry.npmjs.org und mischt so Registry- und
 Tarball-Stand oder scheitert ohne Netz. Deshalb gehört beim Tarball-Weg
 zusätzlich eine Sperre in die `.npmrc` der Anwendung (beim Registry-Weg
 nicht):
 
 ```ini
-# .npmrc – @flowaudit-Pakete nie aus einer Registry beziehen
-@flowaudit:registry=https://npm-registry.invalid/
+# .npmrc – @auditcore-Pakete nie aus einer Registry beziehen
+@auditcore:registry=https://npm-registry.invalid/
 ```
 
 Mit dieser Zeile schlägt ein vergessener Eintrag sofort fehl (`ENOTFOUND`),
@@ -95,7 +97,7 @@ Jeder Release mit npm-Paketen enthält:
 
 | Datei | Inhalt |
 |---|---|
-| `flowaudit-<paket>-<version>.tgz` | Ergebnis von `npm pack` für jedes Paket unter `packages-js/` |
+| `auditcore-<paket>-<version>.tgz` | Ergebnis von `npm pack` für jedes Paket unter `packages-js/` |
 | `npm-packages.json` | je Paket Version, URL, npm-Integrität (`sha512-…`), SHA-256, interne Abhängigkeiten, die vollständige Hülle (`install_closure`) und fertige `package.json`-Einträge (`package_json_dependencies`) |
 | `SHA256SUMS`, `SHA256SUMS.asc` | SHA-256 aller Release-Dateien (Wheels, Debian-Pakete, Tarballs, Manifeste) und die abgetrennte Signatur darüber |
 | `auditcore-preview-keyring.gpg` | öffentlicher Signaturschlüssel, Fingerprint `E427F95CC37CBFD0876314CA0D1580A6CAE37327` (wie bei den Python-Paketen) |
@@ -133,15 +135,15 @@ Die Integrität aus `npm-packages.json` ist genau der Wert, den npm in
 
 ### Installation
 
-Aus der Registry: `npm install @flowaudit/ui vue` (siehe oben). Ohne Registry
-liefert `npm-packages.json` die Einträge für `@flowaudit/ui` samt Hülle:
+Aus der Registry: `npm install @auditcore/ui vue` (siehe oben). Ohne Registry
+liefert `npm-packages.json` die Einträge für `@auditcore/ui` samt Hülle:
 
 ```bash
 deps=$(node -e '
   const m = require("./npm-packages.json")
   const p = m.packages.find((x) => x.name === process.argv[1])
   console.log(Object.entries(p.package_json_dependencies).map(([n, u]) => `${n}@${u}`).join(" "))
-' @flowaudit/ui)
+' @auditcore/ui)
 npm install $deps vue
 ```
 
@@ -150,10 +152,10 @@ Das ergibt in `package.json` (Versionen je nach Release):
 ```json
 {
   "dependencies": {
-    "@flowaudit/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.1.tgz",
-    "@flowaudit/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.1.tgz",
-    "@flowaudit/ui": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-0.3.0.tgz",
-    "@flowaudit/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.2.0.tgz",
+    "@auditcore/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-common-0.1.1.tgz",
+    "@auditcore/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-kanban-core-0.2.1.tgz",
+    "@auditcore/ui": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-0.3.0.tgz",
+    "@auditcore/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-ui-core-0.2.0.tgz",
     "vue": "^3.5.0"
   }
 }
@@ -164,18 +166,18 @@ und in `package-lock.json` je Paket `resolved` (die URL) und `integrity`
 
 **Alternative: Ablage im Repository (`vendor/`).** Wer beim Bau keinen Zugriff
 auf GitHub hat, legt die Tarballs ins Anwendungsrepository, wie regulierung es
-für `@flowaudit/common` tut:
+für `@auditcore/common` tut:
 
 ```text
-frontend/vendor/flowaudit-ui-0.3.0.tgz
-frontend/vendor/flowaudit-ui-0.3.0.provenance.json
+frontend/vendor/auditcore-ui-0.3.0.tgz
+frontend/vendor/auditcore-ui-0.3.0.provenance.json
 ```
 
 ```json
 {
-  "package": "@flowaudit/ui",
+  "package": "@auditcore/ui",
   "version": "0.3.0",
-  "file": "flowaudit-ui-0.3.0.tgz",
+  "file": "auditcore-ui-0.3.0.tgz",
   "source_repository": "https://github.com/janpow77/auditcore",
   "release": "v<release>",
   "source_commit": "<source_commit aus npm-packages.json>",
@@ -185,7 +187,7 @@ frontend/vendor/flowaudit-ui-0.3.0.provenance.json
 }
 ```
 
-In `package.json` steht dann `"@flowaudit/ui": "file:vendor/flowaudit-ui-0.3.0.tgz"`
+In `package.json` steht dann `"@auditcore/ui": "file:vendor/auditcore-ui-0.3.0.tgz"`
 (ebenso für jedes Paket der Hülle). npm schreibt die Integrität auch hier in
 `package-lock.json`; sie muss mit der Herkunftsdatei übereinstimmen.
 
@@ -196,7 +198,7 @@ In `package.json` steht dann `"@flowaudit/ui": "file:vendor/flowaudit-ui-0.3.0.t
   (`FaTable`, `FaButton`, `FaDialog`, `FaSynopsis`, `FaVvt`, `FaDsfa`,
   `KanbanBoard`, `SamplingPanel`, `BenfordPanel`, `ScreeningReview`,
   `RiskFlags`, `FaGeoMap` …).
-- **Stile:** einmal `import '@flowaudit/ui/style.css'`. Farben, Abstände,
+- **Stile:** einmal `import '@auditcore/ui/style.css'`. Farben, Abstände,
   Radien und Schriften sind CSS-Variablen `--fa-*`; die Anwendung überschreibt
   sie bei Bedarf in ihrem eigenen CSS.
 - **Hell/Dunkel:** hell ist Standard, dunkel über `data-fa-theme="dark"` am
@@ -214,8 +216,8 @@ Vollständig und in der CI gebaut: [`examples/vue-minimal`](../../examples/vue-m
 ```ts
 // src/main.ts
 import { createApp, ref } from 'vue'
-import { createFlowauditUi, type Locale } from '@flowaudit/ui'
-import '@flowaudit/ui/style.css'
+import { createFlowauditUi, type Locale } from '@auditcore/ui'
+import '@auditcore/ui/style.css'
 import App from './App.vue'
 
 const locale = ref<Locale>('de')
@@ -225,7 +227,7 @@ createApp(App).use(createFlowauditUi({ locale })).mount('#app')
 ```vue
 <!-- src/App.vue -->
 <script setup lang="ts">
-import { FaButton, FaTable, useTheme, type TableColumn } from '@flowaudit/ui'
+import { FaButton, FaTable, useTheme, type TableColumn } from '@auditcore/ui'
 
 const columns: TableColumn[] = [
   { key: 'beleg', label: 'Beleg', sortable: true },
@@ -245,11 +247,11 @@ const theme = useTheme()
 
 ### Installation
 
-`@flowaudit/ui-react` enthält native React-Komponenten und braucht **kein
+`@auditcore/ui-react` enthält native React-Komponenten und braucht **kein
 Vue**. Hülle: `ui-react`, `ui-core`, `kanban-core`, `common`.
 
 ```bash
-npm install @flowaudit/ui-react react react-dom   # aus der Registry
+npm install @auditcore/ui-react react react-dom   # aus der Registry
 ```
 
 Ohne Registry:
@@ -259,7 +261,7 @@ deps=$(node -e '
   const m = require("./npm-packages.json")
   const p = m.packages.find((x) => x.name === process.argv[1])
   console.log(Object.entries(p.package_json_dependencies).map(([n, u]) => `${n}@${u}`).join(" "))
-' @flowaudit/ui-react)
+' @auditcore/ui-react)
 npm install $deps react react-dom   # React 18.3 oder 19
 ```
 
@@ -277,19 +279,19 @@ Die `vendor/`-Ablage funktioniert wie bei Vue.
   Vue-Fassung (Paritätstests: [react-paritaet.md](../ui/react-paritaet.md)).
   Ereignisse sind `onXxx`-Props; was in Vue ein `v-model` ist, ist hier
   gesteuert (`sort`/`onSortChange`) oder ungesteuert (`defaultSort`).
-- **Stile:** einmal `import '@flowaudit/ui-core/style.css'` (Designtoken
+- **Stile:** einmal `import '@auditcore/ui-core/style.css'` (Designtoken
   `--fa-*` und Komponentenstile).
 - **Hell/Dunkel:** wie bei Vue über `data-fa-theme` am `<html>`
   (`document.documentElement.dataset.faTheme = 'dark'`); ohne Attribut gilt
   `prefers-color-scheme`.
 - **Sprache:** `LocaleProvider` um den Teilbaum, Prop `locale` an einzelnen
   Komponenten oder `setDefaultLocale('en')`.
-- **Datenzugriff:** über Ports aus `@flowaudit/ui-core`
+- **Datenzugriff:** über Ports aus `@auditcore/ui-core`
   (z. B. `createSynopsisRestClient`, `createDataProtectionRestPort`); `fetch` und
   Kopfzeilen (Anmeldetoken) gibt die Anwendung vor.
-- **BPMN:** `@flowaudit/bpmn-react` ist die native React-Oberfläche des
-  BPMN-Editors (ohne Vue) auf demselben Kern wie `@flowaudit/bpmn-vue`; Stile
-  aus `@flowaudit/bpmn-react/style.css`.
+- **BPMN:** `@auditcore/bpmn-react` ist die native React-Oberfläche des
+  BPMN-Editors (ohne Vue) auf demselben Kern wie `@auditcore/bpmn-vue`; Stile
+  aus `@auditcore/bpmn-react/style.css`.
 
 ### Minimalbeispiel
 
@@ -298,8 +300,8 @@ Vollständig und in der CI gebaut: [`examples/react-minimal`](../../examples/rea
 ```tsx
 import { useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { FlowauditTable, LocaleProvider, type Locale, type TableColumn } from '@flowaudit/ui-react'
-import '@flowaudit/ui-core/style.css'
+import { FlowauditTable, LocaleProvider, type Locale, type TableColumn } from '@auditcore/ui-react'
+import '@auditcore/ui-core/style.css'
 
 const columns: TableColumn[] = [
   { key: 'beleg', label: 'Beleg', sortable: true },
@@ -321,28 +323,28 @@ createRoot(document.getElementById('root')!).render(<App />)
 
 ## Ohne Framework: Web Components per `<script type="module">`
 
-`@flowaudit/ui/elements` registriert `<flowaudit-table>`,
+`@auditcore/ui/elements` registriert `<flowaudit-table>`,
 `<flowaudit-synopsis>`, `<flowaudit-vvt>`, `<flowaudit-dsfa>`,
 `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>`,
 `<flowaudit-sampling>`, `<flowaudit-benford>`,
 `<flowaudit-screening-review>`, `<flowaudit-risk-flags>` und
 `<flowaudit-geo-map>` im Light DOM (Designtoken der Seite gelten). Die Module
-importieren `vue`, `@flowaudit/ui-core`, `@flowaudit/common`,
-`@flowaudit/kanban-core` und bei der Geo-Karte `leaflet` über Paketnamen;
+importieren `vue`, `@auditcore/ui-core`, `@auditcore/common`,
+`@auditcore/kanban-core` und bei der Geo-Karte `leaflet` über Paketnamen;
 ohne Bundler bildet eine Import-Map diese Namen auf Dateien ab. Installation
-wie bei Vue (Hülle von `@flowaudit/ui` plus `vue`), danach die Dateien aus
+wie bei Vue (Hülle von `@auditcore/ui` plus `vue`), danach die Dateien aus
 `node_modules/` mit dem Webserver ausliefern:
 
 ```html
-<link rel="stylesheet" href="./node_modules/@flowaudit/ui/dist/ui.css" />
+<link rel="stylesheet" href="./node_modules/@auditcore/ui/dist/ui.css" />
 <script type="importmap">
   {
     "imports": {
-      "@flowaudit/ui/elements": "./node_modules/@flowaudit/ui/dist/elements.js",
-      "@flowaudit/ui-core": "./node_modules/@flowaudit/ui-core/dist/index.js",
-      "@flowaudit/common": "./node_modules/@flowaudit/common/dist/index.js",
-      "@flowaudit/common/browser": "./node_modules/@flowaudit/common/dist/browser.js",
-      "@flowaudit/kanban-core": "./node_modules/@flowaudit/kanban-core/dist/index.js",
+      "@auditcore/ui/elements": "./node_modules/@auditcore/ui/dist/elements.js",
+      "@auditcore/ui-core": "./node_modules/@auditcore/ui-core/dist/index.js",
+      "@auditcore/common": "./node_modules/@auditcore/common/dist/index.js",
+      "@auditcore/common/browser": "./node_modules/@auditcore/common/dist/browser.js",
+      "@auditcore/kanban-core": "./node_modules/@auditcore/kanban-core/dist/index.js",
       "vue": "./node_modules/vue/dist/vue.esm-browser.prod.js",
       "leaflet": "./node_modules/leaflet/dist/leaflet-src.esm.js"
     }
@@ -350,7 +352,7 @@ wie bei Vue (Hülle von `@flowaudit/ui` plus `vue`), danach die Dateien aus
 </script>
 <flowaudit-table id="belege"></flowaudit-table>
 <script type="module">
-  import { defineFlowauditElements } from '@flowaudit/ui/elements'
+  import { defineFlowauditElements } from '@auditcore/ui/elements'
 
   defineFlowauditElements({ locale: 'de' })
   const table = document.getElementById('belege')
@@ -365,24 +367,24 @@ Ereignisse sind `CustomEvent`s in kebab-case, die Nutzdaten stehen in
 `defineFlowauditElements({ locale })`. Beispiel mit Prüfung der Import-Map:
 [`examples/webcomponent-minimal`](../../examples/webcomponent-minimal).
 
-Der BPMN-Editor braucht keine Import-Map: `@flowaudit/bpmn-vue/web-component`
+Der BPMN-Editor braucht keine Import-Map: `@auditcore/bpmn-vue/web-component`
 (`dist-wc/flowaudit-bpmn-editor.js`) ist ein einzelnes Modul mit Vue, Kern,
 Fachschicht, Profilen und CSS:
 
 ```html
-<script type="module" src="./node_modules/@flowaudit/bpmn-vue/dist-wc/flowaudit-bpmn-editor.js"></script>
+<script type="module" src="./node_modules/@auditcore/bpmn-vue/dist-wc/flowaudit-bpmn-editor.js"></script>
 <flowaudit-bpmn-editor api-base="/api/bpmn" diagram-id="antragsverfahren" locale="de"></flowaudit-bpmn-editor>
 ```
 
 ## Aktualisieren und Pins prüfen
 
-**Registry-Weg:** alle `@flowaudit`-Pakete gemeinsam anheben, z. B.
-`npm install @flowaudit/ui@<version>`; `npm outdated` zeigt neue Versionen.
+**Registry-Weg:** alle `@auditcore`-Pakete gemeinsam anheben, z. B.
+`npm install @auditcore/ui@<version>`; `npm outdated` zeigt neue Versionen.
 Danach `npm ci`, Build und Tests. Die Schritte unten gelten für den
 Tarball-Weg.
 
 1. Neuen Release wählen, `SHA256SUMS` und `npm-packages.json` wie oben prüfen.
-2. Die Einträge aller `@flowaudit`-Pakete gemeinsam auf die URLs des neuen
+2. Die Einträge aller `@auditcore`-Pakete gemeinsam auf die URLs des neuen
    Releases umstellen (Befehl aus [Installation](#installation) erneut
    ausführen). Pakete verschiedener Releases nicht mischen: die internen
    Abhängigkeiten sind auf genaue Versionen festgelegt, und die Hülle stimmt
@@ -400,7 +402,7 @@ Tarball-Weg.
 
 4. `npm ci`, Build und Tests der Anwendung. Änderungen der Komponenten stehen
    im `CHANGELOG.md` des jeweiligen Pakets; eine neue Hauptversion (z. B.
-   `@flowaudit/ui-react` 1.0.0) kann die Props ändern.
+   `@auditcore/ui-react` 1.0.0) kann die Props ändern.
 
 `npm update` ändert an URL-Einträgen nichts; ein Wechsel geschieht nur
 ausdrücklich über neue URLs.
@@ -424,7 +426,7 @@ liefert jeweils ein Python-Paket, installiert wie in
 | `KanbanBoard`, `KanbanBoardList` / `FlowauditKanbanBoard`, `FlowauditKanbanBoards` / `<flowaudit-kanban-board>` | [kanban/rest-api.md](../kanban/rest-api.md) | `auditcore_kanban.rest` (`[ui]` oder `[fastapi]`) |
 | `<flowaudit-bpmn-editor>` (`api-base`) | [bpmn/rest-api.md](../bpmn/rest-api.md) | noch kein Server im Paket; `auditcore_bpmn` liest und prüft dasselbe BPMN (Schema flowaudit 1.1) |
 
-`@flowaudit/common` und `@flowaudit/kanban-core` rechnen mit denselben Regeln
+`@auditcore/common` und `@auditcore/kanban-core` rechnen mit denselben Regeln
 wie `auditcore_common` bzw. `auditcore_kanban` (gemeinsame Fixtures), sodass
 Anzeige im Browser und Prüfung auf dem Server übereinstimmen. Maßgeblich bleibt
 stets die Prüfung auf dem Server.
@@ -447,7 +449,7 @@ Herkunftsdatei statt des Releases den Commit festhalten.
 
 `node scripts/js/verify-examples.mjs` installiert die Beispiele unter
 `examples/` wie eine fremde Anwendung: frisches Verzeichnis, leere
-npm-Konfiguration und leerer Cache, Registry für `@flowaudit` gesperrt,
+npm-Konfiguration und leerer Cache, Registry für `@auditcore` gesperrt,
 `npm install`, Abgleich von `package-lock.json` (Version, `resolved`,
 Integrität, keine doppelten Kopien) und `npm run build`. Die CI (Workflow
 `js-packages`) führt das mit frisch gepackten Tarballs aus. Gegen einen

@@ -1,4 +1,4 @@
-import { decisionTitle, recommendationTone, type DataProtectionProfile, type Proposal } from '@flowaudit/ui-core'
+import { decisionTitle, recommendationTone, type DataProtectionProfile, type Proposal } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { prefixedLabel, useDataProtectionText } from '../shared'
 

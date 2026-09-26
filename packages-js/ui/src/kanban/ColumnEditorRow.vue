@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Column } from '@flowaudit/kanban-core'
+import type { Column } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'
 import { COLUMN_COLORS } from './cardView'

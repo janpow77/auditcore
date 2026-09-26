@@ -1,4 +1,4 @@
-import { requestFile, requestJson, type RestOptions } from '@flowaudit/common'
+import { requestFile, requestJson, type RestOptions } from '@auditcore/common'
 import type { DataProtectionPort } from './types'
 
 const segment = encodeURIComponent

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Attachment, CardLink } from '@flowaudit/kanban-core'
+import type { Attachment, CardLink } from '@auditcore/kanban-core'
 import FaIcon from '../base/FaIcon.vue'
 import { formatNumber, useI18n, type Locale } from '../i18n'
 import { fileSize } from './cardView'

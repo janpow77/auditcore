@@ -1,6 +1,6 @@
 /**
  * Creates the core editor with the FlowAudit layer. The core class is passed
- * in (`@flowaudit/bpmn-editor` is a peer of the UI packages), so this module
+ * in (`@auditcore/bpmn-editor` is a peer of the UI packages), so this module
  * stays free of the core and of any UI framework. Tests and applications may
  * pass their own factory (e.g. a fake editor).
  */
@@ -8,7 +8,7 @@
 import { flowauditEditorOptions, type FlowauditModuleOptions } from '../diagram/modules'
 import type { ServiceLocator } from '../diagram/services'
 
-/** The part of `BpmnEditor` the UI uses (contract of @flowaudit/bpmn-editor). */
+/** The part of `BpmnEditor` the UI uses (contract of @auditcore/bpmn-editor). */
 export interface EditorLike extends ServiceLocator {
   importXML(xml: string): Promise<{ warnings: string[] }>
   saveXML(options?: { format?: boolean }): Promise<{ xml: string }>
@@ -37,7 +37,7 @@ export interface CoreEditorOptions {
   config: Record<string, unknown>
 }
 
-/** Factory for the given core editor class (`BpmnEditor` of @flowaudit/bpmn-editor). */
+/** Factory for the given core editor class (`BpmnEditor` of @auditcore/bpmn-editor). */
 export function createEditorFactory(Editor: new (options: CoreEditorOptions) => unknown): EditorFactory {
   return (options) => {
     const extension = flowauditEditorOptions(options.flowaudit)

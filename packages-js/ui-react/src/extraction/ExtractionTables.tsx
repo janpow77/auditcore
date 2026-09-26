@@ -13,7 +13,7 @@ import {
   type ExtractionFinding,
   type ExtractionTranslate,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 
 interface FieldsProps {

@@ -1,4 +1,4 @@
-// Vue-Anbindung des Zustandsautomaten der Vergleichsverwaltung aus @flowaudit/ui-core.
+// Vue-Anbindung des Zustandsautomaten der Vergleichsverwaltung aus @auditcore/ui-core.
 
 import { computed, type ComputedRef, type Ref } from 'vue'
 import {
@@ -10,7 +10,7 @@ import {
   type ComparisonsPort,
   type ComparisonsTranslate,
   type ComparisonsView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
 export interface ComparisonsSource {

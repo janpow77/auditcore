@@ -1,7 +1,7 @@
 import { useId, useSyncExternalStore } from 'react'
-import type { Store } from '@flowaudit/ui-core'
+import type { Store } from '@auditcore/ui-core'
 
-/** Stand eines Kern-Controllers (`@flowaudit/ui-core`) als React-Zustand. */
+/** Stand eines Kern-Controllers (`@auditcore/ui-core`) als React-Zustand. */
 export function useStoreState<S extends object>(store: Store<S>): S {
   return useSyncExternalStore(store.subscribe, store.get, store.get)
 }

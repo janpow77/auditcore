@@ -1,5 +1,5 @@
 import type { DragEvent } from 'react'
-import type { DbColumnView, DbKanbanTranslate } from '@flowaudit/ui-core'
+import type { DbColumnView, DbKanbanTranslate } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { classes, useElementId } from '../store'
 import { DbKanbanCard } from './DbKanbanCard'

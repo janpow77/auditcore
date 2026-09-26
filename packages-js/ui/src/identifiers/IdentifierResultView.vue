@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { identifierFacts, identifierReasonText, identifierStatusText, identifierStatusTone, type IdentifierResult } from '@flowaudit/ui-core'
+import { identifierFacts, identifierReasonText, identifierStatusText, identifierStatusTone, type IdentifierResult } from '@auditcore/ui-core'
 import { useIdentifierContext } from './context'
 
 const props = defineProps<{ result: IdentifierResult }>()

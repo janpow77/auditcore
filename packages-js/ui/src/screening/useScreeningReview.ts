@@ -1,4 +1,4 @@
-// Vue-Anbindung des Zustandsautomaten der Screening-Trefferprüfung aus `@flowaudit/ui-core`.
+// Vue-Anbindung des Zustandsautomaten der Screening-Trefferprüfung aus `@auditcore/ui-core`.
 
 import { computed, type ComputedRef } from 'vue'
 import {
@@ -8,10 +8,10 @@ import {
   type ScreeningController,
   type ScreeningData,
   type ScreeningPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { ReviewEvents, ScreeningError } from '@flowaudit/ui-core'
+export type { ReviewEvents, ScreeningError } from '@auditcore/ui-core'
 
 type Field<K extends keyof ScreeningData> = ComputedRef<ScreeningData[K]>
 

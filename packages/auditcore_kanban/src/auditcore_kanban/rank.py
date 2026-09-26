@@ -1,7 +1,7 @@
 """Rank keys: ordered strings that allow inserting between two cards without renumbering.
 
 The algorithm is a base-62 fractional index (midpoint after D. Greenspan). The
-TypeScript package ``@flowaudit/kanban-core`` implements it character for
+TypeScript package ``@auditcore/kanban-core`` implements it character for
 character; ``tests/fixtures/parity/rank.json`` pins both implementations.
 
 Keys use the ASCII-ordered alphabet ``0-9A-Za-z``, are never empty and never end

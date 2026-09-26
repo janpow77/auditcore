@@ -1,9 +1,9 @@
 /**
  * Exporte des Verzeichnisses aus dem angezeigten Stand, ohne Vue: CSV mit
- * Formelschutz (`toCsv` aus @flowaudit/common, Verträge `csv-cell`/`csv-document`),
+ * Formelschutz (`toCsv` aus @auditcore/common, Verträge `csv-cell`/`csv-document`),
  * Markdown und eigenständiges HTML als Druckansicht („Als PDF speichern“).
  */
-import { escapeHtml, toCsv } from '@flowaudit/common'
+import { escapeHtml, toCsv } from '@auditcore/common'
 import { escapeMarkdown, exportFilename } from '../synopsis/exporters'
 import { displayValue, groupByDepartment } from './registerView'
 import type { RegisterColumn, FieldValue, Issue, RegisterContent } from './types'

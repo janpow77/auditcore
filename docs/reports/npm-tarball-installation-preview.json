@@ -1,168 +1,174 @@
 {
   "scope": "NPM_TARBALL_INSTALLATION",
   "status": "PASS",
-  "hinweis": "Vorabnachweis vor dem ersten Release mit npm-Tarballs: die von scripts/prepare_library_release.py erzeugten Assets (npm-packages.json und Tarballs) wurden lokal über HTTP bereitgestellt (Nachbau des Release-Downloadpfads). Der anonyme Test gegen den öffentlichen GitHub-Release-Pfad folgt nach dem Upload mit derselben Prüfung (--base-url).",
+  "hinweis": "Vorabnachweis vor dem ersten Release mit npm-Tarballs: die von scripts/prepare_library_release.py erzeugten Assets (npm-packages.json und Tarballs) wurden lokal über HTTP bereitgestellt (Nachbau des Release-Downloadpfads). Der anonyme Test gegen den öffentlichen GitHub-Release-Pfad folgt nach dem Upload mit derselben Prüfung (--base-url). Neu erzeugt nach der Umbenennung des npm-Scopes in @auditcore (docs/ui/umbenennung-auditcore.md).",
   "release_url_under_test": "http://127.0.0.1:48751",
   "prepared_release_version": "0.4.2",
-  "source_commit": "7067b9a8bb11f8767d590d65502227830347b694",
+  "source_commit": "be0242d81f8543110d4507597bf352f2b1a4b2d8",
   "packages": [
     {
-      "name": "@flowaudit/bpmn-editor",
-      "version": "0.1.0",
-      "file": "flowaudit-bpmn-editor-0.1.0.tgz",
-      "integrity": "sha512-sGnhF8P/BWIC7wmZWPM2RCALZWTsSHfsc/Ib33uJZwB8U25Z3l1xQwO9CTTJq7wd4gEPR6YCDpVU6EvbhyQByg==",
-      "sha256": "d3bb3338a34284618ca576e57223d037286637d1d380b97b73a49e402601f55b"
+      "name": "@auditcore/bpmn-editor",
+      "version": "0.1.1",
+      "file": "auditcore-bpmn-editor-0.1.1.tgz",
+      "integrity": "sha512-iuttfny2f7iWGLdtQTv0IzkaCAq+JZC3iB32jkz5OmgAemzLIF0D6lZ/P/wpX4QJ/V68M4O9oHT6d+/oRmIjig==",
+      "sha256": "fc0a57099cd162b05ebdfa2fb4cd5a5659175ec4408ee8a7aa1bf7c10f18287f"
     },
     {
-      "name": "@flowaudit/bpmn-flowaudit",
-      "version": "0.1.0",
-      "file": "flowaudit-bpmn-flowaudit-0.1.0.tgz",
-      "integrity": "sha512-yuoJ7E9zWuVjlJio6TKIPts+Mjin/CHg0WN2jO7EwCMNtsBLCnobKYnXz9sYEDGon+DZWc6FDHn+rDxUPZdLEQ==",
-      "sha256": "e02d3ecd69a563f24d7d6b809965049e8eed9b79a9e2cc94b05c5a30019abb0d"
+      "name": "@auditcore/bpmn-flowaudit",
+      "version": "0.2.1",
+      "file": "auditcore-bpmn-flowaudit-0.2.1.tgz",
+      "integrity": "sha512-TQKFoL56gpzk3hlWb6ttH7s4ZHRwNeks+8WiPHK5JBmQMhtFmL3AUwnB6a5gwadHXEMfBIQLFq5aNaqhkOU26g==",
+      "sha256": "96b218831c4a7dbdf8b402f98102f4f4d604e64d71b32487029e14f7316657ab"
     },
     {
-      "name": "@flowaudit/bpmn-react",
-      "version": "0.1.0",
-      "file": "flowaudit-bpmn-react-0.1.0.tgz",
-      "integrity": "sha512-imOeRvPSj8FcwNakeUJBPUlohbW7KJeL1EcmOnG7LZl060v/JeA/R0QfewGLru1U/MgbmmgC7Ny4zgK8ipqG+g==",
-      "sha256": "6c5cb716e2f2d89b36596541fb6eaac5cd979493f01bf9fb2fc6ba9ad5843e3f"
+      "name": "@auditcore/bpmn-react",
+      "version": "0.2.1",
+      "file": "auditcore-bpmn-react-0.2.1.tgz",
+      "integrity": "sha512-AQ0K1PN+LIAbrXHmnv+/zhFHrZJX7aO0qEkAML1PS7I5r8kNjErAzx2YdmG69X3gAG+U0nnrkgPyQETi9VgDHQ==",
+      "sha256": "b4f7dc347c9f57733ce4dbbc74a1fb9915511b1fc64e364fd34e00bfb1d06dff"
     },
     {
-      "name": "@flowaudit/bpmn-vue",
-      "version": "0.1.0",
-      "file": "flowaudit-bpmn-vue-0.1.0.tgz",
-      "integrity": "sha512-iJ5gJ4QKiQWOh+IhdOnA5aDPLKZoAY5PJG6pAQESAkdn15Yodgn1kThdELGc3CwQRETNUMg0HETWTpzLrtW/mQ==",
-      "sha256": "d1d1d3d909506e4d1c025fef37f3aa847950c529565b7cfdee09c65b8d03a1c4"
+      "name": "@auditcore/bpmn-vue",
+      "version": "0.2.1",
+      "file": "auditcore-bpmn-vue-0.2.1.tgz",
+      "integrity": "sha512-89j+W+h9/uz0yeNJAySgHPPZW2g6Zd0yNBIftRFVqUvsxriwZKMvDaE5kyxMLq4O9dndT1SpcDg84EWQI+PdFA==",
+      "sha256": "0df240e60456519d7aa210496c301a6c390637f242ae43288847438f020a13fc"
     },
     {
-      "name": "@flowaudit/common",
-      "version": "0.1.0",
-      "file": "flowaudit-common-0.1.0.tgz",
-      "integrity": "sha512-zdrzBvWO77evKDe7TZKoHRjgx28YjS5Rh3ICezYIDHNiUE/IaxYYf+Q+e/SsN1TA029Dm1zaNcROBgD0Q1MCUg==",
-      "sha256": "b082307effdd0d0b75b101af08582c8e3408db85c1214b0228ef62b06eb35e1e"
+      "name": "@auditcore/common",
+      "version": "0.1.1",
+      "file": "auditcore-common-0.1.1.tgz",
+      "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+      "sha256": "2d633cf1795faba04f6b385d829751f2999de0f6ad607d722daa812a7871a514"
     },
     {
-      "name": "@flowaudit/kanban-core",
-      "version": "0.1.0",
-      "file": "flowaudit-kanban-core-0.1.0.tgz",
-      "integrity": "sha512-m0bJIpp8D3JjQiwSt3JufWJCEROuABRhGgVep9NgPnUtxfqAmkeVnhVqS1FIglmdheSbPmxoQP6RD9RUxatioQ==",
-      "sha256": "57acd7df1c4262a3b9bde2fff17f3df2f5a2de28c7149427bbd6f8d2a691939e"
+      "name": "@auditcore/kanban-core",
+      "version": "0.2.1",
+      "file": "auditcore-kanban-core-0.2.1.tgz",
+      "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+      "sha256": "fe084d2b267a1953c6227163bc977bbf5185812bde18768c6de4c0ba53d623a2"
     },
     {
-      "name": "@flowaudit/ui",
+      "name": "@auditcore/ui",
       "version": "0.3.0",
-      "file": "flowaudit-ui-0.3.0.tgz",
-      "integrity": "sha512-PLs86x4iHn52pjfmHFhpVZU7NobDTSJNNdskxaMS/PofWLkotovgx8UZr9REB1qEyYwrnIxljJjUXhxzhNrlKg==",
-      "sha256": "5819b831f4a32848cde836626fdd8dce7ed74b803760fedc6b756930fc06f3d1"
+      "file": "auditcore-ui-0.3.0.tgz",
+      "integrity": "sha512-BljeF8mBfOyfo7B4svCNz4Hv4PW15d6cwvriKhVdlYvoVrMWeKV1VyjO/NPslY1eYAxtHdcnpnpUEd6ABvI7mw==",
+      "sha256": "ade7b5acdffc0b689556a9833f2b12314fd2eb554b1026e694284d390d6a47ff"
     },
     {
-      "name": "@flowaudit/ui-core",
-      "version": "0.1.0",
-      "file": "flowaudit-ui-core-0.1.0.tgz",
-      "integrity": "sha512-FivLCuu/b4MTIyBNCdNT/rycJni1iobr9S7yj66XxdaBzHYLgXnKqWJI6tAWnR+OsYO1EfMsDaOthTdaN8l3lw==",
-      "sha256": "683cc22f3881874487c6bb754f095cb88de7cf21e1e69279886e8748d6a1d2fd"
+      "name": "@auditcore/ui-core",
+      "version": "0.2.0",
+      "file": "auditcore-ui-core-0.2.0.tgz",
+      "integrity": "sha512-HCI//dY1sFgk+ozcgV1G4SjxRkPVEWZOUlTbXtIdZ7jCVvNCBKqnAj3rrjsn+9fEkecx1Ll3oUbcmZbz8aPVHQ==",
+      "sha256": "ef26807df646f3d0df3f56b8bd1e131a5c3d6cfd16e10315652438359ab8b884"
     },
     {
-      "name": "@flowaudit/ui-react",
-      "version": "1.0.0",
-      "file": "flowaudit-ui-react-1.0.0.tgz",
-      "integrity": "sha512-DtKy4YgB4F7J/HnDaAGiQ0lIcAoA0+VqKtgnrH003VKpgX7m9rB/5FCvRbDB+DpNcAb6+QKY6N8cyRj63+Dh9Q==",
-      "sha256": "58c929daa17fc99e790afc498ba9921e6f6ec38d974553a8adfc2e8f789f7f95"
+      "name": "@auditcore/ui-react",
+      "version": "1.1.0",
+      "file": "auditcore-ui-react-1.1.0.tgz",
+      "integrity": "sha512-aFjq4J/iCr3yzRZ4RU4GXDHU3O2oZKL+BIriR5CIwwxrtGMX7GsvTDuBzfTVvE2zCiV6226wb/ZsTVOZICKwaA==",
+      "sha256": "2dc8ea65edb007bd98e25532f160f127e3e005803b69d8582baa5d7182f298a4"
     }
   ],
   "node": "v20.19.6",
   "npm": "11.16.0",
-  "method": "frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @flowaudit-Registry gesperrt, npm install, Abgleich package-lock.json, npm run build",
+  "method": "frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @auditcore-Registry gesperrt, npm install, Abgleich package-lock.json, npm run build",
   "examples": [
     {
       "example": "react-minimal",
       "status": "PASS",
-      "flowaudit_packages": [
+      "auditcore_packages": [
         {
-          "name": "@flowaudit/common",
-          "version": "0.1.0",
-          "integrity": "sha512-zdrzBvWO77evKDe7TZKoHRjgx28YjS5Rh3ICezYIDHNiUE/IaxYYf+Q+e/SsN1TA029Dm1zaNcROBgD0Q1MCUg==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-common-0.1.0.tgz"
+          "name": "@auditcore/common",
+          "version": "0.1.1",
+          "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+          "resolved": "http://127.0.0.1:48751/auditcore-common-0.1.1.tgz"
         },
         {
-          "name": "@flowaudit/ui-core",
-          "version": "0.1.0",
-          "integrity": "sha512-FivLCuu/b4MTIyBNCdNT/rycJni1iobr9S7yj66XxdaBzHYLgXnKqWJI6tAWnR+OsYO1EfMsDaOthTdaN8l3lw==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-ui-core-0.1.0.tgz"
+          "name": "@auditcore/kanban-core",
+          "version": "0.2.1",
+          "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+          "resolved": "http://127.0.0.1:48751/auditcore-kanban-core-0.2.1.tgz"
         },
         {
-          "name": "@flowaudit/ui-react",
-          "version": "1.0.0",
-          "integrity": "sha512-DtKy4YgB4F7J/HnDaAGiQ0lIcAoA0+VqKtgnrH003VKpgX7m9rB/5FCvRbDB+DpNcAb6+QKY6N8cyRj63+Dh9Q==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-ui-react-1.0.0.tgz"
+          "name": "@auditcore/ui-core",
+          "version": "0.2.0",
+          "integrity": "sha512-HCI//dY1sFgk+ozcgV1G4SjxRkPVEWZOUlTbXtIdZ7jCVvNCBKqnAj3rrjsn+9fEkecx1Ll3oUbcmZbz8aPVHQ==",
+          "resolved": "http://127.0.0.1:48751/auditcore-ui-core-0.2.0.tgz"
+        },
+        {
+          "name": "@auditcore/ui-react",
+          "version": "1.1.0",
+          "integrity": "sha512-aFjq4J/iCr3yzRZ4RU4GXDHU3O2oZKL+BIriR5CIwwxrtGMX7GsvTDuBzfTVvE2zCiV6226wb/ZsTVOZICKwaA==",
+          "resolved": "http://127.0.0.1:48751/auditcore-ui-react-1.1.0.tgz"
         }
       ],
-      "install_and_build_seconds": 158
+      "install_and_build_seconds": 27
     },
     {
       "example": "vue-minimal",
       "status": "PASS",
-      "flowaudit_packages": [
+      "auditcore_packages": [
         {
-          "name": "@flowaudit/common",
-          "version": "0.1.0",
-          "integrity": "sha512-zdrzBvWO77evKDe7TZKoHRjgx28YjS5Rh3ICezYIDHNiUE/IaxYYf+Q+e/SsN1TA029Dm1zaNcROBgD0Q1MCUg==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-common-0.1.0.tgz"
+          "name": "@auditcore/common",
+          "version": "0.1.1",
+          "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+          "resolved": "http://127.0.0.1:48751/auditcore-common-0.1.1.tgz"
         },
         {
-          "name": "@flowaudit/kanban-core",
-          "version": "0.1.0",
-          "integrity": "sha512-m0bJIpp8D3JjQiwSt3JufWJCEROuABRhGgVep9NgPnUtxfqAmkeVnhVqS1FIglmdheSbPmxoQP6RD9RUxatioQ==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-kanban-core-0.1.0.tgz"
+          "name": "@auditcore/kanban-core",
+          "version": "0.2.1",
+          "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+          "resolved": "http://127.0.0.1:48751/auditcore-kanban-core-0.2.1.tgz"
         },
         {
-          "name": "@flowaudit/ui",
+          "name": "@auditcore/ui",
           "version": "0.3.0",
-          "integrity": "sha512-PLs86x4iHn52pjfmHFhpVZU7NobDTSJNNdskxaMS/PofWLkotovgx8UZr9REB1qEyYwrnIxljJjUXhxzhNrlKg==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-ui-0.3.0.tgz"
+          "integrity": "sha512-BljeF8mBfOyfo7B4svCNz4Hv4PW15d6cwvriKhVdlYvoVrMWeKV1VyjO/NPslY1eYAxtHdcnpnpUEd6ABvI7mw==",
+          "resolved": "http://127.0.0.1:48751/auditcore-ui-0.3.0.tgz"
         },
         {
-          "name": "@flowaudit/ui-core",
-          "version": "0.1.0",
-          "integrity": "sha512-FivLCuu/b4MTIyBNCdNT/rycJni1iobr9S7yj66XxdaBzHYLgXnKqWJI6tAWnR+OsYO1EfMsDaOthTdaN8l3lw==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-ui-core-0.1.0.tgz"
+          "name": "@auditcore/ui-core",
+          "version": "0.2.0",
+          "integrity": "sha512-HCI//dY1sFgk+ozcgV1G4SjxRkPVEWZOUlTbXtIdZ7jCVvNCBKqnAj3rrjsn+9fEkecx1Ll3oUbcmZbz8aPVHQ==",
+          "resolved": "http://127.0.0.1:48751/auditcore-ui-core-0.2.0.tgz"
         }
       ],
-      "install_and_build_seconds": 80
+      "install_and_build_seconds": 81
     },
     {
       "example": "webcomponent-minimal",
       "status": "PASS",
-      "flowaudit_packages": [
+      "auditcore_packages": [
         {
-          "name": "@flowaudit/common",
-          "version": "0.1.0",
-          "integrity": "sha512-zdrzBvWO77evKDe7TZKoHRjgx28YjS5Rh3ICezYIDHNiUE/IaxYYf+Q+e/SsN1TA029Dm1zaNcROBgD0Q1MCUg==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-common-0.1.0.tgz"
+          "name": "@auditcore/common",
+          "version": "0.1.1",
+          "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+          "resolved": "http://127.0.0.1:48751/auditcore-common-0.1.1.tgz"
         },
         {
-          "name": "@flowaudit/kanban-core",
-          "version": "0.1.0",
-          "integrity": "sha512-m0bJIpp8D3JjQiwSt3JufWJCEROuABRhGgVep9NgPnUtxfqAmkeVnhVqS1FIglmdheSbPmxoQP6RD9RUxatioQ==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-kanban-core-0.1.0.tgz"
+          "name": "@auditcore/kanban-core",
+          "version": "0.2.1",
+          "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+          "resolved": "http://127.0.0.1:48751/auditcore-kanban-core-0.2.1.tgz"
         },
         {
-          "name": "@flowaudit/ui",
+          "name": "@auditcore/ui",
           "version": "0.3.0",
-          "integrity": "sha512-PLs86x4iHn52pjfmHFhpVZU7NobDTSJNNdskxaMS/PofWLkotovgx8UZr9REB1qEyYwrnIxljJjUXhxzhNrlKg==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-ui-0.3.0.tgz"
+          "integrity": "sha512-BljeF8mBfOyfo7B4svCNz4Hv4PW15d6cwvriKhVdlYvoVrMWeKV1VyjO/NPslY1eYAxtHdcnpnpUEd6ABvI7mw==",
+          "resolved": "http://127.0.0.1:48751/auditcore-ui-0.3.0.tgz"
         },
         {
-          "name": "@flowaudit/ui-core",
-          "version": "0.1.0",
-          "integrity": "sha512-FivLCuu/b4MTIyBNCdNT/rycJni1iobr9S7yj66XxdaBzHYLgXnKqWJI6tAWnR+OsYO1EfMsDaOthTdaN8l3lw==",
-          "resolved": "http://127.0.0.1:48751/flowaudit-ui-core-0.1.0.tgz"
+          "name": "@auditcore/ui-core",
+          "version": "0.2.0",
+          "integrity": "sha512-HCI//dY1sFgk+ozcgV1G4SjxRkPVEWZOUlTbXtIdZ7jCVvNCBKqnAj3rrjsn+9fEkecx1Ll3oUbcmZbz8aPVHQ==",
+          "resolved": "http://127.0.0.1:48751/auditcore-ui-core-0.2.0.tgz"
         }
       ],
       "install_and_build_seconds": 73
     }
   ],
   "registry_publication": "NOT_EXECUTED",
-  "checked_at": "2026-09-26T09:46:12.262Z",
+  "checked_at": "2026-09-26T18:44:27.808Z",
   "application_release": "NOT_EVALUATED"
 }

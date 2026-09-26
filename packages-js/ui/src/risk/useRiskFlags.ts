@@ -10,7 +10,7 @@ import {
   type RiskFilter,
   type RuleView,
   type Totals,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import type { TableColumn, TableRow } from '../table'
 import { useStore } from '../composables/useStore'
 
@@ -30,7 +30,7 @@ export interface UseRiskFlags {
   controller: RiskController
 }
 
-/** Vue-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (Filter, Auswahl, abgeleitete Daten). */
+/** Vue-Anbindung des Zustandsautomaten aus `@auditcore/ui-core` (Filter, Auswahl, abgeleitete Daten). */
 export function useRiskFlags(evaluation: () => Evaluation | null | undefined, recordLabelText: string): UseRiskFlags {
   const controller = createRiskController()
   const state = useStore(controller.store)

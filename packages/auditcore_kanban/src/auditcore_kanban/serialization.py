@@ -1,7 +1,7 @@
 """JSON (de)serialization of boards; format ``auditcore_kanban.board/1``.
 
 The shape is described by ``schemas/board.schema.json`` (JSON Schema 2020-12)
-and mirrored by ``@flowaudit/kanban-core``.
+and mirrored by ``@auditcore/kanban-core``.
 """
 
 from __future__ import annotations
@@ -193,22 +193,36 @@ def column_from_json(r: _Reader) -> Column:
 
 def card_from_json(r: _Reader) -> Card:
     return Card(
-        id=r.text("id"), column_id=r.text("column_id"), rank=r.text("rank"),
-        title=r.text("title"), description=r.text("description", ""),
-        priority=r.text("priority", "mittel"), tags=r.texts("tags"),
-        assignees=r.texts("assignees"), due=r.optional_text("due"),
-        color=r.optional_text("color"), image=r.optional_text("image"),
+        id=r.text("id"),
+        column_id=r.text("column_id"),
+        rank=r.text("rank"),
+        title=r.text("title"),
+        description=r.text("description", ""),
+        priority=r.text("priority", "mittel"),
+        tags=r.texts("tags"),
+        assignees=r.texts("assignees"),
+        due=r.optional_text("due"),
+        color=r.optional_text("color"),
+        image=r.optional_text("image"),
         badge=r.optional_text("badge"),
-        checklist=tuple(ChecklistItem(i.text("text"), i.flag("done"))
-                        for i in r.objects("checklist")),
-        links=tuple(CardLink(i.text("kind"), i.text("target"), i.text("title", ""))
-                    for i in r.objects("links")),
+        checklist=tuple(
+            ChecklistItem(i.text("text"), i.flag("done")) for i in r.objects("checklist")
+        ),
+        links=tuple(
+            CardLink(i.text("kind"), i.text("target"), i.text("title", ""))
+            for i in r.objects("links")
+        ),
         attachments=tuple(
-            Attachment(i.text("id"), i.text("filename"),
-                       i.text("mime_type", "application/octet-stream"), i.integer("size", 0) or 0)
+            Attachment(
+                i.text("id"),
+                i.text("filename"),
+                i.text("mime_type", "application/octet-stream"),
+                i.integer("size", 0) or 0,
+            )
             for i in r.objects("attachments")
         ),
-        created_at=r.text("created_at", ""), updated_at=r.text("updated_at", ""),
+        created_at=r.text("created_at", ""),
+        updated_at=r.text("updated_at", ""),
         extra=r.extra(),
     )
 
@@ -254,17 +268,30 @@ def board_from_json(raw: object) -> Board:
     if not columns:
         raise KanbanError("INVALID_DOCUMENT", "board.columns: mindestens eine Spalte erforderlich")
     return Board(
-        id=r.text("id"), title=r.text("title"), owner_id=r.text("owner_id"),
-        icon=r.text("icon", "📋"), pinned=r.flag("pinned"), archived=r.flag("archived"),
+        id=r.text("id"),
+        title=r.text("title"),
+        owner_id=r.text("owner_id"),
+        icon=r.text("icon", "📋"),
+        pinned=r.flag("pinned"),
+        archived=r.flag("archived"),
         version=r.integer("version", 0) or 0,
-        created_at=r.text("created_at", ""), updated_at=r.text("updated_at", ""),
+        created_at=r.text("created_at", ""),
+        updated_at=r.text("updated_at", ""),
         columns=columns,
         cards=tuple(card_from_json(c) for c in r.objects("cards")),
-        labels=tuple(Label(x.text("id"), x.text("name"), x.text("color", "#6b7280"))
-                     for x in r.objects("labels")),
-        shares=tuple(Share(s.text("user_id"), s.text("permission", "read"),
-                           s.optional_text("shared_by"), s.optional_text("created_at"))
-                     for s in r.objects("shares")),
+        labels=tuple(
+            Label(x.text("id"), x.text("name"), x.text("color", "#6b7280"))
+            for x in r.objects("labels")
+        ),
+        shares=tuple(
+            Share(
+                s.text("user_id"),
+                s.text("permission", "read"),
+                s.optional_text("shared_by"),
+                s.optional_text("created_at"),
+            )
+            for s in r.objects("shares")
+        ),
         transitions=policy_from_json(r.raw.get("transitions")),
         wip_mode=_wip_mode(r),
         extra=r.extra(),

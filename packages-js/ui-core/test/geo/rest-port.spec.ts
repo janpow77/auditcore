@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createGeoRestPort } from '../../src/geo/rest-port'
-import type { FetchLike } from '@flowaudit/common'
+import type { FetchLike } from '@auditcore/common'
 
 function recorder(): { fetch: FetchLike; calls: [string, RequestInit | undefined][] } {
   const calls: [string, RequestInit | undefined][] = []

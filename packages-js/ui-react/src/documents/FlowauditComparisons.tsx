@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, type Ref } from 'react'
-import { synopsisPortOf } from '@flowaudit/ui-core'
+import { synopsisPortOf } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { Dialog } from '../base/Dialog'
 import { LocaleProvider } from '../i18n'

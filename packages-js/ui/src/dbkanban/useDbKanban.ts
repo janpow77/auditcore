@@ -1,7 +1,7 @@
-// Vue-Anbindung der Datenbankansicht als Kanban (Zustandsautomat aus @flowaudit/ui-core).
+// Vue-Anbindung der Datenbankansicht als Kanban (Zustandsautomat aus @auditcore/ui-core).
 
 import { computed, type ComputedRef, type Ref } from 'vue'
-import type { RecordPort } from '@flowaudit/kanban-core'
+import type { RecordPort } from '@auditcore/kanban-core'
 import {
   createDbKanbanController,
   dbKanbanView,
@@ -10,7 +10,7 @@ import {
   type DbKanbanHooks,
   type DbKanbanTranslate,
   type DbKanbanView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
 export interface DbKanbanSource {

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { TableColumn, TableRow } from '@flowaudit/common'
+import type { TableColumn, TableRow } from '@auditcore/common'
 import {
   formatAmount,
   formatShare,
@@ -10,7 +10,7 @@ import {
   type RiskDistributionRow,
   type RiskTranslate,
   type Totals,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { FlowauditTable } from '../table/FlowauditTable'
 import { RiskFlagState } from './RiskFlagState'

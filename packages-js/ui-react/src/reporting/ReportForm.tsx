@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
-import { saveFile } from '@flowaudit/common/browser'
-import { reportingErrorKey, reportingTablesText } from '@flowaudit/ui-core'
+import { saveFile } from '@auditcore/common/browser'
+import { reportingErrorKey, reportingTablesText } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import type { UseReportExport } from './useReportExport'
 

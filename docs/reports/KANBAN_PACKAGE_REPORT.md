@@ -20,5 +20,5 @@ Inventur: `docs/kanban/paritaet-audit-designer.md`. REST-Vertrag:
 `docs/kanban/rest-api.md`.
 
 Nicht ausgeführt: Veröffentlichung (macht der Hauptagent), Consumer-Umstellung
-(audit_designer, cockpit), `@flowaudit/kanban-core` und `@flowaudit/ui`
+(audit_designer, cockpit), `@auditcore/kanban-core` und `@auditcore/ui`
 (eigener Branch).

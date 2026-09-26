@@ -1,7 +1,7 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import FaGeoMap from '../../src/geo/FaGeoMap.vue'
-import type { GeoCatalogue, GeoPackageResult, GeoPort, LocateResult, MapLayers, MapViewOptions, RadiusResult, SimplifyResult, UtmResult } from '@flowaudit/ui-core'
+import type { GeoCatalogue, GeoPackageResult, GeoPort, LocateResult, MapLayers, MapViewOptions, RadiusResult, SimplifyResult, UtmResult } from '@auditcore/ui-core'
 import catalogue from '../../../ui-core/test/fixtures/geo-catalogue.json'
 import gpkg from '../../../ui-core/test/fixtures/geo-gpkg.json'
 import locate from '../../../ui-core/test/fixtures/geo-locate-rand.json'
@@ -12,8 +12,8 @@ import utmPoint from '../../../ui-core/test/fixtures/geo-utm-point.json'
 
 const view = vi.hoisted(() => ({ options: null as MapViewOptions | null, layers: [] as MapLayers[], fit: 0, tiles: [] as unknown[] }))
 
-vi.mock('@flowaudit/ui-core', async (original) => ({
-  ...(await original<typeof import('@flowaudit/ui-core')>()),
+vi.mock('@auditcore/ui-core', async (original) => ({
+  ...(await original<typeof import('@auditcore/ui-core')>()),
   createLeafletView: vi.fn(async (_element: HTMLElement, options: MapViewOptions) => {
     view.options = options
     return {

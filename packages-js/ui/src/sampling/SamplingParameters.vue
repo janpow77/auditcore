@@ -2,7 +2,7 @@
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
-import { confidenceText, parameterUnit as unit, samplingFieldError, samplingMessages, type FieldError, type MethodProfile } from '@flowaudit/ui-core'
+import { confidenceText, parameterUnit as unit, samplingFieldError, samplingMessages, type FieldError, type MethodProfile } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   profile: MethodProfile

@@ -1,4 +1,4 @@
-import { extrapolationIssueText, RESIDUAL_FIELDS, residualColumns, residualMetrics, residualRows, type Locale } from '@flowaudit/ui-core'
+import { extrapolationIssueText, RESIDUAL_FIELDS, residualColumns, residualMetrics, residualRows, type Locale } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { FlowauditTable } from '../table/FlowauditTable'

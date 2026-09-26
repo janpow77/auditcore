@@ -1,4 +1,4 @@
-import { createToastQueue, createTokenStore, type SortState } from '@flowaudit/common'
+import { createToastQueue, createTokenStore, type SortState } from '@auditcore/common'
 import { act, createRef, useRef } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -45,8 +45,8 @@ function Capture<T>({ use, into }: { use: () => T; into: { current: T | null } }
   return null
 }
 
-describe('Re-Exporte aus @flowaudit/common', () => {
-  it('stehen mit den Namen aus @flowaudit/ui bereit', () => {
+describe('Re-Exporte aus @auditcore/common', () => {
+  it('stehen mit den Namen aus @auditcore/ui bereit', () => {
     expect(localeTag('en')).toBe('en-GB')
     expect(formatDate(null, 'de')).toBe('')
     expect(nextSort(null, 'x')).toEqual({ key: 'x', direction: 'asc' })

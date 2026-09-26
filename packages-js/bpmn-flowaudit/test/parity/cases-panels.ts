@@ -1,6 +1,6 @@
 /**
  * Shared parity cases of the panel components: the Vue version
- * (`@flowaudit/bpmn-vue`) and the React version (`@flowaudit/bpmn-react`)
+ * (`@auditcore/bpmn-vue`) and the React version (`@auditcore/bpmn-react`)
  * render with the same inputs and are checked against the same
  * expectations and against each other (DOM). Synthetic data only.
  */

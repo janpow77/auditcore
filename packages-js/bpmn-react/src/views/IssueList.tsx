@@ -1,8 +1,8 @@
 /** Validation issues grouped by severity with jump to the element. */
 
 import { useState } from 'react'
-import { issueMessage, severityLabel, type Severity, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
-import { countSeverity, filterIssues, ISSUE_ICONS, SEVERITIES } from '@flowaudit/bpmn-flowaudit/ui'
+import { issueMessage, severityLabel, type Severity, type ValidationIssue } from '@auditcore/bpmn-flowaudit'
+import { countSeverity, filterIssues, ISSUE_ICONS, SEVERITIES } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ReportExportPanel, createReportingRestPort, type ReportTableInput } from '@flowaudit/ui'
+import { ReportExportPanel, createReportingRestPort, type ReportTableInput } from '@auditcore/ui'
 
 const port = createReportingRestPort({ baseUrl: '/api/reporting' })
 const tables: ReportTableInput[] = [

@@ -1,9 +1,9 @@
-/** Vue-Anbindung der Boardliste (`createBoardListController` aus `@flowaudit/kanban-core`). */
+/** Vue-Anbindung der Boardliste (`createBoardListController` aus `@auditcore/kanban-core`). */
 import { computed } from 'vue'
-import { createBoardListController, selectBoardList, type BoardPort } from '@flowaudit/kanban-core'
+import { createBoardListController, selectBoardList, type BoardPort } from '@auditcore/kanban-core'
 import { useStore } from '../composables/useStore'
 
-export { sortBoards } from '@flowaudit/kanban-core'
+export { sortBoards } from '@auditcore/kanban-core'
 
 export function useBoardList(port: () => BoardPort | null | undefined) {
   const controller = createBoardListController(port)

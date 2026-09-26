@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch, type Component } from 'vue'
-import { FaButton, useTheme } from '@flowaudit/ui'
+import { FaButton, useTheme } from '@auditcore/ui'
 import { DEMO_PAGES, findPage } from './pages'
 import { demoLocale } from './locale'
 

@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from 'react'
-import type { DecimalSeparator } from '@flowaudit/common'
+import type { DecimalSeparator } from '@auditcore/common'
 import {
   createTableImportController,
   importDelimiterText,
@@ -13,7 +13,7 @@ import {
   type TableImportData,
   type Translate,
   type TabularMessageKey,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useTranslation } from '../i18n'
 import { useElementId, useStoreState } from '../store'

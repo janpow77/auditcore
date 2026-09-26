@@ -1,4 +1,4 @@
-import type { PopulationItem } from '@flowaudit/ui'
+import type { PopulationItem } from '@auditcore/ui'
 
 /** Deterministische Beispielbelegliste (zwei Lose) für die Demo – keine echten Daten. */
 export function demoPopulation(count = 240): PopulationItem[] {

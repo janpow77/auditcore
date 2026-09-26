@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import type { DownloadFile } from '@flowaudit/common'
-import { saveFile } from '@flowaudit/common/browser'
+import type { DownloadFile } from '@auditcore/common'
+import { saveFile } from '@auditcore/common/browser'
 import {
   reportingErrorKey,
   reportingMessages,
@@ -10,7 +10,7 @@ import {
   type ReportingPort,
   type ReportTableInput,
   type WorkbookPreview,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'

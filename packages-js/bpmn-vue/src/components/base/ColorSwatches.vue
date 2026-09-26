@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /** List of palette colours with meaning plus „remove colour“ (legacy colour menu). */
-import type { PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import type { PaletteColor } from '@auditcore/bpmn-flowaudit'
 import { useI18n } from '../../i18n/useI18n'
 
 defineProps<{ colors: readonly PaletteColor[]; disabled?: boolean }>()

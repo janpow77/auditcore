@@ -8,7 +8,7 @@ import {
   type SortState,
   type TableColumn,
   type TableRow,
-} from '@flowaudit/ui-react'
+} from '@auditcore/ui-react'
 
 const rows: TableRow[] = [
   { id: 'r1', beleg: 'R-2026-001', datum: '2026-03-02', betrag: 1250.5 },

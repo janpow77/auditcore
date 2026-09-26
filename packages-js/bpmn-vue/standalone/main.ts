@@ -2,7 +2,7 @@
 
 import { createApp } from 'vue'
 import StandaloneApp from '../src/standalone/StandaloneApp.vue'
-import { readConfig } from '@flowaudit/bpmn-flowaudit/ui'
-import '@flowaudit/bpmn-flowaudit/ui.css'
+import { readConfig } from '@auditcore/bpmn-flowaudit/ui'
+import '@auditcore/bpmn-flowaudit/ui.css'
 
 createApp(StandaloneApp, { config: readConfig() }).mount('#app')

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { createScreeningController, selectScreening, type ReviewEvents, type ScreeningController, type ScreeningData, type ScreeningPort, type ScreeningSelection } from '@flowaudit/ui-core'
+import { createScreeningController, selectScreening, type ReviewEvents, type ScreeningController, type ScreeningData, type ScreeningPort, type ScreeningSelection } from '@auditcore/ui-core'
 import { useStoreState } from '../store'
 
 export interface UseScreeningReview {
@@ -9,7 +9,7 @@ export interface UseScreeningReview {
 }
 
 /**
- * React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik
+ * React-Anbindung des Zustandsautomaten aus `@auditcore/ui-core` (dieselbe Logik
  * wie `useScreeningReview` in Vue). Lädt bei gesetztem Port Einstellungen,
  * Quellen und Läufe und öffnet danach `runId`.
  */

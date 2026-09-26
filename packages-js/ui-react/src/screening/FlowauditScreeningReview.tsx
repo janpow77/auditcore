@@ -1,4 +1,4 @@
-import { screeningMessages, type Locale, type ScreeningError, type ScreeningPort } from '@flowaudit/ui-core'
+import { screeningMessages, type Locale, type ScreeningError, type ScreeningPort } from '@auditcore/ui-core'
 import { LocaleProvider, useTranslation } from '../i18n'
 import { ScreeningRunDetail } from './ScreeningRunDetail'
 import { ScreeningRunForm } from './ScreeningRunForm'

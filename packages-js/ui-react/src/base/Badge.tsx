@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { BadgeTone } from '@flowaudit/ui-core'
+import type { BadgeTone } from '@auditcore/ui-core'
 
 export interface BadgeProps {
   tone?: BadgeTone

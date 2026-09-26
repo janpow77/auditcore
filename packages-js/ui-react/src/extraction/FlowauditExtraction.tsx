@@ -6,7 +6,7 @@ import {
   extractionStatusText,
   extractionStatusTone,
   type ExtractionRun,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { useElementId } from '../store'
 import { ExtractionForm } from './ExtractionForm'

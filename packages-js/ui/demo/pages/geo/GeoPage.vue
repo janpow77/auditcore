@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { createGeoRestPort, FaGeoMap, type LatLon, type RadiusResult, type TileSource } from '@flowaudit/ui'
+import { createGeoRestPort, FaGeoMap, type LatLon, type RadiusResult, type TileSource } from '@auditcore/ui'
 import { demoAreas, demoPoints } from './demoData'
 
 const port = createGeoRestPort({ baseUrl: '/api/geo' })

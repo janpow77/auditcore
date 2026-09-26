@@ -1,8 +1,8 @@
 # REST-Vertrag Hochrechnung (`auditcore_extrapolation.web`)
 
 Vertrag `auditcore_extrapolation.evaluation/1`. Stand: auditcore_extrapolation 0.1.0.
-Oberfläche: `<flowaudit-extrapolation>` bzw. `ExtrapolationPanel` aus `@flowaudit/ui`,
-nativ in React `FlowauditExtrapolation` aus `@flowaudit/ui-react`.
+Oberfläche: `<flowaudit-extrapolation>` bzw. `ExtrapolationPanel` aus `@auditcore/ui`,
+nativ in React `FlowauditExtrapolation` aus `@auditcore/ui-react`.
 
 `catalogue`, `evaluate`, `residual` und `export_evaluation` sind framework-frei.
 `create_app`/`routes` benötigen das Extra `web` (Starlette, Debian `python3-starlette`),

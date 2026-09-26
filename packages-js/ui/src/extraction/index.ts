@@ -1,7 +1,7 @@
 export { default as FaExtraction } from './FaExtraction.vue'
 export { extractionElement } from './element'
 export { useExtraction, type ExtractionCallbacks, type UseExtraction } from './useExtraction'
-/** Kern (Vertrag, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag, Zustandsautomat, Anzeige) aus `@auditcore/ui-core`. */
 export {
   extractionMessages,
   type ExtractionMessageKey,
@@ -21,4 +21,4 @@ export {
   type ExtractionFinding,
   type ExtractionOcrSummary,
   type ExtractionPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

@@ -2,7 +2,7 @@
 // Tabelle über einen RecordPort laden, nach einer Auswahl-Eigenschaft gruppieren,
 // Karten per Ziehen oder Tastatur verschieben (setzt den Zellwert), Einträge anlegen.
 
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import {
   dropValue,
   groupableProperties,
@@ -15,7 +15,7 @@ import {
   type RecordPort,
   type RecordRow,
   type RecordTable,
-} from '@flowaudit/kanban-core'
+} from '@auditcore/kanban-core'
 import { createRunner, createStore, IDLE, type RequestState, type Store } from '../store'
 import type { DbKanbanTranslate } from './messages'
 import { cellText, columnLabel, titleProperty } from './view'

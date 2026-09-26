@@ -1,4 +1,4 @@
-import { kanbanDialogMessages, kanbanMessages, type Locale } from '@flowaudit/ui-core'
+import { kanbanDialogMessages, kanbanMessages, type Locale } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 
 /** Texte der Kanban-Komponenten (dieselben Kataloge wie die Vue-Fassung). */

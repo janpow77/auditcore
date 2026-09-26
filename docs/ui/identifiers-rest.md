@@ -1,7 +1,7 @@
 # REST-Vertrag „Kennung prüfen“ (`identifiers_ui/1`, `auditcore_identifiers.web`)
 
 Stand 2026-09-26. Vertrag zwischen `auditcore_identifiers.web` und der
-Oberflächenkomponente `<flowaudit-identifier-check>` aus `@flowaudit/ui`
+Oberflächenkomponente `<flowaudit-identifier-check>` aus `@auditcore/ui`
 (Vue `IdentifierCheck`, React `FlowauditIdentifierCheck`). Geprüft wird
 ausschließlich in der Bibliothek; die Oberfläche rechnet keine Prüfziffern.
 Kein Profil wird still angenommen: `GET /catalogue` empfiehlt `strict`, die
@@ -118,7 +118,7 @@ Zeile (z. B. `value` keine Zeichenkette) lehnen die Anfrage mit Feldpfad ab
 ## Oberfläche
 
 `createIdentifiersRestPort({ baseUrl: '/api/kennungen' })` aus
-`@flowaudit/ui-core` (auch über `@flowaudit/ui` und `@flowaudit/ui-react`).
+`@auditcore/ui-core` (auch über `@auditcore/ui` und `@auditcore/ui-react`).
 Die Komponente zeigt Profilwahl (Empfehlung und Altverhalten gekennzeichnet,
 Herkunft und Zweck aufklappbar), die Einzelprüfung mit Status, Begründung,
 Grund, Normalform und Einzelheiten sowie die Stapelprüfung: Datei (CSV, TSV,

@@ -1,6 +1,6 @@
 /**
  * Shared parity cases of the editor dialogs and side views: the Vue version
- * (`@flowaudit/bpmn-vue`) and the React version (`@flowaudit/bpmn-react`) are
+ * (`@auditcore/bpmn-vue`) and the React version (`@auditcore/bpmn-react`) are
  * rendered with the same inputs and checked against the same expectations
  * and against each other (DOM). Synthetic data only.
  */

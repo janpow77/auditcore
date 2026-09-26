@@ -6,7 +6,7 @@ import {
   type IdentifierBatchAnswer,
   type IdentifierResult,
   type IdentifiersPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
 import { IDENTIFIER_CONTEXT } from './context'

@@ -6,7 +6,7 @@
 import { ref } from 'vue'
 import FaIcon from '../components/base/FaIcon.vue'
 import { useI18n } from '../i18n/useI18n'
-import { removeAt, replaceAt, toggleIndex, type FieldDescriptor, type ListDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
+import { removeAt, replaceAt, toggleIndex, type FieldDescriptor, type ListDescriptor, type Option } from '@auditcore/bpmn-flowaudit/ui'
 import FieldForm from './FieldForm.vue'
 
 const props = defineProps<{

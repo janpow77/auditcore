@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Card } from '@flowaudit/kanban-core'
+import type { Card } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'
 import KanbanCard from './KanbanCard.vue'

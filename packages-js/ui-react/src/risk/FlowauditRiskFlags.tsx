@@ -8,7 +8,7 @@ import {
   type ProfileDetail,
   type RiskFilter,
   type RiskPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { RiskFlagFilter } from './RiskFlagFilter'
 import { RiskFlagSummary } from './RiskFlagSummary'
 import { RiskFlagTable } from './RiskFlagTable'

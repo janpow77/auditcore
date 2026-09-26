@@ -1,5 +1,5 @@
 import type { DragEvent, KeyboardEvent } from 'react'
-import type { DbCardView, DbKanbanTranslate } from '@flowaudit/ui-core'
+import type { DbCardView, DbKanbanTranslate } from '@auditcore/ui-core'
 import { classes } from '../store'
 
 export interface DbKanbanCardProps {

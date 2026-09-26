@@ -4,7 +4,7 @@ import FaBadge from '../base/FaBadge.vue'
 import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 import type { TableColumn, TableRow } from '../table'
-import { riskMessages, type FieldEntry, type ProfileDetail, type RuleView, formatValue, parameterLabel, requirementKey, profileHintText, profileStatusText, whenMissingKey, pairs } from '@flowaudit/ui-core'
+import { riskMessages, type FieldEntry, type ProfileDetail, type RuleView, formatValue, parameterLabel, requirementKey, profileHintText, profileStatusText, whenMissingKey, pairs } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{ profile?: ProfileDetail | null; locale?: Locale }>(), { profile: null, locale: undefined })
 const { t, locale: active } = useI18n(riskMessages, () => props.locale)

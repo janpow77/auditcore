@@ -1,4 +1,4 @@
-import { ariaSort, nextSort, sortRows, type SortState, type TableRow } from '@flowaudit/common'
+import { ariaSort, nextSort, sortRows, type SortState, type TableRow } from '@auditcore/common'
 import { computed, ref, toValue, type ComputedRef, type MaybeRefOrGetter, type Ref } from 'vue'
 
 export interface UseSortOptions {

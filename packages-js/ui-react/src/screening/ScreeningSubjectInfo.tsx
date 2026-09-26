@@ -1,4 +1,4 @@
-import { formatScreeningDate as formatDate, type FindingView, type ScreeningTranslate, type SubjectView } from '@flowaudit/ui-core'
+import { formatScreeningDate as formatDate, type FindingView, type ScreeningTranslate, type SubjectView } from '@auditcore/ui-core'
 import { TitledBadge, useScreeningText } from './shared'
 
 function details(subject: SubjectView, t: ScreeningTranslate): string {

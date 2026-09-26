@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import type { Comment, PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { listsFor, tabMove, tabsFor, type TabDefinition, type TabId } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Comment, PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { listsFor, tabMove, tabsFor, type TabDefinition, type TabId } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { useSelectionState } from '../context'
 import { useI18n } from '../i18n'

@@ -1,4 +1,4 @@
-import { displayName } from '@flowaudit/ui-core'
+import { displayName } from '@auditcore/ui-core'
 import { useGeo } from './context'
 
 export function GeoAreaSelect({ testid }: { testid: string }) {

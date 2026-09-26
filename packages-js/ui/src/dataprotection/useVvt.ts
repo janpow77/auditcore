@@ -1,4 +1,4 @@
-// Vue-Anbindung des VVT-Zustandsautomaten aus @flowaudit/ui-core.
+// Vue-Anbindung des VVT-Zustandsautomaten aus @auditcore/ui-core.
 
 import { computed, onScopeDispose, getCurrentScope, type ComputedRef, type Ref } from 'vue'
 import {
@@ -10,10 +10,10 @@ import {
   type VvtData,
   type VvtHooks,
   type VvtView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { VvtExport, VvtExportFormat, VvtHooks } from '@flowaudit/ui-core'
+export type { VvtExport, VvtExportFormat, VvtHooks } from '@auditcore/ui-core'
 
 export interface VvtState {
   controller: VvtController

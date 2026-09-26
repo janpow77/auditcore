@@ -1,5 +1,5 @@
 /** Beispieldaten der Kanban-Demo (fiktive Personen und Vorhaben). */
-import { findTemplate, SCHEMA_VERSION, spreadRanks, type Board, type Card, type Column, type UserRef } from '@flowaudit/kanban-core'
+import { findTemplate, SCHEMA_VERSION, spreadRanks, type Board, type Card, type Column, type UserRef } from '@auditcore/kanban-core'
 
 export const DEMO_USERS: readonly UserRef[] = [
   { id: 'anna', name: 'Anna Becker', email: 'anna.becker@example.invalid' },

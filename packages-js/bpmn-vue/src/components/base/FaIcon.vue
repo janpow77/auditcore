@@ -4,7 +4,7 @@
  * by default; pass `label` to make it meaningful for assistive technology.
  */
 import { computed, h } from 'vue'
-import { iconPrimitives } from '@flowaudit/bpmn-flowaudit'
+import { iconPrimitives } from '@auditcore/bpmn-flowaudit'
 
 const props = withDefaults(defineProps<{ name: string; size?: number; label?: string }>(), { size: 18, label: '' })
 

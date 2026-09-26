@@ -2,7 +2,7 @@
 
 Stand 25.09.2026. Vorbilder: FlowStat im audit_designer (`origin/main` @ `2c726f3c`),
 ECOHESION-Lab `sampling.py` im audit_designer, riskanalysis (`main`). Ziel: gemeinsame
-Komponenten `<flowaudit-sampling>` und `<flowaudit-benford>` in `@flowaudit/ui` auf Basis von
+Komponenten `<flowaudit-sampling>` und `<flowaudit-benford>` in `@auditcore/ui` auf Basis von
 `auditcore_sampling.web` und `auditcore_statistics.web`.
 
 Legende: **übernommen** = gleiche Fachlogik über die Bibliothek; **ergänzt** = neu gegenüber

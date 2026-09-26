@@ -1,9 +1,9 @@
-import { FaGeoMap } from '@flowaudit/ui'
+import { FaGeoMap } from '@auditcore/ui'
 import { fireEvent as domEvent } from '@testing-library/dom'
 import { fireEvent } from '@testing-library/react'
 import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
-import type { LatLon, MapViewOptions } from '@flowaudit/ui-core'
+import type { LatLon, MapViewOptions } from '@auditcore/ui-core'
 import { fakeGeoPort, GEO_AREA, GEO_POINTS, geoCases } from '../../../ui-core/test/parity/cases-geo'
 import { formState, normalizeDom } from '../../../ui-core/test/parity/dom'
 import { FlowauditGeoMap } from '../../src/geo/FlowauditGeoMap'
@@ -11,8 +11,8 @@ import { expectParity, renderBoth, tick, type Rendered } from './setup'
 
 // Leaflet braucht echtes Layout; beide Fassungen bekommen dieselbe Attrappe der Kartenansicht.
 const views = vi.hoisted(() => [] as MapViewOptions[])
-vi.mock('@flowaudit/ui-core', async (original) => ({
-  ...(await original<typeof import('@flowaudit/ui-core')>()),
+vi.mock('@auditcore/ui-core', async (original) => ({
+  ...(await original<typeof import('@auditcore/ui-core')>()),
   createLeafletView: vi.fn(async (_element: HTMLElement, options: MapViewOptions) => {
     views.push(options)
     return { update: vi.fn(), setTiles: vi.fn(), fit: vi.fn(), destroy: vi.fn() }

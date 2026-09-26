@@ -1,4 +1,4 @@
-import { formatScreeningDate as formatDate, type ReviewView, type ScreeningTranslate } from '@flowaudit/ui-core'
+import { formatScreeningDate as formatDate, type ReviewView, type ScreeningTranslate } from '@auditcore/ui-core'
 import { codeKey, useScreeningText } from './shared'
 
 function decisionLine(review: ReviewView, t: ScreeningTranslate): string {

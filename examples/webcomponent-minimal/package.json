@@ -1,17 +1,17 @@
 {
-  "name": "flowaudit-example-webcomponent-minimal",
+  "name": "auditcore-example-webcomponent-minimal",
   "private": true,
   "version": "0.0.0",
-  "description": "Web Components aus @flowaudit/ui ohne Bundler: <script type=module> mit Import-Map",
+  "description": "Web Components aus @auditcore/ui ohne Bundler: <script type=module> mit Import-Map",
   "type": "module",
   "scripts": {
     "build": "node check-importmap.mjs index.html"
   },
   "dependencies": {
-    "@flowaudit/common": "file:../vendor/flowaudit-common.tgz",
-    "@flowaudit/kanban-core": "file:../vendor/flowaudit-kanban-core.tgz",
-    "@flowaudit/ui": "file:../vendor/flowaudit-ui.tgz",
-    "@flowaudit/ui-core": "file:../vendor/flowaudit-ui-core.tgz",
+    "@auditcore/common": "file:../vendor/auditcore-common.tgz",
+    "@auditcore/kanban-core": "file:../vendor/auditcore-kanban-core.tgz",
+    "@auditcore/ui": "file:../vendor/auditcore-ui.tgz",
+    "@auditcore/ui-core": "file:../vendor/auditcore-ui-core.tgz",
     "vue": "^3.5.0"
   },
   "devDependencies": {

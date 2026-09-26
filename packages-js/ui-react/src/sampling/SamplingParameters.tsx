@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { confidenceText, parameterUnit, samplingFieldError, type FieldError, type Locale, type MethodProfile, type ParameterSpec, type SamplingTranslate } from '@flowaudit/ui-core'
+import { confidenceText, parameterUnit, samplingFieldError, type FieldError, type Locale, type MethodProfile, type ParameterSpec, type SamplingTranslate } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { classes, useElementId } from '../store'
 

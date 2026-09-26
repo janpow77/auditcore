@@ -1,7 +1,7 @@
 # Paritätsinventur „Synopse / Versionsvergleich“
 
 Stand: 25.09.2026. Gegenstand: wiederverwendbare Oberfläche `<flowaudit-synopsis>`
-(`@flowaudit/ui`, Vue 3 + Web Component; native React-Fassung in `@flowaudit/ui-react`, Parität in [`react-paritaet.md`](react-paritaet.md))
+(`@auditcore/ui`, Vue 3 + Web Component; native React-Fassung in `@auditcore/ui-react`, Parität in [`react-paritaet.md`](react-paritaet.md))
 und REST-Anbindung `auditcore_documents.web` (0.3.0). Vertrag:
 [`synopsis-rest.md`](synopsis-rest.md).
 
@@ -21,7 +21,7 @@ Vorbildern, damit Nutzer beider Anwendungen dieselben Begriffe sehen.
 ## Legende
 
 **R** = REST-Anbindung `auditcore_documents` 0.3.0 (getestet) · **U** = Oberfläche
-`@flowaudit/ui` (`packages-js/ui/src/synopsis`, getestet; Demo „Synopse /
+`@auditcore/ui` (`packages-js/ui/src/synopsis`, getestet; Demo „Synopse /
 Versionsvergleich“, Bildschirmfotos unter `docs/ui/screenshots/synopse-*.png`) ·
 **A** = bleibt bewusst Sache der Anwendung · **–** = nicht übernommen (Grund)
 
@@ -91,7 +91,7 @@ Versionsvergleich“, Bildschirmfotos unter `docs/ui/screenshots/synopse-*.png`)
 | Barrierearm | U | Tabellen- bzw. Artikel-Semantik, Überschriften je Spalte, Status nicht nur über Farbe (Text und Unter-/Durchstreichung), `aria-live` für Navigation und Ladezustand, Tastatur („n“/„p“, „j“/„k“), sichtbarer Fokus, reduzierte Bewegung |
 | Dark Mode | U | CSS-Variablen, `prefers-color-scheme` und Attribut `theme` |
 | Framework-freie Anzeige-Logik | U | View-Model (`buildSynopsisView`, Wortdifferenz, Navigation, Export) ohne Vue |
-| Web Component und React | U | `<flowaudit-synopsis>`, `FlowauditSynopsis` in `@flowaudit/ui-react` |
+| Web Component und React | U | `<flowaudit-synopsis>`, `FlowauditSynopsis` in `@auditcore/ui-react` |
 | Mandantentrennung | R | `identify` je Anfrage, 404 für fremde Vergleiche |
 | Keine Datenbank, kein Celery im Paket | R | Port `ComparisonStore` |
 
@@ -104,7 +104,7 @@ Versionsvergleich“, Bildschirmfotos unter `docs/ui/screenshots/synopse-*.png`)
 | HTML-/Markdown-Export, Druckansicht | `src/synopsis/exporters.ts`, `useSynopsisExport.ts` |
 | Port und REST-Client für `auditcore_documents.web` | `src/synopsis/port.ts` |
 | Vue-Komponenten | `FaSynopsis.vue`, `SynopsisHeader.vue`, `SynopsisToolbar.vue`, `SynopsisRow.vue`, `SynopsisText.vue`, `SynopsisCommands.vue` |
-| Web Component / React | `<flowaudit-synopsis>` (`src/synopsis/element.ts`), `FlowauditSynopsis` (`@flowaudit/ui-react`) |
+| Web Component / React | `<flowaudit-synopsis>` (`src/synopsis/element.ts`), `FlowauditSynopsis` (`@auditcore/ui-react`) |
 
 Ereignisse: `row-update` (`{row_id, selected?, reason?}`), `export`
 (`{format, filename, mimeType, content}`), `navigate` (Zeilenkennung),

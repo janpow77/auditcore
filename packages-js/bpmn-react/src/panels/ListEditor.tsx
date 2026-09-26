@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react'
-import { removeAt, replaceAt, toggleIndex, type FieldDescriptor, type ListDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
+import { removeAt, replaceAt, toggleIndex, type FieldDescriptor, type ListDescriptor, type Option } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { classes } from '../hooks'
 import { useI18n } from '../i18n'

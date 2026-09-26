@@ -8,7 +8,7 @@ import {
   type ComparisonsView,
   type RowStatus,
   type UploadFile,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { TextField } from '../base/TextField'
 import { classes, useElementId } from '../store'

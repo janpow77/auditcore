@@ -3,7 +3,7 @@ export { synopsisElement } from './element'
 export { useSynopsis, type SynopsisSource, type SynopsisFilterState, type UseSynopsis } from './useSynopsis'
 export { useSynopsisNavigation, focusRow, type UseSynopsisNavigation } from './useSynopsisNavigation'
 export { useSynopsisExport, downloadText, printHtml, type UseSynopsisExport } from './useSynopsisExport'
-/** Kern (Datentypen, View-Model, Wortvergleich, Exporte, Port) aus `@flowaudit/ui-core`. */
+/** Kern (Datentypen, View-Model, Wortvergleich, Exporte, Port) aus `@auditcore/ui-core`. */
 export {
   synopsisMessages,
   type SynopsisMessageKey,
@@ -59,4 +59,4 @@ export {
   type RestClientOptions,
   type CompareFields,
   type SynopsisRestClient,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

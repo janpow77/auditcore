@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { FaDsfa, FaVvt, createDataProtectionRestPort } from '@flowaudit/ui'
+import { FaDsfa, FaVvt, createDataProtectionRestPort } from '@auditcore/ui'
 
 // Nur Demo: Die Person kommt aus dem Kopf X-Demo-Actor; eine Anwendung nimmt Mandant und Person aus ihrer Sitzung.
 const actors = [

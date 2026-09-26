@@ -1,5 +1,5 @@
-import { intlFormatNumber } from '@flowaudit/common'
-import { formatAge, formatScreeningDate as formatDate, freshnessTone, type BadgeTone, type FreshnessStatus, type ScreeningTranslate, type SourceView } from '@flowaudit/ui-core'
+import { intlFormatNumber } from '@auditcore/common'
+import { formatAge, formatScreeningDate as formatDate, freshnessTone, type BadgeTone, type FreshnessStatus, type ScreeningTranslate, type SourceView } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { TitledBadge, codeKey, useScreeningText } from './shared'
 

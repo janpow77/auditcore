@@ -1,4 +1,4 @@
-import { comparisonRows, indicatorLabels, type HitView, type MatchState, type ScreeningKey, type SubjectView } from '@flowaudit/ui-core'
+import { comparisonRows, indicatorLabels, type HitView, type MatchState, type ScreeningKey, type SubjectView } from '@auditcore/ui-core'
 import { useScreeningText } from './shared'
 
 const SYMBOLS: Record<MatchState, string> = { match: '✓', conflict: '✗', not_compared: '–', info: '' }

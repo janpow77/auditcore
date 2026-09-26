@@ -1,4 +1,4 @@
-import { MemoryBoardPort, SCHEMA_VERSION, type Board, type Card } from '@flowaudit/kanban-core'
+import { MemoryBoardPort, SCHEMA_VERSION, type Board, type Card } from '@auditcore/kanban-core'
 
 export function card(id: string, columnId: string, rank: string, extra: Partial<Card> = {}): Card {
   return {

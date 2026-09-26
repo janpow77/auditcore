@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { issue, type DiagramInfo, type ExportChoice, type Suggestion } from '@flowaudit/bpmn-flowaudit'
+import { issue, type DiagramInfo, type ExportChoice, type Suggestion } from '@auditcore/bpmn-flowaudit'
 import DiagramInfoDialog from '../src/components/dialogs/DiagramInfoDialog.vue'
 import EnrichmentDialog from '../src/components/dialogs/EnrichmentDialog.vue'
 import ExportDialog from '../src/components/dialogs/ExportDialog.vue'

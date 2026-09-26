@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { codeLabel, type FilterOptions, type HitFilter, type ReviewStatus } from '@flowaudit/ui-core'
+import { codeLabel, type FilterOptions, type HitFilter, type ReviewStatus } from '@auditcore/ui-core'
 import { codeKey, useScreeningText } from './shared'
 
 const STATUSES: ReviewStatus[] = ['open', 'pending_second_review', 'confirmed', 'dismissed', 'deferred']

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FaTable, formatNumber, useLocale, type SortState, type TableColumn } from '@flowaudit/ui'
+import { FaTable, formatNumber, useLocale, type SortState, type TableColumn } from '@auditcore/ui'
 
 const locale = useLocale()
 const sort = ref<SortState | null>({ key: 'betrag', direction: 'desc' })

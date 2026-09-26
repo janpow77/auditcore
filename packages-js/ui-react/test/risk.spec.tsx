@@ -1,6 +1,6 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { recordEntries, recordRules, type RiskPort } from '@flowaudit/ui-core'
+import { recordEntries, recordRules, type RiskPort } from '@auditcore/ui-core'
 import { riskEvaluation as evaluation, riskFlowstat as flowstat, riskPort, riskProfile as profile } from '../../ui-core/test/parity/cases-risk'
 import { FlowauditRiskFlags, LocaleProvider, RiskFlagCard, RiskProfileInfo, type FlowauditRiskFlagsProps } from '../src'
 

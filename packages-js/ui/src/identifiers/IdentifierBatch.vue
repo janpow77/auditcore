@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { identifierColumnFields, identifierErrorKey, importOptionalColumn } from '@flowaudit/ui-core'
+import { identifierColumnFields, identifierErrorKey, importOptionalColumn } from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useIdentifierContext } from './context'
 import IdentifierBatchResult from './IdentifierBatchResult.vue'

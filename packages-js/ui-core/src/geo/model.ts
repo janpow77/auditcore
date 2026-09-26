@@ -1,4 +1,4 @@
-import { intlFormatNumber as formatNumber } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber } from '@auditcore/common'
 import type { Locale } from '../i18n'
 import type { GeoMessageKey } from './messages'
 import type { AreaGeometry, GeoArea, GeoPackageResult, GeoPoint, LatLon } from './types'

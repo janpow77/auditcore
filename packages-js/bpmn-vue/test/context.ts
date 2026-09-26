@@ -1,6 +1,6 @@
 import { defineComponent, h, type Component } from 'vue'
 import { mount } from '@vue/test-utils'
-import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
+import type { ProfileData } from '@auditcore/bpmn-flowaudit'
 import { provideEditorContext, type EditorContext, type EditorPorts } from '../src/stores/context'
 
 /** Mounts a component inside a minimal editor context (no core editor). */

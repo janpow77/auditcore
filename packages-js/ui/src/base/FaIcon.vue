@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { ICONS, type IconName } from '@flowaudit/ui-core'
+import { ICONS, type IconName } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   name: IconName

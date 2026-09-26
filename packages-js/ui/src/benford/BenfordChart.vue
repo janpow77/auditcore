@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { benfordBarTitle, benfordChartTitle, benfordMessages, benfordTickText, chartGeometry, type Conformity } from '@flowaudit/ui-core'
+import { benfordBarTitle, benfordChartTitle, benfordMessages, benfordTickText, chartGeometry, type Conformity } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
 

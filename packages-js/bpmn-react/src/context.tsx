@@ -5,8 +5,8 @@
  */
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
-import { validationView, type EditorCore, type EditorPorts, type EditorState, type SelectionCore, type SelectionState, type ValidationCore, type ValidationView } from '@flowaudit/bpmn-flowaudit/ui'
-import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
+import { validationView, type EditorCore, type EditorPorts, type EditorState, type SelectionCore, type SelectionState, type ValidationCore, type ValidationView } from '@auditcore/bpmn-flowaudit/ui'
+import type { ProfileData } from '@auditcore/bpmn-flowaudit'
 import { useStoreState } from './hooks'
 
 export interface EditorContext {

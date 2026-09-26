@@ -1,5 +1,5 @@
 import { Fragment } from 'react'
-import { displayValue, fieldIssues, type Activity, type FieldValue, type RegisterColumn, type RegisterIssue } from '@flowaudit/ui-core'
+import { displayValue, fieldIssues, type Activity, type FieldValue, type RegisterColumn, type RegisterIssue } from '@auditcore/ui-core'
 import { Button } from '../../base/Button'
 import { classes } from '../../store'
 import { useDataProtectionText } from '../shared'

@@ -6,7 +6,7 @@ import {
   splitExtractionFindings,
   type ExtractionFinding,
   type ExtractionTranslate,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 
 const props = defineProps<{

@@ -1,10 +1,10 @@
-import type { Card, Column } from '@flowaudit/kanban-core'
-import type { Locale, Translate } from '@flowaudit/ui-core'
+import type { Card, Column } from '@auditcore/kanban-core'
+import type { Locale, Translate } from '@auditcore/ui-core'
 import { useState } from 'react'
 import { Button } from '../base/Button'
 import { TextField } from '../base/TextField'
 import { useKanbanDialogText } from './text'
-import type { KanbanDialogMessageKey } from '@flowaudit/ui-core'
+import type { KanbanDialogMessageKey } from '@auditcore/ui-core'
 
 type Update = (fields: Record<string, unknown>) => void
 

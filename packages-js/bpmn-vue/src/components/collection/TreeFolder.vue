@@ -4,8 +4,8 @@
  * for diagrams and folders, rows draggable (tree pattern with ARIA).
  */
 import { ref } from 'vue'
-import type { FolderNode } from '@flowaudit/bpmn-flowaudit'
-import { readDrag, setDrag, statusBadge, statusText, type DropTarget } from '@flowaudit/bpmn-flowaudit/ui'
+import type { FolderNode } from '@auditcore/bpmn-flowaudit'
+import { readDrag, setDrag, statusBadge, statusText, type DropTarget } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 

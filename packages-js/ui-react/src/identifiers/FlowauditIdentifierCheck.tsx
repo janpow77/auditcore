@@ -1,5 +1,5 @@
 import { useElementId } from '../store'
-import { identifierProfileLabel } from '@flowaudit/ui-core'
+import { identifierProfileLabel } from '@auditcore/ui-core'
 import { IdentifierBatch } from './IdentifierBatch'
 import { IdentifierSingle } from './IdentifierSingle'
 import { useIdentifierCheck, type IdentifierInputs, type UseIdentifierCheck } from './useIdentifierCheck'

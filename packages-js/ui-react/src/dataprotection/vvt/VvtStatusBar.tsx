@@ -1,4 +1,4 @@
-import { statusTone, type DataProtectionTranslate, type RegisterState, type VersionView, type VvtExportFormat } from '@flowaudit/ui-core'
+import { statusTone, type DataProtectionTranslate, type RegisterState, type VersionView, type VvtExportFormat } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { Button, type ButtonProps } from '../../base/Button'
 import { statusLabel, useDataProtectionText } from '../shared'

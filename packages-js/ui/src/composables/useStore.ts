@@ -1,7 +1,7 @@
 import { getCurrentScope, onScopeDispose, shallowRef, type ShallowRef } from 'vue'
-import type { Store } from '@flowaudit/ui-core'
+import type { Store } from '@auditcore/ui-core'
 
-/** Stand eines Kern-Controllers (`@flowaudit/ui-core`) als reaktive Vue-Referenz. */
+/** Stand eines Kern-Controllers (`@auditcore/ui-core`) als reaktive Vue-Referenz. */
 export function useStore<S extends object>(store: Store<S>): Readonly<ShallowRef<S>> {
   const state = shallowRef(store.get()) as ShallowRef<S>
   const stop = store.subscribe(() => {

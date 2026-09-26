@@ -1,4 +1,4 @@
-import { FaButton, FaDialog, FaTextField } from '@flowaudit/ui'
+import { FaButton, FaDialog, FaTextField } from '@auditcore/ui'
 import { flushPromises, mount } from '@vue/test-utils'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'

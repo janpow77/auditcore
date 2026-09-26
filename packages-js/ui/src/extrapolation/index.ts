@@ -1,7 +1,7 @@
 export { default as ExtrapolationPanel } from './ExtrapolationPanel.vue'
 export { extrapolationElement } from './element'
 export { useExtrapolation, type ExtrapolationCallbacks, type UseExtrapolation } from './useExtrapolation'
-/** Kern (Vertrag, Formularlogik, Zustandsautomat, Anzeige) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag, Formularlogik, Zustandsautomat, Anzeige) aus `@auditcore/ui-core`. */
 export {
   extrapolationMessages,
   createExtrapolationRestPort,
@@ -24,4 +24,4 @@ export {
   type ResidualResult,
   type StratumInput,
   type UnitInput,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

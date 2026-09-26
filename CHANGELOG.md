@@ -15,15 +15,26 @@ Noch keine Änderungen.
 
 ## 0.4.2 – 2026-09-26
 
+- **Breaking – npm-Scope umbenannt:** Alle JS-Pakete unter `packages-js/`
+  heißen jetzt `@auditcore/<paket>` statt `@flowaudit/<paket>` (common,
+  ui-core, ui, ui-react, kanban-core, bpmn-editor, bpmn-flowaudit, bpmn-vue,
+  bpmn-react), einheitlich mit den Python-Paketen `auditcore_*`. Auf npm war
+  unter dem alten Scope nie etwas veröffentlicht. Release-Tarballs heißen
+  `auditcore-<paket>-<version>.tgz`, die npm-Organisation ist `auditcore`,
+  die Registry-Sperre in `.npmrc` lautet `@auditcore:registry=…`.
+  Unverändert bleiben Web-Component-Tags (`<flowaudit-…>`),
+  Komponentennamen (`Flowaudit…`), CSS-Präfixe (`--fa-*`) und Klassennamen.
+  Umstellung der Anwendungen: `docs/ui/umbenennung-auditcore.md`.
+
 - Vorbereitung Release v0.4.2: Versionen aller seit v0.4.1 geänderten Pakete
   angehoben. Python: `auditcore_common` 0.2.0 (neues Modul `rest` mit
   `json_object`), documents 0.4.0, identifiers 0.2.0, invoicesynth 0.2.0,
   reporting 0.3.0, neues Paket `auditcore_extrapolation` 0.1.0; alle übrigen
   als Patch (README im Wheel geändert, Pins auf `auditcore_common==0.2.0` und
-  die neuen Paketstände). npm: `@flowaudit/ui-core` 0.2.0,
-  `@flowaudit/ui-react` 1.1.0, `@flowaudit/common` 0.1.1,
-  `@flowaudit/kanban-core` 0.2.1, `@flowaudit/bpmn-editor` 0.1.1,
-  `@flowaudit/bpmn-flowaudit`/`-vue`/`-react` 0.2.1; `@flowaudit/ui` 0.3.0
+  die neuen Paketstände). npm: `@auditcore/ui-core` 0.2.0,
+  `@auditcore/ui-react` 1.1.0, `@auditcore/common` 0.1.1,
+  `@auditcore/kanban-core` 0.2.1, `@auditcore/bpmn-editor` 0.1.1,
+  `@auditcore/bpmn-flowaudit`/`-vue`/`-react` 0.2.1; `@auditcore/ui` 0.3.0
   erstmals als Release-Datei. Die npm-Pakete liegen ab diesem Release als
   `npm pack`-Tarballs mit `npm-packages.json` bei.
 - Code-Gate: `codegate_js` zählt Build-Ausgaben `dist-*` (z. B. `dist-wc`,
@@ -54,7 +65,7 @@ Noch keine Änderungen.
   `cases-views.ts`; Kern `ui-core/src/table/` und `ui-core/src/base/index.ts`.
   Drei befristete Ausnahmen (Controller für Basis und Tabelle,
   Paritätsfälle der BPMN-Web-Component).
-- npm-Veröffentlichung der `@flowaudit`-Pakete: Workflow `npm-publish`
+- npm-Veröffentlichung der `@auditcore`-Pakete: Workflow `npm-publish`
   veröffentlicht nach einem GitHub-Release (oder von Hand mit Tag, standardmäßig
   als Probelauf) genau die signierten Release-Tarballs auf npmjs.org, nach
   Prüfung von Signatur, SHA-256, Größe und npm-Integrität gegen
@@ -66,7 +77,7 @@ Noch keine Änderungen.
   `NPM_PUBLISH_ENABLED`. Alle `package.json` unter `packages-js/` mit
   `repository` (nötig für Provenance), `homepage`, `bugs` und
   `publishConfig.access=public`. Installationsdoku: `npm install
-  @flowaudit/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
+  @auditcore/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
   Einrichtung in `docs/deployment/npm-veroeffentlichung.md`. Keine
   Versionsanhebung (Paketstände kommen mit v0.4.2).
 
@@ -78,7 +89,7 @@ Noch keine Änderungen.
   Fehlerobergrenze und Ergebnis, getrennt davon Restfehlerquote (RER) nach
   CPRE_23-0013-01 Annex 3; REST-Vertrag `auditcore_extrapolation.evaluation/1`.
   Oberfläche `ExtrapolationPanel`/`<flowaudit-extrapolation>` (Vue) und
-  `FlowauditExtrapolation` (React nativ) auf dem Kern in `@flowaudit/ui-core`
+  `FlowauditExtrapolation` (React nativ) auf dem Kern in `@auditcore/ui-core`
   mit Paritätsfällen. `EXPECTED_SOURCES`, `packaging/library-extras.json` und
   Baseline ergänzt.
 
@@ -95,7 +106,7 @@ Noch keine Änderungen.
   `packaging/library-extras.json` ergänzt) und Oberfläche
   `<flowaudit-report-export>` (Vue `ReportExportPanel`, React nativ
   `FlowauditReportExport`, Kern `createReportingController` in
-  `@flowaudit/ui-core`): Formatprofil wählen, Vorschau mit Excel-Format je
+  `@auditcore/ui-core`): Formatprofil wählen, Vorschau mit Excel-Format je
   Spalte, ersten Zeilen und Probelauf, XLSX-Export. Das Paket hat keine
   Berichtsvorlagen; „Vorlage“ ist hier das Formatprofil
   (`docs/ui/reporting-rest.md`). Sechs Paritätsfälle plus Interaktionsfolge,
@@ -122,7 +133,7 @@ Noch keine Änderungen.
   `auditcore_identifiers.web` (Extras `web`, `fastapi`) und Oberfläche
   `IdentifierCheck`/`<flowaudit-identifier-check>` (Vue) sowie native
   `FlowauditIdentifierCheck` (React) auf gemeinsamem Kern in
-  `@flowaudit/ui-core` (`createIdentifierController`,
+  `@auditcore/ui-core` (`createIdentifierController`,
   `createIdentifiersRestPort`): Prüfprofil mit sichtbarer Empfehlung,
   Einzelprüfung mit Status, Begründung, Grund, Normalform und Einzelheiten,
   Stapelprüfung aus CSV/TSV über den TableImport-Controller mit
@@ -135,7 +146,7 @@ Noch keine Änderungen.
   Validierungsbefunde; OCR/Donut nur über Ports der Anwendung, ohne Engine
   abgeschaltet) und Oberfläche `<flowaudit-extraction>` (Vue `FaExtraction`,
   React nativ `FlowauditExtraction`, Kern `createExtractionController` in
-  `@flowaudit/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
+  `@auditcore/ui-core`), 8 Paritätsfälle plus Interaktionsfolge, Demo mit
   Attrappen-Ports. Vertrag: `docs/ui/extraction-rest.md`.
 
 - Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
@@ -174,7 +185,7 @@ Noch keine Änderungen.
   Konfigurationen auf `build.rolldownOptions`, `oxc`, `codeSplitting: false`
   und `import.meta.dirname` umgestellt. Exporte und Typdeklarationen der Pakete sind
   unverändert (Vue-SFC-Deklarationen im Format von language-core 3).
-  `@flowaudit/bpmn-flowaudit` kennzeichnet `src/index.ts` als
+  `@auditcore/bpmn-flowaudit` kennzeichnet `src/index.ts` als
   seiteneffektbehaftet, damit die Stile der Diagrammschicht (`--fa-hit`,
   Rundgang-/Vergleichsmarkierungen) in Standalone-App und Web Component
   ankommen; die Web Component `<flowaudit-bpmn-editor>` enthielt sie bisher

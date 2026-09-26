@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 // Installiert und baut die Beispielprojekte unter examples/ wie eine fremde Anwendung:
-// frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @flowaudit-Pakete
+// frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @auditcore-Pakete
 // ausschließlich aus npm-pack-Tarballs (docs/deployment/frontend-installation.md).
 //
 //   node scripts/js/verify-examples.mjs                      # Tarballs aus dem Workspace (vorher npm run build)
 //   node scripts/js/verify-examples.mjs --base-url <URL>     # Tarballs eines Releases (liest <URL>/npm-packages.json)
 //   Optionen: --only vue-minimal,react-minimal  --report <datei.json>  --keep
 //
-// Geprüft je Beispiel: die aufgeführten @flowaudit-Pakete bilden die vollständige
+// Geprüft je Beispiel: die aufgeführten @auditcore-Pakete bilden die vollständige
 // interne Abhängigkeitshülle, npm löst sie nur aus den Tarballs auf (die Registry ist
 // für den Scope gesperrt), package-lock.json trägt genau die erwartete Integrität,
-// es gibt keine doppelten @flowaudit-Kopien und `npm run build` läuft.
+// es gibt keine doppelten @auditcore-Kopien und `npm run build` läuft.
 import { execFileSync } from 'node:child_process'
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -18,7 +18,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
-const SCOPE = '@flowaudit/'
+const SCOPE = '@auditcore/'
 const BLOCKED_REGISTRY = 'https://npm-registry.invalid/'
 
 function parseArgs(argv) {
@@ -93,7 +93,7 @@ function prepareExample(name, workDir, packages) {
   for (const dependency of listed) manifest.dependencies[dependency] = packages[dependency].spec
   writeFileSync(join(target, 'package.json'), `${JSON.stringify(manifest, null, 2)}\n`)
   // Wie in der Anleitung empfohlen: Registry für den Scope sperren (kein Nachladen gleichnamiger Fremdpakete).
-  writeFileSync(join(target, '.npmrc'), `@flowaudit:registry=${BLOCKED_REGISTRY}\n`)
+  writeFileSync(join(target, '.npmrc'), `@auditcore:registry=${BLOCKED_REGISTRY}\n`)
   return { target, listed }
 }
 
@@ -106,7 +106,7 @@ function checkLock(target, listed, packages) {
   const lock = JSON.parse(readFileSync(join(target, 'package-lock.json'), 'utf8'))
   const found = []
   for (const [path, node] of Object.entries(lock.packages)) {
-    const match = /(?:^|\/)node_modules\/(@flowaudit\/[^/]+)$/.exec(path)
+    const match = /(?:^|\/)node_modules\/(@auditcore\/[^/]+)$/.exec(path)
     if (!match) continue
     const expected = packages[match[1]]
     if (path !== `node_modules/${match[1]}`) throw new Error(`Doppelte Kopie ${path}`)
@@ -117,7 +117,7 @@ function checkLock(target, listed, packages) {
     }
     found.push({ name: match[1], version: node.version, integrity: node.integrity, resolved: node.resolved })
   }
-  if (found.length !== listed.length) throw new Error(`Lock enthält ${found.length} statt ${listed.length} @flowaudit-Pakete`)
+  if (found.length !== listed.length) throw new Error(`Lock enthält ${found.length} statt ${listed.length} @auditcore-Pakete`)
   return found
 }
 
@@ -128,12 +128,12 @@ function verifyExample(name, workDir, packages) {
   execFileSync('npm', ['install'], { cwd: target, env, stdio: 'inherit' })
   const installed = checkLock(target, listed, packages)
   execFileSync('npm', ['run', 'build'], { cwd: target, env, stdio: 'inherit' })
-  return { example: name, status: 'PASS', flowaudit_packages: installed, install_and_build_seconds: Math.round((Date.now() - started) / 1000) }
+  return { example: name, status: 'PASS', auditcore_packages: installed, install_and_build_seconds: Math.round((Date.now() - started) / 1000) }
 }
 
 async function main() {
   const options = parseArgs(process.argv.slice(2))
-  const workDir = mkdtempSync(join(tmpdir(), 'flowaudit-examples-'))
+  const workDir = mkdtempSync(join(tmpdir(), 'auditcore-examples-'))
   writeFileSync(join(workDir, 'empty-npmrc'), '')
   try {
     const release = options.baseUrl ? await releasePackages(options.baseUrl) : packWorkspace(workDir)
@@ -148,7 +148,7 @@ async function main() {
       source_commit: release.source_commit ?? null,
       node: process.version,
       npm: execFileSync('npm', ['--version']).toString().trim(),
-      method: 'frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @flowaudit-Registry gesperrt, npm install, Abgleich package-lock.json, npm run build',
+      method: 'frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @auditcore-Registry gesperrt, npm install, Abgleich package-lock.json, npm run build',
       examples: results,
       registry_publication: 'NOT_EXECUTED',
       checked_at: new Date().toISOString(),

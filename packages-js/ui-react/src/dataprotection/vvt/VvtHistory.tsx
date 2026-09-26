@@ -1,4 +1,4 @@
-import type { VersionSummary } from '@flowaudit/ui-core'
+import type { VersionSummary } from '@auditcore/ui-core'
 import { statusLabel, useDataProtectionText } from '../shared'
 
 /** Fassungen des Verzeichnisses (wie VvtHistory.vue). */

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch } from 'vue'
-import { DEFAULT_LIMITS, type Column } from '@flowaudit/kanban-core'
+import { DEFAULT_LIMITS, type Column } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import FaDialog from '../base/FaDialog.vue'
 import { useI18n, type Locale } from '../i18n'

@@ -1,5 +1,5 @@
 /**
- * `@flowaudit/common/browser`: Helfer mit DOM-Zugriff. Beim Import wird nichts
+ * `@auditcore/common/browser`: Helfer mit DOM-Zugriff. Beim Import wird nichts
  * ausgeführt (SSR-tauglich); die Funktionen greifen erst beim Aufruf auf
  * `document`, `navigator` und Web Storage zu.
  */

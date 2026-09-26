@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useState, type ChangeEvent } from 'react'
-import type { FlowauditHighlight } from '@flowaudit/bpmn-flowaudit'
-import { compareClasses, runComparison, type CompareMode, type CompareResult, type CompareSource } from '@flowaudit/bpmn-flowaudit/ui'
+import type { FlowauditHighlight } from '@auditcore/bpmn-flowaudit'
+import { compareClasses, runComparison, type CompareMode, type CompareResult, type CompareSource } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { useEditorContext } from '../context'
 import { useI18n } from '../i18n'

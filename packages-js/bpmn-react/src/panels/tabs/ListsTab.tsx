@@ -3,8 +3,8 @@
  * findings, audit steps, sources, references) – from the descriptors.
  */
 
-import type { Extensions, ListExtensionKey } from '@flowaudit/bpmn-flowaudit'
-import { isDescribedList, LISTS } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Extensions, ListExtensionKey } from '@auditcore/bpmn-flowaudit'
+import { isDescribedList, LISTS } from '@auditcore/bpmn-flowaudit/ui'
 import { useEditorContext, useSelectionState } from '../../context'
 import { ListEditor } from '../ListEditor'
 import { useOptions } from '../useOptions'

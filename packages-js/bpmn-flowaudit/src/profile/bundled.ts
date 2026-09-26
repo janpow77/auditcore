@@ -6,7 +6,7 @@
  * (`packages/auditcore_bpmn/src/auditcore_bpmn/profiles/data/`). Vite reads
  * them at build time and bundles them into `dist/profiles.js`; the sources
  * of this package contain no copy. Entry point:
- * `import { bundledProfiles } from '@flowaudit/bpmn-flowaudit/profiles'`.
+ * `import { bundledProfiles } from '@auditcore/bpmn-flowaudit/profiles'`.
  */
 
 import { DEFAULT_PROFILE, latestProfiles, validateProfile, type ProfileData } from './profile'

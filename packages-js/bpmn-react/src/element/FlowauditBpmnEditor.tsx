@@ -6,8 +6,8 @@
  */
 
 import { forwardRef, useImperativeHandle, useRef, useState, type CSSProperties } from 'react'
-import type { Comment, DiagramInfo, ProfileData, StoragePort, ValidationPort } from '@flowaudit/bpmn-flowaudit'
-import type { EditorPorts, ElementEventMap, Theme } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Comment, DiagramInfo, ProfileData, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
+import type { EditorPorts, ElementEventMap, Theme } from '@auditcore/bpmn-flowaudit/ui'
 import type { FlowauditEditorHandle } from '../editorProps'
 import { FlowauditEditor } from '../FlowauditEditor'
 import { useElementSource } from './useElementSource'

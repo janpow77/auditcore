@@ -196,7 +196,7 @@ ort = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
 ## Web-Schnittstelle (0.3.0)
 
 `auditcore_geo.web` stellt den REST-Vertrag für die Oberflächenkomponente
-`<flowaudit-geo-map>` aus `@flowaudit/ui` bereit
+`<flowaudit-geo-map>` aus `@auditcore/ui` bereit
 ([`docs/ui/geo-rest.md`](../../docs/ui/geo-rest.md)): Katalog der Erdmodelle
 und Empfehlungen D1/D2, Umkreissuche, Punkt in Fläche mit ausdrücklicher
 Randregel und Randtoleranz, UTM hin und zurück, Douglas-Peucker in Metern

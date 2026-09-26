@@ -11,7 +11,7 @@ import {
   type RowUpdate,
   type SynopsisLayout,
   type SynopsisPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useElementId } from '../store'
 import { SynopsisCommands } from './SynopsisCommands'
 import { SynopsisHeader } from './SynopsisHeader'

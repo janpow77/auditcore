@@ -1,7 +1,7 @@
 /** Toolbar, palette, key filter, side panel and status bar of the React editor. */
 
-import { profileReference, type Direction, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { activeActions, filterKeys, readImportFile, type UiState } from '@flowaudit/bpmn-flowaudit/ui'
+import { profileReference, type Direction, type PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { activeActions, filterKeys, readImportFile, type UiState } from '@auditcore/bpmn-flowaudit/ui'
 import { StatusBar } from './canvas/CanvasParts'
 import { useEditorState, useValidationView } from './context'
 import type { FlowauditEditorProps } from './editorProps'

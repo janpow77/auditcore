@@ -1,7 +1,7 @@
 /**
  * Kurzformatierer mit `Intl` in der Zeitzone des Rechners und leerem
- * Ersatzwert – unverändert aus `@flowaudit/ui` (i18n/format.ts) übernommen.
- * `@flowaudit/ui` exportiert sie weiter als `formatDate`, `formatNumber`
+ * Ersatzwert – unverändert aus `@auditcore/ui` (i18n/format.ts) übernommen.
+ * `@auditcore/ui` exportiert sie weiter als `formatDate`, `formatNumber`
  * und `formatPercent`. Neue Anwendungen nutzen `formatDate`/`formatNumber`/
  * `formatPercent` dieses Pakets (Berliner Zeit, Ersatzwert „—“).
  */

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import FaBadge from '../base/FaBadge.vue'
-import type { BadgeTone } from '@flowaudit/ui-core'
+import type { BadgeTone } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import SynopsisText from './SynopsisText.vue'
-import type { RowUpdate, SynopsisLayout } from '@flowaudit/ui-core'
-import type { RowView, SynopsisTranslate } from '@flowaudit/ui-core'
+import type { RowUpdate, SynopsisLayout } from '@auditcore/ui-core'
+import type { RowView, SynopsisTranslate } from '@auditcore/ui-core'
 
 const props = defineProps<{
   row: RowView

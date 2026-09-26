@@ -6,13 +6,13 @@ Anleitung: [docs/deployment/frontend-installation.md](../docs/deployment/fronten
 
 | Beispiel | Inhalt |
 |---|---|
-| [`vue-minimal`](vue-minimal) | Vue 3 mit `@flowaudit/ui`: Plugin, Tabelle, Hell/Dunkel, Sprachwechsel |
-| [`react-minimal`](react-minimal) | React 18 mit den nativen Komponenten aus `@flowaudit/ui-react`, ohne Vue |
+| [`vue-minimal`](vue-minimal) | Vue 3 mit `@auditcore/ui`: Plugin, Tabelle, Hell/Dunkel, Sprachwechsel |
+| [`react-minimal`](react-minimal) | React 18 mit den nativen Komponenten aus `@auditcore/ui-react`, ohne Vue |
 | [`webcomponent-minimal`](webcomponent-minimal) | `<flowaudit-table>` per `<script type="module">` und Import-Map, ohne Bundler |
 
-In `package.json` stehen die `@flowaudit`-Pakete als `file:../vendor/<paket>.tgz`.
+In `package.json` stehen die `@auditcore`-Pakete als `file:../vendor/<paket>.tgz`.
 Das Prüfskript ersetzt diese Angaben in einer frischen Kopie durch die Tarballs
-des Workspace oder eines Releases, sperrt die Registry für `@flowaudit`,
+des Workspace oder eines Releases, sperrt die Registry für `@auditcore`,
 installiert, gleicht `package-lock.json` ab und baut:
 
 ```bash

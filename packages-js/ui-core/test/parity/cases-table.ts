@@ -1,5 +1,5 @@
 /** Paritätsfälle der Tabelle (Vue `FaTable` ↔ React `FlowauditTable`); synthetische Belege. */
-import type { SortState, TableColumn, TableRow } from '@flowaudit/common'
+import type { SortState, TableColumn, TableRow } from '@auditcore/common'
 import type { ParityCase } from './cases'
 
 export interface TableCaseProps {

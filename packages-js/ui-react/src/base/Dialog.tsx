@@ -1,6 +1,6 @@
 import { useEffect, useRef, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { baseMessages, createFocusTrap, type Locale } from '@flowaudit/ui-core'
+import { baseMessages, createFocusTrap, type Locale } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useElementId } from '../store'
 import { Button } from './Button'

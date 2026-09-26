@@ -1,8 +1,8 @@
 import { computed, type ComputedRef, type Ref } from 'vue'
-import { createTableImportController, importPreview, type ImportedColumns, type TableImportController, type TableImportData } from '@flowaudit/ui-core'
+import { createTableImportController, importPreview, type ImportedColumns, type TableImportController, type TableImportData } from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { ImportedColumns } from '@flowaudit/ui-core'
+export type { ImportedColumns } from '@auditcore/ui-core'
 
 export interface UseTableImport {
   controller: TableImportController
@@ -10,7 +10,7 @@ export interface UseTableImport {
   preview: ComputedRef<ImportedColumns | null>
 }
 
-/** Vue-Anbindung des Datei-Imports aus `@flowaudit/ui-core` (Datei lesen, Spalten zuordnen, Vorschau). */
+/** Vue-Anbindung des Datei-Imports aus `@auditcore/ui-core` (Datei lesen, Spalten zuordnen, Vorschau). */
 export function useTableImport(): UseTableImport {
   const controller = createTableImportController()
   const state = useStore(controller.store)

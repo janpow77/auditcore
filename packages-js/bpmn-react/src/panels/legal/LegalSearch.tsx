@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useState } from 'react'
-import { shortCitation, type LegalBasis, type LegalSearchHit, type LegalSearchPort } from '@flowaudit/bpmn-flowaudit'
-import { hitHint, typedCitation, withoutDisplayFields } from '@flowaudit/bpmn-flowaudit/ui'
+import { shortCitation, type LegalBasis, type LegalSearchHit, type LegalSearchPort } from '@auditcore/bpmn-flowaudit'
+import { hitHint, typedCitation, withoutDisplayFields } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../../base/FaIcon'
 import { useElementId } from '../../hooks'
 import { useI18n } from '../../i18n'

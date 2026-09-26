@@ -1,5 +1,5 @@
 /** Anzeige der Datenbankansicht: Spalten, Karten und Feldtexte (reine Funktionen). */
-import { groupableProperties, groupRecords, matchesRecord, type RecordValue, type RecordProperty, type RecordRow, type RecordTable } from '@flowaudit/kanban-core'
+import { groupableProperties, groupRecords, matchesRecord, type RecordValue, type RecordProperty, type RecordRow, type RecordTable } from '@auditcore/kanban-core'
 import type { DbKanbanData } from './controller'
 import type { DbKanbanMessageKey, DbKanbanTranslate } from './messages'
 

@@ -6,7 +6,7 @@ import RiskFlagSummary from './RiskFlagSummary.vue'
 import RiskFlagTable from './RiskFlagTable.vue'
 import RiskProfileInfo from './RiskProfileInfo.vue'
 import RiskRecordDetail from './RiskRecordDetail.vue'
-import { riskMessages, type RiskPort, type Evaluation, type ProfileDetail, profileHintText, profileStatusText, type RiskFilter } from '@flowaudit/ui-core'
+import { riskMessages, type RiskPort, type Evaluation, type ProfileDetail, profileHintText, profileStatusText, type RiskFilter } from '@auditcore/ui-core'
 import { useRiskFlags } from './useRiskFlags'
 import { useRiskProfile } from './useRiskProfile'
 

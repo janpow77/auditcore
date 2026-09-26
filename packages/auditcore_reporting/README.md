@@ -156,7 +156,7 @@ Excel-Darstellung, Formelberechnung oder PDF-Ausgabe wird kein Test behauptet.
 `auditcore_reporting.web` (Extras `web`/`fastapi`, Export zusätzlich `excel`)
 stellt `GET /profiles`, `POST /preview` und `POST /export` bereit
 (Vertrag `reporting_ui/1`, [docs/ui/reporting-rest.md](../../docs/ui/reporting-rest.md)).
-Die Oberfläche dazu ist `<flowaudit-report-export>` aus `@flowaudit/ui`
+Die Oberfläche dazu ist `<flowaudit-report-export>` aus `@auditcore/ui`
 (React: `FlowauditReportExport`). Formatregeln und Export laufen
 ausschließlich in dieser Bibliothek.
 

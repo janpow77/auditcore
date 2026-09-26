@@ -1,4 +1,4 @@
-import { extrapolationCellLabel, extrapolationIssueText, UNIT_FIELDS, UNIT_FLAGS, type UnitRow } from '@flowaudit/ui-core'
+import { extrapolationCellLabel, extrapolationIssueText, UNIT_FIELDS, UNIT_FLAGS, type UnitRow } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { classes, useElementId } from '../store'
 import type { UseExtrapolation } from './useExtrapolation'

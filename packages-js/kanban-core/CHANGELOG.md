@@ -1,6 +1,8 @@
-# Changelog @flowaudit/kanban-core
+# Changelog @auditcore/kanban-core
 
 ## 0.2.1 – 2026-09-26 – Release v0.4.2
+
+- **Breaking:** Paketname `@auditcore/kanban-core` statt `@flowaudit/kanban-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-kanban-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 Erste Veröffentlichung als Release-Datei. Enthält alles unter 0.2.0 und den Build mit Vite 8 und vite-plugin-dts 5 (#169). Ein vor dem Release gepackter Stand 0.2.0 war bereits als Tarball in Anwendungen eingebunden (audit_designer); deshalb neue Versionsnummer.
 

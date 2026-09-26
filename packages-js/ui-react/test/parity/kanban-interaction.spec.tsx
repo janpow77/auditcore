@@ -1,4 +1,4 @@
-import { KanbanBoard, KanbanBoardList } from '@flowaudit/ui'
+import { KanbanBoard, KanbanBoardList } from '@auditcore/ui'
 import { act, fireEvent } from '@testing-library/react'
 import { flushPromises } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'

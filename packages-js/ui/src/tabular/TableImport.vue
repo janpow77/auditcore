@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { DecimalSeparator } from '@flowaudit/common'
-import { importDelimiterText, importOptionalColumn, importRejectedLines, tabularMessages, type ImportedColumns } from '@flowaudit/ui-core'
+import type { DecimalSeparator } from '@auditcore/common'
+import { importDelimiterText, importOptionalColumn, importRejectedLines, tabularMessages, type ImportedColumns } from '@auditcore/ui-core'
 import { useId } from '../composables/useId'
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'

@@ -4,7 +4,7 @@
  * Uniform style: 24 px grid, 2 px safe margin, stroke width 1.75, round
  * caps and joins, `currentColor`. Filled shapes are used only for small
  * dots. The table is declarative; renderers exist for DOM (`iconElement`),
- * strings (`iconSvg`) and Vue (`FaIcon` in @flowaudit/bpmn-vue).
+ * strings (`iconSvg`) and Vue (`FaIcon` in @auditcore/bpmn-vue).
  */
 
 export type IconShape =

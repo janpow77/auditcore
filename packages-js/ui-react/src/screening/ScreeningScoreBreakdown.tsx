@@ -1,4 +1,4 @@
-import { breakdownRows, formatScore, type Breakdown } from '@flowaudit/ui-core'
+import { breakdownRows, formatScore, type Breakdown } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { useScreeningText } from './shared'
 

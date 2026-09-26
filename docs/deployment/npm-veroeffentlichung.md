@@ -1,10 +1,10 @@
-# npm-Veröffentlichung der `@flowaudit`-Pakete einrichten
+# npm-Veröffentlichung der `@auditcore`-Pakete einrichten
 
 Die Frontend-Pakete unter `packages-js/` erscheinen nach jedem GitHub-Release
-auf [npmjs.org](https://www.npmjs.com/org/flowaudit). Veröffentlicht werden
+auf [npmjs.org](https://www.npmjs.com/org/auditcore). Veröffentlicht werden
 genau die signierten Tarballs des Releases; neu gebaut wird nichts. Diese
 Anleitung beschreibt die einmalige Einrichtung und den Ablauf je Release.
-Anwendungen installieren danach mit `npm install @flowaudit/<paket>`
+Anwendungen installieren danach mit `npm install @auditcore/<paket>`
 ([frontend-installation.md](frontend-installation.md)).
 
 ## Was der Workflow tut
@@ -13,7 +13,7 @@ Anwendungen installieren danach mit `npm install @flowaudit/<paket>`
 Hand (`workflow_dispatch` mit Release-Tag, standardmäßig nur als Probelauf).
 
 1. **Prüfen** (Job `verify`, ohne Schreibrechte): lädt `npm-packages.json`,
-   alle `flowaudit-*.tgz`, `SHA256SUMS`, `SHA256SUMS.asc` und den
+   alle `auditcore-*.tgz`, `SHA256SUMS`, `SHA256SUMS.asc` und den
    Schlüsselbund des Releases; prüft den Fingerprint
    `E427F95CC37CBFD0876314CA0D1580A6CAE37327`, die Signatur und die SHA-256
    der Dateien. `scripts/npm_publish.py` bindet dann jeden Tarball an seinen
@@ -54,13 +54,13 @@ Publisher erst für ein vorhandenes Paket annimmt.
    **„Authorization and writes“**. Sicherheitsschlüssel oder
    Authenticator-App; die Wiederherstellungscodes sicher ablegen.
 
-### 2. Organisation `@flowaudit` anlegen
+### 2. Organisation `@auditcore` anlegen
 
-1. *Avatar → Add Organization*, Name **`flowaudit`**, Plan **Free**
+1. *Avatar → Add Organization*, Name **`auditcore`**, Plan **Free**
    (unbegrenzt viele öffentliche Pakete).
-2. Stand 26.09.2026 ist der Scope frei: `npm view @flowaudit/ui` liefert 404,
-   die Registry meldet für `flowaudit` „Scope not found“. Den Namen bald
-   sichern; wer ihn zuerst belegt, besitzt alle `@flowaudit/*`-Namen.
+2. Stand 26.09.2026 ist der Scope frei: `npm view @auditcore/ui` liefert 404,
+   die Registry meldet für `auditcore` „Scope not found“. Den Namen bald
+   sichern; wer ihn zuerst belegt, besitzt alle `@auditcore/*`-Namen.
 3. *Organization → Settings*: „Require two-factor authentication“ für alle
    Mitglieder einschalten.
 
@@ -86,7 +86,7 @@ Voraussetzung: ein Release mit npm-Tarballs (der erste nach v0.4.1).
    Token*. Name `auditcore-erstveroeffentlichung`, Ablauf **7 Tage**,
    *Bypass two-factor authentication* anhaken (sonst verlangt `npm publish`
    im Workflow ein Einmalpasswort), *Packages and scopes*: **Read and write**,
-   Auswahl *Organization* `flowaudit` bzw. alle Pakete des Scopes.
+   Auswahl *Organization* `auditcore` bzw. alle Pakete des Scopes.
 2. Token als Environment-Secret `NPM_TOKEN` der Umgebung `npm` speichern
    (Schritt 3.2) und lokal nirgends ablegen.
 3. *Actions → npm-publish → Run workflow*: `tag` = `v0.4.2` (Beispiel),
@@ -96,7 +96,7 @@ Voraussetzung: ein Release mit npm-Tarballs (der erste nach v0.4.1).
 4. Dasselbe mit `dry_run` **aus**. Nach der Freigabe der Umgebung
    veröffentlicht der Job `publish`; die Zusammenfassung des Laufs listet
    Paket, Version, Aktion und dist-tag.
-5. Prüfen: `npm view @flowaudit/ui` zeigt Version und `dist.integrity` (gleich
+5. Prüfen: `npm view @auditcore/ui` zeigt Version und `dist.integrity` (gleich
    `integrity` in `npm-packages.json`); auf npmjs.com trägt jedes Paket das
    Provenance-Abzeichen mit Verweis auf Workflow und Commit.
 
@@ -142,7 +142,7 @@ danach seinen eigenen Trusted Publisher.
 
 | Meldung | Ursache und Abhilfe |
 |---|---|
-| `E404 Not Found - PUT https://registry.npmjs.org/@flowaudit%2f…` | Organisation fehlt oder Konto ohne Schreibrecht; bei Trusted Publishing: Publisher für dieses Paket nicht eingerichtet oder Feld falsch (Workflow-Dateiname, Umgebung) |
+| `E404 Not Found - PUT https://registry.npmjs.org/@auditcore%2f…` | Organisation fehlt oder Konto ohne Schreibrecht; bei Trusted Publishing: Publisher für dieses Paket nicht eingerichtet oder Feld falsch (Workflow-Dateiname, Umgebung) |
 | `E422 … provenance … repository.url` | `package.json#repository` im Tarball passt nicht zu `janpow77/auditcore`; wird schon in `verify` geprüft |
 | `EOTP` | Token ohne *Bypass two-factor authentication* |
 | `Version exists on npm with different content` | Version schon mit anderem Inhalt veröffentlicht; npm erlaubt kein Überschreiben, Version anheben |

@@ -10,7 +10,7 @@ import {
   type JsonObject,
   type Locale,
   type ProfileReference,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { useTranslation } from '../i18n'
 import { classes, useElementId } from '../store'

@@ -1,8 +1,8 @@
 /** Sections of the diagram info dialog: scope (profile, funds), header colours, legal bases and lists. */
 
 import type { Dispatch, SetStateAction } from 'react'
-import { FUNDS, FUND_SHORT, label, type DiagramInfo, type LegalBasis, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
-import { DIAGRAM_LISTS, infoList, LISTS, toggleFund, type FieldDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
+import { FUNDS, FUND_SHORT, label, type DiagramInfo, type LegalBasis, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
+import { DIAGRAM_LISTS, infoList, LISTS, toggleFund, type FieldDescriptor, type Option } from '@auditcore/bpmn-flowaudit/ui'
 import { useEditorContext } from '../context'
 import { useI18n } from '../i18n'
 import { LegalBasisEditor } from '../panels/legal/LegalBasisEditor'

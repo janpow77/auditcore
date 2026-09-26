@@ -1,5 +1,5 @@
 import type { MouseEvent, ReactNode } from 'react'
-import type { ButtonSize, ButtonVariant, IconName } from '@flowaudit/ui-core'
+import type { ButtonSize, ButtonVariant, IconName } from '@auditcore/ui-core'
 import { classes } from '../store'
 import { Icon } from './Icon'
 

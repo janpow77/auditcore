@@ -1,8 +1,10 @@
-# Changelog @flowaudit/ui-core
+# Changelog @auditcore/ui-core
 
 ## 0.2.0 – 2026-09-26 – Release v0.4.2
 
-Erste Veröffentlichung als Release-Datei. Ein früher Stand 0.1.0 (#149) war vor dem Release als Tarball in Anwendungen eingebunden (regulierung, audit_designer); seitdem kamen die unten genannten Kerne dazu (Risiko/Screening/Stichprobe/Benford, Vergleiche, Datenbank-Kanban, Belegerkennung, Kennungen, UTM, Tabellenexport, Hochrechnung). Deshalb 0.2.0 statt 0.1.0. Build mit Vite 8 (#169); Abhängigkeiten `@flowaudit/common` 0.1.1, `@flowaudit/kanban-core` 0.2.1.
+- **Breaking:** Paketname `@auditcore/ui-core` statt `@flowaudit/ui-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
+
+Erste Veröffentlichung als Release-Datei. Ein früher Stand 0.1.0 (#149) war vor dem Release als Tarball in Anwendungen eingebunden (regulierung, audit_designer); seitdem kamen die unten genannten Kerne dazu (Risiko/Screening/Stichprobe/Benford, Vergleiche, Datenbank-Kanban, Belegerkennung, Kennungen, UTM, Tabellenexport, Hochrechnung). Deshalb 0.2.0 statt 0.1.0. Build mit Vite 8 (#169); Abhängigkeiten `@auditcore/common` 0.1.1, `@auditcore/kanban-core` 0.2.1.
 
 ## 0.1.0 – nicht als Release-Datei veröffentlicht
 

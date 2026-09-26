@@ -8,7 +8,7 @@ import {
   type ExtractionRun,
   type ExtractionTranslate,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -27,7 +27,7 @@ export interface UseExtraction {
   state: ExtractionData
 }
 
-/** React-Anbindung der Belegerkennung aus `@flowaudit/ui-core` (dieselbe Logik wie `useExtraction` in Vue). */
+/** React-Anbindung der Belegerkennung aus `@auditcore/ui-core` (dieselbe Logik wie `useExtraction` in Vue). */
 export function useExtraction(props: ExtractionInputs): UseExtraction {
   const { t, locale } = useTranslation(extractionMessages, props.locale)
   const latest = useRef(props)

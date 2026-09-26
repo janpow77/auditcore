@@ -1,7 +1,7 @@
 # FlowAudit-BPMN-Erweiterung, Schema 1.1
 
 Verbindliche Festlegung der fachlichen BPMN-Erweiterung `flowaudit` für
-`auditcore_bpmn` (Python) und `@flowaudit/bpmn-flowaudit` (JavaScript).
+`auditcore_bpmn` (Python) und `@auditcore/bpmn-flowaudit` (JavaScript).
 Maschinenlesbar: `packages/auditcore_bpmn/src/auditcore_bpmn/schemas/flowaudit-1.1.xsd`.
 Python-Abbildung: `auditcore_bpmn.extensions` (Feldnamen englisch, XML-Namen wie hier).
 
@@ -293,7 +293,7 @@ wird gelesen, wenn das Element fehlt.
 `costEstimate`/`cost`, `effortPersonDays`, `frequency`/`frequencyPerYear`
 an Aufgaben; `esiProfile`, `esiCoreRequirements` an Prozessen.
 
-## moddle-Deskriptor (Vorgabe für `@flowaudit/bpmn-flowaudit`)
+## moddle-Deskriptor (Vorgabe für `@auditcore/bpmn-flowaudit`)
 
 `name: "FlowAudit"`, `uri: "https://flowaudit.de/bpmn/schema/1.0"`,
 `prefix: "flowaudit"`, `xml: { tagAlias: "lowerCase" }`; alle Typen

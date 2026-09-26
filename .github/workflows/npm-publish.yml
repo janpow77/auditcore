@@ -1,5 +1,5 @@
 name: npm-publish
-# Veröffentlicht die @flowaudit-Pakete eines GitHub-Releases auf npmjs.org.
+# Veröffentlicht die @auditcore-Pakete eines GitHub-Releases auf npmjs.org.
 # Nichts wird neu gebaut: veröffentlicht werden genau die signierten Tarballs
 # des Releases, nachdem Signatur (SHA256SUMS.asc), SHA-256, Größe und
 # npm-Integrität gegen npm-packages.json geprüft sind (scripts/npm_publish.py).
@@ -60,7 +60,7 @@ jobs:
           fi
           mkdir assets
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir assets \
-            --pattern 'flowaudit-*.tgz' --pattern npm-packages.json \
+            --pattern 'auditcore-*.tgz' --pattern npm-packages.json \
             --pattern SHA256SUMS --pattern SHA256SUMS.asc --pattern auditcore-preview-keyring.gpg
           echo "has_npm=true" >> "$GITHUB_OUTPUT"
       - name: Signatur prüfen
@@ -88,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: npm
-      url: https://www.npmjs.com/org/flowaudit
+      url: https://www.npmjs.com/org/auditcore
     permissions:
       contents: read
       id-token: write

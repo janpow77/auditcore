@@ -14,7 +14,7 @@ import {
   type SamplingTranslate,
   type SelectionResult,
   type SizeResult,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -39,7 +39,7 @@ export interface UseSampling {
   population: readonly PopulationItem[]
 }
 
-/** React-Anbindung des Stichprobenrechners aus `@flowaudit/ui-core` (dieselbe Logik wie `useSampling` in Vue). */
+/** React-Anbindung des Stichprobenrechners aus `@auditcore/ui-core` (dieselbe Logik wie `useSampling` in Vue). */
 export function useSampling(props: SamplingInputs): UseSampling {
   const { t, locale } = useTranslation(samplingMessages, props.locale)
   const latest = useRef({ props, locale })

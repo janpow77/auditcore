@@ -5,10 +5,10 @@
  * (`CustomEvent` with the payload as `detail`, bubbling and composed).
  */
 import { ref, useHost } from 'vue'
-import type { Comment, DiagramInfo, ProfileData, StoragePort, ValidationPort } from '@flowaudit/bpmn-flowaudit'
+import type { Comment, DiagramInfo, ProfileData, StoragePort, ValidationPort } from '@auditcore/bpmn-flowaudit'
 import FlowauditEditor from '../components/FlowauditEditor.vue'
 import type { EditorPorts } from '../stores/context'
-import type { ElementEventMap, ElementEventName, Theme } from '@flowaudit/bpmn-flowaudit/ui'
+import type { ElementEventMap, ElementEventName, Theme } from '@auditcore/bpmn-flowaudit/ui'
 import { useElementSource } from './useElementSource'
 
 const props = withDefaults(

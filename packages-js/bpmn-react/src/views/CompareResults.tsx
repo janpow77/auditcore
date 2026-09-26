@@ -1,6 +1,6 @@
 /** Results of the comparison panel: target/actual check and version synopsis. */
 
-import { changeLabel, synopsis, type Comparison, type TargetActualCheck } from '@flowaudit/bpmn-flowaudit'
+import { changeLabel, synopsis, type Comparison, type TargetActualCheck } from '@auditcore/bpmn-flowaudit'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'
 

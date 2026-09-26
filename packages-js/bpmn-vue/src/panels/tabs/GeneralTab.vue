@@ -4,8 +4,8 @@
  * fields (legacy `BpmnPropertiesPanel` of the audit_designer).
  */
 import { computed } from 'vue'
-import { FLOWSTAT_FIELDS, isActivity, type FlowstatField, type Marker } from '@flowaudit/bpmn-flowaudit'
-import { FLOWSTAT_KEYS as fields, flowstatValue } from '@flowaudit/bpmn-flowaudit/ui'
+import { FLOWSTAT_FIELDS, isActivity, type FlowstatField, type Marker } from '@auditcore/bpmn-flowaudit'
+import { FLOWSTAT_KEYS as fields, flowstatValue } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import MarkerPicker from './MarkerPicker.vue'

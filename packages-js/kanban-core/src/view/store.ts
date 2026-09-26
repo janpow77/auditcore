@@ -2,7 +2,7 @@
  * Kleinster Zustandsspeicher der Kanban-Ansicht. Jeder Stand ist ein neues,
  * unveränderliches Objekt; React liest ihn über `useSyncExternalStore`, Vue
  * spiegelt ihn in ein `shallowRef`. Gleiche Form wie `Store` aus
- * `@flowaudit/ui-core`, damit `useStoreState`/`useStore` ihn direkt lesen.
+ * `@auditcore/ui-core`, damit `useStoreState`/`useStore` ihn direkt lesen.
  */
 export interface KanbanStore<S extends object> {
   get: () => S

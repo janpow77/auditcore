@@ -1,17 +1,17 @@
-# Parität Vue ↔ React (`@flowaudit/ui` ↔ `@flowaudit/ui-react`)
+# Parität Vue ↔ React (`@auditcore/ui` ↔ `@auditcore/ui-react`)
 
 Stand: 26.09.2026. Gegenstand: die nativen React-Komponenten aus
-`@flowaudit/ui-react` 1.0.0 und die Vue-Fassung aus `@flowaudit/ui` 0.3.0.
-Beide rendern aus demselben framework-freien Kern `@flowaudit/ui-core`.
+`@auditcore/ui-react` 1.0.0 und die Vue-Fassung aus `@auditcore/ui` 0.3.0.
+Beide rendern aus demselben framework-freien Kern `@auditcore/ui-core`.
 
 ## Aufteilung
 
 | Schicht | Paket | Inhalt |
 |---|---|---|
-| Kern | `@flowaudit/ui-core` | Texte (`messages`, auch Kanban), Datentypen der REST-Verträge, Ports, View-Modelle (`viewModel`, `registerView`, `dsfaView`), Zustandsautomaten (`createSynopsisController`, `createVvtController`, `createDsfaController`), Fokusfalle (`trapFocus`), Exporte, Symbole, Stile (auch `kanban.css`) |
-| Kanban-Kern | `@flowaudit/kanban-core` | Fachregeln wie `auditcore_kanban` und Ansichtslogik (`createBoardController`, `selectBoardView`, `createMoveController`, `createPointerDrag`, `createBoardListController`, `createColumnEditor`, `createShareSearch`) |
-| Vue | `@flowaudit/ui` | SFC-Vorlagen; `useStore` spiegelt den Controller-Zustand in ein `shallowRef` |
-| React | `@flowaudit/ui-react` | JSX mit demselben Markup; `useStoreState` liest den Zustand über `useSyncExternalStore` |
+| Kern | `@auditcore/ui-core` | Texte (`messages`, auch Kanban), Datentypen der REST-Verträge, Ports, View-Modelle (`viewModel`, `registerView`, `dsfaView`), Zustandsautomaten (`createSynopsisController`, `createVvtController`, `createDsfaController`), Fokusfalle (`trapFocus`), Exporte, Symbole, Stile (auch `kanban.css`) |
+| Kanban-Kern | `@auditcore/kanban-core` | Fachregeln wie `auditcore_kanban` und Ansichtslogik (`createBoardController`, `selectBoardView`, `createMoveController`, `createPointerDrag`, `createBoardListController`, `createColumnEditor`, `createShareSearch`) |
+| Vue | `@auditcore/ui` | SFC-Vorlagen; `useStore` spiegelt den Controller-Zustand in ein `shallowRef` |
+| React | `@auditcore/ui-react` | JSX mit demselben Markup; `useStoreState` liest den Zustand über `useSyncExternalStore` |
 
 Fachregeln (Wortvergleich, Filter, Navigation, Vollständigkeit, Revisionen,
 Vier-Augen-Hinweis, Vorschau, Entscheidungsvorbelegung, Freigabebedingungen,
@@ -105,14 +105,14 @@ unter React 18 (`npm test`) und React 19 (`npm run test:react19`).
 | Leerer Mindestwert im Screening-Laufformular | Vue (`v-model.number`) liefert `''`, React `null`; beides heißt „kein Mindestwert“. |
 | Profilauswahl der Benford-Analyse | Leere Auswahl in beiden Fassungen `<option value="">` (Vue vorher `:value="null"`, nicht sichtbar). |
 
-## BPMN-Editor (`@flowaudit/bpmn-vue` ↔ `@flowaudit/bpmn-react`)
+## BPMN-Editor (`@auditcore/bpmn-vue` ↔ `@auditcore/bpmn-react`)
 
-Eigene Paketfamilie mit demselben Aufbau: Kern `@flowaudit/bpmn-flowaudit/ui`
+Eigene Paketfamilie mit demselben Aufbau: Kern `@auditcore/bpmn-flowaudit/ui`
 (Controller auf `createStore` für Editor, Auswahl, Prüfung, Sammlung,
 Sitzung und Werkzeugleisten-Aktionen; Deskriptoren, Texte, REST-Ports,
 Export, Stile), Vue bindet über `useStore`/`reactive`, React über
 `useSyncExternalStore`. Die Dialoge beider Fassungen nutzen
-`createFocusTrap` aus `@flowaudit/ui-core`.
+`createFocusTrap` aus `@auditcore/ui-core`.
 
 | Bereich | Vue | React (nativ) | Paritätsfälle |
 |---|---|---|---|

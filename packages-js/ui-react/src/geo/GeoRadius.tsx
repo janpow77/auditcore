@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { displayName, formatDistance } from '@flowaudit/ui-core'
+import { displayName, formatDistance } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { numberInput, useGeo } from './context'

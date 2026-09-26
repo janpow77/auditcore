@@ -9,7 +9,7 @@ export { default as RiskProfileInfo } from './RiskProfileInfo.vue'
 export { riskFlagsElement } from './element'
 export { useRiskFlags, type UseRiskFlags } from './useRiskFlags'
 export { useRiskProfile } from './useRiskProfile'
-/** Kern (Vertrag auditcore_risk.web, View-Logik, Zustandsautomat) aus `@flowaudit/ui-core`. */
+/** Kern (Vertrag auditcore_risk.web, View-Logik, Zustandsautomat) aus `@auditcore/ui-core`. */
 export {
   riskMessages,
   type RiskMessageKey,
@@ -76,4 +76,4 @@ export {
   type RiskInputs,
   type RiskSelection,
   type RiskTranslate,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

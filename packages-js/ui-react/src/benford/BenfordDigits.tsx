@@ -1,4 +1,4 @@
-import { benfordDigitColumns, benfordDigitRows, type BenfordTranslate, type Conformity, type Locale } from '@flowaudit/ui-core'
+import { benfordDigitColumns, benfordDigitRows, type BenfordTranslate, type Conformity, type Locale } from '@auditcore/ui-core'
 import { FlowauditTable } from '../table/FlowauditTable'
 
 export interface BenfordDigitsProps {

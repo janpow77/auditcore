@@ -1,8 +1,8 @@
 /**
- * @flowaudit/bpmn-flowaudit/ui – framework-free core of the editor UI (MIT):
+ * @auditcore/bpmn-flowaudit/ui – framework-free core of the editor UI (MIT):
  * controllers with stores, view logic, declarative descriptors, texts, REST
- * ports and export. `@flowaudit/bpmn-vue` and `@flowaudit/bpmn-react` both
- * render from it; the styles are `@flowaudit/bpmn-flowaudit/ui.css`.
+ * ports and export. `@auditcore/bpmn-vue` and `@auditcore/bpmn-react` both
+ * render from it; the styles are `@auditcore/bpmn-flowaudit/ui.css`.
  */
 
 export * from './store'

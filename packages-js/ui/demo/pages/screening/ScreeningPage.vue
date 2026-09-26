@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ScreeningReview, createScreeningRestPort } from '@flowaudit/ui'
+import { ScreeningReview, createScreeningRestPort } from '@auditcore/ui'
 
 // Nur Demo: Die Person kommt aus dem Kopf X-Demo-Actor; eine Anwendung nimmt ihre Sitzung.
 const actors = [

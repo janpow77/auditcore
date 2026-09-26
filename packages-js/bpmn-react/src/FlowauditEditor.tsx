@@ -6,8 +6,8 @@
  */
 
 import { forwardRef, useImperativeHandle, useMemo, useRef, type KeyboardEvent } from 'react'
-import { createStore, dialogPatch, handleShortcut, initialUiState, INITIAL_EDITOR_STATE, type ActionState } from '@flowaudit/bpmn-flowaudit/ui'
-import type { KeyKind } from '@flowaudit/bpmn-flowaudit'
+import { createStore, dialogPatch, handleShortcut, initialUiState, INITIAL_EDITOR_STATE, type ActionState } from '@auditcore/bpmn-flowaudit/ui'
+import type { KeyKind } from '@auditcore/bpmn-flowaudit'
 import { EditorContextProvider, type EditorContext } from './context'
 import { EditorCanvas } from './EditorCanvas'
 import { EditorChrome, EditorFooter, EditorSide } from './EditorChrome'

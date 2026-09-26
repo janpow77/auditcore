@@ -16,14 +16,14 @@ Stand 25.09.2026. Quellen (GitHub-verifiziert, Blob-SHAs in
   `src/cockpit/routes/auftraege.py`, `services/auftraege.py`); `spalteVon` und
   `darfVerschieben` per node ausgeführt (`tests/fixtures/cockpit_rules_observed.json`).
 
-Ziele: **Py** = `auditcore_kanban` (Python), **Core** = `@flowaudit/kanban-core`
+Ziele: **Py** = `auditcore_kanban` (Python), **Core** = `@auditcore/kanban-core`
 (TypeScript, gleiche Regeln, Paritätsfixtures), **UI** = Komponente in
-`@flowaudit/ui` (Vue 3 + `<flowaudit-kanban-board>` + React-Wrapper),
+`@auditcore/ui` (Vue 3 + `<flowaudit-kanban-board>` + React-Wrapper),
 **Port** = Anbindung durch die Anwendung (Speicher-/Rechte-/Datei-Port).
 
 Status: **übernommen** (in Py umgesetzt und getestet), **Core** (Regel in Py
-fertig, TS-Spiegel in `@flowaudit/kanban-core`), **UI übernommen** (Oberfläche in
-`@flowaudit/ui`, PR #84), **Port** (bleibt bei der Anwendung, Schnittstelle vorhanden),
+fertig, TS-Spiegel in `@auditcore/kanban-core`), **UI übernommen** (Oberfläche in
+`@auditcore/ui`, PR #84), **Port** (bleibt bei der Anwendung, Schnittstelle vorhanden),
 **geändert Bx** (bewusste Abweichung, `packages/auditcore_kanban/docs/behavior-changes.md`).
 
 ## 1. Board, Spalten, Vorlagen
@@ -129,13 +129,13 @@ fertig, TS-Spiegel in `@flowaudit/kanban-core`), **UI übernommen** (Oberfläche
 
 ## Offene Punkte
 
-- Core und Oberfläche sind umgesetzt (`@flowaudit/kanban-core`,
-  `@flowaudit/ui` Kanban-Komponenten, `<flowaudit-kanban-board>`,
+- Core und Oberfläche sind umgesetzt (`@auditcore/kanban-core`,
+  `@auditcore/ui` Kanban-Komponenten, `<flowaudit-kanban-board>`,
   React-Hüllen; Parität 312 Fixturefälle, REST-Vertrag gegen den
   Python-Server geprüft, 12 Playwright-Abläufe).
 - Datenbankansicht (`useDbKanban`): `FaDbKanban` / `<flowaudit-db-kanban>`
-  mit Kern in `@flowaudit/kanban-core` (`groupRecords`, `RecordPort`) und
-  `@flowaudit/ui-core` (`createDbKanbanController`).
+  mit Kern in `@auditcore/kanban-core` (`groupRecords`, `RecordPort`) und
+  `@auditcore/ui-core` (`createDbKanbanController`).
 - Offen: zeitgesteuertes Nachladen über `events()`, Auslieferung der gebauten
   Oberfläche über `create_app(ui_directory=…)`.
 - Umstellung von audit_designer und cockpit (Migration über

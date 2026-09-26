@@ -61,7 +61,7 @@ describe('View-Logik Verzeichnis', () => {
 })
 
 describe('Exporte mit Formelschutz', () => {
-  it('schützt jede Zelle nach dem gemeinsamen Vertrag csv-cell (über @flowaudit/common)', () => {
+  it('schützt jede Zelle nach dem gemeinsamen Vertrag csv-cell (über @auditcore/common)', () => {
     const cells = contract('csv-cell').cases.map((entry) => entry.input.value as string | number | null)
     const activities = cells.map((value) => ({ name: 'x', anmerkungen: value }))
     const csv = registerCsv({ content: { ...content, taetigkeiten: activities }, columns: [{ key: 'anmerkungen', title: 'A', reference: '', kind: 'text', required: false }], issues: [], versionLabel: '', texts })

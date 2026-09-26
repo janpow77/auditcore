@@ -1,4 +1,4 @@
-import { decisionTitle, type AssessmentSummary, type DataProtectionProfile } from '@flowaudit/ui-core'
+import { decisionTitle, type AssessmentSummary, type DataProtectionProfile } from '@auditcore/ui-core'
 import { Button } from '../../base/Button'
 import { statusLabel, useDataProtectionText } from '../shared'
 

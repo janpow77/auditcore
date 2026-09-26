@@ -1,6 +1,6 @@
 import { useEffect, useRef, type FormEvent } from 'react'
-import { intlFormatNumber } from '@flowaudit/common'
-import { TOLERANCE_STEPS, vertexCount, type SimplifyUnit } from '@flowaudit/ui-core'
+import { intlFormatNumber } from '@auditcore/common'
+import { TOLERANCE_STEPS, vertexCount, type SimplifyUnit } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { useElementId } from '../store'
 import { GeoAreaSelect } from './GeoAreaSelect'

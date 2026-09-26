@@ -10,7 +10,7 @@ import {
   type BenfordTest,
   type ImportedColumns,
   type ShortValues,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'

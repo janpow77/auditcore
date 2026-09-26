@@ -1,9 +1,9 @@
-# BPMN-Editor (`@flowaudit/bpmn-editor`)
+# BPMN-Editor (`@auditcore/bpmn-editor`)
 
 Eigener BPMN-2.0-Zeicheneditor, der bpmn-js im audit_designer ablöst.
 Paket: `packages-js/bpmn-editor`, Lizenz MIT, TypeScript, framework-frei.
-Die FlowAudit-Fachschicht (`@flowaudit/bpmn-flowaudit`) und die
-Vue-Komponenten (`@flowaudit/bpmn-vue`) setzen auf diesem Kern auf.
+Die FlowAudit-Fachschicht (`@auditcore/bpmn-flowaudit`) und die
+Vue-Komponenten (`@auditcore/bpmn-vue`) setzen auf diesem Kern auf.
 
 ## Clean-Room-Regel
 
@@ -131,7 +131,7 @@ Attribute bleiben erhalten), SVG-Export, deutsche Oberfläche.
 - Rundlauf-Tests: Export ohne Bearbeitung entspricht exakt dem kanonisch
   serialisierten Original (synthetische Fixtures, Beispiele aus dem
   audit_designer). Lokal zusätzlich gegen nicht veröffentlichte
-  Nutzerdiagramme: `BPMN_LOCAL_FIXTURES=<verzeichnis> npm test -w @flowaudit/bpmn-editor`.
+  Nutzerdiagramme: `BPMN_LOCAL_FIXTURES=<verzeichnis> npm test -w @auditcore/bpmn-editor`.
 
 ## Bekannte Grenzen
 

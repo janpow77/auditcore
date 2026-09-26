@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
-import { buildSynopsisExport, deliverExport, type ClientExportFormat, type ExportPayload, type SynopsisSelection, type SynopsisTranslate } from '@flowaudit/ui-core'
+import { buildSynopsisExport, deliverExport, type ClientExportFormat, type ExportPayload, type SynopsisSelection, type SynopsisTranslate } from '@auditcore/ui-core'
 
-export { downloadText, printHtml } from '@flowaudit/ui-core'
+export { downloadText, printHtml } from '@auditcore/ui-core'
 
 export interface UseSynopsisExport {
   build: (format: ClientExportFormat) => ExportPayload | null

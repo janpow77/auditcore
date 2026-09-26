@@ -2,7 +2,7 @@
  * Anzeige der Belegerkennung für Vue und React (reine Funktionen): Profile,
  * Feld- und Befundzeilen, Konfidenzen, Status. Texte nur aus `extractionMessages`.
  */
-import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent } from '@auditcore/common'
 import type { Locale, Translate } from '../i18n'
 import { extractionMessages, type ExtractionMessageKey } from './messages'
 import type { ExtractedField, ExtractionCatalogue, ExtractionProfile, ExtractionRun, ExtractionJson, ExtractionFinding } from './types'

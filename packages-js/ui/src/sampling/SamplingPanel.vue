@@ -9,7 +9,7 @@ import {
   type SamplingPort,
   type SelectionResult,
   type SizeResult,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useI18n, type Locale } from '../i18n'
 import { saveFile } from '../rest/download'
 import SamplingDraw from './SamplingDraw.vue'

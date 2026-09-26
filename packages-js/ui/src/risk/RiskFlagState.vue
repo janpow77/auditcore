@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { Locale } from '../i18n'
 import { useI18n } from '../i18n'
-import { riskMessages, STATE_ICONS, stateTone, STATE_KEYS, type FlagState } from '@flowaudit/ui-core'
+import { riskMessages, STATE_ICONS, stateTone, STATE_KEYS, type FlagState } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   state: FlagState

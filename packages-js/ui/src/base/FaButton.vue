@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import FaIcon from './FaIcon.vue'
-import type { IconName } from '@flowaudit/ui-core'
-import type { ButtonSize, ButtonVariant } from '@flowaudit/ui-core'
+import type { IconName } from '@auditcore/ui-core'
+import type { ButtonSize, ButtonVariant } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   variant?: ButtonVariant

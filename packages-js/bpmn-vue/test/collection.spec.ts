@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount, type VueWrapper } from '@vue/test-utils'
-import { InMemoryStorage } from '@flowaudit/bpmn-flowaudit'
+import { InMemoryStorage } from '@auditcore/bpmn-flowaudit'
 import CollectionTree from '../src/components/collection/CollectionTree.vue'
 import FlowauditWorkbench from '../src/components/FlowauditWorkbench.vue'
-import { DIAGRAM_MIME, readDrag, setDrag } from '@flowaudit/bpmn-flowaudit/ui'
+import { DIAGRAM_MIME, readDrag, setDrag } from '@auditcore/bpmn-flowaudit/ui'
 import { createCollectionStore } from '../src/stores/collectionStore'
 import { fixture, until } from './helpers'
 

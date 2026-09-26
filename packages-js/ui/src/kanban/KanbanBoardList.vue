@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import { TEMPLATES, type Board, type BoardPort, type BoardSummary } from '@flowaudit/kanban-core'
+import { TEMPLATES, type Board, type BoardPort, type BoardSummary } from '@auditcore/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import FaTextField from '../base/FaTextField.vue'
 import { useI18n, type Locale } from '../i18n'

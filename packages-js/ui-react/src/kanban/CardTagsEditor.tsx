@@ -1,4 +1,4 @@
-import type { Locale } from '@flowaudit/ui-core'
+import type { Locale } from '@auditcore/ui-core'
 import { useState, type KeyboardEvent } from 'react'
 import { Icon } from '../base/Icon'
 import { useKanbanDialogText } from './text'

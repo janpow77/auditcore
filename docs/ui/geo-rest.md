@@ -1,7 +1,7 @@
 # REST-Vertrag Geo-Karte (`auditcore_geo.web`)
 
 Stand 2026-09-25. Vertrag zwischen `auditcore_geo.web` (ab 0.3.0) und der
-Oberflächenkomponente `<flowaudit-geo-map>` aus `@flowaudit/ui` (Vue
+Oberflächenkomponente `<flowaudit-geo-map>` aus `@auditcore/ui` (Vue
 `FaGeoMap`, React `FlowauditGeoMap`). Alle Berechnungen laufen in der
 Bibliothek; die Oberfläche rechnet selbst keine Entfernungen, Lagen oder
 Projektionen. Kein Erdmodell und keine Randregel wird still angenommen

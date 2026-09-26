@@ -3,8 +3,8 @@
  * Toggle chips for the domain markers of the selected element. Turning on a
  * colouring marker (e.g. finding) also sets its colour if none is set.
  */
-import { MARKERS, label, type Marker } from '@flowaudit/bpmn-flowaudit'
-import { setMarkerText, toggleMarker } from '@flowaudit/bpmn-flowaudit/ui'
+import { MARKERS, label, type Marker } from '@auditcore/bpmn-flowaudit'
+import { setMarkerText, toggleMarker } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 

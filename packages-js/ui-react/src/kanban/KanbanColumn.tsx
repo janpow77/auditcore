@@ -1,5 +1,5 @@
-import type { Card, ColumnView } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import type { Card, ColumnView } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import type { CSSProperties, KeyboardEvent, PointerEvent } from 'react'
 import { Button } from '../base/Button'
 import { classes } from '../store'

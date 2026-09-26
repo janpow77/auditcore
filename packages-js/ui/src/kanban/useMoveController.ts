@@ -3,7 +3,7 @@
  * Strg+Pfeile, Ansagen für aria-live); gleiche Logik wie die React-Fassung.
  */
 import { computed, nextTick, type Ref } from 'vue'
-import { createMoveController, previewColumns, type KanbanActions } from '@flowaudit/kanban-core'
+import { createMoveController, previewColumns, type KanbanActions } from '@auditcore/kanban-core'
 import type { Translate } from '../i18n'
 import type { KanbanMessageKey } from './messages'
 import { useStore } from '../composables/useStore'

@@ -7,10 +7,10 @@ Paketen zugeordnet, damit beim Umstieg nichts verloren geht.
 
 Pakete:
 
-- **flowaudit** = `@flowaudit/bpmn-flowaudit` (`packages-js/bpmn-flowaudit`),
+- **flowaudit** = `@auditcore/bpmn-flowaudit` (`packages-js/bpmn-flowaudit`),
   framework-freie Fachschicht
-- **vue** = `@flowaudit/bpmn-vue` (`packages-js/bpmn-vue`), Oberfläche
-- **Kern** = `@flowaudit/bpmn-editor` (`packages-js/bpmn-editor`), Zeicheneditor
+- **vue** = `@auditcore/bpmn-vue` (`packages-js/bpmn-vue`), Oberfläche
+- **Kern** = `@auditcore/bpmn-editor` (`packages-js/bpmn-editor`), Zeicheneditor
 - **App** = die einbindende Anwendung (liefert die Ports)
 
 Status: **übernommen** (Verhalten gleich, Tests portiert), **erweitert**

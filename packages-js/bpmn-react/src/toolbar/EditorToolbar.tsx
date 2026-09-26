@@ -5,8 +5,8 @@
  */
 
 import type { ChangeEvent } from 'react'
-import { PALETTE_COLORS, type Direction, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { actionDisabled, FILE_ACTIONS, PAGE_OPTIONS, VIEW_ACTIONS, type ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
+import { PALETTE_COLORS, type Direction, type PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { actionDisabled, FILE_ACTIONS, PAGE_OPTIONS, VIEW_ACTIONS, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import { ColorSwatches } from '../base/ColorSwatches'
 import { FaIcon } from '../base/FaIcon'
 import { ToolbarMenu } from '../base/ToolbarMenu'

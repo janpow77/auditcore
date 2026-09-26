@@ -2,8 +2,8 @@
 
 Vertrag `auditcore_registry_sources.screening_review/1`. Serverseite:
 `auditcore_registry_sources.web` (ab `auditcore_registry_sources` 0.2.0),
-Oberfläche: `<flowaudit-screening-review>` aus `@flowaudit/ui` bzw. der
-React-Wrapper `ScreeningReview` aus `@flowaudit/ui-react`.
+Oberfläche: `<flowaudit-screening-review>` aus `@auditcore/ui` bzw. der
+React-Wrapper `ScreeningReview` aus `@auditcore/ui-react`.
 
 **Ein Treffer ist ein Prüfhinweis, keine Feststellung.** Die Schnittstelle
 hält fest, *wer* einen Hinweis *mit welcher Begründung* bestätigt, verworfen

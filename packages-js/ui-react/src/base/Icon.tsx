@@ -1,4 +1,4 @@
-import { ICONS, type IconName } from '@flowaudit/ui-core'
+import { ICONS, type IconName } from '@auditcore/ui-core'
 
 export interface IconProps {
   name: IconName

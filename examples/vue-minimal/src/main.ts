@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
-import { createFlowauditUi } from '@flowaudit/ui'
+import { createFlowauditUi } from '@auditcore/ui'
 // Einmal je Anwendung: Designtoken (--fa-*), Hell-/Dunkelmodus und Komponentenstile.
-import '@flowaudit/ui/style.css'
+import '@auditcore/ui/style.css'
 import App from './App.vue'
 import { locale } from './locale'
 

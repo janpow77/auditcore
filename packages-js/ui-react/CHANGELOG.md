@@ -1,8 +1,10 @@
-# Changelog @flowaudit/ui-react
+# Changelog @auditcore/ui-react
 
 ## 1.1.0 – 2026-09-26 – Release v0.4.2
 
-Erste Veröffentlichung als Release-Datei. Ein früher Stand 1.0.0 (#149) war vor dem Release als Tarball in regulierung eingebunden; seitdem kamen die nativen Komponenten für Risiko-Merkmale, Screening, Stichprobe, Benford, Vergleiche, Kanban, Datenbank-Kanban, Belegerkennung, Kennungen, Tabellenexport und Hochrechnung dazu. Deshalb 1.1.0. Build mit Vite 8 (#169); Abhängigkeiten `@flowaudit/common` 0.1.1, `@flowaudit/ui-core` 0.2.0, `@flowaudit/kanban-core` 0.2.1.
+- **Breaking:** Paketname `@auditcore/ui-react` statt `@flowaudit/ui-react` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-react-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
+
+Erste Veröffentlichung als Release-Datei. Ein früher Stand 1.0.0 (#149) war vor dem Release als Tarball in regulierung eingebunden; seitdem kamen die nativen Komponenten für Risiko-Merkmale, Screening, Stichprobe, Benford, Vergleiche, Kanban, Datenbank-Kanban, Belegerkennung, Kennungen, Tabellenexport und Hochrechnung dazu. Deshalb 1.1.0. Build mit Vite 8 (#169); Abhängigkeiten `@auditcore/common` 0.1.1, `@auditcore/ui-core` 0.2.0, `@auditcore/kanban-core` 0.2.1.
 
 ## 1.0.0 – nicht als Release-Datei veröffentlicht
 

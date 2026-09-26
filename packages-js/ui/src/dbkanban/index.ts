@@ -3,7 +3,7 @@ export { default as DbKanbanColumn } from './DbKanbanColumn.vue'
 export { default as DbKanbanCard } from './DbKanbanCard.vue'
 export { dbKanbanElement } from './element'
 export { useDbKanban, type DbKanbanSource, type UseDbKanban } from './useDbKanban'
-/** Kern aus `@flowaudit/ui-core` (Zustandsautomat, Anzeige) und `@flowaudit/kanban-core` (Gruppierung, Port). */
+/** Kern aus `@auditcore/ui-core` (Zustandsautomat, Anzeige) und `@auditcore/kanban-core` (Gruppierung, Port). */
 export {
   dbKanbanMessages,
   createDbKanbanController,
@@ -18,7 +18,7 @@ export {
   type DbColumnView,
   type DbCardView,
   type RecordMove,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 export {
   createMemoryRecordPort,
   groupRecords,
@@ -27,4 +27,4 @@ export {
   type RecordRow,
   type RecordProperty,
   type RecordValue,
-} from '@flowaudit/kanban-core'
+} from '@auditcore/kanban-core'

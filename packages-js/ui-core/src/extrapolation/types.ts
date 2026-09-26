@@ -1,5 +1,5 @@
 /** Typen des REST-Vertrags `auditcore_extrapolation.evaluation/1` (docs/ui/extrapolation-rest.md). */
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 
 export interface ExtrapolationMethod {
   id: string

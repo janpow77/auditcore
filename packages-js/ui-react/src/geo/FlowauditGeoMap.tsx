@@ -12,7 +12,7 @@ import {
   type LocateResult,
   type RadiusResult,
   type TileSource,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 import { GeoContext, useGeo as useGeoContextValue, type GeoContextValue } from './context'

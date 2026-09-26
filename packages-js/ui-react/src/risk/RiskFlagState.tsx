@@ -1,4 +1,4 @@
-import { STATE_ICONS, STATE_KEYS, riskMessages, stateTone, type FlagState, type Locale } from '@flowaudit/ui-core'
+import { STATE_ICONS, STATE_KEYS, riskMessages, stateTone, type FlagState, type Locale } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { classes } from '../store'
 

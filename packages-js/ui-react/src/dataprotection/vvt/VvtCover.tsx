@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { coverIssues, type Person, type RegisterContent, type RegisterIssue } from '@flowaudit/ui-core'
+import { coverIssues, type Person, type RegisterContent, type RegisterIssue } from '@auditcore/ui-core'
 import { Button } from '../../base/Button'
 import { TextField } from '../../base/TextField'
 import { useDataProtectionText } from '../shared'

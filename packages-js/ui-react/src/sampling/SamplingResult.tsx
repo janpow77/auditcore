@@ -1,4 +1,4 @@
-import { derivationColumns, derivationRows, sizeTexts, type Locale, type SamplingTranslate, type SizeResult } from '@flowaudit/ui-core'
+import { derivationColumns, derivationRows, sizeTexts, type Locale, type SamplingTranslate, type SizeResult } from '@auditcore/ui-core'
 import { FlowauditTable } from '../table/FlowauditTable'
 import { useElementId } from '../store'
 

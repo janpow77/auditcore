@@ -61,7 +61,7 @@ export function exportSvg(canvas: Canvas, elementRegistry: ElementRegistry, padd
   const height = Math.ceil(bounds.height + padding * 2)
   return (
     '<?xml version="1.0" encoding="utf-8"?>\n' +
-    '<!-- erstellt mit @flowaudit/bpmn-editor -->\n' +
+    '<!-- erstellt mit @auditcore/bpmn-editor -->\n' +
     `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ` +
     `width="${width}" height="${height}" viewBox="${x} ${y} ${width} ${height}" version="1.1">` +
     (defs ? serialize(defs) : '') +

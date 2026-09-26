@@ -1,4 +1,4 @@
-import { blockProgress, screeningTone, withAnswer, withJustification, type BlockView, type DataProtectionProfile, type Proposal, type SurveyInput } from '@flowaudit/ui-core'
+import { blockProgress, screeningTone, withAnswer, withJustification, type BlockView, type DataProtectionProfile, type Proposal, type SurveyInput } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { prefixedLabel, useDataProtectionText } from '../shared'
 import { DsfaQuestion } from './DsfaQuestion'

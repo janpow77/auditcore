@@ -6,13 +6,13 @@
       "node"
     ],
     "paths": {
-      "@flowaudit/common": [
+      "@auditcore/common": [
         "../common/src/index.ts"
       ],
-      "@flowaudit/common/browser": [
+      "@auditcore/common/browser": [
         "../common/src/browser.ts"
       ],
-      "@flowaudit/kanban-core": [
+      "@auditcore/kanban-core": [
         "../kanban-core/src/index.ts"
       ]
     }

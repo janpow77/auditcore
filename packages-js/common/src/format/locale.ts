@@ -1,4 +1,4 @@
-/** Sprachen der FlowAudit-Oberflächen (gleich `Locale` in `@flowaudit/ui`). */
+/** Sprachen der FlowAudit-Oberflächen (gleich `Locale` in `@auditcore/ui`). */
 export type AppLocale = 'de' | 'en'
 
 /** Alle unterstützten Sprachen. */

@@ -5,7 +5,7 @@
  */
 
 import { createContext, useContext, useMemo, type ReactNode } from 'react'
-import { createTranslator, type Locale, type MessageTable, type Translate } from '@flowaudit/bpmn-flowaudit/ui'
+import { createTranslator, type Locale, type MessageTable, type Translate } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface I18n {
   locale: Locale

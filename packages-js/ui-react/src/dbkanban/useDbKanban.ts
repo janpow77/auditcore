@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { createMemoryRecordPort, type RecordPort, type RecordRow, type RecordTable } from '@flowaudit/kanban-core'
+import { createMemoryRecordPort, type RecordPort, type RecordRow, type RecordTable } from '@auditcore/kanban-core'
 import {
   createDbKanbanController,
   dbKanbanMessages,
@@ -11,7 +11,7 @@ import {
   type DbKanbanView,
   type Locale,
   type RecordMove,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -49,7 +49,7 @@ function useSource(props: DbKanbanInputs, latest: { current: { props: DbKanbanIn
   )
 }
 
-/** React-Anbindung der Datenbankansicht aus `@flowaudit/ui-core` (dieselbe Logik wie `useDbKanban` in Vue). */
+/** React-Anbindung der Datenbankansicht aus `@auditcore/ui-core` (dieselbe Logik wie `useDbKanban` in Vue). */
 export function useDbKanban(props: DbKanbanInputs): UseDbKanban {
   const { t, locale } = useTranslation(dbKanbanMessages, props.locale)
   const latest = useRef({ props, t, locale, source: null as RecordPort | null })

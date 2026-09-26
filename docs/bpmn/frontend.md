@@ -1,21 +1,21 @@
 # BPMN-Frontend: FlowAudit-Fachschicht, UI-Kern, Vue, Web Component, React
 
-Drei Pakete bauen auf dem eigenen Editorkern `@flowaudit/bpmn-editor` auf
+Drei Pakete bauen auf dem eigenen Editorkern `@auditcore/bpmn-editor` auf
 (alle MIT, Clean-Room – kein Code, keine Styles, keine Icons aus bpmn-js,
 bpmn-js-properties-panel, @bpmn-io/properties-panel oder bpmn-font):
 
 | Paket | Inhalt | Abhängigkeiten |
 |---|---|---|
-| `@flowaudit/bpmn-flowaudit` (`packages-js/bpmn-flowaudit`) | Fachschicht ohne Framework: moddle-Deskriptor flowaudit 1.0/1.1, Lesen/Schreiben der Erweiterungen, Rollen, Kennzeichen, Prüfbezüge, Prüfpfad, Prüfregeln, Anreicherung, Neutralisierung, Versions- und Soll/Ist-Vergleich, Berichte, Sammlung, Export, diagram-js-Module, Icons, Ports; unter `./ui` der framework-freie Kern der Oberfläche (Controller, Deskriptoren, Texte, REST-Ports, Stile) | `bpmn-moddle`; Kern optional |
-| `@flowaudit/bpmn-vue` (`packages-js/bpmn-vue`) | Vue-3-Oberfläche, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5, Kern, Fachschicht |
-| `@flowaudit/bpmn-react` (`packages-js/bpmn-react`) | native React-Oberfläche (gleiches Markup und XML wie Vue), einbettbarer Editor mit dem Vertrag der Web Component | React 18.3 oder 19, Kern, Fachschicht |
+| `@auditcore/bpmn-flowaudit` (`packages-js/bpmn-flowaudit`) | Fachschicht ohne Framework: moddle-Deskriptor flowaudit 1.0/1.1, Lesen/Schreiben der Erweiterungen, Rollen, Kennzeichen, Prüfbezüge, Prüfpfad, Prüfregeln, Anreicherung, Neutralisierung, Versions- und Soll/Ist-Vergleich, Berichte, Sammlung, Export, diagram-js-Module, Icons, Ports; unter `./ui` der framework-freie Kern der Oberfläche (Controller, Deskriptoren, Texte, REST-Ports, Stile) | `bpmn-moddle`; Kern optional |
+| `@auditcore/bpmn-vue` (`packages-js/bpmn-vue`) | Vue-3-Oberfläche, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5, Kern, Fachschicht |
+| `@auditcore/bpmn-react` (`packages-js/bpmn-react`) | native React-Oberfläche (gleiches Markup und XML wie Vue), einbettbarer Editor mit dem Vertrag der Web Component | React 18.3 oder 19, Kern, Fachschicht |
 
 Die Fachschicht greift nie aufs Netz oder eine Datenbank zu. Alles
 Anwendungsspezifische kommt über **Ports** herein (`StoragePort`,
 `LegalSearchPort`, `CataloguePort`, `ProfilePort`, `ValidationPort`,
 `EsiPort`); für Demo und Tests gibt es Implementierungen im Speicher
 (`InMemoryStorage`, `StaticProfilePort`, `ProfileCataloguePort`,
-`ProfileLegalSearch`), für Server die REST-Ports aus `@flowaudit/bpmn-flowaudit/ui` (auch von `@flowaudit/bpmn-vue` und `@flowaudit/bpmn-react` exportiert)
+`ProfileLegalSearch`), für Server die REST-Ports aus `@auditcore/bpmn-flowaudit/ui` (auch von `@auditcore/bpmn-vue` und `@auditcore/bpmn-react` exportiert)
 (Vertrag: [`rest-api.md`](rest-api.md)). Programmspezifisches (Namen von
 Stellen, Förderprogramme) ist nicht eingebaut: Rollen-Aliasse, Profile und
 Ersetzungen für die Neutralisierung liefert die Anwendung.
@@ -37,17 +37,17 @@ und die XML-Namen des flowaudit-Schemas. Es gelten dieselben Begriffe wie in
 
 Profile (Rollen, Fonds, KA/BK, Funktionstrennungsregeln) liegen nur einmal im
 Repository, in `packages/auditcore_bpmn/src/auditcore_bpmn/profiles/data/`.
-`@flowaudit/bpmn-flowaudit/profiles` liest sie beim Bauen ein
+`@auditcore/bpmn-flowaudit/profiles` liest sie beim Bauen ein
 (`bundledProfiles()`, `defaultProfile()`); Tests prüfen Sammlung, Profile und
 Prüfbericht gegen die JSON-Schemata von `auditcore_bpmn`.
 
 ## Nutzung in Vue
 
 ```ts
-import { FlowauditEditor, FlowauditWorkbench, restPorts } from '@flowaudit/bpmn-vue'
-import '@flowaudit/bpmn-vue/style.css'
-import { InMemoryStorage } from '@flowaudit/bpmn-flowaudit'
-import { defaultProfile } from '@flowaudit/bpmn-flowaudit/profiles'
+import { FlowauditEditor, FlowauditWorkbench, restPorts } from '@auditcore/bpmn-vue'
+import '@auditcore/bpmn-vue/style.css'
+import { InMemoryStorage } from '@auditcore/bpmn-flowaudit'
+import { defaultProfile } from '@auditcore/bpmn-flowaudit/profiles'
 ```
 
 ```vue
@@ -89,11 +89,11 @@ Exportdialog (SVG, PNG, PDF mit Seitenformat, BPMN, MyST, Prozesstabelle,
 Risiko-Kontroll-Matrix, Feststellungsliste, neutral, Kopfzeile, Legenden);
 Anreicherung mit Vorschlagsliste; ESI-Abgleich; Suche, Übersichtskarte,
 Tastenkürzel (`?`), XML-Ansicht, hell/dunkel, Deutsch/Englisch. Eigene
-SVG-Icons (24 px, `currentColor`) in `@flowaudit/bpmn-flowaudit` (`ICONS`).
+SVG-Icons (24 px, `currentColor`) in `@auditcore/bpmn-flowaudit` (`ICONS`).
 
 ## Web Component `<flowaudit-bpmn-editor>`
 
-`@flowaudit/bpmn-vue/web-component` (`dist-wc/flowaudit-bpmn-editor.js`) ist ein
+`@auditcore/bpmn-vue/web-component` (`dist-wc/flowaudit-bpmn-editor.js`) ist ein
 einzelnes ES-Modul mit Vue, Kern, Fachschicht, gebündelten Profilen und CSS –
 keine CDN-Abhängigkeit. Das Element rendert im Light DOM, die Styles werden
 einmal als `<style data-flowaudit-bpmn>` eingefügt.
@@ -146,9 +146,9 @@ Python-Paket mitzuliefern.
 
 ## Nutzung in React-Projekten
 
-`@flowaudit/bpmn-react` ist eine native React-Oberfläche – keine Vue-Laufzeit,
+`@auditcore/bpmn-react` ist eine native React-Oberfläche – keine Vue-Laufzeit,
 keine Web Component. Die Logik (Controller auf `createStore`, Deskriptoren,
-Texte, REST-Ports, Export) kommt aus `@flowaudit/bpmn-flowaudit/ui`, denselben
+Texte, REST-Ports, Export) kommt aus `@auditcore/bpmn-flowaudit/ui`, denselben
 Quellen wie die Vue-Fassung; React liest die Controller über
 `useSyncExternalStore`. Getestet wird unter React 19 (`npm test`) und React
 18.3 (`npm run test:react18`, installiert React 18 außerhalb des Workspace).
@@ -159,8 +159,8 @@ Ereignisse mit denselben Nutzdaten wie `CustomEvent.detail`, Ref mit
 
 ```tsx
 import { useRef } from 'react'
-import { FlowauditBpmnEditor, type FlowauditBpmnEditorHandle } from '@flowaudit/bpmn-react'
-import '@flowaudit/bpmn-react/style.css'
+import { FlowauditBpmnEditor, type FlowauditBpmnEditorHandle } from '@auditcore/bpmn-react'
+import '@auditcore/bpmn-react/style.css'
 
 export function Prozess({ xml }: { xml: string }) {
   const editor = useRef<FlowauditBpmnEditorHandle>(null)

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /** Legal bases of the selected element. */
-import type { LegalBasis } from '@flowaudit/bpmn-flowaudit'
+import type { LegalBasis } from '@auditcore/bpmn-flowaudit'
 import { useEditorContext } from '../../stores/context'
 import LegalBasisEditor from '../legal/LegalBasisEditor.vue'
 

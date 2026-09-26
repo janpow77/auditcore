@@ -1,4 +1,4 @@
-import { ariaSort, bearerHeaders, debounce, isTokenExpired, nextSort, sortRows, type Debounced, type SortState, type TableRow, type TokenStore } from '@flowaudit/common'
+import { ariaSort, bearerHeaders, debounce, isTokenExpired, nextSort, sortRows, type Debounced, type SortState, type TableRow, type TokenStore } from '@auditcore/common'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
 export interface UseSortOptions {
@@ -16,7 +16,7 @@ export interface UseSort<R extends TableRow> {
   ariaSortFor: (key: string) => 'ascending' | 'descending' | 'none'
 }
 
-/** Sortierzustand und sortierte Zeilen (Kern `table/sort` aus `@flowaudit/common`). */
+/** Sortierzustand und sortierte Zeilen (Kern `table/sort` aus `@auditcore/common`). */
 export function useSort<R extends TableRow>(rows: readonly R[], options: UseSortOptions = {}): UseSort<R> {
   const [sort, setSort] = useState<SortState | null>(options.initial ?? null)
   const { locale, cycle } = options
@@ -46,7 +46,7 @@ export interface UseAuthToken {
   clear: () => void
 }
 
-/** Zugangstoken aus einem `TokenStore` (`@flowaudit/common`), neu gerendert bei jeder Änderung. */
+/** Zugangstoken aus einem `TokenStore` (`@auditcore/common`), neu gerendert bei jeder Änderung. */
 export function useAuthToken(store: TokenStore): UseAuthToken {
   const subscribe = useCallback((notify: () => void) => store.subscribe(notify), [store])
   const token = useSyncExternalStore(subscribe, store.get, store.get)

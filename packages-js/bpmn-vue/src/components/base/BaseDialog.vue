@@ -4,7 +4,7 @@
  * Escape and backdrop click, keeps focus inside and returns it afterwards.
  */
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import { createFocusTrap } from '@flowaudit/ui-core'
+import { createFocusTrap } from '@auditcore/ui-core'
 import FaIcon from './FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 

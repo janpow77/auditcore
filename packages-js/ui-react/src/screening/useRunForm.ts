@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { buildRunRequest, runFormDefaults, type RunRequest, type ScreeningKind, type ScreeningRunFormState, type SettingsView, type SourceView, type ViewMessage } from '@flowaudit/ui-core'
+import { buildRunRequest, runFormDefaults, type RunRequest, type ScreeningKind, type ScreeningRunFormState, type SettingsView, type SourceView, type ViewMessage } from '@auditcore/ui-core'
 
 type Basis = { settings: SettingsView; sources: readonly SourceView[] }
 

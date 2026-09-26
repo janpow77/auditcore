@@ -224,15 +224,15 @@ def _npm_tarball(directory, manifest, files=("dist/index.js",)):
 
 def _npm_fixture(tmp_path):
     exports = {".": {"import": "./dist/index.js"}, "./package.json": "./package.json"}
-    common = {"name": "@flowaudit/common", "version": "0.1.0", "license": "MIT", "exports": exports}
+    common = {"name": "@auditcore/common", "version": "0.1.0", "license": "MIT", "exports": exports}
     ui = {
-        "name": "@flowaudit/ui",
+        "name": "@auditcore/ui",
         "version": "0.2.0",
         "license": "MIT",
         "exports": exports,
-        "dependencies": {"@flowaudit/common": "0.1.0", "leaflet": "^1.9.4"},
-        "peerDependencies": {"vue": "^3.5.0", "@flowaudit/kanban-core": "^0.1.0"},
-        "peerDependenciesMeta": {"@flowaudit/kanban-core": {"optional": True}},
+        "dependencies": {"@auditcore/common": "0.1.0", "leaflet": "^1.9.4"},
+        "peerDependencies": {"vue": "^3.5.0", "@auditcore/kanban-core": "^0.1.0"},
+        "peerDependenciesMeta": {"@auditcore/kanban-core": {"optional": True}},
     }
     sources, report = {}, []
     for manifest in (common, ui):
@@ -247,16 +247,16 @@ def test_npm_tarballs_are_bound_with_integrity_and_install_closure(tmp_path):
     assets = release.verify_npm_tarballs(sources, report, tmp_path, "0.4.2", "a" * 40)
     manifest = json.loads(assets[release.NPM_MANIFEST])
     assert manifest["registry_publication"] == "NOT_EXECUTED"
-    ui = next(p for p in manifest["packages"] if p["name"] == "@flowaudit/ui")
-    data = assets["flowaudit-ui-0.2.0.tgz"]
+    ui = next(p for p in manifest["packages"] if p["name"] == "@auditcore/ui")
+    data = assets["auditcore-ui-0.2.0.tgz"]
     assert ui["integrity"] == release.npm_integrity(data)
     assert ui["integrity"].startswith("sha512-")
     assert ui["sha256"] == release.digest(data)
-    assert ui["install_closure"] == ["@flowaudit/common", "@flowaudit/ui"]
+    assert ui["install_closure"] == ["@auditcore/common", "@auditcore/ui"]
     base = "https://github.com/janpow77/auditcore/releases/download/v0.4.2"
     assert ui["package_json_dependencies"] == {
-        "@flowaudit/common": f"{base}/flowaudit-common-0.1.0.tgz",
-        "@flowaudit/ui": f"{base}/flowaudit-ui-0.2.0.tgz",
+        "@auditcore/common": f"{base}/auditcore-common-0.1.0.tgz",
+        "@auditcore/ui": f"{base}/auditcore-ui-0.2.0.tgz",
     }
 
 
@@ -270,16 +270,16 @@ def test_npm_tarballs_fail_closed(tmp_path, change):
     elif change == "integrity":
         report[0]["integrity"] = release.npm_integrity(b"other")
     elif change == "license":
-        sources["@flowaudit/common"]["license"] = "UNLICENSED"
+        sources["@auditcore/common"]["license"] = "UNLICENSED"
     elif change == "private":
-        sources["@flowaudit/ui"]["private"] = True
+        sources["@auditcore/ui"]["private"] = True
     elif change == "unresolved":
-        manifest = {k: v for k, v in sources["@flowaudit/ui"].items() if k != "_directory"}
-        manifest["dependencies"] = {"@flowaudit/common": "^0.2.0"}
-        sources["@flowaudit/ui"], report[1] = _npm_tarball(tmp_path, manifest)
+        manifest = {k: v for k, v in sources["@auditcore/ui"].items() if k != "_directory"}
+        manifest["dependencies"] = {"@auditcore/common": "^0.2.0"}
+        sources["@auditcore/ui"], report[1] = _npm_tarball(tmp_path, manifest)
     else:
-        manifest = {k: v for k, v in sources["@flowaudit/common"].items() if k != "_directory"}
-        sources["@flowaudit/common"], report[0] = _npm_tarball(tmp_path, manifest, files=())
+        manifest = {k: v for k, v in sources["@auditcore/common"].items() if k != "_directory"}
+        sources["@auditcore/common"], report[0] = _npm_tarball(tmp_path, manifest, files=())
     with pytest.raises(ValueError):
         release.verify_npm_tarballs(sources, report, tmp_path, "0.4.2", "a" * 40)
 

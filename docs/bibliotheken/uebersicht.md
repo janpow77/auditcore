@@ -28,10 +28,10 @@ Beihilfetransparenz, Register- und Sanktionslisten, Preis- und Immobilienquellen
 Die Adapter liefern Datensätze mit Herkunft; Speicherung, Zeitplanung und
 Zugangsdaten bleiben bei der Anwendung.
 
-**Oberfläche und Frontend-Logik (npm)** – `@flowaudit/ui` (Vue-3-Komponenten,
-Web Components, Theming, i18n), `@flowaudit/ui-react` (React-Hüllen für die
-Web Components), `@flowaudit/kanban-core` (framework-freie Kanban-Regeln mit
-Parität zu `auditcore_kanban`) und `@flowaudit/bpmn-editor`
+**Oberfläche und Frontend-Logik (npm)** – `@auditcore/ui` (Vue-3-Komponenten,
+Web Components, Theming, i18n), `@auditcore/ui-react` (React-Hüllen für die
+Web Components), `@auditcore/kanban-core` (framework-freie Kanban-Regeln mit
+Parität zu `auditcore_kanban`) und `@auditcore/bpmn-editor`
 (BPMN-2.0-Editor).
 
 **Status** im Katalog: *charakterisiert* – Verhalten der Quellanwendungen vor
@@ -90,13 +90,13 @@ Gleichheitsnachweis; *neu* – ohne Vorläufer.
 
 | Paket | Version | Zweck | Abhängigkeiten | Status |
 |---|---|---|---|---|
-| [`@flowaudit/bpmn-editor`](../../packages-js/bpmn-editor) | 0.1.1 | Eigener, vollständiger BPMN-2.0-Zeicheneditor in TypeScript auf Basis von diagram-js und bpmn-moddle, framework-frei und unter MIT-Lizenz. | `bpmn-moddle@^10.3.1`, `diagram-js@^15.27.1`, `didi@^11.0.0`, `min-dash@^5.1.0`, `min-dom@^5.3.0`, `tiny-svg@^4.1.4` | neu |
-| [`@flowaudit/bpmn-flowaudit`](../../packages-js/bpmn-flowaudit) | 0.2.1 | Framework-freie FlowAudit-Fachschicht für den BPMN-Editor: Schema flowaudit 1.0/1.1, Rollen, Kennzeichen, Prüfbezüge, Prüfregeln, Anreicherung, Neutralisierung, Vergleiche, Durchlauftest, Berichte und Export. | `bpmn-moddle@^10.3.1`, `@flowaudit/bpmn-editor@^0.1.1` (peer) | neu |
-| [`@flowaudit/bpmn-react`](../../packages-js/bpmn-react) | 0.2.1 | Native React-Oberfläche des FlowAudit-BPMN-Editors für React 18.3 und 19 – ohne Vue-Laufzeit und ohne Web Components, auf demselben framework-freien Kern wie `@flowaudit/bpmn-vue`. | `@flowaudit/bpmn-editor@0.1.1`, `@flowaudit/bpmn-flowaudit@0.2.1`, `@flowaudit/ui-core@0.2.0`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
-| [`@flowaudit/bpmn-vue`](../../packages-js/bpmn-vue) | 0.2.1 | Vue-3-Oberfläche des FlowAudit-BPMN-Editors mit Eigenschaften-Panel, Sammlung, Prüfansichten und Export – als Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>` und eigenständige App. | `@flowaudit/bpmn-editor@0.1.1`, `@flowaudit/bpmn-flowaudit@0.2.1`, `@flowaudit/ui-core@0.2.0`, `vue@^3.5.0` (peer) | neu |
-| [`@flowaudit/common`](../../packages-js/common) | 0.1.1 | Framework-freie Hilfsfunktionen der FlowAudit-Anwendungen in TypeScript: deutsche Formatierung in Berliner Zeit, strikte Zahleneingabe, API-Fehlertexte, REST, Token, CSV, Zeitsteuerung, Sortierung und Prüfziffern. | keine | neu |
-| [`@flowaudit/kanban-core`](../../packages-js/kanban-core) | 0.2.1 | Framework-freie Kanban-Logik in TypeScript mit denselben Regeln wie das Python-Paket `auditcore_kanban`: Rang-Schlüssel, Übergänge, WIP-Limits, Filter, Fristen, Rechte, Validierung und reine Befehle. | keine | neu |
-| [`@flowaudit/ui`](../../packages-js/ui) | 0.3.0 | Gemeinsame Oberflächenkomponenten der FlowAudit-Anwendungen als Vue-3-Komponenten und Web Components, mit Designtoken, Hell-/Dunkelmodus und Sprachunterstützung. | `@flowaudit/common@0.1.1`, `@flowaudit/kanban-core@0.2.1`, `@flowaudit/ui-core@0.2.0`, `vue@^3.5.0` (peer) | neu |
-| [`@flowaudit/ui-core`](../../packages-js/ui-core) | 0.2.0 | Framework-freier Kern der FlowAudit-Oberflächen: Texte, Datentypen der REST-Verträge, View-Modelle, Zustandsautomaten, Ports, Exporte und Stile – gemeinsam für Vue und React. | `@flowaudit/common@0.1.1`, `@flowaudit/kanban-core@0.2.1`, `leaflet@^1.9.4` | neu |
-| [`@flowaudit/ui-react`](../../packages-js/ui-react) | 1.1.0 | Native React-Komponenten (React 18/19) der FlowAudit-Oberflächen von Tabelle bis Kanban – ohne Vue, auf den Kernen `@flowaudit/ui-core` und `@flowaudit/kanban-core`. | `@flowaudit/common@0.1.1`, `@flowaudit/ui-core@0.2.0`, `@flowaudit/kanban-core@0.2.1`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
+| [`@auditcore/bpmn-editor`](../../packages-js/bpmn-editor) | 0.1.1 | Eigener, vollständiger BPMN-2.0-Zeicheneditor in TypeScript auf Basis von diagram-js und bpmn-moddle, framework-frei und unter MIT-Lizenz. | `bpmn-moddle@^10.3.1`, `diagram-js@^15.27.1`, `didi@^11.0.0`, `min-dash@^5.1.0`, `min-dom@^5.3.0`, `tiny-svg@^4.1.4` | neu |
+| [`@auditcore/bpmn-flowaudit`](../../packages-js/bpmn-flowaudit) | 0.2.1 | Framework-freie FlowAudit-Fachschicht für den BPMN-Editor: Schema flowaudit 1.0/1.1, Rollen, Kennzeichen, Prüfbezüge, Prüfregeln, Anreicherung, Neutralisierung, Vergleiche, Durchlauftest, Berichte und Export. | `bpmn-moddle@^10.3.1`, `@auditcore/bpmn-editor@^0.1.1` (peer) | neu |
+| [`@auditcore/bpmn-react`](../../packages-js/bpmn-react) | 0.2.1 | Native React-Oberfläche des FlowAudit-BPMN-Editors für React 18.3 und 19 – ohne Vue-Laufzeit und ohne Web Components, auf demselben framework-freien Kern wie `@auditcore/bpmn-vue`. | `@auditcore/bpmn-editor@0.1.1`, `@auditcore/bpmn-flowaudit@0.2.1`, `@auditcore/ui-core@0.2.0`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
+| [`@auditcore/bpmn-vue`](../../packages-js/bpmn-vue) | 0.2.1 | Vue-3-Oberfläche des FlowAudit-BPMN-Editors mit Eigenschaften-Panel, Sammlung, Prüfansichten und Export – als Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>` und eigenständige App. | `@auditcore/bpmn-editor@0.1.1`, `@auditcore/bpmn-flowaudit@0.2.1`, `@auditcore/ui-core@0.2.0`, `vue@^3.5.0` (peer) | neu |
+| [`@auditcore/common`](../../packages-js/common) | 0.1.1 | Framework-freie Hilfsfunktionen der FlowAudit-Anwendungen in TypeScript: deutsche Formatierung in Berliner Zeit, strikte Zahleneingabe, API-Fehlertexte, REST, Token, CSV, Zeitsteuerung, Sortierung und Prüfziffern. | keine | neu |
+| [`@auditcore/kanban-core`](../../packages-js/kanban-core) | 0.2.1 | Framework-freie Kanban-Logik in TypeScript mit denselben Regeln wie das Python-Paket `auditcore_kanban`: Rang-Schlüssel, Übergänge, WIP-Limits, Filter, Fristen, Rechte, Validierung und reine Befehle. | keine | neu |
+| [`@auditcore/ui`](../../packages-js/ui) | 0.3.0 | Gemeinsame Oberflächenkomponenten der FlowAudit-Anwendungen als Vue-3-Komponenten und Web Components, mit Designtoken, Hell-/Dunkelmodus und Sprachunterstützung. | `@auditcore/common@0.1.1`, `@auditcore/kanban-core@0.2.1`, `@auditcore/ui-core@0.2.0`, `vue@^3.5.0` (peer) | neu |
+| [`@auditcore/ui-core`](../../packages-js/ui-core) | 0.2.0 | Framework-freier Kern der FlowAudit-Oberflächen: Texte, Datentypen der REST-Verträge, View-Modelle, Zustandsautomaten, Ports, Exporte und Stile – gemeinsam für Vue und React. | `@auditcore/common@0.1.1`, `@auditcore/kanban-core@0.2.1`, `leaflet@^1.9.4` | neu |
+| [`@auditcore/ui-react`](../../packages-js/ui-react) | 1.1.0 | Native React-Komponenten (React 18/19) der FlowAudit-Oberflächen von Tabelle bis Kanban – ohne Vue, auf den Kernen `@auditcore/ui-core` und `@auditcore/kanban-core`. | `@auditcore/common@0.1.1`, `@auditcore/ui-core@0.2.0`, `@auditcore/kanban-core@0.2.1`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
 <!-- paketkatalog:end -->

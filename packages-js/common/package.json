@@ -1,5 +1,5 @@
 {
-  "name": "@flowaudit/common",
+  "name": "@auditcore/common",
   "version": "0.1.1",
   "description": "Framework-freie Hilfsfunktionen der FlowAudit-Anwendungen: Formatierung, Zahleneingabe, Fehlertexte, REST, Token, CSV, Zeitsteuerung, Sortierung, Prüfziffern",
   "license": "MIT",

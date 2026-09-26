@@ -3,7 +3,7 @@
  * übergeben einen Port – etwa {@link createSynopsisRestClient} für den
  * REST-Vertrag aus `auditcore_documents.web` – oder eigene Implementierungen.
  */
-import { RestError, type FetchLike, type RestOptions } from '@flowaudit/common'
+import { RestError, type FetchLike, type RestOptions } from '@auditcore/common'
 import type { Comparison, ComparisonProfile, ComparisonResult, ComparisonSummary, RowUpdate, ServerExportFormat } from './types'
 
 export interface SynopsisPort {

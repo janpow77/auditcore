@@ -4,8 +4,8 @@
  */
 
 import { Fragment, useState } from 'react'
-import type { DiagramEntry, Tag } from '@flowaudit/bpmn-flowaudit'
-import { infoRows, toggledTags } from '@flowaudit/bpmn-flowaudit/ui'
+import type { DiagramEntry, Tag } from '@auditcore/bpmn-flowaudit'
+import { infoRows, toggledTags } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { PromptDialog } from '../base/PromptDialog'
 import { classes } from '../hooks'

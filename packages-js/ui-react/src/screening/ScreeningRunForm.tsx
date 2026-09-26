@@ -1,4 +1,4 @@
-import { SCREENING_KINDS, kindProfiles, kindSources, profileKeyOf, selectedProfile, type RunRequest, type ScreeningKind, type SettingsView, type SourceView } from '@flowaudit/ui-core'
+import { SCREENING_KINDS, kindProfiles, kindSources, profileKeyOf, selectedProfile, type RunRequest, type ScreeningKind, type SettingsView, type SourceView } from '@auditcore/ui-core'
 import { Badge } from '../base/Badge'
 import { ErrorList, codeKey, useScreeningText } from './shared'
 import { useRunForm } from './useRunForm'

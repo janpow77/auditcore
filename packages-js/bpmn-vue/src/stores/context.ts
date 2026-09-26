@@ -3,13 +3,13 @@
  */
 
 import { inject, provide, type InjectionKey } from 'vue'
-import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
-import type { EditorPorts } from '@flowaudit/bpmn-flowaudit/ui'
+import type { ProfileData } from '@auditcore/bpmn-flowaudit'
+import type { EditorPorts } from '@auditcore/bpmn-flowaudit/ui'
 import type { EditorStore } from './editorStore'
 import type { SelectionStore } from './selectionStore'
 import type { ValidationStore } from './validationStore'
 
-export type { EditorPorts } from '@flowaudit/bpmn-flowaudit/ui'
+export type { EditorPorts } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface EditorContext {
   editor: EditorStore

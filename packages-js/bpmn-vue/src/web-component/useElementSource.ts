@@ -5,8 +5,8 @@
  */
 
 import { computed, ref, shallowRef, watch } from 'vue'
-import { loadSource, persistSource, sourcePorts, sourceRest, sourceStorage, type ElementSourceInput } from '@flowaudit/bpmn-flowaudit/ui'
-import type { ProfileData } from '@flowaudit/bpmn-flowaudit'
+import { loadSource, persistSource, sourcePorts, sourceRest, sourceStorage, type ElementSourceInput } from '@auditcore/bpmn-flowaudit/ui'
+import type { ProfileData } from '@auditcore/bpmn-flowaudit'
 
 export type ElementSourceProps = ElementSourceInput
 

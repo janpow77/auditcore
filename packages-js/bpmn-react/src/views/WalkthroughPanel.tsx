@@ -6,8 +6,8 @@
  */
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import { nextStepId, recordStep, walkthroughProgress, walkthroughSteps, type AuditStep, type FlowauditHighlight } from '@flowaudit/bpmn-flowaudit'
-import { clampStep, progressPercent, stepDraft, WALK_FIELDS, walkthroughClasses } from '@flowaudit/bpmn-flowaudit/ui'
+import { nextStepId, recordStep, walkthroughProgress, walkthroughSteps, type AuditStep, type FlowauditHighlight } from '@auditcore/bpmn-flowaudit'
+import { clampStep, progressPercent, stepDraft, WALK_FIELDS, walkthroughClasses } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { useEditorContext, useEditorState } from '../context'
 import { useI18n } from '../i18n'

@@ -1,4 +1,4 @@
-// Vue-Anbindung des DSFA-Zustandsautomaten aus @flowaudit/ui-core.
+// Vue-Anbindung des DSFA-Zustandsautomaten aus @auditcore/ui-core.
 
 import { computed, getCurrentScope, onScopeDispose, type ComputedRef, type Ref } from 'vue'
 import {
@@ -10,10 +10,10 @@ import {
   type DsfaData,
   type DsfaDerived,
   type DsfaHooks,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { DsfaHooks, DsfaStep } from '@flowaudit/ui-core'
+export type { DsfaHooks, DsfaStep } from '@auditcore/ui-core'
 
 export interface DsfaState {
   controller: DsfaController

@@ -1,7 +1,7 @@
 import { computed, inject, provide, ref, type ComputedRef, type InjectionKey, type Ref } from 'vue'
-import { getDefaultLocale, subscribeDefaultLocale, translate, type Catalogs, type Locale, type Translate } from '@flowaudit/ui-core'
+import { getDefaultLocale, subscribeDefaultLocale, translate, type Catalogs, type Locale, type Translate } from '@auditcore/ui-core'
 
-/** Sprachkern (Kataloge, Platzhalter, Rückfall) aus `@flowaudit/ui-core`; hier nur die Vue-Anbindung. */
+/** Sprachkern (Kataloge, Platzhalter, Rückfall) aus `@auditcore/ui-core`; hier nur die Vue-Anbindung. */
 export {
   DEFAULT_LOCALE,
   LOCALES,
@@ -14,7 +14,7 @@ export {
   type Locale,
   type MessageParams,
   type Translate,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 
 export const LOCALE_KEY: InjectionKey<Ref<Locale>> = Symbol('flowaudit-locale')
 const fallbackLocale = ref<Locale>(getDefaultLocale())

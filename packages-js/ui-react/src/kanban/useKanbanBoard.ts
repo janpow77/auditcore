@@ -1,7 +1,7 @@
 /**
- * React-Anbindung der Board-Zustandsautomaten aus `@flowaudit/kanban-core`
+ * React-Anbindung der Board-Zustandsautomaten aus `@auditcore/kanban-core`
  * (Board, Verschieben, Zeiger, Tastenkürzel) – dieselbe Logik wie die
- * Vue-Composables in `@flowaudit/ui`.
+ * Vue-Composables in `@auditcore/ui`.
  */
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import {
@@ -22,7 +22,7 @@ import {
   type KanbanFilterState,
   type MoveTranslate,
   type UserRef,
-} from '@flowaudit/kanban-core'
+} from '@auditcore/kanban-core'
 import { useStoreState } from '../store'
 
 export interface BoardSource {

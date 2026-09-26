@@ -1,5 +1,5 @@
 import type { FormEvent } from 'react'
-import { identifierErrorKey, kindNeedsCountry } from '@flowaudit/ui-core'
+import { identifierErrorKey, kindNeedsCountry } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { IdentifierResultView } from './IdentifierResultView'
 import type { UseIdentifierCheck } from './useIdentifierCheck'

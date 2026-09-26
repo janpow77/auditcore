@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import { useGeoContext } from './context'
-import { displayName, formatDistance } from '@flowaudit/ui-core'
+import { displayName, formatDistance } from '@auditcore/ui-core'
 
 const { state, t, locale } = useGeoContext()
 const id = useId('fa-geo-radius')

@@ -11,18 +11,18 @@ const here = new URL('.', import.meta.url).pathname
 export function sourceAliases(): Record<string, string> {
   const flowaudit = resolve(here, '../bpmn-flowaudit/src')
   return {
-    '@flowaudit/bpmn-flowaudit/profiles': `${flowaudit}/profile/bundled.ts`,
-    '@flowaudit/bpmn-flowaudit/ui.css': `${flowaudit}/ui/ui.css`,
-    '@flowaudit/bpmn-flowaudit/ui': `${flowaudit}/ui/index.ts`,
-    '@flowaudit/bpmn-flowaudit': `${flowaudit}/index.ts`,
-    '@flowaudit/bpmn-editor': resolve(here, '../bpmn-editor/src/index.ts'),
-    '@flowaudit/ui-core': resolve(here, '../ui-core/src/index.ts'),
-    '@flowaudit/kanban-core': resolve(here, '../kanban-core/src/index.ts'),
-    '@flowaudit/common/browser': resolve(here, '../common/src/browser.ts'),
-    '@flowaudit/common': resolve(here, '../common/src/index.ts'),
+    '@auditcore/bpmn-flowaudit/profiles': `${flowaudit}/profile/bundled.ts`,
+    '@auditcore/bpmn-flowaudit/ui.css': `${flowaudit}/ui/ui.css`,
+    '@auditcore/bpmn-flowaudit/ui': `${flowaudit}/ui/index.ts`,
+    '@auditcore/bpmn-flowaudit': `${flowaudit}/index.ts`,
+    '@auditcore/bpmn-editor': resolve(here, '../bpmn-editor/src/index.ts'),
+    '@auditcore/ui-core': resolve(here, '../ui-core/src/index.ts'),
+    '@auditcore/kanban-core': resolve(here, '../kanban-core/src/index.ts'),
+    '@auditcore/common/browser': resolve(here, '../common/src/browser.ts'),
+    '@auditcore/common': resolve(here, '../common/src/index.ts'),
   }
 }
 
-/** Only the UI stylesheet of the core is bundled into the library CSS (all other @flowaudit imports stay external). */
-export const styleAlias = { '@flowaudit/bpmn-flowaudit/ui.css': resolve(here, '../bpmn-flowaudit/src/ui/ui.css') }
-export const isExternal = (id: string): boolean => /^(vue|diagram-js|bpmn-moddle)($|\/)/.test(id) || (/^@flowaudit\//.test(id) && !id.endsWith('.css'))
+/** Only the UI stylesheet of the core is bundled into the library CSS (all other @auditcore imports stay external). */
+export const styleAlias = { '@auditcore/bpmn-flowaudit/ui.css': resolve(here, '../bpmn-flowaudit/src/ui/ui.css') }
+export const isExternal = (id: string): boolean => /^(vue|diagram-js|bpmn-moddle)($|\/)/.test(id) || (/^@auditcore\//.test(id) && !id.endsWith('.css'))

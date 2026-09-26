@@ -5,8 +5,8 @@ import { geoCases } from '../../ui-core/test/parity/cases-geo'
 import { checkExpectation } from '../../ui-core/test/parity/expect'
 import { FaGeoMap } from '../src'
 
-vi.mock('@flowaudit/ui-core', async (original) => ({
-  ...(await original<typeof import('@flowaudit/ui-core')>()),
+vi.mock('@auditcore/ui-core', async (original) => ({
+  ...(await original<typeof import('@auditcore/ui-core')>()),
   createLeafletView: vi.fn(async () => ({ update: vi.fn(), setTiles: vi.fn(), fit: vi.fn(), destroy: vi.fn() })),
 }))
 

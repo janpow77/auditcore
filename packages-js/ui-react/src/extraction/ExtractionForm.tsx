@@ -1,5 +1,5 @@
 import type { ChangeEvent, FormEvent } from 'react'
-import { extractionAccept, extractionProfileText, extractionSizeText, extractionValidationText } from '@flowaudit/ui-core'
+import { extractionAccept, extractionProfileText, extractionSizeText, extractionValidationText } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import type { UseExtraction } from './useExtraction'
 

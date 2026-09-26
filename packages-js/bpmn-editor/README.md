@@ -1,4 +1,4 @@
-# @flowaudit/bpmn-editor
+# @auditcore/bpmn-editor
 
 ## Zweck
 
@@ -11,11 +11,11 @@ auf (`additionalModules`, `moddleExtensions`).
 
 ## Installation
 
-Standardweg ist die npm-Registry; npm löst die übrigen `@flowaudit`-Pakete
+Standardweg ist die npm-Registry; npm löst die übrigen `@auditcore`-Pakete
 der Abhängigkeitshülle selbst auf:
 
 ```sh
-npm install @flowaudit/bpmn-editor
+npm install @auditcore/bpmn-editor
 ```
 
 Ohne Registry-Zugang (Intranet, offline) bleibt der signierte Tarball aus
@@ -23,23 +23,23 @@ dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
 ausdrücklich in die `package.json`:
 
 ```sh
-npm install @flowaudit/bpmn-editor@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-editor-0.1.1.tgz
+npm install @auditcore/bpmn-editor@https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore-bpmn-editor-0.1.1.tgz
 ```
 
 Anleitung für Vue, React und Web Components mit Integritätsprüfung und
 `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
-Keine weiteren `@flowaudit`-Pakete. Stile: `@flowaudit/bpmn-editor/style.css`.
+Keine weiteren `@auditcore`-Pakete. Stile: `@auditcore/bpmn-editor/style.css`.
 
 Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
-Stamm, Bau mit `npm run build -w @flowaudit/bpmn-editor`).
+Stamm, Bau mit `npm run build -w @auditcore/bpmn-editor`).
 
 ## Schnellstart
 
 ```ts
-import { BpmnEditor, INITIAL_DIAGRAM } from '@flowaudit/bpmn-editor'
-import '@flowaudit/bpmn-editor/style.css'
+import { BpmnEditor, INITIAL_DIAGRAM } from '@auditcore/bpmn-editor'
+import '@auditcore/bpmn-editor/style.css'
 
 interface Modeling {
   updateProperties(element: unknown, properties: Record<string, unknown>): void
@@ -72,8 +72,8 @@ editor.destroy()
 
 - **Framework-frei:** `new BpmnEditor({ container, … })` in ein beliebiges
   DOM-Element; das Paket bringt keine Vue-, React- oder Web-Component-Hülle
-  mit. Die FlowAudit-Fachschicht und Vue-Komponenten (`@flowaudit/bpmn-flowaudit`,
-  `@flowaudit/bpmn-vue`) sind eigene Pakete und setzen auf diesem Kern auf.
+  mit. Die FlowAudit-Fachschicht und Vue-Komponenten (`@auditcore/bpmn-flowaudit`,
+  `@auditcore/bpmn-vue`) sind eigene Pakete und setzen auf diesem Kern auf.
 - **Erweitern:** zusätzliche diagram-js-Module über `additionalModules`,
   eigene Namensräume über `moddleExtensions`
   (z. B. `{ flowaudit: descriptor }`); Dienste über `editor.get(name)`,
@@ -99,31 +99,31 @@ Exporte der Einstiegspunkte aus `package.json#exports` (25):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
-| `@flowaudit/bpmn-editor` | `BIOC_NAMESPACE` | Konstante | – | `moddle/createModdle` |
-| `@flowaudit/bpmn-editor` | `BpmnEditor` | Klasse | – | `BpmnEditor` |
-| `@flowaudit/bpmn-editor` | `COLOR_NAMESPACE` | Konstante | – | `moddle/createModdle` |
-| `@flowaudit/bpmn-editor` | `DEFAULT_MODULES` | Konstante | – | `modules` |
-| `@flowaudit/bpmn-editor` | `EditorOptions` | Schnittstelle | – | `BpmnEditor` |
-| `@flowaudit/bpmn-editor` | `INITIAL_DIAGRAM` | Konstante | Leeres Diagramm mit einem Startereignis (Ausgangspunkt für `createDiagram`). | `initialDiagram` |
-| `@flowaudit/bpmn-editor` | `ImportXMLResult` | Schnittstelle | – | `BpmnEditor` |
-| `@flowaudit/bpmn-editor` | `Translate` | Typ | – | `i18n/translate` |
-| `@flowaudit/bpmn-editor` | `createModdle` | Funktion | Erzeugt eine moddle-Instanz mit BPMN 2.0 samt DI und den Farb-Namensräumen `bioc` und `color` (beide bringt bpmn-moddle mit) sowie beliebigen zusätzlichen Erweiterungen (z. B. | `moddle/createModdle` |
-| `@flowaudit/bpmn-editor` | `createTranslate` | Funktion | – | `i18n/translate` |
-| `@flowaudit/bpmn-editor` | `getBusinessObject` | Funktion | Liefert das semantische Objekt eines Diagrammelements (oder das Objekt selbst). | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `getDi` | Funktion | Liefert die DI eines Diagrammelements; Beschriftungen teilen die DI ihres Ziels. | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `getEventDefinition` | Funktion | – | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `getLabel` | Funktion | Name bzw. Text der Beschriftung. | `util/LabelUtil` |
-| `@flowaudit/bpmn-editor` | `hasEventDefinition` | Funktion | – | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `is` | Funktion | Prüft, ob ein Element (oder moddle-Objekt) vom angegebenen Typ ist. | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `isAny` | Funktion | Prüft, ob ein Element einem der Typen entspricht. | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `isEventSubProcess` | Funktion | – | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `isExpanded` | Funktion | Aufgeklappt? Gilt für Teilprozesse, Pools und Aufrufaktivitäten. | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `isHorizontal` | Funktion | Waagerechte Ausrichtung eines Pools bzw. einer Bahn (Standard: ja). | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `isInterrupting` | Funktion | Unterbrechend? Randereignisse über `cancelActivity`, Startereignisse über `isInterrupting`. | `util/ModelUtil` |
-| `@flowaudit/bpmn-editor` | `isLabelExternal` | Funktion | Hat das Element eine eigenständig verschiebbare (externe) Beschriftung? | `util/LabelUtil` |
-| `@flowaudit/bpmn-editor` | `setLabel` | Funktion | Setzt den Beschriftungstext direkt am moddle-Objekt (ohne Befehlsstapel). | `util/LabelUtil` |
-| `@flowaudit/bpmn-editor` | `setTextMeasure` | Funktion | Erlaubt Tests oder Anwendungen, die Messfunktion auszutauschen. | `draw/TextLayout` |
-| `@flowaudit/bpmn-editor` | `translations` | Konstante | – | `i18n/translations` |
+| `@auditcore/bpmn-editor` | `BIOC_NAMESPACE` | Konstante | – | `moddle/createModdle` |
+| `@auditcore/bpmn-editor` | `BpmnEditor` | Klasse | – | `BpmnEditor` |
+| `@auditcore/bpmn-editor` | `COLOR_NAMESPACE` | Konstante | – | `moddle/createModdle` |
+| `@auditcore/bpmn-editor` | `DEFAULT_MODULES` | Konstante | – | `modules` |
+| `@auditcore/bpmn-editor` | `EditorOptions` | Schnittstelle | – | `BpmnEditor` |
+| `@auditcore/bpmn-editor` | `INITIAL_DIAGRAM` | Konstante | Leeres Diagramm mit einem Startereignis (Ausgangspunkt für `createDiagram`). | `initialDiagram` |
+| `@auditcore/bpmn-editor` | `ImportXMLResult` | Schnittstelle | – | `BpmnEditor` |
+| `@auditcore/bpmn-editor` | `Translate` | Typ | – | `i18n/translate` |
+| `@auditcore/bpmn-editor` | `createModdle` | Funktion | Erzeugt eine moddle-Instanz mit BPMN 2.0 samt DI und den Farb-Namensräumen `bioc` und `color` (beide bringt bpmn-moddle mit) sowie beliebigen zusätzlichen Erweiterungen (z. B. | `moddle/createModdle` |
+| `@auditcore/bpmn-editor` | `createTranslate` | Funktion | – | `i18n/translate` |
+| `@auditcore/bpmn-editor` | `getBusinessObject` | Funktion | Liefert das semantische Objekt eines Diagrammelements (oder das Objekt selbst). | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `getDi` | Funktion | Liefert die DI eines Diagrammelements; Beschriftungen teilen die DI ihres Ziels. | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `getEventDefinition` | Funktion | – | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `getLabel` | Funktion | Name bzw. Text der Beschriftung. | `util/LabelUtil` |
+| `@auditcore/bpmn-editor` | `hasEventDefinition` | Funktion | – | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `is` | Funktion | Prüft, ob ein Element (oder moddle-Objekt) vom angegebenen Typ ist. | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `isAny` | Funktion | Prüft, ob ein Element einem der Typen entspricht. | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `isEventSubProcess` | Funktion | – | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `isExpanded` | Funktion | Aufgeklappt? Gilt für Teilprozesse, Pools und Aufrufaktivitäten. | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `isHorizontal` | Funktion | Waagerechte Ausrichtung eines Pools bzw. einer Bahn (Standard: ja). | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `isInterrupting` | Funktion | Unterbrechend? Randereignisse über `cancelActivity`, Startereignisse über `isInterrupting`. | `util/ModelUtil` |
+| `@auditcore/bpmn-editor` | `isLabelExternal` | Funktion | Hat das Element eine eigenständig verschiebbare (externe) Beschriftung? | `util/LabelUtil` |
+| `@auditcore/bpmn-editor` | `setLabel` | Funktion | Setzt den Beschriftungstext direkt am moddle-Objekt (ohne Befehlsstapel). | `util/LabelUtil` |
+| `@auditcore/bpmn-editor` | `setTextMeasure` | Funktion | Erlaubt Tests oder Anwendungen, die Messfunktion auszutauschen. | `draw/TextLayout` |
+| `@auditcore/bpmn-editor` | `translations` | Konstante | – | `i18n/translations` |
 <!-- api-overview:end -->
 
 ## Konfiguration

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import { createScreeningRestPort } from '../../src'
 
 function fakeFetch(status: number, body: unknown) {

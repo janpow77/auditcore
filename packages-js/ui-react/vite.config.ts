@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     lib: { entry: { index: resolve(import.meta.dirname, 'src/index.ts') }, formats: ['es'] },
     rolldownOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', 'vue', /^@flowaudit\/ui(-core)?(\/.*)?$/, '@flowaudit/kanban-core', /^@flowaudit\/common(\/.*)?$/],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'vue', /^@auditcore\/ui(-core)?(\/.*)?$/, '@auditcore/kanban-core', /^@auditcore\/common(\/.*)?$/],
     },
     sourcemap: true,
   },

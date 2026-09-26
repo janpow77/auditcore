@@ -130,7 +130,7 @@ describe('Dateigröße und Dauer', () => {
   })
 })
 
-describe('Intl-Kurzformen aus @flowaudit/ui (unverändert)', () => {
+describe('Intl-Kurzformen aus @auditcore/ui (unverändert)', () => {
   it('verhalten sich wie bisher', () => {
     expect(localeTag('de')).toBe('de-DE')
     expect(localeTag('en')).toBe('en-GB')

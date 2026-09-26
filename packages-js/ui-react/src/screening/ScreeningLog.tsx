@@ -1,4 +1,4 @@
-import { formatScreeningDate as formatDate, type LogEntry, type ScreeningTranslate } from '@flowaudit/ui-core'
+import { formatScreeningDate as formatDate, type LogEntry, type ScreeningTranslate } from '@auditcore/ui-core'
 import { useScreeningText } from './shared'
 
 function reasonOf(entry: LogEntry): string | null {

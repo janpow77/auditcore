@@ -1,5 +1,5 @@
 import { computed, watch, type Ref } from 'vue'
-import { createRiskController, type Evaluation, type ProfileDetail, type RiskPort } from '@flowaudit/ui-core'
+import { createRiskController, type Evaluation, type ProfileDetail, type RiskPort } from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
 /**

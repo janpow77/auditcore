@@ -1,4 +1,4 @@
-import { KanbanBoard, KanbanBoardList } from '@flowaudit/ui'
+import { KanbanBoard, KanbanBoardList } from '@auditcore/ui'
 import { describe, it } from 'vitest'
 import { boardListCases, kanbanCases } from '../../../kanban-core/test/parity/cases'
 import { FlowauditKanbanBoard } from '../../src/kanban/FlowauditKanbanBoard'

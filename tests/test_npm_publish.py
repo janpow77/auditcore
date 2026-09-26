@@ -60,18 +60,18 @@ def standard(tmp_path):
         tmp_path,
         [
             (
-                "@flowaudit/ui",
+                "@auditcore/ui",
                 "0.3.0",
-                {"@flowaudit/common": "0.1.0", "@flowaudit/ui-core": "0.1.0"},
-                tarball("@flowaudit/ui", "0.3.0"),
+                {"@auditcore/common": "0.1.0", "@auditcore/ui-core": "0.1.0"},
+                tarball("@auditcore/ui", "0.3.0"),
             ),
             (
-                "@flowaudit/ui-core",
+                "@auditcore/ui-core",
                 "0.1.0",
-                {"@flowaudit/common": "0.1.0"},
-                tarball("@flowaudit/ui-core", "0.1.0"),
+                {"@auditcore/common": "0.1.0"},
+                tarball("@auditcore/ui-core", "0.1.0"),
             ),
-            ("@flowaudit/common", "0.1.0", {}, tarball("@flowaudit/common", "0.1.0")),
+            ("@auditcore/common", "0.1.0", {}, tarball("@auditcore/common", "0.1.0")),
         ],
     )
 
@@ -80,16 +80,16 @@ def test_order_puts_dependencies_first(tmp_path):
     standard(tmp_path)
     order = npm_publish.publish_order(npm_publish.load_release(tmp_path, "v0.4.2"))
     assert [entry["name"] for entry in order] == [
-        "@flowaudit/common",
-        "@flowaudit/ui-core",
-        "@flowaudit/ui",
+        "@auditcore/common",
+        "@auditcore/ui-core",
+        "@auditcore/ui",
     ]
 
 
 def test_cycle_is_rejected():
     packages = [
-        {"name": "@flowaudit/a", "internal_requirements": {"@flowaudit/b": "1.0.0"}},
-        {"name": "@flowaudit/b", "internal_requirements": {"@flowaudit/a": "1.0.0"}},
+        {"name": "@auditcore/a", "internal_requirements": {"@auditcore/b": "1.0.0"}},
+        {"name": "@auditcore/b", "internal_requirements": {"@auditcore/a": "1.0.0"}},
     ]
     with pytest.raises(npm_publish.PublishError, match="cycle"):
         npm_publish.publish_order(packages)
@@ -98,9 +98,9 @@ def test_cycle_is_rejected():
 @pytest.mark.parametrize(
     ("tamper", "message"),
     [
-        (lambda p: (p / "flowaudit-common-0.1.0.tgz").write_bytes(b"x"), "SHA-256"),
+        (lambda p: (p / "auditcore-common-0.1.0.tgz").write_bytes(b"x"), "SHA-256"),
         (lambda p: (p / "SHA256SUMS").write_text(""), "not covered"),
-        (lambda p: (p / "flowaudit-common-0.1.0.tgz").unlink(), "missing"),
+        (lambda p: (p / "auditcore-common-0.1.0.tgz").unlink(), "missing"),
     ],
 )
 def test_tampered_assets_are_rejected(tmp_path, tamper, message):
@@ -121,13 +121,13 @@ def test_manifest_of_another_release_is_rejected(tmp_path):
     [
         ({"repository": "https://github.com/someone/else"}, "repository"),
         ({"private": True}, "public MIT"),
-        ({"name": "@flowaudit/other"}, "content"),
+        ({"name": "@auditcore/other"}, "content"),
     ],
 )
 def test_tarball_content_is_checked(tmp_path, extra, message):
     release(
         tmp_path,
-        [("@flowaudit/common", "0.1.0", {}, tarball("@flowaudit/common", "0.1.0", **extra))],
+        [("@auditcore/common", "0.1.0", {}, tarball("@auditcore/common", "0.1.0", **extra))],
     )
     with pytest.raises(npm_publish.PublishError, match=message):
         npm_publish.load_release(tmp_path, "v0.4.2")
@@ -148,7 +148,7 @@ def test_dist_tag(version, latest, tag):
 
 def test_run_skips_published_and_publishes_missing(tmp_path, monkeypatch):
     entries = {entry["name"]: entry for entry in standard(tmp_path)}
-    registry = {"@flowaudit/common@0.1.0": entries["@flowaudit/common"]["integrity"]}
+    registry = {"@auditcore/common@0.1.0": entries["@auditcore/common"]["integrity"]}
     published = []
     monkeypatch.setattr(npm_publish, "npm_view", lambda name, field: registry.get(name))
     monkeypatch.setattr(
@@ -156,11 +156,11 @@ def test_run_skips_published_and_publishes_missing(tmp_path, monkeypatch):
     )
     steps = npm_publish.run(tmp_path, "v0.4.2", publish=True)
     assert [(s["name"], s["action"]) for s in steps] == [
-        ("@flowaudit/common", "skip"),
-        ("@flowaudit/ui-core", "published"),
-        ("@flowaudit/ui", "published"),
+        ("@auditcore/common", "skip"),
+        ("@auditcore/ui-core", "published"),
+        ("@auditcore/ui", "published"),
     ]
-    assert published == ["@flowaudit/ui-core", "@flowaudit/ui"]
+    assert published == ["@auditcore/ui-core", "@auditcore/ui"]
 
 
 def test_plan_only_never_publishes(tmp_path, monkeypatch):
@@ -172,7 +172,7 @@ def test_plan_only_never_publishes(tmp_path, monkeypatch):
 
 def test_same_version_with_other_content_is_a_conflict(tmp_path, monkeypatch):
     standard(tmp_path)
-    registry = {"@flowaudit/common@0.1.0": "sha512-other"}
+    registry = {"@auditcore/common@0.1.0": "sha512-other"}
     published = []
     monkeypatch.setattr(npm_publish, "npm_view", lambda name, field: registry.get(name))
     monkeypatch.setattr(
@@ -183,7 +183,7 @@ def test_same_version_with_other_content_is_a_conflict(tmp_path, monkeypatch):
     assert npm_publish.main(args) == 1
     steps = json.loads(report.read_text())["steps"]
     assert steps[0]["action"] == "conflict"
-    assert published == ["@flowaudit/ui-core", "@flowaudit/ui"]
+    assert published == ["@auditcore/ui-core", "@auditcore/ui"]
     assert npm_publish.main(args[:4]) == 0  # the plan only warns
 
 
@@ -200,10 +200,10 @@ def test_npm_view_distinguishes_missing_from_failure(monkeypatch):
         ]
     )
     monkeypatch.setattr(npm_publish.subprocess, "run", lambda *a, **k: next(outcomes))
-    assert npm_publish.npm_view("@flowaudit/common@0.1.0", "dist.integrity") is None
-    assert npm_publish.npm_view("@flowaudit/common@0.1.0", "dist.integrity") == "sha512-x"
+    assert npm_publish.npm_view("@auditcore/common@0.1.0", "dist.integrity") is None
+    assert npm_publish.npm_view("@auditcore/common@0.1.0", "dist.integrity") == "sha512-x"
     with pytest.raises(npm_publish.PublishError, match="ETIMEDOUT"):
-        npm_publish.npm_view("@flowaudit/common", "dist-tags.latest")
+        npm_publish.npm_view("@auditcore/common", "dist-tags.latest")
 
 
 @pytest.mark.parametrize(

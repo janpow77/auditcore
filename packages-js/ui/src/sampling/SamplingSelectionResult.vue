@@ -12,7 +12,7 @@ import {
   strataRows as strataRowsOf,
   type ExportFormat,
   type SelectionResult,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useI18n, type Locale } from '../i18n'
 import FaTable from '../table/FaTable.vue'
 

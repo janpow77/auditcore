@@ -1,8 +1,8 @@
 /** All dialogs of the editor, driven by the editor session and actions (Vue: `EditorDialogs.vue`). */
 
 import { useEffect, useMemo, useState } from 'react'
-import { collectExportData, type Approval, type ProcessModel, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
-import { dialogPatch, elementNames, EMPTY_EXPORT_DATA, type DialogId, type EditorPorts } from '@flowaudit/bpmn-flowaudit/ui'
+import { collectExportData, type Approval, type ProcessModel, type ProfileSummary } from '@auditcore/bpmn-flowaudit'
+import { dialogPatch, elementNames, EMPTY_EXPORT_DATA, type DialogId, type EditorPorts } from '@auditcore/bpmn-flowaudit/ui'
 import { DiagramInfoDialog } from './dialogs/DiagramInfoDialog'
 import { ElementSearch } from './dialogs/ElementSearch'
 import { EnrichmentDialog } from './dialogs/EnrichmentDialog'

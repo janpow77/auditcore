@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>FlowAudit – Web Components ohne Bundler</title>
-    <link rel="stylesheet" href="./node_modules/@flowaudit/ui/dist/ui.css" />
+    <link rel="stylesheet" href="./node_modules/@auditcore/ui/dist/ui.css" />
     <style>
       html { background: var(--fa-color-bg); color: var(--fa-color-text); font-family: var(--fa-font-sans); }
     </style>
@@ -12,11 +12,11 @@
     <script type="importmap">
       {
         "imports": {
-          "@flowaudit/ui/elements": "./node_modules/@flowaudit/ui/dist/elements.js",
-          "@flowaudit/ui-core": "./node_modules/@flowaudit/ui-core/dist/index.js",
-          "@flowaudit/common": "./node_modules/@flowaudit/common/dist/index.js",
-          "@flowaudit/common/browser": "./node_modules/@flowaudit/common/dist/browser.js",
-          "@flowaudit/kanban-core": "./node_modules/@flowaudit/kanban-core/dist/index.js",
+          "@auditcore/ui/elements": "./node_modules/@auditcore/ui/dist/elements.js",
+          "@auditcore/ui-core": "./node_modules/@auditcore/ui-core/dist/index.js",
+          "@auditcore/common": "./node_modules/@auditcore/common/dist/index.js",
+          "@auditcore/common/browser": "./node_modules/@auditcore/common/dist/browser.js",
+          "@auditcore/kanban-core": "./node_modules/@auditcore/kanban-core/dist/index.js",
           "vue": "./node_modules/vue/dist/vue.esm-browser.prod.js",
           "leaflet": "./node_modules/leaflet/dist/leaflet-src.esm.js"
         }
@@ -30,7 +30,7 @@
       <p id="auswahl" role="status"></p>
     </main>
     <script type="module">
-      import { defineFlowauditElements } from '@flowaudit/ui/elements'
+      import { defineFlowauditElements } from '@auditcore/ui/elements'
 
       defineFlowauditElements({ locale: 'de' })
       const table = document.getElementById('belege')

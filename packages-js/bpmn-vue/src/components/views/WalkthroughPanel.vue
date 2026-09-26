@@ -6,8 +6,8 @@
  * in the diagram (current, met, not met).
  */
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { nextStepId, recordStep, walkthroughProgress, walkthroughSteps, type AuditStep, type FlowauditHighlight } from '@flowaudit/bpmn-flowaudit'
-import { clampStep, progressPercent, stepDraft, WALK_FIELDS as FIELDS, walkthroughClasses } from '@flowaudit/bpmn-flowaudit/ui'
+import { nextStepId, recordStep, walkthroughProgress, walkthroughSteps, type AuditStep, type FlowauditHighlight } from '@auditcore/bpmn-flowaudit'
+import { clampStep, progressPercent, stepDraft, WALK_FIELDS as FIELDS, walkthroughClasses } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import FieldForm from '../../panels/FieldForm.vue'
 import { useOptions } from '../../panels/useOptions'

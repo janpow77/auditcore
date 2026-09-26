@@ -328,7 +328,7 @@ orchestrator = pl.build_pipeline(profile=pl.DONUT_PIPELINE, ocr=ocr)
 ### REST-Anbindung der Synopse-Oberfläche (seit 0.3.0)
 
 `auditcore_documents.web` verbindet die Oberfläche `<flowaudit-synopsis>` aus
-`@flowaudit/ui` mit dem Vergleichskern. Dienst, Ablage-Port und Ausgaben
+`@auditcore/ui` mit dem Vergleichskern. Dienst, Ablage-Port und Ausgaben
 (JSON, Markdown, DOCX, PDF) brauchen nur die Standardbibliothek; Starlette
 bzw. FastAPI kommen über die Extras `web` und `fastapi`. Die bestehenden
 Module sind unverändert.

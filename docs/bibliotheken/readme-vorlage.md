@@ -112,9 +112,9 @@ python scripts/docs/readme_check.py packages/<paket>
 
 | Abschnitt | Inhalt | Geprüft |
 |---|---|---|
-| `# @flowaudit/<paket>` | Titel = Paketname | – |
+| `# @auditcore/<paket>` | Titel = Paketname | – |
 | `## Zweck` | wie Python (erster Absatz = Katalogzeile) | wie Python |
-| `## Installation` | `npm install @flowaudit/<paket>` als Standardweg, Tarball-URL aus dem Release (`npm install @flowaudit/<paket>@<Release-URL>.tgz`) als Alternative ohne Registry, Abhängigkeitshülle, Peer-Abhängigkeiten, CSS-Import, Verweis auf [frontend-installation.md](../deployment/frontend-installation.md), npm-Workspace im Repository | `npm install <name>` |
+| `## Installation` | `npm install @auditcore/<paket>` als Standardweg, Tarball-URL aus dem Release (`npm install @auditcore/<paket>@<Release-URL>.tgz`) als Alternative ohne Registry, Abhängigkeitshülle, Peer-Abhängigkeiten, CSS-Import, Verweis auf [frontend-installation.md](../deployment/frontend-installation.md), npm-Workspace im Repository | `npm install <name>` |
 | `## Schnellstart` | Ein ```` ```ts ````- oder ```` ```tsx ````-Beispiel | **wird gegen die gebauten Typen typgeprüft** (strict, `noUncheckedIndexedAccess`); ```` ```ts run ```` wird zusätzlich in Node ausgeführt |
 | `## Einbindung` | Nutzung als Vue-Plugin/-Komponente, als Web Component (`<flowaudit-…>`) und aus React, soweit das Paket es anbietet | „Vue“ bei Vue-Abhängigkeit, „Web Component“ bei Export `./elements`, „React“ bei React-Abhängigkeit |
 | `## API-Überblick` | Generierter Block: Exporte je Einstiegspunkt mit erster JSDoc-Zeile, Web Components, **Props und Ereignisse** der Vue-Komponenten (aus `defineProps`/`defineEmits`) | Markierungen vorhanden, Block aktuell |

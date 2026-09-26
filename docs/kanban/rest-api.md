@@ -83,5 +83,5 @@ Körper immer `{"error": {"code": "…", "message": "…"}}` (Meldung deutsch).
 ## Eingebettete Oberfläche
 
 `create_app(service, identity, ui_directory=Path(...))` liefert die
-Oberfläche unter `/ui/` aus. Assets werden erst mit `@flowaudit/ui`
+Oberfläche unter `/ui/` aus. Assets werden erst mit `@auditcore/ui`
 (`<flowaudit-kanban-board>`) mitgeliefert; bis dahin bleibt der Parameter leer.

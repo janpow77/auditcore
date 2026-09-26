@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { evaluationResult, fakeExtrapolationPort, fixtureStrata, fixtureUnits, residualResult } from '../../ui-core/test/extrapolation/fake-port'
 import { FlowauditExtrapolation } from '../src/extrapolation/FlowauditExtrapolation'
 
-vi.mock('@flowaudit/common/browser', () => ({ saveFile: vi.fn() }))
+vi.mock('@auditcore/common/browser', () => ({ saveFile: vi.fn() }))
 
 const flush = () => act(() => new Promise<void>((resolve) => setTimeout(resolve, 0)))
 

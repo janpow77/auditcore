@@ -2,7 +2,7 @@
 
 Stand 25.09.2026. Vergleich der bestehenden Oberflächen für Sanktions- und
 PEP-Abgleich mit der gemeinsamen Komponente `<flowaudit-screening-review>`
-(`@flowaudit/ui`) und dem REST-Vertrag
+(`@auditcore/ui`) und dem REST-Vertrag
 [`screening_review/1`](screening-rest.md).
 
 Geprüfte Stände:

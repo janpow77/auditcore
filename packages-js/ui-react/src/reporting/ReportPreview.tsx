@@ -1,4 +1,4 @@
-import { reportCellText, reportingSampleNote, reportingSheetHeading, type Locale, type ReportingTranslate, type TablePreview } from '@flowaudit/ui-core'
+import { reportCellText, reportingSampleNote, reportingSheetHeading, type Locale, type ReportingTranslate, type TablePreview } from '@auditcore/ui-core'
 
 /** Ein Blatt der Vorschau: Spaltenformate und erste Zeilen (wie `ReportPreview.vue`). */
 export function ReportPreview({ table, index, t, locale }: { table: TablePreview; index: number; t: ReportingTranslate; locale: Locale }) {

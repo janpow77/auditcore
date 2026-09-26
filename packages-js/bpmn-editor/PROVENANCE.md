@@ -2,7 +2,7 @@
 
 ## Eigenständige Entwicklung
 
-`@flowaudit/bpmn-editor` wurde im Clean-Room-Verfahren neu geschrieben.
+`@auditcore/bpmn-editor` wurde im Clean-Room-Verfahren neu geschrieben.
 Grundlage waren ausschließlich:
 
 - die BPMN-2.0.2-Spezifikation der OMG (Symbolik, Verbindungs- und

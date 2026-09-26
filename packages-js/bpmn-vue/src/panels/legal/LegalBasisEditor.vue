@@ -6,8 +6,8 @@
  * split into structured entries.
  */
 import { ref } from 'vue'
-import { citation, isStructured, shortCitation, splitFreeText, type LegalBasis, type LegalSearchPort } from '@flowaudit/bpmn-flowaudit'
-import { addLegalBasis, LEGAL_FIELDS as FIELDS, removeLegalBasis, structureLegalBasis, updateLegalBasis } from '@flowaudit/bpmn-flowaudit/ui'
+import { citation, isStructured, shortCitation, splitFreeText, type LegalBasis, type LegalSearchPort } from '@auditcore/bpmn-flowaudit'
+import { addLegalBasis, LEGAL_FIELDS as FIELDS, removeLegalBasis, structureLegalBasis, updateLegalBasis } from '@auditcore/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import FieldForm from '../FieldForm.vue'

@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import type { TableColumn } from '@flowaudit/common'
+import type { TableColumn } from '@auditcore/common'
 import { FlowauditTable } from '../src'
 
 afterEach(cleanup)

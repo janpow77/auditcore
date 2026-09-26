@@ -9,7 +9,7 @@ import {
   type ExtractionData,
   type ExtractionTranslate,
   type Locale,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 
 const props = defineProps<{

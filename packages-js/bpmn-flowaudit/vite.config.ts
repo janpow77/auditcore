@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ['es'],
     },
     rolldownOptions: {
-      external: [/^bpmn-moddle/, /^diagram-js/, /^@flowaudit\/bpmn-editor/],
+      external: [/^bpmn-moddle/, /^diagram-js/, /^@auditcore\/bpmn-editor/],
     },
     sourcemap: true,
   },

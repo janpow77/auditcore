@@ -1,11 +1,11 @@
 /**
  * Accessible modal dialog: `role="dialog"`, labelled by its title, closes on
  * Escape and backdrop click, keeps focus inside and returns it afterwards
- * (focus trap of @flowaudit/ui-core, as in the Vue dialog).
+ * (focus trap of @auditcore/ui-core, as in the Vue dialog).
  */
 
 import { useEffect, useRef, type KeyboardEvent, type ReactNode } from 'react'
-import { createFocusTrap } from '@flowaudit/ui-core'
+import { createFocusTrap } from '@auditcore/ui-core'
 import { useElementId } from '../hooks'
 import { useI18n } from '../i18n'
 import { FaIcon } from './FaIcon'

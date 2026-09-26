@@ -1,8 +1,10 @@
-# Changelog – @flowaudit/bpmn-vue
+# Changelog – @auditcore/bpmn-vue
 
 ## 0.2.1 – 2026-09-26 – Release v0.4.2
 
-Keine Verhaltensänderung. Build mit Vite 8 und vite-plugin-dts 5 (#169); README: Installation als Tarball aus dem GitHub-Release (#157). Abhängigkeiten `@flowaudit/bpmn-editor` 0.1.1, `@flowaudit/bpmn-flowaudit` 0.2.1, `@flowaudit/ui-core` 0.2.0; Pfad-Alias für `@flowaudit/kanban-core` im Workspace (#154).
+- **Breaking:** Paketname `@auditcore/bpmn-vue` statt `@flowaudit/bpmn-vue` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-bpmn-vue-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
+
+Keine Verhaltensänderung. Build mit Vite 8 und vite-plugin-dts 5 (#169); README: Installation als Tarball aus dem GitHub-Release (#157). Abhängigkeiten `@auditcore/bpmn-editor` 0.1.1, `@auditcore/bpmn-flowaudit` 0.2.1, `@auditcore/ui-core` 0.2.0; Pfad-Alias für `@auditcore/kanban-core` im Workspace (#154).
 
 ## 0.2.0 – 2026-09-26
 

@@ -1,7 +1,7 @@
 /**
  * Gemeinsame Paritätsfälle des Kanban-Boards: die Vue-Fassung (`KanbanBoard`,
- * `KanbanBoardList` aus `@flowaudit/ui`) und die React-Fassung
- * (`FlowauditKanbanBoard`, `FlowauditKanbanBoards` aus `@flowaudit/ui-react`)
+ * `KanbanBoardList` aus `@auditcore/ui`) und die React-Fassung
+ * (`FlowauditKanbanBoard`, `FlowauditKanbanBoards` aus `@auditcore/ui-react`)
  * werden mit denselben Eingaben gerendert und gegen dieselben Erwartungen
  * sowie gegeneinander (DOM) geprüft. Synthetische Daten, keine Personendaten.
  */

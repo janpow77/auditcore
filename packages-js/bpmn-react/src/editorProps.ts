@@ -1,7 +1,7 @@
 /** Props and ref handle of the React `FlowauditEditor` (same contract as the Vue component). */
 
-import type { Approval, Comment, DiagramInfo, KeyKind, PaletteColor, ProfileData, ProfileSummary, RoleAlias, ValidationPort } from '@flowaudit/bpmn-flowaudit'
-import type { CompareSource, EditorCore, EditorFactory, EditorPorts, Locale, Theme, ToolbarAction, ValidationCore } from '@flowaudit/bpmn-flowaudit/ui'
+import type { Approval, Comment, DiagramInfo, KeyKind, PaletteColor, ProfileData, ProfileSummary, RoleAlias, ValidationPort } from '@auditcore/bpmn-flowaudit'
+import type { CompareSource, EditorCore, EditorFactory, EditorPorts, Locale, Theme, ToolbarAction, ValidationCore } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface FlowauditEditorProps {
   /** BPMN XML (controlled; changes are reported through `onXmlChange`). */

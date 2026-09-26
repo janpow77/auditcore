@@ -3,7 +3,7 @@ export { default as ComparisonForm } from './ComparisonForm.vue'
 export { default as ComparisonList } from './ComparisonList.vue'
 export { comparisonsElement } from './element'
 export { useComparisons, type ComparisonsSource, type UseComparisons } from './useComparisons'
-/** Kern (Formular, Liste, Import, Zustandsautomat) aus `@flowaudit/ui-core`. */
+/** Kern (Formular, Liste, Import, Zustandsautomat) aus `@auditcore/ui-core`. */
 export {
   comparisonsMessages,
   type ComparisonsMessageKey,
@@ -31,4 +31,4 @@ export {
   type ComparisonsController,
   type ImportRequest,
   type SummaryView,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

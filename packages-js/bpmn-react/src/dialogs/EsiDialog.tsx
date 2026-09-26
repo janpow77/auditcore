@@ -1,8 +1,8 @@
 /** ESI requirements per element (legacy `EsiRequirementsDialog`), loaded through the ESI port. */
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { groupByElement, summarize, type EsiPort, type EsiRequirementResult } from '@flowaudit/bpmn-flowaudit'
-import { ESI_STATUS, loadEsi } from '@flowaudit/bpmn-flowaudit/ui'
+import { groupByElement, summarize, type EsiPort, type EsiRequirementResult } from '@auditcore/bpmn-flowaudit'
+import { ESI_STATUS, loadEsi } from '@auditcore/bpmn-flowaudit/ui'
 import { BaseDialog } from '../base/BaseDialog'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'

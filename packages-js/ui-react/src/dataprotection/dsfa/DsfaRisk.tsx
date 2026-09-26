@@ -1,4 +1,4 @@
-import { addScenario, bandTone, removeScenario, withScenario, type DossierFieldView, type SurveyInput } from '@flowaudit/ui-core'
+import { addScenario, bandTone, removeScenario, withScenario, type DossierFieldView, type SurveyInput } from '@auditcore/ui-core'
 import { Badge } from '../../base/Badge'
 import { Button } from '../../base/Button'
 import { classes, useElementId } from '../../store'

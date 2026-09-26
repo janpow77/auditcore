@@ -1,7 +1,7 @@
 export { default as TableImport } from './TableImport.vue'
 export * from './parse'
 export { useTableImport, type UseTableImport } from './useTableImport'
-/** Kern (Texte, Zustandsautomat, Vorschau) aus `@flowaudit/ui-core`. */
+/** Kern (Texte, Zustandsautomat, Vorschau) aus `@auditcore/ui-core`. */
 export {
   tabularMessages,
   type TabularMessageKey,
@@ -13,4 +13,4 @@ export {
   type ImportedColumns,
   type TableImportController,
   type TableImportData,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

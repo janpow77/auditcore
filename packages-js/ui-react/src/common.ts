@@ -1,9 +1,9 @@
 /**
- * Framework-freie Teile, die bis 0.1.0 nur in `@flowaudit/ui` lagen, jetzt aus
- * `@flowaudit/common` – mit denselben Namen wie in `@flowaudit/ui`, damit
+ * Framework-freie Teile, die bis 0.1.0 nur in `@auditcore/ui` lagen, jetzt aus
+ * `@auditcore/common` – mit denselben Namen wie in `@auditcore/ui`, damit
  * React-Anwendungen sie ohne Vue-Import nutzen können. Die neue API
  * (Berliner Zeit, Ersatzwert „—“, strikte Zahleneingabe) steht direkt in
- * `@flowaudit/common`.
+ * `@auditcore/common`.
  */
 export {
   RestError,
@@ -38,5 +38,5 @@ export {
   type SortState,
   type TableColumn,
   type TableRow,
-} from '@flowaudit/common'
-export { saveFile } from '@flowaudit/common/browser'
+} from '@auditcore/common'
+export { saveFile } from '@auditcore/common/browser'

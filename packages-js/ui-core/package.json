@@ -1,5 +1,5 @@
 {
-  "name": "@flowaudit/ui-core",
+  "name": "@auditcore/ui-core",
   "version": "0.2.0",
   "description": "Framework-freier Kern der FlowAudit-Oberflächen: Texte, REST-Verträge, View-Modelle, Zustandsautomaten und Stile für Vue und React",
   "license": "MIT",
@@ -40,8 +40,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@flowaudit/common": "0.1.1",
-    "@flowaudit/kanban-core": "0.2.1",
+    "@auditcore/common": "0.1.1",
+    "@auditcore/kanban-core": "0.2.1",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {

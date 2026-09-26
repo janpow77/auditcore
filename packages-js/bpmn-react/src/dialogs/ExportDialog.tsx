@@ -5,8 +5,8 @@
  */
 
 import { useEffect, useState, type ReactNode } from 'react'
-import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@flowaudit/bpmn-flowaudit'
-import { EXPORT_FORMATS, FORMAT_ICONS, initialExportChoice, ORIENTATIONS } from '@flowaudit/bpmn-flowaudit/ui'
+import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@auditcore/bpmn-flowaudit'
+import { EXPORT_FORMATS, FORMAT_ICONS, initialExportChoice, ORIENTATIONS } from '@auditcore/bpmn-flowaudit/ui'
 import { BaseDialog } from '../base/BaseDialog'
 import { FaIcon } from '../base/FaIcon'
 import { useI18n } from '../i18n'

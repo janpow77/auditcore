@@ -4,7 +4,7 @@
  * This is the adapter boundary to diagram-js: everything the FlowAudit
  * layer needs from the editor core is described here, so the rest of the
  * package stays free of `any`. The shapes follow the service contract of
- * `@flowaudit/bpmn-editor` (bpmn-js compatible names and semantics).
+ * `@auditcore/bpmn-editor` (bpmn-js compatible names and semantics).
  */
 
 export interface ModdleElement {

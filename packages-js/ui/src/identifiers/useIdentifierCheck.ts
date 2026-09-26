@@ -12,10 +12,10 @@ import {
   type IdentifierProfileInfo,
   type IdentifiersPort,
   type TableImportData,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { IdentifierCallbacks } from '@flowaudit/ui-core'
+export type { IdentifierCallbacks } from '@auditcore/ui-core'
 
 export interface UseIdentifierCheck {
   controller: IdentifierController
@@ -26,7 +26,7 @@ export interface UseIdentifierCheck {
   mapping: ComputedRef<IdentifierBatchMapping>
 }
 
-/** Vue-Anbindung von „Kennung prüfen“ aus `@flowaudit/ui-core` (`createIdentifierController`). */
+/** Vue-Anbindung von „Kennung prüfen“ aus `@auditcore/ui-core` (`createIdentifierController`). */
 export function useIdentifierCheck(port: () => IdentifiersPort | null, callbacks: IdentifierCallbacks = {}): UseIdentifierCheck {
   const controller = createIdentifierController({ port, callbacks: () => callbacks })
   const state = useStore(controller.store)

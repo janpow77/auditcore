@@ -3,7 +3,7 @@
  * der TER, Ergebnis-Ton, Herleitungstabelle und Zeilen der RER-Vorlage.
  * Texte ausschließlich aus `extrapolationMessages`.
  */
-import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, type TableColumn, type TableRow } from '@flowaudit/common'
+import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, type TableColumn, type TableRow } from '@auditcore/common'
 import type { BadgeTone } from '../base/types'
 import type { Locale, Translate } from '../i18n'
 import type { ExtrapolationMessageKey } from './messages'

@@ -1,11 +1,11 @@
-import { intlFormatDate } from '@flowaudit/common'
-import { dataprotectionMessages, type DataProtectionTranslate, type Locale } from '@flowaudit/ui-core'
+import { intlFormatDate } from '@auditcore/common'
+import { dataprotectionMessages, type DataProtectionTranslate, type Locale } from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 
 export {
   dataprotectionStatusLabel as statusLabel,
   dataprotectionLabel as prefixedLabel,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 
 export interface DataProtectionText {
   t: DataProtectionTranslate

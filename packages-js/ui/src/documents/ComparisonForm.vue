@@ -9,7 +9,7 @@ import {
   type ComparisonsView,
   type RowStatus,
   type UploadFile,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import FaTextField from '../base/FaTextField.vue'
 import { useId } from '../composables/useId'

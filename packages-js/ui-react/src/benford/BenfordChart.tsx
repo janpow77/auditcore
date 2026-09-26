@@ -1,4 +1,4 @@
-import { benfordBarTitle, benfordChartTitle, benfordTickText, chartGeometry, type BenfordTranslate, type Conformity, type Locale } from '@flowaudit/ui-core'
+import { benfordBarTitle, benfordChartTitle, benfordTickText, chartGeometry, type BenfordTranslate, type Conformity, type Locale } from '@auditcore/ui-core'
 import { classes, useElementId } from '../store'
 
 export interface BenfordChartProps {

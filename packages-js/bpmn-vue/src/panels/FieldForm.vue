@@ -3,7 +3,7 @@
  * Renders one object from declarative field descriptions. Emits the whole
  * updated object on every committed change (blur/enter for text fields).
  */
-import { fieldText, inputType, isWide, parseFieldInput, unknownOption, withField, type FieldDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
+import { fieldText, inputType, isWide, parseFieldInput, unknownOption, withField, type FieldDescriptor, type Option } from '@auditcore/bpmn-flowaudit/ui'
 import { useI18n } from '../i18n/useI18n'
 
 const props = defineProps<{

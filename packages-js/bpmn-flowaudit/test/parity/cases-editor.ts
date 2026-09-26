@@ -1,6 +1,6 @@
 /**
  * Shared parity cases of the whole editor: the Vue `FlowauditEditor`
- * (@flowaudit/bpmn-vue) and the React `FlowauditEditor` (@flowaudit/bpmn-react)
+ * (@auditcore/bpmn-vue) and the React `FlowauditEditor` (@auditcore/bpmn-react)
  * load the same synthetic fixture, run the same steps (DOM events and the
  * `select` method) and are compared part by part (normalised DOM, form
  * state) and by their XML output.

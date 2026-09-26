@@ -1,6 +1,6 @@
 /**
  * Shared parity cases of the base components (icon, dialog): Vue
- * (`@flowaudit/bpmn-vue`) and React (`@flowaudit/bpmn-react`) are rendered
+ * (`@auditcore/bpmn-vue`) and React (`@auditcore/bpmn-react`) are rendered
  * with the same inputs and checked against the same expectations and against
  * each other (DOM). Synthetic data only.
  */

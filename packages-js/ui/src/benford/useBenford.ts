@@ -8,10 +8,10 @@ import {
   type BenfordData,
   type BenfordPort,
   type ConformityProfile,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useStore } from '../composables/useStore'
 
-export type { BenfordCallbacks } from '@flowaudit/ui-core'
+export type { BenfordCallbacks } from '@auditcore/ui-core'
 
 export interface UseBenford {
   controller: BenfordController
@@ -20,7 +20,7 @@ export interface UseBenford {
   profile: ComputedRef<ConformityProfile | null>
 }
 
-/** Vue-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (`createBenfordController`). */
+/** Vue-Anbindung der Benford-Analyse aus `@auditcore/ui-core` (`createBenfordController`). */
 export function useBenford(
   port: () => BenfordPort | null,
   given: () => readonly (number | null)[],

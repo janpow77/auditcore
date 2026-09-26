@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { downloadText, identifierBatchCsv, identifierBatchLines, identifierBatchSummary, type IdentifierBatchAnswer } from '@flowaudit/ui-core'
+import { downloadText, identifierBatchCsv, identifierBatchLines, identifierBatchSummary, type IdentifierBatchAnswer } from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useIdentifierContext } from './context'
 

@@ -1,4 +1,4 @@
-"""Publish the signed @flowaudit release tarballs to the npm registry.
+"""Publish the signed @auditcore release tarballs to the npm registry.
 
 The workflow ``npm-publish.yml`` downloads the assets of one GitHub release and
 calls this script. Nothing is rebuilt: every tarball must match the SHA-256,
@@ -23,7 +23,7 @@ import tarfile
 from pathlib import Path
 from typing import Any
 
-SCOPE = "@flowaudit/"
+SCOPE = "@auditcore/"
 MANIFEST = "npm-packages.json"
 REPOSITORY = "github.com/janpow77/auditcore"
 VERSION = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?")

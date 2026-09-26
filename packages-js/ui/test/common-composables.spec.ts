@@ -1,4 +1,4 @@
-import { createTokenStore, createToastQueue } from '@flowaudit/common'
+import { createTokenStore, createToastQueue } from '@auditcore/common'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { effectScope, nextTick, ref } from 'vue'
 import {
@@ -26,7 +26,7 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe('Re-Exporte aus @flowaudit/common (API unverändert)', () => {
+describe('Re-Exporte aus @auditcore/common (API unverändert)', () => {
   it('behält Namen und Signaturen', () => {
     expect(localeTag('de')).toBe('de-DE')
     expect(formatDate('kaputt', 'de')).toBe('')

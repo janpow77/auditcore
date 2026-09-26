@@ -1,4 +1,4 @@
-import { onClickOutside, matchesMediaQuery, subscribeMediaQuery } from '@flowaudit/common/browser'
+import { onClickOutside, matchesMediaQuery, subscribeMediaQuery } from '@auditcore/common/browser'
 import { getCurrentScope, onScopeDispose, readonly, ref, toValue, watch, type MaybeRefOrGetter, type Ref } from 'vue'
 
 function dispose(stop: () => void): void {

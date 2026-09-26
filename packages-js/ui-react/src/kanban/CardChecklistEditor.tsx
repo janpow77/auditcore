@@ -1,5 +1,5 @@
-import type { ChecklistItem } from '@flowaudit/kanban-core'
-import type { Locale } from '@flowaudit/ui-core'
+import type { ChecklistItem } from '@auditcore/kanban-core'
+import type { Locale } from '@auditcore/ui-core'
 import { useState, type FocusEvent, type KeyboardEvent } from 'react'
 import { Button } from '../base/Button'
 import { classes } from '../store'

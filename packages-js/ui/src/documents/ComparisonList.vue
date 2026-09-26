@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { SummaryView } from '@flowaudit/ui-core'
-import { comparisonsMessages } from '@flowaudit/ui-core'
+import type { SummaryView } from '@auditcore/ui-core'
+import { comparisonsMessages } from '@auditcore/ui-core'
 import FaBadge from '../base/FaBadge.vue'
 import FaButton from '../base/FaButton.vue'
 import FaTextField from '../base/FaTextField.vue'

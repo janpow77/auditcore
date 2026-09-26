@@ -3,7 +3,7 @@
  * updated object on every committed change (blur/Enter for text fields).
  */
 
-import { fieldText, inputType, isWide, parseFieldInput, unknownOption, withField, type FieldDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
+import { fieldText, inputType, isWide, parseFieldInput, unknownOption, withField, type FieldDescriptor, type Option } from '@auditcore/bpmn-flowaudit/ui'
 import { useElementId } from '../hooks'
 import { useI18n } from '../i18n'
 import { CommitField } from './CommitField'

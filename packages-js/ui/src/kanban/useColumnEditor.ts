@@ -1,6 +1,6 @@
-/** Vue-Anbindung des Spalteneditors (`createColumnEditor` aus `@flowaudit/kanban-core`). */
+/** Vue-Anbindung des Spalteneditors (`createColumnEditor` aus `@auditcore/kanban-core`). */
 import { computed } from 'vue'
-import { createColumnEditor, DEFAULT_LIMITS, selectColumnEditor } from '@flowaudit/kanban-core'
+import { createColumnEditor, DEFAULT_LIMITS, selectColumnEditor } from '@auditcore/kanban-core'
 import { useStore } from '../composables/useStore'
 
 export function useColumnEditor(maxColumns = DEFAULT_LIMITS.columns_max) {

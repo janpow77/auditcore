@@ -1,4 +1,4 @@
-import { benfordValuesText } from '@flowaudit/ui-core'
+import { benfordValuesText } from '@auditcore/ui-core'
 import { TableImport } from '../tabular/TableImport'
 import { useElementId } from '../store'
 import { BenfordChart } from './BenfordChart'

@@ -18,8 +18,8 @@ import {
   type Store,
   type Translate,
   type UiState,
-} from '@flowaudit/bpmn-flowaudit/ui'
-import type { DiagramInfo, ProfileData } from '@flowaudit/bpmn-flowaudit'
+} from '@auditcore/bpmn-flowaudit/ui'
+import type { DiagramInfo, ProfileData } from '@auditcore/bpmn-flowaudit'
 import { defaultEditorFactory } from './editorFactory'
 import type { FlowauditEditorProps } from './editorProps'
 import { useI18n } from './i18n'

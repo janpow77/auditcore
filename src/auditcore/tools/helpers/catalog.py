@@ -2,7 +2,7 @@
 
 Two sources: the curated topic catalog (``data/catalog.json``, name patterns
 with library targets) and, when the auditcore monorepo is available, an index
-of normalised function hashes of all Python packages and ``@flowaudit/*`` JS
+of normalised function hashes of all Python packages and ``@auditcore/*`` JS
 packages. A hash hit means the application carries a verbatim copy.
 """
 

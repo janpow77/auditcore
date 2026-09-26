@@ -148,7 +148,7 @@ Hilfen: `format_iban`, `iban_check_digits`, `lei_check_digits`,
 und `create_router` (Extra `fastapi`) hängen ihn unter `GET /catalogue`,
 `POST /check` und `POST /check/batch` ein. Das Profil ist in jeder Anfrage
 Pflicht; ungültige Kennungen sind Ergebnisse, keine Fehler. Die Oberfläche
-ist `<flowaudit-identifier-check>` aus `@flowaudit/ui` (React:
+ist `<flowaudit-identifier-check>` aus `@auditcore/ui` (React:
 `FlowauditIdentifierCheck`). Vertrag:
 [`docs/ui/identifiers-rest.md`](../../docs/ui/identifiers-rest.md).
 

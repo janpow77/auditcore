@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import FaBadge from '../base/FaBadge.vue'
 import { useId } from '../composables/useId'
 import { useI18n, type Locale } from '../i18n'
-import { methodGroups, methodStatusKey, methodTone, samplingMessages, type MethodProfile, type SamplingCatalogue } from '@flowaudit/ui-core'
+import { methodGroups, methodStatusKey, methodTone, samplingMessages, type MethodProfile, type SamplingCatalogue } from '@auditcore/ui-core'
 
 const props = withDefaults(defineProps<{
   catalogue: SamplingCatalogue

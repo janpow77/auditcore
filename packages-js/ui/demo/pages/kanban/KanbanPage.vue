@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef } from 'vue'
-import { KanbanBoard, KanbanBoardList, type Locale } from '@flowaudit/ui'
-import { MemoryBoardPort, type CardLink } from '@flowaudit/kanban-core'
+import { KanbanBoard, KanbanBoardList, type Locale } from '@auditcore/ui'
+import { MemoryBoardPort, type CardLink } from '@auditcore/kanban-core'
 import { demoLocale } from '../../locale'
 import { DEMO_USERS, demoBoards } from './demoData'
 

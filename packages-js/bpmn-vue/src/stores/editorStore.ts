@@ -7,11 +7,11 @@
  */
 
 import { computed, markRaw, reactive, readonly, shallowRef } from 'vue'
-import { createEditorCore, type EditorCore, type EditorFactory, type EditorLike, type EditorState } from '@flowaudit/bpmn-flowaudit/ui'
-import type { FlowauditModuleOptions } from '@flowaudit/bpmn-flowaudit'
+import { createEditorCore, type EditorCore, type EditorFactory, type EditorLike, type EditorState } from '@auditcore/bpmn-flowaudit/ui'
+import type { FlowauditModuleOptions } from '@auditcore/bpmn-flowaudit'
 import { defaultEditorFactory } from '../editor/defaultFactory'
 
-export type { EditorState } from '@flowaudit/bpmn-flowaudit/ui'
+export type { EditorState } from '@auditcore/bpmn-flowaudit/ui'
 
 export interface EditorStoreOptions {
   factory?: EditorFactory

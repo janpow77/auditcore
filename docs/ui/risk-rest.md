@@ -1,7 +1,7 @@
 # REST-Vertrag Risiko-Merkmale (`auditcore_risk.web`)
 
 Stand 2026-09-25. Vertrag zwischen dem Python-Router `auditcore_risk.web` und
-den Oberflächenkomponenten `@flowaudit/ui` (`<flowaudit-risk-flags>`, Vue und
+den Oberflächenkomponenten `@auditcore/ui` (`<flowaudit-risk-flags>`, Vue und
 React). Die Schnittstelle wertet genau **ein ausdrücklich benanntes Profil** aus;
 es gibt kein Standardprofil, keinen profilübergreifenden Score und keine
 stille Änderung von Schwellen. Unbestimmte Merkmale bleiben unbestimmt.

@@ -13,4 +13,4 @@ export {
   type ProfileDetail,
   type RiskFilter,
   type RiskPort,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

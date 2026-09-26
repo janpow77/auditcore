@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { IdentifierCheck, createIdentifiersRestPort, type IdentifierBatchAnswer, type IdentifierResult } from '@flowaudit/ui'
+import { IdentifierCheck, createIdentifiersRestPort, type IdentifierBatchAnswer, type IdentifierResult } from '@auditcore/ui'
 
 const port = createIdentifiersRestPort({ baseUrl: '/api/identifiers' })
 const last = ref('')

@@ -4,7 +4,7 @@ Vorbild: `regulierung` (`frontend/src/pages/admin/MandantDsgvoSeite.tsx`,
 `MandantDsfaAnsicht.tsx`, Stand `ce76e48`) und die Ansicht des
 Verarbeitungsverzeichnisses aus `auditcore_dataprotection` 0.4.0
 (`render_register_html`). Neu: `<flowaudit-vvt>`, `<flowaudit-dsfa>`
-(`@flowaudit/ui`), REST `auditcore_dataprotection.web` 0.5.0.
+(`@auditcore/ui`), REST `auditcore_dataprotection.web` 0.5.0.
 
 Legende: ✅ übernommen · ➕ neu/erweitert · ⚠ bewusst anders · ⏳ nicht übernommen.
 

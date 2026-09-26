@@ -1,4 +1,4 @@
-import { requestFile, requestJson, type RestOptions } from '@flowaudit/common'
+import { requestFile, requestJson, type RestOptions } from '@auditcore/common'
 import type { ExtrapolationPort } from './types'
 
 /** Port auf den REST-Vertrag von `auditcore_extrapolation.web` (Starlette oder FastAPI). */

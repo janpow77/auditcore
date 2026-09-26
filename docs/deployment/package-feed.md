@@ -50,13 +50,13 @@ Wheels in v0.4.1 (SHA-256):
 | `auditcore_sampling` | 0.2.2 | `c735af5fea79f0b47506f789c0df8b6e21d5391a41e537659cc68d48b9d0a6b1` |
 | `auditcore_statistics` | 0.3.3 | `cdc9a14dc2ec778c26f6dc71e16c7fc615aeaff8305f0934904f915f3fafc177` |
 
-**npm-Pakete (`@flowaudit/*`):** v0.4.1 und ältere Releases enthalten sie nur
+**npm-Pakete (`@auditcore/*`):** v0.4.1 und ältere Releases enthalten sie nur
 im Quellstand des Tags, nicht als Release-Dateien. Ab dem nächsten Release legt
 `scripts/prepare_library_release.py` jedes Paket unter `packages-js/` als
 `npm pack`-Tarball bei, mit `npm-packages.json` (npm-Integrität `sha512-…`,
 SHA-256, vollständige Abhängigkeitshülle) und in `SHA256SUMS` samt Signatur
 `SHA256SUMS.asc`. Der Workflow `npm-publish` veröffentlicht nach dem Release
-genau diese Tarballs auf npmjs.org (Standardweg `npm install @flowaudit/<paket>`,
+genau diese Tarballs auf npmjs.org (Standardweg `npm install @auditcore/<paket>`,
 Einrichtung in [npm-veroeffentlichung.md](npm-veroeffentlichung.md)); die
 Tarball-URLs bleiben der Weg für Intranet und Offline-Betrieb.
 Installation in Vue-, React- und framework-freien Anwendungen:

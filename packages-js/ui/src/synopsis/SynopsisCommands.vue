@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { SynopsisTranslate, SynopsisView } from '@flowaudit/ui-core'
+import type { SynopsisTranslate, SynopsisView } from '@auditcore/ui-core'
 
 /** Gesetzessynopse: offene Änderungsbefehle und konsolidierte Arbeitsfassung. */
 defineProps<{ view: SynopsisView; t: SynopsisTranslate }>()

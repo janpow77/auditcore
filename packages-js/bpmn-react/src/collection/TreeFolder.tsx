@@ -4,8 +4,8 @@
  */
 
 import { useState, type DragEvent } from 'react'
-import type { DiagramEntry, FolderNode } from '@flowaudit/bpmn-flowaudit'
-import { readDrag, setDrag, statusBadge, statusText, type DropTarget } from '@flowaudit/bpmn-flowaudit/ui'
+import type { DiagramEntry, FolderNode } from '@auditcore/bpmn-flowaudit'
+import { readDrag, setDrag, statusBadge, statusText, type DropTarget } from '@auditcore/bpmn-flowaudit/ui'
 import { FaIcon } from '../base/FaIcon'
 import { classes } from '../hooks'
 import { useI18n } from '../i18n'

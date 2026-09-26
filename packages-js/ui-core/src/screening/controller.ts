@@ -2,7 +2,7 @@
 // Vue und React): Laden über den ScreeningPort, Prüfläufe, Filter, Auswahl,
 // Entscheidung und Zweitprüfung. Reine Selektoren liefern die Anzeige.
 
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import { createStore, type Store } from '../store'
 import type {
   HitView,

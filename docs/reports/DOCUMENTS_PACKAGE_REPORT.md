@@ -241,7 +241,7 @@ Fremdcode; keine neue Quellbindung (`EXPECTED_SOURCES` unverändert).
 ## 0.3.0: REST-Anbindung der Synopse-Oberfläche (25.09.2026, nicht veröffentlicht)
 
 Neues Unterpaket `auditcore_documents.web` für `<flowaudit-synopsis>`
-(`@flowaudit/ui`). Bestehende Module unverändert; keine neue Quellbindung.
+(`@auditcore/ui`). Bestehende Module unverändert; keine neue Quellbindung.
 Vertrag `docs/ui/synopsis-rest.md`, Paritätsinventur `docs/ui/synopsis-paritaet.md`.
 
 | Punkt | Stand |

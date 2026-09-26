@@ -1,5 +1,5 @@
-import { saveFile } from '@flowaudit/common/browser'
-import { extrapolationFormMessage, type ExtrapolationExportFormat } from '@flowaudit/ui-core'
+import { saveFile } from '@auditcore/common/browser'
+import { extrapolationFormMessage, type ExtrapolationExportFormat } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import { ExtrapolationResidual } from './ExtrapolationResidual'
 import { ExtrapolationResult } from './ExtrapolationResult'

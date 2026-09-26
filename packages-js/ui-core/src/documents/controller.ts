@@ -1,7 +1,7 @@
 // Zustandsautomat von <flowaudit-comparisons> (Vue und React): gespeicherte
 // Vergleiche laden, neuen Vergleich hochladen, Ergebnis importieren, löschen.
 
-import { RestError } from '@flowaudit/common'
+import { RestError } from '@auditcore/common'
 import { createRunner, createStore, IDLE, type RequestState, type Store } from '../store'
 import type { ImportRequest, SynopsisPort, SynopsisRestClient } from '../synopsis/port'
 import type { Comparison, ComparisonProfile, ComparisonSummary, RowStatus } from '../synopsis/types'

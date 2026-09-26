@@ -1,6 +1,8 @@
-# Changelog @flowaudit/common
+# Changelog @auditcore/common
 
 ## 0.1.1 – 2026-09-26 – Release v0.4.2
+
+- **Breaking:** Paketname `@auditcore/common` statt `@flowaudit/common` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-common-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
 
 Keine Verhaltensänderung. Build mit Vite 8 und vite-plugin-dts 5 (#169); README: Installation als Tarball aus dem GitHub-Release (#157). Der Stand 0.1.0 wurde vor dem Release als Tarball in Anwendungen eingebunden; 0.1.1 ist der erste als Release-Datei veröffentlichte Stand.
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { DownloadFile } from '@flowaudit/common'
+import type { DownloadFile } from '@auditcore/common'
 import {
   createReportingController,
   reportingMessages,
@@ -12,7 +12,7 @@ import {
   type ReportingTranslate,
   type ReportTableInput,
   type WorkbookPreview,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import { useTranslation } from '../i18n'
 import { useStoreState } from '../store'
 
@@ -38,7 +38,7 @@ export interface UseReportExport {
   profile: FormatProfile | null
 }
 
-/** React-Anbindung des Tabellenexports aus `@flowaudit/ui-core` (dieselbe Logik wie `useReportExport` in Vue). */
+/** React-Anbindung des Tabellenexports aus `@auditcore/ui-core` (dieselbe Logik wie `useReportExport` in Vue). */
 export function useReportExport(props: ReportExportInputs): UseReportExport {
   const { t, locale } = useTranslation(reportingMessages, props.locale)
   const latest = useRef(props)

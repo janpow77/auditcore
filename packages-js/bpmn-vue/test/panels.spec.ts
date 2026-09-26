@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { TYPES, EXTENSION_FIELDS, ProfileLegalSearch, type LegalBasis } from '@flowaudit/bpmn-flowaudit'
+import { TYPES, EXTENSION_FIELDS, ProfileLegalSearch, type LegalBasis } from '@auditcore/bpmn-flowaudit'
 import FieldForm from '../src/panels/FieldForm.vue'
 import ListEditor from '../src/panels/ListEditor.vue'
 import LegalBasisEditor from '../src/panels/legal/LegalBasisEditor.vue'
 import LegalSearch from '../src/panels/legal/LegalSearch.vue'
-import { CONTROL_LIST, LISTS, listsFor, TABS, tabsFor, type FieldDescriptor } from '@flowaudit/bpmn-flowaudit/ui'
+import { CONTROL_LIST, LISTS, listsFor, TABS, tabsFor, type FieldDescriptor } from '@auditcore/bpmn-flowaudit/ui'
 import { until } from './helpers'
 
 const noOptions = () => []

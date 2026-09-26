@@ -2,5 +2,5 @@ export { FlowauditDbKanban, type FlowauditDbKanbanProps } from './FlowauditDbKan
 export { DbKanbanColumn, type DbKanbanColumnProps } from './DbKanbanColumn'
 export { DbKanbanCard, type DbKanbanCardProps } from './DbKanbanCard'
 export { useDbKanban, type DbKanbanInputs, type UseDbKanban } from './useDbKanban'
-export type { DbKanbanError, RecordMove } from '@flowaudit/ui-core'
-export { createMemoryRecordPort, type RecordPort, type RecordRow, type RecordTable } from '@flowaudit/kanban-core'
+export type { DbKanbanError, RecordMove } from '@auditcore/ui-core'
+export { createMemoryRecordPort, type RecordPort, type RecordRow, type RecordTable } from '@auditcore/kanban-core'

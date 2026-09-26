@@ -1,5 +1,5 @@
 /**
- * @flowaudit/bpmn-flowaudit – domain layer for the BPMN editor (MIT).
+ * @auditcore/bpmn-flowaudit – domain layer for the BPMN editor (MIT).
  */
 
 import './style.css'

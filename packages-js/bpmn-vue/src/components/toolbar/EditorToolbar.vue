@@ -4,8 +4,8 @@
  * `BpmnToolbar`): name, unsaved/readonly state, save, colour menu, flow
  * direction, page view and panel toggles. Actions are emitted as `action`.
  */
-import { PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
-import { actionDisabled, CHECK_ACTIONS, EDIT_ACTIONS, FILE_ACTIONS, MODE_ACTIONS, PAGE_OPTIONS as pageOptions, VIEW_ACTIONS, type ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
+import { PALETTE_COLORS, type PaletteColor } from '@auditcore/bpmn-flowaudit'
+import { actionDisabled, CHECK_ACTIONS, EDIT_ACTIONS, FILE_ACTIONS, MODE_ACTIONS, PAGE_OPTIONS as pageOptions, VIEW_ACTIONS, type ToolbarAction } from '@auditcore/bpmn-flowaudit/ui'
 import ColorSwatches from '../base/ColorSwatches.vue'
 import FaIcon from '../base/FaIcon.vue'
 import ToolbarMenu from '../base/ToolbarMenu.vue'

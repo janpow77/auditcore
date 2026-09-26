@@ -8,4 +8,4 @@ export {
   type SelectionResult,
   type SizeResult,
   type ImportedColumns,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'

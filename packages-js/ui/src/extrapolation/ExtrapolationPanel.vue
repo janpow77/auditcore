@@ -10,7 +10,7 @@ import {
   type ResidualResult,
   type StratumInput,
   type UnitInput,
-} from '@flowaudit/ui-core'
+} from '@auditcore/ui-core'
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'
 import { saveFile } from '../rest/download'

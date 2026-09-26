@@ -1,6 +1,6 @@
 /**
  * Expectation of a parity case – same shape as `Expectation`/`ParityCase` of
- * @flowaudit/ui-core (test/parity/cases.ts), declared here so the type check
+ * @auditcore/ui-core (test/parity/cases.ts), declared here so the type check
  * of this package does not pull in the sources of ui-core and common.
  */
 
