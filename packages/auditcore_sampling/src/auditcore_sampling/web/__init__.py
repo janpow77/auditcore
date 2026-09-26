@@ -1,10 +1,12 @@
 """REST contract and routes for sampling user interfaces (extra ``web``).
 
 The contract functions (:func:`calculate_size`, :func:`allocate`,
-:func:`select`, :func:`export_selection`, :func:`catalogue`) are
-framework-free. :func:`create_app`/:func:`routes` need Starlette
+:func:`select`, :func:`export_selection`, :func:`catalogue` and the
+guidance-based planning :func:`guidance_catalogue`, :func:`guidance_size`,
+:func:`guidance_draw`) are framework-free. :func:`create_app`/:func:`routes` need Starlette
 (``pip install auditcore_sampling[web]``); :func:`create_router` additionally
-needs FastAPI. Contract: ``docs/ui/sampling-rest.md``.
+needs FastAPI. Contracts: ``docs/ui/sampling-rest.md`` and
+``docs/ui/samplesize-rest.md``.
 """
 
 from __future__ import annotations
@@ -16,6 +18,9 @@ from ._validate import ContractError
 from .derivation import calculate_size
 from .draw import allocate, select
 from .export import ExportFile, export_selection
+from .guidance_catalogue import guidance_catalogue
+from .guidance_plan import draw as guidance_draw
+from .guidance_plan import plan_size as guidance_size
 from .profiles import catalogue
 
 if TYPE_CHECKING:
@@ -32,6 +37,9 @@ __all__ = [
     "create_app",
     "create_router",
     "export_selection",
+    "guidance_catalogue",
+    "guidance_draw",
+    "guidance_size",
     "routes",
     "select",
 ]

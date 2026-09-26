@@ -1,5 +1,31 @@
 # Changelog auditcore_sampling
 
+## Unreleased
+
+Keine Verhaltensänderung der bestehenden Methoden (`sizes`, `selection`,
+`legacy`, REST-Vertrag `/profiles`, `/size`, `/allocation`, `/selection`);
+alle bisherigen Tests laufen unverändert.
+
+- Neu `auditcore_sampling.guidance`: Stichprobenumfang nach dem KOM-Leitfaden
+  EGESIF_16-0014-01 mit Status `GUIDANCE_EGESIF_16_0014_01` („nach
+  Leitfaden“), getrennt von den Altmethoden – einfache Zufallsstichprobe und
+  Differenzenschätzung (auch geschichtet, wahlweise Endlichkeitskorrektur),
+  MUS-Standardansatz mit Hochwertschicht, geschichtetes MUS, konservatives MUS
+  mit Expansionsfaktor, Mindestumfänge nicht-statistischer Stichproben
+  (Art. 79 Abs. 2 VO (EU) 2021/1060; Art. 127 Abs. 1 VO (EU) Nr. 1303/2013 mit
+  Tabelle 6), Standardabweichungen aus Vorstichproben. Faktorprofile
+  `kom_2017_tables` und `exact` wie in `auditcore_extrapolation`. Alle
+  Leitfaden-Beispiele zum Umfang nachgerechnet, Druckfehler dokumentiert
+  (`docs/leitfaden-umfang.md`), Hypothesis-Invarianten.
+- Neu `auditcore_sampling.intermediate_body`: Belegziehung einer
+  Zwischengeschalteten Stelle als versioniertes Profil
+  `zs.value_share_escalation` (Version 1), übernommen aus flowinvoice;
+  Paritätstest mit 240 aufgezeichneten Ziehungen und festen Seeds.
+- REST: versionierter Vertrag `auditcore_sampling.guidance/1`
+  (`GET /guidance/profiles`, `POST /guidance/size`, `POST /guidance/draw`),
+  `docs/ui/samplesize-rest.md`.
+- `[dev]`: `hypothesis`, `numpy` (nur Tests).
+
 ## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.2 – Hilfsfunktionen aus auditcore_common
 
 Keine Verhaltensänderung: alle 61 bestehenden Tests (Replay gegen flowstat und

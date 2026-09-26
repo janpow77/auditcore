@@ -34,6 +34,18 @@
         "run_mus_standard",
         "run_mus_conservative"
       ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
+      "path": "backend/app/verwk/pipeline/pruefplan.py",
+      "git_blob": "08155daeacda5c841d83521f3b48b0dedfd6234a",
+      "symbols": [
+        "Belegziehung nach Ausgabenanteil mit Eskalationsleiter (Funktionen mit den Endungen _ziehung und _leiter)",
+        "Qualitätsstichprobe jeder k-te nicht zu prüfende Mittelabruf",
+        "Seed-Ableitung je Mittelabruf"
+      ],
+      "extracted_to": "auditcore_sampling.intermediate_body"
     }
   ],
   "rights": {
@@ -49,6 +61,11 @@
         "repository": "janpow77/audit-portal",
         "github_private": true,
         "github_license": "NOASSERTION (proprietäre LICENSE des Rechteinhabers)"
+      },
+      {
+        "repository": "janpow77/flowinvoice",
+        "github_private": true,
+        "github_license": null
       }
     ],
     "authorization": {
@@ -71,8 +88,9 @@
     "method_validation": "NOT_PERFORMED"
   },
   "not_extracted": [
-    "zwei Perioden, Differenzschätzung, Fehlerprojektion, nicht-statistische Verfahren (weitere Characterization nötig)",
-    "NumPy-Zufallsziehung (bleibt beim Consumer)"
+    "zwei Perioden (Leitfaden 6.1.3, 6.2.3, 6.3.3, 6.3.4) und mehrstufige Stichproben (6.5)",
+    "NumPy-Zufallsziehung (bleibt beim Consumer)",
+    "Risikobewertung der Zwischengeschalteten Stelle, die über Prüfungsstufen entscheidet (kein Stichprobenverfahren)"
   ],
   "human_decisions": [
     {
@@ -91,6 +109,32 @@
       "added_in": "0.2.0",
       "origin": "OWN_IMPLEMENTATION",
       "description": "REST-Vertrag (docs/ui/sampling-rest.md), Herleitung, reproduzierbare Auswahl mit Seed, Export; Starlette-Routen und optionaler FastAPI-Router (Extra web). Keine neue Stichprobenmethode."
+    },
+    {
+      "module": "auditcore_sampling.guidance",
+      "added_in": "Unreleased",
+      "origin": "NEW_IMPLEMENTATION",
+      "description": "Stichprobenumfang nach EGESIF_16-0014-01 (6.1–6.4) und Mindestumfänge nach Art. 79 Abs. 2 VO (EU) 2021/1060 bzw. Art. 127 Abs. 1 VO (EU) Nr. 1303/2013; Status GUIDANCE_EGESIF_16_0014_01; Referenzfälle docs/leitfaden-umfang.md."
+    },
+    {
+      "module": "auditcore_sampling.web (guidance_catalogue, guidance_size, guidance_draw)",
+      "added_in": "Unreleased",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "Versionierter REST-Vertrag auditcore_sampling.guidance/1 (docs/ui/samplesize-rest.md)."
     }
-  ]
+  ],
+  "intermediate_body_characterization": {
+    "fixture": "tests/fixtures/intermediate_body_observed.json.gz",
+    "tool": "tools/capture_intermediate_body.py",
+    "cases": 240,
+    "drawn_invoices": 5701,
+    "environment": {
+      "python": "3.12.3",
+      "numpy": "2.4.3",
+      "pandas": "3.0.1"
+    },
+    "classification": "OBSERVED",
+    "result": "alle 240 Ziehungen und 9 Leitern exakt reproduziert",
+    "method_validation": "NOT_PERFORMED"
+  }
 }
