@@ -4,7 +4,7 @@
  * parameters (`?api=…&locale=en&profile=…`). Default API base: `./api`.
  */
 
-import type { Locale } from '../i18n/useI18n'
+import type { Locale } from './i18n/translator'
 
 export interface StandaloneConfig {
   apiBase: string

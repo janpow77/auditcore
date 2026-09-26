@@ -4,7 +4,8 @@
  * legal search port (if present) for suggestions. Emits the chosen entry.
  */
 import { computed, ref, watch } from 'vue'
-import { completeEuAct, parseCitation, shortCitation, type LegalBasis, type LegalSearchHit, type LegalSearchPort } from '@flowaudit/bpmn-flowaudit'
+import { shortCitation, type LegalBasis, type LegalSearchHit, type LegalSearchPort } from '@flowaudit/bpmn-flowaudit'
+import { hitHint, typedCitation, withoutDisplayFields } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 
@@ -19,10 +20,7 @@ const listId = `fa-legal-${Math.random().toString(36).slice(2, 8)}`
 let controller: AbortController | null = null
 let timer: ReturnType<typeof setTimeout> | undefined
 
-const typed = computed<LegalBasis | null>(() => {
-  const parsed = parseCitation(query.value)
-  return parsed.act || parsed.text ? completeEuAct(parsed) : null
-})
+const typed = computed<LegalBasis | null>(() => typedCitation(query.value))
 
 async function search(text: string): Promise<void> {
   controller?.abort()
@@ -45,12 +43,6 @@ watch(query, (text) => {
   clearTimeout(timer)
   timer = setTimeout(() => search(text), 250)
 })
-
-/** Search hits carry display helpers (title, excerpt, origin) that are not stored. */
-function withoutDisplayFields(value: LegalBasis | LegalSearchHit): LegalBasis {
-  const DISPLAY = new Set(['title', 'excerpt', 'origin'])
-  return Object.fromEntries(Object.entries(value).filter(([key]) => !DISPLAY.has(key))) as LegalBasis
-}
 
 function choose(value: LegalBasis): void {
   emit('choose', withoutDisplayFields(value))
@@ -79,7 +71,7 @@ function choose(value: LegalBasis): void {
         <FaIcon name="marker-rechtsgrundlage" :size="16" />
         <span>
           <strong>{{ shortCitation(hit) || hit.text }}</strong>
-          <span class="fa-menu-hint">{{ [hit.title, hit.origin].filter(Boolean).join(' · ') }}</span>
+          <span class="fa-menu-hint">{{ hitHint(hit) }}</span>
           <span v-if="hit.excerpt" class="fa-menu-hint">{{ hit.excerpt }}</span>
         </span>
       </button>
@@ -87,22 +79,3 @@ function choose(value: LegalBasis): void {
     </div>
   </div>
 </template>
-
-<style>
-.fa-legal-search__input {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--fa-text-muted);
-}
-
-.fa-legal-search__results {
-  margin-top: 6px;
-  padding: 4px;
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius);
-  background: var(--fa-surface);
-  max-height: 260px;
-  overflow: auto;
-}
-</style>

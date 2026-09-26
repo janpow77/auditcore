@@ -18,7 +18,7 @@ import {
   type Risk,
   type Source,
   type VocabularyName,
-} from '@flowaudit/bpmn-flowaudit'
+} from '../index'
 
 export type FieldKind = 'text' | 'textarea' | 'select' | 'checkbox' | 'date' | 'number' | 'tokens'
 

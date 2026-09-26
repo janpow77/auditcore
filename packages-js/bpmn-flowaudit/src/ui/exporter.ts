@@ -30,12 +30,12 @@ import {
   type PaletteColor,
   type ProcessModel,
   type ProfileData,
-} from '@flowaudit/bpmn-flowaudit'
-import type { EditorFactory } from '../editor/createEditor'
-import type { EditorStore } from '../stores/editorStore'
+} from '../index'
+import type { EditorCore } from './editorCore'
+import type { EditorFactory } from './editorFactory'
 
 export interface ExportContext {
-  editor: EditorStore
+  editor: Pick<EditorCore, 'exportXml' | 'exportSvg' | 'model'>
   factory: EditorFactory
   name: () => string
   diagramId: () => string | undefined
@@ -69,7 +69,9 @@ type Writer = (xml: string, svg: () => Promise<string>, model: ProcessModel, cho
 
 const blob = (text: string, type: string) => new Blob([text], { type: `${type};charset=utf-8` })
 
-export function useExport(ctx: ExportContext) {
+export type Exporter = ReturnType<typeof createExporter>
+
+export function createExporter(ctx: ExportContext) {
   function decorate(svg: string, model: ProcessModel, choice: ExportChoice): string {
     const data = collectExportData(model, ctx.palette)
     const header = headerOf(model.info, choice.title)

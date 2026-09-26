@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /** All dialogs of the editor, driven by the editor setup and actions. */
 import { computed, ref, shallowRef, watch } from 'vue'
-import { collectExportData, displayName, type Approval, type DiagramInfo, type ProcessModel, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
+import { collectExportData, type Approval, type DiagramInfo, type ProcessModel, type ProfileSummary } from '@flowaudit/bpmn-flowaudit'
+import { elementNames, EMPTY_EXPORT_DATA } from '@flowaudit/bpmn-flowaudit/ui'
 import DiagramInfoDialog from './dialogs/DiagramInfoDialog.vue'
 import ElementSearch from './dialogs/ElementSearch.vue'
 import EnrichmentDialog from './dialogs/EnrichmentDialog.vue'
@@ -42,8 +43,8 @@ watch(
   },
 )
 
-const exportData = computed(() => (model.value ? collectExportData(model.value) : { colors: [], markers: [], legalBases: [] }))
-const names = computed(() => Object.fromEntries((model.value?.elements ?? []).map((element) => [element.id, displayName(element)])))
+const exportData = computed(() => (model.value ? collectExportData(model.value) : EMPTY_EXPORT_DATA))
+const names = computed(() => elementNames(model.value))
 const info = computed(() => editor.state.info as DiagramInfo | null)
 </script>
 

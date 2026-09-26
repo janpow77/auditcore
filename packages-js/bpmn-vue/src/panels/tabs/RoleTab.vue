@@ -5,7 +5,8 @@
  * inherited from the lane or pool.
  */
 import { computed } from 'vue'
-import { label, roleOf, rolesFor, type DiagramElement } from '@flowaudit/bpmn-flowaudit'
+import { label, roleOf, rolesFor, type Actor } from '@flowaudit/bpmn-flowaudit'
+import { actorAfter, inheritedRole, isContainerType } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
@@ -14,7 +15,7 @@ const { selection, editor, profile, readonly } = useEditorContext()
 const { t, locale } = useI18n()
 
 const type = computed(() => selection.type.value ?? '')
-const isContainer = computed(() => type.value === 'bpmn:Participant' || type.value === 'bpmn:Lane')
+const isContainer = computed(() => isContainerType(type.value))
 const actor = computed(() => selection.extensions.value.actor ?? {})
 const roles = computed(() => rolesFor(profile(), editor.state.info?.programmingPeriod))
 
@@ -22,21 +23,15 @@ const inherited = computed(() => {
   void selection.version.value
   const element = selection.element.value
   if (!element || isContainer.value) return null
-  const found = editor.model().byId.get(element.id)?.actor
-  const role = roleOf(profile(), found?.role)
-  return found ? { name: found.sourceName, role: role ? label(role.label, locale.value) : t('role.none') } : null
+  return inheritedRole(editor.model(), element.id, profile(), locale.value, t)
 })
 
-function update(patch: { role?: string; displayName?: string }): void {
-  const next = { ...actor.value, ...patch }
-  selection.write({ actor: next.role || next.displayName ? next : undefined })
-}
+const update = (patch: Partial<Actor>) => selection.write({ actor: actorAfter(actor.value, patch) })
 
 function choose(code: string): void {
   update({ role: code || undefined })
-  const element = selection.element.value as DiagramElement | null
   const role = roleOf(profile(), code)
-  if (element && role && !selection.property('name')) selection.rename(label(role.label, locale.value))
+  if (selection.element.value && role && !selection.property('name')) selection.rename(label(role.label, locale.value))
 }
 </script>
 
@@ -72,50 +67,3 @@ function choose(code: string): void {
     </template>
   </div>
 </template>
-
-<style>
-.fa-role-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.fa-role-option {
-  display: grid;
-  grid-template-columns: 24px auto;
-  grid-template-rows: auto auto;
-  column-gap: 8px;
-  align-items: center;
-  padding: 7px 9px;
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius-sm);
-  background: var(--fa-surface);
-  color: var(--fa-text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.fa-role-option svg {
-  grid-row: 1 / 3;
-  color: var(--fa-role-stroke);
-}
-
-.fa-role-option[aria-checked='true'] {
-  border-color: var(--fa-role-stroke);
-  background: var(--fa-role-fill);
-  color: #1a202c;
-}
-
-.fa-role-option__short {
-  font-weight: 700;
-  font-size: 12px;
-}
-
-.fa-role-option__label {
-  font-size: 12px;
-  color: inherit;
-  opacity: 0.85;
-}
-</style>

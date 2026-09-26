@@ -4,7 +4,7 @@
  * palette styles of other editors are needed.
  */
 
-import type { Role } from '@flowaudit/bpmn-flowaudit'
+import type { Role } from '../index'
 
 export interface PaletteItem {
   id: string

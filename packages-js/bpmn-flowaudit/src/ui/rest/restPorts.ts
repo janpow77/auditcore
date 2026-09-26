@@ -23,7 +23,7 @@ import {
   type StoragePort,
   type ValidationIssue,
   type ValidationPort,
-} from '@flowaudit/bpmn-flowaudit'
+} from '../../index'
 
 export interface RestOptions {
   /** Base URL, e.g. `https://intranet.example/api/bpmn`. */

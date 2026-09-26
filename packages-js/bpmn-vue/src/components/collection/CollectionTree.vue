@@ -10,7 +10,7 @@ import { useI18n } from '../../i18n/useI18n'
 import type { CollectionStore } from '../../stores/collectionStore'
 import PromptDialog from '../base/PromptDialog.vue'
 import TreeFolder from './TreeFolder.vue'
-import { readDrag } from './dragData'
+import { readDrag } from '@flowaudit/bpmn-flowaudit/ui'
 
 const props = defineProps<{ store: CollectionStore; selectedDiagram: string | null; openDiagram: string | null }>()
 const emit = defineEmits<{ (e: 'select-diagram', id: string | null): void; (e: 'open-diagram', id: string): void }>()
@@ -101,45 +101,3 @@ function selectFolder(id: string | null): void {
     />
   </nav>
 </template>
-
-<style>
-.fa-collection {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 0;
-  padding: 10px;
-  overflow: auto;
-}
-
-.fa-collection__head {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.fa-collection__head h2 {
-  flex: 1;
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.fa-collection__filters {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.fa-collection__root {
-  display: flex;
-  border-radius: var(--fa-radius-sm);
-  padding: 2px 6px;
-}
-
-.fa-tree {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-</style>

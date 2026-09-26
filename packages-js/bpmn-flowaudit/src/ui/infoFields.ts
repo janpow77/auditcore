@@ -1,6 +1,6 @@
 /** Declarative sections and fields of the diagram info dialog. */
 
-import type { FieldDescriptor } from '../../panels/descriptors'
+import type { FieldDescriptor } from './descriptors'
 
 const info = (key: string, kind: FieldDescriptor['kind'] = 'text', extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({ key, label: `info.field.${key}`, kind, ...extra })
 

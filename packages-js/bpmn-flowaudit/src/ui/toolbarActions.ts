@@ -77,3 +77,8 @@ export const MODE_ACTIONS: ToolbarEntry[] = [
   { id: 'xml', icon: 'xml', label: 'toolbar.xml' },
   { id: 'shortcuts', icon: 'keyboard', label: 'toolbar.shortcuts' },
 ]
+
+/** Whether a toolbar entry is disabled (writing actions when read-only, undo/redo by stack). */
+export function actionDisabled(id: ToolbarAction, writes: boolean | undefined, state: { readonly: boolean; canUndo: boolean; canRedo: boolean }): boolean {
+  return Boolean((writes && state.readonly) || (id === 'undo' && !state.canUndo) || (id === 'redo' && !state.canRedo))
+}

@@ -4,8 +4,8 @@
  * the React wrapper uses the same table).
  */
 
-import type { Comment, DiagramInfo, ProfileData, StoragePort } from '@flowaudit/bpmn-flowaudit'
-import type { EditorPorts } from '../stores/context'
+import type { Comment, DiagramInfo, ProfileData, StoragePort } from '../index'
+import type { EditorPorts } from './ports'
 
 export const ELEMENT_NAME = 'flowaudit-bpmn-editor'
 

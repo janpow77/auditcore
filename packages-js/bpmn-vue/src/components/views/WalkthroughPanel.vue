@@ -6,10 +6,10 @@
  * in the diagram (current, met, not met).
  */
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { HIGHLIGHT_CLASSES, nextStepId, recordStep, walkthroughProgress, walkthroughSteps, type AuditStep, type FlowauditHighlight } from '@flowaudit/bpmn-flowaudit'
+import { nextStepId, recordStep, walkthroughProgress, walkthroughSteps, type AuditStep, type FlowauditHighlight } from '@flowaudit/bpmn-flowaudit'
+import { clampStep, progressPercent, stepDraft, WALK_FIELDS as FIELDS, walkthroughClasses } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import FieldForm from '../../panels/FieldForm.vue'
-import { AUDIT_STEP_LIST } from '../../panels/descriptors'
 import { useOptions } from '../../panels/useOptions'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
@@ -27,20 +27,17 @@ const steps = computed(() => {
 })
 const current = computed(() => steps.value[index.value])
 const progress = computed(() => walkthroughProgress(steps.value))
-const FIELDS = AUDIT_STEP_LIST.fields.filter((field) => field.key !== 'id')
 
 function highlight(): void {
   if (!editor.state.ready) return
   const layer = editor.editor.value?.get<FlowauditHighlight>('flowauditHighlight', false)
   if (!layer) return
-  const classes = new Map<string, string>(steps.value.map((step) => [step.elementId, HIGHLIGHT_CLASSES.walkthrough[step.status]]))
-  if (current.value) classes.set(current.value.elementId, HIGHLIGHT_CLASSES.walkthrough.current)
-  layer.apply('walkthrough', classes)
+  layer.apply('walkthrough', walkthroughClasses(steps.value, current.value?.elementId))
 }
 
 function go(step: number): void {
-  index.value = Math.max(0, Math.min(step, steps.value.length - 1))
-  draft.value = { tester: props.tester, date: new Date().toISOString().slice(0, 10), result: 'erfuellt' }
+  index.value = clampStep(step, steps.value.length)
+  draft.value = stepDraft(props.tester)
   if (current.value) editor.select(current.value.elementId)
 }
 
@@ -58,7 +55,7 @@ go(0)
 <template>
   <section class="fa-walk" :aria-label="t('walk.title')">
     <p class="fa-help" role="status">{{ t('walk.progress', { ...progress }) }}</p>
-    <div class="fa-walk__bar" :style="{ '--done': `${progress.total ? (progress.done / progress.total) * 100 : 0}%` }" aria-hidden="true" />
+    <div class="fa-walk__bar" :style="{ '--done': progressPercent(progress) }" aria-hidden="true" />
     <p v-if="!steps.length" class="fa-help">{{ t('walk.noSteps') }}</p>
     <template v-else-if="current">
       <div class="fa-walk__nav">
@@ -92,71 +89,3 @@ go(0)
     </ol>
   </section>
 </template>
-
-<style>
-.fa-walk__bar {
-  height: 6px;
-  margin: 4px 0 12px;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--fa-success) var(--done), var(--fa-surface-3) var(--done));
-}
-
-.fa-walk__nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.fa-walk__current {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
-
-.fa-walk__controls {
-  margin-top: 10px;
-  padding: 8px 10px;
-}
-
-.fa-walk__controls p {
-  margin: 2px 0;
-}
-
-.fa-walk__done {
-  margin: 8px 0 0;
-  padding-left: 18px;
-  font-size: 12px;
-  color: var(--fa-text-muted);
-}
-
-.fa-walk__list {
-  margin: 16px 0 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--fa-border);
-}
-
-.fa-walk__list [aria-current='true'] {
-  background: var(--fa-primary-soft);
-}
-
-.fa-walk__dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-top: 5px;
-  border-radius: 50%;
-  background: var(--fa-surface-3);
-  flex-shrink: 0;
-}
-
-.fa-walk__dot--erfuellt {
-  background: var(--fa-success);
-}
-
-.fa-walk__dot--nicht_erfuellt {
-  background: var(--fa-danger);
-}
-</style>

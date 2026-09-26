@@ -3,7 +3,7 @@
  * which element type and which lists it edits.
  */
 
-import { isActivity, isEvent, isFlowNode, isGateway, type ListExtensionKey } from '@flowaudit/bpmn-flowaudit'
+import { isActivity, isEvent, isFlowNode, isGateway, type ListExtensionKey } from '../index'
 
 export type TabId = 'general' | 'role' | 'legal' | 'references' | 'control' | 'evidence' | 'findings' | 'source' | 'notes' | 'color'
 

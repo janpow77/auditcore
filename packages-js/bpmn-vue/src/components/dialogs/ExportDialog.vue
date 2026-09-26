@@ -6,6 +6,7 @@
  */
 import { reactive, watch } from 'vue'
 import { CONFIDENTIALITY, DEFAULT_EXPORT_CHOICE, label, type ExportChoice, type ExportData, type ExportFormat } from '@flowaudit/bpmn-flowaudit'
+import { EXPORT_FORMATS, FORMAT_ICONS as ICONS, initialExportChoice, ORIENTATIONS } from '@flowaudit/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
@@ -15,22 +16,11 @@ const emit = defineEmits<{ (e: 'update:open', value: boolean): void; (e: 'export
 const { t, locale } = useI18n()
 const choice = reactive<Omit<ExportChoice, 'format'>>({ ...DEFAULT_EXPORT_CHOICE })
 
-const IMAGE_FORMATS: ExportFormat[] = ['svg', 'png', 'pdf']
-const DATA_FORMATS: ExportFormat[] = ['bpmn', 'myst', 'prozesstabelle-csv', 'prozesstabelle-myst', 'rcm-csv', 'feststellungen-csv']
-const ICONS: Record<string, string> = { svg: 'diagram', png: 'diagram', pdf: 'marker-dokument', bpmn: 'xml', myst: 'marker-dokument', excel: 'analysis' }
 
 watch(
   () => props.open,
   (open) => {
-    if (!open) return
-    Object.assign(choice, DEFAULT_EXPORT_CHOICE, {
-      title: props.defaultTitle,
-      subtitle: props.subtitle ?? '',
-      showLegend: props.data.colors.length > 0,
-      showMarkerLegend: props.data.markers.length > 0,
-      showLegalBases: props.data.legalBases.length > 0,
-      neutral: props.confidentiality === 'vs_nfd',
-    })
+    if (open) Object.assign(choice, initialExportChoice(props.defaultTitle, props.subtitle, props.data, props.confidentiality))
   },
   { immediate: true },
 )
@@ -68,38 +58,16 @@ function run(format: ExportFormat): void {
       <label class="fa-field">
         <span class="fa-label">&nbsp;</span>
         <select v-model="choice.orientation" class="fa-select">
-          <option v-for="option in ['auto', 'hoch', 'quer']" :key="option" :value="option">{{ t(`export.orientation.${option}`) }}</option>
+          <option v-for="option in ORIENTATIONS" :key="option" :value="option">{{ t(`export.orientation.${option}`) }}</option>
         </select>
       </label>
     </div>
     <h3 class="fa-section__title fa-section">{{ t('export.formats') }}</h3>
     <div class="fa-export__formats">
-      <button v-for="format in [...IMAGE_FORMATS, ...DATA_FORMATS]" :key="format" type="button" class="fa-btn" @click="run(format)">
+      <button v-for="format in EXPORT_FORMATS" :key="format" type="button" class="fa-btn" @click="run(format)">
         <FaIcon :name="ICONS[format] ?? 'analysis'" :size="16" />{{ t(`export.format.${format}`) }}
       </button>
       <button v-if="excel" type="button" class="fa-btn" @click="run('excel')"><FaIcon name="analysis" :size="16" />{{ t('export.format.excel') }}</button>
     </div>
   </BaseDialog>
 </template>
-
-<style>
-.fa-export__options {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 14px 0 0;
-  padding: 0;
-  border: 0;
-}
-
-.fa-export__neutral {
-  margin-top: 12px;
-  padding: 10px 12px;
-}
-
-.fa-export__formats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
-}
-</style>
