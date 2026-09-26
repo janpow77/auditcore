@@ -1,5 +1,10 @@
 # Changelog auditcore_extrapolation
 
+## Unreleased
+
+Keine Verhaltensänderung: `web._contract.Reader` prüft das JSON-Objekt über
+`auditcore_common.rest.json_object` (Meldung und Status unverändert).
+
 ## 0.1.0 – 2026-09-26 – Paketstand für Release v0.4.2 (erste Veröffentlichung)
 
 Erste Fassung (Neuimplementierung nach EGESIF_16-0014-01 und CPRE_23-0013-01 Annex 3).

@@ -519,6 +519,42 @@
           "handle_analyse"
         ],
         "revision": "f03aa0e4a1f811b90dd69e9e8846a219937d4289"
+      },
+      {
+        "path": "packages/auditcore_sampling/src/auditcore_sampling/web/_validate.py",
+        "git_blob": "43140f437a67e97f285905dc7fc9516696c4417b",
+        "symbols": [
+          "as_object"
+        ],
+        "revision": "f2220bf58f318117111db2afba69d96946045a84"
+      },
+      {
+        "path": "packages/auditcore_geo/src/auditcore_geo/web/_contract.py",
+        "git_blob": "145d44c01d34b7ad7bc694355764e8f79e8ed6cc",
+        "symbols": [
+          "ContractError",
+          "Body.of"
+        ],
+        "revision": "f2220bf58f318117111db2afba69d96946045a84"
+      },
+      {
+        "path": "packages/auditcore_geo/src/auditcore_geo/web/_http.py",
+        "git_blob": "9c7f5d50ac0550301cf04e928fff89388b7932fe",
+        "symbols": [
+          "Reply",
+          "_clean",
+          "_json",
+          "decode"
+        ],
+        "revision": "f2220bf58f318117111db2afba69d96946045a84"
+      },
+      {
+        "path": "packages/auditcore_extrapolation/src/auditcore_extrapolation/web/_contract.py",
+        "git_blob": "5b7ce733da0b903a5fb26f574f83c3e51bd36cfc",
+        "symbols": [
+          "Reader.__init__"
+        ],
+        "revision": "f2220bf58f318117111db2afba69d96946045a84"
       }
     ]
   },

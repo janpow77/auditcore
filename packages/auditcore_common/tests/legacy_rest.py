@@ -4,7 +4,10 @@ Copied from janpow77/auditcore@f03aa0e4a1f811b90dd69e9e8846a219937d4289
 (``packages/auditcore_sampling`` and ``packages/auditcore_statistics``, ``web``);
 the ``_object`` checks from janpow77/auditcore@e5698cfd49ec2d918a7b8fb44e77f8000c607783
 (``auditcore_identifiers``) and @2025d08f82663a2a85c1c6ed5325042a3c9012b5
-(``auditcore_reporting``, branch of PR #162);
+(``auditcore_reporting``, branch of PR #162); sampling ``as_object``, the geo
+contract (``ContractError``, ``Body.of``, ``_json``, ``decode``) and the
+extrapolation ``Reader`` check from
+janpow77/auditcore@f2220bf58f318117111db2afba69d96946045a84;
 each block names its source file and symbol, ``provenance.json`` lists the git
 blobs. Only lines marked ``[adapted]`` differ: class and function names carry a
 package prefix, and the per-item parsers ``_item``/``_value`` are the identity,
@@ -15,6 +18,7 @@ because only the list checks around them were merged.
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from decimal import Decimal
@@ -211,3 +215,91 @@ def reporting_object(value: object, path: str) -> Mapping[str, object]:  # [adap
     if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
         raise ReportingContractError(f"'{path}' muss ein JSON-Objekt sein.")  # [adapted] name
     return value
+
+
+# packages/auditcore_sampling/src/auditcore_sampling/web/_validate.py :: as_object
+def sampling_as_object(
+    value: object, name: str = "Anfrage"
+) -> Mapping[str, object]:  # [adapted] name
+    """A JSON object with string keys."""
+    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
+        raise SamplingContractError(f"'{name}' muss ein JSON-Objekt sein.")  # [adapted] name
+    return value
+
+
+# packages/auditcore_extrapolation/src/auditcore_extrapolation/web/_contract.py :: Reader.__init__
+def extrapolation_reader_body(
+    raw: object, where: str = "Anfrage"
+) -> Mapping[str, object]:  # [adapted] body of __init__
+    if not isinstance(raw, Mapping) or any(not isinstance(k, str) for k in raw):
+        raise SamplingContractError(
+            f"'{where}' muss ein JSON-Objekt sein."
+        )  # [adapted] same base as rest.ContractError
+    return raw  # [adapted] self.body = raw
+
+
+# packages/auditcore_geo/src/auditcore_geo/web/_contract.py :: ContractError
+class GeoContractError(ValueError):  # [adapted] name
+    """Anfrage erfüllt den REST-Vertrag nicht (Status, Code, deutsche Meldung)."""
+
+    def __init__(
+        self, message: str, *, status: int = 422, code: str = "ungueltige_eingabe"
+    ) -> None:
+        super().__init__(message)
+        self.status = status
+        self.code = code
+
+    def to_dict(self) -> dict[str, object]:
+        """JSON-Fehlerkörper ``{"error": {"code", "message"}}``."""
+        return {"error": {"code": self.code, "message": str(self)}}
+
+
+# packages/auditcore_geo/src/auditcore_geo/web/_contract.py :: Body.of
+def geo_body_of(
+    value: object, path: str = "Anfrage"
+) -> Mapping[str, object]:  # [adapted] classmethod → function
+    """Wrap a JSON object with string keys or reject the value."""
+    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
+        raise GeoContractError(f"'{path}' muss ein JSON-Objekt sein.")  # [adapted] name
+    return value  # [adapted] cls(value, path)
+
+
+# packages/auditcore_geo/src/auditcore_geo/web/_http.py :: Reply
+@dataclass(frozen=True)
+class GeoReply:  # [adapted] name
+    """Status and JSON body of one response."""
+
+    status: int
+    body: bytes
+
+
+# packages/auditcore_geo/src/auditcore_geo/web/_http.py :: _clean
+def geo_clean(value: object) -> object:  # [adapted] name
+    """Non-finite floats become text so every body stays valid JSON."""
+    if isinstance(value, float) and not math.isfinite(value):
+        return "NaN" if math.isnan(value) else ("Infinity" if value > 0 else "-Infinity")
+    if isinstance(value, dict):
+        return {k: geo_clean(v) for k, v in value.items()}  # [adapted] name
+    if isinstance(value, list):
+        return [geo_clean(v) for v in value]  # [adapted] name
+    return value
+
+
+# packages/auditcore_geo/src/auditcore_geo/web/_http.py :: _json
+def geo_json(status: int, data: object) -> GeoReply:  # [adapted] name
+    return GeoReply(
+        status, json.dumps(geo_clean(data), ensure_ascii=False).encode("utf-8")
+    )  # [adapted] names
+
+
+# packages/auditcore_geo/src/auditcore_geo/web/_http.py :: decode
+def geo_decode(raw: bytes, limit: int) -> object:  # [adapted] name
+    """Parsed JSON body within the size limit."""
+    if len(raw) > limit:
+        raise GeoContractError("Anfrage zu groß.", status=413, code="zu_gross")  # [adapted] name
+    try:
+        return json.loads(raw)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise GeoContractError(
+            "Kein gültiges JSON.", status=400, code="ungueltiges_json"
+        ) from exc  # [adapted] name
