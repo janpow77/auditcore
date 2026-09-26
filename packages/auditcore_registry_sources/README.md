@@ -19,12 +19,12 @@ python -m pip install auditcore_registry_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.2 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.3 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-registry-sources/`):
 
 ```text
-auditcore_registry_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_registry_sources-0.2.2-py3-none-any.whl#sha256=177ee3bb37ad533df9de70427bbd9ad343c604589fa000826a2cdd3665e8197d
+auditcore_registry_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_registry_sources-0.2.3-py3-none-any.whl#sha256=9fba74ab942874128794dcebb396e965cb50ade299b7740866e394f1a19acec6
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

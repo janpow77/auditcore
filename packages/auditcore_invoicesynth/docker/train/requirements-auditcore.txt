@@ -1,4 +1,4 @@
-# Abhängigkeiten von auditcore_invoicesynth aus dem Release v0.4.1 (hashgebunden).
-auditcore_invoicegenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_invoicegenerator-0.2.2-py3-none-any.whl#sha256=540994598e88ff77e01966823264e196b71a2fe34800a2010af45befdf1715f9
-auditcore_dummygenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_dummygenerator-0.1.2-py3-none-any.whl#sha256=cd90f739551af590f560a167f2e2a70f71aed79f8972500e672265d97ad3bf90
-auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_common-0.1.1-py3-none-any.whl#sha256=5b6c5659de0d1bb7b8d2c175e295851a5be64a56223050d27c75645b13b90ebd
+# Abhängigkeiten von auditcore_invoicesynth aus dem Release v0.4.2 (hashgebunden).
+auditcore_invoicegenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_invoicegenerator-0.2.3-py3-none-any.whl#sha256=e56c2af581677cf12c4485291e318f13d0d723ed93058ab178ce15ae09cb1f6a
+auditcore_dummygenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_dummygenerator-0.1.3-py3-none-any.whl#sha256=854afcdf7a14765ddca2acb33226099c223e464c244e6fc05969b3223b8fd457
+auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_common-0.2.0-py3-none-any.whl#sha256=08971a3a3128c26e6230414ae338e22186e030a0ffe034758f267cae11539456

@@ -19,12 +19,12 @@ python -m pip install 'auditcore_documents[docx,pdf-text,fuzzy,docx-render]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.3.3 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.4.0 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-documents/`):
 
 ```text
-auditcore_documents @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_documents-0.3.3-py3-none-any.whl#sha256=7ad288d593c9ea5f6578d38c9ed94660186c23729ea31bf52e8817ec153305f4
+auditcore_documents @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_documents-0.4.0-py3-none-any.whl#sha256=d29319749e6c458140bbe153ccaa450eea16ce95c8191f733614db48f952dc2d
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
