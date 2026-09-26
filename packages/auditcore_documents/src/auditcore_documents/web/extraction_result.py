@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any
 
 from auditcore_documents.pipeline import PipelineContext
 
@@ -43,22 +42,24 @@ class Thresholds:
         return "review" if confidence >= self.review else "rejected"
 
 
-def _plain(value: object) -> Any:
+def _plain(value: object) -> object:
     """JSON-taugliche Kopie (Decimal, Datum und Aufzählungen als Text)."""
-    return json.loads(json.dumps(value, default=str, ensure_ascii=False))
+    loaded: object = json.loads(json.dumps(value, default=str, ensure_ascii=False))
+    return loaded
 
 
-def _field_names(normalized: Mapping[str, Any], merged: Mapping[str, Any]) -> list[str]:
+def _field_names(normalized: Mapping[str, object], merged: Mapping[str, object]) -> list[str]:
     names = {k for k in normalized if k != _MERGE} | set(merged)
     known = [n for n in FIELD_ORDER if n in names]
     return known + sorted(names - set(known))
 
 
-def _field(
-    name: str, normalized: Mapping[str, Any], raw: Mapping[str, Any], merged: Mapping[str, Any]
-) -> dict[str, Any]:
+Fields = Mapping[str, object]
+
+
+def _field(name: str, normalized: Fields, raw: Fields, merged: Fields) -> dict[str, object]:
     donut = merged.get(name)
-    entry: dict[str, Any] = {
+    entry: dict[str, object] = {
         "name": name,
         "value": _plain(normalized.get(name)),
         "raw": _plain(raw.get(name)),
@@ -74,29 +75,30 @@ def _field(
             decision=donut.get("decision"),
             proposal=_plain(donut.get("donut")),
             text_match=donut.get("text_match"),
-            checks=_plain(list(donut.get("checks") or [])),
+            checks=_plain(donut.get("checks") or []),
         )
     return entry
 
 
-def fields_of(context: PipelineContext) -> list[dict[str, Any]]:
+def fields_of(context: PipelineContext) -> list[dict[str, object]]:
     """Felder mit Normalwert, Rohwert und – bei Donut – Feldkonfidenz und Entscheidung."""
     artifacts = context.artifacts
     normalized = artifacts.normalized_json or {}
     raw = artifacts.extracted_fields or {}
     merge = normalized.get(_MERGE)
-    merged = merge.get("fields", {}) if isinstance(merge, Mapping) else {}
+    fields = merge.get("fields") if isinstance(merge, Mapping) else None
+    merged: Mapping[str, object] = fields if isinstance(fields, Mapping) else {}
     return [_field(n, normalized, raw, merged) for n in _field_names(normalized, merged)]
 
 
-def _ocr(context: PipelineContext, thresholds: Thresholds) -> dict[str, Any] | None:
+def _ocr(context: PipelineContext, thresholds: Thresholds) -> dict[str, object] | None:
     metrics = context.ocr_metrics
     if metrics is None:
         return None
     return {**metrics.to_dict(), "quality": thresholds.quality(metrics.avg_confidence)}
 
 
-def _pages(context: PipelineContext) -> list[dict[str, Any]]:
+def _pages(context: PipelineContext) -> list[dict[str, object]]:
     pages = context.artifacts.ocr_pages or []
     return [
         {
@@ -109,7 +111,7 @@ def _pages(context: PipelineContext) -> list[dict[str, Any]]:
     ]
 
 
-def _findings(context: PipelineContext) -> list[dict[str, Any]]:
+def _findings(context: PipelineContext) -> list[dict[str, object]]:
     return [
         {
             "rule_id": r.rule_id,
@@ -125,7 +127,7 @@ def _findings(context: PipelineContext) -> list[dict[str, Any]]:
 
 def run_result(
     context: PipelineContext, document: Mapping[str, object], thresholds: Thresholds
-) -> dict[str, Any]:
+) -> dict[str, object]:
     """Lauf, Dokument, OCR, Seiten, Felder und Befunde eines abgeschlossenen Kontexts."""
     artifacts = context.artifacts
     return {
