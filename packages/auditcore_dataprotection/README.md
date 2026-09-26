@@ -35,7 +35,7 @@ sudo apt-get install python3-auditcore-dataprotection
 ```
 
 Extras: `[excel]` – XLSX-Ausgabe (openpyxl und
-`auditcore_reporting[excel]==0.2.1`); `[pdf]` – PDF-Bericht über WeasyPrint;
+`auditcore_reporting[excel]==0.2.2`); `[pdf]` – PDF-Bericht über WeasyPrint;
 `[web]` – REST-Schnittstelle mit Starlette, `[fastapi]` – derselbe Vertrag als
 FastAPI-Router (beide für die Oberflächen `<flowaudit-vvt>`/`<flowaudit-dsfa>`);
 `[dev]` – Test- und Prüfwerkzeuge.
@@ -434,7 +434,7 @@ Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 Python ≥ 3.11, zur Laufzeit `auditcore_common==0.1.1` (gemeinsame
 Hilfsfunktionen, nur Standardbibliothek); die Plattform `auditcore` ist keine
 Abhängigkeit. Optional über `[excel]`
-`openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.1`, über `[pdf]`
+`openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.2`, über `[pdf]`
 `weasyprint>=60.2`, über `[web]` Starlette und über `[fastapi]` FastAPI.
 
 ## Sicherheit und Datenschutz
