@@ -608,8 +608,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `buildWorkbookRequest` | Funktion | Anfrage aus Zustand und Tabellen oder der erste fehlende Punkt. | `reporting/controller` |
 | `@auditcore/ui-core` | `canDecide` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `canReleaseAssessment` | Funktion | Freigabe möglich: Vier-Augen-Vorprüfung, keine ungespeicherten Eingaben, keine Sperrgründe. | `dataprotection/dsfaView` |
-| `@auditcore/ui-core` | `cellAlignClass` | Funktion | – | `table` |
-| `@auditcore/ui-core` | `cellText` | Funktion | – | `table` |
+| `@auditcore/ui-core` | `cellAlignClass` | Funktion | – | `table/index` |
+| `@auditcore/ui-core` | `cellText` | Funktion | – | `table/index` |
 | `@auditcore/ui-core` | `changeIds` | Funktion | Kennungen der Änderungszeilen in Anzeigereihenfolge (Ziel der Navigation). | `synopsis/viewModel` |
 | `@auditcore/ui-core` | `chartGeometry` | Funktion | – | `benford/chart` |
 | `@auditcore/ui-core` | `cloneContent` | Funktion | Tiefe Kopie (JSON-Daten), damit Eingaben den gelesenen Stand nie verändern. | `dataprotection/registerView` |
@@ -858,7 +858,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
 | `@auditcore/ui-core` | `riskTableColumns` | Funktion | – | `risk/controller` |
 | `@auditcore/ui-core` | `riskTableRows` | Funktion | – | `risk/controller` |
-| `@auditcore/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table` |
+| `@auditcore/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table/index` |
 | `@auditcore/ui-core` | `runFormDefaults` | Funktion | Vorbelegung bei Wechsel der Prüfart oder neuen Einstellungen: empfohlenes Profil, alle Listen, Standard-Mindestwert. | `screening/runForm` |
 | `@auditcore/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `samplingFieldError` | Funktion | Fehlermeldung eines Eingabefelds, leer ohne Fehler. | `sampling/view` |
@@ -882,7 +882,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `setDefaultLocale` | Funktion | Sprache ohne Provider (Web Components, React ohne `LocaleProvider`). | `i18n` |
 | `@auditcore/ui-core` | `severityTone` | Funktion | – | `risk/format` |
 | `@auditcore/ui-core` | `sizeTexts` | Funktion | – | `sampling/view` |
-| `@auditcore/ui-core` | `sortIcon` | Funktion | – | `table` |
+| `@auditcore/ui-core` | `sortIcon` | Funktion | – | `table/index` |
 | `@auditcore/ui-core` | `splitExtractionFindings` | Funktion | Auffällige Befunde (nicht bestanden, prüfen) zuerst nach Gewicht; bestandene getrennt. | `extraction/view` |
 | `@auditcore/ui-core` | `stateTone` | Funktion | – | `risk/format` |
 | `@auditcore/ui-core` | `statusHintKey` | Funktion | Hinweis für nicht freigegebene Profile, sonst `null`. | `risk/labels` |

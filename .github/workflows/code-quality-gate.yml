@@ -23,7 +23,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install --upgrade pip 'setuptools>=83' wheel
       - run: python -m pip install -e '.[dev]'
-      - name: Ratchet (steigt eine Metrik, sinkt sie ohne Baseline-Absenkung oder wird die Baseline unbegründet angehoben, schlägt der Job fehl)
+      - name: Vergleichsstand bestimmen
         env:
           COMPARE_REF: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
         # PR: Vergleich mit dem ersten Elternteil des Merge-Commits, also genau dem
@@ -34,10 +34,26 @@ jobs:
           if [ -z "$ref" ] || ! git rev-parse --verify --quiet "$ref^{commit}" >/dev/null; then
             ref="HEAD~1"
           fi
-          auditcore-codegate check --compare-ref "$ref" \
+          echo "GATE_COMPARE_REF=$ref" >> "$GITHUB_ENV"
+      - name: Ratchet (steigt eine Metrik, sinkt sie ohne Baseline-Absenkung oder wird die Baseline unbegründet angehoben, schlägt der Job fehl)
+        run: |
+          auditcore-codegate check --compare-ref "$GATE_COMPARE_REF" \
             --output code-quality-gate.json --summary "$GITHUB_STEP_SUMMARY"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0
+        if: ${{ !cancelled() }}
+        with:
+          node-version: '22'
+          cache: npm
+      - name: npm-Abhängigkeiten (TypeScript-Compiler für die statische Analyse)
+        if: ${{ !cancelled() }}
+        run: npm ci --ignore-scripts
+      - name: UI-Parität Vue ↔ React (fail closed; Ausnahmen in quality/ui-parity-exceptions.json nur abbauen)
+        if: ${{ !cancelled() }}
+        run: node scripts/js/ui-parity-gate.mjs --compare-ref "$GATE_COMPARE_REF" --json ui-parity-gate.json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: code-quality-gate
-          path: code-quality-gate.json
+          path: |
+            code-quality-gate.json
+            ui-parity-gate.json

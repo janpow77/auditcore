@@ -12,6 +12,8 @@ on:
       - 'scripts/docs/**'
       - 'docs/bibliotheken/readme-offen.json'
       - 'examples/**'
+      - 'quality/ui-parity-exceptions.json'
+      - 'docs/ui/**'
       - '.github/workflows/js-packages.yml'
   pull_request:
     paths:
@@ -24,6 +26,8 @@ on:
       - 'scripts/docs/**'
       - 'docs/bibliotheken/readme-offen.json'
       - 'examples/**'
+      - 'quality/ui-parity-exceptions.json'
+      - 'docs/ui/**'
       - '.github/workflows/js-packages.yml'
 permissions:
   contents: read
@@ -52,6 +56,11 @@ jobs:
       - run: npm run lint
       - name: ESLint-Ausnahmen zählen
         run: npm run lint:exceptions
+      - name: UI-Parität Vue ↔ React (jede Komponente nativ in beiden Fassungen, gemeinsamer Kern, gemeinsame Paritätsfälle)
+        run: npm run ui:gate
+      - name: Tests des Paritäts-Gates und des Generators ui:neu (Gerüst in einer Workspace-Kopie erzeugen und prüfen)
+        if: matrix.node == '22'
+        run: npm run test:scripts
       - run: npm run typecheck
       - run: npm test
       - name: React-Pakete zusätzlich gegen React 18.3 testen (Peer-Bereich 18 || 19; Lockfile auf 19)

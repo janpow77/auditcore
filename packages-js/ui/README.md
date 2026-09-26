@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (796):
+Exporte der Einstiegspunkte aus `package.json#exports` (804):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -184,6 +184,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (796):
 | `@auditcore/ui` | `COLUMN_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `COMPARISON_KINDS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `COMPARISON_MODES` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `CardAppearance` | Vue-Komponente | – | `kanban/CardAppearance.vue` |
+| `@auditcore/ui` | `CardChecklistEditor` | Vue-Komponente | – | `kanban/CardChecklistEditor.vue` |
+| `@auditcore/ui` | `CardReferences` | Vue-Komponente | – | `kanban/CardReferences.vue` |
+| `@auditcore/ui` | `CardTagsEditor` | Vue-Komponente | – | `kanban/CardTagsEditor.vue` |
 | `@auditcore/ui` | `Catalogs` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `CellValue` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui` | `ChartBar` | Re-Export | – | `@auditcore/ui-core` |
@@ -191,6 +195,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (796):
 | `@auditcore/ui` | `ChartGeometry` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ClientExportFormat` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnCheck` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ColumnEditorRow` | Vue-Komponente | – | `kanban/ColumnEditorRow.vue` |
 | `@auditcore/ui` | `ColumnPreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnView` | Re-Export | – | `./useKanbanBoard` |
 | `@auditcore/ui` | `CompareFields` | Re-Export | – | `@auditcore/ui-core` |
@@ -236,6 +241,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (796):
 | `@auditcore/ui` | `DatasetFinding` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DbCardView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DbColumnView` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `DbKanbanCard` | Vue-Komponente | – | `dbkanban/DbKanbanCard.vue` |
+| `@auditcore/ui` | `DbKanbanColumn` | Vue-Komponente | – | `dbkanban/DbKanbanColumn.vue` |
 | `@auditcore/ui` | `DbKanbanController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DbKanbanData` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DbKanbanError` | Re-Export | – | `@auditcore/ui-core` |
@@ -365,6 +372,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (796):
 | `@auditcore/ui` | `KanbanColumn` | Vue-Komponente | – | `kanban/KanbanColumn.vue` |
 | `@auditcore/ui` | `KanbanSettingsDialog` | Vue-Komponente | – | `kanban/KanbanSettingsDialog.vue` |
 | `@auditcore/ui` | `KanbanShareDialog` | Vue-Komponente | – | `kanban/KanbanShareDialog.vue` |
+| `@auditcore/ui` | `KanbanToolbar` | Vue-Komponente | – | `kanban/KanbanToolbar.vue` |
 | `@auditcore/ui` | `KeyTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `LOCALES` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `LOCALE_KEY` | Konstante | – | `i18n/i18n` |
@@ -969,6 +977,72 @@ Web Components:
 | `analysis-completed` | `[result: BenfordAnalysis]` | – |
 | `error` | `[message: string]` | – |
 
+#### `CardAppearance`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `color` | `string \| null` | ja | – | – |
+| `image` | `string \| null` | ja | – | – |
+| `readOnly` | `boolean` | nein | `false` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `change` | `[patch: { color?: string; image?: string }]` | – |
+
+#### `CardChecklistEditor`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `items` | `readonly ChecklistItem[]` | ja | – | – |
+| `readOnly` | `boolean` | nein | `false` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `change` | `[items: ChecklistItem[]]` | – |
+
+#### `CardReferences`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `links` | `readonly CardLink[]` | ja | – | – |
+| `attachments` | `readonly Attachment[]` | ja | – | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `navigate` | `[link: CardLink]` | – |
+| `attachment` | `[attachment: Attachment]` | – |
+
+#### `CardTagsEditor`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `tags` | `readonly string[]` | ja | – | – |
+| `readOnly` | `boolean` | nein | `false` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `change` | `[tags: string[]]` | – |
+
+#### `ColumnEditorRow`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `column` | `Column` | ja | – | – |
+| `first` | `boolean` | nein | `false` | – |
+| `last` | `boolean` | nein | `false` | – |
+| `canRemove` | `boolean` | nein | `true` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `update` | `[patch: Partial<Column>]` | – |
+| `remove` | `[]` | – |
+| `move` | `[step: -1 \| 1]` | – |
+
 #### `ComparisonForm`
 
 | Prop | Typ | Pflicht | Standard | Beschreibung |
@@ -1002,6 +1076,40 @@ Web Components:
 | `comparison-open` | `[id: string]` | – |
 | `comparison-remove` | `[id: string]` | – |
 | `result-import` | `[text: string]` | – |
+
+#### `DbKanbanCard`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `card` | `DbCardView` | ja | – | – |
+| `columnLabel` | `string` | ja | – | – |
+| `editable` | `boolean` | nein | `true` | – |
+| `dragging` | `boolean` | nein | `false` | – |
+| `describedBy` | `string` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `card-drag` | `[id: string \| null]` | – |
+| `card-step` | `[id: string, direction: 1 \| -1]` | – |
+
+#### `DbKanbanColumn`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `column` | `DbColumnView` | ja | – | – |
+| `editable` | `boolean` | nein | `true` | – |
+| `canAdd` | `boolean` | nein | `false` | – |
+| `dragging` | `string \| null` | nein | `null` | – |
+| `over` | `boolean` | nein | `false` | – |
+| `hintId` | `string` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `card-drag` | `[id: string \| null]` | – |
+| `card-step` | `[id: string, direction: 1 \| -1]` | – |
+| `card-drop` | `[id: string, column: string]` | – |
+| `column-over` | `[column: string \| null]` | – |
+| `card-add` | `[column: string]` | – |
 
 #### `ExtrapolationPanel`
 
@@ -1355,6 +1463,29 @@ Web Components:
 | `close` | `[]` | – |
 | `share` | `[userId: string, permission: SharePermission]` | – |
 | `revoke` | `[userId: string]` | – |
+
+#### `KanbanToolbar`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `title` | `string` | ja | – | – |
+| `stats` | `BoardStats \| null` | ja | – | – |
+| `filter` | `KanbanFilterState` | ja | – | – |
+| `filterActive` | `boolean` | nein | `false` | – |
+| `canRename` | `boolean` | nein | `false` | – |
+| `canShare` | `boolean` | nein | `false` | – |
+| `canConfigure` | `boolean` | nein | `false` | – |
+| `showFullscreen` | `boolean` | nein | `true` | – |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `rename` | `[title: string]` | – |
+| `share` | `[]` | – |
+| `settings` | `[]` | – |
+| `fullscreen` | `[]` | – |
+| `reset-filter` | `[]` | – |
+| `filter-change` | `[patch: Partial<KanbanFilterState>]` | – |
 
 #### `ReportExportPanel`
 

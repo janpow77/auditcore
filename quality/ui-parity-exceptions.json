@@ -1,0 +1,20 @@
+{
+  "$comment": "Befristete Ausnahmen des UI-Paritäts-Gates (scripts/js/ui-parity-gate.mjs, docs/ui/beitragen.md). Nur Abbau: neue Kennungen und spätere Ablaufdaten lässt die CI nicht zu; geschlossene Lücken müssen hier entfernt werden.",
+  "exceptions": [
+    {
+      "id": "core-controller:ui:base",
+      "reason": "Basiskomponenten (Schaltfläche, Eingabefeld, Dialog, Symbol, Abzeichen) sind zustandslos; Kern ui-core/src/base enthält nur Symbole und Varianten, die Fokusfalle liegt in ui-core/src/focus.ts. Zu klären: Dialog-Zustand (offen, Rückgabefokus) als Controller in den Kern ziehen oder Regel für zustandslose Gruppen festlegen.",
+      "expires": "2027-03-31"
+    },
+    {
+      "id": "core-controller:ui:table",
+      "reason": "Tabelle: Zellen, Sortsymbol und Ausrichtung liegen in ui-core/src/table; der Sortierzustand (v-model sort bzw. sort/onSortChange) wird in Vue und React noch je Fassung gehalten. Sortier-Controller mit createStore in den Kern ziehen.",
+      "expires": "2027-03-31"
+    },
+    {
+      "id": "parity-cases:bpmn:web-component",
+      "reason": "Web Component <flowaudit-bpmn-editor> (Vue defineCustomElement) und FlowauditBpmnEditor (React) haben nur Verhaltenstests je Fassung (Props, Ereignisse, Ref), keine gemeinsamen Paritätsfälle; der Editor darunter ist über cases-editor.ts abgedeckt. cases-web-component.ts mit Attribut-/Ereignisfällen ergänzen.",
+      "expires": "2027-03-31"
+    }
+  ]
+}

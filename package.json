@@ -17,7 +17,10 @@
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
     "license-check": "node scripts/js/check-licenses.mjs",
-    "examples": "node scripts/js/verify-examples.mjs"
+    "examples": "node scripts/js/verify-examples.mjs",
+    "ui:gate": "node scripts/js/ui-parity-gate.mjs",
+    "ui:neu": "node scripts/js/ui-new.mjs",
+    "test:scripts": "node --test scripts/js/test/*.test.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

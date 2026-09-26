@@ -6,7 +6,7 @@
  */
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { issue, loadDefinitions, modelFromDefinitions, type DiagramInfo, type ExportData, type ProcessModel, type Suggestion } from '../../src'
+import { loadDefinitions, modelFromDefinitions, type DiagramInfo, type ExportData, type ProcessModel, type Suggestion } from '../../src'
 import type { Expectation } from './expectation'
 
 export interface DialogCase<P> {
@@ -62,23 +62,6 @@ export const SEARCH_CASE: DialogCase<Record<string, unknown>> = {
   props: () => ({ open: true, model: null }),
   expect: { roles: [['dialog', 'Element suchen'], ['searchbox', 'Element suchen']] },
   type: { selector: 'input', value: 'Antrag' },
-}
-
-export const ISSUES = [issue('BPMN-S010', 'Process_1', { name: 'Antrag' }), issue('BPMN-F001', 'Task_1', { name: 'Prüfen' })]
-
-export const ISSUE_CASE: DialogCase<Record<string, unknown>> = {
-  name: 'Hinweisliste nach Schwere gefiltert',
-  props: () => ({ issues: ISSUES, error: 'Server nicht erreichbar' }),
-  expect: { texts: ['Server nicht erreichbar', 'BPMN-S010'], roles: [['region', 'Hinweise']], counts: { '.fa-issue': 2, '.fa-chip': 4 } },
-  click: { selector: '.fa-chip', index: 1 },
-  after: { counts: { '.fa-issue': 1 } },
-}
-
-export const KEY_FILTER_CASE: DialogCase<Record<string, unknown>> = {
-  name: 'Schlüsselfilter mit Treffern',
-  props: () => ({ keys: { ka: { '10': ['T1'], '2': ['T2'] }, bk: { '2.3': ['T1'] } }, kind: 'ka', value: '', hits: 2 }),
-  expect: { texts: ['2 Treffer'], roles: [['search', 'Schlüsselfilter']], counts: { 'datalist option': 2 } },
-  type: { selector: 'input', value: '10' },
 }
 
 export const INFO: DiagramInfo = { title: 'Bewilligung', subtitle: 'Zuwendungsverfahren', status: 'entwurf', version: '1.0', funds: ['efre'] }

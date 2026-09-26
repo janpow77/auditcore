@@ -21,52 +21,99 @@ Englisch vorbereitet), Basiskomponenten (`FaButton`, `FaIcon`, `FaDialog`,
 `FaTable`, `FaBadge`, `FaTextField`) und Composables (`useFocusTrap`, `useId`,
 `useTheme`, `useI18n`).
 
+## Neue Komponente: Generator und Gate
+
+Das Gerüst einer neuen Komponente entsteht nicht von Hand und nicht per
+LLM, sondern mit dem Generator; ob Vue und React vollständig sind, prüft ein
+Gate in der CI.
+
+```bash
+npm run ui:neu -- <gruppe> <Komponente>     # z. B. npm run ui:neu -- audittrail AuditTrail
+npm run lint && npm run typecheck && npm test && npm run ui:gate
+```
+
+`<gruppe>` ist kurz, klein und englisch (`kanban`, `risk`, `audittrail`),
+`<Komponente>` PascalCase aus Wörtern (`AuditTrail`). Der Generator
+(`scripts/js/ui-new.mjs`) überschreibt nichts und erzeugt:
+
+| Schicht | Dateien |
+|---|---|
+| Kern (`packages-js/ui-core`) | `src/<gruppe>/{messages,types,port,view,controller,index}.ts` (Controller mit `createStore`), `test/<gruppe>/controller.spec.ts`, `styles/<gruppe>.css` (in `styles/index.css`), Export in `src/index.ts` |
+| Vue (`packages-js/ui`) | `src/<gruppe>/<Komponente>.vue` (bindet den Controller mit `useStore`), `element.ts` (`<flowaudit-<komponente>>`, in `src/registry.ts` → `ELEMENTS`), `index.ts`, Export in `src/index.ts` |
+| React (`packages-js/ui-react`) | `src/<gruppe>/Flowaudit<Komponente>.tsx` (bindet denselben Controller mit `useStoreState`), `index.ts`, Export in `src/index.ts` |
+| Parität | `ui-core/test/parity/cases-<gruppe>.ts` mit Beispielfällen, `ui/test/parity-<gruppe>.spec.ts` (Vue), `ui-react/test/parity/<gruppe>.spec.tsx` (Vue und React, DOM-Vergleich, Interaktion) |
+| Doku | `docs/ui/<gruppe>.md` (Stub), Zeile in `docs/ui/react-paritaet.md`, README-API-Überblick (`scripts/docs/api_overview.py --write`) |
+
+Das erzeugte Gerüst ist lauffähig: Lint, Typprüfung, alle erzeugten Tests
+und das Gate sind grün (geprüft von `scripts/js/test/ui-new.test.mjs` in einer
+Kopie des Workspaces). Danach wird der Fachinhalt ergänzt: Vertrag und Port
+im Kern, Texte in `messages.ts`, Markup gleichzeitig in der SFC und der
+React-Komponente, weitere Paritätsfälle.
+
+### Vollständigkeits-Gate (`npm run ui:gate`)
+
+`scripts/js/ui-parity-gate.mjs` leitet aus den Quellen ab, welche Komponenten
+es gibt (TypeScript-Compiler-API, nichts wird ausgeführt): alle `.vue`-Exporte
+der Einstiegspunkte von `packages-js/ui` und `packages-js/bpmn-vue`, die Web
+Components aus `ELEMENTS` (`src/registry.ts`) bzw. aus `defineCustomElement`,
+und alle Komponenten-Exporte (`.tsx`) der React-Pakete. Es gibt keine
+Hand-Liste. Geprüft wird:
+
+| Kennung | Regel |
+|---|---|
+| `react-missing` | Jede Vue-Komponente hat eine native React-Fassung: `Fa<Name>` → `<Name>`, Web Component `<flowaudit-x-y>` → `FlowauditXY`, sonst gleicher Name. |
+| `vue-missing` | Umgekehrt: keine exportierte React-Komponente ohne öffentliches Vue-Gegenstück (Kontext-Provider ausgenommen). |
+| `core-missing`, `core-export`, `core-controller`, `style-missing` | Je Gruppe gibt es `ui-core/src/<gruppe>/index.ts`, exportiert aus `ui-core/src/index.ts`, mit Controller (`createStore` oder `create…Controller`, auch in `packages-js/<gruppe>-core`), und `ui-core/styles/<gruppe>.css` in `styles/index.css`. BPMN: Controller in `bpmn-flowaudit/src/ui`. |
+| `parity-cases` | Je Gruppe gibt es `cases-<gruppe>.ts` (oder `cases-<tag>.ts`, `packages-js/<gruppe>-core/test/parity/cases*.ts`), die ein Test mit der Vue-Fassung und ein Test mit der React-Fassung importieren (statische Importanalyse). |
+| `vue-import`, `vue-dependency` | Das React-Paket importiert kein Vue (`vue`, `@vue/*`, `.vue`, das Vue-Paket) und hat es nicht als Laufzeit- oder Peer-Abhängigkeit (nur `devDependencies` für die Paritätstests). |
+
+Das Gate läuft fail closed in `js-packages` und im Pflicht-Job
+`code-quality-gate` (damit in `ci-ok`): Ein PR mit einer neuen
+Vue-Komponente ohne React-Fassung wird rot.
+
+**Ausnahmen** stehen nur in `quality/ui-parity-exceptions.json` – je Eintrag
+Kennung (wie in der Ausgabe des Gates), Begründung und Ablaufdatum (höchstens
+366 Tage). Abgelaufene Ausnahmen und Ausnahmen für geschlossene Lücken lassen
+das Gate scheitern. Im `code-quality-gate` gilt der Ratchet gegen den
+Vergleichsstand: keine neuen Kennungen, keine späteren Ablaufdaten – die
+Datei darf nur schrumpfen.
+
 ## Ordnerkonvention
 
 ```
-packages-js/ui/src/<komponente>/
-  index.ts            # öffentliche Exporte der Komponente
+packages-js/ui-core/src/<gruppe>/   # Kern: messages, types, port, view, controller, index
+packages-js/ui-core/styles/<gruppe>.css
+packages-js/ui/src/<gruppe>/
+  index.ts            # öffentliche Exporte der Gruppe
   element.ts          # ElementDefinition für die Web Component
-  messages.ts         # defineMessages({ de: {...}, en: {...} })
-  use<Name>.ts        # Logik als Composable(s), ohne DOM-Zugriff testbar
+  use<Name>.ts        # Vue-Anbindung des Controllers (useStore), falls mehrere SFC ihn teilen
   <Name>.vue          # Darstellung; höchstens 250 Zeilen je SFC
-  <Teil>.vue          # weitere Teilkomponenten
-packages-js/ui/test/<komponente>/*.spec.ts
-packages-js/ui/demo/pages/<komponente>/<Name>Page.vue
+packages-js/ui-react/src/<gruppe>/Flowaudit<Name>.tsx
+packages-js/ui-core/test/parity/cases-<gruppe>.ts
+packages-js/ui/test/parity-<gruppe>.spec.ts
+packages-js/ui-react/test/parity/<gruppe>.spec.tsx
+packages-js/ui/demo/pages/<gruppe>/<Name>Page.vue
 ```
 
-`<komponente>` ist kurz, klein und englisch (`kanban`, `synopsis`, `risk`,
-`screening`, `sampling`). Komponenten heißen in Vue `Fa<Name>` oder fachlich
-(`KanbanBoard`); Bezeichner sind englisch, sichtbare Texte deutsch mit echten
-Umlauten und stehen ausschließlich in `messages.ts`.
+Komponenten heißen in Vue `Fa<Name>` oder fachlich (`KanbanBoard`); die
+React-Fassung heißt wie die Vue-Komponente ohne `Fa`, Hauptkomponenten
+`Flowaudit<Name>` passend zum Tag. Bezeichner sind englisch, sichtbare Texte
+deutsch mit echten Umlauten und stehen ausschließlich in `messages.ts` des
+Kerns.
 
-## Registrierung
+## Was der Generator nicht erzeugt
 
-1. **Vue-Export:** in `src/index.ts` eine Zeile `export * from './<komponente>'`.
-2. **Web Component:** in `src/<komponente>/element.ts`
+- **Demo:** Seite in `demo/pages/<gruppe>/` anlegen und in `demo/pages.ts`
+  (`DEMO_PAGES`) mit `id`, `title`, `group: 'Komponenten'` eintragen.
+- **Browser-Test:** `e2e/<gruppe>.e2e.ts` (oder `.api-e2e.ts` mit Python-Backend).
+- **REST-Umsetzung des Ports:** auf `requestJson`/`requestFile` aus
+  `@auditcore/common` aufbauen, Vertrag in `docs/ui/<gruppe>-rest.md`.
 
-   ```ts
-   import type { ElementDefinition } from '../elements/define'
-   import RiskMatrix from './RiskMatrix.vue'
-   export const riskMatrixElement: ElementDefinition = { tag: 'flowaudit-risk-matrix', component: RiskMatrix }
-   ```
-
-   und in `src/registry.ts` in die Liste `ELEMENTS` aufnehmen. Namen immer
-   `flowaudit-<name>` in Kleinbuchstaben mit Bindestrich (ein Test prüft das).
-3. **Kern:** Logik, Texte (`messages.ts`), Datentypen, Port und einen
-   Controller (`createStore` + reine Selektoren) in
-   `packages-js/ui-core/src/<komponente>/` anlegen; Stile nach
-   `packages-js/ui-core/styles/<komponente>.css` (in `styles/index.css` aufnehmen).
-4. **React:** in `packages-js/ui-react/src/<komponente>/` die native
-   Komponente mit demselben Markup (Klassen, ARIA, Texte) wie die Vue-SFC;
-   Props wie in Vue, Ereignisse als `onXxx` mit den Nutzdaten, `v-model` als
-   gesteuerte Prop plus `onXxxChange`. In `src/index.ts` exportieren.
-   Paritätsfälle in `ui-core/test/parity/cases*.ts` ergänzen; der Test in
-   `ui-react/test/parity` vergleicht Vue und React (Erwartungen, normalisiertes
-   DOM, Formularzustand, auch nach Interaktionen).
-5. **Demo:** Seite in `demo/pages/<komponente>/` anlegen und in
-   `demo/pages.ts` (`DEMO_PAGES`) mit `id`, `title`, `group: 'Komponenten'`
-   eintragen.
+Markup-Regeln für die React-Fassung: dasselbe Markup (Klassen, ARIA, Texte)
+wie die Vue-SFC; Props wie in Vue, Ereignisse als `onXxx` mit den Nutzdaten,
+`v-model` als gesteuerte Prop plus `onXxxChange`. Controller-Aufrufe nie vom
+optionalen Callback abhängig machen (`props.onX?.(controller.tuWas())` ist
+falsch).
 
 ## Regeln für Komponenten
 
@@ -125,11 +172,16 @@ Umlauten und stehen ausschließlich in `messages.ts`.
 - **Lint:** `npm run lint` prüft auch `.vue` (eslint-plugin-vue, höchstens
   250 Zeilen je SFC, complexity ≤ 12, kein `any`); das Code-Qualitäts-Gate
   (`python scripts/verify_code_quality.py --package js:ui`) misst dieselben Grenzen.
+- **Gate und Generator:** `npm run ui:gate` (Vollständigkeit Vue ↔ React) und
+  `npm run test:scripts` (Tests des Gates mit synthetischen Mini-Workspaces,
+  Generator in einer Kopie des Workspaces).
 
 ## Befehle
 
 ```bash
 npm install                                   # im Repository-Wurzelverzeichnis
+npm run ui:neu -- <gruppe> <Komponente>       # Gerüst in Kern, Vue, React, Parität, Doku
+npm run ui:gate                               # Vollständigkeits-Gate Vue ↔ React
 npm run demo -w packages-js/ui                # Demo mit Hot Reload (Port 5190)
 npm run build -w packages-js/ui               # dist/index.js, dist/elements.js, dist/ui.css
 npm run build -w packages-js/ui-core
