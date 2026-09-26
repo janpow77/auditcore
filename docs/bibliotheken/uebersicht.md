@@ -34,9 +34,15 @@ Web Components), `@auditcore/kanban-core` (framework-freie Kanban-Regeln mit
 Parität zu `auditcore_kanban`) und `@auditcore/bpmn-editor`
 (BPMN-2.0-Editor).
 
-**Status** im Katalog: *charakterisiert* – Verhalten der Quellanwendungen vor
-der Übernahme aufgezeichnet und im Paket als Test nachgewiesen (legacy-exakt,
-Abweichungen nur dokumentiert); *neu, gegen charakterisierte Verträge* –
+**Status** im Katalog: *spezifiziert* – charakterisiert und zusätzlich
+fachlich spezifiziert: `docs/spezifikation.md` im Paket (Zweck, Verträge,
+Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten),
+jede Invariante als Hypothesis-Eigenschaftstest, bekannte Altfehler als
+benannte Legacy-Varianten (Vorlage und Prüfung:
+[spezifikation-vorlage.md](spezifikation-vorlage.md),
+`scripts/docs/specification.py`); *charakterisiert* – Verhalten der
+Quellanwendungen vor der Übernahme aufgezeichnet und im Paket als Test
+nachgewiesen (legacy-exakt, Abweichungen nur dokumentiert); *neu, gegen charakterisierte Verträge* –
 Neuimplementierung, deren Schnittstellen und Regeln aus charakterisierten
 Anwendungen stammen; *konsolidiert* – zusammengeführte Hilfsfunktionen mit
 Gleichheitsnachweis; *neu* – ohne Vorläufer.
