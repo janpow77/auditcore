@@ -143,5 +143,29 @@
       "PS-D02": "bienici mit Browser-Kennung des Originals",
       "PS-D03": "advertiser_names=\"legacy\" als Standard"
     }
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11"
+    ],
+    "legacy_variants": [
+      "zvg.legacy_parse_de_number",
+      "advertiser_names=\"legacy\"",
+      "robots_policy=\"ignore\""
+    ]
   }
 }
