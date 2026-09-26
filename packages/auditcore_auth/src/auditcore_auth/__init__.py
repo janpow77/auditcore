@@ -40,7 +40,7 @@ from .passwords import PasswordCheck, PasswordHasher
 from .token_profiles import DEFAULT_TOKEN_PROFILE, TokenProfile
 from .tokens import IssuedToken, TokenIssuer, TokenVerifier, VerifiedToken
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "APP_PROFILES",

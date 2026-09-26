@@ -22,11 +22,16 @@ from auditcore_identifiers.result import CheckResult, IdentifierKind, Reason, St
 from auditcore_identifiers.tax_de import format_tax_id
 from auditcore_identifiers.vat import at_uid_check_digit, de_vat_check_digit, normalize_vat_id
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
-def check(kind: IdentifierKind | str, value: object, *, profile: str | Profile = STRICT,
-          country: str | None = None) -> CheckResult:
+def check(
+    kind: IdentifierKind | str,
+    value: object,
+    *,
+    profile: str | Profile = STRICT,
+    country: str | None = None,
+) -> CheckResult:
     """Check ``value`` as identifier ``kind`` under ``profile``."""
     return get_profile(profile).check(kind, value, country)
 
@@ -41,8 +46,9 @@ def check_bic(value: object, *, profile: str | Profile = STRICT) -> CheckResult:
     return check(IdentifierKind.BIC, value, profile=profile)
 
 
-def check_vat_id(value: object, *, country: str | None = None,
-                 profile: str | Profile = STRICT) -> CheckResult:
+def check_vat_id(
+    value: object, *, country: str | None = None, profile: str | Profile = STRICT
+) -> CheckResult:
     """USt-IdNr./VAT ID: EU formats, check digits DE and AT (strict)."""
     return check(IdentifierKind.VAT_ID, value, profile=profile, country=country)
 

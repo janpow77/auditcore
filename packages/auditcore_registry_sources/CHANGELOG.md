@@ -1,5 +1,9 @@
 # Changelog auditcore_registry_sources
 
+## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.2
+
+Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`, `auditcore_harvest==0.1.3`, `auditcore_entity_matching==0.2.4`.
+
 ## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. Pins `auditcore_common==0.1.1`, `auditcore_harvest==0.1.2` und `auditcore_entity_matching==0.2.3`; README-Installationshinweis auf v0.4.0.

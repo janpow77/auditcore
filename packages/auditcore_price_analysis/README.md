@@ -192,7 +192,7 @@ Offen (`REVIEW_REQUIRED`): die Rechtsgrundlage des Umlagenstichtags
 ## Abhängigkeiten
 
 Python ≥ 3.11, zur Laufzeit die Standardbibliothek und
-`auditcore_common==0.1.1` (Zahleneingabe `numbers_de`, ab 0.1.2). Keine Netzwerk- oder
+`auditcore_common==0.2.0` (Zahleneingabe `numbers_de`, ab 0.1.2). Keine Netzwerk- oder
 Datenbankabhängigkeit, keine Abhängigkeit von der Plattform `auditcore`.
 Preisquellen liefert bei Bedarf `auditcore_price_sources`.
 

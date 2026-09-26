@@ -1,6 +1,6 @@
 {
   "name": "@flowaudit/bpmn-editor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Eigener BPMN-2.0-Zeicheneditor auf Basis von diagram-js und bpmn-moddle (Clean-Room, MIT)",
   "license": "MIT",
   "repository": {

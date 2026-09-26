@@ -1,8 +1,8 @@
 # Anbindung eines Fachpakets an auditcore_common
 
 1. **Abhängigkeit mit exaktem Pin:** in `pyproject.toml`
-   `dependencies = ["auditcore_common==0.1.1"]`; braucht das Paket sicheres XML,
-   dann im eigenen Extra `auditcore_common[xml]==0.1.1`. Das APT-Paket
+   `dependencies = ["auditcore_common==0.2.0"]`; braucht das Paket sicheres XML,
+   dann im eigenen Extra `auditcore_common[xml]==0.2.0`. Das APT-Paket
    `python3-auditcore-common` wird aus dem Pin abgeleitet
    (`scripts/verify_domain_packages.py`). `tests/installed_smoke.py` des Pakets
    prüft die Laufzeitanforderungen – dort den Pin nachziehen.

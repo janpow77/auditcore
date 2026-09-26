@@ -2,13 +2,15 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #13, #16, #38, #54, #73).
 
-## Unreleased
+## 0.3.1 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. Die Endlichkeitsprüfung der Koordinaten nutzt
 `auditcore_common.numeric.require_finite`; Fehlerklasse `KoordinatenFehler`
 und Meldungen unverändert (`tests/test_common_parity.py`). Neue
-Pflichtabhängigkeit `auditcore_common==0.1.1` (APT `python3-auditcore-common`,
+Pflichtabhängigkeit `auditcore_common==0.2.0` (APT `python3-auditcore-common`,
 nur Standardbibliothek).
+
+Pins: `auditcore_harvest==0.1.3`.
 
 ## 0.3.0 – 2026-09-25 – REST-Vertrag für Geo-Oberflächen
 

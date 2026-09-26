@@ -18,9 +18,9 @@ from auditcore_property_sources import (
 def main() -> None:
     """Parsers, lifecycle, robots and catalog from the installed package."""
     package = distribution("auditcore_property_sources")
-    assert package.version == "0.1.2"
+    assert package.version == "0.1.3"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.1.1"], runtime
+    assert runtime == ["auditcore_common==0.2.0"], runtime
     assert zvg.parse_de_number("1234,56") == 1234.56
     assert zvg.parse_de_number("1.234") is None
     assert zvg.legacy_parse_de_number("1234,56") == 123.0

@@ -71,7 +71,7 @@ class BenfordResult:
     def to_dict(self) -> dict[str, Any]:
         """JSON-compatible result including exclusion counts."""
         return {
-            "library": "auditcore_statistics 0.3.3",
+            "library": "auditcore_statistics 0.3.4",
             "method": self.method,
             "digits": self.digits,
             "short_values": self.short_values,

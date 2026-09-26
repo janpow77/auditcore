@@ -267,10 +267,10 @@ Details und alle Entscheidungen: [docs/behavior-changes.md](docs/behavior-change
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, `auditcore_common==0.1.1` (gemeinsame Hilfsfunktionen, nur
-Standardbibliothek) und `auditcore_entity_matching==0.2.3` (Normalisierung für
-RF09). Optional: `auditcore_entity_matching[fuzzy]==0.2.3` über `[fuzzy]`,
-`pandas>=2.1` über `[pandas]`, `auditcore_procurement==0.2.3` über
+Python ≥ 3.11, `auditcore_common==0.2.0` (gemeinsame Hilfsfunktionen, nur
+Standardbibliothek) und `auditcore_entity_matching==0.2.4` (Normalisierung für
+RF09). Optional: `auditcore_entity_matching[fuzzy]==0.2.4` über `[fuzzy]`,
+`pandas>=2.1` über `[pandas]`, `auditcore_procurement==0.2.4` über
 `[procurement]`, `starlette>=0.26.1` über `[web]`, `fastapi>=0.92` über
 `[fastapi]`. Die Benford-Prüfung aus flowinvoice liegt in
 `auditcore_statistics` (keine Abhängigkeit).

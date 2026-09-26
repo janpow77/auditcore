@@ -73,7 +73,7 @@ from .serialize import serialize
 from .validation import ValidationConfig, ValidationIssue, ValidationReport, validate
 from .writer import remove_extensions, set_diagram_info, set_extensions
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 __all__ = [
     "FLOWAUDIT_NAMESPACE",

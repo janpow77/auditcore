@@ -1,12 +1,12 @@
 # Changelog auditcore_sampling
 
-## Unreleased – Hilfsfunktionen aus auditcore_common
+## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.2 – Hilfsfunktionen aus auditcore_common
 
 Keine Verhaltensänderung: alle 61 bestehenden Tests (Replay gegen flowstat und
 audit-portal, REST-Vertrag über Starlette und FastAPI, Reproduzierbarkeit)
 laufen unverändert grün; die neuen gemeinsamen Funktionen sind in
 `auditcore_common` gegen die wörtlichen Kopien dieses Pakets differenziell
-und mit Hypothesis geprüft. Neue Laufzeitabhängigkeit `auditcore_common==0.1.1`
+und mit Hypothesis geprüft. Neue Laufzeitabhängigkeit `auditcore_common==0.2.0`
 (APT `python3-auditcore-common`).
 
 - `_numeric.pairwise_sum` und `numpy_round` entfallen; genutzt werden

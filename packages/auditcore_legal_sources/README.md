@@ -160,8 +160,8 @@ ECA-Platzhalterberichte. Offen: DIP-Standardklassifikation
 
 ## Abhängigkeiten
 
-Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.2` (Adaptervertrag) und
-`auditcore_common==0.1.1` (Profile, Fingerprint, Linksammler; nur
+Python ≥ 3.11. Pflicht: `auditcore_harvest==0.1.3` (Adaptervertrag) und
+`auditcore_common==0.2.0` (Profile, Fingerprint, Linksammler; nur
 Standardbibliothek). Extra `feeds`: feedparser ≥ 6.0.10 < 7. ECA-Links liest
 der `html.parser` der Standardbibliothek über `auditcore_common.html_text`. Keine Abhängigkeit von httpx, Datenbanken oder der
 Plattform `auditcore`.

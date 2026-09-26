@@ -23,7 +23,7 @@ from .ted import (
     parse_ted_file,
 )
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 __all__ = [
     "COVERAGE_ALL_NOTICES",
