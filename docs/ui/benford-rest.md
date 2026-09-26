@@ -1,6 +1,6 @@
 # REST-Vertrag Benford (`auditcore_statistics.web`)
 
-Stand: auditcore_statistics 0.3.0. Oberfläche: `<flowaudit-benford>` aus `@auditcore/ui`.
+Stand: auditcore_statistics 0.3.0, Kennzahlen `metrics` nach 0.3.4 (unveröffentlicht). Oberfläche: `<flowaudit-benford>` aus `@auditcore/ui`.
 
 `analyse` und `catalogue` sind framework-frei. `create_app`/`routes` benötigen das Extra
 `web` (Starlette, Debian `python3-starlette`), `create_router` zusätzlich FastAPI.
@@ -64,6 +64,54 @@ Antwort:
 Beim Test `second` werden die Gruppen 10–99 nach ihrer zweiten Ziffer zusammengefasst; die
 Chi²-Werte in `conformity` beziehen sich dann auf 10 Klassen (9 Freiheitsgrade), die in
 `distribution` auf 90 Gruppen.
+
+## Zusätzliche Kennzahlen (`metrics`, optional)
+
+Abwärtskompatible Erweiterung: Ohne `metrics` bleibt die Antwort unverändert. Mit
+`metrics` werden die angeforderten Kennzahlen aus `auditcore_statistics.significance`
+für denselben Test berechnet und unter `metrics` zurückgegeben. `GET /profiles` nennt sie
+unter `metrics` (Kennung, Beschriftung, Parameter) und die immer ausgewiesenen Niveaus unter
+`standard_levels` (`[0.1, 0.05, 0.01]`).
+
+```json
+{"test": "first", "profile": "nigrini.2012", "values": [123.45, 18, 5000],
+ "metrics": {"chi_square": {"significance_level": 0.05},
+             "digit_z": {"continuity_correction": false, "z_critical": 2.576}}}
+```
+
+- `chi_square` – Parameter `significance_level` (optional, 0 < α < 1). Antwort:
+  `chi2_statistic`, `degrees_of_freedom`, `p_value`, `critical_values[]`
+  (`level`, `value`) für 0,10/0,05/0,01 und das gewählte Niveau, `critical_value` beim
+  gewählten Niveau, `rejects` (p < α). Ohne Niveau sind `critical_value` und `rejects`
+  `null` – keine Signifikanzaussage ohne ausdrückliche Wahl.
+- `digit_z` – `continuity_correction` (Pflicht, `true`/`false`), `z_critical`
+  (optional, > 0). Antwort: `rows[]` je Ziffer mit `z`, `deviation` (Vorzeichen =
+  Richtung) und `exceeds`, dazu `exceeding_digits` („auffällige Ziffern“). Ohne
+  `z_critical` sind `exceeds` und `exceeding_digits` `null`.
+
+Die kritischen Werte sind die Quantile der Chi²-Verteilung (Bisektion auf der
+Überlebensfunktion), nicht Tabellenwerte; auf drei Stellen gerundet entsprechen sie der
+Tabelle (df = 8, α = 0,05: 15,507). Unbekannte Kennzahlen oder Parameter werden mit
+`invalid_input` (422) abgewiesen.
+
+### Parität flowinvoice
+
+flowinvoice (`BenfordsLawAnalyzer`, `backend/app/services/fraud_detection/benfords_law.py`)
+entspricht diesen Einstellungen: `chi_square` mit α = 0,05 und – für die frühere
+Einzelziffer-Markierung – `digit_z` mit `continuity_correction: false`,
+`z_critical: 2.576`. Nachweis: 63 synthetische Fälle, beide Fassungen ausgeführt
+(`tools/capture_flowinvoice_significance.py`, `tests/test_significance_parity.py` im Paket):
+
+| Wert | Vergleich mit | Ergebnis |
+|---|---|---|
+| χ², p (4 Stellen), Freiheitsgrade, beobachtete Anteile, Entscheidung | flowinvoice@06c06a8 (Produktion) | gleich in allen 63 Fällen |
+| kritischer Wert | fester Wert 15,507 in flowinvoice | gleich auf 3 Stellen |
+| auffällige Ziffern (z > 2,576), χ² | flowinvoice@fb2d185, mit exakten Erwartungswerten ausgeführt | gleich in allen Fällen mit ≥ 50 Werten |
+
+Die Mindestgröße von 50 Werten, der Hinweistext und die Anzeige „Anomalie“ bleiben
+Regeln von flowinvoice. Die Einzelziffer-Markierung ist seit der Entscheidung K10
+(23.09.2026) nicht Teil der flowinvoice-Prüfentscheidung; `digit_z` macht sie als
+beschreibende Kennzahl wieder verfügbar.
 
 ## Formeln (Profil `nigrini.2012`)
 
