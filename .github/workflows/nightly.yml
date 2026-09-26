@@ -43,6 +43,8 @@ jobs:
           node-version: '${{ matrix.node }}'
           cache: npm
       - run: npm ci
+      - name: Vitest-Worker an die CPU-Quote des Runners anpassen (Node 20 ignoriert die cgroup-Quote)
+        run: bash scripts/js/vitest-workers.sh
       - run: npm run license-check
       - run: npm run lint
       - run: npm run lint:exceptions

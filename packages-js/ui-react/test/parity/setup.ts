@@ -1,11 +1,16 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { act, cleanup, render } from '@testing-library/react'
 import type { ReactElement } from 'react'
-import { afterEach, expect } from 'vitest'
+import { afterEach, expect, vi } from 'vitest'
 import type { Component } from 'vue'
 import { formState, normalizeDom } from '../../../ui-core/test/parity/dom'
 import { checkExpectation } from '../../../ui-core/test/parity/expect'
 import type { Expectation } from '../../../ui-core/test/parity/cases'
+
+// Paritätsdateien rendern Vue und React nacheinander, die Interaktionsabläufe mit
+// vielen Schritten; in der CI dauern sie bis etwa 1,5 s. 10 s gelten nur für die
+// Dateien, die diese Hilfe laden (vi.setConfig wirkt je Datei).
+vi.setConfig({ testTimeout: 10_000 })
 
 afterEach(() => {
   cleanup()
