@@ -1,7 +1,8 @@
 # REST-Vertrag „Synopse / Versionsvergleich“
 
 Stand: 25.09.2026 · Paket `auditcore_documents` ≥ 0.3.0 · Modul `auditcore_documents.web`
-· Oberfläche `<flowaudit-synopsis>` aus `@flowaudit/ui`
+· Oberflächen `<flowaudit-synopsis>` (Anzeige) und `<flowaudit-comparisons>`
+(Hochladen, Liste, Import, Löschen) aus `@flowaudit/ui`
 
 Der Vertrag verbindet die wiederverwendbare Oberfläche mit dem Vergleichskern.
 Die JSON-Formen sind die Ergebnisobjekte von `auditcore_documents`
@@ -157,6 +158,23 @@ berechnet die Wortdifferenz dann selbst.
 
 `{"row_id": str, "selected"?: bool, "reason"?: str (≤ 4000 Zeichen)}`. Unbekannte
 Zeilen oder Felder ergeben 422; die Änderung ist atomar (alle oder keine).
+
+## Oberfläche `<flowaudit-comparisons>`
+
+`FaComparisons` (Vue) bzw. `<flowaudit-comparisons>` nutzt denselben
+REST-Client (`createSynopsisRestClient`) für `GET /profiles`,
+`GET /comparisons`, `POST /comparisons`, `POST /comparisons/import` und
+`DELETE /comparisons/{id}`; ein geöffneter Vergleich erscheint als
+eingebettete Synopse (`GET /comparisons/{id}`, `PATCH …/rows`, Ausgaben).
+Die Oberfläche prüft Endung, Größe (`maxUploadBytes` wie
+`ServiceSettings.max_upload_bytes`), Schwelle, Titel und Ausgabeabschnitte
+vor dem Hochladen; der Server prüft erneut und seine Meldung (`detail`) wird
+angezeigt. Für die Gesetzessynopse sendet sie nur `comparison_type`,
+`highlight_words`, `output_sections`, `title` und `profile`. Importiert werden
+die JSON-Ausgabe (`export?format=json`), ein gespeicherter Vergleich oder
+`{"title"?, "result"}`. Logik und Texte liegen framework-frei in
+`@flowaudit/ui-core` (`createComparisonsController`), damit die React-Fassung
+dieselben Paritätsfälle (`ui-core/test/parity/cases-documents.ts`) erfüllt.
 
 ## Ausgaben
 
