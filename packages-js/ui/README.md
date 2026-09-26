@@ -123,7 +123,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (663):
+Exporte der Einstiegspunkte aus `package.json#exports` (689):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -248,11 +248,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `EntryView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `EvaluateRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Evaluation` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `EvaluationRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `EvaluationResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportedFile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtrapolationCallbacks` | Re-Export | – | `./useExtrapolation` |
+| `@flowaudit/ui` | `ExtrapolationCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtrapolationController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtrapolationData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtrapolationPanel` | Vue-Komponente | – | `extrapolation/ExtrapolationPanel.vue` |
+| `@flowaudit/ui` | `ExtrapolationPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FLAG_STATES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
@@ -297,6 +305,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `HitView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ICONS` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_BENFORD` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IconName` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ImportRequest` | Re-Export | – | `@flowaudit/ui-core` |
@@ -361,6 +370,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `RegisterState` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RelativeKey` | Typ | – | `kanban/cardView` |
+| `@flowaudit/ui` | `ResidualRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ResidualResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RestClientOptions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RestError` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `RestOptions` | Re-Export | – | `./client` |
@@ -448,6 +459,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `SourcesView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `StateFilter` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `StratumCount` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `StratumInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `StratumResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SubjectInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SubjectRequest` | Re-Export | – | `@flowaudit/ui-core` |
@@ -477,9 +489,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `Tone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Totals` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Translate` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UnitInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@flowaudit/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
+| `@flowaudit/ui` | `UseExtrapolation` | Schnittstelle | – | `extrapolation/useExtrapolation` |
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
@@ -533,6 +547,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `blockProgress` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `breakdownRows` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildAnalyseRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `buildEvaluationRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `buildResidualRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildRowView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildSelectionRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `buildSizeRequest` | Re-Export | – | `@flowaudit/ui-core` |
@@ -550,12 +566,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `comparisonsView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `completeness` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `completenessTone` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `conclusionLabel` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `conclusionTone` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `confidenceText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `coverIssues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createBenfordController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createComparisonsController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createExtrapolationController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createExtrapolationRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
 | `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRiskController` | Re-Export | – | `@flowaudit/ui-core` |
@@ -593,6 +613,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `evaluationRules` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `excludedLines` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `exportFilename` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `extrapolationElement` | Konstante | `<flowaudit-extrapolation>`: Eigenschaften `port` (ExtrapolationPort), `strata`, `units`, `locale`; Ereignisse `evaluation-completed`, `residual-computed`, `error`. | `extrapolation/element` |
+| `@flowaudit/ui` | `extrapolationMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `extrapolationMethod` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldIssues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `filterOptions` | Re-Export | – | `@flowaudit/ui-core` |
@@ -686,6 +709,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `requestFile` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `requestJson` | Re-Export | – | `./client` |
 | `@flowaudit/ui` | `requirementKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `residualMetrics` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `resolvedTheme` | Funktion | Tatsächlich wirksames Schema, auch wenn 'system' gewählt ist. | `theme/theme` |
 | `@flowaudit/ui` | `riskFlagsElement` | Konstante | `<flowaudit-risk-flags>`: Eigenschaften `evaluation` (Antwort von `POST /evaluate`) und `profile` (Antwort von `GET /profiles/{id}/{version}`) als JS-Objekte; Ereignisse `record-se … | `risk/element` |
 | `@flowaudit/ui` | `riskMessages` | Re-Export | – | `@flowaudit/ui-core` |
@@ -731,6 +755,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `synopsisPortOf` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `tableElement` | Konstante | `<flowaudit-table>`: Spalten und Zeilen als JS-Eigenschaften, Ereignisse `row-click`, `sort-change`. | `table/element` |
 | `@flowaudit/ui` | `tabularMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `terMetrics` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `textOn` | Funktion | Lesbare Schriftfarbe auf einer Kartenfarbe (Luminanzschwelle wie im Original). | `kanban/cardView` |
 | `@flowaudit/ui` | `toCompareFields` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `toHtml` | Re-Export | – | `@flowaudit/ui-core` |
@@ -746,6 +771,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (663):
 | `@flowaudit/ui` | `useDebouncedFn` | Funktion | Entprellte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDsfa` | Funktion | – | `dataprotection/useDsfa` |
+| `@flowaudit/ui` | `useExtrapolation` | Funktion | Vue-Anbindung der Hochrechnung aus `@flowaudit/ui-core` (`createExtrapolationController`). | `extrapolation/useExtrapolation` |
 | `@flowaudit/ui` | `useFocusTrap` | Funktion | Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn danach an das zuvor fokussierte Element zurück. | `composables/useFocusTrap` |
 | `@flowaudit/ui` | `useGeoMap` | Funktion | Zustand und Abläufe der Geo-Karte; jede Berechnung läuft über den Port. | `geo/useGeoMap` |
 | `@flowaudit/ui` | `useI18n` | Funktion | Composable für Komponenten. `override` (z. B. eine Prop `locale`) hat Vorrang vor der bereitgestellten Sprache. | `i18n/i18n` |
@@ -798,6 +824,7 @@ Web Components:
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-dsfa>` | `FaDsfa` | `dataprotection/element.ts` |
+| `<flowaudit-extrapolation>` | `ExtrapolationPanel` | `extrapolation/element.ts` |
 | `<flowaudit-geo-map>` | `FaGeoMap` | `geo/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
@@ -856,6 +883,21 @@ Web Components:
 | `comparison-open` | `[id: string]` | – |
 | `comparison-remove` | `[id: string]` | – |
 | `result-import` | `[text: string]` | – |
+
+#### `ExtrapolationPanel`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `ExtrapolationPort \| null` | nein | `null` | Fachlogik, z. B. `createExtrapolationRestPort({ baseUrl: '/api/extrapolation' })`. |
+| `strata` | `readonly StratumInput[]` | nein | `() => []` | Schichten der Grundgesamtheit (vorbelegt, in der Komponente bearbeitbar). |
+| `units` | `readonly UnitInput[]` | nein | `() => []` | Geprüfte Einheiten der Stichprobe mit ihren Fehlern. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `evaluation-completed` | `[result: EvaluationResult]` | – |
+| `residual-computed` | `[result: ResidualResult]` | – |
+| `error` | `[message: string]` | – |
 
 #### `FaBadge`
 

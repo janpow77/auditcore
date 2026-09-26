@@ -1,0 +1,33 @@
+/* Hochrechnung und Fehlerquoten – ExtrapolationPanel (Vue) und FlowauditExtrapolation (React). */
+.fa-extrapolation { display: flex; flex-direction: column; gap: var(--fa-space-4); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-extrapolation__card { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); box-shadow: var(--fa-shadow-sm); min-width: 0; }
+.fa-extrapolation__card--result { border-color: var(--fa-color-accent); }
+.fa-extrapolation__card--residual { border-style: dashed; }
+.fa-extrapolation__heading { margin: 0; font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-extrapolation__settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--fa-space-3); align-items: start; }
+.fa-extrapolation__field { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-extrapolation__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-extrapolation__input, .fa-extrapolation__select { min-height: 2.25rem; width: 100%; box-sizing: border-box; padding: 0 var(--fa-space-2); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-extrapolation__input--number { text-align: end; font-variant-numeric: tabular-nums; }
+.fa-extrapolation__input:focus-visible, .fa-extrapolation__select:focus-visible, .fa-extrapolation__check:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-extrapolation__input[aria-invalid="true"], .fa-extrapolation__select[aria-invalid="true"] { border-color: var(--fa-color-danger); }
+.fa-extrapolation__hint, .fa-extrapolation__muted { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-extrapolation__error { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-danger); }
+.fa-extrapolation__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-extrapolation__scroll { overflow-x: auto; }
+.fa-extrapolation__grid { width: 100%; border-collapse: collapse; }
+.fa-extrapolation__grid th { padding: var(--fa-space-1) var(--fa-space-2); text-align: start; font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); white-space: nowrap; }
+.fa-extrapolation__grid td { padding: var(--fa-space-1); vertical-align: top; }
+.fa-extrapolation__grid td .fa-extrapolation__input { min-width: 7rem; }
+.fa-extrapolation__grid td .fa-extrapolation__select { min-width: 9rem; }
+.fa-extrapolation__actions { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); align-items: center; }
+.fa-extrapolation__source code { display: block; margin-top: var(--fa-space-1); font-size: var(--fa-font-size-xs); overflow-wrap: anywhere; }
+.fa-extrapolation__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--fa-space-3); margin: 0; }
+.fa-extrapolation__metric { display: flex; flex-direction: column; gap: var(--fa-space-1); padding: var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-surface-raised); border: 1px solid var(--fa-color-border); }
+.fa-extrapolation__metric dt { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-extrapolation__metric dd { margin: 0; }
+.fa-extrapolation__value { font-size: var(--fa-font-size-md); font-weight: 600; font-variant-numeric: tabular-nums; }
+.fa-extrapolation__conclusion { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); align-items: center; margin: 0; }
+.fa-extrapolation__list { margin: 0; padding-left: var(--fa-space-5); }
+.fa-extrapolation__warnings { margin: 0; padding: var(--fa-space-2) var(--fa-space-3) var(--fa-space-2) var(--fa-space-5); border-radius: var(--fa-radius); background: var(--fa-color-warning-soft); color: var(--fa-color-warning); }
+.fa-extrapolation__fingerprint { font-family: var(--fa-font-mono); font-size: var(--fa-font-size-xs); overflow-wrap: anywhere; color: var(--fa-color-text-muted); }

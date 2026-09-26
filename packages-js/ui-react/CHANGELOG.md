@@ -5,6 +5,10 @@
 **Breaking:** Das Paket enthält jetzt echte React-Komponenten statt Hüllen um
 Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
 
+- `FlowauditExtrapolation` (nativ, Vertrag `auditcore_extrapolation.web`):
+  Hochrechnung mit TER, Fehlerobergrenze, Export und getrennter RER; gleiche
+  Props und Ereignisse wie `<flowaudit-extrapolation>` (`onEvaluationCompleted`,
+  `onResidualComputed`, `onError`), 4 Paritätsfälle und 2 Interaktionsfolgen.
 - Nativ in React 18 (gleiche Props-/Ereignis-Semantik, Texte, ARIA und
   REST-Verträge wie die Vue-Fassung; Logik aus `@flowaudit/ui-core`):
   `FlowauditTable`, `FlowauditSynopsis` (Vertrag `auditcore_documents.web`),

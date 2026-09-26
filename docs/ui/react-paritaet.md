@@ -32,6 +32,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Screening-Trefferprüfung | `ScreeningReview` | `FlowauditScreeningReview` | `screening_review/1` ([screening-rest.md](screening-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Stichprobe | `SamplingPanel` | `FlowauditSampling` | `auditcore_sampling.web` ([sampling-rest.md](sampling-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Benford-Analyse | `BenfordPanel` | `FlowauditBenford` | `auditcore_statistics.web` ([benford-rest.md](benford-rest.md)) | 4 + Interaktionsfolge |
+| Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 4 + 2 Interaktionsfolgen |
 | Kanban | ja | nur veraltete Hüllen (`@flowaudit/ui-react/elements`) | – | – |
 
 ## Nachweis

@@ -1,0 +1,47 @@
+{
+ "method": "mus.standard",
+ "confidence_level": 0.9,
+ "factor_profile": "kom_2017_tables",
+ "materiality_rate": 0.02,
+ "strata": [
+  {
+   "name": "Programm",
+   "book_value": 1000000,
+   "systemic_error": 2000
+  }
+ ],
+ "units": [
+  {
+   "id": "V-01",
+   "stratum": "Programm",
+   "book_value": 20000,
+   "random_error": 1000
+  },
+  {
+   "id": "V-02",
+   "stratum": "Programm",
+   "book_value": 10000,
+   "systemic_error": 500
+  },
+  {
+   "id": "V-03",
+   "stratum": "Programm",
+   "book_value": 5000
+  },
+  {
+   "id": "V-04",
+   "stratum": "Programm",
+   "book_value": 8000,
+   "anomalous_error": 800,
+   "anomalous_reason": "Einmaliger Übertragungsfehler",
+   "anomalous_corrected": true
+  },
+  {
+   "id": "V-05",
+   "stratum": "Programm",
+   "book_value": 200000,
+   "random_error": 4000,
+   "exhaustive": true
+  }
+ ]
+}

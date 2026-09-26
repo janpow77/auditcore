@@ -1,0 +1,186 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "sources": {
+  "guidance": "Europäische Kommission, Guidance on sampling methods for audit authorities, EGESIF_16-0014-01 vom 20.01.2017",
+  "rer_template": "Europäische Kommission, CPRE_23-0013-01, Methodological note ACR/AO, Annex 3 (RER calculation template)",
+  "ter": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060",
+  "rer": "Art. 2 Nr. 36 Verordnung (EU) 2021/1060",
+  "non_statistical": "Art. 79 Abs. 2 Verordnung (EU) 2021/1060"
+ },
+ "methods": [
+  {
+   "id": "srs.mean_per_unit",
+   "label": "Einfache Zufallsstichprobe – Mittelwertschätzung",
+   "statistical": true,
+   "selection": "equal_probability",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.1.1, 6.1.2",
+   "formula": "EE = Σ N_h × ΣE_h / n_h",
+   "needs_population_size": true,
+   "needs_sample_size": false
+  },
+  {
+   "id": "srs.ratio",
+   "label": "Einfache Zufallsstichprobe – Verhältnisschätzung",
+   "statistical": true,
+   "selection": "equal_probability",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.1.1, 6.1.2; Anhang 1, 2.3",
+   "formula": "EE = Σ BV′_h × ΣE_h / ΣBV′_h",
+   "needs_population_size": true,
+   "needs_sample_size": false
+  },
+  {
+   "id": "difference",
+   "label": "Differenzenschätzung",
+   "statistical": true,
+   "selection": "equal_probability",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.2.1, 6.2.2; Anhang 1, 3",
+   "formula": "EE = Σ N_h × ΣE_h / n_h, CBV = BV − TER",
+   "needs_population_size": true,
+   "needs_sample_size": false
+  },
+  {
+   "id": "mus.standard",
+   "label": "MUS – Standardansatz",
+   "statistical": true,
+   "selection": "pps",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.3.1, 6.3.2; Anhang 1, 4.1",
+   "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
+   "needs_population_size": false,
+   "needs_sample_size": false
+  },
+  {
+   "id": "mus.ratio",
+   "label": "MUS – Verhältnisschätzung bei systemischen Fehlern",
+   "statistical": true,
+   "selection": "pps",
+   "stratification": false,
+   "source": "EGESIF_16-0014-01, Anhang 1, 4.2",
+   "formula": "EE_s = BV′_s × Σ(E/BV) / Σ(BV′/BV)",
+   "needs_population_size": false,
+   "needs_sample_size": false
+  },
+  {
+   "id": "mus.conservative",
+   "label": "MUS – konservativer Ansatz",
+   "statistical": true,
+   "selection": "pps",
+   "stratification": false,
+   "source": "EGESIF_16-0014-01, Abschn. 6.3.5",
+   "formula": "SE = SI × RF + Σ (RF(i) − RF(i−1) − 1) × SI × E/BV",
+   "needs_population_size": false,
+   "needs_sample_size": true
+  },
+  {
+   "id": "nonstatistical.mean_per_unit",
+   "label": "Nicht-statistisch, gleiche Wahrscheinlichkeit – Mittelwertschätzung",
+   "statistical": false,
+   "selection": "equal_probability",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.4.5.1, 6.4.5.2",
+   "formula": "EE = Σ N_h × ΣE_h / n_h",
+   "needs_population_size": true,
+   "needs_sample_size": false
+  },
+  {
+   "id": "nonstatistical.ratio",
+   "label": "Nicht-statistisch, gleiche Wahrscheinlichkeit – Verhältnisschätzung",
+   "statistical": false,
+   "selection": "equal_probability",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.4.5.1, 6.4.5.2",
+   "formula": "EE = Σ BV_h × ΣE_h / ΣBV_h",
+   "needs_population_size": true,
+   "needs_sample_size": false
+  },
+  {
+   "id": "nonstatistical.pps",
+   "label": "Nicht-statistisch, wertproportionale Auswahl",
+   "statistical": false,
+   "selection": "pps",
+   "stratification": true,
+   "source": "EGESIF_16-0014-01, Abschn. 6.4.5.3, 6.4.5.4",
+   "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
+   "needs_population_size": true,
+   "needs_sample_size": false
+  }
+ ],
+ "factor_profiles": [
+  {
+   "id": "kom_2017_tables",
+   "label": "Tabellenwerte des KOM-Leitfadens",
+   "source": "EGESIF_16-0014-01, Abschn. 5.3 (Tabelle 3), EGESIF_16-0014-01, Abschn. 6.3.5.2 (Tabelle 4), Anhang 3",
+   "note": "Werte wie gedruckt; nur die dort genannten Konfidenzniveaus."
+  },
+  {
+   "id": "exact",
+   "label": "Exakt berechnete Werte",
+   "source": "Normalverteilung (zweiseitiges Quantil) und Poisson-Obergrenze",
+   "note": "Ungerundet; jedes Konfidenzniveau in (0, 1). Weicht in der 3. Nachkommastelle von den Tabellen ab."
+  }
+ ],
+ "recommended_profile": "kom_2017_tables",
+ "confidence_levels": {
+  "z": [
+   0.6,
+   0.7,
+   0.8,
+   0.9,
+   0.95
+  ],
+  "mus.conservative": [
+   0.5,
+   0.6,
+   0.7,
+   0.75,
+   0.8,
+   0.85,
+   0.9,
+   0.95,
+   0.99
+  ]
+ },
+ "materiality": {
+  "default": 0.02,
+  "maximum": 0.02
+ },
+ "error_classes": [
+  {
+   "id": "random",
+   "label": "Zufälliger Fehler",
+   "description": "Wird auf die Grundgesamtheit hochgerechnet."
+  },
+  {
+   "id": "systemic",
+   "label": "Systemischer Fehler (abgegrenzt)",
+   "description": "Nur wenn der Gesamtumfang in der Grundgesamtheit abgegrenzt ist; geht mit dem abgegrenzten Betrag in die TER ein, nicht hochgerechnet. Sonst als zufälliger Fehler erfassen (Leitfaden, Anhang 1)."
+  },
+  {
+   "id": "anomalous",
+   "label": "Anomaler Fehler",
+   "description": "Nachweislich nicht repräsentativ, nur mit Begründung; nicht hochgerechnet. Nicht korrigiert: Teil der TER; korrigiert: nicht Teil der TER (Leitfaden, Anhang 6)."
+  }
+ ],
+ "conclusions": [
+  {
+   "id": "material",
+   "label": "Wesentlicher Fehler"
+  },
+  {
+   "id": "not_material",
+   "label": "Kein wesentlicher Fehler"
+  },
+  {
+   "id": "inconclusive",
+   "label": "Nicht schlüssig – weitere Prüfungshandlungen"
+  }
+ ],
+ "limits": {
+  "max_units": 100000,
+  "max_strata": 200
+ }
+}

@@ -74,7 +74,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (611):
+Exporte der Einstiegspunkte aus `package.json#exports` (686):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -153,6 +153,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `ComparisonsView` | Schnittstelle | – | `documents/view` |
 | `@flowaudit/ui-core` | `ComparisonsViewOptions` | Schnittstelle | – | `documents/view` |
 | `@flowaudit/ui-core` | `Completeness` | Schnittstelle | – | `dataprotection/registerView` |
+| `@flowaudit/ui-core` | `Conclusion` | Typ | – | `extrapolation/types` |
 | `@flowaudit/ui-core` | `ConfidenceLevel` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui-core` | `Conformity` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui-core` | `ConformityProfile` | Schnittstelle | – | `benford/types` |
@@ -193,16 +194,40 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `DsfaStep` | Typ | – | `dataprotection/dsfa` |
 | `@flowaudit/ui-core` | `DsfaTab` | Typ | – | `dataprotection/dsfa` |
 | `@flowaudit/ui-core` | `EMPTY_EVALUATION` | Konstante | – | `risk/controller` |
+| `@flowaudit/ui-core` | `EMPTY_RESIDUAL` | Konstante | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `EarthModel` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `EntryView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `EvaluateRequest` | Schnittstelle | – | `risk/port` |
 | `@flowaudit/ui-core` | `Evaluation` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui-core` | `EvaluationRequest` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `EvaluationResult` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `EvaluationValidation` | Typ | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `ExportFormat` | Typ | – | `sampling/types` |
 | `@flowaudit/ui-core` | `ExportInput` | Schnittstelle | – | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `ExportPayload` | Schnittstelle | Ergebnis eines Exports in der Oberfläche (Ereignis `export`). | `synopsis/types` |
 | `@flowaudit/ui-core` | `ExportTexts` | Schnittstelle | – | `dataprotection/exporters` |
 | `@flowaudit/ui-core` | `ExportedFile` | Schnittstelle | – | `dataprotection/types` |
+| `@flowaudit/ui-core` | `ExtrapolationBusy` | Typ | – | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `ExtrapolationCallbacks` | Schnittstelle | – | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `ExtrapolationCatalogue` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ExtrapolationController` | Typ | – | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `ExtrapolationData` | Schnittstelle | Stand der Hochrechnung; `error` ist die Meldung der letzten abgelehnten Anfrage. | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `ExtrapolationExportFormat` | Typ | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ExtrapolationField` | Schnittstelle | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `ExtrapolationForm` | Schnittstelle | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `ExtrapolationFormError` | Typ | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `ExtrapolationIssue` | Typ | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `ExtrapolationIssues` | Typ | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `ExtrapolationMessageKey` | Typ | – | `extrapolation/messages` |
+| `@flowaudit/ui-core` | `ExtrapolationMethod` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ExtrapolationMethodGroup` | Schnittstelle | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `ExtrapolationMetric` | Schnittstelle | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `ExtrapolationPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createExtrapolationRestPort`. | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ExtrapolationSource` | Schnittstelle | – | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `ExtrapolationStep` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ExtrapolationTranslate` | Typ | – | `extrapolation/view` |
 | `@flowaudit/ui-core` | `FLAG_STATES` | Konstante | – | `risk/state` |
+| `@flowaudit/ui-core` | `FactorProfileInfo` | Schnittstelle | – | `extrapolation/types` |
 | `@flowaudit/ui-core` | `FieldEntry` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui-core` | `FieldError` | Schnittstelle | – | `sampling/model` |
 | `@flowaudit/ui-core` | `FieldErrorCode` | Typ | – | `sampling/model` |
@@ -244,6 +269,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `IDLE` | Konstante | – | `store` |
 | `@flowaudit/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@flowaudit/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
+| `@flowaudit/ui-core` | `INITIAL_EXTRAPOLATION` | Konstante | – | `extrapolation/controller` |
 | `@flowaudit/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
 | `@flowaudit/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
@@ -290,8 +316,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `ProfileStatus` | Typ | – | `risk/types` |
 | `@flowaudit/ui-core` | `ProfileSummary` | Schnittstelle | – | `risk/port` |
 | `@flowaudit/ui-core` | `ProfileView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui-core` | `Projection` | Schnittstelle | – | `extrapolation/types` |
 | `@flowaudit/ui-core` | `Proposal` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `QuestionView` | Schnittstelle | – | `dataprotection/types` |
+| `@flowaudit/ui-core` | `RESIDUAL_FIELDS` | Konstante | – | `extrapolation/view` |
 | `@flowaudit/ui-core` | `ROW_STATUSES` | Konstante | – | `synopsis/types` |
 | `@flowaudit/ui-core` | `RadiusHit` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `RadiusRequest` | Schnittstelle | – | `geo/types` |
@@ -305,6 +333,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `RegisterState` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `RegisterStatus` | Typ | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `RequestState` | Schnittstelle | Beschäftigt-Status, Fehler und Erfolgsmeldung einer Portanfrage (gemeinsam für alle Controller). | `store` |
+| `@flowaudit/ui-core` | `ResidualErrorRate` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ResidualForm` | Schnittstelle | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `ResidualRequest` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ResidualResult` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ResidualRow` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `ResidualValidation` | Typ | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `RestClientOptions` | Typ | Optionen wie bei `src/rest`: `baseUrl` (z. B. `/api/synopsis`), injizierbares `fetch`, Kopfzeilen. | `synopsis/port` |
 | `@flowaudit/ui-core` | `ReviewEvents` | Schnittstelle | – | `screening/controller` |
 | `@flowaudit/ui-core` | `ReviewStatus` | Typ | – | `screening/types` |
@@ -332,6 +366,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `STATE_FILTER_KEYS` | Konstante | – | `risk/labels` |
 | `@flowaudit/ui-core` | `STATE_ICONS` | Konstante | Symbol je Zustand: Farbe ist nie der einzige Träger der Bedeutung. | `risk/format` |
 | `@flowaudit/ui-core` | `STATE_KEYS` | Konstante | – | `risk/labels` |
+| `@flowaudit/ui-core` | `STRATUM_FIELDS` | Konstante | – | `extrapolation/view` |
 | `@flowaudit/ui-core` | `SamplingBusy` | Typ | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `SamplingCallbacks` | Schnittstelle | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `SamplingCatalogue` | Schnittstelle | – | `sampling/types` |
@@ -381,7 +416,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `StateFilter` | Typ | Filter: `affected` = Treffer oder unbestimmt; `all` = jeder Datensatz. | `risk/state` |
 | `@flowaudit/ui-core` | `Store` | Schnittstelle | Kleinster gemeinsamer Zustandsspeicher der Controller. | `store` |
 | `@flowaudit/ui-core` | `StratumCount` | Schnittstelle | – | `sampling/model` |
+| `@flowaudit/ui-core` | `StratumInput` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `StratumProjection` | Schnittstelle | – | `extrapolation/types` |
 | `@flowaudit/ui-core` | `StratumResult` | Schnittstelle | – | `sampling/types` |
+| `@flowaudit/ui-core` | `StratumRow` | Schnittstelle | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `SubjectInput` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `SubjectRequest` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `SubjectStatus` | Typ | – | `screening/types` |
@@ -407,8 +445,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `TabularMessageKey` | Typ | – | `tabular/messages` |
 | `@flowaudit/ui-core` | `TileSource` | Schnittstelle | Kachelquelle der Anwendung; ohne Quelle zeigt die Karte keinen Hintergrund. | `geo/types` |
 | `@flowaudit/ui-core` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/format` |
+| `@flowaudit/ui-core` | `TotalErrorRate` | Schnittstelle | – | `extrapolation/types` |
 | `@flowaudit/ui-core` | `Totals` | Schnittstelle | – | `risk/state` |
 | `@flowaudit/ui-core` | `Translate` | Typ | – | `i18n` |
+| `@flowaudit/ui-core` | `UNIT_FIELDS` | Konstante | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `UNIT_FLAGS` | Konstante | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `UnitInput` | Schnittstelle | – | `extrapolation/types` |
+| `@flowaudit/ui-core` | `UnitRow` | Schnittstelle | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `UploadFile` | Schnittstelle | Datei aus einem Eingabefeld (im Browser `File`). | `documents/form` |
 | `@flowaudit/ui-core` | `UtmRequest` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `UtmResult` | Schnittstelle | – | `geo/types` |
@@ -451,6 +494,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `blockProgress` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `breakdownRows` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `buildAnalyseRequest` | Funktion | Anfrage für `POST /analyze`; Test, Profil und ggf. Regel für kurze Werte sind Pflicht. | `benford/model` |
+| `@flowaudit/ui-core` | `buildEvaluationRequest` | Funktion | Anfrage für `POST /evaluate`; bei Befunden die Feldschlüssel mit ihrem Fehler. | `extrapolation/model` |
+| `@flowaudit/ui-core` | `buildResidualRequest` | Funktion | Anfrage für `POST /residual`; die Gesamtfehlerquote wird in Prozent eingegeben. | `extrapolation/model` |
 | `@flowaudit/ui-core` | `buildRowView` | Funktion | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `buildRunRequest` | Funktion | Anfrage aus dem Formular; bei Fehlern `request: null` und die Meldungen als Katalogschlüssel. | `screening/runForm` |
 | `@flowaudit/ui-core` | `buildSelectionRequest` | Funktion | Anfrage für `POST /selection`; ein leerer Seed überlässt dem Server die Erzeugung. | `sampling/model` |
@@ -471,6 +516,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `comparisonsView` | Funktion | – | `documents/view` |
 | `@flowaudit/ui-core` | `completeness` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `completenessTone` | Funktion | – | `dataprotection/registerView` |
+| `@flowaudit/ui-core` | `conclusionLabel` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `conclusionTone` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `confidenceChoices` | Funktion | Konfidenzniveaus, die die gewählte Methode mit Tabellenwerten erlaubt. | `extrapolation/model` |
 | `@flowaudit/ui-core` | `confidenceText` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `coverIssues` | Funktion | Hinweise zum Deckblatt (Verantwortlicher, DSB). | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `createBenfordController` | Funktion | – | `benford/controller` |
@@ -479,6 +527,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `createDataProtectionRestPort` | Funktion | Port auf den REST-Vertrag `dataprotection_ui/1` von `auditcore_dataprotection.web`. | `dataprotection/rest-port` |
 | `@flowaudit/ui-core` | `createDelay` | Funktion | Verzögerter Aufruf, der bei jeder neuen Eingabe neu startet (Vorschau, Vollständigkeitsprüfung). | `store` |
 | `@flowaudit/ui-core` | `createDsfaController` | Funktion | – | `dataprotection/dsfa` |
+| `@flowaudit/ui-core` | `createExtrapolationController` | Funktion | – | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `createExtrapolationRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_extrapolation.web` (Starlette oder FastAPI). | `extrapolation/rest-port` |
 | `@flowaudit/ui-core` | `createFocusTrap` | Funktion | – | `focus` |
 | `@flowaudit/ui-core` | `createGeoController` | Funktion | – | `geo/controller` |
 | `@flowaudit/ui-core` | `createGeoRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_geo.web` (Starlette oder FastAPI). | `geo/rest-port` |
@@ -521,12 +571,29 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `emptyContent` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `emptyFilter` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `emptyScenario` | Funktion | – | `dataprotection/dsfaView` |
+| `@flowaudit/ui-core` | `emptyStratum` | Funktion | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `emptyUnit` | Funktion | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `escapeHtml` | Funktion | – | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `escapeMapHtml` | Funktion | Leaflet setzt Tooltips und Namensnennung als HTML; Daten gehen deshalb nur als Text hinein. | `geo/mapView` |
 | `@flowaudit/ui-core` | `escapeMarkdown` | Funktion | – | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `evaluationRules` | Funktion | Regeln der Auswertung; ohne `rules` aus den Codes der Datensätze abgeleitet. | `risk/state` |
 | `@flowaudit/ui-core` | `excludedLines` | Funktion | Hinweise auf Elemente außerhalb der Auswahlbasis. | `sampling/view` |
 | `@flowaudit/ui-core` | `exportFilename` | Funktion | – | `synopsis/exporters` |
+| `@flowaudit/ui-core` | `extrapolationAmount` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationCellLabel` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationConfidenceLabel` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationFormErrorKey` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationFormMessage` | Funktion | Sammelmeldung unter dem Formular: fehlende Auswahl oder markierte Felder. | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationInputNumber` | Funktion | Zahl als Eingabetext (ohne Tausendertrenner). | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationIssueKey` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationIssueText` | Funktion | Meldung eines Feldes (leer ohne Befund). | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationMessages` | Konstante | Texte der Hochrechnung (TER) und der Restfehlerquote (RER). | `extrapolation/messages` |
+| `@flowaudit/ui-core` | `extrapolationMethod` | Funktion | – | `extrapolation/controller` |
+| `@flowaudit/ui-core` | `extrapolationMethodById` | Funktion | – | `extrapolation/model` |
+| `@flowaudit/ui-core` | `extrapolationMethodGroups` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationRate` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationStepColumns` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `extrapolationStepRows` | Funktion | – | `extrapolation/view` |
 | `@flowaudit/ui-core` | `fieldIssues` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `fieldValue` | Funktion | Prüft ein Eingabefeld und liefert den Vertragswert (Prozent → Anteil). | `sampling/model` |
 | `@flowaudit/ui-core` | `filterOptions` | Funktion | – | `screening/view` |
@@ -605,6 +672,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `profileHintText` | Funktion | Warnhinweis für nicht freigegebene Profile, sonst leer. | `risk/controller` |
 | `@flowaudit/ui-core` | `profileKeyOf` | Funktion | – | `screening/runForm` |
 | `@flowaudit/ui-core` | `profileStatusText` | Funktion | Sichtbarer Profilstatus („freigegeben“ …) oder der Rohwert. | `risk/controller` |
+| `@flowaudit/ui-core` | `readExtrapolationAmount` | Funktion | Zahl eines Textfelds oder der Befund; leere, nicht verlangte Felder ergeben 0. | `extrapolation/model` |
 | `@flowaudit/ui-core` | `recommendationTone` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `recordEntries` | Funktion | Treffer und unbestimmte Merkmale eines Datensatzes in Profilreihenfolge. | `risk/state` |
 | `@flowaudit/ui-core` | `recordLabel` | Funktion | – | `risk/state` |
@@ -617,6 +685,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `replaceHit` | Funktion | Replace one hit (after a decision) without reloading the whole run. | `screening/view` |
 | `@flowaudit/ui-core` | `requirementKey` | Funktion | – | `risk/labels` |
 | `@flowaudit/ui-core` | `requiresFourEyes` | Funktion | – | `screening/view` |
+| `@flowaudit/ui-core` | `residualColumns` | Funktion | – | `extrapolation/view` |
+| `@flowaudit/ui-core` | `residualFormFrom` | Funktion | RER-Formular aus einer Auswertung: A = Buchwert, D = Gesamtfehlerquote (in Prozent). | `extrapolation/model` |
+| `@flowaudit/ui-core` | `residualMetrics` | Funktion | Kennzahlen der Restfehlerquote (K, L, M). | `extrapolation/view` |
+| `@flowaudit/ui-core` | `residualRows` | Funktion | – | `extrapolation/view` |
 | `@flowaudit/ui-core` | `riskMessages` | Konstante | Sichtbare Texte der Risiko-Komponenten (Deutsch vollständig, Englisch vorbereitet). | `risk/messages` |
 | `@flowaudit/ui-core` | `riskTableColumns` | Funktion | – | `risk/controller` |
 | `@flowaudit/ui-core` | `riskTableRows` | Funktion | – | `risk/controller` |
@@ -654,6 +726,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `strataColumns` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `strataOf` | Funktion | Schichten in Reihenfolge ihres ersten Auftretens; leer, wenn kein Element geschichtet ist. | `sampling/model` |
 | `@flowaudit/ui-core` | `strataRows` | Funktion | – | `sampling/view` |
+| `@flowaudit/ui-core` | `stratumRows` | Funktion | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `subscribeDefaultLocale` | Funktion | Meldet Änderungen der Standardsprache; liefert die Abmeldung. | `i18n` |
 | `@flowaudit/ui-core` | `summaryOf` | Funktion | Eintrag der Liste aus einem gespeicherten Vergleich (nach Anlegen oder Import). | `documents/list` |
 | `@flowaudit/ui-core` | `summaryView` | Funktion | – | `documents/list` |
@@ -663,6 +736,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `synopsisMessages` | Konstante | Sichtbare Texte der Synopse; Begriffe wie im audit_designer und in ecohesion. | `synopsis/messages` |
 | `@flowaudit/ui-core` | `synopsisPortOf` | Funktion | Der Port als Datenzugang der eingebetteten Synopse, wenn er Vergleiche laden kann. | `documents/controller` |
 | `@flowaudit/ui-core` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
+| `@flowaudit/ui-core` | `terMetrics` | Funktion | Kennzahlen der Gesamtfehlerquote in fester Reihenfolge. | `extrapolation/view` |
 | `@flowaudit/ui-core` | `toCompareFields` | Funktion | Formularfelder für `POST /comparisons`; Gesetzessynopse ohne die Optionen des Standardvergleichs. | `documents/form` |
 | `@flowaudit/ui-core` | `toHtml` | Funktion | Eigenständiges HTML-Dokument mit Druck-CSS (keine externen Ressourcen). | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `toMarkdown` | Funktion | Markdown: gestrichene Wörter als ~~…~~, neue als **…**. | `synopsis/exporters` |
@@ -672,6 +746,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (611):
 | `@flowaudit/ui-core` | `translate` | Funktion | Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. | `i18n` |
 | `@flowaudit/ui-core` | `translator` | Funktion | Übersetzungsfunktion für eine feste Sprache. | `i18n` |
 | `@flowaudit/ui-core` | `triggeredDataset` | Funktion | – | `risk/state` |
+| `@flowaudit/ui-core` | `unitRows` | Funktion | – | `extrapolation/model` |
 | `@flowaudit/ui-core` | `validateDecision` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `vertexCount` | Funktion | Anzahl der Stützpunkte einer Fläche (Schlusspunkte mitgezählt). | `geo/model` |
 | `@flowaudit/ui-core` | `vvtExportTexts` | Funktion | Beschriftungen der Exporte (Druckansicht, Markdown, CSV). | `dataprotection/vvt` |

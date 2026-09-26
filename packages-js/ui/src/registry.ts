@@ -1,5 +1,6 @@
 import type { ElementDefinition } from './elements/define'
 import { benfordElement } from './benford/element'
+import { extrapolationElement } from './extrapolation/element'
 import { dsfaElement, vvtElement } from './dataprotection/element'
 import { comparisonsElement } from './documents/element'
 import { geoMapElement } from './geo/element'
@@ -14,4 +15,4 @@ import { tableElement } from './table/element'
  * Alle Web Components von @flowaudit/ui. Neue Komponenten tragen hier ihre
  * `ElementDefinition` ein (siehe docs/ui/beitragen.md).
  */
-export const ELEMENTS: readonly ElementDefinition[] = [tableElement, samplingElement, benfordElement, kanbanBoardElement, kanbanBoardListElement, screeningReviewElement, riskFlagsElement, synopsisElement, comparisonsElement, vvtElement, dsfaElement, geoMapElement]
+export const ELEMENTS: readonly ElementDefinition[] = [tableElement, samplingElement, benfordElement, extrapolationElement, kanbanBoardElement, kanbanBoardListElement, screeningReviewElement, riskFlagsElement, synopsisElement, comparisonsElement, vvtElement, dsfaElement, geoMapElement]
