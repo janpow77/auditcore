@@ -11,6 +11,12 @@ Beispiele::
     # Training (setzt automatisch am neuesten gültigen Checkpoint fort)
     torchrun --nproc_per_node=2 -m auditcore_invoicesynth.train.cli \\
         --profile donut_train_janpow_ai --dataset ds/ --run-dir runs/r1 --base-model-dir base/
+    # zweiter Lauf auf eigener Karte (Topologie "parallel")
+    python -m auditcore_invoicesynth.train.cli --profile donut_train_janpow_ai --dataset ds/ \\
+        --run-dir runs/r1-1 --base-model-dir base/ --image-size 1536x1152 --seed 43
+
+Während des Laufs steht der Stand in ``<run-dir>/progress.json``; SIGTERM/SIGINT
+beenden nach dem laufenden Schritt mit Checkpoint (Exit-Codes: ``ops.EXIT_CODES``).
 """
 
 from __future__ import annotations
@@ -26,8 +32,14 @@ from typing import Any
 
 from auditcore_invoicesynth.dataset import DatasetError, load_split, verify_dataset
 from auditcore_invoicesynth.train.checkpoint import ResumeMismatch
+from auditcore_invoicesynth.train.guard import (
+    ProgressFile,
+    StepFailed,
+    StopRequest,
+)
 from auditcore_invoicesynth.train.loop import MockBackend, TrainBackend, run_training
 from auditcore_invoicesynth.train.ops import (
+    GpuTemperature,
     InsufficientVram,
     check_free_vram,
     flowagent_job,
@@ -58,6 +70,12 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--tiny", action="store_true", help="winziges Modell (Rauchtest)")
     parser.add_argument("--backend", choices=("torch", "mock"), default="torch")
     parser.add_argument("--max-steps", type=int)
+    parser.add_argument("--epochs", type=int)
+    parser.add_argument("--seed", type=int)
+    parser.add_argument("--image-size", help="Höhe x Breite, z. B. 1536x1152")
+    parser.add_argument("--per-device-batch", type=int)
+    parser.add_argument("--grad-accum", type=int)
+    parser.add_argument("--stop-deadline", type=float, default=90.0, help="Sekunden nach SIGTERM")
     parser.add_argument("--stop-after-step", type=int, help="Abbruch simulieren (Test)")
     parser.add_argument("--step-delay", type=float, default=0.0)
     parser.add_argument("--check-vram", action="store_true")
@@ -71,10 +89,8 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
-    config = PROFILES[args.profile]
-    if args.max_steps:
-        config = replace(config, max_steps=args.max_steps)
     try:
+        config = apply_overrides(PROFILES[args.profile], args)
         if args.check_vram:
             usable = check_free_vram(config)
             _print({"ok": True, "gpus": [g.__dict__ for g in usable]})
@@ -96,9 +112,38 @@ def main(argv: list[str] | None = None) -> int:
             parser.error("--run-dir erforderlich")
         _print(_train(parser, args, config, dataset, verification.dataset_hash, run_id))
         return 0
+    except StepFailed as exc:
+        sys.stderr.write(f"Fehler: {type(exc).__name__}: {exc}\n")
+        return exc.exit_code
     except (DatasetError, ResumeMismatch, InsufficientVram, ValueError) as exc:
         sys.stderr.write(f"Fehler: {exc}\n")
         return 2
+
+
+def apply_overrides(config: TrainConfig, args: argparse.Namespace) -> TrainConfig:
+    """Profilwerte durch Schalter ersetzen (verändert den Konfigurations-Hash)."""
+
+    def pick(name: str, current: int | None) -> int | None:
+        value = getattr(args, name)
+        return current if value is None else int(value)
+
+    size = config.image_size
+    if args.image_size:
+        height, _, width = args.image_size.lower().partition("x")
+        size = (int(height), int(width))
+    changed = replace(
+        config,
+        image_size=size,
+        max_steps=pick("max_steps", config.max_steps),
+        epochs=pick("epochs", config.epochs) or 0,
+        seed=pick("seed", config.seed) or 0,
+        per_device_batch=pick("per_device_batch", config.per_device_batch) or 0,
+        grad_accum=pick("grad_accum", config.grad_accum) or 0,
+    )
+    changed.validate()
+    if min(size) < 1:
+        raise ValueError("--image-size: Höhe und Breite ≥ 1")
+    return changed
 
 
 def _systemd_unit(args: argparse.Namespace, config: TrainConfig) -> str:
@@ -122,12 +167,19 @@ def _plan(
     else:
         gpus = probe_local_gpus()
     topology = choose_topology(config, gpus)
+    hosts = {"dataset": str(dataset.resolve())}
+    if args.base_model_dir:
+        hosts["base_model"] = str(Path(args.base_model_dir).resolve())
+    if args.run_dir:
+        hosts["runs"] = str(Path(args.run_dir).resolve())
     return flowagent_job(
         config,
         topology,
         dataset_hash=dataset_hash,
         dataset_uri=str(dataset.resolve()),
         run_id=run_id,
+        base_model_sha256=args.base_model_sha256,
+        host_mounts=hosts,
     )
 
 
@@ -141,23 +193,44 @@ def _train(
 ) -> dict[str, object]:
     run_dir = Path(args.run_dir)
     samples = len(load_split(dataset, args.split))
-    backend = _backend(parser, args, config, dataset, run_dir)
-    result = run_training(
-        backend,
-        config,
-        samples=samples,
-        run_dir=run_dir,
-        run_id=run_id,
-        dataset_hash=dataset_hash,
-        stop_after_step=args.stop_after_step,
-        step_delay=args.step_delay,
-    )
+    progress = ProgressFile(run_dir, run_id=run_id)
+    stop = StopRequest(
+        deadline_s=args.stop_deadline,
+        on_timeout=lambda: progress.update(
+            zustand="fehler", fehler="Stopp-Frist nach Signal überschritten"
+        ),
+    ).install()
+    try:
+        backend = _backend(parser, args, config, dataset, run_dir)
+        result = run_training(
+            backend,
+            config,
+            samples=samples,
+            run_dir=run_dir,
+            run_id=run_id,
+            dataset_hash=dataset_hash,
+            stop_after_step=args.stop_after_step,
+            step_delay=args.step_delay,
+            progress=progress,
+            stop=stop,
+            temperature=GpuTemperature() if args.backend == "torch" else lambda: None,
+        )
+    except StepFailed:
+        raise
+    except BaseException as exc:
+        if progress.state.get("zustand") != "fehler":
+            reason = f"{type(exc).__name__}: {exc}"
+            progress.update(zustand="fehler", phase="beendet", fehler=reason)
+        raise
+    finally:
+        stop.finished()
     return {
         "run_id": run_id,
         "resumed_from": result.resumed_from,
         "final_step": result.final_step,
         "checkpoints": result.checkpoints,
         "losses": {str(k): v for k, v in result.losses.items()},
+        "state": progress.state["zustand"],
     }
 
 

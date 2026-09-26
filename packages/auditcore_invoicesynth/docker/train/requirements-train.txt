@@ -1,0 +1,10 @@
+# Gepinnte Laufzeit des Job-Images ghcr.io/janpow77/auditcore-donut-train:cu128.
+# torch kommt aus dem cu128-Index (Blackwell, sm_120); Rest von PyPI.
+torch==2.11.0+cu128
+transformers==5.17.0
+tokenizers==0.23.2
+sentencepiece==0.2.2
+safetensors==0.8.0
+pillow==12.3.0
+numpy==2.5.3
+bitsandbytes==0.50.2

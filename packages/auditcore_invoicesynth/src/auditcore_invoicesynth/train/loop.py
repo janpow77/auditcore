@@ -15,13 +15,15 @@ from __future__ import annotations
 import json
 import math
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 from random import Random
 from typing import Any, Protocol
 
 from auditcore_invoicesynth.train.checkpoint import CheckpointManager, CheckpointPolicy
+from auditcore_invoicesynth.train.guard import NonFiniteLoss, ProgressFile, StepFailed
 from auditcore_invoicesynth.train.profiles import TrainConfig
 
 LOG = "train-log.jsonl"
@@ -111,12 +113,56 @@ def run_training(
     temperature: Callable[[], float | None] = lambda: None,
     stop_after_step: int | None = None,
     step_delay: float = 0.0,
+    progress: ProgressFile | None = None,
+    stop: Callable[[], bool] = lambda: False,
 ) -> TrainResult:
     """Training bis ``max_steps``/Epochenende; setzt am neuesten gültigen Checkpoint fort.
 
-    ``stop_after_step`` bricht (nur für Tests/Rauchtests) nach diesem Schritt ohne
-    Checkpoint ab und simuliert damit einen Stromausfall.
+    ``stop`` (z. B. ``StopRequest`` nach SIGTERM) beendet den Lauf nach dem
+    laufenden Schritt mit Checkpoint. ``StepFailed`` (NaN-Loss, OOM, kaputte
+    Daten) sichert den letzten guten Stand, setzt ``zustand=fehler`` und wird
+    weitergereicht. ``stop_after_step`` bricht (nur für Tests/Rauchtests) nach
+    diesem Schritt ohne Checkpoint ab und simuliert damit einen Stromausfall.
     """
+    session = _start(
+        backend, config, samples, run_dir, run_id, dataset_hash, progress, temperature, wall
+    )
+    start = session.last_saved
+    policy = CheckpointPolicy(
+        config.checkpoint_every_steps, config.checkpoint_every_minutes * 60, clock
+    )
+    try:
+        for step in range(start + 1, session.last + 1):
+            if stop():
+                return session.finish("abgebrochen")
+            session.run_step(step)
+            if stop_after_step is not None and step >= stop_after_step:
+                return session.result
+            if policy.due(step) or step == session.last:
+                session.checkpoint(step)
+                policy.saved()
+            if step_delay:
+                time.sleep(step_delay)
+    except StepFailed as exc:
+        if exc.state_intact:
+            session.checkpoint(session.result.final_step)
+        session.report(zustand="fehler", phase="beendet", fehler=f"{type(exc).__name__}: {exc}")
+        raise
+    return session.finish("fertig")
+
+
+def _start(
+    backend: TrainBackend,
+    config: TrainConfig,
+    samples: int,
+    run_dir: Path,
+    run_id: str,
+    dataset_hash: str,
+    progress: ProgressFile | None,
+    temperature: Callable[[], float | None],
+    wall: Callable[[], float],
+) -> _Session:
+    """Prüfen, Modell laden, am neuesten gültigen Checkpoint fortsetzen, Stand melden."""
     config.validate()
     if samples < 1:
         raise ValueError("Datensatz ohne Beispiele")
@@ -127,36 +173,106 @@ def run_training(
         config_hash=config.config_hash,
         save_total_limit=config.save_total_limit,
     )
-    backend.setup(config, samples)
-    main = backend.rank == 0
-    resumed_from = _resume(manager, backend)
+    report = progress if backend.rank == 0 else None
+    with _busy(report, "laden"):
+        backend.setup(config, samples)
+        resumed_from = _resume(manager, backend)
     start = resumed_from or 0
-    if main:
+    if backend.rank == 0:
         _truncate_log(run_dir, start)
     result = TrainResult(run_id, start, start, resumed_from=resumed_from)
-    policy = CheckpointPolicy(
-        config.checkpoint_every_steps, config.checkpoint_every_minutes * 60, clock
+    session = _Session(
+        backend, config, manager, result, report, samples, run_dir, temperature, wall, start
     )
-    last = total_steps(config, samples, backend.world_size)
-    per_epoch = max(1, math.ceil(samples / config.effective_batch(backend.world_size)))
-    for step in range(start + 1, last + 1):
-        batches = step_batches(config, samples, step, backend.world_size)
-        loss = backend.train_step(batches)
-        result.losses[step] = loss
-        result.final_step = step
-        if main:
-            _log_step(run_dir, step, (step - 1) // per_epoch, loss, backend, temperature, wall)
-        if stop_after_step is not None and step >= stop_after_step:
-            return result
-        if policy.due(step) or step == last:
-            if main:
-                manager.save(step, backend.save, {"step": step, "samples": samples})
-                result.checkpoints.append(step)
-            backend.barrier()
-            policy.saved()
-        if step_delay:
-            time.sleep(step_delay)
-    return result
+    session.report(
+        zustand="laeuft",
+        phase="training",
+        schritt=start,
+        letzter_checkpoint=resumed_from,
+        schritte_gesamt=session.last,
+    )
+    return session
+
+
+@contextmanager
+def _busy(progress: ProgressFile | None, phase: str) -> Iterator[None]:
+    if progress is None:
+        yield
+        return
+    with progress.busy(phase):
+        yield
+
+
+@dataclass
+class _Session:
+    """Zustand eines Laufs: Schritt ausführen, protokollieren, sichern, melden."""
+
+    backend: TrainBackend
+    config: TrainConfig
+    manager: CheckpointManager
+    result: TrainResult
+    progress: ProgressFile | None
+    samples: int
+    run_dir: Path
+    temperature: Callable[[], float | None]
+    wall: Callable[[], float]
+    last_saved: int
+
+    def __post_init__(self) -> None:
+        self.last = total_steps(self.config, self.samples, self.backend.world_size)
+        self.per_epoch = max(
+            1, math.ceil(self.samples / self.config.effective_batch(self.backend.world_size))
+        )
+
+    def report(self, **fields: object) -> None:
+        if self.progress is not None:
+            self.progress.update(**fields)
+
+    def run_step(self, step: int) -> None:
+        batches = step_batches(self.config, self.samples, step, self.backend.world_size)
+        loss = self.backend.train_step(batches)
+        if not math.isfinite(loss):
+            raise NonFiniteLoss(f"Loss {loss} in Schritt {step}", state_intact=False)
+        self.result.losses[step] = loss
+        self.result.final_step = step
+        if self.backend.rank != 0:
+            return
+        epoch = (step - 1) // self.per_epoch
+        record = _log_step(
+            self.run_dir, step, epoch, loss, self.backend, self.temperature, self.wall
+        )
+        vram = record["vram_peak_gib"]
+        self.report(
+            schritt=step,
+            epoche=epoch,
+            loss=record["loss"],
+            lr=_current_lr(self.backend),
+            vram_mb=None if vram is None else round(vram * 1024),
+            gpu_temp_c=record["temperature_c"],
+            uebersprungene_beispiele=getattr(self.backend, "skipped_samples", 0),
+        )
+
+    def checkpoint(self, step: int) -> None:
+        """Checkpoint schreiben, falls ``step`` neuer als der letzte gesicherte ist."""
+        if step <= self.last_saved:
+            return
+        if self.backend.rank == 0:
+            with _busy(self.progress, "checkpoint"):
+                self.manager.save(step, self.backend.save, {"step": step, "samples": self.samples})
+            self.result.checkpoints.append(step)
+            self.report(letzter_checkpoint=step)
+        self.backend.barrier()
+        self.last_saved = step
+
+    def finish(self, state: str) -> TrainResult:
+        self.checkpoint(self.result.final_step)
+        self.report(zustand=state, phase="beendet")
+        return self.result
+
+
+def _current_lr(backend: TrainBackend) -> float | None:
+    reader = getattr(backend, "current_lr", None)
+    return float(reader()) if callable(reader) else None
 
 
 def _resume(manager: CheckpointManager, backend: TrainBackend) -> int | None:
@@ -176,9 +292,9 @@ def _log_step(
     backend: TrainBackend,
     temperature: Callable[[], float | None],
     wall: Callable[[], float],
-) -> None:
+) -> dict[str, float | None]:
     """Eine Zeile ``train-log.jsonl`` (nur Rang 0)."""
-    record = {
+    record: dict[str, float | None] = {
         "step": step,
         "epoch": epoch,
         "loss": round(loss, 8),
@@ -188,6 +304,7 @@ def _log_step(
     }
     with (run_dir / LOG).open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, sort_keys=True) + "\n")
+    return record
 
 
 class MockBackend:
@@ -205,6 +322,9 @@ class MockBackend:
         self.momentum = [0.0, 0.0]
         self.lr = 0.05
         self.rng = Random(0)
+        self.calls = 0
+        #: Test-Einspeisung: (Aufruf-Nr., Fehler) – Fehler vor dem Optimiererschritt.
+        self.failure: tuple[int, StepFailed] | None = None
 
     def setup(self, config: TrainConfig, samples: int) -> None:
         self.rng = Random(config.seed)
@@ -216,6 +336,9 @@ class MockBackend:
         return x, 3.0 * x + 0.5
 
     def train_step(self, microbatches: list[list[int]]) -> float:
+        self.calls += 1
+        if self.failure is not None and self.failure[0] == self.calls:
+            raise self.failure[1]
         grads = [0.0, 0.0]
         loss = 0.0
         count = 0
@@ -247,6 +370,9 @@ class MockBackend:
 
     def vram_peak_gib(self) -> float | None:
         return None
+
+    def current_lr(self) -> float:
+        return self.lr
 
     def barrier(self) -> None:
         return None
