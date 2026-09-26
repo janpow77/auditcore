@@ -4,6 +4,19 @@ Rekonstruiert aus der Git-Historie (Pull Requests #46, #48, #79).
 
 ## Unreleased
 
+Etappe E3 (janpow-ai): neues Modul `train.guard` (`ProgressFile` –
+`progress.json` atomar, Herzschlag in Lade-/Checkpoint-Phasen;
+`StopRequest` – SIGTERM/SIGINT → Checkpoint und Exit 0, harte Frist 90 s;
+`NonFiniteLoss`, `OutOfMemory`, `TooManyBadSamples` mit Exit-Codes 3/4/6).
+Der Torch-Adapter verwirft NaN/OOM-Schritte vor `optimizer.step`, überspringt
+unlesbare Bilder (höchstens 1 %) und akzeptiert `pytorch_model.bin` als
+Startgewichte. Neue Schalter `--image-size`, `--seed`, `--epochs`,
+`--per-device-batch`, `--grad-accum`, `--stop-deadline`; der FlowAgent-Job
+(Schema `flowagent-job/2`) trägt je Lauf das vollständige Kommando,
+`--base-model-sha256`, Einhängepunkte und Exit-Codes. Neu
+`train.evaluate` (Kandidat + Donut-CORD auf T1/T2) und
+`docker/train` (Job-Image).
+
 Keine Verhaltensänderung. Datei-SHA-256 (`fonts.sha256_file`,
 `train.torch_backend.sha256_file`, Checkpoint- und Datensatzprüfsummen),
 Datensatz-Hash, Plan-Hash, Konfigurations-Hash, Lauf-ID sowie `parse_rate`
