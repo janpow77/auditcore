@@ -92,9 +92,7 @@ def _donut(page_png: bytes) -> DonutResult:
 
 def build_service() -> ExtractionService:
     """Dienst mit Attrappen für Texterkennung und Donut, höchstens 5 MiB je Datei."""
-    engines = ExtractionEngines(
-        tesseract=DemoTesseract(), donut=FakeDonut(_donut), rasterizer=None
-    )
+    engines = ExtractionEngines(tesseract=DemoTesseract(), donut=FakeDonut(_donut), rasterizer=None)
     return ExtractionService(engines, ExtractionSettings(max_upload_bytes=5 * 1024 * 1024))
 
 
