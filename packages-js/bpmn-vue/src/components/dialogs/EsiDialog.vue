@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /** ESI requirements per element (legacy `EsiRequirementsDialog`), loaded through the ESI port. */
 import { computed, ref, watch } from 'vue'
-import { groupByElement, normalizeEsiResponse, summarize, type EsiPort, type EsiRequirementResult, type EsiStatus } from '@flowaudit/bpmn-flowaudit'
+import { groupByElement, summarize, type EsiPort, type EsiRequirementResult } from '@flowaudit/bpmn-flowaudit'
+import { ESI_STATUS as STATUS, loadEsi } from '@flowaudit/bpmn-flowaudit/ui'
 import BaseDialog from '../base/BaseDialog.vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
@@ -15,18 +16,13 @@ const error = ref<string | null>(null)
 
 const groups = computed(() => groupByElement(list.value))
 const summary = computed(() => summarize(list.value))
-const STATUS: Record<EsiStatus, { icon: string; label: string; badge: string }> = {
-  fulfilled: { icon: 'check', label: 'esi.fulfilled', badge: 'fa-badge--success' },
-  unclear: { icon: 'hint', label: 'esi.unclear', badge: 'fa-badge--warning' },
-  missing: { icon: 'close', label: 'esi.missing', badge: 'fa-badge--danger' },
-}
 
 async function load(): Promise<void> {
   if (!props.port) return
   loading.value = true
   error.value = null
   try {
-    list.value = normalizeEsiResponse(await props.port.requirements(await props.xml(), props.diagramId))
+    list.value = await loadEsi(props.port, props.xml, props.diagramId)
   } catch (caught) {
     error.value = (caught as Error).message
   } finally {
@@ -75,40 +71,3 @@ watch(
     </template>
   </BaseDialog>
 </template>
-
-<style>
-.fa-esi__summary {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.fa-esi__group {
-  margin-top: 8px;
-  padding: 8px 10px;
-}
-
-.fa-esi__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.fa-esi__list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-esi__list li {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: baseline;
-}
-</style>

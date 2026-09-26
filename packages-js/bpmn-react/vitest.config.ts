@@ -1,16 +1,21 @@
 import { createRequire } from 'node:module'
-import { dirname, resolve } from 'node:path'
+import { dirname } from 'node:path'
+import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
+import { sourceAliases } from './aliases'
 
-// One React for the wrapper and @testing-library/react: the version this
-// package resolves (devDependency 18.3; REACT_DIR allows a run against 19).
+// One React for the components and @testing-library/react: the version this
+// package resolves (devDependency 19). `REACT_DIR` points to another
+// installation for the run against React 18 (`npm run test:react18`).
 const require = createRequire(import.meta.url)
 const packageDir = (name: string) => dirname(require.resolve(`${name}/package.json`, { paths: [process.env.REACT_DIR ?? __dirname] }))
+const sources = Object.entries(sourceAliases()).map(([find, replacement]) => ({ find: new RegExp(`^${find.replace(/[/.]/g, '\\$&')}$`), replacement }))
 
 export default defineConfig({
+  plugins: [vue()],
   resolve: {
     alias: [
-      { find: '@flowaudit/bpmn-flowaudit', replacement: resolve(__dirname, '../bpmn-flowaudit/src/index.ts') },
+      ...sources,
       // ESM build, so the React aliases below also apply inside the library.
       { find: /^@testing-library\/react$/, replacement: `${packageDir('@testing-library/react')}/dist/@testing-library/react.esm.js` },
       { find: /^react-dom(\/.*)?$/, replacement: `${packageDir('react-dom')}$1` },
@@ -21,6 +26,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     include: ['test/**/*.spec.tsx', 'test/**/*.spec.ts'],
+    setupFiles: ['../bpmn-flowaudit/test/setup/svgTransforms.ts'],
     server: { deps: { inline: ['@testing-library/react'] } },
   },
 })

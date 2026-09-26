@@ -2,6 +2,7 @@
 /** Validation issues grouped by severity with jump to the element. */
 import { computed, ref } from 'vue'
 import { issueMessage, severityLabel, type Severity, type ValidationIssue } from '@flowaudit/bpmn-flowaudit'
+import { countSeverity, filterIssues, ISSUE_ICONS as ICONS, SEVERITIES } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 
@@ -10,10 +11,8 @@ const emit = defineEmits<{ (e: 'jump', elementId: string): void }>()
 const { t, locale } = useI18n()
 const filter = ref<Severity | 'alle'>('alle')
 
-const ICONS: Record<Severity, string> = { fehler: 'error', warnung: 'warning', hinweis: 'hint' }
-const SEVERITIES: Severity[] = ['fehler', 'warnung', 'hinweis']
-const shown = computed(() => (filter.value === 'alle' ? props.issues : props.issues.filter((item) => item.severity === filter.value)))
-const count = (severity: Severity) => props.issues.filter((item) => item.severity === severity).length
+const shown = computed(() => filterIssues(props.issues, filter.value))
+const count = (severity: Severity) => countSeverity(props.issues, severity)
 </script>
 
 <template>
@@ -38,65 +37,3 @@ const count = (severity: Severity) => props.issues.filter((item) => item.severit
     </ol>
   </section>
 </template>
-
-<style>
-.fa-issues__filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.fa-issues__list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-issue {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 8px;
-  border: 1px solid var(--fa-border);
-  border-left-width: 3px;
-  border-radius: var(--fa-radius-sm);
-  background: var(--fa-surface);
-}
-
-.fa-issue--fehler {
-  border-left-color: var(--fa-danger);
-}
-
-.fa-issue--fehler > svg {
-  color: var(--fa-danger);
-}
-
-.fa-issue--warnung {
-  border-left-color: var(--fa-warning);
-}
-
-.fa-issue--warnung > svg {
-  color: var(--fa-warning);
-}
-
-.fa-issue--hinweis {
-  border-left-color: var(--fa-info);
-}
-
-.fa-issue--hinweis > svg {
-  color: var(--fa-info);
-}
-
-.fa-issue__body {
-  flex: 1;
-  min-width: 0;
-}
-
-.fa-issue__body p {
-  margin: 0;
-}
-</style>

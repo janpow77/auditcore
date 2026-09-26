@@ -1,102 +1,33 @@
 /**
- * Selection store: the selected element, its FlowAudit extensions and a
- * write function that goes through `modeling` (undoable).
+ * Selection store: the selected element, its FlowAudit extensions and
+ * undoable writes (framework-free `createSelectionCore`, mirrored into Vue).
  */
 
-import { computed, markRaw, shallowRef, watch, type ShallowRef } from 'vue'
-import {
-  emptyExtensions,
-  readExtensions,
-  writeExtensions,
-  readFlowstatValues,
-  writeFlowstatValues,
-  type DiagramElement,
-  type Extensions,
-  type FlowstatField,
-} from '@flowaudit/bpmn-flowaudit'
+import { computed } from 'vue'
+import { createSelectionCore, type SelectionCore } from '@flowaudit/bpmn-flowaudit/ui'
+import type { FlowstatField } from '@flowaudit/bpmn-flowaudit'
+import { useStore } from '../composables/useStore'
 import type { EditorStore } from './editorStore'
 
-export type SelectionStore = ReturnType<typeof createSelectionStore>
+export type SelectionStore = ReturnType<typeof bindSelectionCore>
 
-/** Reading and undoable writing of the selected element's properties. */
-function selectionEditing(element: ShallowRef<DiagramElement | null>, version: ShallowRef<number>, editorStore: EditorStore) {
-  function write(patch: Partial<Extensions>): void {
-    if (!element.value) return
-    writeExtensions(element.value, patch, editorStore.services())
+export function bindSelectionCore(core: SelectionCore) {
+  const state = useStore(core.store)
+  const version = computed(() => state.value.version)
+  return {
+    ...core,
+    core,
+    element: computed(() => state.value.element),
+    extensions: computed(() => state.value.extensions),
+    type: computed(() => state.value.type),
+    version,
+    flowstat: () => (void version.value, core.flowstat()),
+    setFlowstat: (field: FlowstatField, value: number | string | null) => core.setFlowstat(field, value),
+    property: (name: string) => (void version.value, core.property(name)),
+    documentation: () => (void version.value, core.documentation()),
   }
-
-  function rename(name: string): void {
-    if (element.value) editorStore.services().modeling.updateProperties(element.value, { name })
-  }
-
-  function setDocumentation(text: string): void {
-    const current = element.value
-    if (!current) return
-    const { modeling, moddle } = editorStore.services()
-    const documentation = text.trim() ? [moddle.create('bpmn:Documentation', { text })] : []
-    modeling.updateProperties(current, { documentation })
-  }
-
-  function flowstat() {
-    void version.value
-    return element.value ? readFlowstatValues(element.value.businessObject) : null
-  }
-
-  function setFlowstat(field: FlowstatField, value: number | string | null): void {
-    if (element.value) writeFlowstatValues(element.value, { [field]: value }, editorStore.services().modeling)
-  }
-
-  function property(name: string): string {
-    void version.value
-    const value = element.value?.businessObject.get(name)
-    return typeof value === 'string' ? value : ''
-  }
-
-  function documentation(): string {
-    void version.value
-    const docs = (element.value?.businessObject.get('documentation') as { text?: string }[] | undefined) ?? []
-    return docs.map((doc) => doc.text ?? '').join('\n')
-  }
-
-  return { write, rename, setDocumentation, flowstat, setFlowstat, property, documentation }
 }
 
-export function createSelectionStore(editorStore: EditorStore) {
-  const element = shallowRef<DiagramElement | null>(null)
-  const extensions = shallowRef<Extensions>(emptyExtensions())
-  const version = shallowRef(0)
-
-  function refresh(): void {
-    const current = element.value
-    extensions.value = current ? readExtensions(current.businessObject) : emptyExtensions()
-    version.value += 1
-  }
-
-  function onSelection(event: unknown): void {
-    const selection = (event as { newSelection?: DiagramElement[] }).newSelection ?? []
-    const [first] = selection.filter((item) => !item.labelTarget)
-    element.value = first ? markRaw(first) : null
-    refresh()
-  }
-
-  watch(
-    () => editorStore.editor.value,
-    (editor, previous) => {
-      previous?.off('selection.changed', onSelection)
-      editor?.on('selection.changed', onSelection)
-      element.value = null
-      refresh()
-    },
-    { immediate: true },
-  )
-  editorStore.onChange(refresh)
-
-  const type = computed(() => {
-    void version.value
-    return element.value?.businessObject?.$type ?? null
-  })
-
-  const editing = selectionEditing(element, version, editorStore)
-
-  return { element, extensions, type, version, ...editing, refresh }
+export function createSelectionStore(editorStore: EditorStore): SelectionStore {
+  return bindSelectionCore(createSelectionCore(editorStore.core))
 }

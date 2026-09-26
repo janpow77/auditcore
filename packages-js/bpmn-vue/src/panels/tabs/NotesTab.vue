@@ -5,6 +5,7 @@
  */
 import { computed, ref } from 'vue'
 import type { Comment } from '@flowaudit/bpmn-flowaudit'
+import { commentsOf, newComment, toggleResolved as toggled } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
@@ -16,18 +17,15 @@ const { t } = useI18n()
 const draft = ref('')
 
 const elementId = computed(() => selection.element.value?.id ?? '')
-const own = computed(() => props.comments.filter((comment) => comment.elementId === elementId.value))
+const own = computed(() => commentsOf(props.comments, elementId.value))
 
 function addComment(): void {
   if (!draft.value.trim() || !elementId.value) return
-  const comment: Comment = { id: `C${Date.now().toString(36)}`, elementId: elementId.value, text: draft.value.trim(), author: props.author, timestamp: new Date().toISOString(), resolved: false }
-  emit('update:comments', [...props.comments, comment])
+  emit('update:comments', [...props.comments, newComment(elementId.value, draft.value, props.author)])
   draft.value = ''
 }
 
-function toggleResolved(id: string): void {
-  emit('update:comments', props.comments.map((comment) => (comment.id === id ? { ...comment, resolved: !comment.resolved } : comment)))
-}
+const toggleResolved = (id: string) => emit('update:comments', toggled(props.comments, id))
 </script>
 
 <template>
@@ -61,38 +59,3 @@ function toggleResolved(id: string): void {
     </section>
   </div>
 </template>
-
-<style>
-.fa-comments {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0 0 8px;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-comment {
-  padding: 8px 10px;
-}
-
-.fa-comment p {
-  margin: 0 0 4px;
-}
-
-.fa-comment footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.fa-comment--resolved p {
-  color: var(--fa-text-muted);
-  text-decoration: line-through;
-}
-
-.fa-comments__new {
-  display: flex;
-  gap: 6px;
-}
-</style>

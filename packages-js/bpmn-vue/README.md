@@ -20,10 +20,10 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-vue-0.1.0.tgz
+npm install @flowaudit/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-vue-0.2.0.tgz
 ```
 
-Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor` und `@flowaudit/bpmn-flowaudit`; Peer-Abhängigkeit `vue` ^3.5. Stile: `@flowaudit/bpmn-vue/style.css`. Drei Ausgaben: Vue-Bibliothek (`dist/`), Web Component (`dist-wc/`, Import `@flowaudit/bpmn-vue/web-component`, ein einzelnes Modul) und eigenständige App (`dist-standalone/`).
+Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor`, `@flowaudit/bpmn-flowaudit`, `@flowaudit/ui-core` und `@flowaudit/common`; Peer-Abhängigkeit `vue` ^3.5. Stile: `@flowaudit/bpmn-vue/style.css`. Drei Ausgaben: Vue-Bibliothek (`dist/`), Web Component (`dist-wc/`, Import `@flowaudit/bpmn-vue/web-component`, ein einzelnes Modul) und eigenständige App (`dist-standalone/`).
 
 Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
 Stamm, Bau mit `npm run build -w @flowaudit/bpmn-vue`).
@@ -70,8 +70,10 @@ Attribute: `src`, `api-base`, `diagram-id`, `name`, `author`, `locale`,
 `diagram-info-change`, `error`. Methoden: `getXml()`, `getSvg()`,
 `select(id)`, `reload()`.
 
-**React:** über `@flowaudit/bpmn-react`, das diese Web Component typisiert
-kapselt.
+**React:** `@flowaudit/bpmn-react` ist eine native React-Fassung derselben
+Oberfläche (kein Wrapper um die Web Component). Beide rendern aus dem
+framework-freien Kern `@flowaudit/bpmn-flowaudit/ui`; Stores und Composables
+dieses Pakets binden dessen Controller an Vue.
 
 **Eigenständige App:** `dist-standalone/` spricht den REST-Vertrag
 `docs/bpmn/rest-api.md`; die API-Basis kommt aus `window.FLOWAUDIT_CONFIG`,
@@ -88,58 +90,62 @@ Wichtige Eigenschaften von `FlowauditEditor`: `xml`, `name`, `diagramId`,
 und Ereignisse stehen unten (generiert).
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (48):
+Exporte der Einstiegspunkte aus `package.json#exports` (52):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@flowaudit/bpmn-vue` | `BaseDialog` | Vue-Komponente | – | `components/base/BaseDialog.vue` |
 | `@flowaudit/bpmn-vue` | `CollectionStore` | Typ | – | `stores/collectionStore` |
 | `@flowaudit/bpmn-vue` | `CollectionTree` | Vue-Komponente | – | `components/collection/CollectionTree.vue` |
-| `@flowaudit/bpmn-vue` | `CompareSource` | Schnittstelle | A diagram (or version) the current diagram can be compared with. | `components/views/compareSource` |
-| `@flowaudit/bpmn-vue` | `CreateEditorOptions` | Schnittstelle | – | `editor/createEditor` |
+| `@flowaudit/bpmn-vue` | `CompareSource` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `CreateEditorOptions` | Re-Export | – | `./editor/defaultFactory` |
 | `@flowaudit/bpmn-vue` | `DiagramInfoColumn` | Vue-Komponente | – | `components/collection/DiagramInfoColumn.vue` |
 | `@flowaudit/bpmn-vue` | `EditorContext` | Schnittstelle | – | `stores/context` |
-| `@flowaudit/bpmn-vue` | `EditorFactory` | Typ | – | `editor/createEditor` |
-| `@flowaudit/bpmn-vue` | `EditorLike` | Schnittstelle | The part of `BpmnEditor` the UI uses (contract of | `editor/createEditor` |
-| `@flowaudit/bpmn-vue` | `EditorPorts` | Schnittstelle | – | `stores/context` |
+| `@flowaudit/bpmn-vue` | `EditorFactory` | Re-Export | – | `./editor/defaultFactory` |
+| `@flowaudit/bpmn-vue` | `EditorLike` | Re-Export | – | `./editor/defaultFactory` |
+| `@flowaudit/bpmn-vue` | `EditorPorts` | Re-Export | – | `./stores/context` |
 | `@flowaudit/bpmn-vue` | `EditorStore` | Typ | – | `stores/editorStore` |
 | `@flowaudit/bpmn-vue` | `FaIcon` | Vue-Komponente | – | `components/base/FaIcon.vue` |
-| `@flowaudit/bpmn-vue` | `FieldDescriptor` | Schnittstelle | – | `panels/descriptors` |
+| `@flowaudit/bpmn-vue` | `FieldDescriptor` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
 | `@flowaudit/bpmn-vue` | `FlowauditEditor` | Vue-Komponente | – | `components/FlowauditEditor.vue` |
 | `@flowaudit/bpmn-vue` | `FlowauditWorkbench` | Vue-Komponente | – | `components/FlowauditWorkbench.vue` |
 | `@flowaudit/bpmn-vue` | `GroupOverview` | Vue-Komponente | – | `components/collection/GroupOverview.vue` |
 | `@flowaudit/bpmn-vue` | `I18n` | Schnittstelle | – | `i18n/useI18n` |
 | `@flowaudit/bpmn-vue` | `IssueList` | Vue-Komponente | – | `components/views/IssueList.vue` |
-| `@flowaudit/bpmn-vue` | `LISTS` | Konstante | – | `panels/descriptors` |
+| `@flowaudit/bpmn-vue` | `LISTS` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
 | `@flowaudit/bpmn-vue` | `LegalBasisEditor` | Vue-Komponente | – | `panels/legal/LegalBasisEditor.vue` |
-| `@flowaudit/bpmn-vue` | `ListDescriptor` | Schnittstelle | – | `panels/descriptors` |
-| `@flowaudit/bpmn-vue` | `Locale` | Typ | – | `i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `MESSAGES_DE` | Konstante | – | `i18n/messages.de` |
-| `@flowaudit/bpmn-vue` | `MESSAGES_EN` | Konstante | – | `i18n/messages.en` |
+| `@flowaudit/bpmn-vue` | `ListDescriptor` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `Locale` | Re-Export | – | `./i18n/useI18n` |
+| `@flowaudit/bpmn-vue` | `MESSAGES_DE` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `MESSAGES_EN` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
 | `@flowaudit/bpmn-vue` | `PropertiesPanel` | Vue-Komponente | – | `panels/PropertiesPanel.vue` |
-| `@flowaudit/bpmn-vue` | `RestCatalogue` | Klasse | – | `rest/restPorts` |
-| `@flowaudit/bpmn-vue` | `RestEsi` | Klasse | – | `rest/restPorts` |
-| `@flowaudit/bpmn-vue` | `RestLegalSearch` | Klasse | – | `rest/restPorts` |
-| `@flowaudit/bpmn-vue` | `RestOptions` | Schnittstelle | – | `rest/restPorts` |
-| `@flowaudit/bpmn-vue` | `RestProfiles` | Klasse | – | `rest/restPorts` |
-| `@flowaudit/bpmn-vue` | `RestStorage` | Klasse | Storage over REST. The collection is one JSON document; an `ETag` of the server is sent back as `If-Match`, so concurrent changes fail with 412 instead of overwriting each other. | `rest/restPorts` |
-| `@flowaudit/bpmn-vue` | `RestValidation` | Klasse | – | `rest/restPorts` |
+| `@flowaudit/bpmn-vue` | `RestCatalogue` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `RestEsi` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `RestLegalSearch` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `RestOptions` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `RestProfiles` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `RestStorage` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `RestValidation` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
 | `@flowaudit/bpmn-vue` | `SelectionStore` | Typ | – | `stores/selectionStore` |
-| `@flowaudit/bpmn-vue` | `TABS` | Konstante | – | `panels/tabs` |
-| `@flowaudit/bpmn-vue` | `TabDefinition` | Schnittstelle | – | `panels/tabs` |
-| `@flowaudit/bpmn-vue` | `ToolbarAction` | Typ | Declarative toolbar entries: id, icon, label, group and whether the action needs write access. `EditorToolbar` renders them and emits `action`. | `components/toolbar/toolbarActions` |
+| `@flowaudit/bpmn-vue` | `TABS` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `TabDefinition` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
+| `@flowaudit/bpmn-vue` | `ToolbarAction` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
 | `@flowaudit/bpmn-vue` | `ValidationStore` | Typ | – | `stores/validationStore` |
+| `@flowaudit/bpmn-vue` | `bindEditorCore` | Funktion | Vue view of an editor controller: reactive `state` and the instance as computed. | `stores/editorStore` |
+| `@flowaudit/bpmn-vue` | `bindSelectionCore` | Funktion | – | `stores/selectionStore` |
+| `@flowaudit/bpmn-vue` | `bindValidationCore` | Funktion | – | `stores/validationStore` |
 | `@flowaudit/bpmn-vue` | `createCollectionStore` | Funktion | – | `stores/collectionStore` |
 | `@flowaudit/bpmn-vue` | `createEditorStore` | Funktion | – | `stores/editorStore` |
 | `@flowaudit/bpmn-vue` | `createI18n` | Funktion | – | `i18n/useI18n` |
 | `@flowaudit/bpmn-vue` | `createSelectionStore` | Funktion | – | `stores/selectionStore` |
 | `@flowaudit/bpmn-vue` | `createValidationStore` | Funktion | – | `stores/validationStore` |
-| `@flowaudit/bpmn-vue` | `defaultEditorFactory` | Funktion | – | `editor/createEditor` |
+| `@flowaudit/bpmn-vue` | `defaultEditorFactory` | Konstante | – | `editor/defaultFactory` |
 | `@flowaudit/bpmn-vue` | `provideEditorContext` | Funktion | – | `stores/context` |
 | `@flowaudit/bpmn-vue` | `provideI18n` | Funktion | – | `i18n/useI18n` |
-| `@flowaudit/bpmn-vue` | `restPorts` | Funktion | All ports for one REST base URL. | `rest/restPorts` |
+| `@flowaudit/bpmn-vue` | `restPorts` | Re-Export | – | `@flowaudit/bpmn-flowaudit/ui` |
 | `@flowaudit/bpmn-vue` | `useEditorContext` | Funktion | – | `stores/context` |
 | `@flowaudit/bpmn-vue` | `useI18n` | Funktion | Injected i18n, or a German default when used standalone. | `i18n/useI18n` |
+| `@flowaudit/bpmn-vue` | `useStore` | Funktion | – | `composables/useStore` |
 
 ### Props und Ereignisse der Vue-Komponenten
 
@@ -318,7 +324,7 @@ Demo (`npm run test:e2e`). Dokumentation: `docs/bpmn/frontend.md`.
 
 ## Abhängigkeiten
 
-`@flowaudit/bpmn-editor@0.1.0`, `@flowaudit/bpmn-flowaudit@0.1.0`; Peer
+`@flowaudit/bpmn-editor@0.1.0`, `@flowaudit/bpmn-flowaudit@0.2.0` (Fachschicht und UI-Kern `./ui`), `@flowaudit/ui-core@0.1.0` (Fokusfalle der Dialoge); Peer
 `vue@^3.5.0`. Die Web Component bündelt Vue mit.
 
 ## Sicherheit und Datenschutz

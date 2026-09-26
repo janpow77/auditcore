@@ -60,6 +60,18 @@ export default tseslint.config(
       'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
     },
   },
+  // BPMN: native React-Oberfläche und framework-freier UI-Kern mit denselben Grenzen.
+  {
+    files: ['packages-js/bpmn-react/src/**/*.{ts,tsx}', 'packages-js/bpmn-flowaudit/src/ui/**/*.ts'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
+      complexity: ['error', 10],
+      'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 250, skipBlankLines: false, skipComments: false }],
+    },
+  },
   {
     files: ['packages-js/**/src/**/*.tsx'],
     rules: {

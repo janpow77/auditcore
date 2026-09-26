@@ -22,8 +22,8 @@ Tarballs. Bis dahin lassen sich die Tarballs im Repository selbst packen
 | `@flowaudit/kanban-core` | Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte), gleiche Regeln wie `auditcore_kanban` | keines | – |
 | `@flowaudit/bpmn-editor` | BPMN-2.0-Zeicheneditor auf Basis von diagram-js | keines | – |
 | `@flowaudit/bpmn-flowaudit` | FlowAudit-Fachschicht für BPMN (Schema flowaudit 1.0/1.1, Prüfpfad, Berichte) | keines | (`bpmn-editor` als optionale Peer-Abhängigkeit) |
-| `@flowaudit/bpmn-vue` | BPMN-Oberfläche: Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5 | `bpmn-editor`, `bpmn-flowaudit` |
-| `@flowaudit/bpmn-react` | Typisierter React-Wrapper um `<flowaudit-bpmn-editor>` | React 18.3/19 | `bpmn-vue`, `bpmn-flowaudit` (dazu transitiv `bpmn-editor`) |
+| `@flowaudit/bpmn-vue` | BPMN-Oberfläche: Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
+| `@flowaudit/bpmn-react` | Native React-Oberfläche des BPMN-Editors ohne Vue-Laufzeit | React 18.3/19 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
 
 Die letzte Spalte ist entscheidend: **Jedes Paket der Hülle muss in der
 Anwendung ausdrücklich mit seiner Tarball-URL stehen.** npm prüft die internen
@@ -238,9 +238,9 @@ Die `vendor/`-Ablage funktioniert wie bei Vue.
   `vue`, ruft `defineFlowauditElements()` auf und lädt
   `@flowaudit/ui/style.css`. Maßgeblich ist der aktuelle Stand in der
   [README von ui-react](../../packages-js/ui-react/README.md).
-- **BPMN:** `@flowaudit/bpmn-react` kapselt die Web Component
-  `<flowaudit-bpmn-editor>` aus `@flowaudit/bpmn-vue`; npm installiert dabei
-  `vue` als Peer-Abhängigkeit mit.
+- **BPMN:** `@flowaudit/bpmn-react` ist die native React-Oberfläche des
+  BPMN-Editors (ohne Vue) auf demselben Kern wie `@flowaudit/bpmn-vue`; Stile
+  aus `@flowaudit/bpmn-react/style.css`.
 
 ### Minimalbeispiel
 

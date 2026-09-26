@@ -5,6 +5,7 @@
  */
 import { computed } from 'vue'
 import { FLOWSTAT_FIELDS, isActivity, type FlowstatField, type Marker } from '@flowaudit/bpmn-flowaudit'
+import { FLOWSTAT_KEYS as fields, flowstatValue } from '@flowaudit/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import MarkerPicker from './MarkerPicker.vue'
@@ -15,7 +16,6 @@ const { t } = useI18n()
 const element = computed(() => selection.element.value)
 const type = computed(() => selection.type.value ?? '')
 const flowstat = computed(() => (isActivity(type.value) ? selection.flowstat() : null))
-const fields = Object.keys(FLOWSTAT_FIELDS) as FlowstatField[]
 
 function setMarkers(markers: Marker[]): void {
   selection.write({ markers })
@@ -27,10 +27,7 @@ function setColor(color: { fill: string; stroke: string }): void {
   editor.services().modeling.setColor([current], color)
 }
 
-function setFlowstat(field: FlowstatField, raw: string): void {
-  const numeric = FLOWSTAT_FIELDS[field].numeric
-  selection.setFlowstat(field, raw.trim() === '' ? null : numeric ? Number(raw) : raw)
-}
+const setFlowstat = (field: FlowstatField, raw: string) => selection.setFlowstat(field, flowstatValue(field, raw))
 </script>
 
 <template>

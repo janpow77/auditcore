@@ -5,28 +5,16 @@
  * reasons, graphical diff in the canvas.
  */
 import { computed, onBeforeUnmount, ref, shallowRef } from 'vue'
-import {
-  changeLabel,
-  checkTargetActual,
-  compareVersions,
-  diffColors,
-  HIGHLIGHT_CLASSES,
-  loadDefinitions,
-  modelFromDefinitions,
-  synopsis,
-  type Comparison,
-  type FlowauditHighlight,
-  type TargetActualCheck,
-} from '@flowaudit/bpmn-flowaudit'
+import { changeLabel, synopsis, type Comparison, type FlowauditHighlight, type TargetActualCheck } from '@flowaudit/bpmn-flowaudit'
+import { compareClasses, runComparison, type CompareMode, type CompareSource } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
-import type { CompareSource } from './compareSource'
 
 const props = defineProps<{ sources: CompareSource[] }>()
 const { editor } = useEditorContext()
 const { t } = useI18n()
-const mode = ref<'version' | 'targetActual'>('targetActual')
+const mode = ref<CompareMode>('targetActual')
 const sourceId = ref('')
 const fileXml = ref<string | null>(null)
 const comparison = shallowRef<Comparison | null>(null)
@@ -46,27 +34,13 @@ async function run(): Promise<void> {
   try {
     const xml = await otherXml()
     if (!xml) return
-    const other = modelFromDefinitions((await loadDefinitions(xml)).definitions)
-    const current = editor.model()
-    comparison.value = mode.value === 'version' ? compareVersions(other, current) : null
-    check.value = mode.value === 'targetActual' ? checkTargetActual(other, current) : null
-    paint()
+    const result = await runComparison(mode.value, xml, editor.model())
+    comparison.value = result.comparison
+    check.value = result.check
+    layer()?.apply('diff', compareClasses(result))
   } catch (caught) {
     error.value = (caught as Error).message
   }
-}
-
-function paint(): void {
-  const classes = new Map<string, string>()
-  if (comparison.value) {
-    const [, after] = diffColors(comparison.value)
-    for (const [id, kind] of after) classes.set(id, HIGHLIGHT_CLASSES.diff[kind])
-  }
-  for (const result of check.value?.results ?? []) {
-    if (result.actualId) classes.set(result.actualId, result.met ? HIGHLIGHT_CLASSES.walkthrough.erfuellt : HIGHLIGHT_CLASSES.walkthrough.nicht_erfuellt)
-  }
-  for (const id of check.value?.additionalInActual ?? []) classes.set(id, HIGHLIGHT_CLASSES.diff.hinzugefuegt)
-  layer()?.apply('diff', classes)
 }
 
 async function onFile(event: Event): Promise<void> {
@@ -121,39 +95,3 @@ onBeforeUnmount(() => layer()?.clear('diff'))
     </template>
   </section>
 </template>
-
-<style>
-.fa-compare__results {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-compare__results li {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 8px;
-  align-items: baseline;
-  padding: 6px 8px;
-  border-left: 3px solid;
-  border-radius: 4px;
-  background: var(--fa-surface-2);
-}
-
-.fa-compare__met {
-  border-color: var(--fa-success) !important;
-}
-
-.fa-compare__not-met {
-  border-color: var(--fa-danger) !important;
-}
-
-.fa-compare__legend {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-}
-</style>
