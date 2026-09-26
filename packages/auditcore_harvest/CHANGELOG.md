@@ -42,3 +42,14 @@ unverändert, alle bisherigen Namen bleiben importierbar.
 | Module > 400 Zeilen | 0 | 0 |
 | `Any`-Verwendungen | 45 | 3 |
 | mypy --strict | 0 | 0 |
+
+## 0.1.0 – 2026-09-22
+
+Erstausgabe mit Vertrag `auditcore_harvest.contract/1`: `HarvestEngine`,
+Ports, Referenzadapter (JSON-API, RSS/Atom), Contract-Suite
+`auditcore_harvest.testing`, Adapteranleitung und versionierter
+Quellenkatalog (35 belegte Quellen). Characterization der Bestandsharvester
+aus auditdatabase, audit_designer und regulierung
+(`tests/fixtures/legacy_harvest_observed.json`). Netzwerktransporte
+(`UrllibTransport`) sind nicht Teil des Kerns, sondern Beispiel in
+`docs/examples/urllib_transport.py`.
