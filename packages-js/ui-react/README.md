@@ -118,7 +118,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (191):
+Exporte der Einstiegspunkte aus `package.json#exports` (206):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -151,6 +151,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (191):
 | `@flowaudit/ui-react` | `ComparisonsPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DataProtectionError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `DataProtectionPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `DbKanbanCard` | Funktion | Karte der Datenbankansicht wie `DbKanbanCard.vue` (Ziehen, Strg+Pfeil). | `dbkanban/DbKanbanCard` |
+| `@flowaudit/ui-react` | `DbKanbanCardProps` | Schnittstelle | – | `dbkanban/DbKanbanCard` |
+| `@flowaudit/ui-react` | `DbKanbanColumn` | Funktion | Spalte der Datenbankansicht wie `DbKanbanColumn.vue` (Ablegen setzt den Wert). | `dbkanban/DbKanbanColumn` |
+| `@flowaudit/ui-react` | `DbKanbanColumnProps` | Schnittstelle | – | `dbkanban/DbKanbanColumn` |
+| `@flowaudit/ui-react` | `DbKanbanError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `DbKanbanInputs` | Schnittstelle | – | `dbkanban/useDbKanban` |
 | `@flowaudit/ui-react` | `DecimalSeparator` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `Delimiter` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `Dialog` | Funktion | Modaler Dialog wie `FaDialog`: Fokusfalle, Escape, Rückgabe des Fokus, beschriftet über Titel und Beschreibung. | `base/Dialog` |
@@ -165,6 +171,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (191):
 | `@flowaudit/ui-react` | `FlowauditComparisons` | Konstante | Dokumentvergleiche als native React-Komponente (Vertrag wie `<flowaudit-comparisons>`): zwei Fassungen hochladen, gespeicherte Vergleiche suchen, öffnen (eingebettete Synopse), lös … | `documents/FlowauditComparisons` |
 | `@flowaudit/ui-react` | `FlowauditComparisonsHandle` | Schnittstelle | – | `documents/FlowauditComparisons` |
 | `@flowaudit/ui-react` | `FlowauditComparisonsProps` | Schnittstelle | – | `documents/FlowauditComparisons` |
+| `@flowaudit/ui-react` | `FlowauditDbKanban` | Funktion | Datenbankansicht als Kanban, native React-Komponente (Vertrag wie `<flowaudit-db-kanban>`): Datensätze nach einer Auswahl-Eigenschaft gruppiert, Ablegen oder Strg+Pfeil setzt den Z … | `dbkanban/FlowauditDbKanban` |
+| `@flowaudit/ui-react` | `FlowauditDbKanbanProps` | Typ | – | `dbkanban/FlowauditDbKanban` |
 | `@flowaudit/ui-react` | `FlowauditDsfa` | Funktion | Datenschutz-Folgenabschätzung (Art. 35 DSGVO) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-dsfa>`: Übersicht, Schwellwertanalyse, Risiko, Vorschlag der B … | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
@@ -216,6 +224,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (191):
 | `@flowaudit/ui-react` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `PopulationItem` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ProfileDetail` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `RecordMove` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `RecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui-react` | `RecordRow` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui-react` | `RecordTable` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui-react` | `RestError` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RestOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RiskFilter` | Re-Export | – | `@flowaudit/ui-core` |
@@ -259,6 +271,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (191):
 | `@flowaudit/ui-react` | `UseAuthToken` | Schnittstelle | – | `hooks/state` |
 | `@flowaudit/ui-react` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@flowaudit/ui-react` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
+| `@flowaudit/ui-react` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
 | `@flowaudit/ui-react` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui-react` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui-react` | `UseScreeningReview` | Schnittstelle | – | `screening/useScreeningReview` |
@@ -273,6 +286,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (191):
 | `@flowaudit/ui-react` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui-react` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createSamplingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createScreeningRestPort` | Re-Export | – | `@flowaudit/ui-core` |
@@ -299,6 +313,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (191):
 | `@flowaudit/ui-react` | `useBenford` | Funktion | React-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (dieselbe Logik wie `useBenford` in Vue). | `benford/useBenford` |
 | `@flowaudit/ui-react` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente und bei Escape; abgemeldet beim Unmount. | `hooks/dom` |
 | `@flowaudit/ui-react` | `useComparisons` | Funktion | React-Anbindung der Vergleichsverwaltung aus `@flowaudit/ui-core` (dieselbe Logik wie `useComparisons` in Vue). | `documents/useComparisons` |
+| `@flowaudit/ui-react` | `useDbKanban` | Funktion | React-Anbindung der Datenbankansicht aus `@flowaudit/ui-core` (dieselbe Logik wie `useDbKanban` in Vue). | `dbkanban/useDbKanban` |
 | `@flowaudit/ui-react` | `useDebouncedCallback` | Funktion | Entprellte, stabile Funktion; ruft immer die neueste `fn` auf und verwirft einen ausstehenden Aufruf beim Unmount. | `hooks/state` |
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
 | `@flowaudit/ui-react` | `useKanbanBoard` | Funktion | – | `kanban/useKanbanBoard` |
