@@ -74,6 +74,7 @@ das Modul:
 | `safe_xml` | `parse_xml`, `defused_fromstring` (Extra `xml`) | `forbid_dtd` |
 | `html_text` | `LinkCollector`, `anchor_links`, `has_html_marker` | `markers`, `window` |
 | `numeric` | `numpy_pairwise_sum`, `numpy_round`, `require_finite`, `parse_percent_rate`, `share_percent`, `as_float`, `as_float_comma` | Fehlermeldungen als Fabriken; `digits`, `multiply_first`; `blank_as_none`, `bool_as_none`, `catch_type_error` |
+| `rest` | `ContractError`, `Reply`, `json_reply`, `decode_body`, `guarded`, `choice`, `bounded_list` – rahmenwerkfreier Teil der JSON-REST-Verträge (Starlette/FastAPI-Adapter bleiben im Paket) | `error` = paketeigene `ContractError`-Unterklasse; `parse_float` (statistics: `Decimal`) |
 | `filenames` | `path_component`, `unicode_filename`, `replace_reserved`, `underscore_slug`, `dashed_slug`, `export_filename` | je Funktion eine charakterisierte App-Variante; Fallback und Länge als Parameter |
 | `aio` | `ThreadLoopRunner`, `run_sync`, `run_on_current_loop` | ein Loop je Thread und Runner (fork-sicher) bzw. Legacy-Variante |
 | `clock`, `ids` | `utc_now`, `require_aware`, `new_uuid` | – |
@@ -104,6 +105,7 @@ das Modul:
 | `auditcore_common.numeric` | Floating-point helpers with documented, NumPy-compatible results without NumPy. |
 | `auditcore_common.optional` | Lazy import of optional extras with the caller's own error type and message. |
 | `auditcore_common.profiles` | Packaged, versioned JSON profiles: list, recommend and load them explicitly. |
+| `auditcore_common.rest` | Framework-neutral parts of the small JSON REST contracts of the domain packages. |
 | `auditcore_common.safe_xml` | XML parsing only through ``defusedxml`` (extra ``xml``), imported lazily. |
 | `auditcore_common.text` | Small text normalisations shared by several packages. |
 <!-- api-overview:end -->

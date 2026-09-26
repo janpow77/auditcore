@@ -2,6 +2,25 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #14, #23, #59).
 
+## Unreleased – Hilfsfunktionen aus auditcore_common
+
+Keine Verhaltensänderung: alle 2 116 bestehenden Tests (bitgenauer
+krypto-Replay, Profile, polars-Adapter, Reproduzierbarkeit) laufen unverändert
+grün. Neue Laufzeitabhängigkeit `auditcore_common==0.1.1`
+(APT `python3-auditcore-common`).
+
+- `_numeric.numpy_pairwise_sum` entfällt; `auditcore_common.numeric.numpy_pairwise_sum`
+  (bitgleich, dort differenziell und mit Hypothesis geprüft).
+- `_series._finite` ruft `auditcore_common.numeric.require_finite` mit den
+  bisherigen Meldungen auf.
+- `profiles.fingerprint`, `available_profiles` und `load_profile` bleiben als
+  dünne Einstiegspunkte über `auditcore_common.hashing.canonical_sha256`,
+  `profiles.packaged_profile_ids` und `profiles.load_packaged_profile`
+  (`require_text=True`, `invalid_name="invalid"` – gleiche Prüfreihenfolge
+  und Meldungen).
+- `polars_adapter._pl` lädt polars über `auditcore_common.optional.require_module`
+  (gleiche `DependencyError`-Meldung, verkettet mit dem `ImportError`).
+
 ## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. README-Installationshinweis auf v0.4.0.
