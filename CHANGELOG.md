@@ -21,6 +21,15 @@
   (`docs/ui/reporting-rest.md`). Sechs Paritätsfälle plus Interaktionsfolge,
   Demo-Seite „Tabellenexport (Excel)“ und API-E2E-Test.
 
+- CI (`js-packages`, `nightly`): Vitest-Worker an die CPU-Quote der
+  selbst gehosteten Runner angepasst (`scripts/js/vitest-workers.sh` setzt
+  `VITEST_MAX_WORKERS`). Node 20 (libuv 1.46) ignoriert die cgroup-Quote von
+  2 CPUs und meldet 20, Vitest startete daher 19 Worker; die Paritätstests in
+  `ui-react` liefen sporadisch in das 5-s-Zeitlimit. Node 22 beachtete die
+  Quote bereits. Das pauschale `testTimeout` von 20 s in
+  `ui-react/vitest.config.ts` (aus #159) ist wieder entfernt; nur die
+  Paritätsdateien setzen über `test/parity/setup.ts` gezielt 10 s.
+
 - Geo-Karte: UTM-Eingabe des Bezugspunkts (`POST /utm/geographisch` von
   `auditcore_geo.web`) in Vue (`GeoUtmInput`) und React nativ – Zone,
   Halbkugel, Ost- und Nordwert mit Feldprüfung im Kern
