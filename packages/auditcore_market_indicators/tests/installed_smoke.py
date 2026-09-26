@@ -9,7 +9,7 @@ import auditcore_market_indicators as mi
 def main() -> None:
     """Indicators, packaged profiles and the error contract from the installed package."""
     package = distribution("auditcore_market_indicators")
-    assert package.version == "0.1.3" and mi.__version__ == "0.1.2"
+    assert package.version == "0.1.3" and mi.__version__ == "0.1.3"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.0"], runtime
     assert find_spec("auditcore") is None

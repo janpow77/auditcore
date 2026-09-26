@@ -23,7 +23,7 @@ from auditcore_geo import (
 def main() -> None:
     """Profile, Umkreis, Fläche mit Rand, UTM und die optionale Adaptergrenze aufrufen."""
     paket = distribution("auditcore_geo")
-    assert paket.version == "0.3.0"
+    assert paket.version == "0.3.1"
     laufzeit = [r for r in paket.requires or [] if "extra ==" not in r]
     assert laufzeit == ["auditcore_common==0.2.0"], laufzeit
     assert find_spec("auditcore") is None
