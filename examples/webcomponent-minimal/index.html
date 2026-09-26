@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FlowAudit – Web Components ohne Bundler</title>
+    <link rel="stylesheet" href="./node_modules/@flowaudit/ui/dist/ui.css" />
+    <style>
+      html { background: var(--fa-color-bg); color: var(--fa-color-text); font-family: var(--fa-font-sans); }
+    </style>
+    <!-- Bare Imports der Pakete auf Dateien abbilden (Pfade relativ zu dieser Seite). -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@flowaudit/ui/elements": "./node_modules/@flowaudit/ui/dist/elements.js",
+          "@flowaudit/ui-core": "./node_modules/@flowaudit/ui-core/dist/index.js",
+          "@flowaudit/common": "./node_modules/@flowaudit/common/dist/index.js",
+          "@flowaudit/common/browser": "./node_modules/@flowaudit/common/dist/browser.js",
+          "@flowaudit/kanban-core": "./node_modules/@flowaudit/kanban-core/dist/index.js",
+          "vue": "./node_modules/vue/dist/vue.esm-browser.prod.js",
+          "leaflet": "./node_modules/leaflet/dist/leaflet-src.esm.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main style="max-width: 48rem; margin: 2rem auto; padding: 0 1rem">
+      <h1>Belege</h1>
+      <flowaudit-table id="belege"></flowaudit-table>
+      <p id="auswahl" role="status"></p>
+    </main>
+    <script type="module">
+      import { defineFlowauditElements } from '@flowaudit/ui/elements'
+
+      defineFlowauditElements({ locale: 'de' })
+      const table = document.getElementById('belege')
+      // Objekte und Listen als JS-Eigenschaften setzen, nicht als Attribute.
+      table.caption = 'Belege'
+      table.clickable = true
+      table.columns = [
+        { key: 'beleg', label: 'Beleg', sortable: true },
+        { key: 'betrag', label: 'Betrag (EUR)', align: 'end' },
+      ]
+      table.rows = [
+        { id: 'r1', beleg: 'R-2026-001', betrag: '1.250,50' },
+        { id: 'r2', beleg: 'R-2026-002', betrag: '980,00' },
+      ]
+      // Ereignisse: CustomEvent in kebab-case, Nutzdaten in detail[0].
+      table.addEventListener('row-click', (event) => {
+        document.getElementById('auswahl').textContent = `Ausgewählt: ${event.detail[0].beleg}`
+      })
+    </script>
+  </body>
+</html>

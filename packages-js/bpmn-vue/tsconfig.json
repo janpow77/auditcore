@@ -10,6 +10,7 @@
       "@flowaudit/bpmn-flowaudit/ui": ["../bpmn-flowaudit/src/ui/index.ts"],
       "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts"],
       "@flowaudit/ui-core": ["../ui-core/src/index.ts"],
+      "@flowaudit/kanban-core": ["../kanban-core/src/index.ts"],
       "@flowaudit/common": ["../common/src/index.ts"],
       "@flowaudit/common/browser": ["../common/src/browser.ts"]
     }

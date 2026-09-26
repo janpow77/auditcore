@@ -11,23 +11,20 @@ auf (`additionalModules`, `moddleExtensions`).
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                                   # im Repository-Stamm
-npm run build -w @flowaudit/bpmn-editor  # dist/: ESM, Typen, CSS
-npm run demo -w @flowaudit/bpmn-editor   # Demo-Seite zur Sichtprüfung
+npm install @flowaudit/bpmn-editor@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-editor-0.1.0.tgz
 ```
 
-Im Anwendungsrepository:
+Keine weiteren `@flowaudit`-Pakete. Stile: `@flowaudit/bpmn-editor/style.css`.
 
-```sh
-npm install @flowaudit/bpmn-editor
-```
-
-Das Paket ist noch nicht in einer npm-Registry veröffentlicht; bis dahin
-Bezug über den Workspace oder ein mit `npm pack -w @flowaudit/bpmn-editor`
-erzeugtes Tarball. Die Stile kommen aus `@flowaudit/bpmn-editor/style.css`.
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/bpmn-editor`).
 
 ## Schnellstart
 

@@ -1,0 +1,4 @@
+# Abhängigkeiten von auditcore_invoicesynth aus dem Release v0.4.1 (hashgebunden).
+auditcore_invoicegenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_invoicegenerator-0.2.2-py3-none-any.whl#sha256=540994598e88ff77e01966823264e196b71a2fe34800a2010af45befdf1715f9
+auditcore_dummygenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_dummygenerator-0.1.2-py3-none-any.whl#sha256=cd90f739551af590f560a167f2e2a70f71aed79f8972500e672265d97ad3bf90
+auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_common-0.1.1-py3-none-any.whl#sha256=5b6c5659de0d1bb7b8d2c175e295851a5be64a56223050d27c75645b13b90ebd

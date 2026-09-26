@@ -11,29 +11,27 @@ Verzeichnisses von Verarbeitungstätigkeiten, Vorschau und Entscheidung der
 Datenschutz-Folgenabschätzung, Zustand und Verteilung der Risiko-Merkmale,
 Trefferprüfung beim Screening, Eingabeprüfung und Anfragen von Stichprobe und
 Benford-Analyse samt Diagrammgeometrie, Formularprüfung, Liste und Import der
-Dokumentvergleiche. Die Oberflächenpakete binden die
+Dokumentvergleiche, Gruppieren und Verschieben der Datenbankansicht als Kanban.
+Die Oberflächenpakete binden die
 Zustandsautomaten nur an ihr Framework an. Kein Vue, kein React, kein
 eigener Netzwerkzugriff außer über die Ports.
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                                # im Repository-Stamm
-npm run build -w @flowaudit/ui-core   # dist/: ESM und Typen; Stile unter styles/
+npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz
 ```
 
-Im Anwendungsrepository (meist indirekt über `@flowaudit/ui` oder
-`@flowaudit/ui-react`):
+Abhängigkeitshülle: dazu `@flowaudit/common`. Stile: `@flowaudit/ui-core/style.css` (Designtoken `--fa-*` und Komponentenstile).
 
-```sh
-npm install @flowaudit/ui-core @flowaudit/common
-```
-
-Das Paket ist nicht in einer npm-Registry veröffentlicht; Bezug über den
-Workspace oder ein mit `npm pack -w @flowaudit/ui-core` erzeugtes Tarball
-(zusammen mit `@flowaudit/common`).
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/ui-core`).
 
 ## Schnellstart
 
@@ -74,7 +72,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (622):
+Exporte der Einstiegspunkte aus `package.json#exports` (644):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -174,6 +172,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `DataProtectionRequestHooks` | Schnittstelle | – | `dataprotection/requests` |
 | `@flowaudit/ui-core` | `DataProtectionTranslate` | Typ | – | `dataprotection/messages` |
 | `@flowaudit/ui-core` | `DatasetFinding` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui-core` | `DbCardView` | Schnittstelle | – | `dbkanban/view` |
+| `@flowaudit/ui-core` | `DbColumnView` | Schnittstelle | – | `dbkanban/view` |
+| `@flowaudit/ui-core` | `DbFieldView` | Schnittstelle | – | `dbkanban/view` |
+| `@flowaudit/ui-core` | `DbGroupOption` | Schnittstelle | – | `dbkanban/view` |
+| `@flowaudit/ui-core` | `DbKanbanBusy` | Typ | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `DbKanbanController` | Typ | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `DbKanbanControllerOptions` | Schnittstelle | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `DbKanbanData` | Schnittstelle | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `DbKanbanError` | Schnittstelle | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `DbKanbanHooks` | Schnittstelle | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `DbKanbanMessageKey` | Typ | – | `dbkanban/messages` |
+| `@flowaudit/ui-core` | `DbKanbanTranslate` | Typ | – | `dbkanban/messages` |
+| `@flowaudit/ui-core` | `DbKanbanView` | Schnittstelle | – | `dbkanban/view` |
 | `@flowaudit/ui-core` | `DecisionForm` | Schnittstelle | Eingabefelder der Entscheidung, vorbelegt aus der Fassung bzw. dem Vorschlag. | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `DecisionInput` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `DecisionRequest` | Schnittstelle | – | `screening/types` |
@@ -244,6 +255,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `IDLE` | Konstante | – | `store` |
 | `@flowaudit/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@flowaudit/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
+| `@flowaudit/ui-core` | `INITIAL_DB_KANBAN` | Konstante | – | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
 | `@flowaudit/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
@@ -298,6 +310,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `RadiusHit` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `RadiusRequest` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `RadiusResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui-core` | `RecordMove` | Schnittstelle | Verschiebung einer Karte: der gesetzte Zellwert (`null` = ohne Wert). | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `RecordView` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui-core` | `RegisterColumn` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `RegisterContent` | Schnittstelle | – | `dataprotection/types` |
@@ -439,6 +452,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `applyRowOverrides` | Funktion | Zeilen mit lokalen Änderungen (Auswahl, Grund) zusammenführen. | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `areasFromGeoPackage` | Funktion | Flächen aus einer GeoPackage-Antwort; Kennungen erhalten die Herkunft als Präfix. | `geo/model` |
 | `@flowaudit/ui-core` | `asComparisonsError` | Funktion | – | `documents/controller` |
+| `@flowaudit/ui-core` | `asDbKanbanError` | Funktion | – | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `asScreeningError` | Funktion | – | `screening/controller` |
 | `@flowaudit/ui-core` | `awaitsSecondReview` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
@@ -472,6 +486,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `chartGeometry` | Funktion | – | `benford/chart` |
 | `@flowaudit/ui-core` | `cloneContent` | Funktion | Tiefe Kopie (JSON-Daten), damit Eingaben den gelesenen Stand nie verändern. | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `codeLabel` | Funktion | Beschriftung eines Codes aus dem Vertrag (Status, Stufe, Hinweis); unbekannte Codes bleiben stehen. | `screening/messages` |
+| `@flowaudit/ui-core` | `columnLabel` | Funktion | – | `dbkanban/view` |
 | `@flowaudit/ui-core` | `comparisonRows` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `comparisonsMessages` | Konstante | Texte der Vergleichsverwaltung (`<flowaudit-comparisons>`): Hochladen, gespeicherte Vergleiche, Import und Löschen. Begriffe wie in der Synopse. | `documents/messages` |
 | `@flowaudit/ui-core` | `comparisonsView` | Funktion | – | `documents/view` |
@@ -483,6 +498,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@flowaudit/ui-core` | `createComparisonsController` | Funktion | – | `documents/controller` |
 | `@flowaudit/ui-core` | `createDataProtectionRestPort` | Funktion | Port auf den REST-Vertrag `dataprotection_ui/1` von `auditcore_dataprotection.web`. | `dataprotection/rest-port` |
+| `@flowaudit/ui-core` | `createDbKanbanController` | Funktion | – | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `createDelay` | Funktion | Verzögerter Aufruf, der bei jeder neuen Eingabe neu startet (Vorschau, Vollständigkeitsprüfung). | `store` |
 | `@flowaudit/ui-core` | `createDsfaController` | Funktion | – | `dataprotection/dsfa` |
 | `@flowaudit/ui-core` | `createFocusTrap` | Funktion | – | `focus` |
@@ -506,6 +522,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `dataprotectionLabel` | Funktion | – | `dataprotection/requests` |
 | `@flowaudit/ui-core` | `dataprotectionMessages` | Konstante | Texte von `<flowaudit-vvt>` und `<flowaudit-dsfa>`. | `dataprotection/messages` |
 | `@flowaudit/ui-core` | `dataprotectionStatusLabel` | Funktion | Übersetzter Status (`entwurf`, `freigegeben`, …); unbekannte Werte bleiben stehen. | `dataprotection/requests` |
+| `@flowaudit/ui-core` | `dbKanbanMessages` | Konstante | Texte der Datenbankansicht als Kanban (`<flowaudit-db-kanban>`). | `dbkanban/messages` |
+| `@flowaudit/ui-core` | `dbKanbanView` | Funktion | – | `dbkanban/view` |
 | `@flowaudit/ui-core` | `decisionForm` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `decisionTitle` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `defaultProfile` | Funktion | Standardprofil des Servers (`default: true`), sonst das erste. | `documents/form` |
@@ -568,6 +586,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `importPreview` | Funktion | Vorschau der übernommenen Werte (reine Funktion). | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `importRejectedLines` | Funktion | Die ersten zehn unlesbaren Zeilen als Liste. | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `indicatorLabels` | Funktion | – | `screening/view` |
+| `@flowaudit/ui-core` | `initialGroupBy` | Funktion | Vorgabe: gewünschte Eigenschaft, falls gruppierbar, sonst die erste Auswahl-Eigenschaft. | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
 | `@flowaudit/ui-core` | `interpolate` | Funktion | Ersetzt {name}-Platzhalter; unbekannte Platzhalter bleiben sichtbar stehen. | `i18n` |
 | `@flowaudit/ui-core` | `involvesPdf` | Funktion | PDF-Dateien vergleicht der Server immer als Fließtext. | `documents/form` |
@@ -673,6 +692,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (622):
 | `@flowaudit/ui-core` | `synopsisMessages` | Konstante | Sichtbare Texte der Synopse; Begriffe wie im audit_designer und in ecohesion. | `synopsis/messages` |
 | `@flowaudit/ui-core` | `synopsisPortOf` | Funktion | Der Port als Datenzugang der eingebetteten Synopse, wenn er Vergleiche laden kann. | `documents/controller` |
 | `@flowaudit/ui-core` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
+| `@flowaudit/ui-core` | `titleProperty` | Funktion | Titel-Eigenschaft: die erste Texteigenschaft (wie die erste Spalte der Tabellenansicht). | `dbkanban/view` |
 | `@flowaudit/ui-core` | `toCompareFields` | Funktion | Formularfelder für `POST /comparisons`; Gesetzessynopse ohne die Optionen des Standardvergleichs. | `documents/form` |
 | `@flowaudit/ui-core` | `toHtml` | Funktion | Eigenständiges HTML-Dokument mit Druck-CSS (keine externen Ressourcen). | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `toMarkdown` | Funktion | Markdown: gestrichene Wörter als ~~…~~, neue als **…**. | `synopsis/exporters` |
@@ -730,6 +750,8 @@ gegen dieselben Erwartungen ([Parität Vue ↔ React](../../docs/ui/react-parita
 
 - `@flowaudit/common` 0.1.0 (Laufzeit: REST-Client, Formatierung,
   CSV mit Formelschutz, `saveFile`)
+- `@flowaudit/kanban-core` 0.2.0 (Laufzeit, MIT, ohne weitere Abhängigkeiten:
+  Gruppierung und `RecordPort` der Datenbankansicht als Kanban)
 - `leaflet` ^1.9.4 (Laufzeit, BSD-2-Clause; Kartenansicht der Geo-Karte, erst
   beim Anzeigen einer Karte dynamisch geladen, Grundstile in `styles/geo.css`)
 

@@ -86,7 +86,7 @@ erzeugt; jede Paket-README folgt der
 | [`@flowaudit/common`](packages-js/common) | 0.1.0 | Framework-freie Hilfsfunktionen der FlowAudit-Anwendungen in TypeScript: deutsche Formatierung in Berliner Zeit, strikte Zahleneingabe, API-Fehlertexte, REST, Token, CSV, Zeitsteuerung, Sortierung und Prüfziffern. | keine | neu |
 | [`@flowaudit/kanban-core`](packages-js/kanban-core) | 0.2.0 | Framework-freie Kanban-Logik in TypeScript mit denselben Regeln wie das Python-Paket `auditcore_kanban`: Rang-Schlüssel, Übergänge, WIP-Limits, Filter, Fristen, Rechte, Validierung und reine Befehle. | keine | neu |
 | [`@flowaudit/ui`](packages-js/ui) | 0.3.0 | Gemeinsame Oberflächenkomponenten der FlowAudit-Anwendungen als Vue-3-Komponenten und Web Components, mit Designtoken, Hell-/Dunkelmodus und Sprachunterstützung. | `@flowaudit/common@0.1.0`, `@flowaudit/kanban-core@0.2.0`, `@flowaudit/ui-core@0.1.0`, `vue@^3.5.0` (peer) | neu |
-| [`@flowaudit/ui-core`](packages-js/ui-core) | 0.1.0 | Framework-freier Kern der FlowAudit-Oberflächen: Texte, Datentypen der REST-Verträge, View-Modelle, Zustandsautomaten, Ports, Exporte und Stile – gemeinsam für Vue und React. | `@flowaudit/common@0.1.0`, `leaflet@^1.9.4` | neu |
+| [`@flowaudit/ui-core`](packages-js/ui-core) | 0.1.0 | Framework-freier Kern der FlowAudit-Oberflächen: Texte, Datentypen der REST-Verträge, View-Modelle, Zustandsautomaten, Ports, Exporte und Stile – gemeinsam für Vue und React. | `@flowaudit/common@0.1.0`, `@flowaudit/kanban-core@0.2.0`, `leaflet@^1.9.4` | neu |
 | [`@flowaudit/ui-react`](packages-js/ui-react) | 1.0.0 | Native React-Komponenten (React 18/19) der FlowAudit-Oberflächen von Tabelle bis Kanban – ohne Vue, auf den Kernen `@flowaudit/ui-core` und `@flowaudit/kanban-core`. | `@flowaudit/common@0.1.0`, `@flowaudit/ui-core@0.1.0`, `@flowaudit/kanban-core@0.2.0`, `react@^18.3.0 || ^19.0.0` (peer), `react-dom@^18.3.0 || ^19.0.0` (peer) | neu |
 <!-- paketkatalog:end -->
 
@@ -97,11 +97,11 @@ getrennte Repositories. Synthetische Testrechnungen sind keine Zusage eines
 Systems zur verbindlichen Rechnungsstellung.
 
 Veröffentlichte Previews (zuletzt
-[v0.3.2](https://github.com/janpow77/auditcore/releases/tag/v0.3.2)) enthalten
+[v0.4.1](https://github.com/janpow77/auditcore/releases/tag/v0.4.1)) enthalten
 Wheels, Source-Distributionen und signierte Debian-Pakete; der Paketindex
 `https://janpow77.github.io/auditcore/simple/` verlinkt alle Versionen mit
-SHA-256. [Installation über Paketindex, Requirements oder APT](docs/deployment/package-feed.md)
-und [vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md).
+SHA-256. Ab dem nächsten Release kommen die npm-Pakete als Tarballs hinzu.
+[Vollständiger Paketbericht](docs/reports/DOMAIN_PACKAGES_REPORT.md).
 
 [Paketgrenzen und weitere Kandidaten](docs/architecture/DOMAIN_PACKAGE_PLAN.md).
 Der technische Frameworknachweis ist im
@@ -109,7 +109,38 @@ Der technische Frameworknachweis ist im
 
 ## Installation
 
-Python 3.11 oder neuer, für Entwicklung:
+### Bibliotheken in einer Anwendung nutzen
+
+**Python** (Paketindex, hashgebundene Requirements oder APT, Details in
+[package-feed.md](docs/deployment/package-feed.md) und
+[library-installation.md](docs/deployment/library-installation.md)):
+
+```bash
+python -m pip install auditcore-geo \
+  --index-url https://janpow77.github.io/auditcore/simple/
+```
+
+**Vue, React oder Web Components** (Details, Integritätsprüfung, `vendor/`-Ablage
+und REST-Gegenstellen in
+[frontend-installation.md](docs/deployment/frontend-installation.md)). Die
+npm-Pakete sind noch nicht auf npm veröffentlicht; sie liegen als Tarballs im
+Release, `npm-packages.json` nennt je Paket alle nötigen Tarball-URLs:
+
+```bash
+BASE=https://github.com/janpow77/auditcore/releases/download/v<release>
+curl -fsSLO "$BASE/npm-packages.json"
+echo '@flowaudit:registry=https://npm-registry.invalid/' >> .npmrc   # nie aus einer Registry
+npm install $(node -e 'const m=require("./npm-packages.json");const p=m.packages.find(x=>x.name===process.argv[1]);console.log(Object.entries(p.package_json_dependencies).map(([n,u])=>n+"@"+u).join(" "))' @flowaudit/ui) vue
+# React: @flowaudit/ui-react statt @flowaudit/ui, dazu react react-dom (kein Vue)
+```
+
+Lauffähige Beispiele: [`examples/vue-minimal`](examples/vue-minimal),
+[`examples/react-minimal`](examples/react-minimal),
+[`examples/webcomponent-minimal`](examples/webcomponent-minimal).
+
+### Entwicklung am Repository
+
+Python 3.11 oder neuer:
 
 ```bash
 python3 -m venv .venv
@@ -124,6 +155,14 @@ Der Core benötigt nur die Standardbibliothek. Extras: `quality`, `analysis`,
 `deploy`, `all`. GitHub-Zugriff nutzt eine bereits angemeldete `gh`-CLI.
 Debian-Builds benötigen `dpkg-deb`; isolierte Pakettests benötigen Docker auf
 **dem Buildsystem**, nicht auf dem Zielserver.
+
+npm-Pakete (Node 20.19 oder neuer, npm-Workspaces unter `packages-js/`):
+
+```bash
+npm ci
+npm run lint && npm run typecheck && npm test && npm run build
+node scripts/js/verify-examples.mjs   # Beispiele aus frisch gepackten Tarballs bauen
+```
 
 ## Quality Gates
 
