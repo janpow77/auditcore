@@ -7,7 +7,8 @@ FlowAudit-Anwendungen. Jede Komponente gibt es
 2. als **Web Component** `<flowaudit-<name>>` (`@flowaudit/ui/elements`),
 3. als **native React-18-Komponente** in `@flowaudit/ui-react`
    (`packages-js/ui-react`) – Tabelle, Synopse, VVT, DSFA, Geo-Karte,
-   Risiko-Merkmale, Screening, Stichprobe, Benford und Kanban (React 18 und 19).
+   Risiko-Merkmale, Screening, Stichprobe, Benford, Belegerkennung, Dokumentvergleiche,
+   Kanban und Datenbankansicht (React 18 und 19).
 
 Fachlogik, Texte, Verträge, View-Modelle, Zustandsautomaten und Stile liegen
 framework-frei in **`@flowaudit/ui-core`** (`packages-js/ui-core`); Vue und

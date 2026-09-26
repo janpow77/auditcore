@@ -1,0 +1,20 @@
+{
+  "name": "flowaudit-example-webcomponent-minimal",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Web Components aus @flowaudit/ui ohne Bundler: <script type=module> mit Import-Map",
+  "type": "module",
+  "scripts": {
+    "build": "node check-importmap.mjs index.html"
+  },
+  "dependencies": {
+    "@flowaudit/common": "file:../vendor/flowaudit-common.tgz",
+    "@flowaudit/kanban-core": "file:../vendor/flowaudit-kanban-core.tgz",
+    "@flowaudit/ui": "file:../vendor/flowaudit-ui.tgz",
+    "@flowaudit/ui-core": "file:../vendor/flowaudit-ui-core.tgz",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "es-module-lexer": "^1.7.0"
+  }
+}

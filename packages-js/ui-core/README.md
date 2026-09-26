@@ -18,23 +18,20 @@ eigener Netzwerkzugriff außer über die Ports.
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                                # im Repository-Stamm
-npm run build -w @flowaudit/ui-core   # dist/: ESM und Typen; Stile unter styles/
+npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz
 ```
 
-Im Anwendungsrepository (meist indirekt über `@flowaudit/ui` oder
-`@flowaudit/ui-react`):
+Abhängigkeitshülle: dazu `@flowaudit/common`. Stile: `@flowaudit/ui-core/style.css` (Designtoken `--fa-*` und Komponentenstile).
 
-```sh
-npm install @flowaudit/ui-core @flowaudit/common
-```
-
-Das Paket ist nicht in einer npm-Registry veröffentlicht; Bezug über den
-Workspace oder ein mit `npm pack -w @flowaudit/ui-core` erzeugtes Tarball
-(zusammen mit `@flowaudit/common`).
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/ui-core`).
 
 ## Schnellstart
 
@@ -75,7 +72,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (637):
+Exporte der Einstiegspunkte aus `package.json#exports` (681):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -216,6 +213,26 @@ Exporte der Einstiegspunkte aus `package.json#exports` (637):
 | `@flowaudit/ui-core` | `ExportPayload` | Schnittstelle | Ergebnis eines Exports in der Oberfläche (Ereignis `export`). | `synopsis/types` |
 | `@flowaudit/ui-core` | `ExportTexts` | Schnittstelle | – | `dataprotection/exporters` |
 | `@flowaudit/ui-core` | `ExportedFile` | Schnittstelle | – | `dataprotection/types` |
+| `@flowaudit/ui-core` | `ExtractedField` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionBusy` | Typ | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionCallbacks` | Schnittstelle | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionCatalogue` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionController` | Typ | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionData` | Schnittstelle | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionFieldDecision` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionFinding` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionJson` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionMessageKey` | Typ | – | `extraction/messages` |
+| `@flowaudit/ui-core` | `ExtractionOcrQuality` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionOcrSummary` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createExtractionRestPort`. Die Oberfläche erkennt nichts selbst. | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionProfile` | Schnittstelle | Typen des REST-Vertrags `documents_extraction/1` (`docs/ui/extraction-rest.md`, auditcore_documents.web). | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionRun` | Schnittstelle | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionRunStatus` | Typ | – | `extraction/types` |
+| `@flowaudit/ui-core` | `ExtractionSource` | Schnittstelle | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `ExtractionTone` | Typ | – | `extraction/view` |
+| `@flowaudit/ui-core` | `ExtractionTranslate` | Typ | – | `extraction/view` |
+| `@flowaudit/ui-core` | `ExtractionValidation` | Typ | – | `extraction/controller` |
 | `@flowaudit/ui-core` | `FLAG_STATES` | Konstante | – | `risk/state` |
 | `@flowaudit/ui-core` | `FieldEntry` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui-core` | `FieldError` | Schnittstelle | – | `sampling/model` |
@@ -259,6 +276,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (637):
 | `@flowaudit/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@flowaudit/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
 | `@flowaudit/ui-core` | `INITIAL_DB_KANBAN` | Konstante | – | `dbkanban/controller` |
+| `@flowaudit/ui-core` | `INITIAL_EXTRACTION` | Konstante | – | `extraction/controller` |
 | `@flowaudit/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
 | `@flowaudit/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
@@ -500,6 +518,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (637):
 | `@flowaudit/ui-core` | `createDbKanbanController` | Funktion | – | `dbkanban/controller` |
 | `@flowaudit/ui-core` | `createDelay` | Funktion | Verzögerter Aufruf, der bei jeder neuen Eingabe neu startet (Vorschau, Vollständigkeitsprüfung). | `store` |
 | `@flowaudit/ui-core` | `createDsfaController` | Funktion | – | `dataprotection/dsfa` |
+| `@flowaudit/ui-core` | `createExtractionController` | Funktion | – | `extraction/controller` |
+| `@flowaudit/ui-core` | `createExtractionRestPort` | Funktion | Port auf den REST-Vertrag `documents_extraction/1` von `auditcore_documents.web` (Starlette oder FastAPI). | `extraction/rest-port` |
 | `@flowaudit/ui-core` | `createFocusTrap` | Funktion | – | `focus` |
 | `@flowaudit/ui-core` | `createGeoController` | Funktion | – | `geo/controller` |
 | `@flowaudit/ui-core` | `createGeoRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_geo.web` (Starlette oder FastAPI). | `geo/rest-port` |
@@ -550,6 +570,26 @@ Exporte der Einstiegspunkte aus `package.json#exports` (637):
 | `@flowaudit/ui-core` | `evaluationRules` | Funktion | Regeln der Auswertung; ohne `rules` aus den Codes der Datensätze abgeleitet. | `risk/state` |
 | `@flowaudit/ui-core` | `excludedLines` | Funktion | Hinweise auf Elemente außerhalb der Auswahlbasis. | `sampling/view` |
 | `@flowaudit/ui-core` | `exportFilename` | Funktion | – | `synopsis/exporters` |
+| `@flowaudit/ui-core` | `extractionAccept` | Funktion | Dateiauswahl der Oberfläche (`accept`) aus den zulässigen Typen. | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionConfidenceText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionConfidenceTone` | Funktion | Ton einer Feldkonfidenz gegen den Schwellwert des Profils. | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionDecisionText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionDecisionTone` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionDocumentText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionFieldLabel` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionFieldThreshold` | Funktion | Schwellwert der Feldkonfidenz des gelaufenen Profils (nur Donut). | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionMessages` | Konstante | Texte der Belegerkennung (`<flowaudit-extraction>`). | `extraction/messages` |
+| `@flowaudit/ui-core` | `extractionOcrText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionOutcomeTone` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionProfileText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionProposalText` | Funktion | Donut-Vorschlag, wenn er nicht übernommen wurde (sonst leer). | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionRuleLabel` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionSizeText` | Funktion | Dateigröße in MiB (bzw. KiB unter 1 MiB). | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionStatusText` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionStatusTone` | Funktion | – | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionValidation` | Funktion | Prüfung vor dem Senden (reine Funktion). | `extraction/controller` |
+| `@flowaudit/ui-core` | `extractionValidationText` | Funktion | Meldung zur Prüfung vor dem Senden. | `extraction/view` |
+| `@flowaudit/ui-core` | `extractionValueText` | Funktion | Wert eines Feldes als Text (Zahlen sprachabhängig, Listen mit Komma). | `extraction/view` |
 | `@flowaudit/ui-core` | `fieldIssues` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `fieldValue` | Funktion | Prüft ein Eingabefeld und liefert den Vertragswert (Prozent → Anteil). | `sampling/model` |
 | `@flowaudit/ui-core` | `filterOptions` | Funktion | – | `screening/view` |
@@ -671,6 +711,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (637):
 | `@flowaudit/ui-core` | `severityTone` | Funktion | – | `risk/format` |
 | `@flowaudit/ui-core` | `sizeTexts` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `sortIcon` | Funktion | – | `table` |
+| `@flowaudit/ui-core` | `splitExtractionFindings` | Funktion | Auffällige Befunde (nicht bestanden, prüfen) zuerst nach Gewicht; bestandene getrennt. | `extraction/view` |
 | `@flowaudit/ui-core` | `stateTone` | Funktion | – | `risk/format` |
 | `@flowaudit/ui-core` | `statusHintKey` | Funktion | Hinweis für nicht freigegebene Profile, sonst `null`. | `risk/labels` |
 | `@flowaudit/ui-core` | `statusKey` | Funktion | – | `risk/labels` |

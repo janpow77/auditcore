@@ -13,24 +13,20 @@ Fachdaten kommen über Props oder Ports; das Paket speichert nichts selbst.
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                           # im Repository-Stamm
-npm run build -w @flowaudit/ui   # dist/: ESM, Typen, ui.css
-npm run demo -w @flowaudit/ui    # Demo-Seite zur Sichtprüfung
+npm install @flowaudit/ui@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-0.3.0.tgz
 ```
 
-Im Anwendungsrepository (Vue 3.5 als Peer-Abhängigkeit):
+Abhängigkeitshülle: dazu `@flowaudit/ui-core`, `@flowaudit/common` und `@flowaudit/kanban-core`; Peer-Abhängigkeit `vue` ^3.5. Stile: immer `@flowaudit/ui/style.css`.
 
-```sh
-npm install @flowaudit/ui vue
-```
-
-Das Paket ist noch nicht in einer npm-Registry veröffentlicht; bis dahin
-Bezug über den Workspace oder ein mit `npm pack -w @flowaudit/ui` erzeugtes
-Tarball (zusammen mit `@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`). Die Stile kommen immer aus
-`@flowaudit/ui/style.css` (enthält die Stile aus `@flowaudit/ui-core`).
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/ui`).
 
 ## Schnellstart
 
@@ -96,9 +92,9 @@ document.body.append(table)
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
 - **React:** Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening,
-  Stichprobe und Benford nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
+  Stichprobe, Benford und Dokumentvergleiche nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
-  Geo-Karte und Kanban.
+  Geo-Karte, Kanban und die Datenbankansicht.
 
 Fachkomponenten und ihre REST-Verträge:
 
@@ -123,7 +119,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (692):
+Exporte der Einstiegspunkte aus `package.json#exports` (715):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -262,6 +258,20 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportTexts` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ExportedFile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractedField` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionBusy` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionCallbacks` | Re-Export | – | `./useExtraction` |
+| `@flowaudit/ui` | `ExtractionCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionFinding` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionOcrSummary` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionProfile` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionRun` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionSource` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `ExtractionValidation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FLAG_STATES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
@@ -269,6 +279,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `FaDbKanban` | Vue-Komponente | – | `dbkanban/FaDbKanban.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
 | `@flowaudit/ui` | `FaDsfa` | Vue-Komponente | – | `dataprotection/FaDsfa.vue` |
+| `@flowaudit/ui` | `FaExtraction` | Vue-Komponente | – | `extraction/FaExtraction.vue` |
 | `@flowaudit/ui` | `FaGeoMap` | Vue-Komponente | – | `geo/FaGeoMap.vue` |
 | `@flowaudit/ui` | `FaIcon` | Vue-Komponente | – | `base/FaIcon.vue` |
 | `@flowaudit/ui` | `FaSynopsis` | Vue-Komponente | – | `synopsis/FaSynopsis.vue` |
@@ -307,6 +318,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `HitView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ICONS` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_BENFORD` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `IconName` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ImportRequest` | Re-Export | – | `@flowaudit/ui-core` |
@@ -499,6 +511,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@flowaudit/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@flowaudit/ui` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
+| `@flowaudit/ui` | `UseExtraction` | Schnittstelle | – | `extraction/useExtraction` |
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
@@ -578,6 +591,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `createComparisonsController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDbKanbanController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createExtractionController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createExtractionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
 | `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
@@ -619,6 +634,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `evaluationRules` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `excludedLines` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `exportFilename` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `extractionElement` | Konstante | `<flowaudit-extraction>`: Eigenschaften `port` (ExtractionPort), `result`, `locale`; Ereignisse `extraction-completed`, `error`. | `extraction/element` |
+| `@flowaudit/ui` | `extractionMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `extractionValidation` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldIssues` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fieldValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `fileSize` | Re-Export | – | `@flowaudit/kanban-core` |
@@ -775,6 +793,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (692):
 | `@flowaudit/ui` | `useDebouncedFn` | Funktion | Entprellte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDsfa` | Funktion | – | `dataprotection/useDsfa` |
+| `@flowaudit/ui` | `useExtraction` | Funktion | Vue-Anbindung der Belegerkennung aus `@flowaudit/ui-core` (`createExtractionController`). | `extraction/useExtraction` |
 | `@flowaudit/ui` | `useFocusTrap` | Funktion | Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn danach an das zuvor fokussierte Element zurück. | `composables/useFocusTrap` |
 | `@flowaudit/ui` | `useGeoMap` | Funktion | Zustand und Abläufe der Geo-Karte; jede Berechnung läuft über den Port. | `geo/useGeoMap` |
 | `@flowaudit/ui` | `useI18n` | Funktion | Composable für Komponenten. `override` (z. B. eine Prop `locale`) hat Vorrang vor der bereitgestellten Sprache. | `i18n/i18n` |
@@ -828,6 +847,7 @@ Web Components:
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
 | `<flowaudit-dsfa>` | `FaDsfa` | `dataprotection/element.ts` |
+| `<flowaudit-extraction>` | `FaExtraction` | `extraction/element.ts` |
 | `<flowaudit-geo-map>` | `FaGeoMap` | `geo/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
@@ -977,6 +997,19 @@ Web Components:
 |---|---|---|
 | `assessment-change` | `[detail: { step: DsfaStep; id: string; version: number; status: string }]` | – |
 | `error` | `[detail: DataProtectionError]` | – |
+
+#### `FaExtraction`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `ExtractionPort \| null` | nein | `null` | Fachlogik, z. B. `createExtractionRestPort({ baseUrl: '/api/extraction' })`. |
+| `result` | `ExtractionRun \| null` | nein | `null` | Vorhandenes Ergebnis anzeigen (z. B. aus der Ablage der Anwendung). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `extraction-completed` | `[result: ExtractionRun]` | – |
+| `error` | `[message: string]` | – |
 
 #### `FaGeoMap`
 

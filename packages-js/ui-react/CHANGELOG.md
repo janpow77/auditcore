@@ -13,7 +13,9 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `FlowauditRiskFlags` mit Teilkomponenten (`auditcore_risk.web`),
   `FlowauditScreeningReview` (`screening_review/1`), `FlowauditSampling`
   (`auditcore_sampling.web`) und `FlowauditBenford`
-  (`auditcore_statistics.web`), dazu
+  (`auditcore_statistics.web`), `FlowauditComparisons` (Dokumentvergleiche:
+  Hochladen, Liste, Import, Löschen, eingebettete Synopse; `auditcore_documents.web`,
+  `ref` mit `reload`/`open`), dazu
   `Button`, `Badge`, `Icon`, `TextField`, `Dialog` (Fokusfalle aus dem Kern), `LocaleProvider`, `useTranslation`,
   `useStoreState`.
 - Ereignisse heißen wie bisher `onXxx`, erhalten aber direkt die Nutzdaten
@@ -32,6 +34,11 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `eventPayload`, `defineFlowauditElements`); `@flowaudit/ui` und `vue` sind
   keine (optionalen) Peer-Abhängigkeiten mehr. Wer Web Components braucht,
   nutzt `@flowaudit/ui/elements` direkt.
+- **Datenbankansicht nativ:** `FlowauditDbKanban` mit `DbKanbanColumn`,
+  `DbKanbanCard` und `useDbKanban` (Logik `createDbKanbanController` aus
+  `@flowaudit/ui-core`, Gruppierung und `RecordPort` aus
+  `@flowaudit/kanban-core`); `port` oder `table`, gesteuertes `groupBy`,
+  Rückrufe `onRecordMove`, `onRecordAdd`, `onTableChange`, `onError`.
 - **Kanban nativ:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards`
   (gleiche Props, Ereignisse als `onXxx`, `renderCardExtra`, `ref` mit
   `reload()`) sowie die Bausteine `KanbanCard`, `KanbanColumn`,
