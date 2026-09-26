@@ -36,19 +36,3 @@ const values = computed(() => Object.keys(props.keys[props.kind] ?? {}).sort((a,
     <button type="button" class="fa-btn fa-btn--ghost" @click="emit('clear')"><FaIcon name="close" :size="16" />{{ t('filter.clear') }}</button>
   </div>
 </template>
-
-<style>
-.fa-keyfilter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--fa-border);
-  background: var(--fa-primary-soft);
-  color: var(--fa-text);
-}
-
-.fa-keyfilter__field {
-  width: 220px;
-}
-</style>

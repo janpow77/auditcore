@@ -9,12 +9,12 @@ import type { Comment, ProfileData, ProfileSummary, RoleAlias, StoragePort, Vali
 import type { EditorPorts } from '../stores/context'
 import { createI18n, provideI18n, type Locale } from '../i18n/useI18n'
 import { createCollectionStore } from '../stores/collectionStore'
-import type { EditorFactory } from '../editor/createEditor'
+import type { EditorFactory } from '@flowaudit/bpmn-flowaudit/ui'
 import CollectionTree from './collection/CollectionTree.vue'
 import DiagramInfoColumn from './collection/DiagramInfoColumn.vue'
 import GroupOverview from './collection/GroupOverview.vue'
 import FlowauditEditor from './FlowauditEditor.vue'
-import '../styles/theme.css'
+import '@flowaudit/bpmn-flowaudit/ui.css'
 
 const props = withDefaults(
   defineProps<{
@@ -130,53 +130,3 @@ onMounted(() => store.load())
     </main>
   </div>
 </template>
-
-<style>
-.fa-workbench {
-  display: flex;
-  height: 100%;
-  min-height: 560px;
-  overflow: hidden;
-}
-
-.fa-workbench__side {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  min-width: 240px;
-  border-right: 1px solid var(--fa-border);
-  background: var(--fa-surface);
-  overflow: auto;
-}
-
-.fa-workbench__main {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  flex-direction: column;
-}
-
-.fa-workbench__main > .fa-editor {
-  flex: 1;
-}
-
-.fa-workbench__overview {
-  display: flex;
-  flex: 1;
-  min-height: 0;
-}
-
-.fa-workbench__overview > .fa-overview {
-  flex: 1;
-  min-width: 0;
-  overflow: auto;
-}
-
-.fa-workbench__info {
-  width: 340px;
-  flex-shrink: 0;
-  border-left: 1px solid var(--fa-border);
-  background: var(--fa-surface);
-  overflow: auto;
-}
-</style>

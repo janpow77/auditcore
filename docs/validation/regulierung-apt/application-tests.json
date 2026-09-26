@@ -1,15 +1,24 @@
 {
   "status": "PASS",
-  "regulierung_commit": "cc6bf9a6feeb92d8aaff77f287c8a1864eb881e7",
-  "auditcore_release": "v0.4.0",
-  "passed": 1803,
+  "regulierung_commit": "5458d2e8161d33015fd6222917735eb55ca8cecf",
+  "auditcore_release": "v0.4.1",
+  "auditcore_libraries": {
+    "auditcore_auth": "0.1.0",
+    "auditcore_common": "0.1.1",
+    "auditcore_dataprotection": "0.5.0",
+    "auditcore_harvest": "0.1.2",
+    "auditcore_price_analysis": "0.1.2",
+    "auditcore_price_sources": "0.1.2",
+    "auditcore_reporting": "0.2.2"
+  },
+  "passed": 1839,
   "skipped": 1,
-  "skipped_reason": "tests/test_frontend_betrieb_2026_09.py:310 benötigt pg_dump (PostgreSQL-16-Client) auf dem Testrechner; im nativen Paket als Depends postgresql-client-16 vorhanden und im QEMU-Lebenszyklus (Sicherung/Wiederherstellung) ausgeführt",
-  "duration_seconds": 72.88,
+  "skipped_reason": "tests/test_frontend_betrieb_2026_09.py:310 benötigt pg_dump auf dem Testrechner; im Paket über postgresql-client-16 vorhanden und im Lebenszyklus (Sicherung/Wiederherstellung) ausgeführt",
+  "duration_seconds": 80.89,
   "exact_locked_versions_verified": 88,
   "mismatches": {},
-  "lock_sha256": "1457f0d0f44c9dd528fef8ed7f4efb986db8ad29cf6154aa672aef49b33234c4",
-  "test_log_sha256": "11fb3252536e8393e770469ab3e5ce54a17834559c91013f7d774e12dcba8587",
+  "lock_sha256": "542a5c1661987a9285682591b4c96dfaa0a1ca162ac72ce2fcc3554177fe90f0",
+  "test_log_sha256": "4619bec829559d5a550d1bb5d67ba8c6a4f79c4e0164b5f539a9dd85b8701f05",
   "pip_check": "PASS",
   "installation": "--no-index --only-binary=:all: --require-hashes --find-links=runtime/wheels -r runtime/requirements.lock (Wheelhouse aus ci_build.py)",
   "additional_suites": {
@@ -21,10 +30,5 @@
       "included_in_main_run": true
     }
   },
-  "parity_tests": [
-    "test_auditcore_auth_paritaet.py",
-    "test_auditcore_common_paritaet.py",
-    "frontend src/lib/__tests__/paritaet.test.ts (TZ Berlin und America/New_York)"
-  ],
-  "scope": "Gesamte regulierung-Backend-Suite gegen die gelockte Laufzeit (CPython 3.12 venv); Wegwerf-PostgreSQL 16 mit TimescaleDB 2.30.1/PostGIS 3.6.4 und Redis 7 in Containern; keine Produktionsdaten; keine native Debian-Installation (siehe lifecycle.json)"
+  "scope": "Gesamte regulierung-Backend-Suite gegen die gelockte Laufzeit (CPython 3.12); Wegwerf-PostgreSQL 16.15 mit TimescaleDB 2.30.1/PostGIS 3.6.4 und Redis 7 in Containern; keine Produktionsdaten"
 }

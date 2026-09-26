@@ -4,7 +4,8 @@
  * keyboard-accessible alternative to drag-and-drop („move to …“).
  */
 import { computed, ref } from 'vue'
-import { DIAGRAM_STATUS, FUND_SHORT, label, type DiagramEntry, type Folder } from '@flowaudit/bpmn-flowaudit'
+import type { DiagramEntry, Folder } from '@flowaudit/bpmn-flowaudit'
+import { infoRows, toggledTags } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../base/FaIcon.vue'
 import PromptDialog from '../base/PromptDialog.vue'
 import { useI18n } from '../../i18n/useI18n'
@@ -18,25 +19,8 @@ const tagging = ref(false)
 
 const folders = computed<Folder[]>(() => [...props.store.collection.value.folders.values()])
 const tags = computed(() => [...props.store.collection.value.tags.values()])
-const info = computed(() => props.entry.info ?? {})
-const rows = computed(() =>
-  [
-    [t('info.field.title'), info.value.title],
-    [t('info.field.status'), info.value.status ? label(DIAGRAM_STATUS[info.value.status], locale.value) : undefined],
-    [t('info.field.version'), info.value.version],
-    [t('info.field.processOwner'), info.value.processOwner],
-    [t('info.field.programmingPeriod'), info.value.programmingPeriod],
-    [t('info.field.funds'), (info.value.funds ?? []).map((code) => FUND_SHORT[code] ?? code).join(', ')],
-    [t('info.field.validFrom'), [info.value.validFrom, info.value.validUntil].filter(Boolean).join(' – ')],
-    [t('info.field.profile'), info.value.profile],
-    [t('collection.overview.legal'), `${props.entry.excerpt.activitiesWithLegalBasis}/${props.entry.excerpt.activities}`],
-  ].filter(([, value]) => value),
-)
-
-function toggleTag(id: string): void {
-  const next = props.entry.tags.includes(id) ? props.entry.tags.filter((tag) => tag !== id) : [...props.entry.tags, id]
-  void props.store.setTags(props.entry.id, next)
-}
+const rows = computed(() => infoRows(props.entry, t, locale.value))
+const toggleTag = (id: string) => void props.store.setTags(props.entry.id, toggledTags(props.entry, id))
 
 async function remove(): Promise<void> {
   if (!window.confirm(t('common.confirmDelete', { name: props.entry.name }))) return
@@ -86,54 +70,3 @@ async function remove(): Promise<void> {
     <PromptDialog v-model:open="tagging" :title="t('collection.newTag')" :label="t('collection.tags')" @confirm="store.createTag($event)" />
   </section>
 </template>
-
-<style>
-.fa-info-column {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 12px;
-  border-top: 1px solid var(--fa-border);
-}
-
-.fa-info-column__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.fa-info-column__head h3 {
-  margin: 0;
-  font-size: 14px;
-}
-
-.fa-info-column__list {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 4px 10px;
-  margin: 0;
-  font-size: 13px;
-}
-
-.fa-info-column__list dt {
-  color: var(--fa-text-muted);
-}
-
-.fa-info-column__list dd {
-  margin: 0;
-  overflow-wrap: anywhere;
-}
-
-.fa-info-column__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 4px;
-}
-
-.fa-info-column__actions {
-  display: flex;
-  gap: 6px;
-}
-</style>

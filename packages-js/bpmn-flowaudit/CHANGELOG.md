@@ -1,5 +1,17 @@
 # Changelog – @flowaudit/bpmn-flowaudit
 
+## 0.2.0 – 2026-09-26
+
+- Neu: Unterpfad `@flowaudit/bpmn-flowaudit/ui` – framework-freier Kern der
+  Editor-Oberfläche, den `@flowaudit/bpmn-vue` und `@flowaudit/bpmn-react`
+  gemeinsam nutzen: Controller auf `createStore` (Editor, Auswahl, Prüfung,
+  Sammlung, Sitzung mit XML-Abgleich, Werkzeugleisten-Aktionen), Export,
+  Deskriptoren der Felder und Tabs, Texte (de/en), REST-Ports, Datenquelle
+  des einbettbaren Editors, Tastenkürzel und reine View-Funktionen.
+  Stile: `@flowaudit/bpmn-flowaudit/ui.css`.
+- Korrektur: Das Seitenraster lag unter der Zeichenfläche und war daher
+  verdeckt; es liegt jetzt darüber (`z-index`).
+
 ## 0.1.0 – 2026-09-25
 
 - Erste Fassung (#90): framework-freie FlowAudit-Fachschicht für den

@@ -1,5 +1,4 @@
 import '@flowaudit/ui-core/style.css'
-import './kanban/kanban.css'
 
 export * from './base'
 export * from './i18n'

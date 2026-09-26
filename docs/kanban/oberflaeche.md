@@ -60,11 +60,44 @@ Ansage über `aria-live`); Suche über alle Textzellen. Logik:
 `RecordPort` (`@flowaudit/kanban-core`). Ein REST-Vertrag für Datensätze
 gehört zur Anwendung; `auditcore_kanban` hat keinen.
 
-## React
+## React (nativ)
 
-`FlowauditKanbanBoard` (`onBoardChange`, `onError`, `onFullscreen`,
-`onNavigate`, `onAttachment`, `onCardOpen`) und `FlowauditKanbanBoards`
-(`onBoardSelect`, `onCreated`); Objekte werden als Eigenschaften gesetzt.
+`FlowauditKanbanBoard` und `FlowauditKanbanBoards` aus `@flowaudit/ui-react`
+sind echte React-Komponenten (React 18 und 19, ohne Vue, ohne Web
+Components) mit denselben Props, demselben Markup und derselben Kernlogik.
+Ereignisse heißen `onBoardChange`, `onError`, `onFullscreen`,
+`onNavigate(link, card)`, `onAttachment(attachment, card)`, `onCardOpen`
+bzw. `onBoardSelect`, `onCreated`; der Slot `card-extra` heißt
+`renderCardExtra(card)`, `defineExpose` wird zu `ref` (`reload()`, `board`).
+Die früheren Hüllen um die Web Components (`@flowaudit/ui-react/elements`)
+sind entfernt.
+
+## Gemeinsame Ansichtslogik (`@flowaudit/kanban-core`)
+
+Vue und React binden dieselben framework-freien Zustandsautomaten an
+(Vue über `useStore` → `shallowRef`, React über `useStoreState` →
+`useSyncExternalStore`). Jeder Automat hat einen `store` mit `get`, `set`,
+`subscribe`; die Anzeige leiten reine Selektoren ab.
+
+| Automat / Funktion | Aufgabe |
+|---|---|
+| `createBoardController({ port, boardId, onError, onChange })` | Laden, optimistische Änderungen in fester Reihenfolge, Rückrollen, Neuladen bei `VERSION_CONFLICT`; `actions` (Karte anlegen, ändern, verschieben, löschen, erledigt, Spalten, Titel, Freigaben) |
+| `selectBoardView(state, { userId, criteria, readOnly, today })` | Rolle, Rechte der Oberfläche, Statistik, Spaltenansicht (`ColumnView`) |
+| `filterCriteria(filter)`, `EMPTY_FILTER` | Werkzeugleisten-Filter → `CardFilter` |
+| `createMoveController({ board, columns, canMove, t, focusCard })` | Tastatur-Verschieben mit Vorschau, Strg+Pfeil, Ansagen (`announcement`) |
+| `createPointerDrag({ mover, root, enabled, columns })` | Ziehen mit Maus, Stift, Touch |
+| `handleCardKey`, `boardShortcut`, `listenBoardShortcuts` | Tastenbelegung von Karte und Board |
+| `createBoardListController(port)`, `selectBoardList` | Boardliste |
+| `createColumnEditor()`, `selectColumnEditor` | Spalteneditor des Einstellungsdialogs |
+| `createShareSearch()`, `shareName` | Personensuche beim Teilen |
+
+**Andere Datenquellen (z. B. eine Kanban-Ansicht über Datenbankzeilen):**
+Eine solche Ansicht liefert einen eigenen `BoardPort` (Zeilen → `Board`,
+Befehle → Schreibzugriffe) und nutzt dann unverändert
+`createBoardController`, `selectBoardView` und `createMoveController` –
+in Vue wie in React. Soll sie ohne Port nur anzeigen und verschieben,
+genügen `columnViews(board, criteria, today)`, `applyPreview`,
+`placementFor` und `checkMove`.
 
 ## Bedienung und Barrierefreiheit
 

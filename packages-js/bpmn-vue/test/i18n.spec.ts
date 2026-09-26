@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createI18n } from '../src/i18n/useI18n'
-import { MESSAGES_DE } from '../src/i18n/messages.de'
-import { MESSAGES_EN } from '../src/i18n/messages.en'
+import { MESSAGES_DE, MESSAGES_EN } from '@flowaudit/bpmn-flowaudit/ui'
 
 const placeholders = (text: string) => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort()
 

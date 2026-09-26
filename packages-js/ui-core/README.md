@@ -75,7 +75,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (633):
+Exporte der Einstiegspunkte aus `package.json#exports` (637):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -266,6 +266,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (633):
 | `@flowaudit/ui-core` | `ImportedColumns` | Schnittstelle | Übernommene Spalten einer Datei. | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `JsonObject` | Typ | – | `risk/types` |
 | `@flowaudit/ui-core` | `JsonValue` | Typ | Datentypen des REST-Vertrags `auditcore_risk.web` (docs/ui/risk-rest.md). Die Komponenten lesen nur diese Felder; unbekannte Felder werden ignoriert. | `risk/types` |
+| `@flowaudit/ui-core` | `KanbanDialogMessageKey` | Typ | – | `kanban/messages` |
+| `@flowaudit/ui-core` | `KanbanMessageKey` | Typ | – | `kanban/messages` |
 | `@flowaudit/ui-core` | `KeyTitle` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `LOCALES` | Konstante | – | `i18n` |
 | `@flowaudit/ui-core` | `LatLon` | Schnittstelle | Typen des REST-Vertrags `docs/ui/geo-rest.md` (auditcore_geo.web). | `geo/types` |
@@ -594,6 +596,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (633):
 | `@flowaudit/ui-core` | `isStratifiedPopulation` | Funktion | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `issuesFor` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `itemsFromImport` | Funktion | Übernommene Dateispalten → Elemente der Grundgesamtheit (Kennung sonst laufende Nummer). | `sampling/model` |
+| `@flowaudit/ui-core` | `kanbanDialogMessages` | Konstante | Texte von Detailansicht, Einstellungen, Teilen und Boardliste. | `kanban/messages` |
+| `@flowaudit/ui-core` | `kanbanMessages` | Konstante | Texte der Kanban-Komponenten; Englisch vorbereitet. | `kanban/messages` |
 | `@flowaudit/ui-core` | `kindProfiles` | Funktion | – | `screening/runForm` |
 | `@flowaudit/ui-core` | `kindSources` | Funktion | – | `screening/runForm` |
 | `@flowaudit/ui-core` | `lcsOperations` | Funktion | Längste gemeinsame Teilfolge über Wörter; `null` oberhalb von {@link WORD_LIMIT}. | `synopsis/wordDiff` |

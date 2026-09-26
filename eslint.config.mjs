@@ -51,13 +51,25 @@ export default tseslint.config(
   // Native React-Komponenten und framework-freier Kern: strengere Grenzen (McCabe ≤ 10,
   // Funktionen ≤ 60 Zeilen, Komponentendateien ≤ 250 Zeilen wie Vue-SFC).
   {
-    files: ['packages-js/ui-react/src/**/*.{ts,tsx}', 'packages-js/ui-core/src/**/*.ts'],
+    files: ['packages-js/ui-react/src/**/*.{ts,tsx}', 'packages-js/ui-core/src/**/*.ts', 'packages-js/kanban-core/src/view/**/*.ts'],
     plugins: { 'react-hooks': reactHooks },
     rules: {
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'error',
       complexity: ['error', 10],
       'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
+    },
+  },
+  // BPMN: native React-Oberfläche und framework-freier UI-Kern mit denselben Grenzen.
+  {
+    files: ['packages-js/bpmn-react/src/**/*.{ts,tsx}', 'packages-js/bpmn-flowaudit/src/ui/**/*.ts'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'error',
+      complexity: ['error', 10],
+      'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 250, skipBlankLines: false, skipComments: false }],
     },
   },
   {

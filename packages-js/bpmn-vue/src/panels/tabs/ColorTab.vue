@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /** Colour of the selected element: audit palette, removal and colour from markers. */
 import { computed } from 'vue'
-import { MARKER_COLOR_PRECEDENCE, MARKER_COLORS, PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import { PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import { colorFromMarkers } from '@flowaudit/bpmn-flowaudit/ui'
 import { useI18n } from '../../i18n/useI18n'
 import { useEditorContext } from '../../stores/context'
 import ColorSwatches from '../../components/base/ColorSwatches.vue'
@@ -11,11 +12,7 @@ const { selection, editor, readonly } = useEditorContext()
 const { t } = useI18n()
 
 const colors = computed(() => props.palette ?? PALETTE_COLORS)
-const fromMarkers = computed(() => {
-  const types = new Set(selection.extensions.value.markers.map((marker) => marker.type))
-  const winner = MARKER_COLOR_PRECEDENCE.find((type) => types.has(type))
-  return winner ? MARKER_COLORS[winner] : null
-})
+const fromMarkers = computed(() => colorFromMarkers(selection.extensions.value.markers))
 
 function apply(color: { fill: string; stroke: string } | null): void {
   const element = selection.element.value

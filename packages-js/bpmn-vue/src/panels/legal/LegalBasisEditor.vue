@@ -6,21 +6,11 @@
  * split into structured entries.
  */
 import { ref } from 'vue'
-import {
-  citation,
-  findCitations,
-  forWriting,
-  isStructured,
-  legalBasisKey,
-  shortCitation,
-  splitFreeText,
-  type LegalBasis,
-  type LegalSearchPort,
-} from '@flowaudit/bpmn-flowaudit'
+import { citation, isStructured, shortCitation, splitFreeText, type LegalBasis, type LegalSearchPort } from '@flowaudit/bpmn-flowaudit'
+import { addLegalBasis, LEGAL_FIELDS as FIELDS, removeLegalBasis, structureLegalBasis, updateLegalBasis } from '@flowaudit/bpmn-flowaudit/ui'
 import FaIcon from '../../components/base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 import FieldForm from '../FieldForm.vue'
-import type { FieldDescriptor } from '../descriptors'
 import LegalSearch from './LegalSearch.vue'
 
 const props = defineProps<{ items: LegalBasis[]; port?: LegalSearchPort; profileId?: string; disabled?: boolean }>()
@@ -28,59 +18,21 @@ const emit = defineEmits<{ (e: 'update', items: LegalBasis[]): void }>()
 const { t } = useI18n()
 const open = ref<number | null>(null)
 
-const legal = (key: string, extra: Partial<FieldDescriptor> = {}): FieldDescriptor => ({ key, label: `legal.${key}`, kind: 'text', ...extra })
-const FIELDS: FieldDescriptor[] = [
-  legal('act', { wide: true, placeholder: 'Verordnung (EU) 2021/1060' }),
-  legal('article'),
-  legal('section'),
-  legal('annex'),
-  legal('paragraph'),
-  legal('subparagraph'),
-  legal('sentence'),
-  legal('point'),
-  legal('number'),
-  legal('version', { wide: true }),
-  legal('celex'),
-  legal('eli'),
-  legal('url', { wide: true }),
-  legal('shortTitle', { wide: true }),
-  legal('note', { wide: true }),
-  { key: 'confidential', label: 'field.confidential', kind: 'checkbox', wide: true },
-]
-
 const asRecord = (item: LegalBasis) => item as unknown as Record<string, unknown>
 
-function emitItems(items: LegalBasis[]): void {
-  emit('update', items.map(forWriting))
-}
-
 function add(value: LegalBasis): void {
-  if (props.items.some((item) => legalBasisKey(item) === legalBasisKey(value))) return
-  emitItems([...props.items, value])
+  const next = addLegalBasis(props.items, value)
+  if (!next) return
+  emit('update', next)
   open.value = null
 }
 
-function update(index: number, value: Record<string, unknown>): void {
-  // Structured edits regenerate the text; free text of the legacy form stays.
-  const next = value as LegalBasis
-  const previous = props.items[index]
-  const regenerated = isStructured(next) && previous && previous.text === citation(previous) ? { ...next, text: undefined } : next
-  emitItems(props.items.map((item, i) => (i === index ? regenerated : item)))
-}
+const update = (index: number, value: Record<string, unknown>) => emit('update', updateLegalBasis(props.items, index, value as LegalBasis))
+const remove = (index: number) => emit('update', removeLegalBasis(props.items, index))
 
-function remove(index: number): void {
-  emitItems(props.items.filter((_, i) => i !== index))
-}
-
-/** Splits a legacy free text into structured entries (unrecognised parts stay text). */
 function structure(index: number): void {
-  const legacy = props.items[index]
-  if (!legacy) return
-  const parts = splitFreeText(legacy.text ?? '').flatMap((part) => {
-    const hits = findCitations(part)
-    return hits.length ? hits.map((hit) => hit.legalBasis) : [{ text: part }]
-  })
-  emitItems([...props.items.slice(0, index), ...parts, ...props.items.slice(index + 1)])
+  const next = structureLegalBasis(props.items, index)
+  if (next) emit('update', next)
 }
 </script>
 
@@ -119,20 +71,3 @@ function structure(index: number): void {
     </ul>
   </section>
 </template>
-
-<style>
-.fa-legal__items {
-  margin-top: 10px;
-}
-
-.fa-legal__text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.fa-legal__legacy {
-  margin: 6px 0 10px;
-  padding-left: 18px;
-}
-</style>

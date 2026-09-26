@@ -2,22 +2,26 @@
   "status": "PASS",
   "date": "2026-09-26",
   "runtime": "offline QEMU TCG, real systemd",
-  "regulierung_commit": "b212c914f1383103e720e393e5f8654e46fdd051",
-  "payload_note": "cc6bf9a ändert nur backend/requirements.txt und einen Test; beide sind nicht Teil des Pakets (build.py kopiert app, alembic, data, zwei Skripte). Paketinhalt entspricht damit cc6bf9a.",
+  "regulierung_commit": "5458d2e8161d33015fd6222917735eb55ca8cecf",
   "packages": [
     {
-      "version": "0.1.0~preview.20260926-1",
-      "sha256": "699c45438de0358c5e244c17b0a2b8d8a3f8705da02a746ce48d886c0696c8f6"
+      "version": "0.1.0~preview.20260926-21",
+      "sha256": "b91fe7e917be14ec0a3e4245c20835b326baeebcda325a4c3a0ca7082e2db99d"
     },
     {
-      "version": "0.1.0~preview.20260926-2",
-      "sha256": "88656b9b0bc219bdc9ebd41a2b35cfe8f07613d60543cd699a3766eea289bcc6"
+      "version": "0.1.0~preview.20260926-22",
+      "sha256": "34d9e8ec1c11ae4d6d86a80b69891d8e7044a8afb90145ebef4a155f65abb03d"
     }
   ],
   "guest_script_sha256": "04be382da07e93786756c43001b100996a5a0f769ea0f8dec836c05866d4a611",
   "dockerfile_sha256": "5c0e3df571d81927416d51fdcad9be10bd7dcf51835c145884a7ed1fafb83780",
   "configuration": "{} (Standardvertrag des Gasttests)",
   "kernel": "6.8.0-142-generic",
+  "database_extensions": {
+    "timescaledb": "2.30.1~ubuntu24.04-1615",
+    "postgis": "3.6.4+dfsg-2.pgdg24.04+1",
+    "source": "Gast-Image am 26.09.2026 aus packagecloud timescale (noble) und Ubuntu/PGDG ohne Versionsangabe gebaut; Kandidat laut apt-cache policy zum selben Zeitpunkt. Der Intranet-Installer pinnt diese Versionen seit regulierung PR #13."
+  },
   "checks": {
     "administrator_created": "PASS",
     "install_anonymous_access_rejected": "PASS",
@@ -80,7 +84,7 @@
   "limitations": [
     "Synthetic empty application database; no production data migration exercised",
     "No external identity provider or live harvesting in the networkless guest",
-    "Upgrade-Test zwischen zwei Kandidaten gleichen Schemas (owi048). Ein Upgrade von Vorversionen mit owi047 (Kandidaten 20260923) verweigert regulierung-admin migrate bewusst: schemaändernde Upgrades brauchen einen geprüften Migrations-/Rückfallplan."
+    "Upgrade-Test zwischen zwei Kandidaten gleichen Schemas (owi049). Zielserver Ministerium ist leer (Erstinstallation per bootstrap-intranet); ein Bestands-Upgrade ist nicht Teil der Auslieferung."
   ],
-  "console_sha256": "62b7d994eb79c455d31a466c7c457d2426e16a21510be77818b185dca95352e5"
+  "console_sha256": "49167ecba5ab1648f5da7a45df7aaad03102747955883fa55cfb37d191b54fdf"
 }

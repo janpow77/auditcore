@@ -51,3 +51,6 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
   `importResult` (`POST /comparisons/import`) ergänzt. Stile
   `styles/documents.css`, Fixture aus dem echten Dienst
   (`test/fixtures/documents-comparisons.json`).
+- Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz, Geo (mit Leaflet-Grundstilen), Kanban (`kanban.css`, aus `@flowaudit/ui` verschoben).
+- Kanban-Texte `kanbanMessages`, `kanbanDialogMessages` (aus `@flowaudit/ui`
+  verschoben).
