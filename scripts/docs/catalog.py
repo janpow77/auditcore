@@ -3,7 +3,8 @@
 Every row is derived from files in the repository: name, version and
 dependencies from ``pyproject.toml`` / ``package.json``, the purpose from the
 first paragraph of the README section „Zweck“ (fallback: the manifest
-description), the status from ``provenance.json``.
+description), the status from ``provenance.json`` („spezifiziert“ only with a
+holding ``specification`` block, see ``specification.py``).
 
     python scripts/docs/catalog.py --write
     python scripts/docs/catalog.py --check      # CI
@@ -24,6 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from generated_blocks import ROOT, md_cell, sync_file  # noqa: E402
 from readme_check import catalog_line  # noqa: E402
+from specification import specified  # noqa: E402
 
 BLOCK = "paketkatalog"
 COMMAND = "python scripts/docs/catalog.py --write"
@@ -63,7 +65,11 @@ def category(name: str, *, js: bool) -> str:
 
 
 def status(package_dir: Path) -> str:
-    """Characterisation status from provenance.json (without one: new)."""
+    """Status from provenance.json (without one: new).
+
+    A characterised package with a holding ``specification`` block is
+    „spezifiziert“; a declared block that does not hold raises.
+    """
     path = package_dir / "provenance.json"
     if not path.is_file():
         return "neu"
@@ -74,7 +80,9 @@ def status(package_dir: Path) -> str:
         return "konsolidiert (Gleichheitsnachweis)"
     if classification.startswith("NEW"):
         return "neu, gegen charakterisierte Verträge" if characterised else "neu"
-    return "charakterisiert" if characterised else "neu"
+    if not characterised:
+        return "neu"
+    return "spezifiziert" if specified(package_dir, data) else "charakterisiert"
 
 
 def _purpose(package_dir: Path, description: str) -> str:

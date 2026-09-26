@@ -24,6 +24,7 @@ web = ["starlette>=0.26.1,<2", "rapidfuzz>=3.10.1,<4"]
 fastapi = ["fastapi>=0.95.2"]
 dev = [
     "pytest>=8",
+    "hypothesis>=6.100",
     "ruff>=0.11",
     "mypy>=1.15",
     "build>=1.2",

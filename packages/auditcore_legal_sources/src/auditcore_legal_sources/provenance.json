@@ -87,5 +87,35 @@
     "get_vorgang/test_connection (defekt, LS-C06)",
     "fetch_document_content/_fetch_page_content (HTML-Abruf, noch nicht charakterisiert)"
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11",
+      "I12"
+    ],
+    "legacy_variants": [
+      "legacy.legacy_parse_date",
+      "legacy.legacy_dip_harvest",
+      "legacy.legacy_dip_normalize",
+      "legacy.legacy_dip_query",
+      "legacy.legacy_bafin_entry",
+      "legacy.legacy_curia_entry",
+      "legacy.legacy_eca_core_reports",
+      "legacy.legacy_update_query"
+    ]
+  }
 }
