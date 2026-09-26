@@ -4,13 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_registry_sources"
-version = "0.2.0"
+version = "0.2.1"
 description = "Register, sanctions and PEP source adapters, list parsers, screening profiles and a screening review API"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_harvest==0.1.1", "auditcore_entity_matching==0.2.2"]
+dependencies = [
+    "auditcore_common==0.1.1",
+    "auditcore_harvest==0.1.1",
+    "auditcore_entity_matching==0.2.2",
+]
 
 [project.optional-dependencies]
 fuzzy = ["rapidfuzz>=3.10.1,<4"]

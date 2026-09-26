@@ -9,10 +9,8 @@ JsonObject: TypeAlias = "dict[str, JsonValue]"
 
 
 def as_object(value: object) -> JsonObject:
-    """Return ``value`` if it is a JSON object, otherwise an empty object."""
-    if isinstance(value, dict):
-        return {str(key): item for key, item in value.items()}
-    return {}
+    """Shallow copy of ``value`` if it is a JSON object (string keys), otherwise ``{}``."""
+    return dict(value) if isinstance(value, dict) else {}
 
 
 def as_list(value: object) -> list[JsonValue]:

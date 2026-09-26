@@ -1,5 +1,14 @@
 # Changelog – auditcore_llm_client
 
+## 0.1.1 – Stabiler Fehlercode des Flow-Agents
+
+- `SensitivityRejectedError`/`EgressDeniedError` werden primär am Response-Header
+  `X-Flow-Agent-Error` erkannt (`invalid-sensitivity` mit HTTP 400,
+  `egress-denied` mit HTTP 403; flow-agent #56, main `873636a4`). Die
+  Texterkennung („Sensitivität“/„Egress“ im `detail`) bleibt Rückfall für
+  Gateways ohne Header. Ein Header-Code mit unpassendem Status ergibt einen
+  gewöhnlichen `RouterHttpError`.
+
 ## 0.1.0 – Erste Fassung
 
 - Client für ai-router und Flow-Agent-Gateway, synchron (`LlmClient`) und

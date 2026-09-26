@@ -17,7 +17,7 @@ def main() -> None:
     package = distribution("auditcore_statistics")
     assert package.version == "0.3.2"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.1.0"], runtime
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     result = benford_test([123, 187, 2450, 31, 4.2, 1.9, 0, None], digits=1)
     assert result.analysed == 6 and result.zero == 1 and result.missing == 1

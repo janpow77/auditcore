@@ -47,6 +47,7 @@ def test_topic_modules_and_no_catch_all() -> None:
         "html_text",
         "ids",
         "json_values",
+        "numbers_de",
         "numeric",
         "optional",
         "profiles",
@@ -60,7 +61,7 @@ def test_import_loads_no_optional_dependency() -> None:
     code = (
         "import sys, auditcore_common; "
         "from auditcore_common import aio, clock, filenames, frozen, hashing, html_text, ids, "
-        "json_values, numeric, optional, profiles, safe_xml, text; "
+        "json_values, numbers_de, numeric, optional, profiles, safe_xml, text; "
         "assert 'defusedxml' not in sys.modules and 'numpy' not in sys.modules"
     )
     subprocess.run([sys.executable, "-c", code], check=True)

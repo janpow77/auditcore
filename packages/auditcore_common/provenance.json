@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "classification": "CONSOLIDATION",
   "sources": [
     {
@@ -473,7 +473,7 @@
       }
     ]
   },
-  "origin": "Zusammenführung doppelter Hilfsfunktionen der auditcore-Fachpakete und – nach der App-Inventur docs/reports/app-helfer-python.md – generischer Hilfsfunktionen mehrerer Anwendungen (Quellen unter sources).",
+  "origin": "Zusammenführung doppelter Hilfsfunktionen der auditcore-Fachpakete und – nach der App-Inventur docs/reports/app-helfer-python.md – generischer Hilfsfunktionen mehrerer Anwendungen (Quellen unter sources). 0.1.1: numbers_de ist eine Neuumsetzung des Vertrags contracts/common-cases/parse-number (Regeln aus flowinvoice amount_parsing.py und german-decimal.ts, Festlegungen des Nutzers vom 25.09.2026); es wird kein Code übernommen.",
   "rights": {
     "license_status": "MIT",
     "public_release_status": "USER_AUTHORIZED_MIT",

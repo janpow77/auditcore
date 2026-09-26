@@ -18,12 +18,12 @@ python -m pip install auditcore_market_indicators \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-market-indicators/`):
 
 ```text
-auditcore_market_indicators @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_market_indicators-0.1.0-py3-none-any.whl#sha256=a4b7a52044384b0b82abae3ef46c5bb8dc86668016ece5a38de6c7d6784e5b16
+auditcore_market_indicators @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_market_indicators-0.1.1-py3-none-any.whl#sha256=c92a5aba7a5c4692b903fe773dcdd6f3fc51293694e9bc62544a90a93cb54371
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

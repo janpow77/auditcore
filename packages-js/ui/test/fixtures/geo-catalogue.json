@@ -1,0 +1,41 @@
+{
+ "bibliothek": "auditcore_geo 0.3.0",
+ "erdmodelle": [
+  {
+   "id": "kugel.r1_6371008_8m",
+   "radius_m": 6371008.8,
+   "beschreibung": "Mittlerer Erdradius R1 des Ellipsoids GRS80/WGS 84",
+   "empfohlen": true
+  },
+  {
+   "id": "kugel.6371000m",
+   "radius_m": 6371000.0,
+   "beschreibung": "Gerundeter Erdradius 6371 km",
+   "empfohlen": false
+  }
+ ],
+ "empfohlenes_erdmodell": "kugel.r1_6371008_8m",
+ "rand_gilt_als_innen_empfohlen": true,
+ "ellipsoide": [
+  "GRS80",
+  "WGS84"
+ ],
+ "vereinfachung_einheiten": [
+  "meter",
+  "grad"
+ ],
+ "grenzen": {
+  "max_body_bytes": 16777216,
+  "max_punkte": 50000,
+  "max_stuetzpunkte": 250000,
+  "max_gpkg_bytes": 67108864,
+  "max_gpkg_flaechen": 5000
+ },
+ "geocoder": {
+  "aktiv": false,
+  "namensnennung": null
+ },
+ "gpkg_quellen": [
+  "schutzgebiete-demo"
+ ]
+}

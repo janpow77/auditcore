@@ -1,7 +1,25 @@
 {
   "schema_version": 1,
-  "status": "vorläufig",
+  "status": "festgelegt (Nutzer 2026-09-25)",
   "stand": "2026-09-25",
+  "festgelegt": [
+    "empty_value",
+    "filesize_base",
+    "filesize_units",
+    "ambiguous_single_dot_de",
+    "amount_max_fraction_digits_de",
+    "display_timezone"
+  ],
+  "vorläufig": [
+    "money_rounding",
+    "datetime_separator"
+  ],
+  "technisch": [
+    "probe_timezone",
+    "csv_delimiter",
+    "csv_bom",
+    "csv_formula_prefix"
+  ],
   "decisions": {
     "empty_value": "—",
     "display_timezone": "Europe/Berlin",

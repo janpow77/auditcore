@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_dataprotection",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "source": {
     "repository": "janpow77/regulierung",
     "commit": "a5d48ea4b90a410210ec25e707781ef9e21ad743",

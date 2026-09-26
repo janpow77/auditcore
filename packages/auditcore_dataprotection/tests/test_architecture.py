@@ -14,7 +14,13 @@ from pathlib import Path
 import auditcore_dataprotection
 
 PACKAGE = Path(auditcore_dataprotection.__file__).parent
-OPTIONAL = {"excel.py": {"openpyxl", "auditcore_reporting"}, "pdf.py": {"weasyprint"}}
+OPTIONAL = {
+    "excel.py": {"openpyxl", "auditcore_reporting"},
+    "pdf.py": {"weasyprint"},
+    # REST interface (extras ``web``/``fastapi``): frameworks only inside functions.
+    "http.py": {"starlette"},
+    "fastapi_router.py": {"fastapi"},
+}
 FORBIDDEN_CALLS = {"open", "eval", "exec", "compile", "__import__"}
 FORBIDDEN_MODULES = {
     "subprocess",

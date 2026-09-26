@@ -19,12 +19,12 @@ python -m pip install auditcore_dataprotection \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.4.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.4.3 im
+Release v0.4.0; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-dataprotection/`):
 
 ```text
-auditcore_dataprotection @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_dataprotection-0.4.0-py3-none-any.whl#sha256=8f61e52e389af37c1194eab641cdecec33b179e9cf96652b408a897da3214106
+auditcore_dataprotection @ https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_dataprotection-0.4.3-py3-none-any.whl#sha256=25f5478b1007ddbfadbc0212136032af3650db0a92f77ca5f7a0d3b8136da18a
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -36,6 +36,8 @@ sudo apt-get install python3-auditcore-dataprotection
 
 Extras: `[excel]` – XLSX-Ausgabe (openpyxl und
 `auditcore_reporting[excel]==0.2.1`); `[pdf]` – PDF-Bericht über WeasyPrint;
+`[web]` – REST-Schnittstelle mit Starlette, `[fastapi]` – derselbe Vertrag als
+FastAPI-Router (beide für die Oberflächen `<flowaudit-vvt>`/`<flowaudit-dsfa>`);
 `[dev]` – Test- und Prüfwerkzeuge.
 
 ## Schnellstart
@@ -197,6 +199,31 @@ Fehlt eine Antwort, lautet der Vorschlag `unvollstaendig`; eine fehlende Angabe
 wird nie zu „Nein“ oder zu einer Freigabe. Der Vorschlag ist eine Empfehlung;
 Entscheidung und Freigabe bleiben menschliche, zurechenbare Schritte.
 
+## REST-Schnittstelle für die Oberfläche (0.5.0)
+
+`auditcore_dataprotection.web` stellt Verzeichnis und Folgenabschätzung für
+die Web Components `<flowaudit-vvt>` und `<flowaudit-dsfa>` bereit. Die
+Handler rufen nur die Dienste der Bibliothek; Persistenz kommt über das
+Protocol `Storage` (Register- und Abschätzungs-Repository plus Audit-Senke),
+Mandant und Person über `identify`. Vertrag, Fehlercodes und Endpunkte:
+[docs/ui/dataprotection-rest.md](../../docs/ui/dataprotection-rest.md).
+
+```python no-run
+from starlette.routing import Mount
+
+from auditcore_dataprotection import load_profile
+from auditcore_dataprotection.web import DataProtectionApi, create_backend
+from auditcore_dataprotection.web.http import routes
+
+profil = load_profile("auditcore.dsgvo", "2026.10.3")
+api = DataProtectionApi(create_backend(profil, speicher, rechte))  # eigene Ports
+anwendung_routes = [Mount("/api/dataprotection", routes=routes(api, identify))]
+```
+
+`identify(request)` liefert `Principal(tenant_id, Actor(...))` aus der Sitzung
+der Anwendung oder `None` (401). Exporte: Druckansicht (HTML der Bibliothek),
+Markdown und CSV mit Formelschutz.
+
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
@@ -284,6 +311,7 @@ Entscheidung und Freigabe bleiben menschliche, zurechenbare Schritte.
 | `auditcore_dataprotection.risk` | Risk assessment: gross risk, capped measure effects, explicit residual values. |
 | `auditcore_dataprotection.rules` | Versioned, source-bound rule profiles for screening, risk and workflow. |
 | `auditcore_dataprotection.screening` | Threshold analysis: hard triggers, EDPB points and the FRIA marker. |
+| `auditcore_dataprotection.web` | REST interface of the VVT and DSFA UI (``<flowaudit-vvt>``, ``<flowaudit-dsfa>``). |
 | `auditcore_dataprotection.workbook_tables` | Flat tables of register and overview workbooks (no spreadsheet dependency). |
 <!-- api-overview:end -->
 
@@ -297,6 +325,7 @@ Bausteine:
 | `assessment` | DSFA aus einer konkreten Tätigkeitsfassung: Erhebung, Entscheidung mit Begründungspflicht, DSB-Stellungnahme und Folgerung, Konsultation, Freigabe, Prüfbedarf nach VVT-Änderung, Neubewertung. |
 | `ports`, `memory` | Schnittstellen für Persistenz, Rechte, Audit, Zeit und Kennungen; In-Memory-Referenzadapter. |
 | `export`, `excel`, `pdf` | Vollständige Berichtsdaten, HTML/JSON, optional XLSX/PDF. Die neuen tabellarischen XLSX-Exporte nutzen den Renderer von `auditcore_reporting` 0.2.1; die Legacy-Layouts mit verbundenen Zellen bleiben ein eigener openpyxl-Adapter. Tabellentexte werden immer als Literal geschrieben. |
+| `web` | REST-Schnittstelle `dataprotection_ui/1` für `<flowaudit-vvt>` und `<flowaudit-dsfa>` (`@flowaudit/ui`): `DataProtectionApi` ohne Framework, `routes`/`create_app` (Extra `web`), `create_router` (Extra `fastapi`), Speicher als Protocol `Storage`. |
 | `legacy` | Verhaltensgleicher Adapter der Quellanwendung `regulierung` für bestehende Consumer. |
 
 Die Module der Tabelle sind die öffentlichen Einstiegspunkte. Seit 0.4.1 sind sie
@@ -371,8 +400,8 @@ Hinweis. Empfohlen für neue Abschätzungen; ältere Fassungen bleiben unveränd
 
 ### Verantwortung der Anwendung
 
-Die Bibliothek enthält keine Datenbank, keine Sitzung, kein HTTP und keine
-Benutzerverwaltung. Die Anwendung implementiert `RegisterRepository`,
+Die Bibliothek enthält keine Datenbank, keine Sitzung und keine
+Benutzerverwaltung; HTTP nur im optionalen Modul `web`. Die Anwendung implementiert `RegisterRepository`,
 `AssessmentRepository`, `Authorizer`, `AuditSink`, `Clock` und `IdFactory`
 (`ports`), ruft jede Operation innerhalb ihrer eigenen Transaktion auf und
 erzwingt die Unveränderlichkeit freigegebener Fassungen zusätzlich in der
@@ -402,11 +431,11 @@ Entscheidungen: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit `auditcore_common==0.1.0` (gemeinsame
+Python ≥ 3.11, zur Laufzeit `auditcore_common==0.1.1` (gemeinsame
 Hilfsfunktionen, nur Standardbibliothek); die Plattform `auditcore` ist keine
 Abhängigkeit. Optional über `[excel]`
 `openpyxl>=3.0.9,<4` und `auditcore_reporting[excel]==0.2.1`, über `[pdf]`
-`weasyprint>=60.2`.
+`weasyprint>=60.2`, über `[web]` Starlette und über `[fastapi]` FastAPI.
 
 ## Sicherheit und Datenschutz
 

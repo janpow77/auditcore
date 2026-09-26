@@ -413,7 +413,7 @@
         {
           "library": "auditcore_common",
           "symbol": "numbers_de.parse_de_number",
-          "status": "geplant"
+          "status": "vorhanden"
         }
       ],
       "contract": "parse-number"

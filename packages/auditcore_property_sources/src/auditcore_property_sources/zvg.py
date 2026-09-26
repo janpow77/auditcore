@@ -39,6 +39,7 @@ from ._zvg_text import (
     decode_portal_bytes,
     extract_market_value,
     fix_mojibake,
+    legacy_parse_de_number,
     parse_de_number,
     parse_money_amount,
 )
@@ -370,6 +371,7 @@ __all__ = [
     "extract_address",
     "extract_market_value",
     "fix_mojibake",
+    "legacy_parse_de_number",
     "listing_ids",
     "normalized_street",
     "parse_de_number",

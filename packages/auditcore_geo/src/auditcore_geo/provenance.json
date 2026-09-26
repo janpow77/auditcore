@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_geo",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "classification": "Kleiner Geokern (H4) mit Nominatim-Adapter auf auditcore_harvest als Extra [geocoder]",
   "multi_use_evidence": {
     "haversine": "6 Implementierungen in osint, audit_designer (3), flowsearch (2)",
@@ -275,5 +275,13 @@
     "points": 168,
     "executed": "audit_designer gis/company und flowsearch _get_geometry_center (gleiche Blobs wie characterization), auditcore_geo 0.1.0 aus Tag v0.3.0, Referenz shapely 2.1.2/pyproj 3.8.0 (EPSG:25832)",
     "design_reference": "Semantik übernommen aus dem Workaround janpow77/audit_designer PR #382, backend/app/core/shared/geo_flaeche.py (Commit 82e1ca5); kein Code übernommen"
-  }
+  },
+  "own_additions": [
+    {
+      "module": "auditcore_geo.web",
+      "added_in": "0.3.0",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "REST-Vertrag für Geo-Oberflächen (docs/ui/geo-rest.md): Profile, Umkreis, Lage mit Randregel, UTM, Douglas-Peucker in Metern oder Grad, GeoPackage-Dateien (SQLite) lesen, Adresssuche nur mit angeschlossenem Geocoder; Starlette-Routen und optionaler FastAPI-Router (Extras web/fastapi). Keine neue Geometrieberechnung, nur Aufrufe der bestehenden Funktionen."
+    }
+  ]
 }
