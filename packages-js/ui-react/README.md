@@ -15,23 +15,20 @@ Entprellen, Token).
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                                 # im Repository-Stamm
-npm run build -w @flowaudit/ui-react   # dist/: ESM und Typen
+npm install @flowaudit/ui-react@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-react-1.0.0.tgz
 ```
 
-Im Anwendungsrepository:
+Abhängigkeitshülle: dazu `@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`; Peer-Abhängigkeiten `react` und `react-dom` (18.3 oder 19), kein Vue. Stile: `@flowaudit/ui-core/style.css`.
 
-```sh
-npm install @flowaudit/ui-react @flowaudit/ui-core @flowaudit/kanban-core @flowaudit/common react react-dom
-```
-
-Das Paket ist nicht in einer npm-Registry veröffentlicht; Bezug über den
-Workspace oder mit `npm pack` erzeugte Tarballs von `@flowaudit/ui-react`,
-`@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`. Vue wird nicht
-gebraucht; den früheren Einstieg `@flowaudit/ui-react/elements` gibt es nicht mehr.
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/ui-react`).
 
 ## Schnellstart
 
