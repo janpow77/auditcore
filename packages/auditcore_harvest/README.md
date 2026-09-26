@@ -20,12 +20,12 @@ python -m pip install auditcore_harvest \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
+Release v0.4.1; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-harvest/`):
 
 ```text
-auditcore_harvest @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_harvest-0.1.0-py3-none-any.whl#sha256=bc6cf59f65826171d81666a28331a609395e2f3cba8ba47f9321d454b378d880
+auditcore_harvest @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_harvest-0.1.2-py3-none-any.whl#sha256=4e2a7845fce2ff34d25a77c6cfbd629a342a7cbeec510d06ca2be03719cf0746
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
