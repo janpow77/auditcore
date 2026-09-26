@@ -35,7 +35,9 @@ Debian/Ubuntu über die signierte APT-Quelle eines Releases
 sudo apt-get install python3-auditcore-harvest
 ```
 
-Extras: nur `[dev]` (Test- und Prüfwerkzeuge). Die Kommandozeile
+Extras: `[xml]` – defusedxml für den Feed-Referenzadapter (ab 0.1.2; ohne das
+Extra meldet `FeedAdapter` einen `ConfigError`); `[dev]` – Test- und
+Prüfwerkzeuge. Die Kommandozeile
 `auditcore-harvest catalog` prüft den Quellenkatalog, `auditcore-harvest replay`
 führt einen Adapter gegen aufgezeichnete Fixtures aus.
 
@@ -227,7 +229,9 @@ Ergebnisbegrenzung wie der DIP-Schlagwortsuche.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11, zur Laufzeit nur die Standardbibliothek. Die Plattform
+Python ≥ 3.11, zur Laufzeit die Standardbibliothek und ab 0.1.2
+`auditcore_common==0.1.1` (sicheres XML, kanonische Hashes; nur
+Standardbibliothek). Optional über `[xml]` `defusedxml>=0.7.1`. Die Plattform
 `auditcore` ist keine Abhängigkeit; HTTP-Clients (`httpx`, `requests`) bringt
 der Consumer über seinen `Transport` mit. Der Kern ist synchron; asynchrone
 Consumer rufen ihn über `asyncio.to_thread` auf.
@@ -238,7 +242,8 @@ Netzwerkzugriffe erfolgen nur über den injizierten `Transport`. Geheimnisse
 kommen aus dem `CredentialProvider`, erscheinen nicht in Datensätzen,
 Lokatoren oder Ereignissen, und `ReplayTransport` zeichnet Schlüsselparameter
 (`apikey`, `token`, `password` …) nicht auf. Der Feed-Referenzadapter nimmt
-keine DTDs an. Welche personenbezogenen Daten eine Quelle liefert und wie
+keine DTDs an und parst ab 0.1.2 nur über defusedxml (kein Rückfall auf den
+Standardparser). Welche personenbezogenen Daten eine Quelle liefert und wie
 lange sie gespeichert werden, entscheidet der Consumer; die Datenrechte der
 Dienste sind von der Paketlizenz nicht erfasst.
 
