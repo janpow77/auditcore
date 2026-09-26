@@ -83,7 +83,7 @@ document.body.append(table)
 - **Web Component:** `defineFlowauditElements({ only?, locale? })` aus
   `@flowaudit/ui/elements` registriert `<flowaudit-table>`,
   `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>`,
-  `<flowaudit-sampling>`, `<flowaudit-benford>`,
+  `<flowaudit-db-kanban>`, `<flowaudit-sampling>`, `<flowaudit-benford>`,
   `<flowaudit-screening-review>`, `<flowaudit-risk-flags>`,
   `<flowaudit-synopsis>`, `<flowaudit-comparisons>`, `<flowaudit-vvt>`,
   `<flowaudit-dsfa>` und `<flowaudit-geo-map>` im Light DOM
@@ -103,6 +103,7 @@ Fachkomponenten und ihre REST-Verträge:
 | `KanbanBoard`, `KanbanBoardList` | `<flowaudit-kanban-board>`, `<flowaudit-kanban-boards>` | Kanban-Boards über einen `BoardPort` | [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md) |
 | `FaSynopsis` | `<flowaudit-synopsis>` | Synopse eines Dokumentvergleichs (Seite an Seite oder fortlaufend, Wortdifferenz, Auswahl und Grund je Zeile, Ausgaben) | [`docs/ui/synopsis-rest.md`](../../docs/ui/synopsis-rest.md) |
 | `FaComparisons` | `<flowaudit-comparisons>` | Dokumentvergleiche über `auditcore_documents.web` verwalten: zwei Fassungen (DOCX, DOCM, PDF) hochladen, Standardvergleich oder Gesetzessynopse mit Optionen und Profil, gespeicherte Vergleiche suchen, öffnen (eingebettete Synopse), löschen, fertige Ergebnisse als JSON importieren | [`docs/ui/synopsis-rest.md`](../../docs/ui/synopsis-rest.md) |
+| `FaDbKanban` | `<flowaudit-db-kanban>` | Datenbankansicht als Kanban (useDbKanban): Datensätze einer Tabelle nach einer Auswahl-Eigenschaft gruppiert, Spalte „Ohne Wert“, Ablegen oder Strg+Pfeil setzt den Zellwert, Eintrag je Spalte anlegen; Datenquelle als `RecordPort` (`load`, `updateCell`, `addRow`) oder Tabelle mit `table-change` | [`docs/kanban/oberflaeche.md`](../../docs/kanban/oberflaeche.md) |
 | `SamplingPanel` | `<flowaudit-sampling>` | Stichprobenumfang und -ziehung über `auditcore_sampling.web` | [`docs/ui/sampling-rest.md`](../../docs/ui/sampling-rest.md) |
 | `BenfordPanel` | `<flowaudit-benford>` | Benford-Analyse über `auditcore_statistics.web` | [`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md) |
 | `ScreeningReview` | `<flowaudit-screening-review>` | Trefferprüfung beim Sanktions-/PEP-Screening | [`docs/ui/screening-rest.md`](../../docs/ui/screening-rest.md) |
@@ -118,7 +119,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (667):
+Exporte der Einstiegspunkte aus `package.json#exports` (692):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -220,6 +221,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `DataProtectionProfile` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DataProtectionTranslate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DatasetFinding` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbCardView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbColumnView` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbKanbanController` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbKanbanData` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbKanbanError` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbKanbanMessageKey` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbKanbanSource` | Schnittstelle | – | `dbkanban/useDbKanban` |
+| `@flowaudit/ui` | `DbKanbanTranslate` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `DbKanbanView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DecimalSeparator` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `DecisionInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DecisionRequest` | Re-Export | – | `@flowaudit/ui-core` |
@@ -252,6 +262,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `FaBadge` | Vue-Komponente | – | `base/FaBadge.vue` |
 | `@flowaudit/ui` | `FaButton` | Vue-Komponente | – | `base/FaButton.vue` |
 | `@flowaudit/ui` | `FaComparisons` | Vue-Komponente | – | `documents/FaComparisons.vue` |
+| `@flowaudit/ui` | `FaDbKanban` | Vue-Komponente | – | `dbkanban/FaDbKanban.vue` |
 | `@flowaudit/ui` | `FaDialog` | Vue-Komponente | – | `base/FaDialog.vue` |
 | `@flowaudit/ui` | `FaDsfa` | Vue-Komponente | – | `dataprotection/FaDsfa.vue` |
 | `@flowaudit/ui` | `FaGeoMap` | Vue-Komponente | – | `geo/FaGeoMap.vue` |
@@ -349,6 +360,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `RadiusHit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RadiusRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RadiusResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RecordMove` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `RecordProperty` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `RecordRow` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `RecordTable` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `RecordValue` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `RecordView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterColumn` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterContent` | Re-Export | – | `@flowaudit/ui-core` |
@@ -477,6 +494,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@flowaudit/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
+| `@flowaudit/ui` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
@@ -536,6 +554,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `buildSynopsisView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `cardAge` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `cardStyle` | Re-Export | – | `@flowaudit/kanban-core` |
+| `@flowaudit/ui` | `cellText` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `changeIds` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `chartGeometry` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `cloneContent` | Re-Export | – | `@flowaudit/ui-core` |
@@ -554,8 +573,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createComparisonsController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createDbKanbanController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
 | `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `createRiskController` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
@@ -568,6 +589,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `currentVersion` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `dataprotectionError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `dataprotectionMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `dbKanbanElement` | Konstante | `<flowaudit-db-kanban>`: `port` (RecordPort) oder `table` als JS-Eigenschaft; Ereignisse `record-move`, `record-add`, `table-change`, `update:groupBy`, `error`. | `dbkanban/element` |
+| `@flowaudit/ui` | `dbKanbanMessages` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `dbKanbanView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `decisionTitle` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `defineMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `derivationColumns` | Re-Export | – | `@flowaudit/ui-core` |
@@ -615,6 +639,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `geoMapElement` | Konstante | `<flowaudit-geo-map>`: Eigenschaften `port` (GeoPort), `points`, `areas`, `tiles` (TileSource), `center`, `zoom`, `locale`; Ereignisse `radius-completed`, `location-checked`, `area … | `geo/element` |
 | `@flowaudit/ui` | `geoMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `groupByDepartment` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `groupRecords` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui` | `guessNumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `hasPartialStrata` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `importDelimiterText` | Re-Export | – | `@flowaudit/ui-core` |
@@ -742,6 +767,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (667):
 | `@flowaudit/ui` | `useBenford` | Funktion | Vue-Anbindung der Benford-Analyse aus `@flowaudit/ui-core` (`createBenfordController`). | `benford/useBenford` |
 | `@flowaudit/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
 | `@flowaudit/ui` | `useComparisons` | Funktion | – | `documents/useComparisons` |
+| `@flowaudit/ui` | `useDbKanban` | Funktion | – | `dbkanban/useDbKanban` |
 | `@flowaudit/ui` | `useDebouncedFn` | Funktion | Entprellte Funktion; ein ausstehender Aufruf wird beim Abbau der Komponente verworfen. | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDsfa` | Funktion | – | `dataprotection/useDsfa` |
@@ -796,6 +822,7 @@ Web Components:
 |---|---|---|
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
+| `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
 | `<flowaudit-dsfa>` | `FaDsfa` | `dataprotection/element.ts` |
 | `<flowaudit-geo-map>` | `FaGeoMap` | `geo/element.ts` |
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
@@ -898,6 +925,22 @@ Web Components:
 | `comparison-removed` | `[id: string]` | – |
 | `comparison-open` | `[id: string]` | – |
 | `error` | `[error: ComparisonsError]` | – |
+
+#### `FaDbKanban`
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `RecordPort \| null` | nein | `null` | Datenquelle (Datenbank/REST der Anwendung) mit `load`, `updateCell` und optional `addRow`. |
+| `table` | `RecordTable \| null` | nein | `null` | Ohne Port: Tabelle direkt übergeben; Änderungen kommen als Ereignis `table-change` zurück. |
+| `editable` | `boolean` | nein | `true` | `false`: nur Ansicht, kein Verschieben und Anlegen. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `record-move` | `[move: RecordMove]` | – |
+| `record-add` | `[row: RecordRow]` | – |
+| `table-change` | `[table: RecordTable]` | – |
+| `error` | `[error: DbKanbanError]` | – |
 
 #### `FaDialog`
 
