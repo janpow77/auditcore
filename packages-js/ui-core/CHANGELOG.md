@@ -24,7 +24,7 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
   Controller; `downloadText`, `printHtml`, `deliverExport`.
 - Stile (`style.css`): Designtoken, Basis, Tabelle, Synopse, Datenschutz, Geo
   (mit Leaflet-Grundstilen), Risiko-Merkmale, Screening, Datei-Import,
-  Stichprobe, Benford, Datenbankansicht.
+  Stichprobe, Benford, Dokumentvergleiche, Datenbankansicht.
 - Risiko-Merkmale: Vertrag `auditcore_risk.web`, REST-Port, View-Logik
   (Zustand je Datensatz, Verteilung, Filter, Detaileinträge), Formate und
   Textschlüssel, Zustandsautomat `createRiskController` mit `selectRisk`
@@ -44,3 +44,10 @@ Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
   `tabularMessages` – gemeinsam für Stichprobe und Benford. Allgemeine Namen
   der drei Gruppen tragen im Kern ein Präfix (`sampling…`, `benford…`,
   `import…`), damit sie im Haupteinstieg nicht kollidieren.
+- Dokumentvergleiche: Formularmodell mit Prüfung wie `POST /comparisons`
+  (`formProblems`, `toCompareFields`), Liste (`summaryView`,
+  `filterSummaries`), Import (`parseImport`), Zustandsautomat
+  `createComparisonsController` mit `comparisonsView`; REST-Client um
+  `importResult` (`POST /comparisons/import`) ergänzt. Stile
+  `styles/documents.css`, Fixture aus dem echten Dienst
+  (`test/fixtures/documents-comparisons.json`).

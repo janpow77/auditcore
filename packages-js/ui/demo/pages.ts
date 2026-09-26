@@ -20,6 +20,7 @@ export const DEMO_PAGES: readonly DemoPage[] = [
   { id: 'datenbank-kanban', title: 'Datenbankansicht (Kanban)', group: 'Komponenten', load: () => import('./pages/dbkanban/DbKanbanPage.vue') },
   { id: 'datenschutz', title: 'Datenschutz: VVT und DSFA', group: 'Komponenten', load: () => import('./pages/dataprotection/DataProtectionPage.vue') },
   { id: 'geo-karte', title: 'Geo-Karte', group: 'Komponenten', load: () => import('./pages/geo/GeoPage.vue') },
+  { id: 'dokumentvergleiche', title: 'Dokumentvergleiche', group: 'Komponenten', load: () => import('./pages/documents/ComparisonsPage.vue') },
   { id: 'synopse', title: 'Synopse / Versionsvergleich', group: 'Komponenten', load: () => import('./pages/synopsis/SynopsisPage.vue') },
 ]
 

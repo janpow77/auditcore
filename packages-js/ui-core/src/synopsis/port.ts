@@ -4,7 +4,7 @@
  * REST-Vertrag aus `auditcore_documents.web` – oder eigene Implementierungen.
  */
 import { RestError, type FetchLike, type RestOptions } from '@flowaudit/common'
-import type { Comparison, ComparisonProfile, ComparisonSummary, RowUpdate, ServerExportFormat } from './types'
+import type { Comparison, ComparisonProfile, ComparisonResult, ComparisonSummary, RowUpdate, ServerExportFormat } from './types'
 
 export interface SynopsisPort {
   /** Vergleich laden (`GET /comparisons/{id}`). */
@@ -31,10 +31,18 @@ export interface CompareFields {
   profile?: string
 }
 
+/** Anfrage von `POST /comparisons/import`: ein fertiges Ergebnis aus der Auftragssteuerung ablegen. */
+export interface ImportRequest {
+  title?: string
+  result: ComparisonResult
+}
+
 export interface SynopsisRestClient extends Required<SynopsisPort> {
   profiles(): Promise<ComparisonProfile[]>
   list(): Promise<ComparisonSummary[]>
   create(oldFile: Blob, oldName: string, newFile: Blob, newName: string, fields?: CompareFields): Promise<Comparison>
+  /** `POST /comparisons/import`. */
+  importResult(request: ImportRequest): Promise<Comparison>
   remove(id: string): Promise<void>
 }
 
@@ -84,6 +92,8 @@ export function createSynopsisRestClient(options: RestClientOptions): SynopsisRe
       for (const [key, value] of formFields(fields)) form.append(key, value)
       return parse<Comparison>(await request(url('/comparisons'), { method: 'POST', body: form }))
     },
+    importResult: async (body) =>
+      parse<Comparison>(await request(url('/comparisons/import'), { method: 'POST', headers: json, body: JSON.stringify(body) })),
     async remove(id) {
       await parse<undefined>(await request(item(id), { method: 'DELETE' }))
     },

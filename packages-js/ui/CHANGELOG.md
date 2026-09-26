@@ -2,6 +2,13 @@
 
 ## 0.3.0 – unveröffentlicht
 
+- **Dokumentvergleiche:** `FaComparisons` (`<flowaudit-comparisons>`) mit
+  `ComparisonForm` und `ComparisonList` verwaltet Vergleiche über
+  `auditcore_documents.web`: Hochladen zweier Fassungen (DOCX, DOCM, PDF) mit
+  Vergleichsart, Dokumentart, Schwelle, Einbeziehen, Ausgabeabschnitten und
+  Profil, Prüfung vor dem Hochladen, Suche, Öffnen mit eingebetteter Synopse,
+  Löschen mit Bestätigung und Import fertiger Ergebnisse (JSON). Logik im
+  Kern (`createComparisonsController`), Paritätsfälle für die React-Fassung.
 - **Datenbankansicht als Kanban:** `FaDbKanban` (`<flowaudit-db-kanban>`)
   gruppiert Datensätze einer Tabelle nach einer Auswahl-Eigenschaft
   (useDbKanban aus audit_designer, Parität mit `group_by_value`): Spalte
