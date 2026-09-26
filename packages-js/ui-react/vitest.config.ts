@@ -32,5 +32,8 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     include: ['test/**/*.spec.ts', 'test/**/*.spec.tsx'],
+    // Paritätsabläufe rendern Vue und React nacheinander; auf ausgelasteten
+    // CI-Runnern (Node 20) dauerten einzelne länger als die Vorgabe von 5 s.
+    testTimeout: 20_000,
   },
 })
