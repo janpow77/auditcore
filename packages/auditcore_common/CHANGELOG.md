@@ -1,5 +1,20 @@
 # Changelog auditcore_common
 
+## Unreleased
+
+- Neues Modul `rest`: rahmenwerkfreier Teil der JSON-REST-Verträge von
+  `auditcore_sampling` und `auditcore_statistics` (Duplikatgruppe B1) –
+  `ContractError` (Status, Code, `to_dict`), `Reply`, `json_reply`,
+  `decode_body` (Größengrenze 413 `too_large`, 400 `invalid_json`,
+  `parse_float`), `guarded` (Vertragsfehler → JSON-Antwort), `choice` und
+  `bounded_list` mit paketeigener Fehlerklasse (`error`). Meldungen und
+  Statuscodes unverändert; Differenztests gegen die wörtlichen Kopien
+  (`tests/legacy_rest.py`, `tests/test_rest.py`).
+- Eigenschaftstests mit Hypothesis (`tests/test_properties.py`, Extra `dev`):
+  paarweise Summe, `numpy_round`, `require_finite`, `canonical_sha256`,
+  `decode_body` und `choice` gegen die früheren Kopien aus sampling,
+  statistics und market_indicators.
+
 ## 0.1.1 – Deutsche Zahleneingabe nach dem gemeinsamen Vertrag
 
 - Neues Modul `numbers_de`: `parse_number(text, mode)`, `parse_de_number(text)`

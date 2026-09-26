@@ -10,7 +10,8 @@ def main() -> None:
     """Indicators, packaged profiles and the error contract from the installed package."""
     package = distribution("auditcore_market_indicators")
     assert package.version == "0.1.2" and mi.__version__ == "0.1.2"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     assert len(mi.available_profiles()) == 5
     decided = mi.load_profile(*mi.RECOMMENDED_PROFILE)
