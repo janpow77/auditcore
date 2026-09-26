@@ -51,7 +51,7 @@ export default tseslint.config(
   // Native React-Komponenten und framework-freier Kern: strengere Grenzen (McCabe ≤ 10,
   // Funktionen ≤ 60 Zeilen, Komponentendateien ≤ 250 Zeilen wie Vue-SFC).
   {
-    files: ['packages-js/ui-react/src/**/*.{ts,tsx}', 'packages-js/ui-core/src/**/*.ts'],
+    files: ['packages-js/ui-react/src/**/*.{ts,tsx}', 'packages-js/ui-core/src/**/*.ts', 'packages-js/kanban-core/src/view/**/*.ts'],
     plugins: { 'react-hooks': reactHooks },
     rules: {
       'react-hooks/rules-of-hooks': 'error',

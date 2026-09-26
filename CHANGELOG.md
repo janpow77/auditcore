@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- `auditcore_common`-Migrationen Teil A: neues Modul `auditcore_common.rest`
+  (rahmenwerkfreier Teil der REST-Schicht, Duplikatgruppe B1);
+  `auditcore_sampling` und `auditcore_statistics` nutzen es,
+  `auditcore_sampling` zusätzlich `numeric.numpy_pairwise_sum`/`numpy_round`,
+  `auditcore_market_indicators` `numpy_pairwise_sum`, `require_finite`,
+  `canonical_sha256` und die Profil-Lader. sampling und market_indicators
+  hängen neu von `auditcore_common==0.1.1` ab. Paritätstests alt ↔ neu
+  (Differenz- und Hypothesis-Tests in `auditcore_common`); keine
+  Verhaltensänderung.
+
+- Offene `auditcore_common`-Migrationen (Teil B): `auditcore_price_sources`
+  (kanonisches JSON, Paketbytes bytegleich), `auditcore_geo` (Endlichkeit),
+  `auditcore_property_sources` (HTML-Erkennung, Zeitzonenprüfung) und
+  `auditcore_invoicesynth` (SHA-256, Steuersatz, Kennungen) nutzen
+  `auditcore_common`; `auditcore_documents` nutzt die Prüfziffern aus
+  `auditcore_identifiers` (neue Pflichtabhängigkeit `auditcore_identifiers==0.1.0`).
+  Neue Pins `auditcore_common==0.1.1` für geo, invoicesynth und price_sources.
+  Paritätstests alt ↔ neu je Paket; Code-Gate `duplicate_functions` 4 → 0
+  (documents 2 → 0, identifiers 2 → 0). Keine Versionsanhebung (Release v0.4.2).
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml

@@ -20,6 +20,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from auditcore_common.hashing import sha256_file
+
 DEFAULT_FONT_DIRS: tuple[Path, ...] = (
     Path("/usr/share/fonts"),
     Path("/usr/local/share/fonts"),
@@ -77,14 +79,6 @@ FONT_CATALOG: dict[str, FontFamilySpec] = {
 
 class FontError(ValueError):
     """Schrift fehlt, ist nicht frei lizenziert oder weicht von der Prüfsumme ab."""
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1 << 16), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 @dataclass(frozen=True)

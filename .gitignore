@@ -21,3 +21,4 @@ coverage/
 
 # Manifeste der Testrepos für auditcore-helpers
 !tests/fixtures/helpers/*/.auditcore/
+.hypothesis/

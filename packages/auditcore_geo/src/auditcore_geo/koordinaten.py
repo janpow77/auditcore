@@ -10,10 +10,11 @@ mit ausdrücklicher Achsenfolge aus Zahlenpaaren gebildet.
 
 from __future__ import annotations
 
-import math
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from enum import StrEnum
+
+from auditcore_common.numeric import require_finite
 
 from .errors import KoordinatenFehler
 
@@ -27,12 +28,12 @@ class Achsenfolge(StrEnum):
 
 
 def _endlich(wert: float, name: str) -> float:
-    if isinstance(wert, bool) or not isinstance(wert, (int, float)):
-        raise KoordinatenFehler(f"{name} ist keine Zahl: {wert!r}")
-    zahl = float(wert)
-    if not math.isfinite(zahl):
-        raise KoordinatenFehler(f"{name} ist nicht endlich: {wert!r}")
-    return zahl
+    """:func:`auditcore_common.numeric.require_finite` mit den Meldungen des Pakets."""
+    return require_finite(
+        wert,
+        not_number=lambda: KoordinatenFehler(f"{name} ist keine Zahl: {wert!r}"),
+        not_finite=lambda: KoordinatenFehler(f"{name} ist nicht endlich: {wert!r}"),
+    )
 
 
 @dataclass(frozen=True)

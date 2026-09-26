@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import type { Share, SharePermission, UserRef } from '@flowaudit/kanban-core'
+import { ref, watch } from 'vue'
+import { createShareSearch, shareName, type Share, type SharePermission, type UserRef } from '@flowaudit/kanban-core'
 import FaButton from '../base/FaButton.vue'
 import FaDialog from '../base/FaDialog.vue'
 import FaTextField from '../base/FaTextField.vue'
+import { useStore } from '../composables/useStore'
 import { useI18n, type Locale } from '../i18n'
 import { initials } from './cardView'
 import { kanbanDialogMessages } from './messages'
@@ -22,25 +23,12 @@ const emit = defineEmits<{ close: []; share: [userId: string, permission: ShareP
 const { t } = useI18n(kanbanDialogMessages, () => props.locale)
 const query = ref('')
 const permission = ref<SharePermission>('read')
-const results = ref<UserRef[]>([])
 const confirming = ref<string | null>(null)
-const known = ref<Map<string, UserRef>>(new Map())
-let request = 0
+const finder = createShareSearch()
+const found = useStore(finder.store)
+const name = (userId: string): string => shareName(userId, found.value.known, props.users)
 
-const shared = computed(() => new Set(props.shares.map((share) => share.user_id)))
-const name = (userId: string): string => known.value.get(userId)?.name ?? props.users.find((user) => user.id === userId)?.name ?? userId
-
-watch(query, async (value) => {
-  const ticket = ++request
-  if (!value.trim() || !props.search) {
-    results.value = []
-    return
-  }
-  const found = await props.search(value)
-  if (ticket !== request) return
-  for (const user of found) known.value.set(user.id, user)
-  results.value = found.filter((user) => !shared.value.has(user.id)).slice(0, 8)
-})
+watch(query, (value) => void finder.query(value, props.search, props.shares))
 
 watch(() => props.open, (open) => {
   if (open) return
@@ -74,8 +62,8 @@ function revoke(userId: string): void {
         </select>
       </label>
     </div>
-    <ul v-if="results.length" class="fa-kanban-share__results" role="listbox" :aria-label="t('searchUser')">
-      <li v-for="user in results" :key="user.id" role="option" aria-selected="false">
+    <ul v-if="found.results.length" class="fa-kanban-share__results" role="listbox" :aria-label="t('searchUser')">
+      <li v-for="user in found.results" :key="user.id" role="option" aria-selected="false">
         <button type="button" @click="add(user)">{{ user.name }} <small v-if="user.email">· {{ user.email }}</small></button>
       </li>
     </ul>

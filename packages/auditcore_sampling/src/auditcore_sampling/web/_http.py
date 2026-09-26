@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import json
 from collections.abc import Callable
-from dataclasses import dataclass
+
+from auditcore_common.rest import Reply, decode_body, guarded, json_reply
 
 from ._validate import ContractError
 from .derivation import calculate_size
@@ -15,16 +15,6 @@ from .profiles import catalogue
 MAX_BODY_BYTES = 32 * 1024 * 1024
 
 
-@dataclass(frozen=True)
-class Reply:
-    """Status, body and headers of one response."""
-
-    status: int
-    body: bytes
-    media_type: str
-    headers: dict[str, str]
-
-
 JSON_HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
     "size": calculate_size,
     "allocation": allocate,
@@ -32,36 +22,27 @@ JSON_HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
 }
 
 
-def _json(status: int, data: object) -> Reply:
-    body = json.dumps(data, ensure_ascii=False).encode("utf-8")
-    return Reply(status, body, "application/json", {})
-
-
 def decode(raw: bytes, limit: int = MAX_BODY_BYTES) -> object:
     """Parsed JSON body within the size limit."""
-    if len(raw) > limit:
-        raise ContractError("Anfrage zu groß.", status=413, code="too_large")
-    try:
-        return json.loads(raw)
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ContractError("Kein gültiges JSON.", status=400, code="invalid_json") from exc
+    return decode_body(raw, limit, error=ContractError)
 
 
 def profiles() -> Reply:
     """``GET /profiles``."""
-    return _json(200, catalogue())
+    return json_reply(200, catalogue())
+
+
+def _run(name: str, raw: bytes, limit: int) -> Reply:
+    payload = decode(raw, limit)
+    if name == "export":
+        exported: ExportFile = export_selection(payload)
+        disposition = f'attachment; filename="{exported.filename}"'
+        return Reply(
+            200, exported.content, exported.media_type, {"Content-Disposition": disposition}
+        )
+    return json_reply(200, JSON_HANDLERS[name](payload))
 
 
 def handle(name: str, raw: bytes, limit: int = MAX_BODY_BYTES) -> Reply:
     """Run one POST endpoint and map contract errors to HTTP replies."""
-    try:
-        payload = decode(raw, limit)
-        if name == "export":
-            exported: ExportFile = export_selection(payload)
-            disposition = f'attachment; filename="{exported.filename}"'
-            return Reply(
-                200, exported.content, exported.media_type, {"Content-Disposition": disposition}
-            )
-        return _json(200, JSON_HANDLERS[name](payload))
-    except ContractError as exc:
-        return _json(exc.status, exc.to_dict())
+    return guarded(lambda: _run(name, raw, limit), error=ContractError)

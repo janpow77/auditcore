@@ -22,13 +22,14 @@ beenden nach dem laufenden Schritt mit Checkpoint (Exit-Codes: ``ops.EXIT_CODES`
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
 import sys
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
+
+from auditcore_common.hashing import sha256_text
 
 from auditcore_invoicesynth.dataset import DatasetError, load_split, verify_dataset
 from auditcore_invoicesynth.train.checkpoint import ResumeMismatch
@@ -51,7 +52,7 @@ from auditcore_invoicesynth.train.profiles import PROFILES, GpuInfo, TrainConfig
 
 def run_id_for(dataset_hash: str, config_hash: str) -> str:
     """Stabile Lauf-ID: Neustart desselben Auftrags findet seine Checkpoints wieder."""
-    return hashlib.sha256(f"{dataset_hash}:{config_hash}".encode()).hexdigest()[:16]
+    return sha256_text(f"{dataset_hash}:{config_hash}")[:16]
 
 
 def _print(data: object) -> None:
