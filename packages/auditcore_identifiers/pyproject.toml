@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_identifiers"
-version = "0.1.0"
+version = "0.2.0"
 description = "Check and normalise IBAN, BIC, EU VAT IDs, German tax identifiers and LEI with strict and legacy profiles"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.1"]
+dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 web = ["starlette>=0.26.1,<2"]

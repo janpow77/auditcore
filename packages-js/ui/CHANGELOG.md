@@ -1,6 +1,8 @@
 # Changelog @flowaudit/ui
 
-## 0.3.0 – unveröffentlicht
+## 0.3.0 – 2026-09-26 – Release v0.4.2
+
+Erste Veröffentlichung als Release-Datei. Build mit Vite 8 (#169); Abhängigkeiten `@flowaudit/common` 0.1.1, `@flowaudit/kanban-core` 0.2.1, `@flowaudit/ui-core` 0.2.0.
 
 - **Hochrechnung und Fehlerquoten:** `ExtrapolationPanel`
   (`<flowaudit-extrapolation>`) für `auditcore_extrapolation.web`: Methode,

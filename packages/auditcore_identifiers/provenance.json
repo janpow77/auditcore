@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_identifiers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contract": "auditcore_identifiers.check/1",
   "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
   "sources": [

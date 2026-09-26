@@ -23,7 +23,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/kanban-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.0.tgz
+npm install @flowaudit/kanban-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.1.tgz
 ```
 
 Keine Peer-Abhängigkeiten, kein CSS, keine weiteren `@flowaudit`-Pakete.

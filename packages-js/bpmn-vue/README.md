@@ -20,7 +20,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-vue-0.2.0.tgz
+npm install @flowaudit/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-vue-0.2.1.tgz
 ```
 
 Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor`, `@flowaudit/bpmn-flowaudit`, `@flowaudit/ui-core` und `@flowaudit/common`; Peer-Abhängigkeit `vue` ^3.5. Stile: `@flowaudit/bpmn-vue/style.css`. Drei Ausgaben: Vue-Bibliothek (`dist/`), Web Component (`dist-wc/`, Import `@flowaudit/bpmn-vue/web-component`, ein einzelnes Modul) und eigenständige App (`dist-standalone/`).
@@ -324,7 +324,7 @@ Demo (`npm run test:e2e`). Dokumentation: `docs/bpmn/frontend.md`.
 
 ## Abhängigkeiten
 
-`@flowaudit/bpmn-editor@0.1.0`, `@flowaudit/bpmn-flowaudit@0.2.0` (Fachschicht und UI-Kern `./ui`), `@flowaudit/ui-core@0.1.0` (Fokusfalle der Dialoge); Peer
+`@flowaudit/bpmn-editor@0.1.1`, `@flowaudit/bpmn-flowaudit@0.2.1` (Fachschicht und UI-Kern `./ui`), `@flowaudit/ui-core@0.2.0` (Fokusfalle der Dialoge); Peer
 `vue@^3.5.0`. Die Web Component bündelt Vue mit.
 
 ## Sicherheit und Datenschutz

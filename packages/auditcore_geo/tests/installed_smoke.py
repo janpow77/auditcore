@@ -25,7 +25,7 @@ def main() -> None:
     paket = distribution("auditcore_geo")
     assert paket.version == "0.3.0"
     laufzeit = [r for r in paket.requires or [] if "extra ==" not in r]
-    assert laufzeit == ["auditcore_common==0.1.1"], laufzeit
+    assert laufzeit == ["auditcore_common==0.2.0"], laufzeit
     assert find_spec("auditcore") is None
     frankfurt, berlin = Punkt(50.1106, 8.6821), Punkt(52.52, 13.405)
     assert round(grosskreis_km(frankfurt, berlin, KUGEL_MITTLERER_RADIUS), 6) == round(

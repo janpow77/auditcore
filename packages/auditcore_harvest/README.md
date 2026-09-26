@@ -230,7 +230,7 @@ Ergebnisbegrenzung wie der DIP-Schlagwortsuche.
 ## Abhängigkeiten
 
 Python ≥ 3.11, zur Laufzeit die Standardbibliothek und ab 0.1.2
-`auditcore_common==0.1.1` (sicheres XML, kanonische Hashes; nur
+`auditcore_common==0.2.0` (sicheres XML, kanonische Hashes; nur
 Standardbibliothek). Optional über `[xml]` `defusedxml>=0.7.1`. Die Plattform
 `auditcore` ist keine Abhängigkeit; HTTP-Clients (`httpx`, `requests`) bringt
 der Consumer über seinen `Transport` mit. Der Kern ist synchron; asynchrone

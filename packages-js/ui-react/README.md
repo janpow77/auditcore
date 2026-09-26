@@ -22,7 +22,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/ui-react@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-react-1.0.0.tgz
+npm install @flowaudit/ui-react@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-react-1.1.0.tgz
 ```
 
 Abhängigkeitshülle: dazu `@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`; Peer-Abhängigkeiten `react` und `react-dom` (18.3 oder 19), kein Vue. Stile: `@flowaudit/ui-core/style.css`.

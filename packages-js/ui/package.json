@@ -38,9 +38,9 @@
     "e2e:api": "playwright test -c e2e/playwright.api.config.ts"
   },
   "dependencies": {
-    "@flowaudit/common": "0.1.0",
-    "@flowaudit/kanban-core": "0.2.0",
-    "@flowaudit/ui-core": "0.1.0"
+    "@flowaudit/common": "0.1.1",
+    "@flowaudit/kanban-core": "0.2.1",
+    "@flowaudit/ui-core": "0.2.0"
   },
   "peerDependencies": {
     "vue": "^3.5.0"

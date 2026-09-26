@@ -7,7 +7,7 @@ from pathlib import Path
 import auditcore_dummygenerator
 from auditcore_dummygenerator import TestDataGenerator, list_profiles, profile_reference
 
-assert version("auditcore_dummygenerator") == "0.1.2"
+assert version("auditcore_dummygenerator") == "0.1.3"
 location = Path(auditcore_dummygenerator.__file__).resolve()
 assert "site-packages" in location.parts or "dist-packages" in location.parts, location
 request = {

@@ -18,7 +18,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/bpmn-editor@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-editor-0.1.0.tgz
+npm install @flowaudit/bpmn-editor@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-editor-0.1.1.tgz
 ```
 
 Keine weiteren `@flowaudit`-Pakete. Stile: `@flowaudit/bpmn-editor/style.css`.

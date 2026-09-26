@@ -25,7 +25,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz
+npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.2.0.tgz
 ```
 
 Abhängigkeitshülle: dazu `@flowaudit/common`. Stile: `@flowaudit/ui-core/style.css` (Designtoken `--fa-*` und Komponentenstile).

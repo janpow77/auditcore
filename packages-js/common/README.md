@@ -20,7 +20,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/common@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.0.tgz
+npm install @flowaudit/common@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.1.tgz
 ```
 
 Keine Peer-Abhängigkeiten, kein CSS, keine weiteren `@flowaudit`-Pakete.

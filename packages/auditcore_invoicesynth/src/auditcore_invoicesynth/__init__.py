@@ -47,7 +47,7 @@ from auditcore_invoicesynth.schema import (
     to_sequence,
 )
 
-__version__ = "0.1.2"
+__version__ = "0.2.0"
 
 __all__ = [
     "ACCEPTANCE_THRESHOLDS",

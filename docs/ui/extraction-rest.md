@@ -66,7 +66,7 @@ und läuft im Thread-Pool.
 ### `GET /profile`
 
 ```json
-{"contract": "documents_extraction/1", "library": "auditcore_documents 0.3.3",
+{"contract": "documents_extraction/1", "library": "auditcore_documents 0.4.0",
  "enabled": true,
  "engines": {"router": false, "chandra": false, "tesseract": true, "donut": true},
  "profiles": [{"id": "flowinvoice.pipeline", "version": "1.0.0", "fingerprint": "…",

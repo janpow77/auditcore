@@ -1,6 +1,10 @@
 # Changelog @flowaudit/ui-core
 
-## 0.1.0 – unveröffentlicht
+## 0.2.0 – 2026-09-26 – Release v0.4.2
+
+Erste Veröffentlichung als Release-Datei. Ein früher Stand 0.1.0 (#149) war vor dem Release als Tarball in Anwendungen eingebunden (regulierung, audit_designer); seitdem kamen die unten genannten Kerne dazu (Risiko/Screening/Stichprobe/Benford, Vergleiche, Datenbank-Kanban, Belegerkennung, Kennungen, UTM, Tabellenexport, Hochrechnung). Deshalb 0.2.0 statt 0.1.0. Build mit Vite 8 (#169); Abhängigkeiten `@flowaudit/common` 0.1.1, `@flowaudit/kanban-core` 0.2.1.
+
+## 0.1.0 – nicht als Release-Datei veröffentlicht
 
 Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
 

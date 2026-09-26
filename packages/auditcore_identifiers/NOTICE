@@ -1,4 +1,4 @@
-auditcore_identifiers 0.1.0 — attribution and authorization
+auditcore_identifiers 0.2.0 — attribution and authorization
 
 New implementation in auditcore. The strict profile follows ISO 13616 (IBAN),
 ISO 9362 (BIC), ISO 17442 (LEI), ISO/IEC 7064 (MOD 97-10, MOD 11,10), the VAT

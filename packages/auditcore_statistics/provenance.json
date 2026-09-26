@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_statistics",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "source": {
     "repository": "janpow77/flowstat",
     "commit": "d665ac221f50ba1f465b7337bdd4aa218d78ec8a",

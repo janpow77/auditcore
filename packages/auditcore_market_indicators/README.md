@@ -207,7 +207,7 @@ charakterisierten Profile bleiben unverändert.
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_common==0.1.1` (nur Standardbibliothek;
+Python ≥ 3.11 und `auditcore_common==0.2.0` (nur Standardbibliothek;
 paarweise Summe, Endlichkeitsprüfung, Profil-Lader und -Fingerprint;
 APT `python3-auditcore-common`). Optional
 `polars>=1.21` über `[polars]`. NumPy ist keine Abhängigkeit.

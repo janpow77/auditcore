@@ -7,7 +7,7 @@ from importlib.util import find_spec
 def main() -> None:
     """Exercise every module of the installed distribution."""
     package = distribution("auditcore_common")
-    assert package.version == "0.1.1"
+    assert package.version == "0.2.0"
     assert [r for r in package.requires or [] if "extra ==" not in r] == []
     assert find_spec("auditcore") is None
 

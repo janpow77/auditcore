@@ -27,7 +27,7 @@ Tarballs. Bis dahin lassen sich die Tarballs im Repository selbst packen
 
 Die letzte Spalte ist entscheidend: **Jedes Paket der Hülle muss in der
 Anwendung ausdrücklich mit seiner Tarball-URL stehen.** npm prüft die internen
-Versionsangaben (z. B. `"@flowaudit/common": "0.1.0"` in `@flowaudit/ui`)
+Versionsangaben (z. B. `"@flowaudit/common": "0.1.1"` in `@flowaudit/ui`)
 dann gegen diese Einträge und fragt die Registry nicht. Fehlt ein Eintrag,
 sucht npm das Paket auf registry.npmjs.org – dort gibt es den Scope
 `@flowaudit` nicht (Fehler 404) oder, schlimmer, künftig ein fremdes Paket
@@ -100,10 +100,10 @@ Das ergibt in `package.json` (Versionen je nach Release):
 ```json
 {
   "dependencies": {
-    "@flowaudit/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.0.tgz",
-    "@flowaudit/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.0.tgz",
+    "@flowaudit/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.1.tgz",
+    "@flowaudit/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.1.tgz",
     "@flowaudit/ui": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-0.3.0.tgz",
-    "@flowaudit/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz",
+    "@flowaudit/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.2.0.tgz",
     "vue": "^3.5.0"
   }
 }

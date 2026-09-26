@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_sampling",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "sources": [
     {
       "repository": "janpow77/flowstat",

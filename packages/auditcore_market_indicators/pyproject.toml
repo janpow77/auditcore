@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_market_indicators"
-version = "0.1.2"
+version = "0.1.3"
 description = "Technical market indicators (returns, SMA/EMA, RSI, ATR, ADX, MACD …) with explicit source-bound variant profiles"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.1"]
+dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 polars = ["polars>=1.21"]

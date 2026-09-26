@@ -18,7 +18,7 @@ Web Components mit Integritätsprüfung und `vendor/`-Ablage:
 [frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm install @flowaudit/bpmn-flowaudit@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-flowaudit-0.2.0.tgz
+npm install @flowaudit/bpmn-flowaudit@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-flowaudit-0.2.1.tgz
 ```
 
 Für die Editor-Module (`flowauditEditorOptions()`) zusätzlich `@flowaudit/bpmn-editor` (optionale Peer-Abhängigkeit). Stile: `@flowaudit/bpmn-flowaudit/style.css`.

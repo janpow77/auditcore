@@ -1,6 +1,10 @@
 # Changelog @flowaudit/ui-react
 
-## 1.0.0 – unveröffentlicht (Veröffentlichung nach auditcore v0.4.1)
+## 1.1.0 – 2026-09-26 – Release v0.4.2
+
+Erste Veröffentlichung als Release-Datei. Ein früher Stand 1.0.0 (#149) war vor dem Release als Tarball in regulierung eingebunden; seitdem kamen die nativen Komponenten für Risiko-Merkmale, Screening, Stichprobe, Benford, Vergleiche, Kanban, Datenbank-Kanban, Belegerkennung, Kennungen, Tabellenexport und Hochrechnung dazu. Deshalb 1.1.0. Build mit Vite 8 (#169); Abhängigkeiten `@flowaudit/common` 0.1.1, `@flowaudit/ui-core` 0.2.0, `@flowaudit/kanban-core` 0.2.1.
+
+## 1.0.0 – nicht als Release-Datei veröffentlicht
 
 **Breaking:** Das Paket enthält jetzt echte React-Komponenten statt Hüllen um
 Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.

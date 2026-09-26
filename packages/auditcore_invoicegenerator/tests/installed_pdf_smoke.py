@@ -8,7 +8,7 @@ import auditcore_invoicegenerator as invoice
 
 origin = Path(invoice.__file__).resolve()
 assert {"site-packages", "dist-packages"} & set(origin.parts)
-assert version("auditcore_invoicegenerator") == "0.2.2"
+assert version("auditcore_invoicegenerator") == "0.2.3"
 record = invoice.InvoiceScenario(42, base_date=date(2026, 1, 1)).generate(1)
 payload = invoice.render_pdf(record)
 assert payload.startswith(b"%PDF-") and payload.rstrip().endswith(b"%%EOF")

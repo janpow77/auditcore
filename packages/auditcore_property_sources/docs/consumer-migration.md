@@ -82,7 +82,7 @@ ergibt 2015,0 statt 201,0, Mehrdeutiges („1.234“, „1.5“, „85,555“) u
 die Zahl („ca. 120,5 m²“) ergeben `None`. Wer für einen Paritätsnachweis das
 Original braucht, bindet `parse_de_number = _ps.legacy_parse_de_number`
 (PS-C10 in [behavior-changes.md](behavior-changes.md)). Mit 0.1.2 kommt
-`auditcore_common==0.1.1` als Pflichtabhängigkeit hinzu.
+`auditcore_common==0.2.0` als Pflichtabhängigkeit hinzu.
 
 `repair_market_values.py`, `reparse_addresses.py` und `regeocode.py`
 importieren weiter aus `zvg_crawler` und erhalten dadurch die Bibliotheks-

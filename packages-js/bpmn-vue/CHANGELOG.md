@@ -1,5 +1,9 @@
 # Changelog – @flowaudit/bpmn-vue
 
+## 0.2.1 – 2026-09-26 – Release v0.4.2
+
+Keine Verhaltensänderung. Build mit Vite 8 und vite-plugin-dts 5 (#169); README: Installation als Tarball aus dem GitHub-Release (#157). Abhängigkeiten `@flowaudit/bpmn-editor` 0.1.1, `@flowaudit/bpmn-flowaudit` 0.2.1, `@flowaudit/ui-core` 0.2.0; Pfad-Alias für `@flowaudit/kanban-core` im Workspace (#154).
+
 ## 0.2.0 – 2026-09-26
 
 - Die Logik liegt im framework-freien Kern `@flowaudit/bpmn-flowaudit/ui`
