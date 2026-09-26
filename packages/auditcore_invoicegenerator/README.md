@@ -18,12 +18,12 @@ python -m pip install auditcore_invoicegenerator \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.0 im
-Release v0.3.2; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.2 im
+Release v0.4.1; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-invoicegenerator/`):
 
 ```text
-auditcore_invoicegenerator @ https://github.com/janpow77/auditcore/releases/download/v0.3.2/auditcore_invoicegenerator-0.2.0-py3-none-any.whl#sha256=a54f4a70b4cb5b48654a2de180b72ee25b6b1a1ebb75922429d042a48cc3c9be
+auditcore_invoicegenerator @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_invoicegenerator-0.2.2-py3-none-any.whl#sha256=540994598e88ff77e01966823264e196b71a2fe34800a2010af45befdf1715f9
 ```
 
 Die Abhängigkeit `auditcore_dummygenerator` braucht in einer hashgebundenen

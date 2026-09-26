@@ -20,13 +20,12 @@ python -m pip install 'auditcore_llm_client[http]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Version 0.1.0 ist noch in keinem Release veröffentlicht. Nach der
-Veröffentlichung steht die Direkt-URL mit Hash im Index unter
-`https://janpow77.github.io/auditcore/simple/auditcore-llm-client/`; Muster
-für eine hashgebundene `requirements.txt`:
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
+Release v0.4.1; weitere Versionen und Hashes unter
+`https://janpow77.github.io/auditcore/simple/auditcore-llm-client/`):
 
 ```text
-auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_llm_client-0.1.0-py3-none-any.whl#sha256=<sha256>
+auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_llm_client-0.1.1-py3-none-any.whl#sha256=2de349bda575a23398f6273f748769676fb9e58114911b0da2a9c75edaeda552
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
