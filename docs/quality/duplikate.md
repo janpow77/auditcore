@@ -59,12 +59,13 @@ Verhaltensunterschied, der als benannter Parameter abgebildet ist.
 | A12 | HTML-Links und HTML-Erkennung | legal `feeds._Links`; property `adapters` 3× `"<html"/"<!doctype" in body[:4096].lower()`; legal `adapters` `"<a"/"<html" in text.lower()` | Linksammler einmal; Erkennung property identisch (3×), legal Variante mit anderen Markern und ohne Fenster | `html_text.LinkCollector`, `anchor_links`, `has_html_marker(text, markers=, window=)` |
 | A13 | NumPy-kompatible Numerik | statistics `numeric.numpy_pairwise_sum`, market_indicators `_numeric.numpy_pairwise_sum` (identisch), sampling `_numeric.pairwise_sum`; `numpy_round` statistics = sampling; geo `koordinaten._endlich` / market `indicators._finite`; documents `donut_values.rate` = invoicesynth `formats.parse_rate` | Summe und Rundung bitgleich (auch gegen NumPy 2.4 geprüft); Endlichkeitsprüfung nur Meldungen verschieden | `numeric.numpy_pairwise_sum`, `numpy_round`, `require_finite(value, not_number=, not_finite=)`, `parse_percent_rate` |
 | A14 | Zeit/IDs/Text/Extras | documents `utc_now` (2×), `new_id`; harvest `model.iso` / property `zvg_lifecycle._aware`; dataprotection `prefill._number` = registry `_legacy_osint._count`; documents `compact` = invoicesynth `normalize_identifier`; verzögerte Importe `_openpyxl` (dataprotection, funding), `_rapidfuzz` (entity_matching, registry), `_pandas` (risk), `_pl` (market), `_pil`/`_modules` (invoicesynth), `_etree` (documents) | identisch bzw. nur Fehlerklasse/Meldung verschieden | `clock.utc_now`, `clock.require_aware`, `ids.new_uuid`, `text.group_thousands_de`, `text.compact_upper`, `optional.require_module` |
+| A15 | REST-Schicht, rahmenwerkfreier Teil (vormals B1) | sampling/statistics `ContractError` (identisch), `Reply` (sampling mit Kopfzeilen, statistics ohne), `_json`, `decode` (statistics mit `parse_float=Decimal`, Grenzen 32/64 MiB), Fehlerabbildung in `handle`/`handle_analyse`, `choice`/`_field`, Listenprüfung `parse_items`/`_values` | Meldungen und Statuscodes gleich; Unterschiede nur Fehlerklasse, `parse_float`, Feldname, Obergrenze und Nomen | `rest.ContractError` (Unterklasse je Paket), `Reply`, `json_reply`, `decode_body(raw, limit, error=, parse_float=)`, `guarded(action, error=)`, `choice(…, error=)`, `bounded_list(raw, name, maximum, noun, error=)`; Differenztests `tests/legacy_rest.py`, Hypothesis `tests/test_properties.py` |
 
 ## B. Wartet auf andere Arbeit (Kandidat, noch nicht zusammengeführt)
 
 | # | Gruppe | Fundstellen | Befund | Warum wartend |
 |---|---|---|---|---|
-| B1 | REST-Schicht Stichprobe/Statistik | sampling/statistics `create_app` (identisch), `create_router`, `decode`, `_response`, `_json`, `profiles`, `get_profiles`, `to_dict`, `parse_items`/`_values`, `choice`/`_field`, `run`, `ContractError.__init__` | nahezu identische Starlette-Schicht (0,86–1,0) | Refaktorierungs-PRs #69/#70 offen; ein gemeinsames Web-Modul bräuchte Starlette als Extra – nach Merge entscheiden |
+| B1 | REST-Schicht Stichprobe/Statistik | sampling/statistics `create_app` (identisch), `create_router`, `response`, `run`/`_analyse`, `get_profiles` | nach A15 verbleiben nur die Starlette-/FastAPI-Adapter (je eine Anweisung bzw. Routentabelle, unter der Gate-Schwelle) | bleibt im Paket: gebunden an Starlette/FastAPI, `auditcore_common` bleibt reine Standardbibliothek. Folgekandidat für dieselbe Umstellung: geo `web.decode`/`create_app` |
 | B2 | Donut-Tokenformat | documents `donut._decode`, `parse_donut_sequence`; invoicesynth `schema._decode`, `from_sequence`; Prüfziffern `de_vat_check_digit`/`at_uid_check_digit` (0,72/0,79: invoicesynth prüft zusätzlich die Eingabe) | fachlich Donut/Rechnung, nicht allgemein | invoicesynth-PR #58 offen; Frage, ob invoicesynth von documents abhängen darf (E1: eigene Distribution) |
 | B3 | Seitenergebnis bauen | legal `_adapter_support._page`, property `adapters._page` | `PageResult`-Aufbau, legal kopiert den Cursor (`dict(next_cursor)`), property nicht | gehört zu **harvest** (Paging-Vertrag), nicht nach `auditcore_common`; harvest-PR #73 („Hilfen für Quellenpakete“) abwarten |
 | B4 | harvest `JSON = Any`, unsicheres XML | harvest `model.JSON`, `reference.py` (`xml.etree.ElementTree.fromstring`, `nosec B314`) | Befund: harvest parst XML ohne `defusedxml` | harvest-PR #73 offen; danach auf `JsonValue` und `safe_xml` umstellen |
@@ -137,6 +138,27 @@ Reihenfolge und Stand stehen im PR-Verlauf; Grundsätze:
   dünne, nicht veraltete Funktionen, weil sie das Ressourcenpaket und die
   Fehlerklasse des Pakets binden.
 - Pakete in laufender Refaktorierung werden erst nach deren Merge migriert.
+
+Stand v0.4.2 (Teil B, 26.09.2026): `auditcore_price_sources` (A1c,
+Paketbytes bytegleich, SHA-256 fester Fixtures festgeschrieben),
+`auditcore_geo` (A13 `_endlich`), `auditcore_property_sources` (A12
+HTML-Erkennung 3×, A14 `_aware`) und `auditcore_invoicesynth` (A2
+Datei-SHA-256 4×, A13 `parse_rate`, A14 `normalize_identifier`, dazu
+Text-SHA-256 und kanonisches JSON für Datensatz-, Plan- und Konfigurations-Hash)
+nutzen `auditcore_common`. Die Prüfziffern `de_vat_check_digit`/
+`at_uid_check_digit` von `auditcore_documents` (Code-Gate: 2 Paare mit
+`auditcore_identifiers`) sind jetzt die Funktionen aus `auditcore_identifiers`
+(Pflichtabhängigkeit `auditcore_identifiers==0.1.0`). Paritätstests je Paket
+(`tests/test_common_parity.py`, documents `tests/test_identifiers_parity.py`);
+`duplicate_functions` documents und identifiers 2 → 0. Offen aus B2 bleiben die
+Prüfziffern von `auditcore_invoicesynth` (prüfen zusätzlich die Eingabe, keine
+gleiche Normalform).
+
+Stand Teil A (v0.4.2): `auditcore_statistics` (A13, A15),
+`auditcore_sampling` (A13, A15) und `auditcore_market_indicators` (A1, A4, A5,
+A13, A14 `_pl`) sind umgestellt; Nachweis zusätzlich durch einen
+Differenzlauf der Pakete alt gegen neu (30 000 REST-Aufrufe mit zufälligen
+Rümpfen, alle Endpunkte über Starlette und FastAPI byte- und kopfzeilengleich).
 
 ## Dauerhafte Absicherung
 

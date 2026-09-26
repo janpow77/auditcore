@@ -15,10 +15,10 @@ Ist janpow-ai nicht erreichbar, meldet ``choose_topology`` den Rechenort als
 
 from __future__ import annotations
 
-import hashlib
-import json
 from dataclasses import asdict, dataclass, replace
 from typing import Any
+
+from auditcore_common.hashing import canonical_sha256
 
 #: Startmodell (Plan Abschnitt 1): MIT, feste Hugging-Face-Revision.
 BASE_MODEL = "naver-clova-ix/donut-base"
@@ -79,8 +79,7 @@ class TrainConfig:
     @property
     def config_hash(self) -> str:
         """SHA-256 der Konfiguration; muss beim Wiederaufnehmen übereinstimmen."""
-        payload = json.dumps(self.to_dict(), sort_keys=True).encode("utf-8")
-        return hashlib.sha256(payload).hexdigest()
+        return canonical_sha256(self.to_dict(), compact=False, ensure_ascii=True)
 
     def effective_batch(self, world_size: int = 1) -> int:
         return self.per_device_batch * self.grad_accum * world_size

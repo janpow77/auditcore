@@ -2,6 +2,16 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #46, #48, #79).
 
+## Unreleased
+
+Keine Verhaltensänderung. Datei-SHA-256 (`fonts.sha256_file`,
+`train.torch_backend.sha256_file`, Checkpoint- und Datensatzprüfsummen),
+Datensatz-Hash, Plan-Hash, Konfigurations-Hash, Lauf-ID sowie `parse_rate`
+und `normalize_identifier` kommen aus `auditcore_common` (`hashing`,
+`numeric.parse_percent_rate`, `text.compact_upper`). Alle Hashes und
+Ergebnisse unverändert (`tests/test_common_parity.py`). Neue
+Pflichtabhängigkeit `auditcore_common==0.1.1`.
+
 ## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. Pin `auditcore_invoicegenerator==0.2.2`; README-Installationshinweis auf v0.4.0.
