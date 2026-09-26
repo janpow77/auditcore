@@ -3,6 +3,15 @@
   "version": "0.2.0",
   "description": "Native React-Oberfläche des FlowAudit-BPMN-Editors (React 18 und 19, ohne Vue und Web Components) auf dem framework-freien Kern @flowaudit/bpmn-flowaudit/ui (MIT)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/bpmn-react"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/bpmn-react#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": [
     "*.css"
@@ -49,5 +58,9 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "vue": "^3.5.22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

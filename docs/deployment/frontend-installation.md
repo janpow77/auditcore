@@ -4,12 +4,51 @@ Diese Anleitung beschreibt, wie eine Anwendung außerhalb dieses Repositorys die
 npm-Pakete unter `packages-js/` einbindet. Für die Python-Pakete gelten
 [package-feed.md](package-feed.md) und [library-installation.md](library-installation.md).
 
-**Bezugsweg:** Die Pakete sind **noch nicht auf npm veröffentlicht** (die
-Entscheidung über eine Registry-Veröffentlichung ist offen). Sie liegen als
-`npm pack`-Tarballs in den GitHub-Releases von auditcore, beginnend mit dem
-ersten Release nach v0.4.1; v0.4.1 und ältere Releases enthalten keine
-Tarballs. Bis dahin lassen sich die Tarballs im Repository selbst packen
-(Abschnitt [Ohne Release](#ohne-release-tarballs-selbst-packen)).
+**Bezugswege:**
+
+1. **npm-Registry (Standard):** `npm install @flowaudit/<paket>`. Der
+   Workflow `npm-publish` veröffentlicht nach jedem GitHub-Release genau die
+   signierten Tarballs dieses Releases auf npmjs.org, mit Herkunftsnachweis
+   (npm provenance). Die erste Veröffentlichung folgt mit dem ersten Release
+   nach v0.4.1, sobald die Organisation `@flowaudit` auf npm eingerichtet ist
+   ([npm-veroeffentlichung.md](npm-veroeffentlichung.md)); bis dahin liefert
+   `npm view @flowaudit/ui` noch 404.
+2. **Tarball aus dem GitHub-Release (Intranet, offline, ohne Registry):**
+   dieselben Dateien als `npm pack`-Tarballs, SHA-256-gebunden und signiert,
+   beginnend mit dem ersten Release nach v0.4.1; v0.4.1 und ältere Releases
+   enthalten keine Tarballs. Abschnitt
+   [Ohne Registry](#ohne-registry-tarballs-aus-dem-release).
+3. **Selbst gepackt** für einen unveröffentlichten Stand (Abschnitt
+   [Ohne Release](#ohne-release-tarballs-selbst-packen)).
+
+Registry und Release enthalten byte-gleiche Pakete: `dist.integrity` auf npm
+ist die `integrity` aus `npm-packages.json`.
+
+## Installation aus der npm-Registry
+
+```bash
+npm install @flowaudit/ui vue                     # Vue-Komponenten und Web Components
+npm install @flowaudit/ui-react react react-dom   # React 18.3 oder 19, ohne Vue
+npm install @flowaudit/bpmn-vue vue               # BPMN-Editor (Vue, Web Component)
+npm install @flowaudit/bpmn-react react react-dom # BPMN-Editor (React)
+```
+
+npm löst die übrigen `@flowaudit`-Pakete der Hülle (Tabelle unten) selbst auf
+und schreibt `resolved` und `integrity` in `package-lock.json`; im Build und in
+der CI dann nur `npm ci`. Die internen Abhängigkeiten sind auf genaue
+Versionen festgelegt, gemischte Stände entstehen nicht.
+
+Herkunft prüfen (Signatur des Registry-Eintrags und Provenance-Nachweis, der
+auf Workflow und Commit in `janpow77/auditcore` verweist):
+
+```bash
+npm audit signatures
+npm view @flowaudit/ui dist.integrity   # gleich der integrity aus npm-packages.json
+```
+
+Vorabversionen (`x.y.z-rc.1` usw.) tragen den dist-tag `next` und kommen nur
+mit `npm install @flowaudit/ui@next`; `latest` bleibt die letzte stabile
+Version.
 
 ## Überblick
 
@@ -25,14 +64,19 @@ Tarballs. Bis dahin lassen sich die Tarballs im Repository selbst packen
 | `@flowaudit/bpmn-vue` | BPMN-Oberfläche: Vue-Bibliothek, Web Component `<flowaudit-bpmn-editor>`, eigenständige App | Vue 3.5 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
 | `@flowaudit/bpmn-react` | Native React-Oberfläche des BPMN-Editors ohne Vue-Laufzeit | React 18.3/19 | `bpmn-editor`, `bpmn-flowaudit`, `ui-core` (dazu transitiv `common`) |
 
-Die letzte Spalte ist entscheidend: **Jedes Paket der Hülle muss in der
-Anwendung ausdrücklich mit seiner Tarball-URL stehen.** npm prüft die internen
-Versionsangaben (z. B. `"@flowaudit/common": "0.1.0"` in `@flowaudit/ui`)
-dann gegen diese Einträge und fragt die Registry nicht. Fehlt ein Eintrag,
-sucht npm das Paket auf registry.npmjs.org – dort gibt es den Scope
-`@flowaudit` nicht (Fehler 404) oder, schlimmer, künftig ein fremdes Paket
-gleichen Namens. Deshalb gehört zusätzlich eine Sperre in die `.npmrc` der
-Anwendung:
+### Ohne Registry: Tarballs aus dem Release
+
+Dieser Weg gilt für Umgebungen ohne Zugang zu npmjs.org und für Anwendungen,
+die jeden Frontend-Baustein als Datei im eigenen Repository führen.
+
+Die letzte Spalte ist beim Tarball-Weg entscheidend: **Jedes Paket der
+Hülle muss in der Anwendung ausdrücklich mit seiner Tarball-URL stehen.**
+npm prüft die internen Versionsangaben (z. B. `"@flowaudit/common": "0.1.0"`
+in `@flowaudit/ui`) dann gegen diese Einträge und fragt die Registry nicht. Fehlt ein Eintrag,
+sucht npm das Paket auf registry.npmjs.org und mischt so Registry- und
+Tarball-Stand oder scheitert ohne Netz. Deshalb gehört beim Tarball-Weg
+zusätzlich eine Sperre in die `.npmrc` der Anwendung (beim Registry-Weg
+nicht):
 
 ```ini
 # .npmrc – @flowaudit-Pakete nie aus einer Registry beziehen
@@ -65,6 +109,11 @@ gemeldeten entspricht oder eine interne Abhängigkeit nicht durch ein Paket
 desselben Releases erfüllt wird. `npm pack` ist reproduzierbar: gleicher
 Quellstand ergibt dieselbe Integrität.
 
+Der Workflow `npm-publish` veröffentlicht genau diese Tarballs auf npmjs.org,
+nachdem er Signatur, SHA-256, Größe und Integrität gegen `npm-packages.json`
+geprüft hat; neu gebaut wird dabei nichts
+([npm-veroeffentlichung.md](npm-veroeffentlichung.md)).
+
 Prüfung vor der Übernahme (`<release>` durch die Release-Version ersetzen):
 
 ```bash
@@ -84,7 +133,8 @@ Die Integrität aus `npm-packages.json` ist genau der Wert, den npm in
 
 ### Installation
 
-Die Einträge für `@flowaudit/ui` samt Hülle liefert `npm-packages.json`:
+Aus der Registry: `npm install @flowaudit/ui vue` (siehe oben). Ohne Registry
+liefert `npm-packages.json` die Einträge für `@flowaudit/ui` samt Hülle:
 
 ```bash
 deps=$(node -e '
@@ -197,6 +247,12 @@ const theme = useTheme()
 
 `@flowaudit/ui-react` enthält native React-Komponenten und braucht **kein
 Vue**. Hülle: `ui-react`, `ui-core`, `kanban-core`, `common`.
+
+```bash
+npm install @flowaudit/ui-react react react-dom   # aus der Registry
+```
+
+Ohne Registry:
 
 ```bash
 deps=$(node -e '
@@ -319,6 +375,11 @@ Fachschicht, Profilen und CSS:
 ```
 
 ## Aktualisieren und Pins prüfen
+
+**Registry-Weg:** alle `@flowaudit`-Pakete gemeinsam anheben, z. B.
+`npm install @flowaudit/ui@<version>`; `npm outdated` zeigt neue Versionen.
+Danach `npm ci`, Build und Tests. Die Schritte unten gelten für den
+Tarball-Weg.
 
 1. Neuen Release wählen, `SHA256SUMS` und `npm-packages.json` wie oben prüfen.
 2. Die Einträge aller `@flowaudit`-Pakete gemeinsam auf die URLs des neuen

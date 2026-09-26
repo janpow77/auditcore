@@ -11,15 +11,24 @@ KA/BK-Texte, Profile und Serverprüfung kommen über Ports herein.
 
 ## Installation
 
-Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
-auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
-`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
-Web Components mit Integritätsprüfung und `vendor/`-Ablage:
-[frontend-installation.md](../../docs/deployment/frontend-installation.md).
+Standardweg ist die npm-Registry; npm löst die übrigen `@flowaudit`-Pakete
+der Abhängigkeitshülle selbst auf:
+
+```sh
+npm install @flowaudit/bpmn-flowaudit
+```
+
+Ohne Registry-Zugang (Intranet, offline) bleibt der signierte Tarball aus
+dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
+ausdrücklich in die `package.json`:
 
 ```sh
 npm install @flowaudit/bpmn-flowaudit@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-flowaudit-0.2.0.tgz
 ```
+
+Anleitung für Vue, React und Web Components mit Integritätsprüfung und
+`vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 Für die Editor-Module (`flowauditEditorOptions()`) zusätzlich `@flowaudit/bpmn-editor` (optionale Peer-Abhängigkeit). Stile: `@flowaudit/bpmn-flowaudit/style.css`.
 

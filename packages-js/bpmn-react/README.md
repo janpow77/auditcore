@@ -13,15 +13,24 @@ React-Fassung rendern dasselbe Markup und schreiben dasselbe XML.
 
 ## Installation
 
-Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
-auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
-`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
-Web Components mit Integritätsprüfung und `vendor/`-Ablage:
-[frontend-installation.md](../../docs/deployment/frontend-installation.md).
+Standardweg ist die npm-Registry; npm löst die übrigen `@flowaudit`-Pakete
+der Abhängigkeitshülle selbst auf:
+
+```sh
+npm install @flowaudit/bpmn-react
+```
+
+Ohne Registry-Zugang (Intranet, offline) bleibt der signierte Tarball aus
+dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
+ausdrücklich in die `package.json`:
 
 ```sh
 npm install @flowaudit/bpmn-react@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-react-0.2.0.tgz
 ```
+
+Anleitung für Vue, React und Web Components mit Integritätsprüfung und
+`vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor`, `@flowaudit/bpmn-flowaudit`, `@flowaudit/ui-core` und `@flowaudit/common`; Peer-Abhängigkeiten `react` und `react-dom` (18.3 oder 19), kein Vue. Stile: `@flowaudit/bpmn-react/style.css`.
 

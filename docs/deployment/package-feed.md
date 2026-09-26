@@ -55,7 +55,10 @@ im Quellstand des Tags, nicht als Release-Dateien. Ab dem nächsten Release legt
 `scripts/prepare_library_release.py` jedes Paket unter `packages-js/` als
 `npm pack`-Tarball bei, mit `npm-packages.json` (npm-Integrität `sha512-…`,
 SHA-256, vollständige Abhängigkeitshülle) und in `SHA256SUMS` samt Signatur
-`SHA256SUMS.asc`. Auf npm sind die Pakete noch nicht veröffentlicht.
+`SHA256SUMS.asc`. Der Workflow `npm-publish` veröffentlicht nach dem Release
+genau diese Tarballs auf npmjs.org (Standardweg `npm install @flowaudit/<paket>`,
+Einrichtung in [npm-veroeffentlichung.md](npm-veroeffentlichung.md)); die
+Tarball-URLs bleiben der Weg für Intranet und Offline-Betrieb.
 Installation in Vue-, React- und framework-freien Anwendungen:
 [frontend-installation.md](frontend-installation.md).
 
