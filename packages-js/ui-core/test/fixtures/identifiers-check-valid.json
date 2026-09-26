@@ -1,0 +1,19 @@
+{
+  "contract": "identifiers_ui/1",
+  "result": {
+    "kind": "vat_id",
+    "status": "VALID",
+    "raw": "136695976",
+    "normalized": "DE136695976",
+    "reason": null,
+    "message": "",
+    "country": "DE",
+    "profile": "strict",
+    "details": {
+      "eu": true,
+      "checksum": "verified"
+    },
+    "kind_label": "USt-IdNr.",
+    "reason_label": null
+  }
+}

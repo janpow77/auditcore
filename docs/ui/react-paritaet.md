@@ -34,6 +34,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Screening-Trefferprüfung | `ScreeningReview` | `FlowauditScreeningReview` | `screening_review/1` ([screening-rest.md](screening-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Stichprobe | `SamplingPanel` | `FlowauditSampling` | `auditcore_sampling.web` ([sampling-rest.md](sampling-rest.md)) | 5 + 2 Interaktionsfolgen |
 | Benford-Analyse | `BenfordPanel` | `FlowauditBenford` | `auditcore_statistics.web` ([benford-rest.md](benford-rest.md)) | 4 + Interaktionsfolge |
+| Kennung prüfen | `IdentifierCheck` | `FlowauditIdentifierCheck` | `identifiers_ui/1` ([identifiers-rest.md](identifiers-rest.md)) | 4 + 2 Interaktionsfolgen |
 | Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
 | Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 4 + 2 Interaktionsfolgen |
 
@@ -54,7 +55,9 @@ echten Python-Backends, keine Personendaten).
    ändern, Historie, Referat anlegen, verwerfen, Freigabe anzeigen; Tabwechsel
    per Pfeiltaste und Ende, Antwort mit Vorschau, Entscheidung; Geo: Hinweis ohne
    Bezugspunkt, Punkt übernehmen, Umkreis, Kartenklick, Punkt in Fläche,
-   Vereinfachung, Einheit, GeoPackage). Die Leaflet-Ansicht ist in beiden
+   Vereinfachung, Einheit, GeoPackage; Kennung prüfen: Einzelprüfung mit
+   Land, Profilwechsel, Pflichtangaben, Datei laden, Spalten zuordnen,
+   Stapelprüfung, Auffälligkeiten filtern). Die Leaflet-Ansicht ist in beiden
    Fassungen dieselbe Attrappe; gezeichnet wird mit dem gemeinsamen
    `createLeafletView` aus dem Kern.
 3. **Verhalten:** je Komponente eigene Tests mit Testing Library, die den

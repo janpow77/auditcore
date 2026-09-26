@@ -4,6 +4,8 @@ Rekonstruiert aus der Git-Historie (Pull Requests #46, #48, #79).
 
 ## Unreleased
 
+`train.cli --plan --image` schreibt das Job-Image (am besten per Digest) in den FlowAgent-Job.
+
 Etappe E3 (janpow-ai): neues Modul `train.guard` (`ProgressFile` –
 `progress.json` atomar, Herzschlag in Lade-/Checkpoint-Phasen;
 `StopRequest` – SIGTERM/SIGINT → Checkpoint und Exit 0, harte Frist 90 s;
