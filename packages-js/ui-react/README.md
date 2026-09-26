@@ -115,7 +115,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (214):
+Exporte der Einstiegspunkte aus `package.json#exports` (223):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -179,6 +179,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (214):
 | `@flowaudit/ui-react` | `FlowauditExtractionProps` | Typ | – | `extraction/FlowauditExtraction` |
 | `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo/FlowauditGeoMap` |
+| `@flowaudit/ui-react` | `FlowauditIdentifierCheck` | Funktion | „Kennung prüfen“ als native React-Komponente (Vertrag wie `<flowaudit-identifier-check>`): Prüfprofil, Einzelprüfung mit Begründung und Stapelprüfung aus einer Tabelle. | `identifiers/FlowauditIdentifierCheck` |
+| `@flowaudit/ui-react` | `FlowauditIdentifierCheckProps` | Typ | – | `identifiers/FlowauditIdentifierCheck` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoard` | Konstante | – | `kanban/FlowauditKanbanBoard` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardHandle` | Schnittstelle | Methoden über `ref` (wie `defineExpose` der Vue-Fassung). | `kanban/FlowauditKanbanBoard` |
 | `@flowaudit/ui-react` | `FlowauditKanbanBoardProps` | Schnittstelle | – | `kanban/FlowauditKanbanBoard` |
@@ -204,6 +206,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (214):
 | `@flowaudit/ui-react` | `HitView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Icon` | Funktion | – | `base/Icon` |
 | `@flowaudit/ui-react` | `IconProps` | Schnittstelle | – | `base/Icon` |
+| `@flowaudit/ui-react` | `IdentifierBatchAnswer` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `IdentifierInputs` | Schnittstelle | – | `identifiers/useIdentifierCheck` |
+| `@flowaudit/ui-react` | `IdentifierResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `IdentifiersPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ImportRequest` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ImportedColumns` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `KanbanCard` | Funktion | Karte wie `KanbanCard.vue` (gleiches Markup, Tastatur und Zeiger über das Board). | `kanban/KanbanCard` |
@@ -275,6 +281,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (214):
 | `@flowaudit/ui-react` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@flowaudit/ui-react` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
 | `@flowaudit/ui-react` | `UseExtraction` | Schnittstelle | – | `extraction/useExtraction` |
+| `@flowaudit/ui-react` | `UseIdentifierCheck` | Schnittstelle | – | `identifiers/useIdentifierCheck` |
 | `@flowaudit/ui-react` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui-react` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui-react` | `UseScreeningReview` | Schnittstelle | – | `screening/useScreeningReview` |
@@ -290,6 +297,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (214):
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createExtractionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createIdentifiersRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
 | `@flowaudit/ui-react` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createSamplingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
@@ -321,6 +329,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (214):
 | `@flowaudit/ui-react` | `useDebouncedCallback` | Funktion | Entprellte, stabile Funktion; ruft immer die neueste `fn` auf und verwirft einen ausstehenden Aufruf beim Unmount. | `hooks/state` |
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
 | `@flowaudit/ui-react` | `useExtraction` | Funktion | React-Anbindung der Belegerkennung aus `@flowaudit/ui-core` (dieselbe Logik wie `useExtraction` in Vue). | `extraction/useExtraction` |
+| `@flowaudit/ui-react` | `useIdentifierCheck` | Funktion | React-Anbindung von „Kennung prüfen“ aus `@flowaudit/ui-core` (dieselbe Logik wie `useIdentifierCheck` in Vue). | `identifiers/useIdentifierCheck` |
 | `@flowaudit/ui-react` | `useKanbanBoard` | Funktion | – | `kanban/useKanbanBoard` |
 | `@flowaudit/ui-react` | `useKanbanMover` | Funktion | Verschieben per Tastatur und Zeiger über dem Board-Controller. | `kanban/useKanbanBoard` |
 | `@flowaudit/ui-react` | `useKanbanShortcuts` | Funktion | Tastenkürzel N, F und /, solange das Board angezeigt wird. | `kanban/useKanbanBoard` |
@@ -371,6 +380,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (214):
   `onError`), Vertrag `auditcore_statistics.web`
   ([`docs/ui/benford-rest.md`](../../docs/ui/benford-rest.md)); beide mit
   Datei-Import `TableImport`.
+- `FlowauditIdentifierCheck` (`port`, `locale`; `onIdentifierChecked`,
+  `onBatchChecked`, `onError`), Vertrag `identifiers_ui/1`
+  ([`docs/ui/identifiers-rest.md`](../../docs/ui/identifiers-rest.md)):
+  Einzelprüfung mit Begründung und Stapelprüfung aus einer Tabelle.
 - `FlowauditKanbanBoard`: `port` + `boardId` oder `board` (+ `userId`,
   `users`), `readOnly`, `sharedByName`, `showFullscreen`, `today`, `locale`,
   `renderCardExtra`; `onBoardChange`, `onError`, `onFullscreen`,

@@ -1,0 +1,92 @@
+{
+  "contract": "identifiers_ui/1",
+  "profile": "strict",
+  "results": [
+    {
+      "index": 0,
+      "ref": "B-1",
+      "error": null,
+      "kind": "iban",
+      "status": "VALID",
+      "raw": "DE89 3704 0044 0532 0130 00",
+      "normalized": "DE89370400440532013000",
+      "reason": null,
+      "message": "",
+      "country": "DE",
+      "profile": "strict",
+      "details": {
+        "bban": "370400440532013000",
+        "check_digits": "89",
+        "registry": "SWIFT IBAN Registry Release 101"
+      },
+      "kind_label": "IBAN",
+      "reason_label": null
+    },
+    {
+      "index": 1,
+      "ref": "B-2",
+      "error": null,
+      "kind": "iban",
+      "status": "INVALID",
+      "raw": "DE89370400440532013001",
+      "normalized": null,
+      "reason": "invalid_checksum",
+      "message": "IBAN-Prüfziffer ist falsch",
+      "country": "DE",
+      "profile": "strict",
+      "details": {},
+      "kind_label": "IBAN",
+      "reason_label": "Prüfziffer falsch"
+    },
+    {
+      "index": 2,
+      "ref": "B-3",
+      "error": null,
+      "kind": "vat_id",
+      "status": "VALID",
+      "raw": "DE136695976",
+      "normalized": "DE136695976",
+      "reason": null,
+      "message": "",
+      "country": "DE",
+      "profile": "strict",
+      "details": {
+        "eu": true,
+        "checksum": "verified"
+      },
+      "kind_label": "USt-IdNr.",
+      "reason_label": null
+    },
+    {
+      "index": 3,
+      "ref": "B-4",
+      "error": null,
+      "kind": "lei",
+      "status": "MISSING",
+      "raw": null,
+      "normalized": null,
+      "reason": "missing",
+      "message": "Wert fehlt",
+      "country": null,
+      "profile": "strict",
+      "details": {},
+      "kind_label": "LEI",
+      "reason_label": "Wert fehlt"
+    },
+    {
+      "index": 4,
+      "ref": "B-5",
+      "error": {
+        "code": "unknown_kind",
+        "message": "'items[4].kind' muss eine der Arten iban, bic, vat_id, tax_id, tax_number, lei, register_number sein."
+      }
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "valid": 2,
+    "invalid": 1,
+    "missing": 1,
+    "not_checked": 1
+  }
+}
