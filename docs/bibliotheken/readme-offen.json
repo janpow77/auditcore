@@ -3,12 +3,7 @@
   "pakete": [
     "auditcore_dataprotection",
     "auditcore_documents",
-    "auditcore_dummygenerator",
     "auditcore_entity_matching",
-    "auditcore_harvest",
-    "auditcore_invoicegenerator",
-    "auditcore_kanban",
-    "auditcore_procurement",
     "auditcore_risk",
     "auditcore_sampling",
     "auditcore_statistics"
