@@ -7,22 +7,19 @@ from collections.abc import Awaitable, Callable
 from fastapi import APIRouter, Request
 from fastapi.responses import Response
 
-from ._http import MAX_BODY_BYTES, Reply, handle_analyse, profiles
-
-
-def _response(reply: Reply) -> Response:
-    return Response(reply.body, reply.status, media_type=reply.media_type)
+from ._http import MAX_BODY_BYTES, handle_analyse, profiles
+from .starlette_app import response
 
 
 def _analyse(max_body_bytes: int) -> Callable[[Request], Awaitable[Response]]:
     async def run(request: Request) -> Response:
-        return _response(handle_analyse(await request.body(), max_body_bytes))
+        return response(handle_analyse(await request.body(), max_body_bytes))
 
     return run
 
 
 async def _profiles() -> Response:
-    return _response(profiles())
+    return response(profiles())
 
 
 def create_router(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> APIRouter:

@@ -1,4 +1,5 @@
-"""Framework T-38: the runtime uses only the standard library; polars only lazily in the adapter."""
+"""Framework T-38: the runtime uses only the standard library and the stdlib-only
+``auditcore_common``; polars only lazily in the adapter."""
 
 from __future__ import annotations
 
@@ -9,6 +10,7 @@ import auditcore_market_indicators
 
 ALLOWED = {
     "__future__",
+    "auditcore_common",
     "math",
     "collections",
     "dataclasses",

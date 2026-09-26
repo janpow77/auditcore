@@ -15,15 +15,17 @@ schema; values are never defaulted silently.
 
 from __future__ import annotations
 
-import hashlib
-import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from importlib import resources
 from types import MappingProxyType
 from typing import Any, Literal, cast
 
+from auditcore_common.hashing import canonical_sha256
+from auditcore_common.profiles import load_packaged_profile, packaged_profile_ids
+
 from .errors import ProfileError
+
+_PROFILE_DATA = "auditcore_market_indicators.profile_data"
 
 SCHEMA = "auditcore_market_indicators.profile/1"
 
@@ -129,8 +131,7 @@ class IndicatorProfile:
 
 def fingerprint(data: Mapping[str, object]) -> str:
     """SHA-256 of the canonical JSON profile document."""
-    canonical = json.dumps(data, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return canonical_sha256(data)
 
 
 def _choice(value: object, allowed: tuple[str, ...], label: str) -> str:
@@ -259,28 +260,21 @@ RECOMMENDED_PROFILE = ("krypto.entschieden", "2026.09.1")
 
 def available_profiles() -> tuple[tuple[str, str], ...]:
     """Packaged ``(id, version)`` pairs; no profile is an implicit default."""
-    found = []
-    for entry in resources.files("auditcore_market_indicators.profile_data").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            found.append((str(data["id"]), str(data["version"])))
-    return tuple(sorted(found))
+    return packaged_profile_ids(_PROFILE_DATA)
 
 
 def load_profile(profile_id: str, version: str) -> IndicatorProfile:
     """Load an explicitly named packaged profile version."""
-    if not isinstance(profile_id, str) or not isinstance(version, str):
-        raise ProfileError("Profilkennung und Version sind als Text anzugeben.")
-    name = f"{profile_id}-{version}.json"
-    if "/" in name or "\\" in name:
-        raise ProfileError("Ungültige Profilkennung.")
-    entry = resources.files("auditcore_market_indicators.profile_data").joinpath(name)
-    if not entry.is_file():
-        raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
-    profile = profile_from_dict(json.loads(entry.read_text(encoding="utf-8")))
-    if (profile.id, profile.version) != (profile_id, version):
-        raise ProfileError("Profildatei und Profilkennung stimmen nicht überein.")
-    return profile
+    return load_packaged_profile(
+        _PROFILE_DATA,
+        profile_id,
+        version,
+        parse=profile_from_dict,
+        identity=lambda profile: (profile.id, profile.version),
+        error=ProfileError,
+        require_text=True,
+        invalid_name="invalid",
+    )
 
 
 def profile_document(profile: IndicatorProfile) -> dict[str, Any]:
