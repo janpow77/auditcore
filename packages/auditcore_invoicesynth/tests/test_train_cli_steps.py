@@ -37,6 +37,10 @@ def test_plan_from_telemetry_file(
     assert cli.main([*argv, str(gpus)]) == 0
     job = _json(capsys)
     assert json.dumps(job)  # a FlowAgent job document
+    assert job["image"] == "ghcr.io/janpow77/auditcore-donut-train:cu128"
+    pinned = "ghcr.io/janpow77/auditcore-donut-train@sha256:" + "f" * 64
+    assert cli.main([*argv, str(gpus), "--image", pinned]) == 0
+    assert _json(capsys)["image"] == pinned
 
 
 def test_mock_training_in_process(
