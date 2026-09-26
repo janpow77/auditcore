@@ -96,7 +96,7 @@ document.body.append(table)
   mit den emit-Argumenten in `detail`. `vue` wird dabei als Abhängigkeit
   mitgeladen.
 - **React:** Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening,
-  Stichprobe und Benford nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
+  Stichprobe, Benford und Dokumentvergleiche nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
   Geo-Karte, Kanban und die Datenbankansicht.
 

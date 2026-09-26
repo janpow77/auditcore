@@ -13,7 +13,9 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `FlowauditRiskFlags` mit Teilkomponenten (`auditcore_risk.web`),
   `FlowauditScreeningReview` (`screening_review/1`), `FlowauditSampling`
   (`auditcore_sampling.web`) und `FlowauditBenford`
-  (`auditcore_statistics.web`), dazu
+  (`auditcore_statistics.web`), `FlowauditComparisons` (Dokumentvergleiche:
+  Hochladen, Liste, Import, Löschen, eingebettete Synopse; `auditcore_documents.web`,
+  `ref` mit `reload`/`open`), dazu
   `Button`, `Badge`, `Icon`, `TextField`, `Dialog` (Fokusfalle aus dem Kern), `LocaleProvider`, `useTranslation`,
   `useStoreState`.
 - Ereignisse heißen wie bisher `onXxx`, erhalten aber direkt die Nutzdaten
