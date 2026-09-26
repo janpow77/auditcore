@@ -9,6 +9,14 @@
   Profil, Prüfung vor dem Hochladen, Suche, Öffnen mit eingebetteter Synopse,
   Löschen mit Bestätigung und Import fertiger Ergebnisse (JSON). Logik im
   Kern (`createComparisonsController`), Paritätsfälle für die React-Fassung.
+- **Datenbankansicht als Kanban:** `FaDbKanban` (`<flowaudit-db-kanban>`)
+  gruppiert Datensätze einer Tabelle nach einer Auswahl-Eigenschaft
+  (useDbKanban aus audit_designer, Parität mit `group_by_value`): Spalte
+  „Ohne Wert“, Ziehen und Ablegen oder Strg+Pfeil setzt den Zellwert (bei
+  Fehlern zurückgenommen), Eintrag je Spalte anlegen, Suche,
+  `v-model:group-by`, Nur-Lese-Modus. Datenquelle als `RecordPort` aus
+  `@flowaudit/kanban-core` oder als Tabelle (`table` + `table-change`).
+  Logik im Kern (`createDbKanbanController`), Paritätsfälle für React.
 - **Kern ausgelagert:** Texte, Datentypen der REST-Verträge, View-Modelle,
   Zustandsautomaten (Synopse, VVT, DSFA), Ports, Exporte, Symbole und die
   Stile von Basis, Tabelle, Synopse, Datenschutz und Geo-Karte liegen jetzt in
