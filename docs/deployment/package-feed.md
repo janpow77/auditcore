@@ -50,8 +50,14 @@ Wheels in v0.4.1 (SHA-256):
 | `auditcore_sampling` | 0.2.2 | `c735af5fea79f0b47506f789c0df8b6e21d5391a41e537659cc68d48b9d0a6b1` |
 | `auditcore_statistics` | 0.3.3 | `cdc9a14dc2ec778c26f6dc71e16c7fc615aeaff8305f0934904f915f3fafc177` |
 
-Die npm-Pakete unter `packages-js/` (`@flowaudit/*`, darunter neu `@flowaudit/common` 0.1.0
-sowie `@flowaudit/ui`/`@flowaudit/ui-react` 0.2.0) sind im Quellstand des Tags enthalten, werden mit diesem Release aber nicht auf npm veröffentlicht.
+**npm-Pakete (`@flowaudit/*`):** v0.4.1 und ältere Releases enthalten sie nur
+im Quellstand des Tags, nicht als Release-Dateien. Ab dem nächsten Release legt
+`scripts/prepare_library_release.py` jedes Paket unter `packages-js/` als
+`npm pack`-Tarball bei, mit `npm-packages.json` (npm-Integrität `sha512-…`,
+SHA-256, vollständige Abhängigkeitshülle) und in `SHA256SUMS` samt Signatur
+`SHA256SUMS.asc`. Auf npm sind die Pakete noch nicht veröffentlicht.
+Installation in Vue-, React- und framework-freien Anwendungen:
+[frontend-installation.md](frontend-installation.md).
 
 Zusätzlich gibt es einen Paketindex nach PEP 503 auf GitHub Pages, der die
 Release-Dateien aller Versionen mit SHA-256 verlinkt:
@@ -91,7 +97,11 @@ konkreten Freigabenachweis der beiden übernommenen Generatorquellen. Es kopiert
 ausschließlich die explizit geprüften Wheels, SDists und Debian-Revision 1,
 die mit den Wheel-Hashes verbundenen validierten SBOMs sowie kleine öffentliche
 Debian-Manifeste mit Version, Abhängigkeiten, Lizenz und Hashes ohne lokale Hostpfade,
-erzeugt signierte Flat-APT-Indizes, Requirements und `SHA256SUMS`. Der öffentliche
+erzeugt signierte Flat-APT-Indizes, Requirements und `SHA256SUMS` mit
+abgetrennter Signatur `SHA256SUMS.asc`. Zusätzlich baut es aus dem committeten
+Stand von `packages-js/` jedes npm-Paket (`npm run build`, `npm pack`) und
+beschreibt die Tarballs in `npm-packages.json` (siehe
+[frontend-installation.md](frontend-installation.md)). Der öffentliche
 Signaturschlüssel ist `auditcore-preview-keyring.gpg`; sein Fingerprint steht in
 `preview-manifest.json`. Revision 2 dient ausschließlich dem lokalen Upgrade-Test.
 

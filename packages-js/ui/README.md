@@ -13,24 +13,20 @@ Fachdaten kommen über Props oder Ports; das Paket speichert nichts selbst.
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                           # im Repository-Stamm
-npm run build -w @flowaudit/ui   # dist/: ESM, Typen, ui.css
-npm run demo -w @flowaudit/ui    # Demo-Seite zur Sichtprüfung
+npm install @flowaudit/ui@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-0.3.0.tgz
 ```
 
-Im Anwendungsrepository (Vue 3.5 als Peer-Abhängigkeit):
+Abhängigkeitshülle: dazu `@flowaudit/ui-core`, `@flowaudit/common` und `@flowaudit/kanban-core`; Peer-Abhängigkeit `vue` ^3.5. Stile: immer `@flowaudit/ui/style.css`.
 
-```sh
-npm install @flowaudit/ui vue
-```
-
-Das Paket ist noch nicht in einer npm-Registry veröffentlicht; bis dahin
-Bezug über den Workspace oder ein mit `npm pack -w @flowaudit/ui` erzeugtes
-Tarball (zusammen mit `@flowaudit/ui-core`, `@flowaudit/kanban-core` und `@flowaudit/common`). Die Stile kommen immer aus
-`@flowaudit/ui/style.css` (enthält die Stile aus `@flowaudit/ui-core`).
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/ui`).
 
 ## Schnellstart
 
@@ -100,7 +96,7 @@ document.body.append(table)
   Stichprobe, Benford und „Kennung prüfen“ nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Stichprobe, Benford und Dokumentvergleiche nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
-  Geo-Karte und Kanban.
+  Geo-Karte, Kanban und die Datenbankansicht.
 
 Fachkomponenten und ihre REST-Verträge:
 
