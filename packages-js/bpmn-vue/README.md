@@ -13,15 +13,24 @@ lokal gebündelt, keine CDN-Abhängigkeit.
 
 ## Installation
 
-Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
-auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
-`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
-Web Components mit Integritätsprüfung und `vendor/`-Ablage:
-[frontend-installation.md](../../docs/deployment/frontend-installation.md).
+Standardweg ist die npm-Registry; npm löst die übrigen `@flowaudit`-Pakete
+der Abhängigkeitshülle selbst auf:
+
+```sh
+npm install @flowaudit/bpmn-vue
+```
+
+Ohne Registry-Zugang (Intranet, offline) bleibt der signierte Tarball aus
+dem GitHub-Release von auditcore; dann gehört jedes Paket der Hülle
+ausdrücklich in die `package.json`:
 
 ```sh
 npm install @flowaudit/bpmn-vue@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-bpmn-vue-0.2.1.tgz
 ```
+
+Anleitung für Vue, React und Web Components mit Integritätsprüfung und
+`vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 Abhängigkeitshülle: dazu `@flowaudit/bpmn-editor`, `@flowaudit/bpmn-flowaudit`, `@flowaudit/ui-core` und `@flowaudit/common`; Peer-Abhängigkeit `vue` ^3.5. Stile: `@flowaudit/bpmn-vue/style.css`. Drei Ausgaben: Vue-Bibliothek (`dist/`), Web Component (`dist-wc/`, Import `@flowaudit/bpmn-vue/web-component`, ein einzelnes Modul) und eigenständige App (`dist-standalone/`).
 
