@@ -13,7 +13,37 @@ lokal auf 8090 bzw. 3003. Der Zielserver benötigt keine Python-Paketdownloads,
 Node-Buildwerkzeuge oder Compiler. Konfiguration und Daten bleiben außerhalb
 von `/opt`; Installation führt weder Downloads noch automatische DB-Migrationen aus.
 
-## Tatsächlich ausgeführte Prüfungen
+## Build-Matrix Ubuntu 26.04 / 24.04 (Stand 26./27.09.2026)
+
+Der Behördenserver des Ministeriums läuft unter Ubuntu 26.04.1 LTS (`resolute`,
+Kernel 7.0, Python 3.14.4). Seit regulierung PR #20 wird das Paket für zwei
+Ziele gebaut (`deploy/apt/targets.json`): `ubuntu-26.04` mit CPython 3.14 und
+`ubuntu-24.04` mit CPython 3.12. Beide Ziele nutzen PostgreSQL 16, TimescaleDB
+2.30.1 und PostGIS 3.6.4; unter 26.04 kommen PostgreSQL 16 und PostGIS aus PGDG
+`resolute-pgdg` (`3.6.4+dfsg-2.pgdg26.04+1`), TimescaleDB aus packagecloud
+`resolute` (`2.30.1~ubuntu26.04-1615`). Ubuntu 26.04 selbst führt nur
+PostgreSQL 18 und TimescaleDB 2.25.1 ohne TSL-Funktionen. Die Nachweise liegen
+in `ubuntu-26.04/`:
+
+- `application-tests.json`: Backend-Suite gegen die gelockte Laufzeit unter
+  Python 3.14.4 und 3.12.3, je 1857 bestanden, 1 übersprungen;
+  Administrationstests je 29 bestanden. Für 3.14 angehoben (gleich für alle
+  Ziele): pydantic 2.12.5, SQLAlchemy 2.0.45, asyncpg 0.31.0,
+  psycopg2-binary 2.9.11, shapely 2.1.2. Kein Paket musste aus dem sdist gebaut
+  werden.
+- `role-migration-proof.txt`: Alembic-Neuinstallation bis `owi049` unter
+  Python 3.14 mit NOSUPERUSER-Rolle.
+- `lifecycle-ubuntu-26.04.json` und `lifecycle-ubuntu-24.04.json`: QEMU-
+  Lebenszyklus je Ziel mit 31 von 31 Prüfpunkten PASS (Gast 26.04: Kernel
+  7.0.0-34, Python 3.14.4, systemd 259). `scripts/regulierung_package_test.py`
+  richtet im Gast PGDG und Timescale für den Codename ein und installiert die
+  Datenbankpins aus den Kontrollfeldern des Pakets (`Regulierung-*`).
+- `lifecycle-candidate-ubuntu-26.04.json`: derselbe Lebenszyklus mit Upgrade
+  auf den GitHub-Actions-Kandidaten 2026.09.27-1.
+- `ci-candidate.json`: Kandidat 2026.09.27-1 aus Workflow-Lauf 36262252005,
+  je Ziel ein `.deb` mit SHA-256; Status `CANDIDATE_NOT_RELEASED`.
+
+## Tatsächlich ausgeführte Prüfungen (Ubuntu 24.04, Stand 26.09.2026)
 
 Stand 26.09.2026: regulierung `5458d2e` (main nach PR #12 und #11) mit den
 auditcore-Bibliotheken aus Release v0.4.1 (dataprotection 0.5.0, reporting 0.2.2,
