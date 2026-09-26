@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- CI (`js-packages`, `nightly`): Vitest-Worker an die CPU-Quote der
+  selbst gehosteten Runner angepasst (`scripts/js/vitest-workers.sh` setzt
+  `VITEST_MAX_WORKERS`). Node 20 (libuv 1.46) ignoriert die cgroup-Quote von
+  2 CPUs und meldet 20, Vitest startete daher 19 Worker; die Paritätstests in
+  `ui-react` liefen sporadisch in das 5-s-Zeitlimit. Node 22 beachtete die
+  Quote bereits.
 - Donut-Nachtraining E3 auf janpow-ai (`auditcore_invoicesynth.train`):
   Job-Image `ghcr.io/janpow77/auditcore-donut-train:cu128` (Workflow
   `donut-train-image`, Basis per Digest, torch 2.11.0+cu128, gepinnte
