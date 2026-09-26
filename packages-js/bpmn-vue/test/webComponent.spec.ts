@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { InMemoryStorage, type DiagramInfo } from '@flowaudit/bpmn-flowaudit'
 import { ELEMENT_EVENTS, ELEMENT_NAME, registerFlowauditBpmnEditor } from '../src/web-component/register'
-import { readConfig } from '../src/standalone/config'
+import { readConfig } from '@flowaudit/bpmn-flowaudit/ui'
 import { fixture, until } from './helpers'
 
 type EditorElement = HTMLElement & { xml?: string; storage?: InMemoryStorage; getXml(): Promise<string> }

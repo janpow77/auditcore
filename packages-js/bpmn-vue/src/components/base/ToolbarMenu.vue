@@ -49,19 +49,3 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocument))
     </div>
   </div>
 </template>
-
-<style>
-.fa-toolbar-menu {
-  position: relative;
-}
-
-.fa-toolbar-menu > .fa-menu {
-  top: calc(100% + 4px);
-  left: 0;
-}
-
-.fa-toolbar-menu > .fa-menu--right {
-  left: auto;
-  right: 0;
-}
-</style>

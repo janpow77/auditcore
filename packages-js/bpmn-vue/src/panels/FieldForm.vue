@@ -3,9 +3,8 @@
  * Renders one object from declarative field descriptions. Emits the whole
  * updated object on every committed change (blur/enter for text fields).
  */
+import { fieldText, inputType, isWide, parseFieldInput, unknownOption, withField, type FieldDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
 import { useI18n } from '../i18n/useI18n'
-import type { FieldDescriptor } from './descriptors'
-import type { Option } from './useOptions'
 
 const props = defineProps<{
   value: Record<string, unknown>
@@ -17,28 +16,14 @@ const emit = defineEmits<{ (e: 'update', value: Record<string, unknown>): void }
 const { t } = useI18n()
 const uid = Math.random().toString(36).slice(2, 8)
 
-function set(key: string, raw: unknown): void {
-  const next: Record<string, unknown> = { ...props.value }
-  const value = typeof raw === 'string' ? raw.trim() : raw
-  if (value === '' || value === false || value === undefined || (Array.isArray(value) && !value.length)) delete next[key]
-  else next[key] = value
-  emit('update', next)
-}
-
-function text(field: FieldDescriptor): string {
-  const value = props.value[field.key]
-  return Array.isArray(value) ? value.join(' ') : value === undefined ? '' : String(value)
-}
-
-function onText(field: FieldDescriptor, event: Event): void {
-  const raw = (event.target as HTMLInputElement).value
-  set(field.key, field.kind === 'tokens' ? raw.split(/[\s,]+/).filter(Boolean) : raw)
-}
+const set = (key: string, raw: unknown) => emit('update', withField(props.value, key, raw))
+const text = (field: FieldDescriptor) => fieldText(props.value, field)
+const onText = (field: FieldDescriptor, event: Event) => set(field.key, parseFieldInput(field, (event.target as HTMLInputElement).value))
 </script>
 
 <template>
   <div class="fa-grid-2 fa-field-form">
-    <label v-for="field in fields" :key="field.key" class="fa-field" :class="{ 'fa-field--wide': field.wide || field.kind === 'textarea' }">
+    <label v-for="field in fields" :key="field.key" class="fa-field" :class="{ 'fa-field--wide': isWide(field) }">
       <template v-if="field.kind === 'checkbox'">
         <span class="fa-check">
           <input type="checkbox" :checked="Boolean(value[field.key])" :disabled="disabled" @change="set(field.key, ($event.target as HTMLInputElement).checked)" />
@@ -57,7 +42,7 @@ function onText(field: FieldDescriptor, event: Event): void {
         >
           <option value="">{{ t('common.none') }}</option>
           <option v-for="option in optionsFor(field)" :key="option.value" :value="option.value">{{ option.label }}</option>
-          <option v-if="text(field) && !optionsFor(field).some((o) => o.value === text(field))" :value="text(field)">{{ text(field) }}</option>
+          <option v-if="unknownOption(optionsFor(field), text(field))" :value="text(field)">{{ text(field) }}</option>
         </select>
         <textarea
           v-else-if="field.kind === 'textarea'"
@@ -71,7 +56,7 @@ function onText(field: FieldDescriptor, event: Event): void {
         <input
           v-else
           class="fa-input"
-          :type="field.kind === 'date' ? 'date' : field.kind === 'number' ? 'number' : 'text'"
+          :type="inputType(field)"
           :value="text(field)"
           :disabled="disabled"
           :placeholder="field.placeholder"
@@ -81,16 +66,3 @@ function onText(field: FieldDescriptor, event: Event): void {
     </label>
   </div>
 </template>
-
-<style>
-.fa-field--wide {
-  grid-column: 1 / -1;
-}
-
-.fa-check {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-</style>

@@ -7,20 +7,13 @@
 import { computed } from 'vue'
 import FaIcon from '../base/FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
-import type { PaletteItem } from './paletteEntries'
+import { paletteSections, type PaletteItem } from '@flowaudit/bpmn-flowaudit/ui'
 
 const props = defineProps<{ items: PaletteItem[]; disabled?: boolean }>()
 const emit = defineEmits<{ (e: 'trigger', id: string, event: Event): void }>()
 const { t } = useI18n()
 
-const tools = computed(() => props.items.filter((item) => item.group === 'tools'))
-const roles = computed(() => props.items.filter((item) => item.group === 'flowaudit-roles'))
-const shapes = computed(() => props.items.filter((item) => item.group !== 'tools' && item.group !== 'flowaudit-roles'))
-const sections = computed(() => [
-  { id: 'tools', title: 'palette.tools', items: tools.value },
-  { id: 'shapes', title: 'palette.shapes', items: shapes.value },
-  { id: 'roles', title: 'palette.roles', items: roles.value },
-])
+const sections = computed(() => paletteSections(props.items))
 </script>
 
 <template>
@@ -50,68 +43,3 @@ const sections = computed(() => [
     <p class="fa-help fa-palette__hint">{{ t('palette.hint') }}</p>
   </nav>
 </template>
-
-<style>
-.fa-palette {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 132px;
-  padding: 10px 8px;
-  border-right: 1px solid var(--fa-border);
-  background: var(--fa-surface);
-  overflow: auto;
-}
-
-.fa-palette__title {
-  margin: 0 0 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--fa-text-muted);
-}
-
-.fa-palette__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 36px);
-  gap: 4px;
-}
-
-.fa-palette__item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius-sm);
-  background: var(--fa-surface);
-  color: var(--fa-text);
-  cursor: grab;
-}
-
-.fa-palette__item:hover:not(:disabled) {
-  border-color: var(--fa-primary);
-  color: var(--fa-primary);
-}
-
-.fa-palette__role {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-}
-
-.fa-palette__fallback {
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.fa-palette__hint {
-  margin-top: auto;
-}
-</style>

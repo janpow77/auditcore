@@ -6,9 +6,8 @@
 import { ref } from 'vue'
 import FaIcon from '../components/base/FaIcon.vue'
 import { useI18n } from '../i18n/useI18n'
+import { removeAt, replaceAt, toggleIndex, type FieldDescriptor, type ListDescriptor, type Option } from '@flowaudit/bpmn-flowaudit/ui'
 import FieldForm from './FieldForm.vue'
-import type { FieldDescriptor, ListDescriptor } from './descriptors'
-import type { Option } from './useOptions'
 
 const props = defineProps<{
   descriptor: ListDescriptor
@@ -20,9 +19,7 @@ const emit = defineEmits<{ (e: 'update', items: Record<string, unknown>[]): void
 const { t } = useI18n()
 const open = ref<number | null>(null)
 
-function update(index: number, value: Record<string, unknown>): void {
-  emit('update', props.items.map((item, i) => (i === index ? value : item)))
-}
+const update = (index: number, value: Record<string, unknown>) => emit('update', replaceAt(props.items, index, value))
 
 function add(): void {
   emit('update', [...props.items, props.descriptor.create()])
@@ -30,13 +27,11 @@ function add(): void {
 }
 
 function remove(index: number): void {
-  emit('update', props.items.filter((_, i) => i !== index))
+  emit('update', removeAt(props.items, index))
   open.value = null
 }
 
-function toggle(index: number): void {
-  open.value = open.value === index ? null : index
-}
+const toggle = (index: number) => (open.value = toggleIndex(open.value, index))
 </script>
 
 <template>
@@ -67,64 +62,3 @@ function toggle(index: number): void {
     </ul>
   </section>
 </template>
-
-<style>
-.fa-list-editor + .fa-list-editor {
-  margin-top: 18px;
-}
-
-.fa-list-editor__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-
-.fa-list-editor__head h3 {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.fa-list-editor__items {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fa-list-editor__row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 4px;
-}
-
-.fa-list-editor__toggle {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  padding: 6px 4px;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.fa-list-editor__summary {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.fa-list-editor__form {
-  padding: 4px 10px 12px;
-  border-top: 1px solid var(--fa-border);
-}
-</style>

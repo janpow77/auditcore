@@ -4,12 +4,12 @@
  * `BpmnToolbar`): name, unsaved/readonly state, save, colour menu, flow
  * direction, page view and panel toggles. Actions are emitted as `action`.
  */
-import { PAGE_FORMATS, PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import { PALETTE_COLORS, type PaletteColor } from '@flowaudit/bpmn-flowaudit'
+import { actionDisabled, CHECK_ACTIONS, EDIT_ACTIONS, FILE_ACTIONS, MODE_ACTIONS, PAGE_OPTIONS as pageOptions, VIEW_ACTIONS, type ToolbarAction } from '@flowaudit/bpmn-flowaudit/ui'
 import ColorSwatches from '../base/ColorSwatches.vue'
 import FaIcon from '../base/FaIcon.vue'
 import ToolbarMenu from '../base/ToolbarMenu.vue'
 import { useI18n } from '../../i18n/useI18n'
-import { CHECK_ACTIONS, EDIT_ACTIONS, FILE_ACTIONS, MODE_ACTIONS, VIEW_ACTIONS, type ToolbarAction } from './toolbarActions'
 
 const props = defineProps<{
   name: string
@@ -34,10 +34,9 @@ const emit = defineEmits<{
 }>()
 const { t } = useI18n()
 
-const pageOptions = PAGE_FORMATS.flatMap((format) => (['hoch', 'quer'] as const).map((orientation) => ({ value: `${format.id}-${orientation}`, label: `${format.label} ${orientation}` })))
 
 const visible = (id: ToolbarAction) => !props.hidden?.includes(id)
-const disabled = (id: ToolbarAction, writes?: boolean) => (writes && props.readonly) || (id === 'undo' && !props.canUndo) || (id === 'redo' && !props.canRedo)
+const disabled = (id: ToolbarAction, writes?: boolean) => actionDisabled(id, writes, props)
 
 function onFile(event: Event): void {
   const input = event.target as HTMLInputElement
@@ -111,53 +110,3 @@ function onFile(event: Event): void {
     </button>
   </div>
 </template>
-
-<style>
-.fa-toolbar {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-height: var(--fa-toolbar-height);
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--fa-border);
-  background: var(--fa-surface);
-  flex-wrap: wrap;
-  position: relative;
-  z-index: 5;
-}
-
-.fa-toolbar__name {
-  width: 220px;
-  flex-shrink: 0;
-  font-weight: 600;
-}
-
-.fa-toolbar__sep {
-  width: 1px;
-  height: 22px;
-  margin: 0 4px;
-  background: var(--fa-border);
-  flex-shrink: 0;
-}
-
-.fa-toolbar__spacer {
-  flex: 1;
-}
-
-.fa-toolbar__page {
-  width: auto;
-  min-width: 150px;
-}
-
-.fa-toolbar__modes,
-.fa-segmented {
-  display: inline-flex;
-  gap: 2px;
-}
-
-.fa-segmented {
-  padding: 2px;
-  border: 1px solid var(--fa-border);
-  border-radius: var(--fa-radius-sm);
-}
-</style>

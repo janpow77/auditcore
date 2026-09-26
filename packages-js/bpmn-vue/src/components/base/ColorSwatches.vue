@@ -22,20 +22,3 @@ const { t } = useI18n()
     </button>
   </div>
 </template>
-
-<style>
-.fa-swatch {
-  display: inline-block;
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  margin-top: 1px;
-  border: 1.5px solid;
-  border-radius: 4px;
-}
-
-.fa-swatch--empty {
-  border-style: dashed;
-  border-color: var(--fa-border-strong);
-}
-</style>
