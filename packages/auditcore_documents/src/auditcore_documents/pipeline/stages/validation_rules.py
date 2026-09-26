@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from auditcore_documents.pipeline.context import PipelineContext, ValidationResult
+from auditcore_documents.pipeline.stages.rule_messages import say
 from auditcore_documents.pipeline.stages.validation_base import (
     VAT_ID_PATTERNS,
     ValidationRule,
@@ -25,11 +26,11 @@ class IbanChecksumRule(ValidationRule):
     async def evaluate(self, context: PipelineContext) -> ValidationResult:
         iban = (context.artifacts.normalized_json or {}).get("iban")
         if not iban:
-            return self.result("INFO", "PASS", "No IBAN found, skipping validation")
+            return self.result("INFO", "PASS", say("iban_missing"))
         valid, message = validate_iban(iban)
         if valid:
             return self.result(
-                self.severity, "PASS", f"IBAN checksum valid: {iban[:4]}...{iban[-4:]}"
+                self.severity, "PASS", say("iban_valid", iban=f"{iban[:4]}...{iban[-4:]}")
             )
         return self.result(self.severity, "FAIL", message, evidence={"iban": iban})
 
@@ -47,22 +48,22 @@ class VatIdFormatRule(ValidationRule):
     async def evaluate(self, context: PipelineContext) -> ValidationResult:
         vat_id = (context.artifacts.normalized_json or {}).get("vat_id")
         if not vat_id:
-            return self.result("INFO", "PASS", "No VAT ID found, skipping validation")
+            return self.result("INFO", "PASS", say("vat_id_missing"))
         country = vat_id[:2].upper()
         pattern = VAT_ID_PATTERNS.get(country)
         if not pattern:
             return self.result(
                 "INFO",
                 "REVIEW",
-                f"Unknown VAT ID country: {country}",
+                say("vat_id_country", country=country),
                 evidence={"vat_id": vat_id, "country": country},
             )
         if re.match(pattern, vat_id):
-            return self.result(self.severity, "PASS", f"VAT ID format valid: {vat_id}")
+            return self.result(self.severity, "PASS", say("vat_id_valid", vat_id=vat_id))
         return self.result(
             self.severity,
             "FAIL",
-            f"VAT ID format invalid for country {country}",
+            say("vat_id_invalid", country=country),
             evidence={"vat_id": vat_id, "expected_pattern": pattern},
         )
 
@@ -83,16 +84,14 @@ class TotalSumPlausibilityRule(ValidationRule):
         total, net, vat = fields.get("total"), fields.get("net_amount"), fields.get("vat_amount")
         # Original: ``all([...])`` – ein Betrag 0 gilt als fehlend (PL-L06).
         if not all([total, net, vat]):
-            return self.result(
-                "INFO", "PASS", "Not all amount fields available for plausibility check"
-            )
+            return self.result("INFO", "PASS", say("sum_incomplete"))
         try:
             total_f, net_f, vat_f = float(total), float(net), float(vat)  # type: ignore[arg-type]
         except (ValueError, TypeError):
             return self.result(
                 "INFO",
                 "REVIEW",
-                "Could not parse amount fields as numbers",
+                say("sum_unparsable"),
                 evidence={"total": total, "net": net, "vat": vat},
             )
         calculated = net_f + vat_f
@@ -102,12 +101,12 @@ class TotalSumPlausibilityRule(ValidationRule):
             return self.result(
                 self.severity,
                 "PASS",
-                f"Sum plausible: {net_f} + {vat_f} = {calculated} (total: {total_f})",
+                say("sum_plausible", net=net_f, vat=vat_f, calculated=calculated, total=total_f),
             )
         return self.result(
             self.severity,
             "FAIL",
-            f"Sum mismatch: {net_f} + {vat_f} = {calculated}, but total is {total_f}",
+            say("sum_mismatch", net=net_f, vat=vat_f, calculated=calculated, total=total_f),
             evidence={
                 "total": total_f,
                 "net": net_f,
@@ -132,17 +131,19 @@ class OcrConfidenceRule(ValidationRule):
 
     async def evaluate(self, context: PipelineContext) -> ValidationResult:
         if not context.ocr_metrics:
-            return self.result("INFO", "PASS", "No OCR metrics available")
+            return self.result("INFO", "PASS", say("ocr_missing"))
         avg = context.ocr_metrics.avg_confidence
         assert self.threshold is not None
         if avg >= self.threshold:
             return self.result(
-                self.severity, "PASS", f"OCR confidence OK: {avg:.2%} >= {self.threshold:.2%}"
+                self.severity,
+                "PASS",
+                say("ocr_ok", confidence=f"{avg:.2%}", threshold=f"{self.threshold:.2%}"),
             )
         return self.result(
             self.severity,
             "REVIEW",
-            f"OCR confidence low: {avg:.2%} < {self.threshold:.2%}",
+            say("ocr_low", confidence=f"{avg:.2%}", threshold=f"{self.threshold:.2%}"),
             evidence={
                 "avg_confidence": avg,
                 "min_confidence": context.ocr_metrics.min_confidence,
@@ -168,10 +169,10 @@ class AmountFormatRule(ValidationRule):
 
         unclear = amount_findings(context.artifacts.extracted_fields or {})
         if not unclear:
-            return self.result("INFO", "PASS", "All amounts unambiguous")
+            return self.result("INFO", "PASS", say("amounts_clear"))
         return self.result(
             self.severity,
             "REVIEW",
-            "Ambiguous or invalid amounts: " + ", ".join(sorted(unclear)),
+            say("amounts_unclear", fields=", ".join(sorted(unclear))),
             evidence=unclear,
         )

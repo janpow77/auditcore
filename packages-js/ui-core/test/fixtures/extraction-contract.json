@@ -313,7 +313,7 @@
     "rule_name": "iban_checksum",
     "severity": "CRITICAL",
     "outcome": "PASS",
-    "message": "IBAN checksum valid: DE63...2889",
+    "message": "IBAN-Prüfsumme gültig: DE63...2889",
     "evidence": null
    },
    {
@@ -321,7 +321,7 @@
     "rule_name": "vat_id_format",
     "severity": "WARN",
     "outcome": "PASS",
-    "message": "VAT ID format valid: DE407133546",
+    "message": "Format der USt-IdNr. gültig: DE407133546",
     "evidence": null
    },
    {
@@ -329,7 +329,7 @@
     "rule_name": "total_sum_plausibility",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "Not all amount fields available for plausibility check",
+    "message": "Nicht alle Betragsfelder für die Summenprüfung vorhanden",
     "evidence": null
    },
    {
@@ -337,7 +337,7 @@
     "rule_name": "ocr_confidence",
     "severity": "WARN",
     "outcome": "PASS",
-    "message": "OCR confidence OK: 93.00% >= 85.00%",
+    "message": "OCR-Konfidenz ausreichend: 93.00% ≥ 85.00%",
     "evidence": null
    },
    {
@@ -345,7 +345,7 @@
     "rule_name": "fraud_detection",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
+    "message": "Zu wenig Daten für die Betrugsprüfung (Rechnungsnummer oder Lieferant fehlt)",
     "evidence": null
    },
    {
@@ -353,7 +353,7 @@
     "rule_name": "amount_format",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "All amounts unambiguous",
+    "message": "Alle Beträge eindeutig",
     "evidence": null
    }
   ],
@@ -497,7 +497,7 @@
     "rule_name": "iban_checksum",
     "severity": "CRITICAL",
     "outcome": "PASS",
-    "message": "IBAN checksum valid: DE25...1611",
+    "message": "IBAN-Prüfsumme gültig: DE25...1611",
     "evidence": null
    },
    {
@@ -505,7 +505,7 @@
     "rule_name": "vat_id_format",
     "severity": "WARN",
     "outcome": "PASS",
-    "message": "VAT ID format valid: DE793599552",
+    "message": "Format der USt-IdNr. gültig: DE793599552",
     "evidence": null
    },
    {
@@ -513,7 +513,7 @@
     "rule_name": "total_sum_plausibility",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "Not all amount fields available for plausibility check",
+    "message": "Nicht alle Betragsfelder für die Summenprüfung vorhanden",
     "evidence": null
    },
    {
@@ -521,7 +521,7 @@
     "rule_name": "ocr_confidence",
     "severity": "WARN",
     "outcome": "REVIEW",
-    "message": "OCR confidence low: 72.00% < 85.00%",
+    "message": "OCR-Konfidenz niedrig: 72.00% < 85.00%",
     "evidence": {
      "avg_confidence": 0.72,
      "min_confidence": 0.72,
@@ -533,7 +533,7 @@
     "rule_name": "fraud_detection",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
+    "message": "Zu wenig Daten für die Betrugsprüfung (Rechnungsnummer oder Lieferant fehlt)",
     "evidence": null
    },
    {
@@ -541,7 +541,7 @@
     "rule_name": "amount_format",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "All amounts unambiguous",
+    "message": "Alle Beträge eindeutig",
     "evidence": null
    }
   ],
@@ -746,7 +746,7 @@
     "rule_name": "iban_checksum",
     "severity": "CRITICAL",
     "outcome": "PASS",
-    "message": "IBAN checksum valid: AT19...3813",
+    "message": "IBAN-Prüfsumme gültig: AT19...3813",
     "evidence": null
    },
    {
@@ -754,7 +754,7 @@
     "rule_name": "vat_id_format",
     "severity": "WARN",
     "outcome": "PASS",
-    "message": "VAT ID format valid: ATU14426968",
+    "message": "Format der USt-IdNr. gültig: ATU14426968",
     "evidence": null
    },
    {
@@ -762,7 +762,7 @@
     "rule_name": "total_sum_plausibility",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "Not all amount fields available for plausibility check",
+    "message": "Nicht alle Betragsfelder für die Summenprüfung vorhanden",
     "evidence": null
    },
    {
@@ -770,7 +770,7 @@
     "rule_name": "ocr_confidence",
     "severity": "WARN",
     "outcome": "PASS",
-    "message": "OCR confidence OK: 93.80% >= 85.00%",
+    "message": "OCR-Konfidenz ausreichend: 93.80% ≥ 85.00%",
     "evidence": null
    },
    {
@@ -778,7 +778,7 @@
     "rule_name": "fraud_detection",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
+    "message": "Zu wenig Daten für die Betrugsprüfung (Rechnungsnummer oder Lieferant fehlt)",
     "evidence": null
    },
    {
@@ -786,7 +786,7 @@
     "rule_name": "amount_format",
     "severity": "INFO",
     "outcome": "PASS",
-    "message": "All amounts unambiguous",
+    "message": "Alle Beträge eindeutig",
     "evidence": null
    },
    {

@@ -45,6 +45,7 @@ from auditcore_documents.pipeline import (
     build_pipeline,
     sniff_mime,
 )
+from auditcore_documents.pipeline.stages.rule_messages import original_message
 
 FIXTURES = Path(__file__).parent / "fixtures"
 PIPELINE_FIXTURES = FIXTURES / "pipeline"
@@ -352,6 +353,33 @@ async def run(
     }
 
 
+def as_original(value: Any) -> Any:
+    """Regelmeldungen sind deutsch (D9); verglichen wird der englische Originalwortlaut."""
+    if isinstance(value, dict):
+        converted = {k: as_original(v) for k, v in value.items()}
+        if "rule_id" in value and isinstance(value.get("message"), str):
+            converted["message"] = original_message(value["message"])
+        return converted
+    if isinstance(value, list):
+        return [as_original(v) for v in value]
+    return value
+
+
+def with_original_sizes(observed: dict[str, Any]) -> dict[str, Any]:
+    """Größe der JSON-Ausgabe mit englischem Wortlaut (die Meldungen stehen genau einmal darin)."""
+    delta = sum(
+        len(json.dumps(r["message"])) - len(json.dumps(original_message(r["message"])))
+        for r in observed["context"].get("validation_results") or []
+    )
+    for event in observed["audit"]:
+        if event.get("event_type") != "EXPORTED":
+            continue
+        for result in event["details"].get("results") or []:
+            if result.get("format") == "json" and "size_bytes" in result:
+                result["size_bytes"] -= delta
+    return observed
+
+
 def paths_as_names(value: Any) -> Any:
     """Exportpfade hängen vom temporären Verzeichnis ab; verglichen wird der Dateiname."""
     if isinstance(value, dict):
@@ -375,7 +403,7 @@ def test_source_is_bound() -> None:
 
 @pytest.mark.parametrize("entry", DATA["scenarios"], ids=lambda e: e["scenario"]["name"])
 def test_pipeline_scenario(entry: dict[str, Any], tmp_path: Path) -> None:
-    observed = asyncio.run(run(entry["scenario"], tmp_path))
+    observed = as_original(with_original_sizes(asyncio.run(run(entry["scenario"], tmp_path))))
     assert entry["error"] is None
     # Maskierte Kontexte vergleichen; Zeitfelder sind in beiden Fällen maskiert.
     assert observed["context"] == entry["context"]
