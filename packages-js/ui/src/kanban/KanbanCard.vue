@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { deadlineState, type Card } from '@flowaudit/kanban-core'
 import FaIcon from '../base/FaIcon.vue'
 import { formatDate, useI18n, type Locale } from '../i18n'
-import { badgeStyle, cardAge, preview, PRIORITY_TONES, textOn } from './cardView'
+import { badgeStyle, cardAge, cardStyle, preview, PRIORITY_TONES } from './cardView'
 import { kanbanMessages } from './messages'
 
 const props = withDefaults(defineProps<{
@@ -24,15 +24,7 @@ const { t, locale: active } = useI18n(kanbanMessages, () => props.locale)
 const due = computed(() => deadlineState(props.card.due, props.today))
 const checklistDone = computed(() => props.card.checklist.filter((item) => item.done).length)
 const age = computed(() => cardAge(props.card.created_at, props.now))
-const style = computed(() => {
-  const result: Record<string, string> = {}
-  if (props.card.color) {
-    result['--fa-kanban-card-bg'] = props.card.color
-    if (textOn(props.card.color) === 'light') result['--fa-kanban-card-fg'] = '#f8fafc'
-  }
-  if (props.card.image) result.backgroundImage = `linear-gradient(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.35)), url("${encodeURI(props.card.image)}")`
-  return result
-})
+const style = computed(() => cardStyle(props.card.color, props.card.image))
 const label = computed(() => [props.card.badge, props.card.title, t(`priority_${props.card.priority}`), props.card.due ? t(`due_${due.value}`) : ''].filter(Boolean).join(', '))
 </script>
 

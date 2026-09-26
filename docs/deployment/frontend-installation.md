@@ -18,7 +18,7 @@ Tarballs. Bis dahin lassen sich die Tarballs im Repository selbst packen
 | `@flowaudit/common` | Hilfsfunktionen: deutsche Formatierung, Zahleneingabe, Fehlertexte, REST, Token, CSV, Sortierung, Prüfziffern | keines | – |
 | `@flowaudit/ui-core` | Gemeinsamer Kern der Oberflächen: Texte, REST-Verträge, Zustandsautomaten, Ports, Designtoken und Stile (`style.css`) | keines | `common` |
 | `@flowaudit/ui` | Oberflächenkomponenten als Vue-3-Komponenten und als Web Components (`@flowaudit/ui/elements`) | Vue 3.5 | `common`, `ui-core`, `kanban-core` |
-| `@flowaudit/ui-react` | Native React-18-Komponenten (Tabelle, Synopse, VVT, DSFA, Geo-Karte, Risiko-Merkmale, Screening, Stichprobe, Benford, Grundbausteine, Hooks) ohne Vue-Laufzeit | React 18.3 | `common`, `ui-core` |
+| `@flowaudit/ui-react` | Native React-Komponenten (Tabelle, Synopse, VVT, DSFA, Geo-Karte, Risiko-Merkmale, Screening, Stichprobe, Benford, Kanban, Grundbausteine, Hooks) ohne Vue-Laufzeit | React 18.3/19 | `common`, `ui-core`, `kanban-core` |
 | `@flowaudit/kanban-core` | Kanban-Logik (Rang, Übergänge, WIP, Filter, Rechte), gleiche Regeln wie `auditcore_kanban` | keines | – |
 | `@flowaudit/bpmn-editor` | BPMN-2.0-Zeicheneditor auf Basis von diagram-js | keines | – |
 | `@flowaudit/bpmn-flowaudit` | FlowAudit-Fachschicht für BPMN (Schema flowaudit 1.0/1.1, Prüfpfad, Berichte) | keines | (`bpmn-editor` als optionale Peer-Abhängigkeit) |
@@ -101,7 +101,7 @@ Das ergibt in `package.json` (Versionen je nach Release):
 {
   "dependencies": {
     "@flowaudit/common": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-common-0.1.0.tgz",
-    "@flowaudit/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.1.0.tgz",
+    "@flowaudit/kanban-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-kanban-core-0.2.0.tgz",
     "@flowaudit/ui": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-0.3.0.tgz",
     "@flowaudit/ui-core": "https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz",
     "vue": "^3.5.0"
@@ -196,7 +196,7 @@ const theme = useTheme()
 ### Installation
 
 `@flowaudit/ui-react` enthält native React-Komponenten und braucht **kein
-Vue**. Hülle: `ui-react`, `ui-core`, `common`.
+Vue**. Hülle: `ui-react`, `ui-core`, `kanban-core`, `common`.
 
 ```bash
 deps=$(node -e '
@@ -204,7 +204,7 @@ deps=$(node -e '
   const p = m.packages.find((x) => x.name === process.argv[1])
   console.log(Object.entries(p.package_json_dependencies).map(([n, u]) => `${n}@${u}`).join(" "))
 ' @flowaudit/ui-react)
-npm install $deps react@^18.3 react-dom@^18.3
+npm install $deps react react-dom   # React 18.3 oder 19
 ```
 
 Die `vendor/`-Ablage funktioniert wie bei Vue.
@@ -213,8 +213,8 @@ Die `vendor/`-Ablage funktioniert wie bei Vue.
 
 - **Komponenten:** `FlowauditTable`, `FlowauditSynopsis`, `FlowauditVvt`,
   `FlowauditDsfa`, `FlowauditGeoMap`, `FlowauditRiskFlags`,
-  `FlowauditScreeningReview`, `FlowauditSampling`, `FlowauditBenford` sowie
-  die Grundbausteine `Button`, `Dialog`, `TextField`,
+  `FlowauditScreeningReview`, `FlowauditSampling`, `FlowauditBenford`,
+  `FlowauditKanbanBoard`, `FlowauditKanbanBoards` sowie die Grundbausteine `Button`, `Dialog`, `TextField`,
   `Badge`, `Icon` und Hooks (`useSort`, `useToast` mit `ToastProvider`,
   `useMediaQuery`, `useClickOutside`, `useDebouncedCallback`,
   `useAuthToken`). Gleiche Verträge, Texte und Barrierefreiheit wie die
@@ -231,13 +231,6 @@ Die `vendor/`-Ablage funktioniert wie bei Vue.
 - **Datenzugriff:** über Ports aus `@flowaudit/ui-core`
   (z. B. `createSynopsisRestClient`, `createDataProtectionRestPort`); `fetch` und
   Kopfzeilen (Anmeldetoken) gibt die Anwendung vor.
-- **Noch nicht nativ:** Kanban steht bis zu seiner nativen Umsetzung nur als
-  veraltete Hülle um die Vue-Web-Component unter `@flowaudit/ui-react/elements`
-  bereit.
-  Wer sie nutzt, installiert zusätzlich `@flowaudit/ui` (mit seiner Hülle) und
-  `vue`, ruft `defineFlowauditElements()` auf und lädt
-  `@flowaudit/ui/style.css`. Maßgeblich ist der aktuelle Stand in der
-  [README von ui-react](../../packages-js/ui-react/README.md).
 - **BPMN:** `@flowaudit/bpmn-react` ist die native React-Oberfläche des
   BPMN-Editors (ohne Vue) auf demselben Kern wie `@flowaudit/bpmn-vue`; Stile
   aus `@flowaudit/bpmn-react/style.css`.
@@ -367,7 +360,7 @@ liefert jeweils ein Python-Paket, installiert wie in
 | `ScreeningReview` / `FlowauditScreeningReview` / `<flowaudit-screening-review>` | `screening_review/1`, [screening-rest.md](../ui/screening-rest.md) | `auditcore_registry_sources.web` (`[web]` oder `[fastapi]`) |
 | `RiskFlags` / `FlowauditRiskFlags` / `<flowaudit-risk-flags>` | [risk-rest.md](../ui/risk-rest.md) | `auditcore_risk.web` (`[web]` oder `[fastapi]`) |
 | `FaGeoMap` / `FlowauditGeoMap` / `<flowaudit-geo-map>` | [geo-rest.md](../ui/geo-rest.md) | `auditcore_geo.web` (`[web]` oder `[fastapi]`) |
-| `KanbanBoard`, `KanbanBoardList` / `<flowaudit-kanban-board>` | [kanban/rest-api.md](../kanban/rest-api.md) | `auditcore_kanban.rest` (`[ui]` oder `[fastapi]`) |
+| `KanbanBoard`, `KanbanBoardList` / `FlowauditKanbanBoard`, `FlowauditKanbanBoards` / `<flowaudit-kanban-board>` | [kanban/rest-api.md](../kanban/rest-api.md) | `auditcore_kanban.rest` (`[ui]` oder `[fastapi]`) |
 | `<flowaudit-bpmn-editor>` (`api-base`) | [bpmn/rest-api.md](../bpmn/rest-api.md) | noch kein Server im Paket; `auditcore_bpmn` liest und prüft dasselbe BPMN (Schema flowaudit 1.1) |
 
 `@flowaudit/common` und `@flowaudit/kanban-core` rechnen mit denselben Regeln

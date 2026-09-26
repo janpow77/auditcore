@@ -96,7 +96,7 @@ async function addCard(columnId: string): Promise<void> {
 }
 
 function onCardKey(event: KeyboardEvent, card: Card): void {
-  if (handleCardKey(event, card, mover, open)) event.preventDefault()
+  if (handleCardKey(event, card, mover.grabbed.value, mover, open)) event.preventDefault()
 }
 
 async function removeCard(card: Card): Promise<void> {
@@ -153,7 +153,7 @@ defineExpose({ reload: state.load, board: current })
           :can-create="can.create"
           :can-toggle="can.move"
           :grabbed-id="mover.grabbed.value"
-          :dragging-id="pointer.drag.active ? pointer.drag.card?.id ?? null : null"
+          :dragging-id="pointer.drag.value.active ? pointer.drag.value.card?.id ?? null : null"
           :instructions-id="instructionsId"
           :locale="locale"
           @add="addCard"
@@ -164,13 +164,13 @@ defineExpose({ reload: state.load, board: current })
         />
       </div>
       <KanbanCard
-        v-if="pointer.drag.active && pointer.drag.card"
+        v-if="pointer.drag.value.active && pointer.drag.value.card"
         class="fa-kanban-card--ghost"
         aria-hidden="true"
-        :card="pointer.drag.card"
+        :card="pointer.drag.value.card"
         :today="state.today.value"
         :locale="locale"
-        :style="{ left: `${pointer.drag.x - pointer.drag.offsetX}px`, top: `${pointer.drag.y - pointer.drag.offsetY}px`, width: `${pointer.drag.width}px` }"
+        :style="{ left: `${pointer.drag.value.x - pointer.drag.value.offsetX}px`, top: `${pointer.drag.value.y - pointer.drag.value.offsetY}px`, width: `${pointer.drag.value.width}px` }"
       />
       <KanbanCardDetail
         :card="selected"

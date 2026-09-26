@@ -5,13 +5,15 @@ export interface IconProps {
   size?: number | string
   /** Mit Beschriftung ist das Symbol bedeutungstragend (role="img"), sonst dekorativ. */
   label?: string
+  /** Zusätzliche Klasse (wie ein durchgereichtes `class` in Vue). */
+  className?: string
 }
 
-export function Icon({ name, size = 18, label = '' }: IconProps) {
+export function Icon({ name, size = 18, label = '', className }: IconProps) {
   const dimension = typeof size === 'number' ? `${size}px` : size
   return (
     <svg
-      className="fa-icon"
+      className={className ? `fa-icon ${className}` : 'fa-icon'}
       viewBox="0 0 24 24"
       width={dimension}
       height={dimension}

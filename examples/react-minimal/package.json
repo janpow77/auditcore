@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@flowaudit/common": "file:../vendor/flowaudit-common.tgz",
+    "@flowaudit/kanban-core": "file:../vendor/flowaudit-kanban-core.tgz",
     "@flowaudit/ui-core": "file:../vendor/flowaudit-ui-core.tgz",
     "@flowaudit/ui-react": "file:../vendor/flowaudit-ui-react.tgz",
     "react": "^18.3.1",
