@@ -1,5 +1,15 @@
 # Changelog @auditcore/ui-react
 
+## Unreleased
+
+- Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`
+  (zusätzliche Kennzahlen des REST-Vertrags: Chi²-Test mit kritischen Werten,
+  auffällige Ziffern mit z je Ziffer), `autoAnalyse` (nach dem Laden und bei neuen
+  Werten analysieren) und `hideInputs` (Einbettung in Berichte). Vorgegebene
+  Kennzahlen sind im Formular abwählbar. Ohne `metrics` unverändert; ältere Server
+  ohne Kennzahlen werden unterstützt (Abschnitt entfällt).
+  Parität Vue ↔ React: zwei neue Fälle in `cases-benford.ts` und ein Abwahl-Test.
+
 ## 1.1.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui-react` statt `@flowaudit/ui-react` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-react-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.

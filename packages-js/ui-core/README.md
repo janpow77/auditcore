@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (849):
+Exporte der Einstiegspunkte aus `package.json#exports` (862):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -105,16 +105,21 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `AssessmentStatus` | Typ | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentSummary` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentView` | Schnittstelle | – | `dataprotection/types` |
+| `@auditcore/ui-core` | `BENFORD_METRIC_IDS` | Konstante | – | `benford/model` |
 | `@auditcore/ui-core` | `BadgeTone` | Typ | – | `base/types` |
 | `@auditcore/ui-core` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordBusy` | Typ | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordCallbacks` | Schnittstelle | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordCatalogue` | Schnittstelle | – | `benford/types` |
+| `@auditcore/ui-core` | `BenfordChiTexts` | Schnittstelle | – | `benford/view` |
 | `@auditcore/ui-core` | `BenfordController` | Typ | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordData` | Schnittstelle | Stand der Benford-Analyse; `error` ist die Meldung der letzten abgelehnten Anfrage. | `benford/controller` |
+| `@auditcore/ui-core` | `BenfordDigitZTexts` | Schnittstelle | – | `benford/view` |
 | `@auditcore/ui-core` | `BenfordDistribution` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordMessageKey` | Typ | – | `benford/messages` |
+| `@auditcore/ui-core` | `BenfordMetricId` | Typ | Zusätzliche, wählbare Kennzahlen (`metrics`, auditcore_statistics.significance). | `benford/types` |
 | `@auditcore/ui-core` | `BenfordMetricTexts` | Schnittstelle | – | `benford/view` |
+| `@auditcore/ui-core` | `BenfordMetricsRequest` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createBenfordRestPort`. | `benford/types` |
 | `@auditcore/ui-core` | `BenfordSource` | Schnittstelle | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordTest` | Typ | Typen des REST-Vertrags `docs/ui/benford-rest.md` (auditcore_statistics.web). | `benford/types` |
@@ -135,6 +140,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `ChartBar` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChartBox` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
+| `@auditcore/ui-core` | `ChiSquareMetric` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `ClientExportFormat` | Typ | – | `synopsis/types` |
 | `@auditcore/ui-core` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
 | `@auditcore/ui-core` | `ColumnPreview` | Schnittstelle | – | `reporting/types` |
@@ -205,6 +211,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `DiffField` | Typ | – | `synopsis/types` |
 | `@auditcore/ui-core` | `DiffSegment` | Schnittstelle | – | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `DiffSide` | Typ | – | `synopsis/wordDiff` |
+| `@auditcore/ui-core` | `DigitZMetric` | Schnittstelle | – | `benford/types` |
+| `@auditcore/ui-core` | `DigitZRow` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `DistributionRow` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `DossierFieldView` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `DsfaController` | Typ | – | `dataprotection/dsfa` |
@@ -568,6 +576,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `WorkbookPreview` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `WorkbookRequest` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `acceptsHit` | Funktion | – | `screening/view` |
+| `@auditcore/ui-core` | `activeMetrics` | Funktion | Vorgegebene Kennzahlen ohne die abgewählten; `null`, wenn keine übrig bleibt. | `benford/model` |
 | `@auditcore/ui-core` | `activityKey` | Funktion | Schlüssel einer Tätigkeit für die Zuordnung der Hinweise (Kennung, sonst Name wie in der Bibliothek). | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `addScenario` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `analyseErrorKey` | Funktion | – | `benford/view` |
@@ -583,9 +592,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `baseMessages` | Konstante | Texte der Basiskomponenten. | `messages` |
 | `@auditcore/ui-core` | `benfordBarTitle` | Funktion | Titel eines Balkens (Tooltip und Vorlesetext). | `benford/view` |
 | `@auditcore/ui-core` | `benfordChartTitle` | Funktion | – | `benford/view` |
+| `@auditcore/ui-core` | `benfordChiTexts` | Funktion | Texte der Kennzahl `chi_square` (kritische Werte je Niveau, Urteil nur mit Niveau). | `benford/view` |
 | `@auditcore/ui-core` | `benfordDigitColumns` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordDigitRows` | Funktion | – | `benford/view` |
+| `@auditcore/ui-core` | `benfordDigitZTexts` | Funktion | Texte der Kennzahl `digit_z` („auffällige Ziffern“ nur mit kritischem z-Wert). | `benford/view` |
 | `@auditcore/ui-core` | `benfordMessages` | Konstante | Texte der Benford-Analyse. | `benford/messages` |
+| `@auditcore/ui-core` | `benfordMetricLabel` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordMetricTexts` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordProfile` | Funktion | – | `benford/controller` |
 | `@auditcore/ui-core` | `benfordTickText` | Funktion | – | `benford/view` |
@@ -808,6 +820,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (849):
 | `@auditcore/ui-core` | `ndiffOperations` | Funktion | ndiff-Zeilen in Operationen übersetzen; Hinweiszeilen (`? `) entfallen. | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `needsShortValues` | Funktion | Zweistellige Tests (erste zwei Ziffern, zweite Ziffer) verlangen eine Regel für kurze Werte. | `benford/model` |
 | `@auditcore/ui-core` | `nextOpenHit` | Funktion | The next hit still needing work after ``currentId`` (open, deferred or pending). | `screening/view` |
+| `@auditcore/ui-core` | `offeredMetrics` | Funktion | Kennungen der vorgegebenen Kennzahlen in fester Reihenfolge (für die Auswahl im Formular). | `benford/model` |
 | `@auditcore/ui-core` | `pairs` | Funktion | Objekt als Liste `[Schlüssel, Wert]` in Einfügereihenfolge (für deklarative Tabellen). | `risk/state` |
 | `@auditcore/ui-core` | `parameterLabel` | Funktion | – | `risk/format` |
 | `@auditcore/ui-core` | `parameterUnit` | Funktion | Einheit hinter dem Eingabefeld (Prozent, Euro oder keine). | `sampling/view` |

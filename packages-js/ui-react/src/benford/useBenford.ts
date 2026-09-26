@@ -7,6 +7,7 @@ import {
   type BenfordAnalysis,
   type BenfordController,
   type BenfordData,
+  type BenfordMetricsRequest,
   type BenfordPort,
   type BenfordTranslate,
   type ConformityProfile,
@@ -22,6 +23,12 @@ export interface BenfordInputs {
   port?: BenfordPort | null
   values?: readonly (number | null)[]
   locale?: Locale
+  /** Zusätzliche Kennzahlen (Chi²-Test, auffällige Ziffern) mit ihren Parametern. */
+  metrics?: BenfordMetricsRequest | null
+  /** Nach dem Laden und bei neuen Werten sofort analysieren. */
+  autoAnalyse?: boolean
+  /** Werte und Formular ausblenden (Einbettung in Berichte, mit `autoAnalyse`). */
+  hideInputs?: boolean
   onAnalysisCompleted?: (result: BenfordAnalysis) => void
   onError?: (message: string) => void
 }
@@ -48,6 +55,8 @@ export function useBenford(props: BenfordInputs): UseBenford {
         analysed: (result) => latest.current.onAnalysisCompleted?.(result),
         failed: (message) => latest.current.onError?.(message),
       }),
+      metrics: () => latest.current.metrics,
+      autoAnalyse: () => latest.current.autoAnalyse,
     }),
   )
   const state = useStoreState(controller.store)
@@ -55,6 +64,8 @@ export function useBenford(props: BenfordInputs): UseBenford {
   useEffect(() => {
     void controller.load()
   }, [controller, props.port])
-  useEffect(() => controller.useValues(null), [controller, given])
+  useEffect(() => {
+    void controller.valuesChanged()
+  }, [controller, given])
   return { t, locale, controller, state, values: benfordValues(state, given), profile: benfordProfile(state) }
 }

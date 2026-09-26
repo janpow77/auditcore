@@ -1,5 +1,13 @@
 # Changelog @auditcore/ui-core
 
+## Unreleased
+
+- Benford: Typen `BenfordMetricsRequest`, `ChiSquareMetric`, `DigitZMetric`;
+  `activeMetrics`, `offeredMetrics`, `benfordChiTexts`, `benfordDigitZTexts`,
+  `benfordMetricLabel`; Controller mit `metrics`/`autoAnalyse` in der Quelle,
+  `valuesChanged()` und `setMetric()`. Fixture `benford-analysis-metrics.json`
+  aus `auditcore_statistics.web`.
+
 ## 0.2.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui-core` statt `@flowaudit/ui-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
