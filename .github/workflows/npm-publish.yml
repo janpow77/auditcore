@@ -1,0 +1,129 @@
+name: npm-publish
+# Veröffentlicht die @flowaudit-Pakete eines GitHub-Releases auf npmjs.org.
+# Nichts wird neu gebaut: veröffentlicht werden genau die signierten Tarballs
+# des Releases, nachdem Signatur (SHA256SUMS.asc), SHA-256, Größe und
+# npm-Integrität gegen npm-packages.json geprüft sind (scripts/npm_publish.py).
+# Reihenfolge nach Abhängigkeiten; bereits veröffentlichte Versionen mit
+# gleicher Integrität werden übersprungen. Vorabversionen (x.y.z-…) erhalten
+# den dist-tag "next", sonst "latest".
+# Anmeldung: Trusted Publishing (OIDC) für janpow77/auditcore und diese Datei;
+# ersatzweise das Secret NPM_TOKEN (nur für die Erstveröffentlichung).
+# Einrichtung: docs/deployment/npm-veroeffentlichung.md
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release-Tag, z. B. v0.4.2"
+        required: true
+      dry_run:
+        description: "Nur prüfen und Plan ausgeben, nichts veröffentlichen"
+        type: boolean
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+env:
+  TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.tag }}
+  # Fingerprint des Release-Schlüssels (docs/deployment/package-feed.md).
+  RELEASE_KEY: E427F95CC37CBFD0876314CA0D1580A6CAE37327
+jobs:
+  verify:
+    # Beim Release nur, wenn die Veröffentlichung freigeschaltet ist
+    # (Repository-Variable NPM_PUBLISH_ENABLED=true); manuell immer.
+    if: github.event_name == 'workflow_dispatch' || vars.NPM_PUBLISH_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      has_npm: ${{ steps.assets.outputs.has_npm }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Release-Dateien laden
+        id: assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! printf '%s' "$TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::Ungültiger Tag: $TAG"; exit 1
+          fi
+          names=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets -q '.assets[].name')
+          if ! printf '%s\n' "$names" | grep -qx 'npm-packages.json'; then
+            echo "::notice::$TAG enthält keine npm-Pakete – nichts zu veröffentlichen."
+            echo "has_npm=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          mkdir assets
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir assets \
+            --pattern 'flowaudit-*.tgz' --pattern npm-packages.json \
+            --pattern SHA256SUMS --pattern SHA256SUMS.asc --pattern auditcore-preview-keyring.gpg
+          echo "has_npm=true" >> "$GITHUB_OUTPUT"
+      - name: Signatur prüfen
+        if: steps.assets.outputs.has_npm == 'true'
+        working-directory: assets
+        run: |
+          found=$(gpg --show-keys --with-colons auditcore-preview-keyring.gpg | awk -F: '$1=="fpr"{print $10}')
+          if [ "$found" != "$RELEASE_KEY" ]; then
+            echo "::error::Unerwarteter Release-Schlüssel: $found"; exit 1
+          fi
+          gpgv --keyring ./auditcore-preview-keyring.gpg SHA256SUMS.asc SHA256SUMS
+          sha256sum --check --ignore-missing --strict SHA256SUMS
+      - name: Tarballs gegen npm-packages.json prüfen und Plan erstellen
+        if: steps.assets.outputs.has_npm == 'true'
+        run: python scripts/npm_publish.py --assets assets --tag "$TAG" --report assets/npm-publish-plan.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: steps.assets.outputs.has_npm == 'true'
+        with:
+          name: npm-release-assets
+          path: assets/
+          if-no-files-found: error
+  publish:
+    needs: verify
+    if: needs.verify.outputs.has_npm == 'true' && (github.event_name == 'release' || !inputs.dry_run)
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/org/flowaudit
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/npm_publish.py
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      # Trusted Publishing braucht npm >= 11.5.1.
+      - run: npm install --global npm@11.16.0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: npm-release-assets
+          path: assets/
+      - name: Veröffentlichen
+        env:
+          # Leer bei Trusted Publishing; dann meldet sich npm per OIDC an.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Erneute Prüfung nach dem Artefakt-Transport, dann Veröffentlichung.
+          python scripts/npm_publish.py --assets assets --tag "$TAG" --publish \
+            --report npm-publish-report.json
+          python -c 'import json;[print(s["name"], s["version"], s["action"], s.get("dist_tag", "")) for s in json.load(open("npm-publish-report.json"))["steps"]]' \
+            >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: npm-publish-report
+          path: npm-publish-report.json
+          if-no-files-found: ignore

@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "description": "Native React-Komponenten (React 18 und 19) der FlowAudit-Oberflächen (Basis, Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening, Stichprobe, Benford, Dokumentvergleiche, Geo-Karte, Kanban) auf Basis von @flowaudit/ui-core und @flowaudit/kanban-core, ohne Vue",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/ui-react"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/ui-react#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -46,5 +55,9 @@
     "@flowaudit/common": "0.1.0",
     "@flowaudit/ui-core": "0.1.0",
     "@flowaudit/kanban-core": "0.2.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

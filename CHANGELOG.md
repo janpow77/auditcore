@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- npm-Veröffentlichung der `@flowaudit`-Pakete: Workflow `npm-publish`
+  veröffentlicht nach einem GitHub-Release (oder von Hand mit Tag, standardmäßig
+  als Probelauf) genau die signierten Release-Tarballs auf npmjs.org, nach
+  Prüfung von Signatur, SHA-256, Größe und npm-Integrität gegen
+  `npm-packages.json` (`scripts/npm_publish.py`), in Abhängigkeitsreihenfolge,
+  idempotent (gleiche Version mit gleicher Integrität wird übersprungen, mit
+  anderem Inhalt nie überschrieben und als Fehler gemeldet), `--provenance`, dist-tag `next` für
+  Vorabversionen. Anmeldung per Trusted Publishing, für die Erstveröffentlichung
+  per Secret `NPM_TOKEN`; Automatik erst mit der Variable
+  `NPM_PUBLISH_ENABLED`. Alle `package.json` unter `packages-js/` mit
+  `repository` (nötig für Provenance), `homepage`, `bugs` und
+  `publishConfig.access=public`. Installationsdoku: `npm install
+  @flowaudit/<paket>` als Standardweg, Tarball-URL für Intranet/offline;
+  Einrichtung in `docs/deployment/npm-veroeffentlichung.md`. Keine
+  Versionsanhebung.
+
 - Neues Paket `auditcore_extrapolation` 0.1.0: Hochrechnung von
   Stichprobenfehlern für Prüfbehörden nach dem KOM-Leitfaden EGESIF_16-0014-01
   (Mittelwert-, Verhältnis- und Differenzenschätzung, MUS Standard/geschichtet/

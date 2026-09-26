@@ -123,9 +123,19 @@ python -m pip install auditcore-geo \
 
 **Vue, React oder Web Components** (Details, Integritätsprüfung, `vendor/`-Ablage
 und REST-Gegenstellen in
-[frontend-installation.md](docs/deployment/frontend-installation.md)). Die
-npm-Pakete sind noch nicht auf npm veröffentlicht; sie liegen als Tarballs im
-Release, `npm-packages.json` nennt je Paket alle nötigen Tarball-URLs:
+[frontend-installation.md](docs/deployment/frontend-installation.md)).
+Standardweg ist die npm-Registry (Veröffentlichung nach jedem Release durch
+den Workflow `npm-publish`, Einrichtung in
+[npm-veroeffentlichung.md](docs/deployment/npm-veroeffentlichung.md)):
+
+```bash
+npm install @flowaudit/ui vue                     # Vue und Web Components
+npm install @flowaudit/ui-react react react-dom   # React, ohne Vue
+```
+
+Ohne Registry-Zugang (Intranet, offline) liegen dieselben Pakete als signierte
+Tarballs im Release; `npm-packages.json` nennt je Paket alle nötigen
+Tarball-URLs:
 
 ```bash
 BASE=https://github.com/janpow77/auditcore/releases/download/v<release>

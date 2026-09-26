@@ -3,6 +3,15 @@
   "version": "0.2.0",
   "description": "Vue-3-Oberfläche für den FlowAudit-BPMN-Editor: Editor, Eigenschaften, Sammlung, Prüfbehörden-Ansichten, Web Component und eigenständige App (MIT)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/janpow77/auditcore.git",
+    "directory": "packages-js/bpmn-vue"
+  },
+  "homepage": "https://github.com/janpow77/auditcore/tree/main/packages-js/bpmn-vue#readme",
+  "bugs": {
+    "url": "https://github.com/janpow77/auditcore/issues"
+  },
   "type": "module",
   "sideEffects": [
     "*.css",
@@ -52,5 +61,9 @@
     "@vue/test-utils": "^2.4.6",
     "vue": "^3.5.22",
     "vue-tsc": "^3.1.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
