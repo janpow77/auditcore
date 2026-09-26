@@ -1,6 +1,6 @@
 {
   "schema": "auditcore_price_sources.catalog/1",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "sources": [
     {
       "source_id": "price.bundesbank",
