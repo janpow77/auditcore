@@ -1,0 +1,117 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "fingerprint": "0aee56b94ff817114f92170da16fc080371c2e65236c349b09607b617414ea9d",
+ "method": {
+  "id": "mus.standard",
+  "label": "MUS – Standardansatz",
+  "statistical": true,
+  "selection": "pps",
+  "stratification": true,
+  "source": "EGESIF_16-0014-01, Abschn. 6.3.1, 6.3.2; Anhang 1, 4.1",
+  "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
+  "needs_population_size": false,
+  "needs_sample_size": false
+ },
+ "projection": {
+  "method": "mus.standard",
+  "projected_random_error": 14000.0,
+  "precision": 16450.0,
+  "confidence_level": 0.9,
+  "factor_profile": "kom_2017_tables",
+  "coefficient": 1.645,
+  "strata": [
+   {
+    "name": "Programm",
+    "projected_error": 14000.0,
+    "exhaustive_error": 4000.0,
+    "sample_size": 4,
+    "sampling_book_value": 800000.0,
+    "figures": {
+     "interval": 200000.0,
+     "tainting_sum": 0.05,
+     "sd_rates": 0.025
+    }
+   }
+  ],
+  "sample_errors": {
+   "random": 5000.0,
+   "systemic": 500.0,
+   "anomalous_uncorrected": 0.0,
+   "anomalous_corrected": 800.0
+  },
+  "systemic_population": 2000.0,
+  "steps": [
+   {
+    "label": "Hochgerechneter Fehler Schicht Programm",
+    "formula": "EE_e + BV_s / n_s × Σ E_i / BV_i",
+    "value": 14000.0,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.1.4"
+   },
+   {
+    "label": "z-Wert",
+    "formula": "z",
+    "value": 1.645,
+    "source": "EGESIF_16-0014-01, Abschn. 5.3"
+   },
+   {
+    "label": "Präzision",
+    "formula": "SE = z × √(Σ BV_hs² / n_hs × s_rh²)",
+    "value": 16450.0,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.1.5"
+   }
+  ],
+  "warnings": [
+   "1 Einheit(en) mit anomalem Fehler aus der Hochrechnung ausgenommen. Anomale Fehler sind nur in sehr außergewöhnlichen, gut begründeten Fällen anzunehmen (Leitfaden, Anhang 6); nicht korrigierte anomale Fehler gehen in die TER ein."
+  ],
+  "extra": {}
+ },
+ "total_error_rate": {
+  "book_value": 1000000.0,
+  "materiality_rate": 0.02,
+  "tolerable_error": 20000.0,
+  "projected_random_error": 14000.0,
+  "systemic_errors": 2000.0,
+  "anomalous_uncorrected": 0.0,
+  "anomalous_corrected_excluded": 800.0,
+  "total_error": 16000.0,
+  "rate": 0.016,
+  "precision": 16450.0,
+  "upper_limit": 32450.0,
+  "upper_limit_rate": 0.03245,
+  "conclusion": "inconclusive",
+  "explanation": [
+   "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Wesentlichkeitsschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
+   "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1).",
+   "Abgegrenzte systemische Fehler sind nicht hochgerechnet, sondern mit ihrem abgegrenzten Betrag enthalten (Leitfaden, Anhang 1).",
+   "Korrigierte anomale Fehler sind nicht Teil der Gesamtfehlerquote."
+  ],
+  "steps": [
+   {
+    "label": "Tolerierbarer Fehler",
+    "formula": "TE = Wesentlichkeit × BV",
+    "value": 20000.0,
+    "source": "EGESIF_16-0014-01, Abschn. 4.10"
+   },
+   {
+    "label": "Gesamtfehler",
+    "formula": "EE + systemische + nicht korrigierte anomale Fehler",
+    "value": 16000.0,
+    "source": "EGESIF_16-0014-01, Anhang 1"
+   },
+   {
+    "label": "Gesamtfehlerquote (TER)",
+    "formula": "TER / BV",
+    "value": 0.016,
+    "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
+   },
+   {
+    "label": "Fehlerobergrenze",
+    "formula": "ULE = TER + SE",
+    "value": 32450.0,
+    "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
+   }
+  ],
+  "difference": null
+ }
+}

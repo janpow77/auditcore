@@ -1,0 +1,92 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "fingerprint": "7dc7d459406aef487724d001b495bf3acac71c1e30cd53522df8b06d0efffe1f",
+ "residual_error_rate": {
+  "source": "CPRE_23-0013-01 Annex 3",
+  "rate": 0.022948191201523197,
+  "rate_rounded": 0.0229,
+  "exceeds_materiality": true,
+  "materiality_rate": 0.02,
+  "extrapolated_correction": 3.0020408163265304,
+  "rate_after_correction": 0.02,
+  "rows": [
+   {
+    "row": "A",
+    "label": "Prüfpopulation",
+    "value": 1000.0,
+    "exact": "1000"
+   },
+   {
+    "row": "D",
+    "label": "Gesamtfehlerquote (TER)",
+    "value": 0.025,
+    "exact": "0.025"
+   },
+   {
+    "row": "E1",
+    "label": "Beträge in laufender Bewertung (Art. 98 Abs. 6)",
+    "value": 0.0,
+    "exact": "0"
+   },
+   {
+    "row": "E2",
+    "label": "Sonstige negative Beträge des Geschäftsjahres",
+    "value": 0.0,
+    "exact": "0"
+   },
+   {
+    "row": "F=A-E1-E2",
+    "label": "Bereinigte Grundgesamtheit",
+    "value": 1000.0,
+    "exact": "1000"
+   },
+   {
+    "row": "G=D*F",
+    "label": "Risikobetrag",
+    "value": 25.0,
+    "exact": "25.000"
+   },
+   {
+    "row": "H",
+    "label": "Finanzkorrekturen",
+    "value": 2.1,
+    "exact": "2.1"
+   },
+   {
+    "row": "I=F-H",
+    "label": "In der Rechnungslegung geltend zu machende Ausgaben",
+    "value": 997.9,
+    "exact": "997.9"
+   },
+   {
+    "row": "J=G-H",
+    "label": "Verbleibender Risikobetrag",
+    "value": 22.9,
+    "exact": "22.900"
+   },
+   {
+    "row": "K=J/I",
+    "label": "Restfehlerquote (RER)",
+    "value": 0.022948191201523197,
+    "exact": "0.02294819120152319871730634332"
+   },
+   {
+    "row": "L=(J-0.02*I)/0.98",
+    "label": "Hochgerechnete Finanzkorrektur bis zur Wesentlichkeit",
+    "value": 3.0020408163265304,
+    "exact": "3.002040816326530612244897959"
+   },
+   {
+    "row": "M=(J-L)/(I-L)",
+    "label": "RER nach hochgerechneter Korrektur",
+    "value": 0.02,
+    "exact": "0.02"
+   }
+  ],
+  "not_applicable": null,
+  "notes": [
+   "RER nach Art. 2 Nr. 36 Verordnung (EU) 2021/1060; nicht mit der Gesamtfehlerquote (TER) zu verwechseln."
+  ]
+ }
+}

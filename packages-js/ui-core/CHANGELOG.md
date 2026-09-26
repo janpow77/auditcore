@@ -4,6 +4,11 @@
 
 Erste Fassung, herausgelöst aus `@flowaudit/ui` 0.2.0.
 
+- Hochrechnung: Vertrag `auditcore_extrapolation.evaluation/1`, REST-Port
+  `createExtrapolationRestPort`, Formularlogik (`buildEvaluationRequest`,
+  `buildResidualRequest`), Zustandsautomat `createExtrapolationController`,
+  Anzeige (`terMetrics`, `residualMetrics`, Herleitung), Stile
+  `styles/extrapolation.css`, Paritätsfälle `cases-extrapolation.ts`.
 - Sprachkern (`defineMessages`, `translate`, `translator`, Standardsprache mit
   Beobachtern), Texte der Basiskomponenten, Synopse und Datenschutz.
 - Synopse: Datentypen `auditcore_documents.web`, Wortvergleich, View-Model,

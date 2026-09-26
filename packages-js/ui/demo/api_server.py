@@ -1,7 +1,8 @@
 """Demo-Backend für die REST-Seiten der Komponenten-Demo.
 
 Startet die REST-Router von auditcore_sampling.web (/api/sampling),
-auditcore_statistics.web (/api/benford) und auditcore_registry_sources.web
+auditcore_statistics.web (/api/benford), auditcore_extrapolation.web
+(/api/extrapolation) und auditcore_registry_sources.web
 (/api/screening, erfundene Demo-Daten aus screening_demo.py),
 auditcore_dataprotection.web (/api/dataprotection, dataprotection_demo.py),
 auditcore_documents.web (/api/synopsis, synthetische Dokumente aus
@@ -20,6 +21,7 @@ from __future__ import annotations
 import os
 
 import uvicorn
+from auditcore_extrapolation.web import routes as extrapolation_routes
 from auditcore_identifiers.web import routes as identifier_routes
 from auditcore_reporting.web import routes as reporting_routes
 from auditcore_sampling.web import routes as sampling_routes
@@ -38,6 +40,7 @@ app = Starlette(
     routes=[
         Mount("/api/sampling", routes=sampling_routes()),
         Mount("/api/benford", routes=benford_routes()),
+        Mount("/api/extrapolation", routes=extrapolation_routes()),
         Mount("/api/reporting", routes=reporting_routes()),
         Mount("/api/identifiers", routes=identifier_routes()),
         Mount("/api/screening", routes=screening_routes()),

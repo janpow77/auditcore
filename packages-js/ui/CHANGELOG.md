@@ -2,6 +2,15 @@
 
 ## 0.3.0 – unveröffentlicht
 
+- **Hochrechnung und Fehlerquoten:** `ExtrapolationPanel`
+  (`<flowaudit-extrapolation>`) für `auditcore_extrapolation.web`: Methode,
+  Konfidenzniveau und Faktorprofil wählen, Schichten und geprüfte Einheiten mit
+  zufälligen, systemischen und anomalen Fehlern erfassen, Gesamtfehlerquote
+  (TER) mit Präzision, Fehlerobergrenze, Ergebnis nach KOM-Leitfaden,
+  Erläuterung und Herleitung, CSV/JSON-Export; getrennt davon die
+  Restfehlerquote (RER) nach der Vorlage CPRE_23-0013-01 Annex 3. Logik im
+  Kern (`createExtrapolationController`), Paritätsfälle für React, Demo-Seite
+  „Hochrechnung (TER/RER)“ und Browserprüfung `extrapolation.api-e2e.ts`.
 - **Dokumentvergleiche:** `FaComparisons` (`<flowaudit-comparisons>`) mit
   `ComparisonForm` und `ComparisonList` verwaltet Vergleiche über
   `auditcore_documents.web`: Hochladen zweier Fassungen (DOCX, DOCM, PDF) mit

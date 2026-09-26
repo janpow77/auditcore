@@ -7,9 +7,10 @@ Stichprobenumfänge (MUS, einfache Zufallsstichprobe), systematische MUS-Auswahl
 Für Prüfanwendungen wie flowstat und audit-portal, die Stichproben
 nachvollziehbar und mit Seed reproduzierbar ziehen müssen. Die Bibliothek
 wählt keine Methode still: Maßgeblich für MUS ist nach der Entscheidung vom
-23.09.2026 `portal.mus_poisson`. Zwei-Perioden-Verfahren,
-Differenzschätzung, Fehlerprojektion und nicht-statistische Auswahl gehören
-(noch) nicht dazu.
+23.09.2026 `portal.mus_poisson`. Zwei-Perioden-Verfahren und
+nicht-statistische Auswahl gehören (noch) nicht dazu; Hochrechnung,
+Fehlerquoten (TER/RER) und Differenzenschätzung stehen in
+`auditcore_extrapolation`.
 
 ## Installation
 

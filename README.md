@@ -32,7 +32,7 @@ erzeugt; jede Paket-README folgt der
 [README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-35 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+36 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
@@ -53,6 +53,7 @@ erzeugt; jede Paket-README folgt der
 | [`auditcore_documents`](packages/auditcore_documents) | 0.3.3 | Dokumentvergleich (Checklisten und Fließtext aus DOCX/PDF), Gesetzessynopse für Artikelgesetze und ein frameworkunabhängiger Kern der Dokumentpipeline mit OCR-Ports. | `auditcore_common==0.1.1`, `auditcore_identifiers==0.1.0`; Extras: `docx`, `pdf-text`, `fuzzy`, `docx-render`, `pdf-render`, `mime`, `ocr-raster`, `donut`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_dummygenerator`](packages/auditcore_dummygenerator) | 0.1.2 | Frameworkunabhängiger Generator für synthetische Testdaten: einzelne Felder (Namen, Adressen, Kennungen, Beträge, Datumswerte) und ganze Zeilen mit festem Seed und Bezugsdatum. | keine; Extras: `parallel` | charakterisiert |
 | [`auditcore_entity_matching`](packages/auditcore_entity_matching) | 0.2.3 | Nachvollziehbare Normalisierung von Firmen- und Personennamen nach benannten, versionierten Profilen, LEI-Prüfung nach ISO 17442 und transparente unscharfe Abgleiche. | `auditcore_common==0.1.1`; Extras: `fuzzy` | charakterisiert |
+| [`auditcore_extrapolation`](packages/auditcore_extrapolation) | 0.1.0 | Hochrechnung von Stichprobenfehlern für Prüfbehörden nach dem KOM-Leitfaden zur Stichprobenziehung: Präzision, Fehlerobergrenze, Gesamtfehlerquote (TER) und getrennt davon die Restfehlerquote (RER). | `auditcore_common==0.1.1`; Extras: `web` | neu |
 | [`auditcore_geo`](packages/auditcore_geo) | 0.3.0 | Charakterisierter Geokern ohne Fremdabhängigkeiten: Großkreisentfernung mit ausdrücklichem Erdmodell, Umkreissuche, Punkt in Fläche mit erkanntem Rand, UTM, GeoPackage-Polygone und Douglas-Peucker. | `auditcore_common==0.1.1`; Extras: `geocoder`, `web`, `fastapi` | charakterisiert |
 | [`auditcore_invoicegenerator`](packages/auditcore_invoicegenerator) | 0.2.2 | Synthetische Testrechnungen mit vollständigen Parteien, Positionen, Beträgen und Datumsfeldern, expliziten Fehlerfällen und einem charakterisierten historischen Flowinvoice-Profil; JSON-Ausgabe, PDF optional. | `auditcore_dummygenerator==0.1.2`; Extras: `pdf` | charakterisiert |
 | [`auditcore_invoicesynth`](packages/auditcore_invoicesynth) | 0.1.2 | Synthetische Trainings- und Testdaten für eine Donut-basierte Erkennung deutscher und österreichischer Rechnungen: Rechnungsbilder, Ziel-JSON, Manifest mit Datensatz-Hash und Bewertung. | `auditcore_common==0.1.1`, `auditcore_invoicegenerator==0.2.2`; Extras: `render`, `train` | neu |

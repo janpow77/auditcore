@@ -115,7 +115,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (232):
+Exporte der Einstiegspunkte aus `package.json#exports` (241):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -161,10 +161,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (232):
 | `@flowaudit/ui-react` | `DownloadFile` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `DsfaStep` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `Evaluation` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `EvaluationResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExportPayload` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExtractionInputs` | Schnittstelle | – | `extraction/useExtraction` |
 | `@flowaudit/ui-react` | `ExtractionPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ExtractionRun` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ExtrapolationInputs` | Schnittstelle | – | `extrapolation/useExtrapolation` |
+| `@flowaudit/ui-react` | `ExtrapolationPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `FetchLike` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `FlowauditBenford` | Funktion | Benford-Analyse als native React-Komponente (Vertrag wie `<flowaudit-benford>`): Werte (Eigenschaft oder Datei), Test, Bewertungsprofil, Kennzahlen mit MAD, Chi² und z je Ziffer, S … | `benford/FlowauditBenford` |
 | `@flowaudit/ui-react` | `FlowauditBenfordProps` | Typ | – | `benford/FlowauditBenford` |
@@ -177,6 +180,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (232):
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditExtraction` | Funktion | Belegerkennung als native React-Komponente (Vertrag wie `<flowaudit-extraction>`): Dokument hochladen, Profil wählen, erkannte Felder mit Konfidenz und Validierungsbefunde. | `extraction/FlowauditExtraction` |
 | `@flowaudit/ui-react` | `FlowauditExtractionProps` | Typ | – | `extraction/FlowauditExtraction` |
+| `@flowaudit/ui-react` | `FlowauditExtrapolation` | Funktion | Hochrechnung von Stichprobenfehlern als native React-Komponente (Vertrag wie `<flowaudit-extrapolation>`): Methode und Konfidenzniveau, Schichten und geprüfte Einheiten mit zufälli … | `extrapolation/FlowauditExtrapolation` |
+| `@flowaudit/ui-react` | `FlowauditExtrapolationProps` | Typ | – | `extrapolation/FlowauditExtrapolation` |
 | `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditIdentifierCheck` | Funktion | „Kennung prüfen“ als native React-Komponente (Vertrag wie `<flowaudit-identifier-check>`): Prüfprofil, Einzelprüfung mit Begründung und Stapelprüfung aus einer Tabelle. | `identifiers/FlowauditIdentifierCheck` |
@@ -241,6 +246,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (232):
 | `@flowaudit/ui-react` | `ReportExportInputs` | Schnittstelle | – | `reporting/useReportExport` |
 | `@flowaudit/ui-react` | `ReportTableInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ReportingPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ResidualResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `RestError` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RestOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RiskFilter` | Re-Export | – | `@flowaudit/ui-core` |
@@ -286,6 +292,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (232):
 | `@flowaudit/ui-react` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@flowaudit/ui-react` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
 | `@flowaudit/ui-react` | `UseExtraction` | Schnittstelle | – | `extraction/useExtraction` |
+| `@flowaudit/ui-react` | `UseExtrapolation` | Schnittstelle | – | `extrapolation/useExtrapolation` |
 | `@flowaudit/ui-react` | `UseIdentifierCheck` | Schnittstelle | – | `identifiers/useIdentifierCheck` |
 | `@flowaudit/ui-react` | `UseReportExport` | Schnittstelle | – | `reporting/useReportExport` |
 | `@flowaudit/ui-react` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
@@ -303,6 +310,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (232):
 | `@flowaudit/ui-react` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createExtractionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createExtrapolationRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createIdentifiersRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createMemoryRecordPort` | Re-Export | – | `@flowaudit/kanban-core` |
@@ -337,6 +345,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (232):
 | `@flowaudit/ui-react` | `useDebouncedCallback` | Funktion | Entprellte, stabile Funktion; ruft immer die neueste `fn` auf und verwirft einen ausstehenden Aufruf beim Unmount. | `hooks/state` |
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
 | `@flowaudit/ui-react` | `useExtraction` | Funktion | React-Anbindung der Belegerkennung aus `@flowaudit/ui-core` (dieselbe Logik wie `useExtraction` in Vue). | `extraction/useExtraction` |
+| `@flowaudit/ui-react` | `useExtrapolation` | Funktion | React-Anbindung der Hochrechnung aus `@flowaudit/ui-core` (dieselbe Logik wie `useExtrapolation` in Vue). | `extrapolation/useExtrapolation` |
 | `@flowaudit/ui-react` | `useIdentifierCheck` | Funktion | React-Anbindung von „Kennung prüfen“ aus `@flowaudit/ui-core` (dieselbe Logik wie `useIdentifierCheck` in Vue). | `identifiers/useIdentifierCheck` |
 | `@flowaudit/ui-react` | `useKanbanBoard` | Funktion | – | `kanban/useKanbanBoard` |
 | `@flowaudit/ui-react` | `useKanbanMover` | Funktion | Verschieben per Tastatur und Zeiger über dem Board-Controller. | `kanban/useKanbanBoard` |

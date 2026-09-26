@@ -37,6 +37,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Tabellenexport (Excel) | `ReportExportPanel` | `FlowauditReportExport` | `reporting_ui/1` ([reporting-rest.md](reporting-rest.md)) | 6 + Interaktionsfolge |
 | Kennung prüfen | `IdentifierCheck` | `FlowauditIdentifierCheck` | `identifiers_ui/1` ([identifiers-rest.md](identifiers-rest.md)) | 4 + 2 Interaktionsfolgen |
 | Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
+| Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 4 + 2 Interaktionsfolgen |
 
 ## Nachweis
 

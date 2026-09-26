@@ -8,7 +8,7 @@ FlowAudit-Anwendungen. Jede Komponente gibt es
 3. als **native React-18-Komponente** in `@flowaudit/ui-react`
    (`packages-js/ui-react`) – Tabelle, Synopse, VVT, DSFA, Geo-Karte,
    Risiko-Merkmale, Screening, Stichprobe, Benford, Belegerkennung, Dokumentvergleiche,
-   Kanban und Datenbankansicht (React 18 und 19).
+   Hochrechnung, Kanban und Datenbankansicht (React 18 und 19).
 
 Fachlogik, Texte, Verträge, View-Modelle, Zustandsautomaten und Stile liegen
 framework-frei in **`@flowaudit/ui-core`** (`packages-js/ui-core`); Vue und
@@ -117,7 +117,7 @@ Umlauten und stehen ausschließlich in `messages.ts`.
 - **Browser:** `npm run demo:build -w packages-js/ui && npm run e2e -w packages-js/ui`
   (Playwright gegen die gebaute Demo; `FA_SCREENSHOTS=<ordner>` legt
   Bildschirmfotos ab). Jede Komponente ergänzt `e2e/<komponente>.e2e.ts`.
-  Komponenten, deren Demo ein Python-Backend braucht (Stichprobe, Benford),
+  Komponenten, deren Demo ein Python-Backend braucht (Stichprobe, Benford, Hochrechnung),
   legen `e2e/<komponente>.api-e2e.ts` an; `npm run e2e:api -w packages-js/ui`
   startet dafür `demo/api_server.py` (Python über `FA_DEMO_PYTHON`, mit den
   Extras `web` der Pakete und `uvicorn`) und die gebaute Demo mit Proxy `/api`.

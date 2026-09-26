@@ -1,0 +1,6 @@
+export { extrapolationMessages, type ExtrapolationMessageKey } from './messages'
+export * from './model'
+export { createExtrapolationRestPort } from './rest-port'
+export type * from './types'
+export * from './controller'
+export * from './view'
