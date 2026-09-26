@@ -123,6 +123,7 @@ Betrag 40.000,00 über 25.000,00; Vergabekennung fehlt; Kostenart vergaberelevan
 | `auditcore_risk.field_rules` | Field rule kinds: comparisons, missing values, dates and duplicate keys per record. |
 | `auditcore_risk.frame` | pandas adapter (extra ``pandas``): drop-in functions for frame-based consumers. |
 | `auditcore_risk.fraud` | Fraud-check mechanics of flowinvoice ``fraud_detection`` as profile-driven functions. |
+| `auditcore_risk.fraud_display` | Display facts of ``signal_score`` profiles: codes per sub-check, labels and severities. |
 | `auditcore_risk.fraud_duplicates` | ``duplicates``: exact and fuzzy invoice duplicates among pre-selected candidates. |
 | `auditcore_risk.fraud_profile` | The fraud-check profile type shared by the three fraud mechanics. |
 | `auditcore_risk.fraud_profiles` | – |
