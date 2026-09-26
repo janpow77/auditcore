@@ -1,4 +1,6 @@
 export { default as FaDbKanban } from './FaDbKanban.vue'
+export { default as DbKanbanColumn } from './DbKanbanColumn.vue'
+export { default as DbKanbanCard } from './DbKanbanCard.vue'
 export { dbKanbanElement } from './element'
 export { useDbKanban, type DbKanbanSource, type UseDbKanban } from './useDbKanban'
 /** Kern aus `@flowaudit/ui-core` (Zustandsautomat, Anzeige) und `@flowaudit/kanban-core` (Gruppierung, Port). */

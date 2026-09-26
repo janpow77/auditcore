@@ -24,6 +24,27 @@ Noch keine Änderungen.
   sind, baut der Workflow genau diese Abhängigkeiten aus demselben
   Repository-Stand (`docker/train/deps_source.py`, Label `auditcore.deps=repo`).
   Sonst bleiben sie hashgebunden aus dem Release.
+- Vue ↔ React per Code erzwungen statt nur dokumentiert:
+  `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`, fail closed in
+  `js-packages` und im Pflicht-Job `code-quality-gate`) leitet die
+  öffentlichen Komponenten aus den Quellen ab (Exporte, `ELEMENTS`,
+  `defineCustomElement`; TypeScript-Compiler-API) und prüft je Komponente die
+  native React-Fassung und umgekehrt, je Gruppe Kernmodul mit Controller und
+  Stil sowie `cases-<gruppe>.ts`, die ein Vue- und ein React-Paritätstest
+  importieren, und dass das React-Paket kein Vue lädt. Ausnahmen nur
+  befristet in `quality/ui-parity-exceptions.json` (Ratchet: nur Abbau).
+  Generator `npm run ui:neu -- <gruppe> <Komponente>` erzeugt Kern,
+  Stil, Vue-SFC, Web Component, React-Komponente, Exporte, Paritätsfälle,
+  beide Paritätstests und Doku-Stub; das Gerüst besteht Lint, Typprüfung,
+  Tests und Gate (`npm run test:scripts`). Bestand: Vue exportiert jetzt auch
+  `KanbanToolbar`, `CardAppearance`, `CardChecklistEditor`, `CardReferences`,
+  `CardTagsEditor`, `ColumnEditorRow`, `DbKanbanColumn`, `DbKanbanCard` (wie
+  React); neue Paritätsfälle für den Datei-Import (`TableImport`) und die
+  BPMN-Basis (`FaIcon`, `BaseDialog`); `cases.ts` aufgeteilt in
+  `cases-synopsis.ts`/`cases-table.ts`, BPMN-Seitenansichten in
+  `cases-views.ts`; Kern `ui-core/src/table/` und `ui-core/src/base/index.ts`.
+  Drei befristete Ausnahmen (Controller für Basis und Tabelle,
+  Paritätsfälle der BPMN-Web-Component).
 - npm-Veröffentlichung der `@flowaudit`-Pakete: Workflow `npm-publish`
   veröffentlicht nach einem GitHub-Release (oder von Hand mit Tag, standardmäßig
   als Probelauf) genau die signierten Release-Tarballs auf npmjs.org, nach
