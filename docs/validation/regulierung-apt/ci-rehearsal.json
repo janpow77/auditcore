@@ -2,61 +2,62 @@
   "status": "PASS",
   "builder": "Ubuntu 24.04 (deploy/apt/Dockerfile.build) CPython 3.12.3",
   "exit_code": 0,
-  "command": "python deploy/apt/ci_build.py --auditcore <auditcore@e1706fc> --auditcore-ref e1706fc6d1771a1b1d18feeec77b7086e0078947 --version <v> --output <dir>",
+  "command": "python deploy/apt/ci_build.py --auditcore <auditcore@4d6202e> --auditcore-ref 4d6202ea29345c4f3c0a4d186893e8da5c13def0 --version <v> --output <dir>",
+  "regulierung_commit": "5458d2e8161d33015fd6222917735eb55ca8cecf",
   "packages": [
     {
-      "version": "0.1.0~preview.20260926-1",
-      "sha256": "699c45438de0358c5e244c17b0a2b8d8a3f8705da02a746ce48d886c0696c8f6"
+      "version": "0.1.0~preview.20260926-21",
+      "sha256": "b91fe7e917be14ec0a3e4245c20835b326baeebcda325a4c3a0ca7082e2db99d"
     },
     {
-      "version": "0.1.0~preview.20260926-2",
-      "sha256": "88656b9b0bc219bdc9ebd41a2b35cfe8f07613d60543cd699a3766eea289bcc6"
+      "version": "0.1.0~preview.20260926-22",
+      "sha256": "34d9e8ec1c11ae4d6d86a80b69891d8e7044a8afb90145ebef4a155f65abb03d"
     }
   ],
-  "scope": "Tatsächliche ci_build.py-Ausführung: öffentliche Wheels gegen feste Hashes geladen, auditcore-Bibliotheken als Release-Wheels v0.4.0 über URL + SHA-256 (kein Neubau aus dem Quellstand), Offline-Installation, SBOM und Debian-Paket",
-  "lock_sha256": "1457f0d0f44c9dd528fef8ed7f4efb986db8ad29cf6154aa672aef49b33234c4",
+  "scope": "Tatsächliche ci_build.py-Ausführung: öffentliche Wheels gegen feste Hashes, auditcore-Bibliotheken als Release-Wheels v0.4.1 über URL + SHA-256, Offline-Installation, SBOM und Debian-Paket",
+  "lock_sha256": "542a5c1661987a9285682591b4c96dfaa0a1ca162ac72ce2fcc3554177fe90f0",
   "release_wheels": [
     {
       "package": "auditcore_auth",
       "version": "0.1.0",
       "sha256": "e5fa62b78c06d51527ba3fe208a52fd0c0345c38076fb673f63a40ded769f4e6",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_auth-0.1.0-py3-none-any.whl"
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_auth-0.1.0-py3-none-any.whl"
     },
     {
       "package": "auditcore_common",
-      "version": "0.1.0",
-      "sha256": "e8b83c282d5306a075f0f051e3f74865b619002272671e90cfc586918ef21eeb",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_common-0.1.0-py3-none-any.whl"
+      "version": "0.1.1",
+      "sha256": "5b6c5659de0d1bb7b8d2c175e295851a5be64a56223050d27c75645b13b90ebd",
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_common-0.1.1-py3-none-any.whl"
     },
     {
       "package": "auditcore_dataprotection",
-      "version": "0.4.3",
-      "sha256": "25f5478b1007ddbfadbc0212136032af3650db0a92f77ca5f7a0d3b8136da18a",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_dataprotection-0.4.3-py3-none-any.whl"
+      "version": "0.5.0",
+      "sha256": "8120e2f5a54edd57b0277acb18cbe5dd2be5477d6cbfbfc15c8df1ad91a5b407",
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_dataprotection-0.5.0-py3-none-any.whl"
     },
     {
       "package": "auditcore_harvest",
-      "version": "0.1.1",
-      "sha256": "35f3deff4f5b8e9d741fbc93f67050056ab10669003c929f0ae2c07421731b87",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_harvest-0.1.1-py3-none-any.whl"
+      "version": "0.1.2",
+      "sha256": "4e2a7845fce2ff34d25a77c6cfbd629a342a7cbeec510d06ca2be03719cf0746",
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_harvest-0.1.2-py3-none-any.whl"
     },
     {
       "package": "auditcore_price_analysis",
-      "version": "0.1.1",
-      "sha256": "b428839afd4dae267a902f7c73ef7a83f0340a7d9f886b1803de44f36523cc8f",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_price_analysis-0.1.1-py3-none-any.whl"
+      "version": "0.1.2",
+      "sha256": "43e225c80c6be00b3c1a511bccbbe6a7d41f188048f18748885c375bb5290100",
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_price_analysis-0.1.2-py3-none-any.whl"
     },
     {
       "package": "auditcore_price_sources",
-      "version": "0.1.1",
-      "sha256": "a21eba39ad14f7a847b256bf44a12345e859b8e09df910e9be64cedb32edc5c7",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_price_sources-0.1.1-py3-none-any.whl"
+      "version": "0.1.2",
+      "sha256": "be2f1d7eca48d73752fa7e42b5d4b37c637b79861c9467dbc6aa102604a98c3a",
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_price_sources-0.1.2-py3-none-any.whl"
     },
     {
       "package": "auditcore_reporting",
-      "version": "0.2.1",
-      "sha256": "d9d982be1b21bacc4bd6596b1dc95208987ece5cdfb278c61fa2a6fc48a24ad7",
-      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.0/auditcore_reporting-0.2.1-py3-none-any.whl"
+      "version": "0.2.2",
+      "sha256": "417f78ca06b8458860699a88728e15118a855a41d8999fc58b87aadab9ce4ba8",
+      "url": "https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_reporting-0.2.2-py3-none-any.whl"
     }
   ],
   "github_actions_execution": "NOT_EXECUTED",
