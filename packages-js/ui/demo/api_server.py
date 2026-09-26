@@ -5,7 +5,8 @@ auditcore_statistics.web (/api/benford) und auditcore_registry_sources.web
 (/api/screening, erfundene Demo-Daten aus screening_demo.py),
 auditcore_dataprotection.web (/api/dataprotection, dataprotection_demo.py),
 auditcore_documents.web (/api/synopsis, synthetische Dokumente aus
-documents_demo.py) und auditcore_geo.web (/api/geo, synthetische Kacheln und
+documents_demo.py), auditcore_reporting.web (/api/reporting, zusätzlich Extra
+``excel``) und auditcore_geo.web (/api/geo, synthetische Kacheln und
 GeoPackage-Dateien aus geo_demo.py unter /api/geo-demo). Erforderlich: Extra ``web`` der Pakete
 und uvicorn. Nur für Demo und Browserprüfung.
 
@@ -17,6 +18,7 @@ from __future__ import annotations
 import os
 
 import uvicorn
+from auditcore_reporting.web import routes as reporting_routes
 from auditcore_sampling.web import routes as sampling_routes
 from auditcore_statistics.web import routes as benford_routes
 from dataprotection_demo import dataprotection_routes
@@ -32,6 +34,7 @@ app = Starlette(
     routes=[
         Mount("/api/sampling", routes=sampling_routes()),
         Mount("/api/benford", routes=benford_routes()),
+        Mount("/api/reporting", routes=reporting_routes()),
         Mount("/api/screening", routes=screening_routes()),
         Mount("/api/dataprotection", routes=dataprotection_routes()),
         Mount("/api/synopsis", routes=comparison_routes()),

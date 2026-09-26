@@ -1,0 +1,41 @@
+{
+  "contract": "reporting_ui/1",
+  "library": "auditcore_reporting 0.2.2",
+  "excel_available": true,
+  "profiles": [
+    {
+      "id": "flowlib-legacy-v1",
+      "label": "Flowlib-Formate nach Spaltennamen",
+      "description": "Zahlenformat aus dem Spaltennamen (Betrag vor Prozent vor Datum vor Anzahl vor Stunden/Tagen, sonst Standard), unverändert aus flowlib übernommen.",
+      "version": "1.0.0",
+      "status": "Draft",
+      "source": "janpow77/flowlib@aca2dc6aad25aea0720312dbcc6da00b0bcba330"
+    },
+    {
+      "id": "plain-v1",
+      "label": "Ohne Formatregeln",
+      "description": "Keine Heuristik: jede Spalte im Standardformat; Datumswerte behalten die Datumsdarstellung von openpyxl.",
+      "version": "1.0.0",
+      "status": "Draft",
+      "source": "new explicitly neutral profile"
+    }
+  ],
+  "column_types": [
+    "json",
+    "text",
+    "number",
+    "boolean",
+    "date",
+    "datetime"
+  ],
+  "limits": {
+    "max_rows_per_sheet": 100000,
+    "max_columns": 256,
+    "max_sheets": 32,
+    "max_cells": 500000,
+    "max_text_characters": 5000000,
+    "max_output_bytes": 33554432,
+    "max_body_bytes": 16777216,
+    "sample_rows": 20
+  }
+}

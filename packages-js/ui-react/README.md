@@ -92,7 +92,7 @@ export function Vergleich({ id }: { id: string }) {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (157):
+Exporte der Einstiegspunkte aus `package.json#exports` (166):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -123,6 +123,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `FlowauditDsfaProps` | Schnittstelle | – | `dataprotection/FlowauditDsfa` |
 | `@flowaudit/ui-react` | `FlowauditGeoMap` | Funktion | Geo-Karte als native React-Komponente (Vertrag wie `<flowaudit-geo-map>`): Karte, Bezugspunkt mit UTM, Umkreis, Punkt in Fläche, Vereinfachung, GeoPackage. | `geo/FlowauditGeoMap` |
 | `@flowaudit/ui-react` | `FlowauditGeoMapProps` | Schnittstelle | – | `geo/FlowauditGeoMap` |
+| `@flowaudit/ui-react` | `FlowauditReportExport` | Funktion | Tabellenexport nach Excel als native React-Komponente (Vertrag wie `<flowaudit-report-export>`): Formatprofil wählen, Vorschau der Spaltenformate und ersten Zeilen, XLSX-Export. | `reporting/FlowauditReportExport` |
+| `@flowaudit/ui-react` | `FlowauditReportExportProps` | Typ | – | `reporting/FlowauditReportExport` |
 | `@flowaudit/ui-react` | `FlowauditRiskFlags` | Funktion | Risiko-Merkmale als native React-Komponente – Vertrag, Texte und Markup wie `<flowaudit-risk-flags>`: Verteilung je Merkmal, Filter, Tabelle je Datensatz, Detailkarten mit Begründu … | `risk/FlowauditRiskFlags` |
 | `@flowaudit/ui-react` | `FlowauditRiskFlagsProps` | Schnittstelle | – | `risk/FlowauditRiskFlags` |
 | `@flowaudit/ui-react` | `FlowauditSampling` | Funktion | Stichprobenrechner als native React-Komponente (Vertrag wie `<flowaudit-sampling>`): Methodenprofil, Stichprobenumfang mit Herleitung, Grundgesamtheit (Eigenschaft oder Datei), Aus … | `sampling/FlowauditSampling` |
@@ -151,6 +153,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `PopulationItem` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ProfileDetail` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ReportExportInputs` | Schnittstelle | – | `reporting/useReportExport` |
+| `@flowaudit/ui-react` | `ReportTableInput` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `ReportingPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `RestError` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RestOptions` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `RiskFilter` | Re-Export | – | `@flowaudit/ui-core` |
@@ -193,6 +198,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `ToastProvider` | Funktion | Stellt eine eigene Warteschlange für den Teilbaum bereit (z. B. je Mandant oder im Test). | `hooks/toast` |
 | `@flowaudit/ui-react` | `UseAuthToken` | Schnittstelle | – | `hooks/state` |
 | `@flowaudit/ui-react` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
+| `@flowaudit/ui-react` | `UseReportExport` | Schnittstelle | – | `reporting/useReportExport` |
 | `@flowaudit/ui-react` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui-react` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
 | `@flowaudit/ui-react` | `UseScreeningReview` | Schnittstelle | – | `screening/useScreeningReview` |
@@ -201,12 +207,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `UseToast` | Schnittstelle | – | `hooks/toast` |
 | `@flowaudit/ui-react` | `UseTranslation` | Schnittstelle | – | `i18n` |
 | `@flowaudit/ui-react` | `VvtExport` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `WorkbookPreview` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `ariaSort` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `columnCells` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `compareValues` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui-react` | `createBenfordRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui-react` | `createReportingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createRiskRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createSamplingRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui-react` | `createScreeningRestPort` | Re-Export | – | `@flowaudit/ui-core` |
@@ -236,6 +244,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (157):
 | `@flowaudit/ui-react` | `useElementId` | Funktion | Stabile, CSS-taugliche Kennung je Instanz für aria-Verknüpfungen (wie `useId` der Vue-Fassung). | `store` |
 | `@flowaudit/ui-react` | `useLocale` | Funktion | Sprache: Prop vor Provider vor Standardsprache (`setDefaultLocale`). | `i18n` |
 | `@flowaudit/ui-react` | `useMediaQuery` | Funktion | Stand einer Media-Query, z. B. `useMediaQuery('(max-width: 768px)')`; serverseitig `false`. | `hooks/dom` |
+| `@flowaudit/ui-react` | `useReportExport` | Funktion | React-Anbindung des Tabellenexports aus `@flowaudit/ui-core` (dieselbe Logik wie `useReportExport` in Vue). | `reporting/useReportExport` |
 | `@flowaudit/ui-react` | `useRiskFlags` | Funktion | React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useRiskFlags`/`useRiskProfile` in Vue). | `risk/useRiskFlags` |
 | `@flowaudit/ui-react` | `useSampling` | Funktion | React-Anbindung des Stichprobenrechners aus `@flowaudit/ui-core` (dieselbe Logik wie `useSampling` in Vue). | `sampling/useSampling` |
 | `@flowaudit/ui-react` | `useScreeningReview` | Funktion | React-Anbindung des Zustandsautomaten aus `@flowaudit/ui-core` (dieselbe Logik wie `useScreeningReview` in Vue). | `screening/useScreeningReview` |

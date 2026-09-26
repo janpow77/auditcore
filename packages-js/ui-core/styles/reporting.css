@@ -1,0 +1,22 @@
+/* Tabellenexport (Excel) – ReportExportPanel (Vue) und FlowauditReportExport (React). */
+.fa-report { display: flex; flex-direction: column; gap: var(--fa-space-4); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-report__card { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); box-shadow: var(--fa-shadow-sm); min-width: 0; }
+.fa-report__heading { margin: 0; font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-report__form { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--fa-space-3); align-items: end; }
+.fa-report__field { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-report__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-report__input { min-height: 2.25rem; padding: 0 var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-report__input:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-report__actions { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); }
+.fa-report__muted, .fa-report__source { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-report__source p { margin: var(--fa-space-1) 0 0; overflow-wrap: anywhere; }
+.fa-report__error { margin: 0; font-size: var(--fa-font-size-xs); color: var(--fa-color-danger); }
+.fa-report__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-report__notice { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-left: 3px solid var(--fa-color-accent); background: var(--fa-color-accent-soft); border-radius: var(--fa-radius-sm); }
+.fa-report__sheet { display: flex; flex-direction: column; gap: var(--fa-space-2); }
+.fa-report__scroll { overflow-x: auto; }
+.fa-report__table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+.fa-report__table caption { text-align: left; font-weight: 600; padding-bottom: var(--fa-space-1); }
+.fa-report__table th, .fa-report__table td { padding: var(--fa-space-1) var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: left; white-space: nowrap; }
+.fa-report__table th { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-report__table code { font-family: var(--fa-font-mono, monospace); }

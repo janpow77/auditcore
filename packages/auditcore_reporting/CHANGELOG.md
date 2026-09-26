@@ -2,6 +2,13 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
+## Unreleased
+
+- Neues Modul `auditcore_reporting.web` (Extras `web`, `fastapi`): REST-Vertrag
+  `reporting_ui/1` für Formatprofile, Vorschau und XLSX-Export übergebener
+  Tabellen (`docs/ui/reporting-rest.md`). Formatregeln, Profile und
+  `render_workbook` unverändert; Fingerabdrücke gültig.
+
 ## 0.2.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. README-Installationshinweis auf v0.4.0.

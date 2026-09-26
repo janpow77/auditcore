@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Tabellenexport nach Excel: `auditcore_reporting.web` mit versioniertem
+  REST-Vertrag `reporting_ui/1` (`GET /profiles`, `POST /preview`,
+  `POST /export`; Starlette und FastAPI, neue Extras `web` und `fastapi`,
+  `packaging/library-extras.json` ergänzt) und Oberfläche
+  `<flowaudit-report-export>` (Vue `ReportExportPanel`, React nativ
+  `FlowauditReportExport`, Kern `createReportingController` in
+  `@flowaudit/ui-core`): Formatprofil wählen, Vorschau mit Excel-Format je
+  Spalte, ersten Zeilen und Probelauf, XLSX-Export. Das Paket hat keine
+  Berichtsvorlagen; „Vorlage“ ist hier das Formatprofil
+  (`docs/ui/reporting-rest.md`). Sechs Paritätsfälle plus Interaktionsfolge,
+  Demo-Seite „Tabellenexport (Excel)“ und API-E2E-Test.
 - Vorbereitung Release v0.4.1: Versionen aller seit v0.4.0 geänderten Pakete
   angehoben (Pins auf `auditcore_common==0.1.1` und die neuen Paketstände),
   `auditcore_harvest` 0.1.2 parst Feeds nur noch über defusedxml
