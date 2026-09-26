@@ -1,4 +1,4 @@
-"""F-09/T-38: Laufzeitmodule nutzen nur Standardbibliothek und eigenes Paket.
+"""F-09/T-38: Laufzeitmodule nutzen nur Standardbibliothek, eigenes Paket und auditcore_common.
 
 Einzige Ausnahme ist ``nominatim`` (Extra ``[geocoder]``), das auf
 ``auditcore_harvest`` aufsetzt; der Paketimport lädt es nicht.
@@ -26,6 +26,7 @@ ALLOWED = {
     "typing",
     "urllib",
     "auditcore_geo",
+    "auditcore_common",
 }
 
 

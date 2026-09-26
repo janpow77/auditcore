@@ -10,6 +10,11 @@
       "package": "auditcore_invoicegenerator",
       "version": "0.2.0",
       "use": "InvoiceScenario (Parteien, Rechnungsnummer, Positionen); unverändert als Abhängigkeit"
+    },
+    {
+      "package": "auditcore_common",
+      "version": "0.1.1",
+      "use": "Datei-/Text-SHA-256, kanonisches JSON (Konfigurations- und Plan-Hash), Steuersatz- und Kennungs-Rücklesung; Hashes und Ergebnisse unverändert (Gleichheitstest tests/test_common_parity.py)"
     }
   ],
   "origin": "Neu in auditcore geschrieben nach docs/architecture/DONUT_OCR_PLAN.md (2b, 2d); kein Code aus anderen Repositories und kein Donut-Code (clovaai/donut) übernommen.",

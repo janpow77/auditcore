@@ -1,5 +1,14 @@
 # Changelog – auditcore_documents
 
+## Unreleased
+
+Keine Verhaltensänderung. Die Prüfziffern `de_vat_check_digit` und
+`at_uid_check_digit` (`pipeline.stages.donut_values`, `donut_merge`) sind jetzt
+die Funktionen aus `auditcore_identifiers` (gleiche Normalform; waren die
+beiden paketübergreifenden Duplikate des Code-Gates). Neue Pflichtabhängigkeit
+`auditcore_identifiers==0.1.0` (APT `python3-auditcore-identifiers`, nur
+Standardbibliothek). Gleichheitstest alt ↔ neu: `tests/test_identifiers_parity.py`.
+
 ## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
 
 Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage (docs/bibliotheken/readme-vorlage.md).
