@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-Keine Verhaltensänderung. Die Prüfziffern `de_vat_check_digit` und
+- Neu: REST-Vertrag `documents_extraction/1` für die Belegerkennung
+  (`auditcore_documents.web`): `ExtractionService`, `ExtractionEngines`
+  (OCR-Gateway, Chandra, Tesseract, Donut als Ports der Anwendung),
+  `ExtractionSettings`, `Thresholds`; Starlette `create_extraction_app`/
+  `extraction_routes` (Extra `web`), FastAPI `create_extraction_router`
+  (Extra `fastapi`). `GET /profile`, `POST /runs`; ohne Engine 404
+  `extraction_disabled`. Keine Speicherung, keine festen Hosts. Vertrag:
+  `docs/ui/extraction-rest.md`.
+- Keine Verhaltensänderung. Die Prüfziffern `de_vat_check_digit` und
 `at_uid_check_digit` (`pipeline.stages.donut_values`, `donut_merge`) sind jetzt
 die Funktionen aus `auditcore_identifiers` (gleiche Normalform; waren die
 beiden paketübergreifenden Duplikate des Code-Gates). Neue Pflichtabhängigkeit

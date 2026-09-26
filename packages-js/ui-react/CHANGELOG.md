@@ -38,6 +38,11 @@ Vue-Web-Components. Der Haupteinstieg braucht weder Vue noch `@flowaudit/ui`.
   `eventPayload`, `defineFlowauditElements`); `@flowaudit/ui` und `vue` sind
   keine (optionalen) Peer-Abhängigkeiten mehr. Wer Web Components braucht,
   nutzt `@flowaudit/ui/elements` direkt.
+- **Datenbankansicht nativ:** `FlowauditDbKanban` mit `DbKanbanColumn`,
+  `DbKanbanCard` und `useDbKanban` (Logik `createDbKanbanController` aus
+  `@flowaudit/ui-core`, Gruppierung und `RecordPort` aus
+  `@flowaudit/kanban-core`); `port` oder `table`, gesteuertes `groupBy`,
+  Rückrufe `onRecordMove`, `onRecordAdd`, `onTableChange`, `onError`.
 - **Kanban nativ:** `FlowauditKanbanBoard` und `FlowauditKanbanBoards`
   (gleiche Props, Ereignisse als `onXxx`, `renderCardExtra`, `ref` mit
   `reload()`) sowie die Bausteine `KanbanCard`, `KanbanColumn`,

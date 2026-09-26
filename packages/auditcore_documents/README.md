@@ -227,7 +227,7 @@ ALT NEU -o synopse.docx --pdf synopse.pdf --json ergebnis.json [--comparison-typ
 | `auditcore_documents.scoring` | Ähnlichkeitsmaße für die Zuordnung. |
 | `auditcore_documents.settings` | Einstellungsvertrag für Web, CLI und Jupyter (aus ``configuration.py``). |
 | `auditcore_documents.synopsis` | Tabellarische Synopse als reine Datensätze (aus dem ecohesion-Worker). |
-| `auditcore_documents.web` | REST-Anbindung der Synopse-Oberfläche (``<flowaudit-synopsis>``). |
+| `auditcore_documents.web` | REST-Anbindung der Synopse-Oberfläche (``<flowaudit-synopsis>``) und der Belegerkennung. |
 <!-- api-overview:end -->
 
 ## Profile und Konfiguration
@@ -345,6 +345,25 @@ im Repository; Abgleich mit audit_designer, ecohesion und regulierung:
 `identify` liefert den Eigentümer je Anfrage, fremde Vergleiche ergeben 404.
 Debian: `python3-starlette`/`python3-fastapi` stehen als *Suggests*; die
 Mindestversionen erfüllt erst ein neueres Debian als trixie, sonst pip.
+
+### REST-Anbindung der Belegerkennung (Vertrag `documents_extraction/1`)
+
+`ExtractionService` führt ein hochgeladenes Dokument mit einem gewählten
+Pipeline-Profil aus und liefert Felder (bei Donut mit Feldkonfidenz und
+Übernahmeentscheidung), OCR-Qualität und Validierungsbefunde für
+`<flowaudit-extraction>`. OCR und Donut kommen nur über die Ports der
+Anwendung (`ExtractionEngines`); ohne Engine ist die Belegerkennung
+abgeschaltet (404 `extraction_disabled`). Das Dokument wird nur für den Lauf
+zwischengespeichert.
+
+```python no-run
+from auditcore_documents.web import ExtractionEngines, ExtractionService, create_extraction_app
+
+service = ExtractionService(ExtractionEngines(tesseract=meine_tesseract_engine))
+app.mount("/api/extraction", create_extraction_app(service))
+```
+
+Vertrag: `docs/ui/extraction-rest.md` im Repository.
 
 ## Herkunft und Charakterisierung
 

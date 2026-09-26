@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
+import io
 import json
 import os
 import re
 import subprocess
+import tarfile
+import tempfile
 import zipfile
 from datetime import UTC, datetime
 from email.parser import BytesParser
@@ -311,8 +315,6 @@ def prepare_inputs(source: Path, release_version: str) -> dict[str, bytes]:
         wheel_bytes = bound_bytes(wheel, source, package["wheel_sha256"])
         if digest(wheel_bytes) != build["wheel_sha256"]:
             raise ValueError("Wheel installation/build digest mismatch")
-        import io
-
         with zipfile.ZipFile(io.BytesIO(wheel_bytes)) as archive:
             metadata = BytesParser().parsebytes(
                 archive.read(f"{name}-{version}.dist-info/METADATA")
@@ -404,8 +406,6 @@ def optional_assets(
     assets: dict[str, bytes], evidence: Path | None, release_version: str
 ) -> dict[str, bytes]:
     """Require actual installation and lock replay for published renderer extras."""
-    import io
-
     features: dict[str, str] = {}
     wheels: dict[str, dict[str, Any]] = {}
     for name, content in assets.items():
@@ -531,9 +531,193 @@ def optional_assets(
     return result
 
 
-def run(command: list[str], environment: dict[str, str]) -> bytes:
+#: npm scope of the frontend packages under packages-js/ (tarball assets, no registry).
+NPM_SCOPE = "@flowaudit/"
+NPM_MANIFEST = "npm-packages.json"
+
+
+def npm_integrity(data: bytes) -> str:
+    """Subresource-integrity string as npm writes it into package-lock.json."""
+    return "sha512-" + base64.b64encode(hashlib.sha512(data).digest()).decode()
+
+
+def _npm_version_satisfies(version: str, spec: str) -> bool:
+    """Exact ``x.y.z`` or caret ``^x.y.z`` (the only forms used between @flowaudit packages)."""
+    if re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", spec):
+        return version == spec
+    match = re.fullmatch(r"\^([0-9]+)\.([0-9]+)\.([0-9]+)", spec)
+    if not match:
+        raise ValueError(f"Unsupported internal npm version range: {spec}")
+    wanted = tuple(int(part) for part in match.groups())
+    have = tuple(int(part) for part in version.split("."))
+    if wanted[0] > 0:
+        return have[0] == wanted[0] and have >= wanted
+    if wanted[1] > 0:
+        return have[:2] == wanted[:2] and have >= wanted
+    return have == wanted
+
+
+def _export_targets(value: Any) -> set[str]:
+    """Concrete files named in package.json#exports (wildcards are skipped)."""
+    if isinstance(value, str):
+        return set() if "*" in value else {value.removeprefix("./")}
+    if isinstance(value, dict):
+        return set().union(*(_export_targets(item) for item in value.values()))
+    return set()
+
+
+def _internal_requirements(manifest: dict[str, Any]) -> dict[str, str]:
+    """Runtime dependencies and required peers inside the @flowaudit scope."""
+    optional = {
+        name
+        for name, meta in (manifest.get("peerDependenciesMeta") or {}).items()
+        if isinstance(meta, dict) and meta.get("optional")
+    }
+    wanted = dict(manifest.get("dependencies") or {})
+    wanted.update(
+        {
+            name: spec
+            for name, spec in (manifest.get("peerDependencies") or {}).items()
+            if name not in optional
+        }
+    )
+    return {name: spec for name, spec in wanted.items() if name.startswith(NPM_SCOPE)}
+
+
+def verify_npm_tarballs(
+    sources: dict[str, dict[str, Any]],
+    pack_report: list[dict[str, Any]],
+    destination: Path,
+    release_version: str,
+    source_commit: str,
+) -> dict[str, bytes]:
+    """Bind every packages-js workspace to exactly one verified MIT tarball."""
+    if not sources or {entry.get("name") for entry in pack_report} != set(sources):
+        raise ValueError("Every packages-js workspace must be packed exactly once")
+    if len(pack_report) != len(sources) or not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+        raise ValueError("Duplicate npm pack entry or missing source commit")
+    base = f"https://github.com/janpow77/auditcore/releases/download/v{release_version}"
+    assets: dict[str, bytes] = {}
+    packages: dict[str, dict[str, Any]] = {}
+    for entry in sorted(pack_report, key=lambda item: item["name"]):
+        name, version = entry["name"], entry["version"]
+        source = sources[name]
+        expected_file = name.removeprefix("@").replace("/", "-") + f"-{version}.tgz"
+        if (
+            not name.startswith(NPM_SCOPE)
+            or source.get("version") != version
+            or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version)
+            or source.get("license") != "MIT"
+            or source.get("private")
+            or entry.get("filename") != expected_file
+        ):
+            raise ValueError(f"Unexpected npm package identity or license: {name}")
+        tarball = destination / expected_file
+        if tarball.is_symlink() or not tarball.resolve().is_relative_to(destination):
+            raise ValueError("npm tarball escapes the pack destination or is a symlink")
+        data = tarball.read_bytes()
+        integrity = npm_integrity(data)
+        if entry.get("integrity") != integrity:
+            raise ValueError(f"npm pack integrity mismatch: {name}")
+        with tarfile.open(fileobj=io.BytesIO(data), mode="r:gz") as archive:
+            members = {member.name for member in archive.getmembers() if member.isfile()}
+            member = archive.extractfile("package/package.json")
+            packed = json.loads(member.read()) if member else {}
+        required = {"package/package.json", "package/LICENSE"} | {
+            f"package/{target}" for target in _export_targets(source.get("exports"))
+        }
+        if (
+            not required <= members
+            or packed.get("name") != name
+            or packed.get("version") != version
+        ):
+            raise ValueError(f"Tarball is not the built, licensed workspace package: {name}")
+        if any(".." in item.split("/") or item.startswith("/") for item in members):
+            raise ValueError(f"Unsafe path inside npm tarball: {name}")
+        assets[expected_file] = data
+        packages[name] = {
+            "name": name,
+            "version": version,
+            "file": expected_file,
+            "url": f"{base}/{expected_file}",
+            "integrity": integrity,
+            "sha256": digest(data),
+            "size": len(data),
+            "license": "MIT",
+            "source_path": f"packages-js/{source['_directory']}",
+            "internal_requirements": _internal_requirements(packed),
+            "peer_dependencies": packed.get("peerDependencies") or {},
+        }
+    for package in packages.values():
+        for dependency, spec in package["internal_requirements"].items():
+            if dependency not in packages or not _npm_version_satisfies(
+                packages[dependency]["version"], spec
+            ):
+                raise ValueError(f"Unresolvable internal npm dependency: {dependency}@{spec}")
+    for package in packages.values():
+        closure: set[str] = set()
+        pending = [package["name"]]
+        while pending:
+            for dependency in packages[pending.pop()]["internal_requirements"]:
+                if dependency not in closure:
+                    closure.add(dependency)
+                    pending.append(dependency)
+        closure.add(package["name"])
+        # Every @flowaudit package of the closure must be named explicitly: npm resolves
+        # the internal ranges against these tarball URLs instead of the npm registry.
+        package["install_closure"] = sorted(closure)
+        package["package_json_dependencies"] = {
+            item: packages[item]["url"] for item in sorted(closure)
+        }
+    manifest = {
+        "scope": "NPM_TARBALL_PREVIEW",
+        "registry_publication": "NOT_EXECUTED",
+        "release_version": release_version,
+        "source_commit": source_commit,
+        "base_url": base,
+        "integrity_format": "npm SRI sha512 (package-lock.json#integrity)",
+        "packages": [packages[name] for name in sorted(packages)],
+    }
+    assets[NPM_MANIFEST] = (json.dumps(manifest, indent=2, ensure_ascii=False) + "\n").encode()
+    return assets
+
+
+def npm_assets(
+    workspace: Path, scratch: Path, release_version: str, environment: dict[str, str]
+) -> dict[str, bytes]:
+    """Build and ``npm pack`` every packages-js workspace from committed sources."""
+    status = run(["git", "status", "--porcelain", "--", "packages-js"], environment, cwd=workspace)
+    if status.strip():
+        raise ValueError("npm release tarballs require committed packages-js sources")
+    commit = run(["git", "rev-parse", "HEAD"], environment, cwd=workspace).decode().strip()
+    sources = {}
+    for path in sorted((workspace / "packages-js").glob("*/package.json")):
+        manifest = read_json(path)
+        manifest["_directory"] = path.parent.name
+        sources[manifest["name"]] = manifest
+    run(["npm", "run", "build", "--workspaces", "--if-present"], environment, workspace, 1800)
+    scratch.mkdir(parents=True, exist_ok=False)
+    report = json.loads(
+        run(
+            ["npm", "pack", "--workspaces", "--json", "--pack-destination", str(scratch)],
+            environment,
+            workspace,
+            600,
+        )
+    )
+    return verify_npm_tarballs(sources, report, scratch.resolve(), release_version, commit)
+
+
+def run(
+    command: list[str],
+    environment: dict[str, str],
+    cwd: Path | None = None,
+    timeout: int = 120,
+) -> bytes:
     """Never print key-generation input, inherited secrets or full subprocess output."""
-    result = subprocess.run(command, env=environment, capture_output=True, timeout=120, check=False)
+    result = subprocess.run(
+        command, env=environment, capture_output=True, timeout=timeout, check=False, cwd=cwd
+    )
     if result.returncode:
         raise RuntimeError(f"Release preparation command failed: {Path(command[0]).name}")
     return result.stdout
@@ -546,6 +730,12 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--version", default="0.1.0")
     parser.add_argument("--optional-verification-output", type=Path)
+    parser.add_argument(
+        "--npm-workspace",
+        type=Path,
+        default=ROOT,
+        help="Repository root whose packages-js/* are packed as release tarballs",
+    )
     args = parser.parse_args()
     if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", args.version):
         raise ValueError("Explicit numeric release version required")
@@ -568,6 +758,15 @@ def main() -> int:
     environment = {
         k: v for k, v in os.environ.items() if k not in {"PYTHONPATH", "PYTHONHOME", "GNUPGHOME"}
     }
+    # npm tarballs of every packages-js workspace: built from the committed sources,
+    # bound by SHA-256 and npm integrity (sha512) and listed in npm-packages.json.
+    with tempfile.TemporaryDirectory(prefix="auditcore-npm-pack-") as scratch:
+        npm = npm_assets(
+            args.npm_workspace.resolve(), Path(scratch) / "pack", args.version, environment
+        )
+    if set(npm) & set(assets):
+        raise ValueError("npm tarball names collide with Python release assets")
+    assets.update(npm)
     environment["PATH"] = str(python.parent) + os.pathsep + environment.get("PATH", "")
     run(
         [
@@ -666,6 +865,10 @@ def main() -> int:
         "application_release": "NOT_EVALUATED",
         "version": args.version,
         "package_versions": package_versions,
+        "npm_package_versions": {
+            item["name"]: item["version"] for item in json.loads(assets[NPM_MANIFEST])["packages"]
+        },
+        "npm_registry_publication": "NOT_EXECUTED",
         "prepared_at": datetime.now(UTC).isoformat(),
         "verification_report_sha256": digest((source / "result.json").read_bytes()),
         "signing_key_fingerprint": fingerprint,
@@ -677,6 +880,23 @@ def main() -> int:
         "".join(
             f"{digest(p.read_bytes())}  {p.name}\n" for p in sorted(output.iterdir()) if p.is_file()
         )
+    )
+    # Detached signature over all checksums: covers wheels, SDists, npm tarballs and
+    # manifests with the same release key as the APT metadata.
+    run(
+        [
+            "gpg",
+            "--batch",
+            "--yes",
+            "--local-user",
+            fingerprint,
+            "--armor",
+            "--detach-sign",
+            "--output",
+            str(output / "SHA256SUMS.asc"),
+            str(output / "SHA256SUMS"),
+        ],
+        environment,
     )
     print(
         json.dumps(

@@ -60,7 +60,12 @@ LAZY = {
 }
 DONUT_ONLY = {"torch", "transformers", "PIL"}
 #: Extras ``web``/``fastapi`` (0.3.0): Frameworks nur in ihrem Adaptermodul unter ``web/``.
-WEB_ADAPTERS = {"asgi.py": {"starlette"}, "fastapi_router.py": {"fastapi"}}
+WEB_ADAPTERS = {
+    "asgi.py": {"starlette"},
+    "fastapi_router.py": {"fastapi"},
+    "extraction_asgi.py": {"starlette"},
+    "extraction_fastapi.py": {"fastapi"},
+}
 FORBIDDEN = {
     "fastapi",
     "sqlalchemy",

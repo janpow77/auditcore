@@ -72,6 +72,11 @@ bzw. `onBoardSelect`, `onCreated`; der Slot `card-extra` heißt
 Die früheren Hüllen um die Web Components (`@flowaudit/ui-react/elements`)
 sind entfernt.
 
+`FlowauditDbKanban` ist die Datenbankansicht in React (gleiche Kernlogik
+`createDbKanbanController`, gleiche Paritätsfälle `cases-dbkanban.ts`):
+`port` oder `table`, gesteuertes `groupBy` mit `onGroupByChange`, Rückrufe
+`onRecordMove`, `onRecordAdd`, `onTableChange`, `onError`.
+
 ## Gemeinsame Ansichtslogik (`@flowaudit/kanban-core`)
 
 Vue und React binden dieselben framework-freien Zustandsautomaten an

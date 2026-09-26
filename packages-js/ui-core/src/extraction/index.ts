@@ -1,0 +1,5 @@
+export { extractionMessages, type ExtractionMessageKey } from './messages'
+export { createExtractionRestPort } from './rest-port'
+export type * from './types'
+export * from './controller'
+export * from './view'
