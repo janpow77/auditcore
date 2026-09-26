@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_common",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "classification": "CONSOLIDATION",
   "sources": [
     {

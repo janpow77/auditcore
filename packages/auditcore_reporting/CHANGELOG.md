@@ -2,9 +2,9 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
-## Unreleased
+## 0.3.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
-- Neue Laufzeitabhängigkeit `auditcore_common==0.1.1` (selbst nur
+- Neue Laufzeitabhängigkeit `auditcore_common==0.2.0` (selbst nur
   Standardbibliothek): `web.ContractError` ist Unterklasse von
   `auditcore_common.rest.ContractError`, die JSON-Objekt-Prüfung nutzt
   `rest.json_object`. Meldungen, Statuscodes und Vertrag unverändert.

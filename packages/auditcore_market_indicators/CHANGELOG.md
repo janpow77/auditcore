@@ -2,11 +2,11 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #14, #23, #59).
 
-## Unreleased – Hilfsfunktionen aus auditcore_common
+## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2 – Hilfsfunktionen aus auditcore_common
 
 Keine Verhaltensänderung: alle 2 116 bestehenden Tests (bitgenauer
 krypto-Replay, Profile, polars-Adapter, Reproduzierbarkeit) laufen unverändert
-grün. Neue Laufzeitabhängigkeit `auditcore_common==0.1.1`
+grün. Neue Laufzeitabhängigkeit `auditcore_common==0.2.0`
 (APT `python3-auditcore-common`).
 
 - `_numeric.numpy_pairwise_sum` entfällt; `auditcore_common.numeric.numpy_pairwise_sum`

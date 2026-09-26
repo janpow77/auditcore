@@ -54,13 +54,26 @@ jobs:
           python -m build --wheel --outdir dist "$pkg"
           echo "wheel=$(basename dist/*.whl)" >> "$GITHUB_OUTPUT"
           echo "short=$short" >> "$GITHUB_OUTPUT"
+          # auditcore-Abhängigkeiten kommen hashgebunden aus dem Release
+          # (docker/train/requirements-auditcore.txt). Verlangt das Rad Stände, die
+          # noch nicht veröffentlicht sind (Release-Vorbereitung), werden genau diese
+          # Pakete aus demselben Repository-Stand gebaut (Label auditcore.deps=repo).
+          deps=$(python "$pkg/docker/train/deps_source.py" dist/*.whl "$pkg/docker/train/requirements-auditcore.txt")
+          echo "deps=$deps" >> "$GITHUB_OUTPUT"
+          if [ "$deps" = repo ]; then
+            for name in $(python "$pkg/docker/train/deps_source.py" --names "$pkg/docker/train/requirements-auditcore.txt"); do
+              python -m build --wheel --outdir dist/deps "packages/$name"
+            done
+          fi
       - name: Image bauen
         env:
           WHEEL: ${{ steps.wheel.outputs.wheel }}
           SHORT: ${{ steps.wheel.outputs.short }}
+          DEPS: ${{ steps.wheel.outputs.deps }}
         run: |
           docker build -f packages/auditcore_invoicesynth/docker/train/Dockerfile \
             --build-arg WHEEL="$WHEEL" --build-arg VCS_REF="$SHORT" \
+            --build-arg AUDITCORE_DEPS="$DEPS" \
             -t "$IMAGE:cu128" -t "$IMAGE:cu128-g$SHORT" .
       - name: Rauchtest im Image (CPU)
         run: |

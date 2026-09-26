@@ -178,7 +178,7 @@ Details: [docs/behavior-changes.md](docs/behavior-changes.md).
 
 ## Abhängigkeiten
 
-Python ≥ 3.11 und `auditcore_common==0.1.1` (nur Standardbibliothek;
+Python ≥ 3.11 und `auditcore_common==0.2.0` (nur Standardbibliothek;
 NumPy-kompatible Summe und Rundung, rahmenwerkfreier Teil der REST-Schicht;
 APT `python3-auditcore-common`); keine Abhängigkeit von `auditcore`,
 `auditcore_statistics` oder NumPy. Optional

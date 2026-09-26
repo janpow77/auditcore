@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_invoicesynth",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "contract": "auditcore_invoicesynth.dataset/1",
   "classification": "NEW_IMPLEMENTATION",
   "sources": [],

@@ -1,6 +1,6 @@
 {
   "name": "@flowaudit/bpmn-react",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Native React-Oberfläche des FlowAudit-BPMN-Editors (React 18 und 19, ohne Vue und Web Components) auf dem framework-freien Kern @flowaudit/bpmn-flowaudit/ui (MIT)",
   "license": "MIT",
   "repository": {
@@ -39,16 +39,16 @@
     "test:react18": "node ../../scripts/js/react18-test.mjs"
   },
   "dependencies": {
-    "@flowaudit/bpmn-editor": "0.1.0",
-    "@flowaudit/bpmn-flowaudit": "0.2.0",
-    "@flowaudit/ui-core": "0.1.0"
+    "@flowaudit/bpmn-editor": "0.1.1",
+    "@flowaudit/bpmn-flowaudit": "0.2.1",
+    "@flowaudit/ui-core": "0.2.0"
   },
   "peerDependencies": {
     "react": "^18.3.0 || ^19.0.0",
     "react-dom": "^18.3.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@flowaudit/bpmn-vue": "0.2.0",
+    "@flowaudit/bpmn-vue": "0.2.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^18.3.31",

@@ -1,6 +1,10 @@
 # Changelog @flowaudit/kanban-core
 
-## 0.2.0 – unveröffentlicht
+## 0.2.1 – 2026-09-26 – Release v0.4.2
+
+Erste Veröffentlichung als Release-Datei. Enthält alles unter 0.2.0 und den Build mit Vite 8 und vite-plugin-dts 5 (#169). Ein vor dem Release gepackter Stand 0.2.0 war bereits als Tarball in Anwendungen eingebunden (audit_designer); deshalb neue Versionsnummer.
+
+## 0.2.0 – nicht als Release-Datei veröffentlicht
 
 - Gemeinsame Ansichtslogik der Kanban-Oberflächen (Vue `@flowaudit/ui`,
   React `@flowaudit/ui-react`), aus den Vue-Composables herausgelöst:

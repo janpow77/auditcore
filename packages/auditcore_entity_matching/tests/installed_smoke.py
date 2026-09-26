@@ -19,9 +19,9 @@ from auditcore_entity_matching import (
 def main() -> None:
     """Exercise normalisation, LEI checks and the optional fuzzy boundary."""
     package = distribution("auditcore_entity_matching")
-    assert package.version == "0.2.3"
+    assert package.version == "0.2.4"
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
-    assert runtime == ["auditcore_common==0.1.1"], runtime
+    assert runtime == ["auditcore_common==0.2.0"], runtime
     assert find_spec("auditcore") is None
     assert len(available_profiles()) == 15
     assert check_lei("529900T8BM49AURSDO55").valid

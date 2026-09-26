@@ -24,6 +24,8 @@ JS_METRICS = (
 )
 SCRIPT_SUFFIXES = frozenset({".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"})
 SKIPPED_DIRECTORIES = frozenset({"node_modules", "dist", "build", "coverage", ".vite", ".turbo"})
+#: Additional build outputs such as ``dist-wc`` or ``dist-standalone`` (bpmn-vue).
+SKIPPED_DIRECTORY_PREFIX = "dist-"
 _FILE_DISABLE = re.compile(r"(?:/\*|<!--)\s*eslint-disable(?![-\w])")
 _LINE_DISABLE = re.compile(r"eslint-disable-(?:next-)?line\b(?P<rest>[^\n]*)")
 _EXPLICIT_ANY = re.compile(r"(?::\s*any|\bas\s+any|<any>|\bany\s*\[\])(?![\w$])")
@@ -34,13 +36,21 @@ def source_files(package: Path) -> list[Path]:
     files = []
     for path in sorted(package.rglob("*")):
         relative_parts = path.relative_to(package).parts
-        if SKIPPED_DIRECTORIES.intersection(relative_parts) or not path.is_file():
+        if _generated(relative_parts[:-1]) or not path.is_file():
             continue
         if path.name.endswith(".d.ts"):
             continue
         if path.suffix in SCRIPT_SUFFIXES or path.suffix == ".vue":
             files.append(path)
     return files
+
+
+def _generated(directories: tuple[str, ...]) -> bool:
+    """True for files below a build-output or dependency directory."""
+    return any(
+        part in SKIPPED_DIRECTORIES or part.startswith(SKIPPED_DIRECTORY_PREFIX)
+        for part in directories
+    )
 
 
 def _justified(rest: str) -> bool:

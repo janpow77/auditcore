@@ -1,6 +1,6 @@
 {
   "contract": "identifiers_ui/1",
-  "library": "auditcore_identifiers 0.1.0",
+  "library": "auditcore_identifiers 0.2.0",
   "recommended_profile": "strict",
   "kinds": [
     {

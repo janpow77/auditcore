@@ -2,12 +2,14 @@
 
 Aus der Git-Historie rekonstruiert (`git log -- packages/auditcore_property_sources`).
 
-## Unreleased
+## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. HTML-Erkennung der Adapter über
 `auditcore_common.html_text.has_html_marker`, Zeitzonenprüfung des
 ZVG-Lebenszyklus über `auditcore_common.clock.require_aware`; Meldungen
 unverändert (`tests/test_common_parity.py`).
+
+Pins: `auditcore_common==0.2.0`, `auditcore_harvest==0.1.3`.
 
 ## 0.1.2 – 2026-09-25
 

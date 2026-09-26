@@ -2,7 +2,7 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #46, #48, #79).
 
-## Unreleased
+## 0.2.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 `train.cli --plan --image` schreibt das Job-Image (am besten per Digest) in den FlowAgent-Job.
 
@@ -25,7 +25,9 @@ Datensatz-Hash, Plan-Hash, Konfigurations-Hash, Lauf-ID sowie `parse_rate`
 und `normalize_identifier` kommen aus `auditcore_common` (`hashing`,
 `numeric.parse_percent_rate`, `text.compact_upper`). Alle Hashes und
 Ergebnisse unverändert (`tests/test_common_parity.py`). Neue
-Pflichtabhängigkeit `auditcore_common==0.1.1`.
+Pflichtabhängigkeit `auditcore_common==0.2.0`.
+
+Pins: `auditcore_invoicegenerator==0.2.3`.
 
 ## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.1
 
