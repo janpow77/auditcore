@@ -3,6 +3,7 @@
 import importlib.util
 import io
 import json
+import tarfile
 import zipfile
 from pathlib import Path
 
@@ -195,3 +196,104 @@ def test_same_named_extra_of_another_package_is_not_a_published_renderer():
 def test_release_requires_passing_code_quality_gate():
     """No release assets without the executed code-quality ratchet (release blocker)."""
     assert "code-quality-gate" in release.REQUIRED_CHECKS
+
+
+def _npm_tarball(directory, manifest, files=("dist/index.js",)):
+    """Synthetic ``npm pack`` output (not an executed build)."""
+    name = manifest["name"].removeprefix("@").replace("/", "-") + f"-{manifest['version']}.tgz"
+    stream = io.BytesIO()
+    with tarfile.open(fileobj=stream, mode="w:gz") as archive:
+        for member, content in [
+            ("package/package.json", json.dumps(manifest).encode()),
+            ("package/LICENSE", b"MIT License\n"),
+            *[(f"package/{item}", b"export {}\n") for item in files],
+        ]:
+            info = tarfile.TarInfo(member)
+            info.size = len(content)
+            archive.addfile(info, io.BytesIO(content))
+    data = stream.getvalue()
+    (directory / name).write_bytes(data)
+    entry = {
+        "name": manifest["name"],
+        "version": manifest["version"],
+        "filename": name,
+        "integrity": release.npm_integrity(data),
+    }
+    return {**manifest, "_directory": manifest["name"].split("/")[1]}, entry
+
+
+def _npm_fixture(tmp_path):
+    exports = {".": {"import": "./dist/index.js"}, "./package.json": "./package.json"}
+    common = {"name": "@flowaudit/common", "version": "0.1.0", "license": "MIT", "exports": exports}
+    ui = {
+        "name": "@flowaudit/ui",
+        "version": "0.2.0",
+        "license": "MIT",
+        "exports": exports,
+        "dependencies": {"@flowaudit/common": "0.1.0", "leaflet": "^1.9.4"},
+        "peerDependencies": {"vue": "^3.5.0", "@flowaudit/kanban-core": "^0.1.0"},
+        "peerDependenciesMeta": {"@flowaudit/kanban-core": {"optional": True}},
+    }
+    sources, report = {}, []
+    for manifest in (common, ui):
+        source, entry = _npm_tarball(tmp_path, manifest)
+        sources[manifest["name"]] = source
+        report.append(entry)
+    return sources, report
+
+
+def test_npm_tarballs_are_bound_with_integrity_and_install_closure(tmp_path):
+    sources, report = _npm_fixture(tmp_path)
+    assets = release.verify_npm_tarballs(sources, report, tmp_path, "0.4.2", "a" * 40)
+    manifest = json.loads(assets[release.NPM_MANIFEST])
+    assert manifest["registry_publication"] == "NOT_EXECUTED"
+    ui = next(p for p in manifest["packages"] if p["name"] == "@flowaudit/ui")
+    data = assets["flowaudit-ui-0.2.0.tgz"]
+    assert ui["integrity"] == release.npm_integrity(data)
+    assert ui["integrity"].startswith("sha512-")
+    assert ui["sha256"] == release.digest(data)
+    assert ui["install_closure"] == ["@flowaudit/common", "@flowaudit/ui"]
+    base = "https://github.com/janpow77/auditcore/releases/download/v0.4.2"
+    assert ui["package_json_dependencies"] == {
+        "@flowaudit/common": f"{base}/flowaudit-common-0.1.0.tgz",
+        "@flowaudit/ui": f"{base}/flowaudit-ui-0.2.0.tgz",
+    }
+
+
+@pytest.mark.parametrize(
+    "change", ["missing_workspace", "integrity", "license", "private", "unresolved", "unbuilt"]
+)
+def test_npm_tarballs_fail_closed(tmp_path, change):
+    sources, report = _npm_fixture(tmp_path)
+    if change == "missing_workspace":
+        report.pop()
+    elif change == "integrity":
+        report[0]["integrity"] = release.npm_integrity(b"other")
+    elif change == "license":
+        sources["@flowaudit/common"]["license"] = "UNLICENSED"
+    elif change == "private":
+        sources["@flowaudit/ui"]["private"] = True
+    elif change == "unresolved":
+        manifest = {k: v for k, v in sources["@flowaudit/ui"].items() if k != "_directory"}
+        manifest["dependencies"] = {"@flowaudit/common": "^0.2.0"}
+        sources["@flowaudit/ui"], report[1] = _npm_tarball(tmp_path, manifest)
+    else:
+        manifest = {k: v for k, v in sources["@flowaudit/common"].items() if k != "_directory"}
+        sources["@flowaudit/common"], report[0] = _npm_tarball(tmp_path, manifest, files=())
+    with pytest.raises(ValueError):
+        release.verify_npm_tarballs(sources, report, tmp_path, "0.4.2", "a" * 40)
+
+
+@pytest.mark.parametrize(
+    ("version", "spec", "expected"),
+    [
+        ("0.1.0", "0.1.0", True),
+        ("0.1.1", "0.1.0", False),
+        ("0.1.3", "^0.1.0", True),
+        ("0.2.0", "^0.1.0", False),
+        ("1.4.0", "^1.0.0", True),
+        ("2.0.0", "^1.0.0", False),
+    ],
+)
+def test_internal_npm_ranges(version, spec, expected):
+    assert release._npm_version_satisfies(version, spec) is expected

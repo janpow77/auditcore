@@ -18,23 +18,20 @@ eigener Netzwerkzugriff außer über die Ports.
 
 ## Installation
 
-Im auditcore-Repository ist das Paket Teil des npm-Workspace:
+Anwendungen beziehen das Paket als Tarball aus dem GitHub-Release von
+auditcore (noch nicht auf npm veröffentlicht), zusammen mit allen
+`@flowaudit`-Paketen seiner Abhängigkeitshülle. Anleitung für Vue, React und
+Web Components mit Integritätsprüfung und `vendor/`-Ablage:
+[frontend-installation.md](../../docs/deployment/frontend-installation.md).
 
 ```sh
-npm ci                                # im Repository-Stamm
-npm run build -w @flowaudit/ui-core   # dist/: ESM und Typen; Stile unter styles/
+npm install @flowaudit/ui-core@https://github.com/janpow77/auditcore/releases/download/v<release>/flowaudit-ui-core-0.1.0.tgz
 ```
 
-Im Anwendungsrepository (meist indirekt über `@flowaudit/ui` oder
-`@flowaudit/ui-react`):
+Abhängigkeitshülle: dazu `@flowaudit/common`. Stile: `@flowaudit/ui-core/style.css` (Designtoken `--fa-*` und Komponentenstile).
 
-```sh
-npm install @flowaudit/ui-core @flowaudit/common
-```
-
-Das Paket ist nicht in einer npm-Registry veröffentlicht; Bezug über den
-Workspace oder ein mit `npm pack -w @flowaudit/ui-core` erzeugtes Tarball
-(zusammen mit `@flowaudit/common`).
+Im auditcore-Repository gehört das Paket zum npm-Workspace (`npm ci` im
+Stamm, Bau mit `npm run build -w @flowaudit/ui-core`).
 
 ## Schnellstart
 
