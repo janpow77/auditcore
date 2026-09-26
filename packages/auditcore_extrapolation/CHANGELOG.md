@@ -1,5 +1,27 @@
 # Changelog auditcore_extrapolation
 
+## Unreleased
+
+- Stichprobe in mehreren Zeiträumen (Leitfaden 6.1.3, 6.2.3, 6.3.3, 6.3.4,
+  6.4.9, 7.3, Anhang 2): `Period`, `project_periods`, `assess_periods`,
+  `combined_precision`.
+- Zwei- und dreistufige Stichprobe, ETC mit Lead-Partner und Partner-Stichprobe
+  (7.6, 6.4.10, 6.5.3): `SubSample`, `project_subsample`, `unit_from_subsample`.
+- Neuberechnung des Konfidenzniveaus (7.7) mit Tabelle 1 aus 3.2.1:
+  `recalculate_confidence`, `system_confidence_level`.
+- Gruppen von Programmen (7.8): `assess_groups`.
+- Merkmalsstichprobe für Systemprüfungen (7.9.3–7.9.5): `evaluate_attributes`
+  (mit Wurzel in der Präzision; Formelfehler des Leitfadens dokumentiert).
+- REST `evaluation/1` abwärtskompatibel erweitert (`periods`, `group`,
+  `subsample`, `system_assessment`, `required_confidence_level`,
+  `population_units`; Antwort `design`, `subsamples`, `groups`,
+  `confidence_recalculation`), neuer Endpunkt `POST /attributes`.
+- Fehlerbehebung: Der konservative MUS-Ansatz scheiterte an Konfidenzniveaus aus
+  Tabelle 4 ohne z-Wert in Tabelle 3 (50 %, 75 %, 85 %, 99 %).
+- Referenzfälle 6.1.3.6, 6.2.3.6, 6.3.3.7, 6.3.4.7, 6.4.9.1, 6.4.9.2,
+  6.5.3.3.2, 7.3.2.2, 7.6.5, 7.7, 7.8.2, 7.9.5; Abdeckungsliste in
+  `docs/abgrenzung.md`.
+
 ## 0.1.0 – 2026-09-26 – Paketstand für Release v0.4.2 (erste Veröffentlichung)
 
 Erste Fassung (Neuimplementierung nach EGESIF_16-0014-01 und CPRE_23-0013-01 Annex 3).

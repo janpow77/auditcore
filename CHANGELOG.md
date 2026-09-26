@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- `auditcore_extrapolation`: fehlende Verfahren des Stichprobenleitfadens
+  EGESIF_16-0014-01 ergänzt – mehrere Zeiträume, zwei-/dreistufige Stichprobe
+  inkl. ETC, Neuberechnung des Konfidenzniveaus (7.7), Gruppen von Programmen
+  (7.8), Merkmalsstichprobe (7.9); REST `evaluation/1` abwärtskompatibel
+  erweitert, `POST /attributes`; UI `ExtrapolationPanel`/`FlowauditExtrapolation`
+  mit Zeiträumen, Gruppen, Teilstichproben und Neuberechnung. Fehlerbehebung:
+  konservativer MUS-Ansatz mit allen Niveaus aus Tabelle 4.
+
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
