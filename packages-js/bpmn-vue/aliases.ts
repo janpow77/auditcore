@@ -16,6 +16,9 @@ export function sourceAliases(): Record<string, string> {
     '@flowaudit/bpmn-flowaudit/ui': `${flowaudit}/ui/index.ts`,
     '@flowaudit/bpmn-flowaudit': `${flowaudit}/index.ts`,
     '@flowaudit/bpmn-editor': resolve(here, '../bpmn-editor/src/index.ts'),
+    '@flowaudit/ui-core': resolve(here, '../ui-core/src/index.ts'),
+    '@flowaudit/common/browser': resolve(here, '../common/src/browser.ts'),
+    '@flowaudit/common': resolve(here, '../common/src/index.ts'),
   }
 }
 

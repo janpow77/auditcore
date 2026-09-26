@@ -1,9 +1,8 @@
 /**
- * Mapping of React props to the attributes and events of
- * `<flowaudit-bpmn-editor>` (see `@flowaudit/bpmn-vue/web-component`).
+ * Mapping of the React props of `FlowauditBpmnEditor` to the attributes and
+ * events of the web component `<flowaudit-bpmn-editor>` (the contract both
+ * implementations share; see `ELEMENT_ATTRIBUTES`/`ELEMENT_EVENTS` of the core).
  */
-
-export const ELEMENT_NAME = 'flowaudit-bpmn-editor'
 
 export const ATTRIBUTE_PROPS = {
   src: 'src',
@@ -17,8 +16,6 @@ export const ATTRIBUTE_PROPS = {
   author: 'author',
 } as const
 
-export type AttributeProp = keyof typeof ATTRIBUTE_PROPS
-
 export const EVENT_PROPS = {
   onReady: 'ready',
   onChange: 'change',
@@ -27,5 +24,3 @@ export const EVENT_PROPS = {
   onDiagramInfoChange: 'diagram-info-change',
   onError: 'error',
 } as const
-
-export type EventProp = keyof typeof EVENT_PROPS

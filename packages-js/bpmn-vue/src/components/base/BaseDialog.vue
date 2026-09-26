@@ -4,6 +4,7 @@
  * Escape and backdrop click, keeps focus inside and returns it afterwards.
  */
 import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { createFocusTrap } from '@flowaudit/ui-core'
 import FaIcon from './FaIcon.vue'
 import { useI18n } from '../../i18n/useI18n'
 
@@ -13,50 +14,30 @@ const { t } = useI18n()
 
 const panel = ref<HTMLElement | null>(null)
 const titleId = `fa-dialog-${Math.random().toString(36).slice(2, 9)}`
-let previousFocus: HTMLElement | null = null
-
-const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+const trap = createFocusTrap(() => panel.value)
 
 function close(): void {
   emit('update:open', false)
   emit('close')
 }
 
-function trapFocus(event: KeyboardEvent): void {
-  if (event.key === 'Escape') {
-    event.stopPropagation()
-    close()
-    return
-  }
-  if (event.key !== 'Tab' || !panel.value) return
-  const items = Array.from(panel.value.querySelectorAll<HTMLElement>(FOCUSABLE))
-  const first = items[0]
-  const last = items[items.length - 1]
-  if (!first || !last) return
-  if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault()
-    last.focus()
-  } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault()
-    first.focus()
-  }
+function onKeydown(event: KeyboardEvent): void {
+  if (event.key !== 'Escape') return
+  event.stopPropagation()
+  close()
 }
 
 watch(
   () => props.open,
   async (open) => {
-    if (open) {
-      previousFocus = document.activeElement as HTMLElement | null
-      await nextTick()
-      panel.value?.querySelector<HTMLElement>(FOCUSABLE)?.focus()
-    } else {
-      previousFocus?.focus?.()
-    }
+    if (!open) return trap.deactivate()
+    await nextTick()
+    trap.activate()
   },
   { immediate: true },
 )
 
-onBeforeUnmount(() => previousFocus?.focus?.())
+onBeforeUnmount(trap.deactivate)
 </script>
 
 <template>
@@ -68,7 +49,7 @@ onBeforeUnmount(() => previousFocus?.focus?.())
       aria-modal="true"
       :aria-labelledby="titleId"
       :style="{ width }"
-      @keydown="trapFocus"
+      @keydown="onKeydown"
     >
       <header class="fa-dialog__head">
         <div>

@@ -8,7 +8,10 @@
       "@flowaudit/bpmn-flowaudit": ["../bpmn-flowaudit/src/index.ts"],
       "@flowaudit/bpmn-flowaudit/profiles": ["../bpmn-flowaudit/src/profile/bundled.ts"],
       "@flowaudit/bpmn-flowaudit/ui": ["../bpmn-flowaudit/src/ui/index.ts"],
-      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts"]
+      "@flowaudit/bpmn-editor": ["../bpmn-editor/src/index.ts"],
+      "@flowaudit/ui-core": ["../ui-core/src/index.ts"],
+      "@flowaudit/common": ["../common/src/index.ts"],
+      "@flowaudit/common/browser": ["../common/src/browser.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "test/**/*.ts", "demo/**/*.ts", "demo/**/*.vue", "standalone/**/*.ts", "*.ts", "../bpmn-flowaudit/src/types/css.d.ts", "../bpmn-editor/src/types/shims.d.ts"]

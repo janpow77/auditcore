@@ -57,7 +57,7 @@ function choose(value: LegalBasis): void {
       <span class="fa-label">{{ t('legal.search') }}</span>
       <span class="fa-legal-search__input">
         <FaIcon name="search" :size="16" />
-        <input v-model="query" class="fa-input" type="search" :disabled="disabled" :aria-controls="listId" @keydown.enter.prevent="typed && choose(typed)" />
+        <input v-model="query" class="fa-input" type="search" :disabled="disabled" :aria-controls="query.trim() ? listId : undefined" @keydown.enter.prevent="typed && choose(typed)" />
       </span>
     </label>
     <div v-if="query.trim()" :id="listId" class="fa-legal-search__results" role="listbox" :aria-busy="busy">
