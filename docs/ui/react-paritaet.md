@@ -26,7 +26,9 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Synopse / Versionsvergleich | `FaSynopsis` | `FlowauditSynopsis` | `auditcore_documents.web` ([synopsis-rest.md](synopsis-rest.md)) | 6 |
 | Verzeichnis von Verarbeitungstätigkeiten | `FaVvt` | `FlowauditVvt` | `dataprotection_ui/1` ([dataprotection-rest.md](dataprotection-rest.md)) | 5 + Interaktionsfolge |
 | Datenschutz-Folgenabschätzung | `FaDsfa` | `FlowauditDsfa` | `dataprotection_ui/1` | 6 + 3 Interaktionsfolgen |
-| Stichprobe, Benford, Screening, Risiko-Merkmale, Kanban, Geo-Karte | ja | nur veraltete Hüllen (`@flowaudit/ui-react/elements`) | – | – |
+| Geo-Karte | `FaGeoMap` | `FlowauditGeoMap` | `auditcore_geo.web` ([geo-rest.md](geo-rest.md)) | 4 + Interaktionsfolge |
+| Basis (Schaltfläche, Eingabefeld, Dialog) | `FaButton`, `FaTextField`, `FaDialog` | `Button`, `TextField`, `Dialog` | – | 9 |
+| Stichprobe, Benford, Screening, Risiko-Merkmale, Kanban | ja | noch veraltete Hüllen (`@flowaudit/ui-react/elements`); native Fassungen in Arbeit | – | – |
 
 ## Nachweis
 
@@ -41,9 +43,13 @@ echten Python-Backends, keine Personendaten).
 2. **Gleiches DOM:** `ui-react/test/parity` rendert beide Fassungen mit
    denselben Eingaben und vergleicht das normalisierte DOM
    (`ui-core/test/parity/dom.ts`) und den Formularzustand (Werte, Häkchen,
-   Auswahl) – auch nach denselben Interaktionen (Tätigkeit wählen, Feld
+   Auswahl; Listen nach gewählter Position und sichtbarem Text) – auch nach denselben Interaktionen (Tätigkeit wählen, Feld
    ändern, Historie, Referat anlegen, verwerfen, Freigabe anzeigen; Tabwechsel
-   per Pfeiltaste und Ende, Antwort mit Vorschau, Entscheidung).
+   per Pfeiltaste und Ende, Antwort mit Vorschau, Entscheidung; Geo: Hinweis ohne
+   Bezugspunkt, Punkt übernehmen, Umkreis, Kartenklick, Punkt in Fläche,
+   Vereinfachung, Einheit, GeoPackage). Die Leaflet-Ansicht ist in beiden
+   Fassungen dieselbe Attrappe; gezeichnet wird mit dem gemeinsamen
+   `createLeafletView` aus dem Kern.
 3. **Verhalten:** je Komponente eigene Tests mit Testing Library, die den
    Vue-Tests entsprechen (Ereignisse, Tastatur, Port-Aufrufe mit Revision,
    Fehlermeldungen, Sprache).

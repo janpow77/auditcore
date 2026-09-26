@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useGeoContext } from './context'
-import { displayName } from './model'
+import { displayName } from '@flowaudit/ui-core'
 
 defineProps<{ testid: string }>()
 const { state, t } = useGeoContext()

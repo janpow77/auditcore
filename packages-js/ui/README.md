@@ -119,7 +119,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (560):
+Exporte der Einstiegspunkte aus `package.json#exports` (556):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -138,7 +138,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `AnswerInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AnswerValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ApiErrorBody` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `AreaGeometry` | Typ | GeoJSON-Fläche in Achsenfolge Länge, Breite (RFC 7946). | `geo/types` |
+| `@flowaudit/ui` | `AreaGeometry` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentExportFormat` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentStatus` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `AssessmentSummary` | Re-Export | – | `@flowaudit/ui-core` |
@@ -185,7 +185,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `ConformityProfile` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `ConformityRow` | Schnittstelle | – | `benford/types` |
 | `@flowaudit/ui` | `ConsolidatedParagraph` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `CoordinateError` | Typ | – | `geo/model` |
+| `@flowaudit/ui` | `CoordinateError` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DATAPROTECTION_CONTRACT` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DEFAULT_BOX` | Konstante | – | `benford/chart` |
 | `@flowaudit/ui` | `DEFAULT_FILTER` | Konstante | – | `risk/view/state` |
@@ -201,7 +201,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `DecisionInput` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `DecisionRequest` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `DecisionView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `DegenerateRing` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `DegenerateRing` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Delimiter` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `DerivationStep` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `DiffField` | Re-Export | – | `@flowaudit/ui-core` |
@@ -213,7 +213,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `DsfaHooks` | Re-Export | – | `./useDsfa` |
 | `@flowaudit/ui` | `DsfaState` | Schnittstelle | – | `dataprotection/useDsfa` |
 | `@flowaudit/ui` | `DsfaStep` | Re-Export | – | `./useDsfa` |
-| `@flowaudit/ui` | `EarthModel` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `EarthModel` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ElementDefinition` | Schnittstelle | Eine Komponente, die als Web Component `flowaudit-<name>` bereitgestellt wird. | `elements/define` |
 | `@flowaudit/ui` | `ElementTag` | Typ | – | `elements/define` |
 | `@flowaudit/ui` | `EntryView` | Schnittstelle | – | `screening/types` |
@@ -251,18 +251,18 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `FlowauditUiOptions` | Schnittstelle | – | `plugin` |
 | `@flowaudit/ui` | `FreshnessStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui` | `FreshnessView` | Schnittstelle | – | `screening/types` |
-| `@flowaudit/ui` | `GeoArea` | Schnittstelle | Fläche auf der Karte (z. B. Schutzgebiet); `notes` sind Hinweise zur Geometrie. | `geo/types` |
-| `@flowaudit/ui` | `GeoBusy` | Typ | – | `geo/useGeoAreas` |
-| `@flowaudit/ui` | `GeoCatalogue` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `GeoHint` | Typ | – | `geo/useGeoAreas` |
-| `@flowaudit/ui` | `GeoMapCallbacks` | Schnittstelle | – | `geo/useGeoMap` |
-| `@flowaudit/ui` | `GeoPackageArea` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `GeoPackageResult` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `GeoPoint` | Schnittstelle | Punkt auf der Karte (z. B. Vorhabenstandort); `id` ist die Kennung in Ergebnissen. | `geo/types` |
-| `@flowaudit/ui` | `GeoPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createGeoRestPort`. | `geo/types` |
-| `@flowaudit/ui` | `GeoRestOptions` | Schnittstelle | – | `geo/rest-port` |
-| `@flowaudit/ui` | `GeocodeHit` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `GeocodeResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `GeoArea` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeoBusy` | Re-Export | – | `./useGeoMap` |
+| `@flowaudit/ui` | `GeoCatalogue` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeoHint` | Re-Export | – | `./useGeoMap` |
+| `@flowaudit/ui` | `GeoMapCallbacks` | Re-Export | – | `./useGeoMap` |
+| `@flowaudit/ui` | `GeoPackageArea` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeoPackageResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeoPoint` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeoPort` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeoRestOptions` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeocodeHit` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `GeocodeResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `HitFilter` | Schnittstelle | – | `screening/view` |
 | `@flowaudit/ui` | `HitView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `ICONS` | Re-Export | – | `@flowaudit/ui-core` |
@@ -281,13 +281,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `KeyTitle` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LOCALES` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LOCALE_KEY` | Konstante | – | `i18n/i18n` |
-| `@flowaudit/ui` | `LatLon` | Schnittstelle | Typen des REST-Vertrags `docs/ui/geo-rest.md` (auditcore_geo.web). | `geo/types` |
+| `@flowaudit/ui` | `LatLon` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LevelTone` | Typ | – | `benford/model` |
 | `@flowaudit/ui` | `LevelView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ListInfo` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `Locale` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `LocateRequest` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `LocateResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `LocateRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `LocateResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `LogEntry` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `LogView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `MeasureView` | Re-Export | – | `@flowaudit/ui-core` |
@@ -306,7 +306,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `ParsedTable` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `Person` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
-| `@flowaudit/ui` | `Position` | Typ | – | `geo/types` |
+| `@flowaudit/ui` | `Position` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ProfileDetail` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileReference` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `ProfileStatus` | Typ | – | `risk/types` |
@@ -315,9 +315,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `Proposal` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `QuestionView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ROW_STATUSES` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `RadiusHit` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `RadiusRequest` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `RadiusResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `RadiusHit` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RadiusRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `RadiusResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RecordView` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui` | `RegisterColumn` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `RegisterContent` | Re-Export | – | `@flowaudit/ui-core` |
@@ -387,9 +387,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `SettingsView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui` | `Severity` | Typ | – | `risk/types` |
 | `@flowaudit/ui` | `ShortValues` | Typ | – | `benford/types` |
-| `@flowaudit/ui` | `SimplifyRequest` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `SimplifyResult` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `SimplifyUnit` | Typ | – | `geo/types` |
+| `@flowaudit/ui` | `SimplifyRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SimplifyResult` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `SimplifyUnit` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SizeRequest` | Typ | – | `sampling/types` |
 | `@flowaudit/ui` | `SizeResult` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui` | `SizeValidation` | Typ | – | `sampling/model` |
@@ -414,21 +414,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `SynopsisSource` | Schnittstelle | Eingaben der Komponente, als Getter übergeben (Props bleiben reaktiv). | `synopsis/useSynopsis` |
 | `@flowaudit/ui` | `SynopsisTranslate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `SynopsisView` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `TOLERANCE_STEPS` | Konstante | Stufen des Toleranzreglers der Vereinfachung (Meter bzw. Grad). | `geo/model` |
+| `@flowaudit/ui` | `TOLERANCE_STEPS` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `TabItem` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `TableColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `TableImport` | Vue-Komponente | – | `tabular/TableImport.vue` |
 | `@flowaudit/ui` | `TableRow` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `ThemeMode` | Typ | – | `theme/theme` |
-| `@flowaudit/ui` | `TileSource` | Schnittstelle | Kachelquelle der Anwendung; ohne Quelle zeigt die Karte keinen Hintergrund. | `geo/types` |
+| `@flowaudit/ui` | `TileSource` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/view/format` |
 | `@flowaudit/ui` | `Totals` | Schnittstelle | – | `risk/view/state` |
 | `@flowaudit/ui` | `Translate` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
 | `@flowaudit/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
-| `@flowaudit/ui` | `UseGeoAreas` | Schnittstelle | – | `geo/useGeoAreas` |
 | `@flowaudit/ui` | `UseGeoMap` | Schnittstelle | – | `geo/useGeoMap` |
-| `@flowaudit/ui` | `UseGeoReference` | Schnittstelle | – | `geo/useGeoReference` |
 | `@flowaudit/ui` | `UseI18n` | Schnittstelle | – | `i18n/i18n` |
 | `@flowaudit/ui` | `UseRiskFlags` | Schnittstelle | – | `risk/useRiskFlags` |
 | `@flowaudit/ui` | `UseSampling` | Schnittstelle | – | `sampling/useSampling` |
@@ -440,8 +438,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `UseTableImport` | Schnittstelle | – | `tabular/useTableImport` |
 | `@flowaudit/ui` | `UseTheme` | Schnittstelle | – | `theme/theme` |
 | `@flowaudit/ui` | `UseToast` | Schnittstelle | – | `composables/useToast` |
-| `@flowaudit/ui` | `UtmRequest` | Schnittstelle | – | `geo/types` |
-| `@flowaudit/ui` | `UtmResult` | Schnittstelle | – | `geo/types` |
+| `@flowaudit/ui` | `UtmRequest` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `UtmResult` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VersionSummary` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `VersionView` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ViewMessage` | Schnittstelle | Meldung als Katalogschlüssel mit Platzhaltern; die Komponente übersetzt sie. | `screening/view` |
@@ -459,7 +457,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `applyPreview` | Funktion | Spaltenansicht mit der bewegten Karte an der Vorschauposition. | `kanban/movePreview` |
 | `@flowaudit/ui` | `applyRowOverrides` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
-| `@flowaudit/ui` | `areasFromGeoPackage` | Funktion | Flächen aus einer GeoPackage-Antwort; Kennungen erhalten die Herkunft als Präfix. | `geo/model` |
+| `@flowaudit/ui` | `areasFromGeoPackage` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `ariaSort` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
 | `@flowaudit/ui` | `badgePrefix` | Funktion | – | `kanban/cardView` |
@@ -489,7 +487,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@flowaudit/ui` | `createDataProtectionRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createFlowauditUi` | Funktion | Vue-Plugin: stellt die Sprache app-weit bereit. | `plugin` |
-| `@flowaudit/ui` | `createGeoRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_geo.web` (Starlette oder FastAPI). | `geo/rest-port` |
+| `@flowaudit/ui` | `createGeoRestPort` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@flowaudit/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
 | `@flowaudit/ui` | `createSamplingRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_sampling.web` (Starlette oder FastAPI). | `sampling/rest-port` |
@@ -504,7 +502,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `detectDelimiter` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `diffSegments` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `digitLabel` | Funktion | Anzeige einer Ziffer: zweite Ziffer 0–9, sonst Zahl. | `benford/model` |
-| `@flowaudit/ui` | `displayName` | Funktion | Bezeichnung für Listen: Name, sonst Kennung. | `geo/model` |
+| `@flowaudit/ui` | `displayName` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `displayValue` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `distribution` | Funktion | Verteilung je Regel in Profilreihenfolge (nur Datensatzregeln). | `risk/view/state` |
 | `@flowaudit/ui` | `downloadText` | Re-Export | – | `./useSynopsisExport` |
@@ -529,15 +527,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `focusableWithin` | Re-Export | – | `./useFocusTrap` |
 | `@flowaudit/ui` | `formatAmount` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatDate` | Re-Export | – | `@flowaudit/common` |
-| `@flowaudit/ui` | `formatDegrees` | Funktion | Grad mit sechs Nachkommastellen (≈ 0,1 m). | `geo/model` |
-| `@flowaudit/ui` | `formatDistance` | Funktion | Entfernung sprachabhängig: unter 1 km in Metern, sonst in Kilometern mit zwei Stellen. | `geo/model` |
-| `@flowaudit/ui` | `formatMetres` | Funktion | Rechts-/Hochwert in Metern mit zwei Nachkommastellen, ohne Tausendertrennung. | `geo/model` |
+| `@flowaudit/ui` | `formatDegrees` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `formatDistance` | Re-Export | – | `@flowaudit/ui-core` |
+| `@flowaudit/ui` | `formatMetres` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `formatNumber` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatPercent` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `formatShare` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `formatValue` | Funktion | Wert eines Eingabefelds: leer ausdrücklich, Zahlen im Sprachformat. | `risk/view/format` |
 | `@flowaudit/ui` | `geoMapElement` | Konstante | `<flowaudit-geo-map>`: Eigenschaften `port` (GeoPort), `points`, `areas`, `tiles` (TileSource), `center`, `zoom`, `locale`; Ereignisse `radius-completed`, `location-checked`, `area … | `geo/element` |
-| `@flowaudit/ui` | `geoMessages` | Konstante | Texte der Geo-Karte. | `geo/messages` |
+| `@flowaudit/ui` | `geoMessages` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `groupByDepartment` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `guessNumberColumn` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
@@ -568,9 +566,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `parameterLabel` | Funktion | – | `risk/view/format` |
 | `@flowaudit/ui` | `parseConditions` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseCount` | Re-Export | – | `@flowaudit/ui-core` |
-| `@flowaudit/ui` | `parseDegrees` | Funktion | Dezimalgrad aus Texteingabe; Komma und Punkt sind als Dezimaltrenner erlaubt, Tausendertrennzeichen nicht. Ungültiges ergibt `null`. | `geo/model` |
+| `@flowaudit/ui` | `parseDegrees` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
-| `@flowaudit/ui` | `parseLatLon` | Funktion | Punkt aus zwei Texteingaben mit Wertebereichsprüfung. | `geo/model` |
+| `@flowaudit/ui` | `parseLatLon` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `parseNumber` | Re-Export | – | `@flowaudit/common` |
 | `@flowaudit/ui` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
 | `@flowaudit/ui` | `parseTable` | Re-Export | – | `@flowaudit/common` |
@@ -638,9 +636,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `useDebouncedRef` | Funktion | Folgt `source` erst nach `ms` Ruhe (z. B. Suchfeld → Anfrage). | `composables/useDebounced` |
 | `@flowaudit/ui` | `useDsfa` | Funktion | – | `dataprotection/useDsfa` |
 | `@flowaudit/ui` | `useFocusTrap` | Funktion | Hält den Tastaturfokus im Container, solange `active` wahr ist, und gibt ihn danach an das zuvor fokussierte Element zurück. | `composables/useFocusTrap` |
-| `@flowaudit/ui` | `useGeoAreas` | Funktion | Flächen (übergeben und aus GeoPackage geladen), Auswahl und Vereinfachung. | `geo/useGeoAreas` |
 | `@flowaudit/ui` | `useGeoMap` | Funktion | Zustand und Abläufe der Geo-Karte; jede Berechnung läuft über den Port. | `geo/useGeoMap` |
-| `@flowaudit/ui` | `useGeoReference` | Funktion | Bezugspunkt mit Texteingabe, UTM-Anzeige und (nur freigegeben) Adresssuche. | `geo/useGeoReference` |
 | `@flowaudit/ui` | `useI18n` | Funktion | Composable für Komponenten. `override` (z. B. eine Prop `locale`) hat Vorrang vor der bereitgestellten Sprache. | `i18n/i18n` |
 | `@flowaudit/ui` | `useId` | Funktion | Eindeutige, stabile ID je Komponenteninstanz für aria-Verknüpfungen. | `composables/useId` |
 | `@flowaudit/ui` | `useKanbanActions` | Funktion | – | `kanban/useKanbanActions` |
@@ -664,7 +660,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (560):
 | `@flowaudit/ui` | `useToast` | Funktion | Toasts als reaktive Liste über der framework-freien Warteschlange aus `@flowaudit/common`. | `composables/useToast` |
 | `@flowaudit/ui` | `useVvt` | Funktion | – | `dataprotection/useVvt` |
 | `@flowaudit/ui` | `validateDecision` | Funktion | – | `screening/view` |
-| `@flowaudit/ui` | `vertexCount` | Funktion | Anzahl der Stützpunkte einer Fläche (Schlusspunkte mitgezählt). | `geo/model` |
+| `@flowaudit/ui` | `vertexCount` | Re-Export | – | `@flowaudit/ui-core` |
 | `@flowaudit/ui` | `vvtElement` | Konstante | `<flowaudit-vvt>`: Eigenschaften `port` (DataProtectionPort), `actor`, `editable`, `locale`; Ereignisse `draft-saved`, `released`, `exported`, `error`. | `dataprotection/element` |
 | `@flowaudit/ui` | `whenMissingKey` | Funktion | – | `risk/view/labels` |
 | `@flowaudit/ui` | `wholeSegments` | Re-Export | – | `@flowaudit/ui-core` |
@@ -1174,8 +1170,9 @@ Geprüft mit Vitest (happy-dom) und Playwright gegen die Demo-Seite
 - `@flowaudit/ui-core` 0.1.0 (Laufzeit, framework-freier Kern: Texte,
   Verträge, View-Modelle, Zustandsautomaten, Stile)
 - `@flowaudit/kanban-core` 0.1.0 (Laufzeit, Kanban-Regeln und Ports)
-- `leaflet` ^1.9.4 (Laufzeit, BSD-2-Clause; Karte von `FaGeoMap`, erst beim
-  Anzeigen einer Karte dynamisch geladen, Stile in `ui.css`)
+- Leaflet (BSD-2-Clause) für `FaGeoMap` kommt seit 0.3.0 über
+  `@flowaudit/ui-core` (erst beim Anzeigen einer Karte dynamisch geladen,
+  Stile in `ui.css`)
 - `vue` ^3.5.0 (Peer-Abhängigkeit; auch für den Web-Component-Einstieg)
 
 Node ≥ 20.19 für Bau und Tests. Typprüfung mit `vue-tsc`.

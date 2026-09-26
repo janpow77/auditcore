@@ -5,7 +5,7 @@ import FaButton from '../base/FaButton.vue'
 import { useId } from '../composables/useId'
 import GeoAreaSelect from './GeoAreaSelect.vue'
 import { useGeoContext } from './context'
-import { formatDistance } from './model'
+import { formatDistance } from '@flowaudit/ui-core'
 import type { BadgeTone } from '../base/types'
 
 const { state, t, locale } = useGeoContext()
