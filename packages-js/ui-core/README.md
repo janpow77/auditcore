@@ -10,7 +10,8 @@ hier: Wortvergleich und Filter der Synopse, Vollständigkeit und Freigabe des
 Verzeichnisses von Verarbeitungstätigkeiten, Vorschau und Entscheidung der
 Datenschutz-Folgenabschätzung, Zustand und Verteilung der Risiko-Merkmale,
 Trefferprüfung beim Screening, Eingabeprüfung und Anfragen von Stichprobe und
-Benford-Analyse samt Diagrammgeometrie. Die Oberflächenpakete binden die
+Benford-Analyse samt Diagrammgeometrie, Formularprüfung, Liste und Import der
+Dokumentvergleiche. Die Oberflächenpakete binden die
 Zustandsautomaten nur an ihr Framework an. Kein Vue, kein React, kein
 eigener Netzwerkzugriff außer über die Ports.
 
@@ -59,24 +60,25 @@ export function positionAfterNext(result: ComparisonResult): string {
 
 - **Vue:** `@flowaudit/ui` spiegelt den Zustand eines Controllers mit
   `useStore(controller.store)` in ein `shallowRef` und leitet Anzeigewerte
-  mit `computed(() => selectSynopsis(…))`, `vvtView(…)`, `dsfaDerived(…)`
-  oder `selectRisk(…)` ab.
+  mit `computed(() => selectSynopsis(…))`, `comparisonsView(…)`, `vvtView(…)`,
+  `dsfaDerived(…)` oder `selectRisk(…)` ab.
 - **React:** `@flowaudit/ui-react` liest denselben Zustand mit
   `useSyncExternalStore(controller.store.subscribe, controller.store.get)`.
 - **Ohne Framework:** Controller erzeugen, `store.subscribe` abonnieren und
   bei jeder Änderung aus `store.get()` neu zeichnen.
 - **Stile:** `import '@flowaudit/ui-core/style.css'` (Designtoken `--fa-*`,
   Basis, Tabelle, Synopse, Datenschutz, Geo, Risiko-Merkmale, Screening,
-  Datei-Import, Stichprobe, Benford); einzelne Dateien unter
+  Datei-Import, Stichprobe, Benford, Dokumentvergleiche); einzelne Dateien unter
   `@flowaudit/ui-core/styles/*.css`. `@flowaudit/ui/style.css` enthält sie bereits.
 
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (563):
+Exporte der Einstiegspunkte aus `package.json#exports` (611):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
+| `@flowaudit/ui-core` | `ACCEPTED_EXTENSIONS` | Konstante | – | `documents/form` |
 | `@flowaudit/ui-core` | `ANSWER_VALUES` | Konstante | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `Activity` | Typ | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `ActivityGroup` | Schnittstelle | – | `dataprotection/registerView` |
@@ -119,6 +121,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `ButtonSize` | Typ | – | `base/types` |
 | `@flowaudit/ui-core` | `ButtonVariant` | Typ | – | `base/types` |
 | `@flowaudit/ui-core` | `CHANGE_STATUSES` | Konstante | Vorgabe des Filters „Alle Änderungen“: alles außer unverändert. | `synopsis/types` |
+| `@flowaudit/ui-core` | `COMPARISON_KINDS` | Konstante | – | `documents/form` |
+| `@flowaudit/ui-core` | `COMPARISON_MODES` | Konstante | – | `documents/form` |
 | `@flowaudit/ui-core` | `CONTRACT` | Konstante | – | `screening/types` |
 | `@flowaudit/ui-core` | `Catalogs` | Schnittstelle | Kataloge je Sprache; Deutsch ist vollständig, Englisch darf (noch) lückenhaft sein. | `i18n` |
 | `@flowaudit/ui-core` | `ChartBar` | Schnittstelle | – | `benford/chart` |
@@ -127,13 +131,27 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `ClientExportFormat` | Typ | – | `synopsis/types` |
 | `@flowaudit/ui-core` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
 | `@flowaudit/ui-core` | `CompareFields` | Schnittstelle | – | `synopsis/port` |
+| `@flowaudit/ui-core` | `CompareForm` | Schnittstelle | – | `documents/form` |
 | `@flowaudit/ui-core` | `CompareRow` | Schnittstelle | – | `synopsis/types` |
 | `@flowaudit/ui-core` | `Comparison` | Schnittstelle | Ein gespeicherter Vergleich (`GET /comparisons/{id}`). | `synopsis/types` |
+| `@flowaudit/ui-core` | `ComparisonKind` | Typ | – | `documents/form` |
 | `@flowaudit/ui-core` | `ComparisonMetadata` | Schnittstelle | – | `synopsis/types` |
+| `@flowaudit/ui-core` | `ComparisonMode` | Typ | – | `documents/form` |
 | `@flowaudit/ui-core` | `ComparisonProfile` | Schnittstelle | – | `synopsis/types` |
 | `@flowaudit/ui-core` | `ComparisonResult` | Schnittstelle | – | `synopsis/types` |
 | `@flowaudit/ui-core` | `ComparisonRow` | Schnittstelle | – | `screening/view` |
 | `@flowaudit/ui-core` | `ComparisonSummary` | Schnittstelle | – | `synopsis/types` |
+| `@flowaudit/ui-core` | `ComparisonsBusy` | Typ | – | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsController` | Typ | – | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsControllerOptions` | Schnittstelle | – | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsData` | Schnittstelle | – | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsError` | Schnittstelle | Fehler einer Portanfrage: Meldung des Servers bzw. `network_error` mit Status 0. | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsHooks` | Schnittstelle | – | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsMessageKey` | Typ | – | `documents/messages` |
+| `@flowaudit/ui-core` | `ComparisonsPort` | Typ | Port zur Anwendung: {@link createSynopsisRestClient } erfüllt ihn vollständig. `load`/`updateRows`/`exportUrl` braucht nur die eingebettete Synopse, `importResult` nur der Import. | `documents/controller` |
+| `@flowaudit/ui-core` | `ComparisonsTranslate` | Typ | – | `documents/messages` |
+| `@flowaudit/ui-core` | `ComparisonsView` | Schnittstelle | – | `documents/view` |
+| `@flowaudit/ui-core` | `ComparisonsViewOptions` | Schnittstelle | – | `documents/view` |
 | `@flowaudit/ui-core` | `Completeness` | Schnittstelle | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `ConfidenceLevel` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui-core` | `Conformity` | Schnittstelle | – | `benford/types` |
@@ -144,7 +162,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `DATAPROTECTION_CONTRACT` | Konstante | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `DEFAULT_BOX` | Konstante | – | `benford/chart` |
 | `@flowaudit/ui-core` | `DEFAULT_FILTER` | Konstante | – | `risk/state` |
+| `@flowaudit/ui-core` | `DEFAULT_FORM` | Konstante | – | `documents/form` |
 | `@flowaudit/ui-core` | `DEFAULT_LOCALE` | Konstante | – | `i18n` |
+| `@flowaudit/ui-core` | `DEFAULT_MAX_UPLOAD_BYTES` | Konstante | Vorgabe des Servers (`ServiceSettings.max_upload_bytes`). | `documents/form` |
 | `@flowaudit/ui-core` | `DEFAULT_SYNOPSIS_FILTER` | Konstante | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `DSFA_NOTICES` | Konstante | – | `dataprotection/dsfa` |
 | `@flowaudit/ui-core` | `DataProtectionError` | Schnittstelle | Fehler einer Portanfrage: Code und Meldung des Servers bzw. `network_error` mit Status 0. | `dataprotection/requests` |
@@ -196,6 +216,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `FlagHit` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui-core` | `FlagState` | Typ | Zustand einer Regel für einen Datensatz. | `risk/state` |
 | `@flowaudit/ui-core` | `FocusTrap` | Schnittstelle | – | `focus` |
+| `@flowaudit/ui-core` | `FormProblem` | Schnittstelle | Ein Befund der Formularprüfung: Textschlüssel und Platzhalter. | `documents/form` |
 | `@flowaudit/ui-core` | `FreshnessStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui-core` | `FreshnessView` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `GeoArea` | Schnittstelle | Fläche auf der Karte (z. B. Schutzgebiet); `notes` sind Hinweise zur Geometrie. | `geo/types` |
@@ -222,8 +243,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@flowaudit/ui-core` | `IDLE` | Konstante | – | `store` |
 | `@flowaudit/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
+| `@flowaudit/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
 | `@flowaudit/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@flowaudit/ui-core` | `IconName` | Typ | – | `base/icons` |
+| `@flowaudit/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
+| `@flowaudit/ui-core` | `ImportRequest` | Schnittstelle | Anfrage von `POST /comparisons/import`: ein fertiges Ergebnis aus der Auftragssteuerung ablegen. | `synopsis/port` |
 | `@flowaudit/ui-core` | `ImportedColumns` | Schnittstelle | Übernommene Spalten einer Datei. | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `JsonObject` | Typ | – | `risk/types` |
 | `@flowaudit/ui-core` | `JsonValue` | Typ | Datentypen des REST-Vertrags `auditcore_risk.web` (docs/ui/risk-rest.md). Die Komponenten lesen nur diese Felder; unbekannte Felder werden ignoriert. | `risk/types` |
@@ -238,6 +262,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `LocateResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `LogEntry` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `LogView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui-core` | `MAX_THRESHOLD` | Konstante | – | `documents/form` |
+| `@flowaudit/ui-core` | `MAX_TITLE` | Konstante | – | `documents/form` |
+| `@flowaudit/ui-core` | `MIN_THRESHOLD` | Konstante | – | `documents/form` |
 | `@flowaudit/ui-core` | `MapLayers` | Schnittstelle | – | `geo/mapView` |
 | `@flowaudit/ui-core` | `MapView` | Schnittstelle | – | `geo/mapView` |
 | `@flowaudit/ui-core` | `MapViewOptions` | Schnittstelle | – | `geo/mapView` |
@@ -256,7 +283,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `Person` | Schnittstelle | – | `dataprotection/types` |
 | `@flowaudit/ui-core` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
 | `@flowaudit/ui-core` | `Position` | Typ | – | `geo/types` |
+| `@flowaudit/ui-core` | `ProblemView` | Schnittstelle | – | `documents/view` |
 | `@flowaudit/ui-core` | `ProfileDetail` | Schnittstelle | – | `risk/types` |
+| `@flowaudit/ui-core` | `ProfileOption` | Schnittstelle | – | `documents/view` |
 | `@flowaudit/ui-core` | `ProfileReference` | Schnittstelle | – | `risk/types` |
 | `@flowaudit/ui-core` | `ProfileStatus` | Typ | – | `risk/types` |
 | `@flowaudit/ui-core` | `ProfileSummary` | Schnittstelle | – | `risk/port` |
@@ -357,6 +386,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `SubjectRequest` | Schnittstelle | – | `screening/types` |
 | `@flowaudit/ui-core` | `SubjectStatus` | Typ | – | `screening/types` |
 | `@flowaudit/ui-core` | `SubjectView` | Schnittstelle | – | `screening/types` |
+| `@flowaudit/ui-core` | `SummaryView` | Schnittstelle | – | `documents/list` |
 | `@flowaudit/ui-core` | `SurveyInput` | Schnittstelle | Erhebung einer Folgenabschätzung, wie sie `POST /assessments/{id}` erwartet. | `dataprotection/types` |
 | `@flowaudit/ui-core` | `SynopsisController` | Typ | – | `synopsis/controller` |
 | `@flowaudit/ui-core` | `SynopsisData` | Schnittstelle | – | `synopsis/controller` |
@@ -379,6 +409,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/format` |
 | `@flowaudit/ui-core` | `Totals` | Schnittstelle | – | `risk/state` |
 | `@flowaudit/ui-core` | `Translate` | Typ | – | `i18n` |
+| `@flowaudit/ui-core` | `UploadFile` | Schnittstelle | Datei aus einem Eingabefeld (im Browser `File`). | `documents/form` |
 | `@flowaudit/ui-core` | `UtmRequest` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `UtmResult` | Schnittstelle | – | `geo/types` |
 | `@flowaudit/ui-core` | `VersionSummary` | Schnittstelle | – | `dataprotection/types` |
@@ -401,6 +432,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `answerOf` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `applyRowOverrides` | Funktion | Zeilen mit lokalen Änderungen (Auswahl, Grund) zusammenführen. | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `areasFromGeoPackage` | Funktion | Flächen aus einer GeoPackage-Antwort; Kennungen erhalten die Herkunft als Präfix. | `geo/model` |
+| `@flowaudit/ui-core` | `asComparisonsError` | Funktion | – | `documents/controller` |
 | `@flowaudit/ui-core` | `asScreeningError` | Funktion | – | `screening/controller` |
 | `@flowaudit/ui-core` | `awaitsSecondReview` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
@@ -435,12 +467,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `cloneContent` | Funktion | Tiefe Kopie (JSON-Daten), damit Eingaben den gelesenen Stand nie verändern. | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `codeLabel` | Funktion | Beschriftung eines Codes aus dem Vertrag (Status, Stufe, Hinweis); unbekannte Codes bleiben stehen. | `screening/messages` |
 | `@flowaudit/ui-core` | `comparisonRows` | Funktion | – | `screening/view` |
+| `@flowaudit/ui-core` | `comparisonsMessages` | Konstante | Texte der Vergleichsverwaltung (`<flowaudit-comparisons>`): Hochladen, gespeicherte Vergleiche, Import und Löschen. Begriffe wie in der Synopse. | `documents/messages` |
+| `@flowaudit/ui-core` | `comparisonsView` | Funktion | – | `documents/view` |
 | `@flowaudit/ui-core` | `completeness` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `completenessTone` | Funktion | – | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `confidenceText` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `coverIssues` | Funktion | Hinweise zum Deckblatt (Verantwortlicher, DSB). | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `createBenfordController` | Funktion | – | `benford/controller` |
 | `@flowaudit/ui-core` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
+| `@flowaudit/ui-core` | `createComparisonsController` | Funktion | – | `documents/controller` |
 | `@flowaudit/ui-core` | `createDataProtectionRestPort` | Funktion | Port auf den REST-Vertrag `dataprotection_ui/1` von `auditcore_dataprotection.web`. | `dataprotection/rest-port` |
 | `@flowaudit/ui-core` | `createDelay` | Funktion | Verzögerter Aufruf, der bei jeder neuen Eingabe neu startet (Vorschau, Vollständigkeitsprüfung). | `store` |
 | `@flowaudit/ui-core` | `createDsfaController` | Funktion | – | `dataprotection/dsfa` |
@@ -467,6 +502,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `dataprotectionStatusLabel` | Funktion | Übersetzter Status (`entwurf`, `freigegeben`, …); unbekannte Werte bleiben stehen. | `dataprotection/requests` |
 | `@flowaudit/ui-core` | `decisionForm` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `decisionTitle` | Funktion | – | `dataprotection/dsfaView` |
+| `@flowaudit/ui-core` | `defaultProfile` | Funktion | Standardprofil des Servers (`default: true`), sonst das erste. | `documents/form` |
 | `@flowaudit/ui-core` | `defineMessages` | Funktion | Typisiert Kataloge einer Komponente; die Schlüssel ergeben sich aus dem deutschen Katalog. | `i18n` |
 | `@flowaudit/ui-core` | `deliverExport` | Funktion | Export ausliefern: Druckansicht (`print`) oder Datei. | `download` |
 | `@flowaudit/ui-core` | `derivationColumns` | Funktion | – | `sampling/view` |
@@ -497,12 +533,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `filterRecords` | Funktion | – | `risk/state` |
 | `@flowaudit/ui-core` | `filterRows` | Funktion | – | `synopsis/viewModel` |
 | `@flowaudit/ui-core` | `filterSubjects` | Funktion | Subjects with only the hits passing the filter; subjects themselves stay visible. | `screening/view` |
+| `@flowaudit/ui-core` | `filterSummaries` | Funktion | Suche in Titel und Dateinamen, ohne Groß-/Kleinschreibung; neueste zuerst wie der Server. | `documents/list` |
 | `@flowaudit/ui-core` | `findHit` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `flagState` | Funktion | – | `risk/state` |
 | `@flowaudit/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
 | `@flowaudit/ui-core` | `focusableWithin` | Funktion | – | `focus` |
+| `@flowaudit/ui-core` | `formProblems` | Funktion | Alle Befunde in Formularreihenfolge; leer heißt: absendbar. | `documents/form` |
 | `@flowaudit/ui-core` | `formatAge` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `formatAmount` | Funktion | – | `risk/format` |
+| `@flowaudit/ui-core` | `formatBytes` | Funktion | Größenangabe wie „20 MiB“ oder „512 KiB“. | `documents/form` |
+| `@flowaudit/ui-core` | `formatDateTime` | Funktion | Datum und Uhrzeit in der Sprache der Oberfläche; ungültige Angaben bleiben stehen. | `documents/list` |
 | `@flowaudit/ui-core` | `formatDegrees` | Funktion | Grad mit sechs Nachkommastellen (≈ 0,1 m). | `geo/model` |
 | `@flowaudit/ui-core` | `formatDistance` | Funktion | Entfernung sprachabhängig: unter 1 km in Metern, sonst in Kilometern mit zwei Stellen. | `geo/model` |
 | `@flowaudit/ui-core` | `formatMetres` | Funktion | Rechts-/Hochwert in Metern mit zwei Nachkommastellen, ohne Tausendertrennung. | `geo/model` |
@@ -515,6 +555,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `geoMessages` | Konstante | Texte der Geo-Karte. | `geo/messages` |
 | `@flowaudit/ui-core` | `getDefaultLocale` | Funktion | – | `i18n` |
 | `@flowaudit/ui-core` | `groupByDepartment` | Funktion | Referate wie in der Quelle: konfigurierte zuerst, dann unbekannte; leere entfallen. | `dataprotection/registerView` |
+| `@flowaudit/ui-core` | `hasAcceptedExtension` | Funktion | – | `documents/form` |
 | `@flowaudit/ui-core` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
 | `@flowaudit/ui-core` | `importDelimiterText` | Funktion | Anzeige des Trennzeichens („Tabulator“ für `\t`). | `tabular/tableImport` |
 | `@flowaudit/ui-core` | `importOptionalColumn` | Funktion | Optionale Spalte aus einem Auswahlwert (`''` = keine). | `tabular/tableImport` |
@@ -523,6 +564,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `indicatorLabels` | Funktion | – | `screening/view` |
 | `@flowaudit/ui-core` | `initialTexts` | Funktion | Startwerte der Textfelder: vorgeschlagene Werte der Profile, sonst leer. | `sampling/model` |
 | `@flowaudit/ui-core` | `interpolate` | Funktion | Ersetzt {name}-Platzhalter; unbekannte Platzhalter bleiben sichtbar stehen. | `i18n` |
+| `@flowaudit/ui-core` | `involvesPdf` | Funktion | PDF-Dateien vergleicht der Server immer als Fließtext. | `documents/form` |
 | `@flowaudit/ui-core` | `isDeviation` | Funktion | Abweichung vom Vorschlag verlangt eine Begründung (Bibliothek prüft Mindestlänge). | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `isIconName` | Funktion | – | `base/icons` |
 | `@flowaudit/ui-core` | `isLocale` | Funktion | – | `i18n` |
@@ -535,6 +577,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `lcsOperations` | Funktion | Längste gemeinsame Teilfolge über Wörter; `null` oberhalb von {@link WORD_LIMIT}. | `synopsis/wordDiff` |
 | `@flowaudit/ui-core` | `levelLabel` | Funktion | – | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `levelTone` | Funktion | Farbton der MAD-Stufe 0–3 (enge … keine Übereinstimmung). | `benford/model` |
+| `@flowaudit/ui-core` | `looksLikeResult` | Funktion | Kennzeichen eines `ComparisonResult.to_dict()`; Einzelheiten prüft `ComparisonResult.from_dict`. | `documents/importing` |
 | `@flowaudit/ui-core` | `mayRelease` | Funktion | Vier-Augen-Prinzip vorab anzeigen; maßgeblich bleibt die Prüfung des Servers. | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `methodGroups` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `methodStatusKey` | Funktion | – | `sampling/view` |
@@ -549,6 +592,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `parseConditions` | Funktion | Auflagen: eine je Zeile, leere Zeilen entfallen. | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `parseCount` | Funktion | Eingabe eines Zahlfeldes: leer → null, sonst nichtnegative ganze Zahl; ungültig → undefined. | `dataprotection/registerView` |
 | `@flowaudit/ui-core` | `parseDegrees` | Funktion | Dezimalgrad aus Texteingabe; Komma und Punkt sind als Dezimaltrenner erlaubt, Tausendertrennzeichen nicht. Ungültiges ergibt `null`. | `geo/model` |
+| `@flowaudit/ui-core` | `parseImport` | Funktion | – | `documents/importing` |
 | `@flowaudit/ui-core` | `parseInput` | Funktion | Eingabetext (deutsch oder englisch notiert) → Zahl; leer → null, unlesbar → undefined. | `sampling/model` |
 | `@flowaudit/ui-core` | `parseLatLon` | Funktion | Punkt aus zwei Texteingaben mit Wertebereichsprüfung. | `geo/model` |
 | `@flowaudit/ui-core` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
@@ -611,14 +655,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (563):
 | `@flowaudit/ui-core` | `strataOf` | Funktion | Schichten in Reihenfolge ihres ersten Auftretens; leer, wenn kein Element geschichtet ist. | `sampling/model` |
 | `@flowaudit/ui-core` | `strataRows` | Funktion | – | `sampling/view` |
 | `@flowaudit/ui-core` | `subscribeDefaultLocale` | Funktion | Meldet Änderungen der Standardsprache; liefert die Abmeldung. | `i18n` |
+| `@flowaudit/ui-core` | `summaryOf` | Funktion | Eintrag der Liste aus einem gespeicherten Vergleich (nach Anlegen oder Import). | `documents/list` |
+| `@flowaudit/ui-core` | `summaryView` | Funktion | – | `documents/list` |
 | `@flowaudit/ui-core` | `surveyFrom` | Funktion | Bearbeitbare Kopie der gespeicherten Erhebung. | `dataprotection/dsfaView` |
 | `@flowaudit/ui-core` | `synopsisBase` | Funktion | Ergebnisobjekt vor lokalen Änderungen: Prop `result`, sonst gespeicherter oder geladener Vergleich. | `synopsis/controller` |
 | `@flowaudit/ui-core` | `synopsisId` | Funktion | Kennung des angezeigten Vergleichs (für Speichern und Server-Exporte). | `synopsis/controller` |
 | `@flowaudit/ui-core` | `synopsisMessages` | Konstante | Sichtbare Texte der Synopse; Begriffe wie im audit_designer und in ecohesion. | `synopsis/messages` |
+| `@flowaudit/ui-core` | `synopsisPortOf` | Funktion | Der Port als Datenzugang der eingebetteten Synopse, wenn er Vergleiche laden kann. | `documents/controller` |
 | `@flowaudit/ui-core` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
+| `@flowaudit/ui-core` | `toCompareFields` | Funktion | Formularfelder für `POST /comparisons`; Gesetzessynopse ohne die Optionen des Standardvergleichs. | `documents/form` |
 | `@flowaudit/ui-core` | `toHtml` | Funktion | Eigenständiges HTML-Dokument mit Druck-CSS (keine externen Ressourcen). | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `toMarkdown` | Funktion | Markdown: gestrichene Wörter als ~~…~~, neue als **…**. | `synopsis/exporters` |
 | `@flowaudit/ui-core` | `toggleMeasure` | Funktion | – | `dataprotection/dsfaView` |
+| `@flowaudit/ui-core` | `toggleSection` | Funktion | Abschnitt ein- oder ausschalten; Reihenfolge wie `ROW_STATUSES`. | `documents/form` |
 | `@flowaudit/ui-core` | `totals` | Funktion | – | `risk/state` |
 | `@flowaudit/ui-core` | `translate` | Funktion | Übersetzt mit Rückfall auf Deutsch und zuletzt auf den Schlüssel. | `i18n` |
 | `@flowaudit/ui-core` | `translator` | Funktion | Übersetzungsfunktion für eine feste Sprache. | `i18n` |
