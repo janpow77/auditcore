@@ -10,7 +10,7 @@ README = Path(__file__).resolve().parents[1] / "README.md"
 
 def test_readme_quick_start_runs() -> None:
     text = README.read_text(encoding="utf-8")
-    section = text.split("## Schnellstart in Python", 1)[1]
+    section = text.split("## Schnellstart\n", 1)[1]
     blocks = re.findall(r"```python\n(.*?)```", section.split("\n## ", 1)[0], re.S)
     assert len(blocks) >= 2
     namespace: dict[str, object] = {}

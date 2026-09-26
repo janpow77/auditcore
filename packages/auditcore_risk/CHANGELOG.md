@@ -1,9 +1,23 @@
 # Changelog – auditcore_risk
 
-## Unveröffentlicht – Web-Schnittstelle
+## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
 
-Neue Funktion, Regeln und Ergebnisse unverändert; die Versionsnummer setzt der
-nächste Paket-Release.
+Keine Verhaltensänderung. Pins `auditcore_common==0.1.1`, `auditcore_entity_matching==0.2.3` (auch Extra `fuzzy`) und Extra `procurement` `auditcore_procurement==0.2.3`; README nach der Vorlage.
+
+## 0.3.2 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung außer der Bibliothekskennung `LIBRARY`
+(„auditcore_risk 0.3.2“). Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`); `auditcore_entity_matching==0.2.2`.
+
+- `fingerprint` → `hashing.canonical_sha256`, `_freeze` → `frozen.freeze`,
+  Profil- und Betrugsprofilverzeichnis → `profiles.packaged_profile_entries`
+  (Suche über den Dateiinhalt bleibt), `_pandas` → `optional.require_module`.
+- `results.plain` ist veraltet (`DeprecationWarning`) und liefert
+  `auditcore_common.json_values.jsonable(value)`; intern wird `jsonable`
+  genutzt. Alle 2 497 Tests grün (Replays unverändert).
+
+Zusätzlich enthält 0.3.2 die bisher unveröffentlichte Web-Schnittstelle:
 
 - **`auditcore_risk.web`** (Extras `web`: starlette ≥ 0.26.1, `fastapi`:
   fastapi ≥ 0.92): `create_app`/`routes` (Starlette) und `build_fastapi_router`

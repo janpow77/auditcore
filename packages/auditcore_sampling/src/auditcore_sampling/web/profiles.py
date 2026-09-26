@@ -26,21 +26,55 @@ _FORMULAS = {
 _DEFAULT_VARIANT = {"portal.mus_poisson": "portal", "flowstat.mus_z_attribute": "flowstat"}
 
 MUS_PARAMETERS: tuple[dict[str, object], ...] = (
-    {"key": "population_value", "label": "Wert der Grundgesamtheit (V)", "unit": "EUR",
-     "type": "number", "minimum": 0},
-    {"key": "materiality", "label": "Wesentlichkeit (M)", "unit": "EUR",
-     "type": "number", "exclusive_minimum": 0},
-    {"key": "expected_error_rate", "label": "Erwartete Fehlerrate (r)", "unit": "Anteil",
-     "type": "number", "minimum": 0, "exclusive_maximum": 1},
+    {
+        "key": "population_value",
+        "label": "Wert der Grundgesamtheit (V)",
+        "unit": "EUR",
+        "type": "number",
+        "minimum": 0,
+    },
+    {
+        "key": "materiality",
+        "label": "Wesentlichkeit (M)",
+        "unit": "EUR",
+        "type": "number",
+        "exclusive_minimum": 0,
+    },
+    {
+        "key": "expected_error_rate",
+        "label": "Erwartete Fehlerrate (r)",
+        "unit": "Anteil",
+        "type": "number",
+        "minimum": 0,
+        "exclusive_maximum": 1,
+    },
     {"key": "confidence_level", "label": "Konfidenzniveau", "unit": "Anteil", "type": "choice"},
 )
 SRS_PARAMETERS: tuple[dict[str, object], ...] = (
-    {"key": "population_size", "label": "Umfang der Grundgesamtheit (N)", "unit": "Stück",
-     "type": "integer", "minimum": 1},
-    {"key": "margin_of_error", "label": "Fehlertoleranz (e)", "unit": "Anteil",
-     "type": "number", "exclusive_minimum": 0, "exclusive_maximum": 1},
-    {"key": "expected_proportion", "label": "Erwarteter Anteil (p)", "unit": "Anteil",
-     "type": "number", "minimum": 0, "maximum": 1, "suggested": 0.5},
+    {
+        "key": "population_size",
+        "label": "Umfang der Grundgesamtheit (N)",
+        "unit": "Stück",
+        "type": "integer",
+        "minimum": 1,
+    },
+    {
+        "key": "margin_of_error",
+        "label": "Fehlertoleranz (e)",
+        "unit": "Anteil",
+        "type": "number",
+        "exclusive_minimum": 0,
+        "exclusive_maximum": 1,
+    },
+    {
+        "key": "expected_proportion",
+        "label": "Erwarteter Anteil (p)",
+        "unit": "Anteil",
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1,
+        "suggested": 0.5,
+    },
     {"key": "confidence_level", "label": "Konfidenzniveau", "unit": "Anteil", "type": "choice"},
 )
 
@@ -59,8 +93,11 @@ SELECTION_VARIANTS: tuple[dict[str, str], ...] = (
     },
 )
 ALLOCATION_METHODS: tuple[dict[str, str], ...] = (
-    {"id": "proportional", "label": "Proportional zum Schichtumfang",
-     "formula": "n_h = min(⌈n · N_h / N⌉, N_h)"},
+    {
+        "id": "proportional",
+        "label": "Proportional zum Schichtumfang",
+        "formula": "n_h = min(⌈n · N_h / N⌉, N_h)",
+    },
     {"id": "equal", "label": "Gleich verteilt", "formula": "n_h = min(⌈n / H⌉, N_h)"},
 )
 

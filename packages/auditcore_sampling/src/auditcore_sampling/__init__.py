@@ -31,7 +31,7 @@ from .sizes import (
     srs_size,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.2.2"
 
 __all__ = [
     "METHODS",

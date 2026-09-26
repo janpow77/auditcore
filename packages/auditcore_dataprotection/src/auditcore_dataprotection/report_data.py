@@ -8,11 +8,11 @@ the documents are the JSON output boundary of the library and therefore typed
 from __future__ import annotations
 
 import json
+import warnings
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict, is_dataclass
-from datetime import date, datetime
-from enum import Enum
 from typing import Any
+
+from auditcore_common.json_values import jsonable
 
 from .edpb import edpb_hints
 from .model import Assessment, RegisterVersion
@@ -34,20 +34,22 @@ SNAPSHOT_FIELDS = (
 )
 
 
+def _plain(value: object) -> Any:
+    """Records, enums, mappings, sets and datetimes as JSON-compatible values."""
+    return jsonable(value, enums=True, dataclasses=True, sets=True)
+
+
 def plain(value: object) -> Any:
-    """Convert records, enums, mappings and datetimes to JSON-compatible values."""
-    if isinstance(value, Enum):
-        return value.value
-    if isinstance(value, (datetime, date)):
-        return value.isoformat()
-    if is_dataclass(value) and not isinstance(value, type):
-        return plain(asdict(value))
-    if isinstance(value, Mapping):
-        return {str(k): plain(v) for k, v in value.items()}
-    if isinstance(value, (list, tuple, set, frozenset)):
-        items = [plain(v) for v in value]
-        return sorted(items) if isinstance(value, (set, frozenset)) else items
-    return value
+    """Veraltet: ``auditcore_common.json_values.jsonable(value, enums=True,
+    dataclasses=True, sets=True)`` (gleiches Ergebnis)."""
+    warnings.warn(
+        "auditcore_dataprotection.report_data.plain ist veraltet; "
+        "auditcore_common.json_values.jsonable(enums=True, dataclasses=True, sets=True) "
+        "verwenden.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return _plain(value)
 
 
 # ---------------------------------------------------------------------------
@@ -134,7 +136,7 @@ def _screening(assessment: Assessment, profile: RuleProfile) -> dict[str, object
 
 def _proposal(proposal: Mapping[str, Any]) -> dict[str, object]:
     notice = (
-        {"consultation_notice": plain(proposal["consultation_notice"])}
+        {"consultation_notice": _plain(proposal["consultation_notice"])}
         if proposal.get("consultation_notice")
         else {}
     )
@@ -145,9 +147,9 @@ def _proposal(proposal: Mapping[str, Any]) -> dict[str, object]:
         "consultation_required": proposal.get("consultation_required"),
         "consultation_reference": proposal.get("consultation_reference"),
         "calculation": proposal.get("calculation"),
-        "profile": plain(proposal.get("profile")),
-        "issues": plain(proposal.get("issues") or []),
-        "trace": plain(proposal.get("trace") or []),
+        "profile": _plain(proposal.get("profile")),
+        "issues": _plain(proposal.get("issues") or []),
+        "trace": _plain(proposal.get("trace") or []),
         **notice,
     }
 
@@ -158,7 +160,7 @@ def _decision(assessment: Assessment, profile: RuleProfile) -> dict[str, object]
         "deviation": assessment.deviation,
         "deviation_justification": assessment.deviation_justification,
         "decided_by": assessment.decided_by,
-        "decided_at": plain(assessment.decided_at),
+        "decided_at": _plain(assessment.decided_at),
     }
     if profile.edpb:
         decision["decision_title"] = profile.decision_titles.get(assessment.decision or "", None)
@@ -172,11 +174,11 @@ def _dpo(assessment: Assessment, profile: RuleProfile) -> dict[str, object]:
         "vote_text": profile.vote_texts.get(assessment.dpo_vote or "", "noch offen"),
         "statement": assessment.dpo_statement,
         "by": assessment.dpo_by,
-        "at": plain(assessment.dpo_at),
+        "at": _plain(assessment.dpo_at),
         "conclusion": assessment.dpo_conclusion,
         "conclusion_by": assessment.dpo_conclusion_by,
         "leadership_presented_to": assessment.leadership_presented_to,
-        "leadership_presented_at": plain(assessment.leadership_presented_at),
+        "leadership_presented_at": _plain(assessment.leadership_presented_at),
     }
     if profile.edpb and profile.documentation_mode:
         dpo["requested_from"] = assessment.dpo_requested_from
@@ -190,7 +192,7 @@ def _consultation(assessment: Assessment, profile: RuleProfile) -> dict[str, obj
     consultation = assessment.consultation
     if not consultation:
         return None
-    data: dict[str, object] = plain(consultation)
+    data: dict[str, object] = _plain(consultation)
     if not profile.edpb:
         # Schema 1 reports stay exactly as before.
         data.pop("ground", None)
@@ -204,11 +206,11 @@ def _consultation(assessment: Assessment, profile: RuleProfile) -> dict[str, obj
 def _lifecycle(assessment: Assessment) -> dict[str, object]:
     return {
         "created_by": assessment.created_by,
-        "created_at": plain(assessment.created_at),
-        "updated_at": plain(assessment.updated_at),
+        "created_at": _plain(assessment.created_at),
+        "updated_at": _plain(assessment.updated_at),
         "editors": list(assessment.editors),
         "released_by": assessment.released_by,
-        "released_at": plain(assessment.released_at),
+        "released_at": _plain(assessment.released_at),
         "revision": assessment.revision,
     }
 
@@ -229,10 +231,10 @@ def assessment_report(
         "meta": _meta(assessment, profile, tenant_label),
         "subject": {
             "fields": [
-                {"key": key, "title": title, "value": plain(snapshot.get(key))}
+                {"key": key, "title": title, "value": _plain(snapshot.get(key))}
                 for key, title in SNAPSHOT_FIELDS
             ],
-            "snapshot": plain(snapshot),
+            "snapshot": _plain(snapshot),
         },
         "screening": _screening(assessment, profile),
         "necessity": {
@@ -240,14 +242,14 @@ def assessment_report(
             "proportionality": assessment.proportionality,
             "data_subject_view": assessment.data_subject_view,
         },
-        "risk": plain(assessment.proposal.get("risk")),
+        "risk": _plain(assessment.proposal.get("risk")),
         "scenarios": [s.to_dict() for s in assessment.scenarios],
         "proposal": _proposal(assessment.proposal),
         "decision": _decision(assessment, profile),
         "dpo": _dpo(assessment, profile),
         "consultation": _consultation(assessment, profile),
         "lifecycle": _lifecycle(assessment),
-        "changes_to_predecessor": plain(list(assessment.changes_to_predecessor)),
+        "changes_to_predecessor": _plain(list(assessment.changes_to_predecessor)),
     }
     if edpb is None:
         return report
@@ -322,7 +324,7 @@ def _edpb_section(assessment: Assessment, profile: RuleProfile) -> dict[str, obj
         "measures": measures,
         "action_plan": [dict(item) for item in assessment.action_plan],
         "hints": list(edpb_hints(assessment, profile)),
-        "sources": [plain(source) for source in profile.sources],
+        "sources": [_plain(source) for source in profile.sources],
     }
 
 
@@ -356,38 +358,38 @@ def register_report(
             "locked": version.locked,
             "content_hash": version.content_hash,
             "created_by": version.created_by,
-            "created_at": plain(version.created_at),
+            "created_at": _plain(version.created_at),
             "editors": list(version.editors),
             "released_by": version.released_by,
-            "released_at": plain(version.released_at),
+            "released_at": _plain(version.released_at),
             "predecessor_version": version.predecessor_version,
             "profile_id": profile.id,
             "profile_version": profile.version,
             "profile_fingerprint": profile.fingerprint,
         },
-        "cover": plain(content.get("deckblatt") or {}),
+        "cover": _plain(content.get("deckblatt") or {}),
         "columns": [
             {"key": key, "title": title, "reference": profile.register_references.get(key, "")}
             for key, title in profile.register_columns
         ],
-        "departments": [{"name": name, "activities": plain(rows)} for name, rows in groups],
+        "departments": [{"name": name, "activities": _plain(rows)} for name, rows in groups],
         "issues": [i.to_dict() for i in check_register(content, profile)],
     }
     if overview is not None:
         report["dsfa"] = {
-            str(row.get("id")): plain(row.get("dsfa")) for row in overview if row.get("id")
+            str(row.get("id")): _plain(row.get("dsfa")) for row in overview if row.get("id")
         }
     return report
 
 
 def overview_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
     """JSON-compatible copy of ``AssessmentService.overview`` rows."""
-    return [plain(dict(row)) for row in rows]
+    return [_plain(dict(row)) for row in rows]
 
 
 def to_json_bytes(report: Mapping[str, Any]) -> bytes:
     """Deterministic UTF-8 JSON (sorted keys, ISO dates)."""
     return (
-        json.dumps(plain(report), sort_keys=True, ensure_ascii=False, indent=1).encode("utf-8")
+        json.dumps(_plain(report), sort_keys=True, ensure_ascii=False, indent=1).encode("utf-8")
         + b"\n"
     )

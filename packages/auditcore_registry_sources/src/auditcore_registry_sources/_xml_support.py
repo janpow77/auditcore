@@ -8,6 +8,8 @@ from datetime import date, datetime
 from typing import Literal, TypeAlias
 from xml.etree.ElementTree import Element  # noqa: S405 - type only; parsing uses defusedxml
 
+from auditcore_common.safe_xml import parse_xml
+
 from .errors import DependencyError
 
 DateMode = Literal["legacy", "text"]
@@ -30,14 +32,11 @@ _DATE_FORMATS = (
 
 
 def _fromstring(data: bytes) -> Element:
-    try:
-        from defusedxml.ElementTree import fromstring
-    except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
-        raise DependencyError(
-            "Für XML-Sanktionslisten ist 'auditcore_registry_sources[xml]' zu installieren."
-        ) from exc
-    root: Element = fromstring(data)
-    return root
+    return parse_xml(
+        data,
+        error=DependencyError,
+        message="Für XML-Sanktionslisten ist 'auditcore_registry_sources[xml]' zu installieren.",
+    )
 
 
 def detect_namespace(root: Element) -> dict[str, str]:

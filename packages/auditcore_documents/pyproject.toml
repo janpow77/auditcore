@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditcore_documents"
-version = "0.3.1"
+version = "0.3.3"
 description = "Characterized document comparison, German article-law synopsis and document pipeline core without web or database dependencies"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
-dependencies = ["auditcore_common==0.1.0"]
+dependencies = ["auditcore_common==0.1.1"]
 
 [project.optional-dependencies]
 docx = ["lxml>=6.1.0,<7"]

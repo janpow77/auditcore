@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_property_sources",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "classification": "EXTRACTED_FROM_CHARACTERIZED_SOURCES",
   "sources": [
     {

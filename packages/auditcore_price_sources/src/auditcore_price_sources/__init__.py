@@ -33,7 +33,7 @@ from .runs import error_text, legacy_status
 from .snapshots import RecordingTransport, SourceSnapshot, canonical_json_bytes, package_sha256
 from .tankerkoenig import TankerkoenigListAdapter, check_list_response
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 CONTRACT_VERSION = "auditcore_price_sources.contract/1"
 
 FACTORIES: dict[str, Callable[[], SourceAdapter]] = {

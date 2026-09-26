@@ -1,5 +1,20 @@
 # Changelog auditcore_statistics
 
+## 0.3.3 – 2026-09-26 – Paketstand für Release v0.4.1
+
+Keine Verhaltensänderung. Pflichtabhängigkeit `auditcore_common==0.1.1`; README nach der Vorlage.
+
+## 0.3.2 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung außer der Bibliothekskennung in den Ergebnissen
+(„auditcore_statistics 0.3.2“). Neue Laufzeitabhängigkeit
+`auditcore_common==0.1.0` (APT `python3-auditcore-common`).
+
+- `numeric.numpy_pairwise_sum` und `numeric.numpy_round` sind dieselben
+  Objekte wie in `auditcore_common.numeric` (dort bitgleich gegen die
+  bisherigen Kopien und gegen NumPy geprüft); die Namen in
+  `auditcore_statistics.numeric` bleiben.
+
 ## 0.3.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: alle 184 bestehenden Tests (Replays gegen die

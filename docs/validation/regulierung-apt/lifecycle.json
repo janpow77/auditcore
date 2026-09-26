@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "date": "2026-09-26",
+  "runtime": "offline QEMU TCG, real systemd",
+  "regulierung_commit": "b212c914f1383103e720e393e5f8654e46fdd051",
+  "payload_note": "cc6bf9a ändert nur backend/requirements.txt und einen Test; beide sind nicht Teil des Pakets (build.py kopiert app, alembic, data, zwei Skripte). Paketinhalt entspricht damit cc6bf9a.",
+  "packages": [
+    {
+      "version": "0.1.0~preview.20260926-1",
+      "sha256": "699c45438de0358c5e244c17b0a2b8d8a3f8705da02a746ce48d886c0696c8f6"
+    },
+    {
+      "version": "0.1.0~preview.20260926-2",
+      "sha256": "88656b9b0bc219bdc9ebd41a2b35cfe8f07613d60543cd699a3766eea289bcc6"
+    }
+  ],
+  "guest_script_sha256": "04be382da07e93786756c43001b100996a5a0f769ea0f8dec836c05866d4a611",
+  "dockerfile_sha256": "5c0e3df571d81927416d51fdcad9be10bd7dcf51835c145884a7ed1fafb83780",
+  "configuration": "{} (Standardvertrag des Gasttests)",
+  "kernel": "6.8.0-142-generic",
+  "checks": {
+    "administrator_created": "PASS",
+    "install_anonymous_access_rejected": "PASS",
+    "install_frontend": "PASS",
+    "install_readiness": "PASS",
+    "install_real_administrator_login": "PASS",
+    "install_secret_permissions": "PASS",
+    "install_signed_apt": "PASS",
+    "install_systemd_nonroot": "PASS",
+    "native_pdf_rendering": "PASS",
+    "no_build_toolchain_required": "PASS",
+    "offline_runtime": "PASS",
+    "readiness_rejects_unavailable_redis": "PASS",
+    "reinstall_anonymous_access_rejected": "PASS",
+    "reinstall_frontend": "PASS",
+    "reinstall_preserved_configuration_and_data": "PASS",
+    "reinstall_readiness": "PASS",
+    "reinstall_real_administrator_login": "PASS",
+    "reinstall_remove_stops_service_retains_data": "PASS",
+    "reinstall_secret_permissions": "PASS",
+    "reinstall_signed_apt": "PASS",
+    "reinstall_systemd_nonroot": "PASS",
+    "upgrade_anonymous_access_rejected": "PASS",
+    "upgrade_backup_and_restore_verification": "PASS",
+    "upgrade_frontend": "PASS",
+    "upgrade_preserved_configuration_and_data": "PASS",
+    "upgrade_readiness": "PASS",
+    "upgrade_real_administrator_login": "PASS",
+    "upgrade_remove_stops_service_retains_data": "PASS",
+    "upgrade_secret_permissions": "PASS",
+    "upgrade_signed_apt": "PASS",
+    "upgrade_systemd_nonroot": "PASS"
+  },
+  "readiness": {
+    "install": {
+      "checks": {
+        "database": true,
+        "redis": true,
+        "schema": true
+      },
+      "status": "ready"
+    },
+    "upgrade": {
+      "checks": {
+        "database": true,
+        "redis": true,
+        "schema": true
+      },
+      "status": "ready"
+    },
+    "reinstall": {
+      "checks": {
+        "database": true,
+        "redis": true,
+        "schema": true
+      },
+      "status": "ready"
+    }
+  },
+  "limitations": [
+    "Synthetic empty application database; no production data migration exercised",
+    "No external identity provider or live harvesting in the networkless guest",
+    "Upgrade-Test zwischen zwei Kandidaten gleichen Schemas (owi048). Ein Upgrade von Vorversionen mit owi047 (Kandidaten 20260923) verweigert regulierung-admin migrate bewusst: schemaändernde Upgrades brauchen einen geprüften Migrations-/Rückfallplan."
+  ],
+  "console_sha256": "62b7d994eb79c455d31a466c7c457d2426e16a21510be77818b185dca95352e5"
+}

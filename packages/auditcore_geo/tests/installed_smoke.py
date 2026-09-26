@@ -23,7 +23,7 @@ from auditcore_geo import (
 def main() -> None:
     """Profile, Umkreis, Fläche mit Rand, UTM und die optionale Adaptergrenze aufrufen."""
     paket = distribution("auditcore_geo")
-    assert paket.version == "0.2.0"
+    assert paket.version == "0.3.0"
     assert not [r for r in paket.requires or [] if "extra ==" not in r]
     assert find_spec("auditcore") is None
     frankfurt, berlin = Punkt(50.1106, 8.6821), Punkt(52.52, 13.405)
@@ -56,6 +56,21 @@ def main() -> None:
     punkt = utm_nach_geographisch(477000.0, 5550000.0, ETRS89_UTM32N)
     assert (punkt.lon, punkt.lat) == legacy.osint_utm_nach_wgs84(477000.0, 5550000.0)
     assert len(douglas_peucker([(0, 0), (1, 0.001), (2, 0)], 0.01)) == 2
+    # 0.3.0: framework-freier REST-Vertrag ohne Starlette/FastAPI/harvest.
+    from auditcore_geo.web import Settings, radius_search
+
+    vertrag = radius_search(
+        {
+            "zentrum": {"lat": 50.1106, "lon": 8.6821},
+            "punkte": [{"id": "b", "lat": 52.52, "lon": 13.405}],
+            "radius_m": 500_000,
+            "erdmodell": KUGEL_MITTLERER_RADIUS.profil_id,
+        },
+        Settings(),
+    )
+    assert vertrag["treffer"] == [
+        {"index": 0, "id": "b", "abstand_m": vertrag["treffer"][0]["abstand_m"]}
+    ]
     if find_spec("auditcore_harvest") is None:
         try:
             import auditcore_geo.nominatim  # noqa: F401
@@ -68,8 +83,8 @@ def main() -> None:
 
         assert NominatimAdapter.source.source_id == "geo.nominatim_search"
     print(
-        "PASS: installed auditcore_geo profiles, radius, boundary, degenerate rings, UTM "
-        "and extra boundary"
+        "PASS: installed auditcore_geo profiles, radius, boundary, degenerate rings, UTM, "
+        "web contract and extra boundary"
     )
 
 

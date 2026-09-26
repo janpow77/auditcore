@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass
 from xml.etree.ElementTree import Element  # noqa: S405 - type only; parsing uses defusedxml
 
+from auditcore_common.safe_xml import defused_fromstring
 from auditcore_harvest import ParserError, Transport, TransportError, raise_for_status
 
 from ._types import JsonObject
@@ -78,12 +79,9 @@ def _local(tag: str) -> str:
 def parse_vies_response(vat_id: str, body: bytes) -> VatCheck:
     """Interpret a ``checkVat`` answer regardless of namespace prefixes."""
     compact, country, _ = split_vat_id(vat_id)
-    try:
-        from defusedxml.ElementTree import fromstring
-    except ImportError as exc:  # pragma: no cover - exercised in the installed smoke test
-        raise DependencyError(
-            "Für VIES ist 'auditcore_registry_sources[xml]' zu installieren."
-        ) from exc
+    fromstring = defused_fromstring(
+        DependencyError, "Für VIES ist 'auditcore_registry_sources[xml]' zu installieren."
+    )
     try:
         root: Element = fromstring(body)
     except Exception as exc:  # noqa: BLE001 - every parser failure is a parser error

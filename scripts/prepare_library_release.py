@@ -20,8 +20,35 @@ ROOT = Path(__file__).resolve().parents[1]
 #: sein, die anderen repos nicht"). The provenance of each wheel must list exactly
 #: these repository/commit pairs; any other or missing binding fails the release.
 EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
-    # Zusammenführung doppelter Hilfsfunktionen der auditcore-Pakete: keine Fremdquelle.
-    "auditcore_common": frozenset(),
+    "auditcore_bpmn": frozenset(
+        {("janpow77/audit_designer", "eff41a4ccedab12b9a73bafff41468712459cb2b")}
+    ),
+    "auditcore_auth": frozenset(
+        {
+            ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
+            ("janpow77/audit_designer", "ccd65245182982af3ef885a7a6d43583f4f72cbb"),
+            ("janpow77/flowinvoice", "5d5d8c5aded2b7eee82c0813994e9efd549277b3"),
+            ("janpow77/flowlib", "aca2dc6aad25aea0720312dbcc6da00b0bcba330"),
+            ("janpow77/flownavigator", "9dff858d3772e59533886dfbae70c672d574a1d4"),
+            ("janpow77/flowsearch", "9ac5e0dd0c2b7363b5a077551e4fb7103f32c697"),
+            ("janpow77/qaaudit", "c78be5c86454d457e5c66d0c65b5117a8528d462"),
+            ("janpow77/regulierung", "ce76e48c8ad7f1cbe430948158a4e7001a02ba99"),
+            ("janpow77/versteigerung", "729f9a10bc5478bd724ef40c1f4cd572e5a3dada"),
+        }
+    ),
+    # Zusammengeführte Hilfsfunktionen: auditcore-Pakete (keine Fremdquelle) und die
+    # generischen App-Hilfen aus docs/reports/app-helfer-python.md (Commits unten).
+    "auditcore_common": frozenset(
+        {
+            ("janpow77/audit-portal", "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312"),
+            ("janpow77/audit_designer", "4b629dd970e5242d6d5d6c74863132b70ce85216"),
+            ("janpow77/flowaudit", "d8107f6b4287228974bc3b0f405bdd95182a66d5"),
+            ("janpow77/flowinvoice", "5d5d8c5aded2b7eee82c0813994e9efd549277b3"),
+            ("janpow77/regulierung", "ce76e48c8ad7f1cbe430948158a4e7001a02ba99"),
+            ("janpow77/riskanalysis", "dace0f66abde171ab91685483092ad7c3550ce55"),
+            ("janpow77/versteigerung", "729f9a10bc5478bd724ef40c1f4cd572e5a3dada"),
+        }
+    ),
     "auditcore_dataprotection": frozenset(
         {("janpow77/regulierung", "a5d48ea4b90a410210ec25e707781ef9e21ad743")}
     ),
@@ -84,6 +111,16 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
         {
             ("janpow77/audit_designer", "030a71e083ef0feddc14545b095a4945bc0bbd7a"),
             ("janpow77/auditdatabase", "bba911e918e102426d4ca2f88fd377fe8ca585e4"),
+        }
+    ),
+    "auditcore_llm_client": frozenset(
+        {
+            ("janpow77/ai-router", "426cd78e86df9f822452af035b8d58a19f7aa820"),
+            ("janpow77/audit-portal", "d8eefa426826bdecb67036774f3128ae05e7d0d0"),
+            ("janpow77/audit_designer", "ccd65245182982af3ef885a7a6d43583f4f72cbb"),
+            ("janpow77/cockpit", "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406"),
+            ("janpow77/flow-agent", "873636a4868f554b8e603e4b7c4c897909762b9a"),
+            ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
         }
     ),
     "auditcore_market_indicators": frozenset(

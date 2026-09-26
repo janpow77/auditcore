@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -23,6 +24,7 @@ from auditcore_harvest import (
     RateLimitError,
     Response,
     TransportError,
+    canonical_hash,
     raise_for_status,
 )
 from auditcore_harvest.memory import FixedClock, StaticCredentials
@@ -167,6 +169,24 @@ def test_feed_adapter_formats_and_safety() -> None:
             adapter.fetch_page(context(feed(bad), cfg), None)
     with pytest.raises(ConfigError):
         adapter.validate_config({"url": "gopher://x"})
+
+
+def test_feed_adapter_parses_only_through_defusedxml(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Security (v0.1.2): no stdlib fallback; without the extra a ConfigError names it."""
+    adapter = FeedAdapter(example_feed_source())
+    cfg = {"url": "https://f.invalid/"}
+    body = "<rss><channel><item><guid>urn:x</guid></item></channel></rss>"
+    monkeypatch.setitem(sys.modules, "defusedxml.ElementTree", None)
+    with pytest.raises(ConfigError, match=r"auditcore_harvest\[xml\]"):
+        adapter.fetch_page(context(feed(body), cfg), None)
+
+
+def test_canonical_hash_is_unchanged_by_the_common_helper() -> None:
+    value = {"b": [1, "ä"], "a": {"z": None, "y": True}}
+    expected = hashlib.sha256(
+        json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()
+    ).hexdigest()
+    assert canonical_hash(value) == expected
 
 
 def test_json_adapter_filters_issues_and_secret_handling() -> None:

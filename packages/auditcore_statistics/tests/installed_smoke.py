@@ -15,8 +15,9 @@ from auditcore_statistics import (
 def main() -> None:
     """Benford analysis, chi-square p-value and the legacy contract from the installed package."""
     package = distribution("auditcore_statistics")
-    assert package.version == "0.3.1"
-    assert not [r for r in package.requires or [] if "extra ==" not in r]
+    assert package.version == "0.3.3"
+    runtime = [r for r in package.requires or [] if "extra ==" not in r]
+    assert runtime == ["auditcore_common==0.1.1"], runtime
     assert find_spec("auditcore") is None
     result = benford_test([123, 187, 2450, 31, 4.2, 1.9, 0, None], digits=1)
     assert result.analysed == 6 and result.zero == 1 and result.missing == 1

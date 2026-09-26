@@ -17,8 +17,8 @@
   "excluded_variants": [
     "auswertungjkb.get_number_format"
   ],
-  "version": "0.2.0",
-  "previous_package_version": "0.1.0",
+  "version": "0.2.2",
+  "previous_package_version": "0.2.0",
   "workbook_sources": [
     {
       "path": "python/flowlib/excel/formats.py",

@@ -1,0 +1,17 @@
+{
+ "erdmodell": "kugel.r1_6371008_8m",
+ "radius_m": 5000.0,
+ "geprueft": 3,
+ "treffer": [
+  {
+   "index": 0,
+   "id": "V-1",
+   "abstand_m": 555.9754011676299
+  },
+  {
+   "index": 1,
+   "id": "V-2",
+   "abstand_m": 4504.583107702829
+  }
+ ]
+}

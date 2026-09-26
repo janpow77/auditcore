@@ -14,6 +14,8 @@ from decimal import (
     InvalidOperation,
 )
 
+from auditcore_common.numbers_de import parse_number_result
+
 from .errors import PriceAnalysisError, ProfileError
 
 _PLAIN = re.compile(r"[+-]?(\d+(\.\d*)?|\.\d+)")
@@ -25,8 +27,8 @@ ROUNDING_MODES = {
 }
 
 
-def _decimal_from_text(value: str, field: str) -> Decimal:
-    """Plain decimal text with a point; commas and exponents are rejected."""
+def _legacy_decimal_from_text(value: str, field: str) -> Decimal:
+    """Plain decimal text with a point; commas and exponents are rejected (0.1.1)."""
     text = value.strip()
     if "," in text:
         raise PriceAnalysisError(
@@ -44,7 +46,35 @@ def _decimal_from_text(value: str, field: str) -> Decimal:
         raise PriceAnalysisError("invalid_number", f"{field} ist ungültig.", field=field) from exc
 
 
-def _exact_decimal(value: object, field: str) -> Decimal:
+def _decimal_from_text(value: str, field: str) -> Decimal:
+    """Point text as before; any other text in German notation (contract ``parse-number``).
+
+    Plain point text (``"2.5"``, ``"1.234"``, ``".5"``) is the package's own
+    text format and keeps its value. Everything else is read in mode ``de`` of
+    ``auditcore_common.numbers_de``: ``"1.234,56"``, ``"1234,56"``, ``"1,5 €"``,
+    ``"1.000.000"``. Ambiguous German text (``"1,234"``, ``"1.234 €"``) is
+    rejected with ``ambiguous_number``; exponents stay invalid.
+    """
+    text = value.strip()
+    if _PLAIN.fullmatch(text):
+        return Decimal(text)
+    parsed = parse_number_result(text, "de")
+    if parsed.value is not None:
+        return parsed.value
+    if parsed.hint == "mehrdeutig":
+        raise PriceAnalysisError(
+            "ambiguous_number",
+            f"{field}: „{text}“ ist mehrdeutig; Dezimalkomma mit höchstens zwei "
+            "Nachkommastellen (1.234,56) oder Dezimalpunkt ohne Tausendertrenner "
+            "(1234.567) angeben.",
+            field=field,
+        )
+    raise PriceAnalysisError(
+        "invalid_number", f"{field} ist keine gültige Dezimalzahl.", field=field
+    )
+
+
+def _exact_decimal(value: object, field: str, *, legacy: bool = False) -> Decimal:
     """Exact decimal of a supported type (booleans and ``None`` are handled by the caller)."""
     if isinstance(value, Decimal):
         return value
@@ -53,29 +83,46 @@ def _exact_decimal(value: object, field: str) -> Decimal:
     if isinstance(value, float):
         return Decimal(repr(value))
     if isinstance(value, str):
-        return _decimal_from_text(value, field)
+        reader = _legacy_decimal_from_text if legacy else _decimal_from_text
+        return reader(value, field)
     raise PriceAnalysisError(
         "invalid_number", f"{field} hat den Typ {type(value).__name__}.", field=field
     )
 
 
-def parse_decimal(value: object, *, field: str) -> Decimal:
-    """Exact decimal from ``int``, ``Decimal``, finite ``float`` or plain decimal text.
-
-    ``None`` is *missing*, never zero; callers decide whether a value may be
-    absent. Booleans, German decimal commas, exponents and non-finite values
-    are rejected so that no number is silently reinterpreted.
-    """
+def _checked_decimal(value: object, field: str, *, legacy: bool) -> Decimal:
     if value is None:
         raise PriceAnalysisError("missing_value", f"{field} fehlt.", field=field)
     if isinstance(value, bool):
         raise PriceAnalysisError(
             "invalid_number", f"{field} ist ein Wahrheitswert, keine Zahl.", field=field
         )
-    result = _exact_decimal(value, field)
+    result = _exact_decimal(value, field, legacy=legacy)
     if not result.is_finite():
         raise PriceAnalysisError("invalid_number", f"{field} muss endlich sein.", field=field)
     return result
+
+
+def parse_decimal(value: object, *, field: str) -> Decimal:
+    """Exact decimal from ``int``, ``Decimal``, finite ``float`` or number text.
+
+    Text is plain point notation (``"2.5"``, unchanged) or German notation
+    (``"1.234,56 €"``, ``"1234,56"``); ambiguous German text such as
+    ``"1,234"`` is rejected with code ``ambiguous_number`` instead of being
+    guessed (PA-C01). ``None`` is
+    *missing*, never zero; booleans, exponents and non-finite values are
+    rejected. The point-only reader of 0.1.1 is :func:`legacy_parse_decimal`.
+    """
+    return _checked_decimal(value, field, legacy=False)
+
+
+def legacy_parse_decimal(value: object, *, field: str) -> Decimal:
+    """Characterized 0.1.1 behaviour: point text only, every comma is rejected.
+
+    ``"1.234"`` is 1.234 and ``"1.234,56"``/``"1234,56"`` raise
+    ``invalid_number`` („Dezimalkomma wird nicht umgedeutet“).
+    """
+    return _checked_decimal(value, field, legacy=True)
 
 
 def non_negative(value: object, *, field: str) -> Decimal:

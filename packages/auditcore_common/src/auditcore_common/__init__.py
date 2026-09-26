@@ -19,7 +19,11 @@ catch-all ``utils``:
     Anchor links of an HTML page and HTML marker detection.
 ``numeric``
     NumPy-compatible pairwise sum and rounding without NumPy, finite checks,
-    percent rates.
+    percent rates, percentage shares and tolerant float coercion.
+``filenames``
+    Characterized file-name variants for downloads and exports.
+``aio``
+    Running coroutines from synchronous code (loop per thread).
 ``clock`` / ``ids``
     Timezone-aware time and random identifiers.
 ``text``
@@ -30,6 +34,6 @@ catch-all ``utils``:
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = ["__version__"]

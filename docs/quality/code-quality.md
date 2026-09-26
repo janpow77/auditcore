@@ -19,6 +19,29 @@ festgeschrieben, neue Pakete müssen die Maßstäbe vollständig erfüllen.
 | `Any` nur sparsam | `any_usages` (jede Verwendung von `Any`/`typing.Any`) |
 | `mypy --strict` je Paket fehlerfrei | `mypy_strict_errors` |
 | Bezeichner (def/class) Englisch; Deutsch nur in Strings, Daten und festen fachlichen Schlüsseln | `non_english_identifiers` (Heuristik: Umlaute oder deutsche Wortstämme, auch in Umlaut-Ersatzschreibung) |
+| Keine paketübergreifend kopierten Funktionen; gemeinsame Hilfen gehören nach `auditcore_common` | `duplicate_functions` (siehe unten) |
+
+#### `duplicate_functions` – paketübergreifende Duplikate
+
+Jeder Funktionsrumpf wird auf AST-Ebene normalisiert (`codegate_duplicates.py`):
+Docstring, Dekoratoren, Annotationen und Name entfallen, lokal gebundene
+Bezeichner werden der Reihe nach zu `v0, v1, …`, Text- und Byte-Konstanten
+werden zu einem Platzhalter (Meldungen und Ressourcennamen unterscheiden sich
+auch zwischen sonst gleichen Kopien). Freie Namen, Attribute und Zahlen
+bleiben. Gezählt wird eine Funktion ihres Pakets, wenn eine Funktion mit
+derselben Normalform in einem anderen Paket existiert und der Rumpf
+**mindestens 2 Anweisungen und 25 AST-Knoten** hat. Die Schwelle ist bewusst
+niedriger als „5 Anweisungen“: der Profil-Fingerprint (zwei Anweisungen, neun
+Kopien) fiele sonst heraus; Ein-Ausdruck-Methoden wie `reference` zählen
+nicht. `auditcore_common` ist der kanonische Ort: seine Funktionen zählen nie,
+eine Paketkopie davon schon. Jede Fundstelle nennt im Bericht die Gegenstücke.
+Ausgangswert bei Einführung (main am 25.09.2026, nach den ersten
+`auditcore_common`-Migrationen): **28** in 11 Paketen; die Werte je Paket hält
+`quality/baseline.json`; die fachliche Inventur steht in [duplikate.md](duplikate.md).
+
+Eine nach Paketaufnahme eingeführte Metrik wird mit `--update-baseline` mit
+ihrem Erstwert erfasst; die Anhebungsprüfung meldet das als WARN
+„Einführung der Metrik“, danach gilt die Ratsche.
 
 #### `warnings` nur für Deprecation-Aliase
 

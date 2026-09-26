@@ -20,8 +20,9 @@ Vorbildern, damit Nutzer beider Anwendungen dieselben Begriffe sehen.
 
 ## Legende
 
-**R** = REST-Anbindung 0.3.0 (dieser Stand, getestet) · **U** = Oberfläche
-`@flowaudit/ui` (eigener PR, sobald `packages-js/ui` in main ist) ·
+**R** = REST-Anbindung `auditcore_documents` 0.3.0 (getestet) · **U** = Oberfläche
+`@flowaudit/ui` (`packages-js/ui/src/synopsis`, getestet; Demo „Synopse /
+Versionsvergleich“, Bildschirmfotos unter `docs/ui/screenshots/synopse-*.png`) ·
 **A** = bleibt bewusst Sache der Anwendung · **–** = nicht übernommen (Grund)
 
 ## Inventar
@@ -93,3 +94,19 @@ Vorbildern, damit Nutzer beider Anwendungen dieselben Begriffe sehen.
 | Web Component und React | U | `<flowaudit-synopsis>`, `FlowauditSynopsis` in `@flowaudit/ui-react` |
 | Mandantentrennung | R | `identify` je Anfrage, 404 für fremde Vergleiche |
 | Keine Datenbank, kein Celery im Paket | R | Port `ComparisonStore` |
+
+## Umsetzung der Oberfläche
+
+| Baustein | Datei |
+|---|---|
+| View-Model, Filter, Navigation (framework-frei) | `src/synopsis/viewModel.ts` |
+| Wortdifferenz (ndiff vom Server, LCS-Rückfall bis 1200 Wörter) | `src/synopsis/wordDiff.ts` |
+| HTML-/Markdown-Export, Druckansicht | `src/synopsis/exporters.ts`, `useSynopsisExport.ts` |
+| Port und REST-Client für `auditcore_documents.web` | `src/synopsis/port.ts` |
+| Vue-Komponenten | `FaSynopsis.vue`, `SynopsisHeader.vue`, `SynopsisToolbar.vue`, `SynopsisRow.vue`, `SynopsisText.vue`, `SynopsisCommands.vue` |
+| Web Component / React | `<flowaudit-synopsis>` (`src/synopsis/element.ts`), `FlowauditSynopsis` (`@flowaudit/ui-react`) |
+
+Ereignisse: `row-update` (`{row_id, selected?, reason?}`), `export`
+(`{format, filename, mimeType, content}`), `navigate` (Zeilenkennung),
+`update:layout`. Tasten: N/J nächste, P/K vorige Änderung (nicht in
+Eingabefeldern).

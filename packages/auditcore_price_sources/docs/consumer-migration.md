@@ -36,7 +36,7 @@ Requirements werden erst mit dem zentralen Release v0.3.0 geändert. Patch:
 1. `backend/requirements.txt`:
 
    ```text
-   auditcore_price_sources @ https://github.com/janpow77/auditcore/releases/download/v0.3.0/auditcore_price_sources-0.1.0-py3-none-any.whl#sha256=<aus Release>
+   auditcore_price_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_price_sources-0.1.2-py3-none-any.whl#sha256=<aus Release>
    ```
    (`auditcore_harvest==0.1.0` ist bereits gebunden.)
 2. Patch anwenden (Teil `external_apis`).

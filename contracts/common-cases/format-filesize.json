@@ -1,0 +1,141 @@
+{
+  "$schema": "./schema.json",
+  "contract": "format-filesize",
+  "version": "1.0.0",
+  "status": "verbindlich",
+  "title": "Dateigröße formatieren",
+  "description": "Basis 1024 mit den Einheiten B, KB, MB, GB, TB; höchstens eine Nachkommastelle mit Dezimalkomma, „,0“ entfällt; Bytes unter 1024 ganzzahlig ohne Tausendertrenner; negative oder fehlende Werte ergeben den Ersatzwert.",
+  "languages": [
+    "ts",
+    "python"
+  ],
+  "params": [
+    "bytes"
+  ],
+  "result": "text",
+  "cases": [
+    {
+      "id": "null-bytes",
+      "input": {
+        "bytes": 0
+      },
+      "expect": {
+        "value": "0 B"
+      }
+    },
+    {
+      "id": "bytes",
+      "input": {
+        "bytes": 512
+      },
+      "expect": {
+        "value": "512 B"
+      }
+    },
+    {
+      "id": "knapp-kb",
+      "input": {
+        "bytes": 1023
+      },
+      "expect": {
+        "value": "1023 B"
+      }
+    },
+    {
+      "id": "tausend-bytes",
+      "input": {
+        "bytes": 1000
+      },
+      "expect": {
+        "value": "1000 B"
+      },
+      "note": "Basis 1024: 1000 Bytes sind noch kein KB"
+    },
+    {
+      "id": "ein-kb",
+      "input": {
+        "bytes": 1024
+      },
+      "expect": {
+        "value": "1 KB"
+      }
+    },
+    {
+      "id": "anderthalb-kb",
+      "input": {
+        "bytes": 1536
+      },
+      "expect": {
+        "value": "1,5 KB"
+      },
+      "note": "toFixed(1) ergibt „1.5 KB“ mit Dezimalpunkt"
+    },
+    {
+      "id": "ein-mb",
+      "input": {
+        "bytes": 1048576
+      },
+      "expect": {
+        "value": "1 MB"
+      }
+    },
+    {
+      "id": "anderthalb-mb",
+      "input": {
+        "bytes": 1572864
+      },
+      "expect": {
+        "value": "1,5 MB"
+      }
+    },
+    {
+      "id": "krumm-mb",
+      "input": {
+        "bytes": 123456789
+      },
+      "expect": {
+        "value": "117,7 MB"
+      }
+    },
+    {
+      "id": "ein-gb",
+      "input": {
+        "bytes": 1073741824
+      },
+      "expect": {
+        "value": "1 GB"
+      }
+    },
+    {
+      "id": "ein-tb",
+      "input": {
+        "bytes": 1099511627776
+      },
+      "expect": {
+        "value": "1 TB"
+      }
+    },
+    {
+      "id": "leer-null",
+      "input": {
+        "bytes": null
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    },
+    {
+      "id": "negativ",
+      "input": {
+        "bytes": -1
+      },
+      "expect": {
+        "value": {
+          "$decision": "empty_value"
+        }
+      }
+    }
+  ]
+}

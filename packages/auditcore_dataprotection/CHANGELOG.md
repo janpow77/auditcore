@@ -1,5 +1,49 @@
 # Changelog auditcore_dataprotection
 
+## 0.5.0 – REST-Schnittstelle für VVT- und DSFA-Oberfläche
+
+Neues Modul `auditcore_dataprotection.web` (Vertrag `dataprotection_ui/1`,
+`docs/ui/dataprotection-rest.md`) für `<flowaudit-vvt>` und `<flowaudit-dsfa>`
+aus `@flowaudit/ui`. Bestehende Module, Berechnung, Profile und Berichte
+unverändert.
+
+- `DataProtectionApi`: Handler ohne Web-Framework für Profil, Verzeichnis
+  (lesen, prüfen, Entwurf, Freigabe, Export) und Folgenabschätzung (Übersicht,
+  Beginn, Erhebung, Vorschau `calculate`, Entscheidung, DSB-Einholung,
+  Freigabe, Neubewertung, Bericht). Fehler als
+  `{"error": {"code", "message"}}`, Bibliotheksfehler mit eigenem Code.
+- `Storage`-Protocol (Repositories und Audit aus `ports`), `InMemoryStorage`
+  für Demo/Tests, `create_backend`, `SystemClock`, `UuidIds`.
+- Extras `web` (`routes`, `create_app`; Starlette ≥ 0.26.1) und `fastapi`
+  (`create_router`); Frameworks werden nur bei Bedarf importiert.
+- Exporte: HTML-Druckansicht (Renderer der Bibliothek), Markdown, CSV mit
+  Formelschutz nach `contracts/common-cases` (`csv-cell`, `csv-document`).
+- Debian-Zuordnung der Extras in `packaging/library-extras.json`.
+
+## 0.4.3 – Hilfsfunktionen aus auditcore_common
+
+Keine fachliche Änderung. Neue Laufzeitabhängigkeit `auditcore_common==0.1.0`
+(APT `python3-auditcore-common`).
+
+- Profil-Fingerprint und Inhaltshash → `auditcore_common.hashing.canonical_sha256`;
+  `hashing.canonical_sha256` bleibt als veralteter Alias (`DeprecationWarning`).
+- `available_profiles`/`load_profile` → `auditcore_common.profiles`
+  (`require_text=True, invalid_name="missing"`).
+- `report_data.plain` ist veraltet; intern
+  `jsonable(value, enums=True, dataclasses=True, sets=True)`.
+- openpyxl über `optional.require_module`, Tausendertrennung der
+  Vorbelegungstexte über `text.group_thousands_de`.
+- `fingerprint`/`content_hash` nehmen `Mapping[str, object]` (statt `Any`); Code-Gate `any_usages` 146 → 145.
+- Meldungen, Fingerprints und Berichtsdaten unverändert; 501 Tests grün.
+
+## 0.4.2 – Abhängigkeit auf auditcore_reporting 0.2.1
+
+Keine Änderung an Code oder Ergebnissen. Das Extra `excel` verlangt jetzt
+`auditcore_reporting[excel]==0.2.1` (Refaktorierung ohne
+Verhaltensänderung; Profile, Zahlenformate und Arbeitsmappen bytegleich).
+Debian-Zuordnung in `packaging/library-extras.json` entsprechend
+(`python3-auditcore-reporting (>= 0.2.1)`).
+
 ## 0.4.1 – Refaktorierung ohne Verhaltensänderung
 
 Keine fachliche Änderung: Berechnung, Legacy-Adapter, Berichte, Exporte und

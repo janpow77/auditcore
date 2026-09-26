@@ -8,7 +8,7 @@ from auditcore_reporting import get_number_format
 def main() -> None:
     """Exercise real formatting behavior and the independent distribution contract."""
     package = distribution("auditcore_reporting")
-    assert package.version == "0.2.0"
+    assert package.version == "0.2.2"
     assert not [
         requirement for requirement in package.requires or [] if "extra ==" not in requirement
     ]

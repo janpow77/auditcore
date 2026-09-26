@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0" xmlns:color="http://www.omg.org/spec/BPMN/non-normative/color/1.0" id="Definitions_Beispiel" targetNamespace="http://example.org/antragsstrecke" exporter="Beispielgenerator">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Pool_1" name="Antragsstrecke (Beispielprogramm)" processRef="Process_1">
+      <bpmn:documentation>Systemprüfung Modell 1 von 3. Zweck: Darstellung des Antragsverfahrens. Betroffene Bewertungskriterien: Bewertungskriterien 2.4 und 2.6. Quellen: Förderhandbuch Muster V 1.0, Kapitel 3.2 (PDF-Seiten 10 bis 12). Stand 01.09.2026.</bpmn:documentation>
+    </bpmn:participant>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_Antrag" name="Antragstellende">
+        <bpmn:flowNodeRef>Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Antrag</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndeAbgelehnt</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Bank" name="Beispielbank (Zwischengeschaltete Stelle)">
+        <bpmn:flowNodeRef>Eingang</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Pruefung</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Vollstaendig</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Nachforderung</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Bescheid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Ablehnung</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Fach" name="Fachtechnische Stelle (Beispielagentur)">
+        <bpmn:flowNodeRef>Stellungnahme</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_VB" name="Beispielministerium (Verwaltungsbehörde)">
+        <bpmn:flowNodeRef>Votum</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndeBewilligt</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start" name="Förderbedarf"/>
+    <bpmn:task id="Antrag" name="Antragstellende: Antrag im Kundenportal einreichen">
+      <bpmn:documentation>Antrag nach Artikel 73 Absatz 2 Buchstabe b der Verordnung (EU) 2021/1060. Kontakt: foerderung@beispiel.example.</bpmn:documentation>
+    </bpmn:task>
+    <bpmn:task id="Eingang" name="Beispielbank: Eingang bestätigen"/>
+    <bpmn:task id="Pruefung" name="Beispielbank: Antrag prüfen">
+      <bpmn:documentation>Prüfung nach Art. 74 Abs. 2 UAbs. 2 sowie §§ 23 und 44 LHO und VV Nummer 4.2 zu § 44 LHO. Antragsprüfcheckliste Muster V 1.2, Prüffeld 3.21. Feststellungen T01 F1 und T01 F2 [A1, B2]. Zuwendung bis 25.000,00 EUR an Muster Solar GmbH, SAP-Nr. 4711123, Einheit SEE912345678901.</bpmn:documentation>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Vollstaendig" name="Antrag vollständig?"/>
+    <bpmn:task id="Nachforderung" name="Beispielbank: Unterlagen nachfordern"/>
+    <bpmn:task id="Stellungnahme" name="Fachtechnische Stelle: Stellungnahme abgeben">
+      <bpmn:documentation>EFRE-Förderrichtlinie Muster, Teil II Nummer 1.6 Satz 3. Bewertungskriterium 2.3.</bpmn:documentation>
+    </bpmn:task>
+    <bpmn:task id="Votum" name="Verwaltungsbehörde: Förderentscheidung treffen"/>
+    <bpmn:task id="Bescheid" name="Beispielbank: Zuwendungsbescheid erlassen"/>
+    <bpmn:task id="Ablehnung" name="Beispielbank: Ablehnungsbescheid erlassen"/>
+    <bpmn:endEvent id="EndeBewilligt" name="Bewilligt"/>
+    <bpmn:endEvent id="EndeAbgelehnt" name="Abgelehnt"/>
+    <bpmn:textAnnotation id="Anmerkung_1"><bpmn:text>Lücke: Frist für die Nachforderung ist nicht geregelt (F3).</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Assoc_1" sourceRef="Nachforderung" targetRef="Anmerkung_1"/>
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Antrag"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="Antrag" targetRef="Eingang"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="Eingang" targetRef="Pruefung"/>
+    <bpmn:sequenceFlow id="F4" sourceRef="Pruefung" targetRef="Vollstaendig"/>
+    <bpmn:sequenceFlow id="F5" name="nein" sourceRef="Vollstaendig" targetRef="Nachforderung"/>
+    <bpmn:sequenceFlow id="F6" sourceRef="Nachforderung" targetRef="Pruefung"/>
+    <bpmn:sequenceFlow id="F7" name="ja" sourceRef="Vollstaendig" targetRef="Stellungnahme"/>
+    <bpmn:sequenceFlow id="F8" sourceRef="Stellungnahme" targetRef="Votum"/>
+    <bpmn:sequenceFlow id="F9" sourceRef="Votum" targetRef="Bescheid"/>
+    <bpmn:sequenceFlow id="F10" sourceRef="Bescheid" targetRef="EndeBewilligt"/>
+    <bpmn:sequenceFlow id="F11" sourceRef="Votum" targetRef="Ablehnung"/>
+    <bpmn:sequenceFlow id="F12" sourceRef="Ablehnung" targetRef="EndeAbgelehnt"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Pool_1_di" bpmnElement="Pool_1" isHorizontal="true"><dc:Bounds x="100" y="60" width="1500" height="640"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Antrag_di" bpmnElement="Antrag"><dc:Bounds x="220" y="100" width="100" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Pruefung_di" bpmnElement="Pruefung" bioc:fill="#fce8e6" bioc:stroke="#b3261e" color:background-color="#fce8e6" color:border-color="#b3261e"><dc:Bounds x="520" y="260" width="100" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Nachforderung_di" bpmnElement="Nachforderung" bioc:fill="#ffe0e0" bioc:stroke="#cc0000" color:background-color="#ffe0e0" color:border-color="#cc0000"><dc:Bounds x="820" y="260" width="100" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Bescheid_di" bpmnElement="Bescheid" bioc:fill="#c8e6c9" bioc:stroke="#1b5e20" color:background-color="#c8e6c9" color:border-color="#1b5e20"><dc:Bounds x="1220" y="260" width="100" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="180" y="140"/><di:waypoint x="220" y="140"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

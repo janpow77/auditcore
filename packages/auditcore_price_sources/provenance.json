@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "package": "auditcore_price_sources",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "contract": "auditcore_price_sources.contract/1",
   "harvest_contract": "auditcore_harvest.contract/1",
   "classification": "NEW_ADAPTERS_FROM_CHARACTERIZED_CONNECTORS; DESTATIS_ADAPTER_MOVED",

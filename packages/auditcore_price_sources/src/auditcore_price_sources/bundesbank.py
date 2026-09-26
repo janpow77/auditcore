@@ -14,24 +14,26 @@ being skipped silently.
 
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date
 from typing import Any
 
 from auditcore_harvest import (
+    JSON,
     AuthKind,
     Capabilities,
     ConfigError,
+    Cursor,
     FetchContext,
     HarvestRecord,
     PageResult,
-    PageStatus,
     ParserError,
     RecordIssue,
     SnapshotSemantics,
     Source,
+    decode_json,
+    page_result,
     raise_for_status,
 )
 
@@ -57,15 +59,15 @@ class SdmxSeries:
     """Parsed series with unit metadata and per-item issues."""
 
     series_id: str
-    unit: dict[str, Any]
+    unit: dict[str, JSON]
     title: str | None
     observations: tuple[SdmxObservation, ...]
     issues: tuple[RecordIssue, ...]
 
 
-def _attribute(structure: Mapping[str, Any], level: str, indexes: list[Any]) -> dict[str, Any]:
+def _attribute(structure: Mapping[str, JSON], level: str, indexes: list[JSON]) -> dict[str, JSON]:
     """Resolve SDMX attribute indexes to ``{id: name}``."""
-    found: dict[str, Any] = {}
+    found: dict[str, JSON] = {}
     definitions = structure.get("attributes", {}).get(level, [])
     for position, definition in enumerate(definitions):
         if position >= len(indexes) or indexes[position] is None:
@@ -77,12 +79,98 @@ def _attribute(structure: Mapping[str, Any], level: str, indexes: list[Any]) -> 
     return found
 
 
-def _int_or_none(value: Any) -> int | None:
+def _int_or_none(value: object) -> int | None:
     text = str(value if value is not None else "")
     return int(text) if text.lstrip("-").isdigit() else None
 
 
-def parse_sdmx_json(payload: Any, *, series_hint: str) -> list[SdmxSeries]:
+def _series_dimensions(key: object, series_dims: list[JSON]) -> dict[str, str]:
+    """Dimension ids of a series key such as ``0:0:1:0``."""
+    positions = [int(p) for p in str(key).split(":") if p.isdigit()]
+    dims: dict[str, str] = {}
+    for position, dim in zip(positions, series_dims, strict=False):
+        values = dim.get("values", [])
+        if 0 <= position < len(values):
+            dims[str(dim.get("id"))] = str(values[position].get("id"))
+    return dims
+
+
+def _series_unit(attrs: Mapping[str, JSON], dims: Mapping[str, str]) -> dict[str, JSON]:
+    """Unit block from ``BBK_UNIT``/currency dimensions (``unbekannt`` without numerator)."""
+    numerator = attrs.get("BBK_UNIT") or dims.get("BBK_STD_CURRENCY")
+    denominator = dims.get("BBK_ERX_PARTNER_CURRENCY")
+    text = (
+        f"{numerator} je 1 {denominator}"
+        if numerator and denominator
+        else (str(numerator) if numerator else None)
+    )
+    return unit(
+        text,
+        source_text=attrs.get("BBK_TITLE"),
+        origin="quelle" if numerator else "unbekannt",
+        numerator=numerator,
+        denominator=denominator,
+        multiplier=_int_or_none(attrs.get("BBK_UNIT_MULT")),
+    )
+
+
+def _observation(
+    structure: Mapping[str, JSON], periods: list[JSON], index_text: object, item: JSON
+) -> SdmxObservation | str:
+    """One observation, or the issue text why it cannot be used."""
+    if not str(index_text).isdigit() or int(str(index_text)) >= len(periods):
+        return "Beobachtung ohne Zeitangabe (Index)"
+    period = periods[int(str(index_text))]
+    if not period or not isinstance(item, list) or not item:
+        return "Beobachtung ohne Datum oder Wertliste"
+    try:
+        date.fromisoformat(str(period))
+    except ValueError:
+        return f"Zeitangabe {period!r} ist kein Tag"
+    obs_attrs = _attribute(structure, "observation", list(item[1:]))
+    raw_value = item[0]
+    if raw_value is not None:
+        try:
+            exact(raw_value)
+        except ValueError as exc:
+            return f"Wert nicht lesbar: {exc}"
+    return SdmxObservation(
+        str(period),
+        None if raw_value is None else str(raw_value),
+        obs_attrs.get("OBS_STATUS"),
+    )
+
+
+def _series(
+    structure: Mapping[str, JSON],
+    periods: list[JSON],
+    series_dims: list[JSON],
+    key: object,
+    series: JSON,
+    series_hint: str,
+) -> SdmxSeries:
+    """Parse one SDMX series with its unit, observations and per-item issues."""
+    dims = _series_dimensions(key, series_dims)
+    attrs = _attribute(structure, "series", list(series.get("attributes", [])))
+    series_id = str(attrs.get("BBK_ID") or series_hint)
+    observations: list[SdmxObservation] = []
+    issues: list[RecordIssue] = []
+    for index_text, item in (series.get("observations") or {}).items():
+        parsed = _observation(structure, periods, index_text, item)
+        if isinstance(parsed, str):
+            issues.append(RecordIssue(f"{series_id}#{index_text}", parsed))
+        else:
+            observations.append(parsed)
+    return SdmxSeries(
+        series_id,
+        _series_unit(attrs, dims),
+        attrs.get("BBK_TITLE"),
+        tuple(observations),
+        tuple(issues),
+    )
+
+
+def parse_sdmx_json(payload: JSON, *, series_hint: str) -> list[SdmxSeries]:
     """Parse an SDMX-JSON data message; structural problems raise ``ParserError``."""
     if not isinstance(payload, Mapping) or not isinstance(payload.get("data"), Mapping):
         raise ParserError("SDMX-JSON ohne data-Block.")
@@ -95,74 +183,11 @@ def parse_sdmx_json(payload: Any, *, series_hint: str) -> list[SdmxSeries]:
     obs_dims = dimensions.get("observation", [])
     periods = [v.get("id") for v in obs_dims[0].get("values", [])] if obs_dims else []
     series_dims = dimensions.get("series", [])
-    result: list[SdmxSeries] = []
-    for dataset in datasets:
-        for key, series in (dataset.get("series") or {}).items():
-            positions = [int(p) for p in str(key).split(":") if p.isdigit()]
-            dims: dict[str, str] = {}
-            for position, dim in zip(positions, series_dims, strict=False):
-                values = dim.get("values", [])
-                if 0 <= position < len(values):
-                    dims[str(dim.get("id"))] = str(values[position].get("id"))
-            attrs = _attribute(structure, "series", list(series.get("attributes", [])))
-            series_id = str(attrs.get("BBK_ID") or series_hint)
-            numerator = attrs.get("BBK_UNIT") or dims.get("BBK_STD_CURRENCY")
-            denominator = dims.get("BBK_ERX_PARTNER_CURRENCY")
-            multiplier = attrs.get("BBK_UNIT_MULT")
-            text = (
-                f"{numerator} je 1 {denominator}"
-                if numerator and denominator
-                else (str(numerator) if numerator else None)
-            )
-            unit_block = unit(
-                text,
-                source_text=attrs.get("BBK_TITLE"),
-                origin="quelle" if numerator else "unbekannt",
-                numerator=numerator,
-                denominator=denominator,
-                multiplier=_int_or_none(multiplier),
-            )
-            observations: list[SdmxObservation] = []
-            issues: list[RecordIssue] = []
-            for index_text, item in (series.get("observations") or {}).items():
-                locator = f"{series_id}#{index_text}"
-                if not str(index_text).isdigit() or int(index_text) >= len(periods):
-                    issues.append(RecordIssue(locator, "Beobachtung ohne Zeitangabe (Index)"))
-                    continue
-                period = periods[int(index_text)]
-                if not period or not isinstance(item, list) or not item:
-                    issues.append(RecordIssue(locator, "Beobachtung ohne Datum oder Wertliste"))
-                    continue
-                try:
-                    date.fromisoformat(str(period))
-                except ValueError:
-                    issues.append(RecordIssue(locator, f"Zeitangabe {period!r} ist kein Tag"))
-                    continue
-                obs_attrs = _attribute(structure, "observation", list(item[1:]))
-                raw_value = item[0]
-                if raw_value is not None:
-                    try:
-                        exact(raw_value)
-                    except ValueError as exc:
-                        issues.append(RecordIssue(locator, f"Wert nicht lesbar: {exc}"))
-                        continue
-                observations.append(
-                    SdmxObservation(
-                        str(period),
-                        None if raw_value is None else str(raw_value),
-                        obs_attrs.get("OBS_STATUS"),
-                    )
-                )
-            result.append(
-                SdmxSeries(
-                    series_id,
-                    unit_block,
-                    attrs.get("BBK_TITLE"),
-                    tuple(observations),
-                    tuple(issues),
-                )
-            )
-    return result
+    return [
+        _series(structure, periods, series_dims, key, series, series_hint)
+        for dataset in datasets
+        for key, series in (dataset.get("series") or {}).items()
+    ]
 
 
 class BundesbankSeriesAdapter:
@@ -183,7 +208,7 @@ class BundesbankSeriesAdapter:
         filters=("flow_ref", "series_key", "last_n_observations"),
     )
 
-    def validate_config(self, config: Mapping[str, Any]) -> None:
+    def validate_config(self, config: Mapping[str, JSON]) -> None:
         """``url`` (REST base), optional ``flow_ref``, ``series_key``, ``last_n_observations``."""
         if not isinstance(config.get("url"), str) or not config["url"].startswith("http"):
             raise ConfigError("url (REST-Basisadresse) fehlt.")
@@ -195,7 +220,7 @@ class BundesbankSeriesAdapter:
             if not isinstance(value, str) or not value or "/" in value:
                 raise ConfigError(f"{key} ist ungültig.")
 
-    def fetch_page(self, context: FetchContext, cursor: Mapping[str, Any] | None) -> PageResult:
+    def fetch_page(self, context: FetchContext, cursor: Cursor | None) -> PageResult:
         """Fetch the series once and deliver every observation as a record."""
         filters = dict(context.request.filters or {})
         flow = str(filters.get("flow_ref") or context.config.get("flow_ref", DEFAULT_FLOW_REF))
@@ -213,44 +238,37 @@ class BundesbankSeriesAdapter:
                 timeout=context.timeout,
             )
         )
-        try:
-            payload = json.loads(response.body)
-        except ValueError as exc:
-            raise ParserError("Antwort ist kein gültiges JSON.") from exc
+        payload = decode_json(response.body, "Antwort ist kein gültiges JSON.")
         series_list = parse_sdmx_json(payload, series_hint=f"{flow}.{key}")
         records: list[HarvestRecord] = []
         issues: list[RecordIssue] = []
         for series in series_list:
             issues.extend(series.issues)
-            for item in series.observations:
-                normalized = observation(
-                    series=series.series_id,
-                    time_kind="tag",
-                    period=item.period,
-                    value=exact(item.value),
-                    unit_block=series.unit,
-                    source_status=item.status,
-                    extra={"titel": series.title},
-                )
-                raw = {
-                    "reihe": series.series_id,
-                    "zeit": item.period,
-                    "wert": item.value,
-                    "status": item.status,
-                }
-                records.append(
-                    HarvestRecord(
-                        source_id=self.source.source_id,
-                        record_id=f"{series.series_id}@{item.period}",
-                        raw=raw,
-                        normalized=normalized,
-                        provenance=context.provenance(self.source, url, raw),
-                    )
-                )
+            records.extend(self._record(context, url, series, item) for item in series.observations)
         if not series_list or not any(s.observations for s in series_list):
             issues.append(RecordIssue(url, "Antwort enthält keine Beobachtungen"))
-        status = PageStatus.PARTIAL if issues else PageStatus.OK
-        return PageResult(tuple(records), None, complete=True, status=status, issues=tuple(issues))
+        return page_result(records, issues)
+
+    def _record(
+        self, context: FetchContext, url: str, series: SdmxSeries, item: SdmxObservation
+    ) -> HarvestRecord:
+        normalized = observation(
+            series=series.series_id,
+            time_kind="tag",
+            period=item.period,
+            value=exact(item.value),
+            unit_block=series.unit,
+            source_status=item.status,
+            extra={"titel": series.title},
+        )
+        raw = {
+            "reihe": series.series_id,
+            "zeit": item.period,
+            "wert": item.value,
+            "status": item.status,
+        }
+        record_id = f"{series.series_id}@{item.period}"
+        return context.record(self.source, record_id, raw, normalized, url)
 
 
 def legacy_exchange_rate_rows(records: list[HarvestRecord]) -> list[dict[str, Any]]:

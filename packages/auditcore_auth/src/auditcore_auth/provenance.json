@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_auth",
+  "version": "0.1.0",
+  "contract": "auditcore_auth/1",
+  "classification": "NEW_IMPLEMENTATION_FROM_CHARACTERIZED_CONTRACTS",
+  "sources": [
+    {
+      "repository": "janpow77/audit_designer",
+      "commit": "ccd65245182982af3ef885a7a6d43583f4f72cbb",
+      "files": [
+        {
+          "git_blob": "39dad0bc4224d756b0c23098fd0b0b8957de3b5a",
+          "path": "backend/app/api/auth.py"
+        },
+        {
+          "git_blob": "3787cb344bed2bed9207c3b927cddf36c679dbe6",
+          "path": "backend/app/api/vpai_notebook/jupyter.py"
+        },
+        {
+          "git_blob": "97e525c3426d5e8f3eb62fc434cbb31d856b698c",
+          "path": "backend/app/core/config.py"
+        },
+        {
+          "git_blob": "f5f779fbd50a4122033fd1e8a0be53d3cde14962",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flownavigator",
+      "commit": "9dff858d3772e59533886dfbae70c672d574a1d4",
+      "files": [
+        {
+          "git_blob": "dd4ced4f57fd8a6f6acc65c4f1a2381afd1b3c57",
+          "path": "apps/backend/app/api/vendor.py"
+        },
+        {
+          "git_blob": "7e293d4c5b97d3d1d2887868b04f8dd390f5f423",
+          "path": "apps/backend/app/core/config.py"
+        },
+        {
+          "git_blob": "94d468fafaf606318299be1e2ae2a72745e4d904",
+          "path": "apps/backend/app/core/security.py"
+        },
+        {
+          "git_blob": "cb3ead3b0e22f4c978cc1fdff7aa10e07ef81c38",
+          "path": "apps/backend/app/services/auth_service.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flowsearch",
+      "commit": "9ac5e0dd0c2b7363b5a077551e4fb7103f32c697",
+      "files": [
+        {
+          "git_blob": "4553e42148b7dff3d02275aef8e0fa7cbf8af251",
+          "path": "backend/app/api/auth.py"
+        },
+        {
+          "git_blob": "51ce4ec68dd53aded044ea3c0d9e34fdd42e3341",
+          "path": "backend/app/core/config.py"
+        },
+        {
+          "git_blob": "441e89cdd7668345b89902857e2b21d7b4d25c5e",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/qaaudit",
+      "commit": "c78be5c86454d457e5c66d0c65b5117a8528d462",
+      "files": [
+        {
+          "git_blob": "0a7a1999dab2a6a22a1516fc1fb1baa9ac45bc4e",
+          "path": "backend/app/api/v1/auth.py"
+        },
+        {
+          "git_blob": "5576b1b1ed8cf212b650c596117f82c7b676a551",
+          "path": "backend/app/core/config.py"
+        },
+        {
+          "git_blob": "da38b9997ffce391c439f9a9fe17a1fe4d37e70d",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/versteigerung",
+      "commit": "729f9a10bc5478bd724ef40c1f4cd572e5a3dada",
+      "files": [
+        {
+          "git_blob": "faffbbde6b9abc6d94370cd466e1ddad4ac98964",
+          "path": "backend/app/api/routers/auth.py"
+        },
+        {
+          "git_blob": "9303702bb6ea322d50ace2a52608c2613524759d",
+          "path": "backend/app/core/config.py"
+        },
+        {
+          "git_blob": "5d902f9e275d99f76116a42d636023fe191e67b7",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/regulierung",
+      "commit": "ce76e48c8ad7f1cbe430948158a4e7001a02ba99",
+      "files": [
+        {
+          "git_blob": "91ec71c405d10efca150f8bc3f1392be442412f7",
+          "path": "backend/app/api/auth_routes.py"
+        },
+        {
+          "git_blob": "00c9c07569be8b6b930fb5894b039c729a9d7684",
+          "path": "backend/app/config.py"
+        },
+        {
+          "git_blob": "149204e0d6c08658aeb94a5582814e0507d187ec",
+          "path": "backend/app/core/auth/jwt_backend.py"
+        },
+        {
+          "git_blob": "e0e8a42615f9d98e0d0cd5656a173a371573ea87",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "5d5d8c5aded2b7eee82c0813994e9efd549277b3",
+      "files": [
+        {
+          "git_blob": "7762214807b6c1ba0c6fb623263945bf8d5f8383",
+          "path": "backend/app/api/deps.py"
+        },
+        {
+          "git_blob": "09b641a68f78f3bbe8243d2492722b4e3a8d93f2",
+          "path": "backend/app/api/user_auth.py"
+        },
+        {
+          "git_blob": "3363ac28b5ea38689426dd99f1b65b0b1f48b142",
+          "path": "backend/app/config.py"
+        },
+        {
+          "git_blob": "350a21ce5fde6b53dab52d7a11e012cc29cbb8e9",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/audit-portal",
+      "commit": "72cc4b1a15fdcd5ee06ef8124d864904cc4e1312",
+      "files": [
+        {
+          "git_blob": "67dc4ac82f2a6daa6a87f8496b47d72678a73b71",
+          "path": "backend/app/api/deps.py"
+        },
+        {
+          "git_blob": "c70462e6675532f7a7150386394c283a544c1735",
+          "path": "backend/app/api/user_auth.py"
+        },
+        {
+          "git_blob": "d0e22d8a497231eea31a9029cde8f7a27b8dc9ef",
+          "path": "backend/app/config.py"
+        },
+        {
+          "git_blob": "8a4f81da4fe30f312f5dff092d9a0909f407a485",
+          "path": "backend/app/core/security.py"
+        }
+      ]
+    },
+    {
+      "repository": "janpow77/flowlib",
+      "commit": "aca2dc6aad25aea0720312dbcc6da00b0bcba330",
+      "files": [
+        {
+          "git_blob": "721ff6be8d39abc2c40d5e00bb64d4d7f0f59a0e",
+          "path": "python/flowlib/auth.py"
+        }
+      ]
+    }
+  ],
+  "reference_only": [
+    {
+      "repository_inspected": "janpow77/cockpit",
+      "inspected_commit": "df203d4c33e786eb8a8ad3fe53b3b7eb9241d406",
+      "finding": "Opake Sitzungstoken in der Datenbank und Klartext-Adminpasswort aus der Konfiguration (secrets.compare_digest); kein JWT, kein Hash."
+    },
+    {
+      "repository_inspected": "janpow77/riskanalysis",
+      "inspected_commit": "dace0f66abde171ab91685483092ad7c3550ce55",
+      "finding": "Keine Authentifizierung, kein JWT und kein Passwort-Hashing im Backend."
+    }
+  ],
+  "origin": "Neu geschrieben nach dem ausgeführten Verhalten der security.py-Module von neun Anwendungen; Hash-Formate, Claim-Reihenfolgen, Algorithmen und Laufzeiten als Kompatibilitätsprofile übernommen. Kryptografie ausschließlich über bcrypt, argon2-cffi und PyJWT.",
+  "app_profiles": {
+    "audit_designer": "backend/app/core/security.py@ccd65245",
+    "flownavigator": "apps/backend/app/core/security.py@9dff858d",
+    "flowsearch": "backend/app/core/security.py@9ac5e0dd",
+    "qaaudit": "backend/app/core/security.py@c78be5c8",
+    "versteigerung": "backend/app/core/security.py@729f9a10",
+    "regulierung": "backend/app/core/security.py@ce76e48c",
+    "flowinvoice": "backend/app/core/security.py@5d5d8c5a",
+    "audit-portal": "backend/app/core/security.py@72cc4b1a",
+    "flowlib": "python/flowlib/auth.py@aca2dc6a"
+  },
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung der Anwendungen. Nutzerauftrag vom 25.09.2026: auditcore_auth aus Gruppe 1 der Python-Inventur bauen."
+    }
+  },
+  "characterization": {
+    "legacy_auth": {
+      "fixture": "tests/fixtures/legacy_auth_observed.json",
+      "tool": "tools/capture_legacy_auth.py",
+      "libraries": {
+        "passlib": "1.7.4",
+        "python-jose": "3.3.0",
+        "bcrypt": "4.2.1",
+        "PyJWT": "2.10.1",
+        "argon2-cffi": "23.1.0"
+      },
+      "issued_tokens": 19,
+      "decode_cases": 153,
+      "password_cases": 90
+    }
+  }
+}

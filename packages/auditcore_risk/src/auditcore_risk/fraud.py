@@ -24,9 +24,9 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Mapping
-from importlib import resources
-from importlib.resources.abc import Traversable
 from types import MappingProxyType
+
+from auditcore_common.profiles import packaged_profile_entries
 
 from .base import JsonObject
 from .errors import ProfileError
@@ -93,23 +93,17 @@ def fraud_profile_from_dict(data: JsonObject) -> FraudProfile:
     )
 
 
-def _packaged() -> dict[tuple[str, str], Traversable]:
-    found = {}
-    for entry in resources.files("auditcore_risk.fraud_profiles").iterdir():
-        if entry.name.endswith(".json"):
-            data = json.loads(entry.read_text(encoding="utf-8"))
-            found[(str(data["id"]), str(data["version"]))] = entry
-    return found
+_RESOURCES = "auditcore_risk.fraud_profiles"
 
 
 def available_fraud_profiles() -> tuple[tuple[str, str], ...]:
     """Packaged ``(id, version)`` pairs of fraud-check profiles."""
-    return tuple(sorted(_packaged()))
+    return tuple(sorted(packaged_profile_entries(_RESOURCES)))
 
 
 def load_fraud_profile(profile_id: str, version: str, kind: str | None = None) -> FraudProfile:
     """Load an explicitly named packaged fraud-check profile (optionally of one kind)."""
-    entry = _packaged().get((profile_id, version))
+    entry = packaged_profile_entries(_RESOURCES).get((profile_id, version))
     if entry is None:
         raise ProfileError(f"Profil {profile_id} in Version {version} ist nicht vorhanden.")
     profile = fraud_profile_from_dict(json.loads(entry.read_text(encoding="utf-8")))

@@ -11,12 +11,12 @@ from dataclasses import replace
 from datetime import UTC, date, datetime
 
 import pytest
+from auditcore_common.hashing import canonical_sha256
 
 from auditcore_dataprotection import calculation, export, legacy, register, rules
 from auditcore_dataprotection.assessment_checks import release_checks
 from auditcore_dataprotection.assessment_core import refuse_second_open_version
 from auditcore_dataprotection.errors import ConflictError
-from auditcore_dataprotection.hashing import canonical_sha256
 from auditcore_dataprotection.html_common import text
 from auditcore_dataprotection.legacy_report import format_datetime_de
 from auditcore_dataprotection.model import Assessment, AssessmentStatus
@@ -127,3 +127,22 @@ def test_overview_tables_are_bounded() -> None:
     assert sheets[0][2][0][6] == "noch nicht begonnen"
     with pytest.raises(ValueError, match="Zu viele Zeilen"):
         overview_tables([{}] * 100_001, "Mandant", NOW)
+
+
+def test_deprecated_helpers_warn_and_keep_their_results() -> None:
+    import datetime
+    import enum
+
+    import pytest
+
+    from auditcore_dataprotection import hashing, report_data
+
+    class Colour(enum.Enum):
+        RED = "rot"
+
+    data = {"b": [1, "ä"], "a": {"z": None}}
+    with pytest.warns(DeprecationWarning, match="auditcore_common.hashing"):
+        assert hashing.canonical_sha256(data) == canonical_sha256(data)
+    value = {"c": Colour.RED, "d": datetime.date(2026, 9, 25), "s": {"b", "a"}}
+    with pytest.warns(DeprecationWarning, match="jsonable"):
+        assert report_data.plain(value) == {"c": "rot", "d": "2026-09-25", "s": ["a", "b"]}

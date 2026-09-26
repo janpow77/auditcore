@@ -17,12 +17,13 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import timedelta
 from importlib import metadata
 from pathlib import Path
 from random import Random
+from types import ModuleType
 from typing import Any, cast
 
 from auditcore_invoicegenerator import InvoiceScenario
@@ -148,8 +149,7 @@ def build_dataset(
     progress: Callable[[int, int], None] | None = None,
 ) -> dict[str, Any]:
     """Datensatz schreiben und Manifest zurückgeben; das Zielverzeichnis muss leer sein."""
-    from auditcore_invoicesynth.augment import augment_page
-    from auditcore_invoicesynth.render import _pil, render_pages
+    from auditcore_invoicesynth.render import _pil
 
     if output.exists() and any(output.iterdir()):
         raise DatasetError(f"Ausgabeverzeichnis ist nicht leer: {output}")
@@ -161,47 +161,10 @@ def build_dataset(
     images: dict[str, int] = dict.fromkeys(SPLITS, 0)
     used_families: set[str] = set()
     for number, sample in enumerate(samples, 1):
-        spec = sample.spec
-        used_families.add(spec.font_family)
-        pages = render_pages(
-            sample.invoice,
-            sample.variant,
-            spec.layout,
-            fonts,
-            family=spec.font_family,
-            dpi=spec.dpi,
-            base_size_pt=spec.font_size_pt,
-        )
-        directory = output / spec.split
-        directory.mkdir(exist_ok=True)
-        for page_no, page in enumerate(pages, 1):
-            texts = " ".join(page.texts)
-            if SYNTHETIC_MARKER not in texts or SYNTHETIC_FOOTER not in texts:
-                raise DatasetError(f"Synthetik-Kennzeichnung fehlt: {spec.sample_id}")
-            image = page.image
-            if spec.augment is not None:
-                stamp_font = image_font.truetype(
-                    str(fonts.path(spec.font_family, "bold")), max(8, spec.dpi // 6)
-                )
-                image = augment_page(
-                    image, spec.augment, spec.seed + page_no, stamp_font=stamp_font
-                )
-            name = spec.sample_id + (f"-p{page_no}" if len(pages) > 1 else "") + ".png"
-            image.save(directory / name, format="PNG", compress_level=6)
-            images[spec.split] += 1
-            ground_truth = {
-                "gt_parse": ordered(nest_fields(page.fields)),
-                "meta": _meta(sample, page_no, len(pages)),
-            }
-            rows[spec.split].append(
-                json.dumps(
-                    {
-                        "file_name": name,
-                        "ground_truth": json.dumps(ground_truth, ensure_ascii=False),
-                    },
-                    ensure_ascii=False,
-                )
-            )
+        used_families.add(sample.spec.font_family)
+        for line in _write_sample(sample, output, fonts, image_font):
+            rows[sample.spec.split].append(line)
+            images[sample.spec.split] += 1
         if progress is not None:
             progress(number, len(samples))
     for split, lines in rows.items():
@@ -210,12 +173,74 @@ def build_dataset(
             (output / split / "metadata.jsonl").write_text(
                 "".join(line + "\n" for line in lines), encoding="utf-8"
             )
+    manifest = _manifest(config, output, fonts, specs, used_families, images)
+    (output / MANIFEST).write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def _write_sample(
+    sample: PreparedSample, output: Path, fonts: FontSet, image_font: ModuleType
+) -> Iterator[str]:
+    """Seiten eines Belegs rendern, prüfen, ggf. verfremden und speichern.
+
+    Liefert je gespeicherter Seite die ``metadata.jsonl``-Zeile, erst nachdem das
+    Bild geschrieben ist.
+    """
+    from auditcore_invoicesynth.augment import augment_page
+    from auditcore_invoicesynth.render import render_pages
+
+    spec = sample.spec
+    pages = render_pages(
+        sample.invoice,
+        sample.variant,
+        spec.layout,
+        fonts,
+        family=spec.font_family,
+        dpi=spec.dpi,
+        base_size_pt=spec.font_size_pt,
+    )
+    directory = output / spec.split
+    directory.mkdir(exist_ok=True)
+    for page_no, page in enumerate(pages, 1):
+        texts = " ".join(page.texts)
+        if SYNTHETIC_MARKER not in texts or SYNTHETIC_FOOTER not in texts:
+            raise DatasetError(f"Synthetik-Kennzeichnung fehlt: {spec.sample_id}")
+        image = page.image
+        if spec.augment is not None:
+            stamp_font = image_font.truetype(
+                str(fonts.path(spec.font_family, "bold")), max(8, spec.dpi // 6)
+            )
+            image = augment_page(image, spec.augment, spec.seed + page_no, stamp_font=stamp_font)
+        name = spec.sample_id + (f"-p{page_no}" if len(pages) > 1 else "") + ".png"
+        image.save(directory / name, format="PNG", compress_level=6)
+        ground_truth = {
+            "gt_parse": ordered(nest_fields(page.fields)),
+            "meta": _meta(sample, page_no, len(pages)),
+        }
+        yield json.dumps(
+            {"file_name": name, "ground_truth": json.dumps(ground_truth, ensure_ascii=False)},
+            ensure_ascii=False,
+        )
+
+
+def _manifest(
+    config: SynthConfig,
+    output: Path,
+    fonts: FontSet,
+    specs: list[SampleSpec],
+    used_families: set[str],
+    images: dict[str, int],
+) -> dict[str, Any]:
+    """Manifest mit Versionen, Plan, Schriften und SHA-256 aller geschriebenen Dateien."""
     files = {
         path.relative_to(output).as_posix(): _sha256(path)
         for path in sorted(output.rglob("*"))
         if path.is_file() and path.name != MANIFEST
     }
-    manifest: dict[str, Any] = {
+    return {
         "format": FORMAT,
         "target_schema": SCHEMA_VERSION,
         "task_token": TASK_TOKEN,
@@ -246,11 +271,6 @@ def build_dataset(
         "files": files,
         "dataset_hash": dataset_hash(files),
     }
-    (output / MANIFEST).write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    return manifest
 
 
 @dataclass(frozen=True)
