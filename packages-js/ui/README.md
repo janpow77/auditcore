@@ -98,7 +98,7 @@ document.body.append(table)
 - **React:** Tabelle, Synopse, VVT, DSFA, Risiko-Merkmale, Screening,
   Stichprobe und Benford nativ in `@flowaudit/ui-react` (ohne Vue, gleiche
   Texte und Verträge, Paritätstests gegen diese Fassung), ebenso die
-  Geo-Karte und Kanban.
+  Geo-Karte, Kanban und die Datenbankansicht.
 
 Fachkomponenten und ihre REST-Verträge:
 
