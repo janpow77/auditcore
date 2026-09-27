@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu `FlowauditRunnerConsole` (native React-Fassung der Runner-Konsole, gleiches DOM wie `RunnerConsole`).
 - Neu `FlowauditAttributeSampling` (wie `AttributeSampling`).
 - `FlowauditExtrapolation`: Teilschichten und dritte Stufe, Programme bei mehreren Zeiträumen (wie Vue).
 - Neu: Bestandsprüfung – `FlowauditBatchChecks` (nativ React); Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).

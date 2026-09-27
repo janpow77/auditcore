@@ -69,9 +69,11 @@ Schema `data/schemas/runner-pool.schema.json`: `klassen.<k>.soll`, optional
 Schreibende Aufrufe: nur Loopback, Kopfzeile `X-Auditcore-Runner: 1`, JSON-Body
 bis 256 KiB.
 
-## Anforderungen an die Oberfläche (`@auditcore/ui`, Gruppe `runner`)
+## Oberfläche (`@auditcore/ui`, Gruppe `runner`)
 
-Die Oberfläche entsteht als Komponentengruppe in `@auditcore/ui` (Vue, natives
+Die Oberfläche ist die Komponentengruppe `runner` (`docs/ui/runner.md`; Bündel
+`data/web/runner-elements.js`, erzeugt mit `npm run runner:bundle`, in der CI per
+Bytevergleich geprüft). Sie ist eine Komponentengruppe in `@auditcore/ui` (Vue, natives
 React, Web Component) und nutzt ausschließlich diese API. Sie braucht die
 Bereiche **Status**, **Einstellungen** (alle Profilfelder mit Validierung und
 Diff vor dem Anwenden; root-Schritte nur als Befehl zum Kopieren), **Werkzeuge**
@@ -79,3 +81,9 @@ Diff vor dem Anwenden; root-Schritte nur als Befehl zum Kopieren), **Werkzeuge**
 **Prioritäten** (Rangfolge `prioritaeten[]` mit `rang`, `verdraengbar`, `min`).
 Sie zeigt `version`, `aenderung` und `sync` an und bei einem Konflikt (409) beide
 Stände mit Diff – „auf dem Rechner geändert“ gegenüber „zentral geändert“.
+
+Hinweise zum heutigen Stand der API, die die Oberfläche berücksichtigt:
+Fehler beim Anwenden kommen mit HTTP 200 und `gueltig: false` (nicht 422);
+ein Konflikt (409) trägt nur `fehler` ohne Diff – die Oberfläche lädt dann
+`GET /api/profil` und zeigt die Unterschiede feldweise selbst; Fehlerpfade in
+Listen lauten `gpus[0].uuid`.
