@@ -7,20 +7,21 @@
 <link rel="stylesheet" href="/tokens.css">
 <style>
   body { font-family: var(--fa-font-sans); background: var(--fa-color-bg); color: var(--fa-color-text);
-         margin: 0; padding: var(--fa-space-6); line-height: var(--fa-line-height); }
-  main { max-width: 48rem; margin: 0 auto; background: var(--fa-color-surface);
+         margin: 0; padding: var(--fa-space-5); line-height: var(--fa-line-height); }
+  main { max-width: 76rem; margin: 0 auto; background: var(--fa-color-surface);
          border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); padding: var(--fa-space-5); }
   code { font-family: var(--fa-font-mono); font-size: var(--fa-font-size-sm); }
   a { color: var(--fa-color-accent); }
 </style>
+<!-- Runner-Konsole aus @auditcore/ui (Gruppe runner); Bündel: npm run runner:bundle -->
 <script type="module" src="/runner-elements.js"></script>
 </head>
 <body>
 <main>
   <flowaudit-runner-console api="/api">
     <h1>auditcore-runner</h1>
-    <p>Die Oberfläche (<code>@auditcore/ui</code>, Gruppe <code>runner</code>) ist in dieser Paketversion noch nicht
-       enthalten. Die Einstellungen lassen sich über die CLI (<code>auditcore-runner profil …</code>) und die JSON-API ändern:</p>
+    <p>Die Oberfläche wird geladen … Ohne JavaScript bleiben die CLI (<code>auditcore-runner profil …</code>)
+       und die JSON-API:</p>
     <ul>
       <li><a href="/api/status">/api/status</a> – Rechner, Klassen, Soll, Runner, Image, Netzsperre</li>
       <li><a href="/api/profil">/api/profil</a> – Profil, Hardware, Validierung</li>

@@ -20,7 +20,8 @@
     "examples": "node scripts/js/verify-examples.mjs",
     "ui:gate": "node scripts/js/ui-parity-gate.mjs",
     "ui:neu": "node scripts/js/ui-new.mjs",
-    "test:scripts": "node --test scripts/js/test/*.test.mjs"
+    "test:scripts": "node --test scripts/js/test/*.test.mjs",
+    "runner:bundle": "node scripts/js/runner-bundle.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
