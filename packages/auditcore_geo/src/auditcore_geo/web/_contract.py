@@ -11,23 +11,23 @@ import math
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from auditcore_common import rest
+
 from ..distanz import KUGELPROFILE, Kugelprofil
 from ..koordinaten import Punkt
 
 
-class ContractError(ValueError):
-    """Anfrage erfüllt den REST-Vertrag nicht (Status, Code, deutsche Meldung)."""
+class ContractError(rest.ContractError):
+    """Anfrage erfüllt den REST-Vertrag nicht (Status, Code, deutsche Meldung).
+
+    Unterklasse von :class:`auditcore_common.rest.ContractError`; nur der
+    Standardcode heißt im Geo-Vertrag ``ungueltige_eingabe``.
+    """
 
     def __init__(
         self, message: str, *, status: int = 422, code: str = "ungueltige_eingabe"
     ) -> None:
-        super().__init__(message)
-        self.status = status
-        self.code = code
-
-    def to_dict(self) -> dict[str, object]:
-        """JSON-Fehlerkörper ``{"error": {"code", "message"}}``."""
-        return {"error": {"code": self.code, "message": str(self)}}
+        super().__init__(message, status=status, code=code)
 
 
 @dataclass(frozen=True)
@@ -40,9 +40,7 @@ class Body:
     @classmethod
     def of(cls, value: object, path: str = "Anfrage") -> Body:
         """Wrap a JSON object with string keys or reject the value."""
-        if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
-            raise ContractError(f"'{path}' muss ein JSON-Objekt sein.")
-        return cls(value, path)
+        return cls(rest.json_object(value, path, error=ContractError), path)
 
     def name(self, key: str) -> str:
         """Field path for messages."""
