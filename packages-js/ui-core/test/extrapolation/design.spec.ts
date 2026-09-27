@@ -12,6 +12,8 @@ import {
   subsampleResultRows,
   systemAssessmentChoices,
   translator,
+  type EvaluationRequest,
+  type ExtrapolationForm,
   type StratumInput,
   type UnitInput,
 } from '../../src'
@@ -116,25 +118,35 @@ describe('Anzeige der Ergänzungen', () => {
   })
 })
 
+function expectMultistageForm(form: ExtrapolationForm): void {
+  expect(form.design).toBe('periods')
+  expect(form.strata.map((row) => row.group)).toEqual(['Programm 1', 'Programm 2', 'Programm 1', 'Programm 2'])
+  const first = form.units[0]?.subsample
+  if (!first) throw new Error('keine Teilstichprobe')
+  expect(first.strata).toHaveLength(2)
+  expect(first.items[1]?.subsample?.items).toHaveLength(4)
+}
+
+function expectMultistageRequest(sent: EvaluationRequest | undefined): void {
+  const expected = multistageFixture.units[0]?.subsample
+  const sub = sent?.units[0]?.subsample
+  if (!sent || !sub || !expected) throw new Error('keine Anfrage')
+  expect(sent.strata.map((stratum) => stratum.group)).toEqual(multistageFixture.strata.map((stratum) => stratum.group))
+  expect(sub.strata).toEqual(expected.strata)
+  const nested = sub.units[1]?.subsample
+  expect(nested?.strata).toEqual(expected.units[1]?.subsample?.strata)
+  expect(nested?.units).toHaveLength(4)
+}
+
 describe('Mehrstufige Teilstichproben und Programme über Zeiträume', () => {
   it('übernimmt Teilschichten, dritte Stufe und Programme und baut dieselbe Anfrage', async () => {
     const { created, port } = controller(multistageFixture.strata, multistageFixture.units)
     await created.load()
-    const form = created.store.get().form
-    expect(form.design).toBe('periods')
-    expect(form.strata.map((row) => row.group)).toEqual(['Programm 1', 'Programm 2', 'Programm 1', 'Programm 2'])
-    expect(form.units[0]?.subsample?.strata).toHaveLength(2)
-    expect(form.units[0]?.subsample?.items[1]?.subsample?.items).toHaveLength(4)
+    expectMultistageForm(created.store.get().form)
     created.selectMethod('mus.standard')
     created.setConfidence(0.9)
     await created.evaluate()
-    const sent = port.calls.evaluate[0]
-    if (!sent) throw new Error('keine Anfrage')
-    expect(sent.strata.map((stratum) => stratum.group)).toEqual(multistageFixture.strata.map((stratum) => stratum.group))
-    expect(sent.units[0]?.subsample?.strata).toEqual(multistageFixture.units[0]?.subsample?.strata)
-    const nested = sent.units[0]?.subsample?.units[1]?.subsample
-    expect(nested?.strata).toEqual(multistageFixture.units[0]?.subsample?.units[1]?.subsample?.strata)
-    expect(nested?.units).toHaveLength(4)
+    expectMultistageRequest(port.calls.evaluate[0])
     expect(created.store.get().result?.groups).toHaveLength(2)
   })
 
