@@ -43,7 +43,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | SampleSizePlanner | `SampleSizePlanner` | `FlowauditSampleSizePlanner` | – ([samplesize.md](samplesize.md)) | 4 + 2 Interaktionsfolgen |
 | Merkmalsstichprobe (Systemprüfung) | `AttributeSampling` | `FlowauditAttributeSampling` | `auditcore_extrapolation.evaluation/1`, `POST /attributes` ([attributes.md](attributes.md)) | 3 + Interaktionsfolge |
 | Berichtsvorlagen | `ReportTemplates` | `FlowauditReportTemplates` | `reporting_ui/1` ([reporting-rest.md](reporting-rest.md), [reporttemplates.md](reporttemplates.md)) | 6 + 2 Interaktionsfolgen |
-| RunnerConsole | `RunnerConsole` | `FlowauditRunnerConsole` | – ([runner.md](runner.md)) | 3 + Interaktionsfolge |
+| Runner-Konsole (Prüfbank) | `RunnerConsole` | `FlowauditRunnerConsole` | `auditcore-runner/status/1`, Profil- und Werkzeug-API ([runner.md](runner.md)) | 7 + 3 Interaktionsfolgen |
 
 Vollständigkeit erzwingt `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`,
 Regeln in [beitragen.md](beitragen.md)); neue Komponenten entstehen mit

@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1094):
+Exporte der Einstiegspunkte aus `package.json#exports` (1152):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -481,6 +481,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1094):
 | `@auditcore/ui-core` | `QuestionView` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `RESIDUAL_FIELDS` | Konstante | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ROW_STATUSES` | Konstante | – | `synopsis/types` |
+| `@auditcore/ui-core` | `RUNNER_ANSICHTEN` | Konstante | – | `runner/controller` |
+| `@auditcore/ui-core` | `RUNNER_SCHREIB_KOPF` | Konstante | Kopfzeile, ohne die `auditcore-runner ui` schreibende Anfragen ablehnt. | `runner/port` |
+| `@auditcore/ui-core` | `RUNNER_WERKZEUG_SCHEMA` | Konstante | – | `runner/port` |
 | `@auditcore/ui-core` | `RadiusHit` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `RadiusRequest` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `RadiusResult` | Schnittstelle | – | `geo/types` |
@@ -542,14 +545,43 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1094):
 | `@auditcore/ui-core` | `RunRequestRecord` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `RunSummary` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `RunView` | Schnittstelle | – | `screening/types` |
+| `@auditcore/ui-core` | `RunnerAbschnitt` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerAenderung` | Schnittstelle | – | `runner/types` |
+| `@auditcore/ui-core` | `RunnerAnsicht` | Typ | Vertrag der lokalen JSON-API von `auditcore_runner` (`auditcore-runner ui`, Doku `packages/auditcore_runner/docs/api.md`). Feldnamen wie im Backend. | `runner/types` |
 | `@auditcore/ui-core` | `RunnerCallbacks` | Schnittstelle | – | `runner/controller` |
 | `@auditcore/ui-core` | `RunnerController` | Schnittstelle | – | `runner/controller` |
 | `@auditcore/ui-core` | `RunnerData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `runner/controller` |
-| `@auditcore/ui-core` | `RunnerItem` | Schnittstelle | Eintrag der Liste (Vertrag des Ports; an den REST-Vertrag des Backends anpassen). | `runner/types` |
+| `@auditcore/ui-core` | `RunnerDateiAenderung` | Schnittstelle | – | `runner/types` |
+| `@auditcore/ui-core` | `RunnerEintrag` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerFeld` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerFeldArt` | Typ | – | `runner/eingabe` |
+| `@auditcore/ui-core` | `RunnerHinweis` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerKlasseStatus` | Schnittstelle | Stand einer Runner-Klasse im Status. `null`: unbekannt (z. B. GitHub nicht erreichbar). | `runner/types` |
+| `@auditcore/ui-core` | `RunnerKlassenZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerKonfliktStand` | Schnittstelle | – | `runner/controller` |
+| `@auditcore/ui-core` | `RunnerKontext` | Schnittstelle | – | `runner/aktionen` |
+| `@auditcore/ui-core` | `RunnerMeldung` | Schnittstelle | Rückmeldung nach einer Aktion (übersetzt in der Ansicht). | `runner/controller` |
 | `@auditcore/ui-core` | `RunnerMessageKey` | Typ | – | `runner/messages` |
+| `@auditcore/ui-core` | `RunnerOption` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerPfad` | Typ | – | `runner/profil` |
 | `@auditcore/ui-core` | `RunnerPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `runner/types` |
-| `@auditcore/ui-core` | `RunnerRow` | Schnittstelle | Zeile der Liste, wie Vue und React sie darstellen. | `runner/view` |
+| `@auditcore/ui-core` | `RunnerPrioritaet` | Schnittstelle | – | `runner/profil` |
+| `@auditcore/ui-core` | `RunnerPrioritaetZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerProblem` | Schnittstelle | – | `runner/types` |
+| `@auditcore/ui-core` | `RunnerProfil` | Typ | Profil als JSON (Schema `auditcore-runner/profil/…`); unbekannte Felder bleiben erhalten. | `runner/types` |
+| `@auditcore/ui-core` | `RunnerProfilStand` | Schnittstelle | `GET /api/profil`. | `runner/types` |
+| `@auditcore/ui-core` | `RunnerPruefung` | Schnittstelle | Ergebnis von `POST /api/profil/pruefen` bzw. `…/anwenden`. | `runner/types` |
 | `@auditcore/ui-core` | `RunnerSource` | Schnittstelle | – | `runner/controller` |
+| `@auditcore/ui-core` | `RunnerStatus` | Schnittstelle | `GET /api/status` (Schema `auditcore-runner/status/1`). | `runner/types` |
+| `@auditcore/ui-core` | `RunnerTab` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerUnterschied` | Schnittstelle | – | `runner/profil` |
+| `@auditcore/ui-core` | `RunnerVorschau` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeug` | Schnittstelle | – | `runner/types` |
+| `@auditcore/ui-core` | `RunnerWerkzeugEinstellung` | Schnittstelle | – | `runner/types` |
+| `@auditcore/ui-core` | `RunnerWerkzeugGruppe` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeugProfile` | Typ | Prüfprofil → Werkzeug → Einstellung. | `runner/types` |
+| `@auditcore/ui-core` | `RunnerWerkzeugZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeuge` | Schnittstelle | `GET /api/werkzeuge`. | `runner/types` |
 | `@auditcore/ui-core` | `SAMPLED_PART` | Konstante | – | `extrapolation/model-subsample` |
 | `@auditcore/ui-core` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
 | `@auditcore/ui-core` | `SCREENING_KINDS` | Konstante | – | `screening/runForm` |
@@ -838,7 +870,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1094):
 | `@auditcore/ui-core` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@auditcore/ui-core` | `createRunner` | Funktion | Führt eine Portanfrage aus: setzt `busy`, fängt Fehler (über `toError`) und meldet sie an `onError`. Ohne Port geschieht nichts (`null`). | `store` |
 | `@auditcore/ui-core` | `createRunnerController` | Funktion | – | `runner/controller` |
-| `@auditcore/ui-core` | `createRunnerMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests). Eine REST-Umsetzung baut auf `requestJson` aus `@auditcore/common` auf (Vorbild: `extrapolation/rest-port.ts`). | `runner/port` |
+| `@auditcore/ui-core` | `createRunnerMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests); Konflikt, wenn `erwarteteVersion` nicht zur gespeicherten passt. | `runner/port` |
+| `@auditcore/ui-core` | `createRunnerRestPort` | Funktion | Port auf die JSON-API von `auditcore-runner ui` (Basis z. B. `/api`). | `runner/port` |
 | `@auditcore/ui-core` | `createSamplesizeController` | Funktion | – | `samplesize/controller` |
 | `@auditcore/ui-core` | `createSamplesizeMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests): feste Antworten je Methode; ohne Antwort wird die Anfrage wie vom Backend abgelehnt. | `samplesize/port` |
 | `@auditcore/ui-core` | `createSamplesizeRestPort` | Funktion | Port auf den REST-Vertrag `auditcore_sampling.guidance/1` (Starlette oder FastAPI). | `samplesize/port` |
@@ -1081,10 +1114,35 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1094):
 | `@auditcore/ui-core` | `riskTableRows` | Funktion | – | `risk/controller` |
 | `@auditcore/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table/index` |
 | `@auditcore/ui-core` | `runFormDefaults` | Funktion | Vorbelegung bei Wechsel der Prüfart oder neuen Einstellungen: empfohlenes Profil, alle Listen, Standard-Mindestwert. | `screening/runForm` |
-| `@auditcore/ui-core` | `runnerIsEmpty` | Funktion | Hinweis „keine Einträge“ nur nach abgeschlossener, fehlerfreier Anfrage. | `runner/view` |
-| `@auditcore/ui-core` | `runnerMessages` | Konstante | Texte von RunnerConsole (Vue) und FlowauditRunnerConsole (React); sichtbare Texte nur hier. | `runner/messages` |
-| `@auditcore/ui-core` | `runnerRows` | Funktion | – | `runner/view` |
-| `@auditcore/ui-core` | `runnerSelection` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerAbschnitte` | Funktion | Formularabschnitte aus dem Entwurf; nur Felder, die das Profil tatsächlich enthält. | `runner/view` |
+| `@auditcore/ui-core` | `runnerEingabe` | Funktion | Eingabe eines Feldes in den Profilwert umsetzen (Zahl, Liste, Schalter, Text). | `runner/eingabe` |
+| `@auditcore/ui-core` | `runnerGeaendert` | Funktion | – | `runner/profil` |
+| `@auditcore/ui-core` | `runnerHardware` | Funktion | Hardware-Angaben des Rechners als Liste (Schlüssel wie vom Backend geliefert). | `runner/view` |
+| `@auditcore/ui-core` | `runnerHatWarteschlange` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerHinweise` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerIstGeaendert` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerKlassenZeilen` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerMessages` | Konstante | Texte der Runner-Konsole (Vue `RunnerConsole`, React `FlowauditRunnerConsole`); sichtbare Texte nur hier. | `runner/messages` |
+| `@auditcore/ui-core` | `runnerMeta` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerNachbarTab` | Funktion | Nächster Reiter für Pfeiltasten (zyklisch). | `runner/view` |
+| `@auditcore/ui-core` | `runnerNurLesen` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerPrioritaetSetze` | Funktion | Eigenschaft eines Prioritätseintrags (Position in der sortierten Liste) ändern. | `runner/profil` |
+| `@auditcore/ui-core` | `runnerPrioritaetZeilen` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerPrioritaeten` | Funktion | Prioritäten des Entwurfs nach Rang (1 = höchster), fehlerhafte Einträge übersprungen. | `runner/profil` |
+| `@auditcore/ui-core` | `runnerProbleme` | Funktion | Meldungen des Backends: aus der letzten Prüfung, sonst aus dem geladenen Stand. | `runner/view` |
+| `@auditcore/ui-core` | `runnerSetze` | Funktion | Neuer Entwurf mit geändertem Wert; der alte bleibt unverändert. | `runner/profil` |
+| `@auditcore/ui-core` | `runnerTabs` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerUeberblick` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerUnterschiede` | Funktion | Feldweise Unterschiede (Pfad in Punktschreibweise), sortiert; ohne `version` und `aenderung`. | `runner/profil` |
+| `@auditcore/ui-core` | `runnerVerschiebe` | Funktion | Eintrag an Position `index` um eine Stelle verschieben; Ränge werden fortlaufend neu vergeben. | `runner/profil` |
+| `@auditcore/ui-core` | `runnerVersion` | Funktion | – | `runner/profil` |
+| `@auditcore/ui-core` | `runnerVorschau` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWeichtZuerst` | Funktion | Wer bei knapper Kapazität zuerst weicht: der verdrängbare Eintrag mit dem niedrigsten Rang (größte Zahl). | `runner/profil` |
+| `@auditcore/ui-core` | `runnerWeichtZuerstText` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWerkzeugFeldId` | Funktion | Schlüssel des Rohtexts einer Werkzeug-Zahleneingabe. | `runner/eingabe` |
+| `@auditcore/ui-core` | `runnerWerkzeugGruppen` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWerkzeugeGeaendert` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWert` | Funktion | – | `runner/profil` |
 | `@auditcore/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `samplesizeAllocation` | Funktion | – | `samplesize/view` |
 | `@auditcore/ui-core` | `samplesizeDerivation` | Funktion | – | `samplesize/view` |

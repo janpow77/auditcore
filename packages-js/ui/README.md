@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (881):
+Exporte der Einstiegspunkte aus `package.json#exports` (884):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -511,11 +511,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (881):
 | `@auditcore/ui` | `RunSummary` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RunView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `Runner` | Schnittstelle | – | `rest/runner` |
+| `@auditcore/ui` | `RunnerAnsicht` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RunnerConsole` | Vue-Komponente | – | `runner/RunnerConsole.vue` |
 | `@auditcore/ui` | `RunnerController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RunnerData` | Re-Export | – | `@auditcore/ui-core` |
-| `@auditcore/ui` | `RunnerItem` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RunnerPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RunnerProfil` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RunnerStatus` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `SCREENING_CONTRACT` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_FILTER_KEYS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_ICONS` | Re-Export | – | `@auditcore/ui-core` |
@@ -744,6 +746,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (881):
 | `@auditcore/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
 | `@auditcore/ui` | `createRunnerController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRunnerMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createRunnerRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplesizeController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplesizeMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplesizeRestPort` | Re-Export | – | `@auditcore/ui-core` |
@@ -905,7 +908,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (881):
 | `@auditcore/ui` | `riskMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `riskTableColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `riskTableRows` | Re-Export | – | `@auditcore/ui-core` |
-| `@auditcore/ui` | `runnerConsoleElement` | Konstante | `<flowaudit-runner-console>`: Eigenschaften `port`, `locale`; Ereignisse `item-select`, `error`. | `runner/element` |
+| `@auditcore/ui` | `runnerConsoleElement` | Konstante | `<flowaudit-runner-console>`: Attribut `api` (Basis-URL der JSON-API von `auditcore-runner ui`, z. B. `/api`), `ansicht`, `locale`; Eigenschaft `port`. | `runner/element` |
 | `@auditcore/ui` | `runnerMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `sameSurvey` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `sampleSizePlannerElement` | Konstante | `<flowaudit-sample-size-planner>`: Eigenschaften `port`, `request`, `locale`; Ereignisse `plan-calculated`, `error`. | `samplesize/element` |
@@ -1721,16 +1724,18 @@ ReportTemplates: Berichtsvorlage wählen, Datenvertrag sehen, Vorschau und Beric
 
 #### `RunnerConsole`
 
-RunnerConsole: Liste mit Auswahl; Logik im Kern (createRunnerController).
+RunnerConsole: Status, Einstellungen, Werkzeuge und Prioritäten eines Rechners mit auditcore_runner; Logik im Kern (createRunnerController).
 
 | Prop | Typ | Pflicht | Standard | Beschreibung |
 |---|---|---|---|---|
-| `port` | `RunnerPort \| null` | nein | `null` | Fachlogik, z. B. `createRunnerMemoryPort([...])`. |
+| `port` | `RunnerPort \| null` | nein | `null` | Fachlogik, z. B. `createRunnerRestPort({ baseUrl: '/api' })`; hat Vorrang vor `api`. |
+| `api` | `string` | nein | `''` | Basis-URL der JSON-API von `auditcore-runner ui` (Web Component: Attribut `api`). |
+| `ansicht` | `RunnerAnsicht` | nein | `'status'` | Bereich beim Öffnen. |
 | `locale` | `Locale` | nein | `undefined` | – |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
-| `item-select` | `[item: RunnerItem]` | – |
+| `applied` | `[version: number]` | – |
 | `error` | `[message: string]` | – |
 
 #### `SampleSizePlanner`
