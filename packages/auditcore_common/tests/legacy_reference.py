@@ -92,7 +92,9 @@ def canonical_sha256(data: Mapping[str, object]) -> str:
     return fingerprint(data)
 
 
-RuleProfile = Profile = SourceProfile = IndicatorProfile = PrecheckProfile = RegistryProfile = LegacyProfile
+RuleProfile = Profile = SourceProfile = IndicatorProfile = PrecheckProfile = RegistryProfile = (
+    LegacyProfile
+)
 
 
 # packages/auditcore_dataprotection/src/auditcore_dataprotection/report_data.py :: plain
@@ -652,6 +654,7 @@ def entity_rapidfuzz() -> tuple[ModuleType, ModuleType]:
         ) from exc
     return fuzz, process
 
+
 # packages/auditcore_price_sources/src/auditcore_price_sources/snapshots.py :: canonical_json_bytes
 def price_sources_canonical_json_bytes(body: bytes) -> bytes:
     """``json.dumps(payload, sort_keys=True)`` of a JSON body (regulierung's package bytes).
@@ -659,4 +662,3 @@ def price_sources_canonical_json_bytes(body: bytes) -> bytes:
     Raises ``ValueError`` if the body is not JSON.
     """
     return json.dumps(json.loads(body), sort_keys=True).encode()
-

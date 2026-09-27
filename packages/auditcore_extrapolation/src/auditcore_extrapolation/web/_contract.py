@@ -12,7 +12,7 @@ from collections.abc import Mapping
 from decimal import Decimal
 
 from auditcore_common.rest import ContractError as RestContractError
-from auditcore_common.rest import bounded_list
+from auditcore_common.rest import bounded_list, json_object
 
 CONTRACT = "auditcore_extrapolation.evaluation/1"
 MAX_UNITS = 100_000
@@ -28,9 +28,7 @@ class Reader:
     """Typed access to one JSON object; ``where`` prefixes the messages."""
 
     def __init__(self, raw: object, where: str = "Anfrage") -> None:
-        if not isinstance(raw, Mapping) or any(not isinstance(k, str) for k in raw):
-            raise ContractError(f"'{where}' muss ein JSON-Objekt sein.")
-        self.body: Mapping[str, object] = raw
+        self.body: Mapping[str, object] = json_object(raw, where, error=ContractError)
         self.where = where
 
     def _name(self, key: str) -> str:
