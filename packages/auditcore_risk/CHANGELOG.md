@@ -1,5 +1,21 @@
 # Changelog – auditcore_risk
 
+## Unreleased
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 11 Invarianten (I1–I11) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`; keine Befunde. `hypothesis` im Extra `dev`.
+
+Keine Versionsanhebung (Release-Ablauf). Abwärtskompatible Erweiterung.
+
+- Betrugsprüfsignale als Risiko-Merkmale: `web.signal_evaluation`,
+  `GET /fraud-profiles`, `POST /fraud-signals/evaluate`; `GET /profiles/{id}/{version}`
+  beschreibt auch `signal_score`-Profile. Blocker/Warnungen von `score_signals`
+  werden Treffer, abgebrochene Teilprüfungen machen ihre Codes unbestimmt.
+- `signal_score`-Profile dürfen einen Block `display` (Bezeichnungen je Code und
+  Teilprüfung) tragen. Neue Fassung `flowinvoice.fraud_signals` 2026.09.3 = 2026.09.2
+  plus Bezeichnungen (Status `CANDIDATE_HUMAN_DECISION_REQUIRED`, Texte offen).
+- Parität: 268 ausgeführte Läufe des flowinvoice-`FraudDetectionManager`
+  (fb2d185) und `score_signals` mit 2026.09.2 (`tests/test_web_signals.py`).
+
 ## 0.3.4 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`, `auditcore_entity_matching==0.2.4`, `auditcore_procurement==0.2.4`.

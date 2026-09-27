@@ -6,6 +6,32 @@
   C-13, A-07, B-12, Ergänzungen ERG-01/ERG-02) mit Oberfläche `BatchChecks` /
   `<flowaudit-batch-checks>` / `FlowauditBatchChecks`; Regelmeldungen der
   Pipeline deutsch (D9). Siehe `docs/ui/batch-checks-rest.md`.
+- `auditcore_extrapolation`: fehlende Verfahren des Stichprobenleitfadens
+  EGESIF_16-0014-01 ergänzt – mehrere Zeiträume, zwei-/dreistufige Stichprobe
+  inkl. ETC, Neuberechnung des Konfidenzniveaus (7.7), Gruppen von Programmen
+  (7.8), Merkmalsstichprobe (7.9); REST `evaluation/1` abwärtskompatibel
+  erweitert, `POST /attributes`; UI `ExtrapolationPanel`/`FlowauditExtrapolation`
+  mit Zeiträumen, Gruppen, Teilstichproben und Neuberechnung. Fehlerbehebung:
+  konservativer MUS-Ansatz mit allen Niveaus aus Tabelle 4.
+- `auditcore_sampling`: Stichprobenumfang nach dem KOM-Leitfaden
+  EGESIF_16-0014-01 als neues Modul `guidance` mit Status „nach Leitfaden“
+  (SRS, Differenzenschätzung, MUS Standard/geschichtet/konservativ,
+  nicht-statistische Mindestumfänge nach Art. 79 Abs. 2 VO (EU) 2021/1060),
+  Belegziehung einer Zwischengeschalteten Stelle (`intermediate_body`,
+  Paritätstest gegen flowinvoice), REST-Vertrag `auditcore_sampling.guidance/1`;
+  Oberfläche `SampleSizePlanner` / `FlowauditSampleSizePlanner`
+  (`<flowaudit-sample-size-planner>`). Konsistenztest Planung → Hochrechnung
+  in `auditcore_extrapolation`.
+- Preview v0.4.2 veröffentlicht (Prerelease, 185 Assets, main `f2220bf5`) und
+  anonym installiert: pip 27/27 (hashgebunden) und 27/27 (Paketindex), APT
+  (debian:bookworm) 27/27, npm 9/9 aus den Tarball-URLs sowie die Beispiele
+  Vue, React und Web Components. Nachweise
+  `docs/reports/domain-public-installation-v0.4.2.json` und
+  `docs/reports/npm-tarball-installation-v0.4.2.json`, Hashes in
+  `docs/deployment/package-feed.md`. Die README-Installationszeilen der Pakete
+  zeigen auf v0.4.2. Das Donut-Job-Image bezieht seine auditcore-Abhängigkeiten
+  wieder hashgebunden aus dem Release (`requirements-auditcore.txt` auf v0.4.2).
+
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
@@ -14,12 +40,55 @@
   `--guest-image ubuntu:26.04`. Nachweise der regulierung-Build-Matrix
   Ubuntu 26.04 (Python 3.14) und 24.04 unter
   `docs/validation/regulierung-apt/ubuntu-26.04/`.
+
+- **Institutsneutrale Pakete:** Die Pakete nennen keine konkreten Institute
+  mehr, sondern fachlich neutrale Rollen (z. B. „Zwischengeschaltete Stelle“,
+  Art. 71 Abs. 3 VO (EU) 2021/1060; Code `intermediate_body`). Neuer Wächter
+  `scripts/check_institution_names.py` im Job `code-quality-gate`: Namen aus
+  `quality/institutsnamen-denylist.txt` sind in `packages/`, `packages-js/`,
+  `docs/ui/` u. a. verboten, Ausnahmen nur mit Begründung in
+  `quality/institutsnamen-ausnahmen.txt`. Umbenannte bzw. neu versionierte
+  Profile:
+  - `auditcore_risk`: `flowinvoice.rbvk_wibank` heißt jetzt
+    `flowinvoice.rbvk_intermediate_body` (Versionen `fb2d18568d2e` und
+    `2026.09.2`, fachlich unverändert, neue Fingerprints). Die alte Kennung
+    lädt übergangsweise mit `DeprecationWarning` das neue Profil
+    (`profiles.DEPRECATED_ALIASES`, entfällt mit dem ersten Release nach dem
+    31.12.2026). Charakterisierungs-Fixture: Schlüssel `rbvk` statt des
+    Institutsnamens.
+  - `auditcore_legal_sources`: `auditdatabase.esi` und `audit_designer.vp_ai`
+    2026.09.2 ersetzen 2026.09.1 (Relevanz-Schlagwörter „Zwischengeschaltete
+    Stelle“ und „Landesförderinstitut“ statt Institutsnamen);
+    `auditcore_bpmn` nutzt `auditdatabase.esi` 2026.09.2, der Quellkatalog
+    von `auditcore_harvest` ist nachgezogen.
+  - `auditcore_funding_sources`: `designer.deminimis.authority_levels`
+    2026.09.2 ersetzt 2026.09.1 (Erkennungsmuster mit Institutsnamen
+    entfallen; Zuordnung über Landesnamen und Landesbehörden).
+  - `auditcore_procurement`: Der User-Agent der HAD-Suche lautet
+    `EFRE-AuditTool/2.0` (ohne Behördenzusatz).
+  Beobachtete Fixtures sind entsprechend neutralisiert und tragen den Hinweis
+  `neutralized`; die Aufzeichnungswerkzeuge neutralisieren künftig selbst.
+  Die BPMN-Neutralitätstests lesen die Namen aus der Denylist.
+- Paketkatalog: neuer Status **„spezifiziert“** für charakterisierte Pakete
+  mit fachlicher Spezifikation (`docs/spezifikation.md` je Paket: Zweck,
+  Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+  Altverhalten), Invarianten als Hypothesis-Eigenschaftstests und benannten
+  Legacy-Varianten. `scripts/docs/specification.py` prüft den
+  `specification`-Block in `provenance.json`; `catalog.py` setzt den Status
+  nur, wenn er hält (Vorlage `docs/bibliotheken/spezifikation-vorlage.md`).
+  Welche Pakete umgestellt sind, steht in den Paket-CHANGELOGs.
 - Duplikatgruppe A16 abgeschlossen: Die Prüfung „JSON-Objekt am Pfad“ in
   sampling (`as_object`), geo (`Body.of`) und extrapolation (`Reader`) nutzt
   `auditcore_common.rest.json_object`; geo `web.decode`, `Reply` und `_json`
   laufen über `auditcore_common.rest` (`decode_body` mit neuen Parametern
   `too_large_code`/`invalid_json_code`). Verhalten unverändert
   (Differenztests, Paketlauf alt gegen neu über HTTP).
+- flowinvoice-Parität für die gemeinsamen Oberflächen: `auditcore_statistics`
+  Chi²-Test mit kritischen Werten und auffällige Ziffern (REST-Feld `metrics`),
+  `auditcore_risk` Betrugsprüfsignale im Vertrag der Risiko-Merkmale
+  (`POST /fraud-signals/evaluate`, Profil `flowinvoice.fraud_signals` 2026.09.3
+  mit Bezeichnungen), Benford-Komponente (Vue/React) mit `metrics`,
+  `autoAnalyse`, `hideInputs`. Keine Versionsanhebung.
 
 ## 0.4.2 – 2026-09-26
 

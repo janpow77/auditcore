@@ -72,6 +72,23 @@
         "cases": 65
       },
       "also_identical_in": "janpow77/audit-portal backend/app/services/fraud_detection/benfords_law.py (gleicher Blob)"
+    },
+    {
+      "repository": "janpow77/flowinvoice",
+      "commit": "06c06a8cf308669edef876520c94c32773d956d9",
+      "path": "backend/app/services/fraud_detection/benfords_law.py",
+      "git_blob": "b6f87541776cd3d6de0df9db27130a719bfdf61a",
+      "symbols": [
+        "BenfordsLawAnalyzer.analyze",
+        "CHI_SQUARE_CRITICAL_005_DF8"
+      ],
+      "profile": "Parität significance.chi_square_test (Chi², p, Freiheitsgrade, kritischer Wert 15,507) und significance.digit_z_test (z > 2,576 ohne Stetigkeitskorrektur; Quelle fb2d185 mit exakten Erwartungswerten ausgeführt)",
+      "added_in": "unveröffentlicht (nach 0.3.4)",
+      "characterization": {
+        "fixture": "tests/fixtures/flowinvoice_significance_observed.json",
+        "tool": "tools/capture_flowinvoice_significance.py",
+        "cases": 63
+      }
     }
   ],
   "own_additions": [
@@ -86,6 +103,35 @@
       "added_in": "0.3.0",
       "origin": "OWN_IMPLEMENTATION",
       "description": "REST-Vertrag (docs/ui/benford-rest.md); Starlette-Routen und optionaler FastAPI-Router (Extra web)."
+    },
+    {
+      "module": "auditcore_statistics.significance",
+      "added_in": "unveröffentlicht (nach 0.3.4)",
+      "origin": "OWN_IMPLEMENTATION",
+      "description": "Chi²-Test mit kritischen Werten (Bisektion auf chi2_survival) und z je Ziffer mit wählbarer Stetigkeitskorrektur und ausdrücklicher Grenze; im REST-Vertrag als optionale Kennzahlen 'metrics'."
     }
-  ]
+  ],
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11"
+    ],
+    "legacy_variants": [
+      "legacy_run_benford",
+      "legacy_flowinvoice_benford"
+    ]
+  }
 }

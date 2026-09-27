@@ -23,6 +23,8 @@ import {
   type StratumRow,
   type UnitRow,
 } from './model'
+import { createSubsampleActions } from './controller-subsample'
+import { designOf } from './model-design'
 import type {
   EvaluationRequest,
   EvaluationResult,
@@ -54,6 +56,8 @@ export interface ExtrapolationData extends RequestState<string> {
   residualForm: ResidualForm
   residualIssues: ExtrapolationIssues
   residual: ResidualResult | null
+  /** Einheit, deren Teilstichprobe gerade bearbeitet wird. */
+  subsampleUnit: number | null
 }
 
 export interface ExtrapolationSource {
@@ -65,11 +69,13 @@ export interface ExtrapolationSource {
   callbacks?: () => ExtrapolationCallbacks
 }
 
-const EMPTY_FORM: ExtrapolationForm = { methodId: '', confidence: null, profileId: null, sampleSize: '', materiality: '', strata: [], units: [] }
+const EMPTY_FORM: ExtrapolationForm = {
+  methodId: '', confidence: null, profileId: null, sampleSize: '', materiality: '', strata: [], units: [], design: 'single', systemAssessment: '', populationUnits: '',
+}
 
 export const INITIAL_EXTRAPOLATION: ExtrapolationData = {
   ...IDLE, catalogue: null, form: EMPTY_FORM, formError: null, issues: {}, result: null, lastRequest: null,
-  residualForm: EMPTY_RESIDUAL, residualIssues: {}, residual: null,
+  residualForm: EMPTY_RESIDUAL, residualIssues: {}, residual: null, subsampleUnit: null,
 }
 
 export function extrapolationMethod(state: ExtrapolationData): ExtrapolationMethod | null {
@@ -93,10 +99,14 @@ function createRows(store: Store<ExtrapolationData>) {
     removeStratum: (index: number) => patchForm({ strata: store.get().form.strata.filter((_, position) => position !== index) }),
     addUnit: () => {
       const form = store.get().form
-      patchForm({ units: [...form.units, emptyUnit(key('u'), form.strata[0]?.name ?? '')] })
+      patchForm({ units: [...form.units, emptyUnit(key('u'), form.strata[0]?.name ?? '', form.design === 'periods' ? form.strata[0]?.part ?? '' : '')] })
     },
     updateUnit: (index: number, patch: Partial<UnitRow>) => patchForm({ units: replaceAt(store.get().form.units, index, patch) }),
-    removeUnit: (index: number) => patchForm({ units: store.get().form.units.filter((_, position) => position !== index) }),
+    removeUnit: (index: number) => {
+      patchForm({ units: store.get().form.units.filter((_, position) => position !== index) })
+      store.set({ subsampleUnit: null })
+    },
+    ...createSubsampleActions(store, key),
   }
 }
 
@@ -142,8 +152,8 @@ export function createExtrapolationController(source: ExtrapolationSource) {
   /** Eigenschaften `strata`/`units` als bearbeitbare Zeilen übernehmen (verwirft das Ergebnis). */
   function applyInputs(): void {
     const strata = stratumRows(source.strata(), source.format)
-    rows.patchForm({ strata: strata.length ? strata : [emptyStratum('s1')], units: unitRows(source.units(), source.format) })
-    store.set({ result: null, residual: null, issues: {}, formError: null })
+    rows.patchForm({ strata: strata.length ? strata : [emptyStratum('s1')], units: unitRows(source.units(), source.format), design: designOf(source.strata()) })
+    store.set({ result: null, residual: null, issues: {}, formError: null, subsampleUnit: null })
   }
 
   async function load(): Promise<void> {
@@ -173,6 +183,12 @@ export function createExtrapolationController(source: ExtrapolationSource) {
     setProfile: (profileId: string | null) => rows.patchForm({ profileId }),
     setSampleSize: (sampleSize: string) => rows.patchForm({ sampleSize }),
     setMateriality: (materiality: string) => rows.patchForm({ materiality }),
+    setDesign: (design: ExtrapolationForm['design']) => {
+      rows.patchForm({ design })
+      store.set({ formError: null })
+    },
+    setSystemAssessment: (systemAssessment: string) => rows.patchForm({ systemAssessment }),
+    setPopulationUnits: (populationUnits: string) => rows.patchForm({ populationUnits }),
     setResidual: (patch: Partial<ResidualForm>) => store.set((state) => ({ residualForm: { ...state.residualForm, ...patch } })),
   }
 }

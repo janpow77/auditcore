@@ -1,15 +1,18 @@
-import { confidenceChoices, extrapolationConfidenceLabel, extrapolationIssueText, extrapolationMethodGroups } from '@auditcore/ui-core'
+import { confidenceChoices, extrapolationConfidenceLabel, extrapolationDesignChoices, extrapolationIssueText, extrapolationMethodGroups, systemAssessmentChoices, type ExtrapolationDesign } from '@auditcore/ui-core'
 import { classes, useElementId } from '../store'
 import type { UseExtrapolation } from './useExtrapolation'
 
-function NumberField({ view, field, label, hint, testId }: { view: UseExtrapolation; field: 'sampleSize' | 'materiality'; label: string; hint: string; testId: string }) {
+type NumberKey = 'sampleSize' | 'materiality' | 'populationUnits'
+
+function NumberField({ view, field, label, hint, testId }: { view: UseExtrapolation; field: NumberKey; label: string; hint: string; testId: string }) {
   const { state, controller, t } = view
   const issue = extrapolationIssueText(state.issues, field, t)
-  const change = field === 'sampleSize' ? controller.setSampleSize : controller.setMateriality
+  const changes: Readonly<Record<NumberKey, (value: string) => void>> = { sampleSize: controller.setSampleSize, materiality: controller.setMateriality, populationUnits: controller.setPopulationUnits }
+  const change = changes[field]
   return (
     <label className="fa-extrapolation__field">
       <span className="fa-extrapolation__label">{label}</span>
-      <input className={classes('fa-extrapolation__input', 'fa-extrapolation__input--number')} inputMode={field === 'sampleSize' ? 'numeric' : 'decimal'} value={state.form[field]} aria-invalid={issue ? 'true' : undefined} data-testid={testId} onChange={(event) => change(event.target.value)} />
+      <input className={classes('fa-extrapolation__input', 'fa-extrapolation__input--number')} inputMode={field === 'materiality' ? 'decimal' : 'numeric'} value={state.form[field]} aria-invalid={issue ? 'true' : undefined} data-testid={testId} onChange={(event) => change(event.target.value)} />
       {issue ? <span className="fa-extrapolation__error">{issue}</span> : null}
       <span className="fa-extrapolation__hint">{hint}</span>
     </label>
@@ -40,6 +43,34 @@ function StatisticalFields({ view }: { view: UseExtrapolation }) {
   )
 }
 
+/** Aufbau, Zahl der Einheiten aller Zeiträume und Systembewertung (Leitfaden 7.3, 7.8, 7.7). */
+function DesignFields({ view }: { view: UseExtrapolation }) {
+  const { state, controller, t, method } = view
+  const assessments = systemAssessmentChoices(state.catalogue, view.locale)
+  return (
+    <>
+      <label className="fa-extrapolation__field">
+        <span className="fa-extrapolation__label">{t('design')}</span>
+        <select className="fa-extrapolation__select" value={state.form.design} data-testid="extrapolation-design" onChange={(event) => controller.setDesign(event.target.value as ExtrapolationDesign)}>
+          {extrapolationDesignChoices(state.catalogue, t).map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
+        </select>
+        <span className="fa-extrapolation__hint">{t('designHint')}</span>
+      </label>
+      {state.form.design === 'periods' && method && !method.statistical ? <NumberField view={view} field="populationUnits" label={t('populationUnits')} hint={t('populationUnitsHint')} testId="extrapolation-population-units" /> : null}
+      {method?.statistical && assessments.length ? (
+        <label className="fa-extrapolation__field">
+          <span className="fa-extrapolation__label">{t('systemAssessment')}</span>
+          <select className="fa-extrapolation__select" value={state.form.systemAssessment} data-testid="extrapolation-system-assessment" onChange={(event) => controller.setSystemAssessment(event.target.value)}>
+            <option value="">{t('systemNone')}</option>
+            {assessments.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
+          </select>
+          <span className="fa-extrapolation__hint">{t('systemAssessmentHint')}</span>
+        </label>
+      ) : null}
+    </>
+  )
+}
+
 /** Methode, Konfidenzniveau, Faktorprofil, Umfang und Wesentlichkeit (wie `ExtrapolationSettings.vue`). */
 export function ExtrapolationSettings({ view }: { view: UseExtrapolation }) {
   const { state, controller, t, method } = view
@@ -63,6 +94,7 @@ export function ExtrapolationSettings({ view }: { view: UseExtrapolation }) {
         </label>
         <StatisticalFields view={view} />
         {method?.needs_sample_size ? <NumberField view={view} field="sampleSize" label={t('sampleSize')} hint={t('sampleSizeHint')} testId="extrapolation-sample-size" /> : null}
+        <DesignFields view={view} />
         <NumberField view={view} field="materiality" label={`${t('materiality')} (%)`} hint={t('materialityHint')} testId="extrapolation-materiality" />
       </div>
       {method ? (

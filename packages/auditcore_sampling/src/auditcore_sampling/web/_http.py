@@ -10,6 +10,9 @@ from ._validate import ContractError
 from .derivation import calculate_size
 from .draw import allocate, select
 from .export import ExportFile, export_selection
+from .guidance_catalogue import guidance_catalogue
+from .guidance_plan import draw as guidance_draw
+from .guidance_plan import plan_size
 from .profiles import catalogue
 
 MAX_BODY_BYTES = 32 * 1024 * 1024
@@ -19,6 +22,8 @@ JSON_HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
     "size": calculate_size,
     "allocation": allocate,
     "selection": select,
+    "guidance_size": plan_size,
+    "guidance_draw": guidance_draw,
 }
 
 
@@ -30,6 +35,11 @@ def decode(raw: bytes, limit: int = MAX_BODY_BYTES) -> object:
 def profiles() -> Reply:
     """``GET /profiles``."""
     return json_reply(200, catalogue())
+
+
+def guidance_profiles() -> Reply:
+    """``GET /guidance/profiles`` (contract ``auditcore_sampling.guidance/1``)."""
+    return json_reply(200, guidance_catalogue())
 
 
 def _run(name: str, raw: bytes, limit: int) -> Reply:

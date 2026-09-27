@@ -1,0 +1,355 @@
+{
+ "contract": "auditcore_sampling.guidance/1",
+ "library": "auditcore_sampling 0.2.3",
+ "status": "GUIDANCE_EGESIF_16_0014_01",
+ "status_label": "nach Leitfaden",
+ "guidance": "Europäische Kommission, Guidance on sampling methods for audit authorities, EGESIF_16-0014-01 vom 20.01.2017",
+ "materiality_rate": 0.02,
+ "methods": [
+  {
+   "id": "guidance.srs",
+   "label": "Einfache Zufallsstichprobe",
+   "section": "6.1.1.2",
+   "formula": "n = (N × z × σ_e / (TE − AE))²",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "book_value",
+    "anticipated_error_rate",
+    "materiality_rate",
+    "population_size",
+    "error_sd",
+    "finite_population_correction"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.1.1.2",
+   "confidence_table": "z"
+  },
+  {
+   "id": "guidance.srs_stratified",
+   "label": "Einfache Zufallsstichprobe, geschichtet",
+   "section": "6.1.2.2",
+   "formula": "n = (N × z × σ_w / (TE − AE))², n_h = N_h / N × n",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "book_value",
+    "anticipated_error_rate",
+    "materiality_rate",
+    "strata",
+    "finite_population_correction"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.1.2.2",
+   "confidence_table": "z"
+  },
+  {
+   "id": "guidance.difference",
+   "label": "Differenzenschätzung",
+   "section": "6.2.1.2",
+   "formula": "n = (N × z × σ_e / (TE − AE))²",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "book_value",
+    "anticipated_error_rate",
+    "materiality_rate",
+    "population_size",
+    "error_sd",
+    "finite_population_correction"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.2.1.2",
+   "confidence_table": "z"
+  },
+  {
+   "id": "guidance.difference_stratified",
+   "label": "Differenzenschätzung, geschichtet",
+   "section": "6.2.2.2",
+   "formula": "n = (N × z × σ_w / (TE − AE))², n_h = N_h / N × n",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "book_value",
+    "anticipated_error_rate",
+    "materiality_rate",
+    "strata",
+    "finite_population_correction"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.2.2.2",
+   "confidence_table": "z"
+  },
+  {
+   "id": "guidance.mus_standard",
+   "label": "MUS – Standardansatz",
+   "section": "6.3.1.2",
+   "formula": "n = (z × BV × σ_r / (TE − AE))², Hochwertschicht BV_i > BV / n",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "book_value",
+    "anticipated_error_rate",
+    "materiality_rate",
+    "error_rate_sd",
+    "book_values"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.3.1.2",
+   "confidence_table": "z"
+  },
+  {
+   "id": "guidance.mus_stratified",
+   "label": "MUS – geschichtet",
+   "section": "6.3.2.2",
+   "formula": "n = (z × BV × σ_rw / (TE − AE))², n_h = BV_h / BV × n",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "anticipated_error_rate",
+    "materiality_rate",
+    "strata"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.3.2.2",
+   "confidence_table": "z"
+  },
+  {
+   "id": "guidance.mus_conservative",
+   "label": "MUS – konservativer Ansatz",
+   "section": "6.3.5.2",
+   "formula": "n = BV × RF / (TE − AE × EF), SI = BV / n",
+   "fields": [
+    "factor_profile",
+    "confidence_level",
+    "book_value",
+    "anticipated_error_rate",
+    "materiality_rate"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.3.5.2",
+   "confidence_table": "reliability"
+  },
+  {
+   "id": "guidance.nonstatistical",
+   "label": "Nicht-statistische Stichprobe (Mindestumfang)",
+   "section": "6.4.3",
+   "formula": "n ≥ Mindestanteil × N",
+   "fields": [
+    "rule",
+    "population_size",
+    "book_value",
+    "assurance_level"
+   ],
+   "source": "EGESIF_16-0014-01, Abschn. 6.4.3",
+   "confidence_table": null
+  }
+ ],
+ "factor_profiles": [
+  {
+   "id": "kom_2017_tables",
+   "label": "Tabellenwerte des KOM-Leitfadens",
+   "source": "EGESIF_16-0014-01, Abschn. 5.3 (Tabelle 3), EGESIF_16-0014-01, Abschn. 6.3.5.2 (Tabellen 4 und 5)",
+   "note": "Werte wie gedruckt; nur die dort genannten Konfidenzniveaus."
+  },
+  {
+   "id": "exact",
+   "label": "Exakt berechnete Werte",
+   "source": "Normalverteilung (zweiseitiges Quantil), Poisson-Obergrenze bei null Fehlern",
+   "note": "Ungerundet, jedes Konfidenzniveau in (0, 1); der Expansionsfaktor bleibt Tabelle 5 des Leitfadens."
+  }
+ ],
+ "tables": {
+  "z": [
+   {
+    "level": 0.6,
+    "value": 0.842
+   },
+   {
+    "level": 0.7,
+    "value": 1.036
+   },
+   {
+    "level": 0.8,
+    "value": 1.282
+   },
+   {
+    "level": 0.9,
+    "value": 1.645
+   },
+   {
+    "level": 0.95,
+    "value": 1.96
+   }
+  ],
+  "reliability": [
+   {
+    "level": 0.5,
+    "value": 0.7
+   },
+   {
+    "level": 0.6,
+    "value": 0.92
+   },
+   {
+    "level": 0.7,
+    "value": 1.21
+   },
+   {
+    "level": 0.75,
+    "value": 1.39
+   },
+   {
+    "level": 0.8,
+    "value": 1.61
+   },
+   {
+    "level": 0.85,
+    "value": 1.9
+   },
+   {
+    "level": 0.9,
+    "value": 2.31
+   },
+   {
+    "level": 0.95,
+    "value": 3.0
+   },
+   {
+    "level": 0.99,
+    "value": 4.61
+   }
+  ],
+  "expansion": [
+   {
+    "level": 0.5,
+    "value": 1.0
+   },
+   {
+    "level": 0.6,
+    "value": 1.1
+   },
+   {
+    "level": 0.7,
+    "value": 1.2
+   },
+   {
+    "level": 0.75,
+    "value": 1.25
+   },
+   {
+    "level": 0.8,
+    "value": 1.3
+   },
+   {
+    "level": 0.85,
+    "value": 1.4
+   },
+   {
+    "level": 0.9,
+    "value": 1.5
+   },
+   {
+    "level": 0.95,
+    "value": 1.6
+   },
+   {
+    "level": 0.99,
+    "value": 1.9
+   }
+  ]
+ },
+ "nonstatistical_rules": [
+  {
+   "id": "cpr_2021_art79_2",
+   "label": "Förderzeitraum 2021–2027: weniger als 300 Einheiten, mindestens 10 % der Einheiten",
+   "source": "Art. 79 Abs. 2 Verordnung (EU) 2021/1060",
+   "min_unit_share": 0.1,
+   "min_expenditure_share": null,
+   "max_population": 300,
+   "assurance_levels": {}
+  },
+  {
+   "id": "cpr_2013_art127_1",
+   "label": "Förderzeitraum 2014–2020: mindestens 5 % der Vorhaben und 10 % der Ausgaben",
+   "source": "Art. 127 Abs. 1 Verordnung (EU) Nr. 1303/2013; EGESIF_16-0014-01, Abschn. 6.4.3, Tabelle 6",
+   "min_unit_share": 0.05,
+   "min_expenditure_share": 0.1,
+   "max_population": null,
+   "assurance_levels": {
+    "works_well": {
+     "units": [
+      0.05,
+      0.05
+     ],
+     "expenditure": [
+      0.1,
+      0.1
+     ]
+    },
+    "works": {
+     "units": [
+      0.05,
+      0.1
+     ],
+     "expenditure": [
+      0.1,
+      0.1
+     ]
+    },
+    "works_partially": {
+     "units": [
+      0.1,
+      0.15
+     ],
+     "expenditure": [
+      0.1,
+      0.2
+     ]
+    },
+    "does_not_work": {
+     "units": [
+      0.15,
+      0.2
+     ],
+     "expenditure": [
+      0.1,
+      0.2
+     ]
+    }
+   }
+  }
+ ],
+ "assurance_levels": [
+  {
+   "id": "works_well",
+   "label": "Funktioniert gut (Kategorie 1)"
+  },
+  {
+   "id": "works",
+   "label": "Funktioniert, Verbesserungen nötig (Kategorie 2)"
+  },
+  {
+   "id": "works_partially",
+   "label": "Funktioniert teilweise (Kategorie 3)"
+  },
+  {
+   "id": "does_not_work",
+   "label": "Funktioniert im Wesentlichen nicht (Kategorie 4)"
+  }
+ ],
+ "procedures": [
+  {
+   "id": "zs.value_share_escalation",
+   "version": 1,
+   "label": "Zwischengeschaltete Stelle: Belegziehung nach Ausgabenanteil mit Erweiterung",
+   "source": "übernommen aus flowinvoice@fb2d18568d2e",
+   "start_share": 0.25,
+   "step": 0.15,
+   "max_share": 0.85,
+   "escalate": true,
+   "quality_every": 20,
+   "note": "Start 25 % der Ausgaben, Erweiterung in Schritten von 15 Prozentpunkten bis 85 %, solange neu gezogene Belege einen finanziellen Fehler tragen (Auslegung der Quelle: maßgeblich sind die neu hinzugekommenen Belege; fachlich zu bestätigen). Qualitätsstichprobe: jeder 20. nicht zu prüfende Mittelabruf.",
+   "ladder": [
+    0.25,
+    0.4,
+    0.55,
+    0.7,
+    0.85
+   ]
+  }
+ ]
+}

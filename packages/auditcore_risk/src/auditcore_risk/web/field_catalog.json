@@ -539,7 +539,7 @@
    "fingerprint": "5985e36487b147b09ef372ad963ce2f150afe1aff9be49ebfb359ee474cfc64a",
    "input_contract": null
   },
-  "flowinvoice.rbvk_wibank@2026.09.2": {
+  "flowinvoice.rbvk_intermediate_body@2026.09.2": {
    "fields": [
     {
      "meaning": "Abrufanteil: Bruttobetrag des Mittelabrufs / `bewilligungsrahmen`; ohne Bewilligungsrahmen der übergebene Wert.",
@@ -931,10 +931,10 @@
      "value_required_by": []
     }
    ],
-   "fingerprint": "9f800f4e59b1c50641c4ca8074d1d24f3b10ce1916cc382c934390339535492b",
+   "fingerprint": "3b80761a25d68128268e8ff98fc53be399d05ce530db2f14b2eb331da8b700d1",
    "input_contract": null
   },
-  "flowinvoice.rbvk_wibank@fb2d18568d2e": {
+  "flowinvoice.rbvk_intermediate_body@fb2d18568d2e": {
    "fields": [
     {
      "meaning": "Abrufanteil: Bruttobetrag des Mittelabrufs / `bewilligungsrahmen`; ohne Bewilligungsrahmen der übergebene Wert.",
@@ -1319,7 +1319,7 @@
      "value_required_by": []
     }
    ],
-   "fingerprint": "72b8cce180b2d94eac9d528815e900028b8c67621e567a4373286576f66ec482",
+   "fingerprint": "54f37c396f21f2500c1388abc7b272780eee83b020e58e892d4794682c17f828",
    "input_contract": null
   },
   "flowinvoice.risk_checker@2026.09.2": {

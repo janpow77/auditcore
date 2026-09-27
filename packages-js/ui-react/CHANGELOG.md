@@ -3,6 +3,15 @@
 ## Unreleased
 
 - Neu: Bestandsprüfung – `FlowauditBatchChecks` (nativ React); Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).
+- `FlowauditExtrapolation`: dieselben Ergänzungen wie `ExtrapolationPanel` (Zeiträume, Gruppen, Teilstichproben, Systembewertung, Neuberechnung des Konfidenzniveaus), Parität per Fälle und Interaktionsfolge.
+- Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
+- Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`
+  (zusätzliche Kennzahlen des REST-Vertrags: Chi²-Test mit kritischen Werten,
+  auffällige Ziffern mit z je Ziffer), `autoAnalyse` (nach dem Laden und bei neuen
+  Werten analysieren) und `hideInputs` (Einbettung in Berichte). Vorgegebene
+  Kennzahlen sind im Formular abwählbar. Ohne `metrics` unverändert; ältere Server
+  ohne Kennzahlen werden unterstützt (Abschnitt entfällt).
+  Parität Vue ↔ React: zwei neue Fälle in `cases-benford.ts` und ein Abwahl-Test.
 
 ## 1.1.0 – 2026-09-26 – Release v0.4.2
 

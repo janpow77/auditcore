@@ -11,6 +11,19 @@ FIXTURES = Path(__file__).parent / "fixtures"
 STICHTAG = date(2026, 9, 25)
 
 
+def institution_names() -> tuple[str, ...]:
+    """Kleingeschriebene Namen aus ``quality/institutsnamen-denylist.txt`` des Repositorys.
+
+    Die Namen stehen bewusst nicht im Quelltext; die Tests laufen im Checkout.
+    """
+    for parent in Path(__file__).resolve().parents:
+        denylist = parent / "quality" / "institutsnamen-denylist.txt"
+        if denylist.is_file():
+            lines = (line.strip() for line in denylist.read_text(encoding="utf-8").splitlines())
+            return tuple(line.partition("=>")[0].strip().lower() for line in lines if line and not line.startswith("#"))
+    raise FileNotFoundError("quality/institutsnamen-denylist.txt nicht gefunden")
+
+
 def ext(*children: str) -> str:
     """``bpmn:extensionElements`` mit FlowAudit-Kindern."""
     return "<bpmn:extensionElements>" + "".join(children) + "</bpmn:extensionElements>"

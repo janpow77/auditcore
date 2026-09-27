@@ -19,12 +19,12 @@ python -m pip install auditcore_legal_sources \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.4 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.5 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-legal-sources/`):
 
 ```text
-auditcore_legal_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_legal_sources-0.1.4-py3-none-any.whl#sha256=7e42231daf1dccda2a01a5fcd00606c69500d0e31ef13eb58930f9e4d44f5ba6
+auditcore_legal_sources @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_legal_sources-0.1.5-py3-none-any.whl#sha256=f82611b739c226675e5507c67d74c52e58ef2820ee700375bd189b743aa08554
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -47,7 +47,7 @@ from datetime import date
 from auditcore_legal_sources import load_profile
 from auditcore_legal_sources import dip
 
-profile = load_profile("auditdatabase.esi", "2026.09.1")
+profile = load_profile("auditdatabase.esi", "2026.09.2")
 params = dip.drucksache_query(profile, "EFRE")  # enthält keinen API-Schlüssel
 assert params == {"format": "json", "num": "30", "f.titel": "EFRE"}
 
@@ -120,12 +120,17 @@ assert document.classification["heuristic"] is True
 ## Profile und Konfiguration
 
 `available_profiles()` liefert `auditdatabase.esi` und `audit_designer.vp_ai`
-(je 2026.09.1). Beide sind aus den ausgeführten Quellanwendungen aufgezeichnet
+(je 2026.09.2). Beide sind aus den ausgeführten Quellanwendungen aufgezeichnet
 und bewusst getrennt: unterschiedliche DIP-Suchbegriffe (27 bzw. 10),
 DIP-Klassifikation nur bei auditdatabase (als `heuristic: true` markiert),
 eigene EUR-Lex-Abfragen und Kerndokumente, eigene Förderperiodenregeln. Ein
 Profil wird mit `load_profile(id, version)` ausdrücklich gewählt; jedes
 `LegalDocument` trägt die Profilreferenz.
+
+Version 2026.09.2 löst 2026.09.1 ab: Die Relevanz-Schlagwörter nennen keine
+konkreten Institute mehr, sondern neutral „Zwischengeschaltete Stelle“ und
+„Landesförderinstitut“ (das Paket gilt für alle Prüfbehörden und ESI-Fonds).
+Sonst sind die Profile unverändert; 2026.09.1 ist nicht mehr enthalten.
 
 Zugangsdaten: der DIP-API-Schlüssel kommt ausschließlich aus dem
 Credential-Provider des Consumers; ohne Schlüssel ist die Quelle

@@ -49,9 +49,12 @@ class Method:
             "formula": self.formula,
             "needs_population_size": self.selection == "equal_probability" or not self.statistical,
             "needs_sample_size": self.id == "mus.conservative",
+            "periods": self.id not in SINGLE_PERIOD_ONLY,
         }
 
 
+#: Methods the guidance describes for one period only (sections 6.3.5, Appendix 1, 4.2).
+SINGLE_PERIOD_ONLY = frozenset({"mus.conservative", "mus.ratio"})
 _EQ, _PPS = "equal_probability", "pps"
 METHODS = MappingProxyType(
     {
@@ -155,9 +158,20 @@ def method(method_id: str) -> Method:
     return found
 
 
-def _coverage(strata: Sequence[Stratum]) -> tuple[dict[str, object], list[str]]:
-    population = sum(s.population_size or 0 for s in strata)
-    audited = sum(len(s.units) + len(s.exhaustive_units) for s in strata)
+def non_statistical_coverage(
+    strata: Sequence[Stratum], population_units: int | None = None
+) -> tuple[dict[str, object], list[str]]:
+    """Coverage of a non-statistical sample (Art. 79(2) CPR).
+
+    ``population_units`` overrides N, e.g. the distinct operations of all
+    periods (guidance section 6.4.9); audited units are then counted by id.
+    """
+    if population_units is None:
+        population = sum(s.population_size or 0 for s in strata)
+        audited = sum(len(s.units) + len(s.exhaustive_units) for s in strata)
+    else:
+        population = population_units
+        audited = len({u.id for s in strata for u in s.units + s.exhaustive_units})
     share = audited / population if population else 0.0
     warnings = []
     if population >= NON_STATISTICAL_MAX_UNITS:
@@ -218,11 +232,13 @@ def _run(
     profile_id: str | None,
     sample_size: int | None,
 ) -> _Outcome:
+    if chosen.id in ("mus.conservative", "mus.ratio") and level is not None and profile_id:
+        return _run_statistical_mus(chosen, strata, level, profile_id, sample_size or 0)
+    # z only for the methods with a normal-approximation precision: the conservative
+    # approach needs reliability factors only (Table 4 has levels without z in Table 3)
     statistical = chosen.statistical and level is not None and profile_id is not None
     z = z_value(level, profile_id) if statistical and level is not None and profile_id else None
     kind = chosen.id.split(".")[-1]
-    if chosen.id in ("mus.conservative", "mus.ratio") and level is not None and profile_id:
-        return _run_statistical_mus(chosen, strata, level, profile_id, sample_size or 0)
     if chosen.selection == "pps":
         res, ee, se_mus, steps = mus.project_standard(strata, z)
         return _Outcome(res, ee, se_mus, steps, [], {})
@@ -258,7 +274,21 @@ def project(
         ExtrapolationInputError: unknown method or profile, invalid strata or
             units, missing confidence level for a statistical method.
     """
-    chosen = method(method_id)
+    return project_strata(
+        method(method_id), strata, confidence_level, factor_profile, sample_size, coverage=True
+    )
+
+
+def project_strata(
+    chosen: Method,
+    strata: Sequence[Stratum],
+    confidence_level: float | None,
+    factor_profile: str | None,
+    sample_size: int | None,
+    *,
+    coverage: bool,
+) -> Projection:
+    """:func:`project` for a resolved method; ``coverage`` False skips the coverage check."""
     _check_parameters(chosen, confidence_level, factor_profile)
     needs_n = chosen.selection == "equal_probability" or not chosen.statistical
     checked = check_strata(strata, needs_population_size=needs_n)
@@ -267,9 +297,9 @@ def project(
     outcome = _run(chosen, checked, confidence_level, factor_profile, sample_size)
     warnings = list(anomaly_warnings(checked)) + outcome.warnings
     extra = dict(outcome.extra)
-    if not chosen.statistical:
-        coverage, more = _coverage(checked)
-        extra["coverage"] = coverage
+    if not chosen.statistical and coverage:
+        figures, more = non_statistical_coverage(checked)
+        extra["coverage"] = figures
         warnings += more
     statistical = chosen.statistical
     return Projection(

@@ -48,6 +48,10 @@ class MatchResult:
     scorer: str
     components: dict[str, float]
     profile: dict[str, str]
+    #: Unrounded winning score; the threshold is checked against this value.
+    #: ``score`` is rounded to one decimal as in the source and can therefore
+    #: lie up to 0.05 below an unrounded ``min_score``.
+    unrounded_score: float | None = None
 
 
 PAIR_SCORERS = frozenset({"ratio", "token_set_ratio", "token_sort_ratio", "WRatio"})
@@ -109,7 +113,12 @@ def best_match(
     chosen = strings[best_index]
     components = {name: float(getattr(fuzz, name)(query, chosen)) for name in rules.scorers}
     return MatchResult(
-        candidates[best_index].id, round(best_score, 1), best_scorer, components, profile.reference
+        candidates[best_index].id,
+        round(best_score, 1),
+        best_scorer,
+        components,
+        profile.reference,
+        unrounded_score=best_score,
     )
 
 

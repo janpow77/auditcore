@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (820):
+Exporte der Einstiegspunkte aus `package.json#exports` (846):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -157,6 +157,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `AssessmentSummary` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AssessmentView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BADGE_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
+| `@auditcore/ui` | `BENFORD_METRIC_IDS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BadgeTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BatchChecks` | Vue-Komponente | – | `batchchecks/BatchChecks.vue` |
 | `@auditcore/ui` | `BatchchecksAnswer` | Re-Export | – | `@auditcore/ui-core` |
@@ -170,11 +171,15 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `BenfordBusy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordCallbacks` | Re-Export | – | `./useBenford` |
 | `@auditcore/ui` | `BenfordCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordChiTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordDigitZTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordDistribution` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordMessageKey` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordMetricId` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordMetricTexts` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordMetricsRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordPanel` | Vue-Komponente | – | `benford/BenfordPanel.vue` |
 | `@auditcore/ui` | `BenfordPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordSource` | Re-Export | – | `@auditcore/ui-core` |
@@ -201,6 +206,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `ChartBar` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChartBox` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChartGeometry` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ChiSquareMetric` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ClientExportFormat` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnCheck` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnEditorRow` | Vue-Komponente | – | `kanban/ColumnEditorRow.vue` |
@@ -268,6 +274,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `DiffField` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DiffSegment` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DiffSide` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `DigitZMetric` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `DigitZRow` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DistributionRow` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DossierFieldView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DownloadFile` | Re-Export | – | `./client` |
@@ -359,6 +367,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTING` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_SAMPLESIZE` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `IconName` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `IdentifierBatchAnswer` | Re-Export | – | `@auditcore/ui-core` |
@@ -493,6 +502,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `STATE_FILTER_KEYS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_ICONS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_KEYS` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SampleSizeCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SampleSizePlan` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SampleSizePlanner` | Vue-Komponente | – | `samplesize/SampleSizePlanner.vue` |
+| `@auditcore/ui` | `SampleSizeRequest` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SamplesizeController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SamplesizeData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SamplesizePort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `SamplingBusy` | Re-Export | – | `./useSampling` |
 | `@auditcore/ui` | `SamplingCallbacks` | Re-Export | – | `./useSampling` |
 | `@auditcore/ui` | `SamplingCatalogue` | Re-Export | – | `@auditcore/ui-core` |
@@ -615,6 +631,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `WorkbookPreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `WorkbookRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `acceptsHit` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `activeMetrics` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `activityKey` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `addScenario` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `analyseErrorKey` | Re-Export | – | `@auditcore/ui-core` |
@@ -633,10 +650,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `batchchecksMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordBarTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChartTitle` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `benfordChiTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordDigitColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordDigitRows` | Re-Export | – | `@auditcore/ui-core` |
-| `@auditcore/ui` | `benfordElement` | Konstante | `<flowaudit-benford>`: Eigenschaften `port` (BenfordPort), `values`, `locale`; Ereignisse `analysis-completed`, `error`. | `benford/element` |
+| `@auditcore/ui` | `benfordDigitZTexts` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `benfordElement` | Konstante | `<flowaudit-benford>`: Eigenschaften `port` (BenfordPort), `values`, `locale`, `metrics`, `auto-analyse`, `hide-inputs`; Ereignisse `analysis-completed`, `error`. | `benford/element` |
 | `@auditcore/ui` | `benfordMessages` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `benfordMetricLabel` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordMetricTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordProfile` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordTickText` | Re-Export | – | `@auditcore/ui-core` |
@@ -693,6 +713,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `createRiskController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRiskRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
+| `@auditcore/ui` | `createSamplesizeController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createSamplesizeMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createSamplesizeRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplingController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplingRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createScreeningController` | Re-Export | – | `@auditcore/ui-core` |
@@ -794,6 +817,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `nextOpenHit` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `nextSort` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui` | `numberColumn` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui` | `offeredMetrics` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `pairs` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `parameterLabel` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `parameterUnit` | Re-Export | – | `@auditcore/ui-core` |
@@ -849,6 +873,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `riskTableColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `riskTableRows` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `sameSurvey` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `sampleSizePlannerElement` | Konstante | `<flowaudit-sample-size-planner>`: Eigenschaften `port`, `request`, `locale`; Ereignisse `plan-calculated`, `error`. | `samplesize/element` |
+| `@auditcore/ui` | `samplesizeMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `samplingElement` | Konstante | `<flowaudit-sampling>`: Eigenschaften `port` (SamplingPort), `items` (Grundgesamtheit), `locale`; Ereignisse `size-calculated`, `selection-drawn`, `error`. | `sampling/element` |
 | `@auditcore/ui` | `samplingFieldError` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `samplingInputNumber` | Re-Export | – | `@auditcore/ui-core` |
@@ -899,7 +925,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (820):
 | `@auditcore/ui` | `triggeredDataset` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@auditcore/common`. | `composables/useAuthToken` |
 | `@auditcore/ui` | `useBatchChecks` | Funktion | Vue-Anbindung der Bestandsprüfung aus `@auditcore/ui-core` (`createBatchchecksController`). | `batchchecks/useBatchChecks` |
-| `@auditcore/ui` | `useBenford` | Funktion | Vue-Anbindung der Benford-Analyse aus `@auditcore/ui-core` (`createBenfordController`). | `benford/useBenford` |
+| `@auditcore/ui` | `useBenford` | Funktion | – | `benford/useBenford` |
 | `@auditcore/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
 | `@auditcore/ui` | `useComparisons` | Funktion | – | `documents/useComparisons` |
 | `@auditcore/ui` | `useDbKanban` | Funktion | – | `dbkanban/useDbKanban` |
@@ -973,6 +999,7 @@ Web Components:
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
 | `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
+| `<flowaudit-sample-size-planner>` | `SampleSizePlanner` | `samplesize/element.ts` |
 | `<flowaudit-sampling>` | `SamplingPanel` | `sampling/element.ts` |
 | `<flowaudit-screening-review>` | `ScreeningReview` | `screening/element.ts` |
 | `<flowaudit-synopsis>` | `FaSynopsis` | `synopsis/element.ts` |
@@ -1003,6 +1030,9 @@ Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im
 | `port` | `BenfordPort \| null` | nein | `null` | Fachlogik, z. B. `createBenfordRestPort({ baseUrl: '/api/benford' })`. |
 | `values` | `readonly (number \| null)[]` | nein | `() => []` | Zu prüfende Beträge; alternativ Datei-Import in der Komponente. |
 | `locale` | `Locale` | nein | `undefined` | – |
+| `metrics` | `BenfordMetricsRequest \| null` | nein | `null` | Zusätzliche Kennzahlen (Chi²-Test, auffällige Ziffern) mit ihren Parametern. |
+| `autoAnalyse` | `boolean` | nein | `false` | Nach dem Laden und bei neuen Werten sofort analysieren. |
+| `hideInputs` | `boolean` | nein | `false` | Werte und Formular ausblenden (Einbettung in Berichte, mit `autoAnalyse`). |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
@@ -1618,6 +1648,21 @@ Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im
 | `entries` | `readonly FlagEntry[]` | nein | `() => []` | – |
 | `profile` | `ProfileReference \| null` | nein | `null` | – |
 | `locale` | `Locale` | nein | `undefined` | – |
+
+#### `SampleSizePlanner`
+
+SampleSizePlanner: Stichprobenumfang nach KOM-Leitfaden planen; Logik im Kern (createSamplesizeController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `SamplesizePort \| null` | nein | `null` | Fachlogik, z. B. `createSamplesizeRestPort({ baseUrl: '/api/sampling' })`. |
+| `request` | `SampleSizeRequest \| null` | nein | `null` | Vorbelegung des Formulars (Anfrage des Vertrags `auditcore_sampling.guidance/1`). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `plan-calculated` | `[plan: SampleSizePlan]` | – |
+| `error` | `[message: string]` | – |
 
 #### `SamplingPanel`
 

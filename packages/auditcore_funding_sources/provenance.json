@@ -106,11 +106,37 @@
   "profiles": [
     "flowworkshop.beneficiaries 2026.09.1",
     "designer.state_aid 2026.09.1",
-    "designer.deminimis.authority_levels 2026.09.1",
+    "designer.deminimis.authority_levels 2026.09.2 (ohne Institutsnamen; löst 2026.09.1 ab)",
     "designer.deminimis.cumulation 2026.09.1 (REVIEW_REQUIRED)"
   ],
   "runtime_dependencies": [
     "auditcore_harvest==0.1.1"
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "typing=\"legacy\"",
+      "header_detection=\"legacy\"",
+      "parse_award_list(strict=False)",
+      "inventory_state(..., legacy=True)",
+      "cumulation.legacy_cumulation",
+      "parse_betrag"
+    ]
+  }
 }

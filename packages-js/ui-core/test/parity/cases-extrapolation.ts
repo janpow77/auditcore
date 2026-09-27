@@ -4,7 +4,7 @@
  * synthetische Daten.
  */
 import type { ExtrapolationPort, StratumInput, UnitInput } from '../../src'
-import { fakeExtrapolationPort, fixtureStrata, fixtureUnits } from '../extrapolation/fake-port'
+import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, groupsFixture, periodsFixture } from '../extrapolation/fake-port'
 import type { ParityCase } from './cases'
 
 export interface ExtrapolationCaseProps {
@@ -33,6 +33,24 @@ export const extrapolationCases: ReadonlyArray<ParityCase<ExtrapolationCaseProps
     name: 'Fehler beim Laden',
     props: () => ({ port: fakeExtrapolationPort('profiles', 'Dienst nicht erreichbar') }),
     expect: { texts: ['Anfrage abgelehnt: Dienst nicht erreichbar'], counts: { '[role="alert"]': 1, 'select': 0 } },
+  },
+  {
+    name: 'mehrere Zeiträume mit Teilstichprobe (Leitfaden 7.3, 7.6)',
+    props: () => ({ port: fakeExtrapolationPort(), strata: periodsFixture.strata, units: periodsFixture.units }),
+    expect: {
+      texts: ['Aufbau der Stichprobe', 'Teilstichprobe'],
+      roles: [['combobox', 'Zeitraum, Zeile 1'], ['textbox', 'Zeitraum, Zeile 2'], ['button', 'Teilstichprobe bearbeiten, Zeile 1'], ['button', 'Teilstichprobe anlegen, Zeile 2']],
+      counts: { '[data-testid="extrapolation-strata"] tbody tr': 2, '[data-testid="extrapolation-units"] tbody tr': 6, '[data-testid="extrapolation-subsample"]': 0 },
+    },
+  },
+  {
+    name: 'Gruppe von Programmen (Leitfaden 7.8)',
+    props: () => ({ port: fakeExtrapolationPort(), strata: groupsFixture.strata, units: groupsFixture.units }),
+    expect: {
+      texts: ['Programm'],
+      roles: [['textbox', 'Programm, Zeile 2'], ['textbox', 'Programm, Zeile 1']],
+      counts: { '[data-testid="extrapolation-units"] tbody tr': 9 },
+    },
   },
   {
     name: 'englisch mit Rückfall auf Deutsch',

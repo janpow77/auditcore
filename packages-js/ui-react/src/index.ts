@@ -52,3 +52,4 @@ export {
 export * from './hooks'
 export * from './common'
 export * from './batchchecks'
+export * from './samplesize'

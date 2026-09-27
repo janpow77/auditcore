@@ -52,6 +52,9 @@ den Vorbildern; **abweichend** = bewusst anders (Begründung); **offen** = nicht
 | Diagramm | FlowStat Plotly (MIT), riskanalysis ECharts (Apache-2.0) | eigenes SVG ohne Diagrammbibliothek: Balken beobachtet, Punkte/Linie erwartet, Hervorhebung | abweichend (keine schwere Abhängigkeit) |
 | Kacheln N, Chi², p, MAD | FlowStat `BenfordCard.vue` | Kennzahlen mit Stufe und Ausschlüssen | übernommen |
 | Pflichthinweis „nur Einordnung“ | riskanalysis `HINWEIS` | Hinweis „Bewertungsstufen sind keine Feststellungen“ | übernommen |
+| Chi²-Test mit kritischen Werten (0,10/0,05/0,01) und Entscheidung bei α | flowinvoice `BenfordsLawAnalyzer` (fest 15,507, α = 0,05) | Kennzahl `metrics.chi_square`, Karte „Chi²-Test“ | übernommen (Parität 63 Fälle, `tests/test_significance_parity.py`) |
+| Auffällige Ziffern (z > 2,576, ohne Stetigkeitskorrektur) | flowinvoice@fb2d185 (seit K10 nicht mehr in der Prüfentscheidung) | Kennzahl `metrics.digit_z`, Karte „Auffällige Ziffern“ | übernommen als beschreibende Kennzahl |
+| Einbettung in Berichte ohne Formular | flowinvoice-Bericht | Eigenschaften `autoAnalyse`, `hideInputs` | ergänzt |
 | Datenübergabe | FlowStat: Spaltenname in der Pipeline | Datei-Upload (CSV/TXT, Spaltenwahl, Dezimalkomma) oder Werte als Eigenschaft | ergänzt |
 
 ## Konsequenzen

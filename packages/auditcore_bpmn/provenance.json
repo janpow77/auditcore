@@ -191,7 +191,7 @@
     "defusedxml": "Extra xml; ohne Extra gleichwertig gehärteter Expat-Parser der Standardbibliothek",
     "openpyxl": "Extra excel (Legacy-Excelbericht, RCM/Berichte als xlsx)",
     "reportlab": "Extra pdf (Legacy-PDF-Bericht)",
-    "auditcore_legal_sources": "0.1.1, Extra legal (Kerndokumente des Profils auditdatabase.esi 2026.09.1)"
+    "auditcore_legal_sources": "0.1.1, Extra legal (Kerndokumente des Profils auditdatabase.esi 2026.09.2)"
   },
   "rights": {
     "license_status": "MIT",
@@ -234,5 +234,30 @@
       "deviations": "docs/behavior-changes.md"
     }
   },
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "validate_bpmn_bva",
+      "BpmnAnalyzer",
+      "analyze_bpmn",
+      "export_bpmn_to_excel",
+      "export_bpmn_to_pdf"
+    ]
+  }
 }

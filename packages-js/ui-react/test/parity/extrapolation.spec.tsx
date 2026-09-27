@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import ExtrapolationPanel from '../../../ui/src/extrapolation/ExtrapolationPanel.vue'
-import { fakeExtrapolationPort, fixtureStrata, fixtureUnits } from '../../../ui-core/test/extrapolation/fake-port'
+import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, periodsFixture } from '../../../ui-core/test/extrapolation/fake-port'
 import { extrapolationCases } from '../../../ui-core/test/parity/cases-extrapolation'
 import { FlowauditExtrapolation } from '../../src/extrapolation/FlowauditExtrapolation'
 import { byTestId, both } from './interact'
@@ -49,5 +49,28 @@ describe('Parität Hochrechnung nach Interaktion', () => {
     await both(rendered, byTestId('extrapolation-add-stratum'), { kind: 'click' })
     await both(rendered, cell('Schicht, Zeile 2'), { kind: 'input', value: 'Hochwert' })
     expect(rendered.react.querySelectorAll('[data-testid="extrapolation-strata"] tbody tr')).toHaveLength(2)
+  })
+
+  it('Zeiträume: Systembewertung, hochrechnen, Ergänzungen, Teilstichprobe bearbeiten', async () => {
+    const vuePort = fakeExtrapolationPort()
+    const reactPort = fakeExtrapolationPort()
+    const props = { strata: periodsFixture.strata, units: periodsFixture.units }
+    const rendered = await renderBoth(ExtrapolationPanel, { port: vuePort, ...props }, <FlowauditExtrapolation port={reactPort} {...props} />)
+    await both(rendered, byTestId('extrapolation-method'), { kind: 'change', value: 'mus.standard' })
+    await both(rendered, byTestId('extrapolation-confidence'), { kind: 'change', value: '0.9' })
+    await both(rendered, byTestId('extrapolation-system-assessment'), { kind: 'change', value: '3' })
+    await both(rendered, byTestId('extrapolation-evaluate'), { kind: 'click' })
+    expect(reactPort.calls.evaluate).toEqual(vuePort.calls.evaluate)
+    expect(reactPort.calls.evaluate[0]?.periods).toHaveLength(2)
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-periods"] tbody tr')).toHaveLength(2)
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-recalculation"] [data-metric]')).toHaveLength(3)
+    await both(rendered, cell('Teilstichprobe bearbeiten, Zeile 1'), { kind: 'click' })
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-subsample-items"] tbody tr')).toHaveLength(3)
+    await both(rendered, byTestId('extrapolation-add-subitem'), { kind: 'click' })
+    await both(rendered, byTestId('extrapolation-subsample-estimator'), { kind: 'change', value: 'mean_per_unit' })
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-subsample-items"] tbody tr')).toHaveLength(4)
+    expect(rendered.vue.querySelector('[data-testid="extrapolation-subsample-size"]')).not.toBeNull()
+    await both(rendered, byTestId('extrapolation-subsample-close'), { kind: 'click' })
+    expect(rendered.react.querySelector('[data-testid="extrapolation-subsample"]')).toBeNull()
   })
 })

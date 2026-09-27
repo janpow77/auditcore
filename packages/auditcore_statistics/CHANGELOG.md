@@ -1,5 +1,29 @@
 # Changelog auditcore_statistics
 
+## Unreleased
+
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 9 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+`legacy_run_benford`, `legacy_flowinvoice_benford`. Keine Befunde. Keine Verhaltensänderung.
+
+Keine Versionsanhebung (Release-Ablauf). Abwärtskompatible Erweiterung.
+
+- Neues Modul `significance`: `chi_square_test` (χ², Freiheitsgrade, p-Wert,
+  kritische Werte bei 0,10/0,05/0,01 und gewähltem α per Bisektion auf
+  `chi2_survival`; Entscheidung nur mit Niveau), `digit_z_test` (z je Ziffer,
+  Stetigkeitskorrektur ausdrücklich, Markierung nur mit `z_critical`),
+  `chi2_critical_value`. `conformity.digit_counts` öffentlich.
+- REST `POST /analyze`: optionales Feld `metrics` (`chi_square`, `digit_z`);
+  ohne `metrics` unveränderte Antwort. `GET /profiles` nennt `metrics` und
+  `standard_levels`.
+- Parität mit flowinvoice (63 synthetische Fälle, beide Fassungen ausgeführt,
+  `tools/capture_flowinvoice_significance.py`): χ², p, Freiheitsgrade,
+  kritischer Wert 15,507 und Entscheidung gleich flowinvoice@06c06a8;
+  auffällige Ziffern (z > 2,576 ohne Korrektur) gleich flowinvoice@fb2d185.
+
 ## 0.3.4 – 2026-09-26 – Paketstand für Release v0.4.2 – REST-Schicht aus auditcore_common
 
 Keine Verhaltensänderung: alle 184 bestehenden Tests laufen unverändert grün;

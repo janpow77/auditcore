@@ -1,4 +1,4 @@
-"""Predicate kinds for point scores (WIBANK-RBVK criteria, ex-ante indicators).
+"""Predicate kinds for point scores (RBVK criteria of the intermediate body, ex-ante indicators).
 
 Each rule is one named criterion that is true or false for a record; its
 points live in the rule (``points``) and are summed by the profile's

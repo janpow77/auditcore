@@ -1,10 +1,12 @@
 import { saveFile } from '@auditcore/common/browser'
-import { extrapolationFormMessage, type ExtrapolationExportFormat } from '@auditcore/ui-core'
+import { extrapolationFormMessage, hasExtrapolationDetails, type ExtrapolationExportFormat } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
+import { ExtrapolationDetails } from './ExtrapolationDetails'
 import { ExtrapolationResidual } from './ExtrapolationResidual'
 import { ExtrapolationResult } from './ExtrapolationResult'
 import { ExtrapolationSettings } from './ExtrapolationSettings'
 import { ExtrapolationStrata } from './ExtrapolationStrata'
+import { ExtrapolationSubsample } from './ExtrapolationSubsample'
 import { ExtrapolationUnits } from './ExtrapolationUnits'
 import { useExtrapolation, type ExtrapolationInputs, type UseExtrapolation } from './useExtrapolation'
 
@@ -20,6 +22,7 @@ function Results({ view, locale }: { view: UseExtrapolation; locale?: FlowauditE
   return (
     <>
       <ExtrapolationResult result={state.result} catalogue={state.catalogue} busy={state.busy === 'export'} t={t} locale={view.locale} tableLocale={locale} onExport={(format) => void onExport(format)} />
+      {hasExtrapolationDetails(state.result) ? <ExtrapolationDetails result={state.result} catalogue={state.catalogue} t={t} locale={view.locale} tableLocale={locale} /> : null}
       <ExtrapolationResidual view={view} tableLocale={locale} />
     </>
   )
@@ -46,6 +49,7 @@ export function FlowauditExtrapolation(props: FlowauditExtrapolationProps) {
           <ExtrapolationSettings view={view} />
           <ExtrapolationStrata view={view} />
           <ExtrapolationUnits view={view} />
+          <ExtrapolationSubsample view={view} />
           <div className="fa-extrapolation__actions">
             <Button variant="primary" loading={state.busy === 'evaluate'} testId="extrapolation-evaluate" onClick={() => void controller.evaluate()}>{t('evaluate')}</Button>
             {message ? <p className="fa-extrapolation__error" role="alert" data-testid="extrapolation-form-error">{message}</p> : null}

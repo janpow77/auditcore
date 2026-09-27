@@ -126,3 +126,18 @@ def test_split_with_a_size_plan_of_auditcore_sampling() -> None:
     assert plan.sample_size == 30
     assert top.exhaustive == (0,)
     assert top.sampling_size == 29
+
+
+@pytest.mark.parametrize("level", sorted(RF_ZERO_TABLE))
+def test_conservative_mus_accepts_every_level_of_table_4(level: float) -> None:
+    """The conservative approach needs RF only; Table 4 has levels (50 %, 75 %, …) without z."""
+    units = tuple(SampleUnit(f"u{i}", 1000.0, 10.0 if i == 0 else 0.0) for i in range(20))
+    result = assess(
+        "mus.conservative",
+        [Stratum("S", 1_000_000.0, units)],
+        confidence_level=level,
+        factor_profile=KOM_TABLES,
+        sample_size=20,
+    )
+    assert result.projection.coefficient == RF_ZERO_TABLE[level]
+    assert result.total_error_rate.upper_limit is not None

@@ -2,6 +2,31 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
+## Unreleased
+
+- Neues Formatprofil `flowlib-v2` (2.0.0, Nachfolger von `flowlib-legacy-v1`,
+  Modul `formats_v2`) behebt Befund B1: Wörter statt Teilzeichenketten, der
+  Kopf des Kompositums entscheidet (`Stundensatz` → Euro statt Prozent),
+  Kennungen (Postleitzahl, Kontonummer, IBAN, Steuernummer, Telefon, `Nr.`,
+  `ID` …) erhalten `@` bzw. `0` statt Tausendertrennern, der Werttyp geht dem
+  Spaltennamen vor (Datum in „Betrag“ bleibt Datum). `flowlib-legacy-v1` und
+  die Voreinstellung von `ReportTable.profile` unverändert; wegen der
+  geänderten `profiles.py` neue Implementierungs-/Inhaltshashes im
+  Profilregister. Der REST-Katalog listet `flowlib-v2`; die Vorschau zeigt das
+  Format für einen typischen Wert des deklarierten Spaltentyps.
+- Befund B2 behoben (alle Profile): Gleitkommazahlen, die openpyxl mit 16
+  Stellen verändert schreiben würde (`0.1 + 0.2`, größte endliche Zahl),
+  werden exakt geschrieben und kommen bitgleich zurück; übrige Zellen
+  bytegleich. Invarianten I10–I13 neu, der erwartete Fehlschlag zu B2 ist ein
+  normaler Test.
+
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 9 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+Profil `flowlib-legacy-v1`. Befunde B1 (Format folgt dem Spaltennamen, nicht dem Wert) und B2 (Gleitkommazahlen mit 16 Stellen geschrieben; die größte endliche Zahl kommt als unendlich zurück, erwarteter Fehlschlag `test_i6_befund_b2_groesste_gleitkommazahl`) dokumentiert, Code unverändert. Keine Verhaltensänderung.
+
 ## 0.3.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neue Laufzeitabhängigkeit `auditcore_common==0.2.0` (selbst nur
