@@ -14,7 +14,8 @@
         "modules_over_400_lines": 3,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 86.21
     },
     "auditcore_auth": {
       "metrics": {
@@ -25,7 +26,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 95.36
     },
     "auditcore_bpmn": {
       "metrics": {
@@ -36,7 +38,8 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0,
         "duplicate_functions": 0
-      }
+      },
+      "coverage_percent": 98.14
     },
     "auditcore_common": {
       "metrics": {
@@ -47,7 +50,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 99.58
     },
     "auditcore_dataprotection": {
       "metrics": {
@@ -58,7 +62,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 1
-      }
+      },
+      "coverage_percent": 96.83
     },
     "auditcore_documents": {
       "metrics": {
@@ -69,7 +74,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 95.51
     },
     "auditcore_dummygenerator": {
       "metrics": {
@@ -80,7 +86,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 97.77
     },
     "auditcore_entity_matching": {
       "metrics": {
@@ -91,7 +98,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 98.85
     },
     "auditcore_extrapolation": {
       "metrics": {
@@ -102,7 +110,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 95.67
     },
     "auditcore_funding_sources": {
       "metrics": {
@@ -113,7 +122,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 96.31
     },
     "auditcore_geo": {
       "metrics": {
@@ -124,7 +134,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 20
-      }
+      },
+      "coverage_percent": 98.0
     },
     "auditcore_harvest": {
       "metrics": {
@@ -135,7 +146,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 95.43
     },
     "auditcore_identifiers": {
       "metrics": {
@@ -146,7 +158,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 99.38
     },
     "auditcore_invoicegenerator": {
       "metrics": {
@@ -157,7 +170,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 98.01
     },
     "auditcore_invoicesynth": {
       "metrics": {
@@ -168,7 +182,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 89.66
     },
     "auditcore_kanban": {
       "metrics": {
@@ -179,7 +194,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 98.78
     },
     "auditcore_legal_sources": {
       "metrics": {
@@ -190,7 +206,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 1
-      }
+      },
+      "coverage_percent": 96.82
     },
     "auditcore_llm_client": {
       "metrics": {
@@ -201,7 +218,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 99.24
     },
     "auditcore_market_indicators": {
       "metrics": {
@@ -212,7 +230,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 99.02
     },
     "auditcore_price_analysis": {
       "metrics": {
@@ -223,7 +242,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 97.99
     },
     "auditcore_price_sources": {
       "metrics": {
@@ -234,7 +254,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 1
-      }
+      },
+      "coverage_percent": 93.31
     },
     "auditcore_procurement": {
       "metrics": {
@@ -245,7 +266,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 97.31
     },
     "auditcore_property_sources": {
       "metrics": {
@@ -256,7 +278,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 98.35
     },
     "auditcore_registry_sources": {
       "metrics": {
@@ -267,7 +290,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 97.28
     },
     "auditcore_reporting": {
       "metrics": {
@@ -278,7 +302,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 93.92
     },
     "auditcore_risk": {
       "metrics": {
@@ -289,7 +314,11 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 97.99
+    },
+    "auditcore_runner": {
+      "coverage_percent": 83.57
     },
     "auditcore_sampling": {
       "metrics": {
@@ -300,7 +329,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 97.81
     },
     "auditcore_statistics": {
       "metrics": {
@@ -311,7 +341,8 @@
         "modules_over_400_lines": 0,
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
-      }
+      },
+      "coverage_percent": 98.92
     },
     "js:common": {
       "metrics": {
