@@ -72,6 +72,8 @@ def definition(**change: object) -> dict[str, Any]:
 def test_valid_definition_is_fingerprinted_and_frozen() -> None:
     template = define_template(definition())
     assert template.formats == ("docx", "pdf", "html")
+    assert template.name == "Test" and template.title == "Test {{ name }}"
+    assert define_template(definition(name="Prüfung")).name == "Prüfung"
     assert len(template.fingerprint) == 64
     assert define_template(definition()).fingerprint == template.fingerprint
     assert define_template(definition(description="x")).fingerprint != template.fingerprint
@@ -105,6 +107,7 @@ def test_valid_definition_is_fingerprinted_and_frozen() -> None:
         ({"sample": {"name": ""}}, "sample"),
         ({"formats": ["odt"]}, "formats"),
         ({"title": "Test {{ fehlt }}"}, "nicht deklariert"),
+        ({"name": "Test {{ name }}"}, "ohne Platzhalter"),
     ],
 )
 def test_invalid_definitions_are_rejected(change: dict[str, object], message: str) -> None:

@@ -1,6 +1,7 @@
 {
   "id": "pruefbericht",
   "version": "1.0.0",
+  "name": "Prüfbericht",
   "title": "Prüfbericht {{ aktenzeichen }}",
   "description": "Prüfbericht zu einem Vorhaben (ESI-Fonds, VO (EU) 2021/1060) mit Kopfdaten, Prüfungsumfang, Feststellungen und Ergebnis; Textbausteine je nach Prüfungsergebnis.",
   "status": "Freigegeben",

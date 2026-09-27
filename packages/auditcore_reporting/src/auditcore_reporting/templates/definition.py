@@ -28,13 +28,14 @@ from .model import (
     Table,
     TextBlock,
 )
+from .placeholders import PLACEHOLDER
 from .schema import check_schema, validate
 
 TEMPLATE_ID = re.compile(r"[a-z][a-z0-9-]{1,63}")
 VERSION = re.compile(r"(0|[1-9]\d{0,3})\.(0|[1-9]\d{0,4})\.(0|[1-9]\d{0,5})")
 _BLOCK_ID = re.compile(r"[A-Za-z_][A-Za-z0-9_-]{0,63}")
 _KEYS = frozenset(
-    {"id", "version", "title", "description", "status", "schema", "conditions",
+    {"id", "version", "name", "title", "description", "status", "schema", "conditions",
      "text_blocks", "blocks", "sample", "formats"}
 )  # fmt: skip
 
@@ -125,6 +126,15 @@ def _check_block(block: Block, checker: Checker, bindings: Bindings, where: str)
             checker.text(row.value, bindings, where)
 
 
+def _name(data: Mapping[str, object]) -> str:
+    """Display name: ``name`` or the title without placeholders."""
+    name = text_of(data, "name", "Vorlage", "")
+    if "{{" in name or "{%" in name:
+        raise TemplateError("name: Anzeigename ohne Platzhalter.")
+    title = PLACEHOLDER.sub("", text_of(data, "title", "Vorlage"))
+    return name.strip() or " ".join(title.split()).strip(" –-") or text_of(data, "id", "Vorlage")
+
+
 def _formats(value: object, docx: bytes | None) -> tuple[str, ...]:
     default = ("docx",) if docx is not None else FORMATS
     formats = tuple(str(v) for v in list_of(value, "formats")) if value is not None else default
@@ -187,6 +197,7 @@ def define_template(
         fingerprint,
         _frozen(data),
         docx,
+        _name(data),
     )
 
 

@@ -1,6 +1,7 @@
 {
   "id": "vermerk",
   "version": "1.0.0",
+  "name": "Vermerk",
   "title": "Vermerk – {{ betreff }}",
   "description": "Allgemeiner Vermerk mit Kopfdaten, Anlass, Sachverhalt, Bewertung, Ergebnis und Anlagen; ohne behördenspezifische Gestaltung.",
   "status": "Freigegeben",

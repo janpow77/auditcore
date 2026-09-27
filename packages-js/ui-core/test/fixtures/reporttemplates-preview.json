@@ -1,0 +1,19 @@
+{
+ "contract": "reporting_ui/1",
+ "template": {
+  "id": "pruefbericht",
+  "version": "1.0.0",
+  "fingerprint": "0ab766156e19721fc24fc800b177f0f62ded38efb304adfdd5becc24dd712dee"
+ },
+ "valid": true,
+ "issues": [],
+ "html": "<!DOCTYPE html>\n<html lang=\"de\"><head><meta charset=\"utf-8\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'\"><meta name=\"generator\" content=\"auditcore_reporting pruefbericht 1.0.0\"><title>Prüfbericht PB-2026-0042</title><style>body{font-family:'Arial',sans-serif;font-size:11.0pt;margin:2.5cm;line-height:1.4;color:#1a1a1a;background:#fff}h1,h2,h3{color:#1F3864;margin:1.2em 0 .4em}h1{font-size:16.0pt}h2{font-size:13.0pt}h3{font-size:11.5pt}table{border-collapse:collapse;width:100%;margin:.6em 0}td,th{border:1px solid #808080;padding:.25em .4em;vertical-align:top}th{background:#D9E2F3;text-align:left}.right{text-align:right}.center{text-align:center}table.fields td{border:none;padding:.1em .6em .1em 0}table.fields td:first-child{font-weight:bold}hr.page{border:none;border-top:1px dashed #999;margin:2em 0}header,footer{color:#555;font-size:.85em}</style></head><body><main>\n<h1>Prüfbericht</h1>\n<table class=\"fields\"><tbody><tr><td>Prüfbehörde</td><td>Musterprüfbehörde</td></tr><tr><td>Aktenzeichen</td><td>PB-2026-0042</td></tr><tr><td>Berichtsdatum</td><td>26.09.2026</td></tr><tr><td>Fonds</td><td>EFRE</td></tr><tr><td>Programm</td><td>Musterprogramm 2021–2027</td></tr><tr><td>Vorhaben</td><td>V-0001 – Musterprojekt Energieeffizienz</td></tr><tr><td>Begünstigte</td><td>Beispiel GmbH</td></tr><tr><td>Prüfungsart</td><td>Vorhabenprüfung</td></tr></tbody></table>\n<p>Prüfzeitraum: 01.07.2025 bis 30.06.2026</p>\n<h2>1. Rechtsgrundlage und Prüfungsumfang</h2>\n<p data-block=\"rechtsgrundlage\">Die Prüfung erfolgte nach Art. 77 der Verordnung (EU) 2021/1060. Sie umfasste die im Prüfzeitraum geltend gemachten Ausgaben des Vorhabens.</p>\n<p>Geprüft wurden Ausgaben in Höhe von 125.000,50 €.</p>\n<p data-block=\"verwaltungsueberpruefung\">Die Ergebnisse der Verwaltungsüberprüfung nach Art. 74 der Verordnung (EU) 2021/1060 wurden in die Prüfung einbezogen.</p>\n<h2>2. Feststellungen</h2>\n<p data-block=\"mit_feststellungen\">Die Prüfung hat zu den nachstehenden Feststellungen geführt.</p>\n<table><thead><tr><th class=\"left\">Nr.</th><th class=\"left\">Feststellung</th><th class=\"left\">Art</th><th class=\"right\">Nicht förderfähig</th></tr></thead><tbody><tr><td class=\"left\">1</td><td class=\"left\">Vergabevermerk unvollständig</td><td class=\"left\">formell</td><td class=\"right\">0,00 €</td></tr><tr><td class=\"left\">2</td><td class=\"left\">Rechnung außerhalb des Förderzeitraums</td><td class=\"left\">finanziell</td><td class=\"right\">1.234,56 €</td></tr></tbody></table>\n<h3>Feststellung 1: Vergabevermerk unvollständig</h3>\n<p>Sachverhalt: Der Vergabevermerk nennt die Wertungskriterien nicht.</p>\n<p>Bewertung: Die Dokumentation genügt den Anforderungen nicht.</p>\n<p>Empfehlung: Vergabevermerk vervollständigen.</p>\n<h3>Feststellung 2: Rechnung außerhalb des Förderzeitraums</h3>\n<p>Sachverhalt: Eine Rechnung datiert nach dem Ende des Durchführungszeitraums.</p>\n<p>Bewertung: Die Ausgabe ist nicht förderfähig.</p>\n<p>Nicht förderfähig: 1.234,56 €</p>\n<h2>3. Ergebnis</h2>\n<p data-block=\"finanzielle_auswirkung\">Aus den Feststellungen ergeben sich nicht förderfähige Ausgaben in Höhe von 1.234,56 €.</p>\n<p data-block=\"stellungnahme\">Zu den Feststellungen besteht Gelegenheit zur Stellungnahme bis zum 26.10.2026.</p>\n</main></body></html>\n",
+ "text_blocks": [
+  "rechtsgrundlage",
+  "verwaltungsueberpruefung",
+  "mit_feststellungen",
+  "finanzielle_auswirkung",
+  "stellungnahme"
+ ],
+ "data_sha256": "35813cc90e8bd6cde06294e7a75eb44747d57ad50bc30e17f294e5e04c39b0d1"
+}

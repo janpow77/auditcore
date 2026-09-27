@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (895):
+Exporte der Einstiegspunkte aus `package.json#exports` (927):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -176,6 +176,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `DEFAULT_MAX_UPLOAD_BYTES` | Konstante | Vorgabe des Servers (`ServiceSettings.max_upload_bytes`). | `documents/form` |
 | `@auditcore/ui-core` | `DEFAULT_SYNOPSIS_FILTER` | Konstante | – | `synopsis/viewModel` |
 | `@auditcore/ui-core` | `DSFA_NOTICES` | Konstante | – | `dataprotection/dsfa` |
+| `@auditcore/ui-core` | `DataIssue` | Schnittstelle | – | `reporttemplates/types` |
 | `@auditcore/ui-core` | `DataProtectionError` | Schnittstelle | Fehler einer Portanfrage: Code und Meldung des Servers bzw. `network_error` mit Status 0. | `dataprotection/requests` |
 | `@auditcore/ui-core` | `DataProtectionKey` | Typ | – | `dataprotection/messages` |
 | `@auditcore/ui-core` | `DataProtectionPort` | Schnittstelle | Datenzugang der Komponenten. Die mitgelieferte Umsetzung ist `createDataProtectionRestPort`; Anwendungen können eigene Ports übergeben. | `dataprotection/types` |
@@ -202,6 +203,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `DecisionView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `DegenerateRing` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `DerivationStep` | Schnittstelle | – | `sampling/types` |
+| `@auditcore/ui-core` | `DesignProfileInfo` | Schnittstelle | – | `reporttemplates/types` |
 | `@auditcore/ui-core` | `DiffField` | Typ | – | `synopsis/types` |
 | `@auditcore/ui-core` | `DiffSegment` | Schnittstelle | – | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `DiffSide` | Typ | – | `synopsis/wordDiff` |
@@ -285,6 +287,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `FlagState` | Typ | Zustand einer Regel für einen Datensatz. | `risk/state` |
 | `@auditcore/ui-core` | `FocusTrap` | Schnittstelle | – | `focus` |
 | `@auditcore/ui-core` | `FormProblem` | Schnittstelle | Ein Befund der Formularprüfung: Textschlüssel und Platzhalter. | `documents/form` |
+| `@auditcore/ui-core` | `FormatOption` | Schnittstelle | – | `reporttemplates/view` |
 | `@auditcore/ui-core` | `FormatProfile` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `FreshnessStatus` | Typ | – | `screening/types` |
 | `@auditcore/ui-core` | `FreshnessView` | Schnittstelle | – | `screening/types` |
@@ -318,6 +321,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `INITIAL_EXTRAPOLATION` | Konstante | – | `extrapolation/controller` |
 | `@auditcore/ui-core` | `INITIAL_IDENTIFIERS` | Konstante | – | `identifiers/controller` |
 | `@auditcore/ui-core` | `INITIAL_REPORTING` | Konstante | – | `reporting/controller` |
+| `@auditcore/ui-core` | `INITIAL_REPORTTEMPLATES` | Konstante | – | `reporttemplates/controller` |
 | `@auditcore/ui-core` | `INITIAL_SAMPLESIZE` | Konstante | – | `samplesize/controller` |
 | `@auditcore/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@auditcore/ui-core` | `IconName` | Typ | – | `base/icons` |
@@ -427,6 +431,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `ReportingPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createReportingRestPort`. | `reporting/types` |
 | `@auditcore/ui-core` | `ReportingSource` | Schnittstelle | – | `reporting/controller` |
 | `@auditcore/ui-core` | `ReportingTranslate` | Typ | – | `reporting/view` |
+| `@auditcore/ui-core` | `ReporttemplatesCallbacks` | Schnittstelle | – | `reporttemplates/controller` |
+| `@auditcore/ui-core` | `ReporttemplatesController` | Schnittstelle | – | `reporttemplates/controller` |
+| `@auditcore/ui-core` | `ReporttemplatesData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `reporttemplates/controller` |
+| `@auditcore/ui-core` | `ReporttemplatesMessageKey` | Typ | – | `reporttemplates/messages` |
+| `@auditcore/ui-core` | `ReporttemplatesPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Standardumsetzung: `createReportTemplatesRestPort`. | `reporttemplates/types` |
+| `@auditcore/ui-core` | `ReporttemplatesSource` | Schnittstelle | – | `reporttemplates/controller` |
 | `@auditcore/ui-core` | `RequestState` | Schnittstelle | Beschäftigt-Status, Fehler und Erfolgsmeldung einer Portanfrage (gemeinsam für alle Controller). | `store` |
 | `@auditcore/ui-core` | `ResidualErrorRate` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `ResidualForm` | Schnittstelle | – | `extrapolation/model` |
@@ -495,6 +505,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `SamplingTranslate` | Typ | – | `sampling/view` |
 | `@auditcore/ui-core` | `ScenarioInput` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `ScenarioResult` | Schnittstelle | – | `dataprotection/types` |
+| `@auditcore/ui-core` | `SchemaFieldRow` | Schnittstelle | Zeile der Datenvertrags-Übersicht (oberste Ebene des Schemas). | `reporttemplates/view` |
 | `@auditcore/ui-core` | `ScoreClass` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `ScreeningController` | Typ | – | `screening/controller` |
 | `@auditcore/ui-core` | `ScreeningData` | Schnittstelle | – | `screening/controller` |
@@ -563,6 +574,17 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `TableImportData` | Schnittstelle | – | `tabular/tableImport` |
 | `@auditcore/ui-core` | `TablePreview` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `TabularMessageKey` | Typ | – | `tabular/messages` |
+| `@auditcore/ui-core` | `TemplateCatalogue` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateData` | Typ | Daten gemäß Datenvertrag (JSON-Schema) der Vorlage. | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateDetail` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateFormat` | Typ | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplatePreview` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateRenderRequest` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateRequest` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateSchema` | Schnittstelle | JSON-Schema-Teilmenge des Datenvertrags. | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateSummary` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TemplateTextBlock` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `TextBlockRow` | Schnittstelle | – | `reporttemplates/view` |
 | `@auditcore/ui-core` | `TileSource` | Schnittstelle | Kachelquelle der Anwendung; ohne Quelle zeigt die Karte keinen Hintergrund. | `geo/types` |
 | `@auditcore/ui-core` | `Tone` | Typ | Farbton wie `FaBadge` (`tone`). | `risk/format` |
 | `@auditcore/ui-core` | `TotalErrorRate` | Schnittstelle | – | `extrapolation/types` |
@@ -632,6 +654,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `buildSizeRequest` | Funktion | Anfrage für `POST /size`; jedes Feld ist Pflicht, nichts wird still ergänzt. | `sampling/model` |
 | `@auditcore/ui-core` | `buildSynopsisExport` | Funktion | Export der sichtbaren Zeilen (HTML, Markdown, Druckansicht). | `synopsis/controller` |
 | `@auditcore/ui-core` | `buildSynopsisView` | Funktion | – | `synopsis/viewModel` |
+| `@auditcore/ui-core` | `buildTemplateRequest` | Funktion | Anfrage aus Zustand und Daten oder `null`, solange keine Vorlage geladen ist. | `reporttemplates/controller` |
 | `@auditcore/ui-core` | `buildVvtExport` | Funktion | – | `dataprotection/vvt` |
 | `@auditcore/ui-core` | `buildWorkbookRequest` | Funktion | Anfrage aus Zustand und Tabellen oder der erste fehlende Punkt. | `reporting/controller` |
 | `@auditcore/ui-core` | `canDecide` | Funktion | – | `screening/view` |
@@ -670,8 +693,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `createIdentifierController` | Funktion | – | `identifiers/controller` |
 | `@auditcore/ui-core` | `createIdentifiersRestPort` | Funktion | Port auf den REST-Vertrag `identifiers_ui/1` von `auditcore_identifiers.web` (Starlette oder FastAPI). | `identifiers/rest-port` |
 | `@auditcore/ui-core` | `createLeafletView` | Funktion | Legt die Leaflet-Karte im Element an. | `geo/mapView` |
+| `@auditcore/ui-core` | `createReportTemplatesRestPort` | Funktion | Port auf die Vorlagen-Endpunkte von `reporting_ui/1` (`auditcore_reporting.web`, Starlette oder FastAPI). | `reporttemplates/port` |
 | `@auditcore/ui-core` | `createReportingController` | Funktion | – | `reporting/controller` |
 | `@auditcore/ui-core` | `createReportingRestPort` | Funktion | Port auf den REST-Vertrag `reporting_ui/1` von `auditcore_reporting.web` (Starlette oder FastAPI). | `reporting/rest-port` |
+| `@auditcore/ui-core` | `createReporttemplatesController` | Funktion | – | `reporttemplates/controller` |
 | `@auditcore/ui-core` | `createRiskController` | Funktion | – | `risk/controller` |
 | `@auditcore/ui-core` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@auditcore/ui-core` | `createRunner` | Funktion | Führt eine Portanfrage aus: setzt `busy`, fängt Fehler (über `toError`) und meldet sie an `onError`. Ohne Port geschieht nichts (`null`). | `store` |
@@ -780,6 +805,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `formatDegrees` | Funktion | Grad mit sechs Nachkommastellen (≈ 0,1 m). | `geo/model` |
 | `@auditcore/ui-core` | `formatDistance` | Funktion | Entfernung sprachabhängig: unter 1 km in Metern, sonst in Kilometern mit zwei Stellen. | `geo/model` |
 | `@auditcore/ui-core` | `formatMetres` | Funktion | Rechts-/Hochwert in Metern mit zwei Nachkommastellen, ohne Tausendertrennung. | `geo/model` |
+| `@auditcore/ui-core` | `formatOptions` | Funktion | – | `reporttemplates/view` |
 | `@auditcore/ui-core` | `formatPoints` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `formatScore` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `formatScreeningDate` | Funktion | – | `screening/view` |
@@ -884,6 +910,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `reportingSheetHeading` | Funktion | – | `reporting/view` |
 | `@auditcore/ui-core` | `reportingTablesText` | Funktion | – | `reporting/view` |
 | `@auditcore/ui-core` | `reportingWorkbookText` | Funktion | – | `reporting/view` |
+| `@auditcore/ui-core` | `reporttemplatesCanRender` | Funktion | Bericht erzeugen ist möglich: Vorlage geladen, Format gewählt und auf dem Server verfügbar. | `reporttemplates/view` |
+| `@auditcore/ui-core` | `reporttemplatesData` | Funktion | Daten für Vorschau und Bericht: die der Anwendung, sonst die Beispieldaten. | `reporttemplates/controller` |
+| `@auditcore/ui-core` | `reporttemplatesIsEmpty` | Funktion | Hinweis „keine Vorlagen“ nur nach abgeschlossener, fehlerfreier Anfrage. | `reporttemplates/view` |
+| `@auditcore/ui-core` | `reporttemplatesMessages` | Konstante | Texte der Berichtsvorlagen (Vue `ReportTemplates`, React `FlowauditReportTemplates`); sichtbare Texte nur hier. | `reporttemplates/messages` |
 | `@auditcore/ui-core` | `requirementKey` | Funktion | – | `risk/labels` |
 | `@auditcore/ui-core` | `requiresFourEyes` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `residualColumns` | Funktion | – | `extrapolation/view` |
@@ -912,6 +942,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `samplingPopulation` | Funktion | – | `sampling/controller` |
 | `@auditcore/ui-core` | `samplingProfile` | Funktion | – | `sampling/controller` |
 | `@auditcore/ui-core` | `scalarFields` | Funktion | Einzelne Eingabefelder der Methode in der Reihenfolge des Katalogs. | `samplesize/model` |
+| `@auditcore/ui-core` | `schemaFields` | Funktion | – | `reporttemplates/view` |
 | `@auditcore/ui-core` | `scorePercent` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `screeningMessages` | Konstante | Texte der Screening-Trefferprüfung (Sanktionslisten, PEP). | `screening/messages` |
 | `@auditcore/ui-core` | `screeningTone` | Funktion | – | `dataprotection/dsfaView` |
@@ -950,6 +981,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (895):
 | `@auditcore/ui-core` | `synopsisPortOf` | Funktion | Der Port als Datenzugang der eingebetteten Synopse, wenn er Vergleiche laden kann. | `documents/controller` |
 | `@auditcore/ui-core` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
 | `@auditcore/ui-core` | `terMetrics` | Funktion | Kennzahlen der Gesamtfehlerquote in fester Reihenfolge. | `extrapolation/view` |
+| `@auditcore/ui-core` | `textBlockRows` | Funktion | – | `reporttemplates/view` |
 | `@auditcore/ui-core` | `titleProperty` | Funktion | Titel-Eigenschaft: die erste Texteigenschaft (wie die erste Spalte der Tabellenansicht). | `dbkanban/view` |
 | `@auditcore/ui-core` | `toCompareFields` | Funktion | Formularfelder für `POST /comparisons`; Gesetzessynopse ohne die Optionen des Standardvergleichs. | `documents/form` |
 | `@auditcore/ui-core` | `toHtml` | Funktion | Eigenständiges HTML-Dokument mit Druck-CSS (keine externen Ressourcen). | `synopsis/exporters` |

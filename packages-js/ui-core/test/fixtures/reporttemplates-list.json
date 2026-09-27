@@ -1,0 +1,67 @@
+{
+ "contract": "reporting_ui/1",
+ "templates": [
+  {
+   "id": "pruefbericht",
+   "version": "1.0.0",
+   "title": "Prüfbericht",
+   "document_title": "Prüfbericht {{ aktenzeichen }}",
+   "description": "Prüfbericht zu einem Vorhaben (ESI-Fonds, VO (EU) 2021/1060) mit Kopfdaten, Prüfungsumfang, Feststellungen und Ergebnis; Textbausteine je nach Prüfungsergebnis.",
+   "status": "Freigegeben",
+   "kind": "structured",
+   "formats": [
+    "docx",
+    "pdf",
+    "html"
+   ],
+   "fingerprint": "0ab766156e19721fc24fc800b177f0f62ded38efb304adfdd5becc24dd712dee",
+   "versions": [
+    "1.0.0"
+   ]
+  },
+  {
+   "id": "vermerk",
+   "version": "1.0.0",
+   "title": "Vermerk",
+   "document_title": "Vermerk – {{ betreff }}",
+   "description": "Allgemeiner Vermerk mit Kopfdaten, Anlass, Sachverhalt, Bewertung, Ergebnis und Anlagen; ohne behördenspezifische Gestaltung.",
+   "status": "Freigegeben",
+   "kind": "structured",
+   "formats": [
+    "docx",
+    "pdf",
+    "html"
+   ],
+   "fingerprint": "34ce54bfae8aad8816dc58af3cc59c1a6273c3afafab48a45001dc9f81d1998f",
+   "versions": [
+    "1.0.0"
+   ]
+  }
+ ],
+ "designs": [
+  {
+   "id": "neutral-v1",
+   "version": "1.0.0",
+   "label": "Neutral",
+   "font_family": "Arial",
+   "pdf_font": "Helvetica",
+   "font_size_pt": 11.0,
+   "heading_sizes_pt": [
+    16.0,
+    13.0,
+    11.5
+   ],
+   "accent_color": "1F3864",
+   "table_header_fill": "D9E2F3",
+   "margin_cm": 2.5,
+   "header_text": "",
+   "footer_text": "",
+   "page_numbers": true
+  }
+ ],
+ "formats": {
+  "docx": true,
+  "pdf": true,
+  "html": true
+ }
+}

@@ -144,6 +144,8 @@ class ReportTemplate:
     fingerprint: str
     definition: Mapping[str, object] = field(repr=False)
     docx: bytes | None = field(default=None, repr=False)
+    #: Display name without placeholders (lists, selection); ``title`` is the document title.
+    name: str = ""
 
     def text_block(self, block_id: str) -> TextBlock | None:
         """Text block by id."""

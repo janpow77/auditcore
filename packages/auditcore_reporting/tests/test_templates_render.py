@@ -32,9 +32,9 @@ MEMO = REGISTRY.get("vermerk")
 #: visible change of the output and needs a new template or design version.
 GOLDEN = {
     ("pruefbericht", "html"): "814b0b8ba66a81e1b9eb11fbb9c5808b97092ef2f85304d4124e734da07e63db",
-    ("pruefbericht", "docx"): "c2b9b01b781501deb09154875cd486634642c3bd01e9ab8d8857189414d41dbd",
+    ("pruefbericht", "docx"): "d6043c56e6352e35a006a9aa3649e5c4ccad98841926b64fc1bb56bb356c7d0a",
     ("vermerk", "html"): "950fa91bdc74d21836e9c2da2e7ba0619dbdcbabc8c2d1a72cd581e9d67eaef3",
-    ("vermerk", "docx"): "7802605f620c7460fa7615e35b80e5ac1856d07ab1b017f71c680b210ee4af5b",
+    ("vermerk", "docx"): "304c715de6842102142de3df7f96b4b7ed19533b4b7513f42f2d99e5194ff565",
 }
 
 
