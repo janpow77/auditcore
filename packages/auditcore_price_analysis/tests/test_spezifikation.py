@@ -1,4 +1,4 @@
-"""Invariants of docs/spezifikation.md as Hypothesis properties (I1–I12)."""
+"""Invariants of docs/spezifikation.md as Hypothesis properties (I1–I13)."""
 
 from __future__ import annotations
 
@@ -33,6 +33,8 @@ from auditcore_price_analysis import (
 WATER = load_calculation_profile("regulierung.hpp.wasser", "2026.09.2")
 HEAT = load_calculation_profile("regulierung.hpp.nahwaerme", "2026.09.2")
 COMPARISON = load_comparison_profile("regulierung.hpp.vergleich", "2026.09.2")
+WATER_COMPLEMENT = load_calculation_profile("regulierung.hpp.wasser", "2026.09.3")
+HEAT_COMPLEMENT = load_calculation_profile("regulierung.hpp.nahwaerme", "2026.09.3")
 EXAMPLES = settings(max_examples=150, deadline=None)
 
 MONEY = st.decimals(min_value=0, max_value=10_000, places=4, allow_nan=False)
@@ -277,3 +279,43 @@ def test_i12_shares_can_add_up_to_100_1() -> None:
     tariff = Tariff.from_mapping(data, WATER, release=ReleaseStatus.FREIGEGEBEN)
     result = calculate(tariff, WATER, consumption={"q3": 4, "m3": "159.96"}, stichtag="2026-01-01")
     assert (result.fixed_share_pct, result.variable_share_pct) == (Decimal("33.4"), Decimal("66.7"))
+
+
+@EXAMPLES
+@given(COMPONENTS, POSITIVE)
+def test_i13_complement_shares_add_up_to_exactly_100(components, m3: Decimal) -> None:
+    """I13: with rounding.shares = complement both shares add up to exactly 100."""
+    tariff = Tariff.from_mapping(components, WATER_COMPLEMENT, release=ReleaseStatus.FREIGEGEBEN)
+    result = calculate(
+        tariff, WATER_COMPLEMENT, consumption={"q3": 4, "m3": m3}, stichtag="2026-01-01"
+    )
+    separate = calculate(
+        Tariff.from_mapping(components, WATER, release=ReleaseStatus.FREIGEGEBEN),
+        WATER,
+        consumption={"q3": 4, "m3": m3},
+        stichtag="2026-01-01",
+    )
+    if result.total > 0:
+        assert result.fixed_share_pct + result.variable_share_pct == 100
+        assert result.fixed_share_pct == separate.fixed_share_pct
+        assert result.variable_share_pct == 100 - WATER_COMPLEMENT.percent.apply(
+            result.fixed_share_pct
+        )
+    else:
+        assert result.fixed_share_pct is None and result.variable_share_pct is None
+
+
+def test_i13_former_100_1_case_now_adds_up_to_100() -> None:
+    """I13: the I12 example (33.35 % / 66.65 %) gives 33.4 % and 66.6 % under 2026.09.3."""
+    data = {
+        "grundpreis_eur_monat": "6.67",
+        "arbeitspreis_eur_m3": "1",
+        "verrechnungspreis_eur_monat": "0",
+        "wasserentnahmeentgelt_eur_m3": "0",
+    }
+    tariff = Tariff.from_mapping(data, WATER_COMPLEMENT, release=ReleaseStatus.FREIGEGEBEN)
+    result = calculate(
+        tariff, WATER_COMPLEMENT, consumption={"q3": 4, "m3": "159.96"}, stichtag="2026-01-01"
+    )
+    assert (result.fixed_share_pct, result.variable_share_pct) == (Decimal("33.4"), Decimal("66.6"))
+    assert HEAT_COMPLEMENT.shares == "complement" and HEAT.shares == "separate"

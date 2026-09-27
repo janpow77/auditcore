@@ -39,7 +39,7 @@ geändert. Der vollständige Änderungssatz liegt als Patch unter
    `preisauswahl.py`).
 3. Tests wie oben gegen eine Wegwerf-Datenbank ausführen.
 
-## Weiterer Schritt: korrigierter Vertrag (empfohlene Profile @2026.09.2)
+## Weiterer Schritt: korrigierter Vertrag (empfohlene Profile @2026.09.3 bzw. Vergleich @2026.09.2)
 
 Neue Aufrufe nutzen die entschiedenen Profile:
 
@@ -52,7 +52,7 @@ from auditcore_price_analysis import (
     standard_consumption,
 )
 
-profil = load_recommended_calculation_profile("regulierung.hpp.wasser")  # @2026.09.2
+profil = load_recommended_calculation_profile("regulierung.hpp.wasser")  # @2026.09.3 (PA-R01)
 tarif = Tariff.from_mapping(
     preisdaten,
     profil,

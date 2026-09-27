@@ -57,7 +57,9 @@
     "regulierung.hpp.vergleich@2026.09.1",
     "regulierung.hpp.nahwaerme@2026.09.2",
     "regulierung.hpp.wasser@2026.09.2",
-    "regulierung.hpp.vergleich@2026.09.2"
+    "regulierung.hpp.vergleich@2026.09.2",
+    "regulierung.hpp.nahwaerme@2026.09.3",
+    "regulierung.hpp.wasser@2026.09.3"
   ],
   "recommended_profiles": [
     "regulierung.hpp.nahwaerme@2026.09.2",
@@ -94,7 +96,8 @@
       "I9",
       "I10",
       "I11",
-      "I12"
+      "I12",
+      "I13"
     ],
     "legacy_variants": [
       "legacy_parse_decimal",

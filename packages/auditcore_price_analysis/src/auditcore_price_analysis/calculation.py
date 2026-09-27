@@ -303,6 +303,23 @@ def _not_comparable(
     return reasons
 
 
+def _shares(
+    profile: CalculationProfile, fixed: Decimal, total: Decimal
+) -> tuple[Decimal | None, Decimal | None]:
+    """Fixed and variable share in percent (``None`` without costs).
+
+    ``separate`` rounds both shares on their own (sum may miss 100 by one
+    step, PA-L10); ``complement`` rounds the fixed share and takes the
+    variable share as ``100 − fixed`` so that both add up to exactly 100.
+    """
+    if total <= 0:
+        return None, None
+    fixed_share = profile.percent.apply(fixed / total * 100)
+    if profile.shares == "complement":
+        return fixed_share, Decimal(100) - fixed_share
+    return fixed_share, profile.percent.apply(Decimal(100) - fixed / total * 100)
+
+
 def calculate(
     tariff: Tariff,
     profile: CalculationProfile,
@@ -330,10 +347,7 @@ def calculate(
     mixed_rule = profile.mixed_price
     basis = quantities[mixed_rule.basis]
     mixed = profile.mixed_rounding.apply(total / basis * mixed_rule.factor) if basis > 0 else None
-    fixed_share = profile.percent.apply(fixed / total * 100) if total > 0 else None
-    variable_share = (
-        profile.percent.apply(Decimal(100) - fixed / total * 100) if total > 0 else None
-    )
+    fixed_share, variable_share = _shares(profile, fixed, total)
     reasons = _not_comparable(tariff, profile, day, state)
     return CalculationResult(
         profile=profile.reference,

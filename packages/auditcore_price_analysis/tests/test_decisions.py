@@ -39,13 +39,17 @@ def _decisions(profile: object) -> dict[str, dict[str, str]]:
 
 
 def test_recommended_versions_are_the_decided_profiles() -> None:
-    for pid in ("regulierung.hpp.nahwaerme", "regulierung.hpp.wasser", "regulierung.hpp.vergleich"):
-        assert recommended_version(pid) == "2026.09.2"
+    assert recommended_version("regulierung.hpp.vergleich") == "2026.09.2"
+    for pid in ("regulierung.hpp.nahwaerme", "regulierung.hpp.wasser"):
+        assert recommended_version(pid) == "2026.09.3"
     for profile in (NW, WA, CP):
         assert profile.recommended and profile.status == "DECIDED"
-        for decision in _decisions(profile).values():
-            assert decision["status"] == "DECIDED" and decision["date"] == "2026-09-23"
-            assert "p3 180" in decision["quote"]
+        for code, decision in _decisions(profile).items():
+            assert decision["status"] == "DECIDED"
+            if code == "PA-R01":
+                assert decision["date"] == "2026-09-27" and "100,0 %" in decision["quote"]
+            else:
+                assert decision["date"] == "2026-09-23" and "p3 180" in decision["quote"]
     assert not load_calculation_profile("regulierung.hpp.wasser", "2026.09.1").recommended
     with pytest.raises(ProfileError):
         recommended_version("regulierung.hpp.unbekannt")
