@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (830):
+Exporte der Einstiegspunkte aus `package.json#exports` (846):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -159,6 +159,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (830):
 | `@auditcore/ui` | `BADGE_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `BENFORD_METRIC_IDS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BadgeTone` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchChecks` | Vue-Komponente | – | `batchchecks/BatchChecks.vue` |
+| `@auditcore/ui` | `BatchchecksAnswer` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksFinding` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordBusy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordCallbacks` | Re-Export | – | `./useBenford` |
@@ -354,6 +362,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (830):
 | `@auditcore/ui` | `HitFilter` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `HitView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ICONS` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_BATCHCHECKS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_BENFORD` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
@@ -583,6 +592,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (830):
 | `@auditcore/ui` | `Translate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `UnitInput` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
+| `@auditcore/ui` | `UseBatchChecks` | Schnittstelle | – | `batchchecks/useBatchChecks` |
 | `@auditcore/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@auditcore/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@auditcore/ui` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
@@ -636,6 +646,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (830):
 | `@auditcore/ui` | `badgeStyle` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `bandTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `baseMessages` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `batchChecksElement` | Konstante | `<flowaudit-batch-checks>`: Eigenschaften `port`, `result`, `locale`; Ereignisse `checks-completed`, `error`. | `batchchecks/element` |
+| `@auditcore/ui` | `batchchecksMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordBarTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChartTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChiTexts` | Re-Export | – | `@auditcore/ui-core` |
@@ -679,6 +691,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (830):
 | `@auditcore/ui` | `conclusionTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `confidenceText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `coverIssues` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createComparisonsController` | Re-Export | – | `@auditcore/ui-core` |
@@ -909,6 +924,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (830):
 | `@auditcore/ui` | `translate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `triggeredDataset` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@auditcore/common`. | `composables/useAuthToken` |
+| `@auditcore/ui` | `useBatchChecks` | Funktion | Vue-Anbindung der Bestandsprüfung aus `@auditcore/ui-core` (`createBatchchecksController`). | `batchchecks/useBatchChecks` |
 | `@auditcore/ui` | `useBenford` | Funktion | – | `benford/useBenford` |
 | `@auditcore/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
 | `@auditcore/ui` | `useComparisons` | Funktion | – | `documents/useComparisons` |
@@ -970,6 +986,7 @@ Web Components:
 
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
+| `<flowaudit-batch-checks>` | `BatchChecks` | `batchchecks/element.ts` |
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
@@ -990,6 +1007,21 @@ Web Components:
 | `<flowaudit-vvt>` | `FaVvt` | `dataprotection/element.ts` |
 
 ### Props und Ereignisse der Vue-Komponenten
+
+#### `BatchChecks`
+
+Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im Kern (createBatchchecksController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `BatchchecksPort \| null` | nein | `null` | Fachlogik, z. B. `createBatchchecksRestPort({ baseUrl: '/api/batch-checks' })`. |
+| `result` | `BatchchecksAnswer \| null` | nein | `null` | Vorhandenes Ergebnis anzeigen (z. B. aus der Ablage der Anwendung). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `checks-completed` | `[answer: BatchchecksAnswer]` | – |
+| `error` | `[message: string]` | – |
 
 #### `BenfordPanel`
 

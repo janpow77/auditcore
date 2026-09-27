@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from auditcore_documents.pipeline.context import PipelineContext, ValidationResult
+from auditcore_documents.pipeline.stages.rule_messages import say
 
 IBAN_COUNTRY_LENGTHS = {
     "DE": 22,
@@ -30,21 +31,23 @@ VAT_ID_PATTERNS = {
 
 
 def validate_iban(iban: str) -> tuple[bool, str]:
-    """Längen- und Modulo-97-Prüfung nach ISO 13616 (Meldungen wie im Original)."""
+    """Längen- und Modulo-97-Prüfung nach ISO 13616 (Meldungen deutsch, D9)."""
     iban = iban.replace(" ", "").upper()
     if len(iban) < 15 or len(iban) > 34:
-        return False, f"Invalid IBAN length: {len(iban)}"
+        return False, say("iban_length", length=len(iban))
     country = iban[:2]
     expected = IBAN_COUNTRY_LENGTHS.get(country)
     if expected is not None and len(iban) != expected:
-        return False, f"Invalid IBAN length for {country}: expected {expected}, got {len(iban)}"
+        return False, say(
+            "iban_country_length", country=country, expected=expected, length=len(iban)
+        )
     rearranged = iban[4:] + iban[:4]
     numeric = "".join(char if char.isdigit() else str(ord(char) - 55) for char in rearranged)
     try:
         if int(numeric) % 97 != 1:
-            return False, "IBAN checksum invalid"
+            return False, say("iban_checksum")
     except ValueError:
-        return False, "IBAN contains invalid characters"
+        return False, say("iban_characters")
     return True, ""
 
 

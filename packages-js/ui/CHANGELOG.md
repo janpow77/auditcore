@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu: Bestandsprüfung – `BatchChecks` / `<flowaudit-batch-checks>` (Vue, Web Component); Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).
 - `ExtrapolationPanel`: Aufbau der Stichprobe (Zeiträume, Gruppen), Spalte Zeitraum/Programm, Teilstichprobe je Einheit (`ExtrapolationSubsample`), Systembewertung und Ergänzungen im Ergebnis (`ExtrapolationDetails`: Zeiträume, Programme, Teilstichproben, Neuberechnung des Konfidenzniveaus).
 - Neu `SampleSizePlanner` / `<flowaudit-sample-size-planner>`: Stichprobenumfang nach KOM-Leitfaden planen (Vertrag `auditcore_sampling.guidance/1`).
 - Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`

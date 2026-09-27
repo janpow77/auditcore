@@ -50,6 +50,7 @@ from auditcore_documents.pipeline.stages.donut_values import (
     text_dates,
     vat_id_check,
 )
+from auditcore_documents.pipeline.stages.rule_messages import say
 from auditcore_documents.pipeline.stages.validation import ValidationRule
 
 __all__ = [
@@ -269,14 +270,14 @@ class DonutPlausibilityRule(ValidationRule):
         if report is None:
             if (context.artifacts.ocr_raw_json or {}).get("engine") == "donut":
                 return self.result(self.severity, "REVIEW", "Donut ohne Zusammenführungsbericht")
-            return self.result("INFO", "PASS", "No Donut result")
+            return self.result("INFO", "PASS", say("donut_missing"))
         rejected = {
             name: entry["checks"]
             for name, entry in report["fields"].items()
             if entry["decision"] == "rejected"
         }
         if not rejected:
-            return self.result("INFO", "PASS", "Donut values plausible")
+            return self.result("INFO", "PASS", say("donut_plausible"))
         return self.result(
             self.severity,
             "FAIL",
@@ -298,14 +299,14 @@ class DonutDisagreementRule(ValidationRule):
     async def evaluate(self, context: PipelineContext) -> ValidationResult:
         report = _report(context)
         if report is None:
-            return self.result("INFO", "PASS", "No Donut result")
+            return self.result("INFO", "PASS", say("donut_missing"))
         open_fields = {
             name: entry["decision"]
             for name, entry in report["fields"].items()
             if entry["decision"] in {"disagreement", "unconfirmed"}
         }
         if not open_fields:
-            return self.result("INFO", "PASS", "Donut values confirmed")
+            return self.result("INFO", "PASS", say("donut_confirmed"))
         return self.result(
             self.severity,
             "REVIEW",

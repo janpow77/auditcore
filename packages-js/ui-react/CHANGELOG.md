@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu: Bestandsprüfung – `FlowauditBatchChecks` (nativ React); Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).
 - `FlowauditExtrapolation`: dieselben Ergänzungen wie `ExtrapolationPanel` (Zeiträume, Gruppen, Teilstichproben, Systembewertung, Neuberechnung des Konfidenzniveaus), Parität per Fälle und Interaktionsfolge.
 - Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
 - Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`

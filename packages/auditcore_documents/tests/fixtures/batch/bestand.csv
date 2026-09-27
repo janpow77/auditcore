@@ -1,0 +1,11 @@
+Beleg;Rechnungsnummer;Rechnungsdatum;Lieferant;Leistungsempfänger;USt-IdNr.;Leistungsbeschreibung;Netto;Steuersatz;Steuerbetrag;Brutto;OCR-Konfidenz
+B-001;RE-2026-0101;15.01.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000001;Rohbauarbeiten Abschnitt 1;10.000,00;19;1.900,00;11.900,00;0,97
+B-002;RE-2026-0102;29.01.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000001;Rohbauarbeiten Abschnitt 2;8.000,00;19;1.520,00;9.520,00;0,95
+B-003;RE-2026-0106;12.02.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000009;Rohbauarbeiten Abschnitt 3;6.500,00;19;1.235,00;7.735,00;0,93
+B-004;RE-2026-0106;12.02.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000009;Rohbauarbeiten Abschnitt 3;6.500,00;19;1.235,00;7.735,00;0,93
+B-005;EL-77;03.03.2026;Beispiel Elektro AG;Beispielverein Projektträger e. V.;DE200000002;Elektroinstallation;4.200,00;19;798,00;4.998,00;0,91
+B-006;EL-78;Invalid Date;Beispiel Elektro AG;Beispielverein Projektträger e. V.;DE200000002;Elektroinstallation Nachtrag;1.000,00;16;160,00;1.160,00;0,88
+B-007;Steuernummer 012/345/67890 Adresse Musterweg 1;18.03.2026;Testlabor Nord GmbH;Beispielverein Projektträger e. V.;DE300000003;Materialprüfung;2.000,00;19;380,00;2.500,00;0,62
+B-008;TL-2026-5;25.03.2026;testlabor nord;Beispielverein Projektträger e. V.;;Materialprüfung Wiederholung;500,00;7;35,00;535,00;0,74
+B-009;DD-10;02.04.2026;Demo Druck KG;;DE400000004;Druck Broschüren;1.200,00;7;84,00;1.284,00;
+B-010;DD-11;16.04.2026;Demo Druck KG;Beispielverein Projektträger e. V.;DE400000004;Druck Plakate;NaN;7;42,00;642,00;0,90

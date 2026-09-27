@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (948):
+Exporte der Einstiegspunkte aus `package.json#exports` (1004):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -105,8 +105,41 @@ Exporte der Einstiegspunkte aus `package.json#exports` (948):
 | `@auditcore/ui-core` | `AssessmentStatus` | Typ | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentSummary` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentView` | Schnittstelle | – | `dataprotection/types` |
+| `@auditcore/ui-core` | `BATCHCHECKS_LISTED_DOCUMENTS` | Konstante | Höchstzahl aufgezählter Belege je Befund. | `batchchecks/view` |
 | `@auditcore/ui-core` | `BENFORD_METRIC_IDS` | Konstante | – | `benford/model` |
 | `@auditcore/ui-core` | `BadgeTone` | Typ | – | `base/types` |
+| `@auditcore/ui-core` | `BatchchecksAnswer` | Schnittstelle | Antwort von `POST /runs`. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksBusy` | Typ | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksCallbacks` | Schnittstelle | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksCatalogue` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksColumnField` | Schnittstelle | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksController` | Typ | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksDocument` | Typ | Beleg der Anfrage: flacher Datensatz oder Lauf der Belegerkennung (`documents_extraction/1`). | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksDocumentResult` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksError` | Typ | – | `batchchecks/model` |
+| `@auditcore/ui-core` | `BatchchecksExportFormat` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksField` | Schnittstelle | Feld des Bestands mit Spaltennamen für die automatische Zuordnung. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksFinding` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksFindingRow` | Schnittstelle | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksInput` | Schnittstelle | – | `batchchecks/model` |
+| `@auditcore/ui-core` | `BatchchecksLevel` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksMapping` | Typ | Feld → Spalte der Tabelle (`null` = nicht zugeordnet). | `batchchecks/model` |
+| `@auditcore/ui-core` | `BatchchecksMessageKey` | Typ | – | `batchchecks/messages` |
+| `@auditcore/ui-core` | `BatchchecksMetrics` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksOptions` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRequest` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRule` | Schnittstelle | Prüfregel des Katalogs: was geprüft wird, Rechtsgrundlage, Herkunft. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRuleResult` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRuleRow` | Schnittstelle | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksRuleStatus` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksScope` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksSource` | Schnittstelle | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksSummary` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksTone` | Typ | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksTranslate` | Typ | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksValidation` | Typ | – | `batchchecks/model` |
 | `@auditcore/ui-core` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordBusy` | Typ | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordCallbacks` | Schnittstelle | – | `benford/controller` |
@@ -326,6 +359,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (948):
 | `@auditcore/ui-core` | `HitView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@auditcore/ui-core` | `IDLE` | Konstante | – | `store` |
+| `@auditcore/ui-core` | `INITIAL_BATCHCHECKS` | Konstante | – | `batchchecks/controller` |
 | `@auditcore/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@auditcore/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
 | `@auditcore/ui-core` | `INITIAL_DB_KANBAN` | Konstante | – | `dbkanban/controller` |
@@ -636,6 +670,24 @@ Exporte der Einstiegspunkte aus `package.json#exports` (948):
 | `@auditcore/ui-core` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
 | `@auditcore/ui-core` | `bandTone` | Funktion | Stufe eines Risikos nach Rang im Profil: höchste Stufe rot, zweithöchste gelb. | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `baseMessages` | Konstante | Texte der Basiskomponenten. | `messages` |
+| `@auditcore/ui-core` | `batchchecksAffectedText` | Funktion | Betroffene Belege als Kennungen (höchstens zehn, dann „… und n weitere“); ohne Belege „Gesamtbestand“. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksAutoMapping` | Funktion | Spalten automatisch zuordnen: Spaltenname gleich Feldkennung oder einem Spaltennamen des Katalogs; jede Spalte höchstens einmal. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksCellValue` | Funktion | Zelle als Wert: leer → `null`, Zahlenfelder als Zahl (Prozentangaben der OCR-Konfidenz als Anteil), Unlesbares unverändert. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksColumnFields` | Funktion | Auswahlfelder der Spaltenzuordnung in der Reihenfolge des Katalogs. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksDecimal` | Funktion | Dezimaltrennzeichen aus den Zellen aller zugeordneten Zahlenspalten. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksFilterOptions` | Funktion | Regeln mit Befunden für die Filterauswahl. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksFindingRows` | Funktion | Befunde (wahlweise einer Regel) mit Begründung und betroffenen Belegen. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksHasTable` | Funktion | Eine Tabelle ist geladen (und keine JSON-Datei). | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksJsonDocuments` | Funktion | Belege aus einer JSON-Datei: Liste, `{"documents": [...]}` oder ein einzelner Lauf der Belegerkennung; `null`, wenn die Datei das nicht ist. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksLevelText` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksLevelTone` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksLooksLikeJson` | Funktion | Dateiinhalt als JSON behandeln (Endung `.json` oder beginnt mit `[`/`{`). | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksMessages` | Konstante | Texte der Bestandsprüfung: BatchChecks (Vue) und FlowauditBatchChecks (React); sichtbare Texte nur hier. | `batchchecks/messages` |
+| `@auditcore/ui-core` | `batchchecksMetricRows` | Funktion | Kennzahlen der Extraktionsqualität (C-12). | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksRuleRows` | Funktion | Regelübersicht: alle Regeln mit Status, auch ohne Befund und nicht geprüfte. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksSourceText` | Funktion | Kurzbeschreibung der eingelesenen Datei. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksSummaryText` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksTableDocuments` | Funktion | Tabellenzeilen als Belege (nur zugeordnete Felder). | `batchchecks/model` |
 | `@auditcore/ui-core` | `benfordBarTitle` | Funktion | Titel eines Balkens (Tooltip und Vorlesetext). | `benford/view` |
 | `@auditcore/ui-core` | `benfordChartTitle` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordChiTexts` | Funktion | Texte der Kennzahl `chi_square` (kritische Werte je Niveau, Urteil nur mit Niveau). | `benford/view` |
@@ -652,6 +704,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (948):
 | `@auditcore/ui-core` | `blockProgress` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `breakdownRows` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `buildAnalyseRequest` | Funktion | Anfrage für `POST /analyze`; Test, Profil und ggf. Regel für kurze Werte sind Pflicht. | `benford/model` |
+| `@auditcore/ui-core` | `buildBatchchecksRequest` | Funktion | Anfrage für `POST /runs` aus Datei, Zuordnung und Optionen. | `batchchecks/model` |
 | `@auditcore/ui-core` | `buildEvaluationRequest` | Funktion | Anfrage für `POST /evaluate`; bei Befunden die Feldschlüssel mit ihrem Fehler. | `extrapolation/model` |
 | `@auditcore/ui-core` | `buildIdentifierBatch` | Funktion | Anfrage für `POST /check/batch` aus der geladenen Tabelle und der Spaltenzuordnung. | `identifiers/model` |
 | `@auditcore/ui-core` | `buildIdentifierCheck` | Funktion | Anfrage für `POST /check`; Profil und Kennungsart sind Pflicht, ein leerer Wert ergibt „fehlt“. | `identifiers/model` |
@@ -684,6 +737,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (948):
 | `@auditcore/ui-core` | `confidenceChoices` | Funktion | Konfidenzniveaus, die die gewählte Methode mit Tabellenwerten erlaubt. | `extrapolation/model` |
 | `@auditcore/ui-core` | `confidenceText` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `coverIssues` | Funktion | Hinweise zum Deckblatt (Verantwortlicher, DSB). | `dataprotection/registerView` |
+| `@auditcore/ui-core` | `createBatchchecksController` | Funktion | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `createBatchchecksMemoryPort` | Funktion | Port mit festen Antworten (Demo ohne Server, Tests): Katalog und Antwort wie vom Dienst; der Export liefert die Antwort als JSON-Datei. | `batchchecks/port` |
+| `@auditcore/ui-core` | `createBatchchecksRestPort` | Funktion | Port auf den REST-Vertrag `documents_batch_checks/1` von `auditcore_documents.web` (Starlette oder FastAPI). | `batchchecks/rest-port` |
 | `@auditcore/ui-core` | `createBenfordController` | Funktion | – | `benford/controller` |
 | `@auditcore/ui-core` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@auditcore/ui-core` | `createComparisonsController` | Funktion | – | `documents/controller` |

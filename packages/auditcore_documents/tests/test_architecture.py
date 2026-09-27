@@ -17,6 +17,7 @@ STDLIB = {
     "collections",
     "contextlib",
     "copy",
+    "csv",
     "dataclasses",
     "datetime",
     "decimal",
@@ -65,6 +66,8 @@ WEB_ADAPTERS = {
     "fastapi_router.py": {"fastapi"},
     "extraction_asgi.py": {"starlette"},
     "extraction_fastapi.py": {"fastapi"},
+    "batch_checks_asgi.py": {"starlette"},
+    "batch_checks_fastapi.py": {"fastapi"},
 }
 FORBIDDEN = {
     "fastapi",
