@@ -4,11 +4,12 @@
 
 | Paket | Verwendung | Lizenz |
 |---|---|---|
-| PyYAML ≥ 6.0 | Workflow-Prüfung (Pflicht) | MIT |
+| PyYAML ≥ 6.0 | Workflow-Prüfung (Extra `workflows`) | MIT |
 | PyJWT[crypto] ≥ 2.8 | GitHub-App-Anmeldung (Extra `github-app`) | MIT; cryptography: Apache-2.0 oder BSD-3-Clause |
 
-Der Test `tests/test_lizenzen.py` prüft die Lizenzen der installierten
-Laufzeitabhängigkeiten auf MIT-Verträglichkeit.
+Pflichtabhängigkeiten gibt es keine. Der Test `tests/test_lizenzen.py` prüft
+die Lizenzen der installierten Extras `github-app` und `workflows` auf
+MIT-Verträglichkeit.
 
 ## Programme im Runner-Image (`data/Dockerfile`)
 

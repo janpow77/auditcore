@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import sys
+
 from pathlib import Path
+
+import pytest
 
 from auditcore_runner import workflows
 
@@ -76,3 +80,9 @@ def test_runner_variable_only_in_runs_on_and_reusable_calls_skipped() -> None:
 def test_fork_guard_direction_matters(tmp_path: Path) -> None:
     wrong = GUARDED.replace("!= github.repository", "== github.repository")
     assert [f.rule for f in workflows.check_file(write(tmp_path, "x.yml", wrong))] == ["fork"]
+
+
+def test_missing_yaml_extra_is_reported(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setitem(sys.modules, "yaml", None)
+    with pytest.raises(workflows.MissingExtraError, match=r"auditcore_runner\[workflows\]"):
+        workflows.check_file(write(tmp_path, "x.yml", GUARDED))

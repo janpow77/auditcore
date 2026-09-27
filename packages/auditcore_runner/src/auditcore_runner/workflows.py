@@ -23,7 +23,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 
-import yaml
 
 PR_TRIGGERS = {
     "pull_request",
@@ -120,7 +119,15 @@ def workflow_findings(
     return findings
 
 
+class MissingExtraError(RuntimeError):
+    """Reading YAML files needs the optional extra ``workflows`` (PyYAML)."""
+
+
 def check_file(path: Path, runner_variables: tuple[str, ...] = ()) -> list[WorkflowFinding]:
+    try:
+        import yaml
+    except ImportError as error:
+        raise MissingExtraError("Workflow-Prüfung braucht das Extra: pip install 'auditcore_runner[workflows]'") from error
     document = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(document, dict):
         return []

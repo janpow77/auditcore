@@ -82,7 +82,11 @@ def _external(command: list[str], parse: object, cwd: Path) -> list[workflows.Wo
 
 def cmd_workflows(args: argparse.Namespace) -> int:
     target = Path(args.pfad)
-    findings = workflows.check_directory(target, tuple(args.runner_variable))
+    try:
+        findings = workflows.check_directory(target, tuple(args.runner_variable))
+    except workflows.MissingExtraError as error:
+        print(f"Fehler: {error}", file=sys.stderr)
+        return 2
     if not args.ohne_extern:
         cwd = target if target.is_dir() else target.parent
         findings += _external(["zizmor", "--format", "sarif", "--no-progress", str(target)], sarif, cwd)

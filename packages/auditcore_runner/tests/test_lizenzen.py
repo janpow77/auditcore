@@ -1,4 +1,4 @@
-"""Runtime dependencies must carry MIT-compatible licenses."""
+"""Runtime dependencies and shipped extras must carry MIT-compatible licenses."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import re
 from importlib.metadata import PackageNotFoundError, distribution, requires
 
 ALLOWED = re.compile(r"\b(MIT|BSD|Apache|ISC|PSF|Python Software Foundation)\b", re.IGNORECASE)
+SHIPPED_EXTRAS = ("github-app", "workflows")
 FORBIDDEN = re.compile(r"\b(A?GPL|LGPL|SSPL|BUSL|BSL|Commons Clause|proprietary)\b", re.IGNORECASE)
 
 
@@ -20,7 +21,7 @@ def _runtime_dependencies() -> list[str]:
     names = []
     for requirement in requires("auditcore_runner") or []:
         name = re.split(r"[\s\[<>=;!~]", requirement, maxsplit=1)[0]
-        optional = "extra ==" in requirement and "github-app" not in requirement
+        optional = "extra ==" in requirement and not any(extra in requirement for extra in SHIPPED_EXTRAS)
         if not optional:
             names.append(name)
     return names
