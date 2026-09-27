@@ -1,5 +1,16 @@
 # Changelog auditcore_invoicegenerator
 
+## Unreleased
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
+(Zweck, Verträge, zehn Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom
+Altverhalten) mit Hypothesis-Eigenschaftstests `tests/test_spezifikation.py`;
+Legacy-Varianten benannt (`FlowInvoiceDemoProfile`,
+`FlowInvoiceDemoProfile.generate_line_items`, `get_vat_rate`,
+`generate_invoice_legacy_global`). `specification`-Block in allen drei
+Kopien von `provenance.json`, Katalogstatus „spezifiziert“. `hypothesis` im
+Extra `dev`.
+
 ## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_dummygenerator==0.1.3`.
