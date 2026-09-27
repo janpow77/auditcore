@@ -10,8 +10,12 @@
   `--guest-image ubuntu:26.04`. Nachweise der regulierung-Build-Matrix
   Ubuntu 26.04 (Python 3.14) und 24.04 unter
   `docs/validation/regulierung-apt/ubuntu-26.04/`.
-
-Noch keine Änderungen.
+- Duplikatgruppe A16 abgeschlossen: Die Prüfung „JSON-Objekt am Pfad“ in
+  sampling (`as_object`), geo (`Body.of`) und extrapolation (`Reader`) nutzt
+  `auditcore_common.rest.json_object`; geo `web.decode`, `Reply` und `_json`
+  laufen über `auditcore_common.rest` (`decode_body` mit neuen Parametern
+  `too_large_code`/`invalid_json_code`). Verhalten unverändert
+  (Differenztests, Paketlauf alt gegen neu über HTTP).
 
 ## 0.4.2 – 2026-09-26
 
