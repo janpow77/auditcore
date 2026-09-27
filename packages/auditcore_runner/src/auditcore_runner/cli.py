@@ -109,6 +109,15 @@ def cmd_schema(args: argparse.Namespace) -> int:
     return 0
 
 
+def _print_install_notes(profile: Profile) -> None:
+    for unit in install.legacy_units():
+        print(f"Hinweis: alte Unit {unit} registriert ebenfalls Runner; nach dem Umstieg abschalten.", file=sys.stderr)
+    if profile.network.enabled:
+        print(f"Netzsperre (einmalig, mit root): {install.firewall_command()}")
+    for hint in install.hints(profile):
+        print(f"Hinweis: {hint}")
+
+
 def cmd_install(args: argparse.Namespace) -> int:
     path = _profile_path(args)
     profile = profile_io.load(path)
@@ -127,10 +136,7 @@ def cmd_install(args: argparse.Namespace) -> int:
             print(change.diff() or f"neu: {change.path}")
     for step in steps:
         print(f"$ {step.text()}    # {step.reason}")
-    for unit in install.legacy_units():
-        print(f"Hinweis: alte Unit {unit} registriert ebenfalls Runner; nach dem Umstieg abschalten.", file=sys.stderr)
-    if profile.network.enabled:
-        print(f"Netzsperre (einmalig, mit root): {install.firewall_command()}")
+    _print_install_notes(profile)
     if args.trockenlauf:
         return 0
     install.write_changes(changes)
@@ -148,6 +154,8 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     for path in paths:
         print(f"entfernen: {path}")
     print("Netzsperre entfernen (falls installiert): sudo /usr/local/sbin/auditcore-ci-firewall entfernen")
+    print("Scale-Sets (Backend „scaleset“) danach löschen: auditcore-runner scaleset loeschen")
+    print("Egress-Zeitgeber (falls installiert): sudo systemctl disable --now auditcore-ci-egress.timer")
     if args.trockenlauf:
         return 0
     errors = install.run_steps(steps)

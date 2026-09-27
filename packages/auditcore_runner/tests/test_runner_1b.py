@@ -196,3 +196,17 @@ def test_decision_workflow(tmp_path: Path) -> None:
     assert fork == {"runs-on": '"ubuntu-latest"', "grund": "Fork-PR"}
     assert _decision(tmp_path, online, ACTOR="dependabot[bot]")["grund"] == "Dependabot"
     assert _decision(tmp_path, online, GH_TOKEN="")["runs-on"] == '["self-hosted","linux"]'
+
+
+def test_install_hints_for_cdi_and_scale_sets(workstation_facts: HostFacts, tmp_path: Path) -> None:
+    profile = base(workstation_facts)
+    gpu_class = next((n for n in profile.classes if profile.gpus_of(n)), None)
+    if gpu_class is None:
+        pytest.skip("Vorschlag ohne GPU-Klasse")
+    classes = {**profile.classes, gpu_class: replace(profile.classes[gpu_class], enabled=True)}
+    profile = replace(profile, classes=classes)
+    assert any("nvidia-ctk" in h for h in install.hints(profile, (tmp_path,)))
+    (tmp_path / "nvidia.yaml").write_text("kind: nvidia.com/gpu\n")
+    assert not any("nvidia-ctk" in h for h in install.hints(profile, (tmp_path,)))
+    assert not install.hints(replace(profile, gpu_access="gpus"), (tmp_path / "leer",))
+    assert any("runs-on" in h for h in install.hints(replace(profile, backend="scaleset"), (tmp_path,)))

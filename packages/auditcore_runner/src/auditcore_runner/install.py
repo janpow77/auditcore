@@ -150,6 +150,37 @@ def render_firewall(profile: Profile) -> dict[str, str]:
     return scripts
 
 
+CDI_DIRS = (Path("/etc/cdi"), Path("/var/run/cdi"))
+
+
+def cdi_ready(directories: tuple[Path, ...] = CDI_DIRS) -> bool:
+    """A CDI specification for ``nvidia.com/gpu`` exists (``nvidia-ctk cdi generate``)."""
+    for directory in directories:
+        for spec in sorted(directory.glob("*.yaml")) + sorted(directory.glob("*.json")) if directory.is_dir() else []:
+            try:
+                if "nvidia.com/gpu" in spec.read_text(encoding="utf-8", errors="replace"):
+                    return True
+            except OSError:
+                continue
+    return False
+
+
+def hints(profile: Profile, directories: tuple[Path, ...] = CDI_DIRS) -> list[str]:
+    """Prerequisites the user has to establish once (shown by install, never done here)."""
+    found: list[str] = []
+    uses_gpus = any(c.enabled and profile.gpus_of(name) for name, c in profile.classes.items())
+    if uses_gpus and profile.gpu_access == "cdi" and not cdi_ready(directories):
+        found.append(
+            "GPU per CDI: einmalig `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml` "
+            "(Docker ab 28 nutzt CDI ohne weitere Einstellung)"
+        )
+    if profile.backend == "scaleset":
+        found.append(
+            "Scale-Sets: Workflows wählen sie mit `runs-on: <name>` (Namen: `auditcore-runner scaleset anzeigen`)"
+        )
+    return found
+
+
 def firewall_command() -> str:
     """The one-liner a user runs once with root rights."""
     return f"sudo bash {root_dir() / 'firewall-installieren.sh'}"
