@@ -14,7 +14,7 @@ dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 sources = ["auditcore_harvest==0.1.3"]
-dev = ["pytest>=8", "hypothesis>=6.100", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.3"]
+dev = ["pytest>=8", "pytest-xdist>=3.6", "pytest-timeout>=2.3", "hypothesis>=6.100", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -24,7 +24,13 @@ auditcore_property_sources = ["py.typed", "provenance.json", "catalog.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra --strict-markers --durations=25"
+timeout = 120
+markers = [
+    "slow: läuft länger als etwa 5 s; mit -m 'not slow' abwählbar",
+    "gpu: braucht torch/transformers (Donut); gezielt mit -m gpu",
+    "network: braucht Netzzugang; in CI ohne Netz abwählbar",
+]
 
 [tool.ruff]
 line-length = 100
