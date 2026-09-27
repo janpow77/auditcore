@@ -5,7 +5,7 @@ from __future__ import annotations
 import importlib.util
 from collections.abc import Sequence
 from dataclasses import asdict
-from datetime import date
+from datetime import date, datetime
 from importlib.metadata import PackageNotFoundError, version
 
 from ..profiles import PROFILE_IDS, get_profile_format, get_profile_metadata
@@ -35,6 +35,12 @@ PROFILE_TEXTS = {
         "Flowlib-Formate nach Spaltennamen",
         "Zahlenformat aus dem Spaltennamen (Betrag vor Prozent vor Datum vor Anzahl vor "
         "Stunden/Tagen, sonst Standard), unverändert aus flowlib übernommen.",
+    ),
+    "flowlib-v2": (
+        "Flowlib-Formate, Kennungen als Text",
+        "Nachfolger von flowlib-legacy-v1: Wörter statt Teilzeichenketten, Kennungen "
+        "(Postleitzahl, Kontonummer, IBAN, Steuernummer, Telefon, Nr./ID) ohne "
+        "Zahlenformat, der Werttyp geht dem Spaltennamen vor.",
     ),
     "plain-v1": (
         "Ohne Formatregeln",
@@ -88,6 +94,18 @@ def catalogue() -> dict[str, object]:
     }
 
 
+# Representative value per declared column type: profiles that consider the
+# value type (flowlib-v2) show the format the export will apply.
+_TYPE_SAMPLE: dict[str, CellValue] = {
+    "json": None,
+    "text": "",
+    "number": 0,
+    "boolean": False,
+    "date": date(2000, 1, 1),
+    "datetime": datetime(2000, 1, 1),
+}
+
+
 def _json_cell(value: CellValue) -> object:
     return value.isoformat() if isinstance(value, date) else value
 
@@ -102,7 +120,8 @@ def _table_preview(entry: TableRequest) -> dict[str, object]:
         {
             "name": column,
             "type": entry.types[column],
-            "format": table.formats.get(column) or get_profile_format(table.profile, column),
+            "format": table.formats.get(column)
+            or get_profile_format(table.profile, column, _TYPE_SAMPLE[entry.types[column]]),
             "source": "override" if column in table.formats else "profile",
         }
         for column in table.columns

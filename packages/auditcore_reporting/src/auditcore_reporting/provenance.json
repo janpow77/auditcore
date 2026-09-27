@@ -58,7 +58,11 @@
       "I6",
       "I7",
       "I8",
-      "I9"
+      "I9",
+      "I10",
+      "I11",
+      "I12",
+      "I13"
     ],
     "legacy_variants": [
       "flowlib-legacy-v1"
