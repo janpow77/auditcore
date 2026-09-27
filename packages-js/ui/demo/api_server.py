@@ -7,7 +7,8 @@ auditcore_statistics.web (/api/benford), auditcore_extrapolation.web
 auditcore_dataprotection.web (/api/dataprotection, dataprotection_demo.py),
 auditcore_documents.web (/api/synopsis, synthetische Dokumente aus
 documents_demo.py; Belegerkennung unter /api/extraction mit Attrappen-Ports aus
-extraction_demo.py), auditcore_reporting.web (/api/reporting, zusätzlich Extra
+extraction_demo.py; Bestandsprüfung unter /api/batch-checks mit dem synthetischen
+Beispielbestand aus batch_checks_demo.py), auditcore_reporting.web (/api/reporting, zusätzlich Extra
 ``excel``) und auditcore_geo.web (/api/geo, synthetische Kacheln und
 GeoPackage-Dateien aus geo_demo.py unter /api/geo-demo) sowie auditcore_identifiers.web
 (/api/identifiers). Erforderlich: Extra ``web`` der Pakete
@@ -26,6 +27,7 @@ from auditcore_identifiers.web import routes as identifier_routes
 from auditcore_reporting.web import routes as reporting_routes
 from auditcore_sampling.web import routes as sampling_routes
 from auditcore_statistics.web import routes as benford_routes
+from batch_checks_demo import batch_check_routes_demo
 from dataprotection_demo import dataprotection_routes
 from documents_demo import comparison_routes
 from extraction_demo import extraction_routes_demo
@@ -47,6 +49,7 @@ app = Starlette(
         Mount("/api/dataprotection", routes=dataprotection_routes()),
         Mount("/api/synopsis", routes=comparison_routes()),
         Mount("/api/extraction", routes=extraction_routes_demo()),
+        Mount("/api/batch-checks", routes=batch_check_routes_demo()),
         Mount("/api/geo", routes=GEO),
         Mount("/api/geo-demo", routes=GEO_DEMO),
     ]

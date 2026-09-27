@@ -22,10 +22,12 @@ class StratumResult:
     sample_size: int
     sampling_book_value: float
     figures: Mapping[str, float] = field(default_factory=lambda: MappingProxyType({}))
+    #: Period of a multi-period sample (guidance section 7.3), else ``None``.
+    period: str | None = None
 
     def to_dict(self) -> dict[str, object]:
-        """JSON-compatible stratum result."""
-        return {
+        """JSON-compatible stratum result (``period`` only for multi-period samples)."""
+        result: dict[str, object] = {
             "name": self.name,
             "projected_error": self.projected_error,
             "exhaustive_error": self.exhaustive_error,
@@ -33,6 +35,9 @@ class StratumResult:
             "sampling_book_value": self.sampling_book_value,
             "figures": dict(self.figures),
         }
+        if self.period is not None:
+            result["period"] = self.period
+        return result
 
 
 @dataclass(frozen=True)

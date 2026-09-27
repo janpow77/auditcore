@@ -69,18 +69,23 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_statistics.__all__` (12):
+Öffentliche Namen aus `auditcore_statistics.__all__` (17):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
 | `LEGACY_METHOD` | Konstante | – | `benford` |
 | `METHOD` | Konstante | – | `benford` |
 | `BenfordResult` | Datenklasse | Distribution, exclusions and chi-square statistic of one analysis. | `benford` |
+| `ChiSquareTest` | Datenklasse | Pearson chi-square test of one digit test against Benford's law. | `significance` |
 | `DigitRow` | Datenklasse | Observed and expected frequency of one leading digit (group). | `benford` |
+| `DigitZTest` | Datenklasse | z per digit and the digits above an explicitly chosen critical value. | `significance` |
 | `StatisticsInputError` | Ausnahme | Input does not satisfy the documented contract. | `benford` |
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `benford_test` | Funktion | Compare leading digits with Benford's law. | `benford` |
+| `chi2_critical_value` | Funktion | Quantile x with P(X ≥ x) = level for a chi-square distribution (bisection). | `significance` |
 | `chi2_survival` | Funktion | P(X ≥ statistic) for a chi-square distribution. | `numeric` |
+| `chi_square_test` | Funktion | Chi-square statistic, p-value and critical values of ``test`` (see module docstring). | `significance` |
+| `digit_z_test` | Funktion | z per digit of ``test``; digits are marked only against an explicit ``z_critical``. | `significance` |
 | `expected_share` | Funktion | Benford probability log10(1 + 1/d) of a leading digit group d. | `benford` |
 | `legacy_flowinvoice_benford` | Funktion | Result fields of the source ``BenfordResult`` as a dictionary (same values). | `legacy_flowinvoice` |
 | `legacy_run_benford` | Funktion | Exact ``run_benford`` result for values already coerced by ``pd.to_numeric``. | `benford` |
@@ -94,6 +99,7 @@ assert konformitaet.mad_label == "Akzeptable Übereinstimmung"
 | `auditcore_statistics.conformity` | Benford conformity measures (MAD, z per digit, second digit) with named profiles. |
 | `auditcore_statistics.legacy_flowinvoice` | Exact legacy variant of flowinvoice ``BenfordsLawAnalyzer.analyze`` (fraud detection). |
 | `auditcore_statistics.numeric` | Standard-library numerics with explicitly documented floating-point behavior. |
+| `auditcore_statistics.significance` | Optional significance measures of a Benford result: chi-square test and z per digit. |
 | `auditcore_statistics.web` | REST contract and routes for Benford user interfaces (extra ``web``). |
 <!-- api-overview:end -->
 
@@ -114,6 +120,13 @@ enthält den REST-Vertrag für `<flowaudit-benford>`
   Mindestumfang 50).
 - `recommended_flowinvoice_benford(values)`: Entscheidung vom 23.09.2026 –
   ruft `benford_test(values, digits=1, significance_level=0.05)` auf.
+- `significance.chi_square_test(result, test, *, significance_level=None)`:
+  χ², Freiheitsgrade, p-Wert und kritische Werte (0,10/0,05/0,01 und das
+  gewählte Niveau); eine Entscheidung (`rejects`) nur mit Niveau.
+- `significance.digit_z_test(result, test, *, continuity_correction, z_critical=None)`:
+  z je Ziffer; „auffällige Ziffern“ nur gegen eine ausdrückliche Grenze.
+  flowinvoice entspricht `continuity_correction=False, z_critical=2.576`
+  (Paritätsnachweis `tests/test_significance_parity.py`).
 - Konformitätsprofil `nigrini.2012` (einziges Profil in
   `conformity.PROFILES`): MAD-Grenzen je Test (`first`, `first_two`,
   `second`), z-Grenze 1,96 mit Stetigkeitskorrektur, α = 0,05; es gibt kein

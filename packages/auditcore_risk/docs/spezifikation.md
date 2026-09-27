@@ -30,6 +30,7 @@ keinen profilübergreifenden Risikoscore (Entscheidung K1).
 | `name_similarity(regel, links, rechts)`, `identifier_missing(regel, wert)` | eine Regel der Art `name_similarity` bzw. `missing_procurement` | Ähnlichkeit 0–1 bzw. „Vergabekennung fehlt“ |
 | `flatten_record(datensatz)` | verschachtelte Zuordnung | eine Ebene `eltern.kind` |
 | `load_fraud_profile`, `find_duplicates`, `score_signals`, `assess_contractor`, `select_contracts` | Profile der flowinvoice-Betrugsprüfung | Dubletten, Signale mit Blockern/Warnungen und profileigenem Score, TED-Auftragnehmerstatistik |
+| `web.signal_evaluation(datensätze, signalprofil, record_key=None)`, REST `POST /fraud-signals/evaluate` | je Rechnung die Teilprüfungsergebnisse wie bei `score_signals` | dieselbe Form wie `evaluate` (Treffer = Blocker/Warnungen, `assessment` = Score und Stufe) für `<flowaudit-risk-flags>` |
 | `auditcore_risk.frame` (Extra `pandas`), `auditcore_risk.web` (Extras `web`/`fastapi`) | DataFrame bzw. JSON-REST | dieselbe Auswertung |
 
 Regelarten (`KINDS`) sind die wiederverwendbare Mechanik; jede fachliche
@@ -54,6 +55,7 @@ Jahresbezogene EU-Vergabeschwellen kommen aus `auditcore_procurement`
 | I9 | `flatten_record` legt genau eine Ebene flach; andere Werte bleiben unter ihrem Schlüssel. | `test_i9_flatten_record_is_one_level` |
 | I10 | Ohne geladenes Profil `ProfileError`; Datensätze, die keine Zuordnung sind, und nicht numerische Werte in streng gelesenen Betragsfeldern `InputError` – kein Raten. | `test_i10_invalid_input_is_an_error_not_a_guess` |
 | I11 | Die Namensähnlichkeit (RF09) liegt in 0–1, ist symmetrisch und für einen hinreichend langen Namen gegen sich selbst 1. | `test_i11_name_similarity_is_bounded_symmetric_and_reflexive` |
+| I12 | Die Signal-Auswertung zeigt genau Blocker, Warnungen, Score und Stufe von `score_signals` (auch mit der reinen Anzeigefassung 2026.09.3); jeder ausgelöste Code ist `True`, die übrigen Codes einer abgebrochenen Teilprüfung sind unbestimmt, abgeschaltete Teilprüfungen erzeugen keine Merkmale. | `test_i12_signal_evaluation_shows_exactly_score_signals` |
 
 ## Fehlerfälle
 

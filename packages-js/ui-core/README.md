@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (927):
+Exporte der Einstiegspunkte aus `package.json#exports` (1036):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -105,16 +105,54 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `AssessmentStatus` | Typ | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentSummary` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `AssessmentView` | Schnittstelle | – | `dataprotection/types` |
+| `@auditcore/ui-core` | `BATCHCHECKS_LISTED_DOCUMENTS` | Konstante | Höchstzahl aufgezählter Belege je Befund. | `batchchecks/view` |
+| `@auditcore/ui-core` | `BENFORD_METRIC_IDS` | Konstante | – | `benford/model` |
 | `@auditcore/ui-core` | `BadgeTone` | Typ | – | `base/types` |
+| `@auditcore/ui-core` | `BatchchecksAnswer` | Schnittstelle | Antwort von `POST /runs`. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksBusy` | Typ | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksCallbacks` | Schnittstelle | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksCatalogue` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksColumnField` | Schnittstelle | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksController` | Typ | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksDocument` | Typ | Beleg der Anfrage: flacher Datensatz oder Lauf der Belegerkennung (`documents_extraction/1`). | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksDocumentResult` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksError` | Typ | – | `batchchecks/model` |
+| `@auditcore/ui-core` | `BatchchecksExportFormat` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksField` | Schnittstelle | Feld des Bestands mit Spaltennamen für die automatische Zuordnung. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksFinding` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksFindingRow` | Schnittstelle | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksInput` | Schnittstelle | – | `batchchecks/model` |
+| `@auditcore/ui-core` | `BatchchecksLevel` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksMapping` | Typ | Feld → Spalte der Tabelle (`null` = nicht zugeordnet). | `batchchecks/model` |
+| `@auditcore/ui-core` | `BatchchecksMessageKey` | Typ | – | `batchchecks/messages` |
+| `@auditcore/ui-core` | `BatchchecksMetrics` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksOptions` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRequest` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRule` | Schnittstelle | Prüfregel des Katalogs: was geprüft wird, Rechtsgrundlage, Herkunft. | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRuleResult` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksRuleRow` | Schnittstelle | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksRuleStatus` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksScope` | Typ | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksSource` | Schnittstelle | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `BatchchecksSummary` | Schnittstelle | – | `batchchecks/types` |
+| `@auditcore/ui-core` | `BatchchecksTone` | Typ | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksTranslate` | Typ | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `BatchchecksValidation` | Typ | – | `batchchecks/model` |
 | `@auditcore/ui-core` | `BenfordAnalysis` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordBusy` | Typ | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordCallbacks` | Schnittstelle | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordCatalogue` | Schnittstelle | – | `benford/types` |
+| `@auditcore/ui-core` | `BenfordChiTexts` | Schnittstelle | – | `benford/view` |
 | `@auditcore/ui-core` | `BenfordController` | Typ | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordData` | Schnittstelle | Stand der Benford-Analyse; `error` ist die Meldung der letzten abgelehnten Anfrage. | `benford/controller` |
+| `@auditcore/ui-core` | `BenfordDigitZTexts` | Schnittstelle | – | `benford/view` |
 | `@auditcore/ui-core` | `BenfordDistribution` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordMessageKey` | Typ | – | `benford/messages` |
+| `@auditcore/ui-core` | `BenfordMetricId` | Typ | Zusätzliche, wählbare Kennzahlen (`metrics`, auditcore_statistics.significance). | `benford/types` |
 | `@auditcore/ui-core` | `BenfordMetricTexts` | Schnittstelle | – | `benford/view` |
+| `@auditcore/ui-core` | `BenfordMetricsRequest` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `BenfordPort` | Schnittstelle | Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createBenfordRestPort`. | `benford/types` |
 | `@auditcore/ui-core` | `BenfordSource` | Schnittstelle | – | `benford/controller` |
 | `@auditcore/ui-core` | `BenfordTest` | Typ | Typen des REST-Vertrags `docs/ui/benford-rest.md` (auditcore_statistics.web). | `benford/types` |
@@ -135,6 +173,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `ChartBar` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChartBox` | Schnittstelle | – | `benford/chart` |
 | `@auditcore/ui-core` | `ChartGeometry` | Schnittstelle | – | `benford/chart` |
+| `@auditcore/ui-core` | `ChiSquareMetric` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `ClientExportFormat` | Typ | – | `synopsis/types` |
 | `@auditcore/ui-core` | `ColumnCheck` | Schnittstelle | – | `risk/port` |
 | `@auditcore/ui-core` | `ColumnPreview` | Schnittstelle | – | `reporting/types` |
@@ -163,6 +202,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `Completeness` | Schnittstelle | – | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `Conclusion` | Typ | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `ConfidenceLevel` | Schnittstelle | – | `sampling/types` |
+| `@auditcore/ui-core` | `ConfidenceRecalculation` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `Conformity` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `ConformityProfile` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `ConformityRow` | Schnittstelle | – | `benford/types` |
@@ -203,10 +243,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `DecisionView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `DegenerateRing` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `DerivationStep` | Schnittstelle | – | `sampling/types` |
+| `@auditcore/ui-core` | `DesignIssue` | Typ | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `DesignProfileInfo` | Schnittstelle | – | `reporttemplates/types` |
+| `@auditcore/ui-core` | `DesignRule` | Schnittstelle | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `DiffField` | Typ | – | `synopsis/types` |
 | `@auditcore/ui-core` | `DiffSegment` | Schnittstelle | – | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `DiffSide` | Typ | – | `synopsis/wordDiff` |
+| `@auditcore/ui-core` | `DigitZMetric` | Schnittstelle | – | `benford/types` |
+| `@auditcore/ui-core` | `DigitZRow` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `DistributionRow` | Schnittstelle | – | `benford/types` |
 | `@auditcore/ui-core` | `DossierFieldView` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `DsfaController` | Typ | – | `dataprotection/dsfa` |
@@ -220,6 +264,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `EMPTY_FORM` | Konstante | – | `samplesize/model` |
 | `@auditcore/ui-core` | `EMPTY_RESIDUAL` | Konstante | – | `extrapolation/model` |
 | `@auditcore/ui-core` | `EMPTY_STRATUM` | Konstante | – | `samplesize/model` |
+| `@auditcore/ui-core` | `EXHAUSTIVE_PART` | Konstante | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `EarthModel` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `EntryView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `EvaluateRequest` | Schnittstelle | – | `risk/port` |
@@ -255,8 +300,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `ExtrapolationBusy` | Typ | – | `extrapolation/controller` |
 | `@auditcore/ui-core` | `ExtrapolationCallbacks` | Schnittstelle | – | `extrapolation/controller` |
 | `@auditcore/ui-core` | `ExtrapolationCatalogue` | Schnittstelle | – | `extrapolation/types` |
+| `@auditcore/ui-core` | `ExtrapolationChoice` | Schnittstelle | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `ExtrapolationController` | Typ | – | `extrapolation/controller` |
 | `@auditcore/ui-core` | `ExtrapolationData` | Schnittstelle | Stand der Hochrechnung; `error` ist die Meldung der letzten abgelehnten Anfrage. | `extrapolation/controller` |
+| `@auditcore/ui-core` | `ExtrapolationDesign` | Typ | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `ExtrapolationExportFormat` | Typ | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `ExtrapolationField` | Schnittstelle | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ExtrapolationForm` | Schnittstelle | – | `extrapolation/model` |
@@ -310,10 +357,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `GeoSelection` | Schnittstelle | – | `geo/controller` |
 | `@auditcore/ui-core` | `GeocodeHit` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `GeocodeResult` | Schnittstelle | – | `geo/types` |
+| `@auditcore/ui-core` | `GroupResult` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `HitFilter` | Schnittstelle | – | `screening/view` |
 | `@auditcore/ui-core` | `HitView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `ICONS` | Konstante | Eigene Strichsymbole (24er-Raster, Strichstärke über CSS). Jede Zeile ist eine Liste von SVG-Pfaden; neue Symbole nur hier ergänzen. | `base/icons` |
 | `@auditcore/ui-core` | `IDLE` | Konstante | – | `store` |
+| `@auditcore/ui-core` | `INITIAL_BATCHCHECKS` | Konstante | – | `batchchecks/controller` |
 | `@auditcore/ui-core` | `INITIAL_BENFORD` | Konstante | – | `benford/controller` |
 | `@auditcore/ui-core` | `INITIAL_COMPARISONS` | Konstante | – | `documents/controller` |
 | `@auditcore/ui-core` | `INITIAL_DB_KANBAN` | Konstante | – | `dbkanban/controller` |
@@ -358,6 +407,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `ImportParse` | Typ | – | `documents/importing` |
 | `@auditcore/ui-core` | `ImportRequest` | Schnittstelle | Anfrage von `POST /comparisons/import`: ein fertiges Ergebnis aus der Auftragssteuerung ablegen. | `synopsis/port` |
 | `@auditcore/ui-core` | `ImportedColumns` | Schnittstelle | Übernommene Spalten einer Datei. | `tabular/tableImport` |
+| `@auditcore/ui-core` | `IssueSink` | Schnittstelle | Sammelt Feldbefunde (von `model.ts` bereitgestellt). | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `JsonObject` | Typ | – | `risk/types` |
 | `@auditcore/ui-core` | `JsonValue` | Typ | Datentypen des REST-Vertrags `auditcore_risk.web` (docs/ui/risk-rest.md). Die Komponenten lesen nur diese Felder; unbekannte Felder werden ignoriert. | `risk/types` |
 | `@auditcore/ui-core` | `KanbanDialogMessageKey` | Typ | – | `kanban/messages` |
@@ -391,6 +441,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `Outcome` | Typ | – | `screening/types` |
 | `@auditcore/ui-core` | `OverviewRow` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `ParameterSpec` | Schnittstelle | – | `sampling/types` |
+| `@auditcore/ui-core` | `PeriodSummary` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `Person` | Schnittstelle | – | `dataprotection/types` |
 | `@auditcore/ui-core` | `PopulationItem` | Schnittstelle | – | `sampling/types` |
 | `@auditcore/ui-core` | `Position` | Typ | – | `geo/types` |
@@ -409,6 +460,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `RadiusHit` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `RadiusRequest` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `RadiusResult` | Schnittstelle | – | `geo/types` |
+| `@auditcore/ui-core` | `RecalculationView` | Schnittstelle | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `RecordMove` | Schnittstelle | Verschiebung einer Karte: der gesetzte Zellwert (`null` = ohne Wert). | `dbkanban/controller` |
 | `@auditcore/ui-core` | `RecordView` | Schnittstelle | – | `risk/types` |
 | `@auditcore/ui-core` | `RegisterColumn` | Schnittstelle | – | `dataprotection/types` |
@@ -466,12 +518,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `RunRequestRecord` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `RunSummary` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `RunView` | Schnittstelle | – | `screening/types` |
+| `@auditcore/ui-core` | `SAMPLED_PART` | Konstante | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
 | `@auditcore/ui-core` | `SCREENING_KINDS` | Konstante | – | `screening/runForm` |
 | `@auditcore/ui-core` | `STATE_FILTER_KEYS` | Konstante | – | `risk/labels` |
 | `@auditcore/ui-core` | `STATE_ICONS` | Konstante | Symbol je Zustand: Farbe ist nie der einzige Träger der Bedeutung. | `risk/format` |
 | `@auditcore/ui-core` | `STATE_KEYS` | Konstante | – | `risk/labels` |
 | `@auditcore/ui-core` | `STRATUM_FIELDS` | Konstante | – | `extrapolation/view` |
+| `@auditcore/ui-core` | `SUB_ITEM_FIELDS` | Konstante | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `SampleSizeAllocation` | Schnittstelle | – | `samplesize/types` |
 | `@auditcore/ui-core` | `SampleSizeCatalogue` | Schnittstelle | – | `samplesize/types` |
 | `@auditcore/ui-core` | `SampleSizeChoice` | Schnittstelle | – | `samplesize/types` |
@@ -550,10 +604,16 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `StratumProjection` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `StratumResult` | Schnittstelle | – | `sampling/types` |
 | `@auditcore/ui-core` | `StratumRow` | Schnittstelle | – | `extrapolation/model` |
+| `@auditcore/ui-core` | `SubItemFieldKey` | Typ | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `SubItemRow` | Schnittstelle | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `SubjectInput` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `SubjectRequest` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `SubjectStatus` | Typ | – | `screening/types` |
 | `@auditcore/ui-core` | `SubjectView` | Schnittstelle | – | `screening/types` |
+| `@auditcore/ui-core` | `SubsampleEstimator` | Typ | – | `extrapolation/types` |
+| `@auditcore/ui-core` | `SubsampleInput` | Schnittstelle | Teilstichprobe einer Einheit (Leitfaden 7.6, 6.5.3). | `extrapolation/types` |
+| `@auditcore/ui-core` | `SubsampleResult` | Schnittstelle | – | `extrapolation/types` |
+| `@auditcore/ui-core` | `SubsampleRows` | Schnittstelle | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `SummaryView` | Schnittstelle | – | `documents/list` |
 | `@auditcore/ui-core` | `SurveyInput` | Schnittstelle | Erhebung einer Folgenabschätzung, wie sie `POST /assessments/{id}` erwartet. | `dataprotection/types` |
 | `@auditcore/ui-core` | `SynopsisController` | Typ | – | `synopsis/controller` |
@@ -568,6 +628,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `SynopsisSelection` | Schnittstelle | Alles, was die Oberfläche aus Stand und Eingaben anzeigt (reine Funktion). | `synopsis/controller` |
 | `@auditcore/ui-core` | `SynopsisTranslate` | Typ | – | `synopsis/viewModel` |
 | `@auditcore/ui-core` | `SynopsisView` | Schnittstelle | – | `synopsis/viewModel` |
+| `@auditcore/ui-core` | `SystemAssessmentLevel` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `TOLERANCE_STEPS` | Konstante | Stufen des Toleranzreglers der Vereinfachung (Meter bzw. Grad). | `geo/model` |
 | `@auditcore/ui-core` | `TabItem` | Schnittstelle | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `TableImportController` | Typ | – | `tabular/tableImport` |
@@ -617,6 +678,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `WorkbookPreview` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `WorkbookRequest` | Schnittstelle | – | `reporting/types` |
 | `@auditcore/ui-core` | `acceptsHit` | Funktion | – | `screening/view` |
+| `@auditcore/ui-core` | `activeMetrics` | Funktion | Vorgegebene Kennzahlen ohne die abgewählten; `null`, wenn keine übrig bleibt. | `benford/model` |
 | `@auditcore/ui-core` | `activityKey` | Funktion | Schlüssel einer Tätigkeit für die Zuordnung der Hinweise (Kennung, sonst Name wie in der Bibliothek). | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `addScenario` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `analyseErrorKey` | Funktion | – | `benford/view` |
@@ -630,11 +692,32 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `axisMaximum` | Funktion | Obergrenze der y-Achse: nächstes Vielfaches des Tickabstands über dem Maximum. | `benford/chart` |
 | `@auditcore/ui-core` | `bandTone` | Funktion | Stufe eines Risikos nach Rang im Profil: höchste Stufe rot, zweithöchste gelb. | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `baseMessages` | Konstante | Texte der Basiskomponenten. | `messages` |
+| `@auditcore/ui-core` | `batchchecksAffectedText` | Funktion | Betroffene Belege als Kennungen (höchstens zehn, dann „… und n weitere“); ohne Belege „Gesamtbestand“. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksAutoMapping` | Funktion | Spalten automatisch zuordnen: Spaltenname gleich Feldkennung oder einem Spaltennamen des Katalogs; jede Spalte höchstens einmal. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksCellValue` | Funktion | Zelle als Wert: leer → `null`, Zahlenfelder als Zahl (Prozentangaben der OCR-Konfidenz als Anteil), Unlesbares unverändert. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksColumnFields` | Funktion | Auswahlfelder der Spaltenzuordnung in der Reihenfolge des Katalogs. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksDecimal` | Funktion | Dezimaltrennzeichen aus den Zellen aller zugeordneten Zahlenspalten. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksFilterOptions` | Funktion | Regeln mit Befunden für die Filterauswahl. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksFindingRows` | Funktion | Befunde (wahlweise einer Regel) mit Begründung und betroffenen Belegen. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksHasTable` | Funktion | Eine Tabelle ist geladen (und keine JSON-Datei). | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksJsonDocuments` | Funktion | Belege aus einer JSON-Datei: Liste, `{"documents": [...]}` oder ein einzelner Lauf der Belegerkennung; `null`, wenn die Datei das nicht ist. | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksLevelText` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksLevelTone` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksLooksLikeJson` | Funktion | Dateiinhalt als JSON behandeln (Endung `.json` oder beginnt mit `[`/`{`). | `batchchecks/model` |
+| `@auditcore/ui-core` | `batchchecksMessages` | Konstante | Texte der Bestandsprüfung: BatchChecks (Vue) und FlowauditBatchChecks (React); sichtbare Texte nur hier. | `batchchecks/messages` |
+| `@auditcore/ui-core` | `batchchecksMetricRows` | Funktion | Kennzahlen der Extraktionsqualität (C-12). | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksRuleRows` | Funktion | Regelübersicht: alle Regeln mit Status, auch ohne Befund und nicht geprüfte. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksSourceText` | Funktion | Kurzbeschreibung der eingelesenen Datei. | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksSummaryText` | Funktion | – | `batchchecks/view` |
+| `@auditcore/ui-core` | `batchchecksTableDocuments` | Funktion | Tabellenzeilen als Belege (nur zugeordnete Felder). | `batchchecks/model` |
 | `@auditcore/ui-core` | `benfordBarTitle` | Funktion | Titel eines Balkens (Tooltip und Vorlesetext). | `benford/view` |
 | `@auditcore/ui-core` | `benfordChartTitle` | Funktion | – | `benford/view` |
+| `@auditcore/ui-core` | `benfordChiTexts` | Funktion | Texte der Kennzahl `chi_square` (kritische Werte je Niveau, Urteil nur mit Niveau). | `benford/view` |
 | `@auditcore/ui-core` | `benfordDigitColumns` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordDigitRows` | Funktion | – | `benford/view` |
+| `@auditcore/ui-core` | `benfordDigitZTexts` | Funktion | Texte der Kennzahl `digit_z` („auffällige Ziffern“ nur mit kritischem z-Wert). | `benford/view` |
 | `@auditcore/ui-core` | `benfordMessages` | Konstante | Texte der Benford-Analyse. | `benford/messages` |
+| `@auditcore/ui-core` | `benfordMetricLabel` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordMetricTexts` | Funktion | – | `benford/view` |
 | `@auditcore/ui-core` | `benfordProfile` | Funktion | – | `benford/controller` |
 | `@auditcore/ui-core` | `benfordTickText` | Funktion | – | `benford/view` |
@@ -643,6 +726,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `blockProgress` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `breakdownRows` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `buildAnalyseRequest` | Funktion | Anfrage für `POST /analyze`; Test, Profil und ggf. Regel für kurze Werte sind Pflicht. | `benford/model` |
+| `@auditcore/ui-core` | `buildBatchchecksRequest` | Funktion | Anfrage für `POST /runs` aus Datei, Zuordnung und Optionen. | `batchchecks/model` |
 | `@auditcore/ui-core` | `buildEvaluationRequest` | Funktion | Anfrage für `POST /evaluate`; bei Befunden die Feldschlüssel mit ihrem Fehler. | `extrapolation/model` |
 | `@auditcore/ui-core` | `buildIdentifierBatch` | Funktion | Anfrage für `POST /check/batch` aus der geladenen Tabelle und der Spaltenzuordnung. | `identifiers/model` |
 | `@auditcore/ui-core` | `buildIdentifierCheck` | Funktion | Anfrage für `POST /check`; Profil und Kennungsart sind Pflicht, ein leerer Wert ergibt „fehlt“. | `identifiers/model` |
@@ -676,6 +760,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `confidenceChoices` | Funktion | Konfidenzniveaus, die die gewählte Methode mit Tabellenwerten erlaubt. | `extrapolation/model` |
 | `@auditcore/ui-core` | `confidenceText` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `coverIssues` | Funktion | Hinweise zum Deckblatt (Verantwortlicher, DSB). | `dataprotection/registerView` |
+| `@auditcore/ui-core` | `createBatchchecksController` | Funktion | – | `batchchecks/controller` |
+| `@auditcore/ui-core` | `createBatchchecksMemoryPort` | Funktion | Port mit festen Antworten (Demo ohne Server, Tests): Katalog und Antwort wie vom Dienst; der Export liefert die Antwort als JSON-Datei. | `batchchecks/port` |
+| `@auditcore/ui-core` | `createBatchchecksRestPort` | Funktion | Port auf den REST-Vertrag `documents_batch_checks/1` von `auditcore_documents.web` (Starlette oder FastAPI). | `batchchecks/rest-port` |
 | `@auditcore/ui-core` | `createBenfordController` | Funktion | – | `benford/controller` |
 | `@auditcore/ui-core` | `createBenfordRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_statistics.web` (Starlette oder FastAPI). | `benford/rest-port` |
 | `@auditcore/ui-core` | `createComparisonsController` | Funktion | – | `documents/controller` |
@@ -726,6 +813,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `deliverExport` | Funktion | Export ausliefern: Druckansicht (`print`) oder Datei. | `download` |
 | `@auditcore/ui-core` | `derivationColumns` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `derivationRows` | Funktion | – | `sampling/view` |
+| `@auditcore/ui-core` | `designOf` | Funktion | Aufbau aus vorbelegten Schichten: Zeitraum oder Gruppe gesetzt? | `extrapolation/model-design` |
+| `@auditcore/ui-core` | `designRequest` | Funktion | Ergänzungen der Anfrage je Aufbau (Zeitraumliste, Zahl der Einheiten, Systembewertung). | `extrapolation/model-design` |
+| `@auditcore/ui-core` | `detailWarnings` | Funktion | Hinweise aus Gruppen und Teilstichproben (die der Hochrechnung stehen im Ergebnis). | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `diffSegments` | Funktion | Segmente einer Seite. `ndiff` hat Vorrang; ohne sie wird nachgerechnet. Ist keine Wortdifferenz möglich, bleibt der Text unmarkiert (seitenweise) bzw. | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `digitLabel` | Funktion | Anzeige einer Ziffer: zweite Ziffer 0–9, sonst Zahl. | `benford/model` |
 | `@auditcore/ui-core` | `displayName` | Funktion | Bezeichnung für Listen: Name, sonst Kennung. | `geo/model` |
@@ -741,6 +831,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `emptyFilter` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `emptyScenario` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `emptyStratum` | Funktion | – | `extrapolation/model` |
+| `@auditcore/ui-core` | `emptySubItem` | Funktion | – | `extrapolation/model-design` |
+| `@auditcore/ui-core` | `emptySubsample` | Funktion | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `emptyUnit` | Funktion | – | `extrapolation/model` |
 | `@auditcore/ui-core` | `escapeHtml` | Funktion | – | `synopsis/exporters` |
 | `@auditcore/ui-core` | `escapeMapHtml` | Funktion | Leaflet setzt Tooltips und Namensnennung als HTML; Daten gehen deshalb nur als Text hinein. | `geo/mapView` |
@@ -771,6 +863,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `extrapolationAmount` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationCellLabel` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationConfidenceLabel` | Funktion | – | `extrapolation/view` |
+| `@auditcore/ui-core` | `extrapolationDesignChoices` | Funktion | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `extrapolationFormErrorKey` | Funktion | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationFormMessage` | Funktion | Sammelmeldung unter dem Formular: fehlende Auswahl oder markierte Felder. | `extrapolation/view` |
 | `@auditcore/ui-core` | `extrapolationInputNumber` | Funktion | Zahl als Eingabetext (ohne Tausendertrenner). | `extrapolation/view` |
@@ -815,7 +908,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `geoMessages` | Konstante | Texte der Geo-Karte. | `geo/messages` |
 | `@auditcore/ui-core` | `getDefaultLocale` | Funktion | – | `i18n` |
 | `@auditcore/ui-core` | `groupByDepartment` | Funktion | Referate wie in der Quelle: konfigurierte zuerst, dann unbekannte; leere entfallen. | `dataprotection/registerView` |
+| `@auditcore/ui-core` | `groupColumns` | Funktion | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `groupRows` | Funktion | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `hasAcceptedExtension` | Funktion | – | `documents/form` |
+| `@auditcore/ui-core` | `hasExtrapolationDetails` | Funktion | Gibt es Ergänzungen anzuzeigen? | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `hasFiniteCorrection` | Funktion | – | `samplesize/model` |
 | `@auditcore/ui-core` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
 | `@auditcore/ui-core` | `hasStrata` | Funktion | – | `samplesize/model` |
@@ -870,6 +966,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `ndiffOperations` | Funktion | ndiff-Zeilen in Operationen übersetzen; Hinweiszeilen (`? `) entfallen. | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `needsShortValues` | Funktion | Zweistellige Tests (erste zwei Ziffern, zweite Ziffer) verlangen eine Regel für kurze Werte. | `benford/model` |
 | `@auditcore/ui-core` | `nextOpenHit` | Funktion | The next hit still needing work after ``currentId`` (open, deferred or pending). | `screening/view` |
+| `@auditcore/ui-core` | `offeredMetrics` | Funktion | Kennungen der vorgegebenen Kennzahlen in fester Reihenfolge (für die Auswahl im Formular). | `benford/model` |
 | `@auditcore/ui-core` | `pairs` | Funktion | Objekt als Liste `[Schlüssel, Wert]` in Einfügereihenfolge (für deklarative Tabellen). | `risk/state` |
 | `@auditcore/ui-core` | `parameterLabel` | Funktion | – | `risk/format` |
 | `@auditcore/ui-core` | `parameterUnit` | Funktion | Einheit hinter dem Eingabefeld (Prozent, Euro oder keine). | `sampling/view` |
@@ -882,6 +979,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `parseMetres` | Funktion | Meter aus Texteingabe (Komma oder Punkt, keine Tausendertrennung); Ungültiges ergibt `null`. | `geo/model` |
 | `@auditcore/ui-core` | `parseSubjects` | Funktion | One subject per line: ``Name; Geburtsdatum; Land; Bezug`` (only the name is required). | `screening/view` |
 | `@auditcore/ui-core` | `parseUtm` | Funktion | UTM-Eingabe mit Wertebereichsprüfung: Zone 1–60, Ostwert 0–1 000 000 m, Nordwert 0–10 000 000 m. | `geo/model` |
+| `@auditcore/ui-core` | `periodColumns` | Funktion | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `periodNames` | Funktion | Zeiträume in der Reihenfolge ihres ersten Auftretens. | `extrapolation/model-design` |
+| `@auditcore/ui-core` | `periodRows` | Funktion | – | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `plainSegments` | Funktion | – | `synopsis/wordDiff` |
 | `@auditcore/ui-core` | `populationSuggestions` | Funktion | Vorschlagswerte aus der Grundgesamtheit (Summe positiver Werte bzw. Anzahl). | `sampling/model` |
 | `@auditcore/ui-core` | `populationText` | Funktion | Zusammenfassung der Grundgesamtheit; leer, wenn keine Elemente vorliegen. | `sampling/view` |
@@ -892,6 +992,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `profileKeyOf` | Funktion | – | `screening/runForm` |
 | `@auditcore/ui-core` | `profileStatusText` | Funktion | Sichtbarer Profilstatus („freigegeben“ …) oder der Rohwert. | `risk/controller` |
 | `@auditcore/ui-core` | `readExtrapolationAmount` | Funktion | Zahl eines Textfelds oder der Befund; leere, nicht verlangte Felder ergeben 0. | `extrapolation/model` |
+| `@auditcore/ui-core` | `readSubsample` | Funktion | Teilstichprobe für die Anfrage; Buchwert der Stichprobenschicht = Einheit − Vollerhebung. | `extrapolation/model-design` |
+| `@auditcore/ui-core` | `recalculationView` | Funktion | Neuberechnung des Konfidenzniveaus; `null`, wenn nicht anwendbar (Ergebnis schlüssig usw.). | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `recommendationTone` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `recordEntries` | Funktion | Treffer und unbestimmte Merkmale eines Datensatzes in Profilreihenfolge. | `risk/state` |
 | `@auditcore/ui-core` | `recordLabel` | Funktion | – | `risk/state` |
@@ -970,7 +1072,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `strataColumns` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `strataOf` | Funktion | Schichten in Reihenfolge ihres ersten Auftretens; leer, wenn kein Element geschichtet ist. | `sampling/model` |
 | `@auditcore/ui-core` | `strataRows` | Funktion | – | `sampling/view` |
+| `@auditcore/ui-core` | `stratumKey` | Funktion | Schlüssel einer Schicht für die Zuordnung der Einheiten (je Zeitraum eindeutig). | `extrapolation/model-design` |
+| `@auditcore/ui-core` | `stratumPart` | Funktion | – | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `stratumRows` | Funktion | – | `extrapolation/model` |
+| `@auditcore/ui-core` | `subsampleColumns` | Funktion | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `subsampleEstimatorChoices` | Funktion | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `subsampleResultRows` | Funktion | – | `extrapolation/view-details` |
+| `@auditcore/ui-core` | `subsampleRows` | Funktion | Formularzeilen einer vorbelegten Teilstichprobe (einstufig, eine Stichprobenschicht). | `extrapolation/model-design` |
 | `@auditcore/ui-core` | `subscribeDefaultLocale` | Funktion | Meldet Änderungen der Standardsprache; liefert die Abmeldung. | `i18n` |
 | `@auditcore/ui-core` | `summaryOf` | Funktion | Eintrag der Liste aus einem gespeicherten Vergleich (nach Anlegen oder Import). | `documents/list` |
 | `@auditcore/ui-core` | `summaryView` | Funktion | – | `documents/list` |
@@ -979,6 +1087,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (927):
 | `@auditcore/ui-core` | `synopsisId` | Funktion | Kennung des angezeigten Vergleichs (für Speichern und Server-Exporte). | `synopsis/controller` |
 | `@auditcore/ui-core` | `synopsisMessages` | Konstante | Sichtbare Texte der Synopse; Begriffe wie im audit_designer und in ecohesion. | `synopsis/messages` |
 | `@auditcore/ui-core` | `synopsisPortOf` | Funktion | Der Port als Datenzugang der eingebetteten Synopse, wenn er Vergleiche laden kann. | `documents/controller` |
+| `@auditcore/ui-core` | `systemAssessmentChoices` | Funktion | Kategorien 1–4 der Systembewertung mit Konfidenzniveau (Tabelle 1, Leitfaden 3.2.1). | `extrapolation/view-details` |
 | `@auditcore/ui-core` | `tabularMessages` | Konstante | Texte des Datei-Imports (Stichprobe, Benford). | `tabular/messages` |
 | `@auditcore/ui-core` | `terMetrics` | Funktion | Kennzahlen der Gesamtfehlerquote in fester Reihenfolge. | `extrapolation/view` |
 | `@auditcore/ui-core` | `textBlockRows` | Funktion | – | `reporttemplates/view` |

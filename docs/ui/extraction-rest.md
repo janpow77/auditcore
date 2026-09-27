@@ -1,6 +1,6 @@
 # REST-Vertrag Belegerkennung (`documents_extraction/1`, `auditcore_documents.web`)
 
-Stand 2026-09-26. Vertrag zwischen `auditcore_documents.web` (Belegerkennung,
+Stand 2026-09-27. Vertrag zwischen `auditcore_documents.web` (Belegerkennung,
 nach 0.3.3) und der Oberfläche `<flowaudit-extraction>` aus `@auditcore/ui`
 (Vue `FaExtraction`, React `FlowauditExtraction`). Die Oberfläche erkennt
 nichts selbst: Sie lädt ein Dokument hoch, zeigt Extraktionsergebnis,
@@ -17,7 +17,7 @@ keine Prüfungsentscheidung.
 | Nachverarbeitung | Feldmuster (Rechnungsnummer, Datum, Beträge, IBAN, USt-IdNr.), gebietsschemabewusste Beträge (D5) | ja |
 | Validierung | Regeln `VAL_IBAN_CHECKSUM`, `VAL_VAT_ID_FORMAT`, `VAL_TOTAL_PLAUSIBILITY`, `VAL_OCR_CONFIDENCE`, `VAL_AMOUNT_FORMAT`, `VAL_FRAUD_DETECTION` (ohne Port nur „zu wenig Daten“), `VAL_DONUT_*` | ja |
 | Aufbewahrung | `RetentionSweeper` über den Port `RetentionStore` der Anwendung (Datenbank) | nur Anzeige der Fristen; der Dienst speichert nichts |
-| Watchdog C-01…C-13 | Bestandsprüfung über viele Belege | nicht im Vertrag (Einzelbeleg-Oberfläche) |
+| Watchdog C-01…C-13 | Bestandsprüfung über viele Belege | eigener Vertrag `documents_batch_checks/1` ([batch-checks-rest.md](batch-checks-rest.md)) |
 | Persistenz, Export | Ports `RunRepository`, `ArtifactStore`, Webhook | nicht im Vertrag |
 
 Ohne Engine rechnet der Dienst nichts: `enabled` ist `false`, `POST /runs`
@@ -104,7 +104,7 @@ Lauf (`run.status = "failed"` mit `error_code`, z. B. `INVALID_MIME_TYPE`,
 | `ocr` | `engine`, `avg_confidence`, `min_confidence`, `max_confidence`, `pages_processed`, `pages_failed`, `duration_ms`, `retries`, `quality` (`ok`/`review`/`rejected` nach `thresholds`); `null` ohne OCR-Lauf |
 | `pages[]` | `page`, `confidence` (nur wenn die Engine sie je Seite liefert), `text` |
 | `fields[]` | `name`, `value` (normalisiert), `raw` (Rohtreffer), `confidence` (nur Donut: Feldkonfidenz), `decision` (nur Donut: `accepted`, `rejected`, `unconfirmed`, `disagreement`, `not_taken`), `proposal` (Donut-Wert), `text_match`, `checks` |
-| `findings[]` | `rule_id`, `rule_name`, `severity` (`INFO`, `WARN`, `CRITICAL`), `outcome` (`PASS`, `FAIL`, `REVIEW`), `message` (Wortlaut des Regelwerks, englisch wie im Original), `evidence` |
+| `findings[]` | `rule_id`, `rule_name`, `severity` (`INFO`, `WARN`, `CRITICAL`), `outcome` (`PASS`, `FAIL`, `REVIEW`), `message` (deutsch seit D9; englischer Originalwortlaut über `pipeline.stages.rule_messages.original_message`), `evidence` |
 | `flags` | Kennzeichen des Laufs (z. B. `LOW_OCR_CONFIDENCE`, `FAIL_VAL_DONUT_PLAUSIBILITY`) |
 | `stored` | immer `false` |
 

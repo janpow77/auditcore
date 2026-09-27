@@ -51,5 +51,6 @@ export {
 } from '@auditcore/ui-core'
 export * from './hooks'
 export * from './common'
+export * from './batchchecks'
 export * from './samplesize'
 export * from './reporttemplates'

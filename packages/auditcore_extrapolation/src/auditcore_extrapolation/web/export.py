@@ -56,6 +56,32 @@ def _cell(value: object) -> str:
     return f"'{text}" if text[:1] in _FORMULA_START else text
 
 
+def _period_rows(projection: Mapping[str, object]) -> Iterator[list[object]]:
+    extra = cast(Mapping[str, object], projection["extra"])
+    for period in cast(list[Mapping[str, object]], extra.get("periods", [])):
+        name = period["name"]
+        yield [f"Zeitraum {name}: Buchwert", period["book_value"]]
+        yield [f"Zeitraum {name}: hochgerechneter Fehler", period["projected_random_error"]]
+        yield [f"Zeitraum {name}: Präzision", period["precision"]]
+
+
+def _chapter7_rows(result: Mapping[str, object]) -> Iterator[list[object]]:
+    """Periods, sub-samples, groups and the recalculated confidence level (guidance ch. 7)."""
+    yield from _period_rows(cast(Mapping[str, object], result["projection"]))
+    for sub in cast(list[Mapping[str, object]], result.get("subsamples", [])):
+        yield [f"Teilstichprobe {sub['unit_id']}: Fehler der Einheit", sub["projected_error"]]
+    for group in cast(list[Mapping[str, object]], result.get("groups", [])):
+        ter = cast(Mapping[str, object], group["total_error_rate"])
+        yield [f"Gruppe {group['name']}: Gesamtfehlerquote", ter["rate"]]
+        yield [f"Gruppe {group['name']}: Ergebnis", _CONCLUSIONS[str(ter["conclusion"])]]
+    recalculation = cast(Mapping[str, object] | None, result.get("confidence_recalculation"))
+    if recalculation and recalculation["applicable"]:
+        yield ["Neu berechnetes Konfidenzniveau (Abschn. 7.7)", recalculation["confidence_level"]]
+        if recalculation["supports_not_material"] is not None:
+            verdict = "ja" if recalculation["supports_not_material"] else "nein"
+            yield ["Mit der Systembewertung vereinbar", verdict]
+
+
 def _rows(result: Mapping[str, object]) -> Iterator[list[object]]:
     method = cast(Mapping[str, object], result["method"])
     ter = cast(Mapping[str, object], result["total_error_rate"])
@@ -68,6 +94,7 @@ def _rows(result: Mapping[str, object]) -> Iterator[list[object]]:
     for label, key in _SUMMARY:
         yield [label, ter[key]]
     yield ["Ergebnis", _CONCLUSIONS[str(ter["conclusion"])]]
+    yield from _chapter7_rows(result)
     for line in cast(list[str], ter["explanation"]):
         yield ["Erläuterung", line]
     for warning in cast(list[str], projection["warnings"]):

@@ -17,6 +17,7 @@ POST_PATHS = (
     ("/evaluate", "evaluate"),
     ("/evaluate/export", "export"),
     ("/residual", "residual"),
+    ("/attributes", "attributes"),
 )
 
 

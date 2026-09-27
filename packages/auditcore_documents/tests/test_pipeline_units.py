@@ -32,6 +32,7 @@ from auditcore_documents.pipeline.stages.postprocess import (
     extract_fields,
     normalize_fields,
 )
+from auditcore_documents.pipeline.stages.rule_messages import original_message
 from auditcore_documents.pipeline.stages.validation import (
     FraudDetectionRule,
     IbanChecksumRule,
@@ -71,6 +72,8 @@ async def evaluate(rule: Any, fields: dict[str, Any], ocr: float | None = None) 
         return {"raises": type(exc).__name__}
     data = jsonable(result.to_dict())
     data.pop("evaluated_at")
+    # Meldungen sind deutsch (D9); verglichen wird der englische Originalwortlaut.
+    data["message"] = original_message(data["message"])
     return data
 
 
@@ -121,6 +124,8 @@ def test_fraud_rule_disabled() -> None:
     )
     data = jsonable(asyncio.run(FraudDetectionRule().evaluate(context)).to_dict())
     data.pop("evaluated_at")
+    assert data["message"] == "Betrugsprüfung in den Analysemodulen abgeschaltet"
+    data["message"] = original_message(data["message"])
     assert data == UNITS["fraud_disabled"]
 
 

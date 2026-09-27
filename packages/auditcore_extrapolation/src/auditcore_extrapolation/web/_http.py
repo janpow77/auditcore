@@ -11,7 +11,7 @@ from auditcore_common.rest import Reply, decode_body, guarded, json_reply
 from ._contract import ContractError
 from .catalogue import catalogue
 from .export import export_evaluation
-from .requests import evaluate, residual
+from .requests import attributes, evaluate, residual
 
 MAX_BODY_BYTES = 16 * 1024 * 1024
 NO_STORE = {"Cache-Control": "no-store"}
@@ -19,6 +19,7 @@ NO_STORE = {"Cache-Control": "no-store"}
 HANDLERS: dict[str, Callable[[object], dict[str, object]]] = {
     "evaluate": evaluate,
     "residual": residual,
+    "attributes": attributes,
 }
 
 

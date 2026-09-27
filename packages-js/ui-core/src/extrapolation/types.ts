@@ -11,6 +11,16 @@ export interface ExtrapolationMethod {
   formula: string
   needs_population_size: boolean
   needs_sample_size: boolean
+  /** Mehrperiodenform vorhanden (Leitfaden 7.3); fehlt bei älteren Backends. */
+  periods?: boolean
+}
+
+export type ExtrapolationDesign = 'single' | 'periods' | 'groups'
+
+export interface SystemAssessmentLevel {
+  category: number
+  label: string
+  confidence_level: number
 }
 
 export interface FactorProfileInfo {
@@ -31,7 +41,19 @@ export interface ExtrapolationCatalogue {
   materiality: { default: number; maximum: number }
   error_classes: readonly { id: string; label: string; description: string }[]
   conclusions: readonly { id: Conclusion; label: string }[]
-  limits: { max_units: number; max_strata: number }
+  limits: { max_units: number; max_strata: number; max_periods?: number }
+  designs?: readonly { id: ExtrapolationDesign; label: string; source: string }[]
+  subsample_estimators?: readonly { id: SubsampleEstimator; label: string }[]
+  system_assessment?: readonly SystemAssessmentLevel[]
+}
+
+export type SubsampleEstimator = 'ratio' | 'mean_per_unit' | 'pps'
+
+/** Teilstichprobe einer Einheit (Leitfaden 7.6, 6.5.3). */
+export interface SubsampleInput {
+  estimator: SubsampleEstimator
+  strata: readonly StratumInput[]
+  units: readonly UnitInput[]
 }
 
 export interface StratumInput {
@@ -39,6 +61,10 @@ export interface StratumInput {
   book_value: number
   population_size?: number
   systemic_error?: number
+  /** Zeitraum (mit `periods`) */
+  period?: string
+  /** Programm einer Gruppe von Programmen (Leitfaden 7.8) */
+  group?: string
 }
 
 export interface UnitInput {
@@ -51,6 +77,8 @@ export interface UnitInput {
   anomalous_reason?: string
   anomalous_corrected?: boolean
   exhaustive?: boolean
+  period?: string
+  subsample?: SubsampleInput
 }
 
 export interface EvaluationRequest {
@@ -61,6 +89,9 @@ export interface EvaluationRequest {
   materiality_rate: number
   strata: readonly StratumInput[]
   units: readonly UnitInput[]
+  periods?: readonly { name: string }[]
+  population_units?: number
+  system_assessment?: number
 }
 
 export interface ExtrapolationStep {
@@ -77,6 +108,39 @@ export interface StratumProjection {
   sample_size: number
   sampling_book_value: number
   figures: Readonly<Record<string, number>>
+  period?: string
+}
+
+export interface PeriodSummary {
+  name: string
+  book_value: number
+  projected_random_error: number
+  precision: number | null
+  sample_size: number
+}
+
+export interface SubsampleResult {
+  unit_id: string
+  estimator: SubsampleEstimator
+  book_value: number
+  projected_error: number
+  error_rate: number
+  audited_book_value: number
+  coverage: number
+  sampled_items: number
+  exhaustive_items: number
+  warnings: readonly string[]
+}
+
+export interface ConfidenceRecalculation {
+  applicable: boolean
+  reason: string | null
+  coefficient: number | null
+  recalculated_coefficient: number | null
+  confidence_level: number | null
+  required_level: number | null
+  supports_not_material: boolean | null
+  steps: readonly ExtrapolationStep[]
 }
 
 export interface Projection {
@@ -120,6 +184,18 @@ export interface EvaluationResult {
   library: string
   fingerprint: string
   method: ExtrapolationMethod
+  projection: Projection
+  total_error_rate: TotalErrorRate
+  design?: ExtrapolationDesign
+  confidence_recalculation?: ConfidenceRecalculation
+  subsamples?: readonly SubsampleResult[]
+  groups?: readonly GroupResult[]
+}
+
+export interface GroupResult {
+  name: string
+  observations: number
+  warnings: readonly string[]
   projection: Projection
   total_error_rate: TotalErrorRate
 }

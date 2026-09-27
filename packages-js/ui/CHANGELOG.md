@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+- Neu: Bestandsprüfung – `BatchChecks` / `<flowaudit-batch-checks>` (Vue, Web Component); Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).
+- `ExtrapolationPanel`: Aufbau der Stichprobe (Zeiträume, Gruppen), Spalte Zeitraum/Programm, Teilstichprobe je Einheit (`ExtrapolationSubsample`), Systembewertung und Ergänzungen im Ergebnis (`ExtrapolationDetails`: Zeiträume, Programme, Teilstichproben, Neuberechnung des Konfidenzniveaus).
 - Neu `SampleSizePlanner` / `<flowaudit-sample-size-planner>`: Stichprobenumfang nach KOM-Leitfaden planen (Vertrag `auditcore_sampling.guidance/1`).
+- Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`
+  (zusätzliche Kennzahlen des REST-Vertrags: Chi²-Test mit kritischen Werten,
+  auffällige Ziffern mit z je Ziffer), `autoAnalyse` (nach dem Laden und bei neuen
+  Werten analysieren) und `hideInputs` (Einbettung in Berichte). Vorgegebene
+  Kennzahlen sind im Formular abwählbar. Ohne `metrics` unverändert; ältere Server
+  ohne Kennzahlen werden unterstützt (Abschnitt entfällt).
 
 ## 0.3.0 – 2026-09-26 – Release v0.4.2
 

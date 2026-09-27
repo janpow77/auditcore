@@ -7,7 +7,7 @@ import { intlFormatNumber as formatNumber, intlFormatPercent as formatPercent, t
 import type { Locale, Translate } from '../i18n'
 import type { BenfordMessageKey } from './messages'
 import type { AnalyseError } from './model'
-import type { BenfordAnalysis, Conformity, ConformityProfile } from './types'
+import type { BenfordAnalysis, BenfordMetricId, ChiSquareMetric, Conformity, ConformityProfile, DigitZMetric } from './types'
 
 export type BenfordTranslate = Translate<BenfordMessageKey>
 
@@ -90,4 +90,55 @@ export function benfordDigitColumns(t: BenfordTranslate, locale: Locale): TableC
 
 export function benfordDigitRows(conformity: Conformity): TableRow[] {
   return conformity.rows.map((row) => ({ id: row.digit, ...row }))
+}
+
+export function benfordMetricLabel(id: BenfordMetricId, t: BenfordTranslate): string {
+  return t(`metric${id}`)
+}
+
+export interface BenfordChiTexts {
+  statistic: string
+  detail: string
+  critical: string
+  verdict: string
+  /** Farbton des Urteils: `warning` (verworfen), `success`, `neutral` (ohne Niveau). */
+  tone: 'warning' | 'success' | 'neutral'
+}
+
+export interface BenfordDigitZTexts {
+  digits: string
+  detail: string
+  largest: string
+}
+
+function pText(p: number, number: (value: number, digits?: number) => string): string {
+  return p < 0.0001 ? `< ${number(0.0001)}` : `= ${number(p, 4)}`
+}
+
+/** Texte der Kennzahl `chi_square` (kritische Werte je Niveau, Urteil nur mit Niveau). */
+export function benfordChiTexts(metric: ChiSquareMetric, t: BenfordTranslate, locale: Locale): BenfordChiTexts {
+  const number = (value: number, digits = 4): string => formatNumber(value, locale, { maximumFractionDigits: digits })
+  const values = metric.critical_values.map((entry) => t('criticalValue', { alpha: number(entry.level, 3), value: number(entry.value, 3) })).join(' · ')
+  const alpha = metric.significance_level === null ? '' : number(metric.significance_level, 3)
+  const verdict = metric.rejects === null ? t('chiNoLevel') : t(metric.rejects ? 'chiRejects' : 'chiKeeps', { alpha })
+  return {
+    statistic: number(metric.chi2_statistic, 2),
+    detail: t('chiTestDetail', { dof: metric.degrees_of_freedom, p: pText(metric.p_value, number) }),
+    critical: t('criticalValues', { values }),
+    verdict,
+    tone: metric.rejects === null ? 'neutral' : metric.rejects ? 'warning' : 'success',
+  }
+}
+
+/** Texte der Kennzahl `digit_z` („auffällige Ziffern“ nur mit kritischem z-Wert). */
+export function benfordDigitZTexts(metric: DigitZMetric, t: BenfordTranslate, locale: Locale): BenfordDigitZTexts {
+  const number = (value: number, digits: number): string => formatNumber(value, locale, { maximumFractionDigits: digits })
+  const correction = t(metric.continuity_correction ? 'withCorrection' : 'withoutCorrection')
+  const exceeding = metric.exceeding_digits
+  const largest = metric.rows.reduce<DigitZMetric['rows'][number] | null>((top, row) => (top === null || row.z > top.z ? row : top), null)
+  return {
+    digits: exceeding === null ? t('digitZNoLimit') : exceeding.length ? exceeding.join(', ') : t('zNone'),
+    detail: metric.z_critical === null ? correction : t('digitZDetail', { critical: number(metric.z_critical, 3), correction }),
+    largest: largest ? t('digitZValues', { digit: largest.digit, z: number(largest.z, 2) }) : '',
+  }
 }

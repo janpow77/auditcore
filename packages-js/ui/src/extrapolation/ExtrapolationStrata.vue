@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import {
   extrapolationCellLabel,
   extrapolationIssueText,
@@ -15,6 +16,7 @@ const props = withDefaults(defineProps<{ controller: ExtrapolationController; st
 const { t } = useI18n(extrapolationMessages, () => props.locale)
 const id = useId('fa-extrapolation-strata')
 const issue = (index: number, key: string): string => extrapolationIssueText(props.state.issues, `strata.${index}.${key}`, t)
+const partLabel = computed(() => (props.state.form.design === 'periods' ? 'period' : 'group') as 'period' | 'group')
 const value = (event: Event): string => (event.target as HTMLInputElement).value
 </script>
 
@@ -26,12 +28,16 @@ const value = (event: Event): string => (event.target as HTMLInputElement).value
       <table class="fa-extrapolation__grid" data-testid="extrapolation-strata">
         <thead>
           <tr>
+            <th v-if="state.form.design !== 'single'" scope="col">{{ t(partLabel) }}</th>
             <th v-for="field in STRATUM_FIELDS" :key="field.key" scope="col">{{ t(field.label) }}</th>
             <th scope="col">{{ t('remove') }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(row, index) in state.form.strata" :key="row.key">
+            <td v-if="state.form.design !== 'single'">
+              <input class="fa-extrapolation__input" :value="row.part" :aria-label="extrapolationCellLabel(t, partLabel, index + 1)" :aria-invalid="issue(index, 'part') ? 'true' : undefined" :title="issue(index, 'part') || undefined" @input="controller.updateStratum(index, { part: value($event) })" />
+            </td>
             <td v-for="field in STRATUM_FIELDS" :key="field.key">
               <input
                 class="fa-extrapolation__input"

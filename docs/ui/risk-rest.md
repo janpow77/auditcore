@@ -156,6 +156,64 @@ Beispiel (Profil `riskanalysis.year_bound` 2026.09.5, Nettobetrag fehlt):
  "summary": [{"code": "RF02", "treffer": 0, "basis": 1, "unbestimmt": 1, "…": "…"}]}
 ```
 
+## Betrugsprüfsignale (`signal_score`-Profile)
+
+Die Signale der Betrugsprüfung (Dubletten, Sanktionslisten, PEP, Unternehmens-
+und TED-Prüfung; Profil `flowinvoice.fraud_signals`) sind keine Regelprofile. Damit
+`<flowaudit-risk-flags>` sie ohne eigene Oberflächenlogik darstellt, liefert die
+Bibliothek sie in derselben Form wie `POST /evaluate` (Modul
+`auditcore_risk.web.signals`, framework-frei aufrufbar als
+`signal_evaluation(records, profile, record_key)`).
+
+| Endpunkt | Inhalt |
+|---|---|
+| `GET /fraud-profiles` | alle `signal_score`-Profile (`id`, `version`, `status`, `rule_count` …) |
+| `GET /profiles/{id}/{version}` | für ein `signal_score`-Profil dessen Beschreibung (`kind` und `assessment` = `signal_score`, `rules` je Code, `fields` je Teilprüfung) |
+| `POST /fraud-signals/evaluate` | `{"profile": {"id", "version"}, "records": [...], "record_key"?}` |
+
+Jeder Datensatz (eine Rechnung) ordnet den Teilprüfungen `duplicate`, `sanctions`,
+`pep`, `company` und `ted` ihr Ergebnis zu – `null` (abgeschaltet),
+`{"failed": true}` (abgebrochen) oder die Ergebniszuordnung wie bei
+`score_signals`; weitere Felder (z. B. die Rechnungsnummer als `record_key`)
+bleiben unberücksichtigt.
+
+```json
+{"profile": {"id": "flowinvoice.fraud_signals", "version": "2026.09.2"},
+ "record_key": "invoice",
+ "records": [{"invoice": "RE-1",
+   "duplicate": {"is_duplicate": true, "matches": [{"match_type": "exact", "confidence": 1.0}]},
+   "sanctions": {"failed": true}, "pep": null,
+   "company": {"risk_indicators": ["INVALID_VAT_ID"], "verification_score": 0.4},
+   "ted": {"red_flags": [{"severity": "high", "flag_type": "SINGLE_BIDDER"}],
+           "legitimacy_score": 0.5}}]}
+```
+
+Antwort wie bei `POST /evaluate`:
+
+- jeder Blocker und jede Warnung von `score_signals` ist ein Treffer (`flags[code] = true`,
+  `hits[]` mit Teilprüfung, Score-Bestandteil und ggf. Fehlermeldung bzw. TED-Warnsignal
+  als `evidence`); nicht ausgelöste Codes einer durchgeführten Teilprüfung sind `false`;
+- bricht eine Teilprüfung ab, ist ihr Abbruch-Code ein Treffer und ihre übrigen Codes sind
+  **unbestimmt** („Teilprüfung „…“ abgebrochen“);
+- ist eine Teilprüfung in allen Datensätzen abgeschaltet, stehen ihre Codes unter `skipped`;
+- `assessment` je Datensatz: `score`, `raw_score`, `level`, `blocked`,
+  `checks_performed`, dazu `blockers`, `warnings` und `components` (Listen);
+- `rules` enthält die festen Codes des Profils und die im Ergebnis vorkommenden
+  zusätzlichen Codes (weitere Unternehmensindikatoren, `TED_<Art>`).
+
+Schwere: Blocker tragen die Blockerstufe des Profils (`CRITICAL`), TED-Warnungen die
+Schwere ihres Warnsignals, übrige Warnungen keine – die Bibliothek erfindet keine
+Einstufung. Bezeichnungen kommen aus `parameters.display` des Profils; ohne diesen Block
+(Fassungen `fb2d18568d2e`, `2026.09.2`) zeigt die Oberfläche die Codes.
+`flowinvoice.fraud_signals` 2026.09.3 ergänzt nur diese Bezeichnungen (Status
+`CANDIDATE_HUMAN_DECISION_REQUIRED` bis zur fachlichen Bestätigung der Texte);
+Blocker, Warnungen, Score und Stufe sind gleich 2026.09.2.
+
+Parität: Die Auswertung zeigt in allen 268 ausgeführten Läufen des flowinvoice-
+`FraudDetectionManager` (flowinvoice@fb2d185, Profil `fb2d18568d2e`) dieselben Blocker,
+Warnungen, Scores und Stufen und für das Produktionsprofil 2026.09.2 genau das Ergebnis
+von `score_signals` (`packages/auditcore_risk/tests/test_web_signals.py`).
+
 ## Fehler
 
 Fehlerantworten haben immer die Form `{"error": {"code": "…", "message": "…"}}`

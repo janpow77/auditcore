@@ -1,0 +1,1439 @@
+{
+ "source": "auditcore_documents.web (Bestandsprüfung), synthetischer Beispielbestand",
+ "csv": "Beleg;Rechnungsnummer;Rechnungsdatum;Lieferant;Leistungsempfänger;USt-IdNr.;Leistungsbeschreibung;Netto;Steuersatz;Steuerbetrag;Brutto;OCR-Konfidenz\nB-001;RE-2026-0101;15.01.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000001;Rohbauarbeiten Abschnitt 1;10.000,00;19;1.900,00;11.900,00;0,97\nB-002;RE-2026-0102;29.01.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000001;Rohbauarbeiten Abschnitt 2;8.000,00;19;1.520,00;9.520,00;0,95\nB-003;RE-2026-0106;12.02.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000009;Rohbauarbeiten Abschnitt 3;6.500,00;19;1.235,00;7.735,00;0,93\nB-004;RE-2026-0106;12.02.2026;Muster Bau GmbH;Beispielverein Projektträger e. V.;DE100000009;Rohbauarbeiten Abschnitt 3;6.500,00;19;1.235,00;7.735,00;0,93\nB-005;EL-77;03.03.2026;Beispiel Elektro AG;Beispielverein Projektträger e. V.;DE200000002;Elektroinstallation;4.200,00;19;798,00;4.998,00;0,91\nB-006;EL-78;Invalid Date;Beispiel Elektro AG;Beispielverein Projektträger e. V.;DE200000002;Elektroinstallation Nachtrag;1.000,00;16;160,00;1.160,00;0,88\nB-007;Steuernummer 012/345/67890 Adresse Musterweg 1;18.03.2026;Testlabor Nord GmbH;Beispielverein Projektträger e. V.;DE300000003;Materialprüfung;2.000,00;19;380,00;2.500,00;0,62\nB-008;TL-2026-5;25.03.2026;testlabor nord;Beispielverein Projektträger e. V.;;Materialprüfung Wiederholung;500,00;7;35,00;535,00;0,74\nB-009;DD-10;02.04.2026;Demo Druck KG;;DE400000004;Druck Broschüren;1.200,00;7;84,00;1.284,00;\nB-010;DD-11;16.04.2026;Demo Druck KG;Beispielverein Projektträger e. V.;DE400000004;Druck Plakate;NaN;7;42,00;642,00;0,90\n",
+ "catalogue": {
+  "contract": "documents_batch_checks/1",
+  "library": "auditcore_documents 0.4.0",
+  "rules": [
+   {
+    "code": "C-01",
+    "title": "Pflichtangaben",
+    "checks": "Neun Pflichtfelder je Beleg: Leistender, Leistungsempfänger, Steuernummer oder USt-IdNr., Ausstellungsdatum, Rechnungsnummer, Leistungsbeschreibung, Entgelt, Steuersatz und Steuerbetrag; leere Werte und Platzhalter gelten als fehlend.",
+    "legal_basis": "§ 14 Abs. 4 UStG",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-02",
+    "title": "Rechnungsdatum lesbar",
+    "checks": "Kein Fehlerwert (z. B. „Invalid Date“) und ein lesbares Datumsformat (TT.MM.JJJJ, JJJJ-MM-TT, TT/MM/JJJJ, MM/TT/JJJJ, TT-MM-JJJJ).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-03",
+    "title": "Rechnungsnummer plausibel",
+    "checks": "Höchstens 30 Zeichen, höchstens drei Wörter, keine fremden Angaben (Steuer, USt-Id, Adresse, Telefon, E-Mail, Web) und höchstens 30 % Sonderzeichen.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-04",
+    "title": "Beträge rechnerisch stimmig",
+    "checks": "Brutto = Netto + Steuerbetrag (Warnung) und Steuerbetrag = Netto × Steuersatz (Hinweis), jeweils mit Toleranz (Vorgabe 0,02 EUR).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-05",
+    "title": "Steuersatz zulässig",
+    "checks": "Nur 0 %, 7 % oder 19 %; Hinweis, wenn mehr als fünf Belege alle denselben Satz tragen (möglicher Vorgabewert statt gelesenem Wert).",
+    "legal_basis": "§ 12 UStG",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-06",
+    "title": "Lieferantenname plausibel",
+    "checks": "Mindestens drei Zeichen, mindestens ein Großbuchstabe, nicht nur Ziffern.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-07",
+    "title": "Lieferantenkonzentration",
+    "checks": "Anteil eines Lieferanten (ohne Rechtsform) am Volumen (brutto, sonst netto) über der Schwelle (Vorgabe 30 %).",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-08",
+    "title": "Summenabgleich",
+    "checks": "Summe der Einzelbeträge (brutto, sonst netto) gegen das ausgewiesene Gesamtvolumen; Toleranz 1 Cent je Beleg. Nur mit Angabe des Gesamtvolumens.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-09",
+    "title": "Dubletten",
+    "checks": "Gleicher Lieferant (ohne Rechtsform) mit gleicher Rechnungsnummer mehrfach im Bestand.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-10",
+    "title": "Eskalation",
+    "checks": "Stufe Info, Warnung oder Blockade. Blockade, wenn der Anteil der Belege mit Warnung die Schwelle übersteigt (Vorgabe 20 %) oder die formale Korrektheit (B-12) höchstens 50 % beträgt; dann ist eine manuelle Freigabe erforderlich.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-11",
+    "title": "Maschinenlesbarer Export",
+    "checks": "Ergebnis mit allen Befunden und Kennzahlen als JSON; zusätzlich Befundliste als CSV.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-12",
+    "title": "Kennzahlen der Extraktionsqualität",
+    "checks": "Erfüllungsquote der Pflichtfelder gesamt und je Feld, Belege mit fehlenden Pflichtfeldern, formale Korrektheit sowie mittlere und kleinste OCR-Konfidenz.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "C-13",
+    "title": "OCR-Konfidenz je Beleg",
+    "checks": "Belege unter 80 % OCR-Konfidenz werden zur risikoorientierten Nachprüfung vorgemerkt. Nur mit OCR-Konfidenzen im Bestand.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "A-07",
+    "title": "Ungültige Zahlenwerte",
+    "checks": "NaN, null, undefined, inf oder n/a in Netto, Steuerbetrag, Brutto oder Steuersatz (Anzeige als „n/v“ erforderlich).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "B-12",
+    "title": "Formale Korrektheit",
+    "checks": "Anteil der Belege ohne fehlende Pflichtangabe, ungültiges Datum, unplausible Rechnungsnummer oder NaN-Betrag; Warnung unter 100 %, Blockade bis 50 %.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)"
+   },
+   {
+    "code": "ERG-01",
+    "title": "Lücken in Rechnungsnummern",
+    "checks": "Je Lieferant und Nummernkreis (gleiches Präfix) fehlende Zählwerte zwischen zwei vorhandenen Nummern (Abstand höchstens 50). Hinweis: Lieferanten nummerieren über alle Kunden fortlaufend, Lücken sind im Bestand eines Empfängers üblich.",
+    "legal_basis": "§ 14 Abs. 4 Satz 1 Nr. 4 UStG",
+    "scope": "inventory",
+    "source": "Ergänzung auditcore"
+   },
+   {
+    "code": "ERG-02",
+    "title": "USt-IdNr.-Konsistenz",
+    "checks": "Ein Lieferant mit verschiedenen USt-IdNr./Steuernummern (Warnung bei zwei verschiedenen USt-IdNr.) und dieselbe Kennung bei verschiedenen Lieferanten (Hinweis).",
+    "legal_basis": "§ 14 Abs. 4 Satz 1 Nr. 2 UStG",
+    "scope": "inventory",
+    "source": "Ergänzung auditcore"
+   }
+  ],
+  "fields": [
+   {
+    "name": "ref",
+    "label": "Beleg (Kennung)",
+    "aliases": [
+     "beleg",
+     "belegnummer",
+     "beleg-nr.",
+     "belegnr",
+     "ref",
+     "kennung",
+     "id",
+     "datei",
+     "dateiname",
+     "filename"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "invoice_number",
+    "label": "Rechnungsnummer",
+    "aliases": [
+     "rechnungsnummer",
+     "rechnungsnr.",
+     "re.-nr.",
+     "rechnungs-nr.",
+     "invoice_number"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "invoice_date",
+    "label": "Rechnungsdatum",
+    "aliases": [
+     "rechnungsdatum",
+     "ausstellungsdatum",
+     "datum",
+     "invoice_date",
+     "date"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "supplier_name",
+    "label": "Leistender (Lieferant)",
+    "aliases": [
+     "lieferant",
+     "leistender",
+     "rechnungssteller",
+     "kreditor",
+     "supplier_name",
+     "supplier"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "customer_name",
+    "label": "Leistungsempfänger",
+    "aliases": [
+     "leistungsempfänger",
+     "rechnungsempfänger",
+     "empfänger",
+     "begünstigter",
+     "customer_name"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "supplier_vat_id",
+    "label": "Steuernummer oder USt-IdNr.",
+    "aliases": [
+     "ust-idnr.",
+     "ust-idnr",
+     "ust-id",
+     "steuernummer",
+     "supplier_vat_id",
+     "vat_id"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "description",
+    "label": "Leistungsbeschreibung",
+    "aliases": [
+     "leistungsbeschreibung",
+     "beschreibung",
+     "leistung",
+     "description"
+    ],
+    "numeric": false
+   },
+   {
+    "name": "net_amount",
+    "label": "Entgelt (netto)",
+    "aliases": [
+     "netto",
+     "nettobetrag",
+     "entgelt",
+     "net_amount"
+    ],
+    "numeric": true
+   },
+   {
+    "name": "vat_rate",
+    "label": "Steuersatz (%)",
+    "aliases": [
+     "steuersatz",
+     "ust-satz",
+     "mwst-satz",
+     "vat_rate"
+    ],
+    "numeric": true
+   },
+   {
+    "name": "vat_amount",
+    "label": "Steuerbetrag",
+    "aliases": [
+     "steuerbetrag",
+     "umsatzsteuer",
+     "ust",
+     "mwst",
+     "vat_amount"
+    ],
+    "numeric": true
+   },
+   {
+    "name": "gross_amount",
+    "label": "Bruttobetrag",
+    "aliases": [
+     "brutto",
+     "bruttobetrag",
+     "gesamtbetrag",
+     "gross_amount",
+     "total"
+    ],
+    "numeric": true
+   },
+   {
+    "name": "ocr_confidence",
+    "label": "OCR-Konfidenz (0–1)",
+    "aliases": [
+     "ocr-konfidenz",
+     "konfidenz",
+     "ocr_confidence"
+    ],
+    "numeric": true
+   }
+  ],
+  "defaults": {
+   "total_volume": null,
+   "tolerance": 0.02,
+   "concentration_threshold": 0.3,
+   "block_threshold": 0.2,
+   "supplementary": true
+  },
+  "levels": [
+   {
+    "id": "info",
+    "label": "Hinweis"
+   },
+   {
+    "id": "warning",
+    "label": "Warnung"
+   },
+   {
+    "id": "blocker",
+    "label": "Blockade"
+   }
+  ],
+  "limits": {
+   "max_documents": 5000,
+   "max_body_bytes": 16777216
+  },
+  "export_formats": [
+   "json",
+   "csv"
+  ],
+  "stored": false
+ },
+ "answer": {
+  "contract": "documents_batch_checks/1",
+  "library": "auditcore_documents 0.4.0",
+  "options": {
+   "total_volume": 48500.0,
+   "tolerance": 0.02,
+   "concentration_threshold": 0.3,
+   "block_threshold": 0.2,
+   "supplementary": true
+  },
+  "summary": {
+   "documents": 10,
+   "findings": 18,
+   "documents_with_findings": 9,
+   "escalation_level": "blocker",
+   "report_blocked": true,
+   "block_reason": "6/10 Belege (60.0%) weisen Extraktionsfehler auf (Schwelle: 20%). Manuelle Freigabe erforderlich.",
+   "timestamp": "2026-09-26T10:00:00+00:00"
+  },
+  "metrics": {
+   "total_documents": 10,
+   "mandatory_fields_success_rate": 0.9555555555555556,
+   "per_field_success": {
+    "supplier_name": 1.0,
+    "customer_name": 0.9,
+    "supplier_vat_id": 0.9,
+    "invoice_date": 0.9,
+    "invoice_number": 1.0,
+    "description": 1.0,
+    "net_amount": 0.9,
+    "vat_rate": 1.0,
+    "vat_amount": 1.0
+   },
+   "documents_with_errors": 4,
+   "documents_with_errors_rate": 0.4,
+   "avg_ocr_confidence": 0.87,
+   "min_ocr_confidence": 0.62,
+   "escalated_documents": 6,
+   "formal_correctness_rate": 0.5
+  },
+  "rules": [
+   {
+    "code": "C-01",
+    "title": "Pflichtangaben",
+    "checks": "Neun Pflichtfelder je Beleg: Leistender, Leistungsempfänger, Steuernummer oder USt-IdNr., Ausstellungsdatum, Rechnungsnummer, Leistungsbeschreibung, Entgelt, Steuersatz und Steuerbetrag; leere Werte und Platzhalter gelten als fehlend.",
+    "legal_basis": "§ 14 Abs. 4 UStG",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 4,
+    "documents": 4,
+    "level": "warning"
+   },
+   {
+    "code": "C-02",
+    "title": "Rechnungsdatum lesbar",
+    "checks": "Kein Fehlerwert (z. B. „Invalid Date“) und ein lesbares Datumsformat (TT.MM.JJJJ, JJJJ-MM-TT, TT/MM/JJJJ, MM/TT/JJJJ, TT-MM-JJJJ).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 1,
+    "level": "warning"
+   },
+   {
+    "code": "C-03",
+    "title": "Rechnungsnummer plausibel",
+    "checks": "Höchstens 30 Zeichen, höchstens drei Wörter, keine fremden Angaben (Steuer, USt-Id, Adresse, Telefon, E-Mail, Web) und höchstens 30 % Sonderzeichen.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 1,
+    "level": "warning"
+   },
+   {
+    "code": "C-04",
+    "title": "Beträge rechnerisch stimmig",
+    "checks": "Brutto = Netto + Steuerbetrag (Warnung) und Steuerbetrag = Netto × Steuersatz (Hinweis), jeweils mit Toleranz (Vorgabe 0,02 EUR).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 1,
+    "level": "warning"
+   },
+   {
+    "code": "C-05",
+    "title": "Steuersatz zulässig",
+    "checks": "Nur 0 %, 7 % oder 19 %; Hinweis, wenn mehr als fünf Belege alle denselben Satz tragen (möglicher Vorgabewert statt gelesenem Wert).",
+    "legal_basis": "§ 12 UStG",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 1,
+    "level": "warning"
+   },
+   {
+    "code": "C-06",
+    "title": "Lieferantenname plausibel",
+    "checks": "Mindestens drei Zeichen, mindestens ein Großbuchstabe, nicht nur Ziffern.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 1,
+    "level": "warning"
+   },
+   {
+    "code": "C-07",
+    "title": "Lieferantenkonzentration",
+    "checks": "Anteil eines Lieferanten (ohne Rechtsform) am Volumen (brutto, sonst netto) über der Schwelle (Vorgabe 30 %).",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 4,
+    "level": "warning"
+   },
+   {
+    "code": "C-08",
+    "title": "Summenabgleich",
+    "checks": "Summe der Einzelbeträge (brutto, sonst netto) gegen das ausgewiesene Gesamtvolumen; Toleranz 1 Cent je Beleg. Nur mit Angabe des Gesamtvolumens.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 0,
+    "level": "warning"
+   },
+   {
+    "code": "C-09",
+    "title": "Dubletten",
+    "checks": "Gleicher Lieferant (ohne Rechtsform) mit gleicher Rechnungsnummer mehrfach im Bestand.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 2,
+    "level": "warning"
+   },
+   {
+    "code": "C-10",
+    "title": "Eskalation",
+    "checks": "Stufe Info, Warnung oder Blockade. Blockade, wenn der Anteil der Belege mit Warnung die Schwelle übersteigt (Vorgabe 20 %) oder die formale Korrektheit (B-12) höchstens 50 % beträgt; dann ist eine manuelle Freigabe erforderlich.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "result",
+    "note": "Stufe: Blockade. 6/10 Belege (60.0%) weisen Extraktionsfehler auf (Schwelle: 20%). Manuelle Freigabe erforderlich.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-11",
+    "title": "Maschinenlesbarer Export",
+    "checks": "Ergebnis mit allen Befunden und Kennzahlen als JSON; zusätzlich Befundliste als CSV.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "result",
+    "note": "Export über POST /export (json oder csv).",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-12",
+    "title": "Kennzahlen der Extraktionsqualität",
+    "checks": "Erfüllungsquote der Pflichtfelder gesamt und je Feld, Belege mit fehlenden Pflichtfeldern, formale Korrektheit sowie mittlere und kleinste OCR-Konfidenz.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "result",
+    "note": "Pflichtfelder erfüllt: 95.6%; formal korrekt: 50.0%.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-13",
+    "title": "OCR-Konfidenz je Beleg",
+    "checks": "Belege unter 80 % OCR-Konfidenz werden zur risikoorientierten Nachprüfung vorgemerkt. Nur mit OCR-Konfidenzen im Bestand.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 2,
+    "documents": 2,
+    "level": "info"
+   },
+   {
+    "code": "A-07",
+    "title": "Ungültige Zahlenwerte",
+    "checks": "NaN, null, undefined, inf oder n/a in Netto, Steuerbetrag, Brutto oder Steuersatz (Anzeige als „n/v“ erforderlich).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 1,
+    "level": "warning"
+   },
+   {
+    "code": "B-12",
+    "title": "Formale Korrektheit",
+    "checks": "Anteil der Belege ohne fehlende Pflichtangabe, ungültiges Datum, unplausible Rechnungsnummer oder NaN-Betrag; Warnung unter 100 %, Blockade bis 50 %.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 5,
+    "level": "blocker"
+   },
+   {
+    "code": "ERG-01",
+    "title": "Lücken in Rechnungsnummern",
+    "checks": "Je Lieferant und Nummernkreis (gleiches Präfix) fehlende Zählwerte zwischen zwei vorhandenen Nummern (Abstand höchstens 50). Hinweis: Lieferanten nummerieren über alle Kunden fortlaufend, Lücken sind im Bestand eines Empfängers üblich.",
+    "legal_basis": "§ 14 Abs. 4 Satz 1 Nr. 4 UStG",
+    "scope": "inventory",
+    "source": "Ergänzung auditcore",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 4,
+    "level": "info"
+   },
+   {
+    "code": "ERG-02",
+    "title": "USt-IdNr.-Konsistenz",
+    "checks": "Ein Lieferant mit verschiedenen USt-IdNr./Steuernummern (Warnung bei zwei verschiedenen USt-IdNr.) und dieselbe Kennung bei verschiedenen Lieferanten (Hinweis).",
+    "legal_basis": "§ 14 Abs. 4 Satz 1 Nr. 2 UStG",
+    "scope": "inventory",
+    "source": "Ergänzung auditcore",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 4,
+    "level": "warning"
+   }
+  ],
+  "findings": [
+   {
+    "id": "B-0001",
+    "rule": "C-01",
+    "category": "mandatory_field",
+    "level": "warning",
+    "field": null,
+    "message": "Beleg 6: 1 Pflichtfeld(er) fehlen: Ausstellungsdatum",
+    "documents": [
+     5
+    ],
+    "evidence": {
+     "missing_fields": [
+      "Ausstellungsdatum"
+     ]
+    },
+    "rule_reference": "§ 14 UStG"
+   },
+   {
+    "id": "B-0002",
+    "rule": "C-01",
+    "category": "mandatory_field",
+    "level": "warning",
+    "field": null,
+    "message": "Beleg 8: 1 Pflichtfeld(er) fehlen: Steuernummer oder USt-IdNr.",
+    "documents": [
+     7
+    ],
+    "evidence": {
+     "missing_fields": [
+      "Steuernummer oder USt-IdNr."
+     ]
+    },
+    "rule_reference": "§ 14 UStG"
+   },
+   {
+    "id": "B-0003",
+    "rule": "C-01",
+    "category": "mandatory_field",
+    "level": "warning",
+    "field": null,
+    "message": "Beleg 9: 1 Pflichtfeld(er) fehlen: Name/Anschrift des Empfängers",
+    "documents": [
+     8
+    ],
+    "evidence": {
+     "missing_fields": [
+      "Name/Anschrift des Empfängers"
+     ]
+    },
+    "rule_reference": "§ 14 UStG"
+   },
+   {
+    "id": "B-0004",
+    "rule": "C-01",
+    "category": "mandatory_field",
+    "level": "warning",
+    "field": null,
+    "message": "Beleg 10: 1 Pflichtfeld(er) fehlen: Entgelt (netto)",
+    "documents": [
+     9
+    ],
+    "evidence": {
+     "missing_fields": [
+      "Entgelt (netto)"
+     ]
+    },
+    "rule_reference": "§ 14 UStG"
+   },
+   {
+    "id": "B-0005",
+    "rule": "C-02",
+    "category": "date_validation",
+    "level": "warning",
+    "field": "invoice_date",
+    "message": "Beleg 6: Datum nicht extrahierbar (Wert: 'Invalid Date'). Manuelle Nachprüfung erforderlich.",
+    "documents": [
+     5
+    ],
+    "evidence": {
+     "raw_value": "Invalid Date"
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0006",
+    "rule": "C-03",
+    "category": "invoice_number",
+    "level": "warning",
+    "field": "invoice_number",
+    "message": "Beleg 7: Rechnungsnummer 'Steuernummer 012/345/67890 Adresse Musterweg 1' nicht plausibel: zu lang (46 > 30 Zeichen); sieht nach Fließtext aus, nicht nach Rechnungsnummer; verdächtiger Inhalt (enthält 'steuer')",
+    "documents": [
+     6
+    ],
+    "evidence": {
+     "value": "Steuernummer 012/345/67890 Adresse Musterweg 1",
+     "issues": [
+      "zu lang (46 > 30 Zeichen)",
+      "sieht nach Fließtext aus, nicht nach Rechnungsnummer",
+      "verdächtiger Inhalt (enthält 'steuer')"
+     ]
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0007",
+    "rule": "C-04",
+    "category": "cross_field",
+    "level": "warning",
+    "field": null,
+    "message": "Beleg 7: Brutto (2500.00) != Netto (2000.00) + USt (380.00) = 2380.00. Differenz: 120.00 EUR.",
+    "documents": [
+     6
+    ],
+    "evidence": {
+     "net": "2000.00",
+     "vat": "380.00",
+     "gross": "2500.00",
+     "calculated": "2380.00",
+     "difference": "120.00"
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0008",
+    "rule": "C-05",
+    "category": "vat_rate",
+    "level": "warning",
+    "field": "vat_rate",
+    "message": "Beleg 6: Steuersatz 16.0% entspricht keinem gesetzlich zulässigen Satz (0%, 7%, 19%).",
+    "documents": [
+     5
+    ],
+    "evidence": {
+     "vat_rate": 16.0,
+     "valid_rates": [
+      0.0,
+      7.0,
+      19.0
+     ]
+    },
+    "rule_reference": "§ 12 UStG"
+   },
+   {
+    "id": "B-0009",
+    "rule": "C-06",
+    "category": "supplier_name",
+    "level": "warning",
+    "field": "supplier_name",
+    "message": "Beleg 8: Lieferantenname 'testlabor nord' nicht plausibel: kein Großbuchstabe (kein plausibler Firmen-/Personenname)",
+    "documents": [
+     7
+    ],
+    "evidence": {
+     "value": "testlabor nord",
+     "issues": [
+      "kein Großbuchstabe (kein plausibler Firmen-/Personenname)"
+     ]
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0010",
+    "rule": "C-07",
+    "category": "concentration",
+    "level": "warning",
+    "field": "supplier_name",
+    "message": "Konzentrationsrisiko: 'muster bau' hat 4 Belege (76.8% des Gesamtvolumens).",
+    "documents": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "evidence": {
+     "supplier": "muster bau",
+     "document_count": 4,
+     "volume": "36890.00",
+     "share": 0.7684
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0011",
+    "rule": "C-08",
+    "category": "sum_reconciliation",
+    "level": "warning",
+    "field": null,
+    "message": "Summenabweichung: Einzelbeträge ergeben 48009.00 EUR, ausgewiesenes Gesamtvolumen ist 48500.00 EUR. Differenz: 491.00 EUR.",
+    "documents": [],
+    "evidence": {
+     "calculated_sum": "48009.00",
+     "reported_total": "48500.0",
+     "difference": "491.00"
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0012",
+    "rule": "C-09",
+    "category": "duplicate",
+    "level": "warning",
+    "field": null,
+    "message": "Mögliches Duplikat: Lieferant 'muster bau' mit Re.-Nr. 'RE-2026-0106' erscheint 2x (Belege 3, 4).",
+    "documents": [
+     2,
+     3
+    ],
+    "evidence": {
+     "supplier": "muster bau",
+     "invoice_number": "RE-2026-0106",
+     "document_indices": [
+      2,
+      3
+     ]
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0013",
+    "rule": "C-13",
+    "category": "mandatory_field",
+    "level": "info",
+    "field": "ocr_confidence",
+    "message": "Beleg 7: OCR-Confidence niedrig (62.0% < 80%). Risikoorientierte Nachprüfung empfohlen.",
+    "documents": [
+     6
+    ],
+    "evidence": {
+     "ocr_confidence": 0.62
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0014",
+    "rule": "C-13",
+    "category": "mandatory_field",
+    "level": "info",
+    "field": "ocr_confidence",
+    "message": "Beleg 8: OCR-Confidence niedrig (74.0% < 80%). Risikoorientierte Nachprüfung empfohlen.",
+    "documents": [
+     7
+    ],
+    "evidence": {
+     "ocr_confidence": 0.74
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0015",
+    "rule": "A-07",
+    "category": "nan_value",
+    "level": "warning",
+    "field": "net_amount",
+    "message": "Beleg 10: Feld 'net_amount' enthält ungültigen Wert 'NaN'. Anzeige als 'n/v' (nicht verfügbar) erforderlich.",
+    "documents": [
+     9
+    ],
+    "evidence": {
+     "field": "net_amount",
+     "raw_value": "NaN"
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0016",
+    "rule": "B-12",
+    "category": "formal_correctness",
+    "level": "blocker",
+    "field": null,
+    "message": "Formale Korrektheit: 5/10 Belege (50.0%) sind formal korrekt. 5 Beleg(e) weisen Mängel auf.",
+    "documents": [
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "evidence": {
+     "correct_count": 5,
+     "total_count": 10,
+     "rate": 0.5,
+     "issues_by_document": {
+      "5": [
+       "Pflichtfeld 'invoice_date' fehlt",
+       "Datum ungültig"
+      ],
+      "6": [
+       "Rechnungsnummer nicht plausibel"
+      ],
+      "7": [
+       "Pflichtfeld 'supplier_vat_id' fehlt"
+      ],
+      "8": [
+       "Pflichtfeld 'customer_name' fehlt"
+      ],
+      "9": [
+       "Pflichtfeld 'net_amount' fehlt",
+       "NaN/Inf in 'net_amount'"
+      ]
+     }
+    },
+    "rule_reference": ""
+   },
+   {
+    "id": "B-0017",
+    "rule": "ERG-01",
+    "category": "invoice_number_gap",
+    "level": "info",
+    "field": "invoice_number",
+    "message": "Nummernlücken bei Lieferant 'muster bau' (Nummernkreis 'RE-2026-…'): 3 Nummer(n) fehlen im Bestand: RE-2026-0103 bis RE-2026-0105.",
+    "documents": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "evidence": {
+     "supplier": "muster bau",
+     "prefix": "RE-2026-",
+     "suffix": "",
+     "missing_count": 3,
+     "gaps": [
+      [
+       103,
+       105
+      ]
+     ],
+     "document_indices": [
+      0,
+      1,
+      2,
+      3
+     ]
+    },
+    "rule_reference": "§ 14 Abs. 4 Satz 1 Nr. 4 UStG"
+   },
+   {
+    "id": "B-0018",
+    "rule": "ERG-02",
+    "category": "vat_id_consistency",
+    "level": "warning",
+    "field": "supplier_vat_id",
+    "message": "Lieferant 'muster bau' mit 2 verschiedenen USt-IdNr./Steuernummern: DE100000001 (Beleg 1, 2); DE100000009 (Beleg 3, 4).",
+    "documents": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "evidence": {
+     "supplier": "muster bau",
+     "variants": {
+      "DE100000001": [
+       0,
+       1
+      ],
+      "DE100000009": [
+       2,
+       3
+      ]
+     },
+     "document_indices": [
+      0,
+      1,
+      2,
+      3
+     ]
+    },
+    "rule_reference": "§ 14 Abs. 4 Satz 1 Nr. 2 UStG"
+   }
+  ],
+  "documents": [
+   {
+    "index": 0,
+    "ref": "B-001",
+    "supplier_name": "Muster Bau GmbH",
+    "invoice_number": "RE-2026-0101",
+    "invoice_date": "15.01.2026",
+    "gross_amount": "11900.00",
+    "ocr_confidence": 0.97,
+    "findings": 3,
+    "level": "warning",
+    "rules": [
+     "C-07",
+     "ERG-01",
+     "ERG-02"
+    ]
+   },
+   {
+    "index": 1,
+    "ref": "B-002",
+    "supplier_name": "Muster Bau GmbH",
+    "invoice_number": "RE-2026-0102",
+    "invoice_date": "29.01.2026",
+    "gross_amount": "9520.00",
+    "ocr_confidence": 0.95,
+    "findings": 3,
+    "level": "warning",
+    "rules": [
+     "C-07",
+     "ERG-01",
+     "ERG-02"
+    ]
+   },
+   {
+    "index": 2,
+    "ref": "B-003",
+    "supplier_name": "Muster Bau GmbH",
+    "invoice_number": "RE-2026-0106",
+    "invoice_date": "12.02.2026",
+    "gross_amount": "7735.00",
+    "ocr_confidence": 0.93,
+    "findings": 4,
+    "level": "warning",
+    "rules": [
+     "C-07",
+     "C-09",
+     "ERG-01",
+     "ERG-02"
+    ]
+   },
+   {
+    "index": 3,
+    "ref": "B-004",
+    "supplier_name": "Muster Bau GmbH",
+    "invoice_number": "RE-2026-0106",
+    "invoice_date": "12.02.2026",
+    "gross_amount": "7735.00",
+    "ocr_confidence": 0.93,
+    "findings": 4,
+    "level": "warning",
+    "rules": [
+     "C-07",
+     "C-09",
+     "ERG-01",
+     "ERG-02"
+    ]
+   },
+   {
+    "index": 4,
+    "ref": "B-005",
+    "supplier_name": "Beispiel Elektro AG",
+    "invoice_number": "EL-77",
+    "invoice_date": "03.03.2026",
+    "gross_amount": "4998.00",
+    "ocr_confidence": 0.91,
+    "findings": 0,
+    "level": null,
+    "rules": []
+   },
+   {
+    "index": 5,
+    "ref": "B-006",
+    "supplier_name": "Beispiel Elektro AG",
+    "invoice_number": "EL-78",
+    "invoice_date": "Invalid Date",
+    "gross_amount": "1160.00",
+    "ocr_confidence": 0.88,
+    "findings": 4,
+    "level": "blocker",
+    "rules": [
+     "B-12",
+     "C-01",
+     "C-02",
+     "C-05"
+    ]
+   },
+   {
+    "index": 6,
+    "ref": "B-007",
+    "supplier_name": "Testlabor Nord GmbH",
+    "invoice_number": "Steuernummer 012/345/67890 Adresse Musterweg 1",
+    "invoice_date": "18.03.2026",
+    "gross_amount": "2500.00",
+    "ocr_confidence": 0.62,
+    "findings": 4,
+    "level": "blocker",
+    "rules": [
+     "B-12",
+     "C-03",
+     "C-04",
+     "C-13"
+    ]
+   },
+   {
+    "index": 7,
+    "ref": "B-008",
+    "supplier_name": "testlabor nord",
+    "invoice_number": "TL-2026-5",
+    "invoice_date": "25.03.2026",
+    "gross_amount": "535.00",
+    "ocr_confidence": 0.74,
+    "findings": 4,
+    "level": "blocker",
+    "rules": [
+     "B-12",
+     "C-01",
+     "C-06",
+     "C-13"
+    ]
+   },
+   {
+    "index": 8,
+    "ref": "B-009",
+    "supplier_name": "Demo Druck KG",
+    "invoice_number": "DD-10",
+    "invoice_date": "02.04.2026",
+    "gross_amount": "1284.00",
+    "ocr_confidence": null,
+    "findings": 2,
+    "level": "blocker",
+    "rules": [
+     "B-12",
+     "C-01"
+    ]
+   },
+   {
+    "index": 9,
+    "ref": "B-010",
+    "supplier_name": "Demo Druck KG",
+    "invoice_number": "DD-11",
+    "invoice_date": "16.04.2026",
+    "gross_amount": "642.00",
+    "ocr_confidence": 0.9,
+    "findings": 3,
+    "level": "blocker",
+    "rules": [
+     "A-07",
+     "B-12",
+     "C-01"
+    ]
+   }
+  ],
+  "stored": false
+ },
+ "answer_plain": {
+  "contract": "documents_batch_checks/1",
+  "library": "auditcore_documents 0.4.0",
+  "options": {
+   "total_volume": null,
+   "tolerance": 0.02,
+   "concentration_threshold": 0.3,
+   "block_threshold": 0.2,
+   "supplementary": false
+  },
+  "summary": {
+   "documents": 2,
+   "findings": 1,
+   "documents_with_findings": 2,
+   "escalation_level": "warning",
+   "report_blocked": false,
+   "block_reason": null,
+   "timestamp": "2026-09-26T10:00:00+00:00"
+  },
+  "metrics": {
+   "total_documents": 2,
+   "mandatory_fields_success_rate": 1.0,
+   "per_field_success": {
+    "supplier_name": 1.0,
+    "customer_name": 1.0,
+    "supplier_vat_id": 1.0,
+    "invoice_date": 1.0,
+    "invoice_number": 1.0,
+    "description": 1.0,
+    "net_amount": 1.0,
+    "vat_rate": 1.0,
+    "vat_amount": 1.0
+   },
+   "documents_with_errors": 0,
+   "documents_with_errors_rate": 0.0,
+   "avg_ocr_confidence": 0.96,
+   "min_ocr_confidence": 0.95,
+   "escalated_documents": 0,
+   "formal_correctness_rate": 1.0
+  },
+  "rules": [
+   {
+    "code": "C-01",
+    "title": "Pflichtangaben",
+    "checks": "Neun Pflichtfelder je Beleg: Leistender, Leistungsempfänger, Steuernummer oder USt-IdNr., Ausstellungsdatum, Rechnungsnummer, Leistungsbeschreibung, Entgelt, Steuersatz und Steuerbetrag; leere Werte und Platzhalter gelten als fehlend.",
+    "legal_basis": "§ 14 Abs. 4 UStG",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-02",
+    "title": "Rechnungsdatum lesbar",
+    "checks": "Kein Fehlerwert (z. B. „Invalid Date“) und ein lesbares Datumsformat (TT.MM.JJJJ, JJJJ-MM-TT, TT/MM/JJJJ, MM/TT/JJJJ, TT-MM-JJJJ).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-03",
+    "title": "Rechnungsnummer plausibel",
+    "checks": "Höchstens 30 Zeichen, höchstens drei Wörter, keine fremden Angaben (Steuer, USt-Id, Adresse, Telefon, E-Mail, Web) und höchstens 30 % Sonderzeichen.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-04",
+    "title": "Beträge rechnerisch stimmig",
+    "checks": "Brutto = Netto + Steuerbetrag (Warnung) und Steuerbetrag = Netto × Steuersatz (Hinweis), jeweils mit Toleranz (Vorgabe 0,02 EUR).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-05",
+    "title": "Steuersatz zulässig",
+    "checks": "Nur 0 %, 7 % oder 19 %; Hinweis, wenn mehr als fünf Belege alle denselben Satz tragen (möglicher Vorgabewert statt gelesenem Wert).",
+    "legal_basis": "§ 12 UStG",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-06",
+    "title": "Lieferantenname plausibel",
+    "checks": "Mindestens drei Zeichen, mindestens ein Großbuchstabe, nicht nur Ziffern.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-07",
+    "title": "Lieferantenkonzentration",
+    "checks": "Anteil eines Lieferanten (ohne Rechtsform) am Volumen (brutto, sonst netto) über der Schwelle (Vorgabe 30 %).",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "findings",
+    "note": null,
+    "findings": 1,
+    "documents": 2,
+    "level": "warning"
+   },
+   {
+    "code": "C-08",
+    "title": "Summenabgleich",
+    "checks": "Summe der Einzelbeträge (brutto, sonst netto) gegen das ausgewiesene Gesamtvolumen; Toleranz 1 Cent je Beleg. Nur mit Angabe des Gesamtvolumens.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "not_checked",
+    "note": "Nicht geprüft: kein Gesamtvolumen angegeben.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-09",
+    "title": "Dubletten",
+    "checks": "Gleicher Lieferant (ohne Rechtsform) mit gleicher Rechnungsnummer mehrfach im Bestand.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-10",
+    "title": "Eskalation",
+    "checks": "Stufe Info, Warnung oder Blockade. Blockade, wenn der Anteil der Belege mit Warnung die Schwelle übersteigt (Vorgabe 20 %) oder die formale Korrektheit (B-12) höchstens 50 % beträgt; dann ist eine manuelle Freigabe erforderlich.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "result",
+    "note": "Stufe: Warnung.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-11",
+    "title": "Maschinenlesbarer Export",
+    "checks": "Ergebnis mit allen Befunden und Kennzahlen als JSON; zusätzlich Befundliste als CSV.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "result",
+    "note": "Export über POST /export (json oder csv).",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-12",
+    "title": "Kennzahlen der Extraktionsqualität",
+    "checks": "Erfüllungsquote der Pflichtfelder gesamt und je Feld, Belege mit fehlenden Pflichtfeldern, formale Korrektheit sowie mittlere und kleinste OCR-Konfidenz.",
+    "legal_basis": "",
+    "scope": "run",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "result",
+    "note": "Pflichtfelder erfüllt: 100.0%; formal korrekt: 100.0%.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "C-13",
+    "title": "OCR-Konfidenz je Beleg",
+    "checks": "Belege unter 80 % OCR-Konfidenz werden zur risikoorientierten Nachprüfung vorgemerkt. Nur mit OCR-Konfidenzen im Bestand.",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "A-07",
+    "title": "Ungültige Zahlenwerte",
+    "checks": "NaN, null, undefined, inf oder n/a in Netto, Steuerbetrag, Brutto oder Steuersatz (Anzeige als „n/v“ erforderlich).",
+    "legal_basis": "",
+    "scope": "document",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "B-12",
+    "title": "Formale Korrektheit",
+    "checks": "Anteil der Belege ohne fehlende Pflichtangabe, ungültiges Datum, unplausible Rechnungsnummer oder NaN-Betrag; Warnung unter 100 %, Blockade bis 50 %.",
+    "legal_basis": "",
+    "scope": "inventory",
+    "source": "Verbesserungskatalog HA-EFRE-2026-0847 (flowinvoice)",
+    "status": "passed",
+    "note": null,
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "ERG-01",
+    "title": "Lücken in Rechnungsnummern",
+    "checks": "Je Lieferant und Nummernkreis (gleiches Präfix) fehlende Zählwerte zwischen zwei vorhandenen Nummern (Abstand höchstens 50). Hinweis: Lieferanten nummerieren über alle Kunden fortlaufend, Lücken sind im Bestand eines Empfängers üblich.",
+    "legal_basis": "§ 14 Abs. 4 Satz 1 Nr. 4 UStG",
+    "scope": "inventory",
+    "source": "Ergänzung auditcore",
+    "status": "not_checked",
+    "note": "Nicht geprüft: Ergänzungsprüfungen abgeschaltet.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   },
+   {
+    "code": "ERG-02",
+    "title": "USt-IdNr.-Konsistenz",
+    "checks": "Ein Lieferant mit verschiedenen USt-IdNr./Steuernummern (Warnung bei zwei verschiedenen USt-IdNr.) und dieselbe Kennung bei verschiedenen Lieferanten (Hinweis).",
+    "legal_basis": "§ 14 Abs. 4 Satz 1 Nr. 2 UStG",
+    "scope": "inventory",
+    "source": "Ergänzung auditcore",
+    "status": "not_checked",
+    "note": "Nicht geprüft: Ergänzungsprüfungen abgeschaltet.",
+    "findings": 0,
+    "documents": 0,
+    "level": null
+   }
+  ],
+  "findings": [
+   {
+    "id": "B-0001",
+    "rule": "C-07",
+    "category": "concentration",
+    "level": "warning",
+    "field": "supplier_name",
+    "message": "Konzentrationsrisiko: 'muster bau' hat 2 Belege (100.0% des Gesamtvolumens).",
+    "documents": [
+     0,
+     1
+    ],
+    "evidence": {
+     "supplier": "muster bau",
+     "document_count": 2,
+     "volume": "21420.00",
+     "share": 1.0
+    },
+    "rule_reference": ""
+   }
+  ],
+  "documents": [
+   {
+    "index": 0,
+    "ref": "B-001",
+    "supplier_name": "Muster Bau GmbH",
+    "invoice_number": "RE-2026-0101",
+    "invoice_date": "15.01.2026",
+    "gross_amount": "11900.00",
+    "ocr_confidence": 0.97,
+    "findings": 1,
+    "level": "warning",
+    "rules": [
+     "C-07"
+    ]
+   },
+   {
+    "index": 1,
+    "ref": "B-002",
+    "supplier_name": "Muster Bau GmbH",
+    "invoice_number": "RE-2026-0102",
+    "invoice_date": "29.01.2026",
+    "gross_amount": "9520.00",
+    "ocr_confidence": 0.95,
+    "findings": 1,
+    "level": "warning",
+    "rules": [
+     "C-07"
+    ]
+   }
+  ],
+  "stored": false
+ }
+}

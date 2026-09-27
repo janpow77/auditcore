@@ -15,6 +15,17 @@
   Oberfläche `ReportTemplates` / `FlowauditReportTemplates`
   (`<flowaudit-report-templates>`) per Generator, Paritätsfälle, Demo und
   Browsertest. Spezifikation um die Invarianten I14–I18 ergänzt.
+- auditcore_documents: Bestandsprüfung `documents_batch_checks/1` (C-01 bis
+  C-13, A-07, B-12, Ergänzungen ERG-01/ERG-02) mit Oberfläche `BatchChecks` /
+  `<flowaudit-batch-checks>` / `FlowauditBatchChecks`; Regelmeldungen der
+  Pipeline deutsch (D9). Siehe `docs/ui/batch-checks-rest.md`.
+- `auditcore_extrapolation`: fehlende Verfahren des Stichprobenleitfadens
+  EGESIF_16-0014-01 ergänzt – mehrere Zeiträume, zwei-/dreistufige Stichprobe
+  inkl. ETC, Neuberechnung des Konfidenzniveaus (7.7), Gruppen von Programmen
+  (7.8), Merkmalsstichprobe (7.9); REST `evaluation/1` abwärtskompatibel
+  erweitert, `POST /attributes`; UI `ExtrapolationPanel`/`FlowauditExtrapolation`
+  mit Zeiträumen, Gruppen, Teilstichproben und Neuberechnung. Fehlerbehebung:
+  konservativer MUS-Ansatz mit allen Niveaus aus Tabelle 4.
 - `auditcore_sampling`: Stichprobenumfang nach dem KOM-Leitfaden
   EGESIF_16-0014-01 als neues Modul `guidance` mit Status „nach Leitfaden“
   (SRS, Differenzenschätzung, MUS Standard/geschichtet/konservativ,
@@ -85,6 +96,12 @@
   laufen über `auditcore_common.rest` (`decode_body` mit neuen Parametern
   `too_large_code`/`invalid_json_code`). Verhalten unverändert
   (Differenztests, Paketlauf alt gegen neu über HTTP).
+- flowinvoice-Parität für die gemeinsamen Oberflächen: `auditcore_statistics`
+  Chi²-Test mit kritischen Werten und auffällige Ziffern (REST-Feld `metrics`),
+  `auditcore_risk` Betrugsprüfsignale im Vertrag der Risiko-Merkmale
+  (`POST /fraud-signals/evaluate`, Profil `flowinvoice.fraud_signals` 2026.09.3
+  mit Bezeichnungen), Benford-Komponente (Vue/React) mit `metrics`,
+  `autoAnalyse`, `hideInputs`. Keine Versionsanhebung.
 
 ## 0.4.2 – 2026-09-26
 

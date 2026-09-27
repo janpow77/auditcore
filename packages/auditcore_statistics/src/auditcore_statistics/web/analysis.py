@@ -14,8 +14,9 @@ from typing import cast
 from auditcore_common import rest
 
 from .. import __version__
-from ..benford import METHOD, ShortValues, StatisticsInputError, benford_test
+from ..benford import METHOD, BenfordResult, ShortValues, StatisticsInputError, benford_test
 from ..conformity import PROFILES, TESTS, Test, assess
+from ..significance import STANDARD_LEVELS, chi_square_test, digit_z_test
 
 LIBRARY = f"auditcore_statistics {__version__}"
 MAX_VALUES = 1_000_000
@@ -25,6 +26,21 @@ TEST_LABELS: Mapping[str, tuple[str, int]] = {
     "first_two": ("Erste zwei Ziffern (10–99)", 2),
     "second": ("Zweite Ziffer (0–9)", 2),
 }
+METRICS = (
+    {
+        "id": "chi_square",
+        "label": "Chi²-Test mit kritischen Werten",
+        "parameters": {"significance_level": "optional, 0 < α < 1"},
+    },
+    {
+        "id": "digit_z",
+        "label": "Auffällige Ziffern (z je Ziffer)",
+        "parameters": {
+            "continuity_correction": "Pflicht, true oder false",
+            "z_critical": "optional, > 0",
+        },
+    },
+)
 SHORT_VALUES = (
     {"id": "exclude", "label": "Werte mit nur einer signifikanten Ziffer ausschließen"},
     {"id": "pad", "label": "Mit 0 auffüllen (5 → 50)"},
@@ -45,6 +61,8 @@ def catalogue() -> dict[str, object]:
         ],
         "short_values": [dict(s) for s in SHORT_VALUES],
         "profiles": [p.to_dict() for p in PROFILES.values()],
+        "metrics": [dict(m) for m in METRICS],
+        "standard_levels": list(STANDARD_LEVELS),
         "limits": {"max_values": MAX_VALUES},
     }
 
@@ -66,6 +84,47 @@ def _field(body: Mapping[str, object], key: str, allowed: tuple[str, ...]) -> st
     return rest.choice(body.get(key), key, allowed, error=ContractError)
 
 
+def _options(raw: object, name: str, allowed: tuple[str, ...]) -> Mapping[str, object]:
+    if not isinstance(raw, Mapping):
+        raise ContractError(f"'metrics.{name}' muss ein Objekt sein.")
+    unknown = sorted(str(k) for k in raw if k not in allowed)
+    if unknown:
+        raise ContractError(f"'metrics.{name}': unbekannte Felder {', '.join(unknown)}.")
+    return cast(Mapping[str, object], raw)
+
+
+def _number(raw: object, where: str) -> float | None:
+    if raw is None:
+        return None
+    if isinstance(raw, bool) or not isinstance(raw, (int, float, Decimal)):
+        raise ContractError(f"'{where}' muss eine Zahl sein.")
+    return float(raw)
+
+
+def _metrics(raw: object, result: BenfordResult, test: Test) -> dict[str, object]:
+    """Requested optional measures (``chi_square``, ``digit_z``) of the result."""
+    if not isinstance(raw, Mapping):
+        raise ContractError("'metrics' muss ein Objekt sein.")
+    unknown = sorted(str(k) for k in raw if k not in ("chi_square", "digit_z"))
+    if unknown:
+        raise ContractError(f"Unbekannte Kennzahlen: {', '.join(unknown)}.")
+    out: dict[str, object] = {}
+    if "chi_square" in raw:
+        chi = _options(raw["chi_square"], "chi_square", ("significance_level",))
+        level = _number(chi.get("significance_level"), "metrics.chi_square.significance_level")
+        out["chi_square"] = chi_square_test(result, test, significance_level=level).to_dict()
+    if "digit_z" in raw:
+        z = _options(raw["digit_z"], "digit_z", ("continuity_correction", "z_critical"))
+        correction = z.get("continuity_correction")
+        if not isinstance(correction, bool):
+            raise ContractError("'metrics.digit_z.continuity_correction' ist true oder false.")
+        critical = _number(z.get("z_critical"), "metrics.digit_z.z_critical")
+        out["digit_z"] = digit_z_test(
+            result, test, continuity_correction=correction, z_critical=critical
+        ).to_dict()
+    return out
+
+
 def analyse(payload: object) -> dict[str, object]:
     """``POST /analyze``: distribution, exclusions and conformity under a named profile."""
     if not isinstance(payload, Mapping):
@@ -83,14 +142,18 @@ def analyse(payload: object) -> dict[str, object]:
     try:
         result = benford_test(values, digits=digits, short_values=short)
         conformity = assess(result, test, profile_id)
+        metrics = None if body.get("metrics") is None else _metrics(body["metrics"], result, test)
     except StatisticsInputError as exc:
         raise ContractError(str(exc)) from exc
     distribution = result.to_dict()
     distribution["library"] = LIBRARY
-    return {
+    answer: dict[str, object] = {
         "library": LIBRARY,
         "test": test,
         "test_label": TEST_LABELS[test][0],
         "distribution": distribution,
         "conformity": conformity.to_dict(),
     }
+    if metrics is not None:
+        answer["metrics"] = metrics
+    return answer

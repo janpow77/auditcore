@@ -1,11 +1,12 @@
 # Spezifikation auditcore_documents
 
-Stand: 26.09.2026, Paketversion 0.4.0. Charakterisierung: Dokumentvergleich
+Stand: 27.09.2026, Paketversion 0.4.0 (mit Bestandsprüfung, noch nicht veröffentlicht). Charakterisierung: Dokumentvergleich
 gegen `janpow77/audit_designer@030a71e083ef` (`document_compare`, u. a.
 62 Standardvergleiche, 7 Gesetzessynopsen, 61 Lesefälle, 8 DOCX-Renderings;
 `docs/behavior-changes.md`), Dokumentpipeline gegen
 `janpow77/flowinvoice@fb2d18568d2e` (30 vollständige Läufe; `docs/pipeline.md`).
-Eigenschaftstests: `tests/test_spezifikation.py`.
+Eigenschaftstests: `tests/test_spezifikation.py` (I1–I10) und
+`tests/test_spezifikation_bestand.py` (I11–I16, Bestandsprüfung und Regelmeldungen).
 
 ## Zweck
 
@@ -14,7 +15,9 @@ und Fließtext aus DOCX/DOCM/PDF – und bereitet die Unterschiede als Synopse
 auf; für Artikelgesetze wendet es die Änderungsbefehle auf das Stammgesetz an.
 Daneben enthält es einen frameworkunabhängigen Kern der Dokumentpipeline
 (Einlesen, OCR über Ports, Feldextraktion, Validierung, Hashing, Aufbewahrung)
-für die Belegerkennung. Ein Vergleich ist eine Arbeitshilfe für Prüferinnen und
+für die Belegerkennung und eine Bestandsprüfung über viele Belege
+(Extraktionsqualitäts-Watchdog C-01 bis C-13, A-07, B-12 und die Ergänzungen
+ERG-01 Nummernlücken, ERG-02 USt-IdNr.-Konsistenz). Ein Vergleich ist eine Arbeitshilfe für Prüferinnen und
 Prüfer: Er stellt Unterschiede fest, trifft aber keine Prüfungsentscheidung.
 
 ## Verträge
@@ -31,6 +34,9 @@ Prüfer: Er stellt Unterschiede fest, trifft aber keine Prüfungsentscheidung.
 | `generate_reason`, `verify_legal_references`, `apply_reasons_*` | Zeilen, Port `ReasonProvider` | Begründungsvorschläge mit geprüften Fundstellen | ohne Port kein Netz (`CompareError`) |
 | `load_settings`, `save_settings`, `merge_settings`, `sanitise_settings` | Pfad bzw. Einstellungen | bereinigte Einstellungen | `save_settings` schreibt atomar |
 | `auditcore_documents.pipeline` (`build_pipeline`, `HashingService`, `RetentionSweeper`, Watchdog) | Dokument, Profil `LEGACY_PIPELINE` oder `CORRECTED_PIPELINE` (= `RECOMMENDED_PIPELINE`), Ports | Kontext mit Stufenergebnissen, Stufen-Hashes, Audit-Ereignissen | nur über Ports (Speicher, OCR, HTTP, Export) |
+| `BatchCheckService.check(payload)` / `.export(payload)` (Vertrag `documents_batch_checks/1`, `docs/ui/batch-checks-rest.md`) | Belege als flache Datensätze oder Läufe von `documents_extraction/1`, Optionen (`total_volume`, Schwellen, `supplementary`) | Antwort mit `summary`, `metrics` (C-12), Status aller Regeln, Befunden mit Begründung und betroffenen Belegen, `documents`; Export JSON (C-11) oder CSV | keine; der Dienst speichert nichts |
+| `pipeline.watchdog.inventory_checks` (`check_invoice_number_gaps`, `check_vat_id_consistency`) | Beleg-Datensätze, `WatchdogResult` | ergänzt Befunde ERG-01/ERG-02 | nur am übergebenen Ergebnis |
+| `pipeline.stages.rule_messages` (`say`, `german_message`, `original_message`) | Meldungskennung bzw. Text | deutsche Meldung bzw. englischer Originalwortlaut | – |
 | `auditcore_documents.web` (Extras `web`/`fastapi`) | REST-Anfragen der Synopse-Oberfläche und der Belegerkennung | JSON-Antworten | keine Authentifizierung; Eigentümer je Anfrage über `identify` |
 
 Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare`
@@ -52,6 +58,12 @@ Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare
 | I8 | `base_paragraphs` zählt die Absätze je Paragraf ab 1 lückenlos und übernimmt den Text unverändert. | `test_i8_base_paragraphs_count_per_section` |
 | I9 | Zeilen ohne erkennbaren Änderungsbefehl werden übergangen: kein erkannter, kein offener Befehl, Stammtext unverändert. | `test_i9_lines_without_command_are_skipped` |
 | I10 | `HashingService.linked_chain` ist deterministisch, präfixstabil und reihenfolgeabhängig; `verify_chain` bestätigt den eigenen Kettenhash jeder nichtleeren Kette. | `test_i10_linked_chain_is_prefix_stable_and_order_sensitive` |
+| I11 | Jede Regelmeldung der Validierungsstufe lässt sich verlustfrei zwischen deutscher Fassung und englischem Originalwortlaut umrechnen (`original_message(say(code, …))` = Original, `german_message(Original)` = `say(code, …)`). | `test_i11_rule_messages_convert_both_ways` |
+| I12 | Die Antwort der Bestandsprüfung verbucht jeden Befund genau einmal: Zahl der Befunde in `summary` = Länge von `findings` = Summe über `rules[].findings`; jeder Befund gehört zu einer Katalogregel, betroffene Belege liegen im Bestand, `documents_with_findings` ist ihre Vereinigung, Nummern `B-0001…` lückenlos; Status `findings` genau bei mindestens einem Befund. | `test_i12_answer_accounts_for_every_finding` |
+| I13 | Der JSON-Export ist die Antwort von `POST /runs`; die CSV hat je Befund und betroffenem Beleg eine Zeile (Gesamtbefunde eine). | `test_i13_export_matches_the_run` |
+| I14 | ERG-01 meldet genau die fehlenden Zählwerte zwischen zwei vorhandenen Nummern mit Abstand ≤ 50 und nie eine vorhandene Nummer. | `test_i14_gaps_lie_between_present_numbers` |
+| I15 | Die Ergänzungsprüfungen ändern weder Eskalation (C-10), Blockade noch Kennzahlen, und die Katalogbefunde bleiben dieselben. | `test_i15_supplementary_checks_do_not_change_escalation` |
+| I16 | Ein Lauf der Belegerkennung als Beleg ergibt dieselben Befunde, Regelstatus und Belegzeilen wie der entsprechende flache Datensatz. | `test_i16_extraction_runs_equal_flat_records` |
 
 ### Befunde aus den Eigenschaftstests
 
@@ -78,6 +90,13 @@ Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare
 | unbekannte Felder in `ComparisonResult.from_dict` | `ValueError` |
 | nicht anwendbarer Änderungsbefehl | kein Fehler: Befehl bleibt mit Grund offen |
 
+Bestandsprüfung (`BatchCheckError`, Unterklasse von `auditcore_common.rest.ContractError`,
+HTTP-Status im Fehlerkörper): kein JSON → 400 `invalid_json`; Körper zu groß
+oder mehr als `max_documents` Belege → 413; leere Belegliste, Beleg kein
+Objekt, Feldwert weder Text noch Zahl, OCR-Konfidenz außerhalb 0…1,
+unzulässige Option, unbekanntes Exportformat → 422 `invalid_input`. Unlesbare
+Beträge sind kein Fehler, sondern werden als Befund gemeldet (A-07, C-01).
+
 `ParseError`, `DependencyError` und `LimitExceededError` sind Unterklassen von
 `CompareError`.
 
@@ -90,6 +109,9 @@ Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare
 - Gesetzessynopse nur für Befehle auf Absatzebene („wird wie folgt gefasst“,
   „wird aufgehoben“, „eingefügt“, Wortersetzungen); Satz-, Nummern- und
   Buchstabenbefehle bleiben offen (DC-L03).
+- Die Bestandsprüfung bewertet Extraktionsqualität und formale Merkmale; ihre
+  Befunde sind Hinweise zur Nachprüfung, keine Feststellungen. Steuersätze und
+  Pflichtangaben folgen dem deutschen UStG (§§ 12, 14), wie im Katalog.
 - OCR-Modelle, Rasterung und Gateway-Aufrufe liegen hinter Ports; die
   Bibliothek lädt kein Modell aus dem Netz.
 
@@ -105,6 +127,8 @@ Korrekturen (vollständig in `docs/behavior-changes.md` DC-C01…DC-C11 und
 | keine Größen-/Seitengrenzen | `ReadLimits` (DC-C03) | `tests/test_contract.py` |
 | „§ … wird aufgehoben“ nie als Befehl gelesen | im Profil `CORRECTED` gelesen (DC-C04, D1) | `tests/test_decisions.py` |
 | keine Umnummerierung nach Einfügung | `renumber_after_insert` in `CORRECTED` (DC-L01, D2) | `tests/test_decisions.py` |
+| Regelmeldungen der Validierungsstufe englisch | deutsch mit echten Umlauten, Codes/Ergebnisse unverändert (D9) | `tests/test_pipeline_replay.py`, `tests/test_spezifikation_bestand.py` (I11) |
+| Watchdog nur als Bibliotheksfunktion, keine Nummernlücken-/USt-IdNr.-Prüfung | REST-Vertrag `documents_batch_checks/1`, Ergänzungen ERG-01/ERG-02 außerhalb der Eskalation | `tests/test_batch_checks.py`, I12–I16 |
 | REVIEW_NEEDED wurde als OK gemeldet; IBAN-Muster lief über Zeilenenden | in `CORRECTED_PIPELINE` korrigiert (PL-C01, PL-C02) | `tests/test_pipeline_units.py` |
 
 Beibehaltenes Altverhalten (Legacy-Varianten, bitgenau und mit stabilen

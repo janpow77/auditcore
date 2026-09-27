@@ -124,14 +124,17 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (256):
+Exporte der Einstiegspunkte aus `package.json#exports` (263):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
 | `@auditcore/ui-react` | `Badge` | Funktion | – | `base/Badge` |
 | `@auditcore/ui-react` | `BadgeProps` | Schnittstelle | – | `base/Badge` |
+| `@auditcore/ui-react` | `BatchchecksAnswer` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `BatchchecksPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `BenfordInputs` | Schnittstelle | – | `benford/useBenford` |
+| `@auditcore/ui-react` | `BenfordMetricsRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `BenfordPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `Button` | Funktion | Schaltfläche wie `FaButton` (gleiche Klassen, ARIA und Zustände). | `base/Button` |
 | `@auditcore/ui-react` | `ButtonProps` | Schnittstelle | – | `base/Button` |
@@ -178,6 +181,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (256):
 | `@auditcore/ui-react` | `ExtrapolationInputs` | Schnittstelle | – | `extrapolation/useExtrapolation` |
 | `@auditcore/ui-react` | `ExtrapolationPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `FetchLike` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `FlowauditBatchChecks` | Funktion | Bestandsprüfung als native React-Komponente (Vertrag wie `<flowaudit-batch-checks>`): Bestand als CSV oder JSON einlesen, Spalten zuordnen, Prüflauf mit Befunden je Regel und betro … | `batchchecks/FlowauditBatchChecks` |
+| `@auditcore/ui-react` | `FlowauditBatchChecksProps` | Typ | – | `batchchecks/FlowauditBatchChecks` |
 | `@auditcore/ui-react` | `FlowauditBenford` | Funktion | Benford-Analyse als native React-Komponente (Vertrag wie `<flowaudit-benford>`): Werte (Eigenschaft oder Datei), Test, Bewertungsprofil, Kennzahlen mit MAD, Chi² und z je Ziffer, S … | `benford/FlowauditBenford` |
 | `@auditcore/ui-react` | `FlowauditBenfordProps` | Typ | – | `benford/FlowauditBenford` |
 | `@auditcore/ui-react` | `FlowauditComparisons` | Konstante | Dokumentvergleiche als native React-Komponente (Vertrag wie `<flowaudit-comparisons>`): zwei Fassungen hochladen, gespeicherte Vergleiche suchen, öffnen (eingebettete Synopse), lös … | `documents/FlowauditComparisons` |
@@ -328,6 +333,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (256):
 | `@auditcore/ui-react` | `ariaSort` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `columnCells` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `compareValues` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `createBatchchecksMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `createBatchchecksRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createBenfordRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createExtractionRestPort` | Re-Export | – | `@auditcore/ui-core` |

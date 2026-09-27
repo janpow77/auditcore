@@ -5,8 +5,15 @@ import type { UseExtrapolation } from './useExtrapolation'
 
 function StratumLine({ view, row, index }: { view: UseExtrapolation; row: StratumRow; index: number }) {
   const { state, controller, t } = view
+  const part = state.form.design === 'periods' ? 'period' : 'group'
+  const partIssue = extrapolationIssueText(state.issues, `strata.${index}.part`, t)
   return (
     <tr>
+      {state.form.design !== 'single' ? (
+        <td>
+          <input className="fa-extrapolation__input" value={row.part} aria-label={extrapolationCellLabel(t, part, index + 1)} aria-invalid={partIssue ? 'true' : undefined} title={partIssue || undefined} onChange={(event) => controller.updateStratum(index, { part: event.target.value })} />
+        </td>
+      ) : null}
       {STRATUM_FIELDS.map((field) => {
         const issue = extrapolationIssueText(state.issues, `strata.${index}.${field.key}`, t)
         return (
@@ -42,6 +49,7 @@ export function ExtrapolationStrata({ view }: { view: UseExtrapolation }) {
         <table className="fa-extrapolation__grid" data-testid="extrapolation-strata">
           <thead>
             <tr>
+              {state.form.design !== 'single' ? <th scope="col">{t(state.form.design === 'periods' ? 'period' : 'group')}</th> : null}
               {STRATUM_FIELDS.map((field) => <th key={field.key} scope="col">{t(field.label)}</th>)}
               <th scope="col">{t('remove')}</th>
             </tr>
