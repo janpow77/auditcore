@@ -87,5 +87,26 @@
       "origin": "OWN_IMPLEMENTATION",
       "description": "REST-Vertrag (docs/ui/benford-rest.md); Starlette-Routen und optionaler FastAPI-Router (Extra web)."
     }
-  ]
+  ],
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9"
+    ],
+    "legacy_variants": [
+      "legacy_run_benford",
+      "legacy_flowinvoice_benford"
+    ]
+  }
 }

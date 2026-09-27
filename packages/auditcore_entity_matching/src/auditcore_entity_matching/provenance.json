@@ -262,5 +262,32 @@
     "tool": "tools/capture_portal.py",
     "cases": 140,
     "method": "audit_prep (nur Standardbibliothek) direkt aus dem Blob-geprüften Checkout importiert"
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11"
+    ],
+    "legacy_variants": [
+      "legacy.flowworkshop_is_valid_lei",
+      "legacy.flowworkshop_extract_lei_from_text",
+      "legacy.flowworkshop_normalize_name",
+      "legacy.designer_normalisiere_name",
+      "legacy.flowinvoice_pep_normalize_name",
+      "riskanalysis.payee"
+    ]
   }
 }
