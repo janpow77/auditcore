@@ -9,6 +9,10 @@
 | `auditcore-runner profil anwenden --datei <pfad\|-> --json [--erwartete-version N] [--quelle lokal\|flow-agent] [--wer …]` | wie oben plus `angewendet`, `konflikt`, `version`, `profil_hash`, `fehler[]` | 0 ok, 1 Fehler, 3 Konflikt |
 | `auditcore-runner runner status --json`/`--schreiben` | Status (unten) | 0 |
 | `auditcore-runner runner soll [KLASSE=N …]` | Soll-Datei lesen/setzen | 0 |
+| `auditcore-runner runner status --streng` | wie oben; Exit 4 bei unbekannten Registrierungen | 0, 4 |
+| `auditcore-runner scaleset anzeigen` | Scale-Set-Name, Soll, Warteschlange und Statistik je Klasse | 0 |
+| `auditcore-runner scaleset loeschen [--klasse K] [--trockenlauf]` | Scale-Sets dieses Rechners löschen | 0 |
+| `auditcore-runner workflows vorlage runner-wahl [--ziel DIR]` | Entscheidungs-Job (`workflow_call`) ausgeben oder kopieren | 0, 1 |
 
 `anwenden` bricht nie laufende Jobs ab: Units werden neu geschrieben und
 geladen, neue Instanzen gestartet; überzählige Instanzen ruhen, weil der
@@ -23,11 +27,26 @@ wird nichts geschrieben; die Antwort nennt Version, letzte Quelle und den Diff.
 `~/.local/state/auditcore-runner/status.json`, jede Minute (Timer
 `auditcore-runner-status.timer`), Schema `auditcore-runner/status/1`:
 `rechner`, `profil_schema`, `profil_version`, `profil_hash`, `aenderung`,
-`sync`, `ziel`, `soll_quelle`, `hardware`, `klassen.<k>.{aktiv,max,soll,gruende,instanzen_aktiv,registriert,belegt}`,
+`sync`, `ziel`, `soll_quelle`, `backend`, `hardware`,
+`klassen.<k>.{aktiv,max,soll,gruende,instanzen_aktiv,registriert,belegt,warteschlange}`
+(mit Scale-Sets zusätzlich `nachfrage_soll`, `scale_set`, `scale_set_statistik`),
 `image_vorhanden`, `netz_vorhanden`, `netzsperre_aktiv`, `unbekannte_runner`,
-`github_rest_kontingent`. Warteschlangenzahlen je Klasse werden im Status geführt,
-sobald das Scale-Set-Backend sie liefert; ein externer Regler muss GitHub dann
-nicht selbst abfragen.
+`unbekannte_runner_details[]` (`name`, `id`, `online`, `belegt`, `labels`,
+`passt_zu_klasse`), `github_rest_kontingent`.
+
+`warteschlange` stammt aus der Nachfrage-Datei (unten) und ist `null`, wenn sie
+fehlt oder älter als 5 Minuten ist; ein externer Regler muss GitHub nicht selbst
+abfragen.
+
+## Nachfrage-Datei (lesend)
+
+`~/.local/state/auditcore-runner/nachfrage.json`, Schema
+`auditcore-runner/nachfrage/1`: `quelle` (`scaleset` oder `regler`),
+`zeit_unix`, `klassen.<k>.{warteschlange,soll,statistik,scale_set}`. Beim Backend
+`scaleset` schreibt sie der Listener nach jeder Nachricht (mindestens einmal je
+Long-Poll); `soll` = min(Kapazität, Minimum + zugewiesene Jobs) begrenzt dann
+die Supervisoren zusätzlich. Sonst schreibt der lokale Regler nur die
+Warteschlange.
 
 ## Soll-Datei (Vertrag mit einem externen Regler)
 

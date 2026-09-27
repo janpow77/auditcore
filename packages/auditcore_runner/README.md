@@ -108,6 +108,7 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 | `auditcore_runner.autoscaler` | Built-in autoscaler for target source ``lokal``: signals → rules → pool file. |
 | `auditcore_runner.backend` | How a runner instance obtains jobs – behind one interface. |
 | `auditcore_runner.cli` | Command line ``auditcore-runner``. |
+| `auditcore_runner.commands_scaleset` | CLI group ``scaleset``: listener, JIT configuration and clean-up for the scale set backend. |
 | `auditcore_runner.commands_tools` | CLI commands for checks: ``lokal``, ``befunde``, ``workflows``, ``image``, ``messen``, ``hook``. |
 | `auditcore_runner.github` | Minimal GitHub REST client: credentials, runners and queued jobs per label. |
 | `auditcore_runner.gpu` | Dynamic GPU assignment: a GPU runner takes whichever allowed card is free when a job starts. |
@@ -115,12 +116,15 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 | `auditcore_runner.image` | Runner image: version check against GitHub's runner releases and rebuild. |
 | `auditcore_runner.install` | Turn a profile into systemd user units, Docker network/image and root scripts. |
 | `auditcore_runner.measure` | Repeatable baseline measurement: CI durations (via ``gh``) and LLM token usage. |
+| `auditcore_runner.nachfrage` | Demand file: jobs waiting per class, written by the scale set listener or the local regulator. |
 | `auditcore_runner.pool` | Target instance counts per class – the contract with an external regulator. |
 | `auditcore_runner.profile` | Runner profile of one machine: classes, limits, target source and scaling rules. |
 | `auditcore_runner.profile_io` | Profile file format (JSON, German keys) with schema versions and migration. |
 | `auditcore_runner.profile_reader` | Typed, path-aware access to JSON objects of the profile file. |
 | `auditcore_runner.propose` | Suggest runner classes and limits from measured hardware. |
 | `auditcore_runner.regeln` | Pure scaling rules: signals + profile → target instances per class. |
+| `auditcore_runner.scaleset` | Client for GitHub's runner scale set API (backend ``scaleset``). |
+| `auditcore_runner.scaleset_listener` | Scale set listener: one long-poll session per runner class (backend ``scaleset``). |
 | `auditcore_runner.signals` | Collect the local signals the scaling rules need. Every probe is failure-tolerant: an unavailable source yields ``None`` (unknown) rather than an optimistic value. |
 | `auditcore_runner.status` | Machine status for humans, the web UI and external regulators (JSON file + Prometheus). |
 | `auditcore_runner.validation` | One validation for CLI and web UI: a profile must be consistent and fit its machine. |
@@ -138,6 +142,9 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
   je Runner, erlaubte GPUs, Prioritäten, Netz, Soll-Quelle. Versioniert
   (`version`, `aenderung`) mit Migration aus Version 1. Neutrale Vorlagen:
   `profil erkennen --vorlage workstation-2gpu|server-cpu`.
+- **Backend** `jit` (Standard, REST-JIT je Job) oder `scaleset` (Runner-Scale-Set
+  je Klasse mit Listener; `runs-on: <praefix>-<klasse>`), siehe
+  [docs/backends.md](docs/backends.md). GPU-Zugriff per CDI.
 - **Soll-Quelle** `statisch` (Maximum), `lokal` (eingebauter Autoskalierer
   `auditcore-runner regler`) oder `datei` (externer Regler, Vertrag
   `data/schemas/runner-pool.schema.json`).
@@ -159,7 +166,11 @@ Ausgangspunkt waren die Skripte unter `ci/runner/` im auditcore-Repository
 `ci/runner/` bleibt als Kompatibilitätsschicht. Charakterisiert durch
 Unit-Tests der reinen Regeln, der Profil-Validierung und -Migration, der
 Parser mit Fixture-Ausgaben je Werkzeug (`tests/fixtures/`) und einen
-Rauchtest des installierten Wheels (`tests/installed_smoke.py`).
+Rauchtest des installierten Wheels (`tests/installed_smoke.py`). Das
+Scale-Set-Backend setzt das Protokoll des MIT-lizenzierten Referenzclients
+`actions/scaleset` in Python um (kein übernommener Code, Lizenz unter
+`LICENSES/`) und ist gegen eine nachgebildete API getestet
+(`tests/fake_scaleset.py`).
 
 ## Bewusste Verhaltensabweichungen
 
@@ -172,17 +183,20 @@ Job statt nach Neuinstallation.
 
 Python ≥ 3.11, keine Pflichtabhängigkeiten. Extras: `[workflows]` – PyYAML ≥ 6.0;
 `[github-app]` – PyJWT[crypto] ≥ 2.8 (mit cryptography). Externe Programme
-(Docker, systemd, `jq`, `gh`, `nvidia-smi`) werden nur aufgerufen; die
+(Docker, systemd, `jq`, `gh`, `nvidia-smi`; für die Egress-Allowlist auf dem
+Host `ipset` und `curl`) werden nur aufgerufen; die
 Werkzeuge der Prüfbank stecken im Runner-Image (`data/Dockerfile`, Versionen
 und Lizenzen in [THIRD_PARTY.md](THIRD_PARTY.md)).
 
 ## Sicherheit und Datenschutz
 
 Ephemere Runner mit `--cap-drop ALL` und `no-new-privileges`, kein
-Docker-Socket, eigenes Netz mit Sperre privater Netze und des Hosts,
+Docker-Socket, eigenes Netz mit Sperre privater Netze und des Hosts
+(optional Egress-Allowlist),
 JIT-Konfiguration als Datei, Tokens nur als Dateipfad (nie im Profil, nie in
 Ausgaben), Warnung bei unbekannten registrierten Runnern, Workflow-Prüfung auf
-Fork- und Dependabot-Schutz. Netzzugriffe nur zur GitHub-API. Die lokale
+Fork- und Dependabot-Schutz. Netzzugriffe nur zur GitHub-API und zum
+Actions-Dienst (`*.actions.githubusercontent.com`). Die lokale
 Oberfläche schreibt nur über Loopback mit Kopfzeile. Personenbezogene Daten
 verarbeitet das Paket nicht. Ausführlich: [docs/sicherheit.md](docs/sicherheit.md).
 

@@ -15,9 +15,13 @@ beide validieren gleich, erhöhen `version` und schreiben `aenderung`.
 | | `runner_gruppe`, `repos_beobachten`, `bekannte_runner` | Runner-Gruppe; bei `org` Repos für die Warteschlange; Namenspräfixe anderer eigener Rechner | 1, [], [] |
 | `auth` | `art` | `gh` (gh-Anmeldung), `pat` (fein granulares Token), `app` (GitHub App) | `gh` |
 | | `token_datei`, `app_id`, `app_schluessel_datei`, `installation_id` | nur Pfade und IDs, nie Geheimnisse | – |
-| | `image`, `backend` | Runner-Image; Backend `jit` | `auditcore-runner:local`, `jit` |
+| | `image`, `backend` | Runner-Image; Backend `jit` (REST-JIT je Job) oder `scaleset` (Runner-Scale-Set, siehe [backends.md](backends.md)) | `auditcore-runner:local`, `jit` |
+| | `gpu_zugriff` | `cdi` (`--device nvidia.com/gpu=<UUID>`) oder `gpus` (`--gpus device=<UUID>`, ältere Docker) | `cdi` |
+| `scale_set` | `name_praefix`, `runner_gruppe` | nur Backend `scaleset`: Scale-Set je Klasse `<praefix>-<klasse>` (leer = Rechnername); Runner-Gruppe (Repositories: `default`) | `""`, `default` |
 | `reserve` | `cpus`, `speicher_gb` | für den Rechner freigehalten; Summe aller Klassen × max muss darunter bleiben | 4, 12 |
 | `netz` | `name`, `subnetz`, `bruecke`, `aktiv`, `sperre_pflicht` | eigenes Docker-Netz; Supervisor wartet auf die Netzsperre, wenn Pflicht | `auditcore-ci`, `172.30.250.0/24` |
+| | `egress` | `aus` (Internet offen, nur private Netze gesperrt) oder `allowlist` (nur die Ziele unten) | `aus` |
+| | `egress_hosts`, `egress_github_meta`, `egress_ports` | Hostnamen (GitHub, PyPI, npm, Container-Registrys), Bereiche aus `api.github.com/meta` (`api`, `web`, `git`, `packages`, `actions` …), erlaubte TCP-Ports | siehe `profil schema`, 80/443 |
 | `soll_quelle` | `art`, `datei` | `statisch`, `lokal` oder `datei` (externer Regler) | `statisch`, `~/.config/auditcore-runner/soll.json` |
 | `klassen.<k>` | `aktiv`, `cpus`, `speicher_gb`, `min_instanzen`, `max_instanzen` | Grenzen je Klasse (`cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`) | – |
 | | `leise_max`, `vram_mb`, `labels`, `cpu_shares`, `nice`, `io_gewicht`, `uv_cache_volume` | Maximum im Leise-Modus (-1 = wie max), VRAM-Bedarf je GPU-Runner, Runner-Labels, Priorität | – |

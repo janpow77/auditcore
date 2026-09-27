@@ -1,0 +1,10 @@
+[Unit]
+Description=auditcore-runner: Egress-Allowlist regelmäßig neu auflösen
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=30min
+RandomizedDelaySec=2min
+
+[Install]
+WantedBy=timers.target

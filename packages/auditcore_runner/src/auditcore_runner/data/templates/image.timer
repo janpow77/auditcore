@@ -1,0 +1,10 @@
+[Unit]
+Description=auditcore-runner: Runner-Image täglich prüfen (Mindestversion und Frist von GitHub)
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=2h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

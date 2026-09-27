@@ -11,6 +11,12 @@ Pflichtabhängigkeiten gibt es keine. Der Test `tests/test_lizenzen.py` prüft
 die Lizenzen der installierten Extras `github-app` und `workflows` auf
 MIT-Verträglichkeit.
 
+## Protokoll-Referenz
+
+| Quelle | Verwendung | Lizenz |
+|---|---|---|
+| github.com/actions/scaleset (Commit `e6daac7`) | Vorlage für das Protokoll des Backends `scaleset`; in Python nachgebaut, kein Code übernommen | MIT, Text in `LICENSES/actions-scaleset-MIT.txt` |
+
 ## Programme im Runner-Image (`data/Dockerfile`)
 
 Separate Programme, die nur aufgerufen werden; nichts davon ist in den

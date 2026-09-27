@@ -9,7 +9,7 @@ description = "Self-hosted GitHub runners with local autoscaling and a local che
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
-license-files = ["LICENSE", "NOTICE"]
+license-files = ["LICENSE", "NOTICE", "LICENSES/*.txt"]
 dependencies = []
 
 [project.optional-dependencies]
@@ -43,6 +43,7 @@ auditcore_runner = [
     "data/beispiele/*.json",
     "data/schemas/*.json",
     "data/web/*",
+    "data/workflows/*.yml",
 ]
 
 [tool.pytest.ini_options]

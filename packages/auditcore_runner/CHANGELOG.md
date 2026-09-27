@@ -23,3 +23,19 @@
   Baseline, Cache je Werkzeug nach Git-Inhalt, Prüfprofile mit
   `.auditcore-runner.toml`, Aufgabenpaket für headless-Agentenläufe,
   `workflows pruefen`, `messen`, prek-Hook.
+- Backend `scaleset`: Python-Umsetzung des Protokolls von `actions/scaleset`
+  (API-Version `6.0-preview`), Listener je Klasse mit Long-Poll und
+  `DeleteMessage`, Soll = min(Kapazität, Minimum + zugewiesene Jobs),
+  Nachfrage-Datei `nachfrage.json`; `scaleset lauschen|jit|entfernen|anzeigen|loeschen`.
+- Warteschlange je Klasse im Status-JSON; der lokale Regler nutzt sie statt
+  der REST-API, wenn der Listener läuft.
+- GPU-Zugriff per CDI (`gpu_zugriff`), Reservierung der Karte beim Wählen.
+- Egress-Allowlist im Runner-Netz (`netz.egress`), als erzeugtes root-Skript
+  mit ipset und Zeitgeber.
+- Überwachung unbekannter Runner: alle Seiten, Details mit passender Klasse,
+  einmalige Warnung je neuer Registrierung, `runner status --streng`.
+- Wiederverwendbarer Entscheidungs-Job (`workflow_call`) als Vorlage:
+  `workflows vorlage runner-wahl`.
+- `AUDITCORE_RUNNER_PROFILE` wird von allen Befehlen beachtet.
+- Zeitgeber `auditcore-runner-image.timer`: Runner-Image täglich prüfen und bei
+  Bedarf neu bauen.

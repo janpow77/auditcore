@@ -1,0 +1,17 @@
+[Unit]
+Description=auditcore-runner: Scale-Set-Listener (Nachfrage je Klasse, Backend „scaleset“)
+After=network-online.target
+
+[Service]
+Type=simple
+Environment=AUDITCORE_RUNNER_PROFILE=${profil}
+ExecStart=${programm} scaleset lauschen
+Restart=always
+RestartSec=30
+Nice=10
+# Beim Stoppen löscht der Listener seine Sitzungen; laufende Jobs bleiben unberührt.
+TimeoutStopSec=100
+KillMode=mixed
+
+[Install]
+WantedBy=default.target

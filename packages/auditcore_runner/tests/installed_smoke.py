@@ -30,6 +30,9 @@ def main() -> None:
         "beispiele/server-cpu.json",
         "web/index.html",
         "web/tokens.css",
+        "workflows/runner-wahl.yml",
+        "templates/scaleset.service",
+        "templates/auditcore-ci-egress.timer",
     ):
         assert data.joinpath(name).is_file(), name
     profile = from_json(json.loads(data.joinpath("beispiele", "workstation-2gpu.json").read_text(encoding="utf-8")))

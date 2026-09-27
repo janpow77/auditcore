@@ -166,6 +166,26 @@ def cmd_hook(args: argparse.Namespace) -> int:
     return 0
 
 
+WORKFLOW_TEMPLATES = ("runner-wahl",)
+
+
+def cmd_workflow_template(args: argparse.Namespace) -> int:
+    from importlib.resources import files
+
+    text = files("auditcore_runner").joinpath("data", "workflows", f"{args.name}.yml").read_text(encoding="utf-8")
+    if not args.ziel:
+        print(text, end="")
+        return 0
+    target = Path(args.ziel) / f"{args.name}.yml"
+    if target.exists() and not args.ueberschreiben:
+        print(f"Fehler: {target} existiert (--ueberschreiben)", file=sys.stderr)
+        return 1
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")
+    print(f"geschrieben: {target}")
+    return 0
+
+
 def add_tool_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
     local = sub.add_parser("lokal", help="Prüfprofil lokal ausführen (Runner-Image oder --host)")
     local.add_argument("pruefprofil")
@@ -194,6 +214,11 @@ def add_tool_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser]) 
     check.add_argument("--ohne-extern", action="store_true", help="ohne zizmor/actionlint")
     check.add_argument("--runner-variable", action="append", default=[], help="z. B. MY_RUNNER: nur in runs-on erlaubt")
     check.set_defaults(func=cmd_workflows)
+    template = flows.add_parser("vorlage", help="Workflow-Vorlage des Pakets ausgeben oder kopieren")
+    template.add_argument("name", choices=WORKFLOW_TEMPLATES)
+    template.add_argument("--ziel", help="Verzeichnis, z. B. .github/workflows (sonst Ausgabe auf stdout)")
+    template.add_argument("--ueberschreiben", action="store_true")
+    template.set_defaults(func=cmd_workflow_template)
     image_parser = sub.add_parser("image", help="Runner-Image prüfen und aktualisieren")
     image_parser.add_argument("aktion", choices=["pruefen", "aktualisieren"])
     image_parser.add_argument("--erzwingen", action="store_true")

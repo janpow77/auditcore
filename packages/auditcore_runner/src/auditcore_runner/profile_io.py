@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import cast
 
 from .profile import (
+    DEFAULT_EGRESS_HOSTS,
+    DEFAULT_GITHUB_META,
     Auth,
     Change,
     GpuPolicy,
@@ -17,6 +19,7 @@ from .profile import (
     Priority,
     Profile,
     RunnerClass,
+    ScaleSetSettings,
     Scaling,
     Target,
     TargetSource,
@@ -144,6 +147,17 @@ def _network(reader: Reader) -> Network:
         bridge=reader.text("bruecke", "br-auditcore-ci"),
         enabled=reader.flag("aktiv", True),
         firewall_required=reader.flag("sperre_pflicht", True),
+        egress=reader.text("egress", "aus"),
+        egress_hosts=reader.texts("egress_hosts", list(DEFAULT_EGRESS_HOSTS)),
+        egress_github_meta=reader.texts("egress_github_meta", list(DEFAULT_GITHUB_META)),
+        egress_ports=reader.integers("egress_ports", [80, 443]),
+    )
+
+
+def _scale_set(reader: Reader) -> ScaleSetSettings:
+    return ScaleSetSettings(
+        name_prefix=reader.text("name_praefix", ""),
+        runner_group=reader.text("runner_gruppe", "default"),
     )
 
 
@@ -157,6 +171,8 @@ def _parse_current(reader: Reader) -> Profile:
         auth=_auth(reader.sub("auth")),
         image=reader.text("image"),
         backend=reader.text("backend", "jit"),
+        scale_set=_scale_set(reader.sub("scale_set")),
+        gpu_access=reader.text("gpu_zugriff", "cdi"),
         reserve_cpus=reserve.integer("cpus"),
         reserve_memory_gb=reserve.integer("speicher_gb"),
         network=_network(reader.sub("netz")),
@@ -293,6 +309,8 @@ def to_json(profile: Profile) -> JsonObject:
         },
         "image": profile.image,
         "backend": profile.backend,
+        "scale_set": {"name_praefix": profile.scale_set.name_prefix, "runner_gruppe": profile.scale_set.runner_group},
+        "gpu_zugriff": profile.gpu_access,
         "reserve": {"cpus": profile.reserve_cpus, "speicher_gb": profile.reserve_memory_gb},
         "netz": {
             "name": network.name,
@@ -300,6 +318,10 @@ def to_json(profile: Profile) -> JsonObject:
             "bruecke": network.bridge,
             "aktiv": network.enabled,
             "sperre_pflicht": network.firewall_required,
+            "egress": network.egress,
+            "egress_hosts": list(network.egress_hosts),
+            "egress_github_meta": list(network.egress_github_meta),
+            "egress_ports": list(network.egress_ports),
         },
         "soll_quelle": {"art": profile.source.kind, "datei": profile.source.file},
         "skalierung": _scaling_json(profile.scaling),
