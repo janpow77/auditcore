@@ -210,11 +210,12 @@ def test_i10_update_query_inserts_exactly_the_date(since: date) -> None:
         update_query(DESIGNER, since)
 
 
-@pytest.mark.xfail(strict=True, reason="Befund LS-S1: datetime wird als date angenommen")
-def test_i10_update_query_rejects_datetimes() -> None:
-    """I10 (Befund LS-S1): a datetime would insert a time into an xsd:date literal."""
-    with pytest.raises(ConfigurationError):
-        update_query(ESI, datetime(2024, 1, 2, 3, 4))
+@EXAMPLES
+@given(st.datetimes())
+def test_i10_update_query_rejects_datetimes(since: datetime) -> None:
+    """I10 (LS-S1, behoben): a datetime would put a time into the xsd:date literal."""
+    with pytest.raises(ConfigurationError, match="ohne Uhrzeit"):
+        update_query(ESI, since)
 
 
 @EXAMPLES
