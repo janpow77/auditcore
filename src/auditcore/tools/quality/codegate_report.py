@@ -51,6 +51,28 @@ class ApiChange:
     change: str
 
 
+FIXES = {
+    "any_usages": "konkreten Typ, TypedDict oder Protocol statt Any",
+    "complexity_over_10": "Funktion aufteilen (Hilfsfunktionen, frühe Rückgabe)",
+    "functions_over_60_lines": "Funktion in benannte Schritte zerlegen",
+    "modules_over_400_lines": "Modul nach Verantwortung aufteilen",
+    "mypy_strict_errors": "Typfehler beheben (mypy --strict)",
+    "non_english_identifiers": "Bezeichner englisch benennen",
+    "duplicate_functions": "Kopie durch Import aus auditcore_common ersetzen",
+}
+
+
+@dataclass(frozen=True)
+class RuleHit:
+    """A concrete ratchet violation: file, line, rule and the expected fix."""
+
+    path: str
+    line: int
+    rule: str
+    detail: str
+    fix: str
+
+
 @dataclass
 class Findings:
     """All inputs of the report in normalized form."""
@@ -63,6 +85,7 @@ class Findings:
     coverage_low: list[tuple[str, float]] = field(default_factory=list)
     api_changes: list[ApiChange] = field(default_factory=list)
     api_compared_to: str = ""
+    rule_hits: list[RuleHit] = field(default_factory=list)
 
     @property
     def status(self) -> str:
@@ -77,7 +100,11 @@ class Findings:
             "scope": "AUDITCORE_FINDINGS_REPORT",
             "status": self.status,
             "tests": {"total": self.tests_total, "failures": [asdict(f) for f in self.failures]},
-            "gate": {"status": self.gate_status, "verdicts": self.verdicts},
+            "gate": {
+                "status": self.gate_status,
+                "verdicts": self.verdicts,
+                "hits": [asdict(hit) for hit in self.rule_hits],
+            },
             "coverage": {
                 "total_percent": self.coverage_total,
                 "low_files": [{"file": f, "percent": p} for f, p in self.coverage_low],
@@ -122,6 +149,27 @@ def read_gate(path: Path) -> tuple[str, list[dict[str, object]]]:
     report = json.loads(path.read_text(encoding="utf-8"))
     verdicts = [v for v in report.get("verdicts", []) if v.get("status") != "PASS"]
     return str(report.get("status", "NOT_EXECUTED")), verdicts
+
+
+def gate_hits(path: Path, changed: set[str] | None) -> list[RuleHit]:
+    """Findings behind failing ratchet metrics, restricted to changed files if known."""
+    report = json.loads(path.read_text(encoding="utf-8"))
+    failing = {
+        (str(v.get("package")), str(v.get("metric")))
+        for v in report.get("verdicts", [])
+        if v.get("status") == "FAIL"
+    }
+    hits = []
+    for package, data in report.get("packages", {}).items():
+        for item in data.get("findings", []):
+            metric, where = str(item["metric"]), str(item["path"])
+            if (package, metric) not in failing:
+                continue
+            if changed is not None and not any(c.endswith(where) for c in changed):
+                continue
+            fix = FIXES.get(metric, "Metrik wieder auf Baseline bringen")
+            hits.append(RuleHit(where, int(item["line"]), metric, str(item["detail"]), fix))
+    return sorted(hits, key=lambda hit: (hit.path, hit.line))
 
 
 def read_coverage(path: Path, limit: int = 10) -> tuple[float, list[tuple[str, float]]]:
@@ -184,6 +232,11 @@ def diff_api(before: Snapshot, after: Snapshot) -> list[ApiChange]:
     return sorted(changes, key=lambda change: (change.change != "removed", change.symbol))
 
 
+def changed_files(root: Path, ref: str) -> set[str]:
+    """Files changed between ``ref`` and the working tree (repository-relative)."""
+    return set(_git(root, "diff", "--name-only", ref).split())
+
+
 def api_changes(root: Path, ref: str) -> list[ApiChange]:
     """Compare the public API of the working tree with ``ref``."""
     return diff_api(_snapshot(_sources_at(root, ref)), _snapshot(_sources_at(root, None)))
@@ -203,6 +256,8 @@ def collect(
         findings.failures += failures
     if gate is not None:
         findings.gate_status, findings.verdicts = read_gate(gate)
+        changed = changed_files(*api) if api is not None else None
+        findings.rule_hits = gate_hits(gate, changed)
     if coverage is not None:
         findings.coverage_total, findings.coverage_low = read_coverage(coverage)
     if api is not None:
@@ -217,9 +272,10 @@ def _failure_lines(failures: list[FailedTest], title: str) -> list[str]:
         return []
     lines = [f"### {title} ({len(failures)})", ""]
     for failure in failures:
-        where = f" – `{failure.location}`" if failure.location else ""
-        lines.append(f"- **{failure.test}** ({failure.kind}){where}")
-        lines += [f"  - `{line[:160]}`" for line in failure.trace or [failure.message]]
+        where = failure.location or failure.test
+        first, *more = failure.trace or [failure.message]
+        lines.append(f"- `{where}` [{failure.kind}] {failure.test}: `{first[:140]}`")
+        lines += [f"  - `{line[:160]}`" for line in more]
     return lines + [""]
 
 
@@ -230,6 +286,10 @@ def _gate_lines(findings: Findings) -> list[str]:
             f"- {verdict.get('status')} {verdict.get('package')} {verdict.get('metric')}: "
             f"{verdict.get('baseline')} → {verdict.get('current')} ({verdict.get('message')})"
         )
+    lines += [
+        f"- `{hit.path}:{hit.line}` [{hit.rule}] {hit.detail} → {hit.fix}"
+        for hit in findings.rule_hits
+    ]
     return lines + [""]
 
 

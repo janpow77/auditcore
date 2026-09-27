@@ -11,6 +11,7 @@ from auditcore.tools.quality.codegate_report import (
     Findings,
     collect,
     diff_api,
+    gate_hits,
     read_coverage,
     read_junit,
     render_markdown,
@@ -167,3 +168,37 @@ def test_cli_reports_unreadable_input(tmp_path, capsys):
     broken = write(tmp_path / "j.xml", "<not-xml")
     assert main(["report", "--junit", str(broken), "--output", str(tmp_path / "r.json")]) == 2
     assert "nicht erstellbar" in capsys.readouterr().err
+
+
+def test_gate_hits_are_line_precise_with_fix(tmp_path):
+    gate = {
+        "status": "FAIL",
+        "verdicts": [
+            {
+                "package": "auditcore",
+                "metric": "any_usages",
+                "baseline": 1,
+                "current": 2,
+                "status": "FAIL",
+                "message": "gestiegen",
+            }
+        ],
+        "packages": {
+            "auditcore": {
+                "findings": [
+                    {"metric": "any_usages", "path": "src/a.py", "line": 7, "detail": "typing.Any"},
+                    {"metric": "any_usages", "path": "src/b.py", "line": 3, "detail": "typing.Any"},
+                    {"metric": "complexity_over_10", "path": "src/a.py", "line": 9, "detail": "f"},
+                ]
+            }
+        },
+    }
+    path = write(tmp_path / "g.json", json.dumps(gate))
+    hits = gate_hits(path, {"src/a.py"})
+    assert [(h.path, h.line, h.rule) for h in hits] == [("src/a.py", 7, "any_usages")]
+    assert len(gate_hits(path, None)) == 2
+    findings = Findings(gate_status="FAIL", rule_hits=hits)
+    line = (
+        "- `src/a.py:7` [any_usages] typing.Any → konkreten Typ, TypedDict oder Protocol statt Any"
+    )
+    assert line in render_markdown(findings)
