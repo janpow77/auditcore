@@ -278,3 +278,16 @@ def test_repo_file_schema_matches_loader(tmp_path: Path) -> None:
     profile = load_repo_profiles(tmp_path)["pr"]
     assert profile.autofix and profile.ordered_tools()[-1] == "playwright"
     assert len(load_codemods(tmp_path)) == 2
+
+
+def test_scan_root_paths_and_missing_programs(tmp_path: Path) -> None:
+    from auditcore_runner.werkzeuge.ausfuehren import _scan_root_relative
+
+    (tmp_path / "requirements.txt").write_text("jinja2==2.10\n", encoding="utf-8")
+    finding = Finding("grype", "GHSA-x", "/requirements.txt", 1, "x")
+    assert _scan_root_relative(finding, tmp_path).path == "requirements.txt"
+    assert _scan_root_relative(Finding("x", "r", "/etc/hosts", 1, "x"), tmp_path).path == "/etc/hosts"
+    registry = Registry({"weg": Tool("weg", "python", ("sh", "-c", "exit 127"), "keine")})
+    document = run_profile(Runner(tmp_path), registry, CheckProfile("t", ("weg",)), use_cache=False)
+    assert document["werkzeuge"][0]["status"] == "fehlt"  # type: ignore[index]
+    assert (tmp_path / ".auditcore-runner" / ".gitignore").read_text(encoding="utf-8") == "*\n"

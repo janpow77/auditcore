@@ -52,6 +52,7 @@ CONFIG_FILES = (
     ".pre-commit-config.yaml",
 )
 TOOL_CACHE_VOLUME = "auditcore-runner-werkzeug-cache"
+COMMAND_NOT_FOUND = 127  # shell and ``docker run`` when the program is missing
 
 
 def _git(root: Path, *args: str) -> str:
@@ -166,6 +167,7 @@ class Runner:
 def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
     work = runner.root / ".auditcore-runner"
     work.mkdir(exist_ok=True)
+    (work / ".gitignore").write_text("*\n", encoding="utf-8")
     output = work / tool.output_file if tool.output_file else None
     target = f"{runner.output_prefix()}/{tool.output_file}"
     argv = [part.replace("{ausgabe}", target) for part in tool.command]
@@ -184,6 +186,10 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
     except subprocess.TimeoutExpired:
         return ToolResult(tool.name, "zeitlimit", float(timeout), message=f"nach {timeout} s abgebrochen")
     seconds = time.monotonic() - started
+    if result.returncode == COMMAND_NOT_FOUND and COMMAND_NOT_FOUND not in tool.success_codes:
+        return ToolResult(
+            tool.name, "fehlt", seconds, message=f"{argv[0]} im Image bzw. auf dem Rechner nicht gefunden"
+        )
     if result.returncode not in tool.success_codes:
         return ToolResult(tool.name, "fehler", seconds, message=result.stderr.strip()[-400:])
     raw = output.read_text(encoding="utf-8") if output and output.exists() else result.stdout
@@ -191,7 +197,8 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         findings = PARSERS[tool.parser](raw)
     except (ValueError, KeyError) as error:
         return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
-    return ToolResult(tool.name, "ok", seconds, relative_to(_named(tool, findings), (str(runner.root), "/work")))
+    local = relative_to(_named(tool, findings), (str(runner.root), "/work"))
+    return ToolResult(tool.name, "ok", seconds, [_scan_root_relative(f, runner.root) for f in local])
 
 
 def _named(tool: Tool, findings: list[Finding]) -> list[Finding]:
@@ -199,6 +206,14 @@ def _named(tool: Tool, findings: list[Finding]) -> list[Finding]:
     if tool.parser != "sarif" or tool.area == "extern":
         return findings
     return [replace(f, tool=tool.name) for f in findings]
+
+
+def _scan_root_relative(finding: Finding, root: Path) -> Finding:
+    """Scanners such as grype report ``/datei`` relative to the scan root."""
+    path = finding.path
+    if path.startswith("/") and (root / path.lstrip("/")).exists():
+        return replace(finding, path=path.lstrip("/"))
+    return finding
 
 
 def cache_dir() -> Path:

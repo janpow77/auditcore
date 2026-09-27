@@ -9,7 +9,8 @@ from __future__ import annotations
 from .katalog_voll import IMAGE, JS
 from .modell import Cost, Tool
 
-NPX = ("npx", "--no-install")
+# Project installation first, then the copy in the image – never a download.
+PROJEKT = "PATH=node_modules/.bin:$PATH "
 STYLES = ("*.css", "*.scss", "*.vue")
 PLAYWRIGHT = "npx playwright test --reporter=junit"
 
@@ -20,8 +21,7 @@ STRUCTURE_TOOLS: tuple[Tool, ...] = (
         command=(
             "sh",
             "-c",
-            "jscpd . --silent --reporters json --gitignore --output {ausgabe}.d"
-            " && mv {ausgabe}.d/jscpd-report.json {ausgabe}",
+            "jscpd . --silent --reporters json --output {ausgabe}.d && mv {ausgabe}.d/jscpd-report.json {ausgabe}",
         ),
         parser="jscpd-json",
         cost=Cost(cpus=2, minutes=3),
@@ -56,23 +56,24 @@ JS_TOOLS: tuple[Tool, ...] = (
     Tool(
         name="tsc",
         area="js",
-        command=(*NPX, "tsc", "--noEmit", "--pretty", "false"),
+        command=("sh", "-c", PROJEKT + "tsc --noEmit --pretty false"),
         parser="tsc-text",
         cost=Cost(cpus=2, minutes=3),
         install=f"npm: typescript (Projekt, sonst {IMAGE})",
-        version_command=(*NPX, "tsc", "--version"),
+        version_command=("sh", "-c", PROJEKT + "tsc --version"),
         applies_to=("tsconfig.json",),
         success_codes=(0, 1, 2),
     ),
     Tool(
         name="prettier",
         area="js",
-        command=("sh", "-c", "prettier --check --ignore-unknown . 2>&1"),
+        command=("sh", "-c", "prettier --check --ignore-unknown . '!.auditcore-runner/**' 2>&1"),
         parser="prettier-text",
-        fix_command=("prettier", "--write", "--ignore-unknown", "."),
+        fix_command=("prettier", "--write", "--ignore-unknown", ".", "!.auditcore-runner/**"),
         install=f"npm: prettier – {IMAGE}",
         version_command=("prettier", "--version"),
         applies_to=(*JS, "*.css", "*.json", "*.md"),
+        success_codes=(0, 1, 2),
         stage="autofix",
     ),
     Tool(
@@ -91,21 +92,21 @@ JS_TOOLS: tuple[Tool, ...] = (
     Tool(
         name="vitest",
         area="js",
-        command=(*NPX, "vitest", "run", "--reporter=junit", "--outputFile={ausgabe}"),
+        command=("sh", "-c", PROJEKT + "vitest run --reporter=junit --outputFile={ausgabe}"),
         parser="vitest-junit",
         cost=Cost(cpus=4, minutes=5),
         install=f"npm: vitest (Projekt, sonst {IMAGE})",
-        version_command=(*NPX, "vitest", "--version"),
-        applies_to=JS,
+        version_command=("sh", "-c", PROJEKT + "vitest --version"),
+        applies_to=("vitest.config.*", "vite.config.*", "vitest.workspace.*"),
         output_file="vitest.xml",
     ),
     Tool(
         name="size-limit",
         area="js",
-        command=(*NPX, "size-limit", "--json"),
+        command=("sh", "-c", PROJEKT + "size-limit --json"),
         parser="size-limit-json",
         install="npm: size-limit und Plugin im Projekt",
-        version_command=(*NPX, "size-limit", "--version"),
+        version_command=("sh", "-c", PROJEKT + "size-limit --version"),
         applies_to=(".size-limit.json", ".size-limit.js", ".size-limit.cjs"),
     ),
 )
