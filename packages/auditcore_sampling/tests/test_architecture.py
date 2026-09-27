@@ -17,13 +17,15 @@ def test_runtime_imports_and_calls() -> None:
         "bisect",
         "collections",
         "dataclasses",
+        "hashlib",
         "math",
         "random",
+        "statistics",
         "types",
         "typing",
     }
     observed: set[str] = set()
-    for path in package.glob("*.py"):
+    for path in [*package.glob("*.py"), *package.glob("guidance/*.py")]:
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):

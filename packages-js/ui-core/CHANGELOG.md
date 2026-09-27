@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## Unreleased
+
+- Neu `samplesize`: Kern des Planers für den Stichprobenumfang nach KOM-Leitfaden (`createSamplesizeController`, `createSamplesizeRestPort` auf `auditcore_sampling.guidance/1`, `createSamplesizeMemoryPort`, Texte, Formular, Anzeige), Stil `styles/samplesize.css`.
+
 ## 0.2.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui-core` statt `@flowaudit/ui-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.
