@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu `SampleSizePlanner` / `<flowaudit-sample-size-planner>`: Stichprobenumfang nach KOM-Leitfaden planen (Vertrag `auditcore_sampling.guidance/1`).
 - Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`
   (zusätzliche Kennzahlen des REST-Vertrags: Chi²-Test mit kritischen Werten,
   auffällige Ziffern mit z je Ziffer), `autoAnalyse` (nach dem Laden und bei neuen

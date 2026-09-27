@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (862):
+Exporte der Einstiegspunkte aus `package.json#exports` (908):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -223,7 +223,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `DsfaStep` | Typ | – | `dataprotection/dsfa` |
 | `@auditcore/ui-core` | `DsfaTab` | Typ | – | `dataprotection/dsfa` |
 | `@auditcore/ui-core` | `EMPTY_EVALUATION` | Konstante | – | `risk/controller` |
+| `@auditcore/ui-core` | `EMPTY_FORM` | Konstante | – | `samplesize/model` |
 | `@auditcore/ui-core` | `EMPTY_RESIDUAL` | Konstante | – | `extrapolation/model` |
+| `@auditcore/ui-core` | `EMPTY_STRATUM` | Konstante | – | `samplesize/model` |
 | `@auditcore/ui-core` | `EarthModel` | Schnittstelle | – | `geo/types` |
 | `@auditcore/ui-core` | `EntryView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `EvaluateRequest` | Schnittstelle | – | `risk/port` |
@@ -324,6 +326,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `INITIAL_EXTRAPOLATION` | Konstante | – | `extrapolation/controller` |
 | `@auditcore/ui-core` | `INITIAL_IDENTIFIERS` | Konstante | – | `identifiers/controller` |
 | `@auditcore/ui-core` | `INITIAL_REPORTING` | Konstante | – | `reporting/controller` |
+| `@auditcore/ui-core` | `INITIAL_SAMPLESIZE` | Konstante | – | `samplesize/controller` |
 | `@auditcore/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@auditcore/ui-core` | `IconName` | Typ | – | `base/icons` |
 | `@auditcore/ui-core` | `IdentifierBatchAnswer` | Schnittstelle | – | `identifiers/types` |
@@ -467,6 +470,28 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `STATE_ICONS` | Konstante | Symbol je Zustand: Farbe ist nie der einzige Träger der Bedeutung. | `risk/format` |
 | `@auditcore/ui-core` | `STATE_KEYS` | Konstante | – | `risk/labels` |
 | `@auditcore/ui-core` | `STRATUM_FIELDS` | Konstante | – | `extrapolation/view` |
+| `@auditcore/ui-core` | `SampleSizeAllocation` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeCatalogue` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeChoice` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeConfidenceTable` | Typ | Tabelle, aus der die Konfidenzniveaus einer Methode stammen. | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeForm` | Schnittstelle | – | `samplesize/model` |
+| `@auditcore/ui-core` | `SampleSizeIssues` | Typ | Feldschlüssel → Fehlerart (`required` oder `invalid`). | `samplesize/model` |
+| `@auditcore/ui-core` | `SampleSizeLevel` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeMethod` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizePlan` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeRequest` | Schnittstelle | Anfrage an `POST /guidance/size`; Anteile als Werte zwischen 0 und 1. | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeStep` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SampleSizeStratumRequest` | Schnittstelle | – | `samplesize/types` |
+| `@auditcore/ui-core` | `SamplesizeBusy` | Typ | – | `samplesize/controller` |
+| `@auditcore/ui-core` | `SamplesizeCallbacks` | Schnittstelle | – | `samplesize/controller` |
+| `@auditcore/ui-core` | `SamplesizeCell` | Schnittstelle | – | `samplesize/view` |
+| `@auditcore/ui-core` | `SamplesizeController` | Schnittstelle | – | `samplesize/controller` |
+| `@auditcore/ui-core` | `SamplesizeData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `samplesize/controller` |
+| `@auditcore/ui-core` | `SamplesizeFieldView` | Schnittstelle | Ein Eingabefeld, wie Vue und React es darstellen. | `samplesize/view` |
+| `@auditcore/ui-core` | `SamplesizeMessageKey` | Typ | – | `samplesize/messages` |
+| `@auditcore/ui-core` | `SamplesizeOption` | Schnittstelle | – | `samplesize/view` |
+| `@auditcore/ui-core` | `SamplesizePort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `samplesize/types` |
+| `@auditcore/ui-core` | `SamplesizeSource` | Schnittstelle | – | `samplesize/controller` |
 | `@auditcore/ui-core` | `SamplingBusy` | Typ | – | `sampling/controller` |
 | `@auditcore/ui-core` | `SamplingCallbacks` | Schnittstelle | – | `sampling/controller` |
 | `@auditcore/ui-core` | `SamplingCatalogue` | Schnittstelle | – | `sampling/types` |
@@ -515,7 +540,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `SourcesView` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `StateFilter` | Typ | Filter: `affected` = Treffer oder unbestimmt; `all` = jeder Datensatz. | `risk/state` |
 | `@auditcore/ui-core` | `Store` | Schnittstelle | Kleinster gemeinsamer Zustandsspeicher der Controller. | `store` |
+| `@auditcore/ui-core` | `StratumColumn` | Typ | – | `samplesize/model` |
 | `@auditcore/ui-core` | `StratumCount` | Schnittstelle | – | `sampling/model` |
+| `@auditcore/ui-core` | `StratumDraft` | Schnittstelle | – | `samplesize/model` |
 | `@auditcore/ui-core` | `StratumInput` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `StratumProjection` | Schnittstelle | – | `extrapolation/types` |
 | `@auditcore/ui-core` | `StratumResult` | Schnittstelle | – | `sampling/types` |
@@ -609,6 +636,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `buildEvaluationRequest` | Funktion | Anfrage für `POST /evaluate`; bei Befunden die Feldschlüssel mit ihrem Fehler. | `extrapolation/model` |
 | `@auditcore/ui-core` | `buildIdentifierBatch` | Funktion | Anfrage für `POST /check/batch` aus der geladenen Tabelle und der Spaltenzuordnung. | `identifiers/model` |
 | `@auditcore/ui-core` | `buildIdentifierCheck` | Funktion | Anfrage für `POST /check`; Profil und Kennungsart sind Pflicht, ein leerer Wert ergibt „fehlt“. | `identifiers/model` |
+| `@auditcore/ui-core` | `buildRequest` | Funktion | Anfrage aus dem Formular oder die Felder mit fehlenden bzw. ungültigen Angaben. | `samplesize/model` |
 | `@auditcore/ui-core` | `buildResidualRequest` | Funktion | Anfrage für `POST /residual`; die Gesamtfehlerquote wird in Prozent eingegeben. | `extrapolation/model` |
 | `@auditcore/ui-core` | `buildRowView` | Funktion | – | `synopsis/viewModel` |
 | `@auditcore/ui-core` | `buildRunRequest` | Funktion | Anfrage aus dem Formular; bei Fehlern `request: null` und die Meldungen als Katalogschlüssel. | `screening/runForm` |
@@ -659,6 +687,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `createRiskController` | Funktion | – | `risk/controller` |
 | `@auditcore/ui-core` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@auditcore/ui-core` | `createRunner` | Funktion | Führt eine Portanfrage aus: setzt `busy`, fängt Fehler (über `toError`) und meldet sie an `onError`. Ohne Port geschieht nichts (`null`). | `store` |
+| `@auditcore/ui-core` | `createSamplesizeController` | Funktion | – | `samplesize/controller` |
+| `@auditcore/ui-core` | `createSamplesizeMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests): feste Antworten je Methode; ohne Antwort wird die Anfrage wie vom Backend abgelehnt. | `samplesize/port` |
+| `@auditcore/ui-core` | `createSamplesizeRestPort` | Funktion | Port auf den REST-Vertrag `auditcore_sampling.guidance/1` (Starlette oder FastAPI). | `samplesize/port` |
 | `@auditcore/ui-core` | `createSamplingController` | Funktion | – | `sampling/controller` |
 | `@auditcore/ui-core` | `createSamplingRestPort` | Funktion | Port auf den REST-Vertrag von `auditcore_sampling.web` (Starlette oder FastAPI). | `sampling/rest-port` |
 | `@auditcore/ui-core` | `createScreeningController` | Funktion | – | `screening/controller` |
@@ -751,6 +782,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `flagState` | Funktion | – | `risk/state` |
 | `@auditcore/ui-core` | `focusRow` | Funktion | Zeile fokussieren und sichtbar machen; Zeilen tragen `data-row-id` und `tabindex="-1"`. | `synopsis/navigation` |
 | `@auditcore/ui-core` | `focusableWithin` | Funktion | – | `focus` |
+| `@auditcore/ui-core` | `formFor` | Funktion | Anfangswerte bei Methodenwechsel: sichtbar vorbelegt ist nur die Wesentlichkeit von 2 %. | `samplesize/model` |
+| `@auditcore/ui-core` | `formFromRequest` | Funktion | Formular aus einer Anfrage (Vorbelegung über die Eigenschaft `request`). | `samplesize/model` |
 | `@auditcore/ui-core` | `formProblems` | Funktion | Alle Befunde in Formularreihenfolge; leer heißt: absendbar. | `documents/form` |
 | `@auditcore/ui-core` | `formatAge` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `formatAmount` | Funktion | – | `risk/format` |
@@ -769,7 +802,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `getDefaultLocale` | Funktion | – | `i18n` |
 | `@auditcore/ui-core` | `groupByDepartment` | Funktion | Referate wie in der Quelle: konfigurierte zuerst, dann unbekannte; leere entfallen. | `dataprotection/registerView` |
 | `@auditcore/ui-core` | `hasAcceptedExtension` | Funktion | – | `documents/form` |
+| `@auditcore/ui-core` | `hasFiniteCorrection` | Funktion | – | `samplesize/model` |
 | `@auditcore/ui-core` | `hasPartialStrata` | Funktion | Teilweise geschichtete Grundgesamtheit (der Server lehnt sie ab). | `sampling/model` |
+| `@auditcore/ui-core` | `hasStrata` | Funktion | – | `samplesize/model` |
 | `@auditcore/ui-core` | `identifierBatchCsv` | Funktion | CSV (Excel-DE) der Stapelprüfung mit denselben Spalten wie die Tabelle (alle Zeilen). | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierBatchLines` | Funktion | – | `identifiers/model` |
 | `@auditcore/ui-core` | `identifierBatchMapping` | Funktion | Zuordnung aus beiden Zuständen (Tabelle und Kennungsprüfung). | `identifiers/controller` |
@@ -813,6 +848,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `levelTone` | Funktion | Farbton der MAD-Stufe 0–3 (enge … keine Übereinstimmung). | `benford/model` |
 | `@auditcore/ui-core` | `looksLikeResult` | Funktion | Kennzeichen eines `ComparisonResult.to_dict()`; Einzelheiten prüft `ComparisonResult.from_dict`. | `documents/importing` |
 | `@auditcore/ui-core` | `mayRelease` | Funktion | Vier-Augen-Prinzip vorab anzeigen; maßgeblich bleibt die Prüfung des Servers. | `dataprotection/dsfaView` |
+| `@auditcore/ui-core` | `methodById` | Funktion | – | `samplesize/model` |
 | `@auditcore/ui-core` | `methodGroups` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `methodStatusKey` | Funktion | – | `sampling/view` |
 | `@auditcore/ui-core` | `methodTone` | Funktion | – | `sampling/view` |
@@ -874,11 +910,21 @@ Exporte der Einstiegspunkte aus `package.json#exports` (862):
 | `@auditcore/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table/index` |
 | `@auditcore/ui-core` | `runFormDefaults` | Funktion | Vorbelegung bei Wechsel der Prüfart oder neuen Einstellungen: empfohlenes Profil, alle Listen, Standard-Mindestwert. | `screening/runForm` |
 | `@auditcore/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
+| `@auditcore/ui-core` | `samplesizeAllocation` | Funktion | – | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizeDerivation` | Funktion | – | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizeFields` | Funktion | Eingabefelder der gewählten Methode mit Beschriftung, Auswahl und Fehlermeldung. | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizeMessages` | Konstante | Texte von SampleSizePlanner (Vue) und FlowauditSampleSizePlanner (React); sichtbare Texte nur hier. | `samplesize/messages` |
+| `@auditcore/ui-core` | `samplesizeMethod` | Funktion | – | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizeNumber` | Funktion | Zahl für die Anzeige: ganze Beträge gruppiert, kleine Werte mit bis zu sechs Stellen. | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizePercentFields` | Konstante | Anteile werden in Prozent erfasst (Beschriftung „(%)“). | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizeStrataColumns` | Funktion | – | `samplesize/view` |
+| `@auditcore/ui-core` | `samplesizeSummary` | Funktion | – | `samplesize/view` |
 | `@auditcore/ui-core` | `samplingFieldError` | Funktion | Fehlermeldung eines Eingabefelds, leer ohne Fehler. | `sampling/view` |
 | `@auditcore/ui-core` | `samplingInputNumber` | Funktion | Zahlformat der Eingabefelder (ohne Tausendertrennung, bis 6 Nachkommastellen). | `sampling/view` |
 | `@auditcore/ui-core` | `samplingMessages` | Konstante | Texte des Stichprobenrechners. | `sampling/messages` |
 | `@auditcore/ui-core` | `samplingPopulation` | Funktion | – | `sampling/controller` |
 | `@auditcore/ui-core` | `samplingProfile` | Funktion | – | `sampling/controller` |
+| `@auditcore/ui-core` | `scalarFields` | Funktion | Einzelne Eingabefelder der Methode in der Reihenfolge des Katalogs. | `samplesize/model` |
 | `@auditcore/ui-core` | `scorePercent` | Funktion | – | `screening/view` |
 | `@auditcore/ui-core` | `screeningMessages` | Konstante | Texte der Screening-Trefferprüfung (Sanktionslisten, PEP). | `screening/messages` |
 | `@auditcore/ui-core` | `screeningTone` | Funktion | – | `dataprotection/dsfaView` |

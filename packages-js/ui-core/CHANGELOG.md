@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu `samplesize`: Kern des Planers für den Stichprobenumfang nach KOM-Leitfaden (`createSamplesizeController`, `createSamplesizeRestPort` auf `auditcore_sampling.guidance/1`, `createSamplesizeMemoryPort`, Texte, Formular, Anzeige), Stil `styles/samplesize.css`.
 - Benford: Typen `BenfordMetricsRequest`, `ChiSquareMetric`, `DigitZMetric`;
   `activeMetrics`, `offeredMetrics`, `benfordChiTexts`, `benfordDigitZTexts`,
   `benfordMetricLabel`; Controller mit `metrics`/`autoAnalyse` in der Quelle,

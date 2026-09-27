@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
 - Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`
   (zusätzliche Kennzahlen des REST-Vertrags: Chi²-Test mit kritischen Werten,
   auffällige Ziffern mit z je Ziffer), `autoAnalyse` (nach dem Laden und bei neuen

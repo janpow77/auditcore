@@ -39,6 +39,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
 | Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 4 + 2 Interaktionsfolgen |
 | Datei-Import (CSV/TSV) | `TableImport` | `TableImport` | – | 3 + Interaktionsfolge |
+| SampleSizePlanner | `SampleSizePlanner` | `FlowauditSampleSizePlanner` | – ([samplesize.md](samplesize.md)) | 4 + 2 Interaktionsfolgen |
 
 Vollständigkeit erzwingt `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`,
 Regeln in [beitragen.md](beitragen.md)); neue Komponenten entstehen mit

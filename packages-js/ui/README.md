@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (817):
+Exporte der Einstiegspunkte aus `package.json#exports` (830):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -358,6 +358,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTING` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_SAMPLESIZE` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `IconName` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `IdentifierBatchAnswer` | Re-Export | – | `@auditcore/ui-core` |
@@ -492,6 +493,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `STATE_FILTER_KEYS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_ICONS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_KEYS` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SampleSizeCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SampleSizePlan` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SampleSizePlanner` | Vue-Komponente | – | `samplesize/SampleSizePlanner.vue` |
+| `@auditcore/ui` | `SampleSizeRequest` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SamplesizeController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SamplesizeData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `SamplesizePort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `SamplingBusy` | Re-Export | – | `./useSampling` |
 | `@auditcore/ui` | `SamplingCallbacks` | Re-Export | – | `./useSampling` |
 | `@auditcore/ui` | `SamplingCatalogue` | Re-Export | – | `@auditcore/ui-core` |
@@ -690,6 +698,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `createRiskController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRiskRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
+| `@auditcore/ui` | `createSamplesizeController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createSamplesizeMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createSamplesizeRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplingController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplingRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createScreeningController` | Re-Export | – | `@auditcore/ui-core` |
@@ -847,6 +858,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `riskTableColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `riskTableRows` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `sameSurvey` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `sampleSizePlannerElement` | Konstante | `<flowaudit-sample-size-planner>`: Eigenschaften `port`, `request`, `locale`; Ereignisse `plan-calculated`, `error`. | `samplesize/element` |
+| `@auditcore/ui` | `samplesizeMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `samplingElement` | Konstante | `<flowaudit-sampling>`: Eigenschaften `port` (SamplingPort), `items` (Grundgesamtheit), `locale`; Ereignisse `size-calculated`, `selection-drawn`, `error`. | `sampling/element` |
 | `@auditcore/ui` | `samplingFieldError` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `samplingInputNumber` | Re-Export | – | `@auditcore/ui-core` |
@@ -969,6 +982,7 @@ Web Components:
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
 | `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
+| `<flowaudit-sample-size-planner>` | `SampleSizePlanner` | `samplesize/element.ts` |
 | `<flowaudit-sampling>` | `SamplingPanel` | `sampling/element.ts` |
 | `<flowaudit-screening-review>` | `ScreeningReview` | `screening/element.ts` |
 | `<flowaudit-synopsis>` | `FaSynopsis` | `synopsis/element.ts` |
@@ -1602,6 +1616,21 @@ Web Components:
 | `entries` | `readonly FlagEntry[]` | nein | `() => []` | – |
 | `profile` | `ProfileReference \| null` | nein | `null` | – |
 | `locale` | `Locale` | nein | `undefined` | – |
+
+#### `SampleSizePlanner`
+
+SampleSizePlanner: Stichprobenumfang nach KOM-Leitfaden planen; Logik im Kern (createSamplesizeController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `SamplesizePort \| null` | nein | `null` | Fachlogik, z. B. `createSamplesizeRestPort({ baseUrl: '/api/sampling' })`. |
+| `request` | `SampleSizeRequest \| null` | nein | `null` | Vorbelegung des Formulars (Anfrage des Vertrags `auditcore_sampling.guidance/1`). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `plan-calculated` | `[plan: SampleSizePlan]` | – |
+| `error` | `[message: string]` | – |
 
 #### `SamplingPanel`
 

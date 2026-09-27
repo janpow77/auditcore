@@ -7,10 +7,14 @@ Stichprobenumfänge (MUS, einfache Zufallsstichprobe), systematische MUS-Auswahl
 Für Prüfanwendungen wie flowstat und audit-portal, die Stichproben
 nachvollziehbar und mit Seed reproduzierbar ziehen müssen. Die Bibliothek
 wählt keine Methode still: Maßgeblich für MUS ist nach der Entscheidung vom
-23.09.2026 `portal.mus_poisson`. Zwei-Perioden-Verfahren und
-nicht-statistische Auswahl gehören (noch) nicht dazu; Hochrechnung,
-Fehlerquoten (TER/RER) und Differenzenschätzung stehen in
-`auditcore_extrapolation`.
+23.09.2026 `portal.mus_poisson`. Getrennt davon plant
+`auditcore_sampling.guidance` den Stichprobenumfang nach dem KOM-Leitfaden
+EGESIF_16-0014-01 (Status „nach Leitfaden“: einfache Zufallsstichprobe,
+Differenzenschätzung, MUS Standard/geschichtet/konservativ, Mindestumfänge
+nicht-statistischer Stichproben), und `auditcore_sampling.intermediate_body`
+enthält die Belegziehung einer Zwischengeschalteten Stelle als versioniertes
+Profil. Zwei-Perioden-Verfahren gehören nicht dazu; Hochrechnung und
+Fehlerquoten (TER/RER) stehen in `auditcore_extrapolation`.
 
 ## Installation
 
@@ -116,18 +120,38 @@ else:
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_sampling.guidance` | Sample sizes after the Commission guidance EGESIF_16-0014-01 (status „nach Leitfaden“). |
+| `auditcore_sampling.intermediate_body` | Value-share draw with an escalation ladder – procedure of an intermediate body. |
 | `auditcore_sampling.legacy` | Behavior-compatible adapters for ``flowstat@d665ac2`` and ``audit-portal@d8eefa4``. |
 | `auditcore_sampling.selection` | Deterministic selection mechanics with explicitly supplied randomness. |
 | `auditcore_sampling.sizes` | Sample-size methods for monetary-unit (MUS) and simple random sampling (SRS). |
 | `auditcore_sampling.web` | REST contract and routes for sampling user interfaces (extra ``web``). |
 <!-- api-overview:end -->
 
+`auditcore_sampling.guidance` (Umfang nach Leitfaden) und
+`auditcore_sampling.intermediate_body` (Belegziehung einer
+Zwischengeschalteten Stelle) sind öffentliche Module mit eigenen Exporten:
+
+```python
+from auditcore_sampling.guidance import KOM_TABLES, mus_conservative_size
+
+# Leitfaden 6.3.5.7: BV 4.199.882.024 €, 90 %, erwartete Fehlerquote 0,2 %
+plan = mus_conservative_size(book_value=4_199_882_024, confidence_level=0.9,
+                             factor_profile=KOM_TABLES, anticipated_error_rate=0.002)
+assert plan.sample_size == 136 and round(plan.interval) == 30_881_485
+assert plan.status == "GUIDANCE_EGESIF_16_0014_01"
+```
+
 `auditcore_sampling.legacy` reproduziert die Ergebnisse beider
 Quellanwendungen exakt; `auditcore_sampling.web` enthält den REST-Vertrag
 (`catalogue`, `calculate_size` mit schrittweiser Herleitung, `allocate`,
 `select` mit sichtbarem Seed und Eingabe-Fingerabdruck, `export_selection`
 als CSV/JSON) für `<flowaudit-sampling>`; Vertrag:
-[docs/ui/sampling-rest.md](../../docs/ui/sampling-rest.md).
+[docs/ui/sampling-rest.md](../../docs/ui/sampling-rest.md). Die Planung nach
+Leitfaden hat den versionierten Vertrag `auditcore_sampling.guidance/1`
+(`GET /guidance/profiles`, `POST /guidance/size`, `POST /guidance/draw`) für
+`<flowaudit-sample-size-planner>`:
+[docs/ui/samplesize-rest.md](../../docs/ui/samplesize-rest.md).
 
 ## Profile und Konfiguration
 
@@ -149,6 +173,22 @@ sowie Null-/Fehlwerte werden ausgewiesen, jede Position einmal).
 `stratified_allocation` teilt proportional (`ceil(n·Nh/N)`) oder gleich
 (`ceil(n/H)`) auf, jeweils höchstens `Nh`.
 
+Planung nach Leitfaden (`auditcore_sampling.guidance`, Status
+`GUIDANCE_EGESIF_16_0014_01`): Methoden `guidance.srs`, `guidance.srs_stratified`,
+`guidance.difference`, `guidance.difference_stratified`, `guidance.mus_standard`
+(mit Hochwertschicht), `guidance.mus_stratified`, `guidance.mus_conservative`
+(Expansionsfaktor) und `guidance.nonstatistical` mit den Regelprofilen
+`cpr_2021_art79_2` und `cpr_2013_art127_1`; Faktorprofile `kom_2017_tables`
+und `exact` wie in `auditcore_extrapolation`. Formeln, Fundstellen,
+Referenzfälle und Druckfehler: [docs/leitfaden-umfang.md](docs/leitfaden-umfang.md).
+
+Belegziehung einer Zwischengeschalteten Stelle
+(`auditcore_sampling.intermediate_body`): Profil `zs.value_share_escalation`
+Version 1 (25 % der Ausgaben, Erweiterung um 15 Prozentpunkte bis 85 % bei
+Fehlern in neu gezogenen Belegen, Qualitätsstichprobe jeder 20. nicht zu
+prüfende Mittelabruf), Parameter änderbar:
+[docs/zwischengeschaltete-stelle.md](docs/zwischengeschaltete-stelle.md).
+
 ## Herkunft und Charakterisierung
 
 Extrahiert aus `janpow77/flowstat@d665ac2` und
@@ -162,6 +202,11 @@ NumPy bleibt beim Consumer. Nach der Umstellung von flowstat ergab ein
 erneuter Erfassungslauf 8 883 identische Fälle. Eine fachliche Validierung
 der Methoden wurde nicht durchgeführt (`method_validation: NOT_PERFORMED`).
 `auditcore_sampling.web` (0.2.0) ist eine eigene Ergänzung ohne neue Methode.
+`auditcore_sampling.guidance` ist eine Neuimplementierung nach dem
+KOM-Leitfaden; alle Beispiele zum Stichprobenumfang (6.1.1.6 bis 6.3.5.7) sind
+nachgerechnet. `auditcore_sampling.intermediate_body` ist aus flowinvoice
+übernommen; 240 dort tatsächlich ausgeführte Ziehungen mit festen Seeds werden
+exakt reproduziert (`tests/test_intermediate_body_parity.py`).
 
 ## Bewusste Verhaltensabweichungen
 
@@ -181,7 +226,8 @@ Details: [docs/behavior-changes.md](docs/behavior-changes.md).
 Python ≥ 3.11 und `auditcore_common==0.2.0` (nur Standardbibliothek;
 NumPy-kompatible Summe und Rundung, rahmenwerkfreier Teil der REST-Schicht;
 APT `python3-auditcore-common`); keine Abhängigkeit von `auditcore`,
-`auditcore_statistics` oder NumPy. Optional
+`auditcore_statistics` oder NumPy (NumPy und Hypothesis nur in `[dev]`
+für Paritäts- und Eigenschaftstests). Optional
 `starlette>=0.26` über `[web]` (FastAPI nur, wenn der Consumer es installiert).
 
 ## Sicherheit und Datenschutz
