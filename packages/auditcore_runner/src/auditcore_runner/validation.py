@@ -9,8 +9,11 @@ from dataclasses import dataclass
 from .hardware import HostFacts
 from .profile import (
     AUTH_KINDS,
+    BACKENDS,
     CHANGE_SOURCES,
     CLASS_NAMES,
+    EGRESS_MODES,
+    GPU_ACCESS,
     GPU_CLASSES,
     SCOPES,
     SYNC_MODES,
@@ -28,7 +31,8 @@ DOCKER_NAME = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$")
 REPO = re.compile(r"^[A-Za-z0-9-]+/[A-Za-z0-9._-]+$")
 ORG = re.compile(r"^[A-Za-z0-9-]+$")
 BRIDGE = re.compile(r"^[a-z0-9-]{1,15}$")
-RUNNER_BACKENDS = ("jit",)
+HOSTNAME = re.compile(r"^(?=.{1,253}$)([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$")
+META_KEYS = ("api", "web", "git", "packages", "actions", "pages", "importer", "dependabot", "hooks")
 IMAGE = re.compile(r"^[a-z0-9][a-z0-9._/:@-]{0,254}$")
 
 
@@ -152,6 +156,23 @@ def _network(found: Findings, profile: Profile) -> None:
         found.add("netz.subnetz", "privates Subnetz mit mindestens /28 erwartet")
     if network.firewall_required and not network.enabled:
         found.add("netz.sperre_pflicht", "Netzsperre verlangt ein aktives Netz")
+    _egress(found, profile)
+
+
+def _egress(found: Findings, profile: Profile) -> None:
+    network = profile.network
+    if network.egress not in EGRESS_MODES:
+        found.add("netz.egress", "aus oder allowlist")
+    if network.egress == "allowlist" and not network.enabled:
+        found.add("netz.egress", "Allowlist verlangt ein aktives Netz")
+    bad_hosts = [h for h in network.egress_hosts if not HOSTNAME.fullmatch(h)]
+    if bad_hosts:
+        found.add("netz.egress_hosts", "keine Hostnamen: " + ", ".join(bad_hosts))
+    bad_keys = [k for k in network.egress_github_meta if k not in META_KEYS]
+    if bad_keys:
+        found.add("netz.egress_github_meta", "unbekannt: " + ", ".join(bad_keys))
+    if not network.egress_ports or any(not 1 <= port <= 65535 for port in network.egress_ports):
+        found.add("netz.egress_ports", "Ports 1–65535 erwartet")
 
 
 def _scaling(found: Findings, scaling: Scaling) -> None:
@@ -188,6 +209,16 @@ def _priorities(found: Findings, profile: Profile) -> None:
         found.add("prioritaeten", "Eintrag doppelt")
 
 
+def _scale_set(found: Findings, profile: Profile) -> None:
+    for name in profile.classes:
+        if not LABEL.fullmatch(profile.scale_set_name(name)):
+            found.add("scale_set.name_praefix", f"ergibt ungültigen Scale-Set-Namen für {name}")
+    if not profile.scale_set.runner_group.strip():
+        found.add("scale_set.runner_gruppe", "Name der Runner-Gruppe erwartet")
+    if profile.backend == "scaleset" and profile.target.scope == "repo" and profile.scale_set.runner_group != "default":
+        found.add("scale_set.runner_gruppe", "Repositories kennen nur die Gruppe „default“")
+
+
 def validate(profile: Profile, facts: HostFacts) -> list[Problem]:
     """All findings; an empty list means the profile may be applied."""
     found = Findings()
@@ -199,8 +230,11 @@ def validate(profile: Profile, facts: HostFacts) -> list[Problem]:
         found.add("sync", "aus oder flow-agent")
     if profile.change.source not in CHANGE_SOURCES:
         found.add("aenderung.quelle", "lokal oder flow-agent")
-    if profile.backend not in RUNNER_BACKENDS:
-        found.add("backend", "verfügbar: " + ", ".join(RUNNER_BACKENDS))
+    if profile.backend not in BACKENDS:
+        found.add("backend", "verfügbar: " + ", ".join(BACKENDS))
+    if profile.gpu_access not in GPU_ACCESS:
+        found.add("gpu_zugriff", "cdi oder gpus")
+    _scale_set(found, profile)
     if profile.source.kind not in TARGET_SOURCES:
         found.add("soll_quelle.art", "statisch, lokal oder datei")
     if profile.source.kind == "datei" and not _path_like(profile.source.file):

@@ -11,6 +11,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from . import __version__, anwenden, backend, github, install, pool, profile_io, status
+from .commands_scaleset import add_scaleset_commands
 from .commands_tools import add_tool_commands
 from .hardware import HostFacts, detect
 from .profile import Profile, default_profile_path
@@ -108,6 +109,15 @@ def cmd_schema(args: argparse.Namespace) -> int:
     return 0
 
 
+def _print_install_notes(profile: Profile) -> None:
+    for unit in install.legacy_units():
+        print(f"Hinweis: alte Unit {unit} registriert ebenfalls Runner; nach dem Umstieg abschalten.", file=sys.stderr)
+    if profile.network.enabled:
+        print(f"Netzsperre (einmalig, mit root): {install.firewall_command()}")
+    for hint in install.hints(profile):
+        print(f"Hinweis: {hint}")
+
+
 def cmd_install(args: argparse.Namespace) -> int:
     path = _profile_path(args)
     profile = profile_io.load(path)
@@ -126,10 +136,7 @@ def cmd_install(args: argparse.Namespace) -> int:
             print(change.diff() or f"neu: {change.path}")
     for step in steps:
         print(f"$ {step.text()}    # {step.reason}")
-    for unit in install.legacy_units():
-        print(f"Hinweis: alte Unit {unit} registriert ebenfalls Runner; nach dem Umstieg abschalten.", file=sys.stderr)
-    if profile.network.enabled:
-        print(f"Netzsperre (einmalig, mit root): {install.firewall_command()}")
+    _print_install_notes(profile)
     if args.trockenlauf:
         return 0
     install.write_changes(changes)
@@ -147,6 +154,8 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     for path in paths:
         print(f"entfernen: {path}")
     print("Netzsperre entfernen (falls installiert): sudo /usr/local/sbin/auditcore-ci-firewall entfernen")
+    print("Scale-Sets (Backend „scaleset“) danach löschen: auditcore-runner scaleset loeschen")
+    print("Egress-Zeitgeber (falls installiert): sudo systemctl disable --now auditcore-ci-egress.timer")
     if args.trockenlauf:
         return 0
     errors = install.run_steps(steps)
@@ -169,6 +178,12 @@ def cmd_status(args: argparse.Namespace) -> int:
         status.write(current)
     if not args.still:
         _print_json(current)
+    unknown = current.get("unbekannte_runner")
+    if isinstance(unknown, list):
+        for name in status.new_unknown([str(n) for n in unknown]):
+            print(f"WARNUNG: unbekannte Runner-Registrierung {name!r} – nicht von diesem Profil", file=sys.stderr)
+        if unknown and args.streng:
+            return 4
     return 0
 
 
@@ -210,7 +225,16 @@ def cmd_gpu_choose(args: argparse.Namespace) -> int:
     uuid = gpu.choose(profile, args.klasse, gpu.observe(profile))
     if uuid is None:
         return 3
+    if args.platz:
+        gpu.reserve(args.platz, uuid)
     print(uuid)
+    return 0
+
+
+def cmd_gpu_release(args: argparse.Namespace) -> int:
+    from . import gpu
+
+    gpu.release(args.platz)
     return 0
 
 
@@ -249,6 +273,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_profile_commands(sub)
     _add_runner_commands(sub)
     add_tool_commands(sub)
+    add_scaleset_commands(sub)
     return parser
 
 
@@ -292,6 +317,7 @@ def _add_runner_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser
     status_parser.add_argument("--schreiben", action="store_true", help=f"nach {status.status_path()} schreiben")
     status_parser.add_argument("--still", action="store_true")
     status_parser.add_argument("--ohne-github", action="store_true")
+    status_parser.add_argument("--streng", action="store_true", help="Exit 4 bei unbekannten Registrierungen")
     status_parser.set_defaults(func=cmd_status)
     target = group.add_parser("soll", help="Soll-Datei lesen oder setzen (KLASSE=ZAHL)")
     target.add_argument("setzen", nargs="*")
@@ -305,7 +331,11 @@ def _add_runner_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser
     )
     choose = gpu_group.add_parser("waehlen", help="freieste erlaubte Karte ausgeben (Exit 3: keine frei)")
     choose.add_argument("klasse")
+    choose.add_argument("--platz", help="Reservierung für diese Instanz (z. B. gpu-16gb-1), bis der Container läuft")
     choose.set_defaults(func=cmd_gpu_choose)
+    release = gpu_group.add_parser("freigeben", help="Reservierung einer Instanz aufheben")
+    release.add_argument("platz")
+    release.set_defaults(func=cmd_gpu_release)
     check_gpu = gpu_group.add_parser("pruefen", help="Exit 1, wenn die Karte geräumt werden muss")
     check_gpu.add_argument("uuid")
     check_gpu.set_defaults(func=cmd_gpu_check)

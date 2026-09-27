@@ -21,8 +21,27 @@ root-Skript gesperrt (`~/.config/auditcore-runner/root/firewall-installieren.sh`
 das Paket führt nichts mit root aus): keine Verbindungen in private Netze
 (RFC 1918), CGNAT/Tailscale (100.64.0.0/10), Link-Local und zum Host selbst;
 Internet bleibt erlaubt. Ist `sperre_pflicht` gesetzt, registriert der Supervisor
-erst, wenn die Sperre aktiv ist. Eine Positivliste (nur GitHub, Paketquellen) ist
-für eine spätere Version vorgesehen.
+erst, wenn die Sperre aktiv ist.
+
+**Egress-Allowlist** (`netz.egress: allowlist`): zusätzlich sind nur die Ziele
+aus `egress_hosts` (per DNS aufgelöst) und die GitHub-Bereiche aus
+`api.github.com/meta` auf den Ports `egress_ports` erreichbar; alles andere wird
+abgelehnt. Das erzeugte root-Skript füllt ein ipset (`auditcore-ci-egress`),
+ein root-Zeitgeber (`auditcore-ci-egress.timer`, alle 30 Minuten) löst neu auf;
+eine leere Auflösung ersetzt die alte Liste nicht. Braucht `ipset`, `jq` und
+`curl` auf dem Host. Grenzen: CDN-Adressen wechseln (bis zur nächsten
+Auflösung kann ein Download scheitern); Ziele, die sich eine Adresse mit
+erlaubten Hosts teilen, sind mit erreichbar. DNS läuft über den Docker-Resolver
+auf dem Host und ist nicht eingeschränkt.
+
+## GPUs
+
+GPU-Runner bekommen je Job genau eine Karte per CDI
+(`--device nvidia.com/gpu=<UUID>`, einmalig `nvidia-ctk cdi generate`). Die Wahl
+(`gpu waehlen --platz <klasse-n>`) reserviert die Karte, bis der Container läuft;
+mehrere Runner teilen eine Karte nach VRAM. Nutzt ein Mensch die Karte oder
+setzt ein Regler `nutzer_vorrang`/`karten_gesperrt`, wird der Container sofort
+gestoppt (einzige Ausnahme von „laufende Jobs bleiben“).
 
 ## Zugangsdaten
 
@@ -30,14 +49,20 @@ Das Profil enthält nur Pfade (`auth.token_datei`, `auth.app_schluessel_datei`).
 Empfohlen ist eine GitHub App mit minimalen Rechten (Repository
 „Administration: write“ nur für Runner-Registrierung, „Actions: read“) oder ein
 fein granulares Token für genau ein Repository. Das Token bleibt auf dem Host;
-Container sehen es nie.
+Container sehen es nie. Beim Backend `scaleset` gehen Tokens nur per TLS an
+`api.github.com` und Hosts unter `actions.githubusercontent.com`; andere
+Adressen in Antworten werden abgelehnt.
 
 ## Überwachung
 
-`runner status` listet registrierte Runner, deren Name keinem eigenen Rechner
-gehört (`unbekannte_runner`, Metrik `auditcore_runner_unknown_registered`) –
-ein bekanntes Angriffsmuster ist das Registrieren fremder Runner mit gestohlenen
-Tokens. Die Runner-Version im Image prüft `image pruefen` (Mindestversion,
+`runner status` listet alle registrierten Runner (alle Seiten der API), deren
+Name keinem eigenen Rechner gehört (`unbekannte_runner`, Details mit Labels und
+passender Klasse in `unbekannte_runner_details`, Metriken
+`auditcore_runner_unknown_registered` und `…_unknown_matching_class`) – ein
+bekanntes Angriffsmuster ist das Registrieren fremder Runner mit gestohlenen
+Tokens, die dann eigene Jobs abgreifen. Jede neu auftauchende Registrierung
+meldet der Status-Zeitgeber einmal als `WARNUNG` im Journal;
+`runner status --streng` endet dann mit Exit 4 (für Überwachung). Die Runner-Version im Image prüft `image pruefen` (Mindestversion,
 30-Tage-Frist nach einem neuen Release).
 
 ## Workflows

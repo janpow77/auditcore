@@ -56,6 +56,12 @@ class Reader:
             raise ProfileFormatError(f"{self.where}.{key}: Liste von Texten erwartet")
         return tuple(cast(list[str], value))
 
+    def integers(self, key: str, default: list[int] | None = None) -> tuple[int, ...]:
+        value = self._get(key, default)
+        if not isinstance(value, list) or not all(isinstance(x, int) and not isinstance(x, bool) for x in value):
+            raise ProfileFormatError(f"{self.where}.{key}: Liste ganzer Zahlen erwartet")
+        return tuple(cast(list[int], value))
+
     def items(self, key: str) -> list[Reader]:
         value = self._get(key, [])
         if not isinstance(value, list):

@@ -1,0 +1,8 @@
+[Unit]
+Description=auditcore-runner: Egress-Allowlist des Runner-Netzes ${netz} neu auflösen
+After=auditcore-ci-firewall.service network-online.target
+Requires=auditcore-ci-firewall.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/auditcore-ci-firewall aktualisieren

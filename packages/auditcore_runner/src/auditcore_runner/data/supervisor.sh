@@ -3,6 +3,10 @@
 # `auditcore-runner supervisor <klasse> <n>`). Je Job ein frischer Container
 # mit einer Einmal-Registrierung (JIT). Das GitHub-Token bleibt auf dem Host.
 #
+# Backend „jit“ holt die Registrierung über die REST-API, Backend „scaleset“
+# aus dem Scale-Set der Klasse; dort begrenzt zusätzlich die Nachfrage-Datei des
+# Listeners (min(Kapazität, min + zugewiesene Jobs)) die aktiven Instanzen.
+#
 # Vor jeder Registrierung werden Profil und Soll-Datei neu gelesen: Änderungen
 # an Grenzen, Labels oder Soll wirken ab dem nächsten Job, ohne laufende Jobs
 # abzubrechen. Überzählige Instanzen registrieren sich nicht mehr (Leerlauf).
@@ -16,6 +20,11 @@ PROFILE="${AUDITCORE_RUNNER_PROFILE:?Profilpfad fehlt}"
 POOL_FILE="${AUDITCORE_RUNNER_POOL:-}"
 PROGRAM="${AUDITCORE_RUNNER_PROGRAM:-auditcore-runner}"
 GPU_CLASS="${AUDITCORE_RUNNER_GPU_CLASS:-}"
+GPU_ACCESS="${AUDITCORE_RUNNER_GPU_ACCESS:-cdi}"
+BACKEND="${AUDITCORE_RUNNER_BACKEND:-jit}"
+DEMAND_FILE="${AUDITCORE_RUNNER_DEMAND:-}"
+DEMAND_MAX_AGE="${AUDITCORE_RUNNER_DEMAND_MAX_AGE:-300}"
+SLOT="$CLASS-$INSTANCE"
 GPU=""
 FIREWALL_MARKER="${AUDITCORE_RUNNER_FIREWALL_MARKER:-/run/auditcore-ci-firewall.ok}"
 SECRET_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/auditcore-runner"
@@ -40,12 +49,20 @@ load_token() {
   fi
 }
 
+# Registrierung löschen: beim Scale-Set über dessen API, sonst über REST.
+remove_registration() {
+  if [[ "$BACKEND" == "scaleset" ]]; then
+    "$PROGRAM" scaleset entfernen "$1" >/dev/null 2>&1
+  else
+    gh api -X DELETE "$(repo)/actions/runners/$1" >/dev/null 2>&1
+  fi
+}
+
 cleanup() {
   if [[ -n "$container" ]]; then docker stop --time 20 "$container" >/dev/null 2>&1 || true; fi
-  if [[ -n "$runner_id" ]]; then
-    gh api -X DELETE "$(repo)/actions/runners/$runner_id" >/dev/null 2>&1 || true
-  fi
+  if [[ -n "$runner_id" ]]; then remove_registration "$runner_id" || true; fi
   if [[ -n "$jit_file" ]]; then rm -f "$jit_file"; fi
+  if [[ -n "$GPU_CLASS" ]]; then "$PROGRAM" gpu freigeben "$SLOT" >/dev/null 2>&1 || true; fi
 }
 trap 'cleanup; exit 0' TERM INT
 
@@ -60,12 +77,25 @@ allowed() {
     target="$(jq -r --arg c "$CLASS" '.klassen[$c].soll // empty' "$POOL_FILE" 2>/dev/null || true)"
     if [[ "$target" =~ ^[0-9]+$ ]] && (( INSTANCE > target )); then return 1; fi
   fi
+  demand_allows
+}
+
+# Scale-Set: nur so viele Instanzen wie Nachfrage. Eine veraltete oder fehlende
+# Datei (Listener aus) begrenzt nicht – Runner bleiben dann nutzbar.
+demand_allows() {
+  local target written
+  [[ -n "$DEMAND_FILE" && -r "$DEMAND_FILE" ]] || return 0
+  written="$(jq -r '.zeit_unix // 0' "$DEMAND_FILE" 2>/dev/null || echo 0)"
+  [[ "$written" =~ ^[0-9]+$ ]] && (( $(date +%s) - written <= DEMAND_MAX_AGE )) || return 0
+  target="$(jq -r --arg c "$CLASS" '.klassen[$c].soll // empty' "$DEMAND_FILE" 2>/dev/null || true)"
+  if [[ "$target" =~ ^[0-9]+$ ]] && (( INSTANCE > target )); then return 1; fi
 }
 
 # GPU-Klassen: die Karte wird je Job frisch gewählt (frei, VRAM reicht, Nutzer nicht darauf).
 choose_gpu() {
   [[ -n "$GPU_CLASS" ]] || return 0
-  GPU="$(flock "$SECRET_DIR/gpu.lock" "$PROGRAM" gpu waehlen "$CLASS" 2>/dev/null)" || { GPU=""; return 1; }
+  GPU="$(flock "$SECRET_DIR/gpu.lock" "$PROGRAM" gpu waehlen "$CLASS" --platz "$SLOT" 2>/dev/null)" \
+    || { GPU=""; return 1; }
 }
 
 wait_until_allowed() {
@@ -73,7 +103,8 @@ wait_until_allowed() {
   install -d -m 0700 "$SECRET_DIR"
   until allowed && choose_gpu; do
     if (( ! said )); then log "Instanz ruht (Klasse aus, über Maximum oder Soll)"; said=1; fi
-    sleep 30
+    # Scale-Set: Nachfrage ändert sich je Job – kürzer warten, damit neue Jobs schnell einen Runner finden.
+    if [[ "$BACKEND" == "scaleset" ]]; then sleep 5; else sleep 30; fi
   done
   if (( said )); then log "Instanz wieder frei"; fi
 }
@@ -96,6 +127,10 @@ wait_for_prerequisites() {
 request_jit_config() {
   local name labels
   name="$(cfg '.rechner')-$HOST-$CLASS-$INSTANCE-$(date +%s)"
+  if [[ "$BACKEND" == "scaleset" ]]; then
+    "$PROGRAM" scaleset jit "$CLASS" "$name"
+    return
+  fi
   labels="$(cfg '.klassen[$c].labels')"
   jq -n --arg name "$name" --argjson labels "$labels" \
     --argjson group "$(cfg '.ziel.runner_gruppe // 1')" \
@@ -118,7 +153,7 @@ watch_allowed() {
     fi
     if ! allowed \
       && [[ "$(gh api "$(repo)/actions/runners/$id" -q .busy 2>/dev/null)" == "false" ]] \
-      && gh api -X DELETE "$(repo)/actions/runners/$id" >/dev/null 2>&1; then
+      && remove_registration "$id"; then
       log "unbenutzte Registrierung $id entfernt"
       docker stop --time 5 "$name" >/dev/null 2>&1 || true
       return
@@ -135,7 +170,7 @@ container_args() {
     --cpus "$(cfg '.klassen[$c].cpus')" --cpu-shares "$shares"
     --memory "$(cfg '.klassen[$c].speicher_gb')g" --pids-limit 4096
     --cap-drop ALL --security-opt no-new-privileges
-    --label "auditcore-runner.klasse=$CLASS"
+    --label "auditcore-runner.klasse=$CLASS" --label "auditcore-runner.platz=$SLOT"
     --volume "auditcore-runner-tool-$CLASS-$INSTANCE:/home/runner/_work/_tool"
     --volume "auditcore-runner-cache-$CLASS-$INSTANCE:/home/runner/.cache"
     --volume "auditcore-runner-npm-$CLASS-$INSTANCE:/home/runner/.npm"
@@ -147,7 +182,13 @@ container_args() {
     args+=(--volume "$volume:/home/runner/.cache/uv" --env UV_CACHE_DIR=/home/runner/.cache/uv)
   fi
   if [[ -n "$GPU" ]]; then
-    args+=(--gpus "\"device=$GPU\"" --env PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True)
+    # CDI (Standard): genau diese Karte per UUID; „gpus“ nur für ältere Docker-Versionen.
+    if [[ "$GPU_ACCESS" == "cdi" ]]; then
+      args+=(--device "nvidia.com/gpu=$GPU")
+    else
+      args+=(--gpus "\"device=$GPU\"")
+    fi
+    args+=(--env PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True)
     args+=(--label "auditcore-runner.gpu=$GPU")
   fi
 }
@@ -173,8 +214,9 @@ run_one_job() {
   container=""
   rm -f "$jit_file"
   jit_file=""
-  gh api -X DELETE "$(repo)/actions/runners/$runner_id" >/dev/null 2>&1 || true
+  remove_registration "$runner_id" || true
   runner_id=""
+  if [[ -n "$GPU" ]]; then "$PROGRAM" gpu freigeben "$SLOT" >/dev/null 2>&1 || true; fi
   GPU=""
 }
 

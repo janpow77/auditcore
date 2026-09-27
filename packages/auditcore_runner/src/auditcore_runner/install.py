@@ -9,6 +9,7 @@ profile and the pool before every registration.
 from __future__ import annotations
 
 import difflib
+import shlex
 import shutil
 import subprocess
 import sys
@@ -99,9 +100,29 @@ def render_unit(profile: Profile, runner_class: str, profile_path: Path) -> str:
     )
 
 
+EGRESS_SET = "auditcore-ci-egress"
+
+
+def _egress_install(base: Path, enabled: bool) -> str:
+    if not enabled:
+        return "rm -f /etc/systemd/system/auditcore-ci-egress.service /etc/systemd/system/auditcore-ci-egress.timer"
+    return "\n".join(
+        [
+            "for tool in ipset jq curl; do",
+            '  command -v "$tool" >/dev/null || { echo "Egress-Allowlist braucht $tool" >&2; exit 1; }',
+            "done",
+            f'install -m 0644 "{base / "auditcore-ci-egress.service"}" /etc/systemd/system/auditcore-ci-egress.service',
+            f'install -m 0644 "{base / "auditcore-ci-egress.timer"}" /etc/systemd/system/auditcore-ci-egress.timer',
+            "systemctl daemon-reload",
+            "systemctl enable --now auditcore-ci-egress.timer",
+        ]
+    )
+
+
 def render_firewall(profile: Profile) -> dict[str, str]:
-    """Root scripts for the network lock; written for the user, never executed here."""
+    """Root scripts for the network lock and egress allowlist; written for the user, never executed here."""
     network, base = profile.network, root_dir()
+    allowlist = network.egress == "allowlist"
     values = {
         "netz": network.name,
         "subnetz": network.subnet,
@@ -109,14 +130,55 @@ def render_firewall(profile: Profile) -> dict[str, str]:
         "pfad": str(base / "auditcore-ci-firewall.sh"),
         "skript": str(base / "auditcore-ci-firewall.sh"),
         "unit": str(base / "auditcore-ci-firewall.service"),
+        "egress": network.egress,
+        "ipset": EGRESS_SET,
+        "egress_ports": ",".join(str(port) for port in network.egress_ports),
+        "egress_hosts": " ".join(shlex.quote(host) for host in network.egress_hosts),
+        "egress_meta": " ".join(shlex.quote(key) for key in network.egress_github_meta),
+        "egress_installieren": _egress_install(base, allowlist),
     }
-    return {
+    scripts = {
         "auditcore-ci-firewall.sh": _render("firewall.sh", **values),
         "auditcore-ci-firewall.service": _render("auditcore-ci-firewall.service", **values),
         "firewall-installieren.sh": _render(
             "firewall-installieren.sh", **{**values, "pfad": str(base / "firewall-installieren.sh")}
         ),
     }
+    if allowlist:
+        scripts["auditcore-ci-egress.service"] = _render("auditcore-ci-egress.service", **values)
+        scripts["auditcore-ci-egress.timer"] = data_text("templates", "auditcore-ci-egress.timer")
+    return scripts
+
+
+CDI_DIRS = (Path("/etc/cdi"), Path("/var/run/cdi"))
+
+
+def cdi_ready(directories: tuple[Path, ...] = CDI_DIRS) -> bool:
+    """A CDI specification for ``nvidia.com/gpu`` exists (``nvidia-ctk cdi generate``)."""
+    for directory in directories:
+        for spec in sorted(directory.glob("*.yaml")) + sorted(directory.glob("*.json")) if directory.is_dir() else []:
+            try:
+                if "nvidia.com/gpu" in spec.read_text(encoding="utf-8", errors="replace"):
+                    return True
+            except OSError:
+                continue
+    return False
+
+
+def hints(profile: Profile, directories: tuple[Path, ...] = CDI_DIRS) -> list[str]:
+    """Prerequisites the user has to establish once (shown by install, never done here)."""
+    found: list[str] = []
+    uses_gpus = any(c.enabled and profile.gpus_of(name) for name, c in profile.classes.items())
+    if uses_gpus and profile.gpu_access == "cdi" and not cdi_ready(directories):
+        found.append(
+            "GPU per CDI: einmalig `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml` "
+            "(Docker ab 28 nutzt CDI ohne weitere Einstellung)"
+        )
+    if profile.backend == "scaleset":
+        found.append(
+            "Scale-Sets: Workflows wählen sie mit `runs-on: <name>` (Namen: `auditcore-runner scaleset anzeigen`)"
+        )
+    return found
 
 
 def firewall_command() -> str:
@@ -129,9 +191,13 @@ def _helper_units(profile: Profile, profile_path: Path) -> list[tuple[str, str]]
     units = [
         (f"{UNIT_PREFIX}-status.service", _render("status.service", **values)),
         (f"{UNIT_PREFIX}-status.timer", data_text("templates", "status.timer")),
+        (f"{UNIT_PREFIX}-image.service", _render("image.service", **values)),
+        (f"{UNIT_PREFIX}-image.timer", data_text("templates", "image.timer")),
     ]
     if profile.source.kind == "lokal":
         units.append((f"{UNIT_PREFIX}-regler.service", _render("regler.service", **values)))
+    if profile.backend == "scaleset":
+        units.append((f"{UNIT_PREFIX}-scaleset.service", _render("scaleset.service", **values)))
     return units
 
 
@@ -156,9 +222,14 @@ def instance_steps(profile: Profile) -> list[Step]:
     """Reload units and enable instances up to the maximum (never stop running ones)."""
     steps = [Step(("systemctl", "--user", "daemon-reload"), "Units neu laden")]
     steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-status.timer"), "Status-Datei"))
+    steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-image.timer"), "Image aktuell halten"))
     if profile.source.kind == "lokal":
         steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-regler.service"), "Autoskalierer"))
         steps.append(Step(("systemctl", "--user", "try-restart", f"{UNIT_PREFIX}-regler.service"), "Regeln neu laden"))
+    if profile.backend == "scaleset":
+        unit = f"{UNIT_PREFIX}-scaleset.service"
+        steps.append(Step(("systemctl", "--user", "enable", "--now", unit), "Scale-Set-Listener"))
+        steps.append(Step(("systemctl", "--user", "try-restart", unit), "Listener mit neuem Profil"))
     for name, settings in sorted(profile.classes.items()):
         if not settings.enabled:
             continue

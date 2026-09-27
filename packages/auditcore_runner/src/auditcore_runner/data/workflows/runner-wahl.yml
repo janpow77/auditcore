@@ -1,0 +1,107 @@
+# auditcore-runner: wiederverwendbarer Entscheidungs-Job (workflow_call).
+# Liefert „runs-on“ für nachfolgende Jobs: eigene Runner, wenn sie erlaubt und
+# erreichbar sind, sonst den Rückfall auf GitHub-gehostete Runner.
+#
+# Einbinden (Vorlage mit `auditcore-runner workflows vorlage runner-wahl` kopieren):
+#
+#   jobs:
+#     wahl:
+#       uses: ./.github/workflows/runner-wahl.yml
+#       with:
+#         eigene: '["self-hosted", "linux"]'   # oder der Scale-Set-Name: '"<praefix>-cpu"'
+#         runner_label: linux                  # Label bzw. Scale-Set-Name der eigenen Runner
+#       secrets:
+#         runner_token: ${{ secrets.RUNNER_READ_TOKEN }}   # optional, nur lesend
+#     test:
+#       needs: wahl
+#       runs-on: ${{ fromJSON(needs.wahl.outputs.runs-on) }}
+#
+# Fork-PRs und Dependabot laufen immer auf dem Rückfall. Ohne `runner_token`
+# (feingranular, „Administration: read“ bzw. bei Organisationen
+# „Self-hosted runners: read“) wird nicht geprüft, ob eigene Runner online sind.
+# Scale-Sets mit Minimum 0 haben im Leerlauf keine Runner online – dann
+# `pruefen: false` setzen oder ein Minimum ≥ 1 wählen.
+name: runner-wahl
+
+on:
+  workflow_call:
+    inputs:
+      eigene:
+        description: runs-on für eigene Runner als JSON (Liste oder Name); leer = immer Rückfall
+        type: string
+        default: ""
+      rueckfall:
+        description: runs-on für den Rückfall als JSON
+        type: string
+        default: '"ubuntu-latest"'
+      runner_label:
+        description: Label (oder Scale-Set-Name), an dem eigene Runner erkannt werden
+        type: string
+        default: ""
+      pruefen:
+        description: nur eigene Runner wählen, wenn mindestens einer online ist
+        type: boolean
+        default: true
+      ziel:
+        description: API-Pfad der Runner (repos/<owner>/<repo> oder orgs/<org>); leer = dieses Repository
+        type: string
+        default: ""
+    secrets:
+      runner_token:
+        required: false
+    outputs:
+      runs-on:
+        description: runs-on als JSON für fromJSON()
+        value: ${{ jobs.wahl.outputs.runs-on }}
+      grund:
+        description: warum so entschieden wurde
+        value: ${{ jobs.wahl.outputs.grund }}
+
+permissions: {}
+
+jobs:
+  wahl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    outputs:
+      runs-on: ${{ steps.wahl.outputs.runs-on }}
+      grund: ${{ steps.wahl.outputs.grund }}
+    steps:
+      - name: Runner wählen
+        id: wahl
+        env:
+          EIGENE: ${{ inputs.eigene }}
+          RUECKFALL: ${{ inputs.rueckfall }}
+          LABEL: ${{ inputs.runner_label }}
+          PRUEFEN: ${{ inputs.pruefen }}
+          ZIEL: ${{ inputs.ziel || format('repos/{0}', github.repository) }}
+          GH_TOKEN: ${{ secrets.runner_token }}
+          EVENT: ${{ github.event_name }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          set -euo pipefail
+          choose() {
+            printf 'runs-on=%s\n' "$(jq -c . <<<"$1")" >> "$GITHUB_OUTPUT"
+            printf 'grund=%s\n' "$2" >> "$GITHUB_OUTPUT"
+            printf 'runs-on: %s (%s)\n' "$1" "$2"
+          }
+          jq -e . <<<"$RUECKFALL" >/dev/null || { echo "rueckfall ist kein JSON" >&2; exit 1; }
+          if [[ -z "$EIGENE" ]]; then choose "$RUECKFALL" "keine eigenen Runner konfiguriert"; exit 0; fi
+          jq -e . <<<"$EIGENE" >/dev/null || { echo "eigene ist kein JSON" >&2; exit 1; }
+          if [[ "$EVENT" == pull_request* && -n "$HEAD_REPO" && "$HEAD_REPO" != "$REPO" ]]; then
+            choose "$RUECKFALL" "Fork-PR"; exit 0
+          fi
+          if [[ "$ACTOR" == "dependabot[bot]" ]]; then choose "$RUECKFALL" "Dependabot"; exit 0; fi
+          if [[ "$PRUEFEN" != "true" ]]; then choose "$EIGENE" "ohne Prüfung"; exit 0; fi
+          if [[ -z "$GH_TOKEN" || -z "$LABEL" ]]; then choose "$EIGENE" "nicht prüfbar (kein Token oder Label)"; exit 0; fi
+          if ! online="$(gh api --paginate "$ZIEL/actions/runners?per_page=100" --jq '.runners[] | select(.status == "online") | [.labels[].name, .name] | @json' 2>/dev/null)"; then
+            choose "$RUECKFALL" "Runner-Liste nicht lesbar"; exit 0
+          fi
+          count="$(jq -s --arg l "$LABEL" '[.[] | select(index($l))] | length' <<<"$online")"
+          if (( count > 0 )); then
+            choose "$EIGENE" "$count eigene Runner online"
+          else
+            choose "$RUECKFALL" "kein eigener Runner online"
+          fi

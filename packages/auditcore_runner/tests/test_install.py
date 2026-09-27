@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 from dataclasses import replace
@@ -34,7 +35,7 @@ def test_plan_renders_units_without_placeholders(workstation: Profile, tmp_path:
     assert "Nice=19" in unit and "CPUWeight=idle" in unit and "IOWeight=10" in unit
     assert "supervisor cpu-gross %i" in unit and "soll.json" in unit
     for change in changes:
-        assert "${" not in change.new.replace("${1:-", "").replace("${BLOCKED[@]}", ""), change.path
+        assert not re.search(r"\$\{[a-z_]+\}", change.new), change.path  # template fields are lower case
 
 
 def test_firewall_script_blocks_private_ranges(workstation: Profile) -> None:
