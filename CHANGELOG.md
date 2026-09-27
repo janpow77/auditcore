@@ -18,8 +18,12 @@
   `specification`-Block in `provenance.json`; `catalog.py` setzt den Status
   nur, wenn er hält (Vorlage `docs/bibliotheken/spezifikation-vorlage.md`).
   Welche Pakete umgestellt sind, steht in den Paket-CHANGELOGs.
-
-Noch keine Änderungen.
+- Duplikatgruppe A16 abgeschlossen: Die Prüfung „JSON-Objekt am Pfad“ in
+  sampling (`as_object`), geo (`Body.of`) und extrapolation (`Reader`) nutzt
+  `auditcore_common.rest.json_object`; geo `web.decode`, `Reply` und `_json`
+  laufen über `auditcore_common.rest` (`decode_body` mit neuen Parametern
+  `too_large_code`/`invalid_json_code`). Verhalten unverändert
+  (Differenztests, Paketlauf alt gegen neu über HTTP).
 
 ## 0.4.2 – 2026-09-26
 
