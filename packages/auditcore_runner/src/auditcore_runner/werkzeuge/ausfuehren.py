@@ -15,7 +15,7 @@ import os
 import subprocess
 import tempfile
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from fnmatch import fnmatch
 from pathlib import Path
 
@@ -191,7 +191,14 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         findings = PARSERS[tool.parser](raw)
     except (ValueError, KeyError) as error:
         return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
-    return ToolResult(tool.name, "ok", seconds, relative_to(findings, (str(runner.root), "/work")))
+    return ToolResult(tool.name, "ok", seconds, relative_to(_named(tool, findings), (str(runner.root), "/work")))
+
+
+def _named(tool: Tool, findings: list[Finding]) -> list[Finding]:
+    """SARIF names its producer freely ("Opengrep OSS"); catalog tools report under their catalog name."""
+    if tool.parser != "sarif" or tool.area == "extern":
+        return findings
+    return [replace(f, tool=tool.name) for f in findings]
 
 
 def cache_dir() -> Path:
