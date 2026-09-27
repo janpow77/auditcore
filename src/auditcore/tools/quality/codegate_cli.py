@@ -10,8 +10,10 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import xml.etree.ElementTree as ElementTree
 from dataclasses import dataclass
 from pathlib import Path
+from subprocess import CalledProcessError
 
 from auditcore.tools.quality.codegate import (
     discover_packages,
@@ -30,6 +32,8 @@ from auditcore.tools.quality.codegate_ratchet import (
     update_baseline,
     write_baseline,
 )
+from auditcore.tools.quality.codegate_report import collect
+from auditcore.tools.quality.codegate_report import render_markdown as render_findings
 
 DEFAULT_BASELINE = Path("quality/baseline.json")
 
@@ -49,6 +53,15 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--format", choices=["text", "json", "markdown"], default="text")
     check.add_argument("--output", type=Path, help="JSON-Bericht zusätzlich schreiben")
     check.add_argument("--summary", type=Path, help="Markdown-Bericht anhängen")
+    report = sub.add_parser("report", help="Kompakter Befundbericht für PRs und Agenten")
+    report.add_argument("--root", type=Path, default=Path.cwd())
+    report.add_argument("--junit", type=Path, action="append", default=[], help="JUnit-XML")
+    report.add_argument("--gate", type=Path, help="JSON-Bericht von 'check --output'")
+    report.add_argument("--coverage", type=Path, help="coverage.py-JSON (--cov-report=json)")
+    report.add_argument("--api-compare-ref", help="Git-Revision für den API-Vergleich")
+    report.add_argument("--output", type=Path, default=Path("report.json"))
+    report.add_argument("--markdown", type=Path, default=Path("report.md"))
+    report.add_argument("--summary", type=Path, help="Markdown zusätzlich anhängen")
     return parser
 
 
@@ -175,9 +188,31 @@ def _emit(args: argparse.Namespace, result: GateResult) -> None:
         print(render_text(report["status"], result.measurements, verdicts))
 
 
+def run_report(args: argparse.Namespace) -> int:
+    """Write report.json and report.md; the report itself never fails the build."""
+    api = (args.root.resolve(), args.api_compare_ref) if args.api_compare_ref else None
+    findings = collect(args.junit, args.gate, args.coverage, api)
+    markdown = render_findings(findings)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(findings.to_dict(), indent=2, ensure_ascii=False) + "\n")
+    args.markdown.parent.mkdir(parents=True, exist_ok=True)
+    args.markdown.write_text(markdown, encoding="utf-8")
+    if args.summary:
+        with args.summary.open("a", encoding="utf-8") as handle:
+            handle.write(markdown)
+    print(markdown)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the gate; exit 0 = PASS/WARN, 1 = FAIL, 2 = not executable."""
     args = build_parser().parse_args(argv)
+    if args.command == "report":
+        try:
+            return run_report(args)
+        except (ValueError, OSError, ElementTree.ParseError, CalledProcessError) as error:
+            print(f"Befundbericht nicht erstellbar: {error}", file=sys.stderr)
+            return 2
     try:
         result = evaluate(args)
     except (ToolError, ValueError, OSError) as error:
