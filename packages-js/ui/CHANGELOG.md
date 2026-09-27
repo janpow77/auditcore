@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Neu `RunnerConsole` / `<flowaudit-runner-console>` (Attribut `api`) mit Bereichen Status, Einstellungen, Werkzeuge, Prioritäten; eigenständiges Bündel für `auditcore_runner` per `npm run build:runner` (`runner-bundle/`).
 - Neu `AttributeSampling` / `<flowaudit-attribute-sampling>` (Leitfaden 7.9, Vertrag `POST /attributes`).
 - `ExtrapolationPanel`: Teilschichten und dritte Stufe im Teilstichproben-Editor, Spalte „Programm (optional)“ bei mehreren Zeiträumen.
 - Neu: Bestandsprüfung – `BatchChecks` / `<flowaudit-batch-checks>` (Vue, Web Component); Vertrag `documents_batch_checks/1` (`docs/ui/batch-checks-rest.md`).

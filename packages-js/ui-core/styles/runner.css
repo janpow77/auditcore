@@ -1,0 +1,52 @@
+/* Runner-Konsole – RunnerConsole (Vue) und FlowauditRunnerConsole (React). Farben nur aus --fa-*-Variablen. */
+.fa-runner { display: flex; flex-direction: column; gap: var(--fa-space-3); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-runner__kopf { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--fa-space-2); }
+.fa-runner__titel { margin: 0; font-size: var(--fa-font-size-lg); }
+.fa-runner__meta { margin: 0; color: var(--fa-color-text-muted); }
+.fa-runner__reiter { display: flex; flex-wrap: wrap; gap: var(--fa-space-1); border-bottom: 1px solid var(--fa-color-border); }
+.fa-runner__tab { padding: var(--fa-space-2) var(--fa-space-3); border: 0; border-bottom: 2px solid transparent; background: none; color: var(--fa-color-text-muted); font: inherit; cursor: pointer; }
+.fa-runner__tab[aria-selected="true"] { border-bottom-color: var(--fa-color-accent); color: var(--fa-color-text); font-weight: 600; }
+.fa-runner__tab:focus-visible, .fa-runner__panel:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); border-radius: var(--fa-radius-sm); }
+.fa-runner__panel { display: flex; flex-direction: column; gap: var(--fa-space-3); }
+.fa-runner__zwischen { display: flex; align-items: center; gap: var(--fa-space-2); margin: 0; font-size: var(--fa-font-size-md); }
+.fa-runner__muted { margin: 0; color: var(--fa-color-text-muted); }
+.fa-runner__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-runner__meldung { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); }
+.fa-runner__meldung--success { background: var(--fa-color-success-soft); color: var(--fa-color-success); }
+.fa-runner__meldung--warning { background: var(--fa-color-warning-soft); color: var(--fa-color-warning); }
+.fa-runner__hinweise { display: flex; flex-direction: column; gap: var(--fa-space-1); margin: 0; padding: 0; list-style: none; }
+.fa-runner__hinweis { padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); border-left: 3px solid var(--fa-color-border-strong); background: var(--fa-color-surface-sunken); }
+.fa-runner__hinweis--danger { border-left-color: var(--fa-color-danger); background: var(--fa-color-danger-soft); }
+.fa-runner__hinweis--warning { border-left-color: var(--fa-color-warning); background: var(--fa-color-warning-soft); }
+.fa-runner__hinweis--info { border-left-color: var(--fa-color-accent); background: var(--fa-color-accent-soft); }
+.fa-runner__daten { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: var(--fa-space-2); margin: 0; }
+.fa-runner__datum { padding: var(--fa-space-2) var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); }
+.fa-runner__datum dt { color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-runner__datum dd { margin: 0; overflow-wrap: anywhere; }
+.fa-runner__tabelle { width: 100%; border-collapse: collapse; }
+.fa-runner__tabelle caption { padding-bottom: var(--fa-space-1); text-align: start; font-weight: 600; }
+.fa-runner__tabelle th, .fa-runner__tabelle td { padding: var(--fa-space-1) var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: start; vertical-align: top; }
+.fa-runner__tabelle thead th { color: var(--fa-color-text-muted); font-weight: 600; }
+.fa-runner__formular { display: flex; flex-direction: column; gap: var(--fa-space-3); }
+.fa-runner__abschnitt { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: var(--fa-space-2) var(--fa-space-4); margin: 0; padding: var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); }
+.fa-runner__abschnitt legend { padding: 0 var(--fa-space-1); font-weight: 600; }
+.fa-runner__feld { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-runner__feld--schalter { flex-direction: row; align-items: center; }
+.fa-runner__eingabe { padding: var(--fa-space-1) var(--fa-space-2); border: 1px solid var(--fa-color-border-strong); border-radius: var(--fa-radius-sm); background: var(--fa-color-surface); color: inherit; font: inherit; }
+.fa-runner__eingabe:focus-visible, .fa-runner__feld input[type="checkbox"]:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-runner__eingabe[aria-invalid="true"] { border-color: var(--fa-color-danger); }
+.fa-runner__eingabe:disabled { opacity: 0.7; }
+.fa-runner__feldfehler { margin: 0; color: var(--fa-color-danger); font-size: var(--fa-font-size-xs); }
+.fa-runner__probleme { margin: 0; padding: var(--fa-space-2) var(--fa-space-3) var(--fa-space-2) var(--fa-space-6); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-runner__aktionen { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2); }
+.fa-runner__vorschau, .fa-runner__konflikt { display: flex; flex-direction: column; gap: var(--fa-space-2); padding: var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface-raised); }
+.fa-runner__konflikt { border-color: var(--fa-color-warning); }
+.fa-runner__diff summary { cursor: pointer; font-family: var(--fa-font-mono); }
+.fa-runner__diff pre, .fa-runner__befehl { margin: 0; padding: var(--fa-space-2); overflow-x: auto; border-radius: var(--fa-radius-sm); background: var(--fa-color-surface-sunken); font: var(--fa-font-size-xs) / var(--fa-line-height) var(--fa-font-mono); }
+.fa-runner__befehl { user-select: all; }
+.fa-runner__schritte { margin: 0; padding-left: var(--fa-space-5); font-family: var(--fa-font-mono); font-size: var(--fa-font-size-xs); }
+.fa-runner__prioritaeten { display: flex; flex-direction: column; gap: var(--fa-space-1); margin: 0; padding: 0; list-style: none; }
+.fa-runner__prioritaet { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fa-space-2) var(--fa-space-3); padding: var(--fa-space-2) var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); }
+.fa-runner__rang { min-width: 4.5rem; color: var(--fa-color-text-muted); }
+.fa-runner__klasse { flex: 1 1 8rem; }
+.fa-runner__schmal { width: 6rem; }

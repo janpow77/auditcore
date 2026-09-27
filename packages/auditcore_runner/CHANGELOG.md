@@ -1,5 +1,9 @@
 # Changelog – auditcore_runner
 
+## Unreleased
+
+- Oberfläche enthalten: `auditcore-runner ui` liefert die Runner-Konsole aus `@auditcore/ui` (Gruppe `runner`) als `data/web/runner-elements.js` aus; Paketseite ohne Platzhaltertext.
+
 ## 0.1.0 – Erste Fassung
 
 - Versioniertes Runner-Profil (Schema 2, Migration aus Version 1) mit gemeinsamer

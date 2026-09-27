@@ -63,8 +63,8 @@ def test_read_endpoints_and_security_headers(server: tuple[str, int]) -> None:
     assert code == 200 and "flowaudit-runner-console" in str(page)
     code, metrics = request(server, "GET", "/metrics")
     assert code == 200 and "auditcore_runner" in str(metrics)
-    code, _ = request(server, "GET", "/runner-elements.js")
-    assert code == 404
+    code, bundle = request(server, "GET", "/runner-elements.js")
+    assert code == 200 and "flowaudit-runner-console" in str(bundle)
 
 
 def test_changes_require_header(server: tuple[str, int], profile_file: Path) -> None:
