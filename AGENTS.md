@@ -7,7 +7,7 @@ dann gezielt Quelltext.** Architektur-Dokumente nur für die konkrete Frage lese
 
 | Frage | Befehl bzw. Quelle |
 |---|---|
-| Was ist im PR rot? | Step-Summary „Befundbericht“ bzw. Artefakt `report.md`/`report.json` (Workflows `code-quality-gate`, `domain-packages`) |
+| Was ist im PR rot? | Step-Summary „Befundbericht“ bzw. Artefakt `report.md`/`report.json` (Workflows `code-quality-gate`, `domain-packages`); jede Zeile nennt `datei:zeile`, Regel und erwarteten Fix |
 | Befund lokal erzeugen | `pytest -n auto --junitxml=j.xml --cov=auditcore --cov-report=json:c.json` und `auditcore-codegate report --junit j.xml --coverage c.json --api-compare-ref origin/main` |
 | Qualitäts-Ratchet | `auditcore-codegate check [--package auditcore_x] [--skip-mypy]` |
 | Welche Pakete betrifft meine Änderung? | `python scripts/ci_affected_packages.py --base origin/main` |
@@ -53,8 +53,9 @@ Marker: `slow`, `gpu` (torch/Donut; `-m gpu`), `network`. Zeitlimit je Test 120 
   Versionen sind unveränderlich, Änderungen brauchen neue Versionen.
 - **Keine erfundenen** Geschäftsregeln, Schwellenwerte oder Testergebnisse; Tests
   nutzen synthetische Daten.
-- **Workflows:** Eigene Runner (NUC, janpow-ai) sehen nie Fork-Code, Secrets oder
-  Dependabot-Läufe; `tests/test_workflow_runner_guard.py` erzwingt das.
+- **Workflows:** zizmor und actionlint prüfen im `code-quality-gate` (ab Schwere medium
+  fail closed); eigene Runner (NUC, janpow-ai) sehen nie Fork-Code oder Dependabot-Läufe
+  (`tests/test_workflow_runner_guard.py`). Actions nur per Commit-SHA pinnen.
 - **Deutsch** in Doku, Meldungen und Commits; Bezeichner im Code englisch.
 
 ## 5. Weniger Tokens
