@@ -114,11 +114,20 @@ autofix = false
 zeitlimit_s = 900
 prioritaet = 10                    # kleiner = früher
 aktiv = true
+befehl = ["mypy", "--strict", "src", "tests"]
+
+[pruefprofile.schnell.werkzeug.ruff]
+autofix_befehl = ["ruff", "check", "--fix", "src", "tests"]
 
 [codemods]
 libcst = ["projekt.codemods.AlteApiErsetzen"]
 befehle = [["python", "-m", "projekt.umschreiben"]]
 ```
+
+`befehl` und `autofix_befehl` sind Argumentlisten und werden ohne Shell
+ausgeführt. Damit lassen sich Ziele und Optionen je Repository ändern, ohne den
+globalen Katalog oder das Runner-Image anzupassen. Bei Parsern mit Ausgabedatei
+muss `befehl` den Platzhalter `{ausgabe}` weiterhin enthalten.
 
 Je Rechner schaltet die Oberfläche bzw. `~/.config/auditcore-runner/werkzeuge.json`
 (`auditcore-runner/werkzeuge/1`) Werkzeuge je Profil an/aus, setzt Zeitlimit und

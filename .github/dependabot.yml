@@ -90,7 +90,8 @@ updates:
         update-types: [minor, patch]
 
   # Werkzeug-Pins des auditcore_runner-Images (Python-Werkzeuge, Node-Werkzeuge).
-  # Binärdateien in binaer.json prüft `auditcore-runner image werkzeuge`.
+  # Binärdateien prüft `auditcore-runner image werkzeuge`; trivy wird zusätzlich
+  # durch den Renovate-Custom-Manager in renovate.json5 überwacht.
   - package-ecosystem: pip
     directory: /packages/auditcore_runner/src/auditcore_runner/data/werkzeuge
     schedule:

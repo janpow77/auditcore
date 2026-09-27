@@ -259,7 +259,7 @@ def run_tool(runner: Runner, tool: Tool, timeout: int, content: str, use_cache: 
 
 def fix_order(registry: Registry, profile: CheckProfile, extra: tuple[Tool, ...] = ()) -> list[Tool]:
     """Stufen ohne LLM: erst Autofixer der Werkzeuge, dann Codemods (Repo-Regeln), dann wird geprüft."""
-    tools = [registry.get(name) for name in profile.ordered_tools()] + list(extra)
+    tools = [profile.configured_tool(registry.get(name)) for name in profile.ordered_tools()] + list(extra)
     fixers = [t for t in tools if t.can_fix]
     return [t for t in fixers if t.stage != "codemod"] + [t for t in fixers if t.stage == "codemod"]
 
@@ -296,7 +296,7 @@ def run_profile(runner: Runner, registry: Registry, profile: CheckProfile, use_c
     """Run all enabled checking tools of a profile; returns the result document."""
     content = content_key(runner.root)
     files = _git(runner.root, "ls-files", "--cached", "--others", "--exclude-standard").splitlines()
-    tools = [t for t in (registry.get(n) for n in profile.ordered_tools()) if t.command]
+    tools = [t for t in (profile.configured_tool(registry.get(n)) for n in profile.ordered_tools()) if t.command]
     results = [
         _check(runner, tool, profile.setting(tool.name).timeout_seconds, content, files, use_cache) for tool in tools
     ]

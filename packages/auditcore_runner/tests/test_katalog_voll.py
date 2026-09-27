@@ -256,6 +256,8 @@ autofix = true
 [pruefprofile.pr.werkzeug.playwright]
 zeitlimit_s = 900
 prioritaet = 90
+befehl = ["playwright", "test", "e2e", "--reporter=junit"]
+autofix_befehl = ["prettier", "--write", "e2e"]
 
 [codemods]
 libcst = ["projekt.codemods.AlteApiErsetzen"]
@@ -277,7 +279,24 @@ def test_repo_file_schema_matches_loader(tmp_path: Path) -> None:
 
     profile = load_repo_profiles(tmp_path)["pr"]
     assert profile.autofix and profile.ordered_tools()[-1] == "playwright"
+    configured = profile.configured_tool(Registry().get("playwright"))
+    assert configured.command == ("playwright", "test", "e2e", "--reporter=junit")
+    assert configured.fix_command == ("prettier", "--write", "e2e")
     assert len(load_codemods(tmp_path)) == 2
+
+
+def test_repo_command_override_runs_without_shell(tmp_path: Path) -> None:
+    _git_repo(tmp_path)
+    (tmp_path / ".auditcore-runner.toml").write_text(
+        '[pruefprofile.test]\nwerkzeuge = ["probe"]\n'
+        '[pruefprofile.test.werkzeug.probe]\nbefehl = ["sh", "-c", "printf override"]\n',
+        encoding="utf-8",
+    )
+    from auditcore_runner.werkzeuge.modell import load_repo_profiles
+
+    registry = Registry({"probe": Tool("probe", "extern", ("printf", "catalog"), "keine")})
+    document = run_profile(Runner(tmp_path), registry, load_repo_profiles(tmp_path)["test"], use_cache=False)
+    assert document["werkzeuge"][0]["status"] == "ok"  # type: ignore[index]
 
 
 def test_scan_root_paths_and_missing_programs(tmp_path: Path) -> None:

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Trivy-Binärpin melden; Prüfsumme muss aus der geprüften Release-Datei übernommen werden",
+      "managerFilePatterns": [
+        "/^packages/auditcore_runner/src/auditcore_runner/data/werkzeuge/binaer\\.json$/"
+      ],
+      "matchStrings": [
+        "\\\"name\\\": \\\"trivy\\\",[\\s\\S]{0,120}?\\\"version\\\": \\\"(?<currentValue>[^\\\"]+)\\\""
+      ],
+      "depNameTemplate": "aquasecurity/trivy",
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver-coerced"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["custom.regex"],
+      "matchPackageNames": ["aquasecurity/trivy"],
+      "labels": ["dependencies", "runner-image", "security"],
+      "automerge": false,
+      "prBodyNotes": [
+        "Die SHA-256 und URL in binaer.json müssen anhand der signierten/geprüften Trivy-Release-Datei aktualisiert werden; niemals ungeprüft mergen."
+      ]
+    }
+  ]
+}

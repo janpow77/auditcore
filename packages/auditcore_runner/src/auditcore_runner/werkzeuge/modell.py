@@ -50,11 +50,13 @@ class Tool:
 
 @dataclass(frozen=True)
 class ToolSetting:
-    """Per-profile override: on/off, time limit and order."""
+    """Per-profile override: on/off, limits, order and repository commands."""
 
     enabled: bool = True
     timeout_seconds: int = 600
     priority: int = 50
+    command: tuple[str, ...] | None = None
+    fix_command: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -73,6 +75,15 @@ class CheckProfile:
     def ordered_tools(self) -> list[str]:
         active = [t for t in self.tools if self.setting(t).enabled]
         return sorted(active, key=lambda t: (self.setting(t).priority, self.tools.index(t)))
+
+    def configured_tool(self, tool: Tool) -> Tool:
+        """Apply command overrides from this repository profile to a catalog tool."""
+        setting = self.setting(tool.name)
+        return replace(
+            tool,
+            command=setting.command if setting.command is not None else tool.command,
+            fix_command=setting.fix_command if setting.fix_command is not None else tool.fix_command,
+        )
 
 
 PR_TOOLS = (
@@ -146,7 +157,18 @@ def _setting(raw: object, where: str) -> ToolSetting:
     enabled, timeout, priority = data.get("aktiv", True), data.get("zeitlimit_s", 600), data.get("prioritaet", 50)
     if not isinstance(enabled, bool) or not isinstance(timeout, int) or not isinstance(priority, int):
         raise RepoConfigError(f"{where}: aktiv (bool), zeitlimit_s, prioritaet (Zahl)")
-    return ToolSetting(enabled, timeout, priority)
+    command = _optional_command(data, "befehl", where)
+    fix_command = _optional_command(data, "autofix_befehl", where)
+    return ToolSetting(enabled, timeout, priority, command, fix_command)
+
+
+def _optional_command(data: dict[str, object], key: str, where: str) -> tuple[str, ...] | None:
+    if key not in data:
+        return None
+    value = data[key]
+    if not isinstance(value, list) or not value or not all(isinstance(part, str) and part for part in value):
+        raise RepoConfigError(f"{where}.{key}: nichtleere Liste von Texten erwartet")
+    return tuple(cast(list[str], value))
 
 
 def _texts(data: dict[str, object], key: str, where: str, default: tuple[str, ...]) -> tuple[str, ...]:
@@ -233,4 +255,14 @@ def load_codemods(root: Path) -> tuple[Tool, ...]:
 
 def apply_machine_settings(profile: CheckProfile, overrides: dict[str, ToolSetting]) -> CheckProfile:
     """Machine-level switches from the UI win over repository defaults."""
-    return replace(profile, settings={**profile.settings, **overrides})
+    combined = dict(profile.settings)
+    for name, machine in overrides.items():
+        repository = combined.get(name)
+        if repository is not None:
+            machine = replace(
+                machine,
+                command=repository.command,
+                fix_command=repository.fix_command,
+            )
+        combined[name] = machine
+    return replace(profile, settings=combined)
