@@ -5397,6 +5397,104 @@ Damit soll eine neue oder aktualisierte Fachanwendung ohne manuelle Source-Code-
 
 ---
 
+# 102AC. Sechste Komponente: `auditcore_runner` – verteilte Prüfbank
+
+## 102AC.1 Zweck
+
+`auditcore_runner` (Paket `packages/auditcore_runner`, CLI `auditcore-runner`) ist eine eigenständige, installierbare Bibliothek, mit der Nutzer auf eigenen Linux-Rechnern ephemere GitHub-Actions-Runner und eine deterministische Prüfbank betreiben. Ziel ist, Tests, statische Analyse und Refactoring-Absicherung auf vorhandene Hardware zu verlagern, Befunde maschinenlesbar und kompakt bereitzustellen und dadurch GitHub-API-Aufrufe sowie LLM-Tokens zu sparen.
+
+```text
+Repo-Workflows (GitHub = Warteschlange)
+        ↓
+auditcore_runner  –  Soll-Quelle (statisch | lokal | datei)
+        ↓                         ↑
+Runner-Container je Klasse   Telemetrie: Last, RAM, Swap, Temperatur,
+        ↓                     Nutzeraktivität, GPU-Speicher, Warteschlange
+Werkzeugkatalog → Befunde (SARIF) → Baseline-Filter → Bericht / Aufgabenpaket
+```
+
+Lizenz: MIT wie das gesamte Repository. Aller Paketcode ist eigener Code; Abhängigkeiten und übernommener Code nur MIT-kompatibel (MIT, BSD, Apache-2.0, ISC), Fremdlizenztexte unter `LICENSES/`.
+
+---
+
+## 102AC.2 Grundsätze
+
+- **RUN-001 Allgemeinheit:** Das Paket enthält nur allgemeine Mechanismen mit neutralen Standardwerten. Rechnernamen, persönliche GPU-Regeln, Prioritätsreihenfolgen, Zeitfenster, Pfade, Repositories oder Dienste eines bestimmten Nutzers stehen nicht in Code, Standardwerten, Tests oder Paketdaten. Nutzerspezifisches ist ausschließlich Konfiguration.
+- **RUN-002 Dynamik:** Keine feste Zuordnung von Runnern, Jobs oder Diensten zu Rechnern oder Karten. Profile legen nur Grenzen fest (Minimum, Maximum, Ressourcen je Runner, erlaubte Karten); die Belegung folgt laufend gemessener Last und freiem Speicher, fährt automatisch hoch und herunter und nutzt Hysterese gegen Flattern.
+- **RUN-003 Vorrang interaktiver Nutzung:** Optional abschaltbarer Schalter; ist er aktiv, weichen Hintergrundjobs sofort, wenn ein Mensch den Rechner oder eine GPU nutzt.
+- **RUN-004 Sicher ab Werk:** ephemere JIT-Runner, kein Docker-Socket, `cap-drop ALL`, `no-new-privileges`, JIT-Konfiguration nicht in `docker inspect` sichtbar, eigenes Docker-Netz mit Sperre privater Netze und (Ausbaustufe) Egress-Allowlist, Fork-PRs nie auf eigenen Runnern.
+- **RUN-005 Unabhängig von flow-agent:** Das Paket ist ohne weitere Plattform voll nutzbar; eine zentrale Steuerung kann über einen dokumentierten Vertrag (Soll-Datei, Status-JSON, Profil-CLI) andocken.
+- **RUN-006 Erweiterung vor Neubau:** Vorhandene, lizenzkompatible Werkzeuge werden aufgerufen statt nachgebaut (z. B. prek, reviewdog, diff-cover, zizmor, actionlint).
+
+---
+
+## 102AC.3 Profile, Klassen und Soll-Quelle
+
+- **RUN-010** `auditcore-runner profil erkennen` ermittelt Kerne, RAM, Swap und NVIDIA-GPUs (UUID, VRAM) und schlägt Runner-Klassen mit Grenzen vor. Profile liegen versioniert unter `~/.config/auditcore-runner/` (Schema-Version, Migration).
+- **RUN-011** Runner-Klassen sind frei benennbar (Standardvorlagen z. B. `cpu`, `cpu-gross`, `gpu`); je Klasse Min/Max, CPU/RAM je Runner, Labels, erlaubte Karten, Prioritäten.
+- **RUN-012** Soll-Quelle je Profil: `statisch` (Profil), `lokal` (eingebauter Autoskalierer) oder `datei` (externer Regler über eine Soll-Datei mit JSON-Schema im Paket).
+- **RUN-013** Entscheidungsregeln als reine, getestete Funktionen (`regeln.py`): Last je Kern, freier RAM, Swap, Temperatur bzw. Drosselung aus einer konfigurierbaren Thermikquelle (HTTP-JSON mit Feldzuordnung), Nutzeraktivität, Zeitfenster, Warteschlange je Klasse, Prioritätsliste (`prioritaeten: [{klasse, rang, verdraengbar, min}]`).
+- **RUN-014** GPU-Runner erhalten beim Start die gerade geeignete Karte per UUID (CDI `--device nvidia.com/gpu=<UUID>`); mehrere Verbraucher dürfen sich eine Karte nach Speicher teilen; bei Vorrang wird geräumt.
+- **RUN-015** Überzählige Runner laufen leer (keine neue Registrierung, unbenutzte Registrierung wird gelöscht); laufende Jobs werden nicht abgebrochen, außer bei GPU-Räumung.
+
+---
+
+## 102AC.4 Runner-Backends und GitHub
+
+- **RUN-020** Backend-Schnittstelle `RunnerBackend`: Stufe 1 JIT-Schleife je Instanz; Stufe 2 Scale-Set-Backend über GitHubs Scale-Set-API (Long-Poll, `TotalAssignedJobs`), Protokoll in Python nach dem MIT-lizenzierten Referenzclient mit Quellenhinweis, API-Version gepinnt.
+- **RUN-021** Die Warteschlange je Klasse liefert das Paket selbst (Status-JSON); externe Regler fragen GitHub nicht zusätzlich ab.
+- **RUN-022** Authentifizierung per GitHub App (Standard) oder fein granularem PAT; Geheimnisse nur aus Dateien bzw. Secret-Store, nie im Profil.
+- **RUN-023** Ziel Repository oder Organisation konfigurierbar; `runs-on` über Scale-Set-Namen; Workflow-Vorlagen und ein wiederverwendbarer Entscheidungs-Job (`workflow_call`) für den Rückfall auf GitHub-gehostete Runner, wenn keine eigenen verfügbar sind.
+- **RUN-024** Runner-Image hält sich aktuell (Mindestversion und Aktualisierungsfrist von GitHub): `auditcore-runner image aktualisieren` mit Versionsprüfung und Zeitgeber.
+- **RUN-025** Überwachung der registrierten Runner; unbekannte Registrierungen werden gemeldet.
+
+---
+
+## 102AC.5 Werkzeugkatalog und Prüfprofile
+
+- **RUN-030** Katalog `auditcore_runner/werkzeuge/`: je Werkzeug Name, Bereich, Befehl, Installationsquelle im gepinnten Runner-Image, Parser auf ein einheitliches Befundmodell (SARIF, Fingerprint, Schwere, Datei:Zeile), Autofix-Fähigkeit, Kosten.
+- **RUN-031** Prüfprofile (z. B. `schnell`, `pr`, `voll`, `gui`, `sicherheit`, `gpu`, `fuell`) mit Werkzeugauswahl, Auslöser (lokal vor dem Push, PR, Nacht, Füllarbeit) und Grenzen; je Repository in `.auditcore-runner.toml`, je Rechner im Profil.
+- **RUN-032** Mindestumfang Stufe 1: ruff (inkl. Sicherheits- und Docstring-Regeln), mypy, pytest (JUnit), gitleaks, eslint, zizmor, actionlint, Adapter für `auditcore-codegate report`.
+- **RUN-033** Ausbaustufe: pyrefly, Opengrep, osv-scanner, syft/grype, trivy nur mit Digest-Pin, vulture, deptry, import-linter, codespell/typos, mutmut, diff-cover, pytest-testmon/-split, jscpd, ast-grep/libcst-Codemods, tsc, prettier, stylelint, vitest, knip, size-limit, Playwright-Screenshotvergleich (quer über Vue- und React-Fassung), axe-core, Lighthouse CI, markdownlint, lychee. Werkzeuge unter GPL/LGPL/AGPL nur als separat aufgerufene Programme mit Lizenztext und Quellverweis; keine kommerziellen oder nicht frei nutzbaren Werkzeuge im Standard-Image. Liste in `THIRD_PARTY.md`.
+- **RUN-034** `auditcore-runner workflows pruefen` ruft zizmor und actionlint auf und ergänzt nur Regeln, die diese nicht abdecken (Fork-Schutz für eigene Runner, Secrets nur auf gehosteten Runnern).
+
+---
+
+## 102AC.6 Token-Sparen
+
+- **RUN-040** `auditcore-runner lokal <profil>` führt dieselben Prüfungen im selben Image vor dem Push aus (optional pre-push-Hook über prek); Ergebnis-Cache nach `(Werkzeug, Version, Konfig-Hash, Git-Tree-Hash des Pakets)`.
+- **RUN-041** Reihenfolge Autofix → Codemods → Befunde; nur neue Befunde gegenüber der Baseline; Aufgabenpaket mit Datei:Zeile, Regel, Auszug und Fix-Hinweis für Claude/Codex bzw. ein lokales Modell (nur Texte/Klassifizieren, mit Schema-Prüfung und Rückfall) samt empfohlenem Headless-Aufruf mit Budget- und Rundenlimit.
+- **RUN-042** `auditcore-runner messen`: CI-Dauern und Token-Verbrauch (Claude-Code-/Codex-Protokolle, OTel-Etiketten `task_type`, `paket_id`) je Aufgabentyp als wiederholbare Messung.
+
+---
+
+## 102AC.7 Bedienung
+
+- **RUN-050** Lokale Oberfläche als Komponentengruppe `runner` in `@auditcore/ui` (Generator `npm run ui:neu`, Kern in `ui-core`, Vue und native React, Web Component, Designtoken `--fa-*`, Paritätsfälle, `ui:gate` ohne Ausnahmen); das Python-Paket liefert das gebaute Bundle als Paketdaten aus, auf dem Zielrechner ist kein Node nötig.
+- **RUN-051** JSON-API: Status, Profil lesen/prüfen/anwenden (Diff, `--erwartete-version`), Werkzeuge, Prioritäten, `/metrics`; Änderungen nur lokal (Loopback) bzw. über die CLI, optional lesender zweiter Listener.
+- **RUN-052** Maschinenlesbare CLI für zentrale Steuerungen: `profil schema`, `profil pruefen --json`, `profil anwenden --json`; Profil-Version, -Hash und letzte Änderung (Quelle lokal/extern) im Status-JSON; Konflikte werden gemeldet, nicht überschrieben.
+
+---
+
+## 102AC.8 Nicht Bestandteil
+
+- keine Kubernetes-Abhängigkeit, kein eigener Warteschlangen-Server, keine Cloud-Pflicht
+- keine macOS- oder AMD-GPU-Unterstützung in der ersten Fassung (dokumentiert als offen)
+- keine nutzerspezifischen Voreinstellungen (siehe RUN-001)
+
+---
+
+## 102AC.9 Abnahme
+
+- Installation auf einem frischen Linux-Rechner nach README in höchstens fünf Befehlen; `profil erkennen`, `runner install --dry-run`, `runner status` funktionieren.
+- Fork-PR läuft nie auf eigenem Runner; aus dem Runner-Container sind private Netze nicht erreichbar.
+- Lastwechsel (Nutzeraktivität, hohe Last, Swap) ändert das Soll nachvollziehbar ohne abgebrochene Jobs; GPU-Räumung bei Vorrang binnen Sekunden.
+- Befundbericht enthält nur neue Befunde mit Datei:Zeile; Ergebnis-Cache greift bei unverändertem Paket.
+- `grep` über das Paket findet keine nutzerspezifischen Rechnernamen, Pfade oder Dienste.
+- Lizenz-Check der Abhängigkeiten grün, `THIRD_PARTY.md` vollständig.
+
+---
+
 # 103. Verbindliche Abschlussprüfung durch Codex
 
 Codex beendet die Aufgabe nicht nach dem Schreiben des Codes.
