@@ -98,15 +98,15 @@ class Runner:
     root: Path
     image: str = ""
 
-    def command(self, argv: list[str]) -> list[str]:
+    def command(self, argv: list[str], network: bool = False) -> list[str]:
+        """Container call; without ``network`` the tool runs fully offline."""
         if not self.image:
             return argv
         return [
             "docker",
             "run",
             "--rm",
-            "--network",
-            "none",
+            *(() if network else ("--network", "none")),
             "--cap-drop",
             "ALL",
             "--user",
@@ -137,7 +137,7 @@ class Runner:
             return ""
         try:
             result = subprocess.run(
-                self.command(list(tool.version_command)),
+                self.command(list(tool.version_command), tool.network),
                 cwd=self.root,
                 capture_output=True,
                 text=True,
@@ -159,7 +159,12 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
     started = time.monotonic()
     try:
         result = subprocess.run(
-            runner.command(argv), cwd=runner.root, capture_output=True, text=True, timeout=timeout, check=False
+            runner.command(argv, tool.network),
+            cwd=runner.root,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
         )
     except FileNotFoundError:
         return ToolResult(tool.name, "fehlt", 0.0, message=f"{argv[0]} nicht installiert")
@@ -217,20 +222,25 @@ def run_tool(runner: Runner, tool: Tool, timeout: int, content: str, use_cache: 
     return result
 
 
-def run_fixes(runner: Runner, registry: Registry, profile: CheckProfile) -> list[str]:
-    """Autofix first (no LLM involved): returns the tools that ran a fixer."""
+def fix_order(registry: Registry, profile: CheckProfile, extra: tuple[Tool, ...] = ()) -> list[Tool]:
+    """Stufen ohne LLM: erst Autofixer der Werkzeuge, dann Codemods (Repo-Regeln), dann wird geprüft."""
+    tools = [registry.get(name) for name in profile.ordered_tools()] + list(extra)
+    fixers = [t for t in tools if t.can_fix]
+    return [t for t in fixers if t.stage != "codemod"] + [t for t in fixers if t.stage == "codemod"]
+
+
+def run_fixes(runner: Runner, registry: Registry, profile: CheckProfile, extra: tuple[Tool, ...] = ()) -> list[str]:
+    """Autofix first, then codemods – no LLM involved; returns the tools that ran a fixer."""
     fixed = []
-    for name in profile.ordered_tools():
-        tool = registry.get(name)
-        if tool.can_fix:
-            subprocess.run(
-                runner.command(list(tool.fix_command)),
-                cwd=runner.root,
-                capture_output=True,
-                timeout=profile.setting(name).timeout_seconds,
-                check=False,
-            )
-            fixed.append(name)
+    for tool in fix_order(registry, profile, extra):
+        subprocess.run(
+            runner.command(list(tool.fix_command), tool.network),
+            cwd=runner.root,
+            capture_output=True,
+            timeout=profile.setting(tool.name).timeout_seconds,
+            check=False,
+        )
+        fixed.append(tool.name)
     return fixed
 
 

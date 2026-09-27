@@ -17,7 +17,9 @@ Parser = Callable[[str], list[Finding]]
 
 VULTURE = re.compile(r"^(?P<path>[^:\n]+):(?P<line>\d+): (?P<message>.+?) \((?P<confidence>\d+)% confidence\)$")
 CODESPELL = re.compile(r"^(?P<path>[^:\n]+):(?P<line>\d+): (?P<wrong>\S+) ==> (?P<fix>.+)$")
-TSC = re.compile(r"^(?P<path>.+?)\((?P<line>\d+),(?P<col>\d+)\): (?P<level>error|warning) (?P<code>TS\d+): (?P<message>.*)$")
+TSC = re.compile(
+    r"^(?P<path>.+?)\((?P<line>\d+),(?P<col>\d+)\): (?P<level>error|warning) (?P<code>TS\d+): (?P<message>.*)$"
+)
 IMPORT_EDGE = re.compile(r"^-\s+(?P<source>[\w.]+) -> (?P<target>[\w.]+) \(l\.(?P<line>\d+)\)")
 MUTANT = re.compile(r"^\s*(?P<name>[\w.]+)__mutmut_(?P<number>\d+): (?P<status>survived|timeout|suspicious|no tests)$")
 AST_GREP_LEVEL = {"error": "fehler", "warning": "warnung", "info": "hinweis", "hint": "hinweis"}
@@ -204,7 +206,10 @@ def diff_cover(text: str) -> list[Finding]:
                     rule="ungetestete-aenderung",
                     path=path,
                     line=lines[0],
-                    message=f"geänderte Zeilen ohne Testabdeckung: {shown} ({stats.get('percent_covered', '?')} % abgedeckt)",
+                    message=(
+                        f"geänderte Zeilen ohne Testabdeckung: {shown} "
+                        f"({stats.get('percent_covered', '?')} % abgedeckt)"
+                    ),
                     severity="warnung",
                 )
             )

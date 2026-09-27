@@ -12,7 +12,8 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import cast
 
-AREAS = ("python", "js", "sicherheit", "struktur", "doku", "gui", "gpu", "extern")
+AREAS = ("python", "js", "sicherheit", "struktur", "doku", "gui", "gpu", "extern", "codemod")
+STAGES = ("autofix", "codemod", "pruefen")
 TRIGGERS = ("lokal", "pr", "nacht", "fuell")
 REPO_FILE = ".auditcore-runner.toml"
 
@@ -39,6 +40,8 @@ class Tool:
     applies_to: tuple[str, ...] = ()
     output_file: str = ""
     success_codes: tuple[int, ...] = (0, 1)
+    stage: str = "pruefen"
+    network: bool = False
 
     @property
     def can_fix(self) -> bool:
@@ -155,6 +158,32 @@ def load_repo_profiles(root: Path) -> dict[str, CheckProfile]:
     for name, raw in section.items():
         profiles[name] = _profile(name, raw, profiles.get(name))
     return profiles
+
+
+def load_codemods(root: Path) -> tuple[Tool, ...]:
+    """Codemods aus ``[codemods]`` in ``.auditcore-runner.toml``.
+
+    ``libcst = ["paket.modul.Klasse", …]`` ergibt je Eintrag einen Codemod über
+    ``libcst-tool codemod``; ``befehle = [["prog", "arg"], …]`` beliebige
+    Umschreib-Befehle. Codemods laufen nach den Autofixern und vor der Prüfung.
+    """
+    path = root / REPO_FILE
+    if not path.exists():
+        return ()
+    section = tomllib.loads(path.read_text(encoding="utf-8")).get("codemods", {})
+    if not isinstance(section, dict):
+        raise RepoConfigError("codemods: Tabelle erwartet")
+    tools: list[Tool] = []
+    for name in _texts(section, "libcst", "codemods", ()):
+        fix = ("libcst-tool", "codemod", "--no-format", name, ".")
+        tools.append(Tool(f"libcst:{name}", "codemod", (), "keine", fix_command=fix, stage="codemod"))
+    commands = section.get("befehle", [])
+    if not isinstance(commands, list) or not all(isinstance(c, list) and c for c in commands):
+        raise RepoConfigError("codemods.befehle: Liste von Befehlslisten erwartet")
+    for number, command in enumerate(cast(list[list[object]], commands), 1):
+        argv = tuple(str(part) for part in command)
+        tools.append(Tool(f"codemod:{number}", "codemod", (), "keine", fix_command=argv, stage="codemod"))
+    return tuple(tools)
 
 
 def apply_machine_settings(profile: CheckProfile, overrides: dict[str, ToolSetting]) -> CheckProfile:

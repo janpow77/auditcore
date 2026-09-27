@@ -1,4 +1,7 @@
-"""Parsers for web, GUI and documentation tools (stylelint, markdownlint, jscpd, knip, tsc, size-limit, Lighthouse CI)."""
+"""Parsers for web, GUI and documentation tools.
+
+stylelint, markdownlint, jscpd, knip, tsc, size-limit and Lighthouse CI.
+"""
 
 from __future__ import annotations
 
