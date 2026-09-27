@@ -1,5 +1,17 @@
 # Changelog – auditcore_documents
 
+## Unreleased
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
+(Zweck, Verträge, zehn Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom
+Altverhalten) mit Hypothesis-Eigenschaftstests `tests/test_spezifikation.py`;
+Legacy-Varianten benannt (`LEGACY`, `LEGACY_DIFFLIB`, `LEGACY_PIPELINE`,
+`legacy_pdf_pages`, `legacy.audit_designer_config_path`). Befund B1 ohne
+Codeänderung festgehalten: `normalise_for_match`/`normalise_semantic`
+entfernen je Durchgang nur eine führende Nummerierung und sind daher nicht
+idempotent (`xfail(strict=True)`). `specification`-Block in
+`provenance.json`, Katalogstatus „spezifiziert“. `hypothesis` im Extra `dev`.
+
 ## 0.4.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neu: REST-Vertrag `documents_extraction/1` für die Belegerkennung
