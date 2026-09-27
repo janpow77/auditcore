@@ -58,7 +58,9 @@ def internal_dependencies(directory: Path, known: set[str]) -> set[str]:
 def changed_files(base: str) -> list[str]:
     output = subprocess.run(
         ["git", "diff", "--name-only", f"{base}...HEAD"],
-        check=True, capture_output=True, text=True,
+        check=True,
+        capture_output=True,
+        text=True,
     ).stdout
     return [line for line in output.splitlines() if line]
 
