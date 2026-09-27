@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Zitaterkennung (Befunde B1/B2 der Spezifikation behoben): gebeugte
+  Normnamen („Artikel 1 der Delegierten Verordnung (EU) Nr. 480/2014“) werden
+  in der Grundform „Delegierte Verordnung …“ gelesen, die Normalform ist im
+  Rundlauf stabil; „der Durchführungsverordnung (EU) …“ und Richtlinien in der
+  Altform „Richtlinie 2014/24/EU“/„RL 2004/18/EG“ werden in Freitext erkannt.
+  Neue Invariante I10, der bisherige `xfail`-Test ist ein regulärer
+  Eigenschaftstest. Die Legacy-Varianten bleiben unverändert.
+
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
 (Zweck, Verträge, neun Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom
 Altverhalten) mit Hypothesis-Eigenschaftstests `tests/test_spezifikation.py`;
