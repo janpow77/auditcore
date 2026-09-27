@@ -1,17 +1,18 @@
-"""Runner guard: self-hosted runners never see fork code, secrets or Dependabot runs.
+"""Runner guard: rules for self-hosted runners that zizmor and actionlint do not cover.
 
-Every job whose ``runs-on`` is not a fixed GitHub-hosted ``ubuntu-*`` label can land
-on a self-hosted runner (NUC, janpow-ai). Such a job must
+General workflow security (template injection, spoofable bot checks, cache
+poisoning, unpinned actions, secrets outside environments) is checked by zizmor
+and actionlint in ``code-quality-gate``. This test adds what only this repository
+knows: which jobs can land on the own runners (NUC, janpow-ai).
 
-* keep fork pull requests on ``ubuntu-latest`` (fork condition in ``runs-on`` or a
-  job ``if`` that admits only same-repository pull requests), unless the workflow is
-  not triggered by pull requests at all (rule ``fork``);
-* not use repository secrets, ``GITHUB_TOKEN`` excepted (rule ``secrets``);
-* keep Dependabot pull requests on GitHub-hosted runners (rule ``dependabot``).
+* ``fork``: a job that can run self-hosted in a pull-request workflow keeps fork
+  PRs on ``ubuntu-latest`` (condition in ``runs-on`` or a same-repository ``if``);
+* ``runner-var``: ``vars.AUDITCORE_RUNNER`` appears only in ``runs-on``;
+* ``dependabot``: Dependabot PRs stay on GitHub-hosted runners (supply chain).
 
 ``workflow_findings`` is pure and repository-independent; it moves to the package
-``auditcore_runner`` (CLI ``auditcore-runner workflows pruefen``) once that exists,
-and this test then calls the package function.
+``auditcore_runner`` (CLI ``auditcore-runner workflows pruefen``) and this test then
+calls the package function.
 """
 
 from __future__ import annotations
@@ -27,10 +28,10 @@ import yaml
 HOSTED = re.compile(r"^ubuntu-[\w.-]+$")
 FORK_IN_RUNS_ON = "github.event.pull_request.head.repo.full_name != github.repository"
 FORK_IN_IF = "github.event.pull_request.head.repo.full_name == github.repository"
+RUNNER_VAR = "vars.AUDITCORE_RUNNER"
 DEPENDABOT = "dependabot[bot]"
-SECRET = re.compile(r"secrets\.(\w+)")
 PR_TRIGGERS = {"pull_request", "pull_request_target"}
-RULES = ("fork", "secrets", "dependabot")
+RULES = ("fork", "runner-var", "dependabot")
 
 
 @dataclass(frozen=True)
@@ -57,19 +58,20 @@ def _job_findings(
     workflow: str, name: str, body: Mapping[str, object], pr: bool
 ) -> list[WorkflowFinding]:
     runs_on = str(body.get("runs-on", "")).strip()
-    if HOSTED.match(runs_on):
-        return []
-    condition = str(body.get("if", ""))
+    rest = yaml.safe_dump({k: v for k, v in body.items() if k != "runs-on"})
     findings: list[WorkflowFinding] = []
-    if pr and not (
-        (FORK_IN_RUNS_ON in runs_on and "'ubuntu-latest'" in runs_on) or FORK_IN_IF in condition
-    ):
+    if RUNNER_VAR in rest:
+        message = f"{RUNNER_VAR} outside runs-on"
+        findings.append(WorkflowFinding(workflow, name, "runner-var", message))
+    if HOSTED.match(runs_on) or not pr:
+        return findings
+    condition = str(body.get("if", ""))
+    fork_guarded = (FORK_IN_RUNS_ON in runs_on and "'ubuntu-latest'" in runs_on) or (
+        FORK_IN_IF in condition
+    )
+    if not fork_guarded:
         findings.append(WorkflowFinding(workflow, name, "fork", "fork PR code on self-hosted"))
-    secrets = set(SECRET.findall(yaml.safe_dump(dict(body)))) - {"GITHUB_TOKEN"}
-    if secrets:
-        message = f"secrets {sorted(secrets)} on self-hosted"
-        findings.append(WorkflowFinding(workflow, name, "secrets", message))
-    if pr and DEPENDABOT not in condition and DEPENDABOT not in runs_on:
+    if DEPENDABOT not in condition and DEPENDABOT not in runs_on:
         message = "Dependabot PRs on self-hosted"
         findings.append(WorkflowFinding(workflow, name, "dependabot", message))
     return findings
@@ -86,7 +88,7 @@ def workflow_findings(workflow: str, document: Mapping[object, object]) -> list[
     return findings
 
 
-def self_hosted_jobs(workflow: str, document: Mapping[object, object]) -> list[str]:
+def self_hosted_jobs(document: Mapping[object, object]) -> list[str]:
     """Names of jobs that can run on a self-hosted runner."""
     jobs = document.get("jobs") or {}
     return [
@@ -100,7 +102,7 @@ def self_hosted_jobs(workflow: str, document: Mapping[object, object]) -> list[s
 WORKFLOWS = Path(__file__).resolve().parents[1] / ".github" / "workflows"
 DOCUMENTS = {p.name: yaml.safe_load(p.read_text("utf-8")) for p in sorted(WORKFLOWS.glob("*.yml"))}
 FINDINGS = [f for name, doc in DOCUMENTS.items() for f in workflow_findings(name, doc)]
-JOBS = [(name, job) for name, doc in DOCUMENTS.items() for job in self_hosted_jobs(name, doc)]
+JOBS = [(name, job) for name, doc in DOCUMENTS.items() for job in self_hosted_jobs(doc)]
 
 # Known violations, removed by the runner phase (see PR "Prüfbank Phase 1").
 # xfail(strict=True): once fixed, the case turns red and the entry must go.
@@ -118,9 +120,8 @@ def _cases() -> list[object]:
             marks = []
             if (workflow, job, rule) in KNOWN:
                 marks.append(pytest.mark.xfail(strict=True, reason=f"known: {rule}"))
-            cases.append(
-                pytest.param(workflow, job, rule, id=f"{workflow}:{job}:{rule}", marks=marks)
-            )
+            case_id = f"{workflow}:{job}:{rule}"
+            cases.append(pytest.param(workflow, job, rule, id=case_id, marks=marks))
     return cases
 
 
@@ -135,28 +136,30 @@ def test_self_hosted_job_follows_rule(workflow: str, job: str, rule: str) -> Non
     assert not hits, hits[0].message
 
 
+def test_runner_var_only_in_runs_on_everywhere() -> None:
+    hits = [f for f in FINDINGS if f.rule == "runner-var"]
+    assert not hits, hits
+
+
 def test_known_entries_are_current() -> None:
     assert {(w, j) for w, j in JOBS} >= {(w, j) for w, j, _ in KNOWN}, "stale entry in KNOWN"
 
 
 # ------------------------------------------------------------------ the pure function
-PR_JOB = {"on": {"pull_request": {}}, "jobs": {}}
 SELF = "${{ fromJSON(vars.AUDITCORE_RUNNER || '\"ubuntu-latest\"') }}"
 
 
 def _doc(**job: object) -> dict[object, object]:
-    return {**PR_JOB, "jobs": {"j": job}}
+    return {"on": {"pull_request": {}}, "jobs": {"j": job}}
 
 
 def test_hosted_jobs_are_never_findings() -> None:
-    body = {"runs-on": "ubuntu-24.04", "steps": [{"run": "echo ${{ secrets.X }}"}]}
-    assert workflow_findings("w.yml", _doc(**body)) == []
+    assert workflow_findings("w.yml", _doc(**{"runs-on": "ubuntu-24.04"})) == []
 
 
-def test_unguarded_self_hosted_pr_job_violates_every_rule() -> None:
-    body = {"runs-on": SELF, "steps": [{"run": "echo ${{ secrets.DEPLOY }}"}]}
-    rules = [f.rule for f in workflow_findings("w.yml", _doc(**body))]
-    assert rules == ["fork", "secrets", "dependabot"]
+def test_unguarded_self_hosted_pr_job_violates_fork_and_dependabot() -> None:
+    rules = [f.rule for f in workflow_findings("w.yml", _doc(**{"runs-on": SELF}))]
+    assert rules == ["fork", "dependabot"]
 
 
 def test_guards_in_if_and_runs_on_are_accepted() -> None:
@@ -167,8 +170,9 @@ def test_guards_in_if_and_runs_on_are_accepted() -> None:
     assert rules == ["dependabot"]
 
 
-def test_non_pr_workflows_only_check_secrets() -> None:
-    document = {True: {"schedule": []}, "jobs": {"n": {"runs-on": SELF}}}
-    assert workflow_findings("n.yml", document) == []
-    document["jobs"] = {"n": {"runs-on": SELF, "env": {"T": "${{ secrets.GITHUB_TOKEN }}"}}}
+def test_runner_var_outside_runs_on_is_found_even_off_pr() -> None:
+    body = {"runs-on": "ubuntu-latest", "env": {"R": f"${{{{ {RUNNER_VAR} }}}}"}}
+    document = {True: {"schedule": []}, "jobs": {"n": body}}
+    assert [f.rule for f in workflow_findings("n.yml", document)] == ["runner-var"]
+    document["jobs"] = {"n": {"runs-on": SELF}}
     assert workflow_findings("n.yml", document) == []
