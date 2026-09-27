@@ -42,7 +42,7 @@ class Period:
     @property
     def book_value(self) -> float:
         """BV_t: declared expenditure of the period (all strata)."""
-        return math.fsum(s.book_value for s in self.strata)
+        return math.fsum(s.original_book_value for s in self.strata)
 
 
 #: Methods without a multi-period form in the guidance.

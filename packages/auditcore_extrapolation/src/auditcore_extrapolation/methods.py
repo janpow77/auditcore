@@ -14,6 +14,7 @@ from types import MappingProxyType
 from . import conservative, equal_probability, mus
 from .design import Stratum, check_strata
 from .errors import ExtrapolationInputError
+from .exclusion import extend_to_original
 from .factors import basic_reliability_factor, profile, z_value
 from .projection import (
     Projection,
@@ -302,7 +303,7 @@ def project_strata(
         extra["coverage"] = figures
         warnings += more
     statistical = chosen.statistical
-    return Projection(
+    result = Projection(
         method=chosen.id,
         projected_random_error=outcome.projected,
         precision=outcome.precision,
@@ -316,6 +317,9 @@ def project_strata(
         warnings=tuple(warnings),
         extra=MappingProxyType(extra),
     )
+    if any(s.has_exclusions for s in checked):
+        return extend_to_original(chosen.id, checked, result)
+    return result
 
 
 def _coefficient(chosen: Method, level: float | None, profile_id: str | None) -> float | None:

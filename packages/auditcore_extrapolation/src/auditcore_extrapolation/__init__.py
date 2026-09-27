@@ -44,6 +44,7 @@ from .evaluation import (
     conclude,
     evaluate,
 )
+from .exclusion import extension_factor
 from .factors import (
     EXACT,
     KOM_TABLES,
@@ -120,6 +121,7 @@ __all__ = [
     "estimator_check",
     "evaluate",
     "evaluate_attributes",
+    "extension_factor",
     "incremental_allowances",
     "mean_per_unit_error",
     "mus_precision",
