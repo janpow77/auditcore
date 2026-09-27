@@ -26,6 +26,8 @@ RUN apt-get update \
 # Werkzeug-Pins: werkzeuge/binaer.json (Binärdateien mit SHA-256), requirements*.txt
 # (Python, Dependabot pip), package.json + package-lock.json (Node, Dependabot npm).
 COPY werkzeuge/ /tmp/werkzeuge/
+# Lizenztexte und Quellverweise der Copyleft-Programme (Opengrep, codespell, axe-core, lightningcss).
+COPY LICENSES/ /usr/share/doc/auditcore-runner/LICENSES/
 
 # Binärdateien und Node, jede Datei gegen ihre SHA-256 geprüft (trivy nur so, siehe binaer.json).
 RUN bash /tmp/werkzeuge/installieren.sh /tmp/werkzeuge/binaer.json
