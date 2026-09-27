@@ -1,0 +1,29 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "fingerprint": "9ec07400e4d141375e56a2438234235e238aa88d47fe37e3540909d4699f7798",
+ "attributes": {
+  "approach": "discovery",
+  "deviations": 0,
+  "sample_size": 59,
+  "confidence_level": 0.95,
+  "rate": 0.0,
+  "upper_limit": 0.04950760988822689,
+  "threshold": 0.05,
+  "conclusion": "criterion_met",
+  "steps": [
+   {
+    "label": "Abweichungsquote",
+    "formula": "k / n",
+    "value": 0.0,
+    "source": "EGESIF_16-0014-01, Abschn. 7.9.3"
+   },
+   {
+    "label": "Obere Abweichungsgrenze (exakt)",
+    "formula": "P(X ≤ k | n, p_u) = 1 − KN",
+    "value": 0.04950760988822689,
+    "source": "EGESIF_16-0014-01, Abschn. 7.9.6; exakte Binomial-Obergrenze (Clopper-Pearson)"
+   }
+  ]
+ }
+}

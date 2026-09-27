@@ -1,0 +1,155 @@
+{
+ "method": "mus.standard",
+ "confidence_level": 0.9,
+ "factor_profile": "kom_2017_tables",
+ "materiality_rate": 0.02,
+ "periods": [
+  {
+   "name": "1. Halbjahr"
+  },
+  {
+   "name": "2. Halbjahr"
+  }
+ ],
+ "strata": [
+  {
+   "name": "P1",
+   "period": "1. Halbjahr",
+   "group": "Programm 1",
+   "book_value": 600000
+  },
+  {
+   "name": "P2",
+   "period": "1. Halbjahr",
+   "group": "Programm 2",
+   "book_value": 400000
+  },
+  {
+   "name": "P1",
+   "period": "2. Halbjahr",
+   "group": "Programm 1",
+   "book_value": 900000
+  },
+  {
+   "name": "P2",
+   "period": "2. Halbjahr",
+   "group": "Programm 2",
+   "book_value": 500000
+  }
+ ],
+ "units": [
+  {
+   "id": "OP-1",
+   "period": "1. Halbjahr",
+   "stratum": "P1",
+   "book_value": 60000,
+   "subsample": {
+    "estimator": "ratio",
+    "strata": [
+     {
+      "name": "Lead-Partner",
+      "book_value": 20000
+     },
+     {
+      "name": "Projektpartner",
+      "book_value": 40000
+     }
+    ],
+    "units": [
+     {
+      "id": "LP",
+      "stratum": "Lead-Partner",
+      "book_value": 20000,
+      "random_error": 400,
+      "exhaustive": true
+     },
+     {
+      "id": "PP-2",
+      "stratum": "Projektpartner",
+      "book_value": 10000,
+      "subsample": {
+       "estimator": "ratio",
+       "strata": [
+        {
+         "name": "Rechnungen",
+         "book_value": 10000
+        }
+       ],
+       "units": [
+        {
+         "id": "R-0",
+         "stratum": "Rechnungen",
+         "book_value": 500,
+         "random_error": 25
+        },
+        {
+         "id": "R-1",
+         "stratum": "Rechnungen",
+         "book_value": 500,
+         "random_error": 0
+        },
+        {
+         "id": "R-2",
+         "stratum": "Rechnungen",
+         "book_value": 500,
+         "random_error": 0
+        },
+        {
+         "id": "R-3",
+         "stratum": "Rechnungen",
+         "book_value": 500,
+         "random_error": 0
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "OP-2",
+   "period": "1. Halbjahr",
+   "stratum": "P1",
+   "book_value": 30000
+  },
+  {
+   "id": "OP-3",
+   "period": "1. Halbjahr",
+   "stratum": "P2",
+   "book_value": 25000,
+   "random_error": 500
+  },
+  {
+   "id": "OP-4",
+   "period": "1. Halbjahr",
+   "stratum": "P2",
+   "book_value": 20000
+  },
+  {
+   "id": "OP-1",
+   "period": "2. Halbjahr",
+   "stratum": "P1",
+   "book_value": 70000,
+   "random_error": 1400
+  },
+  {
+   "id": "OP-5",
+   "period": "2. Halbjahr",
+   "stratum": "P1",
+   "book_value": 40000
+  },
+  {
+   "id": "OP-6",
+   "period": "2. Halbjahr",
+   "stratum": "P2",
+   "book_value": 35000
+  },
+  {
+   "id": "OP-7",
+   "period": "2. Halbjahr",
+   "stratum": "P2",
+   "book_value": 15000,
+   "random_error": 300
+  }
+ ]
+}

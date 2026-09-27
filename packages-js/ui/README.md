@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (817):
+Exporte der Einstiegspunkte aus `package.json#exports` (828):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -156,6 +156,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `AssessmentStatus` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AssessmentSummary` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AssessmentView` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AttributeSampling` | Vue-Komponente | – | `attributes/AttributeSampling.vue` |
+| `@auditcore/ui` | `AttributesController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AttributesData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AttributesPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AttributesRequest` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `AttributesResult` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BADGE_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `BadgeTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
@@ -346,6 +352,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `HitFilter` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `HitView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ICONS` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_ATTRIBUTES` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_BENFORD` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
@@ -622,6 +629,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `applyTheme` | Funktion | Setzt das Farbschema am Element (Standard: Dokumentwurzel); 'system' folgt dem Betriebssystem. | `theme/theme` |
 | `@auditcore/ui` | `areasFromGeoPackage` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ariaSort` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui` | `attributeSamplingElement` | Konstante | `<flowaudit-attribute-sampling>`: Eigenschaften `port`, `locale`; Ereignisse `evaluation-completed`, `error`. | `attributes/element` |
+| `@auditcore/ui` | `attributesMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `axisMaximum` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `badgePrefix` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `badgeStyle` | Re-Export | – | `@auditcore/kanban-core` |
@@ -667,6 +676,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (817):
 | `@auditcore/ui` | `conclusionTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `confidenceText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `coverIssues` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createAttributesController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createAttributesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createComparisonsController` | Re-Export | – | `@auditcore/ui-core` |
@@ -957,6 +968,7 @@ Web Components:
 
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
+| `<flowaudit-attribute-sampling>` | `AttributeSampling` | `attributes/element.ts` |
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
@@ -977,6 +989,20 @@ Web Components:
 | `<flowaudit-vvt>` | `FaVvt` | `dataprotection/element.ts` |
 
 ### Props und Ereignisse der Vue-Komponenten
+
+#### `AttributeSampling`
+
+AttributeSampling: Merkmalsstichprobe für Systemprüfungen (Leitfaden 7.9); Logik im Kern (createAttributesController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `AttributesPort \| null` | nein | `null` | Fachlogik, z. B. `createAttributesRestPort({ baseUrl: '/api/extrapolation' })`. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `evaluation-completed` | `[result: AttributesResult]` | – |
+| `error` | `[message: string]` | – |
 
 #### `BenfordPanel`
 

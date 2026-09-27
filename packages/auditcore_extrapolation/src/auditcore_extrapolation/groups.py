@@ -147,6 +147,37 @@ def _group_periods(
     return found
 
 
+@dataclass(frozen=True)
+class _Options:
+    confidence_level: float | None
+    factor_profile: str | None
+    materiality_rate: float
+
+
+def _period_group(method_id: str, own: list[Period], name: str, options: _Options) -> GroupResult:
+    try:
+        if len(own) > 1:
+            assessment = assess_periods(
+                method_id,
+                own,
+                confidence_level=options.confidence_level,
+                factor_profile=options.factor_profile,
+                materiality_rate=options.materiality_rate,
+            )
+        else:
+            assessment = assess(
+                method_id,
+                own[0].strata,
+                confidence_level=options.confidence_level,
+                factor_profile=options.factor_profile,
+                materiality_rate=options.materiality_rate,
+            )
+    except ExtrapolationInputError as exc:
+        raise ExtrapolationInputError(f"Gruppe '{name}': {exc}") from exc
+    observations = sum(len(s.units) for p in own for s in p.strata)
+    return GroupResult(name, observations, assessment, _warnings(name, observations, assessment))
+
+
 def assess_groups_over_periods(
     method_id: str,
     periods: Sequence[Period],
@@ -174,6 +205,7 @@ def assess_groups_over_periods(
         raise ExtrapolationInputError(
             "Für eine Auswertung je Programm sind mindestens zwei Programme nötig."
         )
+    options = _Options(confidence_level, factor_profile, materiality_rate)
     overall = assess_periods(
         method_id,
         periods,
@@ -182,30 +214,8 @@ def assess_groups_over_periods(
         population_units=population_units,
         materiality_rate=materiality_rate,
     )
-    results = []
-    for name in names:
-        own = _group_periods(periods, labels, name)
-        try:
-            if len(own) > 1:
-                assessment = assess_periods(
-                    method_id,
-                    own,
-                    confidence_level=confidence_level,
-                    factor_profile=factor_profile,
-                    materiality_rate=materiality_rate,
-                )
-            else:
-                assessment = assess(
-                    method_id,
-                    own[0].strata,
-                    confidence_level=confidence_level,
-                    factor_profile=factor_profile,
-                    materiality_rate=materiality_rate,
-                )
-        except ExtrapolationInputError as exc:
-            raise ExtrapolationInputError(f"Gruppe '{name}': {exc}") from exc
-        observations = sum(len(s.units) for p in own for s in p.strata)
-        results.append(
-            GroupResult(name, observations, assessment, _warnings(name, observations, assessment))
-        )
+    results = [
+        _period_group(method_id, _group_periods(periods, labels, name), name, options)
+        for name in names
+    ]
     return GroupsAssessment(overall, tuple(results))

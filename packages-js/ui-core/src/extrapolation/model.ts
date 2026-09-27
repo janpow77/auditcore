@@ -4,7 +4,8 @@
  * ergänzt; leere Fehlerfelder zählen als 0.
  */
 import { parseInput } from '../sampling/model'
-import { designRequest, readSubsample, stratumKey, stratumPart, subsampleRows, type SubsampleRows } from './model-design'
+import { designRequest, stratumKey, stratumPart } from './model-design'
+import { readSubsample, subsampleRows, type SubsampleRows } from './model-subsample'
 import type { EvaluationRequest, EvaluationResult, ExtrapolationCatalogue, ExtrapolationDesign, ExtrapolationMethod, ResidualRequest, StratumInput, UnitInput } from './types'
 
 export interface StratumRow {
@@ -15,6 +16,8 @@ export interface StratumRow {
   systemic: string
   /** Zeitraum bzw. Programm (Aufbau `periods` bzw. `groups`). */
   part: string
+  /** Programm bei mehreren Zeiträumen (optional, Leitfaden 6.3.4 und 7.8). */
+  group: string
 }
 
 export interface UnitRow {
@@ -70,7 +73,7 @@ export type ResidualValidation = { ok: true; request: ResidualRequest } | { ok: 
 export const EMPTY_RESIDUAL: ResidualForm = { auditPopulation: '', terRate: '', ongoing: '', otherNegative: '', corrections: '' }
 
 export function emptyStratum(key: string): StratumRow {
-  return { key, name: '', bookValue: '', populationSize: '', systemic: '', part: '' }
+  return { key, name: '', bookValue: '', populationSize: '', systemic: '', part: '', group: '' }
 }
 
 export function emptyUnit(key: string, stratum = '', period = ''): UnitRow {
@@ -89,6 +92,7 @@ export function stratumRows(strata: readonly StratumInput[], format: Format): St
     populationSize: stratum.population_size === undefined ? '' : String(stratum.population_size),
     systemic: optional(stratum.systemic_error, format),
     part: stratumPart(stratum),
+    group: stratum.period ? stratum.group ?? '' : '',
   }))
 }
 
@@ -150,7 +154,9 @@ function withPart(design: ExtrapolationDesign, row: StratumRow, index: number, o
   if (design === 'single') return {}
   const part = row.part.trim()
   if (!part) out.flag(`strata.${index}.part`, 'required')
-  return design === 'periods' ? { period: part } : { group: part }
+  if (design === 'groups') return { group: part }
+  const group = row.group.trim()
+  return group ? { period: part, group } : { period: part }
 }
 
 function readStrata(rows: readonly StratumRow[], method: ExtrapolationMethod, design: ExtrapolationDesign, out: Collector): StratumInput[] {
@@ -210,6 +216,14 @@ function settings(method: ExtrapolationMethod, form: ExtrapolationForm, out: Col
   }
 }
 
+/** Programme über mehrere Zeiträume: alle Schichten oder keine (Leitfaden 7.8). */
+function checkPeriodGroups(rows: readonly StratumRow[], out: Collector): void {
+  if (!rows.some((row) => row.group.trim())) return
+  rows.forEach((row, index) => {
+    if (!row.group.trim()) out.flag(`strata.${index}.group`, 'required')
+  })
+}
+
 /** Anfrage für `POST /evaluate`; bei Befunden die Feldschlüssel mit ihrem Fehler. */
 export function buildEvaluationRequest(catalogue: ExtrapolationCatalogue, form: ExtrapolationForm): EvaluationValidation {
   const error = formError(catalogue, form)
@@ -220,6 +234,7 @@ export function buildEvaluationRequest(catalogue: ExtrapolationCatalogue, form: 
   const names = new Set(form.strata.filter((row) => row.name.trim()).map((row) => stratumKey(form.design, row.part, row.name)))
   const units = form.units.map((row, index) => readUnit(row, index, names, form.design, out))
   const extra = designRequest(form.design, form.strata.map((row) => row.part), form.populationUnits, form.systemAssessment, out)
+  if (form.design === 'periods') checkPeriodGroups(form.strata, out)
   const request = { method: method.id, ...settings(method, form, out), ...extra, strata, units } as EvaluationRequest
   return Object.keys(out.issues).length ? { ok: false, error: null, issues: out.issues } : { ok: true, request }
 }

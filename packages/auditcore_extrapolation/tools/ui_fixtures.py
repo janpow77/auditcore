@@ -12,7 +12,7 @@ import json
 import sys
 from pathlib import Path
 
-from auditcore_extrapolation.web import catalogue, evaluate, residual
+from auditcore_extrapolation.web import attributes, catalogue, evaluate, residual
 
 EVALUATION_REQUEST: dict[str, object] = {
     "method": "mus.standard",
@@ -108,6 +108,102 @@ GROUPS_REQUEST: dict[str, object] = {
         for i, error in enumerate((0, 0, 5, 0))
     ],
 }
+INVOICES = [
+    {
+        "id": f"R-{i}",
+        "stratum": "Rechnungen",
+        "book_value": 500,
+        "random_error": 25 if i == 0 else 0,
+    }
+    for i in range(4)
+]
+MULTISTAGE_REQUEST: dict[str, object] = {
+    "method": "mus.standard",
+    "confidence_level": 0.9,
+    "factor_profile": "kom_2017_tables",
+    "materiality_rate": 0.02,
+    "periods": [{"name": "1. Halbjahr"}, {"name": "2. Halbjahr"}],
+    "strata": [
+        {"name": "P1", "period": "1. Halbjahr", "group": "Programm 1", "book_value": 600_000},
+        {"name": "P2", "period": "1. Halbjahr", "group": "Programm 2", "book_value": 400_000},
+        {"name": "P1", "period": "2. Halbjahr", "group": "Programm 1", "book_value": 900_000},
+        {"name": "P2", "period": "2. Halbjahr", "group": "Programm 2", "book_value": 500_000},
+    ],
+    "units": [
+        {
+            "id": "OP-1",
+            "period": "1. Halbjahr",
+            "stratum": "P1",
+            "book_value": 60_000,
+            "subsample": {
+                "estimator": "ratio",
+                "strata": [
+                    {"name": "Lead-Partner", "book_value": 20_000},
+                    {"name": "Projektpartner", "book_value": 40_000},
+                ],
+                "units": [
+                    {
+                        "id": "LP",
+                        "stratum": "Lead-Partner",
+                        "book_value": 20_000,
+                        "random_error": 400,
+                        "exhaustive": True,
+                    },
+                    {
+                        "id": "PP-2",
+                        "stratum": "Projektpartner",
+                        "book_value": 10_000,
+                        "subsample": {
+                            "estimator": "ratio",
+                            "strata": [{"name": "Rechnungen", "book_value": 10_000}],
+                            "units": INVOICES,
+                        },
+                    },
+                ],
+            },
+        },
+        {"id": "OP-2", "period": "1. Halbjahr", "stratum": "P1", "book_value": 30_000},
+        {
+            "id": "OP-3",
+            "period": "1. Halbjahr",
+            "stratum": "P2",
+            "book_value": 25_000,
+            "random_error": 500,
+        },
+        {"id": "OP-4", "period": "1. Halbjahr", "stratum": "P2", "book_value": 20_000},
+        {
+            "id": "OP-1",
+            "period": "2. Halbjahr",
+            "stratum": "P1",
+            "book_value": 70_000,
+            "random_error": 1_400,
+        },
+        {"id": "OP-5", "period": "2. Halbjahr", "stratum": "P1", "book_value": 40_000},
+        {"id": "OP-6", "period": "2. Halbjahr", "stratum": "P2", "book_value": 35_000},
+        {
+            "id": "OP-7",
+            "period": "2. Halbjahr",
+            "stratum": "P2",
+            "book_value": 15_000,
+            "random_error": 300,
+        },
+    ],
+}
+ATTRIBUTES_NORMAL: dict[str, object] = {
+    "approach": "normal",
+    "deviations": 3,
+    "sample_size": 150,
+    "confidence_level": 0.95,
+    "factor_profile": "kom_2017_tables",
+    "tolerable_rate": 0.05,
+}
+ATTRIBUTES_DISCOVERY: dict[str, object] = {
+    "approach": "discovery",
+    "deviations": 0,
+    "sample_size": 59,
+    "confidence_level": 0.95,
+    "tolerable_rate": 0.05,
+}
 RESIDUAL_REQUEST: dict[str, object] = {
     "audit_population": 1000,
     "total_error_rate": 0.025,
@@ -121,6 +217,10 @@ def main(target: Path) -> None:
         "extrapolation-request.json": EVALUATION_REQUEST,
         "extrapolation-evaluation.json": evaluate(EVALUATION_REQUEST),
         "extrapolation-residual.json": residual(RESIDUAL_REQUEST),
+        "extrapolation-multistage-request.json": MULTISTAGE_REQUEST,
+        "extrapolation-multistage-evaluation.json": evaluate(MULTISTAGE_REQUEST),
+        "attributes-normal.json": attributes(ATTRIBUTES_NORMAL),
+        "attributes-discovery.json": attributes(ATTRIBUTES_DISCOVERY),
         "extrapolation-periods-request.json": PERIODS_REQUEST,
         "extrapolation-periods-evaluation.json": evaluate(PERIODS_REQUEST),
         "extrapolation-groups-request.json": GROUPS_REQUEST,

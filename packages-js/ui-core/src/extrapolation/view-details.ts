@@ -5,7 +5,9 @@
  */
 import type { TableColumn, TableRow } from '@auditcore/common'
 import type { Locale } from '../i18n'
-import type { SubItemRow } from './model-design'
+import { openSubsample } from './controller-subsample'
+import type { ExtrapolationData } from './controller'
+import { MAX_SUBSAMPLE_DEPTH, type SubItemRow, type SubStratumRow } from './model-subsample'
 import { conclusionLabel, extrapolationAmount, extrapolationConfidenceLabel, extrapolationRate, type ExtrapolationField, type ExtrapolationMetric, type ExtrapolationTranslate } from './view'
 import type { EvaluationResult, ExtrapolationCatalogue, ExtrapolationDesign, SubsampleEstimator } from './types'
 
@@ -38,6 +40,39 @@ export const SUB_ITEM_FIELDS: readonly ExtrapolationField<'id' | 'bookValue' | '
   { key: 'bookValue', label: 'bookValue', numeric: true },
   { key: 'random', label: 'randomError', numeric: true },
 ]
+
+export const SUB_STRATUM_FIELDS: readonly ExtrapolationField<'name' | 'bookValue' | 'populationSize'>[] = [
+  { key: 'name', label: 'subStratum', numeric: false },
+  { key: 'bookValue', label: 'bookValue', numeric: true },
+  { key: 'populationSize', label: 'populationSize', numeric: true },
+]
+
+export type SubStratumFieldKey = keyof Pick<SubStratumRow, 'name' | 'bookValue' | 'populationSize'>
+
+/** Ansicht der gerade bearbeiteten Teilstichprobe: Zeilen, Überschrift, Feldpräfix, Stufe. */
+export interface SubsampleEditorView {
+  rows: NonNullable<ReturnType<typeof openSubsample>>
+  title: string
+  /** Präfix der Feldbefunde, z. B. `units.2.subsample`. */
+  prefix: string
+  nested: boolean
+  /** Teileinheiten dürfen eine eigene Teilstichprobe haben (nur Stufe 2). */
+  allowNested: boolean
+}
+
+export function subsampleEditorView(state: ExtrapolationData, t: ExtrapolationTranslate): SubsampleEditorView | null {
+  const rows = openSubsample(state)
+  const index = state.subsampleUnit
+  const unit = index === null ? null : state.form.units[index]
+  if (!rows || index === null || !unit) return null
+  const unitLabel = unit.id || String(index + 1)
+  if (state.subsampleItem === null) {
+    return { rows, title: t('subsampleTitle', { unit: unitLabel }), prefix: `units.${index}.subsample`, nested: false, allowNested: MAX_SUBSAMPLE_DEPTH > 1 }
+  }
+  const item = unit.subsample?.items[state.subsampleItem]
+  const itemLabel = item?.id || String(state.subsampleItem + 1)
+  return { rows, title: t('subsampleNestedTitle', { unit: unitLabel, item: itemLabel }), prefix: `units.${index}.subsample.items.${state.subsampleItem}.subsample`, nested: true, allowNested: false }
+}
 
 export type SubItemFieldKey = keyof Pick<SubItemRow, 'id' | 'bookValue' | 'random'>
 

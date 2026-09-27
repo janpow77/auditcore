@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Neu `FlowauditAttributeSampling` (wie `AttributeSampling`).
+- `FlowauditExtrapolation`: Teilschichten und dritte Stufe, Programme bei mehreren Zeiträumen (wie Vue).
 - `FlowauditExtrapolation`: dieselben Ergänzungen wie `ExtrapolationPanel` (Zeiträume, Gruppen, Teilstichproben, Systembewertung, Neuberechnung des Konfidenzniveaus), Parität per Fälle und Interaktionsfolge.
 - Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
 

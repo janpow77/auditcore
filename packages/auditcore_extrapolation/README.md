@@ -13,7 +13,9 @@ die Hochwertschicht (Vollerhebung) sowie systemische und anomale Fehler,
 außerdem Stichproben in mehreren Zeiträumen des Geschäftsjahres, zwei- und
 dreistufige Stichproben (Teilstichproben in Vorhaben, auch ETC mit Lead-Partner),
 die Neuberechnung des Konfidenzniveaus (7.7), Gruppen von Programmen (7.8) und
-die Merkmalsstichprobe für Systemprüfungen (7.9). Nicht enthalten:
+die Merkmalsstichprobe für Systemprüfungen (7.9, auch Discovery und Stop-or-go),
+den Ausschluss von Einheiten nach verhältnismäßiger Kontrolle (7.10) und die
+Trennung negativer Stichprobeneinheiten (4.6). Nicht enthalten:
 Stichprobenumfang und Auswahl (das bleibt in `auditcore_sampling`); welche
 Abschnitte des Leitfadens abgedeckt sind, steht in
 [docs/abgrenzung.md](docs/abgrenzung.md).
@@ -98,7 +100,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Öffentliche Namen aus `auditcore_extrapolation.__all__` (68):
+Öffentliche Namen aus `auditcore_extrapolation.__all__` (80):
 
 | Name | Art | Kurzbeschreibung (erste Docstring-Zeile) | Modul |
 |---|---|---|---|
@@ -117,6 +119,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `Assessment` | Datenklasse | Projection and total error rate of one audited sample. | `evaluation` |
 | `AttributeEvaluation` | Datenklasse | Deviation rate, precision and upper deviation limit of an attribute sample. | `attributes` |
 | `ConfidenceRecalculation` | Datenklasse | Result of section 7.7; ``applicable`` False names the ``reason``. | `confidence` |
+| `DeclaredUnit` | Datenklasse | Amounts of one sampling unit in the reference period (all ≥ 0). | `negative` |
 | `DifferenceFigures` | Datenklasse | Corrected book value view of difference estimation (section 6.2.1.5). | `evaluation` |
 | `ErrorClasses` | Datenklasse | Sample totals of the error classes (for the TER breakdown). | `units` |
 | `EstimatorCheck` | Datenklasse | Rule of section 6.1.1.3: ratio estimation if COV(E,BV)/VAR(BV) > ER/2. | `equal_probability` |
@@ -126,11 +129,15 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `GroupResult` | Datenklasse | Evaluation of one programme; ``observations`` = sampled units. | `groups` |
 | `GroupsAssessment` | Datenklasse | Evaluation of the whole group (top-down) and of each programme. | `groups` |
 | `Method` | Datenklasse | A projection method of the guidance. | `methods` |
+| `NegativeCheck` | Datenklasse | Audit of one negative unit: correction carried out versus decided (4.6). | `negative` |
+| `NegativeReview` | Datenklasse | Shortfalls of corrections; ``disclose`` means report in the annual control report. | `negative` |
 | `Period` | Datenklasse | One period of the reference year with its own strata and sample. | `periods` |
+| `PopulationSplit` | Datenklasse | Positive and negative population with the reconciliation (guidance 4.6). | `negative` |
 | `Projection` | Datenklasse | Projected random error (EE) and precision (SE) of one method. | `projection` |
 | `ResidualErrorRate` | Datenklasse | Rows F–M of the template; ``rate`` is K (None if I = 0). | `residual` |
 | `ResidualInputs` | Datenklasse | Rows A–H of the template (B and C are informational only). | `residual` |
 | `SampleUnit` | Datenklasse | One audited sampling unit (operation or payment claim). | `units` |
+| `SequentialEvaluation` | Datenklasse | Result of discovery or stop-or-go sampling. | `attribute_variants` |
 | `Step` | Datenklasse | One retraceable line of a derivation: formula, value and source. | `sources` |
 | `Stratum` | Datenklasse | One stratum: book value, sampled units, exhaustive units, systemic errors. | `design` |
 | `StratumResult` | Datenklasse | Projection of one stratum (sampling part plus exhaustive units). | `projection` |
@@ -141,6 +148,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `__version__` | Wert | – | `(Paketstamm)` |
 | `assess` | Funktion | Project and evaluate in one step; BV is the sum of the strata book values. | `evaluation` |
 | `assess_groups` | Funktion | Evaluate a group of programmes as a whole and per programme (guidance section 7.8). | `groups` |
+| `assess_groups_over_periods` | Funktion | Group of programmes sampled in several periods (guidance sections 6.3.4, 7.3, 7.8). | `groups` |
 | `assess_periods` | Funktion | :func:`project_periods` and the evaluation over BV = Σ_t BV_t (sections 6.1.3.5, 6.3.3.6). | `periods` |
 | `basic_reliability_factor` | Funktion | Reliability factor for zero errors (basic precision, conservative MUS). | `factors` |
 | `combined_precision` | Funktion | SE = √(Σ_t SE_t²) of independent period samples (sections 6.1.3.4, 6.3.3.5; Appendix 2). | `periods` |
@@ -148,6 +156,9 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `estimator_check` | Funktion | Recommend mean-per-unit or ratio estimation from the sample (section 6.1.1.3). | `equal_probability` |
 | `evaluate` | Funktion | TER, upper limit and conclusion for a projection over population ``book_value``. | `evaluation` |
 | `evaluate_attributes` | Funktion | Evaluate a test of controls by attribute sampling (guidance sections 7.9.3–7.9.5). | `attributes` |
+| `evaluate_discovery` | Funktion | Discovery sampling (guidance section 7.9.6): no deviation and p_u ≤ critical rate → met. | `attribute_variants` |
+| `evaluate_stop_or_go` | Funktion | Stop-or-go sampling (guidance section 7.9.6): stop when p_u ≤ tolerable rate, else extend. | `attribute_variants` |
+| `extension_factor` | Funktion | f = original / reduced (book values or numbers of units, guidance section 7.10.2). | `exclusion` |
 | `incremental_allowances` | Funktion | IA_i for the positive taintings by decreasing projected error (guidance section 6.3.5.5). | `conservative` |
 | `mean_per_unit_error` | Funktion | EE₁ = N × ΣE_i / n (section 6.1.1.3, also 6.2.1.3 and 6.4.5.1). | `equal_probability` |
 | `mus_precision` | Funktion | SE = z × √(Σ BV_hs² / n_hs × s_rh²) (section 6.3.2.5; H = 1: 6.3.1.5). | `mus` |
@@ -163,18 +174,22 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `reliability_factor` | Funktion | Reliability factor RF(k) for the k-th error (incremental allowance). | `factors` |
 | `residual_error_rate` | Funktion | RER after financial corrections (template CPRE_23-0013-01 Annex 3, Art. 2 Nr. 36 CPR). | `residual` |
 | `residual_from_total` | Funktion | RER with A = audited population and D = TER of an evaluation. | `residual` |
+| `review_negative_units` | Funktion | Corrections below the decided amount are disclosed in the ACR (guidance section 4.6). | `negative` |
+| `split_population` | Funktion | Separate the positive from the negative population (guidance section 4.6). | `negative` |
 | `split_top_stratum` | Funktion | Separate the 100 % stratum for MUS (guidance section 6.3.1.3). | `design` |
 | `split_top_stratum_for_plan` | Funktion | :func:`split_top_stratum` with the sample size of an ``auditcore_sampling`` plan. | `design` |
 | `stratified_precision` | Funktion | SE = N × z × s_w / √n with s_w² = Σ N_h/N × s_h² (sections 6.1.2.4, 6.2.2.4). | `equal_probability` |
 | `system_confidence_level` | Funktion | Confidence level for a system assessment category 1–4 (section 3.2.1, Table 1). | `confidence` |
 | `tainting_projection` | Funktion | EE_s = SI × Σ E_i / BV_i with SI = BV_s / n_s (section 6.3.1.4). | `mus` |
 | `unit_from_subsample` | Funktion | Sampling unit whose random error is projected from ``sub`` (section 7.6.3). | `subsampling` |
+| `upper_deviation_limit` | Funktion | Exact one-sided upper limit p_u with P(X ≤ k \| n, p_u) = 1 − CL (section 7.9.6). | `attribute_variants` |
 | `z_value` | Funktion | z coefficient of the precision formulas. | `factors` |
 
 Öffentliche Module:
 
 | Modul | Kurzbeschreibung |
 |---|---|
+| `auditcore_extrapolation.attribute_variants` | Discovery and stop-or-go sampling for tests of controls (guidance section 7.9.6). |
 | `auditcore_extrapolation.attributes` | Attribute sampling for tests of controls in system audits (guidance section 7.9). |
 | `auditcore_extrapolation.confidence` | Recalculation of the confidence level for inconclusive results (guidance section 7.7). |
 | `auditcore_extrapolation.conservative` | Monetary unit sampling, conservative approach (guidance section 6.3.5). |
@@ -182,10 +197,12 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 | `auditcore_extrapolation.equal_probability` | Equal-probability projection: mean-per-unit, ratio and difference estimation. |
 | `auditcore_extrapolation.errors` | The single exception type of the package. |
 | `auditcore_extrapolation.evaluation` | Total error rate (TER), upper limit of error and audit conclusion. |
+| `auditcore_extrapolation.exclusion` | Units excluded under proportional control: extension to the original population. |
 | `auditcore_extrapolation.factors` | Confidence coefficients: z values and Poisson reliability factors. |
 | `auditcore_extrapolation.groups` | Groups of programmes and multi-fund programmes (guidance section 7.8). |
 | `auditcore_extrapolation.methods` | Named projection methods and the single entry point :func:`project`. |
 | `auditcore_extrapolation.mus` | Monetary unit sampling (MUS), standard approach, also stratified. |
+| `auditcore_extrapolation.negative` | Negative sampling units: separate population and reconciliation (guidance section 4.6). |
 | `auditcore_extrapolation.periods` | Sampling in several periods of the reference year (two-period and multi-period). |
 | `auditcore_extrapolation.projection` | Result of a projection: projected random error, precision and derivation. |
 | `auditcore_extrapolation.residual` | Residual error rate (RER) after financial corrections – Annex 3 template. |
@@ -197,7 +214,7 @@ auditcore_extrapolation.errors.ExtrapolationInputError: Einheit 'x': Ein anomale
 
 `auditcore_extrapolation.web` enthält den REST-Vertrag
 `auditcore_extrapolation.evaluation/1` (`catalogue`, `evaluate`, `residual`,
-`attributes`, `export_evaluation`) für `<flowaudit-extrapolation>`; Vertrag:
+`attributes`, `negative_units`, `export_evaluation`) für `<flowaudit-extrapolation>`; Vertrag:
 [docs/ui/extrapolation-rest.md](../../docs/ui/extrapolation-rest.md).
 
 ## Profile und Konfiguration
@@ -218,7 +235,9 @@ Aufbau der Stichprobe: ein Zeitraum (`assess`), mehrere Zeiträume
 `mus.conservative` und `mus.ratio`) oder Gruppe von Programmen
 (`assess_groups`, 7.8). Fehler einer Einheit aus einer Teilstichprobe:
 `project_subsample`/`unit_from_subsample` (7.6, 6.5.3). Nicht schlüssige
-Ergebnisse: `recalculate_confidence` (7.7).
+Ergebnisse: `recalculate_confidence` (7.7). Programme über mehrere Zeiträume:
+`assess_groups_over_periods`. Ausschluss (7.10): Felder `excluded_*` der
+Schicht. Negative Einheiten (4.6): `split_population`.
 
 Faktorprofile (`PROFILES`): `kom_2017_tables` (empfohlen, Werte wie gedruckt:
 Tabelle 3 für z, Tabelle 4 für RF(0), Anhang 3 für RF(k); nur deren

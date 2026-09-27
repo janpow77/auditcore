@@ -37,9 +37,10 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Tabellenexport (Excel) | `ReportExportPanel` | `FlowauditReportExport` | `reporting_ui/1` ([reporting-rest.md](reporting-rest.md)) | 6 + Interaktionsfolge |
 | Kennung prüfen | `IdentifierCheck` | `FlowauditIdentifierCheck` | `identifiers_ui/1` ([identifiers-rest.md](identifiers-rest.md)) | 4 + 2 Interaktionsfolgen |
 | Belegerkennung | `FaExtraction` | `FlowauditExtraction` | `documents_extraction/1` ([extraction-rest.md](extraction-rest.md)) | 8 + Interaktionsfolge |
-| Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 6 + 3 Interaktionsfolgen |
+| Hochrechnung (TER/RER) | `ExtrapolationPanel` | `FlowauditExtrapolation` | `auditcore_extrapolation.evaluation/1` ([extrapolation-rest.md](extrapolation-rest.md)) | 7 + 4 Interaktionsfolgen |
 | Datei-Import (CSV/TSV) | `TableImport` | `TableImport` | – | 3 + Interaktionsfolge |
 | SampleSizePlanner | `SampleSizePlanner` | `FlowauditSampleSizePlanner` | – ([samplesize.md](samplesize.md)) | 4 + 2 Interaktionsfolgen |
+| Merkmalsstichprobe (Systemprüfung) | `AttributeSampling` | `FlowauditAttributeSampling` | `auditcore_extrapolation.evaluation/1`, `POST /attributes` ([attributes.md](attributes.md)) | 3 + Interaktionsfolge |
 
 Vollständigkeit erzwingt `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`,
 Regeln in [beitragen.md](beitragen.md)); neue Komponenten entstehen mit

@@ -1,0 +1,18 @@
+/* Merkmalsstichprobe – AttributeSampling (Vue) und FlowauditAttributeSampling (React). Farben nur aus --fa-*-Variablen. */
+.fa-attributes { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-attributes__heading { margin: 0; font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-attributes__form { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--fa-space-3); align-items: start; }
+.fa-attributes__field { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-attributes__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-attributes__input, .fa-attributes__select { min-height: 2.25rem; width: 100%; box-sizing: border-box; padding: 0 var(--fa-space-2); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-attributes__input { text-align: end; font-variant-numeric: tabular-nums; }
+.fa-attributes__input:focus-visible, .fa-attributes__select:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-attributes__input[aria-invalid="true"] { border-color: var(--fa-color-danger); }
+.fa-attributes__error { color: var(--fa-color-danger); font-size: var(--fa-font-size-xs); }
+.fa-attributes__actions { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); align-items: center; }
+.fa-attributes__metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--fa-space-2); margin: 0; }
+.fa-attributes__metric { display: flex; flex-direction: column; gap: var(--fa-space-1); padding: var(--fa-space-2); border-radius: var(--fa-radius); background: var(--fa-color-surface-sunken); }
+.fa-attributes__metric dt { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-attributes__metric dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fa-attributes__muted { margin: 0; color: var(--fa-color-text-muted); }
+.fa-attributes__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }

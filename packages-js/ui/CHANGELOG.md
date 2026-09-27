@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Neu `AttributeSampling` / `<flowaudit-attribute-sampling>` (Leitfaden 7.9, Vertrag `POST /attributes`).
+- `ExtrapolationPanel`: Teilschichten und dritte Stufe im Teilstichproben-Editor, Spalte „Programm (optional)“ bei mehreren Zeiträumen.
 - `ExtrapolationPanel`: Aufbau der Stichprobe (Zeiträume, Gruppen), Spalte Zeitraum/Programm, Teilstichprobe je Einheit (`ExtrapolationSubsample`), Systembewertung und Ergänzungen im Ergebnis (`ExtrapolationDetails`: Zeiträume, Programme, Teilstichproben, Neuberechnung des Konfidenzniveaus).
 - Neu `SampleSizePlanner` / `<flowaudit-sample-size-planner>`: Stichprobenumfang nach KOM-Leitfaden planen (Vertrag `auditcore_sampling.guidance/1`).
 

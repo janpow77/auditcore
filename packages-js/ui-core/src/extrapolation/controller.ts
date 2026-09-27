@@ -58,6 +58,8 @@ export interface ExtrapolationData extends RequestState<string> {
   residual: ResidualResult | null
   /** Einheit, deren Teilstichprobe gerade bearbeitet wird. */
   subsampleUnit: number | null
+  /** Teileinheit dieser Teilstichprobe, deren eigene Teilstichprobe bearbeitet wird (dreistufig). */
+  subsampleItem: number | null
 }
 
 export interface ExtrapolationSource {
@@ -75,7 +77,7 @@ const EMPTY_FORM: ExtrapolationForm = {
 
 export const INITIAL_EXTRAPOLATION: ExtrapolationData = {
   ...IDLE, catalogue: null, form: EMPTY_FORM, formError: null, issues: {}, result: null, lastRequest: null,
-  residualForm: EMPTY_RESIDUAL, residualIssues: {}, residual: null, subsampleUnit: null,
+  residualForm: EMPTY_RESIDUAL, residualIssues: {}, residual: null, subsampleUnit: null, subsampleItem: null,
 }
 
 export function extrapolationMethod(state: ExtrapolationData): ExtrapolationMethod | null {
@@ -104,7 +106,7 @@ function createRows(store: Store<ExtrapolationData>) {
     updateUnit: (index: number, patch: Partial<UnitRow>) => patchForm({ units: replaceAt(store.get().form.units, index, patch) }),
     removeUnit: (index: number) => {
       patchForm({ units: store.get().form.units.filter((_, position) => position !== index) })
-      store.set({ subsampleUnit: null })
+      store.set({ subsampleUnit: null, subsampleItem: null })
     },
     ...createSubsampleActions(store, key),
   }
@@ -153,7 +155,7 @@ export function createExtrapolationController(source: ExtrapolationSource) {
   function applyInputs(): void {
     const strata = stratumRows(source.strata(), source.format)
     rows.patchForm({ strata: strata.length ? strata : [emptyStratum('s1')], units: unitRows(source.units(), source.format), design: designOf(source.strata()) })
-    store.set({ result: null, residual: null, issues: {}, formError: null, subsampleUnit: null })
+    store.set({ result: null, residual: null, issues: {}, formError: null, subsampleUnit: null, subsampleItem: null })
   }
 
   async function load(): Promise<void> {

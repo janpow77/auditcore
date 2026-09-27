@@ -124,10 +124,12 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (248):
+Exporte der Einstiegspunkte aus `package.json#exports` (253):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
+| `@auditcore/ui-react` | `AttributesPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `AttributesResult` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `Badge` | Funktion | – | `base/Badge` |
 | `@auditcore/ui-react` | `BadgeProps` | Schnittstelle | – | `base/Badge` |
 | `@auditcore/ui-react` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
@@ -178,6 +180,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (248):
 | `@auditcore/ui-react` | `ExtrapolationInputs` | Schnittstelle | – | `extrapolation/useExtrapolation` |
 | `@auditcore/ui-react` | `ExtrapolationPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `FetchLike` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `FlowauditAttributeSampling` | Funktion | Merkmalsstichprobe für Systemprüfungen als native React-Komponente (Vertrag wie `<flowaudit-attribute-sampling>`; Leitfaden 7.9, Discovery und Stop-or-go 7.9.6). | `attributes/FlowauditAttributeSampling` |
+| `@auditcore/ui-react` | `FlowauditAttributeSamplingProps` | Schnittstelle | – | `attributes/FlowauditAttributeSampling` |
 | `@auditcore/ui-react` | `FlowauditBenford` | Funktion | Benford-Analyse als native React-Komponente (Vertrag wie `<flowaudit-benford>`): Werte (Eigenschaft oder Datei), Test, Bewertungsprofil, Kennzahlen mit MAD, Chi² und z je Ziffer, S … | `benford/FlowauditBenford` |
 | `@auditcore/ui-react` | `FlowauditBenfordProps` | Typ | – | `benford/FlowauditBenford` |
 | `@auditcore/ui-react` | `FlowauditComparisons` | Konstante | Dokumentvergleiche als native React-Komponente (Vertrag wie `<flowaudit-comparisons>`): zwei Fassungen hochladen, gespeicherte Vergleiche suchen, öffnen (eingebettete Synopse), lös … | `documents/FlowauditComparisons` |
@@ -321,6 +325,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (248):
 | `@auditcore/ui-react` | `ariaSort` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `columnCells` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `compareValues` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `createAttributesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createBenfordRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createDataProtectionRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createExtractionRestPort` | Re-Export | – | `@auditcore/ui-core` |

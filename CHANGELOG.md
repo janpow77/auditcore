@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `auditcore_extrapolation` und UI: verbleibende Leitfaden-Verfahren – Ausschluss
+  nach verhältnismäßiger Kontrolle (7.10), negative Stichprobeneinheiten (4.6),
+  Discovery- und Stop-or-go-Stichprobe (7.9.6), Programme über mehrere
+  Zeiträume; neue Komponente `AttributeSampling`/`FlowauditAttributeSampling`
+  (`npm run ui:neu`), mehrstufige Teilstichproben mit Teilschichten und dritter
+  Stufe in der Hochrechnung.
 - `auditcore_extrapolation`: fehlende Verfahren des Stichprobenleitfadens
   EGESIF_16-0014-01 ergänzt – mehrere Zeiträume, zwei-/dreistufige Stichprobe
   inkl. ETC, Neuberechnung des Konfidenzniveaus (7.7), Gruppen von Programmen
@@ -27,7 +33,6 @@
   `docs/deployment/package-feed.md`. Die README-Installationszeilen der Pakete
   zeigen auf v0.4.2. Das Donut-Job-Image bezieht seine auditcore-Abhängigkeiten
   wieder hashgebunden aus dem Release (`requirements-auditcore.txt` auf v0.4.2).
-
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
