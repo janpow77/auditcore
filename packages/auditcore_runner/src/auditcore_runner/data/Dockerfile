@@ -18,31 +18,40 @@ RUN apt-get update \
       libxml2 libxslt1.1 \
       libpango-1.0-0 libpangoft2-1.0-0 libpangocairo-1.0-0 libcairo2 libgdk-pixbuf-2.0-0 \
       libharfbuzz0b libjpeg-turbo8 libopenjp2-7 shared-mime-info \
-      fonts-dejavu-core fonts-liberation locales \
+      fonts-dejavu-core fonts-liberation fonts-noto-core fonts-noto-color-emoji locales \
  && sed -i 's/^# *de_DE.UTF-8/de_DE.UTF-8/' /etc/locale.gen \
  && locale-gen \
  && rm -rf /var/lib/apt/lists/*
 
-# uv (MIT/Apache-2.0) und die Python-Werkzeuge (MIT), versionsgenau.
+# Werkzeug-Pins: werkzeuge/binaer.json (Binärdateien mit SHA-256), requirements*.txt
+# (Python, Dependabot pip), package.json + package-lock.json (Node, Dependabot npm).
+COPY werkzeuge/ /tmp/werkzeuge/
+
+# Binärdateien und Node, jede Datei gegen ihre SHA-256 geprüft (trivy nur so, siehe binaer.json).
+RUN bash /tmp/werkzeuge/installieren.sh /tmp/werkzeuge/binaer.json
+
+# uv (MIT/Apache-2.0) und die Python-Werkzeuge, je in eigener Umgebung, versionsgenau.
 COPY --from=uv /uv /uvx /usr/local/bin/
 ENV UV_TOOL_DIR=/opt/tools UV_TOOL_BIN_DIR=/usr/local/bin UV_PYTHON_INSTALL_DIR=/opt/python
-RUN uv tool install ruff==0.16.9 \
- && uv tool install mypy==2.3.1 \
- && uv tool install zizmor==1.30.1
+RUN grep -vE '^[[:space:]]*(#|$)' /tmp/werkzeuge/requirements.txt | xargs -n1 uv tool install \
+ && uv venv /opt/libcst \
+ && uv pip install --python /opt/libcst/bin/python -r /tmp/werkzeuge/requirements-libcst.txt \
+ && printf '#!/bin/sh\nexec /opt/libcst/bin/python -m libcst.tool "$@"\n' > /usr/local/bin/libcst-tool \
+ && chmod 0755 /usr/local/bin/libcst-tool
 
-# Einzelne Binärdateien mit geprüfter SHA-256 (Werte aus den Release-Prüfsummen).
-ARG GITLEAKS_VERSION=8.30.1
-ARG GITLEAKS_SHA256=551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
-ARG ACTIONLINT_VERSION=1.7.12
-ARG ACTIONLINT_SHA256=8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
-RUN set -eu; cd /tmp \
- && curl -fsSLo gitleaks.tar.gz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
- && echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c - \
- && tar -xzf gitleaks.tar.gz gitleaks && install -m 0755 gitleaks /usr/local/bin/gitleaks \
- && curl -fsSLo actionlint.tar.gz "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" \
- && echo "${ACTIONLINT_SHA256}  actionlint.tar.gz" | sha256sum -c - \
- && tar -xzf actionlint.tar.gz actionlint && install -m 0755 actionlint /usr/local/bin/actionlint \
- && rm -f /tmp/*.tar.gz /tmp/gitleaks /tmp/actionlint
+# Node-Werkzeuge aus dem Lockfile; Playwright-Chromium mit Systemabhängigkeiten und
+# festen Schriften (stabile Screenshots). Lighthouse CI nutzt denselben Browser.
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/ms-playwright
+RUN mkdir -p /opt/node-tools \
+ && cp /tmp/werkzeuge/package.json /tmp/werkzeuge/package-lock.json /opt/node-tools/ \
+ && cd /opt/node-tools && npm ci --no-audit --no-fund \
+ && ./node_modules/.bin/playwright install --with-deps chromium \
+ && ln -sf "$(ls -d /opt/ms-playwright/chromium-*/chrome-linux*/chrome | head -n1)" /usr/local/bin/chromium \
+ && chmod -R a+rX /opt/ms-playwright /opt/node-tools \
+ && rm -rf /var/lib/apt/lists/* /root/.npm /tmp/werkzeuge
+ENV PATH=/opt/node-tools/node_modules/.bin:$PATH \
+    CHROME_PATH=/usr/local/bin/chromium \
+    NODE_PATH=/opt/node-tools/node_modules
 
 # Verzeichnisse für Werkzeug- und Paket-Cache vorab anlegen, damit Docker neue
 # benannte Volumes mit den Rechten des Runner-Nutzers initialisiert. Der

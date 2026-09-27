@@ -88,3 +88,37 @@ updates:
       github-actions:
         patterns: ['*']
         update-types: [minor, patch]
+
+  # Werkzeug-Pins des auditcore_runner-Images (Python-Werkzeuge, Node-Werkzeuge).
+  # Binärdateien in binaer.json prüft `auditcore-runner image werkzeuge`.
+  - package-ecosystem: pip
+    directory: /packages/auditcore_runner/src/auditcore_runner/data/werkzeuge
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels: [dependencies, runner-image]
+    commit-message:
+      prefix: 'chore(runner-image)'
+    groups:
+      runner-python-werkzeuge:
+        patterns: ['*']
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directory: /packages/auditcore_runner/src/auditcore_runner/data/werkzeuge
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels: [dependencies, runner-image]
+    commit-message:
+      prefix: 'chore(runner-image)'
+    groups:
+      runner-node-werkzeuge:
+        patterns: ['*']
+        update-types: [minor, patch]
