@@ -513,7 +513,8 @@
       "LEGACY_DIFFLIB",
       "LEGACY_PIPELINE",
       "legacy_pdf_pages",
-      "legacy.audit_designer_config_path"
+      "legacy.audit_designer_config_path",
+      "numbering=\"once\""
     ]
   }
 }
