@@ -1,5 +1,14 @@
 # Changelog – auditcore_legal_sources
 
+## Unreleased
+
+Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
+`docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,
+Abgrenzung, bewusste Abweichungen vom Altverhalten), 12 Invarianten als
+Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`
+(`hypothesis` im Extra `dev`), `specification`-Block in `provenance.json`.
+LS-S1: `eurlex.update_query` nimmt ein `datetime` an und setzt einen Zeitpunkt in ein `xsd:date`-Literal (als `xfail(strict=True)` festgehalten, keine Verhaltensänderung in diesem Stand). Legacy-Varianten: Modul `legacy`.
+
 ## 0.1.5 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`, `auditcore_harvest==0.1.3`.
