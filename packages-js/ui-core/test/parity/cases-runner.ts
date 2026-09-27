@@ -99,7 +99,7 @@ export const runnerCases: ReadonlyArray<ParityCase<RunnerCaseProps>> = [
     expect: {
       texts: ['Allgemein', 'Klasse cpu', 'Grafikkarte 0: Karte 0'],
       roles: [['spinbutton', 'Höchstanzahl'], ['checkbox', 'Vorrang interaktiver Nutzung'], ['combobox', 'Soll-Quelle'], ['button', 'Prüfen'], ['button', 'Klasse hinzufügen']],
-      counts: { fieldset: 8, 'select[id$=".art"]': 2, 'input[id$="klassen.cpu.vram_mb"]': 0, 'input[id$="klassen.gpu.vram_mb"]': 1 },
+      counts: { fieldset: 8, 'select[id*="klassen."][id$=".art"]': 2, 'input[id$="klassen.cpu.vram_mb"]': 0, 'input[id$="klassen.gpu.vram_mb"]': 1 },
     },
   },
   {

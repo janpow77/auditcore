@@ -1,6 +1,7 @@
 import type { ChangeEvent } from 'react'
 import { runnerAbschnitte, runnerNurLesen, type RunnerController, type RunnerFeld } from '@auditcore/ui-core'
 import { classes } from '../../store'
+import { KlassenName, NeueKlasse } from './Klassen'
 import type { BereichProps } from './types'
 
 function Feld({ feld, uid, nurLesen, controller }: { feld: RunnerFeld; uid: string; nurLesen: boolean; controller: RunnerController }) {
@@ -49,9 +50,11 @@ export function Felder({ state, controller, t, uid }: BereichProps & { uid: stri
       {runnerAbschnitte(state, t).map((abschnitt) => (
         <fieldset key={abschnitt.id} className="fa-runner__abschnitt">
           <legend>{abschnitt.titel}</legend>
+          {abschnitt.klasse ? <KlassenName klasse={abschnitt.klasse} controller={controller} t={t} uid={uid} nurLesen={nurLesen} /> : null}
           {abschnitt.felder.map((feld) => <Feld key={feld.id} feld={feld} uid={uid} nurLesen={nurLesen} controller={controller} />)}
         </fieldset>
       ))}
+      <NeueKlasse state={state} controller={controller} t={t} uid={uid} />
     </>
   )
 }

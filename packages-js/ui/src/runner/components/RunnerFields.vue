@@ -11,11 +11,14 @@ function eingabe(feld: RunnerFeld, event: Event): void {
   const target = event.target as HTMLInputElement | HTMLSelectElement
   props.controller.eingabe(feld.pfad, feld.art, feld.art === 'schalter' ? (target as HTMLInputElement).checked : target.value)
 }
+import RunnerClassName from './RunnerClassName.vue'
+import RunnerNewClass from './RunnerNewClass.vue'
 </script>
 
 <template>
   <fieldset v-for="abschnitt in abschnitte" :key="abschnitt.id" class="fa-runner__abschnitt">
     <legend>{{ abschnitt.titel }}</legend>
+    <RunnerClassName v-if="abschnitt.klasse" :klasse="abschnitt.klasse" :controller="controller" :t="t" :uid="uid" :nur-lesen="nurLesen" />
     <div v-for="feld in abschnitt.felder" :key="feld.id" :class="['fa-runner__feld', feld.art === 'schalter' && 'fa-runner__feld--schalter']">
       <template v-if="feld.art === 'schalter'">
         <input
@@ -59,4 +62,5 @@ function eingabe(feld: RunnerFeld, event: Event): void {
       <p v-if="feld.fehler" :id="`${uid}-${feld.id}-fehler`" class="fa-runner__feldfehler">{{ feld.fehler }}</p>
     </div>
   </fieldset>
+  <RunnerNewClass :state="state" :controller="controller" :t="t" :uid="uid" />
 </template>
