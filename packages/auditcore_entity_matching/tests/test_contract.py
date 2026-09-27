@@ -91,6 +91,7 @@ def test_profiles_are_explicit_source_bound_and_fingerprinted() -> None:
         ("flowworkshop.sanctions", "2026.09.3"),
         ("flowworkshop.state_aid", V),
         ("flowworkshop.state_aid", "2026.09.2"),
+        ("flowworkshop.state_aid", "2026.09.3"),
         ("riskanalysis.payee", V),
         ("riskanalysis.payee", "2026.09.2"),
     )
