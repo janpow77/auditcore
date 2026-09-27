@@ -29,13 +29,18 @@ def request(**change: object) -> dict[str, object]:
 def test_catalogue_lists_profiles_types_limits() -> None:
     data = catalogue()
     assert data["contract"] == CONTRACT == "reporting_ui/1"
-    assert [p["id"] for p in data["profiles"]] == ["flowlib-legacy-v1", "plain-v1"]  # type: ignore[index]
+    assert [p["id"] for p in data["profiles"]] == [  # type: ignore[index]
+        "flowlib-legacy-v1",
+        "flowlib-v2",
+        "plain-v1",
+    ]
     assert data["excel_available"] is True
     assert "date" in data["column_types"]  # type: ignore[operator]
     assert data["limits"]["max_rows_per_sheet"] == 100_000  # type: ignore[index]
     sources = [p["source"] for p in data["profiles"]]  # type: ignore[union-attr]
     assert sources[0].startswith("janpow77/flowlib@aca2dc6a")
-    assert sources[1] == "new explicitly neutral profile"
+    assert sources[1].startswith("successor of flowlib-legacy-v1")
+    assert sources[2] == "new explicitly neutral profile"
 
 
 def test_preview_reports_formats_per_column_and_renders_trial_workbook() -> None:
