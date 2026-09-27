@@ -22,12 +22,12 @@ python -m pip install auditcore_extrapolation \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Noch nicht veröffentlicht: 0.1.0 erscheint mit dem nächsten Release. Danach
-hashgebunden in einer `requirements.txt` (Direkt-URL und `sha256` stehen im
-Index unter `https://janpow77.github.io/auditcore/simple/auditcore-extrapolation/`):
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.0 im
+Release v0.4.2; weitere Versionen und Hashes unter
+`https://janpow77.github.io/auditcore/simple/auditcore-extrapolation/`):
 
 ```text
-auditcore_extrapolation @ https://github.com/janpow77/auditcore/releases/download/v<release>/auditcore_extrapolation-0.1.0-py3-none-any.whl#sha256=<sha256>
+auditcore_extrapolation @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_extrapolation-0.1.0-py3-none-any.whl#sha256=0ca9a6634ac9392fdb3731a35309e8e381cd21ead763f1b129fbdbb091df7900
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
