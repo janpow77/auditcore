@@ -17,8 +17,8 @@ DATA = json.loads(
     (Path(__file__).parent / "fixtures" / "legacy_harvesters_observed.json").read_text()
 )
 CASES = DATA["cases"]
-AUDITDATABASE = load_profile("auditdatabase.esi", "2026.09.1")
-DESIGNER = load_profile("audit_designer.vp_ai", "2026.09.1")
+AUDITDATABASE = load_profile("auditdatabase.esi", "2026.09.2")
+DESIGNER = load_profile("audit_designer.vp_ai", "2026.09.2")
 PURE = {
     "parse_date",
     "detect_funding_period",

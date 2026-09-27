@@ -23,7 +23,7 @@ Profil `riskanalysis.year_bound` 2026.09.5 (Branch `feat/auditcore-v0.3.0`,
 
 ### flowinvoice (React 18, `frontend/src/components/`)
 
-Profile `flowinvoice.risk_checker`, `flowinvoice.rbvk_wibank`,
+Profile `flowinvoice.risk_checker`, `flowinvoice.rbvk_intermediate_body`,
 `flowinvoice.exante_*` sowie Betrugsprüfung (`fraud_signals`, `ted_contractor`,
 `duplicates`).
 

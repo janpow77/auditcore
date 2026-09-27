@@ -1,4 +1,4 @@
-"""RK-L: VerwK point scores of flowinvoice (WIBANK-RBVK, ex-ante) are reproduced.
+"""RK-L: VerwK point scores of flowinvoice (intermediate-body RBVK, ex-ante) are reproduced.
 
 Fixture: ``tools/capture_flowinvoice_verwk_scores.py`` traced the unchanged,
 blob-verified scoring functions of flowinvoice@fb2d185 (Python 3.12 like
@@ -17,7 +17,7 @@ from auditcore_risk import ProfileError, evaluate, load_profile
 
 FIXTURE = fixture("flowinvoice_verwk_scores_observed.json")
 V = "fb2d18568d2e"
-WIBANK = load_profile("flowinvoice.rbvk_wibank", V)
+RBVK = load_profile("flowinvoice.rbvk_intermediate_body", V)
 HEUR = load_profile("flowinvoice.exante_heuristik", V)
 BASIS = load_profile("flowinvoice.exante_basis", V)
 LABEL_TO_CODE = {r.label: r.code for r in BASIS.rules}
@@ -27,9 +27,9 @@ def legacy_stage(score: int) -> str:
     return "keine_pruefung" if score < 8 else "teilpruefung" if score < 19 else "vollpruefung"
 
 
-@pytest.mark.parametrize("case", FIXTURE["wibank"], ids=lambda c: str(id(c)))
-def test_wibank_points_criteria_and_stage(case: dict[str, Any]) -> None:
-    result = evaluate([decode(case["record"])], WIBANK)
+@pytest.mark.parametrize("case", FIXTURE["rbvk"], ids=lambda c: str(id(c)))
+def test_rbvk_points_criteria_and_stage(case: dict[str, Any]) -> None:
+    result = evaluate([decode(case["record"])], RBVK)
     assessment = result.records[0].assessment
     assert assessment is not None
     assert {code[1:]: value for code, value in assessment["criteria"].items()} == case["flags"]
@@ -95,13 +95,13 @@ def test_heuristik_scores() -> None:
 
 def test_points_override_rules() -> None:
     with pytest.raises(ProfileError):
-        evaluate([{}], WIBANK, points={r.code: 1 for r in WIBANK.rules})
+        evaluate([{}], RBVK, points={r.code: 1 for r in RBVK.rules})
     with pytest.raises(ProfileError):
         evaluate([{}], BASIS, points={"E1": 5})
 
 
 def test_fixture_scope() -> None:
-    assert len(FIXTURE["wibank"]) == 777
+    assert len(FIXTURE["rbvk"]) == 777
     assert len(FIXTURE["exante_features"]) == 125
     assert len(FIXTURE["exante"]) == 3
     assert FIXTURE["source"]["commit"] == "fb2d18568d2eaf64574d131ceae51a936b9aac02"

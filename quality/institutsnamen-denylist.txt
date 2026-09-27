@@ -1,0 +1,22 @@
+# Institutsnamen, die in den auditcore-Paketen nicht vorkommen dürfen.
+#
+# Die Pakete gelten für alle Prüfbehörden und ESI-Fonds. Konkrete Stellen
+# werden fachlich neutral bezeichnet, z. B. „Zwischengeschaltete Stelle“
+# (ZS, Art. 71 Abs. 3 VO (EU) 2021/1060; Code-Bezeichner `intermediate_body`).
+#
+# Format: ein Name je Zeile, Groß-/Kleinschreibung egal, Treffer nur als
+# eigenes Wort (Unterstrich und Ziffern trennen, Buchstaben nicht).
+# Optional nach „=>“ der neutrale Ersatz, den Aufzeichnungswerkzeuge beim
+# Neutralisieren beobachteter Fixtures einsetzen.
+#
+# Geprüft von scripts/check_institution_names.py (code-quality-gate).
+# Ausnahmen mit Begründung: quality/institutsnamen-ausnahmen.txt
+
+WIBANK => Zwischengeschaltete Stelle
+WIBank => Zwischengeschaltete Stelle
+Wirtschafts- und Infrastrukturbank => Zwischengeschaltete Stelle
+Helaba => Landesförderinstitut
+Landesbank Hessen-Thüringen => Landesförderinstitut
+HMWVW => Landesministerium
+HMWEVW => Landesministerium
+HMdF => Landesministerium

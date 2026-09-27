@@ -5082,7 +5082,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5129,7 +5129,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5164,7 +5164,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5186,7 +5186,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5208,7 +5208,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5230,7 +5230,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5252,7 +5252,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5568,7 +5568,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5615,7 +5615,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5650,7 +5650,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5672,7 +5672,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5694,7 +5694,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5716,7 +5716,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5738,7 +5738,7 @@
      },
      "headers": {
       "Accept": "text/html,application/xhtml+xml",
-      "User-Agent": "EFRE-AuditTool/2.0 (HMdF Hessen)"
+      "User-Agent": "EFRE-AuditTool/2.0"
      },
      "timeout": 20
     }
@@ -5746,5 +5746,6 @@
    "output": [],
    "exception": null
   }
- ]
+ ],
+ "neutralized": "Klammerzusätze mit Institutsnamen (quality/institutsnamen-denylist.txt) entfernt, z. B. im User-Agent; sonst unverändert beobachtet."
 }

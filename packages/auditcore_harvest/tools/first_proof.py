@@ -169,7 +169,7 @@ def main() -> None:
             DipDrucksachenAdapter,
             lambda: ReplayTransport.from_file(legal / "dip.json"),
             {
-                "profile": {"id": "auditdatabase.esi", "version": "2026.09.1"},
+                "profile": {"id": "auditdatabase.esi", "version": "2026.09.2"},
                 "keywords": ["EFRE", "Strukturfonds"],
             },
             {("legal.dip_bundestag", "api_key"): "fixture-key-nicht-echt"},

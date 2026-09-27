@@ -1,0 +1,9 @@
+# Begründete Ausnahmen zu quality/institutsnamen-denylist.txt.
+#
+# Format: <Dateimuster (fnmatch)> | <erlaubter Ausdruck (Regex)> | <Begründung>
+# Ein Treffer gilt nur als Ausnahme, wenn der erlaubte Ausdruck ihn in derselben
+# Zeile vollständig umschließt. Ausnahmen ohne Treffer lässt das Gate scheitern
+# (nur abbauen, nicht auf Vorrat anlegen).
+
+packages/auditcore_risk/* | rbvk_wibank_scorer|rbvk_wibank\.json | Datei- bzw. Modulname in flowinvoice und riskanalysis (backend/app/…/rbvk_…_scorer.py, verwk/data/rbvk_….json); Herkunftsnachweis mit Git-Blob, darf nicht verfälscht werden. Entfällt, sobald die Anwendungen die Datei umbenennen und das Profil neu charakterisiert wird.
+packages/auditcore_risk/src/auditcore_risk/profiles.py | "flowinvoice\.rbvk_wibank": | Veralteter Alias der früheren Profilkennung (DEPRECATED_ALIASES), weil flowinvoice (Branch feat/auditcore-v041) sie lädt. Entfällt mit dem ersten Release nach dem 31.12.2026.

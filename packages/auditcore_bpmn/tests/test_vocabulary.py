@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from helpers import institution_names
+
 from auditcore_bpmn import vocabulary as v
 
 
@@ -21,7 +23,7 @@ def test_roles_bound_to_periods() -> None:
 
 
 def test_all_vocabularies_bilingual_and_neutral() -> None:
-    forbidden = ("hessen", "hmwvw", "wibank", "efre hessen")
+    forbidden = ("hessen", "efre hessen", *institution_names())
     for vocabulary in (
         v.DIAGRAM_STATUS,
         v.MARKERS,

@@ -16,8 +16,8 @@ from auditcore_legal_sources.profile import load_profile
 
 DATA = json.loads((Path(__file__).parent / "fixtures" / "legacy_feeds_observed.json").read_text())
 CASES = {c["name"]: c for c in DATA["cases"]}
-ADB = load_profile("auditdatabase.esi", "2026.09.1")
-DES = load_profile("audit_designer.vp_ai", "2026.09.1")
+ADB = load_profile("auditdatabase.esi", "2026.09.2")
+DES = load_profile("audit_designer.vp_ai", "2026.09.2")
 HASH_ID = re.compile(r"^(bafin|curia)_-?\d+$")
 
 

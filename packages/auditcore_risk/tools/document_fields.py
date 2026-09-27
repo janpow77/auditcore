@@ -57,7 +57,7 @@ AD_BELEGLISTE = (
     "`normalize_belegliste`)"
 )
 FI_SCHEMA = "flowinvoice@fb2d185 `backend/app/schemas/risk.py`"
-FI_WIBANK = "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py`"
+FI_RBVK = "flowinvoice@fb2d185 `backend/app/verwk/pipeline/rbvk_wibank_scorer.py`"
 FI_EXANTE = "flowinvoice@fb2d185 `backend/app/verwk/pipeline/exante_score.py`"
 CAPTURE_VERWK = "`tools/capture_flowinvoice_verwk_scores.py`"
 
@@ -257,9 +257,9 @@ def _risk_checker() -> dict[str, Meaning]:
     }
 
 
-def _wibank(version: str) -> dict[str, Meaning]:
-    norm = f"{FI_WIBANK} (`_normalise_sources`)"
-    score = f"{FI_WIBANK} (`score_mittelabrufe`)"
+def _rbvk(version: str) -> dict[str, Meaning]:
+    norm = f"{FI_RBVK} (`_normalise_sources`)"
+    score = f"{FI_RBVK} (`score_mittelabrufe`)"
     kosten = "Kostenart-Text (`kostenart_auswertung_bezeichnung`, `kostenart_bezeichnung`, `KOWG`)"
     out = {
         "verbundvorhaben": Meaning(
@@ -443,8 +443,8 @@ def meanings(profile_id: str, version: str) -> dict[str, Meaning]:
         return _flowstat()
     if profile_id == "flowinvoice.risk_checker":
         return _risk_checker()
-    if profile_id == "flowinvoice.rbvk_wibank":
-        return _wibank(version)
+    if profile_id == "flowinvoice.rbvk_intermediate_body":
+        return _rbvk(version)
     if profile_id.startswith("flowinvoice.exante_"):
         return _exante()
     return {}
