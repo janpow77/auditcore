@@ -17,6 +17,27 @@ TARGET_SOURCES = ("statisch", "lokal", "datei")
 SCOPES = ("repo", "org")
 AUTH_KINDS = ("gh", "pat", "app")
 DEFAULT_IMAGE = "auditcore-runner:local"
+BACKENDS = ("jit", "scaleset")
+GPU_ACCESS = ("cdi", "gpus")
+EGRESS_MODES = ("aus", "allowlist")
+# Hosts a CI job typically needs (GitHub, PyPI, npm, container registries); GitHub's
+# own ranges come from api.github.com/meta (``egress_github_meta``).
+DEFAULT_EGRESS_HOSTS = (
+    "github.com",
+    "api.github.com",
+    "codeload.github.com",
+    "objects.githubusercontent.com",
+    "release-assets.githubusercontent.com",
+    "pypi.org",
+    "files.pythonhosted.org",
+    "registry.npmjs.org",
+    "ghcr.io",
+    "pkg-containers.githubusercontent.com",
+    "registry-1.docker.io",
+    "auth.docker.io",
+    "production.cloudflare.docker.com",
+)
+DEFAULT_GITHUB_META = ("api", "web", "git", "packages", "actions")
 UV_CACHE_VOLUME = "auditcore-runner-uv"
 
 
@@ -105,6 +126,18 @@ class Network:
     bridge: str = "br-auditcore-ci"
     enabled: bool = True
     firewall_required: bool = True
+    egress: str = "aus"
+    egress_hosts: tuple[str, ...] = DEFAULT_EGRESS_HOSTS
+    egress_github_meta: tuple[str, ...] = DEFAULT_GITHUB_META
+    egress_ports: tuple[int, ...] = (80, 443)
+
+
+@dataclass(frozen=True)
+class ScaleSetSettings:
+    """Backend ``scaleset``: one scale set per class, named ``<praefix>-<klasse>``."""
+
+    name_prefix: str = ""
+    runner_group: str = "default"
 
 
 @dataclass(frozen=True)
@@ -184,6 +217,8 @@ class Profile:
     auth: Auth = field(default_factory=Auth)
     image: str = DEFAULT_IMAGE
     backend: str = "jit"
+    scale_set: ScaleSetSettings = field(default_factory=ScaleSetSettings)
+    gpu_access: str = "cdi"
     reserve_cpus: int = 4
     reserve_memory_gb: int = 12
     network: Network = field(default_factory=Network)
@@ -203,6 +238,10 @@ class Profile:
     def runner_prefix(self) -> str:
         """Names of runners registered by this machine start with this prefix."""
         return f"{self.host}-"
+
+    def scale_set_name(self, runner_class: str) -> str:
+        """Scale set of a class; workflows select it with ``runs-on: <name>``."""
+        return f"{self.scale_set.name_prefix or self.host}-{runner_class}"
 
     def known_prefixes(self) -> tuple[str, ...]:
         return (self.runner_prefix(), *self.target.known_runner_prefixes)
