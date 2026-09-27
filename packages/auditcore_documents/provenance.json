@@ -494,7 +494,8 @@
   "specification": {
     "document": "docs/spezifikation.md",
     "property_tests": [
-      "tests/test_spezifikation.py"
+      "tests/test_spezifikation.py",
+      "tests/test_spezifikation_bestand.py"
     ],
     "invariants": [
       "I1",
@@ -506,7 +507,13 @@
       "I7",
       "I8",
       "I9",
-      "I10"
+      "I10",
+      "I11",
+      "I12",
+      "I13",
+      "I14",
+      "I15",
+      "I16"
     ],
     "legacy_variants": [
       "LEGACY",
