@@ -91,6 +91,17 @@ LAYOUTS: dict[str, LayoutSpec] = {
     "kleinunternehmer": LayoutSpec(header="right", meta="below_title", due_in_text=True),
     "gutschrift": LayoutSpec(meta="below_title", table_lines=False, bank="below_totals"),
     "mehrseitig": LayoutSpec(min_positions=40, vat_id_place="footer"),
+    # Bankdaten im Absenderblock sind eine eigene Trainingsdimension. Die drei
+    # Varianten vermeiden, dass das Modell ``bank="sender"`` nur aus der
+    # Holdout-Vorlage ``holdout_kompakt`` kennen würde, ohne deren komplette
+    # Geometrie in den Trainingssatz zu übernehmen.
+    "bank_kopf_links": LayoutSpec(bank="sender", meta="below_title", totals="right"),
+    "bank_kopf_rechts": LayoutSpec(
+        header="right", bank="sender", table_lines=False, totals="left_box"
+    ),
+    "bank_kopf_zweispaltig": LayoutSpec(
+        bank="sender", meta="two_column", totals="bottom", show_vat_base=True
+    ),
     "holdout_kompakt": LayoutSpec(
         meta="grid", totals="left_box", bank="sender", scale=0.9, table_lines=False
     ),
