@@ -43,5 +43,25 @@
     "Named legacy/plain format profiles with fingerprinted metadata",
     "Preserve font property values while normalizing generated styles.xml sequence to the Open XML SDK schema; parse with defusedxml"
   ],
-  "profile_registry": "profile-registry.json"
+  "profile_registry": "profile-registry.json",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9"
+    ],
+    "legacy_variants": [
+      "flowlib-legacy-v1"
+    ]
+  }
 }
