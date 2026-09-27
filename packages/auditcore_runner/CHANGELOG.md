@@ -37,5 +37,11 @@
 - Wiederverwendbarer Entscheidungs-Job (`workflow_call`) als Vorlage:
   `workflows vorlage runner-wahl`.
 - `AUDITCORE_RUNNER_PROFILE` wird von allen Befehlen beachtet.
+- Frei benennbare Klassen (RUN-011): Feld `klassen.<k>.art` (`cpu`/`gpu`)
+  bestimmt das GPU-Verhalten; Profil-Schema 3 mit Migration aus Version 2;
+  Soll-Datei und Schemas akzeptieren jeden gültigen Klassennamen.
+- Anmeldung nach RUN-022: `profil erkennen` schlägt eine konfigurierte GitHub
+  App vor, sonst ein Token, `gh` nur als Rückfall (`auth_begruendung`);
+  Status-Feld `auth_art`.
 - Zeitgeber `auditcore-runner-image.timer`: Runner-Image täglich prüfen und bei
   Bedarf neu bauen.
