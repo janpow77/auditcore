@@ -9,6 +9,7 @@ from decimal import Decimal
 from typing import Protocol
 
 from auditcore_documents.pipeline.context import PipelineContext, ValidationResult
+from auditcore_documents.pipeline.stages.rule_messages import say
 from auditcore_documents.pipeline.stages.validation_base import ValidationRule
 
 
@@ -79,25 +80,21 @@ class FraudDetectionRule(ValidationRule):
 
     async def evaluate(self, context: PipelineContext) -> ValidationResult:
         if context.analysis_modules and not context.analysis_modules.fraud_detection:
-            return self.result("INFO", "PASS", "Fraud detection disabled in analysis modules")
+            return self.result("INFO", "PASS", say("fraud_disabled"))
         fields = context.artifacts.normalized_json or {}
         invoice_number = fields.get("invoice_number")
         supplier_name = fields.get("supplier_name") or fields.get("vendor_name")
         supplier_vat_id = fields.get("vat_id") or fields.get("supplier_vat_id")
         total_str = fields.get("total") or fields.get("total_amount")
         if not invoice_number or not supplier_name:
-            return self.result(
-                "INFO",
-                "PASS",
-                "Insufficient data for fraud detection (missing invoice_number or supplier_name)",
-            )
+            return self.result("INFO", "PASS", say("fraud_insufficient"))
         total_amount = _total_amount(total_str)
         invoice_date = fraud_invoice_date(
             fields.get("date") or fields.get("invoice_date"), self.today()
         )
         if self.fraud_checker is None:
             # Meldung des Originals, wenn keine DB-Sitzung übergeben wurde.
-            return self.result("INFO", "PASS", "No database session for fraud detection")
+            return self.result("INFO", "PASS", say("fraud_no_session"))
         try:
             result = await self.fraud_checker(
                 invoice_number=invoice_number,
@@ -109,7 +106,7 @@ class FraudDetectionRule(ValidationRule):
                 exclude_document_id=context.document_id,
             )
         except Exception as exc:  # noqa: BLE001 - Originalvertrag
-            return self.result("WARN", "REVIEW", f"Fraud detection error: {exc}")
+            return self.result("WARN", "REVIEW", say("fraud_error", error=exc))
         return self._assessment_result(result)
 
     def _assessment_result(self, result: FraudAssessment) -> ValidationResult:
@@ -120,7 +117,7 @@ class FraudDetectionRule(ValidationRule):
             return self.result(
                 "CRITICAL",
                 "FAIL",
-                f"CRITICAL fraud risk detected: {factors}",
+                say("fraud_critical", factors=factors),
                 evidence={
                     "risk_level": level,
                     "risk_factors": result.risk_factors,
@@ -133,7 +130,7 @@ class FraudDetectionRule(ValidationRule):
             return self.result(
                 "WARN" if level == "high" else "INFO",
                 "REVIEW",
-                f"{'High' if level == 'high' else 'Medium'} fraud risk: {factors}",
+                say("fraud_high" if level == "high" else "fraud_medium", factors=factors),
                 evidence={
                     "risk_level": level,
                     "risk_factors": result.risk_factors,
@@ -143,7 +140,7 @@ class FraudDetectionRule(ValidationRule):
         return self.result(
             "INFO",
             "PASS",
-            f"Fraud detection passed (risk level: {level})",
+            say("fraud_passed", level=level),
             evidence={"risk_level": level, "risk_score": result.risk_score},
         )
 

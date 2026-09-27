@@ -2,10 +2,12 @@
 
 ## Zweck
 
-Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahlenformat) mit benannten Formatprofilen und optionalem, abgesichertem XLSX-Export.
+Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahlenformat) mit benannten Formatprofilen, optionalem, abgesichertem XLSX-Export und versionierten Berichtsvorlagen (DOCX, PDF, HTML).
 
 Für Anwendungen, die tabellarische Berichte als Excel-Datei ausgeben –
-etwa `auditcore_dataprotection` für seine tabellarischen XLSX-Exporte. Der Kern
+etwa `auditcore_dataprotection` für seine tabellarischen XLSX-Exporte – und
+für Prüfberichte, Vermerke und Schreiben aus Vorlagen mit Datenvertrag und
+Textbausteinen (`auditcore_reporting.templates`). Der Kern
 benötigt nur die Standardbibliothek (die REST-Schicht zusätzlich
 `auditcore_common`); der Renderer übernimmt ausschließlich
 übergebene Daten und fragt weder HTTP, Datenbanken noch Dateisysteme ab.
@@ -37,8 +39,12 @@ sudo apt-get install python3-auditcore-reporting
 
 Extras: `[excel]` – openpyxl (≥ 3.0.9, < 4) und defusedxml für
 `render_workbook`; `[web]` – Starlette für den REST-Vertrag `reporting_ui/1`
-(`auditcore_reporting.web`), `[fastapi]` – zusätzlich FastAPI-Router; `[dev]` – Test- und Prüfwerkzeuge (einschließlich pandas nur
-für die Charakterisierung).
+(`auditcore_reporting.web`), `[fastapi]` – zusätzlich FastAPI-Router;
+`[pdf]` – reportlab (BSD, ≥ 3.6.12, < 6) für die PDF-Ausgabe der Vorlagen
+(APT `python3-reportlab`); `[docx]` – defusedxml zum Einlesen von
+Word-Vorlagen der Anwendung; `[dev]` – Test- und Prüfwerkzeuge (einschließlich
+pandas nur für die Charakterisierung, python-docx und pypdf nur zum Nachlesen
+erzeugter Dateien in Tests).
 
 ## Schnellstart
 
@@ -92,7 +98,8 @@ assert get_profile_format("flowlib-v2", "Stundensatz") == '#,##0.00 "EUR"'
 | `auditcore_reporting.formats` | Excel-Zahlenformate / Excel format selection preserving Flowlib behavior. |
 | `auditcore_reporting.formats_v2` | Excel number formats of profile ``flowlib-v2`` (successor of ``flowlib-legacy-v1``). |
 | `auditcore_reporting.profiles` | Explicit format profiles; the original Flowlib selector remains unchanged. |
-| `auditcore_reporting.web` | REST contract ``reporting_ui/1`` for the table export UI (extras ``web``, ``fastapi``). |
+| `auditcore_reporting.templates` | Versioned report templates: data contract, text blocks, DOCX/PDF/HTML rendering. |
+| `auditcore_reporting.web` | REST contract ``reporting_ui/1``: table export and report templates (``web``, ``fastapi``). |
 | `auditcore_reporting.workbook` | Standard-library-only workbook contracts with an optional Excel adapter. |
 <!-- api-overview:end -->
 
@@ -162,14 +169,62 @@ Die Datei ist ein neu erzeugter Datenexport. Vorlagen, Charts, Makros und
 Formeln aus existierenden Arbeitsmappen werden nicht importiert. Für native
 Excel-Darstellung, Formelberechnung oder PDF-Ausgabe wird kein Test behauptet.
 
+## Berichtsvorlagen
+
+`auditcore_reporting.templates` (Kern: Standardbibliothek und
+`auditcore_common`). Eine Vorlage ist eine JSON-Definition mit Kennung,
+Version (MAJOR.MINOR.PATCH), Status (`Entwurf`, `Freigegeben`, `Archiviert`),
+Datenvertrag als JSON-Schema-Teilmenge, benannten Bedingungen, Textbausteinen
+(Text mit Platzhaltern, Bedingung, Pflichtkennzeichen, Rechtsgrundlage) und
+einem Rumpf aus Blöcken (`heading`, `paragraph`, `textblock`, `list`,
+`table`, `fields`, `pagebreak`, `section` mit `if` und `for`) – oder einer
+Word-Datei (DOCX/DOTX) mit `{{ … }}`-Platzhaltern und `{%p … %}`/`{%tr … %}`-
+Steuer-Tags. `define_template` prüft beim Anlegen jeden Platzhalter,
+jede Bedingung und jede Schleife gegen den Datenvertrag, Pflichtbausteine
+und die Beispieldaten; der Fingerabdruck (SHA-256) deckt Definition und
+Word-Datei ab, eine registrierte Version ist unveränderlich
+(`TemplateRegistry`).
+
+Platzhalter sind Datenpfade mit festen Filtern (`text`, `zahl`, `ganzzahl`,
+`eur`, `prozent`, `datum`, `ja_nein`; deutsche Schreibweise), Bedingungen
+JSON-Operatoren (`filled`, `empty`, `equals`, `not_equals`, `in`, `greater`,
+`less`, `at_least`, `at_most`, `all`, `any`, `not`) – keine Ausdruckssprache,
+kein `eval`. `render(template, data, "docx" | "pdf" | "html", design)` prüft
+die Daten (`TemplateDataError` mit allen Fundstellen) und liefert die Datei
+mit Vorlagenkennung, -version, Fingerabdruck, Datenhash und verwendeten
+Textbausteinen. Ausgabe deterministisch: gleiche Eingaben, gleiche Bytes
+(feste ZIP-Zeitstempel, reportlab `invariant`). DOCX und HTML entstehen ohne
+Fremdpakete; PDF braucht `[pdf]`. Die Gestaltung ist ein austauschbares
+`DesignProfile` (Schrift, Farben, Ränder, Kopf- und Fußzeile); mitgeliefert
+ist nur `neutral-v1`. Logos und Briefköpfe gehören in die Word-Vorlage der
+Anwendung. Mitgelieferte neutrale Vorlagen: `vermerk` und `pruefbericht`
+(ESI-Fonds, Art. 74/77 VO (EU) 2021/1060).
+
+```python
+from auditcore_reporting.templates import builtin_registry, render
+
+report = builtin_registry().get("pruefbericht")
+result = render(report, report.sample, "docx")
+assert result.content[:2] == b"PK" and result.template_version == "1.0.0"
+assert render(report, report.sample, "docx").content == result.content
+assert "mit_feststellungen" in result.text_blocks
+```
+
+Spezifikation der Vorlagen: Invarianten I14–I18 in
+[docs/spezifikation.md](docs/spezifikation.md).
+
 ## REST-Vertrag und Oberfläche
 
 `auditcore_reporting.web` (Extras `web`/`fastapi`, Export zusätzlich `excel`)
-stellt `GET /profiles`, `POST /preview` und `POST /export` bereit
-(Vertrag `reporting_ui/1`, [docs/ui/reporting-rest.md](../../docs/ui/reporting-rest.md)).
-Die Oberfläche dazu ist `<flowaudit-report-export>` aus `@auditcore/ui`
-(React: `FlowauditReportExport`). Formatregeln und Export laufen
-ausschließlich in dieser Bibliothek.
+stellt `GET /profiles`, `POST /preview` und `POST /export` bereit, für die
+Berichtsvorlagen `GET /templates`, `GET /templates/{id}`,
+`POST /templates/{id}/preview` und `POST /templates/{id}/render`
+(Vertrag `reporting_ui/1`, [docs/ui/reporting-rest.md](../../docs/ui/reporting-rest.md);
+eigene Vorlagen und Gestaltungen über `TemplateCatalogue`).
+Die Oberflächen dazu sind `<flowaudit-report-export>` und
+`<flowaudit-report-templates>` aus `@auditcore/ui` (React:
+`FlowauditReportExport`, `FlowauditReportTemplates`). Formatregeln, Export und
+Rendering laufen ausschließlich in dieser Bibliothek.
 
 ```python
 from auditcore_reporting.web import catalogue, preview
@@ -212,7 +267,10 @@ rahmenwerkfreier Teil der REST-Schicht für `web`, APT
 `python3-auditcore-common`), sonst nur die Standardbibliothek. Optional
 `openpyxl>=3.0.9,<4` und `defusedxml>=0.7.1` über `[excel]`; ohne Extra meldet
 `render_workbook` `ExcelDependencyError`, Formatfunktionen und Datenmodelle
-bleiben nutzbar. pandas ist keine Laufzeitabhängigkeit.
+bleiben nutzbar. pandas ist keine Laufzeitabhängigkeit. Berichtsvorlagen:
+DOCX und HTML ohne Fremdpakete; `reportlab>=3.6.12,<6` (BSD-Lizenz) über
+`[pdf]`, sonst `RenderDependencyError`; `defusedxml>=0.7.1` über `[docx]` für
+Word-Vorlagen. Kein LibreOffice, kein Jinja, kein python-docx zur Laufzeit.
 
 ## Sicherheit und Datenschutz
 
@@ -226,6 +284,20 @@ ohne sie durch vorangestellte Apostrophe zu verändern. Grenzen
 das Dateiziel legt der Consumer fest. Personenbezug und Berechtigungen der
 exportierten Daten beurteilt die Anwendung. Ein Öffnungs- oder Layouttest in
 nativem Microsoft Excel wird nicht behauptet.
+
+Berichtsvorlagen: Word-Vorlagen werden vor jeder Verarbeitung geprüft und
+abgewiesen, wenn sie Makros (VBA, makrofähige Inhaltstypen), ActiveX,
+OLE-Objekte, `altChunk`/Teildokumente, angehängte Dokumentvorlagen, externe
+Quellen außer Hyperlinks, nachladende Felder (`INCLUDETEXT`, `DDE`, `LINK` …),
+DTDs, unsichere Eintragsnamen, Verschlüsselung oder ZIP-Bomben enthalten; jede
+XML-Datei wird über `auditcore_common.safe_xml` (defusedxml, DTD verboten)
+gelesen. Datenwerte werden nur eingesetzt, nie als Platzhalter oder Markup
+ausgewertet; HTML ist maskiert, ohne Skripte und externe Quellen und mit
+eigener Content-Security-Policy. Grenzen (`ResolveLimits`, `DocxLimits`)
+verhindern übergroße Dokumente. Erzeugte Dateien enthalten keine Makros.
+Die Beispieldaten sind synthetisch; Personenbezug der Berichtsdaten beurteilt
+die Anwendung. Ein Öffnungstest in nativem Microsoft Word wird nicht
+behauptet (geprüft mit python-docx und LibreOffice).
 
 ## Lizenz und Herkunftsnachweis
 

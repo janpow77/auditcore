@@ -61,7 +61,7 @@ Status vorher: HUMAN_DECISION_REQUIRED, jetzt **DECIDED**.
 
 `LEGACY` und `LEGACY_DIFFLIB` bleiben bitgenau, einschließlich ihrer
 Fingerabdrücke (`test_legacy_fingerprints_are_stable`). Die Pipeline-Entscheidungen
-D4 bis D8 stehen in `docs/pipeline.md`.
+D4 bis D9 stehen in `docs/pipeline.md`.
 
 ## 0.2.0: Donut (additiv)
 

@@ -1,0 +1,21 @@
+/* Berichtsvorlagen – ReportTemplates (Vue) und FlowauditReportTemplates (React). Farben nur aus --fa-*-Variablen. */
+.fa-reporttemplates { display: flex; flex-direction: column; gap: var(--fa-space-4); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-reporttemplates__card { display: flex; flex-direction: column; gap: var(--fa-space-3); padding: var(--fa-space-4); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius-lg); background: var(--fa-color-surface); box-shadow: var(--fa-shadow-sm); min-width: 0; }
+.fa-reporttemplates__heading { margin: 0; font-size: var(--fa-font-size-md); font-weight: 600; }
+.fa-reporttemplates__form { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: var(--fa-space-3); align-items: end; }
+.fa-reporttemplates__field { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-reporttemplates__label { font-size: var(--fa-font-size-xs); font-weight: 600; color: var(--fa-color-text-muted); }
+.fa-reporttemplates__input { min-height: 2.25rem; padding: 0 var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: var(--fa-color-text); font: inherit; }
+.fa-reporttemplates__input:focus-visible { outline: none; box-shadow: var(--fa-focus-ring); }
+.fa-reporttemplates__actions { display: flex; flex-wrap: wrap; gap: var(--fa-space-2); }
+.fa-reporttemplates__muted { margin: 0; color: var(--fa-color-text-muted); font-size: var(--fa-font-size-xs); }
+.fa-reporttemplates__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
+.fa-reporttemplates__notice { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-left: 3px solid var(--fa-color-accent); background: var(--fa-color-accent-soft); border-radius: var(--fa-radius-sm); }
+.fa-reporttemplates__scroll { overflow-x: auto; }
+.fa-reporttemplates__table { border-collapse: collapse; width: 100%; }
+.fa-reporttemplates__table th, .fa-reporttemplates__table td { padding: var(--fa-space-1) var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: left; vertical-align: top; }
+.fa-reporttemplates__table th { font-size: var(--fa-font-size-xs); color: var(--fa-color-text-muted); }
+.fa-reporttemplates__table code, .fa-reporttemplates__issues code { font-family: var(--fa-font-mono, monospace); }
+.fa-reporttemplates__blocks, .fa-reporttemplates__issues { margin: 0; padding-left: var(--fa-space-4); display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-reporttemplates__issues { color: var(--fa-color-danger); }
+.fa-reporttemplates__frame { width: 100%; min-height: 24rem; border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: #fff; }

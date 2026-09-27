@@ -4,6 +4,33 @@ Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
 ## Unreleased
 
+- Neues Modul `auditcore_reporting.templates`: versionierte Berichtsvorlagen
+  (`define_template`, `TemplateRegistry`, `builtin_registry`, `render`,
+  `resolve`, `DesignProfile`/`design_from_dict`). Datenvertrag als
+  JSON-Schema-Teilmenge (nicht unterstützte Schlüsselwörter werden abgewiesen),
+  benannte Bedingungen als JSON-Operatoren, Textbausteine mit Bedingung,
+  Pflichtkennzeichen und Rechtsgrundlage, Blöcke `heading`, `paragraph`,
+  `textblock`, `list`, `table`, `fields`, `pagebreak`, `section` (`if`,
+  `for`). Platzhalter `{{ pfad | filter }}` mit deutschen Filtern; alle Pfade
+  werden beim Anlegen gegen den Datenvertrag geprüft. Ausgabe DOCX
+  (Standardbibliothek, feste ZIP-Zeitstempel), HTML (maskiert, ohne Skripte,
+  eigene CSP) und PDF (Extra `pdf`: reportlab ≥ 3.6.12, < 6, BSD, `invariant`);
+  gleiche Eingaben ergeben gleiche Bytes (Golden-Hashes in
+  `tests/test_templates_render.py`). Word-Vorlagen (DOCX/DOTX) der Anwendung
+  mit `{{ … }}`, `{%p … %}` und `{%tr … %}` (Extra `docx`: defusedxml),
+  vorher Sicherheitsprüfung des Pakets. Neutrale Vorlagen `vermerk` 1.0.0 und
+  `pruefbericht` 1.0.0 als Paketdaten, Gestaltung `neutral-v1`.
+- REST `reporting_ui/1`: `GET /templates`, `GET /templates/{id}`,
+  `POST /templates/{id}/preview`, `POST /templates/{id}/render`
+  (Herkunftskopfzeilen `X-Template-*`, `X-Data-SHA256`); `create_app`,
+  `routes`, `create_router` nehmen einen `TemplateCatalogue` der Anwendung.
+  Bestehende Endpunkte unverändert.
+- Spezifikation: Invarianten I14–I18 (Determinismus, Daten bleiben Text,
+  Datenvertrag vor Ausgabe, Textbausteine genau bei Bedingung, Versionen
+  unveränderlich) als Hypothesis-Tests in `tests/test_spezifikation_vorlagen.py`;
+  I1–I13 unverändert. Debian-„Suggests“ für die neuen Extras in
+  `packaging/library-extras.json`. Keine Versionsanhebung.
+
 - Neues Formatprofil `flowlib-v2` (2.0.0, Nachfolger von `flowlib-legacy-v1`,
   Modul `formats_v2`) behebt Befund B1: Wörter statt Teilzeichenketten, der
   Kopf des Kompositums entscheidet (`Stundensatz` → Euro statt Prozent),

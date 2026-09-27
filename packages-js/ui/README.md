@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (841):
+Exporte der Einstiegspunkte aus `package.json#exports` (871):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -165,6 +165,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `BADGE_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `BENFORD_METRIC_IDS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BadgeTone` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchChecks` | Vue-Komponente | – | `batchchecks/BatchChecks.vue` |
+| `@auditcore/ui` | `BatchchecksAnswer` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksFinding` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BatchchecksRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordBusy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordCallbacks` | Re-Export | – | `./useBenford` |
@@ -361,10 +369,12 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `HitView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ICONS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_ATTRIBUTES` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_BATCHCHECKS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_BENFORD` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRACTION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTING` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_REPORTTEMPLATES` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_SAMPLESIZE` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `IconName` | Re-Export | – | `@auditcore/ui-core` |
@@ -451,6 +461,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `ReportColumnType` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ReportExportPanel` | Vue-Komponente | – | `reporting/ReportExportPanel.vue` |
 | `@auditcore/ui` | `ReportTableInput` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ReportTemplates` | Vue-Komponente | – | `reporttemplates/ReportTemplates.vue` |
 | `@auditcore/ui` | `ReportingBusy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ReportingCallbacks` | Re-Export | – | `./useReportExport` |
 | `@auditcore/ui` | `ReportingCatalogue` | Re-Export | – | `@auditcore/ui-core` |
@@ -461,6 +472,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `ReportingPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ReportingSource` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ReportingTranslate` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ReporttemplatesController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ReporttemplatesData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ReporttemplatesPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ResidualRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ResidualResult` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RestClientOptions` | Re-Export | – | `@auditcore/ui-core` |
@@ -583,6 +597,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `TablePreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `TableRow` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui` | `TabularMessageKey` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `TemplateCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `TemplateData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `TemplateDetail` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `TemplateFormat` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `TemplatePreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ThemeMode` | Typ | – | `theme/theme` |
 | `@auditcore/ui` | `TileSource` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `Tone` | Re-Export | – | `@auditcore/ui-core` |
@@ -590,6 +609,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `Translate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `UnitInput` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `UseAuthToken` | Schnittstelle | – | `composables/useAuthToken` |
+| `@auditcore/ui` | `UseBatchChecks` | Schnittstelle | – | `batchchecks/useBatchChecks` |
 | `@auditcore/ui` | `UseBenford` | Schnittstelle | – | `benford/useBenford` |
 | `@auditcore/ui` | `UseComparisons` | Schnittstelle | – | `documents/useComparisons` |
 | `@auditcore/ui` | `UseDbKanban` | Schnittstelle | – | `dbkanban/useDbKanban` |
@@ -645,6 +665,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `badgeStyle` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui` | `bandTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `baseMessages` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `batchChecksElement` | Konstante | `<flowaudit-batch-checks>`: Eigenschaften `port`, `result`, `locale`; Ereignisse `checks-completed`, `error`. | `batchchecks/element` |
+| `@auditcore/ui` | `batchchecksMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordBarTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChartTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChiTexts` | Re-Export | – | `@auditcore/ui-core` |
@@ -690,6 +712,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `coverIssues` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAttributesController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createAttributesRestPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createBatchchecksRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createBenfordRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createComparisonsController` | Re-Export | – | `@auditcore/ui-core` |
@@ -704,8 +729,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `createIdentifierController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createIdentifiersRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createMemoryRecordPort` | Re-Export | – | `@auditcore/kanban-core` |
+| `@auditcore/ui` | `createReportTemplatesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createReportingController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createReportingRestPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createReporttemplatesController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRiskController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRiskRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
@@ -852,6 +879,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `removeScenario` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `reportCellText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `reportExportElement` | Konstante | `<flowaudit-report-export>`: Eigenschaften `port` (ReportingPort), `tables`, `filename`, `locale`; Ereignisse `preview-completed`, `export-completed`, `error`. | `reporting/element` |
+| `@auditcore/ui` | `reportTemplatesElement` | Konstante | `<flowaudit-report-templates>`: Eigenschaften `port`, `data`, `filename`, `locale`; Ereignisse `template-select`, `preview-completed`, `report-rendered`, `error`. | `reporttemplates/element` |
 | `@auditcore/ui` | `reportingErrorKey` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `reportingMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `reportingProfile` | Re-Export | – | `@auditcore/ui-core` |
@@ -859,6 +887,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `reportingSheetHeading` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `reportingTablesText` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `reportingWorkbookText` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `reporttemplatesMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `requestFile` | Re-Export | – | `./client` |
 | `@auditcore/ui` | `requestJson` | Re-Export | – | `./client` |
 | `@auditcore/ui` | `requirementKey` | Re-Export | – | `@auditcore/ui-core` |
@@ -920,6 +949,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (841):
 | `@auditcore/ui` | `translate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `triggeredDataset` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@auditcore/common`. | `composables/useAuthToken` |
+| `@auditcore/ui` | `useBatchChecks` | Funktion | Vue-Anbindung der Bestandsprüfung aus `@auditcore/ui-core` (`createBatchchecksController`). | `batchchecks/useBatchChecks` |
 | `@auditcore/ui` | `useBenford` | Funktion | – | `benford/useBenford` |
 | `@auditcore/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
 | `@auditcore/ui` | `useComparisons` | Funktion | – | `documents/useComparisons` |
@@ -982,6 +1012,7 @@ Web Components:
 | Element | Vue-Komponente | Definiert in |
 |---|---|---|
 | `<flowaudit-attribute-sampling>` | `AttributeSampling` | `attributes/element.ts` |
+| `<flowaudit-batch-checks>` | `BatchChecks` | `batchchecks/element.ts` |
 | `<flowaudit-benford>` | `BenfordPanel` | `benford/element.ts` |
 | `<flowaudit-comparisons>` | `FaComparisons` | `documents/element.ts` |
 | `<flowaudit-db-kanban>` | `FaDbKanban` | `dbkanban/element.ts` |
@@ -993,6 +1024,7 @@ Web Components:
 | `<flowaudit-kanban-board>` | `KanbanBoard` | `kanban/element.ts` |
 | `<flowaudit-kanban-boards>` | `KanbanBoardList` | `kanban/element.ts` |
 | `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
+| `<flowaudit-report-templates>` | `ReportTemplates` | `reporttemplates/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
 | `<flowaudit-sample-size-planner>` | `SampleSizePlanner` | `samplesize/element.ts` |
 | `<flowaudit-sampling>` | `SamplingPanel` | `sampling/element.ts` |
@@ -1015,6 +1047,21 @@ AttributeSampling: Merkmalsstichprobe für Systemprüfungen (Leitfaden 7.9); Log
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|
 | `evaluation-completed` | `[result: AttributesResult]` | – |
+| `error` | `[message: string]` | – |
+
+#### `BatchChecks`
+
+Bestandsprüfung über viele Belege (Vertrag documents_batch_checks/1); Logik im Kern (createBatchchecksController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `BatchchecksPort \| null` | nein | `null` | Fachlogik, z. B. `createBatchchecksRestPort({ baseUrl: '/api/batch-checks' })`. |
+| `result` | `BatchchecksAnswer \| null` | nein | `null` | Vorhandenes Ergebnis anzeigen (z. B. aus der Ablage der Anwendung). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `checks-completed` | `[answer: BatchchecksAnswer]` | – |
 | `error` | `[message: string]` | – |
 
 #### `BenfordPanel`
@@ -1556,6 +1603,24 @@ AttributeSampling: Merkmalsstichprobe für Systemprüfungen (Leitfaden 7.9); Log
 |---|---|---|
 | `preview-completed` | `[result: WorkbookPreview]` | – |
 | `export-completed` | `[file: DownloadFile]` | – |
+| `error` | `[message: string]` | – |
+
+#### `ReportTemplates`
+
+ReportTemplates: Berichtsvorlage wählen, Datenvertrag sehen, Vorschau und Bericht; Logik im Kern (createReporttemplatesController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `ReporttemplatesPort \| null` | nein | `null` | Fachlogik, z. B. `createReportTemplatesRestPort({ baseUrl: '/api/reporting' })`. |
+| `data` | `TemplateData \| null` | nein | `null` | Daten gemäß Datenvertrag; ohne Daten gelten die Beispieldaten der Vorlage. |
+| `filename` | `string` | nein | `''` | Vorschlag für den Dateinamen (ohne Endung). |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `template-select` | `[detail: TemplateDetail]` | – |
+| `preview-completed` | `[result: TemplatePreview]` | – |
+| `report-rendered` | `[file: DownloadFile]` | – |
 | `error` | `[message: string]` | – |
 
 #### `RiskFlagCard`

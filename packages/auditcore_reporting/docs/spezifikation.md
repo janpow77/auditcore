@@ -4,7 +4,9 @@ Stand: 27.09.2026 (Profil `flowlib-v2`, Befunde B1/B2 behoben), Paketversion 0.3
 aus flowlib@`aca2dc6` (`tests/test_formats.py`, Fixtures in `tests/fixtures`),
 Original-Arbeitsmappen, Wert- und Stil-Rundläufe (`tests/test_excel.py`,
 `docs/excel-validation.md`), Profilversionierung in `docs/profiles.md`.
-Eigenschaftstests: `tests/test_spezifikation.py`.
+Eigenschaftstests: `tests/test_spezifikation.py`, für die Berichtsvorlagen
+`tests/test_spezifikation_vorlagen.py` (I14–I18); Beispiel- und Sicherheitsfälle
+der Vorlagen in `tests/test_templates_*.py`.
 
 ## Zweck
 
@@ -12,8 +14,13 @@ Zahlenformate für tabellarische Berichte (Spaltenname → Excel-Zahlenformat)
 nach benannten, versionierten Formatprofilen und ein abgesicherter
 XLSX-Export übergebener Tabellen. Das Paket dient Anwendungen, die
 Prüfergebnisse, Verzeichnisse oder Listen als Excel-Datei ausgeben (etwa
-`auditcore_dataprotection`). Es enthält keine Berichtsvorlagen, Textbausteine
-oder PDF-Ausgabe.
+`auditcore_dataprotection`). Dazu kommen versionierte Berichtsvorlagen
+(`auditcore_reporting.templates`): Datenvertrag als JSON-Schema, bedingte
+Textbausteine, Abschnitte und Tabellen, deterministische Ausgabe als DOCX, PDF
+und HTML sowie das Befüllen von Word-Vorlagen der Anwendung (Prüfberichte,
+Vermerke, Schreiben). Die Gestaltung ist ein austauschbares Profil; das Paket
+enthält nur die neutrale Gestaltung `neutral-v1` und die neutralen Vorlagen
+`vermerk` und `pruefbericht`.
 
 ## Verträge
 
@@ -25,7 +32,11 @@ oder PDF-Ausgabe.
 | `get_profile_metadata(profile)` | Profilkennung | frische Kopie des Registereintrags (`profile-registry.json`) nach Prüfung von Inhalts- und Implementierungshash | liest Paketdaten |
 | `ReportTable(name, columns, rows, start_row=1, profile="flowlib-legacy-v1", formats={})` | Blattname 1–31 Zeichen, eindeutige Spaltennamen, Zeilen als Folge gleicher Breite oder Mapping mit genau den Spaltenschlüsseln; Werte `str`, `int` (≤ 15 Stellen), `float`, `bool`, `date`, `datetime` ohne Zeitzone, `None` | – | Zeilen werden einmal gelesen |
 | `render_workbook(tables, options=None)` (Extra `excel`) | eine oder mehrere `ReportTable`, `ExcelOptions` mit `WorkbookLimits` | vollständige XLSX-Datei als Bytes | keine Datei-, Netz- oder Anwendungszugriffe |
-| REST `auditcore_reporting.web` (`reporting_ui/1`, Extras `web`/`fastapi`) | JSON-Tabellen, Profilwahl | Katalog, Vorschau, XLSX-Export; Fehler `{"error": {"code", "message"}}` | keine; Vertrag `docs/ui/reporting-rest.md` |
+| REST `auditcore_reporting.web` (`reporting_ui/1`, Extras `web`/`fastapi`) | JSON-Tabellen, Profilwahl; Vorlagenkennung, Daten, Format, Gestaltung | Katalog, Vorschau, XLSX-Export; Vorlagenliste, Datenvertrag, Vorlagenvorschau, Dokument; Fehler `{"error": {"code", "message"}}` | keine; Vertrag `docs/ui/reporting-rest.md` |
+| `templates.define_template(definition, *, docx=None)` | JSON-Definition (`id`, `version` MAJOR.MINOR.PATCH, `title`, `schema`, `conditions`, `text_blocks`, `blocks` oder Word-Datei, `sample`, `status`, `formats`) | unveränderliche `ReportTemplate` mit SHA-256-Fingerabdruck über Definition und Word-Datei | keine; alle Platzhalter, Bedingungen und Schleifen werden gegen das Schema geprüft |
+| `templates.render(template, data, output="docx", design=NEUTRAL_DESIGN, limits=None)` | Daten gemäß Datenvertrag; `docx`, `pdf` (Extra `pdf`) oder `html`; `DesignProfile` | `RenderResult`: Bytes, Medientyp, Vorlagenkennung, -version, -fingerabdruck, Datenhash, Gestaltung, verwendete Textbausteine | keine; deterministisch (feste ZIP-Zeitstempel, reportlab `invariant`) |
+| `templates.TemplateRegistry`, `builtin_registry()` | Vorlagen | Abruf je Kennung und Version, neueste nicht archivierte Version | eine registrierte Version ist unveränderlich |
+| `templates.design_from_dict(data)` / `DesignProfile` | Schriften, Farben (RRGGBB), Ränder, Kopf-/Fußzeilentext | geprüftes Gestaltungsprofil | keine; keine Logos, keine Dateien |
 
 Formatwahl im Profil `flowlib-legacy-v1`: Die erste passende Gruppe gewinnt
 (Groß-/Kleinschreibung egal, Teilwortsuche): Betrag (`betrag`, `summe`,
@@ -71,6 +82,11 @@ einen typischen Wert des deklarierten Spaltentyps.
 | I11 | `flowlib-v2`: Der Werttyp geht dem Spaltennamen vor – Datumswerte erhalten das Datumsformat, Text und Wahrheitswerte kein Zahlenformat, Zahlen nie das Datumsformat. | `test_i11_werttyp_vor_spaltenname` |
 | I12 | `flowlib-v2`: In zusammengesetzten Wörtern entscheidet der Kopf (Wortende); kurze Begriffe wirken nur als ganzes Wort. | `test_i12_kopf_des_kompositums_entscheidet`, `test_i12_kurzwoerter_nur_als_ganzes_wort` |
 | I13 | `flowlib-v2`: Groß-/Kleinschreibung und Umlautschreibweise (ä/ae, ö/oe, ü/ue, ß/ss) ändern die Formatwahl nicht. | `test_i13_schreibweise_ohne_einfluss` |
+| I14 | Vorlagen: gleiche Vorlage, Daten und Gestaltung ergeben bytegleiche DOCX-, HTML- und PDF-Dateien; Datenhash und Fingerabdruck sind stabil. | `test_i14_ausgabe_deterministisch` |
+| I15 | Vorlagen: Datenwerte erscheinen wörtlich (HTML maskiert) und werden nie als Platzhalter, Steuer-Tag oder Markup ausgewertet. | `test_i15_daten_bleiben_text` |
+| I16 | Vorlagen: Daten, die den Datenvertrag verletzen, ergeben `TemplateDataError` mit allen Pfaden und keine Datei; gültige Daten ergeben immer eine Datei. | `test_i16_datenvertrag_vor_ausgabe` |
+| I17 | Vorlagen: Ein Textbaustein erscheint genau dann, wenn seine Bedingung gilt, und wird dann im Ergebnis als verwendet genannt. | `test_i17_textbaustein_genau_bei_bedingung` |
+| I18 | Vorlagen: Jede Änderung der Definition ändert den Fingerabdruck; dieselbe Version mit anderem Inhalt wird nicht registriert. | `test_i18_version_unveraenderlich` |
 
 ## Fehlerfälle
 
@@ -87,10 +103,27 @@ einen typischen Wert des deklarierten Spaltentyps.
   unendlichen Zahlen, Zeitstempeln mit Zeitzone, ungültigen Optionen, ohne
   Tabelle; `TypeError` bei nicht unterstützten Werttypen oder Optionen.
 - NaN wird als leere Zelle geschrieben.
+- Vorlagen: `TemplateError` bei ungültiger Definition (unbekannte Felder oder
+  Schlüsselwörter des Schemas, nicht deklarierte Datenpfade, unbekannte Filter,
+  Operatoren oder Textbausteine, nicht verwendeter Pflichtbaustein, zyklische
+  Bedingungen, ungültige Steuer-Tags, Beispieldaten außerhalb des Vertrags);
+  `TemplateDataError` (mit `issues`) bei Daten außerhalb des Vertrags;
+  `UnsafeDocumentError` bei Word-Dateien mit Makros, ActiveX, OLE-Objekten,
+  `altChunk`, externen Quellen außer Hyperlinks, nachladenden Feldern
+  (`INCLUDETEXT`, `DDE` …), DTDs, unsicheren Eintragsnamen oder ZIP-Bomben;
+  `RenderLimitError` bei Überschreiten von Knoten-, Zeichen- oder
+  Schleifengrenzen; `RenderDependencyError` ohne Extra `pdf` bzw. `docx`.
 
 ## Abgrenzung
 
-- Keine Berichtsvorlagen, keine Textbausteine, keine Diagramme, kein PDF.
+- Keine Diagramme und Bilder in Vorlagen; Logos und Briefköpfe stehen in der
+  Word-Vorlage der Anwendung, nicht im Paket.
+- Keine behördenspezifische Gestaltung: nur das neutrale Profil `neutral-v1`;
+  Hausgestaltungen sind Profile oder Word-Vorlagen der Anwendung.
+- Keine Umwandlung DOCX → PDF (kein LibreOffice); PDF entsteht aus derselben
+  aufgelösten Struktur wie DOCX und HTML, Word-Vorlagen liefern nur DOCX.
+- Keine Ausdruckssprache: Platzhalter sind Datenpfade mit festen Filtern,
+  Bedingungen JSON-Operatoren; kein Jinja, kein `eval`.
 - Kein Lesen vorhandener Arbeitsmappen, keine Formeln, keine Hyperlinks.
 - Keine Umrechnung von Werten (Währung, Zeitzone, Rundung); der Aufrufer
   übergibt fertige Werte und wählt das Profil.

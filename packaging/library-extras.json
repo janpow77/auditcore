@@ -7,7 +7,9 @@
     "defusedxml>=0.7.1; extra == \"excel\"": "python3-defusedxml (>= 0.7.1)",
     "starlette<2,>=0.26.1; extra == \"web\"": "python3-starlette (>= 0.26.1)",
     "fastapi>=0.92; extra == \"fastapi\"": "python3-fastapi (>= 0.92)",
-    "starlette<2,>=0.26.1; extra == \"fastapi\"": "python3-starlette (>= 0.26.1)"
+    "starlette<2,>=0.26.1; extra == \"fastapi\"": "python3-starlette (>= 0.26.1)",
+    "defusedxml>=0.7.1; extra == \"docx\"": "python3-defusedxml (>= 0.7.1)",
+    "reportlab<6,>=3.6.12; extra == \"pdf\"": "python3-reportlab (>= 3.6.12)"
   },
   "auditcore_dataprotection": {
     "openpyxl<4,>=3.0.9; extra == \"excel\"": "python3-openpyxl (>= 3.0.9)",
