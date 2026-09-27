@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Befund B1 behoben: `normalise_for_match` und `normalise_semantic` nehmen
+  `numbering="all"` (alle führenden Nummerierungen bis zum Fixpunkt,
+  idempotent). Standard bleibt `numbering="once"` (Original, Legacy-Variante),
+  die Vergleichsprofile und ihre Ergebnisse sind unverändert. Der frühere
+  `xfail`-Test ist ein echter Eigenschaftstest.
+
 Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
 (Zweck, Verträge, zehn Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom
 Altverhalten) mit Hypothesis-Eigenschaftstests `tests/test_spezifikation.py`;

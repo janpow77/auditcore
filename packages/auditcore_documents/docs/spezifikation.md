@@ -25,7 +25,7 @@ Prüfer: Er stellt Unterschiede fest, trifft aber keine Prüfungsentscheidung.
 | `compare_items(old, new, *, mode, profile, threshold=85, include_answers=True, include_notes=True, include_editorial=False)` | Vergleichseinheiten zweier Fassungen, Profil | (`CompareRow`s, Zählwerte `old_count`, `new_count`, `matched_count`, `changed_count`, `removed_count`, `added_count`, `moved_count`) | keine (reiner Kern) |
 | `compare_files(old, new, *, profile, options=None, context=None)` | zwei Dateien, Profil, `CompareOptions`, `ReadContext` (Uhr, Seitenquelle, OCR-Rückruf, Grenzen) | `ComparisonResult` (JSON-fähig, `to_dict`/`from_dict`) | liest beide Dateien |
 | `compare_article_law_files` / `base_paragraphs` / `apply_commands(paragraphs, commands, *, renumber_after_insert=False)` | Stammgesetz, Änderungsbefehle | Synopse; Absätze mit neuer Fassung, Aufhebung, Einfügung; offene Befehle; Zahl erkannter Befehle | `apply_commands` verändert die übergebenen Absätze |
-| `normalise_for_match`, `normalise_semantic`, `normalise_verbatim`, `word_diff` | Text | normalisierter Text bzw. Wortdifferenz (`difflib.ndiff`) | – |
+| `normalise_for_match`, `normalise_semantic`, `normalise_verbatim`, `word_diff` | Text; `normalise_for_match`/`normalise_semantic` zusätzlich `numbering="once"` (Standard, Original) oder `"all"` (idempotent) | normalisierter Text bzw. Wortdifferenz (`difflib.ndiff`) | – |
 | `difflib_ratio`, `rapidfuzz_token_set`, `get_scorer` | zwei Texte | ganzzahlige Ähnlichkeit 0…100 | `rapidfuzz` nur im Extra `fuzzy` |
 | `synopsis_records`, `render_docx` (Extra `docx-render`), `render_pdf` (Extra `pdf-render`) | Ergebnis | Tabellenzeilen bzw. Dokumentbytes | schreibt nur ausdrücklich benannte Ausgaben |
 | `generate_reason`, `verify_legal_references`, `apply_reasons_*` | Zeilen, Port `ReasonProvider` | Begründungsvorschläge mit geprüften Fundstellen | ohne Port kein Netz (`CompareError`) |
@@ -42,7 +42,7 @@ Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare
 
 | Nr. | Invariante | Test |
 |---|---|---|
-| I1 | `normalise_verbatim` ist idempotent; `normalise_for_match` und `normalise_semantic` sind es für Texte, die mit einem Wort beginnen (Ausnahme: Befund B1). | `test_i1_normalisation_is_idempotent`, `test_i1_befund_b1_leading_numbering_is_removed_once` (xfail) |
+| I1 | `normalise_verbatim` ist idempotent; `normalise_for_match` und `normalise_semantic` sind es mit `numbering="all"` für beliebige Texte, im Standard `numbering="once"` (Original) für Texte, die mit einem Wort beginnen (Befund B1, behoben durch die Variante `"all"`). | `test_i1_normalisation_is_idempotent`, `test_i1_numbering_all_is_idempotent`, `test_i1_numbering_once_keeps_original_behaviour` |
 | I2 | `normalise_verbatim` hängt nicht von Art und Menge des Leerraums zwischen den Wörtern ab. | `test_i2_verbatim_ignores_whitespace_layout` |
 | I3 | `word_diff(a, a)` ist leer; sonst ergeben die Zeilen mit „- “/„  “ die alte und die mit „+ “/„  “ die neue Wortfolge. | `test_i3_word_diff_reconstructs_both_versions` |
 | I4 | Vergleich einer Fassung mit sich selbst (beide Modi, Profile `RECOMMENDED` und `LEGACY_DIFFLIB`): alle Einheiten zugeordnet, keine geänderte, entfallene, hinzugefügte oder umgestellte Zeile, keine Zeile vorausgewählt. | `test_i4_comparison_with_itself_finds_no_change` |
@@ -55,14 +55,16 @@ Profile des Vergleichs: `CORRECTED` = `RECOMMENDED` (`auditcore.document_compare
 
 ### Befunde aus den Eigenschaftstests
 
-- **B1** – `normalise_for_match` entfernt je Durchgang nur **eine** führende
-  Nummerierung; `normalise_semantic` legt durch das Entfernen von
-  Satzzeichen weitere führende Ziffern frei. Beispiele: „1. 2. Text“ →
-  „2. text“ → „text“; „:0“ → „0“ → „“. Für den Vergleich wird jede
-  Normalisierung genau einmal angewandt, das Ergebnis ist also
-  deterministisch; die Funktionen sind aber nicht idempotent. Unverändert aus
-  dem Original (charakterisiert), nicht korrigiert; als erwarteter
-  Fehlschlag festgehalten (`xfail(strict=True)`).
+- **B1 (behoben)** – `normalise_for_match` entfernt im Original je Durchgang
+  nur **eine** führende Nummerierung; `normalise_semantic` legt durch das
+  Entfernen von Satzzeichen weitere führende Ziffern frei. Beispiele:
+  „1. 2. Text“ → „2. text“ → „text“; „:0“ → „0“ → „“. Neu:
+  `numbering="all"` wendet den Schritt bis zum Fixpunkt an und ist für
+  beliebige Texte idempotent (`test_i1_numbering_all_is_idempotent`). Der
+  Standard bleibt `numbering="once"` (Legacy-Variante), weil alle
+  Vergleichsprofile – auch `RECOMMENDED` – die Zuordnungsschlüssel damit
+  bilden und die Vergleichsergebnisse charakterisiert sind; ein Wechsel der
+  Zuordnung auf `"all"` gehört in eine neue Profilversion.
 
 ## Fehlerfälle
 
@@ -114,6 +116,7 @@ Fingerabdrücken; für neue Aufrufer gelten `RECOMMENDED` bzw.
 | `LEGACY` | Original mit rapidfuzz: „§“-Absätze nie Befehle, keine Umnummerierung, Ersetzungen treffen alle Vorkommen im Absatz (DC-L02, auch in `CORRECTED`) |
 | `LEGACY_DIFFLIB` | Original ohne rapidfuzz (difflib-Rückfall, andere Zuordnung) |
 | `LEGACY_PIPELINE` | flowinvoice-Pipeline mit PL-L01…PL-L10 (u. a. englische Zahlenformate deutsch gelesen, Gateway-Ausfall → REJECTED, nur eine Aufbewahrungsfrist wirksam) |
+| `numbering="once"` | Standard von `normalise_for_match`/`normalise_semantic`: genau eine führende Nummerierung je Aufruf, nicht idempotent (B1); Grundlage der Zuordnung in allen Vergleichsprofilen |
 | `legacy_pdf_pages` | Originalreihenfolge der PDF-Textquelle: erst `pdftotext`, bei Fehlen/Fehler `pypdf` |
 | `legacy.audit_designer_config_path` | Standardpfad der Einstellungsdatei des Originals (die Bibliothek liest selbst keine Umgebung) |
 
