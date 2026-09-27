@@ -48,7 +48,7 @@ def test_session_messages_and_deletion() -> None:
     api.delete_message(session, received.message_id)
     assert fake.deleted_messages == [3]
     assert api.get_message(session, 3, 5) is None
-    assert "lastMessageId=3" in fake.calls[-1][1] and fake.calls[-1][2]["X-ScaleSetMaxCapacity"] == "5"
+    assert fake.calls[-1][1] == QUEUE + "&lastMessageId=3" and fake.calls[-1][2]["X-ScaleSetMaxCapacity"] == "5"
 
 
 def test_expired_queue_token_and_refresh() -> None:

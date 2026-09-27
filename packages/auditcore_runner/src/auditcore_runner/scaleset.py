@@ -284,7 +284,8 @@ class ScaleSetClient:
 
     def get_message(self, session: Session, last_message_id: int, max_capacity: int) -> Message | None:
         """Long-poll; ``None`` when the server timed out without a message (HTTP 202)."""
-        query = f"?{urlencode({'lastMessageId': last_message_id})}" if last_message_id > 0 else ""
+        separator = "&" if "?" in session.queue_url else "?"
+        query = f"{separator}{urlencode({'lastMessageId': last_message_id})}" if last_message_id > 0 else ""
         headers = {
             "Accept": f"application/json; api-version={API_VERSION}",
             "Authorization": f"Bearer {session.queue_token}",
