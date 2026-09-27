@@ -234,5 +234,30 @@
       "deviations": "docs/behavior-changes.md"
     }
   },
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "validate_bpmn_bva",
+      "BpmnAnalyzer",
+      "analyze_bpmn",
+      "export_bpmn_to_excel",
+      "export_bpmn_to_pdf"
+    ]
+  }
 }

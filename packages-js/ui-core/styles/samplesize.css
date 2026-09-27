@@ -1,0 +1,27 @@
+/* SampleSizePlanner (Vue) und FlowauditSampleSizePlanner (React). Farben nur aus --fa-*-Variablen. */
+.fa-samplesize { display: flex; flex-direction: column; gap: var(--fa-space-3); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-samplesize__form, .fa-samplesize__result { display: flex; flex-direction: column; gap: var(--fa-space-3); }
+.fa-samplesize__fields { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: var(--fa-space-3); }
+.fa-samplesize__field { display: flex; flex-direction: column; gap: var(--fa-space-1); }
+.fa-samplesize__label { font-weight: 600; }
+.fa-samplesize__input, .fa-samplesize__select { padding: var(--fa-space-1) var(--fa-space-2); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: inherit; font: inherit; }
+.fa-samplesize__input:focus-visible, .fa-samplesize__select:focus-visible, .fa-samplesize__submit:focus-visible, .fa-samplesize__add:focus-visible, .fa-samplesize__remove:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-samplesize__input[aria-invalid='true'], .fa-samplesize__select[aria-invalid='true'] { border-color: var(--fa-color-danger); }
+.fa-samplesize__error { color: var(--fa-color-danger); }
+.fa-samplesize__check { display: flex; gap: var(--fa-space-2); align-items: center; }
+.fa-samplesize__strata { margin: 0; padding: var(--fa-space-2); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); }
+.fa-samplesize__table { width: 100%; border-collapse: collapse; }
+.fa-samplesize__table caption { text-align: start; font-weight: 600; padding-block: var(--fa-space-1); }
+.fa-samplesize__table th, .fa-samplesize__table td { padding: var(--fa-space-1) var(--fa-space-2); border-bottom: 1px solid var(--fa-color-border); text-align: start; vertical-align: top; }
+.fa-samplesize__submit, .fa-samplesize__add, .fa-samplesize__remove { align-self: flex-start; padding: var(--fa-space-2) var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: inherit; font: inherit; cursor: pointer; }
+.fa-samplesize__submit { border-color: var(--fa-color-accent); }
+.fa-samplesize__submit:disabled { cursor: not-allowed; opacity: 0.6; }
+.fa-samplesize__source code { font-family: var(--fa-font-mono, monospace); }
+.fa-samplesize__heading { margin: 0; font-size: var(--fa-font-size-md, 1rem); }
+.fa-samplesize__badge { margin-inline-start: var(--fa-space-2); padding: 0 var(--fa-space-2); border: 1px solid var(--fa-color-accent); border-radius: var(--fa-radius); font-size: var(--fa-font-size-sm); font-weight: 400; }
+.fa-samplesize__summary { display: flex; flex-wrap: wrap; gap: var(--fa-space-4); margin: 0; }
+.fa-samplesize__summary dt { color: var(--fa-color-text-muted); }
+.fa-samplesize__summary dd { margin: 0; font-size: var(--fa-font-size-lg, 1.25rem); font-weight: 600; }
+.fa-samplesize__warnings { margin: 0; padding-inline-start: var(--fa-space-4); color: var(--fa-color-text-muted); }
+.fa-samplesize__muted { margin: 0; color: var(--fa-color-text-muted); }
+.fa-samplesize__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }

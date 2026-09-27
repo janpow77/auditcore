@@ -170,5 +170,33 @@
     "regulierung.dsgvo 2026.09.1",
     "regulierung.hdsig_ji 2026.09.1"
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "legacy.legacy_threshold",
+      "legacy.legacy_proposal",
+      "legacy.legacy_risk",
+      "legacy.legacy_prefill",
+      "legacy.legacy_regime_suggestion",
+      "legacy.legacy_report_html",
+      "regulierung.dsgvo",
+      "regulierung.hdsig_ji"
+    ]
+  }
 }

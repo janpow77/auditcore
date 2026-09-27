@@ -16,6 +16,8 @@ dependencies = ["auditcore_common==0.2.0"]
 web = ["starlette>=0.26"]
 dev = [
     "pytest>=8",
+    "hypothesis>=6.100",
+    "numpy>=1.26",
     "ruff>=0.11",
     "mypy>=1.15",
     "build>=1.2",

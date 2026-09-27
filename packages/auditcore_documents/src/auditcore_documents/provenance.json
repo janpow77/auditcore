@@ -490,5 +490,31 @@
       "fastapi": "fastapi, starlette, python-multipart"
     },
     "existing_modules": "unverändert; der Dienst nutzt compare_files, ComparisonResult, render_docx_bytes und render_synopsis_pdf"
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "LEGACY",
+      "LEGACY_DIFFLIB",
+      "LEGACY_PIPELINE",
+      "legacy_pdf_pages",
+      "legacy.audit_designer_config_path",
+      "numbering=\"once\""
+    ]
   }
 }

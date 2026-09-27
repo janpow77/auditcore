@@ -1,0 +1,236 @@
+{
+ "guidance.mus_conservative": {
+  "request": {
+   "method": "guidance.mus_conservative",
+   "factor_profile": "kom_2017_tables",
+   "confidence_level": 0.9,
+   "book_value": 4199882024,
+   "anticipated_error_rate": 0.002,
+   "materiality_rate": 0.02
+  },
+  "response": {
+   "contract": "auditcore_sampling.guidance/1",
+   "library": "auditcore_sampling 0.2.3",
+   "status_label": "nach Leitfaden",
+   "method": "guidance.mus_conservative",
+   "status": "GUIDANCE_EGESIF_16_0014_01",
+   "sample_size": 136,
+   "raw_size": 135.88235294117646,
+   "interval": 30881485.470588237,
+   "inputs": {
+    "book_value": 4199882024.0,
+    "materiality_rate": 0.02,
+    "anticipated_error_rate": 0.002,
+    "tolerable_error": 83997640.48,
+    "anticipated_error": 8399764.048,
+    "confidence_level": 0.9,
+    "factor_profile": "kom_2017_tables",
+    "reliability_factor": 2.31,
+    "expansion_factor": 1.5
+   },
+   "strata": [],
+   "derivation": [
+    {
+     "label": "Zuverlässigkeitsfaktor",
+     "formula": "RF",
+     "value": 2.31,
+     "source": "EGESIF_16-0014-01, Tabelle 4"
+    },
+    {
+     "label": "Expansionsfaktor",
+     "formula": "EF (nur bei AE > 0)",
+     "value": 1.5,
+     "source": "EGESIF_16-0014-01, Tabelle 5"
+    },
+    {
+     "label": "Tolerierbarer Fehler",
+     "formula": "TE = Wesentlichkeit × BV",
+     "value": 83997640.48,
+     "source": "EGESIF_16-0014-01, Abschn. 5.3"
+    },
+    {
+     "label": "Erwarteter Fehler",
+     "formula": "AE = erwartete Fehlerquote × BV",
+     "value": 8399764.048,
+     "source": "EGESIF_16-0014-01, Abschn. 5.3"
+    },
+    {
+     "label": "Stichprobenumfang",
+     "formula": "n = BV × RF / (TE − AE × EF)",
+     "value": 135.88235294117646,
+     "source": "EGESIF_16-0014-01, Abschn. 6.3.5.2"
+    },
+    {
+     "label": "Stichprobenintervall",
+     "formula": "SI = BV / n",
+     "value": 30881485.470588237,
+     "source": "EGESIF_16-0014-01, Abschn. 6.3.5.3"
+    }
+   ],
+   "warnings": [
+    "Einheiten mit Buchwert über dem Intervall bilden eine Hochwertschicht (Leitfaden, Abschn. 6.3.5.3)."
+   ]
+  }
+ },
+ "guidance.srs_stratified": {
+  "request": {
+   "method": "guidance.srs_stratified",
+   "factor_profile": "kom_2017_tables",
+   "confidence_level": 0.8,
+   "book_value": 1396535319,
+   "anticipated_error_rate": 0.018,
+   "materiality_rate": 0.02,
+   "finite_population_correction": false,
+   "strata": [
+    {
+     "name": "Programm 1",
+     "population_size": 3582,
+     "sd": 444,
+     "exhaustive": false
+    },
+    {
+     "name": "Programm 2",
+     "population_size": 1225,
+     "sd": 9818,
+     "exhaustive": false
+    },
+    {
+     "name": "Hochwert",
+     "population_size": 5,
+     "exhaustive": true
+    }
+   ]
+  },
+  "response": {
+   "contract": "auditcore_sampling.guidance/1",
+   "library": "auditcore_sampling 0.2.3",
+   "status_label": "nach Leitfaden",
+   "method": "guidance.srs_stratified",
+   "status": "GUIDANCE_EGESIF_16_0014_01",
+   "sample_size": 126,
+   "raw_size": 120.29785214152197,
+   "interval": null,
+   "inputs": {
+    "book_value": 1396535319.0,
+    "materiality_rate": 0.02,
+    "anticipated_error_rate": 0.018,
+    "tolerable_error": 27930706.38,
+    "anticipated_error": 25137635.742,
+    "population_size": 4807,
+    "confidence_level": 0.8,
+    "factor_profile": "kom_2017_tables",
+    "z": 1.282,
+    "weighted_variance": 24711403.796962764,
+    "finite_population_correction": false
+   },
+   "strata": [
+    {
+     "name": "Programm 1",
+     "sample_size": 90,
+     "exhaustive": false,
+     "population_size": 3582,
+     "book_value": null,
+     "share": 0.7451633035157063,
+     "cut_off": null
+    },
+    {
+     "name": "Programm 2",
+     "sample_size": 31,
+     "exhaustive": false,
+     "population_size": 1225,
+     "book_value": null,
+     "share": 0.25483669648429375,
+     "cut_off": null
+    },
+    {
+     "name": "Hochwert",
+     "sample_size": 5,
+     "exhaustive": true,
+     "population_size": 5,
+     "book_value": null,
+     "share": null,
+     "cut_off": null
+    }
+   ],
+   "derivation": [
+    {
+     "label": "z-Wert",
+     "formula": "z",
+     "value": 1.282,
+     "source": "EGESIF_16-0014-01, Abschn. 5.3"
+    },
+    {
+     "label": "Tolerierbarer Fehler",
+     "formula": "TE = Wesentlichkeit × BV",
+     "value": 27930706.38,
+     "source": "EGESIF_16-0014-01, Abschn. 5.3"
+    },
+    {
+     "label": "Erwarteter Fehler",
+     "formula": "AE = erwartete Fehlerquote × BV",
+     "value": 25137635.742,
+     "source": "EGESIF_16-0014-01, Abschn. 5.3"
+    },
+    {
+     "label": "Gewichtete Varianz",
+     "formula": "σ_w² = Σ N_h / N × σ_h²",
+     "value": 24711403.796962764,
+     "source": "EGESIF_16-0014-01, Abschn. 6.1.2.2"
+    },
+    {
+     "label": "Stichprobenumfang",
+     "formula": "n = (N × z × σ / (TE − AE))²",
+     "value": 120.29785214152197,
+     "source": "EGESIF_16-0014-01, Abschn. 6.1.2.2"
+    },
+    {
+     "label": "Aufteilung",
+     "formula": "n_h = N_h / N × n (größter Rest)",
+     "value": 121.0,
+     "source": "EGESIF_16-0014-01, Abschn. 6.1.2.2"
+    },
+    {
+     "label": "Gesamtumfang",
+     "formula": "Σ n_h + Einheiten der Vollerhebung",
+     "value": 126.0,
+     "source": "EGESIF_16-0014-01, Abschn. 6.1.2.2"
+    }
+   ],
+   "warnings": []
+  }
+ },
+ "guidance.nonstatistical": {
+  "request": {
+   "method": "guidance.nonstatistical",
+   "rule": "cpr_2021_art79_2",
+   "population_size": 187
+  },
+  "response": {
+   "contract": "auditcore_sampling.guidance/1",
+   "library": "auditcore_sampling 0.2.3",
+   "status_label": "nach Leitfaden",
+   "method": "guidance.nonstatistical",
+   "status": "GUIDANCE_EGESIF_16_0014_01",
+   "sample_size": 19,
+   "raw_size": 18.7,
+   "interval": null,
+   "inputs": {
+    "rule": "cpr_2021_art79_2",
+    "population_size": 187
+   },
+   "strata": [],
+   "derivation": [
+    {
+     "label": "Mindestumfang (Einheiten)",
+     "formula": "⌈10% × N⌉",
+     "value": 18.7,
+     "source": "Art. 79 Abs. 2 Verordnung (EU) 2021/1060"
+    }
+   ],
+   "warnings": [
+    "Mindestwert: Die Prüfbehörde legt den Umfang nach pflichtgemäßem Ermessen fest und zieht zufällig (Leitfaden, Abschn. 6.4.3 und 6.4.4).",
+    "Über 150 Einheiten empfiehlt der Leitfaden, vorab den Rat der Kommission einzuholen (Abschn. 6.4.1)."
+   ]
+  }
+ }
+}

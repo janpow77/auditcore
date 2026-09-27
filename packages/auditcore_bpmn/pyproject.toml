@@ -30,6 +30,7 @@ dev = [
     "lxml>=6.1.0,<7",
     "jsonschema>=4.10",
     "auditcore_legal_sources==0.1.5",
+    "hypothesis>=6.100",
 ]
 
 [tool.setuptools.packages.find]

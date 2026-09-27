@@ -293,5 +293,35 @@
       "status": "LEGACY_CHARACTERIZED"
     }
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11"
+    ],
+    "legacy_variants": [
+      "riskanalysis.legacy",
+      "audit_designer.flowstat_belegliste",
+      "flowinvoice.risk_checker",
+      "flowinvoice.rbvk_wibank",
+      "flowinvoice.exante_basis",
+      "flowinvoice.exante_heuristik",
+      "flowinvoice.fraud_signals",
+      "flowinvoice.ted_contractor",
+      "flowinvoice.duplicates"
+    ]
+  }
 }

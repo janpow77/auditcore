@@ -4,12 +4,13 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 
+from auditcore_common.rest import Reply
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette.routing import Route
 
-from ._http import Reply, get_profile, get_sources, handle, handle_gpkg, handle_source
+from ._http import get_profile, get_sources, handle, handle_gpkg, handle_source
 from .settings import Settings
 
 ENDPOINTS = (
@@ -24,7 +25,7 @@ ENDPOINTS = (
 
 def response(reply: Reply) -> Response:
     """Starlette response of a framework-neutral reply."""
-    return Response(reply.body, reply.status, media_type="application/json")
+    return Response(reply.body, reply.status, media_type=reply.media_type)
 
 
 async def read_limited(request: Request, limit: int) -> bytes:
