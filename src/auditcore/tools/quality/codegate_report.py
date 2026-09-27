@@ -10,8 +10,8 @@ from __future__ import annotations
 import ast
 import json
 import re
-import subprocess
-import xml.etree.ElementTree as ElementTree
+import subprocess  # nosec B404
+import xml.etree.ElementTree as ElementTree  # nosec B405
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -129,7 +129,11 @@ def _trace(text: str) -> tuple[str, list[str]]:
 
 def read_junit(path: Path) -> tuple[int, list[FailedTest]]:
     """Count test cases and collect failures and errors of one JUnit XML file."""
-    root = ElementTree.parse(path).getroot()
+    text = path.read_text(encoding="utf-8")
+    if "<!DOCTYPE" in text or "<!ENTITY" in text:
+        raise ValueError(f"{path}: JUnit-XML mit DOCTYPE/ENTITY wird nicht gelesen")
+    # Without DTD and entities, stdlib parsing has no XXE or entity-expansion surface.
+    root = ElementTree.fromstring(text)  # nosec B314
     total, failures = 0, []
     for case in root.iter("testcase"):
         total += 1
@@ -186,7 +190,7 @@ def read_coverage(path: Path, limit: int = 10) -> tuple[float, list[tuple[str, f
 
 
 def _git(root: Path, *arguments: str) -> str:
-    result = subprocess.run(
+    result = subprocess.run(  # nosec B603 B607
         ["git", *arguments], cwd=root, capture_output=True, text=True, check=True
     )
     return result.stdout

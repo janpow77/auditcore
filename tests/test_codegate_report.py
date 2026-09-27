@@ -4,6 +4,8 @@ import json
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from auditcore.tools.quality.codegate_cli import main
 from auditcore.tools.quality.codegate_report import (
     ApiChange,
@@ -202,3 +204,9 @@ def test_gate_hits_are_line_precise_with_fix(tmp_path):
         "- `src/a.py:7` [any_usages] typing.Any → konkreten Typ, TypedDict oder Protocol statt Any"
     )
     assert line in render_markdown(findings)
+
+
+def test_junit_with_entities_is_refused(tmp_path):
+    evil = '<?xml version="1.0"?><!DOCTYPE x [<!ENTITY a "b">]><testsuites/>'
+    with pytest.raises(ValueError, match="DOCTYPE"):
+        read_junit(write(tmp_path / "e.xml", evil))
