@@ -3,6 +3,7 @@
 ## Unreleased
 
 - `FlowauditExtrapolation`: dieselben Ergänzungen wie `ExtrapolationPanel` (Zeiträume, Gruppen, Teilstichproben, Systembewertung, Neuberechnung des Konfidenzniveaus), Parität per Fälle und Interaktionsfolge.
+- Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
 
 ## 1.1.0 – 2026-09-26 – Release v0.4.2
 

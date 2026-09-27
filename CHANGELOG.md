@@ -9,7 +9,15 @@
   erweitert, `POST /attributes`; UI `ExtrapolationPanel`/`FlowauditExtrapolation`
   mit Zeiträumen, Gruppen, Teilstichproben und Neuberechnung. Fehlerbehebung:
   konservativer MUS-Ansatz mit allen Niveaus aus Tabelle 4.
-
+- `auditcore_sampling`: Stichprobenumfang nach dem KOM-Leitfaden
+  EGESIF_16-0014-01 als neues Modul `guidance` mit Status „nach Leitfaden“
+  (SRS, Differenzenschätzung, MUS Standard/geschichtet/konservativ,
+  nicht-statistische Mindestumfänge nach Art. 79 Abs. 2 VO (EU) 2021/1060),
+  Belegziehung einer Zwischengeschalteten Stelle (`intermediate_body`,
+  Paritätstest gegen flowinvoice), REST-Vertrag `auditcore_sampling.guidance/1`;
+  Oberfläche `SampleSizePlanner` / `FlowauditSampleSizePlanner`
+  (`<flowaudit-sample-size-planner>`). Konsistenztest Planung → Hochrechnung
+  in `auditcore_extrapolation`.
 - Preview v0.4.2 veröffentlicht (Prerelease, 185 Assets, main `f2220bf5`) und
   anonym installiert: pip 27/27 (hashgebunden) und 27/27 (Paketindex), APT
   (debian:bookworm) 27/27, npm 9/9 aus den Tarball-URLs sowie die Beispiele
