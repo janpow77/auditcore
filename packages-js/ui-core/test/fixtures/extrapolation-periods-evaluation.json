@@ -1,0 +1,261 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "fingerprint": "5a3a466c11a30e2f419e50b76a6c6da84e9f2095f61c024b2796118474c73c03",
+ "method": {
+  "id": "mus.standard",
+  "label": "MUS – Standardansatz",
+  "statistical": true,
+  "selection": "pps",
+  "stratification": true,
+  "source": "EGESIF_16-0014-01, Abschn. 6.3.1, 6.3.2; Anhang 1, 4.1",
+  "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
+  "needs_population_size": false,
+  "needs_sample_size": false,
+  "periods": true
+ },
+ "design": "periods",
+ "projection": {
+  "method": "mus.standard",
+  "projected_random_error": 29500.0,
+  "precision": 41785.91426844698,
+  "confidence_level": 0.9,
+  "factor_profile": "kom_2017_tables",
+  "coefficient": 1.645,
+  "strata": [
+   {
+    "name": "Programm",
+    "projected_error": 4500.0,
+    "exhaustive_error": 0.0,
+    "sample_size": 3,
+    "sampling_book_value": 1000000.0,
+    "figures": {
+     "interval": 333333.3333333333,
+     "tainting_sum": 0.0135,
+     "sd_rates": 0.007794228634059948
+    },
+    "period": "1. Halbjahr"
+   },
+   {
+    "name": "Programm",
+    "projected_error": 25000.0,
+    "exhaustive_error": 0.0,
+    "sample_size": 3,
+    "sampling_book_value": 1500000.0,
+    "figures": {
+     "interval": 500000.0,
+     "tainting_sum": 0.05,
+     "sd_rates": 0.02886751345948129
+    },
+    "period": "2. Halbjahr"
+   }
+  ],
+  "sample_errors": {
+   "random": 3040.0,
+   "systemic": 0.0,
+   "anomalous_uncorrected": 0.0,
+   "anomalous_corrected": 0.0
+  },
+  "systemic_population": 0.0,
+  "steps": [
+   {
+    "label": "1. Halbjahr: Hochgerechneter Fehler Schicht Programm",
+    "formula": "EE_e + BV_s / n_s × Σ E_i / BV_i",
+    "value": 4500.0,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.1.4"
+   },
+   {
+    "label": "1. Halbjahr: z-Wert",
+    "formula": "z",
+    "value": 1.645,
+    "source": "EGESIF_16-0014-01, Abschn. 5.3"
+   },
+   {
+    "label": "1. Halbjahr: Präzision",
+    "formula": "SE = z × √(Σ BV_hs² / n_hs × s_rh²)",
+    "value": 7402.5,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.1.5"
+   },
+   {
+    "label": "2. Halbjahr: Hochgerechneter Fehler Schicht Programm",
+    "formula": "EE_e + BV_s / n_s × Σ E_i / BV_i",
+    "value": 25000.0,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.1.4"
+   },
+   {
+    "label": "2. Halbjahr: z-Wert",
+    "formula": "z",
+    "value": 1.645,
+    "source": "EGESIF_16-0014-01, Abschn. 5.3"
+   },
+   {
+    "label": "2. Halbjahr: Präzision",
+    "formula": "SE = z × √(Σ BV_hs² / n_hs × s_rh²)",
+    "value": 41125.00000000001,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.1.5"
+   },
+   {
+    "label": "Hochgerechneter Fehler aller Zeiträume",
+    "formula": "EE = Σ_t EE_t",
+    "value": 29500.0,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.3.4, 6.3.4.4"
+   },
+   {
+    "label": "Präzision aller Zeiträume",
+    "formula": "SE = √(Σ_t SE_t²)",
+    "value": 41785.91426844698,
+    "source": "EGESIF_16-0014-01, Abschn. 6.3.3.5, 6.3.4.5; Anhang 2"
+   }
+  ],
+  "warnings": [],
+  "extra": {
+   "periods": [
+    {
+     "name": "1. Halbjahr",
+     "book_value": 1000000.0,
+     "projected_random_error": 4500.0,
+     "precision": 7402.5,
+     "sample_size": 3,
+     "extra": {}
+    },
+    {
+     "name": "2. Halbjahr",
+     "book_value": 1500000.0,
+     "projected_random_error": 25000.0,
+     "precision": 41125.00000000001,
+     "sample_size": 3,
+     "extra": {}
+    }
+   ]
+  }
+ },
+ "total_error_rate": {
+  "book_value": 2500000.0,
+  "materiality_rate": 0.02,
+  "tolerable_error": 50000.0,
+  "projected_random_error": 29500.0,
+  "systemic_errors": 0.0,
+  "anomalous_uncorrected": 0.0,
+  "anomalous_corrected_excluded": 0.0,
+  "total_error": 29500.0,
+  "rate": 0.0118,
+  "precision": 41785.91426844698,
+  "upper_limit": 71285.91426844697,
+  "upper_limit_rate": 0.028514365707378787,
+  "conclusion": "inconclusive",
+  "explanation": [
+   "Nicht schlüssig: Die Gesamtfehlerquote liegt unter, die Fehlerobergrenze über der Wesentlichkeitsschwelle. Weitere Prüfungshandlungen nach Abschn. 4.12 des Leitfadens (Klärung durch die geprüfte Stelle, Stichprobe erweitern, alternative Prüfungshandlungen).",
+   "Konfidenzniveau 90%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+  ],
+  "steps": [
+   {
+    "label": "Tolerierbarer Fehler",
+    "formula": "TE = Wesentlichkeit × BV",
+    "value": 50000.0,
+    "source": "EGESIF_16-0014-01, Abschn. 4.10"
+   },
+   {
+    "label": "Gesamtfehler",
+    "formula": "EE + systemische + nicht korrigierte anomale Fehler",
+    "value": 29500.0,
+    "source": "EGESIF_16-0014-01, Anhang 1"
+   },
+   {
+    "label": "Gesamtfehlerquote (TER)",
+    "formula": "TER / BV",
+    "value": 0.0118,
+    "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
+   },
+   {
+    "label": "Fehlerobergrenze",
+    "formula": "ULE = TER + SE",
+    "value": 71285.91426844697,
+    "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
+   }
+  ],
+  "difference": null
+ },
+ "confidence_recalculation": {
+  "applicable": true,
+  "reason": null,
+  "coefficient": 1.645,
+  "recalculated_coefficient": 0.80703032565843,
+  "confidence_level": 0.5803509882630111,
+  "required_level": 0.8,
+  "supports_not_material": false,
+  "steps": [
+   {
+    "label": "Neuer z-Wert",
+    "formula": "z* = z × (TE − Gesamtfehler) / SE",
+    "value": 0.80703032565843,
+    "source": "EGESIF_16-0014-01, Abschn. 7.7"
+   },
+   {
+    "label": "Neu berechnetes Konfidenzniveau",
+    "formula": "1 − 2 × (1 − Φ(z*))",
+    "value": 0.5803509882630111,
+    "source": "EGESIF_16-0014-01, Abschn. 7.7"
+   }
+  ]
+ },
+ "subsamples": [
+  {
+   "unit_id": "V-01",
+   "estimator": "ratio",
+   "book_value": 40000.0,
+   "projected_error": 540.0,
+   "error_rate": 0.0135,
+   "audited_book_value": 15000.0,
+   "coverage": 0.375,
+   "sampled_items": 2,
+   "exhaustive_items": 1,
+   "strata": [
+    {
+     "name": "Vollerhebung",
+     "projected_error": 300.0,
+     "exhaustive_error": 300.0,
+     "sample_size": 0,
+     "sampling_book_value": 0.0,
+     "figures": {}
+    },
+    {
+     "name": "Stichprobe",
+     "projected_error": 240.0,
+     "exhaustive_error": 0.0,
+     "sample_size": 2,
+     "sampling_book_value": 30000.0,
+     "figures": {
+      "population_size": 0,
+      "error_total": 40.0,
+      "book_value_adjusted": 30000.0,
+      "sample_book_value": 5000.0
+     }
+    }
+   ],
+   "steps": [
+    {
+     "label": "Hochgerechneter Fehler Schicht Vollerhebung",
+     "formula": "BV′_h × ΣE / ΣBV′_i",
+     "value": 300.0,
+     "source": "EGESIF_16-0014-01, Abschn. 6.1.2.3"
+    },
+    {
+     "label": "Hochgerechneter Fehler Schicht Stichprobe",
+     "formula": "BV′_h × ΣE / ΣBV′_i",
+     "value": 240.0,
+     "source": "EGESIF_16-0014-01, Abschn. 6.1.2.3"
+    },
+    {
+     "label": "Fehler der Einheit V-01 aus der Teilstichprobe",
+     "formula": "EE_i = Σ Teilschichten (Hochrechnung + Vollerhebung)",
+     "value": 540.0,
+     "source": "EGESIF_16-0014-01, Abschn. 7.6.3, 6.5.3.3.1"
+    }
+   ],
+   "warnings": [
+    "Einheit 'V-01': Teilstichprobe mit 2 Teileinheiten (Deckung 37.5% des Buchwerts). Der Leitfaden verlangt mindestens 30 Rechnungen oder Zahlungsanträge (Abschn. 6.5.3.1, 7.6.2); bei anderen Teilstichprobeneinheiten in nicht-statistischen Verfahren sollen weniger als 30 mindestens 10 % der Ausgaben der Einheit abdecken (Abschn. 6.4.10)."
+   ]
+  }
+ ],
+ "groups": []
+}

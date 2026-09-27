@@ -114,3 +114,81 @@ Wie `/evaluate` plus `format`. CSV: Semikolon, UTF-8 mit BOM, Dezimalkomma,
 Formelzeichen am Zellanfang mit Apostroph neutralisiert; Kennzahlen, Ergebnis,
 Erläuterung, Hinweise und die Herleitung mit Quelle je Schritt. Dateiname
 `hochrechnung-<methode>-<12 Zeichen Fingerabdruck>.<format>`.
+
+## Erweiterungen nach Leitfaden Kapitel 6 und 7 (abwärtskompatibel)
+
+Alle Felder sind optional; Anfragen ohne sie werden wie bisher ausgewertet. Die
+Antwort enthält zusätzlich immer `design` (`single`, `periods`, `groups`),
+`subsamples` (Liste), `groups` (Liste) und `confidence_recalculation`.
+Der Vertragsname bleibt `auditcore_extrapolation.evaluation/1`; Clients, die
+unbekannte Felder übergehen, müssen nichts ändern.
+
+### Mehrere Zeiträume (Leitfaden 6.1.3, 6.2.3, 6.3.3, 6.3.4, 6.4.9, 7.3)
+
+```json
+{"method": "mus.standard", "confidence_level": 0.6, "factor_profile": "kom_2017_tables",
+ "periods": [{"name": "1. Halbjahr"}, {"name": "2. Halbjahr"}],
+ "strata": [{"name": "Programm", "period": "1. Halbjahr", "book_value": 1827930259},
+            {"name": "Programm", "period": "2. Halbjahr", "book_value": 2961930008}],
+ "units": [{"id": "V-01", "period": "1. Halbjahr", "stratum": "Programm", "book_value": 1200000, "random_error": 900}]}
+```
+
+Jede Schicht und jede Einheit nennt ihren Zeitraum; Schichtnamen gelten je
+Zeitraum, dieselbe Vorhabenkennung darf in mehreren Zeiträumen vorkommen.
+Gerechnet wird je Zeitraum mit der gewählten Methode (auch geschichtet),
+dann EE = Σ EE_t und SE = √Σ SE_t². Nicht zulässig für `mus.conservative` und
+`mus.ratio`. `population_units` (optional) ist die Zahl verschiedener Einheiten
+des Jahres für die Abdeckungsprüfung nicht-statistischer Verfahren (6.4.9).
+Antwort: `projection.extra.periods` (je Zeitraum `name`, `book_value`,
+`projected_random_error`, `precision`, `sample_size`, `extra`) und `period` je
+Schichtergebnis.
+
+### Teilstichprobe einer Einheit (7.6, 6.4.10, 6.5.3)
+
+```json
+{"id": "OP-7", "stratum": "Programm", "book_value": 1425315,
+ "subsample": {"estimator": "ratio",
+   "strata": [{"name": "Lead-Partner", "book_value": 658748}, {"name": "Projektpartner", "book_value": 766567}],
+   "units": [{"id": "LP", "stratum": "Lead-Partner", "book_value": 658748, "random_error": 5274, "exhaustive": true},
+             {"id": "PP-3", "stratum": "Projektpartner", "book_value": 152024, "random_error": 23}]}}
+```
+
+`estimator`: `ratio`, `mean_per_unit` (verlangt `population_size` je
+Teilschicht) oder `pps`. Der zufällige Fehler der Einheit wird hochgerechnet
+(`random_error` darf dann nicht gesetzt sein); `book_value` muss der Summe der
+Teilschichten entsprechen. Teileinheiten tragen nur zufällige Fehler;
+systemische und anomale Fehler stehen bei der Einheit. Eine Teileinheit darf
+selbst eine `subsample` haben (dreistufig), tiefer nicht. Antwort `subsamples`:
+je Einheit `projected_error`, `error_rate`, `coverage`, `sampled_items`,
+Herleitung und Hinweise (unter 30 Teileinheiten).
+
+### Gruppen von Programmen (7.8)
+
+`group` an jeder Schicht (alle oder keine; nicht mit Zeiträumen kombinierbar).
+Die Hauptauswertung gilt der ganzen Gruppe; `groups` enthält je Programm
+`name`, `observations`, `warnings`, `projection` und `total_error_rate`.
+
+### Neuberechnung des Konfidenzniveaus (7.7)
+
+`system_assessment` (Kategorie 1–4 nach Tabelle 1 in 3.2.1: 60/70/80/90 %)
+oder `required_confidence_level` (Anteil). `confidence_recalculation`:
+`applicable`, `reason`, `coefficient` (z), `recalculated_coefficient` (z*),
+`confidence_level`, `required_level`, `supports_not_material`, `steps`.
+Anwendbar nur bei nicht schlüssigem Ergebnis statistischer Verfahren außer
+dem konservativen MUS-Ansatz.
+
+### `POST /attributes` (7.9)
+
+```json
+{"deviations": 3, "sample_size": 150, "confidence_level": 0.95,
+ "factor_profile": "kom_2017_tables", "tolerable_rate": 0.05}
+```
+
+Antwort `attributes`: `rate` (EDR), `precision` (z × √(p(1 − p)/n)),
+`upper_limit` (ULD), `conclusion` (`supported` / `not_supported`), `steps`.
+
+### Katalog
+
+`/profiles` enthält zusätzlich `designs`, `subsample_estimators`,
+`system_assessment` (Kategorie, Bezeichnung, Konfidenzniveau),
+`limits.max_periods` und je Methode `periods` (Mehrperiodenform vorhanden).

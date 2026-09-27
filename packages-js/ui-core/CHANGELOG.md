@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Hochrechnung: Aufbau der Stichprobe (ein Zeitraum, mehrere Zeiträume, Gruppe von Programmen), Teilstichproben je Einheit, Systembewertung für die Neuberechnung des Konfidenzniveaus (Leitfaden 7.7); neue Funktionen in `model-design.ts`, `view-details.ts`, Controller-Aktionen `setDesign`, `setSystemAssessment`, `setPopulationUnits`, `toggleSubsample`, `editSubsample`, `updateSubsample`, `addSubItem`, `updateSubItem`, `removeSubItem`; Typen des erweiterten Vertrags `evaluation/1`.
 - Neu `samplesize`: Kern des Planers für den Stichprobenumfang nach KOM-Leitfaden (`createSamplesizeController`, `createSamplesizeRestPort` auf `auditcore_sampling.guidance/1`, `createSamplesizeMemoryPort`, Texte, Formular, Anzeige), Stil `styles/samplesize.css`.
 
 ## 0.2.0 – 2026-09-26 – Release v0.4.2

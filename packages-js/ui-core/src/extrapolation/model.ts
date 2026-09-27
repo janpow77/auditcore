@@ -4,7 +4,8 @@
  * ergänzt; leere Fehlerfelder zählen als 0.
  */
 import { parseInput } from '../sampling/model'
-import type { EvaluationRequest, EvaluationResult, ExtrapolationCatalogue, ExtrapolationMethod, ResidualRequest, StratumInput, UnitInput } from './types'
+import { designRequest, readSubsample, stratumKey, stratumPart, subsampleRows, type SubsampleRows } from './model-design'
+import type { EvaluationRequest, EvaluationResult, ExtrapolationCatalogue, ExtrapolationDesign, ExtrapolationMethod, ResidualRequest, StratumInput, UnitInput } from './types'
 
 export interface StratumRow {
   key: string
@@ -12,6 +13,8 @@ export interface StratumRow {
   bookValue: string
   populationSize: string
   systemic: string
+  /** Zeitraum bzw. Programm (Aufbau `periods` bzw. `groups`). */
+  part: string
 }
 
 export interface UnitRow {
@@ -25,6 +28,8 @@ export interface UnitRow {
   reason: string
   corrected: boolean
   exhaustive: boolean
+  period: string
+  subsample: SubsampleRows | null
 }
 
 export interface ExtrapolationForm {
@@ -36,10 +41,15 @@ export interface ExtrapolationForm {
   materiality: string
   strata: readonly StratumRow[]
   units: readonly UnitRow[]
+  design: ExtrapolationDesign
+  /** Kategorie 1–4 der Systembewertung (Tabelle 1, Leitfaden 3.2.1) oder leer. */
+  systemAssessment: string
+  /** Verschiedene Einheiten aller Zeiträume (nicht-statistisch, 6.4.9). */
+  populationUnits: string
 }
 
 export type ExtrapolationIssue = 'required' | 'invalid' | 'range' | 'reason' | 'stratum' | 'duplicate'
-export type ExtrapolationFormError = 'method' | 'confidence' | 'profile' | 'strata' | 'units'
+export type ExtrapolationFormError = 'method' | 'confidence' | 'profile' | 'strata' | 'units' | 'periods'
 export type ExtrapolationIssues = Readonly<Record<string, ExtrapolationIssue>>
 
 export type EvaluationValidation =
@@ -60,11 +70,11 @@ export type ResidualValidation = { ok: true; request: ResidualRequest } | { ok: 
 export const EMPTY_RESIDUAL: ResidualForm = { auditPopulation: '', terRate: '', ongoing: '', otherNegative: '', corrections: '' }
 
 export function emptyStratum(key: string): StratumRow {
-  return { key, name: '', bookValue: '', populationSize: '', systemic: '' }
+  return { key, name: '', bookValue: '', populationSize: '', systemic: '', part: '' }
 }
 
-export function emptyUnit(key: string, stratum = ''): UnitRow {
-  return { key, id: '', stratum, bookValue: '', random: '', systemic: '', anomalous: '', reason: '', corrected: false, exhaustive: false }
+export function emptyUnit(key: string, stratum = '', period = ''): UnitRow {
+  return { key, id: '', stratum, bookValue: '', random: '', systemic: '', anomalous: '', reason: '', corrected: false, exhaustive: false, period, subsample: null }
 }
 
 type Format = (value: number) => string
@@ -78,6 +88,7 @@ export function stratumRows(strata: readonly StratumInput[], format: Format): St
     bookValue: format(stratum.book_value),
     populationSize: stratum.population_size === undefined ? '' : String(stratum.population_size),
     systemic: optional(stratum.systemic_error, format),
+    part: stratumPart(stratum),
   }))
 }
 
@@ -93,6 +104,8 @@ export function unitRows(units: readonly UnitInput[], format: Format): UnitRow[]
     reason: unit.anomalous_reason ?? '',
     corrected: unit.anomalous_corrected ?? false,
     exhaustive: unit.exhaustive ?? false,
+    period: unit.period ?? '',
+    subsample: subsampleRows(unit.subsample, format),
   }))
 }
 
@@ -133,37 +146,47 @@ class Collector {
   }
 }
 
-function readStrata(rows: readonly StratumRow[], method: ExtrapolationMethod, out: Collector): StratumInput[] {
+function withPart(design: ExtrapolationDesign, row: StratumRow, index: number, out: Collector): Partial<StratumInput> {
+  if (design === 'single') return {}
+  const part = row.part.trim()
+  if (!part) out.flag(`strata.${index}.part`, 'required')
+  return design === 'periods' ? { period: part } : { group: part }
+}
+
+function readStrata(rows: readonly StratumRow[], method: ExtrapolationMethod, design: ExtrapolationDesign, out: Collector): StratumInput[] {
   const seen = new Set<string>()
   return rows.map((row, index) => {
     const name = row.name.trim()
+    const key = stratumKey(design, row.part, name)
     if (!name) out.flag(`strata.${index}.name`, 'required')
-    else if (seen.has(name)) out.flag(`strata.${index}.name`, 'duplicate')
-    seen.add(name)
+    else if (seen.has(key)) out.flag(`strata.${index}.name`, 'duplicate')
+    seen.add(key)
     const stratum: StratumInput = { name, book_value: out.take(`strata.${index}.bookValue`, row.bookValue, { required: true, positive: true }) }
     const systemic = out.take(`strata.${index}.systemic`, row.systemic)
     const size = row.populationSize.trim() || method.needs_population_size
       ? out.take(`strata.${index}.populationSize`, row.populationSize, { required: true, positive: true, integer: true })
       : undefined
-    return { ...stratum, ...(size === undefined ? {} : { population_size: size }), ...(systemic ? { systemic_error: systemic } : {}) }
+    return { ...stratum, ...(size === undefined ? {} : { population_size: size }), ...(systemic ? { systemic_error: systemic } : {}), ...withPart(design, row, index, out) }
   })
 }
 
-function readUnit(row: UnitRow, index: number, names: ReadonlySet<string>, out: Collector): UnitInput {
+function readUnit(row: UnitRow, index: number, names: ReadonlySet<string>, design: ExtrapolationDesign, out: Collector): UnitInput {
   const key = `units.${index}`
   if (!row.id.trim()) out.flag(`${key}.id`, 'required')
-  if (!names.has(row.stratum.trim())) out.flag(`${key}.stratum`, 'stratum')
+  if (!names.has(stratumKey(design, row.period, row.stratum))) out.flag(`${key}.stratum`, 'stratum')
   const anomalous = out.take(`${key}.anomalous`, row.anomalous)
   if (anomalous > 0 && !row.reason.trim()) out.flag(`${key}.reason`, 'reason')
+  const book = out.take(`${key}.bookValue`, row.bookValue, { required: true, positive: true })
   const unit: UnitInput = {
     id: row.id.trim(),
     stratum: row.stratum.trim(),
-    book_value: out.take(`${key}.bookValue`, row.bookValue, { required: true, positive: true }),
-    random_error: out.take(`${key}.random`, row.random),
+    book_value: book,
+    ...(row.subsample ? { subsample: readSubsample(row.subsample, book, `${key}.subsample`, out) } : { random_error: out.take(`${key}.random`, row.random) }),
     systemic_error: out.take(`${key}.systemic`, row.systemic),
     anomalous_error: anomalous,
   }
-  return { ...unit, ...(anomalous > 0 ? { anomalous_reason: row.reason.trim(), anomalous_corrected: row.corrected } : {}), ...(row.exhaustive ? { exhaustive: true } : {}) }
+  const period = design === 'periods' ? { period: row.period.trim() } : {}
+  return { ...unit, ...period, ...(anomalous > 0 ? { anomalous_reason: row.reason.trim(), anomalous_corrected: row.corrected } : {}), ...(row.exhaustive ? { exhaustive: true } : {}) }
 }
 
 function formError(catalogue: ExtrapolationCatalogue, form: ExtrapolationForm): ExtrapolationFormError | null {
@@ -171,6 +194,7 @@ function formError(catalogue: ExtrapolationCatalogue, form: ExtrapolationForm): 
   if (!method) return 'method'
   if (method.statistical && form.confidence === null) return 'confidence'
   if (method.statistical && form.profileId === null) return 'profile'
+  if (form.design === 'periods' && method.periods === false) return 'periods'
   if (form.strata.length === 0) return 'strata'
   return form.units.length === 0 ? 'units' : null
 }
@@ -192,10 +216,11 @@ export function buildEvaluationRequest(catalogue: ExtrapolationCatalogue, form: 
   const method = catalogue.methods.find((entry) => entry.id === form.methodId)
   if (error || !method) return { ok: false, error, issues: {} }
   const out = new Collector()
-  const strata = readStrata(form.strata, method, out)
-  const names = new Set(strata.map((stratum) => stratum.name).filter(Boolean))
-  const units = form.units.map((row, index) => readUnit(row, index, names, out))
-  const request = { method: method.id, ...settings(method, form, out), strata, units } as EvaluationRequest
+  const strata = readStrata(form.strata, method, form.design, out)
+  const names = new Set(form.strata.filter((row) => row.name.trim()).map((row) => stratumKey(form.design, row.part, row.name)))
+  const units = form.units.map((row, index) => readUnit(row, index, names, form.design, out))
+  const extra = designRequest(form.design, form.strata.map((row) => row.part), form.populationUnits, form.systemAssessment, out)
+  const request = { method: method.id, ...settings(method, form, out), ...extra, strata, units } as EvaluationRequest
   return Object.keys(out.issues).length ? { ok: false, error: null, issues: out.issues } : { ok: true, request }
 }
 

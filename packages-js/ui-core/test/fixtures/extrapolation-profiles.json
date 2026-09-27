@@ -6,7 +6,13 @@
   "rer_template": "Europäische Kommission, CPRE_23-0013-01, Methodological note ACR/AO, Annex 3 (RER calculation template)",
   "ter": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060",
   "rer": "Art. 2 Nr. 36 Verordnung (EU) 2021/1060",
-  "non_statistical": "Art. 79 Abs. 2 Verordnung (EU) 2021/1060"
+  "non_statistical": "Art. 79 Abs. 2 Verordnung (EU) 2021/1060",
+  "periods": "EGESIF_16-0014-01, Abschn. 7.3",
+  "subsampling": "EGESIF_16-0014-01, Abschn. 7.6, 6.5.3",
+  "recalculation": "EGESIF_16-0014-01, Abschn. 7.7",
+  "system_assessment": "EGESIF_16-0014-01, Abschn. 3.2.1",
+  "groups": "EGESIF_16-0014-01, Abschn. 7.8",
+  "attributes": "EGESIF_16-0014-01, Abschn. 7.9"
  },
  "methods": [
   {
@@ -18,7 +24,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.1.1, 6.1.2",
    "formula": "EE = Σ N_h × ΣE_h / n_h",
    "needs_population_size": true,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   },
   {
    "id": "srs.ratio",
@@ -29,7 +36,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.1.1, 6.1.2; Anhang 1, 2.3",
    "formula": "EE = Σ BV′_h × ΣE_h / ΣBV′_h",
    "needs_population_size": true,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   },
   {
    "id": "difference",
@@ -40,7 +48,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.2.1, 6.2.2; Anhang 1, 3",
    "formula": "EE = Σ N_h × ΣE_h / n_h, CBV = BV − TER",
    "needs_population_size": true,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   },
   {
    "id": "mus.standard",
@@ -51,7 +60,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.3.1, 6.3.2; Anhang 1, 4.1",
    "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
    "needs_population_size": false,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   },
   {
    "id": "mus.ratio",
@@ -62,7 +72,8 @@
    "source": "EGESIF_16-0014-01, Anhang 1, 4.2",
    "formula": "EE_s = BV′_s × Σ(E/BV) / Σ(BV′/BV)",
    "needs_population_size": false,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": false
   },
   {
    "id": "mus.conservative",
@@ -73,7 +84,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.3.5",
    "formula": "SE = SI × RF + Σ (RF(i) − RF(i−1) − 1) × SI × E/BV",
    "needs_population_size": false,
-   "needs_sample_size": true
+   "needs_sample_size": true,
+   "periods": false
   },
   {
    "id": "nonstatistical.mean_per_unit",
@@ -84,7 +96,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.4.5.1, 6.4.5.2",
    "formula": "EE = Σ N_h × ΣE_h / n_h",
    "needs_population_size": true,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   },
   {
    "id": "nonstatistical.ratio",
@@ -95,7 +108,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.4.5.1, 6.4.5.2",
    "formula": "EE = Σ BV_h × ΣE_h / ΣBV_h",
    "needs_population_size": true,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   },
   {
    "id": "nonstatistical.pps",
@@ -106,7 +120,8 @@
    "source": "EGESIF_16-0014-01, Abschn. 6.4.5.3, 6.4.5.4",
    "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
    "needs_population_size": true,
-   "needs_sample_size": false
+   "needs_sample_size": false,
+   "periods": true
   }
  ],
  "factor_profiles": [
@@ -179,8 +194,62 @@
    "label": "Nicht schlüssig – weitere Prüfungshandlungen"
   }
  ],
+ "designs": [
+  {
+   "id": "single",
+   "label": "Ein Zeitraum",
+   "source": "EGESIF_16-0014-01, Abschn. 6.1–6.4"
+  },
+  {
+   "id": "periods",
+   "label": "Mehrere Zeiträume des Geschäftsjahres",
+   "source": "EGESIF_16-0014-01, Abschn. 6.1.3, 6.2.3, 6.3.3, 6.3.4, 6.4.9, 7.3; Anhang 2"
+  },
+  {
+   "id": "groups",
+   "label": "Gruppe von Programmen",
+   "source": "EGESIF_16-0014-01, Abschn. 7.8"
+  }
+ ],
+ "subsample_estimators": [
+  {
+   "id": "ratio",
+   "label": "Verhältnisschätzung (gleiche Auswahlwahrscheinlichkeit)"
+  },
+  {
+   "id": "mean_per_unit",
+   "label": "Mittelwertschätzung (gleiche Auswahlwahrscheinlichkeit)"
+  },
+  {
+   "id": "pps",
+   "label": "Wertproportionale Auswahl (MUS-Formel)"
+  }
+ ],
+ "system_assessment": [
+  {
+   "category": 1,
+   "label": "Funktioniert gut, allenfalls geringfügige Verbesserungen nötig",
+   "confidence_level": 0.6
+  },
+  {
+   "category": 2,
+   "label": "Funktioniert, einige Verbesserungen nötig",
+   "confidence_level": 0.7
+  },
+  {
+   "category": 3,
+   "label": "Funktioniert teilweise, erhebliche Verbesserungen nötig",
+   "confidence_level": 0.8
+  },
+  {
+   "category": 4,
+   "label": "Funktioniert im Wesentlichen nicht",
+   "confidence_level": 0.9
+  }
+ ],
  "limits": {
   "max_units": 100000,
-  "max_strata": 200
+  "max_strata": 200,
+  "max_periods": 12
  }
 }
