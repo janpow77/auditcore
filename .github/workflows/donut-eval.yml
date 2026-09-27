@@ -1,0 +1,61 @@
+name: donut-eval
+on:
+  schedule:
+    - cron: '11 3 * * *'
+  workflow_dispatch:
+    inputs:
+      dataset:
+        description: Absoluter Pfad zum verifizierten Datensatz auf dem Runner
+        required: false
+        type: string
+      run_dir:
+        description: Absoluter Pfad zum Lauf mit Checkpoints auf dem Runner
+        required: false
+        type: string
+      limit:
+        description: Höchstens so viele Seiten je Testsatz bewerten
+        required: false
+        default: '50'
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: donut-eval
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    name: Neuen Donut-Checkpoint bewerten
+    if: github.event_name == 'workflow_dispatch' || (vars.DONUT_EVAL_DATASET != '' && vars.DONUT_EVAL_RUN_DIR != '')
+    runs-on: [self-hosted, auditcore, gpu]
+    timeout-minutes: 30
+    env:
+      DATASET: ${{ inputs.dataset || vars.DONUT_EVAL_DATASET }}
+      RUN_DIR: ${{ inputs.run_dir || vars.DONUT_EVAL_RUN_DIR }}
+      LIMIT: ${{ inputs.limit || '50' }}
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+      - name: Bewertung installieren
+        run: uv pip install --system -e 'packages/auditcore_invoicesynth[train]'
+      - name: Eingaben prüfen
+        run: |
+          test -n "$DATASET" -a -d "$DATASET" || { echo '::error::dataset/DONUT_EVAL_DATASET fehlt'; exit 2; }
+          test -n "$RUN_DIR" -a -d "$RUN_DIR" || { echo '::error::run_dir/DONUT_EVAL_RUN_DIR fehlt'; exit 2; }
+      - name: Neuesten gültigen Checkpoint bewerten
+        run: |
+          mkdir -p evaluation
+          python -m auditcore_invoicesynth.train.evaluate \
+            --dataset "$DATASET" --run-dir "$RUN_DIR" --limit "$LIMIT" \
+            --device cuda --out evaluation/report.json | tee evaluation/summary.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: donut-eval-${{ github.run_id }}
+          path: evaluation/
+          if-no-files-found: warn

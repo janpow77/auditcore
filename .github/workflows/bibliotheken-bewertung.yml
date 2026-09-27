@@ -1,0 +1,57 @@
+name: bibliotheken-bewertung
+on:
+  schedule:
+    - cron: '29 0 * * 1,4'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: bibliotheken-bewertung
+  cancel-in-progress: false
+
+jobs:
+  bewertung:
+    name: Bibliotheken und Konsolidierung bewerten
+    runs-on: [self-hosted, auditcore, cpu-gross]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: requirements/ci.lock
+      - name: Bewertungswerkzeuge installieren
+        run: uv pip install --system -c requirements/ci.lock -e '.[dev]'
+      - name: Alle Bibliotheken deterministisch bewerten
+        run: |
+          mkdir -p quality/bibliotheken
+          status=0
+          for package in packages/auditcore_*; do
+            test -d "$package/src" || continue
+            name=${package##*/}
+            auditcore-bibquality "$package/src" --no-external-tools --format json \
+              --output "quality/bibliotheken/$name.json" || status=1
+          done
+          auditcore-consolidate --state-dir quality/konsolidierung packages inventory packages \
+            > quality/bibliotheken/konsolidierung.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          reports = []
+          for path in sorted(Path('quality/bibliotheken').glob('auditcore_*.json')):
+              data = json.loads(path.read_text())
+              reports.append({'paket': path.stem, 'status': data.get('status'), 'befunde': len(data.get('findings', []))})
+          Path('quality/bibliotheken/uebersicht.json').write_text(json.dumps(reports, indent=2) + '\n')
+          PY
+          exit "$status"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: bibliotheken-bewertung-${{ github.run_id }}
+          path: |
+            quality/bibliotheken/
+            quality/konsolidierung/
+          if-no-files-found: warn
