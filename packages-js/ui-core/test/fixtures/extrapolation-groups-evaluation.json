@@ -1,0 +1,360 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "fingerprint": "4af5e8e385c43abef4dedd4e0113d3de9cf0608096979a64fb32b77787aba807",
+ "method": {
+  "id": "srs.mean_per_unit",
+  "label": "Einfache Zufallsstichprobe – Mittelwertschätzung",
+  "statistical": true,
+  "selection": "equal_probability",
+  "stratification": true,
+  "source": "EGESIF_16-0014-01, Abschn. 6.1.1, 6.1.2",
+  "formula": "EE = Σ N_h × ΣE_h / n_h",
+  "needs_population_size": true,
+  "needs_sample_size": false,
+  "periods": true
+ },
+ "design": "groups",
+ "projection": {
+  "method": "srs.mean_per_unit",
+  "projected_random_error": 4312.5,
+  "precision": 3798.5973443788735,
+  "confidence_level": 0.8,
+  "factor_profile": "kom_2017_tables",
+  "coefficient": 1.282,
+  "strata": [
+   {
+    "name": "P1",
+    "projected_error": 4000.0,
+    "exhaustive_error": 0.0,
+    "sample_size": 5,
+    "sampling_book_value": 500000.0,
+    "figures": {
+     "population_size": 400,
+     "error_total": 50.0,
+     "sd": 17.320508075688775
+    }
+   },
+   {
+    "name": "P2",
+    "projected_error": 312.5,
+    "exhaustive_error": 0.0,
+    "sample_size": 4,
+    "sampling_book_value": 300000.0,
+    "figures": {
+     "population_size": 250,
+     "error_total": 5.0,
+     "sd": 2.5
+    }
+   }
+  ],
+  "sample_errors": {
+   "random": 55.0,
+   "systemic": 0.0,
+   "anomalous_uncorrected": 0.0,
+   "anomalous_corrected": 0.0
+  },
+  "systemic_population": 0.0,
+  "steps": [
+   {
+    "label": "Hochgerechneter Fehler Schicht P1",
+    "formula": "N_h × ΣE / n_h",
+    "value": 4000.0,
+    "source": "EGESIF_16-0014-01, Abschn. 6.1.2.3"
+   },
+   {
+    "label": "Hochgerechneter Fehler Schicht P2",
+    "formula": "N_h × ΣE / n_h",
+    "value": 312.5,
+    "source": "EGESIF_16-0014-01, Abschn. 6.1.2.3"
+   },
+   {
+    "label": "z-Wert",
+    "formula": "z",
+    "value": 1.282,
+    "source": "EGESIF_16-0014-01, Abschn. 5.3"
+   },
+   {
+    "label": "Präzision",
+    "formula": "SE = N × z × s_w / √n",
+    "value": 3798.5973443788735,
+    "source": "EGESIF_16-0014-01, Abschn. 6.1.2.4"
+   }
+  ],
+  "warnings": [
+   "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar."
+  ],
+  "extra": {}
+ },
+ "total_error_rate": {
+  "book_value": 800000.0,
+  "materiality_rate": 0.02,
+  "tolerable_error": 16000.0,
+  "projected_random_error": 4312.5,
+  "systemic_errors": 0.0,
+  "anomalous_uncorrected": 0.0,
+  "anomalous_corrected_excluded": 0.0,
+  "total_error": 4312.5,
+  "rate": 0.005390625,
+  "precision": 3798.5973443788735,
+  "upper_limit": 8111.0973443788735,
+  "upper_limit_rate": 0.010138871680473591,
+  "conclusion": "not_material",
+  "explanation": [
+   "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+   "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+  ],
+  "steps": [
+   {
+    "label": "Tolerierbarer Fehler",
+    "formula": "TE = Wesentlichkeit × BV",
+    "value": 16000.0,
+    "source": "EGESIF_16-0014-01, Abschn. 4.10"
+   },
+   {
+    "label": "Gesamtfehler",
+    "formula": "EE + systemische + nicht korrigierte anomale Fehler",
+    "value": 4312.5,
+    "source": "EGESIF_16-0014-01, Anhang 1"
+   },
+   {
+    "label": "Gesamtfehlerquote (TER)",
+    "formula": "TER / BV",
+    "value": 0.005390625,
+    "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
+   },
+   {
+    "label": "Fehlerobergrenze",
+    "formula": "ULE = TER + SE",
+    "value": 8111.0973443788735,
+    "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
+   }
+  ],
+  "difference": null
+ },
+ "confidence_recalculation": {
+  "applicable": false,
+  "reason": "Das Ergebnis ist bereits schlüssig; eine Neuberechnung ist nicht nötig.",
+  "coefficient": null,
+  "recalculated_coefficient": null,
+  "confidence_level": null,
+  "required_level": null,
+  "supports_not_material": null,
+  "steps": []
+ },
+ "subsamples": [],
+ "groups": [
+  {
+   "name": "Programm 1",
+   "observations": 5,
+   "warnings": [
+    "Gruppe 'Programm 1': 5 Beobachtungen; ein Ergebnis je Programm setzt mindestens 30 voraus (Leitfaden, Abschn. 7.8.1)."
+   ],
+   "projection": {
+    "method": "srs.mean_per_unit",
+    "projected_random_error": 4000.0,
+    "precision": 3972.131719870327,
+    "confidence_level": 0.8,
+    "factor_profile": "kom_2017_tables",
+    "coefficient": 1.282,
+    "strata": [
+     {
+      "name": "P1",
+      "projected_error": 4000.0,
+      "exhaustive_error": 0.0,
+      "sample_size": 5,
+      "sampling_book_value": 500000.0,
+      "figures": {
+       "population_size": 400,
+       "error_total": 50.0,
+       "sd": 17.320508075688775
+      }
+     }
+    ],
+    "sample_errors": {
+     "random": 50.0,
+     "systemic": 0.0,
+     "anomalous_uncorrected": 0.0,
+     "anomalous_corrected": 0.0
+    },
+    "systemic_population": 0.0,
+    "steps": [
+     {
+      "label": "Hochgerechneter Fehler Schicht P1",
+      "formula": "N_h × ΣE / n_h",
+      "value": 4000.0,
+      "source": "EGESIF_16-0014-01, Abschn. 6.1.1.3"
+     },
+     {
+      "label": "z-Wert",
+      "formula": "z",
+      "value": 1.282,
+      "source": "EGESIF_16-0014-01, Abschn. 5.3"
+     },
+     {
+      "label": "Präzision",
+      "formula": "SE = N × z × s_w / √n",
+      "value": 3972.131719870327,
+      "source": "EGESIF_16-0014-01, Abschn. 6.1.1.4"
+     }
+    ],
+    "warnings": [
+     "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar."
+    ],
+    "extra": {}
+   },
+   "total_error_rate": {
+    "book_value": 500000.0,
+    "materiality_rate": 0.02,
+    "tolerable_error": 10000.0,
+    "projected_random_error": 4000.0,
+    "systemic_errors": 0.0,
+    "anomalous_uncorrected": 0.0,
+    "anomalous_corrected_excluded": 0.0,
+    "total_error": 4000.0,
+    "rate": 0.008,
+    "precision": 3972.131719870327,
+    "upper_limit": 7972.131719870327,
+    "upper_limit_rate": 0.015944263439740654,
+    "conclusion": "not_material",
+    "explanation": [
+     "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+     "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+    ],
+    "steps": [
+     {
+      "label": "Tolerierbarer Fehler",
+      "formula": "TE = Wesentlichkeit × BV",
+      "value": 10000.0,
+      "source": "EGESIF_16-0014-01, Abschn. 4.10"
+     },
+     {
+      "label": "Gesamtfehler",
+      "formula": "EE + systemische + nicht korrigierte anomale Fehler",
+      "value": 4000.0,
+      "source": "EGESIF_16-0014-01, Anhang 1"
+     },
+     {
+      "label": "Gesamtfehlerquote (TER)",
+      "formula": "TER / BV",
+      "value": 0.008,
+      "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
+     },
+     {
+      "label": "Fehlerobergrenze",
+      "formula": "ULE = TER + SE",
+      "value": 7972.131719870327,
+      "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
+     }
+    ],
+    "difference": null
+   }
+  },
+  {
+   "name": "Programm 2",
+   "observations": 4,
+   "warnings": [
+    "Gruppe 'Programm 2': 4 Beobachtungen; ein Ergebnis je Programm setzt mindestens 30 voraus (Leitfaden, Abschn. 7.8.1)."
+   ],
+   "projection": {
+    "method": "srs.mean_per_unit",
+    "projected_random_error": 312.5,
+    "precision": 400.625,
+    "confidence_level": 0.8,
+    "factor_profile": "kom_2017_tables",
+    "coefficient": 1.282,
+    "strata": [
+     {
+      "name": "P2",
+      "projected_error": 312.5,
+      "exhaustive_error": 0.0,
+      "sample_size": 4,
+      "sampling_book_value": 300000.0,
+      "figures": {
+       "population_size": 250,
+       "error_total": 5.0,
+       "sd": 2.5
+      }
+     }
+    ],
+    "sample_errors": {
+     "random": 5.0,
+     "systemic": 0.0,
+     "anomalous_uncorrected": 0.0,
+     "anomalous_corrected": 0.0
+    },
+    "systemic_population": 0.0,
+    "steps": [
+     {
+      "label": "Hochgerechneter Fehler Schicht P2",
+      "formula": "N_h × ΣE / n_h",
+      "value": 312.5,
+      "source": "EGESIF_16-0014-01, Abschn. 6.1.1.3"
+     },
+     {
+      "label": "z-Wert",
+      "formula": "z",
+      "value": 1.282,
+      "source": "EGESIF_16-0014-01, Abschn. 5.3"
+     },
+     {
+      "label": "Präzision",
+      "formula": "SE = N × z × s_w / √n",
+      "value": 400.625,
+      "source": "EGESIF_16-0014-01, Abschn. 6.1.1.4"
+     }
+    ],
+    "warnings": [
+     "Schätzerwahl nicht prüfbar: Alle Buchwerte gleich: Kovarianzregel nicht anwendbar."
+    ],
+    "extra": {}
+   },
+   "total_error_rate": {
+    "book_value": 300000.0,
+    "materiality_rate": 0.02,
+    "tolerable_error": 6000.0,
+    "projected_random_error": 312.5,
+    "systemic_errors": 0.0,
+    "anomalous_uncorrected": 0.0,
+    "anomalous_corrected_excluded": 0.0,
+    "total_error": 312.5,
+    "rate": 0.0010416666666666667,
+    "precision": 400.625,
+    "upper_limit": 713.125,
+    "upper_limit_rate": 0.0023770833333333335,
+    "conclusion": "not_material",
+    "explanation": [
+     "Kein wesentlicher Fehler: Auch die Fehlerobergrenze liegt unter der Wesentlichkeitsschwelle.",
+     "Konfidenzniveau 80%: Die Fehlerobergrenze ist Gesamtfehler plus Präzision (Leitfaden, Abschn. 4.12 und Anhang 1)."
+    ],
+    "steps": [
+     {
+      "label": "Tolerierbarer Fehler",
+      "formula": "TE = Wesentlichkeit × BV",
+      "value": 6000.0,
+      "source": "EGESIF_16-0014-01, Abschn. 4.10"
+     },
+     {
+      "label": "Gesamtfehler",
+      "formula": "EE + systemische + nicht korrigierte anomale Fehler",
+      "value": 312.5,
+      "source": "EGESIF_16-0014-01, Anhang 1"
+     },
+     {
+      "label": "Gesamtfehlerquote (TER)",
+      "formula": "TER / BV",
+      "value": 0.0010416666666666667,
+      "source": "Art. 2 Nr. 35 Verordnung (EU) 2021/1060"
+     },
+     {
+      "label": "Fehlerobergrenze",
+      "formula": "ULE = TER + SE",
+      "value": 713.125,
+      "source": "EGESIF_16-0014-01, Abschn. 4.12, Anhang 1"
+     }
+    ],
+    "difference": null
+   }
+  }
+ ]
+}

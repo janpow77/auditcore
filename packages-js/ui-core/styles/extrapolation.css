@@ -31,3 +31,4 @@
 .fa-extrapolation__list { margin: 0; padding-left: var(--fa-space-5); }
 .fa-extrapolation__warnings { margin: 0; padding: var(--fa-space-2) var(--fa-space-3) var(--fa-space-2) var(--fa-space-5); border-radius: var(--fa-radius); background: var(--fa-color-warning-soft); color: var(--fa-color-warning); }
 .fa-extrapolation__fingerprint { font-family: var(--fa-font-mono); font-size: var(--fa-font-size-xs); overflow-wrap: anywhere; color: var(--fa-color-text-muted); }
+.fa-extrapolation__nowrap { white-space: nowrap; }

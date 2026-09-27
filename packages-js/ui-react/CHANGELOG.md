@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `FlowauditExtrapolation`: dieselben Ergänzungen wie `ExtrapolationPanel` (Zeiträume, Gruppen, Teilstichproben, Systembewertung, Neuberechnung des Konfidenzniveaus), Parität per Fälle und Interaktionsfolge.
 - Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
 - Benford (`<flowaudit-benford>`, `FlowauditBenford`): neue Eigenschaften `metrics`
   (zusätzliche Kennzahlen des REST-Vertrags: Chi²-Test mit kritischen Werten,

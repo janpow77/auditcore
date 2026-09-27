@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `auditcore_extrapolation`: fehlende Verfahren des Stichprobenleitfadens
+  EGESIF_16-0014-01 ergänzt – mehrere Zeiträume, zwei-/dreistufige Stichprobe
+  inkl. ETC, Neuberechnung des Konfidenzniveaus (7.7), Gruppen von Programmen
+  (7.8), Merkmalsstichprobe (7.9); REST `evaluation/1` abwärtskompatibel
+  erweitert, `POST /attributes`; UI `ExtrapolationPanel`/`FlowauditExtrapolation`
+  mit Zeiträumen, Gruppen, Teilstichproben und Neuberechnung. Fehlerbehebung:
+  konservativer MUS-Ansatz mit allen Niveaus aus Tabelle 4.
 - `auditcore_sampling`: Stichprobenumfang nach dem KOM-Leitfaden
   EGESIF_16-0014-01 als neues Modul `guidance` mit Status „nach Leitfaden“
   (SRS, Differenzenschätzung, MUS Standard/geschichtet/konservativ,
