@@ -37,3 +37,5 @@
 - Wiederverwendbarer Entscheidungs-Job (`workflow_call`) als Vorlage:
   `workflows vorlage runner-wahl`.
 - `AUDITCORE_RUNNER_PROFILE` wird von allen Befehlen beachtet.
+- Zeitgeber `auditcore-runner-image.timer`: Runner-Image täglich prüfen und bei
+  Bedarf neu bauen.

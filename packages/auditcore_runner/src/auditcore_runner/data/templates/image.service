@@ -1,0 +1,11 @@
+[Unit]
+Description=auditcore-runner: Runner-Image prüfen und bei Bedarf neu bauen
+After=network-online.target docker.service
+
+[Service]
+Type=oneshot
+Environment=AUDITCORE_RUNNER_PROFILE=${profil}
+# Baut nur, wenn die Runner-Version nicht mehr aktuell ist; laufende Container behalten ihr Image.
+ExecStart=${programm} image aktualisieren
+Nice=19
+IOSchedulingClass=idle

@@ -70,6 +70,7 @@ def test_listener_unit_only_for_scale_sets(workstation_facts: HostFacts) -> None
     profile = base(workstation_facts)
     names = {c.path.name for c in install.plan(profile)}
     assert "auditcore-runner-scaleset.service" not in names
+    assert {"auditcore-runner-image.service", "auditcore-runner-image.timer"} <= names
     scale = replace(profile, backend="scaleset")
     unit = next(c.new for c in install.plan(scale) if c.path.name == "auditcore-runner-scaleset.service")
     assert "scaleset lauschen" in unit

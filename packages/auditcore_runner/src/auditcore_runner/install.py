@@ -191,6 +191,8 @@ def _helper_units(profile: Profile, profile_path: Path) -> list[tuple[str, str]]
     units = [
         (f"{UNIT_PREFIX}-status.service", _render("status.service", **values)),
         (f"{UNIT_PREFIX}-status.timer", data_text("templates", "status.timer")),
+        (f"{UNIT_PREFIX}-image.service", _render("image.service", **values)),
+        (f"{UNIT_PREFIX}-image.timer", data_text("templates", "image.timer")),
     ]
     if profile.source.kind == "lokal":
         units.append((f"{UNIT_PREFIX}-regler.service", _render("regler.service", **values)))
@@ -220,6 +222,7 @@ def instance_steps(profile: Profile) -> list[Step]:
     """Reload units and enable instances up to the maximum (never stop running ones)."""
     steps = [Step(("systemctl", "--user", "daemon-reload"), "Units neu laden")]
     steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-status.timer"), "Status-Datei"))
+    steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-image.timer"), "Image aktuell halten"))
     if profile.source.kind == "lokal":
         steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-regler.service"), "Autoskalierer"))
         steps.append(Step(("systemctl", "--user", "try-restart", f"{UNIT_PREFIX}-regler.service"), "Regeln neu laden"))
