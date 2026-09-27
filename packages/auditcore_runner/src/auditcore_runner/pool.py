@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
-from .profile import CLASS_NAMES
+from .profile import CLASS_NAME
 from .profile_io import write_atomic
 
 POOL_SCHEMA = "auditcore-runner/runner-pool/1"
@@ -37,8 +37,8 @@ class Pool:
 
 def _target(name: str, entry: object) -> int:
     value = entry.get("soll") if isinstance(entry, dict) else None
-    if name not in CLASS_NAMES:
-        raise PoolFormatError(f"klassen.{name}: unbekannte Klasse")
+    if not CLASS_NAME.fullmatch(name):
+        raise PoolFormatError(f"klassen.{name}: ungültiger Klassenname")
     if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= MAX_TARGET:
         raise PoolFormatError(f"klassen.{name}.soll: ganze Zahl 0–{MAX_TARGET} erwartet")
     return value

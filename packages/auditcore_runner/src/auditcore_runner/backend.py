@@ -35,7 +35,7 @@ class RunnerBackend(Protocol):
 
 def _loop_environment(profile: Profile, runner_class: str, backend_name: str) -> dict[str, str]:
     pool_path = profile.pool_path()
-    gpu_class = bool(profile.classes[runner_class].vram_mb or profile.gpus_of(runner_class))
+    gpu_class = profile.classes[runner_class].is_gpu
     return {
         "AUDITCORE_RUNNER_BACKEND": backend_name,
         "AUDITCORE_RUNNER_POOL": str(pool_path) if pool_path else "",

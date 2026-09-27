@@ -23,9 +23,9 @@ def test_budget_over_machine(workstation_facts: HostFacts) -> None:
 def test_labels_ranges_and_class_names(workstation_facts: HostFacts) -> None:
     profile = propose(workstation_facts, "owner/repo")
     broken = replace(profile.classes["cpu-gross"], labels=("linux", "bad label"), nice=25, cpu_shares=1)
-    problems = validate(with_class(profile, "gpu-99", broken), workstation_facts)
+    problems = validate(with_class(profile, "Gpu_99", broken), workstation_facts)
     names = fields(problems)
-    assert {"klassen.gpu-99", "klassen.gpu-99.labels", "klassen.gpu-99.nice", "klassen.gpu-99.cpu_shares"} <= names
+    assert {"klassen.Gpu_99", "klassen.Gpu_99.labels", "klassen.Gpu_99.nice", "klassen.Gpu_99.cpu_shares"} <= names
 
 
 def test_target_and_auth(workstation_facts: HostFacts) -> None:

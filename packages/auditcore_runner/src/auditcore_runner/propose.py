@@ -5,7 +5,7 @@ from __future__ import annotations
 from .hardware import Gpu, HostFacts
 from .profile import (
     BASE_LABELS,
-    GPU_CLASSES,
+    TEMPLATE_GPU_CLASSES,
     GpuPolicy,
     Network,
     Profile,
@@ -23,11 +23,11 @@ def gpu_class_for(vram_mb: int) -> str:
 
 def _gpu_classes(facts: HostFacts, project_label: str) -> dict[str, RunnerClass]:
     classes: dict[str, RunnerClass] = {}
-    for name in GPU_CLASSES:
+    for name in TEMPLATE_GPU_CLASSES:
         count = sum(1 for g in facts.gpus if gpu_class_for(g.vram_mb) == name)
         if count:
             labels = (*BASE_LABELS, project_label, facts.hostname, "gpu", name)
-            classes[name] = RunnerClass(True, 2, 8, count, labels, 128, 19, 10, quiet_max=0)
+            classes[name] = RunnerClass(True, 2, 8, count, labels, 128, 19, 10, quiet_max=0, kind="gpu")
     return classes
 
 
