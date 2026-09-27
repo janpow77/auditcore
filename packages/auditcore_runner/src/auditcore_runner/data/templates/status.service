@@ -1,0 +1,8 @@
+[Unit]
+Description=auditcore-runner: Status-Datei schreiben
+
+[Service]
+Type=oneshot
+Environment=AUDITCORE_RUNNER_PROFILE=${profil}
+ExecStart=${programm} runner status --schreiben --still
+Nice=19

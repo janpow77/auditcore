@@ -1,42 +1,66 @@
-# CI-Runner auf der NUC
+# Self-hosted CI-Runner
 
-Die CI von auditcore läuft überwiegend auf ephemeren Runnern auf der NUC. GitHub-Runner bleiben als Rückfallweg und für Läufe, die Docker brauchen.
+Die CI von auditcore kann auf eigenen Rechnern mit ephemeren Runnern laufen.
+GitHub-Runner bleiben der Rückfallweg und der Ort für Fork-PRs, Dependabot und
+Läufe, die Docker brauchen. Runner-Verwaltung, Skalierung und Prüfbank liefert
+das Paket [`auditcore_runner`](../../packages/auditcore_runner); `ci/runner/`
+bleibt nur als Kompatibilitätsschicht für bestehende Installationen.
+
+## Neuen Rechner anbinden in 5 Befehlen
+
+Voraussetzungen: Linux mit systemd, Docker, `jq`, `gh auth login` (oder ein
+fein granulares Token bzw. eine GitHub App, siehe Paket-Doku).
+
+```bash
+uv tool install auditcore_runner --index-url https://janpow77.github.io/auditcore/simple/
+auditcore-runner profil erkennen --ziel janpow77/auditcore --speichern
+auditcore-runner runner install --trockenlauf     # Units, Image, Netz und Befehle prüfen
+auditcore-runner runner install
+sudo bash ~/.config/auditcore-runner/root/firewall-installieren.sh   # einmalig: Netzsperre
+```
+
+Grenzen, Labels, GPUs, Prioritäten und die Soll-Quelle (statisch, lokaler
+Autoskalierer oder externer Regler) stehen im Profil
+(`~/.config/auditcore-runner/profil.json`, Referenz
+[`docs/konfiguration.md`](../../packages/auditcore_runner/docs/konfiguration.md));
+Einstellungen über `auditcore-runner ui` oder `profil anwenden`.
 
 ## Architektur
 
-- `ci/runner/supervisor.sh` holt je Job eine Einmal-Registrierung (JIT, `generate-jitconfig`) und startet dafür einen frischen Container aus `ci/runner/Dockerfile`. Nach dem Job wird der Container verworfen.
-- Das GitHub-Token (`gh auth`) bleibt auf dem Host. Der Container erhält nur die einmal gültige JIT-Konfiguration.
-- systemd-User-Units `auditcore-runner@1..10` halten zehn Instanzen bereit. Sie starten nach einem Neustart der NUC automatisch (Linger ist aktiv).
+- Je Klasse (`cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`) eine systemd-User-Unit
+  `auditcore-runner-<klasse>@<n>`; jede Instanz holt je Job eine
+  Einmal-Registrierung (JIT) und startet einen frischen Container aus dem
+  Runner-Image des Pakets.
+- Vor jeder Registrierung liest der Supervisor Profil und Soll neu: Änderungen
+  wirken ab dem nächsten Job, laufende Jobs werden nie abgebrochen,
+  überzählige Instanzen ruhen.
+- GPU-Runner wählen die Karte je Job nach freiem VRAM; nutzt jemand die Karte
+  interaktiv, wird sie sofort geräumt.
 
 ## Sicherheitsmodell
 
-- Container: `--cap-drop ALL`, `no-new-privileges`, kein Docker-Socket, kein Host-Netz, keine Host-Verzeichnisse. Der Runner-Nutzer ist nicht in `sudo` oder `docker`.
-- Grenzen je Container: 2 CPUs, 6 GB RAM, 4096 Prozesse. `--cpu-shares 512`, damit die Dienste der NUC Vorrang behalten.
-- Cache-Volumes (Werkzeuge, pip, npm) gibt es je Instanz getrennt, damit sich ein vergifteter Cache nicht über alle Instanzen verbreitet.
-- Fork-PRs laufen nie auf der NUC. Die Workflows leiten sie auf `ubuntu-latest`, und die Repo-Einstellung verlangt eine Freigabe für Workflows aus Forks.
-- Läufe, die Docker brauchen (die Python-3.12-Beine mit APT- und Lebenszyklus-Test), bleiben auf `ubuntu-latest`.
+Siehe [`docs/sicherheit.md`](../../packages/auditcore_runner/docs/sicherheit.md):
+ephemere Container ohne Capabilities, Docker-Socket und Host-Verzeichnisse,
+eigenes Netz ohne Zugriff auf private Netze und den Host, JIT-Konfiguration als
+Datei, Tokens nur auf dem Host, Warnung bei unbekannten registrierten Runnern.
+Fork-PRs laufen nie auf eigenen Runnern; `auditcore-runner workflows pruefen`
+prüft das für alle Workflows.
 
 ## Umschalten
 
 Die Repo-Variable `AUDITCORE_RUNNER` steuert, wohin die Jobs gehen:
 
 ```bash
-# NUC
-gh variable set AUDITCORE_RUNNER --repo janpow77/auditcore --body '["self-hosted","nuc","auditcore"]'
-# zurück auf GitHub, etwa wenn die NUC ausfällt
-gh variable delete AUDITCORE_RUNNER --repo janpow77/auditcore
+gh variable set AUDITCORE_RUNNER --repo janpow77/auditcore --body '["self-hosted","auditcore"]'
+gh variable delete AUDITCORE_RUNNER --repo janpow77/auditcore   # zurück auf GitHub
 ```
 
-Ist die NUC aus, warten die Jobs auf einen Runner. Dann die Variable löschen.
-
-## Installation und Betrieb
+## Bestehende Installation (`ci/runner`)
 
 ```bash
-ci/runner/install.sh            # Image bauen, 10 Instanzen installieren und starten
-ci/runner/install.sh 4          # Anzahl ändern
+ci/runner/install.sh            # veraltet; Image bauen, Instanzen installieren
 ci/runner/install.sh --uninstall
-systemctl --user status 'auditcore-runner@*'
-journalctl --user -u 'auditcore-runner@1' -f
 ```
 
-Bei einer neuen Runner-Version den Digest im Dockerfile anheben und `install.sh` erneut ausführen.
+Umstieg: `auditcore-runner runner install` meldet alte Units `auditcore-runner@N`;
+nach dem Umstieg `ci/runner/install.sh --uninstall`, wenn gerade kein Job läuft.

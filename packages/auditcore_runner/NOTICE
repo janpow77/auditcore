@@ -1,0 +1,14 @@
+auditcore_runner 0.1.0 — attribution and authorization
+
+New implementation in auditcore (runner management, scaling rules, check
+bench). It replaces the ad-hoc self-hosted runner scripts under ci/runner/ of this
+repository, which remain as a compatibility layer. The design tokens in
+data/web/tokens.css are copied unchanged from packages-js/ui-core of this
+repository.
+
+On 2026-09-27 the rights holder decided that auditcore_runner is part of
+auditcore under the MIT license (copyright janpow77). No third-party code is
+included. External checkers (ruff, mypy, zizmor, gitleaks, actionlint, …) are
+separate programs that are only invoked; their versions and licenses are
+listed in THIRD_PARTY.md. PyYAML (MIT) is the only runtime dependency; the
+optional extra github-app uses PyJWT (MIT) with cryptography (Apache-2.0/BSD).

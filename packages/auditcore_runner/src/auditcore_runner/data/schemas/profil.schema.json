@@ -1,0 +1,492 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "auditcore-runner/profil/2",
+  "title": "Runner-Profil eines Rechners (auditcore_runner)",
+  "description": "Grenzen und Regeln für die Runner eines Rechners. Validierung und Anwenden: `auditcore-runner profil pruefen|anwenden`.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "auditcore-runner/profil/2"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "fortlaufend; jede angewendete Änderung erhöht sie"
+    },
+    "aenderung": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "zeit": {
+          "type": "string"
+        },
+        "quelle": {
+          "enum": [
+            "lokal",
+            "flow-agent"
+          ]
+        },
+        "wer": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "sync": {
+      "enum": [
+        "aus",
+        "flow-agent"
+      ],
+      "description": "nur Anzeige: wird das Profil zentral mitgepflegt?"
+    },
+    "rechner": {
+      "type": "string",
+      "description": "Name, Präfix der Runner-Namen"
+    },
+    "ziel": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "art": {
+          "enum": [
+            "repo",
+            "org"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "description": "besitzer/repo bzw. Organisation"
+        },
+        "runner_gruppe": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "repos_beobachten": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "für Organisationen: Repos der Warteschlange"
+        },
+        "bekannte_runner": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Namenspräfixe fremder, aber bekannter Runner"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "art": {
+          "enum": [
+            "gh",
+            "pat",
+            "app"
+          ]
+        },
+        "token_datei": {
+          "type": "string",
+          "description": "Pfad, nie das Token selbst"
+        },
+        "app_id": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "app_schluessel_datei": {
+          "type": "string"
+        },
+        "installation_id": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": []
+    },
+    "image": {
+      "type": "string",
+      "description": "Runner-Image"
+    },
+    "backend": {
+      "enum": [
+        "jit"
+      ]
+    },
+    "reserve": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpus": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "speicher_gb": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1024
+        }
+      },
+      "required": [
+        "cpus",
+        "speicher_gb"
+      ],
+      "description": "für den Rechner freigehaltene Kapazität"
+    },
+    "netz": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "subnetz": {
+          "type": "string"
+        },
+        "bruecke": {
+          "type": "string",
+          "maxLength": 15
+        },
+        "aktiv": {
+          "type": "boolean"
+        },
+        "sperre_pflicht": {
+          "type": "boolean"
+        }
+      },
+      "required": []
+    },
+    "soll_quelle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "art": {
+          "enum": [
+            "statisch",
+            "lokal",
+            "datei"
+          ]
+        },
+        "datei": {
+          "type": "string",
+          "description": "Soll-Datei des externen Reglers"
+        }
+      },
+      "required": []
+    },
+    "skalierung": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "vorrang_interaktiv": {
+          "type": "boolean",
+          "description": "interaktive Nutzung hat Vorrang (Arbeitsplatz)"
+        },
+        "leerlauf_minuten": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 240
+        },
+        "anteil_bei_nutzung": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "interaktive_karten": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "interaktive_karten_leerlauf_minuten": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 240
+        },
+        "swap_sperre_gb": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1024,
+          "description": "0 = aus"
+        },
+        "swap_einlagerung_max_s": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Seiten/s"
+        },
+        "ram_frei_min_gb": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1024
+        },
+        "last_je_kern_max": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 8
+        },
+        "temperatur_max_c": {
+          "type": "number",
+          "minimum": 40,
+          "maximum": 110
+        },
+        "volllast_von": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "volllast_bis": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 24,
+          "description": "gleich volllast_von = kein Fenster"
+        },
+        "freie_reserve": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "haltezeit_s": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400
+        },
+        "intervall_s": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 3600
+        },
+        "thermik": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "aktiv": {
+              "type": "boolean"
+            },
+            "url": {
+              "type": "string"
+            },
+            "felder": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "drosselung_aktiv": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "temperatur": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "grenze": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "modus": {
+                  "type": "string"
+                }
+              },
+              "required": []
+            },
+            "leise_wert": {
+              "type": "string"
+            },
+            "abstand_c": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 30
+            }
+          },
+          "required": []
+        },
+        "gpu_dienste_teilen": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Prozessnamen-Muster, mit denen GPU-Runner eine Karte teilen"
+        }
+      },
+      "required": []
+    },
+    "klassen": {
+      "type": "object",
+      "propertyNames": {
+        "enum": [
+          "cpu",
+          "cpu-gross",
+          "gpu-16gb",
+          "gpu-8gb"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "aktiv": {
+            "type": "boolean",
+            "description": "Klasse an/aus"
+          },
+          "cpus": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 64,
+            "description": "CPUs je Runner-Container"
+          },
+          "speicher_gb": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 256,
+            "description": "RAM je Runner-Container"
+          },
+          "min_instanzen": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32,
+            "description": "Untergrenze (außer bei Nutzer-Vorrang oder Druck)"
+          },
+          "max_instanzen": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32,
+            "description": "Obergrenze"
+          },
+          "leise_max": {
+            "type": "integer",
+            "minimum": -1,
+            "maximum": 32,
+            "description": "Obergrenze im Leise-Modus der Thermik-Quelle (-1 = wie max)"
+          },
+          "vram_mb": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 262144,
+            "description": "VRAM-Bedarf je GPU-Runner"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Runner-Labels; self-hosted ist Pflicht"
+          },
+          "cpu_shares": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 1024
+          },
+          "nice": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 19
+          },
+          "io_gewicht": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "uv_cache_volume": {
+            "type": "string",
+            "description": "gemeinsames Docker-Volume für den uv-Cache"
+          }
+        },
+        "required": [
+          "aktiv",
+          "cpus",
+          "speicher_gb",
+          "max_instanzen",
+          "labels"
+        ]
+      }
+    },
+    "gpus": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "uuid": {
+            "type": "string",
+            "pattern": "^GPU-"
+          },
+          "name": {
+            "type": "string"
+          },
+          "vram_mb": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "erlaubt": {
+            "type": "boolean"
+          },
+          "klasse": {
+            "enum": [
+              "gpu-16gb",
+              "gpu-8gb"
+            ]
+          }
+        },
+        "required": [
+          "uuid",
+          "vram_mb",
+          "erlaubt",
+          "klasse"
+        ]
+      }
+    },
+    "prioritaeten": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "klasse": {
+            "type": "string"
+          },
+          "rang": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "verdraengbar": {
+            "type": "boolean"
+          },
+          "min": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 32
+          }
+        },
+        "required": [
+          "klasse",
+          "rang"
+        ]
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "rechner",
+    "ziel",
+    "image",
+    "reserve",
+    "klassen"
+  ]
+}

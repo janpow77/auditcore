@@ -1,0 +1,14 @@
+[Unit]
+Description=auditcore-runner: lokaler Autoskalierer (Soll-Quelle „lokal“)
+After=network-online.target
+
+[Service]
+Type=simple
+Environment=AUDITCORE_RUNNER_PROFILE=${profil}
+ExecStart=${programm} regler
+Restart=always
+RestartSec=30
+Nice=15
+
+[Install]
+WantedBy=default.target

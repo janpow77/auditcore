@@ -1,0 +1,149 @@
+{
+  "schema": "auditcore-runner/profil/2",
+  "version": 0,
+  "aenderung": {
+    "zeit": "",
+    "quelle": "lokal",
+    "wer": ""
+  },
+  "sync": "aus",
+  "rechner": "workstation",
+  "ziel": {
+    "art": "repo",
+    "name": "besitzer/repo",
+    "runner_gruppe": 1,
+    "repos_beobachten": [],
+    "bekannte_runner": []
+  },
+  "auth": {
+    "art": "gh",
+    "token_datei": "",
+    "app_id": 0,
+    "app_schluessel_datei": "",
+    "installation_id": 0
+  },
+  "image": "auditcore-runner:local",
+  "backend": "jit",
+  "reserve": {
+    "cpus": 4,
+    "speicher_gb": 8
+  },
+  "netz": {
+    "name": "auditcore-ci",
+    "subnetz": "172.30.250.0/24",
+    "bruecke": "br-auditcore-ci",
+    "aktiv": true,
+    "sperre_pflicht": true
+  },
+  "soll_quelle": {
+    "art": "lokal",
+    "datei": "~/.config/auditcore-runner/soll.json"
+  },
+  "skalierung": {
+    "vorrang_interaktiv": true,
+    "leerlauf_minuten": 10,
+    "anteil_bei_nutzung": 0.25,
+    "interaktive_karten": [
+      0
+    ],
+    "interaktive_karten_leerlauf_minuten": 15,
+    "swap_sperre_gb": 0.0,
+    "swap_einlagerung_max_s": 256.0,
+    "ram_frei_min_gb": 8.0,
+    "last_je_kern_max": 0.85,
+    "temperatur_max_c": 85.0,
+    "volllast_von": 0,
+    "volllast_bis": 0,
+    "freie_reserve": 1,
+    "haltezeit_s": 300,
+    "intervall_s": 30,
+    "thermik": {
+      "aktiv": false,
+      "url": "",
+      "felder": {
+        "drosselung_aktiv": [],
+        "temperatur": [],
+        "grenze": [],
+        "modus": ""
+      },
+      "leise_wert": "",
+      "abstand_c": 3.0
+    },
+    "gpu_dienste_teilen": []
+  },
+  "klassen": {
+    "cpu-gross": {
+      "aktiv": true,
+      "cpus": 8,
+      "speicher_gb": 12,
+      "min_instanzen": 0,
+      "max_instanzen": 3,
+      "leise_max": 1,
+      "vram_mb": 0,
+      "labels": [
+        "self-hosted",
+        "linux",
+        "x64",
+        "auditcore",
+        "cpu-gross"
+      ],
+      "cpu_shares": 128,
+      "nice": 19,
+      "io_gewicht": 10,
+      "uv_cache_volume": "auditcore-runner-uv"
+    },
+    "gpu-16gb": {
+      "aktiv": true,
+      "cpus": 2,
+      "speicher_gb": 6,
+      "min_instanzen": 0,
+      "max_instanzen": 2,
+      "leise_max": 0,
+      "vram_mb": 6000,
+      "labels": [
+        "self-hosted",
+        "linux",
+        "x64",
+        "auditcore",
+        "gpu",
+        "gpu-16gb"
+      ],
+      "cpu_shares": 128,
+      "nice": 19,
+      "io_gewicht": 10,
+      "uv_cache_volume": "auditcore-runner-uv"
+    }
+  },
+  "gpus": [
+    {
+      "index": 0,
+      "uuid": "GPU-00000000-0000-0000-0000-000000000000",
+      "name": "Karte 0 (Beispiel)",
+      "vram_mb": 16384,
+      "erlaubt": true,
+      "klasse": "gpu-16gb"
+    },
+    {
+      "index": 1,
+      "uuid": "GPU-11111111-1111-1111-1111-111111111111",
+      "name": "Karte 1 (Beispiel)",
+      "vram_mb": 16384,
+      "erlaubt": true,
+      "klasse": "gpu-16gb"
+    }
+  ],
+  "prioritaeten": [
+    {
+      "klasse": "cpu-gross",
+      "rang": 1,
+      "verdraengbar": false,
+      "min": 0
+    },
+    {
+      "klasse": "gpu-16gb",
+      "rang": 2,
+      "verdraengbar": true,
+      "min": 0
+    }
+  ]
+}

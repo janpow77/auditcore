@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "package": "auditcore_runner",
+  "version": "0.1.0",
+  "contract": "auditcore_runner.profil/2",
+  "classification": "NEW_IMPLEMENTATION",
+  "sources": [
+    {
+      "repository": "janpow77/auditcore",
+      "commit": "7b71f1c13cda06bd375e50ad8f909618ec09986c",
+      "files": [
+        {
+          "path": "ci/runner/supervisor.sh",
+          "note": "JIT-Schleife als Ausgangspunkt, im Paket neu geschrieben"
+        },
+        {
+          "path": "ci/runner/Dockerfile",
+          "note": "Runner-Image, um Werkzeuge und JIT-Datei erweitert"
+        },
+        {
+          "path": "packages-js/ui-core/styles/tokens.css",
+          "note": "Designtoken unverändert als Paketdaten"
+        }
+      ]
+    }
+  ],
+  "rights": {
+    "license_status": "MIT",
+    "public_release_status": "USER_AUTHORIZED_MIT",
+    "contributors": [
+      "janpow77",
+      "claude"
+    ],
+    "reviewed_on": "2026-09-27",
+    "notice": "Eigener Code in auditcore; keine Übernahme aus fremden Repositories. Externe Werkzeuge werden nur aufgerufen (THIRD_PARTY.md)."
+  }
+}

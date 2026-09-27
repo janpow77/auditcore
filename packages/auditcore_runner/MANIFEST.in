@@ -1,0 +1,4 @@
+include LICENSE NOTICE README.md CHANGELOG.md THIRD_PARTY.md provenance.json auditcore-context.json
+recursive-include docs *.md
+recursive-include tests *.py *.json *.xml *.txt *.yml *.toml
+recursive-include src/auditcore_runner/data *

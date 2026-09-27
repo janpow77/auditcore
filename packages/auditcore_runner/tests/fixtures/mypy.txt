@@ -1,0 +1,2 @@
+src/a.py:7:12: error: Argument 1 to "f" has incompatible type "str"; expected "int"  [arg-type]
+src/a.py:7:12: note: see https://mypy.readthedocs.io
