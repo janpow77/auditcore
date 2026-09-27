@@ -156,6 +156,10 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
   Vorrang interaktiver Nutzung, Volllast-Fenster.
 - **Prüfprofile** `schnell`, `pr`, `voll`, `sicherheit`, `gui`, `gpu`, `fuell`;
   im Repository anpassbar über `.auditcore-runner.toml`.
+- **Verifizierte Codemods:** `codemod ast-grep <regel>` beziehungsweise
+  `codemod libcst <modul>` arbeiten in einer Kopie und übernehmen Änderungen
+  nur nach erfolgreichem `auditcore-refactor verify`; siehe
+  [docs/werkzeuge.md](docs/werkzeuge.md#verifizierte-codemods).
 - **Umgebungsvariablen:** `AUDITCORE_RUNNER_PROFILE` (Profilpfad),
   `XDG_CONFIG_HOME`/`XDG_STATE_HOME` (Ablage von Profil und Status).
 

@@ -10,7 +10,7 @@ import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from . import github, image, measure, profile_io, workflows
+from . import codemods, github, image, measure, profile_io, workflows
 from .hardware import detect
 from .profile import default_profile_path
 from .werkzeuge import aufgaben, bericht, einstellungen
@@ -166,6 +166,17 @@ def cmd_hook(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_codemod(args: argparse.Namespace) -> int:
+    """Apply one structural codemod only after the configured verification passes."""
+    try:
+        result = codemods.run(args.engine, args.rezept, Path(args.pfad))
+    except codemods.CodemodError as error:
+        print(f"Codemod blockiert: {error}", file=sys.stderr)
+        return 1
+    print(json.dumps(result.as_dict(), indent=2, ensure_ascii=False))
+    return 0
+
+
 WORKFLOW_TEMPLATES = ("runner-wahl",)
 
 
@@ -187,6 +198,11 @@ def cmd_workflow_template(args: argparse.Namespace) -> int:
 
 
 def add_tool_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
+    codemod = sub.add_parser("codemod", help="ast-grep/LibCST-Codemod transaktional anwenden")
+    codemod.add_argument("engine", choices=("ast-grep", "libcst"))
+    codemod.add_argument("rezept", help="Regeldatei (ast-grep) oder Codemod-Modul (LibCST)")
+    codemod.add_argument("--pfad", default=".")
+    codemod.set_defaults(func=cmd_codemod)
     local = sub.add_parser("lokal", help="Prüfprofil lokal ausführen (Runner-Image oder --host)")
     local.add_argument("pruefprofil")
     local.add_argument("--pfad", default=".")

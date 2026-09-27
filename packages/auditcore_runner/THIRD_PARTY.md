@@ -36,3 +36,14 @@ Paketcode übernommen.
 Keine kommerziellen oder nicht frei nutzbaren Werkzeuge im Standard-Image.
 Werkzeuge mit Copyleft-Lizenz (etwa GPL oder LGPL) kommen nur als separate
 Programme mit Lizenztext unter `LICENSES/` und Quellverweis hinzu.
+
+## Optionale Codemod-Programme
+
+Diese Programme werden nicht mit dem Paket verknüpft oder in dessen
+Standard-Image installiert. `auditcore-runner codemod` ruft eine vom Betreiber
+bereitgestellte Installation als getrennten Prozess auf.
+
+| Programm | Verwendung | Lizenz | Quelle |
+|---|---|---|---|
+| ast-grep | YAML-basierte strukturelle Suche und Ersetzung | MIT | github.com/ast-grep/ast-grep |
+| LibCST | Python-Codemod-Module | MIT | github.com/Instagram/LibCST |
