@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-import json
 import math
 from collections.abc import Callable
-from dataclasses import dataclass
+
+from auditcore_common import rest
+from auditcore_common.rest import Reply
 
 from ..errors import GeoError
 from ._contract import Body, ContractError
@@ -14,14 +15,6 @@ from .geocoding import GeocoderError
 from .geopackage import read_geopackage, read_source
 from .settings import Settings
 from .simplification import simplify
-
-
-@dataclass(frozen=True)
-class Reply:
-    """Status and JSON body of one response."""
-
-    status: int
-    body: bytes
 
 
 def _clean(value: object) -> object:
@@ -36,17 +29,18 @@ def _clean(value: object) -> object:
 
 
 def _json(status: int, data: object) -> Reply:
-    return Reply(status, json.dumps(_clean(data), ensure_ascii=False).encode("utf-8"))
+    return rest.json_reply(status, _clean(data))
 
 
 def decode(raw: bytes, limit: int) -> object:
-    """Parsed JSON body within the size limit."""
-    if len(raw) > limit:
-        raise ContractError("Anfrage zu groß.", status=413, code="zu_gross")
-    try:
-        return json.loads(raw)
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise ContractError("Kein gültiges JSON.", status=400, code="ungueltiges_json") from exc
+    """Parsed JSON body within the size limit (codes ``zu_gross``/``ungueltiges_json``)."""
+    return rest.decode_body(
+        raw,
+        limit,
+        error=ContractError,
+        too_large_code="zu_gross",
+        invalid_json_code="ungueltiges_json",
+    )
 
 
 def _geocode(payload: object, settings: Settings) -> dict[str, object]:

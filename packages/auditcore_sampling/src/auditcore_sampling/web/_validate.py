@@ -24,9 +24,7 @@ class ContractError(rest.ContractError):
 
 def as_object(value: object, name: str = "Anfrage") -> Mapping[str, object]:
     """A JSON object with string keys."""
-    if not isinstance(value, Mapping) or not all(isinstance(k, str) for k in value):
-        raise ContractError(f"'{name}' muss ein JSON-Objekt sein.")
-    return value
+    return rest.json_object(value, name, error=ContractError)
 
 
 def require(body: Mapping[str, object], key: str) -> object:

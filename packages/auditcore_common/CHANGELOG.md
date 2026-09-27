@@ -1,5 +1,17 @@
 # Changelog auditcore_common
 
+## Unreleased
+
+- `rest.decode_body` nimmt `too_large_code` und `invalid_json_code` (Vorgabe
+  `too_large`/`invalid_json`, bisheriges Verhalten unverändert), damit
+  Verträge mit eigenen Fehlercodes (geo: `zu_gross`/`ungueltiges_json`) die
+  Funktion nutzen können.
+- Duplikatgruppe A16 abgeschlossen: `rest.json_object` ersetzt jetzt auch
+  sampling `web._validate.as_object`, geo `web._contract.Body.of` und
+  extrapolation `web._contract.Reader`; dazu geo `web._http.Reply`, `_json`
+  und `decode`. Differenztests gegen die wörtlichen Kopien
+  (`tests/legacy_rest.py`, `tests/test_rest.py`).
+
 ## 0.2.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neues Modul `rest`: rahmenwerkfreier Teil der JSON-REST-Verträge von

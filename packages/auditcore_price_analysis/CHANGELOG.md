@@ -1,5 +1,9 @@
 # Changelog – auditcore_price_analysis
 
+## Unreleased
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 12 Invarianten (I1–I12) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`. Befund (dokumentiert, Code unverändert): Fix- und Variabelanteil werden getrennt gerundet und können zusammen 100,1 % ergeben. `hypothesis` im Extra `dev`.
+
 ## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`.

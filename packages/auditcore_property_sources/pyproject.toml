@@ -14,7 +14,7 @@ dependencies = ["auditcore_common==0.2.0"]
 
 [project.optional-dependencies]
 sources = ["auditcore_harvest==0.1.3"]
-dev = ["pytest>=8", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.3"]
+dev = ["pytest>=8", "hypothesis>=6.100", "ruff>=0.11", "mypy>=1.15", "build>=1.2", "auditcore_harvest==0.1.3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

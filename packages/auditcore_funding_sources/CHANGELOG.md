@@ -1,5 +1,14 @@
 # Changelog auditcore_funding_sources
 
+## Unreleased
+
+Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
+`docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,
+Abgrenzung, bewusste Abweichungen vom Altverhalten), 10 Invarianten als
+Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`
+(`hypothesis` im Extra `dev`), `specification`-Block in `provenance.json`.
+Keine Befunde. Legacy-Varianten: `typing="legacy"`, `header_detection="legacy"`, `parse_award_list(strict=False)`, `inventory_state(..., legacy=True)`, `cumulation.legacy_cumulation`, Designer-Aliase.
+
 ## 0.1.5 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`, `auditcore_harvest==0.1.3`.
