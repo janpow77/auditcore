@@ -9,6 +9,7 @@ profile and the pool before every registration.
 from __future__ import annotations
 
 import difflib
+import shlex
 import shutil
 import subprocess
 import sys
@@ -99,9 +100,29 @@ def render_unit(profile: Profile, runner_class: str, profile_path: Path) -> str:
     )
 
 
+EGRESS_SET = "auditcore-ci-egress"
+
+
+def _egress_install(base: Path, enabled: bool) -> str:
+    if not enabled:
+        return "rm -f /etc/systemd/system/auditcore-ci-egress.service /etc/systemd/system/auditcore-ci-egress.timer"
+    return "\n".join(
+        [
+            "for tool in ipset jq curl; do",
+            '  command -v "$tool" >/dev/null || { echo "Egress-Allowlist braucht $tool" >&2; exit 1; }',
+            "done",
+            f'install -m 0644 "{base / "auditcore-ci-egress.service"}" /etc/systemd/system/auditcore-ci-egress.service',
+            f'install -m 0644 "{base / "auditcore-ci-egress.timer"}" /etc/systemd/system/auditcore-ci-egress.timer',
+            "systemctl daemon-reload",
+            "systemctl enable --now auditcore-ci-egress.timer",
+        ]
+    )
+
+
 def render_firewall(profile: Profile) -> dict[str, str]:
-    """Root scripts for the network lock; written for the user, never executed here."""
+    """Root scripts for the network lock and egress allowlist; written for the user, never executed here."""
     network, base = profile.network, root_dir()
+    allowlist = network.egress == "allowlist"
     values = {
         "netz": network.name,
         "subnetz": network.subnet,
@@ -109,14 +130,24 @@ def render_firewall(profile: Profile) -> dict[str, str]:
         "pfad": str(base / "auditcore-ci-firewall.sh"),
         "skript": str(base / "auditcore-ci-firewall.sh"),
         "unit": str(base / "auditcore-ci-firewall.service"),
+        "egress": network.egress,
+        "ipset": EGRESS_SET,
+        "egress_ports": ",".join(str(port) for port in network.egress_ports),
+        "egress_hosts": " ".join(shlex.quote(host) for host in network.egress_hosts),
+        "egress_meta": " ".join(shlex.quote(key) for key in network.egress_github_meta),
+        "egress_installieren": _egress_install(base, allowlist),
     }
-    return {
+    scripts = {
         "auditcore-ci-firewall.sh": _render("firewall.sh", **values),
         "auditcore-ci-firewall.service": _render("auditcore-ci-firewall.service", **values),
         "firewall-installieren.sh": _render(
             "firewall-installieren.sh", **{**values, "pfad": str(base / "firewall-installieren.sh")}
         ),
     }
+    if allowlist:
+        scripts["auditcore-ci-egress.service"] = _render("auditcore-ci-egress.service", **values)
+        scripts["auditcore-ci-egress.timer"] = data_text("templates", "auditcore-ci-egress.timer")
+    return scripts
 
 
 def firewall_command() -> str:
