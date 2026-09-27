@@ -7,6 +7,7 @@ extra dependencies. ``AUDITCORE_HELPERS_TOOLCHAIN`` overrides the location.
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import shutil
@@ -54,10 +55,23 @@ def is_installed(directory: Path) -> bool:
 
 
 def ensure_toolchain() -> Path:
-    """Install the toolchain from the shipped lockfile unless already present."""
+    """Install the toolchain from the shipped lockfile unless already present.
+
+    Parallel processes (pytest-xdist workers, several CLI runs) serialize on a lock
+    file; otherwise concurrent ``npm ci`` runs break each other (ENOTEMPTY).
+    """
     directory = toolchain_dir()
     if is_installed(directory):
         return directory
+    directory.parent.mkdir(parents=True, exist_ok=True)
+    with open(directory.parent / f".{directory.name}.lock", "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if is_installed(directory):
+            return directory
+        return _install(directory)
+
+
+def _install(directory: Path) -> Path:
     npm = shutil.which("npm")
     if not npm:
         raise HelperToolError(
