@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1079):
+Exporte der Einstiegspunkte aus `package.json#exports` (1094):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -393,6 +393,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1079):
 | `@auditcore/ui-core` | `INITIAL_IDENTIFIERS` | Konstante | – | `identifiers/controller` |
 | `@auditcore/ui-core` | `INITIAL_REPORTING` | Konstante | – | `reporting/controller` |
 | `@auditcore/ui-core` | `INITIAL_REPORTTEMPLATES` | Konstante | – | `reporttemplates/controller` |
+| `@auditcore/ui-core` | `INITIAL_RUNNER` | Konstante | – | `runner/controller` |
 | `@auditcore/ui-core` | `INITIAL_SAMPLESIZE` | Konstante | – | `samplesize/controller` |
 | `@auditcore/ui-core` | `INITIAL_SAMPLING` | Konstante | – | `sampling/controller` |
 | `@auditcore/ui-core` | `IconName` | Typ | – | `base/icons` |
@@ -541,6 +542,14 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1079):
 | `@auditcore/ui-core` | `RunRequestRecord` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `RunSummary` | Schnittstelle | – | `screening/types` |
 | `@auditcore/ui-core` | `RunView` | Schnittstelle | – | `screening/types` |
+| `@auditcore/ui-core` | `RunnerCallbacks` | Schnittstelle | – | `runner/controller` |
+| `@auditcore/ui-core` | `RunnerController` | Schnittstelle | – | `runner/controller` |
+| `@auditcore/ui-core` | `RunnerData` | Schnittstelle | Stand; `error` ist die Meldung der letzten abgelehnten Anfrage. | `runner/controller` |
+| `@auditcore/ui-core` | `RunnerItem` | Schnittstelle | Eintrag der Liste (Vertrag des Ports; an den REST-Vertrag des Backends anpassen). | `runner/types` |
+| `@auditcore/ui-core` | `RunnerMessageKey` | Typ | – | `runner/messages` |
+| `@auditcore/ui-core` | `RunnerPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `runner/types` |
+| `@auditcore/ui-core` | `RunnerRow` | Schnittstelle | Zeile der Liste, wie Vue und React sie darstellen. | `runner/view` |
+| `@auditcore/ui-core` | `RunnerSource` | Schnittstelle | – | `runner/controller` |
 | `@auditcore/ui-core` | `SAMPLED_PART` | Konstante | – | `extrapolation/model-subsample` |
 | `@auditcore/ui-core` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
 | `@auditcore/ui-core` | `SCREENING_KINDS` | Konstante | – | `screening/runForm` |
@@ -828,6 +837,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1079):
 | `@auditcore/ui-core` | `createRiskController` | Funktion | – | `risk/controller` |
 | `@auditcore/ui-core` | `createRiskRestPort` | Funktion | REST-Umsetzung des Ports, z. B. `createRiskRestPort({ baseUrl: '/api/risk' })`. | `risk/port` |
 | `@auditcore/ui-core` | `createRunner` | Funktion | Führt eine Portanfrage aus: setzt `busy`, fängt Fehler (über `toError`) und meldet sie an `onError`. Ohne Port geschieht nichts (`null`). | `store` |
+| `@auditcore/ui-core` | `createRunnerController` | Funktion | – | `runner/controller` |
+| `@auditcore/ui-core` | `createRunnerMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests). Eine REST-Umsetzung baut auf `requestJson` aus `@auditcore/common` auf (Vorbild: `extrapolation/rest-port.ts`). | `runner/port` |
 | `@auditcore/ui-core` | `createSamplesizeController` | Funktion | – | `samplesize/controller` |
 | `@auditcore/ui-core` | `createSamplesizeMemoryPort` | Funktion | Port im Arbeitsspeicher (Demo, Tests): feste Antworten je Methode; ohne Antwort wird die Anfrage wie vom Backend abgelehnt. | `samplesize/port` |
 | `@auditcore/ui-core` | `createSamplesizeRestPort` | Funktion | Port auf den REST-Vertrag `auditcore_sampling.guidance/1` (Starlette oder FastAPI). | `samplesize/port` |
@@ -1070,6 +1081,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1079):
 | `@auditcore/ui-core` | `riskTableRows` | Funktion | – | `risk/controller` |
 | `@auditcore/ui-core` | `rowKeyOf` | Funktion | Schlüssel einer Zeile aus `rowKey`, sonst Position. | `table/index` |
 | `@auditcore/ui-core` | `runFormDefaults` | Funktion | Vorbelegung bei Wechsel der Prüfart oder neuen Einstellungen: empfohlenes Profil, alle Listen, Standard-Mindestwert. | `screening/runForm` |
+| `@auditcore/ui-core` | `runnerIsEmpty` | Funktion | Hinweis „keine Einträge“ nur nach abgeschlossener, fehlerfreier Anfrage. | `runner/view` |
+| `@auditcore/ui-core` | `runnerMessages` | Konstante | Texte von RunnerConsole (Vue) und FlowauditRunnerConsole (React); sichtbare Texte nur hier. | `runner/messages` |
+| `@auditcore/ui-core` | `runnerRows` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerSelection` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `samplesizeAllocation` | Funktion | – | `samplesize/view` |
 | `@auditcore/ui-core` | `samplesizeDerivation` | Funktion | – | `samplesize/view` |

@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (871):
+Exporte der Einstiegspunkte aus `package.json#exports` (881):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -375,6 +375,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (871):
 | `@auditcore/ui` | `INITIAL_EXTRAPOLATION` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTING` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_REPORTTEMPLATES` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `INITIAL_RUNNER` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_SAMPLESIZE` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `INITIAL_SAMPLING` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `IconName` | Re-Export | – | `@auditcore/ui-core` |
@@ -510,6 +511,11 @@ Exporte der Einstiegspunkte aus `package.json#exports` (871):
 | `@auditcore/ui` | `RunSummary` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `RunView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `Runner` | Schnittstelle | – | `rest/runner` |
+| `@auditcore/ui` | `RunnerConsole` | Vue-Komponente | – | `runner/RunnerConsole.vue` |
+| `@auditcore/ui` | `RunnerController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RunnerData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RunnerItem` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `RunnerPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `SCREENING_CONTRACT` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_FILTER_KEYS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `STATE_ICONS` | Re-Export | – | `@auditcore/ui-core` |
@@ -736,6 +742,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (871):
 | `@auditcore/ui` | `createRiskController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRiskRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createRunner` | Funktion | Gemeinsamer Ablauf für Portanfragen: Beschäftigt-Status, Fehlermeldung, Rückruf. | `rest/runner` |
+| `@auditcore/ui` | `createRunnerController` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `createRunnerMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplesizeController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplesizeMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `createSamplesizeRestPort` | Re-Export | – | `@auditcore/ui-core` |
@@ -897,6 +905,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (871):
 | `@auditcore/ui` | `riskMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `riskTableColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `riskTableRows` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `runnerConsoleElement` | Konstante | `<flowaudit-runner-console>`: Eigenschaften `port`, `locale`; Ereignisse `item-select`, `error`. | `runner/element` |
+| `@auditcore/ui` | `runnerMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `sameSurvey` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `sampleSizePlannerElement` | Konstante | `<flowaudit-sample-size-planner>`: Eigenschaften `port`, `request`, `locale`; Ereignisse `plan-calculated`, `error`. | `samplesize/element` |
 | `@auditcore/ui` | `samplesizeMessages` | Re-Export | – | `@auditcore/ui-core` |
@@ -1026,6 +1036,7 @@ Web Components:
 | `<flowaudit-report-export>` | `ReportExportPanel` | `reporting/element.ts` |
 | `<flowaudit-report-templates>` | `ReportTemplates` | `reporttemplates/element.ts` |
 | `<flowaudit-risk-flags>` | `RiskFlags` | `risk/element.ts` |
+| `<flowaudit-runner-console>` | `RunnerConsole` | `runner/element.ts` |
 | `<flowaudit-sample-size-planner>` | `SampleSizePlanner` | `samplesize/element.ts` |
 | `<flowaudit-sampling>` | `SamplingPanel` | `sampling/element.ts` |
 | `<flowaudit-screening-review>` | `ScreeningReview` | `screening/element.ts` |
@@ -1707,6 +1718,20 @@ ReportTemplates: Berichtsvorlage wählen, Datenvertrag sehen, Vorschau und Beric
 | `entries` | `readonly FlagEntry[]` | nein | `() => []` | – |
 | `profile` | `ProfileReference \| null` | nein | `null` | – |
 | `locale` | `Locale` | nein | `undefined` | – |
+
+#### `RunnerConsole`
+
+RunnerConsole: Liste mit Auswahl; Logik im Kern (createRunnerController).
+
+| Prop | Typ | Pflicht | Standard | Beschreibung |
+|---|---|---|---|---|
+| `port` | `RunnerPort \| null` | nein | `null` | Fachlogik, z. B. `createRunnerMemoryPort([...])`. |
+| `locale` | `Locale` | nein | `undefined` | – |
+
+| Ereignis | Nutzdaten | Beschreibung |
+|---|---|---|
+| `item-select` | `[item: RunnerItem]` | – |
+| `error` | `[message: string]` | – |
 
 #### `SampleSizePlanner`
 

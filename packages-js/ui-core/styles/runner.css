@@ -1,0 +1,8 @@
+/* RunnerConsole – RunnerConsole (Vue) und FlowauditRunnerConsole (React). Farben nur aus --fa-*-Variablen. */
+.fa-runner { display: flex; flex-direction: column; gap: var(--fa-space-3); font: var(--fa-font-size-sm) / var(--fa-line-height) var(--fa-font-sans); color: var(--fa-color-text); }
+.fa-runner__list { display: flex; flex-direction: column; gap: var(--fa-space-1); margin: 0; padding: 0; list-style: none; }
+.fa-runner__item { width: 100%; padding: var(--fa-space-2) var(--fa-space-3); border: 1px solid var(--fa-color-border); border-radius: var(--fa-radius); background: var(--fa-color-surface); color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.fa-runner__item:focus-visible { outline: none; border-color: var(--fa-color-accent); box-shadow: var(--fa-focus-ring); }
+.fa-runner__item--selected { border-color: var(--fa-color-accent); }
+.fa-runner__muted { margin: 0; color: var(--fa-color-text-muted); }
+.fa-runner__failure { margin: 0; padding: var(--fa-space-2) var(--fa-space-3); border-radius: var(--fa-radius); background: var(--fa-color-danger-soft); color: var(--fa-color-danger); }
