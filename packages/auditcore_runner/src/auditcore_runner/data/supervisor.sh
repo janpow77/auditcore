@@ -103,7 +103,8 @@ wait_until_allowed() {
   install -d -m 0700 "$SECRET_DIR"
   until allowed && choose_gpu; do
     if (( ! said )); then log "Instanz ruht (Klasse aus, über Maximum oder Soll)"; said=1; fi
-    sleep 30
+    # Scale-Set: Nachfrage ändert sich je Job – kürzer warten, damit neue Jobs schnell einen Runner finden.
+    if [[ "$BACKEND" == "scaleset" ]]; then sleep 5; else sleep 30; fi
   done
   if (( said )); then log "Instanz wieder frei"; fi
 }
