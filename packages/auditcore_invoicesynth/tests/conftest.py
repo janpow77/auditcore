@@ -31,3 +31,19 @@ def small_dataset(
 
     out = tmp_path_factory.mktemp("ds") / "a"
     return out, build_dataset(small_config, out, fonts)
+
+
+TORCH_STACK = frozenset({"torch", "transformers", "tokenizers"})
+
+
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    """Mark tests that need the torch stack as ``gpu`` (select with ``-m gpu``).
+
+    They are CPU smoke tests (``cpu_smoke``) and still run without CUDA; they skip
+    themselves via ``importorskip`` when torch is not installed.
+    """
+    for item in items:
+        function = getattr(item, "function", None)
+        constants = set(getattr(getattr(function, "__code__", None), "co_consts", ()))
+        if constants & TORCH_STACK:
+            item.add_marker(pytest.mark.gpu)

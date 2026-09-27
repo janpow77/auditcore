@@ -168,7 +168,7 @@ def cdi_ready(directories: tuple[Path, ...] = CDI_DIRS) -> bool:
 def hints(profile: Profile, directories: tuple[Path, ...] = CDI_DIRS) -> list[str]:
     """Prerequisites the user has to establish once (shown by install, never done here)."""
     found: list[str] = []
-    uses_gpus = any(c.enabled and profile.gpus_of(name) for name, c in profile.classes.items())
+    uses_gpus = any(c.enabled and c.is_gpu and profile.gpus_of(name) for name, c in profile.classes.items())
     if uses_gpus and profile.gpu_access == "cdi" and not cdi_ready(directories):
         found.append(
             "GPU per CDI: einmalig `sudo nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml` "

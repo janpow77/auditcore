@@ -34,7 +34,7 @@ def test_missing_file_means_no_regulator(tmp_path: Path) -> None:
     "document",
     [
         {"schema": "falsch", "klassen": {}},
-        {"schema": pool.POOL_SCHEMA, "klassen": {"unbekannt": {"soll": 1}}},
+        {"schema": pool.POOL_SCHEMA, "klassen": {"Ungültig Name": {"soll": 1}}},
         {"schema": pool.POOL_SCHEMA, "klassen": {"cpu": {"soll": -1}}},
         {"schema": pool.POOL_SCHEMA, "klassen": {"cpu": {"soll": True}}},
     ],

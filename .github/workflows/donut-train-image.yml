@@ -86,9 +86,10 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         env:
           TOKEN: ${{ github.token }}
+          ACTOR: ${{ github.actor }}
           SHORT: ${{ steps.wheel.outputs.short }}
         run: |
-          echo "$TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          echo "$TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
           docker push "$IMAGE:cu128-g$SHORT"
           docker push "$IMAGE:cu128"
           digest=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:cu128")

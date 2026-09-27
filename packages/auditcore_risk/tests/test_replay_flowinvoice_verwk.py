@@ -27,7 +27,9 @@ def legacy_stage(score: int) -> str:
     return "keine_pruefung" if score < 8 else "teilpruefung" if score < 19 else "vollpruefung"
 
 
-@pytest.mark.parametrize("case", FIXTURE["rbvk"], ids=lambda c: str(id(c)))
+@pytest.mark.parametrize(
+    "case", FIXTURE["rbvk"], ids=[f"rbvk-{i}" for i in range(len(FIXTURE["rbvk"]))]
+)
 def test_rbvk_points_criteria_and_stage(case: dict[str, Any]) -> None:
     result = evaluate([decode(case["record"])], RBVK)
     assessment = result.records[0].assessment

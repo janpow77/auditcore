@@ -16,6 +16,8 @@ dependencies = ["auditcore_common==0.2.0"]
 web = ["starlette>=0.26"]
 dev = [
     "pytest>=8",
+    "pytest-xdist>=3.6",
+    "pytest-timeout>=2.3",
     "hypothesis>=6.100",
     "numpy>=1.26",
     "ruff>=0.11",
@@ -34,7 +36,13 @@ auditcore_sampling = ["py.typed", "provenance.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra --strict-markers --durations=25"
+timeout = 120
+markers = [
+    "slow: läuft länger als etwa 5 s; mit -m 'not slow' abwählbar",
+    "gpu: braucht torch/transformers (Donut); gezielt mit -m gpu",
+    "network: braucht Netzzugang; in CI ohne Netz abwählbar",
+]
 
 [tool.ruff]
 line-length = 100

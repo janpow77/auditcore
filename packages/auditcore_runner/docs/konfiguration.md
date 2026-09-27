@@ -2,7 +2,9 @@
 
 Das Profil liegt unter `~/.config/auditcore-runner/profil.json` (JSON). Maßgeblich
 ist das Schema aus `auditcore-runner profil schema`; ältere Fassungen werden beim
-Lesen migriert (`schema: auditcore-runner/profil/<version>`, derzeit 2).
+Lesen migriert (`schema: auditcore-runner/profil/<version>`, derzeit 3; Version 3 hat frei
+benennbare Klassen mit `art`, die Migration leitet `art` aus dem alten Namen,
+`vram_mb` und den zugeordneten Karten ab).
 Änderungen immer über `auditcore-runner profil anwenden` oder die Oberfläche –
 beide validieren gleich, erhöhen `version` und schreiben `aenderung`.
 
@@ -13,7 +15,7 @@ beide validieren gleich, erhöhen `version` und schreiben `aenderung`.
 | | `rechner` | Name; Präfix der Runner-Namen | Hostname |
 | `ziel` | `art`, `name` | `repo` (`<owner>/<repo>`) oder `org` | – |
 | | `runner_gruppe`, `repos_beobachten`, `bekannte_runner` | Runner-Gruppe; bei `org` Repos für die Warteschlange; Namenspräfixe anderer eigener Rechner | 1, [], [] |
-| `auth` | `art` | `gh` (gh-Anmeldung), `pat` (fein granulares Token), `app` (GitHub App) | `gh` |
+| `auth` | `art` | `app` (GitHub App, empfohlen), `pat` (fein granulares Token) oder `gh` (gh-Anmeldung, nur Einzelrechner) | Vorschlag: `app`, wenn `github-app.json` im Konfigurationsverzeichnis liegt, sonst `pat`, wenn `github-token` dort liegt, sonst `gh` |
 | | `token_datei`, `app_id`, `app_schluessel_datei`, `installation_id` | nur Pfade und IDs, nie Geheimnisse | – |
 | | `image`, `backend` | Runner-Image; Backend `jit` (REST-JIT je Job) oder `scaleset` (Runner-Scale-Set, siehe [backends.md](backends.md)) | `auditcore-runner:local`, `jit` |
 | | `gpu_zugriff` | `cdi` (`--device nvidia.com/gpu=<UUID>`) oder `gpus` (`--gpus device=<UUID>`, ältere Docker) | `cdi` |
@@ -23,7 +25,7 @@ beide validieren gleich, erhöhen `version` und schreiben `aenderung`.
 | | `egress` | `aus` (Internet offen, nur private Netze gesperrt) oder `allowlist` (nur die Ziele unten) | `aus` |
 | | `egress_hosts`, `egress_github_meta`, `egress_ports` | Hostnamen (GitHub, PyPI, npm, Container-Registrys), Bereiche aus `api.github.com/meta` (`api`, `web`, `git`, `packages`, `actions` …), erlaubte TCP-Ports | siehe `profil schema`, 80/443 |
 | `soll_quelle` | `art`, `datei` | `statisch`, `lokal` oder `datei` (externer Regler) | `statisch`, `~/.config/auditcore-runner/soll.json` |
-| `klassen.<k>` | `aktiv`, `cpus`, `speicher_gb`, `min_instanzen`, `max_instanzen` | Grenzen je Klasse (`cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`) | – |
+| `klassen.<k>` | `art`, `aktiv`, `cpus`, `speicher_gb`, `min_instanzen`, `max_instanzen` | Grenzen je Klasse; Name frei (a–z, 0–9, Bindestrich, ≤ 31 Zeichen), Vorlage `cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`; `art` `cpu` oder `gpu` (GPU-Runner bekommen je Job eine Karte) | – |
 | | `leise_max`, `vram_mb`, `labels`, `cpu_shares`, `nice`, `io_gewicht`, `uv_cache_volume` | Maximum im Leise-Modus (-1 = wie max), VRAM-Bedarf je GPU-Runner, Runner-Labels, Priorität | – |
 | `gpus[]` | `index`, `uuid`, `name`, `vram_mb`, `erlaubt`, `klasse` | erlaubte Karten; welche genutzt wird, entscheidet sich je Job | erkannt |
 | `prioritaeten[]` | `klasse`, `rang`, `verdraengbar`, `min` | Rangfolge (1 = höchste) von Klassen und Prüfprofilen; bei knapper Kapazität werden verdrängbare Klassen mit hohem Rang zuerst bis `min` gesenkt | [] |

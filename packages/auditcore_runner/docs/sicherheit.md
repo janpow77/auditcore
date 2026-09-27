@@ -47,8 +47,14 @@ gestoppt (einzige Ausnahme von „laufende Jobs bleiben“).
 
 Das Profil enthält nur Pfade (`auth.token_datei`, `auth.app_schluessel_datei`).
 Empfohlen ist eine GitHub App mit minimalen Rechten (Repository
-„Administration: write“ nur für Runner-Registrierung, „Actions: read“) oder ein
-fein granulares Token für genau ein Repository. Das Token bleibt auf dem Host;
+„Administration: write“ nur für Runner-Registrierung, „Actions: read“); sie ist
+Standard, sobald `~/.config/auditcore-runner/github-app.json` existiert
+(`app_id`, `installation_id`, `schluessel_datei` – der Schlüssel bleibt in
+seiner eigenen Datei, Rechte 0600). Sonst ein fein granulares Token für genau
+ein Repository (`~/.config/auditcore-runner/github-token`). `gh` (persönliche
+Anmeldung mit breiten Rechten) nur als Rückfall für einen Einzelrechner;
+`profil erkennen` wählt in dieser Reihenfolge und nennt den Grund
+(`auth_begruendung`). Das Token bleibt auf dem Host;
 Container sehen es nie. Beim Backend `scaleset` gehen Tokens nur per TLS an
 `api.github.com` und Hosts unter `actions.githubusercontent.com`; andere
 Adressen in Antworten werden abgelehnt.
