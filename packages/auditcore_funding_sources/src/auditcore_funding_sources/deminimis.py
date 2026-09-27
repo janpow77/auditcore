@@ -28,7 +28,7 @@ from .deminimis_inventory import inventory_state as inventory_state
 from .deminimis_inventory import mark_vanished as mark_vanished
 from .deminimis_inventory import reconcile_page as reconcile_page
 from .deminimis_inventory import record_hash as record_hash
-from .profiles import load_profile
+from .profiles import AUTHORITY_LEVELS_VERSION, load_profile
 
 PROFILE_ID = "designer.deminimis.register"
 API_BASE = "https://aid-register.ec.europa.eu/eair/public/api"
@@ -257,7 +257,7 @@ def harvest_timestamp(value: object) -> datetime | None:
 
 @lru_cache(maxsize=1)
 def _authority_rules() -> tuple[tuple[str, tuple[re.Pattern[str], ...]], ...]:
-    data = load_profile("designer.deminimis.authority_levels")
+    data = load_profile("designer.deminimis.authority_levels", AUTHORITY_LEVELS_VERSION)
     return tuple(
         (target, tuple(re.compile(p, re.IGNORECASE) for p in patterns))
         for target, patterns in data["rules"]

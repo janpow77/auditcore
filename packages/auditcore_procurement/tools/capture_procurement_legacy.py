@@ -23,6 +23,7 @@ import importlib.util
 import json
 import os
 import platform
+import re
 import sys
 from dataclasses import asdict, is_dataclass
 from decimal import Decimal
@@ -349,6 +350,23 @@ async def fetch_capture(ted: ModuleType, httpx: Any) -> list[dict[str, Any]]:
         finally:
             ted.httpx.AsyncClient = original
     return rows
+
+
+NEUTRALIZED = (
+    "Klammerzusätze mit Institutsnamen (quality/institutsnamen-denylist.txt) entfernt, "
+    "z. B. im User-Agent; sonst unverändert beobachtet."
+)
+
+
+def _neutral(text: str) -> str:
+    """Drop parenthetical notes naming an institution of the repository denylist."""
+    script = Path(__file__).resolve().parents[3] / "scripts" / "check_institution_names.py"
+    spec = importlib.util.spec_from_file_location("check_institution_names", script)
+    assert spec is not None and spec.loader is not None
+    module = sys.modules[spec.name] = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    names = module.name_pattern(module.load_denylist())
+    return re.sub(r' \([^()"]*\)', lambda m: "" if names.search(m.group()) else m.group(), text)
 
 
 def main() -> None:
@@ -838,9 +856,10 @@ def main() -> None:
         "fetch": fetch,
         "prechecks": prechecks,
         "clients": clients,
+        "neutralized": NEUTRALIZED,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
+    args.output.write_text(_neutral(json.dumps(report, indent=1, ensure_ascii=False)) + "\n")
     print(
         json.dumps(
             {

@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from helpers import institution_names
+
 import auditcore_bpmn
 
 PACKAGE = Path(auditcore_bpmn.__file__).parent
@@ -51,7 +53,7 @@ def test_runtime_imports() -> None:
 
 
 def test_no_forbidden_calls_or_names() -> None:
-    forbidden_text = ("hmwvw", "wibank", "hessen")
+    forbidden_text = ("hessen", *institution_names())
     for path in PACKAGE.rglob("*.py"):
         text = path.read_text(encoding="utf-8")
         tree = ast.parse(text)

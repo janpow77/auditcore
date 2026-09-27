@@ -28,7 +28,7 @@ except ImportError as error:
         "pip install 'auditcore_bpmn[legal]'"
     ) from error
 
-DEFAULT_SOURCE_PROFILE = ("auditdatabase.esi", "2026.09.1")
+DEFAULT_SOURCE_PROFILE = ("auditdatabase.esi", "2026.09.2")
 
 
 class LegalSourcesNormResolver:

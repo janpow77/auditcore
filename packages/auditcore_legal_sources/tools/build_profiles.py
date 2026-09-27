@@ -1,4 +1,8 @@
-"""Derive the packaged source profiles from the recorded legacy snapshot (unchanged data)."""
+"""Derive the packaged source profiles from the recorded legacy snapshot.
+
+The data is taken unchanged from the fixture; institution names are already
+neutralised there (2026.09.2 replaced 2026.09.2, which carried them).
+"""
 
 from __future__ import annotations
 
@@ -6,7 +10,7 @@ import argparse
 import json
 from pathlib import Path
 
-VERSION = "2026.09.1"
+VERSION = "2026.09.2"
 
 
 def main() -> None:

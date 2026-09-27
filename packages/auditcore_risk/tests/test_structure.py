@@ -182,7 +182,7 @@ def _drop(*path: str) -> Mutation:
 LEGACY = ("profile_data", "riskanalysis.legacy-b5c523bf7eaa")
 FLOWSTAT = ("profile_data", "audit_designer.flowstat_belegliste-1254591156d3")
 CHECKER = ("profile_data", "flowinvoice.risk_checker-2026.09.3")
-RBVK = ("profile_data", "flowinvoice.rbvk_wibank-2026.09.2")
+RBVK = ("profile_data", "flowinvoice.rbvk_intermediate_body-2026.09.2")
 EXANTE = ("profile_data", "flowinvoice.exante_basis-fb2d18568d2e")
 YEAR = ("profile_data", "riskanalysis.year_bound-2026.09.5")
 

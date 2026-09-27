@@ -78,8 +78,8 @@
     "classification": "OBSERVED"
   },
   "profiles": [
-    "auditdatabase.esi 2026.09.1",
-    "audit_designer.vp_ai 2026.09.1"
+    "auditdatabase.esi 2026.09.2",
+    "audit_designer.vp_ai 2026.09.2"
   ],
   "excluded": [
     "DIP DEFAULT_API_KEY (hart kodierter Schlüssel)",

@@ -93,7 +93,7 @@ Neue Consumer-Umstellungen verwenden die freigegebenen Profile
 `riskanalysis.year_bound 2026.09.5` (Spalte `nettobetrag` aus „Gesamt Netto“,
 soweit vorhanden; fehlt sie oder ist ein Wert leer, sind RF02/RF08 je Beleg
 unbestimmt – kein Abbruch, kein Rückfall auf brutto; EU-Schwellen 2014–2027 über
-das Extra `procurement`), `flowinvoice.rbvk_wibank 2026.09.2` (Eingaben
+das Extra `procurement`), `flowinvoice.rbvk_intermediate_body 2026.09.2` (Eingaben
 `offene_auflagen_anzahl`, `externe_kuerzung`, `vorherige_verwk_quote`,
 `vorherige_kuerzungsgruende`), `flowinvoice.fraud_signals`/`ted_contractor
 2026.09.2` und `auditcore_statistics.recommended_flowinvoice_benford`. Die
@@ -115,11 +115,11 @@ entscheiden (Status: geplant).
 
 ## flowinvoice VerwK-Scores (Consumer, geprüft)
 
-* WIBANK-RBVK: `verwk/pipeline/rbvk_wibank_scorer.py:score_mittelabrufe` (Aufrufer
+* RBVK der Zwischengeschalteten Stelle: `verwk/pipeline/rbvk_wibank_scorer.py:score_mittelabrufe` (Aufrufer
   `pruefplan.py:903`). Umstellung: Merkmalsaufbereitung und Vorhistorie bleiben;
   im Bewertungsschritt wird je Mittelabruf ein Datensatz aus den aufbereiteten
   Feldern plus `prior_k`, `prior_q`, `prior_families`, `erstes_vorhaben` gebildet
-  und mit `evaluate([...], load_profile("flowinvoice.rbvk_wibank", "fb2d18568d2e"))`
+  und mit `evaluate([...], load_profile("flowinvoice.rbvk_intermediate_body", "fb2d18568d2e"))`
   bewertet (Punkte `assessment["score"]`, Kriterien `assessment["criteria"]`).
 * Nachweis (Checkout-Kopie, Bewertungsschritt ersetzt, installiertes Wheel):
   `score_mittelabrufe` liefert für einen Demobestand und 40 synthetische Rahmen
