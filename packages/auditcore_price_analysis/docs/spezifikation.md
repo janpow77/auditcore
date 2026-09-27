@@ -1,6 +1,6 @@
 # Spezifikation auditcore_price_analysis
 
-Stand: 26.09.2026, Paketversion 0.1.3, Vertrag `auditcore_price_analysis.contract/1`.
+Stand: 27.09.2026, Paketversion 0.1.3, Vertrag `auditcore_price_analysis.contract/1`.
 Charakterisierung: 274 tatsächlich ausgeführte Fälle von regulierung
 (`tests/fixtures/regulierung_calculator_observed.json`, `tests/test_legacy_replay.py`,
 `tests/test_contract_vs_legacy.py`); Abweichungen in
@@ -48,7 +48,8 @@ Alle Funktionen sind rein und deterministisch.
 | I9 | Gruppenkennzahlen: Minimum ≤ Median, Mittelwert ≤ Maximum, Standardabweichung ≥ 0, unabhängig von der Reihenfolge; leere Gruppe → `None`. | `test_i9_group_statistics_are_ordered_and_order_free` |
 | I10 | Die Tarifauswahl ist unabhängig von der Eingabereihenfolge und wählt nur Tarife, die am Stichtag gelten und (laut Profil) freigegeben sind. | `test_i10_selection_is_deterministic_and_only_picks_eligible` |
 | I11 | `legacy_parse_decimal` stimmt bei Punkttext mit `parse_decimal` überein und lehnt jedes Komma ab. | `test_i11_legacy_reader_rejects_every_comma` |
-| I12 | Fix- und Variabelanteil werden getrennt gerundet; ihre Summe weicht von 100 höchstens um einen Rundungsschritt ab; ohne Kosten sind beide `None`. | `test_i12_fixed_and_variable_share_differ_from_100_by_at_most_one_step`, `test_i12_shares_can_add_up_to_100_1` |
+| I12 | Profile mit `rounding.shares = "separate"` (Vorgabe, bis 2026.09.2): Fix- und Variabelanteil werden getrennt gerundet; ihre Summe weicht von 100 höchstens um einen Rundungsschritt ab; ohne Kosten sind beide `None`. | `test_i12_fixed_and_variable_share_differ_from_100_by_at_most_one_step`, `test_i12_shares_can_add_up_to_100_1` |
+| I13 | Profile mit `rounding.shares = "complement"` (ab 2026.09.3): Fix- und Variabelanteil ergeben zusammen genau 100 (der Fixanteil ist gerundet, der Variabelanteil `100 − Fixanteil`); ohne Kosten sind beide `None`. | `test_i13_complement_shares_add_up_to_exactly_100` |
 
 ## Fehlerfälle
 
@@ -92,9 +93,13 @@ Mischpreis bei Verbrauch 0, Anteile bei Kosten 0, Kennzahlen einer leeren Gruppe
 Legacy-Funktionen und -Profile reproduzieren das Original bitgenau für die
 Umstellung bestehender Aufrufer; neue Aufrufer nutzen den Vertrag oben.
 
-**Befund aus den Eigenschaftstests (26.09.2026, dokumentiert, Code unverändert):**
-Fix- und Variabelanteil werden je für sich mit `ROUND_HALF_UP` auf 0,1 gerundet.
-Liegen beide genau auf der Hälfte (33,35 % / 66,65 %), ergibt die Summe
-100,1 % (Beispiel in I12). Das entspricht der Regel „jede Zeile einzeln
-runden“ (PA-L10); wer eine Summe von genau 100 braucht, bildet den zweiten
-Anteil als `100 − Fixanteil`.
+**Befund aus den Eigenschaftstests (26.09.2026) – behoben am 27.09.2026 in
+neuen Profilversionen:** Fix- und Variabelanteil wurden je für sich mit
+`ROUND_HALF_UP` auf 0,1 gerundet. Lagen beide genau auf der Hälfte
+(33,35 % / 66,65 %), ergab die Summe 100,1 % (Beispiel in I12). Die Profile
+`regulierung.hpp.wasser` und `regulierung.hpp.nahwaerme` 2026.09.3
+(Entscheidung PA-R01) setzen `rounding.shares = "complement"`: der
+Variabelanteil ist `100 − gerundeter Fixanteil`, die Summe ist immer genau
+100 (I13). Sie ersetzen 2026.09.2 als empfohlene Fassung (`supersedes`);
+2026.09.2 bleibt mit unveränderten Daten und Fingerprint ladbar und rundet
+weiter getrennt (Regel `rounding.shares = "separate"`, PA-L10).

@@ -155,7 +155,10 @@ Werten, Freigabeanforderung, Ampel-, Statistik- und Auswahlregeln. Mitgeliefert:
 **2026.09.1** (charakterisiert, bitgenau zum Original) und **2026.09.2**
 (empfohlen, Nutzerentscheidungen PA-H01 bis PA-H04 vom 23.09.2026, u. a.
 Wasser-Standardverbrauch 180 m³ über `standard_consumption`, Beachtung von
-`valid_to`). Es gibt kein stilles Standardprofil: Version immer angeben oder
+`valid_to`); Nahwärme und Wasser zusätzlich in **2026.09.3** (empfohlen,
+ersetzt 2026.09.2 per `supersedes`; Entscheidung PA-R01: Fix- und
+Variabelanteil ergeben zusammen genau 100 %, `rounding.shares =
+"complement"`). Es gibt kein stilles Standardprofil: Version immer angeben oder
 ausdrücklich `load_recommended_calculation_profile` bzw.
 `load_recommended_comparison_profile` verwenden.
 
