@@ -105,6 +105,8 @@ jobs:
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
+          # Release-Job: kein Cache, sonst könnte ein vergifteter Cache ins Paket gelangen.
+          package-manager-cache: false
       # Trusted Publishing braucht npm >= 11.5.1.
       - run: npm install --global npm@11.16.0
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c

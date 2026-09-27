@@ -20,6 +20,8 @@ web = ["starlette>=0.26.1,<2"]
 fastapi = ["fastapi>=0.92", "starlette>=0.26.1,<2"]
 dev = [
     "pytest>=8",
+    "pytest-xdist>=3.6",
+    "pytest-timeout>=2.3",
     "hypothesis>=6.100",
     "ruff>=0.11",
     "mypy>=1.15",
@@ -39,7 +41,13 @@ auditcore_dataprotection = ["py.typed", "provenance.json", "profiles/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra"
+addopts = "-ra --strict-markers --durations=25"
+timeout = 120
+markers = [
+    "slow: läuft länger als etwa 5 s; mit -m 'not slow' abwählbar",
+    "gpu: braucht torch/transformers (Donut); gezielt mit -m gpu",
+    "network: braucht Netzzugang; in CI ohne Netz abwählbar",
+]
 
 [tool.ruff]
 line-length = 100

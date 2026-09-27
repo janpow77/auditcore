@@ -6,7 +6,12 @@ Ein Plan allein, Beispielcode oder leere Paketgerüste erfüllen den Auftrag nic
 
 ## 1. Verbindliche Grundlage und tatsächlicher Arbeitsstand
 
-Lies zuerst vollständig:
+> **Vorrang hat [AGENTS.md](../../AGENTS.md):** Zuerst den Befundbericht
+> (`auditcore-codegate report`) und die deterministischen Werkzeuge nutzen. Die
+> folgende Liste ist die fachliche Grundlage; lies daraus gezielt die Abschnitte,
+> die der konkrete Schritt braucht, statt alles vorab vollständig.
+
+Grundlage:
 
 - `AUDITCORE_LASTENHEFT.md`
 - `docs/architecture/ADR-001-multi-package-monorepo.md`

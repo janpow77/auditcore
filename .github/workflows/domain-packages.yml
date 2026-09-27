@@ -13,6 +13,7 @@ on:
       - 'scripts/prepare_library_release.py'
       - 'scripts/verify_code_quality.py'
       - 'scripts/ci_affected_packages.py'
+      - 'requirements/ci.lock'
       - 'quality/baseline.json'
       - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
@@ -26,6 +27,7 @@ on:
       - 'scripts/prepare_library_release.py'
       - 'scripts/verify_code_quality.py'
       - 'scripts/ci_affected_packages.py'
+      - 'requirements/ci.lock'
       - 'quality/baseline.json'
       - 'src/auditcore/tools/quality/codegate*.py'
       - '.github/workflows/domain-packages.yml'
@@ -38,7 +40,7 @@ concurrency:
 
 jobs:
   packages:
-    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || matrix.python == '3.12' || matrix.python == '3.11') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
+    runs-on: ${{ ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) || github.actor == 'dependabot[bot]' || matrix.python == '3.12' || matrix.python == '3.11') && 'ubuntu-latest' || fromJSON(vars.AUDITCORE_RUNNER || '"ubuntu-latest"') }}
     strategy:
       fail-fast: false
       matrix:
@@ -50,6 +52,10 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '${{ matrix.python }}'
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: requirements/ci.lock
       - name: Select affected packages
         id: affected
         env:
@@ -67,10 +73,12 @@ jobs:
       - name: Build and install the platform wheel
         if: steps.affected.outputs.any == 'true'
         run: |
-          python -m pip install --upgrade pip build 'setuptools>=83' wheel
+          uv pip install --system -c requirements/ci.lock build 'setuptools>=83' wheel
           python -m build
-          python -m venv .auditcore/package-platform
-          .auditcore/package-platform/bin/python -m pip install --upgrade pip 'dist/auditcore-0.3.0-py3-none-any.whl[dev]'
+          # --seed: pip bleibt im venv (pip check, verify_domain_packages.py prüft pip-Installationen)
+          uv venv --seed --python "$(command -v python)" .auditcore/package-platform
+          uv pip install --python .auditcore/package-platform/bin/python -c requirements/ci.lock \
+            'dist/auditcore-0.3.0-py3-none-any.whl[dev]'
       - name: Prepare Debian installation environment
         if: matrix.python == '3.12' && steps.affected.outputs.any == 'true'
         run: >-
@@ -110,20 +118,36 @@ jobs:
           from pathlib import Path
           python = str(Path('.auditcore/package-platform/bin/python').absolute())
           wheels = sorted(Path('.auditcore/domain-ci/builds').glob('*/*.whl'))
-          subprocess.run([python, '-m', 'pip', 'install',
+          subprocess.run(['uv', 'pip', 'install', '--python', python, '-c', 'requirements/ci.lock',
                           *(str(w.absolute()) + '[dev]' for w in wheels)], check=True)
+          junit = Path('.auditcore/junit').absolute()
+          junit.mkdir(parents=True, exist_ok=True)
           for project in (Path(line) / 'pyproject.toml' for line in Path('.affected-packages').read_text().split()):
-              for arguments in (['pytest', 'tests', '-q'], ['ruff', 'check', '.'],
+              report = f'--junitxml={junit / project.parent.name}.xml'
+              for arguments in (['pytest', 'tests', '-q', '-n', 'auto', report], ['ruff', 'check', '.'],
                                 ['mypy', 'src'], ['bandit', '-q', '-ll', '-r', 'src']):
                   subprocess.run([python, '-m', *arguments], cwd=project.parent, check=True)
           subprocess.run([python, '-m', 'pip', 'check'], check=True)
           PY
+      - name: Befundbericht (fehlgeschlagene Tests mit Minimal-Trace)
+        if: always() && steps.affected.outputs.any == 'true'
+        run: |
+          shopt -s nullglob
+          files=(.auditcore/junit/*.xml)
+          [ ${#files[@]} -gt 0 ] || exit 0
+          .auditcore/package-platform/bin/auditcore-codegate report \
+            $(printf -- '--junit %s ' "${files[@]}") \
+            --output .auditcore/report.json --markdown .auditcore/report.md \
+            --summary "$GITHUB_STEP_SUMMARY" > /dev/null
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always() && steps.affected.outputs.any == 'true'
         with:
           name: domain-package-evidence-${{ matrix.python }}
           include-hidden-files: true
           path: |
+            .auditcore/report.json
+            .auditcore/report.md
+            .auditcore/junit/*.xml
             .auditcore/optional-renderers-ci/result.json
             .auditcore/optional-renderers-ci/*.log
             .auditcore/optional-renderers-ci/requirements-*.txt
