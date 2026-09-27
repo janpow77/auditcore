@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-core
 
+## Unreleased
+
+- Hochrechnung: Aufbau der Stichprobe (ein Zeitraum, mehrere Zeiträume, Gruppe von Programmen), Teilstichproben je Einheit, Systembewertung für die Neuberechnung des Konfidenzniveaus (Leitfaden 7.7); neue Funktionen in `model-design.ts`, `view-details.ts`, Controller-Aktionen `setDesign`, `setSystemAssessment`, `setPopulationUnits`, `toggleSubsample`, `editSubsample`, `updateSubsample`, `addSubItem`, `updateSubItem`, `removeSubItem`; Typen des erweiterten Vertrags `evaluation/1`.
+
 ## 0.2.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui-core` statt `@flowaudit/ui-core` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-core-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.

@@ -3,9 +3,11 @@ import { computed } from 'vue'
 import {
   confidenceChoices,
   extrapolationConfidenceLabel,
+  extrapolationDesignChoices,
   extrapolationIssueText,
   extrapolationMessages,
   extrapolationMethodGroups,
+  systemAssessmentChoices,
   type ExtrapolationController,
   type ExtrapolationData,
   type ExtrapolationMethod,
@@ -24,6 +26,8 @@ const id = useId('fa-extrapolation-settings')
 const catalogue = computed(() => props.state.catalogue)
 const groups = computed(() => (catalogue.value ? extrapolationMethodGroups(catalogue.value, t) : []))
 const levels = computed(() => (catalogue.value ? confidenceChoices(catalogue.value, props.method) : []))
+const designs = computed(() => extrapolationDesignChoices(catalogue.value, t))
+const assessments = computed(() => systemAssessmentChoices(catalogue.value, active.value))
 const issue = (key: string): string => extrapolationIssueText(props.state.issues, key, t)
 const value = (event: Event): string => (event.target as HTMLInputElement | HTMLSelectElement).value
 const level = (text: string): number | null => (text === '' ? null : Number(text))
@@ -63,6 +67,27 @@ const level = (text: string): number | null => (text === '' ? null : Number(text
         <input class="fa-extrapolation__input fa-extrapolation__input--number" inputmode="numeric" :value="state.form.sampleSize" :aria-invalid="issue('sampleSize') ? 'true' : undefined" data-testid="extrapolation-sample-size" @input="controller.setSampleSize(value($event))" />
         <span v-if="issue('sampleSize')" class="fa-extrapolation__error">{{ issue('sampleSize') }}</span>
         <span class="fa-extrapolation__hint">{{ t('sampleSizeHint') }}</span>
+      </label>
+      <label class="fa-extrapolation__field">
+        <span class="fa-extrapolation__label">{{ t('design') }}</span>
+        <select class="fa-extrapolation__select" :value="state.form.design" data-testid="extrapolation-design" @change="controller.setDesign(value($event) as typeof state.form.design)">
+          <option v-for="entry in designs" :key="entry.id" :value="entry.id">{{ entry.label }}</option>
+        </select>
+        <span class="fa-extrapolation__hint">{{ t('designHint') }}</span>
+      </label>
+      <label v-if="state.form.design === 'periods' && method && !method.statistical" class="fa-extrapolation__field">
+        <span class="fa-extrapolation__label">{{ t('populationUnits') }}</span>
+        <input class="fa-extrapolation__input fa-extrapolation__input--number" inputmode="numeric" :value="state.form.populationUnits" :aria-invalid="issue('populationUnits') ? 'true' : undefined" data-testid="extrapolation-population-units" @input="controller.setPopulationUnits(value($event))" />
+        <span v-if="issue('populationUnits')" class="fa-extrapolation__error">{{ issue('populationUnits') }}</span>
+        <span class="fa-extrapolation__hint">{{ t('populationUnitsHint') }}</span>
+      </label>
+      <label v-if="method?.statistical && assessments.length" class="fa-extrapolation__field">
+        <span class="fa-extrapolation__label">{{ t('systemAssessment') }}</span>
+        <select class="fa-extrapolation__select" :value="state.form.systemAssessment" data-testid="extrapolation-system-assessment" @change="controller.setSystemAssessment(value($event))">
+          <option value="">{{ t('systemNone') }}</option>
+          <option v-for="entry in assessments" :key="entry.id" :value="entry.id">{{ entry.label }}</option>
+        </select>
+        <span class="fa-extrapolation__hint">{{ t('systemAssessmentHint') }}</span>
       </label>
       <label class="fa-extrapolation__field">
         <span class="fa-extrapolation__label">{{ t('materiality') }} (%)</span>

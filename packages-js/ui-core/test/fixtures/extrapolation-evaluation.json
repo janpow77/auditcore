@@ -11,8 +11,10 @@
   "source": "EGESIF_16-0014-01, Abschn. 6.3.1, 6.3.2; Anhang 1, 4.1",
   "formula": "EE = EE_e + Σ BV_hs / n_hs × ΣE/BV",
   "needs_population_size": false,
-  "needs_sample_size": false
+  "needs_sample_size": false,
+  "periods": true
  },
+ "design": "single",
  "projection": {
   "method": "mus.standard",
   "projected_random_error": 14000.0,
@@ -113,5 +115,30 @@
    }
   ],
   "difference": null
- }
+ },
+ "confidence_recalculation": {
+  "applicable": true,
+  "reason": null,
+  "coefficient": 1.645,
+  "recalculated_coefficient": 0.4,
+  "confidence_level": 0.31084348322064836,
+  "required_level": null,
+  "supports_not_material": null,
+  "steps": [
+   {
+    "label": "Neuer z-Wert",
+    "formula": "z* = z × (TE − Gesamtfehler) / SE",
+    "value": 0.4,
+    "source": "EGESIF_16-0014-01, Abschn. 7.7"
+   },
+   {
+    "label": "Neu berechnetes Konfidenzniveau",
+    "formula": "1 − 2 × (1 − Φ(z*))",
+    "value": 0.31084348322064836,
+    "source": "EGESIF_16-0014-01, Abschn. 7.7"
+   }
+  ]
+ },
+ "subsamples": [],
+ "groups": []
 }

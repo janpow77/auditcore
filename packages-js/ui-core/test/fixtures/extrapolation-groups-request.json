@@ -1,0 +1,76 @@
+{
+ "method": "srs.mean_per_unit",
+ "confidence_level": 0.8,
+ "factor_profile": "kom_2017_tables",
+ "materiality_rate": 0.02,
+ "strata": [
+  {
+   "name": "P1",
+   "group": "Programm 1",
+   "book_value": 500000,
+   "population_size": 400
+  },
+  {
+   "name": "P2",
+   "group": "Programm 2",
+   "book_value": 300000,
+   "population_size": 250
+  }
+ ],
+ "units": [
+  {
+   "id": "A-0",
+   "stratum": "P1",
+   "book_value": 1000,
+   "random_error": 40
+  },
+  {
+   "id": "A-1",
+   "stratum": "P1",
+   "book_value": 1000,
+   "random_error": 0
+  },
+  {
+   "id": "A-2",
+   "stratum": "P1",
+   "book_value": 1000,
+   "random_error": 0
+  },
+  {
+   "id": "A-3",
+   "stratum": "P1",
+   "book_value": 1000,
+   "random_error": 10
+  },
+  {
+   "id": "A-4",
+   "stratum": "P1",
+   "book_value": 1000,
+   "random_error": 0
+  },
+  {
+   "id": "B-0",
+   "stratum": "P2",
+   "book_value": 1000,
+   "random_error": 0
+  },
+  {
+   "id": "B-1",
+   "stratum": "P2",
+   "book_value": 1000,
+   "random_error": 0
+  },
+  {
+   "id": "B-2",
+   "stratum": "P2",
+   "book_value": 1000,
+   "random_error": 5
+  },
+  {
+   "id": "B-3",
+   "stratum": "P2",
+   "book_value": 1000,
+   "random_error": 0
+  }
+ ]
+}

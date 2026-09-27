@@ -17,6 +17,7 @@ const format = (value: number): string => String(value).replace('.', ',')
 function form(patch: Partial<ExtrapolationForm> = {}): ExtrapolationForm {
   return {
     methodId: 'mus.standard', confidence: 0.9, profileId: 'kom_2017_tables', sampleSize: '', materiality: '2',
+    design: 'single', systemAssessment: '', populationUnits: '',
     strata: stratumRows(fixtureStrata, format), units: unitRows(fixtureUnits, format), ...patch,
   }
 }

@@ -2,6 +2,7 @@
 import { computed, watch } from 'vue'
 import {
   extrapolationFormMessage,
+  hasExtrapolationDetails,
   extrapolationInputNumber,
   extrapolationMessages,
   type EvaluationResult,
@@ -14,10 +15,12 @@ import {
 import FaButton from '../base/FaButton.vue'
 import { useI18n, type Locale } from '../i18n'
 import { saveFile } from '../rest/download'
+import ExtrapolationDetails from './ExtrapolationDetails.vue'
 import ExtrapolationResidual from './ExtrapolationResidual.vue'
 import ExtrapolationResult from './ExtrapolationResult.vue'
 import ExtrapolationSettings from './ExtrapolationSettings.vue'
 import ExtrapolationStrata from './ExtrapolationStrata.vue'
+import ExtrapolationSubsample from './ExtrapolationSubsample.vue'
 import ExtrapolationUnits from './ExtrapolationUnits.vue'
 import { useExtrapolation } from './useExtrapolation'
 
@@ -67,12 +70,14 @@ async function onExport(format: ExtrapolationExportFormat): Promise<void> {
       <ExtrapolationSettings :controller="controller" :state="state" :method="method" :locale="locale" />
       <ExtrapolationStrata :controller="controller" :state="state" :locale="locale" />
       <ExtrapolationUnits :controller="controller" :state="state" :locale="locale" />
+      <ExtrapolationSubsample :controller="controller" :state="state" :locale="locale" />
       <div class="fa-extrapolation__actions">
         <FaButton variant="primary" :loading="state.busy === 'evaluate'" data-testid="extrapolation-evaluate" @click="controller.evaluate">{{ t('evaluate') }}</FaButton>
         <p v-if="formMessage" class="fa-extrapolation__error" role="alert" data-testid="extrapolation-form-error">{{ formMessage }}</p>
       </div>
       <template v-if="state.result">
         <ExtrapolationResult :result="state.result" :catalogue="state.catalogue" :busy="state.busy === 'export'" :locale="locale" @export="onExport" />
+        <ExtrapolationDetails v-if="hasExtrapolationDetails(state.result)" :result="state.result" :catalogue="state.catalogue" :locale="locale" />
         <ExtrapolationResidual :controller="controller" :state="state" :locale="locale" />
       </template>
     </template>

@@ -1,0 +1,99 @@
+{
+ "method": "mus.standard",
+ "confidence_level": 0.9,
+ "factor_profile": "kom_2017_tables",
+ "materiality_rate": 0.02,
+ "system_assessment": 3,
+ "periods": [
+  {
+   "name": "1. Halbjahr"
+  },
+  {
+   "name": "2. Halbjahr"
+  }
+ ],
+ "strata": [
+  {
+   "name": "Programm",
+   "period": "1. Halbjahr",
+   "book_value": 1000000
+  },
+  {
+   "name": "Programm",
+   "period": "2. Halbjahr",
+   "book_value": 1500000
+  }
+ ],
+ "units": [
+  {
+   "id": "V-01",
+   "period": "1. Halbjahr",
+   "stratum": "Programm",
+   "book_value": 40000,
+   "subsample": {
+    "estimator": "ratio",
+    "strata": [
+     {
+      "name": "Vollerhebung",
+      "book_value": 10000
+     },
+     {
+      "name": "Stichprobe",
+      "book_value": 30000
+     }
+    ],
+    "units": [
+     {
+      "id": "LP",
+      "stratum": "Vollerhebung",
+      "book_value": 10000,
+      "random_error": 300,
+      "exhaustive": true
+     },
+     {
+      "id": "R-1",
+      "stratum": "Stichprobe",
+      "book_value": 2000,
+      "random_error": 40
+     },
+     {
+      "id": "R-2",
+      "stratum": "Stichprobe",
+      "book_value": 3000
+     }
+    ]
+   }
+  },
+  {
+   "id": "V-02",
+   "period": "1. Halbjahr",
+   "stratum": "Programm",
+   "book_value": 25000
+  },
+  {
+   "id": "V-03",
+   "period": "1. Halbjahr",
+   "stratum": "Programm",
+   "book_value": 30000
+  },
+  {
+   "id": "V-01",
+   "period": "2. Halbjahr",
+   "stratum": "Programm",
+   "book_value": 50000,
+   "random_error": 2500
+  },
+  {
+   "id": "V-04",
+   "period": "2. Halbjahr",
+   "stratum": "Programm",
+   "book_value": 20000
+  },
+  {
+   "id": "V-05",
+   "period": "2. Halbjahr",
+   "stratum": "Programm",
+   "book_value": 45000
+  }
+ ]
+}
