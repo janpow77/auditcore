@@ -22,6 +22,9 @@
   6.5.3.3.2, 7.3.2.2, 7.6.5, 7.7, 7.8.2, 7.9.5; Abdeckungsliste in
   `docs/abgrenzung.md`.
 
+Keine Verhaltensänderung: `web._contract.Reader` prüft das JSON-Objekt über
+`auditcore_common.rest.json_object` (Meldung und Status unverändert).
+
 ## 0.1.0 – 2026-09-26 – Paketstand für Release v0.4.2 (erste Veröffentlichung)
 
 Erste Fassung (Neuimplementierung nach EGESIF_16-0014-01 und CPRE_23-0013-01 Annex 3).

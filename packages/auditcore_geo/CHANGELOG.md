@@ -2,6 +2,25 @@
 
 Rekonstruiert aus der Git-Historie (Pull Requests #13, #16, #38, #54, #73).
 
+## Unreleased
+
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 10 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+`legacy.*` (osint, audit_designer, flowsearch) und Profil `kugel.6371000m`. Keine Befunde. Keine Verhaltensänderung.
+
+Keine Verhaltensänderung. Die rahmenwerkfreie REST-Schicht nutzt
+`auditcore_common.rest`: `ContractError` ist Unterklasse von
+`rest.ContractError` (Standardcode weiter `ungueltige_eingabe`),
+`Body.of` prüft über `rest.json_object`, `Reply`/`_json`/`decode` über
+`rest.Reply`, `rest.json_reply` und `rest.decode_body` (Codes `zu_gross`,
+`ungueltiges_json` unverändert). Braucht die nächste Fassung von
+`auditcore_common` (neue Parameter von `decode_body`); der Pin wird im
+Release-Ablauf angehoben. `create_app`/`routes`/`create_router` bleiben als
+Starlette-/FastAPI-Adapter im Paket (Duplikatgruppe B1).
+
 ## 0.3.1 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. Die Endlichkeitsprüfung der Koordinaten nutzt

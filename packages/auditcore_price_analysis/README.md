@@ -18,12 +18,12 @@ python -m pip install auditcore_price_analysis \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.3 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-price-analysis/`):
 
 ```text
-auditcore_price_analysis @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_price_analysis-0.1.2-py3-none-any.whl#sha256=43e225c80c6be00b3c1a511bccbbe6a7d41f188048f18748885c375bb5290100
+auditcore_price_analysis @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_price_analysis-0.1.3-py3-none-any.whl#sha256=69423286e560b4d1ce25cb0ade227b803d526ee0db20d825eb19638bbc93b0e2
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -155,7 +155,10 @@ Werten, Freigabeanforderung, Ampel-, Statistik- und Auswahlregeln. Mitgeliefert:
 **2026.09.1** (charakterisiert, bitgenau zum Original) und **2026.09.2**
 (empfohlen, Nutzerentscheidungen PA-H01 bis PA-H04 vom 23.09.2026, u. a.
 Wasser-Standardverbrauch 180 m³ über `standard_consumption`, Beachtung von
-`valid_to`). Es gibt kein stilles Standardprofil: Version immer angeben oder
+`valid_to`); Nahwärme und Wasser zusätzlich in **2026.09.3** (empfohlen,
+ersetzt 2026.09.2 per `supersedes`; Entscheidung PA-R01: Fix- und
+Variabelanteil ergeben zusammen genau 100 %, `rounding.shares =
+"complement"`). Es gibt kein stilles Standardprofil: Version immer angeben oder
 ausdrücklich `load_recommended_calculation_profile` bzw.
 `load_recommended_comparison_profile` verwenden.
 

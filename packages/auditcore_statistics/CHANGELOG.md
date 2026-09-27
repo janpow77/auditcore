@@ -1,5 +1,14 @@
 # Changelog auditcore_statistics
 
+## Unreleased
+
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 9 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+`legacy_run_benford`, `legacy_flowinvoice_benford`. Keine Befunde. Keine Verhaltensänderung.
+
 ## 0.3.4 – 2026-09-26 – Paketstand für Release v0.4.2 – REST-Schicht aus auditcore_common
 
 Keine Verhaltensänderung: alle 184 bestehenden Tests laufen unverändert grün;

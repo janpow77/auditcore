@@ -57,7 +57,9 @@
     "regulierung.hpp.vergleich@2026.09.1",
     "regulierung.hpp.nahwaerme@2026.09.2",
     "regulierung.hpp.wasser@2026.09.2",
-    "regulierung.hpp.vergleich@2026.09.2"
+    "regulierung.hpp.vergleich@2026.09.2",
+    "regulierung.hpp.nahwaerme@2026.09.3",
+    "regulierung.hpp.wasser@2026.09.3"
   ],
   "recommended_profiles": [
     "regulierung.hpp.nahwaerme@2026.09.2",
@@ -75,6 +77,38 @@
     ],
     "review_required": [
       "Umlagenstichtag 01.07.2025 (Rechtsgrundlage)"
+    ]
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11",
+      "I12",
+      "I13"
+    ],
+    "legacy_variants": [
+      "legacy_parse_decimal",
+      "legacy.calculate_nahwaerme",
+      "legacy.calculate_wasser",
+      "legacy.calculate_delta",
+      "legacy.determine_compliance",
+      "legacy.calculate_cluster_statistics",
+      "legacy.waehle_preis_deterministisch",
+      "legacy.waehle_wasser_preis",
+      "regulierung.hpp.vergleich"
     ]
   }
 }

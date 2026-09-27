@@ -20,12 +20,12 @@ python -m pip install 'auditcore_entity_matching[fuzzy]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.3 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.4 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-entity-matching/`):
 
 ```text
-auditcore_entity_matching @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_entity_matching-0.2.3-py3-none-any.whl#sha256=8865ffc99778f76770f1550b5ea2fc57a47af24d47d2fdc9ed4a9e283ebc7e43
+auditcore_entity_matching @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_entity_matching-0.2.4-py3-none-any.whl#sha256=a289fdd1132538eb0984793c98260487bfb16795242763e4cba6462dcb90074e
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -122,7 +122,7 @@ Jedes Profil ist quellengebunden, versioniert und hat einen Fingerprint;
 
 | Profil | Versionen | Herkunft / Verwendung |
 |---|---|---|
-| `flowworkshop.state_aid` | 2026.09.1, 2026.09.2 | Beihilfe-Namensabgleich (`Müller → mueller`) |
+| `flowworkshop.state_aid` | 2026.09.1–2026.09.3 | Beihilfe-Namensabgleich (`Müller → mueller`); ab 2026.09.3 idempotent (`casefold_then_translate`) |
 | `flowworkshop.sanctions` | 2026.09.1–2026.09.3 | Sanktionsabgleich flowworkshop |
 | `audit_designer.sanctions` | 2026.09.1–2026.09.3 | Sanktionsabgleich audit_designer |
 | `flowworkshop.entity_resolution` | 2026.09.1 | Entity Resolution flowworkshop |
@@ -136,7 +136,10 @@ Jedes Profil ist quellengebunden, versioniert und hat einen Fingerprint;
 `sanctions_screening` → `audit_designer.sanctions` 2026.09.3,
 `pep_screening` → `flowinvoice.pep` 2026.09.2, `payee` →
 `riskanalysis.payee` 2026.09.2. Die Empfehlung ändert kein Ergebnis eines
-benannten Profils. Schwellen (etwa 75, 70, Klassen 97/90/80) existieren nur
+benannten Profils. `flowworkshop.state_aid` 2026.09.3 ist die idempotente
+Fassung von 2026.09.2 (Kleinschreibung vor der Zeichentabelle, `SOCIÉTÉ →
+societe` statt `société`); die Empfehlung bleibt bis zur Umstellung der
+Anwendungen auf 2026.09.2. Schwellen (etwa 75, 70, Klassen 97/90/80) existieren nur
 als benannte Profilwerte; `best_match` verlangt `min_score` ausdrücklich.
 
 ## Herkunft und Charakterisierung
