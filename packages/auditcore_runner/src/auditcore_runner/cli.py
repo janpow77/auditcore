@@ -255,7 +255,7 @@ def build_parser() -> argparse.ArgumentParser:
 def _add_profile_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser]) -> None:
     group = sub.add_parser("profil", help="Profil dieses Rechners").add_subparsers(dest="aktion", required=True)
     detect_parser = group.add_parser("erkennen", help="Hardware messen und Profil vorschlagen")
-    detect_parser.add_argument("--ziel", help="Repository besitzer/name")
+    detect_parser.add_argument("--ziel", help="Repository <owner>/<repo>")
     detect_parser.add_argument("--vorlage", choices=TEMPLATES, help="neutrale Vorlage, an diesen Rechner angepasst")
     detect_parser.add_argument("--speichern", action="store_true")
     detect_parser.set_defaults(func=cmd_detect)

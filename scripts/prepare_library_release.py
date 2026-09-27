@@ -108,6 +108,8 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     "auditcore_extrapolation": frozenset(),
     # Neuimplementierung ohne Quellrepository (Donut-Plan, 2026-09-24): keine Bindung.
     "auditcore_invoicesynth": frozenset(),
+    # Neuimplementierung; Ausgangspunkt ci/runner im selben Repository.
+    "auditcore_runner": frozenset({("janpow77/auditcore", "7b71f1c13cda06bd375e50ad8f909618ec09986c")}),
     "auditcore_kanban": frozenset(
         {
             ("janpow77/audit_designer", "2c726f3c1481775cd34aeaa83f87137d6ab12ffe"),

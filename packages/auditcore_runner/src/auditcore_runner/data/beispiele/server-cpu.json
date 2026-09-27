@@ -10,7 +10,7 @@
   "rechner": "server",
   "ziel": {
     "art": "repo",
-    "name": "besitzer/repo",
+    "name": "owner/repo",
     "runner_gruppe": 1,
     "repos_beobachten": [],
     "bekannte_runner": []

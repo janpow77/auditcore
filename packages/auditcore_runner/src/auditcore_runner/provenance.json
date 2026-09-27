@@ -32,6 +32,12 @@
       "claude"
     ],
     "reviewed_on": "2026-09-27",
-    "notice": "Eigener Code in auditcore; keine Übernahme aus fremden Repositories. Externe Werkzeuge werden nur aufgerufen (THIRD_PARTY.md)."
+    "notice": "Eigener Code in auditcore; keine Übernahme aus fremden Repositories. Externe Werkzeuge werden nur aufgerufen (THIRD_PARTY.md).",
+    "authorization": {
+      "status": "USER_AUTHORIZED_MIT",
+      "date": "2026-09-22",
+      "confirmation": "die Bibliotheken sollen MIT sein, die anderen Repos nicht; die Bibliotheken kommen nach auditcore",
+      "limitation": "Gilt für die Bibliothek in auditcore; keine Umlizenzierung anderer Repositories. Externe Werkzeuge werden nur aufgerufen (THIRD_PARTY.md)."
+    }
   }
 }

@@ -56,14 +56,14 @@ def test_example_templates_are_neutral_and_valid(workstation_facts: HostFacts, s
         profile = profile_io.from_json(raw)
         server_profile = profile if name == "workstation-2gpu" else replace(profile, gpus=())
         assert validate(server_profile, facts) == [], name
-        assert profile.target == Target("repo", "besitzer/repo")
+        assert profile.target == Target("repo", "owner/repo")
 
 
 def test_template_adapts_to_detected_cards(workstation_facts: HostFacts, monkeypatch: pytest.MonkeyPatch) -> None:
     from auditcore_runner import cli
 
-    adapted = cli.from_template("workstation-2gpu", workstation_facts, "firma/projekt")
-    assert adapted.host == "workstation" and adapted.target.name == "firma/projekt"
+    adapted = cli.from_template("workstation-2gpu", workstation_facts, "owner/repo")
+    assert adapted.host == "workstation" and adapted.target.name == "owner/repo"
     assert [g.uuid for g in adapted.gpus] == [g.uuid for g in workstation_facts.gpus]
     assert validate(adapted, workstation_facts) == []
 

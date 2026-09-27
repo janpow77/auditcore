@@ -126,9 +126,8 @@ def check_file(path: Path, runner_variables: tuple[str, ...] = ()) -> list[Workf
     try:
         import yaml
     except ImportError as error:
-        raise MissingExtraError(
-            "Workflow-Prüfung braucht das Extra: pip install 'auditcore_runner[workflows]'"
-        ) from error
+        hint = "Workflow-Prüfung braucht das Extra: pip install 'auditcore_runner[workflows]'"
+        raise MissingExtraError(hint) from error
     document = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(document, dict):
         return []

@@ -61,7 +61,7 @@ def _target(found: Findings, target: Target) -> None:
         found.add("ziel.art", "repo oder org")
     pattern = REPO if target.scope == "repo" else ORG
     if not pattern.fullmatch(target.name):
-        found.add("ziel.name", "Form besitzer/repo" if target.scope == "repo" else "Organisationsname")
+        found.add("ziel.name", "Form <owner>/<repo>" if target.scope == "repo" else "Organisationsname")
     prefixes = [p for p in target.known_runner_prefixes if not LABEL.fullmatch(p.rstrip("-"))]
     if prefixes:
         found.add("ziel.bekannte_runner", "ungültige Präfixe: " + ", ".join(prefixes))

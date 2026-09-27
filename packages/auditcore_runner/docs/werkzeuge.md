@@ -63,7 +63,7 @@ Priorität; das gilt vor der Repo-Datei.
 
 ## Messen
 
-`auditcore-runner messen --repo besitzer/repo --tage 14` – CI-Dauern (Median,
+`auditcore-runner messen --repo <owner>/<repo> --tage 14` – CI-Dauern (Median,
 p90, Anteil rot) und Token-Verbrauch aus Claude-Code- und Codex-Protokollen je
 Arbeitsverzeichnis; `--otel-datei` wertet OTel-Metriken
 (`claude_code.token.usage`, `claude_code.cost.usage`) nach `task_type` aus.

@@ -1,4 +1,4 @@
-"""Check and apply a profile – shared by CLI (``profil pruefen|anwenden``), web API and external tools.
+"""Check and apply a profile – shared by the CLI, the web API and external tools.
 
 Every accepted change raises ``version`` and records who changed it. An
 optional expected version detects concurrent edits (local UI vs. central

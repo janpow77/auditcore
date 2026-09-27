@@ -32,7 +32,7 @@ erzeugt; jede Paket-README folgt der
 [README-Vorlage](docs/bibliotheken/readme-vorlage.md).
 
 <!-- paketkatalog:start (generiert: python scripts/docs/catalog.py --write) -->
-36 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
+37 Pakete, gruppiert nach Einordnung ([Übersicht](docs/bibliotheken/uebersicht.md)):
 
 **Querschnitt**
 
@@ -63,7 +63,7 @@ erzeugt; jede Paket-README folgt der
 | [`auditcore_procurement`](packages/auditcore_procurement) | 0.2.4 | Vergabebekanntmachungen (TED, HAD) als kanonischer Datensatz mit verhaltensgleicher TED-Normalisierung und Dateiimport sowie deterministische, versionierte Vergabe-Vorprüfungen mit EU-Schwellenwerten je Geltungszeitraum. | `auditcore_common==0.2.0`; Extras: `html`, `sources` | spezifiziert |
 | [`auditcore_reporting`](packages/auditcore_reporting) | 0.3.0 | Charakterisierte Flowlib-Zahlenformate für Berichte (Spaltenname → Excel-Zahlenformat) mit benannten Formatprofilen, optionalem, abgesichertem XLSX-Export und versionierten Berichtsvorlagen (DOCX, PDF, HTML). | `auditcore_common==0.2.0`; Extras: `excel`, `docx`, `pdf`, `web`, `fastapi` | spezifiziert |
 | [`auditcore_risk`](packages/auditcore_risk) | 0.3.4 | Risiko-Merkmale (Red Flags) aus ausdrücklich gewählten, versionierten und quellengebundenen Regelprofilen, jedes Merkmal mit Code, Begründung, Belegwerten und Quellfundstelle. | `auditcore_common==0.2.0`, `auditcore_entity_matching==0.2.4`; Extras: `fuzzy`, `pandas`, `procurement`, `web`, `fastapi` | spezifiziert |
-| [`auditcore_runner`](packages/auditcore_runner) | 0.1.0 | Self-hosted GitHub-Runner mit dynamischer Skalierung nach Last, Speicher, Temperatur und Nutzung sowie lokale Prüfbank mit einheitlichen, gegen eine Baseline gefilterten Befunden (SARIF) und Aufgabenpaketen für Agentenläufe. | `PyYAML`; Extras: `github-app` | neu |
+| [`auditcore_runner`](packages/auditcore_runner) | 0.1.0 | Ephemere self-hosted GitHub-Runner auf eigenen Rechnern – isoliert, dynamisch nach Last skaliert – und eine lokale Prüfbank mit einheitlichen, baseline-gefilterten Befunden. | keine; Extras: `github-app`, `workflows` | neu |
 | [`auditcore_sampling`](packages/auditcore_sampling) | 0.2.3 | Stichprobenumfänge (MUS, einfache Zufallsstichprobe), systematische MUS-Auswahl, Zufallsauswahl und Schichtung mit ausdrücklich benannten, quellengebundenen Methoden. | `auditcore_common==0.2.0`; Extras: `web` | spezifiziert |
 | [`auditcore_statistics`](packages/auditcore_statistics) | 0.3.4 | Beschreibende Prüfstatistik (Benford-Test erster und erster zwei Ziffern, Konformitätsmaße nach MAD und z-Test) mit benannten, quellengebundenen Methodenprofilen. | `auditcore_common==0.2.0`; Extras: `web` | spezifiziert |
 

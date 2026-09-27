@@ -11,7 +11,7 @@ beide validieren gleich, erhöhen `version` und schreiben `aenderung`.
 | Kopf | `version`, `aenderung.{zeit,quelle,wer}` | fortlaufende Version, letzte Änderung (`lokal` oder `flow-agent`) | 0 |
 | | `sync` | nur Anzeige: `aus` oder `flow-agent` (zentral mitgepflegt) | `aus` |
 | | `rechner` | Name; Präfix der Runner-Namen | Hostname |
-| `ziel` | `art`, `name` | `repo` (`besitzer/repo`) oder `org` | – |
+| `ziel` | `art`, `name` | `repo` (`<owner>/<repo>`) oder `org` | – |
 | | `runner_gruppe`, `repos_beobachten`, `bekannte_runner` | Runner-Gruppe; bei `org` Repos für die Warteschlange; Namenspräfixe anderer eigener Rechner | 1, [], [] |
 | `auth` | `art` | `gh` (gh-Anmeldung), `pat` (fein granulares Token), `app` (GitHub App) | `gh` |
 | | `token_datei`, `app_id`, `app_schluessel_datei`, `installation_id` | nur Pfade und IDs, nie Geheimnisse | – |

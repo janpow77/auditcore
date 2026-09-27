@@ -123,7 +123,7 @@ def test_cli_profile_commands(
     assert cli.main([*args, "--quelle", "flow-agent", "--wer", "zentrale"]) == 0
     result = json.loads(capsys.readouterr().out)
     assert result["version"] == 1 and profile_io.load(profile_file).change.source == "flow-agent"
-    assert cli.main(["profil", "erkennen", "--vorlage", "server-cpu", "--ziel", "firma/projekt"]) == 0
+    assert cli.main(["profil", "erkennen", "--vorlage", "server-cpu", "--ziel", "owner/repo"]) == 0
 
 
 def test_cli_findings_and_workflows(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
