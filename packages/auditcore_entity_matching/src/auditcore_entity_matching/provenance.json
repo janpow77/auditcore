@@ -287,7 +287,8 @@
       "legacy.flowworkshop_normalize_name",
       "legacy.designer_normalisiere_name",
       "legacy.flowinvoice_pep_normalize_name",
-      "riskanalysis.payee"
+      "riskanalysis.payee",
+      "translate_then_casefold"
     ]
   }
 }

@@ -6,7 +6,11 @@ Two algorithms exist in the sources and are kept apart:
   table (``ä → ae``, ``é → e`` …) *before* case folding, ``&`` → ``und``,
   punctuation → space, legal-form tokens and optionally filler words removed.
   Characters outside the table, including upper-case accented letters such as
-  ``É``, are kept.
+  ``É``, are kept – so a second pass can change the result (``É → é → e``).
+* ``casefold_then_translate`` (flowworkshop state aid from 2026.09.3): the
+  same steps, but case folding (and NFC composition) *before* the table, so
+  upper-case accented letters meet their lower-case entry and normalising a
+  comparison form again leaves it unchanged.
 * ``casefold_fold_nfkd`` (flowworkshop and audit_designer sanctions): case
   folding, a small fold map (``ß → ss``, ``ø → o`` …), NFKD decomposition
   without combining marks (``ä → a``), punctuation → space, legal-form tokens
@@ -106,6 +110,11 @@ def _translate_then_casefold(text: str, rules: Normalization) -> str:
     return _SPACE.sub(" ", _WORD.sub(" ", value)).strip()
 
 
+def _casefold_then_translate(text: str, rules: Normalization) -> str:
+    """Idempotent state aid variant: case folding and NFC before the character table."""
+    return _translate_then_casefold(unicodedata.normalize("NFC", text.casefold()), rules)
+
+
 def _casefold_fold_nfkd(text: str, rules: Normalization) -> str:
     """Sanctions variants ``casefold_fold_nfkd`` and ``casefold_nfc_fold_nfkd``."""
     value = text.casefold()
@@ -117,6 +126,7 @@ def _casefold_fold_nfkd(text: str, rules: Normalization) -> str:
 _TOKEN_ALGORITHMS: Mapping[str, Callable[[str, Normalization], str]] = {
     "lower_nfkd_ascii": _lower_nfkd_ascii,
     "translate_then_casefold": _translate_then_casefold,
+    "casefold_then_translate": _casefold_then_translate,
 }
 
 

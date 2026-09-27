@@ -61,10 +61,21 @@ def test_i2_normalize_is_idempotent(name: str, profile) -> None:
 
 
 def test_i2_translate_then_casefold_is_not_idempotent_legacy() -> None:
-    """I2 (Befund): the state-aid table runs before case folding, so É → é → e."""
-    profile = load_profile("flowworkshop.state_aid", "2026.09.1")
-    assert normalize("É", profile) == "é"
-    assert normalize("é", profile) == "e"
+    """I2 (Legacy): in 2026.09.1/2026.09.2 the table runs before case folding, so É → é → e."""
+    for version in ("2026.09.1", "2026.09.2"):
+        profile = load_profile("flowworkshop.state_aid", version)
+        assert normalize("É", profile) == "é"
+        assert normalize("é", profile) == "e"
+
+
+@EXAMPLES
+@given(NAMES, st.booleans())
+def test_i2_state_aid_2026_09_3_is_idempotent(name: str, drop: bool) -> None:
+    """I2: from 2026.09.3 (casefold_then_translate) the comparison form is a fixed point."""
+    profile = load_profile("flowworkshop.state_aid", "2026.09.3")
+    once = normalize(name, profile, drop_filler=drop)
+    assert normalize(once, profile, drop_filler=drop) == once
+    assert normalize("SOCIÉTÉ Müller & Söhne GmbH", profile) == "societe mueller soehne"
 
 
 @EXAMPLES
@@ -150,7 +161,7 @@ def test_i9_pair_score_is_bounded_and_reflexive(left: str, right: str, scorer: s
 def test_i10_best_match_respects_the_explicit_threshold(
     query: str, names: list[str], a: float, b: float, profile
 ) -> None:
-    """I10: rounded score ≥ rounded min_score; raising the threshold never creates a match."""
+    """I10: unrounded score ≥ min_score, reported score is its rounding; stricter never adds."""
     candidates = [Candidate(i, n) for i, n in enumerate(names)]
     low, high = sorted((a, b))
     loose = best_match(query, candidates, profile, min_score=low)
@@ -158,6 +169,9 @@ def test_i10_best_match_respects_the_explicit_threshold(
     for result, limit in ((loose, low), (strict, high)):
         if result is not None:
             assert round(limit, 1) <= result.score <= 100
+            assert result.unrounded_score is not None
+            assert limit <= result.unrounded_score <= 100
+            assert result.score == round(result.unrounded_score, 1)
             assert result.candidate_id in range(len(names))
             assert result.profile == profile.reference
     if loose is None:
@@ -165,11 +179,18 @@ def test_i10_best_match_respects_the_explicit_threshold(
 
 
 def test_i10_returned_score_is_rounded_to_one_decimal() -> None:
-    """I10 (Befund): the rounded score may lie up to 0.05 below an unrounded min_score."""
+    """I10: the threshold is checked unrounded; ``score`` is rounded, ``unrounded_score`` is not."""
     profile = load_profile("flowworkshop.entity_resolution", "2026.09.1")
     threshold = 100 * 10 / 11  # WRatio of the two names below
     result = best_match("abcdefghijk", [Candidate(1, "abcdefghijz")], profile, min_score=threshold)
     assert result is not None and result.score == 90.9 < threshold
+    assert result.unrounded_score is not None and result.unrounded_score >= threshold
+    assert (
+        best_match(
+            "abcdefghijk", [Candidate(1, "abcdefghijz")], profile, min_score=threshold + 1e-9
+        )
+        is None
+    )
 
 
 @EXAMPLES
