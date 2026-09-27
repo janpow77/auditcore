@@ -82,7 +82,7 @@ def test_migration_from_version_1() -> None:
         "gpus": [],
     }
     data, applied = profile_io.migrate(old)
-    assert applied == [1] and data["schema"] == "auditcore-runner/profil/2"
+    assert applied == [1, 2] and data["schema"] == "auditcore-runner/profil/3"
     profile = profile_io.from_json(old)
     assert profile.target.name == "owner/repo" and profile.auth.kind == "pat" and profile.auth.token_file == "~/token"
     assert profile.scaling.idle_minutes == 5 and profile.source.kind == "statisch"

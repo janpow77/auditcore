@@ -11,10 +11,10 @@ from .profile import (
     AUTH_KINDS,
     BACKENDS,
     CHANGE_SOURCES,
-    CLASS_NAMES,
+    CLASS_KINDS,
+    CLASS_NAME,
     EGRESS_MODES,
     GPU_ACCESS,
-    GPU_CLASSES,
     SCOPES,
     SYNC_MODES,
     TARGET_SOURCES,
@@ -91,8 +91,12 @@ def _auth(found: Findings, auth: Auth, target: Target) -> None:
 
 def _class(found: Findings, name: str, runner_class: RunnerClass) -> None:
     field = f"klassen.{name}"
-    if name not in CLASS_NAMES:
-        found.add(field, "unbekannte Klasse (erlaubt: " + ", ".join(CLASS_NAMES) + ")")
+    if not CLASS_NAME.fullmatch(name):
+        found.add(field, "Klassenname: a–z, 0–9, Bindestrich, höchstens 31 Zeichen")
+    if runner_class.kind not in CLASS_KINDS:
+        found.add(f"{field}.art", "cpu oder gpu")
+    if runner_class.kind == "cpu" and runner_class.vram_mb:
+        found.add(f"{field}.vram_mb", "nur für Klassen der Art gpu")
     found.within(f"{field}.cpus", runner_class.cpus, 1, 64)
     found.within(f"{field}.speicher_gb", runner_class.memory_gb, 1, 256)
     found.within(f"{field}.max_instanzen", runner_class.max_instances, 0, 32)
@@ -129,9 +133,9 @@ def _gpus(found: Findings, profile: Profile, facts: HostFacts) -> None:
     for index, gpu in enumerate(profile.gpus):
         if gpu.uuid not in present:
             found.add(f"gpus[{index}].uuid", "Karte auf diesem Rechner nicht gefunden")
-        if gpu.runner_class not in GPU_CLASSES:
-            found.add(f"gpus[{index}].klasse", "gpu-16gb oder gpu-8gb")
-    for name in GPU_CLASSES:
+        if gpu.runner_class not in profile.gpu_classes():
+            found.add(f"gpus[{index}].klasse", "Klasse der Art gpu erwartet: " + ", ".join(profile.gpu_classes()))
+    for name in profile.gpu_classes():
         runner_class = profile.classes.get(name)
         cards = len(profile.gpus_of(name))
         if runner_class and runner_class.enabled and runner_class.max_instances > cards:
@@ -198,7 +202,7 @@ def _scaling(found: Findings, scaling: Scaling) -> None:
 
 
 def _priorities(found: Findings, profile: Profile) -> None:
-    known = set(CLASS_NAMES) | set(profile.classes) | set(DEFAULT_PROFILES)
+    known = set(profile.classes) | set(DEFAULT_PROFILES)
     names = [p.name for p in profile.priorities]
     for index, priority in enumerate(profile.priorities):
         if priority.name not in known:

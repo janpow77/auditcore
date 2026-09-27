@@ -16,12 +16,7 @@
     "klassen": {
       "type": "object",
       "propertyNames": {
-        "enum": [
-          "cpu",
-          "cpu-gross",
-          "gpu-16gb",
-          "gpu-8gb"
-        ]
+        "pattern": "^[a-z0-9][a-z0-9-]{0,30}$"
       },
       "additionalProperties": {
         "type": "object",

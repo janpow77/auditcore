@@ -26,12 +26,13 @@ from .profile import (
     ThermalSource,
     default_profile_path,
 )
+from .profile_migration import CURRENT_SCHEMA as CURRENT_SCHEMA  # re-exported
+from .profile_migration import CURRENT_VERSION as CURRENT_VERSION
+from .profile_migration import SCHEMA_PREFIX as SCHEMA_PREFIX
+from .profile_migration import migrate as migrate
+from .profile_migration import schema_version as schema_version
 from .profile_reader import ProfileFormatError as ProfileFormatError  # re-exported
 from .profile_reader import Reader
-
-SCHEMA_PREFIX = "auditcore-runner/profil/"
-CURRENT_VERSION = 2
-CURRENT_SCHEMA = f"{SCHEMA_PREFIX}{CURRENT_VERSION}"
 
 JsonObject = dict[str, object]
 
@@ -50,6 +51,7 @@ def _class(reader: Reader) -> RunnerClass:
         quiet_max=reader.integer("leise_max", -1),
         min_instances=reader.integer("min_instanzen", 0),
         vram_mb=reader.integer("vram_mb", 0),
+        kind=reader.text("art", "cpu"),
     )
 
 
@@ -187,45 +189,6 @@ def _parse_current(reader: Reader) -> Profile:
     )
 
 
-def _migrate_1_to_2(data: JsonObject) -> JsonObject:
-    """Version 1 had ``repo``/``token_datei`` at top level and ``aktivitaet``."""
-    migrated = {k: v for k, v in data.items() if k not in {"repo", "token_datei", "aktivitaet"}}
-    token = data.get("token_datei") or ""
-    migrated["ziel"] = {"art": "repo", "name": data.get("repo", "")}
-    migrated["auth"] = {"art": "pat" if token else "gh", "token_datei": token}
-    migrated["soll_quelle"] = {"art": "statisch"}
-    migrated["skalierung"] = dict(cast(JsonObject, data.get("aktivitaet") or {}))
-    migrated["schema"] = f"{SCHEMA_PREFIX}2"
-    return migrated
-
-
-MIGRATIONS = {1: _migrate_1_to_2}
-
-
-def schema_version(data: JsonObject) -> int:
-    schema = data.get("schema")
-    if not isinstance(schema, str) or not schema.startswith(SCHEMA_PREFIX):
-        raise ProfileFormatError(f"schema: erwartet {SCHEMA_PREFIX}<version>")
-    version = schema.removeprefix(SCHEMA_PREFIX)
-    if not version.isdigit():
-        raise ProfileFormatError("schema: Versionsnummer fehlt")
-    return int(version)
-
-
-def migrate(raw: object) -> tuple[JsonObject, list[int]]:
-    """Bring older files to the current version; returns data and applied steps."""
-    data = Reader(raw, "profil").data
-    applied: list[int] = []
-    version = schema_version(data)
-    if version > CURRENT_VERSION:
-        raise ProfileFormatError(f"schema: Version {version} ist neuer als dieses Paket ({CURRENT_VERSION})")
-    while version < CURRENT_VERSION:
-        data = MIGRATIONS[version](data)
-        applied.append(version)
-        version += 1
-    return data, applied
-
-
 def from_json(raw: object) -> Profile:
     data, _ = migrate(raw)
     return _parse_current(Reader(data, "profil"))
@@ -233,6 +196,7 @@ def from_json(raw: object) -> Profile:
 
 def _class_json(runner_class: RunnerClass) -> JsonObject:
     return {
+        "art": runner_class.kind,
         "aktiv": runner_class.enabled,
         "cpus": runner_class.cpus,
         "speicher_gb": runner_class.memory_gb,

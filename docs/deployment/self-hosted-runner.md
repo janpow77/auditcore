@@ -8,8 +8,10 @@ bleibt nur als Kompatibilitätsschicht für bestehende Installationen.
 
 ## Neuen Rechner anbinden in 5 Befehlen
 
-Voraussetzungen: Linux mit systemd, Docker, `jq`, `gh auth login` (oder ein
-fein granulares Token bzw. eine GitHub App, siehe Paket-Doku).
+Voraussetzungen: Linux mit systemd, Docker, `jq` und Zugangsdaten – empfohlen
+eine GitHub App (`~/.config/auditcore-runner/github-app.json`), sonst ein fein
+granulares Token (`~/.config/auditcore-runner/github-token`); `gh auth login`
+nur für einen Einzelrechner (siehe Paket-Doku).
 
 ```bash
 uv tool install auditcore_runner --index-url https://janpow77.github.io/auditcore/simple/
@@ -27,7 +29,7 @@ Einstellungen über `auditcore-runner ui` oder `profil anwenden`.
 
 ## Architektur
 
-- Je Klasse (`cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`) eine systemd-User-Unit
+- Je Klasse (frei benennbar, Vorlage `cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`) eine systemd-User-Unit
   `auditcore-runner-<klasse>@<n>`; jede Instanz holt je Job eine
   Einmal-Registrierung (JIT) und startet einen frischen Container aus dem
   Runner-Image des Pakets.

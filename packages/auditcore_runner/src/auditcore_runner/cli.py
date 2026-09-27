@@ -11,6 +11,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from . import __version__, anwenden, backend, github, install, pool, profile_io, status
+from .auth_setup import detect_auth
 from .commands_scaleset import add_scaleset_commands
 from .commands_tools import add_tool_commands
 from .hardware import HostFacts, detect
@@ -35,12 +36,11 @@ def from_template(name: str, facts: HostFacts, target: str) -> Profile:
     text = files("auditcore_runner").joinpath("data", "beispiele", f"{name}.json").read_text(encoding="utf-8")
     template = profile_io.from_json(json.loads(text))
     detected = propose(facts, target).gpus
-    classes = {name: settings for name, settings in template.classes.items()}
-    gpu_classes = {g.runner_class for g in detected}
-    for name in [n for n in classes if n.startswith("gpu-") and n not in gpu_classes]:
-        classes.pop(name)
+    with_cards = {g.runner_class for g in detected}
+    classes = {n: c for n, c in template.classes.items() if not c.is_gpu or n in with_cards}
+    cards = tuple(g for g in detected if g.runner_class in classes)
     chosen = replace(template.target, name=target or template.target.name)
-    return replace(template, host=facts.hostname, target=chosen, classes=classes, gpus=detected)
+    return replace(template, host=facts.hostname, target=chosen, classes=classes, gpus=cards, auth=detect_auth()[0])
 
 
 def cmd_detect(args: argparse.Namespace) -> int:
@@ -53,6 +53,7 @@ def cmd_detect(args: argparse.Namespace) -> int:
         {
             "hardware": facts.as_dict(),
             "profil": profile_io.to_json(suggestion),
+            "auth_begruendung": detect_auth()[1],
             "probleme": [p.as_dict() for p in problems],
         }
     )

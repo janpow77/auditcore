@@ -7,11 +7,16 @@ the example profiles (``data/profiles``) carry concrete machines.
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-CLASS_NAMES = ("cpu", "cpu-gross", "gpu-16gb", "gpu-8gb")
-GPU_CLASSES = ("gpu-16gb", "gpu-8gb")
+# Class names are free (RUN-011); these are only the names of the standard template.
+TEMPLATE_CLASSES = ("cpu", "cpu-gross", "gpu-16gb", "gpu-8gb")
+TEMPLATE_GPU_CLASSES = ("gpu-16gb", "gpu-8gb")
+CLASS_KINDS = ("cpu", "gpu")
+# Used in unit, container, volume and scale set names – keep it short and plain.
+CLASS_NAME = re.compile(r"^[a-z0-9][a-z0-9-]{0,30}$")
 BASE_LABELS = ("self-hosted", "linux", "x64")
 TARGET_SOURCES = ("statisch", "lokal", "datei")
 SCOPES = ("repo", "org")
@@ -105,6 +110,11 @@ class RunnerClass:
     quiet_max: int = -1
     min_instances: int = 0
     vram_mb: int = 0
+    kind: str = "cpu"
+
+    @property
+    def is_gpu(self) -> bool:
+        return self.kind == "gpu"
 
     def cap_quiet(self) -> int:
         """Instances allowed while the thermal source reports quiet mode."""
@@ -232,6 +242,9 @@ class Profile:
     version: int = 0
     change: Change = field(default_factory=Change)
     sync: str = "aus"
+
+    def gpu_classes(self) -> list[str]:
+        return sorted(name for name, settings in self.classes.items() if settings.is_gpu)
 
     def gpus_of(self, runner_class: str) -> list[GpuPolicy]:
         """Cards a GPU class may use; which one is picked is decided per job at start."""

@@ -1,5 +1,5 @@
 {
-  "schema": "auditcore-runner/profil/2",
+  "schema": "auditcore-runner/profil/3",
   "version": 0,
   "aenderung": {
     "zeit": "",
@@ -71,6 +71,7 @@
   },
   "klassen": {
     "cpu": {
+      "art": "cpu",
       "aktiv": true,
       "cpus": 2,
       "speicher_gb": 5,

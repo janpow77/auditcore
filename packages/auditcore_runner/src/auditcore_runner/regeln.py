@@ -10,7 +10,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 
-from .profile import GPU_CLASSES, Profile, RunnerClass, Scaling
+from .profile import Profile, RunnerClass, Scaling
 
 
 @dataclass(frozen=True)
@@ -143,7 +143,7 @@ def _thermal_caps(decision: Decision, name: str, settings: RunnerClass, signals:
 def _activity_caps(decision: Decision, name: str, signals: Signals, profile: Profile) -> None:
     scaling = profile.scaling
     active = scaling.interactive_priority and user_active(signals, scaling)
-    if name in GPU_CLASSES:
+    if profile.classes[name].is_gpu:
         decision.cap(name, _gpu_free(profile, name, signals, active), "freie Karten (Nutzer-Vorrang, VRAM)", True)
         return
     if not scaling.interactive_priority or in_full_power_window(signals.hour, scaling):
