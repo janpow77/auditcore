@@ -109,9 +109,13 @@ def python_package(package_dir: Path) -> Package:
         deps += "; Extras: " + ", ".join(f"`{e}`" for e in extras)
     name = str(project["name"])
     return Package(
-        name, package_dir.relative_to(ROOT).as_posix(), str(project["version"]),
-        _purpose(package_dir, str(project.get("description", ""))), deps,
-        status(package_dir), category(name, js=False),
+        name,
+        package_dir.relative_to(ROOT).as_posix(),
+        str(project["version"]),
+        _purpose(package_dir, str(project.get("description", ""))),
+        deps,
+        status(package_dir),
+        category(name, js=False),
     )
 
 
@@ -123,9 +127,13 @@ def js_package(package_dir: Path) -> Package:
     parts += [f"`{n}@{v}` (peer)" for n, v in peers.items()]
     name = str(manifest["name"])
     return Package(
-        name, package_dir.relative_to(ROOT).as_posix(), str(manifest["version"]),
+        name,
+        package_dir.relative_to(ROOT).as_posix(),
+        str(manifest["version"]),
         _purpose(package_dir, str(manifest.get("description", ""))),
-        ", ".join(parts) or "keine", status(package_dir), category(name, js=True),
+        ", ".join(parts) or "keine",
+        status(package_dir),
+        category(name, js=True),
     )
 
 
@@ -149,8 +157,10 @@ def render_table(packages: list[Package], link_prefix: str) -> list[str]:
 
 
 def render_readme(packages: list[Package]) -> str:
-    lines = [f"{len(packages)} Pakete, gruppiert nach Einordnung "
-             "([Übersicht](docs/bibliotheken/uebersicht.md)):"]
+    lines = [
+        f"{len(packages)} Pakete, gruppiert nach Einordnung "
+        "([Übersicht](docs/bibliotheken/uebersicht.md)):"
+    ]
     for name in CATEGORIES:
         group = [p for p in packages if p.category == name]
         if group:
@@ -179,12 +189,15 @@ def main(argv: list[str] | None = None) -> int:
         (ROOT / "docs" / "bibliotheken" / "uebersicht.md", render_overview(packages)),
     )
     stale = [
-        path for path, content in targets
+        path
+        for path, content in targets
         if not sync_file(path, BLOCK, COMMAND, content, write=args.write)
     ]
     for path in stale if args.check else []:
-        print(f"{path.relative_to(ROOT)}: Paketkatalog veraltet – `{COMMAND}` ausführen",
-              file=sys.stderr)
+        print(
+            f"{path.relative_to(ROOT)}: Paketkatalog veraltet – `{COMMAND}` ausführen",
+            file=sys.stderr,
+        )
     return 1 if stale and args.check else 0
 
 
