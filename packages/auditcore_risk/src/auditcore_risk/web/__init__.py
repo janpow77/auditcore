@@ -19,6 +19,12 @@ from .service import (
     handle_profiles,
     library_error,
 )
+from .signal_catalog import (
+    handle_profile_or_signals,
+    handle_signal_profiles,
+    signal_profile_detail,
+)
+from .signals import handle_signal_evaluate, signal_evaluation
 
 __all__ = [
     "MAX_BODY_BYTES",
@@ -32,7 +38,10 @@ __all__ = [
     "handle_check_columns",
     "handle_evaluate",
     "handle_profile",
+    "handle_profile_or_signals",
     "handle_profiles",
+    "handle_signal_evaluate",
+    "handle_signal_profiles",
     "json_safe",
     "library_error",
     "list_profiles",
@@ -40,4 +49,6 @@ __all__ = [
     "profile_fields",
     "routes",
     "rule_parameters",
+    "signal_evaluation",
+    "signal_profile_detail",
 ]

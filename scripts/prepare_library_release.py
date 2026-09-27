@@ -181,6 +181,8 @@ EXPECTED_SOURCES: dict[str, frozenset[tuple[str, str]]] = {
     "auditcore_statistics": frozenset(
         {
             ("janpow77/flowinvoice", "fb2d18568d2eaf64574d131ceae51a936b9aac02"),
+            # Paritätsnachweis significance (ausgeführt, kein Code übernommen)
+            ("janpow77/flowinvoice", "06c06a8cf308669edef876520c94c32773d956d9"),
             ("janpow77/flowstat", "d665ac221f50ba1f465b7337bdd4aa218d78ec8a"),
         }
     ),

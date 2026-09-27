@@ -5,6 +5,7 @@ import { BenfordChart } from './BenfordChart'
 import { BenfordDigits } from './BenfordDigits'
 import { BenfordForm } from './BenfordForm'
 import { BenfordMetrics } from './BenfordMetrics'
+import { BenfordSignificance } from './BenfordSignificance'
 import { useBenford, type BenfordInputs, type UseBenford } from './useBenford'
 
 export type FlowauditBenfordProps = BenfordInputs
@@ -18,6 +19,7 @@ function Result({ view, id, locale }: { view: UseBenford; id: string; locale?: F
       <h3 id={`${id}-result`} className="fa-benford__heading">{result.test_label}</h3>
       <p className="fa-benford__notice">{t('notice')}</p>
       <BenfordMetrics analysis={result} profile={profile} t={t} locale={view.locale} />
+      {result.metrics ? <BenfordSignificance metrics={result.metrics} t={t} locale={view.locale} /> : null}
       <BenfordChart conformity={result.conformity} testLabel={result.test_label} t={t} locale={view.locale} />
       <BenfordDigits conformity={result.conformity} t={t} locale={view.locale} tableLocale={locale} />
     </section>
@@ -40,14 +42,14 @@ export function FlowauditBenford(props: FlowauditBenfordProps) {
       {state.error ? <p className="fa-benford__failure" role="alert">{t('failed', { message: state.error })}</p> : null}
       {state.catalogue ? (
         <>
-          <div className="fa-benford__inputs">
+          {props.hideInputs ? null : <div className="fa-benford__inputs">
             <section className="fa-benford__card" aria-labelledby={`${id}-data`}>
               <h3 id={`${id}-data`} className="fa-benford__heading">{t('data')}</h3>
               <p className="fa-benford__muted" data-testid="benford-count">{benfordValuesText(view.values.length, t, view.locale)}</p>
               <TableImport mode="values" locale={props.locale} onImport={(columns) => controller.useValues(columns.values)} />
             </section>
-            <BenfordForm view={view} id={id} />
-          </div>
+            <BenfordForm view={view} id={id} metrics={props.metrics} />
+          </div>}
           <Result view={view} id={id} locale={props.locale} />
         </>
       ) : null}

@@ -179,8 +179,10 @@ def z_statistic(observed: float, expected: float, n: int, *, correction: bool) -
     return difference / math.sqrt(expected * (1 - expected) / n)
 
 
-def _counts(result: BenfordResult, test: Test) -> list[tuple[int, int, float]]:
+def digit_counts(result: BenfordResult, test: Test) -> list[tuple[int, int, float]]:
     """(digit, observed count, expected share) for the requested test."""
+    if test not in TESTS:
+        raise StatisticsInputError(f"Unbekannter Test '{test}'. Zulässig: {', '.join(TESTS)}.")
     expected_digits = 1 if test == "first" else 2
     if result.digits != expected_digits:
         raise StatisticsInputError(
@@ -211,7 +213,7 @@ def assess(result: BenfordResult, test: Test, profile_id: str) -> Conformity:
         raise StatisticsInputError(f"Unbekannter Test '{test}'. Zulässig: {', '.join(TESTS)}.")
     n = result.analysed
     rows = []
-    for digit, count, expected in _counts(result, test):
+    for digit, count, expected in digit_counts(result, test):
         share = count / n
         z = z_statistic(share, expected, n, correction=chosen.continuity_correction)
         rows.append(DigitAssessment(digit, count, share, expected, z, z > chosen.z_critical))

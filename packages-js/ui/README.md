@@ -131,7 +131,7 @@ Komponenten: [`docs/ui/beitragen.md`](../../docs/ui/beitragen.md).
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (828):
+Exporte der Einstiegspunkte aus `package.json#exports` (841):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -163,16 +163,21 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `AttributesRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `AttributesResult` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BADGE_COLORS` | Re-Export | – | `@auditcore/kanban-core` |
+| `@auditcore/ui` | `BENFORD_METRIC_IDS` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BadgeTone` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordBusy` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordCallbacks` | Re-Export | – | `./useBenford` |
 | `@auditcore/ui` | `BenfordCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordChiTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordController` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordDigitZTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordDistribution` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordMessageKey` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordMetricId` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordMetricTexts` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `BenfordMetricsRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordPanel` | Vue-Komponente | – | `benford/BenfordPanel.vue` |
 | `@auditcore/ui` | `BenfordPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `BenfordSource` | Re-Export | – | `@auditcore/ui-core` |
@@ -199,6 +204,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `ChartBar` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChartBox` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ChartGeometry` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `ChiSquareMetric` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ClientExportFormat` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnCheck` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `ColumnEditorRow` | Vue-Komponente | – | `kanban/ColumnEditorRow.vue` |
@@ -266,6 +272,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `DiffField` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DiffSegment` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DiffSide` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `DigitZMetric` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `DigitZRow` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DistributionRow` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DossierFieldView` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `DownloadFile` | Re-Export | – | `./client` |
@@ -620,6 +628,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `WorkbookPreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `WorkbookRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `acceptsHit` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `activeMetrics` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `activityKey` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `addScenario` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `analyseErrorKey` | Re-Export | – | `@auditcore/ui-core` |
@@ -638,10 +647,13 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `baseMessages` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordBarTitle` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordChartTitle` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `benfordChiTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordDigitColumns` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordDigitRows` | Re-Export | – | `@auditcore/ui-core` |
-| `@auditcore/ui` | `benfordElement` | Konstante | `<flowaudit-benford>`: Eigenschaften `port` (BenfordPort), `values`, `locale`; Ereignisse `analysis-completed`, `error`. | `benford/element` |
+| `@auditcore/ui` | `benfordDigitZTexts` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `benfordElement` | Konstante | `<flowaudit-benford>`: Eigenschaften `port` (BenfordPort), `values`, `locale`, `metrics`, `auto-analyse`, `hide-inputs`; Ereignisse `analysis-completed`, `error`. | `benford/element` |
 | `@auditcore/ui` | `benfordMessages` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui` | `benfordMetricLabel` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordMetricTexts` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordProfile` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `benfordTickText` | Re-Export | – | `@auditcore/ui-core` |
@@ -801,6 +813,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `nextOpenHit` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `nextSort` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui` | `numberColumn` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui` | `offeredMetrics` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `pairs` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `parameterLabel` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `parameterUnit` | Re-Export | – | `@auditcore/ui-core` |
@@ -907,7 +920,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (828):
 | `@auditcore/ui` | `translate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `triggeredDataset` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui` | `useAuthToken` | Funktion | Reaktiver Zugriff auf einen `TokenStore` aus `@auditcore/common`. | `composables/useAuthToken` |
-| `@auditcore/ui` | `useBenford` | Funktion | Vue-Anbindung der Benford-Analyse aus `@auditcore/ui-core` (`createBenfordController`). | `benford/useBenford` |
+| `@auditcore/ui` | `useBenford` | Funktion | – | `benford/useBenford` |
 | `@auditcore/ui` | `useClickOutside` | Funktion | Ruft `handler` bei Klick außerhalb der Elemente (Template-Refs) und bei Escape; abgemeldet beim Aufräumen. | `composables/useDom` |
 | `@auditcore/ui` | `useComparisons` | Funktion | – | `documents/useComparisons` |
 | `@auditcore/ui` | `useDbKanban` | Funktion | – | `dbkanban/useDbKanban` |
@@ -1011,6 +1024,9 @@ AttributeSampling: Merkmalsstichprobe für Systemprüfungen (Leitfaden 7.9); Log
 | `port` | `BenfordPort \| null` | nein | `null` | Fachlogik, z. B. `createBenfordRestPort({ baseUrl: '/api/benford' })`. |
 | `values` | `readonly (number \| null)[]` | nein | `() => []` | Zu prüfende Beträge; alternativ Datei-Import in der Komponente. |
 | `locale` | `Locale` | nein | `undefined` | – |
+| `metrics` | `BenfordMetricsRequest \| null` | nein | `null` | Zusätzliche Kennzahlen (Chi²-Test, auffällige Ziffern) mit ihren Parametern. |
+| `autoAnalyse` | `boolean` | nein | `false` | Nach dem Laden und bei neuen Werten sofort analysieren. |
+| `hideInputs` | `boolean` | nein | `false` | Werte und Formular ausblenden (Einbettung in Berichte, mit `autoAnalyse`). |
 
 | Ereignis | Nutzdaten | Beschreibung |
 |---|---|---|

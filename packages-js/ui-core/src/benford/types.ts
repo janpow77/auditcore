@@ -15,6 +15,16 @@ export interface ConformityProfile {
   note: string
 }
 
+/** Zusätzliche, wählbare Kennzahlen (`metrics`, auditcore_statistics.significance). */
+export type BenfordMetricId = 'chi_square' | 'digit_z'
+
+export interface BenfordMetricsRequest {
+  /** Chi²-Test mit kritischen Werten; Entscheidung nur mit `significance_level`. */
+  chi_square?: { significance_level?: number | null }
+  /** z je Ziffer; „auffällige Ziffern“ nur mit `z_critical`. */
+  digit_z?: { continuity_correction: boolean; z_critical?: number | null }
+}
+
 export interface BenfordCatalogue {
   library: string
   method: string
@@ -22,6 +32,9 @@ export interface BenfordCatalogue {
   short_values: readonly { id: ShortValues; label: string }[]
   profiles: readonly ConformityProfile[]
   limits: { max_values: number }
+  /** Ab auditcore_statistics nach 0.3.4; ältere Server liefern keine Kennzahlen. */
+  metrics?: readonly { id: BenfordMetricId; label: string; parameters: Readonly<Record<string, string>> }[]
+  standard_levels?: readonly number[]
 }
 
 export interface AnalyseRequest {
@@ -29,6 +42,7 @@ export interface AnalyseRequest {
   profile: string
   short_values?: ShortValues
   values: readonly (number | null)[]
+  metrics?: BenfordMetricsRequest
 }
 
 export interface DistributionRow {
@@ -74,12 +88,40 @@ export interface Conformity {
   rows: readonly ConformityRow[]
 }
 
+export interface ChiSquareMetric {
+  test: BenfordTest
+  analysed: number
+  chi2_statistic: number
+  degrees_of_freedom: number
+  p_value: number
+  significance_level: number | null
+  critical_value: number | null
+  rejects: boolean | null
+  critical_values: readonly { level: number; value: number }[]
+}
+
+export interface DigitZRow extends DistributionRow {
+  z: number
+  exceeds: boolean | null
+}
+
+export interface DigitZMetric {
+  test: BenfordTest
+  analysed: number
+  continuity_correction: boolean
+  z_critical: number | null
+  exceeding_digits: readonly number[] | null
+  rows: readonly DigitZRow[]
+}
+
 export interface BenfordAnalysis {
   library: string
   test: BenfordTest
   test_label: string
   distribution: BenfordDistribution
   conformity: Conformity
+  /** Nur bei angeforderten Kennzahlen (`AnalyseRequest.metrics`). */
+  metrics?: { chi_square?: ChiSquareMetric; digit_z?: DigitZMetric }
 }
 
 /** Schnittstelle der Komponente zur Fachlogik; Standardumsetzung: `createBenfordRestPort`. */

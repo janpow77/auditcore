@@ -16,6 +16,13 @@ from .benford import (
 )
 from .legacy_flowinvoice import legacy_flowinvoice_benford, recommended_flowinvoice_benford
 from .numeric import chi2_survival
+from .significance import (
+    ChiSquareTest,
+    DigitZTest,
+    chi2_critical_value,
+    chi_square_test,
+    digit_z_test,
+)
 
 __version__ = "0.3.4"
 
@@ -23,11 +30,16 @@ __all__ = [
     "LEGACY_METHOD",
     "METHOD",
     "BenfordResult",
+    "ChiSquareTest",
     "DigitRow",
+    "DigitZTest",
     "StatisticsInputError",
     "__version__",
     "benford_test",
+    "chi2_critical_value",
     "chi2_survival",
+    "chi_square_test",
+    "digit_z_test",
     "expected_share",
     "legacy_flowinvoice_benford",
     "legacy_run_benford",

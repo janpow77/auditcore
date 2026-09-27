@@ -20,9 +20,10 @@ from .service import (
     Limits,
     handle_check_columns,
     handle_evaluate,
-    handle_profile,
     handle_profiles,
 )
+from .signal_catalog import handle_profile_or_signals, handle_signal_profiles
+from .signals import handle_signal_evaluate
 
 if TYPE_CHECKING:
     from fastapi import APIRouter
@@ -86,7 +87,7 @@ def routes(max_records: int = MAX_RECORDS, max_body_bytes: int = MAX_BODY_BYTES)
 
     async def profile(request: Request) -> JsonObject:
         params = request.path_params
-        return handle_profile(params["profile_id"], params["version"])
+        return handle_profile_or_signals(params["profile_id"], params["version"])
 
     async def check_columns(request: Request) -> JsonObject:
         params = request.path_params
@@ -99,12 +100,22 @@ def routes(max_records: int = MAX_RECORDS, max_body_bytes: int = MAX_BODY_BYTES)
         result: JsonObject = await run_in_threadpool(handle_evaluate, body, limits)
         return result
 
+    async def signal_profiles(request: Request) -> JsonObject:
+        return handle_signal_profiles()
+
+    async def signal_evaluate(request: Request) -> JsonObject:
+        body = await _body(request, max_body_bytes)
+        result: JsonObject = await run_in_threadpool(handle_signal_evaluate, body, limits)
+        return result
+
     base = "/profiles/{profile_id}/{version}"
     return [
         Route("/profiles", _guarded(profiles), methods=["GET"]),
         Route(base, _guarded(profile), methods=["GET"]),
         Route(f"{base}/check-columns", _guarded(check_columns), methods=["POST"]),
         Route("/evaluate", _guarded(evaluate), methods=["POST"]),
+        Route("/fraud-profiles", _guarded(signal_profiles), methods=["GET"]),
+        Route("/fraud-signals/evaluate", _guarded(signal_evaluate), methods=["POST"]),
     ]
 
 

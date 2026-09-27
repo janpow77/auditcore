@@ -20,6 +20,7 @@ from auditcore_statistics import (
     expected_share,
 )
 from auditcore_statistics.conformity import NIGRINI_2012, assess
+from auditcore_statistics.significance import chi_square_test, digit_z_test
 
 EINSTELLUNG = settings(max_examples=150, deadline=None)
 BETRAG = st.one_of(
@@ -189,3 +190,50 @@ def test_i9_nicht_numerisches_wird_abgewiesen_nicht_umgedeutet(values, schlecht)
     """I9: Wahrheitswerte, Texte und unendliche Werte führen zu ``StatisticsInputError``."""
     with pytest.raises(StatisticsInputError):
         benford_test([*values, schlecht], digits=1)  # type: ignore[list-item]
+
+
+@EINSTELLUNG
+@given(
+    st.lists(POSITIV, min_size=1, max_size=200),
+    st.sampled_from(["first", "first_two", "second"]),
+    st.one_of(st.none(), st.floats(min_value=0.001, max_value=0.5)),
+)
+def test_i10_chi_quadrat_test_kritische_werte_und_entscheidung(values, test, level) -> None:
+    """I10: χ²/p gleich der Konformität; P(X ≥ krit) = Niveau; Entscheidung nur mit α."""
+    digits = 1 if test == "first" else 2
+    r = benford_test(values, digits=digits, short_values=None if digits == 1 else "pad")
+    chi = chi_square_test(r, test, significance_level=level)
+    c = assess(r, test, "nigrini.2012")
+    assert (chi.chi2_statistic, chi.p_value) == (c.chi2_statistic, c.p_value)
+    for entry in chi.critical_values:
+        survival = chi2_survival(entry.value, chi.degrees_of_freedom)
+        assert survival == pytest.approx(entry.level, rel=1e-9)
+    values_by_level = [entry.value for entry in chi.critical_values]
+    assert values_by_level == sorted(values_by_level)
+    if level is None:
+        assert chi.rejects is None and chi.critical_value is None
+    else:
+        assert chi.rejects is (chi.p_value < level)
+
+
+@EINSTELLUNG
+@given(
+    st.lists(POSITIV, min_size=1, max_size=200),
+    st.sampled_from(["first", "first_two", "second"]),
+    st.one_of(st.none(), st.floats(min_value=0.1, max_value=5)),
+)
+def test_i11_auffaellige_ziffern_nur_gegen_ausdrueckliche_grenze(values, test, limit) -> None:
+    """I11: z ≥ 0; mit Korrektur gleich der Konformität; Markierung genau z > z_krit."""
+    digits = 1 if test == "first" else 2
+    r = benford_test(values, digits=digits, short_values=None if digits == 1 else "pad")
+    corrected = digit_z_test(r, test, continuity_correction=True, z_critical=limit)
+    assert [row.z for row in corrected.rows] == [
+        row.z for row in assess(r, test, "nigrini.2012").rows
+    ]
+    plain = digit_z_test(r, test, continuity_correction=False, z_critical=limit)
+    for z in (corrected, plain):
+        assert all(row.z >= 0 for row in z.rows)
+        if limit is None:
+            assert z.exceeding_digits is None
+        else:
+            assert z.exceeding_digits == tuple(row.digit for row in z.rows if row.z > limit)

@@ -13,6 +13,7 @@ from typing import Any
 
 from .base import JsonObject
 from .errors import InputError, ProfileError
+from .fraud_display import validate_display
 from .fraud_profile import FraudProfile, as_number, require_parameters
 
 KNOWN_CHECKS = frozenset({"duplicate", "sanctions", "pep", "company", "ted"})
@@ -235,7 +236,7 @@ def score_signals(signals: JsonObject, profile: FraudProfile) -> SignalAssessmen
 def validate_signal(p: JsonObject) -> None:
     """Parameter contract of a ``signal_score`` profile."""
     need = {"order", "derivation", "score", "levels"}
-    if not need <= set(p) or set(p) - need - {"policy"}:
+    if not need <= set(p) or set(p) - need - {"policy", "display"}:
         raise ProfileError(f"signal_score braucht {sorted(need)} (optional policy).")
     policy = p.get("policy", {})
     if (
@@ -257,3 +258,5 @@ def validate_signal(p: JsonObject) -> None:
     thresholds = [t["min"] for t in p["levels"]["thresholds"]]
     if thresholds != sorted(thresholds, reverse=True):
         raise ProfileError("Stufen müssen absteigend geordnet sein.")
+    if "display" in p:
+        validate_display(p["display"], p["order"])

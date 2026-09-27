@@ -23,9 +23,12 @@ wählt keine Schwellen still.
 | `expected_share(d)` | Ziffer bzw. Zifferngruppe d ≥ 1 | log10(1 + 1/d) | keine |
 | `chi2_survival(x, dof)` | Statistik, Freiheitsgrade ≥ 1 | P(X ≥ x) der Chi-Quadrat-Verteilung | keine |
 | `conformity.assess(result, test, profile_id)` | Ergebnis von `benford_test`; `test` = `first` (digits=1), `first_two` oder `second` (digits=2); Profil ausdrücklich (derzeit `nigrini.2012`) | `Conformity` mit MAD, MAD-Stufe und -Bezeichnung, z je Ziffer, auffälligen Ziffern, χ² und p-Wert | keine |
+| `significance.chi_square_test(result, test, *, significance_level=None)` | Ergebnis von `benford_test`, Test wie bei `assess`, optional α ∈ (0, 1) | `ChiSquareTest`: χ², Freiheitsgrade, p-Wert, kritische Werte bei 0,10/0,05/0,01 und α, `rejects` nur mit α | keine |
+| `significance.digit_z_test(result, test, *, continuity_correction, z_critical=None)` | Ergebnis, Test, Stetigkeitskorrektur ausdrücklich, optional z_krit > 0 | `DigitZTest`: z je Ziffer, `exceeding_digits` („auffällige Ziffern“) nur mit z_krit | keine |
+| `chi2_critical_value(dof, level)` | Freiheitsgrade ≥ 1, Niveau ∈ (0, 1) | Quantil x mit P(X ≥ x) = Niveau (Bisektion) | keine |
 | `recommended_flowinvoice_benford(values)` | Beträge | `benford_test(values, digits=1, significance_level=0.05)` | keine |
 | `legacy_run_benford`, `legacy_flowinvoice_benford` | wie die Quellen | exakte Altergebnisse | keine |
-| REST `auditcore_statistics.web` (Extra `web`) | JSON-Objekt, Obergrenze 1 000 000 Werte, 64 MiB | JSON-Ergebnis bzw. `{"error": {"code", "message"}}` | keine |
+| REST `auditcore_statistics.web` (Extra `web`) | JSON-Objekt, Obergrenze 1 000 000 Werte, 64 MiB; optional `metrics` (`chi_square`, `digit_z`) | JSON-Ergebnis (mit `metrics` nur auf Anfrage) bzw. `{"error": {"code", "message"}}` | keine |
 
 Ziffernbildung: signifikante Ziffern aus der exakten Dezimaldarstellung
 (`repr` für `float`, sonst `str`, dann `Decimal.normalize`); negative Werte
@@ -45,6 +48,8 @@ NumPy-Paarweisenreihenfolge (bitgleich zu den Quellen).
 | I7 | Konformität: MAD ≥ 0 und liegt im gemeldeten Band des Profils; auffällige Ziffern sind genau die mit z > z_krit; der Zweitziffertest hat 10 Zeilen, deren Erwartungsanteile zu 1 summieren. | `test_i7_konformitaet_mad_band_und_z_test_konsistent` |
 | I8 | Werte mit nur einer signifikanten Ziffer werden im Zwei-Ziffern-Test nur nach ausdrücklicher Regel behandelt: ohne `short_values` Fehler, `pad` zählt d als 10·d, `exclude` weist sie als kurz aus. | `test_i8_einstellige_werte_im_zweiziffertest_nur_mit_ausdruecklicher_regel` |
 | I9 | Wahrheitswerte, Texte und unendliche Werte werden abgewiesen, nie still umgedeutet. | `test_i9_nicht_numerisches_wird_abgewiesen_nicht_umgedeutet` |
+| I10 | Chi²-Test: χ² und p gleich der Konformität desselben Tests; jeder kritische Wert x erfüllt P(X ≥ x) = Niveau, kritische Werte fallen mit dem Niveau; ohne α keine Entscheidung, mit α gilt `rejects` genau bei p < α. | `test_i10_chi_quadrat_test_kritische_werte_und_entscheidung` |
+| I11 | z je Ziffer: z ≥ 0; mit Stetigkeitskorrektur gleich den z-Werten der Konformität; auffällige Ziffern genau die mit z > z_krit, ohne z_krit keine Markierung. | `test_i11_auffaellige_ziffern_nur_gegen_ausdrueckliche_grenze` |
 
 ## Fehlerfälle
 
@@ -87,6 +92,7 @@ Aufrufer gedacht.
 | Ausschlüsse ohne Ausweis (ST-C05) | Zähler im Ergebnis | `legacy_run_benford` | I2 |
 | `significant = p < 0.05` fest (ST-C06) | Aussage nur mit ausdrücklichem Niveau | `legacy_run_benford` | I6 |
 | flowinvoice: gerundete Erwartungswerte, fester kritischer Wert 15,507, p-Wert als Stufenfunktion, Mindestumfang 50, Texte zählen | `recommended_flowinvoice_benford` = `benford_test` mit α = 0,05 (Entscheidung K10) | `legacy_flowinvoice_benford` | `test_legacy_flowinvoice.py` |
+| flowinvoice: Einzelziffer-Markierung mit z > 2,576 ohne Korrektur (seit K10 nicht mehr in der Prüfentscheidung) | beschreibende Kennzahl `digit_z_test(..., continuity_correction=False, z_critical=2.576)`, nur auf Anfrage | – (Parität `tests/test_significance_parity.py`) | I11 |
 | flowinvoice: `±inf` Endlosschleife (ST-C07) | `ValueError` | – (auch die Legacy-Variante bricht ab) | `test_legacy_flowinvoice.py` |
 
 Offen (HUMAN_DECISION_REQUIRED aus `docs/behavior-changes.md`): welche

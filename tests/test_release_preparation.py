@@ -145,6 +145,10 @@ def _extracted_provenance():
                 "repository": "janpow77/flowinvoice",
                 "commit": "fb2d18568d2eaf64574d131ceae51a936b9aac02",
             },
+            {
+                "repository": "janpow77/flowinvoice",
+                "commit": "06c06a8cf308669edef876520c94c32773d956d9",
+            },
         ],
         "rights": {
             "authorization": {

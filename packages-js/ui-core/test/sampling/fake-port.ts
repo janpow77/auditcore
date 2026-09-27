@@ -5,6 +5,7 @@
  */
 import type { BenfordAnalysis, BenfordCatalogue, BenfordPort, PopulationItem, SamplingCatalogue, SamplingPort, SelectionResult, SizeResult } from '../../src'
 import analysis from '../fixtures/benford-analysis.json'
+import analysisMetrics from '../fixtures/benford-analysis-metrics.json'
 import benfordProfiles from '../fixtures/benford-profiles.json'
 import samplingProfiles from '../fixtures/sampling-profiles.json'
 import selection from '../fixtures/sampling-selection.json'
@@ -15,6 +16,8 @@ export const sizeResult = size as unknown as SizeResult
 export const selectionResult = selection as unknown as SelectionResult
 export const benfordCatalogue = benfordProfiles as unknown as BenfordCatalogue
 export const benfordAnalysis = analysis as unknown as BenfordAnalysis
+/** Antwort mit `metrics` (Chi²-Test α = 0,05, z je Ziffer 2,576 ohne Korrektur). */
+export const benfordAnalysisMetrics = analysisMetrics as unknown as BenfordAnalysis
 
 /** 30 synthetische Belege in zwei Losen (wie in den Vue-Tests). */
 export const populationItems: readonly PopulationItem[] = Array.from({ length: 30 }, (_, i) => ({
@@ -44,7 +47,7 @@ export function fakeSamplingPort(failing?: keyof SamplingPort, message = 'Konfid
 
 export type BenfordFake = BenfordPort & { calls: unknown[] }
 
-export function fakeBenfordPort(failing?: keyof BenfordPort, message = 'Dienst nicht erreichbar'): BenfordFake {
+export function fakeBenfordPort(failing?: keyof BenfordPort, message = 'Dienst nicht erreichbar', result: BenfordAnalysis = benfordAnalysis): BenfordFake {
   const calls: unknown[] = []
   return {
     calls,
@@ -55,7 +58,7 @@ export function fakeBenfordPort(failing?: keyof BenfordPort, message = 'Dienst n
     analyse: async (request) => {
       if (failing === 'analyse') throw new Error(message)
       calls.push(request)
-      return benfordAnalysis
+      return result
     },
   }
 }
