@@ -187,6 +187,22 @@ def drucksache(n: int, **extra: Any) -> dict[str, Any]:
     return base
 
 
+NEUTRALIZED = (
+    "Institutsnamen der Quelle durch neutrale Begriffe ersetzt "
+    "(quality/institutsnamen-denylist.txt); sonst unverändert beobachtet."
+)
+
+
+def _neutral(text: str) -> str:
+    """Institution names replaced as listed in the repository denylist."""
+    script = Path(__file__).resolve().parents[3] / "scripts" / "check_institution_names.py"
+    spec = importlib.util.spec_from_file_location("check_institution_names", script)
+    assert spec is not None and spec.loader is not None
+    module = sys.modules[spec.name] = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return str(module.neutralize(text))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--auditdatabase", type=Path, required=True)
@@ -703,8 +719,9 @@ def main() -> None:
         "profile": profile,
         "cases": cases,
     }
+    report["neutralized"] = NEUTRALIZED
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
+    args.output.write_text(_neutral(json.dumps(report, indent=1, ensure_ascii=False)) + "\n")
     print(
         json.dumps(
             {

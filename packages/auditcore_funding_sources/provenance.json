@@ -106,7 +106,7 @@
   "profiles": [
     "flowworkshop.beneficiaries 2026.09.1",
     "designer.state_aid 2026.09.1",
-    "designer.deminimis.authority_levels 2026.09.1",
+    "designer.deminimis.authority_levels 2026.09.2 (ohne Institutsnamen; löst 2026.09.1 ab)",
     "designer.deminimis.cumulation 2026.09.1 (REVIEW_REQUIRED)"
   ],
   "runtime_dependencies": [
