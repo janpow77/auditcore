@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Runner-Konsole: Klassen hinzufügen und umbenennen (`runnerKlasseHinzu`, `runnerKlasseUmbenennen`, Prüfung `RUNNER_KLASSEN_NAME`), Art `cpu`/`gpu` je Klasse (Grafikspeicher und Kartenauswahl nur bei `gpu`), `auth_art` im Status.
 - Neu `runner` (Runner-Konsole der Prüfbank `auditcore_runner`): `createRunnerController` (Status, Profil-Entwurf mit Prüfen/Anwenden, Konflikt mit feldweisen Unterschieden, Werkzeug-Einstellungen, Prioritäten), `createRunnerRestPort` auf die JSON-API von `auditcore-runner ui` (Schreib-Kopfzeile, 409 → Konflikt), `createRunnerMemoryPort`, Ansichtsmodelle, Stil `styles/runner.css` (`docs/ui/runner.md`).
 - Neu `attributes` (Merkmalsstichprobe, Discovery, Stop-or-go; `createAttributesController`, `createAttributesRestPort`).
 - Hochrechnung: Teilstichproben mit eigenen Teilschichten und dritter Stufe (`model-subsample.ts`, `subsampleEditorView`, Aktionen `addSubStratum`, `updateSubStratum`, `removeSubStratum`, `toggleNestedSubsample`, `editNestedSubsample`), Programme bei mehreren Zeiträumen (`StratumRow.group`).

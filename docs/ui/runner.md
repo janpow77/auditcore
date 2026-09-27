@@ -15,7 +15,7 @@ einer Komponente (eine Web Component für die Paketoberfläche).
 | Stil | `packages-js/ui-core/styles/runner.css` (nur `--fa-*`-Token, hell und dunkel) |
 | Vue / Web Component | `RunnerConsole` / `<flowaudit-runner-console>` (`packages-js/ui/src/runner/`, Teile unter `components/`) |
 | React (nativ) | `FlowauditRunnerConsole` (`packages-js/ui-react/src/runner/`, Teile unter `parts/`) |
-| Paritätsfälle | `packages-js/ui-core/test/parity/cases-runner.ts` (7 Fälle, 3 Interaktionsfolgen) |
+| Paritätsfälle | `packages-js/ui-core/test/parity/cases-runner.ts` (8 Fälle, 4 Interaktionsfolgen) |
 | Eigenständiges Bündel | `packages-js/ui/runner-bundle/` → `npm run build:runner -w @auditcore/ui` |
 
 ## Vertrag
@@ -42,12 +42,17 @@ Ergebnis mit `konflikt: true`.
 ## Bereiche
 
 - **Status:** Rechner, Profilversion, Abgleich (lokal oder zentrale Verwaltung), Ziel,
-  Soll-Quelle, letzte Änderung (Zeit, Quelle), Image, Netzsperre, GitHub-Kontingent,
+  Soll-Quelle, Anmeldung bei GitHub (`auth_art`), letzte Änderung (Zeit, Quelle), Image, Netzsperre, GitHub-Kontingent,
   Runner-Version mit Frist (sobald geliefert); Klassen mit Soll, Max., Instanzen, registriert,
   belegt, Warteschlange (sobald geliefert) und Begründung; Hardware. Warnungen: unbekannte
   Runner-Registrierungen, fehlendes Image, inaktive Netzsperre, Nur-Lesen.
 - **Einstellungen:** Felder nur für Werte, die das Profil enthält (allgemein, Regelung,
-  Thermikquelle, Netz, je Klasse, je Grafikkarte). „Prüfen“ zeigt Fehler am Feld, Datei-Diffs,
+  Thermikquelle, Netz, je Klasse, je Grafikkarte). Klassen sind frei benennbar (Profil-Schema 3):
+  hinzufügen und umbenennen mit derselben Prüfung wie im Backend (a–z, 0–9, Bindestrich,
+  höchstens 31 Zeichen, eindeutig); Umbenennen zieht Kartenzuordnung, Prioritäten und das
+  gleichnamige Label mit. Je Klasse Auswahl `art` (`cpu`/`gpu`); Grafikspeicher und die
+  Kartenauswahl erscheinen nur bei Klassen der Art `gpu` (beim Wechsel auf `cpu` wird
+  `vram_mb` 0). „Prüfen“ zeigt Fehler am Feld, Datei-Diffs,
   Schritte und den root-Befehl der Netzsperre zum Kopieren; „Anwenden“ sendet die erwartete
   Version. Bei einem Konflikt stehen Entwurf und gespeicherter Stand feldweise nebeneinander
   (letzte Quelle, z. B. zentrale Verwaltung), mit „Gespeicherten Stand übernehmen“ oder

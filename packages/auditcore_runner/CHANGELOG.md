@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Oberfläche: Klassen hinzufügen/umbenennen, Art je Klasse, Anmeldeart im Status (Bündel neu gebaut).
 - Oberfläche enthalten: `auditcore-runner ui` liefert die Runner-Konsole aus `@auditcore/ui` (Gruppe `runner`) als `data/web/runner-elements.js` aus; Paketseite ohne Platzhaltertext.
 
 ## 0.1.0 – Erste Fassung
