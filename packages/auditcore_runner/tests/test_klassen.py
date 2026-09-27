@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from importlib.resources import files
+from pathlib import Path
 
 import jsonschema
 import pytest
@@ -81,3 +82,28 @@ def test_schema_and_examples_carry_the_kind(workstation_facts: HostFacts) -> Non
 
 def test_runner_class_default_kind_is_cpu() -> None:
     assert not RunnerClass(True, 1, 1, 1, ("self-hosted",)).is_gpu
+
+
+def test_auth_order_app_then_token_then_gh(tmp_path: Path, workstation_facts: HostFacts) -> None:
+    from auditcore_runner.auth_setup import detect_auth
+
+    auth, reason = detect_auth(tmp_path)
+    assert auth.kind == "gh" and "Einzelrechner" in reason
+    (tmp_path / "github-token").write_text("geheim")
+    auth, _ = detect_auth(tmp_path)
+    assert auth.kind == "pat" and auth.token_file.endswith("github-token")
+    (tmp_path / "github-app.json").write_text('{"app_id": 1, "installation_id": 2, "schluessel_datei": "~/app.pem"}')
+    auth, reason = detect_auth(tmp_path)
+    assert (auth.kind, auth.app_id, auth.installation_id, auth.app_key_file) == ("app", 1, 2, "~/app.pem")
+    assert "empfohlen" in reason and "geheim" not in reason
+    (tmp_path / "github-app.json").write_text('{"app_id": "x"}')
+    assert detect_auth(tmp_path)[0].kind == "pat"
+
+
+def test_proposal_uses_configured_app(workstation_facts: HostFacts) -> None:
+    from auditcore_runner.profile import config_dir
+
+    config_dir().mkdir(parents=True)
+    (config_dir() / "github-app.json").write_text('{"app_id": 7, "installation_id": 8, "schluessel_datei": "~/k.pem"}')
+    profile = propose(workstation_facts, "owner/repo")
+    assert profile.auth.kind == "app" and validate(profile, workstation_facts) == []

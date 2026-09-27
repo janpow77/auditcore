@@ -142,6 +142,7 @@ def collect(profile: Profile, facts: HostFacts, client: github.Client | None) ->
         "sync": profile.sync,
         "ziel": profile.target.name,
         "soll_quelle": profile.source.kind,
+        "auth_art": profile.auth.kind,
         "backend": profile.backend,
         "hardware": facts.as_dict(),
         "klassen": classes,

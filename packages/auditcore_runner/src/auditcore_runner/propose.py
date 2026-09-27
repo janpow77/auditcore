@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from .auth_setup import detect_auth
 from .hardware import Gpu, HostFacts
 from .profile import (
     BASE_LABELS,
     TEMPLATE_GPU_CLASSES,
+    Auth,
     GpuPolicy,
     Network,
     Profile,
@@ -44,8 +46,8 @@ def _budget(facts: HostFacts, reserve: tuple[int, int], gpu: dict[str, RunnerCla
     )
 
 
-def propose(facts: HostFacts, target: str = "", project_label: str = "auditcore") -> Profile:
-    """A safe starting profile: large machines share cores at low priority."""
+def propose(facts: HostFacts, target: str = "", project_label: str = "auditcore", auth: Auth | None = None) -> Profile:
+    """A safe starting profile: large machines share cores at low priority; credentials per RUN-022."""
     large = facts.cpu_count >= LARGE_CPUS and facts.memory_mb >= LARGE_MEMORY_GB * 1024
     name = "cpu-gross" if large else "cpu"
     cpus, memory = (8, 12) if large else (2, 5)
@@ -60,6 +62,7 @@ def propose(facts: HostFacts, target: str = "", project_label: str = "auditcore"
     return Profile(
         host=facts.hostname,
         target=Target(scope="repo", name=target),
+        auth=auth if auth is not None else detect_auth()[0],
         reserve_cpus=reserve[0],
         reserve_memory_gb=reserve[1],
         network=Network(enabled=True, firewall_required=True),
