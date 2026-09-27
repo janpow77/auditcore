@@ -20,12 +20,12 @@ python -m pip install 'auditcore_llm_client[http]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-llm-client/`):
 
 ```text
-auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_llm_client-0.1.1-py3-none-any.whl#sha256=2de349bda575a23398f6273f748769676fb9e58114911b0da2a9c75edaeda552
+auditcore_llm_client @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_llm_client-0.1.2-py3-none-any.whl#sha256=56be64b8d6b5c53bf2a2f3a763bbee8b48ad0e0274677fafca003df960928b1b
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

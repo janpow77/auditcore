@@ -34,12 +34,12 @@ python -m pip install auditcore_bpmn \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-bpmn/`):
 
 ```text
-auditcore_bpmn @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_bpmn-0.1.1-py3-none-any.whl#sha256=3707df29a78341a5c16e469364203d86d0b430635a0ff0804ada7b17658cd72f
+auditcore_bpmn @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_bpmn-0.1.2-py3-none-any.whl#sha256=8419ad7f93874999c7ad5038621b08efb36834dc953b88386d98ae60f4e50cba
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
