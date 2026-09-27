@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Fehlerbehebung LS-S1:** `eurlex.update_query` weist ein `datetime` ab
+  (`ConfigurationError` „Das Startdatum muss ein Datum ohne Uhrzeit sein.“),
+  statt einen Zeitpunkt in das `xsd:date`-Literal der SPARQL-Abfrage zu
+  setzen (Vertrag LS-C09: nur `date`). Der Harvest-Adapter übergibt weiter
+  ein `date`; `legacy.legacy_update_query` bleibt unverändert. Der bisherige
+  `xfail`-Test ist jetzt ein Eigenschaftstest.
+
 Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
 `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,
 Abgrenzung, bewusste Abweichungen vom Altverhalten), 12 Invarianten als

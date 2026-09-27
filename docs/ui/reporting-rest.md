@@ -9,8 +9,9 @@ Oberflächenkomponente `<flowaudit-report-export>` aus `@auditcore/ui` (Vue
 `auditcore_reporting` hat **keine Berichtsvorlagen** (keine Dokumentvorlagen,
 Textbausteine, Diagramme oder PDF-Ausgabe). Es kann zwei Dinge belastbar:
 
-1. **Formatprofile** (`flowlib-legacy-v1`, `plain-v1`): Excel-Zahlenformat je
-   Spaltenname, charakterisiert gegen flowlib (34 Goldens).
+1. **Formatprofile** (`flowlib-legacy-v1`, `flowlib-v2`, `plain-v1`): Excel-Zahlenformat je
+   Spaltenname, charakterisiert gegen flowlib (34 Goldens); `flowlib-v2`
+   berücksichtigt zusätzlich den Werttyp und formatiert Kennungen als Text.
 2. **XLSX-Export** übergebener Tabellen (`render_workbook`, Extra `excel`):
    neu erzeugte Arbeitsmappe, Texte immer als Text (kein `=`-Formelrisiko),
    feste Ressourcengrenzen.
@@ -78,6 +79,8 @@ Ratenbegrenzung sind Sache der Anwendung.
  "profiles": [{"id": "flowlib-legacy-v1", "label": "Flowlib-Formate nach Spaltennamen",
                "description": "…", "version": "1.0.0", "status": "Draft",
                "source": "janpow77/flowlib@aca2dc6a…"},
+              {"id": "flowlib-v2", "label": "Flowlib-Formate, Kennungen als Text",
+               "version": "2.0.0", "…": "…"},
               {"id": "plain-v1", "label": "Ohne Formatregeln", "…": "…"}],
  "column_types": ["json", "text", "number", "boolean", "date", "datetime"],
  "limits": {"max_rows_per_sheet": 100000, "max_columns": 256, "max_sheets": 32,

@@ -49,22 +49,24 @@ VO (EU) Nr. 480/2014). Bewertungskriterien liefert die Anwendung.
 | I4 | Neutralisieren entfernt E-Mail-Adressen der Form `lokal@domain.tld` und ist idempotent: ein zweiter Lauf ändert das Ergebnis nicht. | `test_i4_neutralization_is_idempotent_and_removes_mail_addresses` |
 | I5 | Die Prüfung ist deterministisch (XML oder Modell, gleicher Stichtag → gleicher Bericht); ein Bericht ist gültig genau dann, wenn er keinen Treffer mit Schweregrad Fehler enthält; alle Regel-IDs beginnen mit `BPMN-`. | `test_i5_validation_is_deterministic_and_valid_means_no_errors` |
 | I6 | Dokumente mit DTD oder Entitätsdeklaration werden mit `UnsafeXmlError`, Dokumente über `max_size` mit `XmlTooLargeError` abgewiesen. | `test_i6_hardened_parser_rejects_dtd_and_oversize` |
-| I7 | Die ausgeschriebene Normalform einer strukturierten Rechtsgrundlage zu einer EU-Verordnung (Artikel, Absatz, Buchstabe) wird von `parse_citation` gleich strukturiert zurückgelesen; `normalized()` ist idempotent. Ausnahme: Befund B1. | `test_i7_structured_citation_round_trip`, `test_i7_befund_b1_declined_delegated_act` (xfail) |
+| I7 | Die ausgeschriebene Normalform einer strukturierten Rechtsgrundlage zu einer EU-Verordnung (Artikel, Absatz, Buchstabe) wird von `parse_citation` gleich strukturiert zurückgelesen; `normalized()` ist idempotent. Das gilt auch für im Zitat gebeugte Normnamen („der Delegierten Verordnung“, „der Durchführungsverordnung“, „der Richtlinie“): gelesen wird die Grundform („Delegierte Verordnung …“). | `test_i7_structured_citation_round_trip`, `test_i7_declined_act_round_trip` |
 | I8 | Treffer von `find_citations` sind nach Position sortiert, überlappen nicht und geben genau den Textausschnitt wieder. | `test_i8_found_citations_do_not_overlap` |
 | I9 | Dieselben FlowAudit-Angaben zweimal zu schreiben ergibt dasselbe XML wie einmal; die Rechtsgrundlage trägt danach ihre Normalform als Text. | `test_i9_writing_extensions_is_idempotent` |
+| I10 | Richtlinien in der Altform „Richtlinie Jahr/Nummer/EU“ (ebenso EG, EWG) (auch Kurzform „RL …“) werden in Lang- und Kurzform erkannt, in Freitext gefunden und im Rundlauf stabil gelesen. | `test_i10_old_form_directives_are_recognised` |
 
-### Befunde aus den Eigenschaftstests
+### Befunde aus den Eigenschaftstests (behoben)
 
-- **B1** – `parse_citation("Artikel 1 der Delegierten Verordnung (EU) Nr. 480/2014")`
-  liest die Norm als „Delegierten Verordnung (EU) Nr. 480/2014“ (gebeugte
-  Form). Die daraus erzeugte Normalform lautet „Artikel 1 Delegierten
-  Verordnung …“ (ohne „der“) und stimmt nicht mehr mit dem Ausgangszitat
-  überein. Nicht korrigiert; als erwarteter Fehlschlag festgehalten
-  (`xfail(strict=True)`), damit eine Korrektur auffällt.
-- **B2** – Richtlinien in der bis 2014 üblichen Zitierform „Jahr/Nummer/EU“
-  („Artikel 1 der Richtlinie 2014/24/EU“) werden von `find_citations` nicht
-  erkannt und bleiben in `parse_citation` Freitext; die Form „Richtlinie (EU)
-  2019/1937“ wird erkannt. Nicht korrigiert, nur festgehalten.
+- **B1** (behoben) – `parse_citation("Artikel 1 der Delegierten Verordnung (EU) Nr. 480/2014")`
+  las die Norm bis einschließlich 0.1.2 in der gebeugten Form „Delegierten
+  Verordnung …“; die Normalform verlor dann das „der“. Jetzt führt `act_long`
+  die gebeugte Form auf die Grundform „Delegierte Verordnung …“ zurück, der
+  Rundlauf ist stabil (I7). Beim Beheben fiel auf, dass „der
+  Durchführungsverordnung (EU) …“ in Freitext gar nicht erkannt wurde (das
+  Muster verlangte „Durchführungs Verordnung“); ebenfalls behoben.
+- **B2** (behoben) – Richtlinien in der bis 2014 üblichen Zitierform
+  „Jahr/Nummer/EU“ („Artikel 1 der Richtlinie 2014/24/EU“, „Art. 5 RL
+  2004/18/EG“) blieben Freitext. Sie werden jetzt erkannt (I10); die
+  CELEX-/ELI-Auflösung (`eu_act`) kannte die Altform bereits.
 
 ## Fehlerfälle
 
@@ -91,8 +93,8 @@ VO (EU) Nr. 480/2014). Bewertungskriterien liefert die Anwendung.
   Kernanforderungen trifft die Prüfbehörde.
 - Zitaterkennung: EU-Rechtsakte in der Form „Verordnung/Richtlinie (EU)
   Jahr/Nummer“ (auch Delegierte und Durchführungsverordnungen), Paragrafen
-  nationaler Gesetze und Verwaltungsvorschriften; Richtlinien in der Altform
-  „2014/24/EU“ bleiben Freitext (B2).
+  nationaler Gesetze und Verwaltungsvorschriften; Richtlinien auch in der
+  Altform „2014/24/EU“.
   Keine Auflösung über das Netz ohne ausdrücklichen Resolver.
 - Bewertungskriterien stehen in keinem Rechtstext; die Anwendung speist sie ein.
 
@@ -104,6 +106,7 @@ VO (EU) Nr. 480/2014). Bewertungskriterien liefert die Anwendung.
 | `unique_owners`/`unique_departments`/`unique_systems` in zufälliger Reihenfolge (`list(set(...))`) | Reihenfolge des ersten Auftretens | `tests/test_legacy_characterization.py` |
 | Personalkosten aus Datenbankabfrage (im Original stets leer) | Port `personnel_rate(grade)` | `tests/test_legacy_characterization.py` |
 | Excel über pandas | openpyxl direkt, gleiche Zellen und Formate | `tests/test_legacy_characterization.py` |
+| bis 0.1.2: gebeugter Normname „Delegierten Verordnung …“ in `parse_citation`/`find_citations`, „Durchführungsverordnung (EU) …“ und Richtlinien „2014/24/EU“ in Freitext nicht erkannt | Grundform „Delegierte Verordnung …“; beide Formen erkannt (Zitaterkennung ist kein charakterisiertes Altverhalten, daher ohne Legacy-Variante) | I7, I10 |
 
 Beibehaltene Altfunktionen (Legacy-Varianten; für neue Aufrufer gilt
 `validate` mit den Regeln aus `docs/rules.md`):

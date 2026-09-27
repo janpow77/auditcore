@@ -51,7 +51,7 @@ Alle Funktionen außer den Adaptern sind rein und deterministisch.
 | I7 | Feed-Identitäten sind `<quelle>_<SHA-256(id oder link)[:16]>`, unabhängig von Titel und Text; ohne `id` und `link` gibt es keine Identität (`ParseError`). | `test_i7_feed_identity_depends_only_on_id_or_link`, `test_i7_entry_without_id_and_link_is_rejected` |
 | I8 | Die Förderperiodenregeln liefern nur bekannte Perioden; die Jahresregel des Designers ordnet ein Jahr der jüngsten Periode zu, die nicht später beginnt, vor 1994 keiner. | `test_i8_funding_period_rules_are_closed` |
 | I9 | `merge_rows`: Kerndokumente zuerst, jede CELEX-Nummer genau einmal, Zeilen ohne CELEX entfallen, keine CELEX kommt hinzu. | `test_i9_eurlex_core_documents_first_celex_unique` |
-| I10 | `update_query` setzt genau das ISO-Datum in den einzigen Platzhalter der Profilvorlage; Text statt Datum und Profile ohne Vorlage werden abgewiesen. | `test_i10_update_query_inserts_exactly_the_date`, Befund LS-S1: `test_i10_update_query_rejects_datetimes` (xfail) |
+| I10 | `update_query` setzt genau das ISO-Datum in den einzigen Platzhalter der Profilvorlage; Text statt Datum, `datetime` und Profile ohne Vorlage werden abgewiesen. | `test_i10_update_query_inserts_exactly_the_date`, `test_i10_update_query_rejects_datetimes` (LS-S1, behoben) |
 | I11 | Der CELEX-Dokumenttyp ist für jeden Text definiert und stammt aus der festen Liste Unbekannt, Verordnung, Richtlinie, Beschluss, Guidance, Rechtsprechung, Sonstiges. | `test_i11_celex_type_is_total` |
 | I12 | Relevanz ist ein Teilstring-Abgleich ohne Groß-/Kleinschreibung gegen ausdrücklich übergebene Suchbegriffe; ohne Begriffe ist nichts relevant. | `test_i12_relevance_is_case_insensitive_substring` |
 
@@ -60,7 +60,7 @@ Alle Funktionen außer den Adaptern sind rein und deterministisch.
 | Fall | Ergebnis |
 |---|---|
 | Profil unbekannt, Name mit Pfadtrenner oder führendem Punkt, Schema- oder Feldfehler, Seitengröße außerhalb 1…100, Vorlage ohne genau einen `{since}` | `ProfileError` |
-| DIP-Schlüssel leer/mehrzeilig, Suchbegriff leer, Suchbegriffe außerhalb des Profils, fehlende Feedquelle, fremder Feedname, fehlende Aktualisierungsvorlage, Startdatum kein `date` | `ConfigurationError` (Code `NOT_CONFIGURED` im Adapter) |
+| DIP-Schlüssel leer/mehrzeilig, Suchbegriff leer, Suchbegriffe außerhalb des Profils, fehlende Feedquelle, fremder Feedname, fehlende Aktualisierungsvorlage, Startdatum kein `date` oder ein `datetime` (LS-S1) | `ConfigurationError` (Code `NOT_CONFIGURED` im Adapter) |
 | DIP-Antwort kein Objekt oder ohne Dokumentliste; Eintrag ohne ID/Titel | `ParseError` (Seite bzw. je Eintrag mit Fundort) |
 | SPARQL-Antwort ohne `results.bindings`, Binding kein Objekt, Wert ohne `value`; EUR-Lex-Zeile ohne CELEX | `ParseError` |
 | Feed nicht lesbar (bozo ohne Einträge), Eintrag ohne Titel oder ohne `id`/`link` | `ParseError` |
@@ -96,11 +96,12 @@ Aufrufer gedacht:
 | ECA-Platzhalterberichte bei nicht lesbarer Seite (LS-C13) | keine Ersatzinhalte | `legacy.legacy_eca_core_reports` | `tests/test_feeds.py` |
 | Aktualisierungsabfrage per f-String aus `datetime` (LS-C09) | nur `date`, feste Vorlage (I10) | `legacy.legacy_update_query` | Replay, `test_i10_…` |
 
-**Befund LS-S1 (offen):** `eurlex.update_query` prüft `isinstance(since,
-date)`; da `datetime` eine Unterklasse von `date` ist, wird ein Zeitpunkt
-angenommen und als `"2024-01-02T03:04:00"^^xsd:date` in die Abfrage gesetzt –
-ein ungültiges `xsd:date`-Literal, entgegen LS-C09 („nur `date`-Objekte“).
-Festgehalten als `xfail(strict=True)` in
-`test_i10_update_query_rejects_datetimes`; die Korrektur (Ablehnung oder
-`as_date`) ist eine Verhaltensänderung und bleibt einer eigenen Änderung
-vorbehalten.
+**Befund LS-S1 (behoben):** `eurlex.update_query` prüfte nur
+`isinstance(since, date)`; da `datetime` eine Unterklasse von `date` ist,
+wurde ein Zeitpunkt angenommen und als `"2024-01-02T03:04:00"^^xsd:date` in
+die Abfrage gesetzt – ein ungültiges `xsd:date`-Literal, entgegen LS-C09.
+Seit „Unreleased“ weist `update_query` ein `datetime` mit
+`ConfigurationError` („Das Startdatum muss ein Datum ohne Uhrzeit sein.“) ab;
+der Harvest-Adapter übergibt ohnehin nur `date` (`_since`). Das Altverhalten
+(f-String aus `datetime`) bleibt allein in `legacy.legacy_update_query`.
+Nachweis: `test_i10_update_query_rejects_datetimes`.
