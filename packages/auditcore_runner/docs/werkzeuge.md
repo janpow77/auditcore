@@ -31,6 +31,29 @@
 Vor dem Push: `auditcore-runner hook --schreiben` legt eine prek/pre-commit-
 Konfiguration an (`prek install --hook-type pre-push`).
 
+## Verifizierte Codemods
+
+Strukturelle Änderungen laufen zuerst in einer temporären Kopie des sauberen
+Git-Arbeitsbaums. Erst wenn alle in `auditcore-verification.json` hinterlegten
+Kategorien durch `auditcore-refactor verify` mit `PASS` enden, übernimmt die
+Prüfbank die geänderten Dateien in den Arbeitsbaum. Ein fehlendes Werkzeug,
+eine erfolglose Transformation oder eine unvollständige Verifikation lässt das
+Original unverändert.
+
+```bash
+# YAML-Regel liegt zur Review im Repository
+auditcore-runner codemod ast-grep codemods/print-zu-logger.yml --pfad .
+
+# Voll qualifizierter LibCST-Codemod; das Modul muss installiert/importierbar sein
+auditcore-runner codemod libcst mein_projekt.codemods.RenameApi --pfad .
+```
+
+ast-grep, LibCST und `auditcore-refactor` werden als getrennte Programme
+aufgerufen. Rezepte gehören versioniert ins Ziel-Repository; LibCST-Module sind
+ausführbarer Code und müssen vor dem Lauf geprüft werden. Der Befehl lehnt einen
+bereits veränderten oder unversionierte Dateien enthaltenden Arbeitsbaum ab,
+damit er keine Arbeit des Benutzers überschreiben kann.
+
 ## Katalog
 
 Alle Programme liegen fest gepinnt im Runner-Image (`data/werkzeuge/`:

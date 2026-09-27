@@ -1,0 +1,79 @@
+name: mutation
+on:
+  schedule:
+    - cron: '7 1 * * *'
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Git-Revision, deren Änderungen mutiert werden
+        required: false
+        default: HEAD~1
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: mutation
+  cancel-in-progress: false
+
+jobs:
+  auswahl:
+    name: Betroffene Pakete bestimmen
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      pakete: ${{ steps.auswahl.outputs.pakete }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - id: auswahl
+        env:
+          BASE: ${{ inputs.base || 'HEAD~1' }}
+        run: |
+          python scripts/ci_affected_packages.py --base "$BASE" > pakete.txt
+          git diff --quiet "$BASE"...HEAD -- src tests || printf '.\n' >> pakete.txt
+          sort -u -o pakete.txt pakete.txt
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+          packages = [line for line in Path('pakete.txt').read_text().splitlines() if line]
+          print('pakete=' + json.dumps(packages))
+          PY
+
+  mutieren:
+    name: Mutation ${{ matrix.paket }}
+    needs: auswahl
+    if: needs.auswahl.outputs.pakete != '[]'
+    runs-on: [self-hosted, auditcore, cpu-gross]
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        paket: ${{ fromJSON(needs.auswahl.outputs.pakete) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+      - name: Paket und mutmut installieren
+        working-directory: ${{ matrix.paket }}
+        run: |
+          uv venv .venv
+          uv pip install --python .venv/bin/python -e '.[dev]' mutmut==3.3.1
+      - name: Mutationstests
+        working-directory: ${{ matrix.paket }}
+        run: .venv/bin/mutmut run
+      - name: Ergebnis exportieren
+        if: always()
+        working-directory: ${{ matrix.paket }}
+        run: .venv/bin/mutmut results > mutation-results.txt || true
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: mutation-${{ strategy.job-index }}
+          path: ${{ matrix.paket }}/mutation-results.txt
+          if-no-files-found: warn

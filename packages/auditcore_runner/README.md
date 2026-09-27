@@ -109,6 +109,7 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 | `auditcore_runner.autoscaler` | Built-in autoscaler for target source ``lokal``: signals → rules → pool file. |
 | `auditcore_runner.backend` | How a runner instance obtains jobs – behind one interface. |
 | `auditcore_runner.cli` | Command line ``auditcore-runner``. |
+| `auditcore_runner.codemods` | Transactional ast-grep and LibCST codemods guarded by auditcore-refactor. |
 | `auditcore_runner.commands_scaleset` | CLI group ``scaleset``: listener, JIT configuration and clean-up for the scale set backend. |
 | `auditcore_runner.commands_tools` | CLI commands for checks: ``lokal``, ``befunde``, ``workflows``, ``image``, ``messen``, ``hook``. |
 | `auditcore_runner.github` | Minimal GitHub REST client: credentials, runners and queued jobs per label. |
@@ -159,6 +160,10 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
   Sicherheit, Doku, Struktur, GUI); Werkzeuge ohne passende Dateien entfallen.
   Im Repository anpassbar über `.auditcore-runner.toml` (Profile und Codemods,
   Schema `data/schemas/repo-konfiguration.schema.json`).
+- **Verifizierte Codemods:** `codemod ast-grep <regel>` beziehungsweise
+  `codemod libcst <modul>` arbeiten in einer Kopie und übernehmen Änderungen
+  nur nach erfolgreichem `auditcore-refactor verify`; siehe
+  [docs/werkzeuge.md](docs/werkzeuge.md#verifizierte-codemods).
 - **Umgebungsvariablen:** `AUDITCORE_RUNNER_PROFILE` (Profilpfad),
   `XDG_CONFIG_HOME`/`XDG_STATE_HOME` (Ablage von Profil und Status).
 

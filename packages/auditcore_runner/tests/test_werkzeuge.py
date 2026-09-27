@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
+from auditcore_runner import codemods
 from auditcore_runner.werkzeuge import aufgaben, bericht, einstellungen, parser
 from auditcore_runner.werkzeuge.ausfuehren import Runner, content_key, run_profile
 from auditcore_runner.werkzeuge.befunde import (
@@ -170,3 +172,77 @@ def test_default_profiles_reference_known_tools() -> None:
     names = Registry().names()
     assert all(tool in names for profile in DEFAULT_PROFILES.values() for tool in profile.tools)
     assert json.dumps(sorted(DEFAULT_PROFILES))
+
+
+def _executable(path: Path, source: str) -> None:
+    path.write_text("#!/usr/bin/env python3\n" + source, encoding="utf-8")
+    path.chmod(0o755)
+
+
+def test_ast_grep_codemod_is_published_only_after_refactor_verification(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, binaries = tmp_path / "repo", tmp_path / "bin"
+    repo.mkdir()
+    binaries.mkdir()
+    _git_repo(repo)
+    (repo / "regel.yml").write_text("id: modernisieren\n", encoding="utf-8")
+    (repo / "auditcore-verification.json").write_text("{}\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "config"],
+        check=True,
+    )
+    _executable(
+        binaries / "ast-grep",
+        "from pathlib import Path\nPath('a.py').write_text('x = 2\\n')\n",
+    )
+    _executable(
+        binaries / "auditcore-refactor",
+        "import json\nfrom pathlib import Path\n"
+        "ok = Path('a.py').read_text() == 'x = 2\\n'\n"
+        "print(json.dumps({'status': 'PASS' if ok else 'MIGRATION_BLOCKED'}))\nraise SystemExit(0 if ok else 1)\n",
+    )
+    monkeypatch.setenv("PATH", f"{binaries}:{os.environ['PATH']}")
+
+    result = codemods.run("ast-grep", "regel.yml", repo)
+
+    assert result.changed_files == ("a.py",)
+    assert (repo / "a.py").read_text(encoding="utf-8") == "x = 2\n"
+    assert result.verification["status"] == "PASS"
+
+
+def test_codemod_failure_leaves_repository_unchanged(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo, binaries = tmp_path / "repo", tmp_path / "bin"
+    repo.mkdir()
+    binaries.mkdir()
+    _git_repo(repo)
+    (repo / "regel.yml").write_text("id: kaputt\n", encoding="utf-8")
+    (repo / "auditcore-verification.json").write_text("{}\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "config"],
+        check=True,
+    )
+    _executable(binaries / "ast-grep", "from pathlib import Path\nPath('a.py').write_text('x = 9\\n')\n")
+    _executable(
+        binaries / "auditcore-refactor",
+        "import json\nprint(json.dumps({'status': 'MIGRATION_BLOCKED'}))\nraise SystemExit(1)\n",
+    )
+    monkeypatch.setenv("PATH", f"{binaries}:{os.environ['PATH']}")
+
+    with pytest.raises(codemods.CodemodError, match="verify"):
+        codemods.run("ast-grep", "regel.yml", repo)
+
+    assert (repo / "a.py").read_text(encoding="utf-8") == "x = 1\n"
+
+
+def test_codemod_requires_clean_tree_and_verification_config(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _git_repo(repo)
+    with pytest.raises(codemods.CodemodError, match="verification"):
+        codemods.run("libcst", "package.Rename", repo)
+    (repo / "auditcore-verification.json").write_text("{}\n", encoding="utf-8")
+    with pytest.raises(codemods.CodemodError, match="nicht sauber"):
+        codemods.run("libcst", "package.Rename", repo)

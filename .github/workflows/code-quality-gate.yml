@@ -81,6 +81,12 @@ jobs:
         run: >-
           pytest -n auto -q -p no:cacheprovider --junitxml=pytest-junit.xml
           --cov=auditcore --cov-report=json:coverage.json
+      - name: Paketweiser Coverage-Ratchet (Plattform)
+        if: ${{ !cancelled() }}
+        run: >-
+          auditcore-codegate coverage --coverage coverage.json --package auditcore
+          --compare-ref "$GATE_COMPARE_REF" --output coverage-gate.json
+          --summary "$GITHUB_STEP_SUMMARY"
       - name: Befundbericht (report.md für Agenten und Review, Details in report.json)
         if: ${{ !cancelled() }}
         run: |
@@ -95,6 +101,7 @@ jobs:
           name: code-quality-gate
           path: |
             code-quality-gate.json
+            coverage-gate.json
             report.json
             report.md
             zizmor.sarif

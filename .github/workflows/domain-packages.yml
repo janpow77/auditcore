@@ -70,6 +70,15 @@ jobs:
           echo "## Geprüfte Pakete" >> "$GITHUB_STEP_SUMMARY"; sed 's/^/- /' .affected-packages >> "$GITHUB_STEP_SUMMARY"
           if [ -s .affected-packages ]; then echo "any=true" >> "$GITHUB_OUTPUT"; else echo "any=false" >> "$GITHUB_OUTPUT"; fi
           if grep -qE 'auditcore_(invoicegenerator|reporting)$' .affected-packages; then echo "renderers=true" >> "$GITHUB_OUTPUT"; else echo "renderers=false" >> "$GITHUB_OUTPUT"; fi
+      - name: Vergleichsstand für Ratchets bestimmen
+        env:
+          COMPARE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+        run: |
+          ref="$COMPARE_REF"
+          if [ -z "$ref" ] || ! git rev-parse --verify --quiet "$ref^{commit}" >/dev/null; then
+            ref="HEAD~1"
+          fi
+          echo "GATE_COMPARE_REF=$ref" >> "$GITHUB_ENV"
       - name: Build and install the platform wheel
         if: steps.affected.outputs.any == 'true'
         run: |
@@ -112,8 +121,11 @@ jobs:
             ${{ matrix.python == '3.12' && '--apt' || '' }}
       - name: Test installed domain wheels against their source test suites
         if: steps.affected.outputs.any == 'true'
+        env:
+          COVERAGE_GATE: ${{ matrix.python == '3.13' }}
         run: |
           python - <<'PY'
+          import os
           import subprocess
           from pathlib import Path
           python = str(Path('.auditcore/package-platform/bin/python').absolute())
@@ -122,11 +134,23 @@ jobs:
                           *(str(w.absolute()) + '[dev]' for w in wheels)], check=True)
           junit = Path('.auditcore/junit').absolute()
           junit.mkdir(parents=True, exist_ok=True)
+          coverage = Path('.auditcore/coverage').absolute()
+          coverage.mkdir(parents=True, exist_ok=True)
           for project in (Path(line) / 'pyproject.toml' for line in Path('.affected-packages').read_text().split()):
               report = f'--junitxml={junit / project.parent.name}.xml'
-              for arguments in (['pytest', 'tests', '-q', '-n', 'auto', report], ['ruff', 'check', '.'],
+              coverage_report = coverage / f'{project.parent.name}.json'
+              pytest_args = ['pytest', 'tests', '-q', '-n', 'auto', report,
+                             f'--cov={project.parent.name}', f'--cov-report=json:{coverage_report}']
+              for arguments in (pytest_args, ['ruff', 'check', '.'],
                                 ['mypy', 'src'], ['bandit', '-q', '-ll', '-r', 'src']):
                   subprocess.run([python, '-m', *arguments], cwd=project.parent, check=True)
+              if os.environ['COVERAGE_GATE'] == 'true':
+                  subprocess.run([
+                      str(Path('.auditcore/package-platform/bin/auditcore-codegate').absolute()),
+                      'coverage', '--coverage', str(coverage_report), '--package', project.parent.name,
+                      '--compare-ref', os.environ['GATE_COMPARE_REF'],
+                      '--output', str(coverage / f'{project.parent.name}-gate.json'),
+                  ], check=True)
           subprocess.run([python, '-m', 'pip', 'check'], check=True)
           PY
       - name: Befundbericht (fehlgeschlagene Tests mit Minimal-Trace)
@@ -148,6 +172,7 @@ jobs:
             .auditcore/report.json
             .auditcore/report.md
             .auditcore/junit/*.xml
+            .auditcore/coverage/*.json
             .auditcore/optional-renderers-ci/result.json
             .auditcore/optional-renderers-ci/*.log
             .auditcore/optional-renderers-ci/requirements-*.txt

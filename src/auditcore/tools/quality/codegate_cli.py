@@ -21,6 +21,12 @@ from auditcore.tools.quality.codegate import (
     select_packages,
     tool_versions,
 )
+from auditcore.tools.quality.codegate_coverage import (
+    compare_coverage,
+    compare_coverage_reference,
+    read_package_coverage,
+    update_coverage,
+)
 from auditcore.tools.quality.codegate_python import PackageMeasurement, ToolError
 from auditcore.tools.quality.codegate_ratchet import (
     Verdict,
@@ -53,6 +59,15 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--format", choices=["text", "json", "markdown"], default="text")
     check.add_argument("--output", type=Path, help="JSON-Bericht zusätzlich schreiben")
     check.add_argument("--summary", type=Path, help="Markdown-Bericht anhängen")
+    coverage = sub.add_parser("coverage", help="Paketweise Testabdeckung per Ratchet")
+    coverage.add_argument("--root", type=Path, default=Path.cwd())
+    coverage.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
+    coverage.add_argument("--coverage", type=Path, required=True, help="coverage.py-JSON")
+    coverage.add_argument("--package", action="append", default=[], help="Nur dieses Paket")
+    coverage.add_argument("--compare-ref", help="Git-Revision für die Absenkungsprüfung")
+    coverage.add_argument("--update-baseline", action="store_true", help="Baseline anheben")
+    coverage.add_argument("--output", type=Path, help="JSON-Bericht schreiben")
+    coverage.add_argument("--summary", type=Path, help="Markdown-Bericht anhängen")
     report = sub.add_parser("report", help="Kompakter Befundbericht für PRs und Agenten")
     report.add_argument("--root", type=Path, default=Path.cwd())
     report.add_argument("--junit", type=Path, action="append", default=[], help="JUnit-XML")
@@ -204,9 +219,56 @@ def run_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def run_coverage(args: argparse.Namespace) -> int:
+    """Evaluate package coverage and optionally record improvements."""
+    root = args.root.resolve()
+    baseline_path = args.baseline if args.baseline.is_absolute() else root / args.baseline
+    coverage_path = args.coverage if args.coverage.is_absolute() else root / args.coverage
+    selected = set(args.package) or None
+    current = read_package_coverage(root, coverage_path, selected)
+    baseline = load_baseline(baseline_path)
+    if args.update_baseline:
+        baseline = update_coverage(baseline, current)
+        write_baseline(baseline_path, baseline)
+    verdicts = compare_coverage(current, baseline, selected)
+    if args.compare_ref:
+        relative = baseline_path.relative_to(root).as_posix()
+        verdicts += compare_coverage_reference(
+            baseline, baseline_from_git(root, args.compare_ref, relative), selected
+        )
+    status = _status(verdicts)  # type: ignore[arg-type]
+    report = {
+        "scope": "AUDITCORE_COVERAGE_GATE",
+        "status": status,
+        "baseline": baseline_path.relative_to(root).as_posix(),
+        "packages": current,
+        "verdicts": [verdict.to_dict() for verdict in verdicts if verdict.status != "PASS"],
+    }
+    if args.output:
+        args.output.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+    lines = [f"## Coverage-Ratchet: {status}", ""]
+    lines += [
+        f"- {v.status} {v.package}: {v.baseline:.2f}% → {v.current:.2f}% ({v.message})"
+        for v in verdicts
+        if v.status != "PASS"
+    ] or ["Alle Pakete halten ihre Coverage-Baseline ein."]
+    markdown = "\n".join(lines) + "\n"
+    if args.summary:
+        with args.summary.open("a", encoding="utf-8") as handle:
+            handle.write(markdown)
+    print(markdown)
+    return 1 if status == "FAIL" else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the gate; exit 0 = PASS/WARN, 1 = FAIL, 2 = not executable."""
     args = build_parser().parse_args(argv)
+    if args.command == "coverage":
+        try:
+            return run_coverage(args)
+        except (ValueError, OSError, KeyError, json.JSONDecodeError) as error:
+            print(f"Coverage-Ratchet nicht ausführbar: {error}", file=sys.stderr)
+            return 2
     if args.command == "report":
         try:
             return run_report(args)

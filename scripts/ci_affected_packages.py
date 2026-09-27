@@ -91,15 +91,47 @@ def select(root: Path, files: list[str]) -> list[Path]:
     return [packages[name] for name in sorted(selected)]
 
 
+def select_tests(root: Path, files: list[str]) -> list[Path]:
+    """Choose conventional module tests and fall back to package test directories."""
+    selected: set[Path] = set()
+    for package in select(root, files):
+        prefix = f"{package.relative_to(root).as_posix()}/src/"
+        changed = [Path(file) for file in files if file.startswith(prefix) and file.endswith(".py")]
+        module_tests = {
+            package / "tests" / f"test_{source.stem}.py"
+            for source in changed
+            if (package / "tests" / f"test_{source.stem}.py").is_file()
+        }
+        selected.update(
+            module_tests or ({package / "tests"} if (package / "tests").is_dir() else set())
+        )
+    if any(file.startswith(("src/", "tests/")) for file in files):
+        candidates = {
+            root / "tests" / f"test_{Path(file).stem}.py"
+            for file in files
+            if file.startswith("src/") and file.endswith(".py")
+        }
+        existing = {path for path in candidates if path.is_file()}
+        selected.update(existing or {root / "tests"})
+    return sorted(selected)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", help="Base ref of a pull request; omit to select all")
+    parser.add_argument("--tests", action="store_true", help="Testpfade statt Paketpfade ausgeben")
     args = parser.parse_args()
     root = Path.cwd()
     if args.base:
-        chosen = select(root, changed_files(args.base))
+        files = changed_files(args.base)
+        chosen = select_tests(root, files) if args.tests else select(root, files)
     else:
-        chosen = list(all_packages(root).values())
+        chosen = (
+            [root / "tests", *(path / "tests" for path in all_packages(root).values())]
+            if args.tests
+            else list(all_packages(root).values())
+        )
+        chosen = [path for path in chosen if path.is_dir()]
     # No trailing empty line: the workflow tests the file with ``-s`` and would
     # otherwise build the platform and call pip without any package.
     for path in chosen:
