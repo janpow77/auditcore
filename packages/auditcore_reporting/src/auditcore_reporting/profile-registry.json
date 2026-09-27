@@ -23,15 +23,46 @@
         "profile_id": "flowlib-legacy-v1",
         "implementation_hashes": {
           "formats.py": "e3468fbceb97d27217402297f9606b27ade9ca62a9ffe1a972088714d73a02ec",
-          "profiles.py": "0f5df8237bc32cdb4dfa0d009eff327ff9d1e628d0e464898d483581a6f51247"
+          "profiles.py": "3d63ae9bea43134524226ac7e239b78cabd2cdcfaa2119bc7ab07812d1d0c6f1"
         }
       },
-      "content_hash": "6f94e2bbaec8bda110460f59ea9e5b3220f92509d0ffe97bf54e98bda94eedd9",
+      "content_hash": "f7a1662513ffa2b2f993847d96658940a6e8fae87054cbf44c1eb4d0d2a7aed2",
       "review": {
         "technical_tests": "tests/test_formats.py and tests/test_excel.py",
         "human_release_approval": "NOT_CLAIMED"
       },
       "release_policy": "docs/profiles.md"
+    },
+    "flowlib-v2": {
+      "artifact_id": "auditcore.reporting.flowlib-v2",
+      "type": "rulebook",
+      "title": "Flowlib formats with word-based column matching and value types",
+      "version": "2.0.0",
+      "status": "Draft",
+      "created_at": "2026-09-27T00:00:00+00:00",
+      "updated_at": "2026-09-27T00:00:00+00:00",
+      "owner": "Jan Riener",
+      "author": "Jan Riener (owner); Claude (implementation)",
+      "organization": "UNKNOWN",
+      "predecessor": "auditcore.reporting.flowlib-legacy-v1@1.0.0",
+      "source": {
+        "kind": "successor of flowlib-legacy-v1 correcting findings B1 of docs/spezifikation.md"
+      },
+      "change_reason": "Identifiers (postcode, account number, IBAN, tax number …) are not formatted as numbers; compound heads instead of substrings; value type beats column name",
+      "content": {
+        "profile_id": "flowlib-v2",
+        "implementation_hashes": {
+          "formats_v2.py": "7e551a321f1b75891732d09bbedefe7fb5408aed7b1fae629423e1849bd9aa9e",
+          "profiles.py": "3d63ae9bea43134524226ac7e239b78cabd2cdcfaa2119bc7ab07812d1d0c6f1"
+        }
+      },
+      "content_hash": "c744d30bb89befbc6f065ff721ec4c8748c9c937a4ba39a2e3195afe1ff9881e",
+      "review": {
+        "technical_tests": "tests/test_formats_v2.py and tests/test_spezifikation.py",
+        "human_release_approval": "NOT_CLAIMED"
+      },
+      "release_policy": "docs/profiles.md",
+      "package_version": "unreleased"
     },
     "plain-v1": {
       "artifact_id": "auditcore.reporting.plain-v1",
@@ -54,10 +85,10 @@
         "profile_id": "plain-v1",
         "implementation_hashes": {
           "formats.py": "e3468fbceb97d27217402297f9606b27ade9ca62a9ffe1a972088714d73a02ec",
-          "profiles.py": "0f5df8237bc32cdb4dfa0d009eff327ff9d1e628d0e464898d483581a6f51247"
+          "profiles.py": "3d63ae9bea43134524226ac7e239b78cabd2cdcfaa2119bc7ab07812d1d0c6f1"
         }
       },
-      "content_hash": "ef555932e36288b4cdb96cf6f0494362f0cb7e9ca69150aa490306d01a6baae3",
+      "content_hash": "14a85b780a11f4dd6c30ec563b754d5a8741e8746ef6c217c40a0d91ceb21ba6",
       "review": {
         "technical_tests": "tests/test_formats.py and tests/test_excel.py",
         "human_release_approval": "NOT_CLAIMED"

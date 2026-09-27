@@ -5,17 +5,18 @@ from __future__ import annotations
 from typing import Any
 
 from auditcore_reporting.formats import get_number_format
+from auditcore_reporting.formats_v2 import get_number_format_v2
 
-PROFILE_IDS = ("flowlib-legacy-v1", "plain-v1")
+PROFILE_IDS = ("flowlib-legacy-v1", "flowlib-v2", "plain-v1")
 
 
 def get_profile_format(profile: str, column: str, value: Any = None) -> str:
     """Return a profile's format without modifying values or guessing locale.
 
     Args:
-        profile: flowlib-legacy-v1 or plain-v1; unknown profiles are rejected.
+        profile: flowlib-legacy-v1, flowlib-v2 or plain-v1; unknown profiles are rejected.
         column: Header passed unchanged to the selected profile.
-        value: Optional existing compatibility argument, unused by both profiles.
+        value: Optional cell value; only flowlib-v2 uses it (type beats name).
     Returns:
         Excel format string; plain-v1 always returns General.
     Raises:
@@ -24,6 +25,8 @@ def get_profile_format(profile: str, column: str, value: Any = None) -> str:
     """
     if profile == "flowlib-legacy-v1":
         return get_number_format(column, value)
+    if profile == "flowlib-v2":
+        return get_number_format_v2(column, value)
     if profile == "plain-v1":
         return "General"
     raise ValueError(f"Unknown format profile: {profile}")
@@ -52,7 +55,7 @@ def get_profile_metadata(profile: str) -> dict[str, Any]:
     canonical = json.dumps(content, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     if hashlib.sha256(canonical.encode()).hexdigest() != entry["content_hash"]:
         raise ValueError("Profile content fingerprint mismatch")
-    for filename in ("formats.py", "profiles.py"):
+    for filename in content["implementation_hashes"]:
         actual = hashlib.sha256(package.joinpath(filename).read_bytes()).hexdigest()
         if actual != content["implementation_hashes"][filename]:
             raise ValueError("Profile implementation fingerprint mismatch")

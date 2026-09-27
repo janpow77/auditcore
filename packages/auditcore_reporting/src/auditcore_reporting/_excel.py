@@ -20,7 +20,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
-from auditcore_reporting._ooxml import normalize_font_sequence
+from auditcore_reporting._ooxml import normalize_font_sequence, restore_exact_numbers
 from auditcore_reporting.profiles import PROFILE_IDS, get_profile_format
 from auditcore_reporting.workbook import (
     CellValue,
@@ -45,6 +45,9 @@ class _Budget:
         self.options = options
         self.cells = 0
         self.text = 0
+        self.sheet = 0
+        # Worksheet member → {cell: repr} for floats that ``%.16g`` would change.
+        self.exact: dict[str, dict[str, str]] = {}
 
     def consume(self, value: CellValue) -> None:
         """Count each written cell and string before accepting it into the workbook."""
@@ -194,6 +197,9 @@ def _cell_format(table: ReportTable, column: str, value: CellValue) -> str:
 
 def _write_cell(cell: Cell, value: CellValue, fmt: str, offset: int, budget: _Budget) -> None:
     _assign(cell, value, budget)
+    if isinstance(value, float) and float(f"{value:.16g}") != value:
+        member = f"xl/worksheets/sheet{budget.sheet}.xml"
+        budget.exact.setdefault(member, {})[cell.coordinate] = repr(value)
     if fmt != "General":
         cell.number_format = fmt
     if budget.options.zebra and offset % 2 == 0:
@@ -244,6 +250,7 @@ def render(tables: Iterable[ReportTable], options: ExcelOptions) -> bytes:
             if table.name.casefold() in names:
                 raise ValueError("Duplicate worksheet name")
             names.add(table.name.casefold())
+            budget.sheet = len(names)
             if len(names) > options.limits.max_sheets:
                 raise WorkbookLimitError("Worksheet budget exceeded")
             _body(workbook.create_sheet(table.name), table, columns, budget)
@@ -254,6 +261,8 @@ def render(tables: Iterable[ReportTable], options: ExcelOptions) -> bytes:
         if output.tell() > options.limits.max_output_bytes:
             raise WorkbookLimitError("Workbook output budget exceeded")
         payload = normalize_font_sequence(output.getvalue())
+        if budget.exact:
+            payload = restore_exact_numbers(payload, budget.exact)
         if len(payload) > options.limits.max_output_bytes:
             raise WorkbookLimitError("Workbook output budget exceeded")
         return payload

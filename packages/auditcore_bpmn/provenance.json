@@ -249,7 +249,8 @@
       "I6",
       "I7",
       "I8",
-      "I9"
+      "I9",
+      "I10"
     ],
     "legacy_variants": [
       "validate_bpmn_bva",

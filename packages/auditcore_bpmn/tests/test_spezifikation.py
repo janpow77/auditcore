@@ -36,6 +36,13 @@ NAMES = st.text(
 )
 ACT = st.sampled_from(["Verordnung (EU) 2021/1060", "Verordnung (EU) Nr. 1303/2013", "Verordnung (EU) 2018/1046"])
 DELEGATED = "Delegierte Verordnung (EU) Nr. 480/2014"
+DECLINED = [DELEGATED, "Durchführungsverordnung (EU) 2021/1060", "Richtlinie (EU) 2019/1937"]
+OLD_DIRECTIVES = st.builds(
+    lambda year, number, suffix: f"Richtlinie {year}/{number}/{suffix}",
+    st.integers(1960, 2014),
+    st.integers(1, 999),
+    st.sampled_from(["EU", "EG", "EWG"]),
+)
 NUMBERS = st.integers(1, 200).map(str)
 
 
@@ -135,17 +142,16 @@ def test_i7_structured_citation_round_trip(act: str, article: str, paragraph: st
     assert basis.normalized().normalized() == basis.normalized()
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Befund B1 (docs/spezifikation.md): „der Delegierten Verordnung“ wird als Norm "
-    "„Delegierten Verordnung …“ gelesen; die Normalform verliert dann den Artikel „der“.",
-)
-@settings(max_examples=5, deadline=None)
-@given(NUMBERS)
-def test_i7_befund_b1_declined_delegated_act(article: str) -> None:
-    """I7 (Befund B1): der Rundlauf gilt noch nicht für gebeugte Normnamen wie „der Delegierten Verordnung“."""
-    basis = LegalBasis(act=DELEGATED, article=article)
-    assert parse_citation(basis.citation()).citation() == basis.citation()
+@EXAMPLES
+@given(st.sampled_from(DECLINED), NUMBERS, st.one_of(st.none(), NUMBERS))
+def test_i7_declined_act_round_trip(act: str, article: str, paragraph: str | None) -> None:
+    """I7 (vormals Befund B1): gebeugte Normnamen („der Delegierten Verordnung“) werden in der Grundform gelesen."""
+    basis = LegalBasis(act=act, article=article, paragraph=paragraph)
+    parsed = parse_citation(basis.citation())
+    assert parsed.act == act
+    assert (parsed.article, parsed.paragraph) == (article, paragraph)
+    assert parsed.citation() == basis.citation()
+    assert "der Delegierten Verordnung" in basis.citation() or act != DELEGATED
 
 
 @EXAMPLES
@@ -167,3 +173,17 @@ def test_i9_writing_extensions_is_idempotent(xml: str, act: str, article: str) -
     assert set_extensions(once, "S", extensions) == once
     written = parse_bpmn(once).elements["S"].extensions.legal_bases
     assert [(b.article, b.text) for b in written] == [(article, LegalBasis(act=act, article=article).citation())]
+
+
+@EXAMPLES
+@given(OLD_DIRECTIVES, NUMBERS, st.one_of(st.none(), NUMBERS), st.text(max_size=20))
+def test_i10_old_form_directives_are_recognised(act: str, article: str, paragraph: str | None, noise: str) -> None:
+    """I10 (vormals Befund B2): Richtlinien in der Altform „Richtlinie 2014/24/EU“ werden erkannt."""
+    basis = LegalBasis(act=act, article=article, paragraph=paragraph)
+    parsed = parse_citation(basis.citation())
+    assert (parsed.act, parsed.article, parsed.paragraph) == (act, article, paragraph)
+    assert parsed.citation() == basis.citation()
+    short = f"Art. {article} RL {act.split(' ', 1)[1]}"
+    assert parse_citation(short).act == act
+    hits = find_citations(f"{noise} {basis.citation()} {noise}")
+    assert any(hit.legal_basis.act == act and hit.legal_basis.article == article for hit in hits)
