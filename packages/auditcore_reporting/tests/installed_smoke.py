@@ -24,6 +24,14 @@ def main() -> None:
         pass
     else:
         raise AssertionError("Legacy TypeError contract changed")
+    from auditcore_reporting.templates import builtin_registry, render
+
+    registry = builtin_registry()
+    assert [t.id for t in registry.latest()] == ["pruefbericht", "vermerk"]
+    memo = registry.get("vermerk")
+    first = render(memo, memo.sample, "docx").content
+    assert first[:2] == b"PK" and first == render(memo, memo.sample, "docx").content
+    assert "Vermerk" in render(memo, memo.sample, "html").content.decode("utf-8")
     print("PASS: installed auditcore_reporting behavior and independent runtime")
 
 

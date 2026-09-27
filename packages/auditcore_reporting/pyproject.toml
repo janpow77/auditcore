@@ -39,6 +39,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.ruff.lint.per-file-ignores]
 # Expected document texts and XML fragments are kept on one line.
 "tests/test_templates_*.py" = ["E501"]
+"tests/test_spezifikation_vorlagen.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.11"

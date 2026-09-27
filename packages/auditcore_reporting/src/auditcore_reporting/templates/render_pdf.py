@@ -9,7 +9,6 @@ texts are escaped before they reach reportlab's paragraph markup.
 from __future__ import annotations
 
 import io
-from typing import Any
 from xml.sax.saxutils import escape
 
 from auditcore_common.optional import require_module
@@ -37,7 +36,7 @@ def _markup(text: str) -> str:
     return escape(text).replace("\n", "<br/>")
 
 
-def _color(value: str) -> Any:
+def _color(value: str) -> object:
     colors = require_module("reportlab.lib.colors", RenderDependencyError, _MESSAGE)
     return colors.HexColor(f"#{value}")
 
@@ -59,7 +58,7 @@ class _Styles:
             for level, h in enumerate(design.heading_sizes_pt, start=1)
         ]  # fmt: skip
 
-    def aligned(self, align: str, bold: bool = False) -> Any:
+    def aligned(self, align: str, bold: bool = False) -> object:
         enums = require_module("reportlab.lib.enums", RenderDependencyError, _MESSAGE)
         alignment = {"left": enums.TA_LEFT, "right": enums.TA_RIGHT, "center": enums.TA_CENTER}
         styles = require_module("reportlab.lib.styles", RenderDependencyError, _MESSAGE)
@@ -69,7 +68,7 @@ class _Styles:
         )
 
 
-def _table(node: RTable, styles: _Styles, width: float, design: DesignProfile) -> Any:
+def _table(node: RTable, styles: _Styles, width: float, design: DesignProfile) -> object:
     platypus = require_module("reportlab.platypus", RenderDependencyError, _MESSAGE)
     head = [
         platypus.Paragraph(_markup(h), styles.aligned(a, True))
@@ -96,7 +95,7 @@ def _table(node: RTable, styles: _Styles, width: float, design: DesignProfile) -
     return table
 
 
-def _flowables(node: Node, styles: _Styles, width: float, design: DesignProfile) -> list[Any]:
+def _flowables(node: Node, styles: _Styles, width: float, design: DesignProfile) -> list[object]:
     platypus = require_module("reportlab.platypus", RenderDependencyError, _MESSAGE)
     if isinstance(node, RHeading):
         return [platypus.Paragraph(_markup(node.text), styles.headings[node.level - 1])]
@@ -123,14 +122,14 @@ def _flowables(node: Node, styles: _Styles, width: float, design: DesignProfile)
     return [platypus.PageBreak()]
 
 
-def _canvas_class(design: DesignProfile) -> Any:
+def _canvas_class(design: DesignProfile) -> type:
     """Canvas that writes header, footer and "Seite X von Y" after the last page."""
     canvas_module = require_module("reportlab.pdfgen.canvas", RenderDependencyError, _MESSAGE)
 
     class NumberedCanvas(canvas_module.Canvas):  # type: ignore[misc,name-defined]
-        def __init__(self, *args: Any, **kwargs: Any) -> None:
+        def __init__(self, *args: object, **kwargs: object) -> None:
             super().__init__(*args, **kwargs)
-            self._pages: list[dict[str, Any]] = []
+            self._pages: list[dict[str, object]] = []
 
         def showPage(self) -> None:  # noqa: N802 - reportlab API
             self._pages.append(dict(self.__dict__))
@@ -174,7 +173,7 @@ def render_pdf(document: ResolvedDocument, design: DesignProfile = NEUTRAL_DESIG
         creator="auditcore_reporting", author="", invariant=1,
     )  # fmt: skip
     styles = _Styles(design)
-    story: list[Any] = []
+    story: list[object] = []
     for node in document.nodes:
         story.extend(_flowables(node, styles, template.width, design))
     template.build(story, canvasmaker=_canvas_class(design))

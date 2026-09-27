@@ -88,31 +88,41 @@ def _conditions(value: object) -> dict[str, Condition]:
     return named
 
 
+def _check_listing(
+    block: BulletList | Table, checker: Checker, bindings: Bindings, where: str
+) -> None:
+    inner = checker.loop(block.source, block.var, bindings, where)
+    checker.text(block.empty_text, bindings, where)
+    texts = [block.item] if isinstance(block, BulletList) else [c.cell for c in block.columns]
+    for text in texts:
+        checker.text(text, inner, where)
+
+
+def _check_section(block: Section, checker: Checker, bindings: Bindings, where: str) -> None:
+    inner = bindings
+    if block.repeat is not None:
+        inner = checker.loop(block.repeat, block.var, bindings, where)
+    checker.condition(block.condition, inner, where)
+    checker.text(block.title, inner, where)
+    for index, child in enumerate(block.blocks):
+        _check_block(child, checker, inner, f"{where}.blocks[{index}]")
+
+
 def _check_block(block: Block, checker: Checker, bindings: Bindings, where: str) -> None:
-    if not isinstance(block, Section):
-        checker.condition(block.condition, bindings, where)
+    if isinstance(block, Section):
+        _check_section(block, checker, bindings, where)
+        return
+    checker.condition(block.condition, bindings, where)
     if isinstance(block, (Heading, Paragraph)):
         checker.text(block.text, bindings, where)
     elif isinstance(block, BlockRef):
         checker.block_ref(block.block, bindings, where)
     elif isinstance(block, (BulletList, Table)):
-        inner = checker.loop(block.source, block.var, bindings, where)
-        checker.text(block.empty_text, bindings, where)
-        texts = [block.item] if isinstance(block, BulletList) else [c.cell for c in block.columns]
-        for text in texts:
-            checker.text(text, inner, where)
+        _check_listing(block, checker, bindings, where)
     elif isinstance(block, Fields):
         for row in block.rows:
             checker.text(row.label, bindings, where)
             checker.text(row.value, bindings, where)
-    elif isinstance(block, Section):
-        inner = bindings
-        if block.repeat is not None:
-            inner = checker.loop(block.repeat, block.var, bindings, where)
-        checker.condition(block.condition, inner, where)
-        checker.text(block.title, inner, where)
-        for index, child in enumerate(block.blocks):
-            _check_block(child, checker, inner, f"{where}.blocks[{index}]")
 
 
 def _formats(value: object, docx: bytes | None) -> tuple[str, ...]:

@@ -37,10 +37,7 @@ def _types(schema: Mapping[str, object]) -> tuple[str, ...]:
     return tuple(str(k) for k in kind) if isinstance(kind, (list, tuple)) else ()
 
 
-def check_schema(schema: object, where: str = "schema") -> None:
-    """Reject unsupported keywords, unknown types and malformed sub-schemas."""
-    if not isinstance(schema, Mapping):
-        raise TemplateError(f"{where}: Schema muss ein Objekt sein.")
+def _check_keywords(schema: Mapping[str, object], where: str) -> None:
     unknown = sorted(set(schema) - KEYWORDS)
     if unknown:
         raise TemplateError(f"{where}: nicht unterstützte Schlüsselwörter {unknown}.")
@@ -54,6 +51,13 @@ def check_schema(schema: object, where: str = "schema") -> None:
         raise TemplateError(f"{where}.format: nur {FORMATS} werden geprüft.")
     if schema.get("additionalProperties", False) not in (True, False):
         raise TemplateError(f"{where}.additionalProperties: nur true oder false.")
+
+
+def check_schema(schema: object, where: str = "schema") -> None:
+    """Reject unsupported keywords, unknown types and malformed sub-schemas."""
+    if not isinstance(schema, Mapping):
+        raise TemplateError(f"{where}: Schema muss ein Objekt sein.")
+    _check_keywords(schema, where)
     properties = schema.get("properties", {})
     if not isinstance(properties, Mapping):
         raise TemplateError(f"{where}.properties: Objekt erwartet.")

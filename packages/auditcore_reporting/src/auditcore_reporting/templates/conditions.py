@@ -51,23 +51,20 @@ def _comparison(name: str, argument: object, where: str) -> tuple[str, object]:
     return path, value
 
 
-def condition_paths(
-    spec: Condition, named: Mapping[str, Condition], where: str, depth: int = 0
+def _named_paths(
+    spec: str, named: Mapping[str, Condition], where: str, depth: int
 ) -> Iterator[str]:
-    """Data paths a condition reads; raises :class:`TemplateError` for malformed ones."""
-    if depth > MAX_DEPTH:
-        raise TemplateError(f"{where}: Bedingungen zu tief verschachtelt oder zyklisch.")
-    if isinstance(spec, str):
-        if spec in named:
-            yield from condition_paths(named[spec], named, f"{where} → {spec}", depth + 1)
-        elif valid_path(spec):
-            yield spec
-        else:
-            raise TemplateError(f"{where}: {spec!r} ist weder benannte Bedingung noch Datenpfad.")
-        return
-    if not isinstance(spec, Mapping):
-        raise TemplateError(f"{where}: Bedingung muss Name oder Objekt sein.")
-    name, argument = _operator(spec, where)
+    if spec in named:
+        yield from condition_paths(named[spec], named, f"{where} → {spec}", depth + 1)
+    elif valid_path(spec):
+        yield spec
+    else:
+        raise TemplateError(f"{where}: {spec!r} ist weder benannte Bedingung noch Datenpfad.")
+
+
+def _operator_paths(
+    name: str, argument: object, named: Mapping[str, Condition], where: str, depth: int
+) -> Iterator[str]:
     if name in _UNARY:
         if not isinstance(argument, str) or not valid_path(argument):
             raise TemplateError(f"{where}: {name!r} erwartet einen Datenpfad.")
@@ -81,6 +78,21 @@ def condition_paths(
             raise TemplateError(f"{where}: {name!r} erwartet eine nicht leere Liste.")
         for child in argument:
             yield from condition_paths(_child(child, where), named, where, depth + 1)
+
+
+def condition_paths(
+    spec: Condition, named: Mapping[str, Condition], where: str, depth: int = 0
+) -> Iterator[str]:
+    """Data paths a condition reads; raises :class:`TemplateError` for malformed ones."""
+    if depth > MAX_DEPTH:
+        raise TemplateError(f"{where}: Bedingungen zu tief verschachtelt oder zyklisch.")
+    if isinstance(spec, str):
+        yield from _named_paths(spec, named, where, depth)
+        return
+    if not isinstance(spec, Mapping):
+        raise TemplateError(f"{where}: Bedingung muss Name oder Objekt sein.")
+    name, argument = _operator(spec, where)
+    yield from _operator_paths(name, argument, named, where, depth)
 
 
 def _child(value: object, where: str) -> Condition:

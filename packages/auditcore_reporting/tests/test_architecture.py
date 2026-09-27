@@ -61,3 +61,21 @@ else:
 """
     result = subprocess.run([sys.executable, "-I", "-c", script], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
+
+
+def test_template_dependency_boundary():
+    """Templates: standard library and auditcore_common only; XML parsing only via safe_xml."""
+    package = Path(auditcore_reporting.__file__).parent / "templates"
+    allowed = set(sys.stdlib_module_names) | {"__future__", "auditcore_common"}
+    for path in package.glob("*.py"):
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                assert {alias.name.split(".")[0] for alias in node.names} <= allowed, path.name
+            elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                assert (node.module or "").split(".")[0] in allowed, path.name
+                if node.module == "xml.etree.ElementTree":
+                    assert {alias.name for alias in node.names} == {"Element"}, path.name
+            elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                assert node.func.id not in {"open", "eval", "exec", "compile", "__import__"}
+    assert not list(package.glob("builtin/*.py"))
