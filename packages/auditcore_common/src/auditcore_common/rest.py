@@ -51,18 +51,21 @@ def decode_body(
     *,
     error: type[ContractError] = ContractError,
     parse_float: Callable[[str], object] | None = None,
+    too_large_code: str = "too_large",
+    invalid_json_code: str = "invalid_json",
 ) -> object:
     """Parsed JSON body; ``413 too_large`` above ``limit`` bytes, ``400 invalid_json`` else.
 
     ``parse_float`` is passed to :func:`json.loads` (e.g. ``Decimal`` for exact
-    digits).
+    digits). ``too_large_code``/``invalid_json_code`` keep the error codes of a
+    contract that names them differently (geo: ``zu_gross``/``ungueltiges_json``).
     """
     if len(raw) > limit:
-        raise error("Anfrage zu groß.", status=413, code="too_large")
+        raise error("Anfrage zu groß.", status=413, code=too_large_code)
     try:
         return json.loads(raw, parse_float=parse_float)
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise error("Kein gültiges JSON.", status=400, code="invalid_json") from exc
+        raise error("Kein gültiges JSON.", status=400, code=invalid_json_code) from exc
 
 
 def guarded(action: Callable[[], Reply], *, error: type[ContractError] = ContractError) -> Reply:

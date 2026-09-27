@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
+from dataclasses import replace
 from datetime import date
 from decimal import Decimal
 from importlib import resources
@@ -50,6 +51,7 @@ __all__ = [
 ]
 
 SCHEMA = "auditcore_price_analysis.profile/1"
+SHARE_RULES = ("separate", "complement")
 
 
 def _dec(data: Mapping[str, object], key: str, where: str) -> Decimal:
@@ -172,6 +174,9 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
     rounding = data.get("rounding", {})
     missing = data.get("missing", {})
     release = data.get("release", {})
+    shares = str(rounding.get("shares", "separate"))
+    if shares not in SHARE_RULES:
+        raise ProfileError("rounding.shares muss separate oder complement sein.")
     return CalculationProfile(
         profile_id=profile_id,
         version=version,
@@ -192,6 +197,7 @@ def calculation_profile_from_dict(data: Mapping[str, Any]) -> CalculationProfile
         fingerprint=canonical_sha256(data),
         raw=data,
         recommended=bool(data.get("recommended", False)),
+        shares=shares,
     )
 
 
@@ -248,13 +254,27 @@ def available_profiles() -> list[dict[str, Any]]:
                 "version": version,
                 "type": str(data["type"]),
                 "status": str(data.get("status", "UNKNOWN")),
-                "recommended": bool(data.get("recommended", False)),
+                "recommended": _recommended(pid, version, data),
                 "fingerprint": canonical_sha256(data),
             }
             for (pid, version), data in _shipped().items()
         ),
         key=lambda row: (row["profile_id"], row["version"]),
     )
+
+
+def _superseded(profile_id: str) -> set[str]:
+    """Versions of ``profile_id`` that a later shipped version names in ``supersedes``."""
+    return {
+        str(data["supersedes"])
+        for (pid, _), data in _shipped().items()
+        if pid == profile_id and data.get("supersedes")
+    }
+
+
+def _recommended(profile_id: str, version: str, data: Mapping[str, object]) -> bool:
+    """Marked as recommended and not superseded by a later version (profile data unchanged)."""
+    return bool(data.get("recommended")) and version not in _superseded(profile_id)
 
 
 def _load(profile_id: str, version: str) -> Mapping[str, Any]:
@@ -268,18 +288,28 @@ def _load(profile_id: str, version: str) -> Mapping[str, Any]:
 
 def load_calculation_profile(profile_id: str, version: str) -> CalculationProfile:
     """Shipped calculation profile; the version must be named explicitly."""
-    return calculation_profile_from_dict(_load(profile_id, version))
+    data = _load(profile_id, version)
+    profile = calculation_profile_from_dict(data)
+    return replace(profile, recommended=_recommended(profile_id, version, data))
 
 
 def load_comparison_profile(profile_id: str, version: str) -> ComparisonProfile:
     """Shipped comparison profile; the version must be named explicitly."""
-    return comparison_profile_from_dict(_load(profile_id, version))
+    data = _load(profile_id, version)
+    profile = comparison_profile_from_dict(data)
+    return replace(profile, recommended=_recommended(profile_id, version, data))
 
 
 def recommended_version(profile_id: str) -> str:
-    """Version of ``profile_id`` marked as recommended (decided rules); exactly one must exist."""
+    """Version of ``profile_id`` marked as recommended (decided rules); exactly one must exist.
+
+    A version that a later shipped version names in ``supersedes`` no longer
+    counts; its data (and fingerprint) stay unchanged.
+    """
     versions = [
-        v for (pid, v), data in _shipped().items() if pid == profile_id and data.get("recommended")
+        v
+        for (pid, v), data in _shipped().items()
+        if pid == profile_id and _recommended(pid, v, data)
     ]
     if len(versions) != 1:
         raise ProfileError(f"Für {profile_id} ist nicht genau eine empfohlene Version hinterlegt.")

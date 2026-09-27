@@ -70,5 +70,29 @@
     "count": 27,
     "status": "Draft",
     "policy": "docs/profile-versioning.md"
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "TestDataGenerator.generate_postal_code",
+      "TestDataGenerator.generate_amount",
+      "TestDataGenerator.apply_deviation",
+      "TestDataGenerator.generate_field"
+    ]
   }
 }

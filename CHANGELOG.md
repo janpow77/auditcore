@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- `auditcore_sampling`: Stichprobenumfang nach dem KOM-Leitfaden
+  EGESIF_16-0014-01 als neues Modul `guidance` mit Status „nach Leitfaden“
+  (SRS, Differenzenschätzung, MUS Standard/geschichtet/konservativ,
+  nicht-statistische Mindestumfänge nach Art. 79 Abs. 2 VO (EU) 2021/1060),
+  Belegziehung einer Zwischengeschalteten Stelle (`intermediate_body`,
+  Paritätstest gegen flowinvoice), REST-Vertrag `auditcore_sampling.guidance/1`;
+  Oberfläche `SampleSizePlanner` / `FlowauditSampleSizePlanner`
+  (`<flowaudit-sample-size-planner>`). Konsistenztest Planung → Hochrechnung
+  in `auditcore_extrapolation`.
+- Preview v0.4.2 veröffentlicht (Prerelease, 185 Assets, main `f2220bf5`) und
+  anonym installiert: pip 27/27 (hashgebunden) und 27/27 (Paketindex), APT
+  (debian:bookworm) 27/27, npm 9/9 aus den Tarball-URLs sowie die Beispiele
+  Vue, React und Web Components. Nachweise
+  `docs/reports/domain-public-installation-v0.4.2.json` und
+  `docs/reports/npm-tarball-installation-v0.4.2.json`, Hashes in
+  `docs/deployment/package-feed.md`. Die README-Installationszeilen der Pakete
+  zeigen auf v0.4.2. Das Donut-Job-Image bezieht seine auditcore-Abhängigkeiten
+  wieder hashgebunden aus dem Release (`requirements-auditcore.txt` auf v0.4.2).
+
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
@@ -39,6 +58,20 @@
   Beobachtete Fixtures sind entsprechend neutralisiert und tragen den Hinweis
   `neutralized`; die Aufzeichnungswerkzeuge neutralisieren künftig selbst.
   Die BPMN-Neutralitätstests lesen die Namen aus der Denylist.
+- Paketkatalog: neuer Status **„spezifiziert“** für charakterisierte Pakete
+  mit fachlicher Spezifikation (`docs/spezifikation.md` je Paket: Zweck,
+  Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+  Altverhalten), Invarianten als Hypothesis-Eigenschaftstests und benannten
+  Legacy-Varianten. `scripts/docs/specification.py` prüft den
+  `specification`-Block in `provenance.json`; `catalog.py` setzt den Status
+  nur, wenn er hält (Vorlage `docs/bibliotheken/spezifikation-vorlage.md`).
+  Welche Pakete umgestellt sind, steht in den Paket-CHANGELOGs.
+- Duplikatgruppe A16 abgeschlossen: Die Prüfung „JSON-Objekt am Pfad“ in
+  sampling (`as_object`), geo (`Body.of`) und extrapolation (`Reader`) nutzt
+  `auditcore_common.rest.json_object`; geo `web.decode`, `Reply` und `_json`
+  laufen über `auditcore_common.rest` (`decode_body` mit neuen Parametern
+  `too_large_code`/`invalid_json_code`). Verhalten unverändert
+  (Differenztests, Paketlauf alt gegen neu über HTTP).
 
 ## 0.4.2 – 2026-09-26
 

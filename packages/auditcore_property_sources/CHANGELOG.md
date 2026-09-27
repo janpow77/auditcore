@@ -2,6 +2,15 @@
 
 Aus der Git-Historie rekonstruiert (`git log -- packages/auditcore_property_sources`).
 
+## Unreleased
+
+Keine Verhaltensänderung. Status „spezifiziert“: fachliche Spezifikation
+`docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle,
+Abgrenzung, bewusste Abweichungen vom Altverhalten), 11 Invarianten als
+Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`
+(`hypothesis` im Extra `dev`), `specification`-Block in `provenance.json`.
+Keine Befunde. Legacy-Varianten: `zvg.legacy_parse_de_number`, `advertiser_names="legacy"`, `robots_policy="ignore"`.
+
 ## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. HTML-Erkennung der Adapter über

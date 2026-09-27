@@ -18,12 +18,12 @@ python -m pip install auditcore_common \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.0 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-common/`):
 
 ```text
-auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_common-0.1.1-py3-none-any.whl#sha256=5b6c5659de0d1bb7b8d2c175e295851a5be64a56223050d27c75645b13b90ebd
+auditcore_common @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_common-0.2.0-py3-none-any.whl#sha256=08971a3a3128c26e6230414ae338e22186e030a0ffe034758f267cae11539456
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

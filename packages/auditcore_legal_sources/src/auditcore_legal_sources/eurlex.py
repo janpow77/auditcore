@@ -9,7 +9,7 @@ checkpoints belong to the ``auditcore_harvest`` engine.
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from datetime import date
+from datetime import date, datetime
 
 from .errors import ConfigurationError, ParseError
 from .model import LegalDocument
@@ -33,11 +33,15 @@ def sparql_form(query: str) -> dict[str, str]:
 
 
 def update_query(profile: SourceProfile, since: date) -> str:
-    """Incremental query of the profile; ``since`` must be a date (no text injection)."""
+    """Incremental query of the profile; ``since`` must be a plain date.
+
+    Text (no injection) and ``datetime`` (would put a time into the
+    ``xsd:date`` literal) are rejected.
+    """
     if profile.eurlex_update_query_template is None:
         raise ConfigurationError(f"Profil {profile.id} hat keine Aktualisierungsabfrage.")
-    if not isinstance(since, date):
-        raise ConfigurationError("Das Startdatum muss ein Datum sein.")
+    if not isinstance(since, date) or isinstance(since, datetime):
+        raise ConfigurationError("Das Startdatum muss ein Datum ohne Uhrzeit sein.")
     return profile.eurlex_update_query_template.replace("{since}", since.isoformat())
 
 

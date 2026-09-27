@@ -1,5 +1,14 @@
 # Changelog auditcore_dummygenerator
 
+## Unreleased
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
+(Zweck, Verträge, zehn Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom
+Altverhalten) mit Hypothesis-Eigenschaftstests `tests/test_spezifikation.py`;
+Legacy-Varianten benannt (`generate_postal_code`, `generate_amount`,
+`apply_deviation`, `generate_field`). `specification`-Block in
+`provenance.json`, Katalogstatus „spezifiziert“. `hypothesis` im Extra `dev`.
+
 ## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1.

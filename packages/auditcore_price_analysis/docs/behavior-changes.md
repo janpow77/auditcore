@@ -75,6 +75,19 @@ Profilen `regulierung.hpp.nahwaerme`, `.wasser`, `.vergleich` **@2026.09.2**
 - **PA-H04 – DECIDED:** `valid_to` der Preiszeile wird bei der Tarifauswahl
   beachtet (`selection.respect_valid_to: true`, Ausschlussgrund `abgelaufen`).
 
+## Entscheidung PA-R01 (DECIDED, 27.09.2026)
+
+Auftrag vom 27.09.2026, Zitat: „Anteile summieren auf 100,0 %“. Bis 2026.09.2
+werden Fix- und Variabelanteil getrennt gerundet (PA-L10); bei 33,35 % /
+66,65 % ergibt die Summe 100,1 %. Die Profile `regulierung.hpp.nahwaerme` und
+`.wasser` **@2026.09.3** setzen `rounding.shares = "complement"`: der
+Fixanteil wird gerundet, der Variabelanteil ist `100 − Fixanteil`. Sie
+ersetzen 2026.09.2 als empfohlene Fassung (`supersedes: "2026.09.2"`); die
+Daten und Fingerprints von 2026.09.1 und 2026.09.2 bleiben unverändert und
+rechnen weiter getrennt (`rounding.shares` fehlt = `"separate"`).
+`recommended_version` und `available_profiles` werten `supersedes` aus;
+`.vergleich` bleibt bei 2026.09.2.
+
 ## REVIEW_REQUIRED
 
 - **Umlagenstichtag 01.07.2025:** Recherche vom 23.09.2026 ohne belastbare

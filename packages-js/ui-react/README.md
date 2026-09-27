@@ -124,7 +124,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (241):
+Exporte der Einstiegspunkte aus `package.json#exports` (248):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -205,6 +205,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (241):
 | `@auditcore/ui-react` | `FlowauditReportExportProps` | Typ | – | `reporting/FlowauditReportExport` |
 | `@auditcore/ui-react` | `FlowauditRiskFlags` | Funktion | Risiko-Merkmale als native React-Komponente – Vertrag, Texte und Markup wie `<flowaudit-risk-flags>`: Verteilung je Merkmal, Filter, Tabelle je Datensatz, Detailkarten mit Begründu … | `risk/FlowauditRiskFlags` |
 | `@auditcore/ui-react` | `FlowauditRiskFlagsProps` | Schnittstelle | – | `risk/FlowauditRiskFlags` |
+| `@auditcore/ui-react` | `FlowauditSampleSizePlanner` | Funktion | Stichprobenumfang nach KOM-Leitfaden als native React-Komponente (Vertrag wie `<flowaudit-sample-size-planner>`). Ereignisse: `onPlanCalculated`, `onError`. | `samplesize/FlowauditSampleSizePlanner` |
+| `@auditcore/ui-react` | `FlowauditSampleSizePlannerProps` | Schnittstelle | – | `samplesize/FlowauditSampleSizePlanner` |
 | `@auditcore/ui-react` | `FlowauditSampling` | Funktion | Stichprobenrechner als native React-Komponente (Vertrag wie `<flowaudit-sampling>`): Methodenprofil, Stichprobenumfang mit Herleitung, Grundgesamtheit (Eigenschaft oder Datei), Aus … | `sampling/FlowauditSampling` |
 | `@auditcore/ui-react` | `FlowauditSamplingProps` | Typ | – | `sampling/FlowauditSampling` |
 | `@auditcore/ui-react` | `FlowauditScreeningReview` | Funktion | Screening-Trefferprüfung (Sanktionslisten, PEP) als native React-Komponente – Vertrag, Texte und Ablauf wie `<flowaudit-screening-review>`: Prüflauf anlegen, Treffer filtern, vergl … | `screening/FlowauditScreeningReview` |
@@ -276,6 +278,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (241):
 | `@auditcore/ui-react` | `RiskRecordDetailProps` | Schnittstelle | – | `risk/RiskRecordDetail` |
 | `@auditcore/ui-react` | `RowUpdate` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `RunView` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `SampleSizePlan` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `SampleSizeRequest` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `SamplesizePort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `SamplingInputs` | Schnittstelle | – | `sampling/useSampling` |
 | `@auditcore/ui-react` | `SamplingPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `ScreeningError` | Re-Export | – | `@auditcore/ui-core` |
@@ -325,6 +330,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (241):
 | `@auditcore/ui-react` | `createMemoryRecordPort` | Re-Export | – | `@auditcore/kanban-core` |
 | `@auditcore/ui-react` | `createReportingRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createRiskRestPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `createSamplesizeMemoryPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `createSamplesizeRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createSamplingRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createScreeningRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createSynopsisRestClient` | Re-Export | – | `@auditcore/ui-core` |

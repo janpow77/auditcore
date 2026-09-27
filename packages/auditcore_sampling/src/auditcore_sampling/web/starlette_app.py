@@ -10,13 +10,15 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.routing import Route
 
-from ._http import MAX_BODY_BYTES, handle, profiles
+from ._http import MAX_BODY_BYTES, guidance_profiles, handle, profiles
 
 ENDPOINTS = (
     ("/size", "size"),
     ("/allocation", "allocation"),
     ("/selection", "selection"),
     ("/selection/export", "export"),
+    ("/guidance/size", "guidance_size"),
+    ("/guidance/draw", "guidance_draw"),
 )
 
 
@@ -37,7 +39,13 @@ def routes(prefix: str = "", *, max_body_bytes: int = MAX_BODY_BYTES) -> list[Ro
 
         return run
 
-    result = [Route(f"{prefix}/profiles", get_profiles, methods=["GET"])]
+    async def get_guidance_profiles(_: Request) -> Response:
+        return response(guidance_profiles())
+
+    result = [
+        Route(f"{prefix}/profiles", get_profiles, methods=["GET"]),
+        Route(f"{prefix}/guidance/profiles", get_guidance_profiles, methods=["GET"]),
+    ]
     result += [Route(prefix + path, endpoint(name), methods=["POST"]) for path, name in ENDPOINTS]
     return result
 

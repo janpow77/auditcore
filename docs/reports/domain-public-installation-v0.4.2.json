@@ -1,0 +1,278 @@
+{
+  "scope": "PUBLIC_RELEASE_ANONYMOUS_INSTALLATION",
+  "release": {
+    "tag": "v0.4.2",
+    "url": "https://github.com/janpow77/auditcore/releases/tag/v0.4.2",
+    "published_at": "2026-09-26T20:06:18Z",
+    "prerelease": true,
+    "target_commit": "f2220bf58f318117111db2afba69d96946045a84",
+    "assets": 185,
+    "publication_method": "Entwurf mit allen 185 Assets hochgeladen und gegen die lokalen Größen geprüft, danach veröffentlicht"
+  },
+  "signing_key_fingerprint": "E427F95CC37CBFD0876314CA0D1580A6CAE37327",
+  "packages": [
+    {
+      "distribution": "auditcore-auth",
+      "version": "0.1.1",
+      "wheel_sha256": "0af1a2a8c27dd4d2847cfb4e90fe4a46c7f0dd2ca96fd5a1bd7e832b77c20f9b"
+    },
+    {
+      "distribution": "auditcore-bpmn",
+      "version": "0.1.2",
+      "wheel_sha256": "8419ad7f93874999c7ad5038621b08efb36834dc953b88386d98ae60f4e50cba"
+    },
+    {
+      "distribution": "auditcore-common",
+      "version": "0.2.0",
+      "wheel_sha256": "08971a3a3128c26e6230414ae338e22186e030a0ffe034758f267cae11539456"
+    },
+    {
+      "distribution": "auditcore-dataprotection",
+      "version": "0.5.1",
+      "wheel_sha256": "9fd7a540b53ee28a44a1edc5093f434a64469697c71f83f9ba577c0bcf10e1da"
+    },
+    {
+      "distribution": "auditcore-documents",
+      "version": "0.4.0",
+      "wheel_sha256": "d29319749e6c458140bbe153ccaa450eea16ce95c8191f733614db48f952dc2d"
+    },
+    {
+      "distribution": "auditcore-dummygenerator",
+      "version": "0.1.3",
+      "wheel_sha256": "854afcdf7a14765ddca2acb33226099c223e464c244e6fc05969b3223b8fd457"
+    },
+    {
+      "distribution": "auditcore-entity-matching",
+      "version": "0.2.4",
+      "wheel_sha256": "a289fdd1132538eb0984793c98260487bfb16795242763e4cba6462dcb90074e"
+    },
+    {
+      "distribution": "auditcore-extrapolation",
+      "version": "0.1.0",
+      "wheel_sha256": "0ca9a6634ac9392fdb3731a35309e8e381cd21ead763f1b129fbdbb091df7900"
+    },
+    {
+      "distribution": "auditcore-funding-sources",
+      "version": "0.1.5",
+      "wheel_sha256": "1b8cdbda142afbf2a1dd9a3bf02f304d7016b2afe9205c3355391a0534c145bc"
+    },
+    {
+      "distribution": "auditcore-geo",
+      "version": "0.3.1",
+      "wheel_sha256": "7d674abef3675cc50326005a30f7341803207b7dae6d91b39c1d935745f75a70"
+    },
+    {
+      "distribution": "auditcore-harvest",
+      "version": "0.1.3",
+      "wheel_sha256": "b5d08aa53e21f488277bd5df14b9d0df9aa4795b7f3fe6c3650ee0797600adb9"
+    },
+    {
+      "distribution": "auditcore-identifiers",
+      "version": "0.2.0",
+      "wheel_sha256": "ee7e4df7a64ceb6b047c015bbc7ede2ae6e696cb59bd50f3c3e7ac880be28631"
+    },
+    {
+      "distribution": "auditcore-invoicegenerator",
+      "version": "0.2.3",
+      "wheel_sha256": "e56c2af581677cf12c4485291e318f13d0d723ed93058ab178ce15ae09cb1f6a"
+    },
+    {
+      "distribution": "auditcore-invoicesynth",
+      "version": "0.2.0",
+      "wheel_sha256": "e22380b0426655f14b5dc3c02246e4aef658b5ea4936a0a6b1113b2f3966433d"
+    },
+    {
+      "distribution": "auditcore-kanban",
+      "version": "0.1.2",
+      "wheel_sha256": "569c89f84f4289c9608fef8a4ca821db32596a518881f1bc4feddfd3ea59432d"
+    },
+    {
+      "distribution": "auditcore-legal-sources",
+      "version": "0.1.5",
+      "wheel_sha256": "f82611b739c226675e5507c67d74c52e58ef2820ee700375bd189b743aa08554"
+    },
+    {
+      "distribution": "auditcore-llm-client",
+      "version": "0.1.2",
+      "wheel_sha256": "56be64b8d6b5c53bf2a2f3a763bbee8b48ad0e0274677fafca003df960928b1b"
+    },
+    {
+      "distribution": "auditcore-market-indicators",
+      "version": "0.1.3",
+      "wheel_sha256": "0e359850489db6ed7e284260989527603ebc65f5b2987da6a75572155cd92895"
+    },
+    {
+      "distribution": "auditcore-price-analysis",
+      "version": "0.1.3",
+      "wheel_sha256": "69423286e560b4d1ce25cb0ade227b803d526ee0db20d825eb19638bbc93b0e2"
+    },
+    {
+      "distribution": "auditcore-price-sources",
+      "version": "0.1.3",
+      "wheel_sha256": "f48ee1f9dd1ab3dfc283b17e40a0cfc5e76152f496a36c75acb6264796211d74"
+    },
+    {
+      "distribution": "auditcore-procurement",
+      "version": "0.2.4",
+      "wheel_sha256": "4b2271bf17bdd39955d56091b6cb77e8db275e56f1c8b1bbccd2769b117917e7"
+    },
+    {
+      "distribution": "auditcore-property-sources",
+      "version": "0.1.3",
+      "wheel_sha256": "afee96064a67d0d786be548ae9d2c19789eaa4f6f9d5d53d335035c8c52dd1dc"
+    },
+    {
+      "distribution": "auditcore-registry-sources",
+      "version": "0.2.3",
+      "wheel_sha256": "9fba74ab942874128794dcebb396e965cb50ade299b7740866e394f1a19acec6"
+    },
+    {
+      "distribution": "auditcore-reporting",
+      "version": "0.3.0",
+      "wheel_sha256": "b0058d75d82e5367942ebed8e1381ac994cf8874ad30afee92f511672a8069a2"
+    },
+    {
+      "distribution": "auditcore-risk",
+      "version": "0.3.4",
+      "wheel_sha256": "811970b803f1609e3e0810d18170428c97d15b9361f0e0cd3487b1c2916c5b69"
+    },
+    {
+      "distribution": "auditcore-sampling",
+      "version": "0.2.3",
+      "wheel_sha256": "30391db774421c955a200e590efeb22766a1fb1b947dc009df2891d4bc3ae63c"
+    },
+    {
+      "distribution": "auditcore-statistics",
+      "version": "0.3.4",
+      "wheel_sha256": "7ef4b80d8b006ac820f13baf80e40b3db1cf19600751ee922c9ba3ad5ad80d5a"
+    }
+  ],
+  "new_versions": [
+    "auditcore-auth 0.1.0 -> 0.1.1",
+    "auditcore-bpmn 0.1.1 -> 0.1.2",
+    "auditcore-common 0.1.1 -> 0.2.0",
+    "auditcore-dataprotection 0.5.0 -> 0.5.1",
+    "auditcore-documents 0.3.3 -> 0.4.0",
+    "auditcore-dummygenerator 0.1.2 -> 0.1.3",
+    "auditcore-entity-matching 0.2.3 -> 0.2.4",
+    "auditcore-funding-sources 0.1.4 -> 0.1.5",
+    "auditcore-geo 0.3.0 -> 0.3.1",
+    "auditcore-harvest 0.1.2 -> 0.1.3",
+    "auditcore-identifiers 0.1.0 -> 0.2.0",
+    "auditcore-invoicegenerator 0.2.2 -> 0.2.3",
+    "auditcore-invoicesynth 0.1.2 -> 0.2.0",
+    "auditcore-kanban 0.1.1 -> 0.1.2",
+    "auditcore-legal-sources 0.1.4 -> 0.1.5",
+    "auditcore-llm-client 0.1.1 -> 0.1.2",
+    "auditcore-market-indicators 0.1.2 -> 0.1.3",
+    "auditcore-price-analysis 0.1.2 -> 0.1.3",
+    "auditcore-price-sources 0.1.2 -> 0.1.3",
+    "auditcore-procurement 0.2.3 -> 0.2.4",
+    "auditcore-property-sources 0.1.2 -> 0.1.3",
+    "auditcore-registry-sources 0.2.2 -> 0.2.3",
+    "auditcore-reporting 0.2.2 -> 0.3.0",
+    "auditcore-risk 0.3.3 -> 0.3.4",
+    "auditcore-sampling 0.2.2 -> 0.2.3",
+    "auditcore-statistics 0.3.3 -> 0.3.4"
+  ],
+  "new_distributions": [
+    "auditcore-extrapolation 0.1.0"
+  ],
+  "npm_packages": [
+    {
+      "name": "@auditcore/bpmn-editor",
+      "version": "0.1.1",
+      "file": "auditcore-bpmn-editor-0.1.1.tgz",
+      "sha256": "fc0a57099cd162b05ebdfa2fb4cd5a5659175ec4408ee8a7aa1bf7c10f18287f",
+      "integrity": "sha512-iuttfny2f7iWGLdtQTv0IzkaCAq+JZC3iB32jkz5OmgAemzLIF0D6lZ/P/wpX4QJ/V68M4O9oHT6d+/oRmIjig=="
+    },
+    {
+      "name": "@auditcore/bpmn-flowaudit",
+      "version": "0.2.1",
+      "file": "auditcore-bpmn-flowaudit-0.2.1.tgz",
+      "sha256": "96b218831c4a7dbdf8b402f98102f4f4d604e64d71b32487029e14f7316657ab",
+      "integrity": "sha512-TQKFoL56gpzk3hlWb6ttH7s4ZHRwNeks+8WiPHK5JBmQMhtFmL3AUwnB6a5gwadHXEMfBIQLFq5aNaqhkOU26g=="
+    },
+    {
+      "name": "@auditcore/bpmn-react",
+      "version": "0.2.1",
+      "file": "auditcore-bpmn-react-0.2.1.tgz",
+      "sha256": "b4f7dc347c9f57733ce4dbbc74a1fb9915511b1fc64e364fd34e00bfb1d06dff",
+      "integrity": "sha512-AQ0K1PN+LIAbrXHmnv+/zhFHrZJX7aO0qEkAML1PS7I5r8kNjErAzx2YdmG69X3gAG+U0nnrkgPyQETi9VgDHQ=="
+    },
+    {
+      "name": "@auditcore/bpmn-vue",
+      "version": "0.2.1",
+      "file": "auditcore-bpmn-vue-0.2.1.tgz",
+      "sha256": "0df240e60456519d7aa210496c301a6c390637f242ae43288847438f020a13fc",
+      "integrity": "sha512-89j+W+h9/uz0yeNJAySgHPPZW2g6Zd0yNBIftRFVqUvsxriwZKMvDaE5kyxMLq4O9dndT1SpcDg84EWQI+PdFA=="
+    },
+    {
+      "name": "@auditcore/common",
+      "version": "0.1.1",
+      "file": "auditcore-common-0.1.1.tgz",
+      "sha256": "2d633cf1795faba04f6b385d829751f2999de0f6ad607d722daa812a7871a514",
+      "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw=="
+    },
+    {
+      "name": "@auditcore/kanban-core",
+      "version": "0.2.1",
+      "file": "auditcore-kanban-core-0.2.1.tgz",
+      "sha256": "fe084d2b267a1953c6227163bc977bbf5185812bde18768c6de4c0ba53d623a2",
+      "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA=="
+    },
+    {
+      "name": "@auditcore/ui",
+      "version": "0.3.0",
+      "file": "auditcore-ui-0.3.0.tgz",
+      "sha256": "7c9e40bbfe14340aa99e5a98ed078743cfcfdbb9a3381ad9067ead5b7dd17760",
+      "integrity": "sha512-C8JbW7soA9gm7JyXCKo84oFZ0Y8nihfSWb8HLpXybpoE+YONfJsNo11CJ7WkD3mMAH5X4SCZbNh08IVag4fYrg=="
+    },
+    {
+      "name": "@auditcore/ui-core",
+      "version": "0.2.0",
+      "file": "auditcore-ui-core-0.2.0.tgz",
+      "sha256": "fba4fc3a10c405044cc471ee48e3add88e19390af7a00a127f83087f4696b24d",
+      "integrity": "sha512-iCFk974FY15VTr6Oa1z8Pxgzs9xMcjGKPKLEkXcOQTm29yO+hQuBFCbA5EsboyelUO2jhcOEXFwexdmhwTJ92w=="
+    },
+    {
+      "name": "@auditcore/ui-react",
+      "version": "1.1.0",
+      "file": "auditcore-ui-react-1.1.0.tgz",
+      "sha256": "2dc8ea65edb007bd98e25532f160f127e3e005803b69d8582baa5d7182f298a4",
+      "integrity": "sha512-aFjq4J/iCr3yzRZ4RU4GXDHU3O2oZKL+BIriR5CIwwxrtGMX7GsvTDuBzfTVvE2zCiV6226wb/ZsTVOZICKwaA=="
+    }
+  ],
+  "pre_upload_verification": {
+    "domain_packages": "PASS (204/204, --apt)",
+    "optional_renderers": "PASS (15/15, --apt)",
+    "code_quality_gate": "PASS",
+    "readme_checks": "PASS",
+    "js_workspace": "PASS (npm ci, lint, typecheck, test, build, license-check, README-Snippets, Beispiele aus Workspace-Tarballs)",
+    "sha256sums_signature": "PASS (SHA256SUMS.asc, E427F95CC37CBFD0876314CA0D1580A6CAE37327)"
+  },
+  "anonymous_pip": {
+    "status": "PASS",
+    "method": "je Paket frische venv, env -i, pip --isolated -r requirements-<paket>.txt (hashgebunden, --no-index) sowie getrennt pip --isolated --index-url https://janpow77.github.io/auditcore/simple/ <paket>; danach tests/installed_smoke.py mit python -I",
+    "smoke": "27/27 (requirements) und 27/27 (Paketindex)"
+  },
+  "anonymous_apt": {
+    "status": "PASS",
+    "image": "debian:bookworm",
+    "steps": "Fingerprint geprüft, signed-by-Quelle, apt update ohne Warnung, 27 Pakete installiert, Smoke 27/27 mit /usr/bin/python3 -I, purge + autoremove, keine Pakete oder Dateien übrig"
+  },
+  "package_index": {
+    "status": "PASS",
+    "url": "https://janpow77.github.io/auditcore/simple/",
+    "projects": 27,
+    "workflow_run": 36268349231
+  },
+  "anonymous_npm": {
+    "status": "PASS",
+    "examples": "react-minimal, vue-minimal, webcomponent-minimal aus den Release-Tarballs (Bericht npm-tarball-installation-v0.4.2.json)",
+    "per_package": "9/9: je Paket frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @auditcore-Registry gesperrt, npm install der Abhängigkeitshülle aus den Tarball-URLs, package-lock.json-Integrität und resolved gegen npm-packages.json, alle exports-Dateien vorhanden; Import in Node 20 für ui, ui-core, ui-react, common, kanban-core, bpmn-flowaudit; bpmn-editor, bpmn-vue und bpmn-react per Vite-Build gebündelt (Direktimport in Node scheitert an Verzeichnisimporten von diagram-js, Bundler-Paket)",
+    "registry_publication": "NOT_EXECUTED (Workflow npm-publish beim Release übersprungen, NPM_PUBLISH_ENABLED aus)"
+  },
+  "checked_at": "2026-09-26T20:26:26+00:00",
+  "application_release": "NOT_EVALUATED"
+}

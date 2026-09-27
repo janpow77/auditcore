@@ -200,10 +200,16 @@ def test_empty_workbook_invalid_options_and_excel_row_bound():
 def test_versioned_profile_metadata_and_unknown_profiles():
     from auditcore_reporting import PROFILE_IDS, get_profile_metadata
 
+    expected = {
+        "flowlib-legacy-v1": ("0.2.0", "1.0.0"),
+        "plain-v1": ("0.2.0", "1.0.0"),
+        # Package version is set by the release run that first ships the profile.
+        "flowlib-v2": ("unreleased", "2.0.0"),
+    }
+    assert set(PROFILE_IDS) == set(expected)
     for name in PROFILE_IDS:
         metadata = get_profile_metadata(name)
-        assert metadata["package_version"] == "0.2.0"
-        assert metadata["version"] == "1.0.0"
+        assert (metadata["package_version"], metadata["version"]) == expected[name]
         assert metadata["status"] == "Draft"
         assert datetime.fromisoformat(metadata["created_at"]).tzinfo is not None
         assert metadata["organization"] == "UNKNOWN"
@@ -240,8 +246,21 @@ def test_generated_font_properties_follow_office_schema_sequence():
     payload = render_workbook([ReportTable("Report", ["Betrag"], [[12.5]])])
     ns = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
     order = (
-        "b", "i", "strike", "condense", "extend", "outline", "shadow", "u", "vertAlign",
-        "sz", "color", "name", "family", "charset", "scheme",
+        "b",
+        "i",
+        "strike",
+        "condense",
+        "extend",
+        "outline",
+        "shadow",
+        "u",
+        "vertAlign",
+        "sz",
+        "color",
+        "name",
+        "family",
+        "charset",
+        "scheme",
     )
     with ZipFile(io.BytesIO(payload)) as archive:
         root = fromstring(archive.read("xl/styles.xml"))

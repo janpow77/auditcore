@@ -1,5 +1,9 @@
 # Changelog @auditcore/ui-react
 
+## Unreleased
+
+- Neu `FlowauditSampleSizePlanner`: native React-Fassung des Planers für den Stichprobenumfang nach KOM-Leitfaden, paritätsgeprüft gegen `SampleSizePlanner`.
+
 ## 1.1.0 – 2026-09-26 – Release v0.4.2
 
 - **Breaking:** Paketname `@auditcore/ui-react` statt `@flowaudit/ui-react` (npm-Scope einheitlich mit den Python-Paketen `auditcore_*`). Imports, `package.json`-Einträge und Tarball-Namen (`auditcore-ui-react-<version>.tgz`) anpassen; siehe `docs/ui/umbenennung-auditcore.md`. Web-Component-Tags und CSS-Präfixe unverändert.

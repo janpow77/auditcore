@@ -13,6 +13,7 @@ from dataclasses import dataclass, replace
 from .mapping import xml_field
 
 _ACT_LONG = (
+    (re.compile(r"^Delegierten\s+(?:VO|Verordnung)\b"), "Delegierte Verordnung"),
     (re.compile(r"^Delegierte\s+VO\b"), "Delegierte Verordnung"),
     (re.compile(r"^Durchführungs-?VO\b"), "Durchführungsverordnung"),
     (re.compile(r"^DVO\b"), "Durchführungsverordnung"),
@@ -44,7 +45,11 @@ _SUBDIVISIONS = (
 
 
 def act_long(act: str) -> str:
-    """Ausgeschriebener Normname (``VO`` → ``Verordnung``)."""
+    """Ausgeschriebener Normname in der Grundform (``VO`` → ``Verordnung``).
+
+    Die im Zitat gebeugte Form („der Delegierten Verordnung …“) wird auf den
+    Nominativ „Delegierte Verordnung …“ zurückgeführt.
+    """
     value = " ".join(act.split())
     for pattern, replacement in _ACT_LONG:
         if pattern.search(value):

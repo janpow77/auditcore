@@ -1,5 +1,19 @@
 # Changelog – auditcore_price_analysis
 
+## Unreleased
+
+- Profile `regulierung.hpp.nahwaerme` und `regulierung.hpp.wasser`
+  **2026.09.3** (Entscheidung PA-R01): Fix- und Variabelanteil ergeben
+  zusammen genau 100 % (`rounding.shares = "complement"`, Variabelanteil =
+  100 − gerundeter Fixanteil). Sie sind die neuen empfohlenen Fassungen
+  (`supersedes: "2026.09.2"`); 2026.09.1/2026.09.2 bleiben mit unveränderten
+  Daten und Fingerprints ladbar und runden weiter getrennt. Neues
+  Profilfeld `rounding.shares` (`separate` Vorgabe, `complement`),
+  `CalculationProfile.shares`; `recommended_version`/`available_profiles`
+  werten `supersedes` aus. Behebt den Befund aus den Eigenschaftstests
+  (Summe 100,1 %); neue Invariante I13.
+- Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 12 Invarianten (I1–I12) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`. Befund (dokumentiert, Code unverändert): Fix- und Variabelanteil werden getrennt gerundet und können zusammen 100,1 % ergeben. `hypothesis` im Extra `dev`.
+
 ## 0.1.3 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`.

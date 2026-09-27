@@ -112,5 +112,31 @@
   "runtime_dependencies": [
     "auditcore_harvest==0.1.1"
   ],
-  "behavior_changes": "docs/behavior-changes.md"
+  "behavior_changes": "docs/behavior-changes.md",
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "typing=\"legacy\"",
+      "header_detection=\"legacy\"",
+      "parse_award_list(strict=False)",
+      "inventory_state(..., legacy=True)",
+      "cumulation.legacy_cumulation",
+      "parse_betrag"
+    ]
+  }
 }
