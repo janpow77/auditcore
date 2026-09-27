@@ -1,0 +1,108 @@
+{
+  "scope": "NPM_TARBALL_INSTALLATION",
+  "status": "PASS",
+  "mode": "release",
+  "source": "https://github.com/janpow77/auditcore/releases/download/v0.4.2",
+  "release_version": "0.4.2",
+  "source_commit": "f2220bf58f318117111db2afba69d96946045a84",
+  "node": "v20.19.6",
+  "npm": "11.16.0",
+  "method": "frisches Verzeichnis, leere npm-Konfiguration und leerer Cache, @auditcore-Registry gesperrt, npm install, Abgleich package-lock.json, npm run build",
+  "examples": [
+    {
+      "example": "react-minimal",
+      "status": "PASS",
+      "auditcore_packages": [
+        {
+          "name": "@auditcore/common",
+          "version": "0.1.1",
+          "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-common-0.1.1.tgz"
+        },
+        {
+          "name": "@auditcore/kanban-core",
+          "version": "0.2.1",
+          "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-kanban-core-0.2.1.tgz"
+        },
+        {
+          "name": "@auditcore/ui-core",
+          "version": "0.2.0",
+          "integrity": "sha512-iCFk974FY15VTr6Oa1z8Pxgzs9xMcjGKPKLEkXcOQTm29yO+hQuBFCbA5EsboyelUO2jhcOEXFwexdmhwTJ92w==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-ui-core-0.2.0.tgz"
+        },
+        {
+          "name": "@auditcore/ui-react",
+          "version": "1.1.0",
+          "integrity": "sha512-aFjq4J/iCr3yzRZ4RU4GXDHU3O2oZKL+BIriR5CIwwxrtGMX7GsvTDuBzfTVvE2zCiV6226wb/ZsTVOZICKwaA==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-ui-react-1.1.0.tgz"
+        }
+      ],
+      "install_and_build_seconds": 33
+    },
+    {
+      "example": "vue-minimal",
+      "status": "PASS",
+      "auditcore_packages": [
+        {
+          "name": "@auditcore/common",
+          "version": "0.1.1",
+          "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-common-0.1.1.tgz"
+        },
+        {
+          "name": "@auditcore/kanban-core",
+          "version": "0.2.1",
+          "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-kanban-core-0.2.1.tgz"
+        },
+        {
+          "name": "@auditcore/ui",
+          "version": "0.3.0",
+          "integrity": "sha512-C8JbW7soA9gm7JyXCKo84oFZ0Y8nihfSWb8HLpXybpoE+YONfJsNo11CJ7WkD3mMAH5X4SCZbNh08IVag4fYrg==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-ui-0.3.0.tgz"
+        },
+        {
+          "name": "@auditcore/ui-core",
+          "version": "0.2.0",
+          "integrity": "sha512-iCFk974FY15VTr6Oa1z8Pxgzs9xMcjGKPKLEkXcOQTm29yO+hQuBFCbA5EsboyelUO2jhcOEXFwexdmhwTJ92w==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-ui-core-0.2.0.tgz"
+        }
+      ],
+      "install_and_build_seconds": 82
+    },
+    {
+      "example": "webcomponent-minimal",
+      "status": "PASS",
+      "auditcore_packages": [
+        {
+          "name": "@auditcore/common",
+          "version": "0.1.1",
+          "integrity": "sha512-Y+ss0woO3jOB7y91EaU3VmR4oxUDCUDv5h70OwE11PMESD7zG2BzcDb+1zDpnLhrCJZ4mG2qTV7eiZjdRoKpDw==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-common-0.1.1.tgz"
+        },
+        {
+          "name": "@auditcore/kanban-core",
+          "version": "0.2.1",
+          "integrity": "sha512-c9JNSqTAgmLZTDz9OGn4rGziBKHjw7MEOZwQKQJ8qFdIz16W7jC3eRPPzWgeVm085rjALzO9zALC9YXXn+tsxA==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-kanban-core-0.2.1.tgz"
+        },
+        {
+          "name": "@auditcore/ui",
+          "version": "0.3.0",
+          "integrity": "sha512-C8JbW7soA9gm7JyXCKo84oFZ0Y8nihfSWb8HLpXybpoE+YONfJsNo11CJ7WkD3mMAH5X4SCZbNh08IVag4fYrg==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-ui-0.3.0.tgz"
+        },
+        {
+          "name": "@auditcore/ui-core",
+          "version": "0.2.0",
+          "integrity": "sha512-iCFk974FY15VTr6Oa1z8Pxgzs9xMcjGKPKLEkXcOQTm29yO+hQuBFCbA5EsboyelUO2jhcOEXFwexdmhwTJ92w==",
+          "resolved": "https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore-ui-core-0.2.0.tgz"
+        }
+      ],
+      "install_and_build_seconds": 74
+    }
+  ],
+  "registry_publication": "NOT_EXECUTED",
+  "checked_at": "2026-09-26T20:14:44.166Z"
+}
