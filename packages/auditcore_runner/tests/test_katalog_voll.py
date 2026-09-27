@@ -127,6 +127,12 @@ def test_image_pins_every_binary() -> None:
         ("knip-json", "knip.json", 3, ("knip", "unbenutzte-datei", "src/verwaist.ts", 0, False)),
         ("tsc-text", "tsc.txt", 1, ("tsc", "TS2322", "web/app.ts", 1, False)),
         ("size-limit-json", "size-limit.json", 1, ("size-limit", "groessengrenze", "package.json", 0, False)),
+        (
+            "lighthouse-json",
+            "lighthouse.json",
+            8,
+            ("lighthouse", "meta-description", "http://127.0.0.1:5198/?fw=vue&fall=eingabefeld-1", 0, False),
+        ),
         ("sarif", "opengrep.sarif", 1, ("Opengrep OSS", "kein-eval", "src/probe/gefahr.py", 2, False)),
         ("sarif", "osv-scanner.sarif", 3, ("osv-scanner", "CVE-2019-10906", "file:///work/requirements.txt", 0, False)),
     ],

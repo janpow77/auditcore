@@ -23,3 +23,6 @@ coverage/
 !tests/fixtures/helpers/*/.auditcore/
 .hypothesis/
 /packages/*/uv.lock
+.lighthouseci/
+.auditcore-runner/
+packages-js/ui-react/visual/dist/

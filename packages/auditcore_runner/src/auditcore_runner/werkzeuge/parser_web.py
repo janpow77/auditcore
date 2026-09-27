@@ -155,7 +155,7 @@ def lighthouse(text: str) -> list[Finding]:
     return [
         Finding(
             tool="lighthouse",
-            rule=str(item.get("auditId") or item.get("name", "lighthouse")),
+            rule=":".join(str(item[k]) for k in ("auditId", "auditProperty") if item.get(k)) or "lighthouse",
             path=str(item.get("url", "")),
             line=0,
             message=(

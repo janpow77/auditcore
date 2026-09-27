@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bildparität Vue ↔ React</title>
+    <style>
+      /* Feste Bühne: gleiche Schrift, keine Animationen, damit Pixel vergleichbar bleiben. */
+      html, body { margin: 0; background: #fff; font-family: 'Noto Sans', 'DejaVu Sans', sans-serif; }
+      *, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }
+      #buehne { display: inline-block; padding: 16px; min-width: 320px; }
+    </style>
+  </head>
+  <body>
+    <main><h1 style="position:absolute;left:-9999px">Bildparität</h1><div id="buehne"></div></main>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
