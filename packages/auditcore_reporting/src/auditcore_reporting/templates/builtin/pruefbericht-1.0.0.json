@@ -1,0 +1,146 @@
+{
+  "id": "pruefbericht",
+  "version": "1.0.0",
+  "title": "Prüfbericht {{ aktenzeichen }}",
+  "description": "Prüfbericht zu einem Vorhaben (ESI-Fonds, VO (EU) 2021/1060) mit Kopfdaten, Prüfungsumfang, Feststellungen und Ergebnis; Textbausteine je nach Prüfungsergebnis.",
+  "status": "Freigegeben",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Datenvertrag Prüfbericht",
+    "type": "object",
+    "required": ["pruefbehoerde", "aktenzeichen", "berichtsdatum", "vorhaben", "feststellungen"],
+    "properties": {
+      "pruefbehoerde": {"type": "string", "title": "Prüfbehörde", "minLength": 1},
+      "aktenzeichen": {"type": "string", "title": "Aktenzeichen", "minLength": 1},
+      "berichtsdatum": {"type": "string", "format": "date", "title": "Berichtsdatum"},
+      "fonds": {"type": "string", "title": "Fonds"},
+      "programm": {"type": "string", "title": "Programm"},
+      "pruefungsart": {"type": "string", "title": "Prüfungsart"},
+      "pruefzeitraum": {
+        "type": "object",
+        "title": "Prüfzeitraum",
+        "properties": {
+          "von": {"type": "string", "format": "date"},
+          "bis": {"type": "string", "format": "date"}
+        }
+      },
+      "vorhaben": {
+        "type": "object",
+        "title": "Vorhaben",
+        "required": ["kennung", "bezeichnung"],
+        "properties": {
+          "kennung": {"type": "string", "title": "Kennung"},
+          "bezeichnung": {"type": "string", "title": "Bezeichnung"},
+          "beguenstigte": {"type": "string", "title": "Begünstigte"}
+        }
+      },
+      "gepruefte_ausgaben": {"type": "number", "title": "Geprüfte Ausgaben (EUR)", "minimum": 0},
+      "verwaltungsueberpruefung_einbezogen": {"type": "boolean", "title": "Ergebnisse der Verwaltungsüberprüfung einbezogen"},
+      "summe_nicht_foerderfaehig": {"type": "number", "title": "Summe nicht förderfähiger Ausgaben (EUR)", "minimum": 0},
+      "stellungnahme_frist": {"type": "string", "format": "date", "title": "Frist für die Stellungnahme"},
+      "ergebnis": {"type": "string", "title": "Zusammenfassendes Ergebnis"},
+      "feststellungen": {
+        "type": "array",
+        "title": "Feststellungen",
+        "maxItems": 500,
+        "items": {
+          "type": "object",
+          "required": ["nummer", "titel", "art"],
+          "properties": {
+            "nummer": {"type": "string", "title": "Nummer"},
+            "titel": {"type": "string", "title": "Titel"},
+            "art": {"type": "string", "enum": ["formell", "finanziell"], "title": "Art"},
+            "sachverhalt": {"type": "string", "title": "Sachverhalt"},
+            "bewertung": {"type": "string", "title": "Bewertung"},
+            "empfehlung": {"type": "string", "title": "Empfehlung"},
+            "betrag_nicht_foerderfaehig": {"type": "number", "minimum": 0, "title": "Nicht förderfähig (EUR)"}
+          }
+        }
+      }
+    }
+  },
+  "conditions": {
+    "mit_feststellungen": {"filled": "feststellungen"},
+    "finanzielle_auswirkung": {"greater": ["summe_nicht_foerderfaehig", 0]}
+  },
+  "text_blocks": [
+    {"id": "rechtsgrundlage", "title": "Rechtsgrundlage", "required": true,
+     "legal_basis": "Art. 77 VO (EU) 2021/1060",
+     "text": "Die Prüfung erfolgte nach Art. 77 der Verordnung (EU) 2021/1060. Sie umfasste die im Prüfzeitraum geltend gemachten Ausgaben des Vorhabens."},
+    {"id": "verwaltungsueberpruefung", "title": "Verwaltungsüberprüfung", "if": "verwaltungsueberpruefung_einbezogen",
+     "legal_basis": "Art. 74 VO (EU) 2021/1060",
+     "text": "Die Ergebnisse der Verwaltungsüberprüfung nach Art. 74 der Verordnung (EU) 2021/1060 wurden in die Prüfung einbezogen."},
+    {"id": "ohne_feststellungen", "title": "Ergebnis ohne Feststellungen", "if": {"not": "mit_feststellungen"},
+     "text": "Die Prüfung hat zu keinen Feststellungen geführt."},
+    {"id": "mit_feststellungen", "title": "Ergebnis mit Feststellungen", "if": "mit_feststellungen",
+     "text": "Die Prüfung hat zu den nachstehenden Feststellungen geführt."},
+    {"id": "finanzielle_auswirkung", "title": "Finanzielle Auswirkung", "if": "finanzielle_auswirkung",
+     "text": "Aus den Feststellungen ergeben sich nicht förderfähige Ausgaben in Höhe von {{ summe_nicht_foerderfaehig | eur }}."},
+    {"id": "stellungnahme", "title": "Kontradiktorisches Verfahren", "if": {"all": ["mit_feststellungen", {"filled": "stellungnahme_frist"}]},
+     "text": "Zu den Feststellungen besteht Gelegenheit zur Stellungnahme bis zum {{ stellungnahme_frist | datum }}."}
+  ],
+  "blocks": [
+    {"type": "heading", "text": "Prüfbericht", "level": 1},
+    {"type": "fields", "rows": [
+      {"label": "Prüfbehörde", "value": "{{ pruefbehoerde }}"},
+      {"label": "Aktenzeichen", "value": "{{ aktenzeichen }}"},
+      {"label": "Berichtsdatum", "value": "{{ berichtsdatum | datum }}"},
+      {"label": "Fonds", "value": "{{ fonds }}"},
+      {"label": "Programm", "value": "{{ programm }}"},
+      {"label": "Vorhaben", "value": "{{ vorhaben.kennung }} – {{ vorhaben.bezeichnung }}"},
+      {"label": "Begünstigte", "value": "{{ vorhaben.beguenstigte }}"},
+      {"label": "Prüfungsart", "value": "{{ pruefungsart }}"}
+    ]},
+    {"type": "paragraph", "if": {"all": [{"filled": "pruefzeitraum.von"}, {"filled": "pruefzeitraum.bis"}]},
+     "text": "Prüfzeitraum: {{ pruefzeitraum.von | datum }} bis {{ pruefzeitraum.bis | datum }}"},
+    {"type": "heading", "text": "1. Rechtsgrundlage und Prüfungsumfang", "level": 2},
+    {"type": "textblock", "id": "rechtsgrundlage"},
+    {"type": "paragraph", "if": {"filled": "gepruefte_ausgaben"},
+     "text": "Geprüft wurden Ausgaben in Höhe von {{ gepruefte_ausgaben | eur }}."},
+    {"type": "textblock", "id": "verwaltungsueberpruefung"},
+    {"type": "heading", "text": "2. Feststellungen", "level": 2},
+    {"type": "textblock", "id": "ohne_feststellungen"},
+    {"type": "textblock", "id": "mit_feststellungen"},
+    {"type": "table", "source": "feststellungen", "as": "f", "columns": [
+      {"header": "Nr.", "cell": "{{ f.nummer }}"},
+      {"header": "Feststellung", "cell": "{{ f.titel }}"},
+      {"header": "Art", "cell": "{{ f.art }}"},
+      {"header": "Nicht förderfähig", "cell": "{{ f.betrag_nicht_foerderfaehig | eur }}", "align": "right"}
+    ]},
+    {"type": "section", "for": "feststellungen", "as": "f", "level": 3,
+     "title": "Feststellung {{ f.nummer }}: {{ f.titel }}", "blocks": [
+       {"type": "paragraph", "if": "f.sachverhalt", "text": "Sachverhalt: {{ f.sachverhalt }}"},
+       {"type": "paragraph", "if": "f.bewertung", "text": "Bewertung: {{ f.bewertung }}"},
+       {"type": "paragraph", "if": {"greater": ["f.betrag_nicht_foerderfaehig", 0]},
+        "text": "Nicht förderfähig: {{ f.betrag_nicht_foerderfaehig | eur }}"},
+       {"type": "paragraph", "if": "f.empfehlung", "text": "Empfehlung: {{ f.empfehlung }}"}
+     ]},
+    {"type": "heading", "text": "3. Ergebnis", "level": 2},
+    {"type": "textblock", "id": "finanzielle_auswirkung"},
+    {"type": "paragraph", "if": "ergebnis", "text": "{{ ergebnis }}"},
+    {"type": "textblock", "id": "stellungnahme"}
+  ],
+  "sample": {
+    "pruefbehoerde": "Musterprüfbehörde",
+    "aktenzeichen": "PB-2026-0042",
+    "berichtsdatum": "2026-09-26",
+    "fonds": "EFRE",
+    "programm": "Musterprogramm 2021–2027",
+    "pruefungsart": "Vorhabenprüfung",
+    "pruefzeitraum": {"von": "2025-07-01", "bis": "2026-06-30"},
+    "vorhaben": {"kennung": "V-0001", "bezeichnung": "Musterprojekt Energieeffizienz", "beguenstigte": "Beispiel GmbH"},
+    "gepruefte_ausgaben": 125000.5,
+    "verwaltungsueberpruefung_einbezogen": true,
+    "summe_nicht_foerderfaehig": 1234.56,
+    "stellungnahme_frist": "2026-10-26",
+    "feststellungen": [
+      {"nummer": "1", "titel": "Vergabevermerk unvollständig", "art": "formell",
+       "sachverhalt": "Der Vergabevermerk nennt die Wertungskriterien nicht.",
+       "bewertung": "Die Dokumentation genügt den Anforderungen nicht.",
+       "empfehlung": "Vergabevermerk vervollständigen.", "betrag_nicht_foerderfaehig": 0},
+      {"nummer": "2", "titel": "Rechnung außerhalb des Förderzeitraums", "art": "finanziell",
+       "sachverhalt": "Eine Rechnung datiert nach dem Ende des Durchführungszeitraums.",
+       "bewertung": "Die Ausgabe ist nicht förderfähig.", "betrag_nicht_foerderfaehig": 1234.56}
+    ]
+  }
+}
