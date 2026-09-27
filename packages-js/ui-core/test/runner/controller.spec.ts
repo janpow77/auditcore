@@ -5,6 +5,7 @@ import {
   createRunnerRestPort,
   runnerAbschnitte,
   runnerEingabe,
+  runnerFeldId,
   runnerKlassenZeilen,
   runnerPrioritaetZeilen,
   runnerUnterschiede,
@@ -75,6 +76,19 @@ describe('Runner-Konsole: Einstellungen', () => {
     controller.werkzeugZahl('pr', 'ruff', 'zeitlimit_s', '')
     expect(runnerWerkzeugGruppen(controller.store.get(), t)[0]?.zeilen[1]?.zeitlimit).toBe('')
     expect(controller.store.get().werkzeugEntwurf?.pr?.ruff?.zeitlimit_s).toBe(120)
+  })
+
+  it('Fehlerpfade des Backends mit Listenindex landen am Feld', async () => {
+    const port = createRunnerMemoryPort({
+      status: runnerStatusBeispiel,
+      profil: runnerStandBeispiel,
+      pruefen: () => ({ gueltig: false, probleme: [{ feld: 'gpus[0].erlaubt', meldung: 'Karte fehlt' }], aktive_version: 3, aenderungen: [], schritte: [], netzsperre_befehl: null }),
+    })
+    const controller = await geladen(port)
+    await controller.pruefen()
+    const karte = runnerAbschnitte(controller.store.get(), t).find((a) => a.id === 'karte-0')
+    expect(karte?.felder.find((f) => f.id === 'gpus.0.erlaubt')?.fehler).toBe('Karte fehlt')
+    expect(runnerFeldId('klassen.cpu.labels[2]')).toBe('klassen.cpu.labels.2')
   })
 
   it('Eingaben: Zahl, Liste, Schalter', () => {

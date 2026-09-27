@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1152):
+Exporte der Einstiegspunkte aus `package.json#exports` (1153):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -1116,6 +1116,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1152):
 | `@auditcore/ui-core` | `runFormDefaults` | Funktion | Vorbelegung bei Wechsel der Prüfart oder neuen Einstellungen: empfohlenes Profil, alle Listen, Standard-Mindestwert. | `screening/runForm` |
 | `@auditcore/ui-core` | `runnerAbschnitte` | Funktion | Formularabschnitte aus dem Entwurf; nur Felder, die das Profil tatsächlich enthält. | `runner/view` |
 | `@auditcore/ui-core` | `runnerEingabe` | Funktion | Eingabe eines Feldes in den Profilwert umsetzen (Zahl, Liste, Schalter, Text). | `runner/eingabe` |
+| `@auditcore/ui-core` | `runnerFeldId` | Funktion | Feldpfad des Backends (`gpus[0].erlaubt`) in die Feld-ID der Ansicht (`gpus.0.erlaubt`). | `runner/view` |
 | `@auditcore/ui-core` | `runnerGeaendert` | Funktion | – | `runner/profil` |
 | `@auditcore/ui-core` | `runnerHardware` | Funktion | Hardware-Angaben des Rechners als Liste (Schlüssel wie vom Backend geliefert). | `runner/view` |
 | `@auditcore/ui-core` | `runnerHatWarteschlange` | Funktion | – | `runner/view` |

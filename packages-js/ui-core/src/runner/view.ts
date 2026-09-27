@@ -267,6 +267,11 @@ function abschnitt(id: string, titel: string, profil: RunnerProfil, defs: readon
   return felder.length ? { id, titel, felder } : null
 }
 
+/** Feldpfad des Backends (`gpus[0].erlaubt`) in die Feld-ID der Ansicht (`gpus.0.erlaubt`). */
+export function runnerFeldId(feld: string): string {
+  return feld.replace(/\[(\d+)\]/g, '.$1')
+}
+
 /** Meldungen des Backends: aus der letzten Prüfung, sonst aus dem geladenen Stand. */
 export function runnerProbleme(state: RunnerData): readonly RunnerProblem[] {
   return state.pruefung?.probleme ?? state.stand?.probleme ?? []
@@ -276,7 +281,7 @@ export function runnerProbleme(state: RunnerData): readonly RunnerProblem[] {
 export function runnerAbschnitte(state: RunnerData, t: T): RunnerAbschnitt[] {
   const profil = state.entwurf
   if (!profil) return []
-  const kontext: Kontext = { t, fehler: new Map(runnerProbleme(state).map((problem) => [problem.feld, problem.meldung])), eingaben: state.eingaben }
+  const kontext: Kontext = { t, fehler: new Map(runnerProbleme(state).map((problem) => [runnerFeldId(problem.feld), problem.meldung])), eingaben: state.eingaben }
   const klassen = runnerWert(profil, ['klassen'])
   const klassenNamen = klassen && typeof klassen === 'object' ? Object.keys(klassen).sort() : []
   const result: (RunnerAbschnitt | null)[] = [

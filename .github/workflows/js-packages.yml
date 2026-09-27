@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'packages-js/**'
+      - 'packages/auditcore_runner/src/auditcore_runner/data/web/**'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.base.json'
@@ -18,6 +19,7 @@ on:
   pull_request:
     paths:
       - 'packages-js/**'
+      - 'packages/auditcore_runner/src/auditcore_runner/data/web/**'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.base.json'
@@ -61,6 +63,9 @@ jobs:
       - name: Tests des Paritäts-Gates und des Generators ui:neu (Gerüst in einer Workspace-Kopie erzeugen und prüfen)
         if: matrix.node == '22'
         run: npm run test:scripts
+      - name: Runner-Bündel im Paket auditcore_runner aktuell (deterministischer Bau, Bytevergleich)
+        if: matrix.node == '22'
+        run: npm run runner:bundle -- --pruefen
       - run: npm run typecheck
       - run: npm test
       - name: React-Pakete zusätzlich gegen React 18.3 testen (Peer-Bereich 18 || 19; Lockfile auf 19)
