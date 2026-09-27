@@ -1,0 +1,34 @@
+name: gpu-tests
+on:
+  schedule:
+    - cron: '43 2 * * 2,5'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gpu-tests
+  cancel-in-progress: false
+
+jobs:
+  gpu-tests:
+    name: GPU-Tests und Donut-Smoke
+    runs-on: [self-hosted, auditcore, gpu]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: requirements/ci.lock
+      - name: GPU-Tests installieren
+        run: |
+          uv pip install --system -c requirements/ci.lock -e '.[dev]'
+          uv pip install --system -e 'packages/auditcore_invoicesynth[dev,train]'
+      - name: CUDA und Donut-Rauchtest
+        run: |
+          python -c "import torch; assert torch.cuda.is_available(); print(torch.cuda.get_device_name(0))"
+          pytest -n 0 -m gpu packages/auditcore_invoicesynth/tests
+        env:
+          PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True

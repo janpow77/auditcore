@@ -1,0 +1,5 @@
+self-hosted-runner:
+  labels:
+    - auditcore
+    - cpu-gross
+    - gpu
