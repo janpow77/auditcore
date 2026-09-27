@@ -124,7 +124,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (248):
+Exporte der Einstiegspunkte aus `package.json#exports` (249):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -132,6 +132,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (248):
 | `@auditcore/ui-react` | `BadgeProps` | Schnittstelle | – | `base/Badge` |
 | `@auditcore/ui-react` | `BenfordAnalysis` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `BenfordInputs` | Schnittstelle | – | `benford/useBenford` |
+| `@auditcore/ui-react` | `BenfordMetricsRequest` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `BenfordPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `Button` | Funktion | Schaltfläche wie `FaButton` (gleiche Klassen, ARIA und Zustände). | `base/Button` |
 | `@auditcore/ui-react` | `ButtonProps` | Schnittstelle | – | `base/Button` |

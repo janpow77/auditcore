@@ -79,6 +79,12 @@
   laufen über `auditcore_common.rest` (`decode_body` mit neuen Parametern
   `too_large_code`/`invalid_json_code`). Verhalten unverändert
   (Differenztests, Paketlauf alt gegen neu über HTTP).
+- flowinvoice-Parität für die gemeinsamen Oberflächen: `auditcore_statistics`
+  Chi²-Test mit kritischen Werten und auffällige Ziffern (REST-Feld `metrics`),
+  `auditcore_risk` Betrugsprüfsignale im Vertrag der Risiko-Merkmale
+  (`POST /fraud-signals/evaluate`, Profil `flowinvoice.fraud_signals` 2026.09.3
+  mit Bezeichnungen), Benford-Komponente (Vue/React) mit `metrics`,
+  `autoAnalyse`, `hideInputs`. Keine Versionsanhebung.
 
 ## 0.4.2 – 2026-09-26
 

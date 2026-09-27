@@ -310,7 +310,8 @@
       "I8",
       "I9",
       "I10",
-      "I11"
+      "I11",
+      "I12"
     ],
     "legacy_variants": [
       "riskanalysis.legacy",

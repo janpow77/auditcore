@@ -1,4 +1,4 @@
-"""Invariants of docs/spezifikation.md as Hypothesis properties (I1–I11)."""
+"""Invariants of docs/spezifikation.md as Hypothesis properties (I1–I12)."""
 
 from __future__ import annotations
 
@@ -11,9 +11,11 @@ from auditcore_risk import (
     ProfileError,
     evaluate,
     flatten_record,
+    load_fraud_profile,
     load_profile,
     missing_columns,
     name_similarity,
+    score_signals,
 )
 
 FLOWSTAT = load_profile("audit_designer.flowstat_belegliste", "1254591156d3")
@@ -246,3 +248,85 @@ def test_i11_name_similarity_is_bounded_symmetric_and_reflexive(left: str, right
     assert value == name_similarity(RF09, right, left)
     if len(left.replace(" ", "")) >= 8:
         assert name_similarity(RF09, left, left) == 1
+
+
+SIGNAL_PROFILES = [
+    load_fraud_profile("flowinvoice.fraud_signals", v) for v in ("2026.09.2", "2026.09.3")
+]
+SCORE = st.floats(0, 1)
+CHECK_RESULTS = {
+    "duplicate": st.fixed_dictionaries(
+        {
+            "is_duplicate": st.booleans(),
+            "matches": st.lists(
+                st.fixed_dictionaries(
+                    {"match_type": st.sampled_from(["exact", "fuzzy"]), "confidence": SCORE}
+                ),
+                max_size=3,
+            ),
+        }
+    ),
+    "sanctions": st.fixed_dictionaries(
+        {
+            "is_sanctioned": st.booleans(),
+            "error_message": st.none() | st.just("Zeitüberschreitung"),
+            "matches": st.lists(st.fixed_dictionaries({"match_score": SCORE}), max_size=2),
+        }
+    ),
+    "pep": st.fixed_dictionaries(
+        {
+            "is_clean": st.booleans(),
+            "error_message": st.none() | st.just("nicht erreichbar"),
+            "matches": st.lists(st.fixed_dictionaries({"match_score": SCORE}), max_size=2),
+        }
+    ),
+    "company": st.fixed_dictionaries(
+        {
+            "risk_indicators": st.lists(
+                st.sampled_from(
+                    ["INVALID_VAT_ID", "COMPANY_DISSOLVED", "NOT_IN_REGISTER", "NEW_COMPANY"]
+                ),
+                max_size=3,
+            ),
+            "verification_score": SCORE,
+        }
+    ),
+    "ted": st.fixed_dictionaries(
+        {
+            "red_flags": st.lists(
+                st.fixed_dictionaries(
+                    {
+                        "severity": st.sampled_from(["low", "medium", "high", "critical"]),
+                        "flag_type": st.sampled_from(["SINGLE_BIDDER", "HIGH_CONCENTRATION"]),
+                    }
+                ),
+                max_size=2,
+            ),
+            "legitimacy_score": SCORE,
+        }
+    ),
+}
+SIGNALS = st.fixed_dictionaries(
+    {
+        check: st.none() | st.just({"failed": True}) | result
+        for check, result in CHECK_RESULTS.items()
+    }
+)
+
+
+@EXAMPLES
+@given(st.lists(SIGNALS, min_size=1, max_size=4), st.sampled_from(SIGNAL_PROFILES))
+def test_i12_signal_evaluation_shows_exactly_score_signals(records, profile) -> None:
+    from auditcore_risk.web import signal_evaluation
+
+    evaluation = signal_evaluation(records, profile)
+    for record, view in zip(records, evaluation["records"], strict=True):
+        expected = score_signals(record, profile)
+        assert view["codes"] == [*expected.blockers, *expected.warnings]
+        assessment = view["assessment"]
+        assert (assessment["score"], assessment["level"]) == (expected.score, expected.level)
+        assert all(view["flags"][code] is True for code in view["codes"])
+        for code, flag in view["flags"].items():
+            assert flag is not None or code in view["undetermined"]
+        failed = {c for c, v in record.items() if isinstance(v, dict) and v.get("failed")}
+        assert failed or not view["undetermined"]

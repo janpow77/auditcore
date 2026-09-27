@@ -1,10 +1,10 @@
 import type { FormEvent } from 'react'
-import { analyseErrorKey, needsShortValues, type BenfordTest, type ShortValues } from '@auditcore/ui-core'
+import { analyseErrorKey, benfordMetricLabel, needsShortValues, offeredMetrics, type BenfordMetricsRequest, type BenfordTest, type ShortValues } from '@auditcore/ui-core'
 import { Button } from '../base/Button'
 import type { UseBenford } from './useBenford'
 
 /** Test, Regel für kurze Werte und Bewertungsprofil (Formular aus `BenfordPanel.vue`). */
-export function BenfordForm({ view, id }: { view: UseBenford; id: string }) {
+export function BenfordForm({ view, id, metrics }: { view: UseBenford; id: string; metrics?: BenfordMetricsRequest | null }) {
   const { state, controller, t, profile } = view
   const catalogue = state.catalogue
   if (!catalogue) return null
@@ -38,6 +38,17 @@ export function BenfordForm({ view, id }: { view: UseBenford; id: string }) {
           {catalogue.profiles.map((entry) => <option key={entry.id} value={entry.id}>{entry.label}</option>)}
         </select>
       </label>
+      {offeredMetrics(metrics).length ? (
+        <fieldset className="fa-benford__fieldset">
+          <legend className="fa-benford__label">{t('metricsLegend')}</legend>
+          {offeredMetrics(metrics).map((metric) => (
+            <label key={metric} className="fa-benford__radio">
+              <input type="checkbox" checked={!state.disabledMetrics.includes(metric)} data-testid={`benford-metric-${metric}`} onChange={(event) => controller.setMetric(metric, event.target.checked)} />
+              {benfordMetricLabel(metric, t)}
+            </label>
+          ))}
+        </fieldset>
+      ) : null}
       {profile ? (
         <details className="fa-benford__source">
           <summary>{t('profileSource')}</summary>
