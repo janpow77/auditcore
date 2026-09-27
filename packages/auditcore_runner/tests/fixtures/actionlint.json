@@ -1,0 +1,1 @@
+[{"message": "property \"foo\" is not defined", "filepath": ".github/workflows/ci.yml", "line": 9, "column": 14, "kind": "expression"}]

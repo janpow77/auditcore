@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Veraltet: Nachfolger ist das Paket auditcore_runner (`auditcore-runner runner install`,
+# siehe docs/deployment/self-hosted-runner.md). Dieses Skript bleibt, damit bestehende
+# Installationen unverändert weiterlaufen.
 # Installiert oder aktualisiert die NUC-Runner (idempotent, ohne sudo).
 #   ci/runner/install.sh [ANZAHL]      Standard: 10 Instanzen
 #   ci/runner/install.sh --uninstall   Runner stoppen und entfernen
@@ -23,6 +26,7 @@ if [[ "${1:-}" == "--uninstall" ]]; then
   exit 0
 fi
 
+echo "Hinweis: ci/runner ist veraltet – neue Rechner mit auditcore_runner anbinden (docs/deployment/self-hosted-runner.md)." >&2
 COUNT="${1:-10}"
 command -v gh >/dev/null && gh auth status >/dev/null 2>&1 || { echo "gh ist nicht angemeldet"; exit 1; }
 command -v jq >/dev/null || { echo "jq fehlt"; exit 1; }

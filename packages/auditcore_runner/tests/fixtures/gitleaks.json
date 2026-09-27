@@ -1,0 +1,1 @@
+[{"Description": "Generic API Key", "StartLine": 4, "File": "config.py", "RuleID": "generic-api-key", "Secret": "sk-live-1234", "Match": "key = sk-live-1234"}]

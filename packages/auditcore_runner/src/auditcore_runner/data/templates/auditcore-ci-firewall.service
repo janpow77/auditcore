@@ -1,0 +1,14 @@
+[Unit]
+Description=auditcore-runner: Netzsperre für das Runner-Netz ${netz}
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/auditcore-ci-firewall anwenden
+ExecStop=/usr/local/sbin/auditcore-ci-firewall entfernen
+
+[Install]
+WantedBy=multi-user.target docker.service

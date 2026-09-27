@@ -1,0 +1,1 @@
+[{"filePath": "/w/app.ts", "messages": [{"ruleId": "no-unused-vars", "severity": 2, "message": "'x' is defined but never used.", "line": 2, "column": 7}]}]

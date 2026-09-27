@@ -1,0 +1,143 @@
+"""Machine status for humans, the web UI and external regulators (JSON file + Prometheus).
+
+Status file (read-only contract for external tools): ``~/.local/state/auditcore-runner/status.json``.
+"""
+
+from __future__ import annotations
+
+import json
+import subprocess
+from datetime import datetime
+from pathlib import Path
+
+from . import github, install, pool
+from .hardware import HostFacts
+from .profile import Profile, state_dir
+from .profile_io import CURRENT_SCHEMA, content_hash, write_atomic
+
+STATUS_SCHEMA = "auditcore-runner/status/1"
+
+
+def status_path() -> Path:
+    return state_dir() / "status.json"
+
+
+def active_instances(runner_class: str) -> int:
+    try:
+        result = subprocess.run(
+            [
+                "systemctl",
+                "--user",
+                "list-units",
+                "--state=active",
+                "--plain",
+                "--no-legend",
+                install.unit_name(runner_class, None).replace("@.", "@*."),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=20,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 0
+    return sum(1 for line in result.stdout.splitlines() if line.strip())
+
+
+def _runner_counts(profile: Profile, runners: list[github.RunnerInfo]) -> dict[str, dict[str, int]]:
+    counts: dict[str, dict[str, int]] = {name: {"registriert": 0, "belegt": 0} for name in profile.classes}
+    for runner in runners:
+        if not runner.name.startswith(profile.runner_prefix()):
+            continue
+        name = github.class_of(runner.labels, profile)
+        if name in counts:
+            counts[name]["registriert"] += 1
+            counts[name]["belegt"] += int(runner.busy)
+    return counts
+
+
+def unknown_runners(profile: Profile, runners: list[github.RunnerInfo]) -> list[str]:
+    """Registered runners no configured machine owns – a warning sign (rogue registrations)."""
+    return sorted(r.name for r in runners if not r.name.startswith(profile.known_prefixes()))
+
+
+def collect(profile: Profile, facts: HostFacts, client: github.Client | None) -> dict[str, object]:
+    """Full status; GitHub numbers are omitted (null) when unreachable."""
+    runners: list[github.RunnerInfo] | None = None
+    if client is not None:
+        try:
+            runners = github.list_runners(client, profile.target)
+        except github.GitHubError:
+            runners = None
+    counts = _runner_counts(profile, runners) if runners is not None else {}
+    current = pool.load(profile.pool_path())
+    classes: dict[str, object] = {}
+    for name, settings in sorted(profile.classes.items()):
+        classes[name] = {
+            "aktiv": settings.enabled,
+            "max": settings.max_instances,
+            "soll": current.targets.get(name) if current else None,
+            "gruende": current.reasons.get(name, []) if current else [],
+            "instanzen_aktiv": active_instances(name),
+            **(counts.get(name) or {"registriert": None, "belegt": None}),
+        }
+    return {
+        "schema": STATUS_SCHEMA,
+        "zeit": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "rechner": profile.host,
+        "profil_schema": CURRENT_SCHEMA,
+        "profil_version": profile.version,
+        "profil_hash": content_hash(profile),
+        "aenderung": {"zeit": profile.change.time, "quelle": profile.change.source, "wer": profile.change.who},
+        "sync": profile.sync,
+        "ziel": profile.target.name,
+        "soll_quelle": profile.source.kind,
+        "hardware": facts.as_dict(),
+        "klassen": classes,
+        "image_vorhanden": install.image_present(profile.image),
+        "netz_vorhanden": install.network_present(profile.network.name) if profile.network.enabled else None,
+        "netzsperre_aktiv": install.FIREWALL_MARKER.exists() if profile.network.enabled else None,
+        "unbekannte_runner": unknown_runners(profile, runners) if runners is not None else None,
+        "github_rest_kontingent": client.remaining if client else None,
+    }
+
+
+def write(status: dict[str, object], path: Path | None = None) -> Path:
+    target = path or status_path()
+    write_atomic(target, json.dumps(status, indent=2, ensure_ascii=False) + "\n")
+    return target
+
+
+def _metric(lines: list[str], name: str, value: object, labels: dict[str, str] | None = None) -> None:
+    if isinstance(value, bool):
+        value = int(value)
+    if not isinstance(value, (int, float)):
+        return
+    rendered = ",".join(f'{k}="{v}"' for k, v in (labels or {}).items())
+    lines.append(f"{name}{{{rendered}}} {value}" if rendered else f"{name} {value}")
+
+
+def prometheus(status: dict[str, object]) -> str:
+    """Prometheus text exposition of the status."""
+    lines = [
+        "# HELP auditcore_runner_instances Runner-Instanzen je Klasse und Zustand",
+        "# TYPE auditcore_runner_instances gauge",
+    ]
+    host = str(status.get("rechner", ""))
+    classes = status.get("klassen")
+    for name, entry in classes.items() if isinstance(classes, dict) else []:
+        if isinstance(entry, dict):
+            for state in ("max", "soll", "instanzen_aktiv", "registriert", "belegt"):
+                _metric(
+                    lines,
+                    "auditcore_runner_instances",
+                    entry.get(state),
+                    {"rechner": host, "klasse": name, "zustand": state},
+                )
+    _metric(lines, "auditcore_runner_image_present", status.get("image_vorhanden"), {"rechner": host})
+    _metric(lines, "auditcore_runner_firewall_active", status.get("netzsperre_aktiv"), {"rechner": host})
+    _metric(lines, "auditcore_runner_github_rate_remaining", status.get("github_rest_kontingent"), {"rechner": host})
+    unknown = status.get("unbekannte_runner")
+    if isinstance(unknown, list):
+        _metric(lines, "auditcore_runner_unknown_registered", len(unknown), {"rechner": host})
+    return "\n".join(lines) + "\n"

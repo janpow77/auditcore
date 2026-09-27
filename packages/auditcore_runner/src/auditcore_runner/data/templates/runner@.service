@@ -1,0 +1,20 @@
+[Unit]
+Description=auditcore-runner Runner ${klasse} (Instanz %i)
+Documentation=https://github.com/janpow77/auditcore/blob/main/docs/deployment/self-hosted-runner.md
+After=network-online.target docker.service
+
+[Service]
+Type=simple
+Environment=AUDITCORE_RUNNER_PROFILE=${profil}
+Environment=AUDITCORE_RUNNER_POOL=${pool}
+ExecStart=${programm} supervisor ${klasse} %i
+Restart=always
+RestartSec=15
+Nice=${nice}
+CPUWeight=${cpu_gewicht}
+IOWeight=${io_gewicht}
+TimeoutStopSec=60
+KillMode=mixed
+
+[Install]
+WantedBy=default.target

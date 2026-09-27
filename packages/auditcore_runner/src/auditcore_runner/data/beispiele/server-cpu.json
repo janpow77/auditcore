@@ -1,0 +1,103 @@
+{
+  "schema": "auditcore-runner/profil/2",
+  "version": 0,
+  "aenderung": {
+    "zeit": "",
+    "quelle": "lokal",
+    "wer": ""
+  },
+  "sync": "aus",
+  "rechner": "server",
+  "ziel": {
+    "art": "repo",
+    "name": "owner/repo",
+    "runner_gruppe": 1,
+    "repos_beobachten": [],
+    "bekannte_runner": []
+  },
+  "auth": {
+    "art": "gh",
+    "token_datei": "",
+    "app_id": 0,
+    "app_schluessel_datei": "",
+    "installation_id": 0
+  },
+  "image": "auditcore-runner:local",
+  "backend": "jit",
+  "reserve": {
+    "cpus": 6,
+    "speicher_gb": 24
+  },
+  "netz": {
+    "name": "auditcore-ci",
+    "subnetz": "172.30.250.0/24",
+    "bruecke": "br-auditcore-ci",
+    "aktiv": true,
+    "sperre_pflicht": true
+  },
+  "soll_quelle": {
+    "art": "lokal",
+    "datei": "~/.config/auditcore-runner/soll.json"
+  },
+  "skalierung": {
+    "vorrang_interaktiv": false,
+    "leerlauf_minuten": 10,
+    "anteil_bei_nutzung": 0.25,
+    "interaktive_karten": [],
+    "interaktive_karten_leerlauf_minuten": 15,
+    "swap_sperre_gb": 0.0,
+    "swap_einlagerung_max_s": 256.0,
+    "ram_frei_min_gb": 12.0,
+    "last_je_kern_max": 0.8,
+    "temperatur_max_c": 85.0,
+    "volllast_von": 0,
+    "volllast_bis": 0,
+    "freie_reserve": 1,
+    "haltezeit_s": 300,
+    "intervall_s": 30,
+    "thermik": {
+      "aktiv": false,
+      "url": "",
+      "felder": {
+        "drosselung_aktiv": [],
+        "temperatur": [],
+        "grenze": [],
+        "modus": ""
+      },
+      "leise_wert": "",
+      "abstand_c": 3.0
+    },
+    "gpu_dienste_teilen": []
+  },
+  "klassen": {
+    "cpu": {
+      "aktiv": true,
+      "cpus": 2,
+      "speicher_gb": 5,
+      "min_instanzen": 1,
+      "max_instanzen": 6,
+      "leise_max": -1,
+      "vram_mb": 0,
+      "labels": [
+        "self-hosted",
+        "linux",
+        "x64",
+        "auditcore",
+        "cpu"
+      ],
+      "cpu_shares": 512,
+      "nice": 10,
+      "io_gewicht": 100,
+      "uv_cache_volume": "auditcore-runner-uv"
+    }
+  },
+  "gpus": [],
+  "prioritaeten": [
+    {
+      "klasse": "cpu",
+      "rang": 1,
+      "verdraengbar": false,
+      "min": 1
+    }
+  ]
+}
