@@ -105,6 +105,7 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_runner.anwenden` | Check and apply a profile – shared by the CLI, the web API and external tools. |
+| `auditcore_runner.auth_setup` | Which credentials a new profile uses (RUN-022): GitHub App, then fine-grained PAT, then ``gh``. |
 | `auditcore_runner.autoscaler` | Built-in autoscaler for target source ``lokal``: signals → rules → pool file. |
 | `auditcore_runner.backend` | How a runner instance obtains jobs – behind one interface. |
 | `auditcore_runner.cli` | Command line ``auditcore-runner``. |
@@ -120,6 +121,7 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 | `auditcore_runner.pool` | Target instance counts per class – the contract with an external regulator. |
 | `auditcore_runner.profile` | Runner profile of one machine: classes, limits, target source and scaling rules. |
 | `auditcore_runner.profile_io` | Profile file format (JSON, German keys) with schema versions and migration. |
+| `auditcore_runner.profile_migration` | Migration of older profile files to the current schema (one step per version). |
 | `auditcore_runner.profile_reader` | Typed, path-aware access to JSON objects of the profile file. |
 | `auditcore_runner.propose` | Suggest runner classes and limits from measured hardware. |
 | `auditcore_runner.regeln` | Pure scaling rules: signals + profile → target instances per class. |
@@ -136,11 +138,13 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
 ## Profile und Konfiguration
 
 - **Runner-Profil** `~/.config/auditcore-runner/profil.json` (Schema
-  `auditcore-runner/profil/2`, ausgeben mit `auditcore-runner profil schema`):
-  Ziel (Repository oder Organisation), Anmeldung (`gh`, Token-Datei, GitHub
-  App), Klassen `cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb` mit Min/Max, CPU/RAM
-  je Runner, erlaubte GPUs, Prioritäten, Netz, Soll-Quelle. Versioniert
-  (`version`, `aenderung`) mit Migration aus Version 1. Neutrale Vorlagen:
+  `auditcore-runner/profil/3`, ausgeben mit `auditcore-runner profil schema`):
+  Ziel (Repository oder Organisation), Anmeldung (GitHub App empfohlen und
+  Standard, sobald konfiguriert; sonst Token-Datei; `gh` nur für
+  Einzelrechner), frei benennbare Klassen der Art `cpu` oder `gpu` mit Min/Max,
+  CPU/RAM je Runner, erlaubte GPUs, Prioritäten, Netz, Soll-Quelle. Versioniert
+  (`version`, `aenderung`) mit Migration älterer Fassungen. Neutrale Vorlagen
+  mit den Standardklassen `cpu`, `cpu-gross`, `gpu-16gb`, `gpu-8gb`:
   `profil erkennen --vorlage workstation-2gpu|server-cpu`.
 - **Backend** `jit` (Standard, REST-JIT je Job) oder `scaleset` (Runner-Scale-Set
   je Klasse mit Listener; `runs-on: <praefix>-<klasse>`), siehe

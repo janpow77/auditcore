@@ -1,5 +1,5 @@
 {
-  "schema": "auditcore-runner/profil/2",
+  "schema": "auditcore-runner/profil/3",
   "version": 0,
   "aenderung": {
     "zeit": "",
@@ -73,6 +73,7 @@
   },
   "klassen": {
     "cpu-gross": {
+      "art": "cpu",
       "aktiv": true,
       "cpus": 8,
       "speicher_gb": 12,
@@ -93,6 +94,7 @@
       "uv_cache_volume": "auditcore-runner-uv"
     },
     "gpu-16gb": {
+      "art": "gpu",
       "aktiv": true,
       "cpus": 2,
       "speicher_gb": 6,

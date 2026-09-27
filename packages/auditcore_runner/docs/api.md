@@ -27,7 +27,7 @@ wird nichts geschrieben; die Antwort nennt Version, letzte Quelle und den Diff.
 `~/.local/state/auditcore-runner/status.json`, jede Minute (Timer
 `auditcore-runner-status.timer`), Schema `auditcore-runner/status/1`:
 `rechner`, `profil_schema`, `profil_version`, `profil_hash`, `aenderung`,
-`sync`, `ziel`, `soll_quelle`, `backend`, `hardware`,
+`sync`, `ziel`, `soll_quelle`, `backend`, `auth_art`, `hardware`,
 `klassen.<k>.{aktiv,max,soll,gruende,instanzen_aktiv,registriert,belegt,warteschlange}`
 (mit Scale-Sets zusätzlich `nachfrage_soll`, `scale_set`, `scale_set_statistik`),
 `image_vorhanden`, `netz_vorhanden`, `netzsperre_aktiv`, `unbekannte_runner`,

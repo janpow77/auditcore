@@ -7,7 +7,7 @@
   "additionalProperties": false,
   "properties": {
     "schema": {
-      "const": "auditcore-runner/profil/2"
+      "const": "auditcore-runner/profil/3"
     },
     "version": {
       "type": "integer",
@@ -354,17 +354,20 @@
     "klassen": {
       "type": "object",
       "propertyNames": {
-        "enum": [
-          "cpu",
-          "cpu-gross",
-          "gpu-16gb",
-          "gpu-8gb"
-        ]
+        "pattern": "^[a-z0-9][a-z0-9-]{0,30}$",
+        "description": "frei wählbarer Klassenname (Vorlage: cpu, cpu-gross, gpu-16gb, gpu-8gb)"
       },
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "art": {
+            "enum": [
+              "cpu",
+              "gpu"
+            ],
+            "description": "gpu: Runner erhält je Job eine Karte"
+          },
           "aktiv": {
             "type": "boolean",
             "description": "Klasse an/aus"
@@ -466,10 +469,9 @@
             "type": "boolean"
           },
           "klasse": {
-            "enum": [
-              "gpu-16gb",
-              "gpu-8gb"
-            ]
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,30}$",
+            "description": "Klasse der Art gpu"
           }
         },
         "required": [
