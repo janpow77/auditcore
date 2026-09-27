@@ -41,6 +41,7 @@ Tätigkeitsliste, Eingabefelder der Entscheidung, Text der Anzahl-Felder).
 | Datei-Import (CSV/TSV) | `TableImport` | `TableImport` | – | 3 + Interaktionsfolge |
 | Bestandsprüfung | `BatchChecks` | `FlowauditBatchChecks` | `documents_batch_checks/1` ([batch-checks-rest.md](batch-checks-rest.md), [batchchecks.md](batchchecks.md)) | 5 + 2 Interaktionsfolgen |
 | SampleSizePlanner | `SampleSizePlanner` | `FlowauditSampleSizePlanner` | – ([samplesize.md](samplesize.md)) | 4 + 2 Interaktionsfolgen |
+| Berichtsvorlagen | `ReportTemplates` | `FlowauditReportTemplates` | `reporting_ui/1` ([reporting-rest.md](reporting-rest.md), [reporttemplates.md](reporttemplates.md)) | 6 + 2 Interaktionsfolgen |
 
 Vollständigkeit erzwingt `npm run ui:gate` (`scripts/js/ui-parity-gate.mjs`,
 Regeln in [beitragen.md](beitragen.md)); neue Komponenten entstehen mit

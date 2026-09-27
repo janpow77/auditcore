@@ -23,5 +23,6 @@ export { applyTheme, readTheme, resolvedTheme, useTheme, type ThemeMode, type Us
 export * from './composables'
 export * from './batchchecks'
 export * from './samplesize'
+export * from './reporttemplates'
 export { createFlowauditUi, type FlowauditUiOptions } from './plugin'
 export type { ElementDefinition, ElementTag } from './elements/define'

@@ -41,13 +41,15 @@
     "Explicit shape/type/text/number/row/column/resource validation",
     "Optional openpyxl dependency; core imports remain standard-library-only",
     "Named legacy/plain format profiles with fingerprinted metadata",
-    "Preserve font property values while normalizing generated styles.xml sequence to the Open XML SDK schema; parse with defusedxml"
+    "Preserve font property values while normalizing generated styles.xml sequence to the Open XML SDK schema; parse with defusedxml",
+    "Versioned report templates (auditcore_reporting.templates): JSON-Schema data contract, conditional text blocks, deterministic DOCX (standard library), HTML and PDF (extra pdf, reportlab BSD); Word templates checked for macros/external content and parsed via auditcore_common.safe_xml (extra docx)"
   ],
   "profile_registry": "profile-registry.json",
   "specification": {
     "document": "docs/spezifikation.md",
     "property_tests": [
-      "tests/test_spezifikation.py"
+      "tests/test_spezifikation.py",
+      "tests/test_spezifikation_vorlagen.py"
     ],
     "invariants": [
       "I1",
@@ -62,7 +64,12 @@
       "I10",
       "I11",
       "I12",
-      "I13"
+      "I13",
+      "I14",
+      "I15",
+      "I16",
+      "I17",
+      "I18"
     ],
     "legacy_variants": [
       "flowlib-legacy-v1"

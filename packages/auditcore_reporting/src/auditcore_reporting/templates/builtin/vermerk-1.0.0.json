@@ -1,0 +1,80 @@
+{
+  "id": "vermerk",
+  "version": "1.0.0",
+  "name": "Vermerk",
+  "title": "Vermerk – {{ betreff }}",
+  "description": "Allgemeiner Vermerk mit Kopfdaten, Anlass, Sachverhalt, Bewertung, Ergebnis und Anlagen; ohne behördenspezifische Gestaltung.",
+  "status": "Freigegeben",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Datenvertrag Vermerk",
+    "type": "object",
+    "required": ["aktenzeichen", "datum", "betreff", "anlass"],
+    "properties": {
+      "organisationseinheit": {"type": "string", "title": "Organisationseinheit", "maxLength": 200},
+      "aktenzeichen": {"type": "string", "title": "Aktenzeichen", "minLength": 1, "maxLength": 100},
+      "datum": {"type": "string", "format": "date", "title": "Datum"},
+      "verfasser": {"type": "string", "title": "Verfasserin oder Verfasser", "maxLength": 200},
+      "betreff": {"type": "string", "title": "Betreff", "minLength": 1, "maxLength": 500},
+      "anlass": {"type": "string", "title": "Anlass", "minLength": 1},
+      "sachverhalt": {"type": "string", "title": "Sachverhalt"},
+      "bewertung": {"type": "string", "title": "Bewertung"},
+      "ergebnis": {"type": "string", "title": "Ergebnis"},
+      "weiteres_vorgehen": {"type": "string", "title": "Weiteres Vorgehen"},
+      "anlagen": {
+        "type": "array",
+        "title": "Anlagen",
+        "maxItems": 200,
+        "items": {
+          "type": "object",
+          "required": ["titel"],
+          "properties": {"titel": {"type": "string", "title": "Titel", "minLength": 1}}
+        }
+      }
+    }
+  },
+  "blocks": [
+    {"type": "heading", "text": "Vermerk", "level": 1},
+    {"type": "fields", "rows": [
+      {"label": "Organisationseinheit", "value": "{{ organisationseinheit }}"},
+      {"label": "Aktenzeichen", "value": "{{ aktenzeichen }}"},
+      {"label": "Datum", "value": "{{ datum | datum }}"},
+      {"label": "Verfasst von", "value": "{{ verfasser }}"},
+      {"label": "Betreff", "value": "{{ betreff }}"}
+    ]},
+    {"type": "heading", "text": "Anlass", "level": 2},
+    {"type": "paragraph", "text": "{{ anlass }}"},
+    {"type": "section", "if": "sachverhalt", "blocks": [
+      {"type": "heading", "text": "Sachverhalt", "level": 2},
+      {"type": "paragraph", "text": "{{ sachverhalt }}"}
+    ]},
+    {"type": "section", "if": "bewertung", "blocks": [
+      {"type": "heading", "text": "Bewertung", "level": 2},
+      {"type": "paragraph", "text": "{{ bewertung }}"}
+    ]},
+    {"type": "section", "if": "ergebnis", "blocks": [
+      {"type": "heading", "text": "Ergebnis", "level": 2},
+      {"type": "paragraph", "text": "{{ ergebnis }}"}
+    ]},
+    {"type": "section", "if": "weiteres_vorgehen", "blocks": [
+      {"type": "heading", "text": "Weiteres Vorgehen", "level": 2},
+      {"type": "paragraph", "text": "{{ weiteres_vorgehen }}"}
+    ]},
+    {"type": "section", "if": "anlagen", "blocks": [
+      {"type": "heading", "text": "Anlagen", "level": 2},
+      {"type": "list", "source": "anlagen", "as": "anlage", "item": "{{ anlage.titel }}"}
+    ]}
+  ],
+  "sample": {
+    "organisationseinheit": "Musterbehörde, Referat Prüfung",
+    "aktenzeichen": "AZ-2026-0001",
+    "datum": "2026-09-26",
+    "verfasser": "Prüferin Muster",
+    "betreff": "Abstimmung zur Stichprobe des Geschäftsjahres",
+    "anlass": "Die Verwaltungsbehörde hat um eine Abstimmung zur Grundgesamtheit gebeten.",
+    "sachverhalt": "Die übermittelte Grundgesamtheit umfasst 1.234 Vorhaben.",
+    "bewertung": "Die Abgrenzung ist nachvollziehbar; Feststellungen ergeben sich nicht.",
+    "ergebnis": "Die Grundgesamtheit wird für die Stichprobenziehung übernommen.",
+    "anlagen": [{"titel": "Übersicht der Grundgesamtheit"}, {"titel": "Abstimmungsprotokoll"}]
+  }
+}

@@ -124,7 +124,7 @@ export function Aufgaben() {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (255):
+Exporte der Einstiegspunkte aus `package.json#exports` (263):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -208,6 +208,8 @@ Exporte der Einstiegspunkte aus `package.json#exports` (255):
 | `@auditcore/ui-react` | `FlowauditKanbanBoardsProps` | Schnittstelle | – | `kanban/FlowauditKanbanBoards` |
 | `@auditcore/ui-react` | `FlowauditReportExport` | Funktion | Tabellenexport nach Excel als native React-Komponente (Vertrag wie `<flowaudit-report-export>`): Formatprofil wählen, Vorschau der Spaltenformate und ersten Zeilen, XLSX-Export. | `reporting/FlowauditReportExport` |
 | `@auditcore/ui-react` | `FlowauditReportExportProps` | Typ | – | `reporting/FlowauditReportExport` |
+| `@auditcore/ui-react` | `FlowauditReportTemplates` | Funktion | Berichtsvorlagen als native React-Komponente (Vertrag wie `<flowaudit-report-templates>`): Vorlage wählen, Datenvertrag und Textbausteine sehen, Vorschau, Bericht als DOCX/PDF/HTML … | `reporttemplates/FlowauditReportTemplates` |
+| `@auditcore/ui-react` | `FlowauditReportTemplatesProps` | Typ | – | `reporttemplates/FlowauditReportTemplates` |
 | `@auditcore/ui-react` | `FlowauditRiskFlags` | Funktion | Risiko-Merkmale als native React-Komponente – Vertrag, Texte und Markup wie `<flowaudit-risk-flags>`: Verteilung je Merkmal, Filter, Tabelle je Datensatz, Detailkarten mit Begründu … | `risk/FlowauditRiskFlags` |
 | `@auditcore/ui-react` | `FlowauditRiskFlagsProps` | Schnittstelle | – | `risk/FlowauditRiskFlags` |
 | `@auditcore/ui-react` | `FlowauditSampleSizePlanner` | Funktion | Stichprobenumfang nach KOM-Leitfaden als native React-Komponente (Vertrag wie `<flowaudit-sample-size-planner>`). Ereignisse: `onPlanCalculated`, `onError`. | `samplesize/FlowauditSampleSizePlanner` |
@@ -262,6 +264,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (255):
 | `@auditcore/ui-react` | `ReportExportInputs` | Schnittstelle | – | `reporting/useReportExport` |
 | `@auditcore/ui-react` | `ReportTableInput` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `ReportingPort` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `ReporttemplatesPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `ResidualResult` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `RestError` | Re-Export | – | `@auditcore/common` |
 | `@auditcore/ui-react` | `RestOptions` | Re-Export | – | `@auditcore/common` |
@@ -302,6 +305,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (255):
 | `@auditcore/ui-react` | `TableImport` | Funktion | Datei-Import wie `TableImport` (Vue): CSV/TSV/Text lesen, Spalten zuordnen, Werte übernehmen. | `tabular/TableImport` |
 | `@auditcore/ui-react` | `TableImportProps` | Schnittstelle | – | `tabular/TableImport` |
 | `@auditcore/ui-react` | `TableRow` | Re-Export | – | `@auditcore/common` |
+| `@auditcore/ui-react` | `TemplateCatalogue` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `TemplateData` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `TemplateDetail` | Re-Export | – | `@auditcore/ui-core` |
+| `@auditcore/ui-react` | `TemplatePreview` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `TextField` | Funktion | Eingabefeld wie `FaTextField` (Beschriftung, Hinweis, Fehler mit aria-describedby). | `base/TextField` |
 | `@auditcore/ui-react` | `TextFieldProps` | Schnittstelle | – | `base/TextField` |
 | `@auditcore/ui-react` | `TileSource` | Re-Export | – | `@auditcore/ui-core` |
@@ -335,6 +342,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (255):
 | `@auditcore/ui-react` | `createGeoRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createIdentifiersRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createMemoryRecordPort` | Re-Export | – | `@auditcore/kanban-core` |
+| `@auditcore/ui-react` | `createReportTemplatesRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createReportingRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createRiskRestPort` | Re-Export | – | `@auditcore/ui-core` |
 | `@auditcore/ui-react` | `createSamplesizeMemoryPort` | Re-Export | – | `@auditcore/ui-core` |

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- `auditcore_reporting`: versionierte Berichtsvorlagen als Bibliotheksfunktion
+  (`auditcore_reporting.templates`): Datenvertrag als JSON-Schema-Teilmenge,
+  bedingte Textbausteine mit Pflichtkennzeichen und Rechtsgrundlage,
+  Abschnitte mit Bedingung und Wiederholung, deterministische Ausgabe als DOCX
+  (Standardbibliothek), HTML und PDF (neues Extra `pdf`, reportlab, BSD) sowie
+  Befüllen von Word-Vorlagen der Anwendung mit Sicherheitsprüfung (Makros,
+  ActiveX, OLE, externe Quellen, nachladende Felder, ZIP-Bomben; XML über
+  `auditcore_common.safe_xml`, neues Extra `docx`). Neutrale Vorlagen
+  `vermerk` und `pruefbericht`, Gestaltung nur als austauschbares Profil
+  (`neutral-v1`). REST-Vertrag `reporting_ui/1` um `/templates…` erweitert;
+  Oberfläche `ReportTemplates` / `FlowauditReportTemplates`
+  (`<flowaudit-report-templates>`) per Generator, Paritätsfälle, Demo und
+  Browsertest. Spezifikation um die Invarianten I14–I18 ergänzt.
 - auditcore_documents: Bestandsprüfung `documents_batch_checks/1` (C-01 bis
   C-13, A-07, B-12, Ergänzungen ERG-01/ERG-02) mit Oberfläche `BatchChecks` /
   `<flowaudit-batch-checks>` / `FlowauditBatchChecks`; Regelmeldungen der
