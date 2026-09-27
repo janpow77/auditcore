@@ -16,12 +16,13 @@ share of the exhaustive units), as in the example of section 7.8.2.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
 from .design import Stratum
 from .errors import ExtrapolationInputError
 from .evaluation import INCONCLUSIVE, MATERIALITY_RATE, Assessment, assess
+from .periods import Period, assess_periods
 
 #: Minimum observations per programme for a result per programme (section 7.8.1).
 MIN_GROUP_OBSERVATIONS = 30
@@ -131,5 +132,80 @@ def assess_groups(
         observations = sum(len(s.units) for s in group.strata)
         results.append(
             GroupResult(group.name, observations, own, _warnings(group.name, observations, own))
+        )
+    return GroupsAssessment(overall, tuple(results))
+
+
+def _group_periods(
+    periods: Sequence[Period], labels: Mapping[tuple[str, str], str], name: str
+) -> list[Period]:
+    found = []
+    for period in periods:
+        own = tuple(s for s in period.strata if labels.get((period.name, s.name)) == name)
+        if own:
+            found.append(Period(period.name, own))
+    return found
+
+
+def assess_groups_over_periods(
+    method_id: str,
+    periods: Sequence[Period],
+    labels: Mapping[tuple[str, str], str],
+    *,
+    confidence_level: float | None = None,
+    factor_profile: str | None = None,
+    population_units: int | None = None,
+    materiality_rate: float = MATERIALITY_RATE,
+) -> GroupsAssessment:
+    """Group of programmes sampled in several periods (guidance sections 6.3.4, 7.3, 7.8).
+
+    Section 6.3.4 stratifies each period by programme (example 6.3.4.7); the
+    whole group is evaluated over all periods, each programme over its own
+    strata of all periods. ``labels`` maps (period, stratum) to the programme.
+    """
+    missing = [
+        (p.name, s.name) for p in periods for s in p.strata if not labels.get((p.name, s.name))
+    ]
+    if missing:
+        period, stratum = missing[0]
+        raise ExtrapolationInputError(f"Schicht '{stratum}' im Zeitraum '{period}' ohne Programm.")
+    names = list(dict.fromkeys(labels[(p.name, s.name)] for p in periods for s in p.strata))
+    if len(names) < 2:
+        raise ExtrapolationInputError(
+            "Für eine Auswertung je Programm sind mindestens zwei Programme nötig."
+        )
+    overall = assess_periods(
+        method_id,
+        periods,
+        confidence_level=confidence_level,
+        factor_profile=factor_profile,
+        population_units=population_units,
+        materiality_rate=materiality_rate,
+    )
+    results = []
+    for name in names:
+        own = _group_periods(periods, labels, name)
+        try:
+            if len(own) > 1:
+                assessment = assess_periods(
+                    method_id,
+                    own,
+                    confidence_level=confidence_level,
+                    factor_profile=factor_profile,
+                    materiality_rate=materiality_rate,
+                )
+            else:
+                assessment = assess(
+                    method_id,
+                    own[0].strata,
+                    confidence_level=confidence_level,
+                    factor_profile=factor_profile,
+                    materiality_rate=materiality_rate,
+                )
+        except ExtrapolationInputError as exc:
+            raise ExtrapolationInputError(f"Gruppe '{name}': {exc}") from exc
+        observations = sum(len(s.units) for p in own for s in p.strata)
+        results.append(
+            GroupResult(name, observations, assessment, _warnings(name, observations, assessment))
         )
     return GroupsAssessment(overall, tuple(results))
