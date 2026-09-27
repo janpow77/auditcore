@@ -28,10 +28,11 @@ kein stilles Standardprofil.
 | `check_lei(wert)` | beliebiger Wert | `LeiCheck(normalized, format_ok, checksum_ok)`, `valid` = beides | keine |
 | `is_lei_format`, `lei_checksum_ok`, `lei_check_digits`, `extract_lei` | Text | Wahrheitswert, Prüfziffern, erstes LEI-Token | keine |
 | `pair_score(links, rechts, scorer)` | zwei bereits normalisierte Namen, Scorer aus `PAIR_SCORERS` | Wert 0–100 (rapidfuzz) | Extra `fuzzy` |
-| `best_match(anfrage, kandidaten, profil, *, min_score)` | normalisierte Anfrage, `Candidate(id, normalized)`, Auflösungsprofil, **ausdrückliche** Schwelle | `MatchResult` (Kandidat, auf eine Nachkommastelle gerundeter Wert, Scorer, alle Einzelwerte, Profilreferenz) oder `None` | Extra `fuzzy` |
+| `best_match(anfrage, kandidaten, profil, *, min_score)` | normalisierte Anfrage, `Candidate(id, normalized)`, Auflösungsprofil, **ausdrückliche** Schwelle | `MatchResult` (Kandidat, auf eine Nachkommastelle gerundeter Wert `score`, ungerundeter Wert `unrounded_score`, Scorer, alle Einzelwerte, Profilreferenz) oder `None`; die Schwelle gilt für den ungerundeten Wert | Extra `fuzzy` |
 | `classify(wert, profil, anfrage_norm=None, treffer_norm=None)` | Wert, Screening-Profil | `exact`/`high`/`medium`/`low` | Extra `fuzzy` nur mit Normformen |
 
 Normalisierungsverfahren (je Profil genau eines): `translate_then_casefold`,
+`casefold_then_translate` (ab `flowworkshop.state_aid` 2026.09.3),
 `casefold_fold_nfkd`, `casefold_nfc_fold_nfkd`, `lower_nfkd_ascii`,
 `nfkd_lower_regex`; optional `compose: "NFC"` in den nutzerentschiedenen
 Profilen (23.09.2026). Auswahlregel von `best_match`: je Scorer des Profils die
@@ -43,7 +44,7 @@ gewinnt, bei Gleichstand der frühere Kandidat und der frühere Scorer.
 | Nr. | Invariante | Test |
 |---|---|---|
 | I1 | `normalize` ist deterministisch und liefert Text; `None` und `""` ergeben `""`. | `tests/test_spezifikation.py::test_i1_normalize_is_deterministic_text` |
-| I2 | Die Vergleichsform ist ein Fixpunkt: erneutes Normalisieren ändert sie nicht – für alle Verfahren außer `translate_then_casefold` (Befund unten). | `test_i2_normalize_is_idempotent`, `test_i2_translate_then_casefold_is_not_idempotent_legacy` |
+| I2 | Die Vergleichsform ist ein Fixpunkt: erneutes Normalisieren ändert sie nicht – für alle Verfahren außer dem Legacy-Verfahren `translate_then_casefold` (`flowworkshop.state_aid` 2026.09.1/2026.09.2), ausdrücklich auch für `flowworkshop.state_aid` 2026.09.3. | `test_i2_normalize_is_idempotent`, `test_i2_state_aid_2026_09_3_is_idempotent`, `test_i2_translate_then_casefold_is_not_idempotent_legacy` |
 | I3 | Die Vergleichsform hat keine führenden, abschließenden oder doppelten Leerzeichen und keine Großbuchstaben. | `test_i3_comparison_form_has_single_spaces_and_no_upper_case` |
 | I4 | Bei tokenbasierten Verfahren ist kein Token der Vergleichsform eine Rechtsform des Profils (mit `drop_filler` auch kein Füllwort). | `test_i4_legal_form_tokens_are_removed` |
 | I5 | Ein 18-stelliges Präfix mit `lei_check_digits` ist ein gültiger LEI, unabhängig von Groß-/Kleinschreibung und umgebenden Leerzeichen; `extract_lei` findet ihn im Fließtext. | `test_i5_generated_check_digits_make_a_valid_lei` |
@@ -51,7 +52,7 @@ gewinnt, bei Gleichstand der frühere Kandidat und der frühere Scorer.
 | I7 | `extract_lei` liefert `None` oder ein Token mit richtigen Prüfziffern; ohne Prüfziffernprüfung mindestens ein formal richtiges Token. | `test_i7_extracted_lei_has_correct_check_digits` |
 | I8 | Die Klasse von `classify` ist in der Punktzahl monoton (`low` < `medium` < `high` < `exact`). | `test_i8_score_class_is_monotone` |
 | I9 | `pair_score` liegt in 0–100, ein nichtleerer Name erreicht gegen sich selbst 100; `ratio`, `token_set_ratio` und `token_sort_ratio` sind symmetrisch. | `test_i9_pair_score_is_bounded_and_reflexive` |
-| I10 | `best_match` liefert nur Treffer mit (gerundet) mindestens der ausdrücklichen Schwelle, nur Kandidaten aus der Liste und die Profilreferenz; eine höhere Schwelle erzeugt nie einen Treffer, den eine niedrigere nicht hatte. | `test_i10_best_match_respects_the_explicit_threshold`, `test_i10_returned_score_is_rounded_to_one_decimal` |
+| I10 | `best_match` liefert nur Treffer, deren ungerundeter Wert `unrounded_score` mindestens die ausdrückliche Schwelle erreicht; `score` ist dessen Rundung auf eine Nachkommastelle; nur Kandidaten aus der Liste und die Profilreferenz; eine höhere Schwelle erzeugt nie einen Treffer, den eine niedrigere nicht hatte. | `test_i10_best_match_respects_the_explicit_threshold`, `test_i10_returned_score_is_rounded_to_one_decimal` |
 | I11 | Nur mitgelieferte Profile laden, jedes unter seiner eigenen Kennung und Version mit 64-stelligem Fingerabdruck; alles andere ist `ProfileError`. | `test_i11_only_packaged_profiles_load`, `test_i11_packaged_profiles_are_identified` |
 
 ## Fehlerfälle
@@ -88,21 +89,28 @@ gewinnt, bei Gleichstand der frühere Kandidat und der frühere Scorer.
 | `Müller → muller` im Sanktionsabgleich | empfohlen: Umschrift `mueller` (Profile 2026.09.2/2026.09.3) | Profile `flowworkshop.sanctions` 2026.09.1 und `audit_designer.sanctions` 2026.09.1 (`legacy.flowworkshop_normalize_name`, `legacy.designer_normalisiere_name`) | Replays |
 | flowinvoice-PEP: alles außer `a-z0-9` wird Trenner (`Straße → stra e`) | empfohlen: `flowinvoice.pep` 2026.09.2 | Profil `flowinvoice.pep` 2026.09.1 (`legacy.flowinvoice_pep_normalize_name`) | Replays |
 | riskanalysis: NFKD vor dem Zeichenmuster zerlegt Umlaute (`Müller → mu ller`, EM-L01) | empfohlen: `riskanalysis.payee` 2026.09.2 (`Müller → mueller`) | Profil `riskanalysis.payee` 2026.09.1 | `test_riskanalysis_payee.py` |
+| state_aid: Tabelle vor Kleinschreibung, nicht idempotent (`É → é → e`) | `flowworkshop.state_aid` 2026.09.3 (`casefold_then_translate`) | Profile `flowworkshop.state_aid` 2026.09.1 und 2026.09.2 (`translate_then_casefold`) | I2 |
 | Eingaben wurden mit `str()` umgewandelt (`NaN → "nan"`, EM-C05) | nur Text, sonst `TypeError` | keine (Aufrufer wandelt um) | Fehlerfälle |
 
 Die Legacy-Profile und `legacy.*`-Funktionen sind zur bitgenauen Reproduktion
 bestehender Ergebnisse da, nicht für neue Aufrufer.
 
-**Befunde aus den Eigenschaftstests (26.09.2026, dokumentiert, Code unverändert):**
+**Befunde aus den Eigenschaftstests (26.09.2026) und ihre Behebung (27.09.2026):**
 
 1. *`translate_then_casefold` ist nicht idempotent* (Profile
    `flowworkshop.state_aid` 2026.09.1 und 2026.09.2): Die Zeichentabelle wirkt
    vor der Kleinschreibung, großgeschriebene Akzentbuchstaben ohne
    Tabelleneintrag bleiben stehen (`É → é`); ein zweiter Durchlauf ergibt
-   `e`. Wer bereits normalisierte Werte erneut normalisiert, erhält andere
-   Vergleichsformen. Charakterisiertes Quellverhalten (EM-C03), deshalb nicht
-   korrigiert; eine Korrektur wäre eine neue Profilversion.
-2. *Gerundeter Trefferwert:* `best_match` rundet den Wert auf eine
-   Nachkommastelle (Quellverhalten). Er kann dadurch bis zu 0,05 unter einer
-   ungerundeten Schwelle liegen (Schwelle 90,909…, Rückgabe 90,9). Wer den
-   Wert erneut gegen die Schwelle prüft, vergleicht mit der gerundeten Schwelle.
+   `e`. **Behoben** in der neuen Profilversion `flowworkshop.state_aid`
+   2026.09.3 (Verfahren `casefold_then_translate`: Kleinschreibung und NFC vor
+   der Tabelle, `SOCIÉTÉ → societe`). 2026.09.1 und 2026.09.2 bleiben als
+   Legacy-Varianten bitgenau unverändert (EM-C03, Replays); die Empfehlung
+   `entity_normalization` zeigt weiter auf 2026.09.2, bis die Anwendungen
+   umstellen.
+2. *Gerundeter Trefferwert:* `best_match` prüfte die Schwelle schon immer am
+   ungerundeten Wert, gab aber nur den auf eine Nachkommastelle gerundeten
+   Wert aus (Quellverhalten); dieser kann bis zu 0,05 unter einer
+   ungerundeten Schwelle liegen (Schwelle 90,909…, Ausgabe 90,9). **Behoben**
+   durch das zusätzliche Feld `MatchResult.unrounded_score`: Wer nachprüft,
+   vergleicht diesen Wert mit der Schwelle. `score` bleibt gerundet, damit
+   Replays und `legacy.*` unverändert bleiben.

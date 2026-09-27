@@ -23,7 +23,7 @@ def main() -> None:
     runtime = [r for r in package.requires or [] if "extra ==" not in r]
     assert runtime == ["auditcore_common==0.2.0"], runtime
     assert find_spec("auditcore") is None
-    assert len(available_profiles()) == 15
+    assert len(available_profiles()) == 16
     assert check_lei("529900T8BM49AURSDO55").valid
     assert not check_lei("7LTWFZYICNSX8D621K87").valid
     assert legacy.flowworkshop_is_valid_lei("7LTWFZYICNSX8D621K87")
@@ -32,6 +32,9 @@ def main() -> None:
     sanctions = load_profile("flowworkshop.sanctions", "2026.09.1")
     assert normalize("Müller GmbH", state_aid) == "mueller"
     assert normalize("Müller GmbH", sanctions) == "muller"
+    idempotent = load_profile("flowworkshop.state_aid", "2026.09.3")
+    assert normalize("SOCIÉTÉ", state_aid) == "société"
+    assert normalize("SOCIÉTÉ", idempotent) == normalize("societe", idempotent) == "societe"
     umschrift = load_profile("audit_designer.sanctions", "2026.09.2")
     assert normalize("Mu\u0308ller-Søren GmbH", umschrift) == "mueller soren"
     assert legacy.flowworkshop_normalize_name_umschrift("Müller") == "mueller"
