@@ -34,6 +34,8 @@ export interface RunnerStatus {
   sync: string
   ziel: string
   soll_quelle: string
+  /** Anmeldung bei GitHub: `gh`, `pat` oder `app` (optional). */
+  auth_art?: string
   hardware: Readonly<Record<string, unknown>>
   klassen: Readonly<Record<string, RunnerKlasseStatus>>
   image_vorhanden: boolean

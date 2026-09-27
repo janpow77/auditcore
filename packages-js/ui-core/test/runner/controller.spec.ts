@@ -7,6 +7,8 @@ import {
   runnerEingabe,
   runnerFeldId,
   runnerKlassenZeilen,
+  runnerNeueKlasse,
+  runnerUeberblick,
   runnerPrioritaetZeilen,
   runnerUnterschiede,
   runnerWeichtZuerstText,
@@ -65,7 +67,7 @@ describe('Runner-Konsole: Einstellungen', () => {
     expect(abschnitte.map((a) => a.id)).toEqual(['allgemein', 'regelung', 'thermik', 'netz', 'klasse-cpu', 'klasse-gpu', 'karte-0'])
     const max = abschnitte.find((a) => a.id === 'klasse-cpu')?.felder.find((f) => f.id === 'klassen.cpu.max_instanzen')
     expect(max).toMatchObject({ wert: '99', fehler: 'zu groß' })
-    expect(abschnitte.find((a) => a.id === 'karte-0')?.felder[1]?.optionen.map((o) => o.wert)).toEqual(['cpu', 'gpu'])
+    expect(abschnitte.find((a) => a.id === 'karte-0')?.felder[1]?.optionen.map((o) => o.wert)).toEqual(['gpu'])
   })
 
   it('Rohtext bleibt beim Tippen erhalten, der Entwurf bekommt den umgesetzten Wert', async () => {
@@ -128,6 +130,55 @@ describe('Runner-Konsole: Einstellungen', () => {
 
   it('Unterschiede ignorieren Version und Änderungsvermerk', () => {
     expect(runnerUnterschiede({ ...runnerProfilBeispiel, version: 9, aenderung: {} }, runnerProfilBeispiel)).toEqual([])
+  })
+})
+
+describe('Runner-Konsole: Klassen', () => {
+  it('Art gpu zeigt Grafikspeicher, Wechsel auf cpu setzt ihn auf 0 und blendet ihn aus', async () => {
+    const controller = await geladen()
+    const felder = (id: string) => runnerAbschnitte(controller.store.get(), t).find((a) => a.id === id)?.felder.map((f) => f.id) ?? []
+    expect(felder('klasse-gpu')).toContain('klassen.gpu.vram_mb')
+    expect(felder('klasse-cpu')).not.toContain('klassen.cpu.vram_mb')
+    controller.eingabe(['klassen', 'gpu', 'art'], 'auswahl', 'cpu')
+    expect(controller.store.get().entwurf?.klassen).toMatchObject({ gpu: { art: 'cpu', vram_mb: 0 } })
+    expect(felder('klasse-gpu')).not.toContain('klassen.gpu.vram_mb')
+    expect(runnerAbschnitte(controller.store.get(), t).some((a) => a.id.startsWith('karte-'))).toBe(false)
+  })
+
+  it('Klasse hinzufügen nur mit gültigem, freiem Namen', async () => {
+    const controller = await geladen()
+    controller.neueKlasseEingabe('Gross!')
+    expect(runnerNeueKlasse(controller.store.get(), t)).toMatchObject({ moeglich: false, fehler: 'Klassenname: a–z, 0–9, Bindestrich, höchstens 31 Zeichen' })
+    controller.neueKlasseEingabe('cpu')
+    expect(runnerNeueKlasse(controller.store.get(), t).fehler).toBe('Dieser Name ist bereits vergeben.')
+    controller.neueKlasseEingabe('a'.repeat(32))
+    expect(runnerNeueKlasse(controller.store.get(), t).moeglich).toBe(false)
+    controller.neueKlasseEingabe('nacht-lauf')
+    controller.klasseHinzufuegen()
+    expect(controller.store.get().entwurf?.klassen).toMatchObject({ 'nacht-lauf': { art: 'cpu', max_instanzen: 1, labels: ['self-hosted', 'linux', 'x64', 'nacht-lauf'] } })
+    expect(controller.store.get().neueKlasse).toBe('')
+  })
+
+  it('Umbenennen zieht Karten, Prioritäten und Label mit', async () => {
+    const controller = await geladen()
+    controller.klassenNameEingabe('gpu', 'gpu-gross')
+    const name = runnerAbschnitte(controller.store.get(), t).find((a) => a.id === 'klasse-gpu')?.klasse
+    expect(name).toMatchObject({ wert: 'gpu-gross', fehler: '', geaendert: true })
+    controller.klasseUmbenennen('gpu')
+    const entwurf = controller.store.get().entwurf
+    expect(Object.keys(entwurf?.klassen as object)).toEqual(['cpu', 'gpu-gross'])
+    expect(entwurf?.gpus).toMatchObject([{ klasse: 'gpu-gross' }])
+    expect(runnerPrioritaetZeilen(controller.store.get(), t).map((z) => z.klasse)).toEqual(['cpu', 'gpu-gross'])
+    expect((entwurf?.klassen as Record<string, { labels: string[] }>)['gpu-gross']?.labels).toEqual(['self-hosted', 'gpu-gross'])
+    controller.klassenNameEingabe('cpu', 'gpu-gross')
+    expect(runnerAbschnitte(controller.store.get(), t).find((a) => a.id === 'klasse-cpu')?.klasse?.fehler).toBe('Dieser Name ist bereits vergeben.')
+    controller.klasseUmbenennen('cpu')
+    expect(Object.keys(controller.store.get().entwurf?.klassen as object)).toEqual(['cpu', 'gpu-gross'])
+  })
+
+  it('Status zeigt die Anmeldeart', async () => {
+    const controller = await geladen()
+    expect(runnerUeberblick(controller.store.get().status, t)).toContainEqual({ label: 'Anmeldung bei GitHub', wert: 'app' })
   })
 })
 
