@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Preview v0.4.2 veröffentlicht (Prerelease, 185 Assets, main `f2220bf5`) und
+  anonym installiert: pip 27/27 (hashgebunden) und 27/27 (Paketindex), APT
+  (debian:bookworm) 27/27, npm 9/9 aus den Tarball-URLs sowie die Beispiele
+  Vue, React und Web Components. Nachweise
+  `docs/reports/domain-public-installation-v0.4.2.json` und
+  `docs/reports/npm-tarball-installation-v0.4.2.json`, Hashes in
+  `docs/deployment/package-feed.md`. Die README-Installationszeilen der Pakete
+  zeigen auf v0.4.2. Das Donut-Job-Image bezieht seine auditcore-Abhängigkeiten
+  wieder hashgebunden aus dem Release (`requirements-auditcore.txt` auf v0.4.2).
+
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
