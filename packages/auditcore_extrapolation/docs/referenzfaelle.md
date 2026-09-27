@@ -31,6 +31,9 @@ TER und RER nach Art. 2 Nr. 35 und 36 der Verordnung.
 | Neuberechnung Konfidenzniveau | z* = z × (TE − Gesamtfehler)/SE; KN* = 1 − 2 × (1 − Φ(z*)) | 7.7; Tabelle 1 in 3.2.1 | `recalculate_confidence` |
 | Gruppen von Programmen | Gesamtauswertung über alle Schichten, je Programm über dessen Schichten; Hinweis unter 30 Beobachtungen | 7.8 | `assess_groups` |
 | Merkmalsstichprobe | EDR = k/n; SE = z × √(p(1 − p)/n); ULD = EDR + SE | 7.9.3–7.9.5 | `evaluate_attributes` |
+| Ausschluss (verhältnismäßige Kontrolle) | EE_s × BV_s,orig/BV_s,red (N-Verhältnis bei Mittelwertschätzung), EE_e × BV_e,orig/BV_e,red; SE ebenso | 7.10.2 | `extend_to_original`, `extension_factor` |
+| Negative Einheiten | positive Grundgesamtheit (Buchwert für Stichprobe und TER), negative gesondert; netto = positiv + negativ | 4.6 | `split_population` |
+| Discovery / Stop-or-go | exakte Obergrenze p_u mit P(X ≤ k \| n, p_u) = 1 − KN | 7.9.6 (Methodenwahl) | `upper_deviation_limit` |
 | RER | F = A − E1 − E2, G = D × F, I = F − H, J = G − H, K = J/I; L, M bei ROUND(K; 4) > 2 % | Annex 3 | `residual_error_rate` |
 
 ## Nachgerechnete Beispiele
@@ -63,6 +66,13 @@ TER und RER nach Art. 2 Nr. 35 und 36 der Verordnung.
 | 7.7 Konfidenzniveau neu berechnen | z* 1,419, 84,4 % | `test_recalculated_confidence_level_7_7` | keine |
 | 7.8.2 Gruppe von Programmen | EE 2.681.139; je Programm SE 442.105/456.204, EE 2.507.452/173.687 | `test_group_of_programmes_7_8_2` | **Druckfehler:** Zeile P für Programm 1 zeigt 2,90 %, (M + L)/(A + B) = 3,01 %; n₃ = N₃ steht als 5 statt 8. |
 | 7.9.5 Merkmalsstichprobe | ULD 0,023 bei 3 Abweichungen in 150 (95 %) | `test_attribute_sampling_7_9_5` | **Formelfehler:** 7.9.4 druckt SE = z × p(1 − p)/√n ohne Wurzel über p(1 − p), das Beispiel rechnet so. Die Normalapproximation der Binomialverteilung ist z × √(p(1 − p)/n); die Bibliothek rechnet so (ULD 0,0424). |
+
+| 7.10.3.1 b PPS, Ersetzen einer Einheit der Hochwertschicht | EE 50.020.779 | `test_pps_replacement_of_a_high_value_unit_7_10_3_1_b` | keine |
+| 7.10.3.2 MUS, Ausschluss | EE 50.225.817, SE 53.015.513, ULE 103.241.330 | `test_mus_exclusion_7_10_3_2` | keine |
+| 7.10.3.3 MUS konservativ, Ausschluss | EE 41.192.637, SE 85.998.313 | `test_conservative_exclusion_7_10_3_3` | nur Faktor nachgerechnet (Zuschläge nicht gedruckt) |
+| 7.10.3.4 SRS, Ausschluss | Mittelwert: EE 30.317.560,43, SE 15.316.501,38, ULE 45.634.061,81; Verhältnis: EE 33.142.008,96 | `test_srs_mean_per_unit_exclusion_7_10_3_4`, `test_srs_ratio_exclusion_7_10_3_4` | **Druckfehler (Planung, nicht nachgerechnet):** Der Text nennt für σ_e vier Werte aus „3 früheren Stichproben“ (97.654 doppelt), die Formel mittelt drei (34.973, 97.654, 43.564 → 58.730). Die Präzision der Verhältnisschätzung ist nicht beziffert (s_q fehlt); geprüft ist die Erweiterung SE_red × 1,0011. |
+| 4.6 negative Einheiten | X/Y/Z: positiv 120.000, netto 115.000; Variante 3: 24.300 positiv, 4.300 negativ | `test_negative_units_example_4_6` | keine |
+| 7.9.6 Discovery/Stop-or-go | Tabellenwerte der Merkmalsstichprobe (5 %, 95 %): n = 59/93/124 für 0/1/2 Abweichungen | `test_exact_upper_limit_matches_the_attribute_sampling_table` | Der Leitfaden druckt keine Werte; Vergleich mit den üblichen Tabellen der Fachliteratur. |
 
 Einige Beispiele lassen sich nicht aus Einzeleinheiten nachbauen: Bei nicht
 negativen Fehlern gilt s ≤ ΣE/√n, die gedruckten Standardabweichungen in

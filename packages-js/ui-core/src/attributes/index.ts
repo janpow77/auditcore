@@ -1,0 +1,5 @@
+export { attributesMessages, type AttributesMessageKey } from './messages'
+export type * from './types'
+export { createAttributesRestPort } from './port'
+export * from './controller'
+export * from './view'

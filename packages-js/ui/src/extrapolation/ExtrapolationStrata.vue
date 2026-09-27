@@ -29,6 +29,7 @@ const value = (event: Event): string => (event.target as HTMLInputElement).value
         <thead>
           <tr>
             <th v-if="state.form.design !== 'single'" scope="col">{{ t(partLabel) }}</th>
+            <th v-if="state.form.design === 'periods'" scope="col">{{ t('groupOptional') }}</th>
             <th v-for="field in STRATUM_FIELDS" :key="field.key" scope="col">{{ t(field.label) }}</th>
             <th scope="col">{{ t('remove') }}</th>
           </tr>
@@ -37,6 +38,9 @@ const value = (event: Event): string => (event.target as HTMLInputElement).value
           <tr v-for="(row, index) in state.form.strata" :key="row.key">
             <td v-if="state.form.design !== 'single'">
               <input class="fa-extrapolation__input" :value="row.part" :aria-label="extrapolationCellLabel(t, partLabel, index + 1)" :aria-invalid="issue(index, 'part') ? 'true' : undefined" :title="issue(index, 'part') || undefined" @input="controller.updateStratum(index, { part: value($event) })" />
+            </td>
+            <td v-if="state.form.design === 'periods'">
+              <input class="fa-extrapolation__input" :value="row.group" :aria-label="extrapolationCellLabel(t, 'groupOptional', index + 1)" :aria-invalid="issue(index, 'group') ? 'true' : undefined" :title="issue(index, 'group') || undefined" @input="controller.updateStratum(index, { group: value($event) })" />
             </td>
             <td v-for="field in STRATUM_FIELDS" :key="field.key">
               <input

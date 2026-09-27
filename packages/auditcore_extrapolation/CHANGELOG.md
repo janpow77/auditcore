@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Ausschluss und Ersetzen von Einheiten nach verhältnismäßiger Kontrolle
+  (Leitfaden 7.10): `Stratum.excluded_*`, Erweiterung auf die ursprüngliche
+  Grundgesamtheit je Schicht, `extension_factor`; Referenzfälle 7.10.3.1 b–7.10.3.4.
+- Negative Stichprobeneinheiten (4.6): `split_population`, `review_negative_units`,
+  REST `POST /negative-units`.
+- Discovery- und Stop-or-go-Stichprobe (7.9.6) mit exakter Binomialgrenze:
+  `evaluate_discovery`, `evaluate_stop_or_go`, `upper_deviation_limit`;
+  `POST /attributes` mit `approach`.
+- Programme über mehrere Zeiträume (6.3.4 + 7.8): `assess_groups_over_periods`;
+  REST erlaubt `group` zusammen mit `periods`.
 - Stichprobe in mehreren Zeiträumen (Leitfaden 6.1.3, 6.2.3, 6.3.3, 6.3.4,
   6.4.9, 7.3, Anhang 2): `Period`, `project_periods`, `assess_periods`,
   `combined_precision`.

@@ -28,7 +28,7 @@ Bibliothek deckt die **Auswertung** ab. Stichprobenumfang und Auswahl
 |---|---|---|---|
 | 3.2.1 | Konfidenzniveau nach Systembewertung (Tabelle 1) | abgedeckt | `SYSTEM_ASSESSMENT_LEVELS`, `system_confidence_level` (für 7.7) |
 | 3.2.2 | Gruppe von Programmen: ein Zusicherungsniveau | abgedeckt (Hinweis) | anspruchsvollste Kategorie wählen; siehe 7.8 |
-| 4.6 | Negative Stichprobeneinheiten | fehlt | Einheiten mit negativem Buchwert werden abgelehnt (offener Punkt) |
+| 4.6 | Negative Stichprobeneinheiten | abgedeckt | `split_population` (Varianten 1–3, Abstimmung netto/positiv/negativ), `review_negative_units`; REST `/negative-units`. Einheiten mit negativem Buchwert bleiben in der Hochrechnung unzulässig (gesonderte Grundgesamtheit, keine Fehlerquote) |
 | 4.9–4.14 | Wesentlichkeit, TE, Obergrenze, Ergebnis, Fehlerquoten | abgedeckt | `evaluate`, `conclude` |
 | 6.1.1, 6.1.2 | SRS, geschichtet | abgedeckt | `srs.*` |
 | 6.1.3 | SRS, zwei Zeiträume | abgedeckt | `project_periods` |
@@ -40,7 +40,7 @@ Bibliothek deckt die **Auswertung** ab. Stichprobenumfang und Auswahl
 | 6.4.1–6.4.8 | nicht-statistisch, kleine Grundgesamtheiten (Art. 79 Abs. 2 CPR: unter 300 Einheiten, Abdeckung) | abgedeckt | `nonstatistical.*`, Abdeckungsprüfung |
 | 6.4.9 | nicht-statistisch, zwei Zeiträume | abgedeckt | `project_periods` mit `population_units` |
 | 6.4.10 | Teilstichproben bei nicht-statistischen Verfahren | abgedeckt | `project_subsample` (Hinweis unter 30 Teileinheiten / 10 % Deckung) |
-| 6.5 | ETC-Programme: Stichprobeneinheit, zwei- und dreistufig, Lead-Partner + Partner-Stichprobe | abgedeckt | `project_subsample` (verschachtelt für drei Stufen); Wahl der Stichprobeneinheit ist fachliche Entscheidung |
+| 6.5 | ETC-Programme: Stichprobeneinheit, zwei- und dreistufig, Lead-Partner + Partner-Stichprobe | abgedeckt | `project_subsample` (verschachtelt für drei Stufen), UI mit Teilschichten und dritter Stufe; Wahl der Stichprobeneinheit ist fachliche Entscheidung |
 | 7.1 | Erwarteter Fehler | Planung | `auditcore_sampling` |
 | 7.2.1 | Ergänzende (risikobasierte) Stichprobe | nicht rechnerisch | getrennt auswerten, nicht in die Fehlerquote (7.2.1) – Auswertung als eigene Grundgesamtheit möglich |
 | 7.2.2 | Zusätzliche Stichprobe bei nicht schlüssigem Ergebnis | abgedeckt (Auswertung) | vereinigte Stichprobe mit `assess`; Umfang: Planung |
@@ -49,12 +49,13 @@ Bibliothek deckt die **Auswertung** ab. Stichprobenumfang und Auswahl
 | 7.5 | Fehlerquoten EER = EE/BV, SER = SE/BV | abgedeckt | `rate`, `upper_limit_rate` |
 | 7.6 | Zweistufige Stichprobe | abgedeckt | `project_subsample`, `unit_from_subsample`; Präzision wie einstufig (7.6.4) |
 | 7.7 | Neuberechnung des Konfidenzniveaus | abgedeckt | `recalculate_confidence` (nicht für den konservativen Ansatz) |
-| 7.8 | Gruppen von Programmen und Mehrfonds-Programme | abgedeckt | `assess_groups` (top-down mit Auswertung je Programm) |
-| 7.9 | Merkmalsstichprobe für Systemprüfungen | abgedeckt (Auswertung) | `evaluate_attributes`, REST `/attributes`; Discovery/Stop-or-go (7.9.6) fehlen |
-| 7.10 | Verhältnismäßige Kontrolle (Art. 148 VO 1303/2013): Ersetzen/Ausschluss von Einheiten | teilweise | Ersetzen: Hochrechnung mit den Parametern der ursprünglichen Grundgesamtheit (empfohlen, ohne Sonderformel). **Fehlt:** Hochrechnung aus reduzierter Grundgesamtheit mit Faktor BV_orig/BV_red bzw. N_orig/N_red je Schicht und Hochwertschicht (offener Punkt) |
+| 7.8 | Gruppen von Programmen und Mehrfonds-Programme | abgedeckt | `assess_groups` (top-down mit Auswertung je Programm), über mehrere Zeiträume `assess_groups_over_periods` (6.3.4 + 7.8) |
+| 7.9 | Merkmalsstichprobe für Systemprüfungen | abgedeckt (Auswertung) | `evaluate_attributes`; Discovery/Stop-or-go (7.9.6) mit exakter Binomialgrenze `evaluate_discovery`, `evaluate_stop_or_go` (Methodenwahl, der Leitfaden nennt keine Formel); REST `/attributes`, UI `AttributeSampling` |
+| 7.10 | Verhältnismäßige Kontrolle (Art. 148 VO 1303/2013; 2021–2027 Art. 80 VO 2021/1060): Ersetzen/Ausschluss von Einheiten | abgedeckt | `excluded_*` je Schicht, Erweiterung mit BV- bzw. N-Verhältnis je Stichproben- und Hochwertschicht (`extension_factor`); geschichtete SRS mit Ausschluss in mehreren Schichten nicht beschrieben (abgelehnt) |
 | Anhang 1 | Systemische Fehler | abgedeckt | Fehlerklassen, `mus.ratio` |
 | Anhang 2 | Drei und vier Zeiträume | abgedeckt | `project_periods` |
 | Anhang 3, 4 | Faktoren, z-Werte | abgedeckt | `KOM_TABLES` |
 
-Kombinationen: Zeiträume und Gruppen sind im REST-Vertrag nicht kombinierbar;
-Teilstichproben lassen sich mit jedem Aufbau verbinden.
+Kombinationen: Zeiträume und Gruppen sind kombinierbar (Programme als Schichten
+je Zeitraum, 6.3.4); Teilstichproben und Ausschlüsse lassen sich mit jedem
+Aufbau verbinden.

@@ -1,0 +1,38 @@
+{
+ "contract": "auditcore_extrapolation.evaluation/1",
+ "library": "auditcore_extrapolation 0.1.0",
+ "fingerprint": "a3f9d751484ff693ebf6bbec5a7439dd1fd3f6e8255981f53d9576e2ca79ab90",
+ "attributes": {
+  "deviations": 3,
+  "sample_size": 150,
+  "confidence_level": 0.95,
+  "factor_profile": "kom_2017_tables",
+  "coefficient": 1.96,
+  "rate": 0.02,
+  "precision": 0.0224046661806568,
+  "upper_limit": 0.0424046661806568,
+  "tolerable_rate": 0.05,
+  "conclusion": "supported",
+  "steps": [
+   {
+    "label": "Abweichungsquote (EDR)",
+    "formula": "Abweichungen / n",
+    "value": 0.02,
+    "source": "EGESIF_16-0014-01, Abschn. 7.9.3"
+   },
+   {
+    "label": "Präzision",
+    "formula": "SE = z × √(p_s × (1 − p_s) / n)",
+    "value": 0.0224046661806568,
+    "source": "EGESIF_16-0014-01, Abschn. 7.9.4"
+   },
+   {
+    "label": "Obere Abweichungsgrenze (ULD)",
+    "formula": "ULD = EDR + SE",
+    "value": 0.0424046661806568,
+    "source": "EGESIF_16-0014-01, Abschn. 7.9.5"
+   }
+  ],
+  "approach": "normal"
+ }
+}

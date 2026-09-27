@@ -8,13 +8,16 @@ import {
   hasExtrapolationDetails,
   periodRows,
   recalculationView,
+  subsampleEditorView,
   subsampleResultRows,
   systemAssessmentChoices,
   translator,
+  type EvaluationRequest,
+  type ExtrapolationForm,
   type StratumInput,
   type UnitInput,
 } from '../../src'
-import { evaluationResult, extrapolationCatalogue, fakeExtrapolationPort, groupsFixture, groupsResult, periodsFixture, periodsResult } from './fake-port'
+import { evaluationResult, extrapolationCatalogue, fakeExtrapolationPort, groupsFixture, groupsResult, multistageFixture, periodsFixture, periodsResult } from './fake-port'
 
 const t = translator(extrapolationMessages, 'de')
 
@@ -112,5 +115,62 @@ describe('Anzeige der Ergänzungen', () => {
     expect(detailWarnings(groupsResult).length).toBeGreaterThan(0)
     expect(extrapolationDesignChoices(extrapolationCatalogue, t).map((choice) => choice.id)).toEqual(['single', 'periods', 'groups'])
     expect(systemAssessmentChoices(extrapolationCatalogue, 'de')).toHaveLength(4)
+  })
+})
+
+function expectMultistageForm(form: ExtrapolationForm): void {
+  expect(form.design).toBe('periods')
+  expect(form.strata.map((row) => row.group)).toEqual(['Programm 1', 'Programm 2', 'Programm 1', 'Programm 2'])
+  const first = form.units[0]?.subsample
+  if (!first) throw new Error('keine Teilstichprobe')
+  expect(first.strata).toHaveLength(2)
+  expect(first.items[1]?.subsample?.items).toHaveLength(4)
+}
+
+function expectMultistageRequest(sent: EvaluationRequest | undefined): void {
+  const expected = multistageFixture.units[0]?.subsample
+  const sub = sent?.units[0]?.subsample
+  if (!sent || !sub || !expected) throw new Error('keine Anfrage')
+  expect(sent.strata.map((stratum) => stratum.group)).toEqual(multistageFixture.strata.map((stratum) => stratum.group))
+  expect(sub.strata).toEqual(expected.strata)
+  const nested = sub.units[1]?.subsample
+  expect(nested?.strata).toEqual(expected.units[1]?.subsample?.strata)
+  expect(nested?.units).toHaveLength(4)
+}
+
+describe('Mehrstufige Teilstichproben und Programme über Zeiträume', () => {
+  it('übernimmt Teilschichten, dritte Stufe und Programme und baut dieselbe Anfrage', async () => {
+    const { created, port } = controller(multistageFixture.strata, multistageFixture.units)
+    await created.load()
+    expectMultistageForm(created.store.get().form)
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    await created.evaluate()
+    expectMultistageRequest(port.calls.evaluate[0])
+    expect(created.store.get().result?.groups).toHaveLength(2)
+  })
+
+  it('bearbeitet Teilschichten und die Teilstichprobe einer Teileinheit', async () => {
+    const { created } = controller(multistageFixture.strata, multistageFixture.units)
+    await created.load()
+    created.editSubsample(0)
+    created.editNestedSubsample(1)
+    expect(subsampleEditorView(created.store.get(), t)?.nested).toBe(true)
+    created.addSubItem()
+    expect(created.store.get().form.units[0]?.subsample?.items[1]?.subsample?.items).toHaveLength(5)
+    created.editNestedSubsample(null)
+    created.addSubStratum()
+    created.updateSubStratum(2, { name: 'Neu', bookValue: '1' })
+    created.selectMethod('mus.standard')
+    created.setConfidence(0.9)
+    await created.evaluate()
+    const issues = created.store.get().issues
+    expect(issues['units.0.subsample.strata']).toBe('range')
+    expect(issues['units.0.subsample.items.1.subsample.items.4.id']).toBe('required')
+    created.toggleNestedSubsample(1)
+    expect(created.store.get().form.units[0]?.subsample?.items[1]?.subsample).toBeNull()
+    created.updateStratum(0, { group: '' })
+    await created.evaluate()
+    expect(created.store.get().issues['strata.0.group']).toBe('required')
   })
 })

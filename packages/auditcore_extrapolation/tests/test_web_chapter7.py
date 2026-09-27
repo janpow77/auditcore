@@ -187,7 +187,7 @@ def test_period_errors() -> None:
         evaluate(conservative)
     grouped = copy.deepcopy(PERIODS_REQUEST)
     cast(list[dict[str, object]], grouped["strata"])[0]["group"] = "A"
-    with pytest.raises(ContractError, match="nicht kombinierbar"):
+    with pytest.raises(ContractError, match="braucht jede Schicht"):
         evaluate(grouped)
     with pytest.raises(ContractError, match="population_units"):
         evaluate({**GROUPS_REQUEST, "population_units": 5})

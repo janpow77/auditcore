@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import ExtrapolationPanel from '../../../ui/src/extrapolation/ExtrapolationPanel.vue'
-import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, periodsFixture } from '../../../ui-core/test/extrapolation/fake-port'
+import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, multistageFixture, periodsFixture } from '../../../ui-core/test/extrapolation/fake-port'
 import { extrapolationCases } from '../../../ui-core/test/parity/cases-extrapolation'
 import { FlowauditExtrapolation } from '../../src/extrapolation/FlowauditExtrapolation'
 import { byTestId, both } from './interact'
@@ -72,5 +72,25 @@ describe('Parität Hochrechnung nach Interaktion', () => {
     expect(rendered.vue.querySelector('[data-testid="extrapolation-subsample-size"]')).not.toBeNull()
     await both(rendered, byTestId('extrapolation-subsample-close'), { kind: 'click' })
     expect(rendered.react.querySelector('[data-testid="extrapolation-subsample"]')).toBeNull()
+  })
+
+  it('Mehrstufig: Teilschichten, dritte Stufe öffnen, zurück, Programme im Ergebnis', async () => {
+    const vuePort = fakeExtrapolationPort()
+    const reactPort = fakeExtrapolationPort()
+    const props = { strata: multistageFixture.strata, units: multistageFixture.units }
+    const rendered = await renderBoth(ExtrapolationPanel, { port: vuePort, ...props }, <FlowauditExtrapolation port={reactPort} {...props} />)
+    await both(rendered, cell('Teilstichprobe bearbeiten, Zeile 1'), { kind: 'click' })
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-substrata"] tbody tr')).toHaveLength(2)
+    await both(rendered, cell('Teilstichprobe der Teileinheit bearbeiten, Zeile 2'), { kind: 'click' })
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-subsample-items"] tbody tr')).toHaveLength(4)
+    expect(rendered.vue.querySelector('[data-testid="extrapolation-subsample-back"]')).not.toBeNull()
+    await both(rendered, byTestId('extrapolation-subsample-back'), { kind: 'click' })
+    await both(rendered, byTestId('extrapolation-add-substratum'), { kind: 'click' })
+    expect(rendered.react.querySelectorAll('[data-testid="extrapolation-substrata"] tbody tr')).toHaveLength(3)
+    await both(rendered, byTestId('extrapolation-subsample-close'), { kind: 'click' })
+    await both(rendered, byTestId('extrapolation-method'), { kind: 'change', value: 'mus.standard' })
+    await both(rendered, byTestId('extrapolation-confidence'), { kind: 'change', value: '0.9' })
+    await both(rendered, byTestId('extrapolation-evaluate'), { kind: 'click' })
+    expect(rendered.react.querySelector('[data-testid="extrapolation-form-error"]')).not.toBeNull()
   })
 })

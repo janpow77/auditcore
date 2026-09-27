@@ -10,6 +10,8 @@ import request from '../fixtures/extrapolation-request.json'
 import residual from '../fixtures/extrapolation-residual.json'
 import groupsEvaluation from '../fixtures/extrapolation-groups-evaluation.json'
 import groupsRequest from '../fixtures/extrapolation-groups-request.json'
+import multistageEvaluation from '../fixtures/extrapolation-multistage-evaluation.json'
+import multistageRequest from '../fixtures/extrapolation-multistage-request.json'
 import periodsEvaluation from '../fixtures/extrapolation-periods-evaluation.json'
 import periodsRequest from '../fixtures/extrapolation-periods-request.json'
 
@@ -23,10 +25,12 @@ export const periodsResult = periodsEvaluation as unknown as EvaluationResult
 export const periodsFixture = periodsRequest as unknown as EvaluationRequest
 export const groupsResult = groupsEvaluation as unknown as EvaluationResult
 export const groupsFixture = groupsRequest as unknown as EvaluationRequest
+export const multistageResult = multistageEvaluation as unknown as EvaluationResult
+export const multistageFixture = multistageRequest as unknown as EvaluationRequest
 
 /** Antwort passend zum Aufbau der Anfrage (Zeiträume, Gruppen oder einfach). */
 function answer(body: EvaluationRequest): EvaluationResult {
-  if (body.periods) return periodsResult
+  if (body.periods) return body.strata.some((stratum) => stratum.group) ? multistageResult : periodsResult
   return body.strata.some((stratum) => stratum.group) ? groupsResult : evaluationResult
 }
 

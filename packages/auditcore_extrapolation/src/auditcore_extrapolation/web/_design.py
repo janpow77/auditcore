@@ -55,6 +55,8 @@ class Design:
     groups: list[Group] | None
     subsamples: list[SubSampleResult]
     population_units: int | None
+    #: (period, stratum) → programme for groups over periods (guidance 6.3.4, 7.8).
+    period_groups: dict[tuple[str, str], str] | None = None
 
     @property
     def kind(self) -> str:
@@ -123,6 +125,10 @@ def _stratum(entry: Reader, members: list[_Unit]) -> Stratum:
         exhaustive_units=tuple(m.unit for m in members if m.exhaustive),
         population_size=entry.optional_whole("population_size", minimum=1),
         systemic_error=entry.number("systemic_error", 0.0),
+        excluded_book_value=entry.number("excluded_book_value", 0.0),
+        excluded_units=entry.optional_whole("excluded_units") or 0,
+        excluded_exhaustive_book_value=entry.number("excluded_exhaustive_book_value", 0.0),
+        excluded_exhaustive_units=entry.optional_whole("excluded_exhaustive_units") or 0,
     )
 
 
@@ -176,11 +182,19 @@ def read_design(body: Reader) -> Design:
     entries = body.items("strata", MAX_STRATA)
     groups_labels = [_label(e, "group") for e in entries]
     if body.has("periods"):
-        if any(groups_labels):
-            raise ContractError("Zeiträume und Gruppen von Programmen sind nicht kombinierbar.")
         periods = _periods(body, units)
         strata = [s for p in periods for s in p.strata]
-        return Design(strata, periods, None, ctx.subsamples, population_units)
+        labels = None
+        if any(groups_labels):
+            if not all(groups_labels):
+                raise ContractError(
+                    "Mit Gruppen (Leitfaden, Abschn. 7.8) braucht jede Schicht 'group'."
+                )
+            labels = {
+                (_label(e, "period"), e.text("name")): g
+                for e, g in zip(entries, groups_labels, strict=True)
+            }
+        return Design(strata, periods, None, ctx.subsamples, population_units, labels)
     if any(_label(e, "period") for e in entries) or any(u.period for u in units):
         raise ContractError("'period' setzt die Liste 'periods' voraus.")
     if population_units is not None:

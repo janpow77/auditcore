@@ -12,6 +12,12 @@ controls and, strictly separate, the residual error rate (RER) after financial
 corrections along the template CPRE_23-0013-01 Annex 3. See README.md.
 """
 
+from .attribute_variants import (
+    SequentialEvaluation,
+    evaluate_discovery,
+    evaluate_stop_or_go,
+    upper_deviation_limit,
+)
 from .attributes import AttributeEvaluation, evaluate_attributes
 from .confidence import (
     SYSTEM_ASSESSMENT_LEVELS,
@@ -44,6 +50,7 @@ from .evaluation import (
     conclude,
     evaluate,
 )
+from .exclusion import extension_factor
 from .factors import (
     EXACT,
     KOM_TABLES,
@@ -55,9 +62,23 @@ from .factors import (
     reliability_factor,
     z_value,
 )
-from .groups import Group, GroupResult, GroupsAssessment, assess_groups
+from .groups import (
+    Group,
+    GroupResult,
+    GroupsAssessment,
+    assess_groups,
+    assess_groups_over_periods,
+)
 from .methods import METHODS, Method, project
 from .mus import mus_precision, tainting_projection
+from .negative import (
+    DeclaredUnit,
+    NegativeCheck,
+    NegativeReview,
+    PopulationSplit,
+    review_negative_units,
+    split_population,
+)
 from .periods import Period, assess_periods, combined_precision, project_periods
 from .projection import Projection, StratumResult
 from .residual import ResidualErrorRate, ResidualInputs, residual_error_rate, residual_from_total
@@ -89,6 +110,7 @@ __all__ = [
     "Assessment",
     "AttributeEvaluation",
     "ConfidenceRecalculation",
+    "DeclaredUnit",
     "DifferenceFigures",
     "ErrorClasses",
     "EstimatorCheck",
@@ -98,11 +120,15 @@ __all__ = [
     "GroupResult",
     "GroupsAssessment",
     "Method",
+    "NegativeCheck",
+    "NegativeReview",
     "Period",
+    "PopulationSplit",
     "Projection",
     "ResidualErrorRate",
     "ResidualInputs",
     "SampleUnit",
+    "SequentialEvaluation",
     "Step",
     "Stratum",
     "StratumResult",
@@ -113,6 +139,7 @@ __all__ = [
     "__version__",
     "assess",
     "assess_groups",
+    "assess_groups_over_periods",
     "assess_periods",
     "basic_reliability_factor",
     "combined_precision",
@@ -120,6 +147,9 @@ __all__ = [
     "estimator_check",
     "evaluate",
     "evaluate_attributes",
+    "evaluate_discovery",
+    "evaluate_stop_or_go",
+    "extension_factor",
     "incremental_allowances",
     "mean_per_unit_error",
     "mus_precision",
@@ -135,11 +165,14 @@ __all__ = [
     "reliability_factor",
     "residual_error_rate",
     "residual_from_total",
+    "review_negative_units",
+    "split_population",
     "split_top_stratum",
     "split_top_stratum_for_plan",
     "stratified_precision",
     "system_confidence_level",
     "tainting_projection",
     "unit_from_subsample",
+    "upper_deviation_limit",
     "z_value",
 ]

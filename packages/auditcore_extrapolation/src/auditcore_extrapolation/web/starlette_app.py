@@ -18,6 +18,7 @@ POST_PATHS = (
     ("/evaluate/export", "export"),
     ("/residual", "residual"),
     ("/attributes", "attributes"),
+    ("/negative-units", "negative-units"),
 )
 
 

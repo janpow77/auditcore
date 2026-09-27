@@ -224,7 +224,11 @@ def assess(
     sample_size: int | None = None,
     materiality_rate: float = MATERIALITY_RATE,
 ) -> Assessment:
-    """Project and evaluate in one step; BV is the sum of the strata book values."""
+    """Project and evaluate in one step; BV is the sum of the strata book values.
+
+    With units excluded under proportional control the original book values
+    are used (guidance section 7.10.2).
+    """
     projection = project(
         method_id,
         strata,
@@ -232,5 +236,5 @@ def assess(
         factor_profile=factor_profile,
         sample_size=sample_size,
     )
-    book_value = math.fsum(s.book_value for s in strata)
+    book_value = math.fsum(s.original_book_value for s in strata)
     return Assessment(projection, evaluate(projection, book_value, materiality_rate))

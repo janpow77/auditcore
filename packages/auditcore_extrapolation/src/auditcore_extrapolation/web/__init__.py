@@ -15,7 +15,7 @@ from ._contract import CONTRACT, ContractError
 from ._http import MAX_BODY_BYTES
 from .catalogue import catalogue
 from .export import ExportFile, export_evaluation
-from .requests import attributes, evaluate, fingerprint, residual
+from .requests import attributes, evaluate, fingerprint, negative_units, residual
 
 if TYPE_CHECKING:
     from fastapi import APIRouter
@@ -33,6 +33,7 @@ __all__ = [
     "evaluate",
     "export_evaluation",
     "fingerprint",
+    "negative_units",
     "residual",
     "routes",
 ]

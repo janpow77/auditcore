@@ -28,6 +28,14 @@ class Stratum:
     the delimited amount of systemic error in the *sampling part* of the
     stratum population, including the amounts found in the sampled units;
     systemic errors of exhaustive units are taken from those units.
+
+    Units excluded from the sample selection under proportional control
+    (Art. 148(1) Regulation (EU) No 1303/2013, guidance section 7.10; single
+    audit, Art. 80 Regulation (EU) 2021/1060) are *not* part of
+    ``book_value``/``population_size`` (the reduced population that was
+    sampled); ``excluded_*`` give their book value and number, split into the
+    sampling part and the exhaustive (high-value) part. The projection is then
+    extended to the original population (section 7.10.2).
     """
 
     name: str
@@ -36,6 +44,25 @@ class Stratum:
     exhaustive_units: tuple[SampleUnit, ...] = ()
     population_size: int | None = None
     systemic_error: float = 0.0
+    excluded_book_value: float = 0.0
+    excluded_units: int = 0
+    excluded_exhaustive_book_value: float = 0.0
+    excluded_exhaustive_units: int = 0
+
+    @property
+    def original_book_value(self) -> float:
+        """Book value of the original population including the excluded units (7.10.2)."""
+        return self.book_value + self.excluded_book_value + self.excluded_exhaustive_book_value
+
+    @property
+    def has_exclusions(self) -> bool:
+        """True if units were excluded under proportional control (section 7.10)."""
+        return bool(
+            self.excluded_book_value
+            or self.excluded_units
+            or self.excluded_exhaustive_book_value
+            or self.excluded_exhaustive_units
+        )
 
     @property
     def exhaustive_book_value(self) -> float:
@@ -79,12 +106,35 @@ def _check_numbers(stratum: Stratum) -> None:
         )
 
 
+def _check_exclusions(stratum: Stratum) -> None:
+    label = f"Schicht '{stratum.name}'"
+    for value in (stratum.excluded_book_value, stratum.excluded_exhaustive_book_value):
+        if not math.isfinite(value) or value < 0:
+            raise ExtrapolationInputError(
+                f"{label}: Ausgeschlossene Beträge dürfen nicht negativ sein."
+            )
+    for count in (stratum.excluded_units, stratum.excluded_exhaustive_units):
+        if isinstance(count, bool) or not isinstance(count, int) or count < 0:
+            raise ExtrapolationInputError(
+                f"{label}: Die Zahl ausgeschlossener Einheiten ist eine ganze Zahl ≥ 0."
+            )
+    if (
+        stratum.excluded_exhaustive_book_value or stratum.excluded_exhaustive_units
+    ) and not stratum.exhaustive_units:
+        raise ExtrapolationInputError(
+            f"{label}: Ohne geprüfte Einheit der Hochwertschicht kann ihr Fehler nicht auf die "
+            "ausgeschlossenen Einheiten hochgerechnet werden; die Einheit ist durch eine "
+            "Einheit der Stichprobenschicht zu ersetzen (Leitfaden, Abschn. 7.10.3.1 b)."
+        )
+
+
 def check_stratum(stratum: Stratum, *, needs_population_size: bool) -> Stratum:
     """Validate a stratum for the chosen method."""
     if not stratum.name.strip():
         raise ExtrapolationInputError("Jede Schicht braucht einen Namen.")
     check_units(stratum.units + stratum.exhaustive_units, minimum=1)
     _check_numbers(stratum)
+    _check_exclusions(stratum)
     size = stratum.population_size
     if needs_population_size and not stratum.is_exhaustive_only:
         if isinstance(size, bool) or not isinstance(size, int):

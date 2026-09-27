@@ -1,0 +1,52 @@
+import { defineMessages } from '../i18n'
+
+/** Texte von AttributeSampling (Vue) und FlowauditAttributeSampling (React); sichtbare Texte nur hier. */
+export const attributesMessages = defineMessages({
+  de: {
+    title: 'Merkmalsstichprobe (Systemprüfung)',
+    loading: 'Profile werden geladen …',
+    failed: 'Anfrage abgelehnt: {message}',
+    notice: 'Test von Kontrollen nach Leitfaden 7.9; Discovery- und Stop-or-go-Stichprobe (7.9.6) mit exakter Binomialgrenze – der Leitfaden nennt dafür keine Formel.',
+    approach: 'Verfahren',
+    approachnormal: 'Merkmalsstichprobe (Normalapproximation)',
+    approachdiscovery: 'Discovery-Stichprobe',
+    approachstop_or_go: 'Stop-or-go-Stichprobe',
+    deviations: 'Abweichungen in der Stichprobe',
+    sampleSize: 'Geprüfte Elemente (n)',
+    confidence: 'Konfidenzniveau',
+    factorProfile: 'Faktorprofil (z-Wert)',
+    tolerable: 'Tolerierbare Abweichungsquote (%)',
+    critical: 'Kritische Abweichungsquote (%)',
+    choose: 'Bitte wählen',
+    evaluate: 'Auswerten',
+    issueRequired: 'Pflichtfeld.',
+    issueInvalid: 'Keine gültige Zahl.',
+    issueRange: 'Wert außerhalb des zulässigen Bereichs.',
+    formIncomplete: 'Bitte die markierten Felder prüfen.',
+    resultTitle: 'Ergebnis',
+    rate: 'Abweichungsquote (EDR)',
+    precision: 'Präzision (SE)',
+    upperLimit: 'Obere Abweichungsgrenze (ULD)',
+    threshold: 'Schwelle',
+    derivation: 'Herleitung',
+    colStep: 'Schritt',
+    colFormula: 'Formel',
+    colValue: 'Wert',
+    colSource: 'Quelle',
+    conclusionsupported: 'Kriterium erfüllt: ULD höchstens tolerierbare Quote',
+    conclusionnot_supported: 'Kriterium nicht erfüllt: ULD über der tolerierbaren Quote',
+    conclusioncriterion_met: 'Keine Abweichung: Quote unter der kritischen Schwelle',
+    conclusiondeviation_found: 'Kritische Abweichung gefunden – Einzelfall untersuchen',
+    conclusionstop: 'Stopp: Quote unter der tolerierbaren Schwelle',
+    conclusiongo: 'Weiter: Stichprobe erweitern',
+    fingerprint: 'Fingerabdruck der Eingabe',
+  },
+  en: {
+    title: 'Attribute sampling (system audit)',
+    loading: 'Loading profiles …',
+    failed: 'Request rejected: {message}',
+    evaluate: 'Evaluate',
+  },
+})
+
+export type AttributesMessageKey = keyof typeof attributesMessages.de

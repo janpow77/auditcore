@@ -4,7 +4,7 @@
  * synthetische Daten.
  */
 import type { ExtrapolationPort, StratumInput, UnitInput } from '../../src'
-import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, groupsFixture, periodsFixture } from '../extrapolation/fake-port'
+import { fakeExtrapolationPort, fixtureStrata, fixtureUnits, groupsFixture, multistageFixture, periodsFixture } from '../extrapolation/fake-port'
 import type { ParityCase } from './cases'
 
 export interface ExtrapolationCaseProps {
@@ -50,6 +50,15 @@ export const extrapolationCases: ReadonlyArray<ParityCase<ExtrapolationCaseProps
       texts: ['Programm'],
       roles: [['textbox', 'Programm, Zeile 2'], ['textbox', 'Programm, Zeile 1']],
       counts: { '[data-testid="extrapolation-units"] tbody tr': 9 },
+    },
+  },
+  {
+    name: 'Programme über Zeiträume, dreistufige Teilstichprobe (Leitfaden 6.3.4, 6.5.3, 7.8)',
+    props: () => ({ port: fakeExtrapolationPort(), strata: multistageFixture.strata, units: multistageFixture.units }),
+    expect: {
+      texts: ['Programm (optional)'],
+      roles: [['textbox', 'Programm (optional), Zeile 3'], ['button', 'Teilstichprobe bearbeiten, Zeile 1']],
+      counts: { '[data-testid="extrapolation-strata"] tbody tr': 4, '[data-testid="extrapolation-units"] tbody tr': 8 },
     },
   },
   {

@@ -45,6 +45,8 @@ fastapi_app.include_router(create_router("/api/extrapolation"))
 | POST | `/evaluate` | Hochrechnung, Präzision, TER, Fehlerobergrenze, Ergebnis, Herleitung |
 | POST | `/evaluate/export` | dieselbe Auswertung als Datei (`format`: `csv` oder `json`) |
 | POST | `/residual` | Restfehlerquote nach Annex 3 (Zeilen A–M) |
+| POST | `/attributes` | Merkmals-, Discovery- und Stop-or-go-Stichprobe (Leitfaden 7.9) |
+| POST | `/negative-units` | positive und negative Grundgesamtheit, Abstimmung (Leitfaden 4.6) |
 
 ### `POST /evaluate`
 
@@ -164,7 +166,10 @@ Herleitung und Hinweise (unter 30 Teileinheiten).
 
 ### Gruppen von Programmen (7.8)
 
-`group` an jeder Schicht (alle oder keine; nicht mit Zeiträumen kombinierbar).
+`group` an jeder Schicht (alle oder keine). Mit `periods` kombinierbar:
+Programme als Schichten je Zeitraum (6.3.4, Beispiel 6.3.4.7); die Gruppe wird
+über alle Zeiträume ausgewertet, jedes Programm über seine Schichten aller
+Zeiträume.
 Die Hauptauswertung gilt der ganzen Gruppe; `groups` enthält je Programm
 `name`, `observations`, `warnings`, `projection` und `total_error_rate`.
 
@@ -177,18 +182,51 @@ oder `required_confidence_level` (Anteil). `confidence_recalculation`:
 Anwendbar nur bei nicht schlüssigem Ergebnis statistischer Verfahren außer
 dem konservativen MUS-Ansatz.
 
+### Ausschluss und Ersetzen nach verhältnismäßiger Kontrolle (7.10)
+
+Je Schicht optional `excluded_book_value`, `excluded_units` (Stichprobenteil)
+und `excluded_exhaustive_book_value`, `excluded_exhaustive_units`
+(Hochwertschicht). `book_value` und `population_size` beschreiben dann die
+reduzierte, tatsächlich gezogene Grundgesamtheit. Die Hochrechnung wird je
+Schicht mit BV_original/BV_reduziert (MUS, Verhältnisschätzung, PPS,
+konservativ) bzw. N_original/N_reduziert (Mittelwert- und
+Differenzenschätzung) erweitert; die TER bezieht sich auf den ursprünglichen
+Buchwert (`total_error_rate.book_value`). Ersetzen einer Einheit der
+Hochwertschicht durch eine Einheit der Stichprobenschicht (7.10.3.1 b):
+`excluded_exhaustive_*` setzen, die Ersatzeinheit gehört zur Stichprobe.
+
 ### `POST /attributes` (7.9)
 
 ```json
-{"deviations": 3, "sample_size": 150, "confidence_level": 0.95,
+{"approach": "normal", "deviations": 3, "sample_size": 150, "confidence_level": 0.95,
  "factor_profile": "kom_2017_tables", "tolerable_rate": 0.05}
 ```
 
-Antwort `attributes`: `rate` (EDR), `precision` (z × √(p(1 − p)/n)),
-`upper_limit` (ULD), `conclusion` (`supported` / `not_supported`), `steps`.
+`approach`: `normal` (Voreinstellung, Merkmalsstichprobe 7.9.3–7.9.5,
+verlangt `factor_profile`), `discovery` oder `stop_or_go` (7.9.6, exakte
+Binomial-Obergrenze; `tolerable_rate` ist bei `discovery` die kritische Quote).
+Antwort `attributes`: `approach`, `rate` (EDR), `upper_limit` (ULD),
+`conclusion` (`supported`/`not_supported`, `criterion_met`/`deviation_found`/`go`,
+`stop`/`go`), `steps`; bei `normal` zusätzlich `precision`
+(z × √(p(1 − p)/n)) und `tolerable_rate`, sonst `threshold`.
+
+### `POST /negative-units` (4.6)
+
+```json
+{"approach": 3,
+ "units": [{"id": "Y", "new_expenditure": 25000, "current_corrections": 700, "previous_corrections": 4300}],
+ "checks": [{"id": "Z", "corrected_amount": 12000, "decided_amount": 15000}]}
+```
+
+`approach` 1–3 nach Leitfaden 4.6 (2 und 3 empfohlen). Antwort `population`
+(`positive`, `negative`, `positive_total`, `negative_total`, `net_declared`,
+Herleitung, Hinweise) und `review` (`shortfalls`, `total_shortfall`,
+`disclose` = im Kontrollbericht offenlegen). Für die negative Grundgesamtheit
+wird keine Fehlerquote berechnet.
 
 ### Katalog
 
 `/profiles` enthält zusätzlich `designs`, `subsample_estimators`,
 `system_assessment` (Kategorie, Bezeichnung, Konfidenzniveau),
-`limits.max_periods` und je Methode `periods` (Mehrperiodenform vorhanden).
+`limits.max_periods`, `attribute_approaches`, `negative_approaches` und je
+Methode `periods` (Mehrperiodenform vorhanden).

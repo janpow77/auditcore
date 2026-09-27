@@ -12,7 +12,9 @@
   "recalculation": "EGESIF_16-0014-01, Abschn. 7.7",
   "system_assessment": "EGESIF_16-0014-01, Abschn. 3.2.1",
   "groups": "EGESIF_16-0014-01, Abschn. 7.8",
-  "attributes": "EGESIF_16-0014-01, Abschn. 7.9"
+  "attributes": "EGESIF_16-0014-01, Abschn. 7.9",
+  "negative_units": "EGESIF_16-0014-01, Abschn. 4.6",
+  "exclusion": "EGESIF_16-0014-01, Abschn. 7.10"
  },
  "methods": [
   {
@@ -245,6 +247,37 @@
    "category": 4,
    "label": "Funktioniert im Wesentlichen nicht",
    "confidence_level": 0.9
+  }
+ ],
+ "attribute_approaches": [
+  {
+   "id": "normal",
+   "label": "Merkmalsstichprobe (Normalapproximation)",
+   "source": "EGESIF_16-0014-01, Abschn. 7.9.3–7.9.5"
+  },
+  {
+   "id": "discovery",
+   "label": "Discovery-Stichprobe (exakte Binomialgrenze)",
+   "source": "EGESIF_16-0014-01, Abschn. 7.9.6"
+  },
+  {
+   "id": "stop_or_go",
+   "label": "Stop-or-go-Stichprobe (exakte Binomialgrenze)",
+   "source": "EGESIF_16-0014-01, Abschn. 7.9.6"
+  }
+ ],
+ "negative_approaches": [
+  {
+   "id": 1,
+   "label": "Saldo der Einheit (zulässig, Risiko geringerer Auswahlchance korrigierter Einheiten)"
+  },
+  {
+   "id": 2,
+   "label": "Alle positiven Beträge positiv, alle negativen negativ (empfohlen)"
+  },
+  {
+   "id": 3,
+   "label": "Korrekturen des laufenden Zeitraums verrechnet, frühere negativ (empfohlen)"
   }
  ],
  "limits": {
