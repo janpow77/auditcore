@@ -1,0 +1,27 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npx vite build --config packages-js/ui-react/visual/vite.config.ts --logLevel warn && npx vite preview --config packages-js/ui-react/visual/vite.config.ts --host 127.0.0.1 --port 5198 --strictPort",
+      "startServerReadyPattern": "5198",
+      "url": [
+        "http://127.0.0.1:5198/?fw=vue&fall=eingabefeld-1",
+        "http://127.0.0.1:5198/?fw=react&fall=eingabefeld-1",
+        "http://127.0.0.1:5198/?fw=vue&fall=schaltflaeche-2",
+        "http://127.0.0.1:5198/?fw=react&fall=schaltflaeche-2"
+      ],
+      "numberOfRuns": 1,
+      "settings": {
+        "preset": "desktop",
+        "onlyCategories": ["accessibility", "best-practices"],
+        "chromeFlags": "--headless=new --no-sandbox --disable-dev-shm-usage"
+      }
+    },
+    "assert": {
+      "assertions": {
+        "categories:accessibility": ["error", { "minScore": 1 }],
+        "categories:best-practices": ["warn", { "minScore": 0.9 }]
+      }
+    },
+    "upload": { "target": "filesystem", "outputDir": ".auditcore-runner/lighthouse" }
+  }
+}

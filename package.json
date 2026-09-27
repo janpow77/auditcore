@@ -24,7 +24,9 @@
     "runner:bundle": "node scripts/js/runner-bundle.mjs"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "1.63.0",
     "@types/node": "^26.6.2",
     "@vue/language-core": "^3.3.11",
     "eslint": "^9.39.5",

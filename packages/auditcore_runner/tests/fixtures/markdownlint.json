@@ -1,0 +1,55 @@
+[
+  {
+    "fileName": "docs/lies.md",
+    "lineNumber": 1,
+    "ruleNames": [
+      "MD022",
+      "blanks-around-headings"
+    ],
+    "ruleDescription": "Headings should be surrounded by blank lines",
+    "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.41.1/doc/md022.md",
+    "errorDetail": "Expected: 1; Actual: 0; Below",
+    "errorContext": "# Titel",
+    "errorRange": null,
+    "fixInfo": {
+      "lineNumber": 2,
+      "insertText": "\n"
+    },
+    "severity": "error"
+  },
+  {
+    "fileName": "docs/lies.md",
+    "lineNumber": 2,
+    "ruleNames": [
+      "MD022",
+      "blanks-around-headings"
+    ],
+    "ruleDescription": "Headings should be surrounded by blank lines",
+    "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.41.1/doc/md022.md",
+    "errorDetail": "Expected: 1; Actual: 0; Above",
+    "errorContext": "## Unterpunkt ohne Leerzeile",
+    "errorRange": null,
+    "fixInfo": {
+      "insertText": "\n"
+    },
+    "severity": "error"
+  },
+  {
+    "fileName": "docs/lies.md",
+    "lineNumber": 2,
+    "ruleNames": [
+      "MD022",
+      "blanks-around-headings"
+    ],
+    "ruleDescription": "Headings should be surrounded by blank lines",
+    "ruleInformation": "https://github.com/DavidAnson/markdownlint/blob/v0.41.1/doc/md022.md",
+    "errorDetail": "Expected: 1; Actual: 0; Below",
+    "errorContext": "## Unterpunkt ohne Leerzeile",
+    "errorRange": null,
+    "fixInfo": {
+      "lineNumber": 3,
+      "insertText": "\n"
+    },
+    "severity": "error"
+  }
+]

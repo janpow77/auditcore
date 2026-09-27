@@ -1,0 +1,1 @@
+{"report_name": "XML", "diff_name": "main...HEAD, staged and unstaged changes", "src_stats": {"src/probe/rechnen.py": {"percent_covered": 25.0, "violation_lines": [10, 11, 12], "covered_lines": [9], "violations": [[10, null], [11, null], [12, null]]}}, "total_num_lines": 4, "total_num_violations": 3, "total_percent_covered": 25, "num_changed_lines": 6}

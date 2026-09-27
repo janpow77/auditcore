@@ -1,0 +1,5 @@
+Checking formatting...
+[warn] web/app.ts
+[warn] web/stil.css
+[warn] docs/lies.md
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.

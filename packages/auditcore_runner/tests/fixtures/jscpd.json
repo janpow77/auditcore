@@ -1,0 +1,83 @@
+{
+ "duplicates": [
+  {
+   "firstFile": {
+    "end": 17,
+    "endLoc": {
+     "column": 19,
+     "line": 17,
+     "position": 204
+    },
+    "name": "probe/domain.py",
+    "start": 11,
+    "startLoc": {
+     "column": 10,
+     "line": 11,
+     "position": 93
+    }
+   },
+   "format": "python",
+   "fragment": "def betrag(a: int) -> int:\n    ergebnis: int = \"text\"\n    return a + ergebnis\n\n\ndef recieve() -> str:\n    return ui.FARBE",
+   "isNew": false,
+   "kind": "exact",
+   "lines": 7,
+   "secondFile": {
+    "end": 17,
+    "endLoc": {
+     "column": 19,
+     "line": 17,
+     "position": 205
+    },
+    "name": "probe/kopie.py",
+    "start": 11,
+    "startLoc": {
+     "column": 11,
+     "line": 11,
+     "position": 94
+    }
+   },
+   "tokens": 30
+  }
+ ],
+ "statistics": {
+  "detectionDate": "2026-09-27T09:57:50.309Z",
+  "formats": {
+   "python": {
+    "clones": 1,
+    "duplicatedLines": 7,
+    "duplicatedTokens": 30,
+    "lines": 46,
+    "newClones": 0,
+    "newDuplicatedLines": 0,
+    "percentage": 15.217391304347828,
+    "percentageTokens": 19.607843137254903,
+    "sources": 3,
+    "tokens": 153
+   },
+   "txt": {
+    "clones": 0,
+    "duplicatedLines": 0,
+    "duplicatedTokens": 0,
+    "lines": 12,
+    "newClones": 0,
+    "newDuplicatedLines": 0,
+    "percentage": 0.0,
+    "percentageTokens": 0.0,
+    "sources": 1,
+    "tokens": 98
+   }
+  },
+  "total": {
+   "clones": 1,
+   "duplicatedLines": 7,
+   "duplicatedTokens": 30,
+   "lines": 58,
+   "newClones": 0,
+   "newDuplicatedLines": 0,
+   "percentage": 12.068965517241379,
+   "percentageTokens": 11.952191235059761,
+   "sources": 4,
+   "tokens": 251
+  }
+ }
+}

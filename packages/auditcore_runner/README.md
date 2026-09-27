@@ -154,8 +154,11 @@ JSON-API der lokalen Oberfläche, Status-Datei und Exit-Codes:
   `data/schemas/runner-pool.schema.json`).
 - **Optionale Regeln**, standardmäßig aus: Thermik-Quelle mit Feldzuordnung,
   Vorrang interaktiver Nutzung, Volllast-Fenster.
-- **Prüfprofile** `schnell`, `pr`, `voll`, `sicherheit`, `gui`, `gpu`, `fuell`;
-  im Repository anpassbar über `.auditcore-runner.toml`.
+- **Prüfprofile** `schnell`, `pr`, `voll`, `sicherheit`, `gui`, `gpu`, `fuell`
+  über rund 45 fest gepinnte Werkzeuge im Runner-Image (Python, JS,
+  Sicherheit, Doku, Struktur, GUI); Werkzeuge ohne passende Dateien entfallen.
+  Im Repository anpassbar über `.auditcore-runner.toml` (Profile und Codemods,
+  Schema `data/schemas/repo-konfiguration.schema.json`).
 - **Umgebungsvariablen:** `AUDITCORE_RUNNER_PROFILE` (Profilpfad),
   `XDG_CONFIG_HOME`/`XDG_STATE_HOME` (Ablage von Profil und Status).
 

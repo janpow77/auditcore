@@ -41,6 +41,8 @@ auditcore_runner = [
     "provenance.json",
     "data/Dockerfile",
     "data/supervisor.sh",
+    "data/werkzeuge/*",
+    "data/LICENSES/*",
     "data/templates/*",
     "data/beispiele/*.json",
     "data/schemas/*.json",

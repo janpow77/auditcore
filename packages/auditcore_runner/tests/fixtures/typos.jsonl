@@ -1,0 +1,4 @@
+{"type":"typo","path":"src/probe/rechnen.py","line_num":5,"byte_offset":4,"typo":"ist","corrections":["is","it","its","sit","list"]}
+{"type":"typo","path":"src/probe/domain.py","line_num":16,"byte_offset":4,"typo":"recieve","corrections":["receive"]}
+{"type":"typo","path":"src/probe/kopie.py","line_num":16,"byte_offset":4,"typo":"recieve","corrections":["receive"]}
+{"type":"typo","path":"docs/lies.md","line_num":1,"byte_offset":2,"typo":"Titel","corrections":["Title"]}
