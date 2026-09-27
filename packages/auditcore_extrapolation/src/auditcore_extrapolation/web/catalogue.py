@@ -7,6 +7,7 @@ from ..confidence import SYSTEM_ASSESSMENT_LABELS, SYSTEM_ASSESSMENT_LEVELS
 from ..evaluation import MATERIALITY_RATE
 from ..factors import PROFILES, RECOMMENDED_PROFILE, RF_ZERO_TABLE, Z_TABLE
 from ..methods import METHODS
+from ..negative import APPROACHES as NEGATIVE_APPROACHES
 from ..sources import GUIDANCE, RER_TEMPLATE, cpr, guidance
 from ..subsampling import SUBSAMPLE_ESTIMATORS
 from ._contract import CONTRACT, MAX_STRATA, MAX_UNITS
@@ -53,6 +54,25 @@ DESIGNS: tuple[dict[str, str], ...] = (
 )
 
 
+ATTRIBUTE_APPROACHES: tuple[dict[str, str], ...] = (
+    {
+        "id": "normal",
+        "label": "Merkmalsstichprobe (Normalapproximation)",
+        "source": guidance("7.9.3–7.9.5"),
+    },
+    {
+        "id": "discovery",
+        "label": "Discovery-Stichprobe (exakte Binomialgrenze)",
+        "source": guidance("7.9.6"),
+    },
+    {
+        "id": "stop_or_go",
+        "label": "Stop-or-go-Stichprobe (exakte Binomialgrenze)",
+        "source": guidance("7.9.6"),
+    },
+)
+
+
 def _system_assessment() -> list[dict[str, object]]:
     return [
         {
@@ -88,6 +108,8 @@ def catalogue() -> dict[str, object]:
             "system_assessment": guidance("3.2.1"),
             "groups": guidance("7.8"),
             "attributes": guidance("7.9"),
+            "negative_units": guidance("4.6"),
+            "exclusion": guidance("7.10"),
         },
         "methods": [m.to_dict() for m in METHODS.values()],
         "factor_profiles": [p.to_dict() for p in PROFILES.values()],
@@ -101,5 +123,9 @@ def catalogue() -> dict[str, object]:
             {"id": key, "label": label} for key, label in SUBSAMPLE_ESTIMATORS.items()
         ],
         "system_assessment": _system_assessment(),
+        "attribute_approaches": [dict(a) for a in ATTRIBUTE_APPROACHES],
+        "negative_approaches": [
+            {"id": key, "label": label} for key, label in NEGATIVE_APPROACHES.items()
+        ],
         "limits": {"max_units": MAX_UNITS, "max_strata": MAX_STRATA, "max_periods": MAX_PERIODS},
     }

@@ -13,15 +13,17 @@ import hashlib
 import json
 from decimal import Decimal
 
+from ..attribute_variants import evaluate_discovery, evaluate_stop_or_go
 from ..attributes import evaluate_attributes
 from ..confidence import recalculate_confidence, system_confidence_level
 from ..errors import ExtrapolationInputError
 from ..evaluation import MATERIALITY_RATE, Assessment, assess
-from ..groups import GroupsAssessment, assess_groups
+from ..groups import GroupsAssessment, assess_groups, assess_groups_over_periods
 from ..methods import METHODS
+from ..negative import DeclaredUnit, NegativeCheck, review_negative_units, split_population
 from ..periods import assess_periods
 from ..residual import ResidualInputs, residual_error_rate
-from ._contract import CONTRACT, ContractError, Reader
+from ._contract import CONTRACT, MAX_UNITS, ContractError, Reader
 from ._design import Design, read_design
 from .catalogue import LIBRARY
 
@@ -48,6 +50,17 @@ def _assess(
     level = body.optional_number("confidence_level")
     profile = body.text("factor_profile") if body.has("factor_profile") else None
     materiality = body.number("materiality_rate", MATERIALITY_RATE)
+    if design.periods is not None and design.period_groups is not None:
+        grouped = assess_groups_over_periods(
+            method_id,
+            design.periods,
+            design.period_groups,
+            confidence_level=level,
+            factor_profile=profile,
+            population_units=design.population_units,
+            materiality_rate=materiality,
+        )
+        return grouped.overall, grouped
     if design.periods is not None:
         return assess_periods(
             method_id,
@@ -110,16 +123,68 @@ def evaluate(payload: object) -> dict[str, object]:
     }
 
 
+def _attribute_result(body: Reader) -> dict[str, object]:
+    approach = body.text("approach") if body.has("approach") else "normal"
+    deviations, size = body.whole("deviations"), body.whole("sample_size", minimum=1)
+    level, rate = body.number("confidence_level"), body.number("tolerable_rate")
+    if approach == "normal":
+        return evaluate_attributes(
+            deviations,
+            size,
+            confidence_level=level,
+            factor_profile=body.text("factor_profile"),
+            tolerable_rate=rate,
+        ).to_dict() | {"approach": "normal"}
+    if approach == "discovery":
+        return evaluate_discovery(
+            deviations, size, confidence_level=level, critical_rate=rate
+        ).to_dict()
+    if approach == "stop_or_go":
+        return evaluate_stop_or_go(
+            deviations, size, confidence_level=level, tolerable_rate=rate
+        ).to_dict()
+    raise ContractError("'approach' muss normal, discovery oder stop_or_go sein.")
+
+
 def attributes(payload: object) -> dict[str, object]:
-    """``POST /attributes``: attribute sampling of a test of controls (guidance 7.9)."""
+    """``POST /attributes``: tests of controls (guidance 7.9; discovery and stop-or-go 7.9.6)."""
     body = Reader(payload)
     try:
-        result = evaluate_attributes(
-            body.whole("deviations"),
-            body.whole("sample_size", minimum=1),
-            confidence_level=body.number("confidence_level"),
-            factor_profile=body.text("factor_profile"),
-            tolerable_rate=body.number("tolerable_rate"),
+        result = _attribute_result(body)
+    except ExtrapolationInputError as exc:
+        raise ContractError(str(exc)) from exc
+    return {
+        "contract": CONTRACT,
+        "library": LIBRARY,
+        "fingerprint": fingerprint(payload),
+        "attributes": result,
+    }
+
+
+def negative_units(payload: object) -> dict[str, object]:
+    """``POST /negative-units``: positive and negative population (guidance 4.6)."""
+    body = Reader(payload)
+    try:
+        split = split_population(
+            [
+                DeclaredUnit(
+                    entry.text("id"),
+                    entry.number("new_expenditure"),
+                    entry.number("current_corrections", 0.0),
+                    entry.number("previous_corrections", 0.0),
+                )
+                for entry in body.items("units", MAX_UNITS)
+            ],
+            body.whole("approach", minimum=1),
+        )
+        checks = body.items("checks", MAX_UNITS) if body.has("checks") else []
+        review = review_negative_units(
+            [
+                NegativeCheck(
+                    e.text("id"), e.number("corrected_amount"), e.number("decided_amount")
+                )
+                for e in checks
+            ]
         )
     except ExtrapolationInputError as exc:
         raise ContractError(str(exc)) from exc
@@ -127,7 +192,8 @@ def attributes(payload: object) -> dict[str, object]:
         "contract": CONTRACT,
         "library": LIBRARY,
         "fingerprint": fingerprint(payload),
-        "attributes": result.to_dict(),
+        "population": split.to_dict(),
+        "review": review.to_dict(),
     }
 
 
