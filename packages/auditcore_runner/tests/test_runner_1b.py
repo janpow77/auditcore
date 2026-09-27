@@ -10,6 +10,7 @@ from dataclasses import replace
 from importlib.resources import files
 from pathlib import Path
 
+import jsonschema
 import pytest
 import yaml
 
@@ -29,6 +30,8 @@ def base(facts: HostFacts) -> Profile:
 def test_profile_round_trip_keeps_new_fields(workstation_facts: HostFacts) -> None:
     profile = replace(base(workstation_facts), backend="scaleset", gpu_access="gpus")
     profile = replace(profile, network=replace(profile.network, egress="allowlist", egress_hosts=("pypi.org",)))
+    schema = json.loads(files("auditcore_runner").joinpath("data", "schemas", "profil.schema.json").read_text())
+    jsonschema.validate(profile_io.to_json(profile), schema)
     again = profile_io.from_json(json.loads(profile_io.dumps(profile)))
     assert again.backend == "scaleset" and again.gpu_access == "gpus"
     assert again.network.egress_hosts == ("pypi.org",) and again.scale_set_name("cpu") == "build-01-cpu"
