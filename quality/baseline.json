@@ -318,7 +318,7 @@
       "coverage_percent": 97.99
     },
     "auditcore_runner": {
-      "coverage_percent": 83.57
+      "coverage_percent": 85.01
     },
     "auditcore_sampling": {
       "metrics": {
@@ -330,7 +330,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 97.81
+      "coverage_percent": 97.74
     },
     "auditcore_statistics": {
       "metrics": {
