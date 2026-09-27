@@ -39,6 +39,9 @@ jobs:
         run: |
           auditcore-codegate check --compare-ref "$GATE_COMPARE_REF" \
             --output code-quality-gate.json --summary "$GITHUB_STEP_SUMMARY"
+      - name: Institutsnamen (Denylist quality/institutsnamen-denylist.txt; Ausnahmen nur mit Begründung in quality/institutsnamen-ausnahmen.txt)
+        if: ${{ !cancelled() }}
+        run: python scripts/check_institution_names.py --json institution-names.json
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020  # v7.0.0
         if: ${{ !cancelled() }}
         with:
@@ -57,3 +60,4 @@ jobs:
           path: |
             code-quality-gate.json
             ui-parity-gate.json
+            institution-names.json

@@ -28,8 +28,8 @@ from auditcore_legal_sources.normalize import (
     parse_publication_date,
 )
 
-ESI = load_profile("auditdatabase.esi", "2026.09.1")
-DESIGNER = load_profile("audit_designer.vp_ai", "2026.09.1")
+ESI = load_profile("auditdatabase.esi", "2026.09.2")
+DESIGNER = load_profile("audit_designer.vp_ai", "2026.09.2")
 DATES = st.dates(min_value=date(1000, 1, 1), max_value=date(9999, 12, 31))
 TEXT = st.text(max_size=40)
 ASCII = st.text(
