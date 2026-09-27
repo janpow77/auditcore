@@ -1,0 +1,43 @@
+[
+ {
+  "RuleID": "aws-access-token",
+  "Description": "Identified an AWS access key ID paired with a secret access key, which together can provide full access to AWS services.",
+  "StartLine": 1,
+  "EndLine": 1,
+  "StartColumn": 22,
+  "EndColumn": 41,
+  "Match": "REDACTED",
+  "Secret": "REDACTED",
+  "Attributes": {
+   "confidence": "high",
+   "path": "config.py",
+   "resource": "fs.content"
+  },
+  "Tags": [],
+  "ComponentSets": [
+   {
+    "components": [
+     {
+      "RuleID": "aws-secret-access-key",
+      "Optional": false,
+      "StartLine": 2,
+      "EndLine": 2,
+      "StartColumn": 5,
+      "EndColumn": 55,
+      "Match": "SECRET = \"REDACTED\"",
+      "Secret": "REDACTED"
+     }
+    ]
+   }
+  ],
+  "Fingerprint": "config.py:aws-access-token:1",
+  "File": "config.py",
+  "SymlinkFile": "",
+  "Commit": "",
+  "Entropy": 3.6464393,
+  "Author": "",
+  "Email": "",
+  "Date": "",
+  "Message": ""
+ }
+]

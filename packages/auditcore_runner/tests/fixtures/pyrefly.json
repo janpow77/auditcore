@@ -1,0 +1,28 @@
+{
+  "errors": [
+    {
+      "line": 2,
+      "column": 14,
+      "stop_line": 2,
+      "stop_column": 20,
+      "path": "m.py",
+      "code": -2,
+      "name": "bad-assignment",
+      "description": "`Literal['text']` is not assignable to `int`",
+      "concise_description": "`Literal['text']` is not assignable to `int`",
+      "severity": "error"
+    },
+    {
+      "line": 5,
+      "column": 3,
+      "stop_line": 5,
+      "stop_column": 9,
+      "path": "m.py",
+      "code": -2,
+      "name": "bad-argument-type",
+      "description": "Argument `Literal['drei']` is not assignable to parameter `a` with type `int` in function `f`",
+      "concise_description": "Argument `Literal['drei']` is not assignable to parameter `a` with type `int` in function `f`",
+      "severity": "error"
+    }
+  ]
+}

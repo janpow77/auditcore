@@ -1,0 +1,74 @@
+{
+ "version": "2.1.0",
+ "runs": [
+  {
+   "invocations": [
+    {
+     "executionSuccessful": true,
+     "toolExecutionNotifications": []
+    }
+   ],
+   "results": [
+    {
+     "fingerprints": {
+      "matchBasedId/v1": "410dba7d29921766bc4641931e910c0597dd25ba9262e5f7b011877056a6b79de91963a8b52c25cd27420218c7c5e8ca82e5159f08636aaea45e580d77c43bb6_0"
+     },
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "src/probe/gefahr.py",
+         "uriBaseId": "%SRCROOT%"
+        },
+        "region": {
+         "endColumn": 19,
+         "endLine": 2,
+         "snippet": {
+          "text": "    return eval(s)"
+         },
+         "startColumn": 12,
+         "startLine": 2
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "eval ist verboten"
+     },
+     "properties": {},
+     "ruleId": "kein-eval"
+    }
+   ],
+   "tool": {
+    "driver": {
+     "name": "Opengrep OSS",
+     "rules": [
+      {
+       "defaultConfiguration": {
+        "level": "error"
+       },
+       "fullDescription": {
+        "text": "eval ist verboten"
+       },
+       "help": {
+        "markdown": "eval ist verboten",
+        "text": "eval ist verboten"
+       },
+       "id": "kein-eval",
+       "name": "kein-eval",
+       "properties": {
+        "precision": "very-high",
+        "tags": []
+       },
+       "shortDescription": {
+        "text": "Opengrep Finding: kein-eval"
+       }
+      }
+     ],
+     "semanticVersion": "1.30.0"
+    }
+   }
+  }
+ ],
+ "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/schemas/sarif-schema-2.1.0.json"
+}

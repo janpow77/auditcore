@@ -8,6 +8,8 @@ import xml.etree.ElementTree as ElementTree  # noqa: S405 - parses local tool ou
 from collections.abc import Callable
 from typing import cast
 
+from . import parser_erweitert as _erweitert
+from . import parser_web as _web
 from .befunde import Finding, from_sarif
 
 Parser = Callable[[str], list[Finding]]
@@ -191,3 +193,28 @@ PARSERS: dict[str, Parser] = {
     "codegate-json": codegate,
     "sarif": sarif,
 }
+
+PARSERS.update(
+    {
+        "pyrefly-json": _erweitert.pyrefly,
+        "vulture-text": _erweitert.vulture,
+        "deptry-json": _erweitert.deptry,
+        "import-linter-text": _erweitert.import_linter,
+        "codespell-text": _erweitert.codespell,
+        "typos-json": _erweitert.typos,
+        "mutmut-text": _erweitert.mutmut,
+        "diff-cover-json": _erweitert.diff_cover,
+        "ast-grep-json": _erweitert.ast_grep,
+        "betterleaks-json": _erweitert.leak_report("betterleaks"),
+        "lychee-json": _erweitert.lychee,
+        "prettier-text": _erweitert.prettier,
+        "stylelint-json": _web.stylelint,
+        "markdownlint-json": _web.markdownlint,
+        "jscpd-json": _web.jscpd,
+        "knip-json": _web.knip,
+        "tsc-text": _web.tsc,
+        "size-limit-json": _web.size_limit,
+        "lighthouse-json": _web.lighthouse,
+        "keine": _web.none,
+    }
+)

@@ -19,7 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from ..profile import state_dir
-from .befunde import Finding, deduplicate
+from .befunde import Finding, deduplicate, relative_to
 from .katalog import Registry
 from .modell import CheckProfile, Tool
 from .parser import PARSERS
@@ -173,7 +173,7 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         findings = PARSERS[tool.parser](raw)
     except (ValueError, KeyError) as error:
         return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
-    return ToolResult(tool.name, "ok", seconds, findings)
+    return ToolResult(tool.name, "ok", seconds, relative_to(findings, (str(runner.root), "/work")))
 
 
 def cache_dir() -> Path:

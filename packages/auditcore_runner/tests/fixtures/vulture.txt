@@ -1,0 +1,13 @@
+Installed 1 package in 2ms
+src/probe/domain.py:1: unused import 'os' (90% confidence)
+src/probe/domain.py:2: unused import 'yaml' (90% confidence)
+src/probe/domain.py:7: unused function 'ungenutzt' (60% confidence)
+src/probe/domain.py:11: unused function 'betrag' (60% confidence)
+src/probe/domain.py:16: unused function 'recieve' (60% confidence)
+src/probe/kopie.py:1: unused import 'os' (90% confidence)
+src/probe/kopie.py:2: unused import 'yaml' (90% confidence)
+src/probe/kopie.py:7: unused function 'ungenutzt' (60% confidence)
+src/probe/kopie.py:11: unused function 'betrag2' (60% confidence)
+src/probe/kopie.py:16: unused function 'recieve' (60% confidence)
+src/probe/rechnen.py:1: unused function 'verdoppeln' (60% confidence)
+src/probe/rechnen.py:5: unused function 'ist_gross' (60% confidence)
