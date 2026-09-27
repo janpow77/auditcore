@@ -125,6 +125,7 @@ jobs:
           COVERAGE_GATE: ${{ matrix.python == '3.13' }}
         run: |
           python - <<'PY'
+          import os
           import subprocess
           from pathlib import Path
           python = str(Path('.auditcore/package-platform/bin/python').absolute())
