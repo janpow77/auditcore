@@ -12,7 +12,7 @@ export interface RunnerCaseProps {
 }
 
 export const runnerProfilBeispiel: RunnerProfil = {
-  schema: 'auditcore-runner/profil/2',
+  schema: 'auditcore-runner/profil/3',
   version: 3,
   aenderung: { zeit: '2026-01-02T10:00:00+01:00', quelle: 'lokal', wer: 'ui' },
   sync: 'aus',
@@ -24,8 +24,8 @@ export const runnerProfilBeispiel: RunnerProfil = {
   soll_quelle: { art: 'lokal', datei: '~/.config/auditcore-runner/soll.json' },
   skalierung: { vorrang_interaktiv: true, leerlauf_minuten: 10, anteil_bei_nutzung: 0.25, thermik: { aktiv: false, url: '' } },
   klassen: {
-    cpu: { aktiv: true, cpus: 2, speicher_gb: 4, min_instanzen: 0, max_instanzen: 4, leise_max: -1, vram_mb: 0, labels: ['self-hosted', 'cpu'] },
-    gpu: { aktiv: true, cpus: 2, speicher_gb: 6, min_instanzen: 0, max_instanzen: 1, leise_max: 0, vram_mb: 6000, labels: ['self-hosted', 'gpu'] },
+    cpu: { art: 'cpu', aktiv: true, cpus: 2, speicher_gb: 4, min_instanzen: 0, max_instanzen: 4, leise_max: -1, vram_mb: 0, labels: ['self-hosted', 'cpu'] },
+    gpu: { art: 'gpu', aktiv: true, cpus: 2, speicher_gb: 6, min_instanzen: 0, max_instanzen: 1, leise_max: 0, vram_mb: 6000, labels: ['self-hosted', 'gpu'] },
   },
   gpus: [{ index: 0, uuid: 'GPU-0', name: 'Karte 0', vram_mb: 16384, erlaubt: true, klasse: 'gpu' }],
   prioritaeten: [
@@ -42,6 +42,7 @@ export const runnerStatusBeispiel: RunnerStatus = {
   sync: 'aus',
   ziel: 'besitzer/repo',
   soll_quelle: 'lokal',
+  auth_art: 'app',
   hardware: { cpus: 16, speicher_gb: 64, gpus: [{ name: 'Karte 0' }] },
   klassen: {
     cpu: { aktiv: true, max: 4, soll: 2, gruende: ['Leerlauf'], instanzen_aktiv: 2, registriert: 2, belegt: 1 },
@@ -82,7 +83,7 @@ export const runnerCases: ReadonlyArray<ParityCase<RunnerCaseProps>> = [
     name: 'Status mit Klassen',
     props: () => ({ port: runnerBeispielPort() }),
     expect: {
-      texts: ['Runner-Konsole', 'beispiel-rechner · Profilversion 3 · nur lokal verwaltet', 'besitzer/repo', 'Leerlauf'],
+      texts: ['Runner-Konsole', 'beispiel-rechner · Profilversion 3 · nur lokal verwaltet', 'besitzer/repo', 'Leerlauf', 'Anmeldung bei GitHub'],
       roles: [['tab', 'Status'], ['tab', 'Einstellungen'], ['button', 'Aktualisieren']],
       counts: { '[role="tab"][aria-selected="true"]': 1, 'tbody tr': 2 },
     },
@@ -97,8 +98,8 @@ export const runnerCases: ReadonlyArray<ParityCase<RunnerCaseProps>> = [
     props: () => ({ port: runnerBeispielPort(), ansicht: 'einstellungen' }),
     expect: {
       texts: ['Allgemein', 'Klasse cpu', 'Grafikkarte 0: Karte 0'],
-      roles: [['spinbutton', 'Höchstanzahl'], ['checkbox', 'Vorrang interaktiver Nutzung'], ['combobox', 'Soll-Quelle'], ['button', 'Prüfen']],
-      counts: { fieldset: 7 },
+      roles: [['spinbutton', 'Höchstanzahl'], ['checkbox', 'Vorrang interaktiver Nutzung'], ['combobox', 'Soll-Quelle'], ['button', 'Prüfen'], ['button', 'Klasse hinzufügen']],
+      counts: { fieldset: 8, 'select[id$=".art"]': 2, 'input[id$="klassen.cpu.vram_mb"]': 0, 'input[id$="klassen.gpu.vram_mb"]': 1 },
     },
   },
   {
@@ -110,6 +111,17 @@ export const runnerCases: ReadonlyArray<ParityCase<RunnerCaseProps>> = [
     name: 'Prioritäten mit Vorschau',
     props: () => ({ port: runnerBeispielPort(), ansicht: 'prioritaeten' }),
     expect: { texts: ['Rang 1', 'Bei Platzmangel weicht zuerst: gpu'], roles: [['button', 'Nach unten: cpu']], counts: { 'ol > li': 2 } },
+  },
+  {
+    name: 'Ohne Klasse der Art gpu keine Kartenauswahl',
+    props: () => ({
+      port: createRunnerMemoryPort({
+        status: runnerStatusBeispiel,
+        profil: { ...runnerStandBeispiel, profil: { ...runnerProfilBeispiel, klassen: { cpu: (runnerProfilBeispiel.klassen as Record<string, unknown>).cpu } } },
+      }),
+      ansicht: 'einstellungen',
+    }),
+    expect: { texts: ['Klasse cpu'], counts: { 'fieldset legend': 6, 'input[id$="vram_mb"]': 0 } },
   },
   {
     name: 'Nur lesen',

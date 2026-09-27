@@ -8,7 +8,7 @@ import type { MessageParams } from '../i18n'
 import type { RunnerMessageKey } from './messages'
 import type { RunnerFeldArt } from './eingabe'
 import { createRunnerRestPort } from './port'
-import { profilAktionen, werkzeugAktionen, type RunnerKontext } from './aktionen'
+import { klassenAktionen, profilAktionen, werkzeugAktionen, type RunnerKontext } from './aktionen'
 import type { RunnerPfad, RunnerPrioritaet, RunnerUnterschied } from './profil'
 import type {
   RunnerAnsicht,
@@ -53,6 +53,10 @@ export interface RunnerData extends RequestState<string> {
   meldung: RunnerMeldung | null
   /** Rohtext der Eingabefelder je Feld-ID, solange getippt wird (Zahlen, Listen). */
   eingaben: Readonly<Record<string, string>>
+  /** Entwürfe der Klassennamen beim Umbenennen (bisheriger Name → Eingabe). */
+  klassenNamen: Readonly<Record<string, string>>
+  /** Eingabe „Neue Klasse“. */
+  neueKlasse: string
 }
 
 export interface RunnerSource {
@@ -81,6 +85,10 @@ export interface RunnerController {
   /** Zahleneingabe (Zeitlimit, Priorität) eines Werkzeugs; ungültiger Rohtext bleibt nur sichtbar. */
   werkzeugZahl: (profil: string, werkzeug: string, feld: 'zeitlimit_s' | 'prioritaet', roh: string) => void
   werkzeugeSpeichern: () => Promise<void>
+  neueKlasseEingabe: (roh: string) => void
+  klasseHinzufuegen: () => void
+  klassenNameEingabe: (alt: string, roh: string) => void
+  klasseUmbenennen: (alt: string) => void
 }
 
 export const INITIAL_RUNNER: RunnerData = {
@@ -95,6 +103,8 @@ export const INITIAL_RUNNER: RunnerData = {
   werkzeugEntwurf: null,
   meldung: null,
   eingaben: {},
+  klassenNamen: {},
+  neueKlasse: '',
 }
 
 export const RUNNER_ANSICHTEN: readonly RunnerAnsicht[] = ['status', 'einstellungen', 'werkzeuge', 'prioritaeten']
@@ -118,12 +128,13 @@ export function createRunnerController(source: RunnerSource): RunnerController {
       const daten = await run('load', (port) => Promise.all([port.status(), port.profil(), port.werkzeuge()]))
       if (!daten) return
       const [status, stand, werkzeuge] = daten
-      store.set({ status, werkzeuge, werkzeugEntwurf: werkzeuge.profile, stand, entwurf: stand.profil, pruefung: null, konflikt: null, eingaben: {} })
+      store.set({ status, werkzeuge, werkzeugEntwurf: werkzeuge.profile, stand, entwurf: stand.profil, pruefung: null, konflikt: null, eingaben: {}, klassenNamen: {}, neueKlasse: '' })
     },
     zeige(ansicht) {
       store.set({ ansicht })
     },
     ...profilAktionen(kontext),
     ...werkzeugAktionen(kontext),
+    ...klassenAktionen(kontext),
   }
 }

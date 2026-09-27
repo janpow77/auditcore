@@ -4,7 +4,7 @@
 import type { Store } from '../store'
 import type { RunnerController, RunnerData } from './controller'
 import { runnerEingabe, runnerWerkzeugFeldId } from './eingabe'
-import { runnerPrioritaetSetze, runnerSetze, runnerUnterschiede, runnerVerschiebe, runnerVersion } from './profil'
+import { runnerKlasseHinzu, runnerKlassenNameFehler, runnerKlasseUmbenennen, runnerPrioritaetSetze, runnerSetze, runnerUnterschiede, runnerVerschiebe, runnerVersion } from './profil'
 import type { RunnerPort, RunnerProfil, RunnerProfilStand, RunnerPruefung } from './types'
 
 type Run = <T>(kind: string, task: (port: RunnerPort) => Promise<T>) => Promise<T | null>
@@ -17,9 +17,10 @@ export interface RunnerKontext {
 
 type ProfilAktionen = Pick<RunnerController, 'setze' | 'eingabe' | 'verwerfen' | 'pruefen' | 'anwenden' | 'gespeichertUebernehmen' | 'entwurfTrotzdemAnwenden' | 'verschiebe' | 'prioritaet'>
 type WerkzeugAktionen = Pick<RunnerController, 'werkzeug' | 'werkzeugZahl' | 'werkzeugeSpeichern'>
+type KlassenAktionen = Pick<RunnerController, 'neueKlasseEingabe' | 'klasseHinzufuegen' | 'klassenNameEingabe' | 'klasseUmbenennen'>
 
 function uebernimmStand(store: Store<RunnerData>, stand: RunnerProfilStand): void {
-  store.set({ stand, entwurf: stand.profil, pruefung: null, konflikt: null, eingaben: {} })
+  store.set({ stand, entwurf: stand.profil, pruefung: null, konflikt: null, eingaben: {}, klassenNamen: {}, neueKlasse: '' })
 }
 
 /** Entwurf ändern; eine alte Prüfung und Rückmeldung gelten danach nicht mehr. */
@@ -65,7 +66,12 @@ export function profilAktionen(kontext: RunnerKontext): ProfilAktionen {
     setze: (pfad, wert) => aendere(store, (entwurf) => runnerSetze(entwurf, pfad, wert)),
     eingabe(pfad, art, roh) {
       if (typeof roh === 'string') store.set({ eingaben: { ...store.get().eingaben, [pfad.join('.')]: roh } })
-      aendere(store, (entwurf) => runnerSetze(entwurf, pfad, runnerEingabe(art, roh)))
+      aendere(store, (entwurf) => {
+        const neu = runnerSetze(entwurf, pfad, runnerEingabe(art, roh))
+        // Art cpu hat keinen Grafikspeicher (Backend: vram_mb nur für Klassen der Art gpu).
+        const istArt = pfad.length === 3 && pfad[0] === 'klassen' && pfad[2] === 'art'
+        return istArt && roh === 'cpu' ? runnerSetze(neu, ['klassen', pfad[1] as string, 'vram_mb'], 0) : neu
+      })
     },
     verwerfen() {
       const stand = store.get().stand
@@ -118,6 +124,28 @@ export function werkzeugAktionen({ store, run }: RunnerKontext): WerkzeugAktione
       if (!ok) return
       const werkzeuge = store.get().werkzeuge
       store.set({ werkzeuge: werkzeuge ? { ...werkzeuge, profile } : werkzeuge, meldung: { key: 'gespeichert', ton: 'success' } })
+    },
+  }
+}
+
+export function klassenAktionen({ store }: RunnerKontext): KlassenAktionen {
+  return {
+    neueKlasseEingabe: (roh) => store.set({ neueKlasse: roh }),
+    klasseHinzufuegen() {
+      const { entwurf, neueKlasse } = store.get()
+      const name = neueKlasse.trim()
+      if (!entwurf || runnerKlassenNameFehler(entwurf, name)) return
+      aendere(store, (profil) => runnerKlasseHinzu(profil, name))
+      store.set({ neueKlasse: '' })
+    },
+    klassenNameEingabe: (alt, roh) => store.set({ klassenNamen: { ...store.get().klassenNamen, [alt]: roh } }),
+    klasseUmbenennen(alt) {
+      const { entwurf, klassenNamen } = store.get()
+      const neu = (klassenNamen[alt] ?? alt).trim()
+      if (!entwurf || neu === alt || runnerKlassenNameFehler(entwurf, neu, alt)) return
+      const rest = Object.fromEntries(Object.entries(klassenNamen).filter(([k]) => k !== alt))
+      aendere(store, (profil) => runnerKlasseUmbenennen(profil, alt, neu))
+      store.set({ klassenNamen: rest })
     },
   }
 }

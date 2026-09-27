@@ -6,7 +6,7 @@ import type { RunnerData } from './controller'
 import { RUNNER_ANSICHTEN } from './controller'
 import type { RunnerMessageKey } from './messages'
 import { runnerWerkzeugFeldId, type RunnerFeldArt } from './eingabe'
-import { runnerGeaendert, runnerPrioritaeten, runnerWeichtZuerst, runnerWert, type RunnerPfad, type RunnerPrioritaet } from './profil'
+import { runnerGeaendert, runnerKlassen, runnerKlassenArt, runnerKlassenNameFehler, runnerPrioritaeten, runnerWeichtZuerst, runnerWert, type RunnerPfad, type RunnerPrioritaet } from './profil'
 import type { RunnerAnsicht, RunnerDateiAenderung, RunnerProblem, RunnerProfil, RunnerStatus } from './types'
 
 type T = Translate<RunnerMessageKey>
@@ -82,6 +82,7 @@ export function runnerUeberblick(status: RunnerStatus | null, t: T): RunnerEintr
   const eintraege: RunnerEintrag[] = [
     { label: t('ziel'), wert: status.ziel || t('unbekannt') },
     { label: t('sollQuelle'), wert: status.soll_quelle },
+    ...(status.auth_art ? [{ label: t('anmeldung'), wert: status.auth_art }] : []),
     { label: t('profilVersion'), wert: String(status.profil_version) },
     { label: t('aenderung'), wert: aenderung },
     { label: t('image'), wert: jaNein(status.image_vorhanden, t('vorhanden'), t('fehlt'), t) },
@@ -173,10 +174,19 @@ export interface RunnerFeld {
   fehler: string
 }
 
+/** Umbenennen einer Klasse (nur Abschnitte vom Typ Klasse). */
+export interface RunnerKlassenName {
+  alt: string
+  wert: string
+  fehler: string
+  geaendert: boolean
+}
+
 export interface RunnerAbschnitt {
   id: string
   titel: string
   felder: RunnerFeld[]
+  klasse?: RunnerKlassenName
 }
 
 interface FeldDef {
@@ -222,7 +232,10 @@ const NETZ: readonly FeldDef[] = [
   { pfad: ['netz', 'sperre_pflicht'], key: 'fSperre', art: 'schalter' },
 ]
 
+const ARTEN = (t: T): RunnerOption[] => [{ wert: 'cpu', label: t('oCpu') }, { wert: 'gpu', label: t('oGpu') }]
+
 const KLASSE: readonly (Omit<FeldDef, 'pfad'> & { feld: string })[] = [
+  { feld: 'art', key: 'kArt', art: 'auswahl', optionen: ARTEN },
   { feld: 'aktiv', key: 'kAktiv', art: 'schalter' },
   { feld: 'min_instanzen', key: 'kMin', art: 'zahl' },
   { feld: 'max_instanzen', key: 'kMax', art: 'zahl' },
@@ -278,26 +291,41 @@ export function runnerProbleme(state: RunnerData): readonly RunnerProblem[] {
 }
 
 /** Formularabschnitte aus dem Entwurf; nur Felder, die das Profil tatsächlich enthält. */
+function namensFehler(t: T, fehler: 'ungueltig' | 'vergeben' | null): string {
+  if (fehler === 'ungueltig') return t('klasseNameUngueltig')
+  return fehler === 'vergeben' ? t('klasseNameVergeben') : ''
+}
+
+function klassenAbschnitt(state: RunnerData, profil: RunnerProfil, name: string, kontext: Kontext): RunnerAbschnitt | null {
+  const gpu = runnerKlassenArt(profil, name) === 'gpu'
+  const defs = KLASSE.filter((def) => gpu || def.feld !== 'vram_mb').map(({ feld: schluessel, ...rest }) => ({ ...rest, pfad: ['klassen', name, schluessel] }))
+  const eintrag = abschnitt(`klasse-${name}`, kontext.t('abschnittKlasse', { name }), profil, defs, kontext)
+  if (!eintrag) return null
+  const wert = state.klassenNamen[name] ?? name
+  const fehler = wert === name ? '' : namensFehler(kontext.t, runnerKlassenNameFehler(profil, wert.trim(), name))
+  return { ...eintrag, klasse: { alt: name, wert, fehler, geaendert: wert.trim() !== name && !fehler } }
+}
+
+/** Formularabschnitte aus dem Entwurf; nur Felder, die das Profil tatsächlich enthält. */
 export function runnerAbschnitte(state: RunnerData, t: T): RunnerAbschnitt[] {
   const profil = state.entwurf
   if (!profil) return []
   const kontext: Kontext = { t, fehler: new Map(runnerProbleme(state).map((problem) => [runnerFeldId(problem.feld), problem.meldung])), eingaben: state.eingaben }
-  const klassen = runnerWert(profil, ['klassen'])
-  const klassenNamen = klassen && typeof klassen === 'object' ? Object.keys(klassen).sort() : []
+  const klassenNamen = runnerKlassen(profil)
+  const gpuKlassen = klassenNamen.filter((name) => runnerKlassenArt(profil, name) === 'gpu')
   const result: (RunnerAbschnitt | null)[] = [
     abschnitt('allgemein', t('abschnittAllgemein'), profil, ALLGEMEIN, kontext),
     abschnitt('regelung', t('abschnittRegelung'), profil, REGELUNG, kontext),
     abschnitt('thermik', t('abschnittThermik'), profil, THERMIK, kontext),
     abschnitt('netz', t('abschnittNetz'), profil, NETZ, kontext),
-    ...klassenNamen.map((name) =>
-      abschnitt(`klasse-${name}`, t('abschnittKlasse', { name }), profil, KLASSE.map(({ feld: schluessel, ...rest }) => ({ ...rest, pfad: ['klassen', name, schluessel] })), kontext),
-    ),
+    ...klassenNamen.map((name) => klassenAbschnitt(state, profil, name, kontext)),
   ]
   const gpus = runnerWert(profil, ['gpus'])
-  if (Array.isArray(gpus)) {
+  // Kartenauswahl nur, wenn es eine Klasse der Art gpu gibt; angeboten werden nur diese.
+  if (Array.isArray(gpus) && gpuKlassen.length) {
+    const optionen = (): RunnerOption[] => gpuKlassen.map((klasse) => ({ wert: klasse, label: klasse }))
     gpus.forEach((karte, index) => {
       const name = typeof karte === 'object' && karte !== null ? String((karte as Record<string, unknown>).name ?? index) : String(index)
-      const optionen = (): RunnerOption[] => klassenNamen.map((klasse) => ({ wert: klasse, label: klasse }))
       result.push(
         abschnitt(`karte-${index}`, t('abschnittKarte', { index, name }), profil, [
           { pfad: ['gpus', index, 'erlaubt'], key: 'gErlaubt', art: 'schalter' },
@@ -307,6 +335,19 @@ export function runnerAbschnitte(state: RunnerData, t: T): RunnerAbschnitt[] {
     })
   }
   return result.filter((entry): entry is RunnerAbschnitt => entry !== null)
+}
+
+export interface RunnerNeueKlasse {
+  wert: string
+  fehler: string
+  moeglich: boolean
+}
+
+/** Eingabe „Neue Klasse“ mit Prüfung wie im Backend (Fehler erst nach einer Eingabe). */
+export function runnerNeueKlasse(state: RunnerData, t: T): RunnerNeueKlasse {
+  const name = state.neueKlasse.trim()
+  const fehler = name ? namensFehler(t, runnerKlassenNameFehler(state.entwurf, name)) : ''
+  return { wert: state.neueKlasse, fehler, moeglich: Boolean(name) && !fehler }
 }
 
 export interface RunnerVorschau {
