@@ -6,7 +6,7 @@
  *   Lizenz mit Wasserzeichenpflicht; Clean-Room-Regel des Editors).
  * - Laufzeitabhängigkeiten: nur MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0.
  * - Entwicklungswerkzeuge: zusätzlich ausdrücklich gelistete freizügige Lizenzen
- *   sowie Einzelfreigaben je Paket (DEV_EXCEPTIONS, z. B. lightningcss unter MPL-2.0).
+ *   sowie Einzelfreigaben je Paket (DEV_EXCEPTIONS, z. B. lightningcss und axe-core unter MPL-2.0).
  * - Eigene Workspace-Pakete müssen MIT sein.
  *
  * Aufruf: `npm run license-check` (Rückgabewert ≠ 0 bei Verstoß).
@@ -26,7 +26,12 @@ const DEV_ALLOWED = new Set([...RUNTIME_ALLOWED, 'MIT-0', '0BSD', 'BlueOak-1.0.0
 // Einzelfreigaben für Entwicklungswerkzeuge mit schwachem Copyleft: nur das genannte Paket,
 // nur als Entwicklungsabhängigkeit. lightningcss (MPL-2.0) ist feste Abhängigkeit von Vite 8
 // (CSS-Verarbeitung beim Bau); ausgeliefert wird nur das erzeugte CSS, kein lightningcss-Code.
-const DEV_EXCEPTIONS = [{ name: /^lightningcss(-[a-z0-9-]+)?$/, license: 'MPL-2.0' }]
+// axe-core und @axe-core/playwright (MPL-2.0) prüfen nur in den GUI-Tests die Barrierefreiheit;
+// nichts davon gelangt in ein Paket.
+const DEV_EXCEPTIONS = [
+  { name: /^lightningcss(-[a-z0-9-]+)?$/, license: 'MPL-2.0' },
+  { name: /^(@axe-core\/playwright|axe-core)$/, license: 'MPL-2.0' },
+]
 
 const problems = []
 const runtime = new Map()

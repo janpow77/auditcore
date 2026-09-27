@@ -81,7 +81,7 @@ export function positionAfterNext(result: ComparisonResult): string {
 ## API-Überblick
 
 <!-- api-overview:start (generiert: python scripts/docs/api_overview.py --write) -->
-Exporte der Einstiegspunkte aus `package.json#exports` (1153):
+Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 
 | Einstieg | Name | Art | Kurzbeschreibung (erste JSDoc-Zeile) | Modul |
 |---|---|---|---|---|
@@ -482,6 +482,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1153):
 | `@auditcore/ui-core` | `RESIDUAL_FIELDS` | Konstante | – | `extrapolation/view` |
 | `@auditcore/ui-core` | `ROW_STATUSES` | Konstante | – | `synopsis/types` |
 | `@auditcore/ui-core` | `RUNNER_ANSICHTEN` | Konstante | – | `runner/controller` |
+| `@auditcore/ui-core` | `RUNNER_KLASSEN_NAME` | Konstante | Klassenname wie im Backend (`auditcore_runner.profile.CLASS_NAME`). | `runner/profil` |
 | `@auditcore/ui-core` | `RUNNER_SCHREIB_KOPF` | Konstante | Kopfzeile, ohne die `auditcore-runner ui` schreibende Anfragen ablehnt. | `runner/port` |
 | `@auditcore/ui-core` | `RUNNER_WERKZEUG_SCHEMA` | Konstante | – | `runner/port` |
 | `@auditcore/ui-core` | `RadiusHit` | Schnittstelle | – | `geo/types` |
@@ -557,16 +558,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1153):
 | `@auditcore/ui-core` | `RunnerFeldArt` | Typ | – | `runner/eingabe` |
 | `@auditcore/ui-core` | `RunnerHinweis` | Schnittstelle | – | `runner/view` |
 | `@auditcore/ui-core` | `RunnerKlasseStatus` | Schnittstelle | Stand einer Runner-Klasse im Status. `null`: unbekannt (z. B. GitHub nicht erreichbar). | `runner/types` |
+| `@auditcore/ui-core` | `RunnerKlassenArt` | Typ | – | `runner/profil` |
+| `@auditcore/ui-core` | `RunnerKlassenName` | Schnittstelle | Umbenennen einer Klasse (nur Abschnitte vom Typ Klasse). | `runner/view` |
 | `@auditcore/ui-core` | `RunnerKlassenZeile` | Schnittstelle | – | `runner/view` |
 | `@auditcore/ui-core` | `RunnerKonfliktStand` | Schnittstelle | – | `runner/controller` |
 | `@auditcore/ui-core` | `RunnerKontext` | Schnittstelle | – | `runner/aktionen` |
 | `@auditcore/ui-core` | `RunnerMeldung` | Schnittstelle | Rückmeldung nach einer Aktion (übersetzt in der Ansicht). | `runner/controller` |
 | `@auditcore/ui-core` | `RunnerMessageKey` | Typ | – | `runner/messages` |
+| `@auditcore/ui-core` | `RunnerNeueKlasse` | Schnittstelle | – | `runner/view` |
 | `@auditcore/ui-core` | `RunnerOption` | Schnittstelle | – | `runner/view` |
 | `@auditcore/ui-core` | `RunnerPfad` | Typ | – | `runner/profil` |
 | `@auditcore/ui-core` | `RunnerPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `runner/types` |
 | `@auditcore/ui-core` | `RunnerPrioritaet` | Schnittstelle | – | `runner/profil` |
-| `@auditcore/ui-core` | `RunnerPrioritaetZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerPrioritaetZeile` | Schnittstelle | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `RunnerProblem` | Schnittstelle | – | `runner/types` |
 | `@auditcore/ui-core` | `RunnerProfil` | Typ | Profil als JSON (Schema `auditcore-runner/profil/…`); unbekannte Felder bleiben erhalten. | `runner/types` |
 | `@auditcore/ui-core` | `RunnerProfilStand` | Schnittstelle | `GET /api/profil`. | `runner/types` |
@@ -578,9 +582,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1153):
 | `@auditcore/ui-core` | `RunnerVorschau` | Schnittstelle | – | `runner/view` |
 | `@auditcore/ui-core` | `RunnerWerkzeug` | Schnittstelle | – | `runner/types` |
 | `@auditcore/ui-core` | `RunnerWerkzeugEinstellung` | Schnittstelle | – | `runner/types` |
-| `@auditcore/ui-core` | `RunnerWerkzeugGruppe` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeugGruppe` | Schnittstelle | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `RunnerWerkzeugProfile` | Typ | Prüfprofil → Werkzeug → Einstellung. | `runner/types` |
-| `@auditcore/ui-core` | `RunnerWerkzeugZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeugZeile` | Schnittstelle | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `RunnerWerkzeuge` | Schnittstelle | `GET /api/werkzeuge`. | `runner/types` |
 | `@auditcore/ui-core` | `SAMPLED_PART` | Konstante | – | `extrapolation/model-subsample` |
 | `@auditcore/ui-core` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
@@ -1122,13 +1126,19 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1153):
 | `@auditcore/ui-core` | `runnerHatWarteschlange` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerHinweise` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerIstGeaendert` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerKlasseHinzu` | Funktion | Neue Klasse der Art `cpu` mit neutralen Werten (höchstens eine Instanz). | `runner/profil` |
+| `@auditcore/ui-core` | `runnerKlasseUmbenennen` | Funktion | Klasse umbenennen; Verweise in Karten, Prioritäten und das gleichnamige Label ziehen mit. | `runner/profil` |
+| `@auditcore/ui-core` | `runnerKlassen` | Funktion | – | `runner/profil` |
+| `@auditcore/ui-core` | `runnerKlassenArt` | Funktion | – | `runner/profil` |
+| `@auditcore/ui-core` | `runnerKlassenNameFehler` | Funktion | Fehlerart eines Klassennamens; `null` = gültig. `alt` ist der bisherige Name beim Umbenennen. | `runner/profil` |
 | `@auditcore/ui-core` | `runnerKlassenZeilen` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerMessages` | Konstante | Texte der Runner-Konsole (Vue `RunnerConsole`, React `FlowauditRunnerConsole`); sichtbare Texte nur hier. | `runner/messages` |
 | `@auditcore/ui-core` | `runnerMeta` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerNachbarTab` | Funktion | Nächster Reiter für Pfeiltasten (zyklisch). | `runner/view` |
+| `@auditcore/ui-core` | `runnerNeueKlasse` | Funktion | Eingabe „Neue Klasse“ mit Prüfung wie im Backend (Fehler erst nach einer Eingabe). | `runner/view` |
 | `@auditcore/ui-core` | `runnerNurLesen` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerPrioritaetSetze` | Funktion | Eigenschaft eines Prioritätseintrags (Position in der sortierten Liste) ändern. | `runner/profil` |
-| `@auditcore/ui-core` | `runnerPrioritaetZeilen` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerPrioritaetZeilen` | Funktion | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `runnerPrioritaeten` | Funktion | Prioritäten des Entwurfs nach Rang (1 = höchster), fehlerhafte Einträge übersprungen. | `runner/profil` |
 | `@auditcore/ui-core` | `runnerProbleme` | Funktion | Meldungen des Backends: aus der letzten Prüfung, sonst aus dem geladenen Stand. | `runner/view` |
 | `@auditcore/ui-core` | `runnerSetze` | Funktion | Neuer Entwurf mit geändertem Wert; der alte bleibt unverändert. | `runner/profil` |
@@ -1139,10 +1149,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1153):
 | `@auditcore/ui-core` | `runnerVersion` | Funktion | – | `runner/profil` |
 | `@auditcore/ui-core` | `runnerVorschau` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerWeichtZuerst` | Funktion | Wer bei knapper Kapazität zuerst weicht: der verdrängbare Eintrag mit dem niedrigsten Rang (größte Zahl). | `runner/profil` |
-| `@auditcore/ui-core` | `runnerWeichtZuerstText` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWeichtZuerstText` | Funktion | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `runnerWerkzeugFeldId` | Funktion | Schlüssel des Rohtexts einer Werkzeug-Zahleneingabe. | `runner/eingabe` |
-| `@auditcore/ui-core` | `runnerWerkzeugGruppen` | Funktion | – | `runner/view` |
-| `@auditcore/ui-core` | `runnerWerkzeugeGeaendert` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWerkzeugGruppen` | Funktion | – | `runner/view-listen` |
+| `@auditcore/ui-core` | `runnerWerkzeugeGeaendert` | Funktion | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `runnerWert` | Funktion | – | `runner/profil` |
 | `@auditcore/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `samplesizeAllocation` | Funktion | – | `samplesize/view` |

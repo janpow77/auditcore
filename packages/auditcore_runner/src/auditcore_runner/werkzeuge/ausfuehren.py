@@ -15,11 +15,12 @@ import os
 import subprocess
 import tempfile
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from fnmatch import fnmatch
 from pathlib import Path
 
 from ..profile import state_dir
-from .befunde import Finding, deduplicate
+from .befunde import Finding, deduplicate, relative_to
 from .katalog import Registry
 from .modell import CheckProfile, Tool
 from .parser import PARSERS
@@ -37,8 +38,21 @@ CONFIG_FILES = (
     "package.json",
     ".gitleaks.toml",
     ".auditcore-runner.toml",
+    "tsconfig.json",
+    ".importlinter",
+    "sgconfig.yml",
+    "_typos.toml",
+    ".markdownlint.json",
+    ".stylelintrc.json",
+    "knip.json",
+    ".jscpd.json",
+    ".size-limit.json",
+    "lighthouserc.json",
+    "playwright.config.ts",
+    ".pre-commit-config.yaml",
 )
 TOOL_CACHE_VOLUME = "auditcore-runner-werkzeug-cache"
+COMMAND_NOT_FOUND = 127  # shell and ``docker run`` when the program is missing
 
 
 def _git(root: Path, *args: str) -> str:
@@ -98,15 +112,15 @@ class Runner:
     root: Path
     image: str = ""
 
-    def command(self, argv: list[str]) -> list[str]:
+    def command(self, argv: list[str], network: bool = False) -> list[str]:
+        """Container call; without ``network`` the tool runs fully offline."""
         if not self.image:
             return argv
         return [
             "docker",
             "run",
             "--rm",
-            "--network",
-            "none",
+            *(() if network else ("--network", "none")),
             "--cap-drop",
             "ALL",
             "--user",
@@ -137,7 +151,7 @@ class Runner:
             return ""
         try:
             result = subprocess.run(
-                self.command(list(tool.version_command)),
+                self.command(list(tool.version_command), tool.network),
                 cwd=self.root,
                 capture_output=True,
                 text=True,
@@ -153,19 +167,29 @@ class Runner:
 def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
     work = runner.root / ".auditcore-runner"
     work.mkdir(exist_ok=True)
+    (work / ".gitignore").write_text("*\n", encoding="utf-8")
     output = work / tool.output_file if tool.output_file else None
     target = f"{runner.output_prefix()}/{tool.output_file}"
     argv = [part.replace("{ausgabe}", target) for part in tool.command]
     started = time.monotonic()
     try:
         result = subprocess.run(
-            runner.command(argv), cwd=runner.root, capture_output=True, text=True, timeout=timeout, check=False
+            runner.command(argv, tool.network),
+            cwd=runner.root,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
         )
     except FileNotFoundError:
         return ToolResult(tool.name, "fehlt", 0.0, message=f"{argv[0]} nicht installiert")
     except subprocess.TimeoutExpired:
         return ToolResult(tool.name, "zeitlimit", float(timeout), message=f"nach {timeout} s abgebrochen")
     seconds = time.monotonic() - started
+    if result.returncode == COMMAND_NOT_FOUND and COMMAND_NOT_FOUND not in tool.success_codes:
+        return ToolResult(
+            tool.name, "fehlt", seconds, message=f"{argv[0]} im Image bzw. auf dem Rechner nicht gefunden"
+        )
     if result.returncode not in tool.success_codes:
         return ToolResult(tool.name, "fehler", seconds, message=result.stderr.strip()[-400:])
     raw = output.read_text(encoding="utf-8") if output and output.exists() else result.stdout
@@ -173,7 +197,23 @@ def _execute(runner: Runner, tool: Tool, timeout: int) -> ToolResult:
         findings = PARSERS[tool.parser](raw)
     except (ValueError, KeyError) as error:
         return ToolResult(tool.name, "unlesbar", seconds, message=str(error)[:300])
-    return ToolResult(tool.name, "ok", seconds, findings)
+    local = relative_to(_named(tool, findings), (str(runner.root), "/work"))
+    return ToolResult(tool.name, "ok", seconds, [_scan_root_relative(f, runner.root) for f in local])
+
+
+def _named(tool: Tool, findings: list[Finding]) -> list[Finding]:
+    """SARIF names its producer freely ("Opengrep OSS"); catalog tools report under their catalog name."""
+    if tool.parser != "sarif" or tool.area == "extern":
+        return findings
+    return [replace(f, tool=tool.name) for f in findings]
+
+
+def _scan_root_relative(finding: Finding, root: Path) -> Finding:
+    """Scanners such as grype report ``/datei`` relative to the scan root."""
+    path = finding.path
+    if path.startswith("/") and (root / path.lstrip("/")).exists():
+        return replace(finding, path=path.lstrip("/"))
+    return finding
 
 
 def cache_dir() -> Path:
@@ -217,29 +257,48 @@ def run_tool(runner: Runner, tool: Tool, timeout: int, content: str, use_cache: 
     return result
 
 
-def run_fixes(runner: Runner, registry: Registry, profile: CheckProfile) -> list[str]:
-    """Autofix first (no LLM involved): returns the tools that ran a fixer."""
+def fix_order(registry: Registry, profile: CheckProfile, extra: tuple[Tool, ...] = ()) -> list[Tool]:
+    """Stufen ohne LLM: erst Autofixer der Werkzeuge, dann Codemods (Repo-Regeln), dann wird geprüft."""
+    tools = [profile.configured_tool(registry.get(name)) for name in profile.ordered_tools()] + list(extra)
+    fixers = [t for t in tools if t.can_fix]
+    return [t for t in fixers if t.stage != "codemod"] + [t for t in fixers if t.stage == "codemod"]
+
+
+def run_fixes(runner: Runner, registry: Registry, profile: CheckProfile, extra: tuple[Tool, ...] = ()) -> list[str]:
+    """Autofix first, then codemods – no LLM involved; returns the tools that ran a fixer."""
     fixed = []
-    for name in profile.ordered_tools():
-        tool = registry.get(name)
-        if tool.can_fix:
-            subprocess.run(
-                runner.command(list(tool.fix_command)),
-                cwd=runner.root,
-                capture_output=True,
-                timeout=profile.setting(name).timeout_seconds,
-                check=False,
-            )
-            fixed.append(name)
+    for tool in fix_order(registry, profile, extra):
+        subprocess.run(
+            runner.command(list(tool.fix_command), tool.network),
+            cwd=runner.root,
+            capture_output=True,
+            timeout=profile.setting(tool.name).timeout_seconds,
+            check=False,
+        )
+        fixed.append(tool.name)
     return fixed
 
 
+def applies(tool: Tool, files: list[str]) -> bool:
+    """A tool with ``applies_to`` runs only if a tracked file matches (path or file name)."""
+    if not tool.applies_to or not files:
+        return True
+    return any(fnmatch(f, p) or fnmatch(f.rsplit("/", 1)[-1], p) for f in files for p in tool.applies_to)
+
+
+def _check(runner: Runner, tool: Tool, timeout: int, content: str, files: list[str], use_cache: bool) -> ToolResult:
+    if not applies(tool, files):
+        return ToolResult(tool.name, "entfaellt", 0.0, message="keine passenden Dateien")
+    return run_tool(runner, tool, timeout, content, use_cache)
+
+
 def run_profile(runner: Runner, registry: Registry, profile: CheckProfile, use_cache: bool = True) -> dict[str, object]:
-    """Run all enabled tools of a profile; returns the result document."""
+    """Run all enabled checking tools of a profile; returns the result document."""
     content = content_key(runner.root)
+    files = _git(runner.root, "ls-files", "--cached", "--others", "--exclude-standard").splitlines()
+    tools = [t for t in (profile.configured_tool(registry.get(n)) for n in profile.ordered_tools()) if t.command]
     results = [
-        run_tool(runner, registry.get(name), profile.setting(name).timeout_seconds, content, use_cache)
-        for name in profile.ordered_tools()
+        _check(runner, tool, profile.setting(tool.name).timeout_seconds, content, files, use_cache) for tool in tools
     ]
     findings = deduplicate(f for r in results for f in r.findings)
     return {

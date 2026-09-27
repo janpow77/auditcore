@@ -50,3 +50,5 @@
 .fa-runner__rang { min-width: 4.5rem; color: var(--fa-color-text-muted); }
 .fa-runner__klasse { flex: 1 1 8rem; }
 .fa-runner__schmal { width: 6rem; }
+.fa-runner__klassenname { grid-column: 1 / -1; }
+.fa-runner__klassenname .fa-runner__eingabe { flex: 1 1 12rem; }

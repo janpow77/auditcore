@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "auditcore-runner/repo-konfiguration/1",
+  "title": ".auditcore-runner.toml eines Repositories (auditcore_runner)",
+  "description": "Prüfprofile und Codemods je Repository, als TOML geschrieben. Eingebaute Profile werden überschrieben oder ergänzt; Rechner-Schalter der Oberfläche gelten vorrangig.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "pruefprofile": {
+      "type": "object",
+      "description": "Profilname → Profil. Eingebaut: schnell, pr, voll, gui, sicherheit, gpu, fuell.",
+      "additionalProperties": { "$ref": "#/$defs/profil" }
+    },
+    "codemods": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Umschreibungen ohne Modell; laufen nach den Autofixern und vor der Prüfung.",
+      "properties": {
+        "libcst": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[A-Za-z_][\\w.]*$" },
+          "description": "Codemod-Klassen für `libcst-tool codemod` (Modulpfad.Klasse)"
+        },
+        "befehle": {
+          "type": "array",
+          "items": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "description": "Beliebige Umschreib-Befehle, je als Liste von Argumenten"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "profil": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "werkzeuge": { "type": "array", "items": { "type": "string" } },
+        "ausloeser": { "type": "array", "items": { "enum": ["lokal", "pr", "nacht", "fuell"] } },
+        "zeitlimit_s": { "type": "integer", "minimum": 1 },
+        "max_befunde": { "type": "integer", "minimum": 1 },
+        "autofix": { "type": "boolean" },
+        "werkzeug": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "aktiv": { "type": "boolean" },
+              "zeitlimit_s": { "type": "integer", "minimum": 1 },
+              "prioritaet": { "type": "integer", "description": "kleiner = früher" },
+              "befehl": {
+                "type": "array", "minItems": 1,
+                "items": { "type": "string", "minLength": 1 },
+                "description": "Ersetzt den Katalogbefehl für dieses Repository; {ausgabe} bleibt als Platzhalter verfügbar"
+              },
+              "autofix_befehl": {
+                "type": "array", "minItems": 1,
+                "items": { "type": "string", "minLength": 1 },
+                "description": "Ersetzt den Autofix-Befehl für dieses Repository"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

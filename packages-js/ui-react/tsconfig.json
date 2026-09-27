@@ -32,6 +32,8 @@
     "src/**/*.tsx",
     "test/**/*.ts",
     "test/**/*.tsx",
+    "visual/**/*.ts",
+    "visual/**/*.tsx",
     "vite.config.ts",
     "vitest.config.ts",
     "../ui/env.d.ts"

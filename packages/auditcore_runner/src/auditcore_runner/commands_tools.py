@@ -17,7 +17,7 @@ from .werkzeuge import aufgaben, bericht, einstellungen
 from .werkzeuge.ausfuehren import Runner, last_result_path, run_fixes, run_profile
 from .werkzeuge.befunde import deduplicate, load_baseline, only_new, save_baseline, to_sarif
 from .werkzeuge.katalog import Registry
-from .werkzeuge.modell import apply_machine_settings, load_repo_profiles
+from .werkzeuge.modell import apply_machine_settings, load_codemods, load_repo_profiles
 from .werkzeuge.parser import actionlint, sarif
 
 
@@ -37,7 +37,7 @@ def cmd_local(args: argparse.Namespace) -> int:
     selected = apply_machine_settings(profiles[args.pruefprofil], einstellungen.load().get(args.pruefprofil, {}))
     runner, registry = Runner(root, _image(args)), Registry()
     if args.beheben or selected.autofix:
-        run_fixes(runner, registry, selected)
+        run_fixes(runner, registry, selected, load_codemods(root))
     document = run_profile(runner, registry, selected, use_cache=not args.ohne_cache)
     last_result_path().parent.mkdir(parents=True, exist_ok=True)
     last_result_path().write_text(json.dumps(document, ensure_ascii=False) + "\n", encoding="utf-8")

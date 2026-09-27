@@ -123,3 +123,50 @@ export function runnerPrioritaetSetze(profil: RunnerProfil, index: number, aende
 export function runnerWeichtZuerst(liste: readonly RunnerPrioritaet[]): RunnerPrioritaet | null {
   return [...liste].reverse().find((eintrag) => eintrag.verdraengbar) ?? null
 }
+
+/** Klassenname wie im Backend (`auditcore_runner.profile.CLASS_NAME`). */
+export const RUNNER_KLASSEN_NAME = /^[a-z0-9][a-z0-9-]{0,30}$/
+export type RunnerKlassenArt = 'cpu' | 'gpu'
+
+export function runnerKlassen(profil: RunnerProfil | null | undefined): string[] {
+  const klassen = runnerWert(profil, ['klassen'])
+  return isObject(klassen) ? Object.keys(klassen).sort() : []
+}
+
+export function runnerKlassenArt(profil: RunnerProfil | null | undefined, name: string): RunnerKlassenArt {
+  return runnerWert(profil, ['klassen', name, 'art']) === 'gpu' ? 'gpu' : 'cpu'
+}
+
+/** Fehlerart eines Klassennamens; `null` = gültig. `alt` ist der bisherige Name beim Umbenennen. */
+export function runnerKlassenNameFehler(profil: RunnerProfil | null | undefined, name: string, alt?: string): 'ungueltig' | 'vergeben' | null {
+  if (!RUNNER_KLASSEN_NAME.test(name)) return 'ungueltig'
+  if (name !== alt && runnerKlassen(profil).includes(name)) return 'vergeben'
+  return null
+}
+
+/** Neue Klasse der Art `cpu` mit neutralen Werten (höchstens eine Instanz). */
+export function runnerKlasseHinzu(profil: RunnerProfil, name: string): RunnerProfil {
+  if (runnerKlassenNameFehler(profil, name)) return profil
+  return runnerSetze(profil, ['klassen', name], {
+    art: 'cpu', aktiv: true, cpus: 2, speicher_gb: 4, min_instanzen: 0, max_instanzen: 1, leise_max: -1, vram_mb: 0,
+    labels: ['self-hosted', 'linux', 'x64', name],
+  })
+}
+
+/** Klasse umbenennen; Verweise in Karten, Prioritäten und das gleichnamige Label ziehen mit. */
+export function runnerKlasseUmbenennen(profil: RunnerProfil, alt: string, neu: string): RunnerProfil {
+  const klassen = runnerWert(profil, ['klassen'])
+  if (alt === neu || !isObject(klassen) || !(alt in klassen) || runnerKlassenNameFehler(profil, neu, alt)) return profil
+  const eintrag = klassen[alt]
+  const labels = runnerWert(eintrag as RunnerProfil, ['labels'])
+  const umbenannt = isObject(eintrag) && Array.isArray(labels) ? { ...eintrag, labels: labels.map((l) => (l === alt ? neu : l)) } : eintrag
+  const neueKlassen = Object.fromEntries(Object.entries(klassen).map(([k, v]) => (k === alt ? [neu, umbenannt] : [k, v])))
+  let ergebnis = runnerSetze(profil, ['klassen'], neueKlassen)
+  for (const liste of ['gpus', 'prioritaeten'] as const) {
+    const eintraege = runnerWert(ergebnis, [liste])
+    if (Array.isArray(eintraege)) {
+      ergebnis = runnerSetze(ergebnis, [liste], eintraege.map((e) => (isObject(e) && e.klasse === alt ? { ...e, klasse: neu } : e)))
+    }
+  }
+  return ergebnis
+}

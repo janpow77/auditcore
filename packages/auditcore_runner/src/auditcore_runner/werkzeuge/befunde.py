@@ -83,6 +83,20 @@ def save_baseline(path: Path, findings: Iterable[Finding]) -> None:
     path.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")
 
 
+def relative_to(findings: Iterable[Finding], roots: Iterable[str]) -> list[Finding]:
+    """Repository-relative paths: strips ``file://`` and the checked roots (host path or ``/work``)."""
+    prefixes = sorted({r.rstrip("/") + "/" for r in roots if r}, key=len, reverse=True)
+    result = []
+    for finding in findings:
+        path = finding.path.removeprefix("file://")
+        for prefix in prefixes:
+            if path.startswith(prefix):
+                path = path[len(prefix) :]
+                break
+        result.append(finding if path == finding.path else replace(finding, path=path))
+    return result
+
+
 def only_new(findings: Iterable[Finding], baseline: frozenset[str]) -> list[Finding]:
     return [f for f in (x.with_fingerprint() for x in findings) if f.fingerprint not in baseline]
 

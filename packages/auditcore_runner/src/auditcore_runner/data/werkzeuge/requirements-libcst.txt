@@ -1,0 +1,3 @@
+# libcst für Codemods (Bibliothek ohne eigenes Programm): eigene Umgebung /opt/libcst,
+# aufgerufen über `libcst-tool` (= python -m libcst.tool). Dependabot (pip) hält die Version aktuell.
+libcst==1.9.0

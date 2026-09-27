@@ -7,6 +7,7 @@ recommends a call (Claude Code or Codex) with a budget; it never runs a model.
 
 from __future__ import annotations
 
+import re
 import shlex
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -14,6 +15,27 @@ from pathlib import Path
 from .befunde import Finding
 
 KINDS = ("claude", "codex", "lokal")
+# Gleiche Grenzen wie die Vorlage „befunde-beheben“ der zentralen Steuerung.
+KENNUNG = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+TYP = re.compile(r"[A-Za-z0-9._-]{1,64}")
+MAX_ZEICHEN = 60_000
+DEFAULT_HINTS: dict[str, str] = {
+    "mypy": "Typfehler an der Ursache beheben, kein `type: ignore`.",
+    "pyrefly": "Typfehler an der Ursache beheben, kein Unterdrücken.",
+    "tsc": "Typfehler an der Ursache beheben, kein `any` und kein `@ts-ignore`.",
+    "pytest": "Test und Code lesen; den Code korrigieren, den Test nur bei nachweislich falscher Erwartung.",
+    "vulture": "Toten Code entfernen; nur behalten, wenn er von außen genutzt wird (dann Whitelist).",
+    "deptry": "Abhängigkeit in pyproject.toml ergänzen oder den ungenutzten Eintrag entfernen.",
+    "import-linter": "Import über die erlaubte Schicht führen, Architekturvertrag nicht aufweichen.",
+    "mutmut": "Einen Test ergänzen, der die überlebende Mutante tötet.",
+    "diff-cover": "Tests für die geänderten, ungetesteten Zeilen ergänzen.",
+    "jscpd": "Duplikat in eine gemeinsame Funktion auslagern.",
+    "knip": "Ungenutzte Datei, Abhängigkeit oder Export entfernen.",
+    "gitleaks": "Geheimnis entfernen, rotieren lassen und aus der Historie tilgen – nie im Klartext wiederholen.",
+    "betterleaks": "Geheimnis entfernen, rotieren lassen und aus der Historie tilgen – nie im Klartext wiederholen.",
+    "osv-scanner": "Abhängigkeit auf eine nicht betroffene Version anheben.",
+    "lychee": "Link korrigieren oder das Ziel wiederherstellen.",
+}
 
 
 @dataclass(frozen=True)
@@ -52,9 +74,14 @@ def excerpt(root: Path, finding: Finding, context: int = 2) -> str:
 def build(
     package_id: str, task_type: str, root: Path, findings: list[Finding], hints: dict[str, str] | None = None
 ) -> TaskPackage:
-    """Items only for findings a fixer could not resolve."""
+    """Items only for findings a fixer could not resolve; hint: rule-specific, else per tool."""
+    if not KENNUNG.fullmatch(package_id) or not TYP.fullmatch(task_type):
+        raise ValueError("Paket-ID oder Aufgabentyp ungültig (Buchstaben, Ziffern, . _ -; höchstens 64 Zeichen)")
+    chosen = hints or {}
     items = tuple(
-        TaskItem(f, excerpt(root, f), (hints or {}).get(f"{f.tool}/{f.rule}", "")) for f in findings if not f.fixable
+        TaskItem(f, excerpt(root, f), chosen.get(f"{f.tool}/{f.rule}") or DEFAULT_HINTS.get(f.tool, ""))
+        for f in findings
+        if not f.fixable
     )
     return TaskPackage(package_id, task_type, root, items)
 
@@ -66,13 +93,20 @@ def render(package: TaskPackage) -> str:
         "Behebe genau die folgenden Befunde. Ändere nichts anderes; prüfe am Ende mit",
         "`auditcore-runner lokal pr`, dass sie verschwunden sind.",
     ]
+    size = sum(len(line) + 1 for line in lines)
     for number, item in enumerate(package.items, 1):
         finding = item.finding
-        lines += ["", f"## {number}. {finding.path}:{finding.line} – {finding.tool}/{finding.rule}", finding.message]
+        block = ["", f"## {number}. {finding.path}:{finding.line} – {finding.tool}/{finding.rule}", finding.message]
         if item.hint:
-            lines.append(f"Hinweis: {item.hint}")
+            block.append(f"Hinweis: {item.hint}")
         if item.excerpt:
-            lines += ["```", item.excerpt, "```"]
+            block += ["```", item.excerpt, "```"]
+        block_size = sum(len(line) + 1 for line in block)
+        if size + block_size > MAX_ZEICHEN - 200:
+            lines += ["", f"(weitere {len(package.items) - number + 1} Befunde im nächsten Paket)"]
+            break
+        lines += block
+        size += block_size
     return "\n".join(lines) + "\n"
 
 

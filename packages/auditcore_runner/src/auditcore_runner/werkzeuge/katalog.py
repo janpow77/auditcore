@@ -1,9 +1,11 @@
-"""Registry of tools. PR 1 ships the minimum set; further tools are added the same way."""
+"""Registry of tools: the minimum set plus the full catalog of the runner image."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from .katalog_voll import DOC_TOOLS, PYTHON_TOOLS, SECURITY_TOOLS
+from .katalog_web import GUI_TOOLS, HOOK_TOOLS, JS_TOOLS, STRUCTURE_TOOLS
 from .modell import Cost, Tool
 
 MINIMUM_TOOLS: tuple[Tool, ...] = (
@@ -103,9 +105,21 @@ MINIMUM_TOOLS: tuple[Tool, ...] = (
 )
 
 
+FULL_TOOLS: tuple[Tool, ...] = (
+    *MINIMUM_TOOLS,
+    *PYTHON_TOOLS,
+    *SECURITY_TOOLS,
+    *DOC_TOOLS,
+    *STRUCTURE_TOOLS,
+    *JS_TOOLS,
+    *GUI_TOOLS,
+    *HOOK_TOOLS,
+)
+
+
 @dataclass
 class Registry:
-    tools: dict[str, Tool] = field(default_factory=lambda: {t.name: t for t in MINIMUM_TOOLS})
+    tools: dict[str, Tool] = field(default_factory=lambda: {t.name: t for t in FULL_TOOLS})
 
     def register(self, tool: Tool) -> None:
         """Add or replace a tool, e.g. an external orchestrator with parser ``sarif``."""

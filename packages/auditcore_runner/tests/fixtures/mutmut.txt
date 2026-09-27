@@ -1,0 +1,2 @@
+    probe.rechnen.x_ist_gross__mutmut_1: survived
+    probe.rechnen.x_ist_gross__mutmut_2: survived

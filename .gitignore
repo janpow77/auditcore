@@ -22,3 +22,7 @@ coverage/
 # Manifeste der Testrepos für auditcore-helpers
 !tests/fixtures/helpers/*/.auditcore/
 .hypothesis/
+/packages/*/uv.lock
+.lighthouseci/
+.auditcore-runner/
+packages-js/ui-react/visual/dist/
