@@ -74,7 +74,7 @@ def mypy(text: str) -> list[Finding]:
     return findings
 
 
-def _junit_case(case: ElementTree.Element) -> Finding | None:
+def _junit_case(case: ElementTree.Element, tool: str = "pytest") -> Finding | None:
     problem = case.find("failure")
     if problem is None:
         problem = case.find("error")
@@ -83,7 +83,7 @@ def _junit_case(case: ElementTree.Element) -> Finding | None:
     file = case.get("file") or case.get("classname", "").replace(".", "/") + ".py"
     message = (problem.get("message") or problem.text or "").strip().splitlines()
     return Finding(
-        tool="pytest",
+        tool=tool,
         rule=problem.tag,
         path=file,
         line=int(case.get("line") or 0),
@@ -92,15 +92,22 @@ def _junit_case(case: ElementTree.Element) -> Finding | None:
     )
 
 
-def junit(text: str) -> list[Finding]:
-    """JUnit XML (``pytest --junitxml``): failed and erroring test cases."""
-    if not text.strip():
-        return []
-    if len(text) > MAX_XML_BYTES or "<!DOCTYPE" in text or "<!ENTITY" in text:
-        raise ValueError("JUnit-XML abgelehnt (zu groß oder mit DOCTYPE/ENTITY)")
-    # Without DOCTYPE/ENTITY declarations there is nothing to expand or resolve.
-    root = ElementTree.fromstring(text)  # noqa: S314  # nosec B314
-    return [f for f in (_junit_case(case) for case in root.iter("testcase")) if f is not None]
+def junit_report(tool: str) -> Parser:
+    """JUnit XML (pytest, vitest, Playwright): failed and erroring test cases."""
+
+    def parse(text: str) -> list[Finding]:
+        if not text.strip():
+            return []
+        if len(text) > MAX_XML_BYTES or "<!DOCTYPE" in text or "<!ENTITY" in text:
+            raise ValueError("JUnit-XML abgelehnt (zu groß oder mit DOCTYPE/ENTITY)")
+        # Without DOCTYPE/ENTITY declarations there is nothing to expand or resolve.
+        root = ElementTree.fromstring(text)  # noqa: S314  # nosec B314
+        return [f for f in (_junit_case(case, tool) for case in root.iter("testcase")) if f is not None]
+
+    return parse
+
+
+junit = junit_report("pytest")
 
 
 def actionlint(text: str) -> list[Finding]:
@@ -216,5 +223,8 @@ PARSERS.update(
         "size-limit-json": _web.size_limit,
         "lighthouse-json": _web.lighthouse,
         "keine": _web.none,
+        "vitest-junit": junit_report("vitest"),
+        "playwright-junit": junit_report("playwright"),
+        "axe-junit": junit_report("axe"),
     }
 )

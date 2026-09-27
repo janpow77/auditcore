@@ -75,18 +75,63 @@ class CheckProfile:
         return sorted(active, key=lambda t: (self.setting(t).priority, self.tools.index(t)))
 
 
+PR_TOOLS = (
+    "ruff",
+    "mypy",
+    "pytest",
+    "gitleaks",
+    "zizmor",
+    "actionlint",
+    "codegate",
+    "deptry",
+    "import-linter",
+    "codespell",
+    "typos",
+    "markdownlint",
+    "lychee",
+    "ast-grep",
+    "eslint",
+    "tsc",
+    "prettier",
+    "stylelint",
+    "vitest",
+    "knip",
+    "size-limit",
+)
+SECURITY_TOOLS = (
+    "gitleaks",
+    "betterleaks",
+    "opengrep",
+    "osv-scanner",
+    "grype",
+    "trivy",
+    "syft",
+    "zizmor",
+    "actionlint",
+    "ruff",
+)
+GUI_TOOLS = ("playwright", "axe", "lighthouse", "stylelint", "eslint", "tsc")
+# Neutral defaults: every tool skips itself when the repository has no matching files.
 DEFAULT_PROFILES: dict[str, CheckProfile] = {
-    "schnell": CheckProfile("schnell", ("ruff", "gitleaks"), ("lokal",), 300, autofix=True),
-    "pr": CheckProfile(
-        "pr", ("ruff", "mypy", "pytest", "gitleaks", "eslint", "zizmor", "actionlint", "codegate"), ("lokal", "pr")
-    ),
+    "schnell": CheckProfile("schnell", ("ruff", "typos", "prettier", "gitleaks"), ("lokal",), 300, autofix=True),
+    "pr": CheckProfile("pr", PR_TOOLS, ("lokal", "pr")),
     "voll": CheckProfile(
-        "voll", ("ruff", "mypy", "pytest", "gitleaks", "eslint", "zizmor", "actionlint", "codegate"), ("nacht",), 5400
+        "voll",
+        tuple(dict.fromkeys((*PR_TOOLS, "pyrefly", "vulture", "jscpd", "diff-cover", *SECURITY_TOOLS, *GUI_TOOLS))),
+        ("nacht",),
+        5400,
+        max_findings=500,
     ),
-    "sicherheit": CheckProfile("sicherheit", ("ruff", "gitleaks", "zizmor", "actionlint"), ("pr", "nacht")),
-    "gui": CheckProfile("gui", ("eslint",), ("lokal", "pr")),
-    "gpu": CheckProfile("gpu", ("pytest",), ("fuell",), 1800),
-    "fuell": CheckProfile("fuell", ("pytest", "codegate"), ("fuell", "nacht"), 3600),
+    "gui": CheckProfile("gui", GUI_TOOLS, ("lokal", "pr"), 2400),
+    "sicherheit": CheckProfile("sicherheit", SECURITY_TOOLS, ("pr", "nacht")),
+    "gpu": CheckProfile("gpu", ("pytest-gpu",), ("fuell",), 1800),
+    "fuell": CheckProfile(
+        "fuell",
+        ("mutmut", "pytest-split-1v2", "pytest-split-2v2", "vulture", "jscpd", "lychee-online", "codegate"),
+        ("fuell", "nacht"),
+        3600,
+        max_findings=500,
+    ),
 }
 
 

@@ -16,6 +16,7 @@ import subprocess
 import tempfile
 import time
 from dataclasses import dataclass, field
+from fnmatch import fnmatch
 from pathlib import Path
 
 from ..profile import state_dir
@@ -37,6 +38,18 @@ CONFIG_FILES = (
     "package.json",
     ".gitleaks.toml",
     ".auditcore-runner.toml",
+    "tsconfig.json",
+    ".importlinter",
+    "sgconfig.yml",
+    "_typos.toml",
+    ".markdownlint.json",
+    ".stylelintrc.json",
+    "knip.json",
+    ".jscpd.json",
+    ".size-limit.json",
+    "lighthouserc.json",
+    "playwright.config.ts",
+    ".pre-commit-config.yaml",
 )
 TOOL_CACHE_VOLUME = "auditcore-runner-werkzeug-cache"
 
@@ -244,12 +257,26 @@ def run_fixes(runner: Runner, registry: Registry, profile: CheckProfile, extra: 
     return fixed
 
 
+def applies(tool: Tool, files: list[str]) -> bool:
+    """A tool with ``applies_to`` runs only if a tracked file matches (path or file name)."""
+    if not tool.applies_to or not files:
+        return True
+    return any(fnmatch(f, p) or fnmatch(f.rsplit("/", 1)[-1], p) for f in files for p in tool.applies_to)
+
+
+def _check(runner: Runner, tool: Tool, timeout: int, content: str, files: list[str], use_cache: bool) -> ToolResult:
+    if not applies(tool, files):
+        return ToolResult(tool.name, "entfaellt", 0.0, message="keine passenden Dateien")
+    return run_tool(runner, tool, timeout, content, use_cache)
+
+
 def run_profile(runner: Runner, registry: Registry, profile: CheckProfile, use_cache: bool = True) -> dict[str, object]:
-    """Run all enabled tools of a profile; returns the result document."""
+    """Run all enabled checking tools of a profile; returns the result document."""
     content = content_key(runner.root)
+    files = _git(runner.root, "ls-files", "--cached", "--others", "--exclude-standard").splitlines()
+    tools = [t for t in (registry.get(n) for n in profile.ordered_tools()) if t.command]
     results = [
-        run_tool(runner, registry.get(name), profile.setting(name).timeout_seconds, content, use_cache)
-        for name in profile.ordered_tools()
+        _check(runner, tool, profile.setting(tool.name).timeout_seconds, content, files, use_cache) for tool in tools
     ]
     findings = deduplicate(f for r in results for f in r.findings)
     return {
