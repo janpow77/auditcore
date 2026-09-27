@@ -136,5 +136,30 @@
     "classification": "OBSERVED",
     "result": "alle 240 Ziehungen und 9 Leitern exakt reproduziert",
     "method_validation": "NOT_PERFORMED"
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "flowstat.mus_z_attribute",
+      "legacy.flowstat_mus_size",
+      "legacy.portal_mus_size_legacy",
+      "legacy.flowstat_srs_size",
+      "legacy.portal_srs_size"
+    ]
   }
 }

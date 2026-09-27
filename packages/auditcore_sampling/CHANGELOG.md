@@ -24,6 +24,9 @@ alle bisherigen Tests laufen unverändert.
 - REST: versionierter Vertrag `auditcore_sampling.guidance/1`
   (`GET /guidance/profiles`, `POST /guidance/size`, `POST /guidance/draw`),
   `docs/ui/samplesize-rest.md`.
+- Status „spezifiziert“: `docs/spezifikation.md` mit Invarianten I1–I10 als
+  Hypothesis-Eigenschaftstests (`tests/test_spezifikation.py`), benannte
+  Legacy-Varianten und `specification`-Block in `provenance.json`.
 - `[dev]`: `hypothesis`, `numpy` (nur Tests).
 
 ## 0.2.3 – 2026-09-26 – Paketstand für Release v0.4.2 – Hilfsfunktionen aus auditcore_common
