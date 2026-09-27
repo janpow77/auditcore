@@ -216,7 +216,8 @@ def test_builtin_templates_are_neutral_and_valid() -> None:
     report = registry.get("pruefbericht")
     assert report.text_block("rechtsgrundlage").required  # type: ignore[union-attr]
     text = str(report.definition).lower()
-    for word in ("hessen", "hmwvw", "gellix", "wibank"):
+    # Neutral: no letterhead, logo or font in the template; design is a separate profile.
+    for word in ("logo", "briefkopf", "font", "farbe"):
         assert word not in text
     assert "verwaltungsüberprüfung" in text and "feststellungen" in text
     visible = " ".join(b.title for b in report.text_blocks)
