@@ -21,8 +21,11 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.12'
-      - run: python -m pip install --upgrade pip 'setuptools>=83' wheel
-      - run: python -m pip install -e '.[dev]'
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7  # v10.2.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: requirements/ci.lock
+      - run: uv pip install --system -c requirements/ci.lock -e '.[dev]'
       - name: Vergleichsstand bestimmen
         env:
           COMPARE_REF: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
@@ -53,11 +56,27 @@ jobs:
       - name: UI-Parität Vue ↔ React (fail closed; Ausnahmen in quality/ui-parity-exceptions.json nur abbauen)
         if: ${{ !cancelled() }}
         run: node scripts/js/ui-parity-gate.mjs --compare-ref "$GATE_COMPARE_REF" --json ui-parity-gate.json
+      - name: Plattform-Tests für den Befundbericht (Ergebnis nur im Bericht; rot macht quality)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: >-
+          pytest -n auto -q -p no:cacheprovider --junitxml=pytest-junit.xml
+          --cov=auditcore --cov-report=json:coverage.json
+      - name: Befundbericht (report.md für Agenten und Review, Details in report.json)
+        if: ${{ !cancelled() }}
+        run: |
+          args=(--gate code-quality-gate.json --api-compare-ref "$GATE_COMPARE_REF")
+          [ -f pytest-junit.xml ] && args+=(--junit pytest-junit.xml)
+          [ -f coverage.json ] && args+=(--coverage coverage.json)
+          [ -f code-quality-gate.json ] || args=("${args[@]:2}")
+          auditcore-codegate report "${args[@]}" --summary "$GITHUB_STEP_SUMMARY" > /dev/null
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: code-quality-gate
           path: |
             code-quality-gate.json
+            report.json
+            report.md
             ui-parity-gate.json
             institution-names.json

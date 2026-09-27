@@ -24,6 +24,7 @@ SHARED_PREFIXES = (
     "scripts/prepare_library_release.py",
     "scripts/verify_code_quality.py",
     "scripts/ci_affected_packages.py",
+    "requirements/ci.lock",
     ".github/workflows/domain-packages.yml",
 )
 REQUIREMENT_NAME = re.compile(r"^\s*([A-Za-z0-9_.-]+)")
