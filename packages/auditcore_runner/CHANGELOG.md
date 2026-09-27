@@ -3,6 +3,21 @@
 ## Unreleased
 
 - Oberfläche enthalten: `auditcore-runner ui` liefert die Runner-Konsole aus `@auditcore/ui` (Gruppe `runner`) als `data/web/runner-elements.js` aus; Paketseite ohne Platzhaltertext.
+- Vollständiger Werkzeugkatalog im Runner-Image, fest gepinnt (Binärdateien mit
+  SHA-256, Python und Node mit Lockfile, Dependabot pip/npm): pyrefly, Opengrep,
+  osv-scanner v2, syft, grype, trivy (nur per Prüfsumme), vulture, deptry,
+  import-linter, codespell, typos, mutmut, diff-cover, pytest-testmon/-split,
+  jscpd, ast-grep, libcst, tsc, prettier, stylelint, vitest, knip, size-limit,
+  Playwright mit Chromium und festen Schriften, axe, Lighthouse CI,
+  markdownlint, lychee, betterleaks, reviewdog, prek.
+- Parser je Werkzeug auf das einheitliche Befundmodell, getestet mit echten
+  Ausgaben; Pfade relativ zum Repository; Netz nur für Werkzeuge, die es brauchen.
+- Kette Autofix → Codemods (ast-grep, libcst, `[codemods]`) → Befunde;
+  Aufgabenpaket mit Fix-Hinweisen je Werkzeug, geprüfter Kennung und
+  Größengrenze.
+- Prüfprofile mit neutraler Standardauswahl, Schema für `.auditcore-runner.toml`.
+- Copyleft-Programme (Opengrep, codespell, axe-core, lightningcss) nur als
+  separate Programme mit Lizenztext und Quellverweis unter `data/LICENSES/`.
 
 ## 0.1.0 – Erste Fassung
 

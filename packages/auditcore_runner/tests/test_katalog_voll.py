@@ -244,3 +244,37 @@ def test_catalog_module_runs_without_optional_imports() -> None:
     code = "import auditcore_runner.werkzeuge as w; print(len(w.FULL_TOOLS))"
     result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True)
     assert int(result.stdout) >= 40
+
+
+BEISPIEL = """
+[pruefprofile.pr]
+werkzeuge = ["ruff", "pyrefly", "pytest", "gitleaks", "playwright"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = true
+
+[pruefprofile.pr.werkzeug.playwright]
+zeitlimit_s = 900
+prioritaet = 90
+
+[codemods]
+libcst = ["projekt.codemods.AlteApiErsetzen"]
+befehle = [["ast-grep", "scan", "--update-all"]]
+"""
+
+
+def test_repo_file_schema_matches_loader(tmp_path: Path) -> None:
+    import tomllib
+
+    import jsonschema
+
+    schema = json.loads((DATA.parent / "schemas" / "repo-konfiguration.schema.json").read_text(encoding="utf-8"))
+    jsonschema.validate(tomllib.loads(BEISPIEL), schema)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"pruefprofile": {"pr": {"ausloeser": ["immer"]}}}, schema)
+    (tmp_path / ".auditcore-runner.toml").write_text(BEISPIEL, encoding="utf-8")
+    from auditcore_runner.werkzeuge.modell import load_repo_profiles
+
+    profile = load_repo_profiles(tmp_path)["pr"]
+    assert profile.autofix and profile.ordered_tools()[-1] == "playwright"
+    assert len(load_codemods(tmp_path)) == 2
