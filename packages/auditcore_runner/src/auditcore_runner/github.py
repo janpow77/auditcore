@@ -129,18 +129,24 @@ def _label_names(item: dict[str, object]) -> tuple[str, ...]:
     return tuple(str(name) for name in names if name)
 
 
-def list_runners(client: Client, target: Target) -> list[RunnerInfo]:
-    data = client.get(f"{target.api_base}/actions/runners?per_page=100")
-    return [
-        RunnerInfo(
-            runner_id=int(str(item.get("id", 0))),
-            name=str(item.get("name", "")),
-            online=item.get("status") == "online",
-            busy=bool(item.get("busy")),
-            labels=_label_names(item),
-        )
-        for item in _objects(data, "runners")
-    ]
+def list_runners(client: Client, target: Target, max_pages: int = 20) -> list[RunnerInfo]:
+    """Every registered runner of the target (all pages)."""
+    runners: list[RunnerInfo] = []
+    for page in range(1, max_pages + 1):
+        items = _objects(client.get(f"{target.api_base}/actions/runners?per_page=100&page={page}"), "runners")
+        runners += [
+            RunnerInfo(
+                runner_id=int(str(item.get("id", 0))),
+                name=str(item.get("name", "")),
+                online=item.get("status") == "online",
+                busy=bool(item.get("busy")),
+                labels=_label_names(item),
+            )
+            for item in items
+        ]
+        if len(items) < 100:
+            break
+    return runners
 
 
 def class_of(labels: tuple[str, ...], profile: Profile) -> str | None:

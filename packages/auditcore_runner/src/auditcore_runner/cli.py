@@ -170,6 +170,12 @@ def cmd_status(args: argparse.Namespace) -> int:
         status.write(current)
     if not args.still:
         _print_json(current)
+    unknown = current.get("unbekannte_runner")
+    if isinstance(unknown, list):
+        for name in status.new_unknown([str(n) for n in unknown]):
+            print(f"WARNUNG: unbekannte Runner-Registrierung {name!r} – nicht von diesem Profil", file=sys.stderr)
+        if unknown and args.streng:
+            return 4
     return 0
 
 
@@ -303,6 +309,7 @@ def _add_runner_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser
     status_parser.add_argument("--schreiben", action="store_true", help=f"nach {status.status_path()} schreiben")
     status_parser.add_argument("--still", action="store_true")
     status_parser.add_argument("--ohne-github", action="store_true")
+    status_parser.add_argument("--streng", action="store_true", help="Exit 4 bei unbekannten Registrierungen")
     status_parser.set_defaults(func=cmd_status)
     target = group.add_parser("soll", help="Soll-Datei lesen oder setzen (KLASSE=ZAHL)")
     target.add_argument("setzen", nargs="*")

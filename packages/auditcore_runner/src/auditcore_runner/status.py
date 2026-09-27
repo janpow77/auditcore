@@ -10,7 +10,7 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from . import github, install, pool
+from . import github, install, nachfrage, pool
 from .hardware import HostFacts
 from .profile import Profile, state_dir
 from .profile_io import CURRENT_SCHEMA, content_hash, write_atomic
@@ -61,6 +61,54 @@ def unknown_runners(profile: Profile, runners: list[github.RunnerInfo]) -> list[
     return sorted(r.name for r in runners if not r.name.startswith(profile.known_prefixes()))
 
 
+def unknown_details(profile: Profile, runners: list[github.RunnerInfo]) -> list[dict[str, object]]:
+    """Unknown registrations with what they could take: a class match means they can steal our jobs."""
+    return [
+        {
+            "name": r.name,
+            "id": r.runner_id,
+            "online": r.online,
+            "belegt": r.busy,
+            "labels": list(r.labels),
+            "passt_zu_klasse": github.class_of(r.labels, profile),
+        }
+        for r in sorted(runners, key=lambda r: r.name)
+        if not r.name.startswith(profile.known_prefixes())
+    ]
+
+
+def seen_path() -> Path:
+    return state_dir() / "unbekannte_runner.json"
+
+
+def new_unknown(names: list[str], path: Path | None = None) -> list[str]:
+    """Names not reported before; remembers the current set (a vanished runner is reported again later)."""
+    target = path or seen_path()
+    try:
+        seen = set(json.loads(target.read_text(encoding="utf-8")))
+    except (OSError, ValueError, TypeError):
+        seen = set()
+    write_atomic(target, json.dumps(sorted(names)) + "\n")
+    return sorted(set(names) - seen)
+
+
+def _queue(demand: nachfrage.Demand | None, name: str) -> dict[str, object]:
+    entry = demand.classes.get(name) if demand and demand.fresh() else None
+    if entry is None:
+        return {"warteschlange": None}
+    result: dict[str, object] = {
+        "warteschlange": entry.waiting,
+        "warteschlange_quelle": demand.source if demand else "",
+    }
+    if entry.target is not None:
+        result["nachfrage_soll"] = entry.target
+    if entry.scale_set:
+        result["scale_set"] = entry.scale_set
+    if entry.statistics:
+        result["scale_set_statistik"] = entry.statistics
+    return result
+
+
 def collect(profile: Profile, facts: HostFacts, client: github.Client | None) -> dict[str, object]:
     """Full status; GitHub numbers are omitted (null) when unreachable."""
     runners: list[github.RunnerInfo] | None = None
@@ -71,6 +119,7 @@ def collect(profile: Profile, facts: HostFacts, client: github.Client | None) ->
             runners = None
     counts = _runner_counts(profile, runners) if runners is not None else {}
     current = pool.load(profile.pool_path())
+    demand = nachfrage.load()
     classes: dict[str, object] = {}
     for name, settings in sorted(profile.classes.items()):
         classes[name] = {
@@ -80,6 +129,7 @@ def collect(profile: Profile, facts: HostFacts, client: github.Client | None) ->
             "gruende": current.reasons.get(name, []) if current else [],
             "instanzen_aktiv": active_instances(name),
             **(counts.get(name) or {"registriert": None, "belegt": None}),
+            **_queue(demand, name),
         }
     return {
         "schema": STATUS_SCHEMA,
@@ -92,12 +142,14 @@ def collect(profile: Profile, facts: HostFacts, client: github.Client | None) ->
         "sync": profile.sync,
         "ziel": profile.target.name,
         "soll_quelle": profile.source.kind,
+        "backend": profile.backend,
         "hardware": facts.as_dict(),
         "klassen": classes,
         "image_vorhanden": install.image_present(profile.image),
         "netz_vorhanden": install.network_present(profile.network.name) if profile.network.enabled else None,
         "netzsperre_aktiv": install.FIREWALL_MARKER.exists() if profile.network.enabled else None,
         "unbekannte_runner": unknown_runners(profile, runners) if runners is not None else None,
+        "unbekannte_runner_details": unknown_details(profile, runners) if runners is not None else None,
         "github_rest_kontingent": client.remaining if client else None,
     }
 
@@ -127,7 +179,7 @@ def prometheus(status: dict[str, object]) -> str:
     classes = status.get("klassen")
     for name, entry in classes.items() if isinstance(classes, dict) else []:
         if isinstance(entry, dict):
-            for state in ("max", "soll", "instanzen_aktiv", "registriert", "belegt"):
+            for state in ("max", "soll", "instanzen_aktiv", "registriert", "belegt", "warteschlange", "nachfrage_soll"):
                 _metric(
                     lines,
                     "auditcore_runner_instances",
@@ -140,4 +192,8 @@ def prometheus(status: dict[str, object]) -> str:
     unknown = status.get("unbekannte_runner")
     if isinstance(unknown, list):
         _metric(lines, "auditcore_runner_unknown_registered", len(unknown), {"rechner": host})
+    details = status.get("unbekannte_runner_details")
+    if isinstance(details, list):
+        matching = [d for d in details if isinstance(d, dict) and d.get("passt_zu_klasse")]
+        _metric(lines, "auditcore_runner_unknown_matching_class", len(matching), {"rechner": host})
     return "\n".join(lines) + "\n"

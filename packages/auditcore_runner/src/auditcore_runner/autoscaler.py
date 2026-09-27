@@ -6,10 +6,26 @@ import time
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from . import github, pool, signals
+from . import github, nachfrage, pool, signals
 from .hardware import detect
 from .profile import Profile
 from .regeln import Decision, Signals, decide, smooth
+
+
+def queue_and_busy(profile: Profile, client: github.Client | None) -> tuple[dict[str, int], dict[str, int]]:
+    """Waiting and running jobs per class: from the scale set listener if it is fresh, else from the REST API."""
+    demand = nachfrage.load() if profile.backend == "scaleset" else None
+    if demand is not None and demand.fresh():
+        queued = {name: entry.waiting for name, entry in demand.classes.items()}
+        busy = {name: entry.statistics.get("laufend", 0) for name, entry in demand.classes.items()}
+        return queued, busy
+    if client is None:
+        return {}, {}
+    try:
+        runners = github.list_runners(client, profile.target)
+        return github.queued_by_class(client, profile), github.busy_by_class(runners, profile, profile.runner_prefix())
+    except github.GitHubError:
+        return {}, {}
 
 
 def collect(profile: Profile, client: github.Client | None, swap_in_per_s: float | None = None) -> Signals:
@@ -19,15 +35,7 @@ def collect(profile: Profile, client: github.Client | None, swap_in_per_s: float
     idle, locked = signals.activity()
     cards = signals.gpu_use(profile.scaling.gpu_shared_services)
     external = pool.load(profile.pool_path()) if profile.source.kind == "datei" else None
-    queued: dict[str, int] = {}
-    busy: dict[str, int] = {}
-    if client is not None:
-        try:
-            runners = github.list_runners(client, profile.target)
-            busy = github.busy_by_class(runners, profile, profile.runner_prefix())
-            queued = github.queued_by_class(client, profile)
-        except github.GitHubError:
-            queued, busy = {}, {}
+    queued, busy = queue_and_busy(profile, client)
     return Signals(
         cpu_count=facts.cpu_count,
         load_1m=signals.load_1m(),
@@ -84,6 +92,9 @@ class Regulator:
                 ),
                 path,
             )
+        if self.profile.backend != "scaleset":  # with scale sets the listener owns the demand file
+            classes = {name: nachfrage.ClassDemand(count) for name, count in measured.queued.items()}
+            nachfrage.save(nachfrage.Demand("regler", time.time(), classes))
 
 
 def swap_rate(before: tuple[float, int], after: tuple[float, int]) -> float | None:
