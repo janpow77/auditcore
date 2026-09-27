@@ -74,17 +74,38 @@ def test_i1_normalisation_is_idempotent(text: str, sentence: str) -> None:
         assert normalise(normalise(sentence)) == normalise(sentence)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Befund B1 (docs/spezifikation.md): je Durchgang wird nur eine führende "
-    "Nummerierung entfernt; „1. 2. Text“ und „:0“ ändern sich beim zweiten Durchgang erneut.",
-)
-@settings(max_examples=200, deadline=None)
-@given(ANY_TEXT)
-def test_i1_befund_b1_leading_numbering_is_removed_once(text: str) -> None:
-    """I1 (Befund B1): für beliebige Texte nicht idempotent."""
+NUMBERED = st.lists(
+    st.sampled_from(["1.", "2)", "a)", "-", "–", ":", "0", "§", "Text", " "]), max_size=8
+).map("".join)
+
+
+@settings(max_examples=300, deadline=None)
+@given(ANY_TEXT | NUMBERED)
+def test_i1_numbering_all_is_idempotent(text: str) -> None:
+    """I1 (Befund B1 behoben): mit ``numbering="all"`` für beliebige Texte idempotent."""
     for normalise in (normalise_for_match, normalise_semantic):
-        assert normalise(normalise(text)) == normalise(text)
+        once = normalise(text, numbering="all")
+        assert normalise(once, numbering="all") == once
+
+
+@pytest.mark.parametrize(
+    ("text", "for_match", "semantic"),
+    [
+        ("1. 2. Text", "2. text", "2 text"),
+        (":0", ":0", "0"),
+        ("a) 1) Frist", "1) frist", "1 frist"),
+    ],
+)
+def test_i1_numbering_once_keeps_original_behaviour(
+    text: str, for_match: str, semantic: str
+) -> None:
+    """I1: Standard ``numbering="once"`` bleibt das charakterisierte Original (Legacy-Variante)."""
+    assert normalise_for_match(text) == for_match
+    assert normalise_semantic(text) == semantic
+    assert normalise_for_match(text, numbering="once") == for_match
+    assert normalise_for_match(text, numbering="all") == normalise_for_match(
+        normalise_for_match(text, numbering="all")
+    )
 
 
 @EXAMPLES
