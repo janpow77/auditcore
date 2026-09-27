@@ -283,5 +283,38 @@
       "origin": "OWN_IMPLEMENTATION",
       "description": "REST-Vertrag für Geo-Oberflächen (docs/ui/geo-rest.md): Profile, Umkreis, Lage mit Randregel, UTM, Douglas-Peucker in Metern oder Grad, GeoPackage-Dateien (SQLite) lesen, Adresssuche nur mit angeschlossenem Geocoder; Starlette-Routen und optionaler FastAPI-Router (Extras web/fastapi). Keine neue Geometrieberechnung, nur Aufrufe der bestehenden Funktionen."
     }
-  ]
+  ],
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "legacy.osint_haversine_km",
+      "legacy.designer_gis_haversine_m",
+      "legacy.osint_umkreis",
+      "legacy.osint_im_ring",
+      "legacy.designer_gis_punkt_in_geometrie",
+      "legacy.designer_gis_randabstand_m",
+      "legacy.designer_company_abstand_zur_geometrie_m",
+      "legacy.flowsearch_geometriezentrum",
+      "legacy.osint_wkb_polygone",
+      "legacy.osint_achsen_drehen",
+      "legacy.designer_gis_schwerpunkt",
+      "legacy.osint_douglas_peucker",
+      "legacy.osint_utm_nach_wgs84"
+    ]
+  }
 }

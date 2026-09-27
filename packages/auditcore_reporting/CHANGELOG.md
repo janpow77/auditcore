@@ -2,6 +2,15 @@
 
 Rekonstruiert aus der Git-Historie (0.2.1: Pull Request #68).
 
+## Unreleased
+
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 9 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+Profil `flowlib-legacy-v1`. Befunde B1 (Format folgt dem Spaltennamen, nicht dem Wert) und B2 (Gleitkommazahlen mit 16 Stellen geschrieben; die größte endliche Zahl kommt als unendlich zurück, erwarteter Fehlschlag `test_i6_befund_b2_groesste_gleitkommazahl`) dokumentiert, Code unverändert. Keine Verhaltensänderung.
+
 ## 0.3.0 – 2026-09-26 – Paketstand für Release v0.4.2
 
 - Neue Laufzeitabhängigkeit `auditcore_common==0.2.0` (selbst nur
