@@ -132,6 +132,8 @@ def _helper_units(profile: Profile, profile_path: Path) -> list[tuple[str, str]]
     ]
     if profile.source.kind == "lokal":
         units.append((f"{UNIT_PREFIX}-regler.service", _render("regler.service", **values)))
+    if profile.backend == "scaleset":
+        units.append((f"{UNIT_PREFIX}-scaleset.service", _render("scaleset.service", **values)))
     return units
 
 
@@ -159,6 +161,10 @@ def instance_steps(profile: Profile) -> list[Step]:
     if profile.source.kind == "lokal":
         steps.append(Step(("systemctl", "--user", "enable", "--now", f"{UNIT_PREFIX}-regler.service"), "Autoskalierer"))
         steps.append(Step(("systemctl", "--user", "try-restart", f"{UNIT_PREFIX}-regler.service"), "Regeln neu laden"))
+    if profile.backend == "scaleset":
+        unit = f"{UNIT_PREFIX}-scaleset.service"
+        steps.append(Step(("systemctl", "--user", "enable", "--now", unit), "Scale-Set-Listener"))
+        steps.append(Step(("systemctl", "--user", "try-restart", unit), "Listener mit neuem Profil"))
     for name, settings in sorted(profile.classes.items()):
         if not settings.enabled:
             continue

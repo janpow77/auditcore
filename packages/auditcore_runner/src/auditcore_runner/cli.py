@@ -11,6 +11,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from . import __version__, anwenden, backend, github, install, pool, profile_io, status
+from .commands_scaleset import add_scaleset_commands
 from .commands_tools import add_tool_commands
 from .hardware import HostFacts, detect
 from .profile import Profile, default_profile_path
@@ -210,7 +211,16 @@ def cmd_gpu_choose(args: argparse.Namespace) -> int:
     uuid = gpu.choose(profile, args.klasse, gpu.observe(profile))
     if uuid is None:
         return 3
+    if args.platz:
+        gpu.reserve(args.platz, uuid)
     print(uuid)
+    return 0
+
+
+def cmd_gpu_release(args: argparse.Namespace) -> int:
+    from . import gpu
+
+    gpu.release(args.platz)
     return 0
 
 
@@ -249,6 +259,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_profile_commands(sub)
     _add_runner_commands(sub)
     add_tool_commands(sub)
+    add_scaleset_commands(sub)
     return parser
 
 
@@ -305,7 +316,11 @@ def _add_runner_commands(sub: argparse._SubParsersAction[argparse.ArgumentParser
     )
     choose = gpu_group.add_parser("waehlen", help="freieste erlaubte Karte ausgeben (Exit 3: keine frei)")
     choose.add_argument("klasse")
+    choose.add_argument("--platz", help="Reservierung für diese Instanz (z. B. gpu-16gb-1), bis der Container läuft")
     choose.set_defaults(func=cmd_gpu_choose)
+    release = gpu_group.add_parser("freigeben", help="Reservierung einer Instanz aufheben")
+    release.add_argument("platz")
+    release.set_defaults(func=cmd_gpu_release)
     check_gpu = gpu_group.add_parser("pruefen", help="Exit 1, wenn die Karte geräumt werden muss")
     check_gpu.add_argument("uuid")
     check_gpu.set_defaults(func=cmd_gpu_check)

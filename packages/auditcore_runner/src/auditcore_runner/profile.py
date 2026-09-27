@@ -52,7 +52,9 @@ def state_dir() -> Path:
 
 
 def default_profile_path() -> Path:
-    return config_dir() / "profil.json"
+    """``AUDITCORE_RUNNER_PROFILE`` (set by the units) or the profile in the config directory."""
+    configured = os.environ.get("AUDITCORE_RUNNER_PROFILE")
+    return Path(configured) if configured else config_dir() / "profil.json"
 
 
 def expand(path: str) -> Path:

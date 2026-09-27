@@ -33,4 +33,5 @@ def isolated_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setenv("XDG_CONFIG_HOME", str(home / ".config"))
     monkeypatch.setenv("XDG_STATE_HOME", str(home / ".local" / "state"))
     monkeypatch.setenv("XDG_CACHE_HOME", str(home / ".cache"))
+    monkeypatch.delenv("AUDITCORE_RUNNER_PROFILE", raising=False)
     return home
