@@ -1,0 +1,24 @@
+{
+  "donut_root": "/home/janpow/donut",
+  "stufen": [
+    {
+      "id": "pilot",
+      "titel": "1 · Pilot",
+      "run": "6cb8d70e0befc10e-0",
+      "eval": "eval/pilot-gpu0.json",
+      "job": "job-pilot.json",
+      "testsaetze": "pilot"
+    },
+    {
+      "id": "voll1",
+      "titel": "2 · Volllauf 1",
+      "run": "2835be42bd3c1e1a-0",
+      "eval": "eval/2835be42bd3c1e1a-0.json",
+      "job": "job-voll.json",
+      "testsaetze": "voll"
+    }
+  ],
+  "gpu_auftraege": ["donut-gross"],
+  "titel_auftraege": {"donut-gross": "3 · Große Bilder"},
+  "auftraege_ordner": "~/.config/flow-agent/gpu-auftraege"
+}
