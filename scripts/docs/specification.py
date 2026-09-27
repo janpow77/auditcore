@@ -73,8 +73,7 @@ def check(package_dir: Path, block: object) -> list[str]:
     try:
         document = _read(package_dir, block.get("document"), where)
         tests = [
-            _read(package_dir, path, where)
-            for path in _strings(block, "property_tests", where)
+            _read(package_dir, path, where) for path in _strings(block, "property_tests", where)
         ]
         invariants = _strings(block, "invariants", where)
         legacy = _strings(block, "legacy_variants", where)
