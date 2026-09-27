@@ -75,7 +75,7 @@
         "mypy_strict_errors": 0,
         "non_english_identifiers": 0
       },
-      "coverage_percent": 95.51
+      "coverage_percent": 95.47
     },
     "auditcore_dummygenerator": {
       "metrics": {
