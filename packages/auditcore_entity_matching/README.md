@@ -122,7 +122,7 @@ Jedes Profil ist quellengebunden, versioniert und hat einen Fingerprint;
 
 | Profil | Versionen | Herkunft / Verwendung |
 |---|---|---|
-| `flowworkshop.state_aid` | 2026.09.1, 2026.09.2 | Beihilfe-Namensabgleich (`Müller → mueller`) |
+| `flowworkshop.state_aid` | 2026.09.1–2026.09.3 | Beihilfe-Namensabgleich (`Müller → mueller`); ab 2026.09.3 idempotent (`casefold_then_translate`) |
 | `flowworkshop.sanctions` | 2026.09.1–2026.09.3 | Sanktionsabgleich flowworkshop |
 | `audit_designer.sanctions` | 2026.09.1–2026.09.3 | Sanktionsabgleich audit_designer |
 | `flowworkshop.entity_resolution` | 2026.09.1 | Entity Resolution flowworkshop |
@@ -136,7 +136,10 @@ Jedes Profil ist quellengebunden, versioniert und hat einen Fingerprint;
 `sanctions_screening` → `audit_designer.sanctions` 2026.09.3,
 `pep_screening` → `flowinvoice.pep` 2026.09.2, `payee` →
 `riskanalysis.payee` 2026.09.2. Die Empfehlung ändert kein Ergebnis eines
-benannten Profils. Schwellen (etwa 75, 70, Klassen 97/90/80) existieren nur
+benannten Profils. `flowworkshop.state_aid` 2026.09.3 ist die idempotente
+Fassung von 2026.09.2 (Kleinschreibung vor der Zeichentabelle, `SOCIÉTÉ →
+societe` statt `société`); die Empfehlung bleibt bis zur Umstellung der
+Anwendungen auf 2026.09.2. Schwellen (etwa 75, 70, Klassen 97/90/80) existieren nur
 als benannte Profilwerte; `best_match` verlangt `min_score` ausdrücklich.
 
 ## Herkunft und Charakterisierung
