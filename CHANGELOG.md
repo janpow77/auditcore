@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- `auditcore_sampling`: Stichprobenumfang nach dem KOM-Leitfaden
+  EGESIF_16-0014-01 als neues Modul `guidance` mit Status „nach Leitfaden“
+  (SRS, Differenzenschätzung, MUS Standard/geschichtet/konservativ,
+  nicht-statistische Mindestumfänge nach Art. 79 Abs. 2 VO (EU) 2021/1060),
+  Belegziehung einer Zwischengeschalteten Stelle (`intermediate_body`,
+  Paritätstest gegen flowinvoice), REST-Vertrag `auditcore_sampling.guidance/1`;
+  Oberfläche `SampleSizePlanner` / `FlowauditSampleSizePlanner`
+  (`<flowaudit-sample-size-planner>`). Konsistenztest Planung → Hochrechnung
+  in `auditcore_extrapolation`.
+
 - `scripts/regulierung_package_test.py`: Der Gast richtet PGDG und das
   Timescale-Repository für den Codename des Gast-Images ein und installiert
   PostgreSQL, TimescaleDB und PostGIS in den Versionen aus den
