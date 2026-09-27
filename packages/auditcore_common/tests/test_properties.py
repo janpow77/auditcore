@@ -84,6 +84,15 @@ def test_canonical_sha256_equals_market_fingerprint(data: dict[str, object]) -> 
     assert canonical_sha256(data) == legacy.fingerprint(data)
 
 
+class _GeoError(rest.ContractError):
+    """Geo's subclass: same class, own default code."""
+
+    def __init__(
+        self, message: str, *, status: int = 422, code: str = "ungueltige_eingabe"
+    ) -> None:
+        super().__init__(message, status=status, code=code)
+
+
 def _decode_outcome(function: object) -> object:
     try:
         return ("ok", function())  # type: ignore[operator]
@@ -113,3 +122,34 @@ def test_choice_equals_sampling_and_statistics(value: object, name: str) -> None
     assert repr(old) == repr(_decode_outcome(lambda: rest.choice(value, name, allowed)))
     old_field = _decode_outcome(lambda: legacy_rest.statistics_field({name: value}, name, allowed))
     assert repr(old_field) == repr(old)
+
+
+@EXAMPLES
+@given(
+    st.one_of(st.binary(max_size=40), JSON.map(lambda v: repr(v).encode())),
+    st.integers(min_value=0, max_value=64),
+)
+def test_decode_body_equals_geo(raw: bytes, limit: int) -> None:
+    old = _decode_outcome(lambda: legacy_rest.geo_decode(raw, limit))
+    new = _decode_outcome(
+        lambda: rest.decode_body(
+            raw, limit, too_large_code="zu_gross", invalid_json_code="ungueltiges_json"
+        )
+    )
+    assert repr(old) == repr(new)
+
+
+@EXAMPLES
+@given(
+    st.one_of(JSON, st.dictionaries(st.integers() | st.text(max_size=3), JSON, max_size=3)),
+    st.text(max_size=10),
+)
+def test_json_object_equals_sampling_geo_and_extrapolation(value: object, path: str) -> None:
+    cases = (
+        (legacy_rest.sampling_as_object, rest.ContractError),
+        (legacy_rest.extrapolation_reader_body, rest.ContractError),
+        (legacy_rest.geo_body_of, _GeoError),
+    )
+    for old, error in cases:
+        new = _decode_outcome(lambda error=error: rest.json_object(value, path, error=error))
+        assert repr(_decode_outcome(lambda old=old: old(value, path))) == repr(new)
