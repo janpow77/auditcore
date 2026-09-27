@@ -18,7 +18,10 @@
       "testsaetze": "voll"
     }
   ],
-  "gpu_auftraege": ["donut-gross"],
-  "titel_auftraege": {"donut-gross": "3 · Große Bilder"},
+  "gpu_auftraege": ["donut-gross", "donut-iban-20261003"],
+  "titel_auftraege": {
+    "donut-gross": "3 · Große Bilder",
+    "donut-iban-20261003": "4 · IBAN-Positionsvielfalt"
+  },
   "auftraege_ordner": "~/.config/flow-agent/gpu-auftraege"
 }

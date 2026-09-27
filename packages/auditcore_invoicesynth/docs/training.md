@@ -170,16 +170,57 @@ Kandidat und Donut-CORD läuft durch (CPU ≈ 3,5 s je Seite bei 128 Token).
 Sehr kleine Bildgrößen (z. B. 320×240) scheitern an der Fenstergröße 10 des
 Swin-Encoders; die beiden Profilgrößen sind geprüft.
 
-## Was für E3 noch offen ist
+## Nächster Lauf: IBAN-Training am 3./4. Oktober 2026
 
-1. FlowAgent: Runner `train:donut` mit GPU-Freigabe (whisper auf GPU 0,
-   Ollama/ComfyUI auf GPU 1), Auftragsdateien, Checkpoint-Spiegel auf die NUC
-   (flow-agent-f1).
-2. Pilot 3 Epochen × 2 000 auf beiden Karten, VRAM-Spitze messen (Lauf 1:
-   1536×1152, Batch 4; bei OOM Exit 4 → `--per-device-batch 2 --grad-accum 4`).
-3. Stromausfall-Test auf der GPU (`kill -9` und SIGTERM während eines
-   Checkpoints), danach Wiederaufnahme prüfen.
-4. Bewertung des Piloten gegen Donut-CORD auf T1/T2 (Befehl oben); danach
-   Volltraining (6 Epochen × 20 000) über Nacht. Frühes Anhalten auf der
-   Validierung ist noch nicht eingebaut; ausgewählt wird per Bewertung.
-5. T3 (ausgedruckt/gescannt) und die Abnahme E6 folgen nach dem Volltraining.
+Geplantes Rechnerfenster (Europe/Berlin): **Samstag, 03.10.2026, 08:00 Uhr,
+bis Sonntag, 04.10.2026, 20:00 Uhr**. Die Uhrzeiten konkretisieren die Angabe
+„Samstagmorgen bis Sonntagabend“. Der Lauf wird vorab als persistenter
+`systemd --user`-Timer eingerichtet; nach dem Einschalten genügt das Erreichen
+des Startzeitpunkts. Ein Einschalten nach 08:00 Uhr holt den Start wegen
+`Persistent=true` nach.
+
+### Befund und Trainingsänderung
+
+- Stufe 3 erkennt auf T2 insgesamt 204 von 487 IBANs korrekt. Die Verteilung
+  ist nicht kontinuierlich: `holdout_briefkopf` erreicht 204/215 (94,9 %),
+  `holdout_kompakt` dagegen 0/272; dort fehlt die IBAN ausnahmslos.
+- `holdout_kompakt` setzt die Bankdaten mit `bank="sender"` in den
+  Absenderkopf. Keine der bisherigen acht Trainingsvorlagen verwendete diese
+  Position. Größere Bilder und ein anderer Seed änderten das Fehlermuster nicht.
+- Drei neue, geometrisch eigenständige Trainingsvorlagen `bank_kopf_*`
+  verwenden Bankdaten im linken, rechten beziehungsweise zweispaltigen
+  Absenderkopf. Die elf Trainingslayouts verteilen sich damit auf fünf mit
+  Bankdaten in der Fußzeile, drei unter dem Summenblock und drei im
+  Absenderkopf (rund 45/27/27 %). Die gut funktionierende Fußzeilenposition
+  bleibt also die größte Gruppe; keine Holdout-Vorlage wird kopiert.
+- Gruppierte und kompakte IBANs, DE/AT, 150/200/300 dpi, Schriften und
+  Verfremdungen bleiben wie bisher gemischt. Der T2-Holdout bleibt unverändert.
+
+### Automatischer Ablauf
+
+1. Vor dem Wochenende: neuen Datensatz mit Seed 42 und 20 000/1 000/1 000/500
+   Belegen erzeugen, Hash prüfen und Auftragsdatei mit festem Image-Digest
+   ablegen; einen kleinen Rauchtest durchführen.
+2. Am Samstag: GPU-Dienste kontrolliert über den FlowAgent freigeben und auf
+   beiden Karten unabhängige Läufe mit sechs Epochen starten. GPU 0 nutzt
+   1280×960, Batch 4 × Akkumulation 2, Seed 42; GPU 1 nutzt 1536×1152,
+   Batch 2 × Akkumulation 4, Seed 43. Checkpoints werden weiter auf die NUC
+   gespiegelt und nach Stromausfall fortgesetzt.
+3. Nach beiden Läufen: Kandidaten auf unverändertem T1/T2 bewerten, Bericht
+   und Diagramme neu erzeugen und als Branch/PR ablegen.
+4. Spätestens Sonntag 20:00 Uhr: laufende Container per SIGTERM mit Checkpoint
+   beenden, GPU-Dienste wiederherstellen und den Abschlusszustand protokollieren.
+
+### Auswahl- und Sicherheitskriterien
+
+- Primär: IBAN auf `holdout_kompakt` mindestens 90 %, danach Zielschwelle E6
+  von 97 % auf T2.
+- Kein Rückgang eines Pflichtfelds auf T1 um mehr als einen Prozentpunkt
+  gegenüber Stufe 3 Lauf 1.
+- Jede ausgegebene IBAN muss `iban_valid()` bestehen. In Stufe 3 waren alle
+  elf falschen T2-Ausgaben prüfziffer-ungültig und damit sicher verwerfbar.
+- Wird die Zielschwelle nicht erreicht, wird kein Modell automatisch
+  ausgerollt; die Ergebnisse bleiben ein bewerteter Kandidat. Nächster Versuch
+  wäre ein IBAN-OCR-Fallback mit Modulo-97-Prüfung.
+
+T3 (ausgedruckt/gescannt) und die vollständige Abnahme E6 bleiben danach offen.

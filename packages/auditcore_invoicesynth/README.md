@@ -103,7 +103,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | Baustein | Umfang |
 |---|---|
 | Anreicherung (`enrich`) | fiktive IBAN/BIC (BLZ-Liste mit führender 9 bzw. `99xxx`, BIC `SYNT…`), USt-IdNr. DE (ISO 7064 MOD 11,10) und UID AT mit gültiger Prüfziffer, Steuernummer, Steuerzeilen 19/7/gemischt, § 19 UStG, Reverse Charge, AT 20/13/10/gemischt; Beträge mit `Decimal`, `netto + USt = brutto` exakt; Fehlerfälle `wrong_total`, `missing_vat_id`, `missing_iban` |
-| Vorlagen (`layouts`) | 10 Vorlagen: `kopf_links`, `kopf_rechts`, `summen_unten`, `fusszeile_bank`, `zweispaltig`, `kleinunternehmer`, `gutschrift`, `mehrseitig` (Training) und `holdout_kompakt`, `holdout_briefkopf` (nur Testsatz `test_layout_holdout`) |
+| Vorlagen (`layouts`) | 13 Vorlagen: acht allgemeine Trainingsvorlagen, drei Trainingsvarianten mit Bankdaten im Absenderkopf (`bank_kopf_*`) und `holdout_kompakt`/`holdout_briefkopf` nur für den Testsatz `test_layout_holdout` |
 | Beschriftungen/Formate | Synonymlisten je Feld (DE, ≈ 10 % EN); `1.234,56`, `1234,56`, `1 234,56`, `1,234.56`; Währung vor/nach dem Betrag (`EUR`/`€`) oder ohne; `15.01.2026`, `15.1.26`, `15. Januar 2026` (AT: Jänner), ISO, englisch |
 | Schriften (`fonts`) | nur Katalog freier Familien (DejaVu, Liberation, Noto); **nicht eingebettet**: Systemschriften oder `fetch_font` mit SHA-256; optionale Prüfsummen-Pins; Holdout-Schrift standardmäßig `DejaVu Serif` |
 | Scanrauschen (`augment`) | Drehung ±3°, Perspektive, Unschärfe, JPEG, Salz-und-Pfeffer, Graustufe/Binarisierung, Stempel, Kugelschreiber, Lochung, Faltkante, 150–300 dpi; alles aus dem Einzelseed |
@@ -171,7 +171,7 @@ assert from_sequence(sequence) == {"invoice_number": "RE-2026-001", "total": "11
 | `auditcore_invoicesynth.layout_body` | Positionstabelle, Summenblock, Zahlungshinweis, Bankverbindung und Fußzeile. |
 | `auditcore_invoicesynth.layout_head` | Kopfbereich eines Belegs: Kennzeichnung, Absender, Empfänger, Titel, Kopfdaten. |
 | `auditcore_invoicesynth.layout_model` | Belegvorlagen als Daten: Zeichenfläche, Vorlagenparameter und Formatwahl. |
-| `auditcore_invoicesynth.layouts` | Zehn Belegvorlagen (acht fürs Training, zwei nur für den Layout-Holdout). |
+| `auditcore_invoicesynth.layouts` | Dreizehn Belegvorlagen (elf fürs Training, zwei nur für den Layout-Holdout). |
 | `auditcore_invoicesynth.plan` | Deterministischer Variantenplan und Aufteilung in Trainings-/Testsätze. |
 | `auditcore_invoicesynth.render` | Pillow-Zeichenfläche für die Vorlagen (Extra ``render``). |
 | `auditcore_invoicesynth.schema` | Ziel-JSON ``auditcore_invoice_v1`` (nur Kopf-/Summenfelder, Entscheidung E8). |

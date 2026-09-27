@@ -1,4 +1,4 @@
-"""Zehn Belegvorlagen (acht fürs Training, zwei nur für den Layout-Holdout).
+"""Dreizehn Belegvorlagen (elf fürs Training, zwei nur für den Layout-Holdout).
 
 Die Vorlagen beschreiben nur Geometrie und Reihenfolge; gezeichnet wird über
 die Schnittstelle ``Canvas`` (Pillow-Umsetzung in ``render``). Jeder als Feld
