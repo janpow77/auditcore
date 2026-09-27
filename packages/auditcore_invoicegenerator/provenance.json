@@ -141,5 +141,29 @@
     "change_reason": "User-authorized optional PDF output of existing synthetic invoice contract; existing invoice rules unchanged",
     "review_status": "TECHNICAL_REVIEW_IN_PROGRESS",
     "source_reference": "New implementation; no upstream PDF source reused"
+  },
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10"
+    ],
+    "legacy_variants": [
+      "FlowInvoiceDemoProfile",
+      "FlowInvoiceDemoProfile.generate_line_items",
+      "get_vat_rate",
+      "generate_invoice_legacy_global"
+    ]
   }
 }

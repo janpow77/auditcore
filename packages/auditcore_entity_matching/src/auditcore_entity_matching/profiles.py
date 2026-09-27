@@ -28,6 +28,7 @@ SCHEMA = "auditcore_entity_matching.profile/1"
 ALGORITHMS = frozenset(
     {
         "translate_then_casefold",
+        "casefold_then_translate",
         "casefold_fold_nfkd",
         "casefold_nfc_fold_nfkd",
         "lower_nfkd_ascii",

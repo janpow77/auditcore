@@ -1,5 +1,19 @@
 # Changelog auditcore_entity_matching
 
+## Unreleased
+
+- Neue Profilversion `flowworkshop.state_aid` 2026.09.3 mit dem Verfahren
+  `casefold_then_translate`: Kleinschreibung und NFC vor der Zeichentabelle,
+  dadurch idempotent (`SOCIÉTÉ → societe`, vorher `société`). 2026.09.1 und
+  2026.09.2 bleiben bitgenau unverändert; die Empfehlung
+  `entity_normalization` bleibt auf 2026.09.2.
+- `MatchResult.unrounded_score`: ungerundeter Trefferwert, an dem
+  `best_match` die Schwelle prüft; `score` bleibt auf eine Nachkommastelle
+  gerundet (Quellverhalten).
+- Spezifikation: beide Befunde als behoben dokumentiert, I2/I10 geschärft.
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 11 Invarianten (I1–I11) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`. Befunde (dokumentiert, Code unverändert): `translate_then_casefold` ist nicht idempotent (`É → é → e`), `best_match` rundet den Wert und kann dadurch bis 0,05 unter einer ungerundeten Schwelle liegen. `hypothesis` im Extra `dev`.
+
 ## 0.2.4 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_common==0.2.0`.

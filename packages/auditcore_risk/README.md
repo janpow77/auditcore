@@ -20,12 +20,12 @@ python -m pip install 'auditcore_risk[fuzzy,procurement]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.3.3 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.3.4 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-risk/`):
 
 ```text
-auditcore_risk @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_risk-0.3.3-py3-none-any.whl#sha256=2c652183426f139c053063d4334f4bc9f8667e5f7f36f171c60d547b03e83b60
+auditcore_risk @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_risk-0.3.4-py3-none-any.whl#sha256=811970b803f1609e3e0810d18170428c97d15b9361f0e0cd3487b1c2916c5b69
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

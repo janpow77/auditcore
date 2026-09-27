@@ -110,5 +110,28 @@
       "origin": "OWN_IMPLEMENTATION",
       "description": "Chi²-Test mit kritischen Werten (Bisektion auf chi2_survival) und z je Ziffer mit wählbarer Stetigkeitskorrektur und ausdrücklicher Grenze; im REST-Vertrag als optionale Kennzahlen 'metrics'."
     }
-  ]
+  ],
+  "specification": {
+    "document": "docs/spezifikation.md",
+    "property_tests": [
+      "tests/test_spezifikation.py"
+    ],
+    "invariants": [
+      "I1",
+      "I2",
+      "I3",
+      "I4",
+      "I5",
+      "I6",
+      "I7",
+      "I8",
+      "I9",
+      "I10",
+      "I11"
+    ],
+    "legacy_variants": [
+      "legacy_run_benford",
+      "legacy_flowinvoice_benford"
+    ]
+  }
 }

@@ -1,5 +1,25 @@
 # Changelog – auditcore_bpmn
 
+## Unreleased
+
+- Zitaterkennung (Befunde B1/B2 der Spezifikation behoben): gebeugte
+  Normnamen („Artikel 1 der Delegierten Verordnung (EU) Nr. 480/2014“) werden
+  in der Grundform „Delegierte Verordnung …“ gelesen, die Normalform ist im
+  Rundlauf stabil; „der Durchführungsverordnung (EU) …“ und Richtlinien in der
+  Altform „Richtlinie 2014/24/EU“/„RL 2004/18/EG“ werden in Freitext erkannt.
+  Neue Invariante I10, der bisherige `xfail`-Test ist ein regulärer
+  Eigenschaftstest. Die Legacy-Varianten bleiben unverändert.
+
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md`
+(Zweck, Verträge, neun Invarianten, Fehlerfälle, Abgrenzung, Abweichungen vom
+Altverhalten) mit Hypothesis-Eigenschaftstests `tests/test_spezifikation.py`;
+Legacy-Varianten benannt (`validate_bpmn_bva`, `BpmnAnalyzer`, `analyze_bpmn`,
+`export_bpmn_to_excel`, `export_bpmn_to_pdf`). Befunde ohne Codeänderung
+festgehalten: B1 gebeugte Normnamen („der Delegierten Verordnung“) sind im
+Zitat-Rundlauf nicht stabil (`xfail(strict=True)`), B2 Richtlinien in der
+Altform „2014/24/EU“ werden nicht erkannt. `specification`-Block in
+`provenance.json`, Katalogstatus „spezifiziert“. `hypothesis` im Extra `dev`.
+
 ## 0.1.2 – 2026-09-26 – Paketstand für Release v0.4.2
 
 Keine Verhaltensänderung. README mit den Installationsangaben aus Release v0.4.1. Pins: `auditcore_legal_sources==0.1.5`.

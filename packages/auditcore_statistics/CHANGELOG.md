@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+Status „spezifiziert“: fachliche Spezifikation `docs/spezifikation.md` (Zweck,
+Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom
+Altverhalten), 9 Invarianten als Hypothesis-Eigenschaftstests
+(`tests/test_spezifikation.py`, `hypothesis` im Extra `dev`),
+`specification`-Block in `provenance.json`. Legacy-Varianten benannt:
+`legacy_run_benford`, `legacy_flowinvoice_benford`. Keine Befunde. Keine Verhaltensänderung.
+
 Keine Versionsanhebung (Release-Ablauf). Abwärtskompatible Erweiterung.
 
 - Neues Modul `significance`: `chi_square_test` (χ², Freiheitsgrade, p-Wert,

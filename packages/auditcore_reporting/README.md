@@ -19,12 +19,12 @@ python -m pip install 'auditcore_reporting[excel]' \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.2.2 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.3.0 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-reporting/`):
 
 ```text
-auditcore_reporting @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_reporting-0.2.2-py3-none-any.whl#sha256=417f78ca06b8458860699a88728e15118a855a41d8999fc58b87aadab9ce4ba8
+auditcore_reporting @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_reporting-0.3.0-py3-none-any.whl#sha256=b0058d75d82e5367942ebed8e1381ac994cf8874ad30afee92f511672a8069a2
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
@@ -53,8 +53,13 @@ assert get_number_format("Anzahl") == "#,##0"
 assert get_number_format("Name") == "General"
 
 # Benannte Profile: plain-v1 verzichtet auf die Heuristik
-assert PROFILE_IDS == ("flowlib-legacy-v1", "plain-v1")
+assert PROFILE_IDS == ("flowlib-legacy-v1", "flowlib-v2", "plain-v1")
 assert get_profile_format("plain-v1", "Betrag") == "General"
+
+# flowlib-v2: Kennungen ohne Tausendertrenner, Kopf des Kompositums entscheidet
+assert get_number_format("Postleitzahl") == "#,##0"  # Altverhalten
+assert get_profile_format("flowlib-v2", "Postleitzahl") == "@"
+assert get_profile_format("flowlib-v2", "Stundensatz") == '#,##0.00 "EUR"'
 ```
 
 ```pycon
@@ -85,6 +90,7 @@ assert get_profile_format("plain-v1", "Betrag") == "General"
 | Modul | Kurzbeschreibung |
 |---|---|
 | `auditcore_reporting.formats` | Excel-Zahlenformate / Excel format selection preserving Flowlib behavior. |
+| `auditcore_reporting.formats_v2` | Excel number formats of profile ``flowlib-v2`` (successor of ``flowlib-legacy-v1``). |
 | `auditcore_reporting.profiles` | Explicit format profiles; the original Flowlib selector remains unchanged. |
 | `auditcore_reporting.web` | REST contract ``reporting_ui/1`` for the table export UI (extras ``web``, ``fastapi``). |
 | `auditcore_reporting.workbook` | Standard-library-only workbook contracts with an optional Excel adapter. |
@@ -94,6 +100,11 @@ assert get_profile_format("plain-v1", "Betrag") == "General"
 
 - `flowlib-legacy-v1`: unveränderte Flowlib-Spaltennamensheuristik; Betrag vor
   Prozent vor Datum vor Anzahl vor Stunden/Tagen, sonst `General`.
+- `flowlib-v2`: Nachfolger von `flowlib-legacy-v1` mit denselben Formaten,
+  aber Wörtern statt Teilzeichenketten (Kopf des Kompositums entscheidet),
+  Kennungen wie Postleitzahl, Kontonummer, IBAN oder Steuernummer als `@`
+  (Zahlen `0`) und Werttyp vor Spaltenname (Datumswerte immer als Datum).
+  Regeln: [docs/spezifikation.md](docs/spezifikation.md).
 - `plain-v1`: keine Heuristik, `General`. Echte Datumsobjekte behalten die
   notwendige openpyxl-Datumsdarstellung.
 - `formats={"Kennung": "@"}` überschreibt einzelne Spalten ausdrücklich.
@@ -163,7 +174,7 @@ ausschließlich in dieser Bibliothek.
 ```python
 from auditcore_reporting.web import catalogue, preview
 
-assert [p["id"] for p in catalogue()["profiles"]] == ["flowlib-legacy-v1", "plain-v1"]
+assert [p["id"] for p in catalogue()["profiles"]] == ["flowlib-legacy-v1", "flowlib-v2", "plain-v1"]
 table = {"name": "Liste", "columns": ["Betrag"], "rows": [[12.5]]}
 result = preview({"profile": "flowlib-legacy-v1", "tables": [table]})
 assert result["tables"][0]["columns"][0]["format"] == '#,##0.00 "EUR"'

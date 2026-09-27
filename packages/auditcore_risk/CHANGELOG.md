@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+Keine Verhaltensänderung. Fachliche Spezifikation `docs/spezifikation.md` (Zweck, Verträge, Invarianten, Fehlerfälle, Abgrenzung, bewusste Abweichungen vom Altverhalten mit benannten Legacy-Varianten); Status im Paketkatalog „spezifiziert“. 11 Invarianten (I1–I11) als Hypothesis-Eigenschaftstests in `tests/test_spezifikation.py`; keine Befunde. `hypothesis` im Extra `dev`.
+
 Keine Versionsanhebung (Release-Ablauf). Abwärtskompatible Erweiterung.
 
 - Betrugsprüfsignale als Risiko-Merkmale: `web.signal_evaluation`,

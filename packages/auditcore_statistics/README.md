@@ -19,12 +19,12 @@ python -m pip install auditcore_statistics \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.3.3 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.3.4 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-statistics/`):
 
 ```text
-auditcore_statistics @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_statistics-0.3.3-py3-none-any.whl#sha256=cdc9a14dc2ec778c26f6dc71e16c7fc615aeaff8305f0934904f915f3fafc177
+auditcore_statistics @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_statistics-0.3.4-py3-none-any.whl#sha256=7ef4b80d8b006ac820f13baf80e40b3db1cf19600751ee922c9ba3ad5ad80d5a
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases

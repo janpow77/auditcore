@@ -116,8 +116,10 @@ def enrich(legal_basis: LegalBasis, resolver: NormResolver | None = None) -> Leg
 # ---------------------------------------------------------------------------
 
 _EU_ACT_TEXT = (
-    r"(?:(?:Delegierten|Durchführungs)\s*)?(?:Verordnung|Richtlinie|VO|RL)\s*"
+    r"(?:(?:Durchführungsverordnung|(?:(?:Delegierten|Durchführungs)\s*)?(?:Verordnung|Richtlinie|VO|RL))\s*"
     r"\((?:EU|EG|EWG|EU,\s*Euratom|EG,\s*Euratom)\)\s*(?:Nr\.\s*)?\d{1,4}/\d{1,4}"
+    # Richtlinien in der Altform „Richtlinie 2014/24/EU“, „RL 2004/18/EG“
+    r"|(?:Richtlinie|RL)\s+\d{4}/\d{1,4}/(?:EU|EG|EWG)\b)"
 )
 _LONG_PARTS = (
     r"(?:\s+(?:Absatz|Abs\.)\s+(?P<abs>\d+[a-z]?))?(?:\s+Unterabsatz\s+(?P<uabs>\d+))?"

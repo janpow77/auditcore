@@ -97,6 +97,7 @@ class CalculationProfile:
     fingerprint: str
     raw: Mapping[str, Any]
     recommended: bool = False
+    shares: str = "separate"
 
     @property
     def reference(self) -> dict[str, str]:

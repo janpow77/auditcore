@@ -19,12 +19,12 @@ python -m pip install auditcore_kanban \
   --index-url https://janpow77.github.io/auditcore/simple/
 ```
 
-Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.1 im
-Release v0.4.1; weitere Versionen und Hashes unter
+Hashgebunden in einer `requirements.txt` (zuletzt veröffentlicht: 0.1.2 im
+Release v0.4.2; weitere Versionen und Hashes unter
 `https://janpow77.github.io/auditcore/simple/auditcore-kanban/`):
 
 ```text
-auditcore_kanban @ https://github.com/janpow77/auditcore/releases/download/v0.4.1/auditcore_kanban-0.1.1-py3-none-any.whl#sha256=ede5980d5c1b13509b17059f94c832ff02a35d60ee94ae2e05e6229b207c12a7
+auditcore_kanban @ https://github.com/janpow77/auditcore/releases/download/v0.4.2/auditcore_kanban-0.1.2-py3-none-any.whl#sha256=569c89f84f4289c9608fef8a4ca821db32596a518881f1bc4feddfd3ea59432d
 ```
 
 Debian/Ubuntu über die signierte APT-Quelle eines Releases
