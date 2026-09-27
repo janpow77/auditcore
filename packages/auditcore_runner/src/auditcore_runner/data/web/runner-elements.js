@@ -4358,6 +4358,8 @@ function $s(e) {
 		rootBefehl: t.netzsperre_befehl ?? ""
 	} : null;
 }
+//#endregion
+//#region ../ui-core/src/runner/view-listen.ts
 function ec(e, t) {
 	let n = new Map((e.werkzeuge?.werkzeuge ?? []).map((e) => [e.name, e])), r = e.werkzeugEntwurf ?? {};
 	return Object.keys(r).sort().map((i) => ({

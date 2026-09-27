@@ -570,7 +570,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `RunnerPfad` | Typ | – | `runner/profil` |
 | `@auditcore/ui-core` | `RunnerPort` | Schnittstelle | Fachlogik hinter der Oberfläche; Vue und React rufen nur diesen Port auf. | `runner/types` |
 | `@auditcore/ui-core` | `RunnerPrioritaet` | Schnittstelle | – | `runner/profil` |
-| `@auditcore/ui-core` | `RunnerPrioritaetZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerPrioritaetZeile` | Schnittstelle | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `RunnerProblem` | Schnittstelle | – | `runner/types` |
 | `@auditcore/ui-core` | `RunnerProfil` | Typ | Profil als JSON (Schema `auditcore-runner/profil/…`); unbekannte Felder bleiben erhalten. | `runner/types` |
 | `@auditcore/ui-core` | `RunnerProfilStand` | Schnittstelle | `GET /api/profil`. | `runner/types` |
@@ -582,9 +582,9 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `RunnerVorschau` | Schnittstelle | – | `runner/view` |
 | `@auditcore/ui-core` | `RunnerWerkzeug` | Schnittstelle | – | `runner/types` |
 | `@auditcore/ui-core` | `RunnerWerkzeugEinstellung` | Schnittstelle | – | `runner/types` |
-| `@auditcore/ui-core` | `RunnerWerkzeugGruppe` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeugGruppe` | Schnittstelle | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `RunnerWerkzeugProfile` | Typ | Prüfprofil → Werkzeug → Einstellung. | `runner/types` |
-| `@auditcore/ui-core` | `RunnerWerkzeugZeile` | Schnittstelle | – | `runner/view` |
+| `@auditcore/ui-core` | `RunnerWerkzeugZeile` | Schnittstelle | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `RunnerWerkzeuge` | Schnittstelle | `GET /api/werkzeuge`. | `runner/types` |
 | `@auditcore/ui-core` | `SAMPLED_PART` | Konstante | – | `extrapolation/model-subsample` |
 | `@auditcore/ui-core` | `SCREENING_CONTRACT` | Konstante | – | `screening/types` |
@@ -1138,7 +1138,7 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `runnerNeueKlasse` | Funktion | Eingabe „Neue Klasse“ mit Prüfung wie im Backend (Fehler erst nach einer Eingabe). | `runner/view` |
 | `@auditcore/ui-core` | `runnerNurLesen` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerPrioritaetSetze` | Funktion | Eigenschaft eines Prioritätseintrags (Position in der sortierten Liste) ändern. | `runner/profil` |
-| `@auditcore/ui-core` | `runnerPrioritaetZeilen` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerPrioritaetZeilen` | Funktion | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `runnerPrioritaeten` | Funktion | Prioritäten des Entwurfs nach Rang (1 = höchster), fehlerhafte Einträge übersprungen. | `runner/profil` |
 | `@auditcore/ui-core` | `runnerProbleme` | Funktion | Meldungen des Backends: aus der letzten Prüfung, sonst aus dem geladenen Stand. | `runner/view` |
 | `@auditcore/ui-core` | `runnerSetze` | Funktion | Neuer Entwurf mit geändertem Wert; der alte bleibt unverändert. | `runner/profil` |
@@ -1149,10 +1149,10 @@ Exporte der Einstiegspunkte aus `package.json#exports` (1163):
 | `@auditcore/ui-core` | `runnerVersion` | Funktion | – | `runner/profil` |
 | `@auditcore/ui-core` | `runnerVorschau` | Funktion | – | `runner/view` |
 | `@auditcore/ui-core` | `runnerWeichtZuerst` | Funktion | Wer bei knapper Kapazität zuerst weicht: der verdrängbare Eintrag mit dem niedrigsten Rang (größte Zahl). | `runner/profil` |
-| `@auditcore/ui-core` | `runnerWeichtZuerstText` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWeichtZuerstText` | Funktion | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `runnerWerkzeugFeldId` | Funktion | Schlüssel des Rohtexts einer Werkzeug-Zahleneingabe. | `runner/eingabe` |
-| `@auditcore/ui-core` | `runnerWerkzeugGruppen` | Funktion | – | `runner/view` |
-| `@auditcore/ui-core` | `runnerWerkzeugeGeaendert` | Funktion | – | `runner/view` |
+| `@auditcore/ui-core` | `runnerWerkzeugGruppen` | Funktion | – | `runner/view-listen` |
+| `@auditcore/ui-core` | `runnerWerkzeugeGeaendert` | Funktion | – | `runner/view-listen` |
 | `@auditcore/ui-core` | `runnerWert` | Funktion | – | `runner/profil` |
 | `@auditcore/ui-core` | `sameSurvey` | Funktion | – | `dataprotection/dsfaView` |
 | `@auditcore/ui-core` | `samplesizeAllocation` | Funktion | – | `samplesize/view` |
