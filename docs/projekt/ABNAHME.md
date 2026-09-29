@@ -46,3 +46,9 @@ Container-Markierungen vor dem Erzeugen des Gast-Dateisystems entfernt: Andernfa
 ignoriert systemd im QEMU-Gast das übergebene Test-Startziel. Nach dieser Korrektur
 besteht das Root-Profil erneut; beide Regulierung-Lifecycle-Tests bestehen ebenfalls.
 Die Paketberichte binden das Ergebnis an die SHA-256-Prüfsumme des getesteten Pakets.
+
+Merge-Prüfung vom 29.09.2026: Das zusätzliche Profil `invoicesynth` prüft die
+Pakettests und Typkompatibilität mit Python 3.11. Die automatische Prozessanzahl
+verwendet unter Python 3.11/3.12 `os.cpu_count()`; ab 3.13 `os.process_cpu_count()`.
+Der Regressionstest bestätigt unveränderte Datensatz-Hashes. Profile `pr` und
+`invoicesynth` sowie der Paket-Ratchet bestehen nach der Korrektur.

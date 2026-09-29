@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from collections.abc import Callable, Iterator
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
@@ -151,7 +152,11 @@ def build_dataset(
     if output.exists() and any(output.iterdir()):
         raise DatasetError(f"Ausgabeverzeichnis ist nicht leer: {output}")
     if workers is None:
-        workers = min(16, max(1, (os.process_cpu_count() or 2) - 2))
+        if sys.version_info >= (3, 13):
+            cpu_count = os.process_cpu_count()
+        else:
+            cpu_count = os.cpu_count()
+        workers = min(16, max(1, (cpu_count or 2) - 2))
     if workers < 1:
         raise ValueError("workers muss mindestens 1 sein")
     specs = plan_dataset(config, fonts.families)
@@ -168,11 +173,11 @@ def build_dataset(
             images[sample.spec.split] += 1
         if progress is not None:
             progress(number, len(samples))
-    for split, lines in rows.items():
-        if lines:
+    for split, metadata_lines in rows.items():
+        if metadata_lines:
             (output / split).mkdir(exist_ok=True)
             (output / split / "metadata.jsonl").write_text(
-                "".join(line + "\n" for line in lines), encoding="utf-8"
+                "".join(line + "\n" for line in metadata_lines), encoding="utf-8"
             )
     manifest = _manifest(config, output, fonts, specs, used_families, images)
     (output / MANIFEST).write_text(

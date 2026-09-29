@@ -36,3 +36,18 @@ autofix = false
 [pruefprofile.runner.werkzeug.pytest]
 befehl = ["env", "PYTHONPATH=packages/auditcore_runner/src", "python3", "-m", "pytest", "packages/auditcore_runner/tests", "-n", "2", "--junitxml={ausgabe}"]
 zeitlimit_s = 1200
+
+# Python-Kompatibilität und fachliche Regression des parallelen Datensatzaufbaus.
+[pruefprofile.invoicesynth]
+werkzeuge = ["pytest", "mypy"]
+ausloeser = ["lokal", "pr"]
+zeitlimit_s = 1800
+autofix = false
+
+[pruefprofile.invoicesynth.werkzeug.pytest]
+befehl = ["python3", "-m", "pytest", "packages/auditcore_invoicesynth/tests", "-n", "2", "-m", "not gpu and not network", "--junitxml={ausgabe}"]
+zeitlimit_s = 1200
+
+[pruefprofile.invoicesynth.werkzeug.mypy]
+befehl = ["sh", "-c", "cd packages/auditcore_invoicesynth && exec python3 -m mypy src --python-version 3.11 --no-color-output --no-error-summary"]
+zeitlimit_s = 900

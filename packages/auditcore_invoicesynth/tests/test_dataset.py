@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +41,21 @@ def test_parallel_build_is_byte_identical(
     assert (tmp_path / "parallel/manifest.json").read_bytes() == (
         tmp_path / "sequential/manifest.json"
     ).read_bytes()
+
+
+def test_automatic_worker_count_builds_same_dataset(
+    small_dataset: tuple[Path, dict[str, Any]],
+    small_config: SynthConfig,
+    fonts: FontSet,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(os, "cpu_count", lambda: 2)
+    if hasattr(os, "process_cpu_count"):
+        monkeypatch.setattr(os, "process_cpu_count", lambda: 2)
+    _, expected = small_dataset
+    automatic = build_dataset(small_config, tmp_path / "automatic", fonts, workers=None)
+    assert automatic["dataset_hash"] == expected["dataset_hash"]
 
 
 def test_donut_layout_and_manifest(small_dataset: tuple[Path, dict[str, Any]]) -> None:
